@@ -1,0 +1,19 @@
+﻿=== Print PAC Box Label Document.pptx ===
+
+--- ppt/slides/slide1.xml ---
+Hướng dẫn QUY Trình Created by EA Vietnam IN TEM khách hàng PAC style.visibility style.visibility
+
+--- ppt/slides/slide2.xml ---
+I. B754 – Màn hình in tem Vì mỗi loại tem thùng trong và thùng ngoài sẽ tính số SN riêng , nên màn hình sẽ có thêm nút chọn loại tem Các bước in tem : Bước 1: Bắn mã Lot và chọn loại tem cần in Bước 2: Các thông số của tem sẽ được hiển thị ở bảng bên dưới Bước 3: Ấn nút In tem và chọn máy in để in tem
+
+--- ppt/slides/slide3.xml ---
+II. B755 Tra cứu lịch sử in tem Chức năng : Tra cứu lịch sử đã in tem từ ngày … đến ngày … Chọn khoảng thời gian từ ngày … đến ngày … và ấn tìm kiếm . Lịch sử in tem sẽ hiện ra bao gồm các trường đã in trên tem , người in và thời gian in
+
+--- ppt/slides/slide4.xml ---
+III. B756 IN TEM THÙNG CARTON và cân nặng 1. In tem Thùng carton Bước 1: Điền số lượng tem thùng carton vào ô rồi ấn Tìm kiếm Bước 2: Dữ liệu số tem thùng carton sẽ hiển thị ở bảng bên dưới Bước 3: Ấn nút Tem thùng Carton để in từng đó số lượng tem
+
+--- ppt/slides/slide5.xml ---
+III. B756 IN TEM THÙNG CARTON và cân nặng 1. In tem Cân nặng Bước 1: Tích chọn vào ô Is Weight Label rồi ấn Tìm kiếm Bước 2: Dữ liệu cân nặng sẽ hiển thị ở bảng bên dưới Bước 3: Ấn nút Tem Cân Nặng Bước 4: Chọn số lượng tem cần in và ấn OK
+
+--- ppt/slides/slide6.xml ---
+III. B756 IN TEM THÙNG CARTON và cân nặng Kết quả

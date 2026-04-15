@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<WLANProfile xmlns="http://www.microsoft.com/networking/WLAN/profile/v1">
+	<name>Vinatech_Meeting_Room_Backup</name>
+	<SSIDConfig>
+		<SSID>
+			<hex>56696E61746563685F4D656574696E675F526F6F6D5F4261636B7570</hex>
+			<name>Vinatech_Meeting_Room_Backup</name>
+		</SSID>
+	</SSIDConfig>
+	<connectionType>ESS</connectionType>
+	<connectionMode>auto</connectionMode>
+	<MSM>
+		<security>
+			<authEncryption>
+				<authentication>WPA3SAE</authentication>
+				<encryption>AES</encryption>
+				<useOneX>false</useOneX>
+				<transitionMode xmlns="http://www.microsoft.com/networking/WLAN/profile/v4">true</transitionMode>
+			</authEncryption>
+			<sharedKey>
+				<keyType>passPhrase</keyType>
+				<protected>false</protected>
+				<keyMaterial>2222221105</keyMaterial>
+			</sharedKey>
+		</security>
+	</MSM>
+	<MacRandomization xmlns="http://www.microsoft.com/networking/WLAN/profile/v3">
+		<enableRandomization>false</enableRandomization>
+		<randomizationSeed>1229634799</randomizationSeed>
+	</MacRandomization>
+</WLANProfile>

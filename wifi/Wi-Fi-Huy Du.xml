@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<WLANProfile xmlns="http://www.microsoft.com/networking/WLAN/profile/v1">
+	<name>Huy Du</name>
+	<SSIDConfig>
+		<SSID>
+			<hex>487579204475</hex>
+			<name>Huy Du</name>
+		</SSID>
+	</SSIDConfig>
+	<connectionType>ESS</connectionType>
+	<connectionMode>auto</connectionMode>
+	<MSM>
+		<security>
+			<authEncryption>
+				<authentication>WPA3SAE</authentication>
+				<encryption>AES</encryption>
+				<useOneX>false</useOneX>
+				<transitionMode xmlns="http://www.microsoft.com/networking/WLAN/profile/v4">true</transitionMode>
+			</authEncryption>
+			<sharedKey>
+				<keyType>passPhrase</keyType>
+				<protected>true</protected>
+				<keyMaterial>01000000D08C9DDF0115D1118C7A00C04FC297EB010000000BAA808151303A448AA39CFA1DAE71CE000000000200000000001066000000010000200000006D000868F5FD47683730A3296A9FD88E4A2CC749A57BA8A8AB3B40D6ED4A781C000000000E800000000200002000000056E5B51EBDFC7DA121E64A09819C216604BA97B67F5F297495BB142CB4DD7423100000002207E559D1F904C2E7E20CD98E7EF63E4000000077B2578832D8C659FC53673F981D72D3ADF7DDD79461CA1C8C4DD260E8E96585BE4F47BE191133922C752CB84165EC1A1740F05F70F7FE25AADB763A48484819</keyMaterial>
+			</sharedKey>
+		</security>
+	</MSM>
+	<MacRandomization xmlns="http://www.microsoft.com/networking/WLAN/profile/v3">
+		<enableRandomization>false</enableRandomization>
+		<randomizationSeed>4106269032</randomizationSeed>
+	</MacRandomization>
+</WLANProfile>

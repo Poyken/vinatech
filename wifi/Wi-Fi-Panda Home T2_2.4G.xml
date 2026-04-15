@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<WLANProfile xmlns="http://www.microsoft.com/networking/WLAN/profile/v1">
+	<name>Panda Home T2_2.4G</name>
+	<SSIDConfig>
+		<SSID>
+			<hex>50616E646120486F6D652054325F322E3447</hex>
+			<name>Panda Home T2_2.4G</name>
+		</SSID>
+	</SSIDConfig>
+	<connectionType>ESS</connectionType>
+	<connectionMode>auto</connectionMode>
+	<MSM>
+		<security>
+			<authEncryption>
+				<authentication>WPA3SAE</authentication>
+				<encryption>AES</encryption>
+				<useOneX>false</useOneX>
+				<transitionMode xmlns="http://www.microsoft.com/networking/WLAN/profile/v4">true</transitionMode>
+			</authEncryption>
+			<sharedKey>
+				<keyType>passPhrase</keyType>
+				<protected>true</protected>
+				<keyMaterial>01000000D08C9DDF0115D1118C7A00C04FC297EB010000000BAA808151303A448AA39CFA1DAE71CE00000000020000000000106600000001000020000000588503026C18948FB53739865E8D15C3C1E1DC585079AAC45C2A87CE5C785255000000000E800000000200002000000013564FE9330F462ECBCFEB87DA18483002D07174932A75485E820F6A04A2474C10000000E72948144688DAD5F9D57133F5B4683840000000502E81F5AAD0800C4B3F598143467F22908E2F374C275ADBC89028E394E38790583D727608A30DD904CD27EF1D008B6B3E7B378C0DA493F6DA8068246953851D</keyMaterial>
+			</sharedKey>
+		</security>
+	</MSM>
+	<MacRandomization xmlns="http://www.microsoft.com/networking/WLAN/profile/v3">
+		<enableRandomization>false</enableRandomization>
+		<randomizationSeed>3377258809</randomizationSeed>
+	</MacRandomization>
+</WLANProfile>

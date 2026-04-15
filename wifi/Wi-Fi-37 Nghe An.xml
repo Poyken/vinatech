@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<WLANProfile xmlns="http://www.microsoft.com/networking/WLAN/profile/v1">
+	<name>37 Nghe An</name>
+	<SSIDConfig>
+		<SSID>
+			<hex>3337204E67686520416E</hex>
+			<name>37 Nghe An</name>
+		</SSID>
+	</SSIDConfig>
+	<connectionType>ESS</connectionType>
+	<connectionMode>auto</connectionMode>
+	<MSM>
+		<security>
+			<authEncryption>
+				<authentication>WPA2PSK</authentication>
+				<encryption>AES</encryption>
+				<useOneX>false</useOneX>
+			</authEncryption>
+			<sharedKey>
+				<keyType>passPhrase</keyType>
+				<protected>true</protected>
+				<keyMaterial>01000000D08C9DDF0115D1118C7A00C04FC297EB010000000BAA808151303A448AA39CFA1DAE71CE000000000200000000001066000000010000200000007499B8F7E4CE9D331FD68007D901EF071083888D50D84C109539519B4CBA0CF5000000000E800000000200002000000008736C4DFB34622D9E3D87271347881F8F76AEA29AB2ED17B655B642186317CB1000000032FCA2DC7AF6CBACBABBA5C07E62ED3B40000000F68FE58F63D51BCA2667D514770B456A78DE09E7643F71444C8BA5832452158412DE8832B37A128AE3C80F7983EDFE91C1166A9AC6175CA2CF3DC14F5822F348</keyMaterial>
+			</sharedKey>
+		</security>
+	</MSM>
+	<MacRandomization xmlns="http://www.microsoft.com/networking/WLAN/profile/v3">
+		<enableRandomization>false</enableRandomization>
+		<randomizationSeed>4153347581</randomizationSeed>
+	</MacRandomization>
+</WLANProfile>

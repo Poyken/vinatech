@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "Zalo Thảo Tracker (EA Team)",
+  "version": "1.0",
+  "description": "Tự động đồng bộ Zalo chat, lọc trùng lặp và tính toán ngày trống.",
+  "permissions": [
+    "storage",
+    "downloads"
+  ],
+  "host_permissions": [
+    "https://chat.zalo.me/*"
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://chat.zalo.me/*"],
+      "js": ["content.js"]
+    }
+  ]
+}

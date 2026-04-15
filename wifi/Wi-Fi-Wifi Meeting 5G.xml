@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<WLANProfile xmlns="http://www.microsoft.com/networking/WLAN/profile/v1">
+	<name>Wifi Meeting 5G</name>
+	<SSIDConfig>
+		<SSID>
+			<hex>57696669204D656574696E67203547</hex>
+			<name>Wifi Meeting 5G</name>
+		</SSID>
+	</SSIDConfig>
+	<connectionType>ESS</connectionType>
+	<connectionMode>auto</connectionMode>
+	<MSM>
+		<security>
+			<authEncryption>
+				<authentication>open</authentication>
+				<encryption>none</encryption>
+				<useOneX>false</useOneX>
+			</authEncryption>
+		</security>
+	</MSM>
+	<MacRandomization xmlns="http://www.microsoft.com/networking/WLAN/profile/v3">
+		<enableRandomization>false</enableRandomization>
+		<randomizationSeed>838025477</randomizationSeed>
+	</MacRandomization>
+</WLANProfile>

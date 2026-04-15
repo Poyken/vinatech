@@ -1,0 +1,310 @@
+﻿
+LineNumber Line                                                                                
+---------- ----                                                                                
+         1 # 🏭 VINATECH MES — Complete Data Flow Documentation                                
+        10 ## 🏛️ Tổng Quan Kiến Trúc (The Three Pillars)                                      
+        22 ## 📋 Mục lục                                                                       
+        50 ## 💡 Kiến Trúc Vận Hành NAIS (NAIS Framework Architecture)                         
+        54 ### 1. Cách tìm Logic đằng sau bất kỳ màn hình nào                                  
+        71 ### 2. Phân vùng Database                                                           
+        79 ## 🧠 Logic "Ngầm" & Hệ Thống Tự Động (Hidden Database Logic)                       
+        83 ### 1. Tự độ cập nhật Tồn kho (Auto-Stock via Triggers)                             
+        92 ### 2. Validate ràng buộc dữ liệu (DB-Level Validation)                             
+       100 ## 📈 Tầng Hoạch Định Sản Xuất (Master Production Schedule - MPS)                   
+       104 ### 1. Master Production Schedule (MPS)                                             
+       110 ### 2. Quản lý Batch & Daily Schedule                                               
+       117 ## 🧬 Vòng Đời & Phả Hệ Dữ Liệu (Data Lifecycle & Genealogy)                        
+       121 ### 1. Sơ đồ Luồng Công đoạn (Process Step Mapping)                                 
+       134 ### 2. Sự chuyển hóa Định danh (The ID Genealogy)                                   
+       156 ### 🔍 Truy Vết 360 Độ (Golden Query)                                               
+       179 ## 🚚 Hành Trình Nguyên Vật Liệu (The Material Journey - WMS Linkage)               
+       185 ### 1. Luồng Di chuyển Dữ liệu                                                      
+       193 ### 2. Sự tự động hóa trong Sản xuất                                                
+       200 ## ⚙️ Cấu Hình Hệ Thống & Enums (System DNA)                                        
+       204 ### 1. BaseCodes (STB_BaseCode)                                                     
+       210 ### 2. Hằng số hệ thống (STB_ConstCodeInfo)                                         
+       213 ### 3. Kiến trúc View Logic (Logical Layer)                                         
+       222 ## 🏢 Ma Trận Nhà Máy (The Factory Matrix - VNT vs VVT vs HN)                       
+       237 ## 🗺️ Bản Đồ Chức Năng VVT (VVT Functional Navigator)                              
+       241 ### 📦 Nhóm 1: Quản lý Nguyên Vật Liệu (Raw Material)                               
+       251 ### ⚡ Nhóm 2: Sản xuất Điện cực (Electrode Area)                                    
+       260 ### 🔧 Nhóm 3: Lắp ráp & Đóng gói (Production & Packing)                            
+       270 ### 🔬 Nhóm 4: Quản lý Chất lượng (QC & OQC)                                        
+       283 ## 📘 Từ Điển Bảng Dữ Liệu (Table Dictionary)                                       
+       290 ### 📂 Nhóm 1 — Master Data (Dữ liệu nền tảng)                                      
+       306 ### 📂 Nhóm 2 — Kế hoạch & Lệnh Sản Xuất (Production Planning)                      
+       322 ### 📂 Nhóm 3 — Quản Lý Nguyên Vật Liệu (Material Management)                       
+       341 ### 📂 Nhóm 4 — Sản Xuất Điện Cực (Electrode Manufacturing)                         
+       355 ### 📂 Nhóm 5 — Routing & Tracking Sản Xuất (Production Routing)                    
+       366 ### 📂 Nhóm 6 — Kiểm Tra Chất Lượng (Quality Control)                               
+       381 ### 📂 Nhóm 7 — Đóng Gói & Kho Thành Phẩm (Packing & Finished Goods)                
+       398 ### 📂 Nhóm 8 — Hệ Thống & Cross-Database                                           
+       411 ### 🔄 Sơ đồ quan hệ giữa các nhóm bảng                                             
+       462 ## 🗺️ End-to-End Data Flow Overview                                                
+       641 ## 🔗 Mermaid — Phase Transition Diagram                                            
+       674 ## ⚙️ Kỹ thuật triển khai chung                                                     
+       689 ## Phase 0 — Master Data: BOM & Routing                                             
+       693 ### 📊 Tables liên quan                                                             
+       702 ### 🔄 SP: `usp_BomHeader_iud`                                                      
+       715 ### 🔄 SP: `usp_BomDetail_iud`                                                      
+       726 ### 🔄 SP: `usp_RouteInfo_iud`                                                      
+       732 ### 🔄 SP: `usp_RouteInfo_get`                                                      
+       739 ## Phase 1 — Material Inbound & Quality Control                                     
+       743 ### 📊 Tables liên quan                                                             
+       754 ### 🔄 SP: `usp_RawMaterialInputHist_iud`                                           
+       762 ### 🔄 SP: `usp_MaterialQcInfo_iud`                                                 
+       776 ### 🔄 SP: `usp_MaterialWarehouseInOutHist_iud`                                     
+       800 ### 🔄 SP: `usp_VVTMaterialWarehouse_validFIFO`                                     
+       813 ## Phase 2 — Electrode Manufacturing (Điện cực)                                     
+       817 ### 📊 Tables liên quan                                                             
+       829 ### 🔄 SP: `pop_Electrode_Coating_iud`                                              
+       848 ### 🔄 SP: `pop_Electrode_RollPressing_iud`                                         
+       853 ### 🔄 SP: `usp_ElectrodeSlittingResult_iud`                                        
+       864 ### 🔄 SP: `usp_ElectrodeWasteInfoNew_iud`                                          
+       872 ## Phase 2.5 — Lập Kế Hoạch & Chuẩn Bị Sản Xuất ⚠️ (Bước bị thiếu trong tài liệu cũ)
+       876 ### 📊 Tables được tạo ra tại bước này                                              
+       888 ### 🔄 Luồng chuẩn bị sản xuất (before Phase 3)                                     
+       921 ### ⚙️ Hàm hỗ trợ quan trọng                                                        
+       944 ## Phase 3 — Assembly & Production Routing (Lắp ráp)                                
+       948 ### 📊 Tables liên quan                                                             
+       967 ### 🔄 SP: `usp_DoProcessProdRouteHist` ⭐ (Core Production SP)                      
+      1030 ### 🔄 SP: `usp_DoProcessProdGIMaterialByBOM`                                       
+      1050 ### 🔄 SP: `usp_DoProcessProdGRMaterialByOne`                                       
+      1077 ## Phase 4 — Aging, Sorting & Defect Management                                     
+      1081 ### 📊 Tables liên quan                                                             
+      1089 ### 🔄 SP: `usp_InsertDataAgingAndSorting`                                          
+      1094 ### 🔄 SP: `usp_DefectInfo_iud`                                                     
+      1104 ### 🔄 SP: `usp_Add_VN_SCRAP_WEIGHSCALE_PRODUCTIONS`                                
+      1164 ## Phase 5 — Packing & Shipping (Đóng gói & Xuất kho)                               
+      1168 ### 📊 Tables liên quan                                                             
+      1184 ### 🔄 SP: `usp_DivideAndPrintPackagingLabels`                                      
+      1204 ### 🔄 SP: `usp_Vietnam_DoProcessBigBoxPacking_VVT_F3`                              
+      1225 ### 🔄 SP: `usp_VN_FinishGood_BG_StockIn_iud`                                       
+      1241 ## 📋 SP → Table Mapping (Quick Reference)                                          
+      1269 ## 🔑 Key Identifiers — Chuỗi định danh                                             
+      1290 ## 🏗️ Infrastructure & Plant Codes                                                 
+      1302 ### 🏭 Nhà máy (Plant Codes)                                                        
+      1312 ### 🗄️ Objects đặc biệt                                                            
+      1321 ### 🔗 Cross-Factory: VNT Winding -> Korea HQ                                       
+      1328 ## 🚫 SP Không tìm thấy trong Database                                              
+      1336 ## ⚠️ Khoảng trống ngoài 21 SPs đã phân tích                                        
+      1350 ## 🛠️ Developer Cheat Sheet (SQL Snippets)                                         
+      1354 ### 1. Tra cứu "Hành tung" của một Lot vật tư                                       
+      1362 ### 2. Kiểm tra lỗi FIFO                                                            
+      1373 ### 3. Tìm SP đằng sau một chức năng (Dùng DB SmartFramework)                       
+      1381 ### 4. Kiểm tra lịch sử scan Barcode của sản phẩm                                   
+      1392 ## 🛠️ Nhật Ký Tùy Chỉnh & Sửa Lỗi (Customization & Troubleshooting Log)            
+      1396 ### 1. Case: Chèn hậu tố "Dynamic Suffix" cho mã GBAKAC                             
+      1405 ### 2. Case: Cưỡng bức Scan vật tư trạm V-23, V-24                                  
+      1413 ### 3. Case: Đồng bộ hiển thị F721 và F330                                          
+      1419 ### 4. Case: Lỗi "Exception occurred" và thiếu Đặc tính tại F330 (2026-04-10)       
+      1439 # 🏭 CELL LINE — Quy Trình Vận Hành Chi Tiết & Phân Tích Lỗi                        
+      1447 ## 🗺️ Bản Đồ Tổng Quan Cell Line (V22 → V28)                                       
+      1486 ## 📺 B450 — Kế Hoạch Sản Xuất Theo Ngày                                            
+      1488 ### Vận hành                                                                        
+      1495 ### SP liên quan                                                                    
+      1506 ### ⚠️ Lỗi thường gặp & Nguyên nhân                                                 
+      1517 ## 📺 B310 — Tạo Production Order (PO)                                              
+      1519 ### Vận hành                                                                        
+      1525 ### SP liên quan                                                                    
+      1534 ### ⚠️ Lỗi thường gặp                                                               
+      1543 ## 📺 A230 — Material Master & A410 — Model Basic Info                              
+      1545 ### A230 — `usp_MaterialMaster_get`                                                 
+      1549 ### A410 — `usp_ModelBasicInfo_get`                                                 
+      1558 ### ⚠️ Lỗi: Cột Hạng mục cao/thấp sai                                               
+      1566 ## 📺 C141 / C143 — Thiết Lập Thông Số Kiểm Tra                                     
+      1568 ### C141 — Common Inspection Type Item Management                                   
+      1576 ### C143 — Common Inspection Individual Spec                                        
+      1583 ## 📺 B540 — Assy Card Info (Nhập Theo Process V22→V28)                             
+      1585 ### Vận hành                                                                        
+      1595 ### SP liên quan                                                                    
+      1603 ### Sấy hàng (Oven)                                                                 
+      1607 ### ⚠️ Lỗi: 1 con hàng Module nhưng hiển thị thông số Cell                          
+      1622 ## 📺 B530 — Nhập Số Lượng Sản Xuất                                                 
+      1624 ### Vận hành                                                                        
+      1630 ### SP Core: `usp_DoProcessProdRouteHistForCalc_SmartApp_VNT`                       
+      1666 ### ⚠️ Lỗi thường gặp tại B530                                                      
+      1678 ## 📺 B597 — Kiểm Tra Thường Xuyên (Nhập Mã Lot NVL)                                
+      1680 ### Vận hành                                                                        
+      1692 ### SP Core: `usp_Vietnam_RawMaterialInputHist_uid` (162.9 KB — lớn nhất)           
+      1731 ### ⚠️ Lỗi thường gặp tại B597                                                      
+      1744 ### Thủ tục chuyển đổi mã Vendor Lot                                                
+      1757 ## 📺 B523 — Đóng Gói (Gộp Box)                                                     
+      1759 ### Vận hành                                                                        
+      1763 ### SP liên quan                                                                    
+      1772 ### Logic VV → VJ (`usp_Vietnam_GetBoxIDForLotNo_VVT` — 34.8 KB)                    
+      1796 ### Cổng chặn tại B523                                                              
+      1805 ### Bảng `STB_MaterialLotInfo`                                                      
+      1808 ### ⚠️ Lỗi thường gặp tại B523                                                      
+      1819 ## 📺 B717 — Bending & Tapping (Bẻ Cong Chân & Dán Băng Keo)                        
+      1821 ### Vận hành                                                                        
+      1826 ### SP liên quan                                                                    
+      1835 ### Logic duplicate check trong `usp_STB_BENDING_TAPPING`:                          
+      1844 ### ⚠️ Lỗi: Nhập sai số lượng tại B717                                              
+      1858 ## 📺 B718 — Báo Cáo B618 + B717                                                    
+      1866 ## 📺 B786 — ESR Monitoring (Online)                                                
+      1868 ### Tab Online Monitoring                                                           
+      1874 ### Tab ESR                                                                         
+      1879 ## 📺 B452 — Đổi Lại Khi Lưu Line Sai (Vietnam Print Lot Changed)                   
+      1881 ### Vận hành                                                                        
+      1885 ### SP: `usp_Set_VVT_Info_get` (kiêm execute khi truyền `@pInputLineCode`)          
+      1919 ### ⚠️ Lỗi: Không đổi được Line                                                     
+      1927 ## 📺 B882 — ANDON (Báo Cáo Lỗi Dây Chuyền)                                         
+      1929 ### Vận hành                                                                        
+      1934 ### SP: `usp_getAndon_v1`                                                           
+      1946 ## 📺 B726 / B791 — Scrap & Module Tracking                                         
+      1948 ### B726 — `usp_vn_scrapafterproduction` (53.7 KB)                                  
+      1952 ### B791 — `usp_ModuleLotTrackingInfo_VVT2_get` + `fn_VVT_StagePricesMODULE`        
+      1958 ## 📺 F110 — Nhập/Xuất Kho Thành Phẩm                                               
+      1960 ### Nhập kho thành phẩm: `usp_VVT_checkHOLD_QC` (2.6 KB)                            
+      1966 ### Xuất kho thành phẩm: `usp_VVT_checkFIFO_FinishGood` (9.2 KB)                    
+      1973 ### F110 Không gõ Box được                                                          
+      1979 ### `usp_VN_Update_ExportExcel_BG` (2.4 KB)                                         
+      1985 ## 🗺️ Navigator — Các Màn Báo Cáo Phụ                                              
+      1998 ## 📊 Ma Trận Màn Hình → SP → Bảng (Cell Line Summary)                              
+      2017 ## 🔥 Tổng Hợp Root Cause Lỗi Cell Line                                             
+      2076 ## 🛠️ SQL Cheat Sheet — Cell Line Troubleshooting                                  
+      2146 # 📦 MODULE MỞ RỘNG — Màn Hình Bổ Sung (Cập nhật 2026-04-13)                        
+      2153 ## 🔄 B351 — Lot Chuyển Đổi Nguyên Liệu (Lot Change Material)                       
+      2155 ### Vận hành                                                                        
+      2159 ### SP liên quan (từ ảnh màn hình)                                                  
+      2167 ### Cấu trúc dữ liệu hiển thị                                                       
+      2188 ### ⚠️ Lỗi thường gặp & SQL sửa                                                     
+      2204 ## ⚡ B552 — Vietnam Electrode Measure Result (Kết Quả Đo Điện Cực)                  
+      2206 ### Vận hành                                                                        
+      2218 ### SP liên quan (từ ảnh màn hình)                                                  
+      2246 ### Bảng dữ liệu chính                                                              
+      2273 ### ⚠️ Lỗi hay gặp tại B552                                                         
+      2300 ## 🔧 C321 — PQC Reliability Assy (Sửa Chữa Lỗi Cell Line)                          
+      2302 ### Vận hành                                                                        
+      2306 ### SP liên quan (từ ảnh màn hình)                                                  
+      2315 ### Cấu trúc dữ liệu                                                                
+      2348 ### ⚠️ Lỗi hay gặp                                                                  
+      2365 ## 🔬 C443 — Vietnam InspectionPQC (Kiểm Tra Công Đoạn Ngoài Line)                  
+      2367 ### Vận hành                                                                        
+      2371 ### SP liên quan (từ ảnh màn hình)                                                  
+      2381 ### Cấu trúc dữ liệu — CommInspectionHistoryForBarcode                              
+      2396 ### ⚠️ Lỗi: Sửa hạng mục kiểm tra tại C443                                          
+      2414 ## 📦 B789 — VNT Module Lot Trading Info (Lịch Sử Đóng Gói Module)                  
+      2416 ### Vận hành                                                                        
+      2421 ### SP liên quan (từ ảnh màn hình)                                                  
+      2428 ### Cấu trúc dữ liệu — Vietnam Module Pack Prnt Time                                
+      2446 ### ⚠️ Lỗi hay gặp tại B789                                                         
+      2466 ## 📊 FG02 — Tổng Hợp Kho Thành Phẩm (BN + BG)                                      
+      2468 ### Vận hành                                                                        
+      2473 ### SP liên quan (từ ảnh màn hình)                                                  
+      2481 ### Cấu trúc dữ liệu — FnshGoodReport TK                                            
+      2497 ### ⚠️ Lỗi hay gặp                                                                  
+      2514 ## 📦 B525 — Kho Đóng Gói Module (Module Packing)                                   
+      2516 ### Vận hành                                                                        
+      2520 ### SP liên quan (từ ảnh màn hình)                                                  
+      2536 ### Cấu trúc dữ liệu                                                                
+      2572 ### ⚠️ Lỗi hay gặp tại B525                                                         
+      2593 ## 🖨️ In Tem Khách Hàng Đặc Biệt (B754~B758)                                       
+      2599 ### 📺 B754 — In Tem PAC (Inner/Outer)                                              
+      2610 ### 📺 B755 — Lịch Sử In Tem PAC                                                    
+      2616 ### 📺 B756 — In Tem Thùng Carton PAC + Cân Nặng                                    
+      2622 ### 📺 B757 — In Tem Digi-Key (Sản Phẩm + Logistic)                                 
+      2631 ### 📺 B758 — In Tem Thùng MIXED LOAD Digi-Key                                      
+      2642 ## 🏭 A210 — Loại Vật Liệu (Material Type)                                          
+      2644 ### Vận hành                                                                        
+      2647 ### Phân loại MaterialTypeCode                                                      
+      2663 ## 📐 A418 — Số Lượng Đóng Gói Theo Size                                            
+      2665 ### Vận hành                                                                        
+      2669 ### Luồng dữ liệu: A410 → A418 → B523                                               
+      2684 ### Bảng dữ liệu                                                                    
+      2692 ### ⚠️ Lỗi: "Lỗi chưa có tiêu chuẩn đóng gói ở B523"                                
+      2702 ## 👥 B260 — Thông Tin Nhân Viên Sản Xuất                                           
+      2704 ### Vận hành                                                                        
+      2707 ### ⚠️ Quy tắc bắt buộc                                                             
+      2712 ### Thao tác                                                                        
+      2720 ### Filter tìm kiếm                                                                 
+      2726 ## 🏷️ B453 — In Tem INNER / OUTER (Customer Label)                                 
+      2728 ### Vận hành                                                                        
+      2731 ### Thông tin cần nhập                                                              
+      2743 ### ⚠️ Lưu ý                                                                        
+      2750 ## 📦 B523 — Quy Trình Mới: In Tem Box To + Chia Box                                
+      2754 ### Thay đổi so với quy trình cũ                                                    
+      2761 ### Quy tắc bắt buộc (QUAN TRỌNG)                                                   
+      2774 ### Luồng thực hiện                                                                 
+      2793 ## 📡 B934 / B935 — Import Dữ Liệu Máy Phân Cấp Bigsize (ESR AgingSD)               
+      2795 ### B934 — Import Data                                                              
+      2812 ### B935 — Xem Lịch Sử Import                                                       
+      2822 ## 🏭 F130 / F140 — Chỉ Định NCC ↔ NVL                                              
+      2824 ### F130 — Chỉ Định Vật Liệu Theo Nhà Cung Cấp (NCC → NVL)                          
+      2833 ### F140 — Chỉ Định Nhà Cung Cấp Theo Từng Vật Liệu (NVL → NCC)                     
+      2846 ## ✂️ Quy Trình Slitting Hà Nam — F743, F744, F746, F747, F748, C243                
+      2848 ### Tổng quan Flow                                                                  
+      2880 ### Bảng dữ liệu quan trọng                                                         
+      2888 ### ⚠️ Lỗi thường gặp Slitting                                                      
+      2912 ## 🏭 HN00 + HN101 — Thành Phẩm Hà Nam                                              
+      2914 ### HN101 — Thiết Lập Đơn Giá Theo Mã Kế Toán                                       
+      2920 ### HN00 — Tồn Kho Thành Phẩm Hà Nam                                                
+      2931 ## 🔧 H301 / H302 / H303 / H305 — Spare Part Đặc Biệt                               
+      2933 ### H301 — Cấu Hình Loại Spare Part                                                 
+      2945 ### H302 — Tồn Kho / Nhập / Xuất Kho Spare Part                                     
+      2953 ### H303 — Lịch Sử Lot Spare Part Đã Xuất                                           
+      2959 ### H305 — Thông Tin Spare Part Đang Dùng / Đã Thay Thế                             
+      2969 ## 🏗️ K101 / K109 — Nhà Máy BG2 (Bắc Giang 2)                                      
+      2971 ### K101 — Kế Hoạch Lắp Ráp Theo Ngày BG2                                           
+      2980 ### K109 — Kiểm Tra Thường Xuyên BG2                                                
+      2990 ## 🧪 Toàn Bộ Flow QC — Từ IQC Đến OQC                                              
+      2992 ### 🔷 IQC (Incoming Quality Control — Kiểm tra NVL đầu vào)                        
+      3009 ### 🔷 PQC (Process Quality Control — Kiểm tra trong quá trình SX)                  
+      3033 ### 🔷 OQC (Outgoing Quality Control — Kiểm tra thành phẩm xuất kho)                
+      3067 ### 🔷 Bending/Cutting QC                                                           
+      3086 ### 🔷 Bảng SQL Quan Trọng (QC)                                                     
+      3116 ## 🌐 Địa Chỉ Truy Cập Hệ Thống VINATECH                                            
+      3133 ## 📊 Bảng Tổng Hợp Tất Cả Màn Hình (Updated)                                       
+      3221 # 🆕 BỔ SUNG ĐỢT 3 — 4 Màn Hình Từ Ảnh (Cập nhật 2026-04-13)                        
+      3225 ## 📋 B530 — Nhập Sản Lượng Công Đoạn (Chi Tiết SP Thực Tế Từ Ảnh)                  
+      3229 ### SP liên quan (từ ảnh màn hình — đầy đủ)                                         
+      3244 ### Cấu trúc 3 bảng dữ liệu trên màn B530                                           
+      3286 ### Trường tìm kiếm chính                                                           
+      3295 ### ⚠️ Cột IsRawMaterialInputFinish — Gate quan trọng nhất                          
+      3312 ### ⚠️ SP `usp_DoSplitLotAgingPV` — Tách Lot trước Aging                            
+      3322 ## 🛢️ B528 — Barrel Barcode (Gộp Thùng Xuất Hàng)                                  
+      3324 ### Vận hành                                                                        
+      3329 ### SP liên quan (từ ảnh màn hình)                                                  
+      3336 ### Cấu trúc dữ liệu — Barrel Barcode Carton Info                                   
+      3349 ### Liên hệ với các màn khác                                                        
+      3364 ### ⚠️ Lỗi hay gặp                                                                  
+      3385 ## ⚡ B802 — Vietnam Electrode Prod Route Hist (NG Điện Cực / Lịch Sử SX Điện Cực)   
+      3387 ### Vận hành                                                                        
+      3393 ### SP liên quan (từ ảnh màn hình)                                                  
+      3400 ### Cấu trúc dữ liệu                                                                
+      3443 ### ⚠️ Lỗi hay gặp tại B802                                                         
+      3473 ### Mối quan hệ B802 ↔ B552                                                         
+      3488 ## 🗑️ B598 — Báo Phế Sản Xuất (Production Error/Scrap)                             
+      3490 ### Vận hành                                                                        
+      3495 ### SP liên quan (từ ảnh màn hình)                                                  
+      3504 ### Cấu trúc dữ liệu — vn_showproductionerror                                       
+      3525 ### Filter tìm kiếm                                                                 
+      3531 ### Phân biệt B598 với B530 DefectQty                                               
+      3541 ### ⚠️ Lỗi hay gặp tại B598                                                         
+      3574 # 🏭 MODULE LINE — Quy Trình Vận Hành Đầy Đủ                                        
+      3578 ## Sự Khác Biệt giữa Cell Line và Module Line                                       
+      3590 ## Flow Module Line                                                                 
+      3628 ## Giá Thành Module                                                                 
+      3648 # 🔒 FIFO & HOLD — Quản Lý Tồn Kho NVL                                              
+      3650 ## FIFO (First In First Out)                                                        
+      3652 ### Nguyên tắc hoạt động                                                            
+      3656 ### Cấu hình FIFO                                                                   
+      3677 ### Lỗi FIFO: "Lỗi FIFO — không phải Lot mới nhất"                                  
+      3686 ## HOLD Management                                                                  
+      3688 ### Các loại HOLD trong hệ thống                                                    
+      3697 ### Xử lý HOLD                                                                      
+      3750 # 🧪 SQL CHEAT SHEET — QC (C-Series)                                                
+      3752 ## IQC — Kiểm Tra NVL Đầu Vào                                                       
+      3773 ## OQC — Kiểm Tra Thành Phẩm Trước Xuất Kho                                         
+      3813 ## PQC — Kiểm Tra Trong Quá Trình SX (C443)                                         
+      3841 # 📦 SQL CHEAT SHEET — Kho (F-Series)                                               
+      3843 ## F312 — Ghi Chú NVL (Invoice / Material Doc)                                      
+      3872 ## F330 — Nhập Kho + Tạo Tem                                                        
+      3899 ## F430 — Xuất/Nhập Kho Lịch Sử (Điều Chỉnh)                                        
+      3926 # ⚡ SQL CHEAT SHEET — Điện Cực (Electrode)                                          
+      3981 # 🚀 QUICK START — Khi Có Model / Hàng Mới                                          
+      3983 ## Checklist Đầy Đủ Khi Thêm Model Mới                                              
+      4030 ## Checklist Khi Onboard User Mới                                                   
+
+

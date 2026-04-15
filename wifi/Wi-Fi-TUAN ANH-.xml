@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<WLANProfile xmlns="http://www.microsoft.com/networking/WLAN/profile/v1">
+	<name>TUAN ANH-</name>
+	<SSIDConfig>
+		<SSID>
+			<hex>5455414E20414E482D</hex>
+			<name>TUAN ANH-</name>
+		</SSID>
+	</SSIDConfig>
+	<connectionType>ESS</connectionType>
+	<connectionMode>auto</connectionMode>
+	<MSM>
+		<security>
+			<authEncryption>
+				<authentication>WPA2PSK</authentication>
+				<encryption>AES</encryption>
+				<useOneX>false</useOneX>
+			</authEncryption>
+			<sharedKey>
+				<keyType>passPhrase</keyType>
+				<protected>true</protected>
+				<keyMaterial>01000000D08C9DDF0115D1118C7A00C04FC297EB010000000BAA808151303A448AA39CFA1DAE71CE000000000200000000001066000000010000200000004F583E38B76E06F714DC5C593D0ABD421C3DE9FE568994D95494A9A5BD35E292000000000E80000000020000200000002F6FC565AAF5BD8F60520A637557FD7495758C65CFD37DEF3E1DD67E03A6F7621000000065201DE989C33CC077831BB42A30CA794000000017F4C06FA66FA42B0D617A44F7F12FC4D4D8171759CCBD5874C86C300F79BB5F73CEFFC3C5F0F4587D07E3C023406EEF14BD1081586D0FE2CD725ABDE0C3EF80</keyMaterial>
+			</sharedKey>
+		</security>
+	</MSM>
+	<MacRandomization xmlns="http://www.microsoft.com/networking/WLAN/profile/v3">
+		<enableRandomization>false</enableRandomization>
+		<randomizationSeed>2967196458</randomizationSeed>
+	</MacRandomization>
+</WLANProfile>

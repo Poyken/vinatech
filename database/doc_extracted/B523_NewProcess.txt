@@ -1,0 +1,19 @@
+﻿=== B523_NewProcess.pptx ===
+
+--- ppt/slides/slide1.xml ---
+Hướng dẫn quy trình mới B523 Created by EA Vietnam In Tem và chia Box style.visibility style.visibility
+
+--- ppt/slides/slide2.xml ---
+I. IN Tem BOX TO Tại màn hình B523 , sau khi gộp box, thông tin box to sẽ hiển thị tại bảng số 3 Để in tem : Bước 1: Chọn dòng cần in Bước 2: click nút In tem &amp; Mục đích process mới : Tránh trùng lặp packing khi nhập kho , xuất kho
+
+--- ppt/slides/slide3.xml ---
+I. IN Tem BOX TO LƯU Ý: {5C22544A-7EE6-4342-B048-85BDC9FD1C3A} Chỉ được in tem 1 lần Phải In tem trước khi chia box Chỉ được in tem 1 lần duy nhất , nếu in tiếp sẽ hiện thông báo lỗi Nếu muốn in lần 2, phải liên hệ EA team Trước khi muốn Chia box, phải in tem box to trước , nếu không sẽ không chia đc box
+
+--- ppt/slides/slide4.xml ---
+II. Chia box Nếu muốn chia box: Bước 1: Chọn dòng PackingID cần chia Bước 2: Ấn nút Chia box
+
+--- ppt/slides/slide5.xml ---
+II. Chia box Bước 3: Nhập số lượng box mới cần chia Kết quả :
+
+--- ppt/slides/slide6.xml ---
+II. Chia box LƯU Ý: {5C22544A-7EE6-4342-B048-85BDC9FD1C3A} Chỉ được in tem nhỏ 1 lần Phải In tem trước khi chia box Chỉ được in tem 1 lần duy nhất , nếu in tiếp sẽ hiện thông báo lỗi Nếu muốn in lần 2, phải liên hệ EA team Trước khi muốn Chia box tiếp , phải in tem box nhỏ trước , nếu không sẽ không chia đc box

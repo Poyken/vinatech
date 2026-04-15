@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<WLANProfile xmlns="http://www.microsoft.com/networking/WLAN/profile/v1">
+	<name>Cong Isme</name>
+	<SSIDConfig>
+		<SSID>
+			<hex>436F6E672049736D65</hex>
+			<name>Cong Isme</name>
+		</SSID>
+	</SSIDConfig>
+	<connectionType>ESS</connectionType>
+	<connectionMode>auto</connectionMode>
+	<autoSwitch>false</autoSwitch>
+	<MSM>
+		<security>
+			<authEncryption>
+				<authentication>WPA2PSK</authentication>
+				<encryption>AES</encryption>
+				<useOneX>false</useOneX>
+			</authEncryption>
+			<sharedKey>
+				<keyType>passPhrase</keyType>
+				<protected>true</protected>
+				<keyMaterial>01000000D08C9DDF0115D1118C7A00C04FC297EB010000000BAA808151303A448AA39CFA1DAE71CE000000000200000000001066000000010000200000002488E45DE78F653BED44F51232E84C70BCBE6FD7A6060189D4D31867E5831C22000000000E8000000002000020000000921A72FE4992DDE27DDB1B758922B96461DD3DCC1C0E8BF58B716DFE0D32F0EF10000000E06DAD99BB01EC6BD288B23BD9BF60094000000051EFE75CBFDD5FC55C537C9A3B5FDC0414E847B2107C936DACA87A271F4DC95D421AD0A9CA26543C7D0597C0360B8999B32D98F997E002C93C8318266924CCE7</keyMaterial>
+			</sharedKey>
+		</security>
+	</MSM>
+</WLANProfile>

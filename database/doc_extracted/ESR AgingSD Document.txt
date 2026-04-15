@@ -1,0 +1,25 @@
+﻿=== ESR AgingSD Document.pptx ===
+
+--- ppt/slides/slide1.xml ---
+Hướng dẫn QUY Trình Created by EA Vietnam Nhập dữ liệu máy phân cấp bigsize style.visibility style.visibility
+
+--- ppt/slides/slide2.xml ---
+I. Đổi file CSV sang xlsx Vì hệ thống MES không support file đuôi csv nên phải đổi sang file đuôi xlsx Bước 1 : Mở file csv cần import dữ liệu lên hệ thống , Bước 2 : Save As .xlsx
+
+--- ppt/slides/slide3.xml ---
+II. B934 - import data Vào màn hình B934 và làm các bước sau để import dữ liệu lên hệ thống Bước 1 : Nhập LotNo và FileName vào ô tìm kiếm , sau đó ấn nút tìm kiếm . LƯU Ý: File Name có thể nhập bất kì , sao cho dễ tìm kiếm là được Bước 2 : Nhấn biểu tượng Import data
+
+--- ppt/slides/slide4.xml ---
+II. B934 - import data Bước 3 : Sau khi ấn nút Import, một cửa sổ Import Wizard hiện ra Chọn Source Type: Excel Source Excel: Ấn nút 3 chấm và chọn file cần import Bước 4 : Chọn file và sheet trong file cần import, sau đó ấn OK
+
+--- ppt/slides/slide5.xml ---
+II. B934 - import data Bước 5 : Ấn Next Bước 6 : Chọn các trường tương ứng của bảng dữ liệu ( bên trái ) với các cột trong file ( bên phải ) Cách thực hiện : Bấm vào dòng bên trái sau đó bấm chọn cột tương ứng bên phải . Khi thấy dữ liệu bên trái hiện dấu – là được Lưu ý: Không chọn LotNo , File Name Các trường từ CH trở xuống đã sắp xếp theo thứ tự trong file, cứ chọn lần lượt là được Sau đó bấm Next
+
+--- ppt/slides/slide6.xml ---
+II. B934 - import data Bước 7 : Ấn Next Bước 8 : Ấn OK
+
+--- ppt/slides/slide7.xml ---
+II. B934 - import data Bước 9: Ấn biểu tượng Save để lưu lại Nếu muốn thêm dữ liệu nữa thì bạn nhập lại LotNo và FileName , sau đó tiếp tục ấn tìm kiếm
+
+--- ppt/slides/slide8.xml ---
+III. B935 – xem lịch sử đẩy dữ liệu Chức năng : Tìm kiếm dữ liệu đã import từ màn hình B934 Lưu ý: 1. Nếu không nhập LotNo thì sẽ tìm kiếm theo ngày đẩy dữ liệu 2. Có thể nhập LotNo hoặc FileName vào ô LotNo để tìm kiếm đều được

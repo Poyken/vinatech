@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<WLANProfile xmlns="http://www.microsoft.com/networking/WLAN/profile/v1">
+	<name>iPhone 9 Super Pro Ultimate </name>
+	<SSIDConfig>
+		<SSID>
+			<hex>6950686f6e6520392053757065722050726f20556c74696d61746520</hex>
+			<name>iPhone 9 Super Pro Ultimate </name>
+		</SSID>
+	</SSIDConfig>
+	<connectionType>ESS</connectionType>
+	<connectionMode>manual</connectionMode>
+	<MSM>
+		<security>
+			<authEncryption>
+				<authentication>open</authentication>
+				<encryption>none</encryption>
+				<useOneX>false</useOneX>
+			</authEncryption>
+		</security>
+	</MSM>
+</WLANProfile>
+<!-- 
+	0 = Name
+	1 = Hex
+-->

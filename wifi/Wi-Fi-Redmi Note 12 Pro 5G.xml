@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<WLANProfile xmlns="http://www.microsoft.com/networking/WLAN/profile/v1">
+	<name>Redmi Note 12 Pro 5G</name>
+	<SSIDConfig>
+		<SSID>
+			<hex>5265646D69204E6F74652031322050726F203547</hex>
+			<name>Redmi Note 12 Pro 5G</name>
+		</SSID>
+	</SSIDConfig>
+	<connectionType>ESS</connectionType>
+	<connectionMode>auto</connectionMode>
+	<MSM>
+		<security>
+			<authEncryption>
+				<authentication>WPA2PSK</authentication>
+				<encryption>AES</encryption>
+				<useOneX>false</useOneX>
+			</authEncryption>
+			<sharedKey>
+				<keyType>passPhrase</keyType>
+				<protected>true</protected>
+				<keyMaterial>01000000D08C9DDF0115D1118C7A00C04FC297EB010000000BAA808151303A448AA39CFA1DAE71CE00000000020000000000106600000001000020000000626C0F5971B1213D99E6784D31A41FCA0F0B899B9A488ED172584EAE506B9C50000000000E800000000200002000000019A3C9F1C733CC83A0DF036D083A9C901753560D9FAE39D30F320CEF90E4E4D2100000008FFB4CFF5E044555C58BD86B7A5284264000000073C970F7957E571E2D0006485CEB81E6B4CF9167F489157E228CD44AAC3803E7A1B1EE1ECC5AEADB323C497998A11716FBC96B765DC42674B6FA9CAF7146303D</keyMaterial>
+			</sharedKey>
+		</security>
+	</MSM>
+	<MacRandomization xmlns="http://www.microsoft.com/networking/WLAN/profile/v3">
+		<enableRandomization>false</enableRandomization>
+		<randomizationSeed>2643330192</randomizationSeed>
+	</MacRandomization>
+</WLANProfile>

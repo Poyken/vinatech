@@ -1,0 +1,46 @@
+
+CREATE PROCEDURE [dbo].[usp_CheckInputRawMaterialCodeForProduct]
+	@pBarcode varchar(50),
+	@pRouteCode varchar(50)
+AS
+BEGIN
+	SET NOCOUNT ON;
+	declare @check int = 0;
+	;with  getBomversion as (
+		select SI.MaterialCode,DPP.BomVersion from STB_SetInfo SI
+		join STB_DayProdPlan DPP WITH(NOLOCK) on SI.DayPlanNo = DPP.DayPlanNo
+		where SI.barcode=@pBarcode
+	),
+	getAllRawMaterialForCode as 
+	(
+		select BD.ChildMaterialCode,BD.RouteCode from getBomversion GBV
+		join STB_BomDetail BD WITH(NOLOCK) on GBV.BomVersion = BD.BomVersion and GBV.MaterialCode = BD.MaterialCode
+		where BD.RouteCode = @pRouteCode
+	),
+	checkInputRawMaterial as (
+		select count(*) as slg from getAllRawMaterialForCode GA
+		left join STB_RawMaterialInputHist RMIH WITH(NOLOCK) on  GA.ChildMaterialCode =RMIH.MaterialCode and (barcode=@pBarcode OR barcode = LEFT(@pBarcode, LEN(@pBarcode) - 1))
+		where RMIH.RawMaterialBarcode is null
+	)
+	select @check=slg from checkInputRawMaterial
+
+	if(@check > 0)
+	begin
+		raiserror (N'Công đoạn của bạn chưa nhập đủ nguyên vật liệu. Vui lòng kiểm tra lại!',16,1)
+		return ;
+	end
+	
+	-- kiem tra xem da nhap chu marking man hinh HN541 hay chua (Chi ap dung cho HN VE06)
+	IF (@pRouteCode = 'VE06')
+	BEGIN
+		DECLARE @CountCheck int = 0  
+
+		select @CountCheck=count(MarkingCode) from STB_CreateMarkingLetterAndQtyForBarcode where Barcode=@pBarcode
+
+		IF(@CountCheck=0)
+		BEGIN
+				raiserror (N'Chưa lưu chữ marking ở màn hình HN541. Vui lòng kiểm tra lại!',16,1)
+				return ;
+		END
+	END
+END

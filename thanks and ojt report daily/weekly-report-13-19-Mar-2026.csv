@@ -1,0 +1,12 @@
+NAME,DEPARTMENT,DATE GET ISSUE,NAME ISSUE,THE SOLVE,TYPE ISSUE,DATE SOLVE ISSUE,SOLVE ISSUE BY,STATUS,REMARK
+Nguyen Van Duc,EA Team,13/3/2026,Dev Task Import Excel,"Tiếp tục phát triển module import Excel. Hoàn thiện 80% logic mapping, tối ưu data ingestion và validation dữ liệu.",Dev,13/3/2026,Nguyen Van Duc,In Progress,HW
+Nguyen Van Duc,EA Team,13/3/2026,Self-study WinForms,"Tự nghiên cứu Windows Forms: UI components, event handling, data binding, DataGridView và form lifecycle.",Research,13/3/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,16/3/2026,Application Finalization & QA,"Hoàn thiện ứng dụng, tạo test case toàn diện và thực hiện kiểm thử. Đạt trạng thái Test Pass. Review code và kiểm tra stability.",Dev,16/3/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,16/3/2026,On-site Workshop Support,"Hỗ trợ kỹ thuật tại xưởng sản xuất cùng anh Hải. Quan sát quy trình sản xuất và cấu hình thiết bị IT phòng ban.",Support,16/3/2026,Tran Thanh Hai,Done,HW
+Nguyen Van Duc,EA Team,17/3/2026,R&D Assembly & Scan-to-Email,"Lắp ráp máy tại phòng R&D. Cấu hình chức năng Scan to Email cho phòng Kế toán.",Support,17/3/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,17/3/2026,Bac Giang 1 Network Support,"Học kỹ thuật mở rộng dung lượng ổ cứng với anh Mạnh. Sang Bắc Giang 1 buổi trưa xử lý sự cố mạng cho end-users.",Support / Site Visit,17/3/2026,Nguyen Dinh Manh,Done,HW
+Nguyen Van Duc,EA Team,17/3/2026,Network Cabling,"Kéo dây mạng tại các khu vực được phân công để cải thiện kết nối.",Support,17/3/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,18/3/2026,Software Packaging & Self-study,"Đóng gói phần mềm để phân phối. Tiếp tục tự nghiên cứu WinForms và kéo dây mạng.",Dev / Support,18/3/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,18/3/2026,Enterprise Security & COM Cabling,"Họp phòng ban phối hợp đổi mật khẩu admin toàn bộ các sector. Triển khai cáp COM tại xưởng sản xuất.",Security,18/3/2026,EA Team,Done,HW
+Nguyen Van Duc,EA Team,18/3/2026,R&D Admin Security Update,"Thực hiện đổi mật khẩu admin cho phòng R&D.",Security,18/3/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,19/3/2026,R&D Tool Fix,"Lên phòng R&D sửa tool hỗ trợ cho phòng R&D.",Support,19/3/2026,Nguyen Van Duc,Done,HW

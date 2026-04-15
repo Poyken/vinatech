@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<WLANProfile xmlns="http://www.microsoft.com/networking/WLAN/profile/v1">
+	<name>TuanV</name>
+	<SSIDConfig>
+		<SSID>
+			<hex>5475616E56</hex>
+			<name>TuanV</name>
+		</SSID>
+	</SSIDConfig>
+	<connectionType>ESS</connectionType>
+	<connectionMode>auto</connectionMode>
+	<MSM>
+		<security>
+			<authEncryption>
+				<authentication>WPA2PSK</authentication>
+				<encryption>AES</encryption>
+				<useOneX>false</useOneX>
+			</authEncryption>
+			<sharedKey>
+				<keyType>passPhrase</keyType>
+				<protected>true</protected>
+				<keyMaterial>01000000D08C9DDF0115D1118C7A00C04FC297EB010000000BAA808151303A448AA39CFA1DAE71CE00000000020000000000106600000001000020000000FA502A4916EA9D4A240F4B0027CB8C28A6F8476142F192068C7DFEB015DBACF2000000000E8000000002000020000000AD1EDB33C0225F64FE21333950E72D1F16A0F22C627173A7010C96EBAA56A5161000000090AD0A3374EE3B940EA663A80952885840000000E87C1268E7CC373DBD5762BCDCE37E448C0A1D4E79FE18BBBF8AFC62437367F24F774F6DA82EDDD8ABB3314A55C68DFF22749C9D6CDF444CC1F71246816D157E</keyMaterial>
+			</sharedKey>
+		</security>
+	</MSM>
+	<MacRandomization xmlns="http://www.microsoft.com/networking/WLAN/profile/v3">
+		<enableRandomization>false</enableRandomization>
+		<randomizationSeed>1858547202</randomizationSeed>
+	</MacRandomization>
+</WLANProfile>

@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<WLANProfile xmlns="http://www.microsoft.com/networking/WLAN/profile/v1">
+	<name>Ula Working Space</name>
+	<SSIDConfig>
+		<SSID>
+			<hex>556C6120576F726B696E67205370616365</hex>
+			<name>Ula Working Space</name>
+		</SSID>
+	</SSIDConfig>
+	<connectionType>ESS</connectionType>
+	<connectionMode>auto</connectionMode>
+	<MSM>
+		<security>
+			<authEncryption>
+				<authentication>WPAPSK</authentication>
+				<encryption>AES</encryption>
+				<useOneX>false</useOneX>
+			</authEncryption>
+			<sharedKey>
+				<keyType>passPhrase</keyType>
+				<protected>true</protected>
+				<keyMaterial>01000000D08C9DDF0115D1118C7A00C04FC297EB010000000BAA808151303A448AA39CFA1DAE71CE00000000020000000000106600000001000020000000B9EFAF73DD2E58CF8F3AF4A3D0637B16905347FA7797D19D6F429987EE7AC494000000000E800000000200002000000015D85BB07E134A7A4C68E3755D95D9F08029E7537B3868B49CC70B1322C777891000000095617F8D977EA8B67A63D007E03A168040000000BAFD338B346F4FC6A4EED9D47E5C17186D3C1030BD63A65DD9AD922DB667D6E3BB48CE56581F6F10E926E23DDBAFEE627A41F66C86357C4744EFB848C8DAEA56</keyMaterial>
+			</sharedKey>
+		</security>
+	</MSM>
+	<MacRandomization xmlns="http://www.microsoft.com/networking/WLAN/profile/v3">
+		<enableRandomization>false</enableRandomization>
+		<randomizationSeed>1152600544</randomizationSeed>
+	</MacRandomization>
+</WLANProfile>

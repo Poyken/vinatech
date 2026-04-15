@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<WLANProfile xmlns="http://www.microsoft.com/networking/WLAN/profile/v1">
+	<name>Khong Co Wifi</name>
+	<SSIDConfig>
+		<SSID>
+			<hex>4B686F6E6720436F2057696669</hex>
+			<name>Khong Co Wifi</name>
+		</SSID>
+	</SSIDConfig>
+	<connectionType>ESS</connectionType>
+	<connectionMode>auto</connectionMode>
+	<MSM>
+		<security>
+			<authEncryption>
+				<authentication>WPA2PSK</authentication>
+				<encryption>AES</encryption>
+				<useOneX>false</useOneX>
+			</authEncryption>
+			<sharedKey>
+				<keyType>passPhrase</keyType>
+				<protected>true</protected>
+				<keyMaterial>01000000D08C9DDF0115D1118C7A00C04FC297EB010000000BAA808151303A448AA39CFA1DAE71CE00000000020000000000106600000001000020000000BFFEB48E6459144270B60EDF77A2233D0DD1D96C94423399669F0B3FAC0C0680000000000E800000000200002000000025D808EFB007E867DF13571F1386D06DEFFD98E61B39FB0DF3A44E51049EA15D1000000074A620813BB63AD02DDB19D2F4AA4AEF40000000BEA19B6FD37A01EEAC3E88ED36AF92B8C51FAD4F414C10DBD4A14EC9022F4EE7857778CF0DE7D492826229148AFD593FF88F4039B7AC11AFB6A1CA5D97359C8C</keyMaterial>
+			</sharedKey>
+		</security>
+	</MSM>
+	<MacRandomization xmlns="http://www.microsoft.com/networking/WLAN/profile/v3">
+		<enableRandomization>false</enableRandomization>
+		<randomizationSeed>2520288497</randomizationSeed>
+	</MacRandomization>
+</WLANProfile>

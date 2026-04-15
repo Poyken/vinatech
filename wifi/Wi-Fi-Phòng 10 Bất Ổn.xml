@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<WLANProfile xmlns="http://www.microsoft.com/networking/WLAN/profile/v1">
+	<name>Phòng 10 Bất Ổn</name>
+	<SSIDConfig>
+		<SSID>
+			<hex>5068C3B26E672031302042E1BAA57420E1BB946E</hex>
+			<name>Phòng 10 Bất Ổn</name>
+		</SSID>
+	</SSIDConfig>
+	<connectionType>ESS</connectionType>
+	<connectionMode>auto</connectionMode>
+	<MSM>
+		<security>
+			<authEncryption>
+				<authentication>WPA2PSK</authentication>
+				<encryption>AES</encryption>
+				<useOneX>false</useOneX>
+			</authEncryption>
+			<sharedKey>
+				<keyType>passPhrase</keyType>
+				<protected>true</protected>
+				<keyMaterial>01000000D08C9DDF0115D1118C7A00C04FC297EB010000000BAA808151303A448AA39CFA1DAE71CE00000000020000000000106600000001000020000000C173C66BA3EBF469E8D99244AB2F05434C4A98031AC580381F028443BCF6AA8C000000000E80000000020000200000009519C0FBCD833E65344EAD24D4D5EED27CF6D6C9CBE25F9CE53EA42C417A3BFE10000000798C93BE9201EB65EFE772C7A3F573B54000000087C2057F983275474B5E5935E03E1DB13FB8461F17600F6D14C197D472FA567344E2807E391EF95FB792B4E1CE37316F3D44A0EA1DE9A2C04D0EB60495A70EBE</keyMaterial>
+			</sharedKey>
+		</security>
+	</MSM>
+	<MacRandomization xmlns="http://www.microsoft.com/networking/WLAN/profile/v3">
+		<enableRandomization>false</enableRandomization>
+		<randomizationSeed>42966056</randomizationSeed>
+	</MacRandomization>
+</WLANProfile>

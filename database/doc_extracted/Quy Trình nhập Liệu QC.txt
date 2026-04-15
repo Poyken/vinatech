@@ -1,0 +1,16 @@
+﻿=== Quy Trình nhập Liệu QC.pptx ===
+
+--- ppt/slides/slide1.xml ---
+Quy Trình nhập Liệu QC Created by EA Vietnam IQC – PQC - OQC style.visibility
+
+--- ppt/slides/slide2.xml ---
+I. Quản LÝ hạng mục / Nhóm kiểm tra IQC và OQC 1. Màn hình sử dụng C121
+
+--- ppt/slides/slide3.xml ---
+2. Thêm thông tin mã nhóm kiểm tra
+
+--- ppt/slides/slide4.xml ---
+2. Sửa thông tin nhóm hạng mục
+
+--- ppt/slides/slide5.xml ---
+3. Xóa thông tin mã nhóm kiểm tra =&gt; Thêm , sửa và xóa Hạng mục tương tự như Nhóm hạng mục

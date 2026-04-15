@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<WLANProfile xmlns="http://www.microsoft.com/networking/WLAN/profile/v1">
+	<name>ULA CAFE</name>
+	<SSIDConfig>
+		<SSID>
+			<hex>554C412043414645</hex>
+			<name>ULA CAFE</name>
+		</SSID>
+	</SSIDConfig>
+	<connectionType>ESS</connectionType>
+	<connectionMode>auto</connectionMode>
+	<MSM>
+		<security>
+			<authEncryption>
+				<authentication>WPA3SAE</authentication>
+				<encryption>AES</encryption>
+				<useOneX>false</useOneX>
+				<transitionMode xmlns="http://www.microsoft.com/networking/WLAN/profile/v4">true</transitionMode>
+			</authEncryption>
+			<sharedKey>
+				<keyType>passPhrase</keyType>
+				<protected>true</protected>
+				<keyMaterial>01000000D08C9DDF0115D1118C7A00C04FC297EB010000000BAA808151303A448AA39CFA1DAE71CE00000000020000000000106600000001000020000000556992569506658F184302B706D5DC1BAD7A17472A6A56E993ACB98999D30475000000000E80000000020000200000000FF8554E89BF7111F54BAE78F8D7F42C185C92267A4EDAC9F5BE780CC81C57A2100000005705473C3A06D2C252DBE1A658FA088C40000000B4DE1FCD9ADDBD91C50E23A43ED9DDD4700AEA5A73602B4FA94671C4D0E95A637575A0FF417484EA52BDAD4BFCDBE0A8C947C9AB48F4B59EDE8AE85494D69DC7</keyMaterial>
+			</sharedKey>
+		</security>
+	</MSM>
+	<MacRandomization xmlns="http://www.microsoft.com/networking/WLAN/profile/v3">
+		<enableRandomization>false</enableRandomization>
+		<randomizationSeed>860691752</randomizationSeed>
+	</MacRandomization>
+</WLANProfile>

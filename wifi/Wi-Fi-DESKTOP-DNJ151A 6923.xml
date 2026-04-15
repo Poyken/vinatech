@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<WLANProfile xmlns="http://www.microsoft.com/networking/WLAN/profile/v1">
+	<name>DESKTOP-DNJ151A 6923</name>
+	<SSIDConfig>
+		<SSID>
+			<hex>4445534B544F502D444E4A313531412036393233</hex>
+			<name>DESKTOP-DNJ151A 6923</name>
+		</SSID>
+	</SSIDConfig>
+	<connectionType>ESS</connectionType>
+	<connectionMode>auto</connectionMode>
+	<MSM>
+		<security>
+			<authEncryption>
+				<authentication>WPA2PSK</authentication>
+				<encryption>AES</encryption>
+				<useOneX>false</useOneX>
+			</authEncryption>
+			<sharedKey>
+				<keyType>passPhrase</keyType>
+				<protected>true</protected>
+				<keyMaterial>01000000D08C9DDF0115D1118C7A00C04FC297EB010000000BAA808151303A448AA39CFA1DAE71CE000000000200000000001066000000010000200000007845DEC9F808BA4FF7B26267C393D35C2C946D63B3C9E4CF607ABA72C75062EE000000000E8000000002000020000000F6D4F43B9941F723E174245EC14BEA1C1887D64500357BF5CFD3B533FCCB750D1000000034F18E679506B2EC1386DBABE5CB072A400000006021863C41C2A23445F2D7FB224D9465AA1E826B8B72305A00372BE9F9001536FB6D75F345279F75E62B454599C01B8D74FB7A65EC14DF3368D2483C6CA85078</keyMaterial>
+			</sharedKey>
+		</security>
+	</MSM>
+	<MacRandomization xmlns="http://www.microsoft.com/networking/WLAN/profile/v3">
+		<enableRandomization>false</enableRandomization>
+		<randomizationSeed>1131662240</randomizationSeed>
+	</MacRandomization>
+</WLANProfile>

@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<WLANProfile xmlns="http://www.microsoft.com/networking/WLAN/profile/v1">
+	<name>Cab3 Cafe</name>
+	<SSIDConfig>
+		<SSID>
+			<hex>436162332043616665</hex>
+			<name>Cab3 Cafe</name>
+		</SSID>
+	</SSIDConfig>
+	<connectionType>ESS</connectionType>
+	<connectionMode>auto</connectionMode>
+	<MSM>
+		<security>
+			<authEncryption>
+				<authentication>WPA3SAE</authentication>
+				<encryption>AES</encryption>
+				<useOneX>false</useOneX>
+				<transitionMode xmlns="http://www.microsoft.com/networking/WLAN/profile/v4">true</transitionMode>
+			</authEncryption>
+			<sharedKey>
+				<keyType>passPhrase</keyType>
+				<protected>true</protected>
+				<keyMaterial>01000000D08C9DDF0115D1118C7A00C04FC297EB010000000BAA808151303A448AA39CFA1DAE71CE00000000020000000000106600000001000020000000A6AF12C14F18065EE28238D1C89EAD39C654112864BACDBFC78D4B084A6DEEA5000000000E8000000002000020000000196CBE98B8B669F74775E18464ECBCC4903BA50E7AD227D6121030DB34538D8E100000002820C9E7CED046731B716B7C933A64C040000000317686511B158351ED6965830A66B440DD42015952873EB54E213C2A1AC0DDFA823C1C812C17DCE79150C58C94DC3515054D74E7E0F8F16F9E308B48B5CCCA03</keyMaterial>
+			</sharedKey>
+		</security>
+	</MSM>
+	<MacRandomization xmlns="http://www.microsoft.com/networking/WLAN/profile/v3">
+		<enableRandomization>false</enableRandomization>
+		<randomizationSeed>1635102998</randomizationSeed>
+	</MacRandomization>
+</WLANProfile>

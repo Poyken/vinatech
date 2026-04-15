@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<WLANProfile xmlns="http://www.microsoft.com/networking/WLAN/profile/v1">
+	<name>Chia tay di</name>
+	<SSIDConfig>
+		<SSID>
+			<hex>4368696120746179206469</hex>
+			<name>Chia tay di</name>
+		</SSID>
+	</SSIDConfig>
+	<connectionType>ESS</connectionType>
+	<connectionMode>auto</connectionMode>
+	<MSM>
+		<security>
+			<authEncryption>
+				<authentication>WPA2PSK</authentication>
+				<encryption>AES</encryption>
+				<useOneX>false</useOneX>
+			</authEncryption>
+			<sharedKey>
+				<keyType>passPhrase</keyType>
+				<protected>true</protected>
+				<keyMaterial>01000000D08C9DDF0115D1118C7A00C04FC297EB010000000BAA808151303A448AA39CFA1DAE71CE0000000002000000000010660000000100002000000011F8DD08ADD4EE60B8881AFE8B954606EFAF2A6FE59D973A98E1599E85848649000000000E800000000200002000000059CC6CE12490BCA775091E569468023284FAE6044873896586717C30C42617C11000000004FA8611CE87AC95B0A9823ECD5D86C540000000344E72A6D1924326BF4DDF8F8598108A36AAEF5482D7597B4B907FC6315E8CCC3C9CE25E3586BDE9861BABA799ABC97C49C18C4DCDBB945DF7D99A91D8B18572</keyMaterial>
+			</sharedKey>
+		</security>
+	</MSM>
+	<MacRandomization xmlns="http://www.microsoft.com/networking/WLAN/profile/v3">
+		<enableRandomization>false</enableRandomization>
+		<randomizationSeed>3568081916</randomizationSeed>
+	</MacRandomization>
+</WLANProfile>

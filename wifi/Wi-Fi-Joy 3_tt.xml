@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<WLANProfile xmlns="http://www.microsoft.com/networking/WLAN/profile/v1">
+	<name>Joy 3_tt</name>
+	<SSIDConfig>
+		<SSID>
+			<hex>4A6F7920335F7474</hex>
+			<name>Joy 3_tt</name>
+		</SSID>
+	</SSIDConfig>
+	<connectionType>ESS</connectionType>
+	<connectionMode>auto</connectionMode>
+	<MSM>
+		<security>
+			<authEncryption>
+				<authentication>WPA2PSK</authentication>
+				<encryption>AES</encryption>
+				<useOneX>false</useOneX>
+			</authEncryption>
+			<sharedKey>
+				<keyType>passPhrase</keyType>
+				<protected>true</protected>
+				<keyMaterial>01000000D08C9DDF0115D1118C7A00C04FC297EB010000000BAA808151303A448AA39CFA1DAE71CE00000000020000000000106600000001000020000000AA387A0DB006EE5ED50FB4E60FC80F747405D2DA62BE383964938AEA4601CFBE000000000E8000000002000020000000279B302D82850EAE04667145CAE4A65843A5E67742B727050BA80343138524C010000000F261A47EBB93B384C67685D08C27B81940000000FC8BE92B655285F89F85F0ACF3ADD269884DA74B7BCD66D31C74ADFA216BA448CEC6CA52F0E236B9D608440BF6720B1FA3965ABB9545B84E104DF4F4981A1BD9</keyMaterial>
+			</sharedKey>
+		</security>
+	</MSM>
+	<MacRandomization xmlns="http://www.microsoft.com/networking/WLAN/profile/v3">
+		<enableRandomization>false</enableRandomization>
+		<randomizationSeed>1940674680</randomizationSeed>
+	</MacRandomization>
+</WLANProfile>

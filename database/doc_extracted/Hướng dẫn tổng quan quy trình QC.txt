@@ -1,0 +1,16 @@
+﻿=== Hướng dẫn tổng quan quy trình QC.pptx ===
+
+--- ppt/slides/slide1.xml ---
+Các màn hình hiển thị dữ liệu Cấu hình hệ thống TÓM TẮT Tổng quan màn hình QC trên hệ thống MES
+
+--- ppt/slides/slide2.xml ---
+C121 Thiết lập các nhóm , hạng mục kiểm tra chung IQC-OQC C122 Thiết lập hạng mục kiểm tra riêng cho từng mã NVL C151 Thiết lập hạng mục kiểm tra riêng cho từng model IQC PQC C220 Kiểm tra NVL đầu vào (IQC) C512 Tạo lot kiểm tra theo model C530 Kiểm tra OQC C540 Lịch sử kiểm tra C530
+
+--- ppt/slides/slide3.xml ---
+C141 Thiết lập các nhóm , hạng mục kiểm tra chung PQC C443 Kiểm tra PQC B597 Nhập thông số ktra thường xuyên (SX) C430 Lịch sử kiểm tra PQC C143 Thiết hạng mục kiểm tra riêng cho từng model Click chọn thông số riêng lẻ bên C141 Mã TEST – các hạng mục của sản xuất , kiểm tra trên B597 Mã QUALITY – Các hạng mục của QC, kiểm tra trên C443
+
+--- ppt/slides/slide4.xml ---
+C132 Thiết lập các lỗi của QC và sản xuất trên công đoạn Các màn hình khác B530 Nhập lỗi trên từng công đoạn C385 Nhập báo cáo bất thường ( Báo cáo lỗi gửi về mail) C390 Xem lại báo cáo bất thường C385
+
+--- ppt/slides/slide5.xml ---
+Trang Tài nguyên Sử dụng các tài nguyên thiết kế này trong Bản thuyết trình Canva của bạn. Thiết kế vui vẻ! Xóa hoặc giấu trang này trước khi trình bày.

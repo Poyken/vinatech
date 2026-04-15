@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<WLANProfile xmlns="http://www.microsoft.com/networking/WLAN/profile/v1">
+	<name>Thoi</name>
+	<SSIDConfig>
+		<SSID>
+			<hex>54686F69</hex>
+			<name>Thoi</name>
+		</SSID>
+	</SSIDConfig>
+	<connectionType>ESS</connectionType>
+	<connectionMode>auto</connectionMode>
+	<MSM>
+		<security>
+			<authEncryption>
+				<authentication>WPA3SAE</authentication>
+				<encryption>AES</encryption>
+				<useOneX>false</useOneX>
+				<transitionMode xmlns="http://www.microsoft.com/networking/WLAN/profile/v4">true</transitionMode>
+			</authEncryption>
+			<sharedKey>
+				<keyType>passPhrase</keyType>
+				<protected>true</protected>
+				<keyMaterial>01000000D08C9DDF0115D1118C7A00C04FC297EB010000000BAA808151303A448AA39CFA1DAE71CE00000000020000000000106600000001000020000000ABC6024667931C980CA128A608F47AB171091B1220D2CC9BB9D9F37D06BCCA30000000000E800000000200002000000040C700761C7D449C10BB00E7E6CDF116FC3CA255D7BFC8262D732567DF1B2EFD1000000097E202FC3BC9F9A359CD825C96B3AAF34000000082997988E0B5A023022E5F2FA240094628FE69AB4949C50557A59E5CA841359012A97C5301A42B81380F8BAC2435D2BE738AA2F901484D6CFEC58C1CD967FE69</keyMaterial>
+			</sharedKey>
+		</security>
+	</MSM>
+	<MacRandomization xmlns="http://www.microsoft.com/networking/WLAN/profile/v3">
+		<enableRandomization>false</enableRandomization>
+		<randomizationSeed>258149189</randomizationSeed>
+	</MacRandomization>
+</WLANProfile>

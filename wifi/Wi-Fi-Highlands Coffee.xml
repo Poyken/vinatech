@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<WLANProfile xmlns="http://www.microsoft.com/networking/WLAN/profile/v1">
+	<name>Highlands Coffee</name>
+	<SSIDConfig>
+		<SSID>
+			<hex>486967686C616E647320436F66666565</hex>
+			<name>Highlands Coffee</name>
+		</SSID>
+	</SSIDConfig>
+	<connectionType>ESS</connectionType>
+	<connectionMode>auto</connectionMode>
+	<MSM>
+		<security>
+			<authEncryption>
+				<authentication>open</authentication>
+				<encryption>none</encryption>
+				<useOneX>false</useOneX>
+			</authEncryption>
+		</security>
+	</MSM>
+	<MacRandomization xmlns="http://www.microsoft.com/networking/WLAN/profile/v3">
+		<enableRandomization>false</enableRandomization>
+		<randomizationSeed>3882063821</randomizationSeed>
+	</MacRandomization>
+</WLANProfile>

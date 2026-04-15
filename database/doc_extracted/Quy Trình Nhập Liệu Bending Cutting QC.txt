@@ -1,0 +1,46 @@
+﻿=== Quy Trình Nhập Liệu Bending Cutting QC.pptx ===
+
+--- ppt/slides/slide1.xml ---
+Quy Trình nhập Liệu Created by EA Vietnam Bending/Cutting QC style.visibility
+
+--- ppt/slides/slide10.xml ---
+III.Tạo Lot kiểm tra ( C562 ) Bước 1: Dán Mã barcode vào và ấn tìm kiếm Bước 2: Thông tin Lot sẽ hiển thị bên dưới Bước 3: Ấn Tạo Lot Lưu ý: Mã barcode sẽ do bên sản xuất cung cấp cho QC
+
+--- ppt/slides/slide11.xml ---
+IV.kiểm tra sản phẩm theo từng mẫu ( C563 ) Nhập Mã barcode (1) , chọn Mã nhân viên (2) và ấn Tìm kiếm (3) Màn hình kiểm tra giống với C530
+
+--- ppt/slides/slide12.xml ---
+IV.kiểm tra sản phẩm theo từng mẫu ( C563 ) Bước 1: Chọn hạng mục cần kiểm tra Bước 2: Nhập Giá trị đo ở bảng bên phải Bước 3: Ấn nút lưu ở bảng bên phải Bước 4: Chọn kết quả Pass ở bảng bên trái Bước 5: Ấn nút lưu ở bảng bên trái Nhập giá trị đo : Lặp lại các bước với từng hạng mục kiểm tra
+
+--- ppt/slides/slide13.xml ---
+IV.kiểm tra sản phẩm theo từng mẫu ( C 563 ) Trường hợp thêm / sửa các hạng mục kiểm tra sản phẩm ở C561: Ấn nút Tổng hợp các hạng mục kiểm tra sản phẩm để cập nhật lại các giá trị đo từ đầu
+
+--- ppt/slides/slide14.xml ---
+IV.kiểm tra sản phẩm theo từng mẫu ( C563 ) Sau khi nhập xong giá trị , ấn Đánh giá OK sau đó ấn Lưu để hệ thống cập nhật kết quá
+
+--- ppt/slides/slide15.xml ---
+V.lịch sử kiểm tra sản xuất ( C564 ) Nhập Mã barcode (1) , chọn Mã địa điểm (2) và ấn Tìm kiếm (3)
+
+--- ppt/slides/slide2.xml ---
+Quy trình C121 Thiết lập các hạng mục kiểm tra chung C561 Các hạng mục kiểm tra riêng cho từng sản phẩm Thiết lập ban đầu C562 Tạo Lot kiểm tra C563 Kiểm tra các Lot C564 Lịch sử kiểm tra
+
+--- ppt/slides/slide3.xml ---
+I. Quản LÝ hạng mục / Nhóm kiểm tra 1. Màn hình sử dụng C121 Nếu không nhập Mã nhóm kiểm tra =&gt; Tìm kiếm tất cả nhóm hạng mục kiểm tra
+
+--- ppt/slides/slide4.xml ---
+2. Thêm thông tin mã nhóm kiểm tra
+
+--- ppt/slides/slide5.xml ---
+2. Sửa thông tin nhóm hạng mục
+
+--- ppt/slides/slide6.xml ---
+3. Xóa thông tin mã nhóm kiểm tra Thêm , sửa và xóa Hạng mục tương tự như Nhóm hạng mục Trường Mô tả thông số QC : nhập số lượng cần kiểm tra
+
+--- ppt/slides/slide7.xml ---
+II.Thiết lập Hạng mục theo từng MODEL( C561 ) 1. Tìm kiếm thông tin a) Tìm kiếm Mã nguyên liệu cần thiết lập sau đó click chọn (1) -&gt; Nhấn tìm kiếm Sau đó danh sách các hạng mục kiểm tra sẽ hiện ra (2)
+
+--- ppt/slides/slide8.xml ---
+Chọn trong Nhóm / Hạng mục kiểm tra Bước 1: Click tìm kiếm Bước 2: Chọn nhóm hạng mục Bước 3: Tick chọn các hạng mục cần thêm vào để kiểm tra Bước 4: Ấn nút OK Sau đó quay lại màn hình C561 và ấn Lưu II.Thiết lập Hạng mục theo từng MODEL( C561 )
+
+--- ppt/slides/slide9.xml ---
+Lưu ý Chỉnh sửa các thông số cho đúng với nguyên liệu cần kiểm tra Nếu không chỉnh sửa thì mặc định sẽ lấy thông số đã thiết lập ở C121 Khi đã thiết lập xong , ấn Lưu để cập nhật lên hệ thống II.Thiết lập Hạng mục theo từng MODEL( C561 )

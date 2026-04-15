@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<WLANProfile xmlns="http://www.microsoft.com/networking/WLAN/profile/v1">
+	<name>HaUI FREE</name>
+	<SSIDConfig>
+		<SSID>
+			<hex>486155492046524545</hex>
+			<name>HaUI FREE</name>
+		</SSID>
+	</SSIDConfig>
+	<connectionType>ESS</connectionType>
+	<connectionMode>auto</connectionMode>
+	<MSM>
+		<security>
+			<authEncryption>
+				<authentication>open</authentication>
+				<encryption>none</encryption>
+				<useOneX>false</useOneX>
+			</authEncryption>
+		</security>
+	</MSM>
+	<MacRandomization xmlns="http://www.microsoft.com/networking/WLAN/profile/v3">
+		<enableRandomization>false</enableRandomization>
+		<randomizationSeed>1632129145</randomizationSeed>
+	</MacRandomization>
+</WLANProfile>

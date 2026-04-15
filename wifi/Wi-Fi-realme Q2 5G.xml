@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<WLANProfile xmlns="http://www.microsoft.com/networking/WLAN/profile/v1">
+	<name>realme Q2 5G</name>
+	<SSIDConfig>
+		<SSID>
+			<hex>7265616C6D65205132203547</hex>
+			<name>realme Q2 5G</name>
+		</SSID>
+	</SSIDConfig>
+	<connectionType>ESS</connectionType>
+	<connectionMode>auto</connectionMode>
+	<MSM>
+		<security>
+			<authEncryption>
+				<authentication>WPA2PSK</authentication>
+				<encryption>AES</encryption>
+				<useOneX>false</useOneX>
+			</authEncryption>
+			<sharedKey>
+				<keyType>passPhrase</keyType>
+				<protected>true</protected>
+				<keyMaterial>01000000D08C9DDF0115D1118C7A00C04FC297EB010000000BAA808151303A448AA39CFA1DAE71CE000000000200000000001066000000010000200000006B7B5C916E07D54F717DDCC0AF0CEAD7EC22BA0EDC9B8439DFB94BDDBFA746A8000000000E8000000002000020000000AE79879949F2DD9E3067555B8DAD443F700CB00E621D6F2A1984A74114A19B741000000038EB1325D0478DD88DAF7B2CE9DE6F114000000066E12D91C9D566CCBC000F675C139E9C489615585FAA736915A9241BC1A96DAA53C9F3E983D4C8F6DF589845E1E626D1EE51981936CD1645AAE4C9FF9645B03A</keyMaterial>
+			</sharedKey>
+		</security>
+	</MSM>
+	<MacRandomization xmlns="http://www.microsoft.com/networking/WLAN/profile/v3">
+		<enableRandomization>false</enableRandomization>
+		<randomizationSeed>570277215</randomizationSeed>
+	</MacRandomization>
+</WLANProfile>

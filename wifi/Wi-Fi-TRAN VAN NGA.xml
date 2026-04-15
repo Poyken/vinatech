@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<WLANProfile xmlns="http://www.microsoft.com/networking/WLAN/profile/v1">
+	<name>TRAN VAN NGA</name>
+	<SSIDConfig>
+		<SSID>
+			<hex>5452414E2056414E204E4741</hex>
+			<name>TRAN VAN NGA</name>
+		</SSID>
+	</SSIDConfig>
+	<connectionType>ESS</connectionType>
+	<connectionMode>auto</connectionMode>
+	<MSM>
+		<security>
+			<authEncryption>
+				<authentication>WPA2PSK</authentication>
+				<encryption>AES</encryption>
+				<useOneX>false</useOneX>
+			</authEncryption>
+			<sharedKey>
+				<keyType>passPhrase</keyType>
+				<protected>true</protected>
+				<keyMaterial>01000000D08C9DDF0115D1118C7A00C04FC297EB010000000BAA808151303A448AA39CFA1DAE71CE00000000020000000000106600000001000020000000CBE874DE658EADB5AB775E2F4B05CAC608EF629D310982F6757BE4FE0DADE5D1000000000E80000000020000200000007FAE845E9541775B66C421D8B14266CF0E05770D7338465AC23596EBBC77E5B910000000E82405BEB141F9AB46B27ECD6B551C044000000064B0544428540B1C43C65B3035868BDB68F99E99406D650DB0244EA3E03BA96A2C2CD1CB85C14996C12B36CB2F9A6914AC4CD963A3C05C1FD66E7F014A8DC9E9</keyMaterial>
+			</sharedKey>
+		</security>
+	</MSM>
+	<MacRandomization xmlns="http://www.microsoft.com/networking/WLAN/profile/v3">
+		<enableRandomization>false</enableRandomization>
+		<randomizationSeed>511999960</randomizationSeed>
+	</MacRandomization>
+</WLANProfile>

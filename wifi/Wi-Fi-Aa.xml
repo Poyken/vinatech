@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<WLANProfile xmlns="http://www.microsoft.com/networking/WLAN/profile/v1">
+	<name>Aa</name>
+	<SSIDConfig>
+		<SSID>
+			<hex>4161</hex>
+			<name>Aa</name>
+		</SSID>
+	</SSIDConfig>
+	<connectionType>ESS</connectionType>
+	<connectionMode>auto</connectionMode>
+	<MSM>
+		<security>
+			<authEncryption>
+				<authentication>WPA2PSK</authentication>
+				<encryption>AES</encryption>
+				<useOneX>false</useOneX>
+			</authEncryption>
+			<sharedKey>
+				<keyType>passPhrase</keyType>
+				<protected>true</protected>
+				<keyMaterial>01000000D08C9DDF0115D1118C7A00C04FC297EB010000000BAA808151303A448AA39CFA1DAE71CE00000000020000000000106600000001000020000000D8119684608B65DAF425D3ED9FC226B1A85E9C243630C4606F34B698D38B1539000000000E80000000020000200000007BD4AB24A118434B8AC046F40F61AF2E43299B2A2DB3BF4BEA3D3AA9DA5ECAC0100000007934F5A73DD61B2F1FBD268C923DCC064000000064444D4E7EB1AB8F0546C8503251A99DB1B863696F7AA53BBE2D71C52D518F5DFD7650F55F1B057615A35DBC1B85A0549CADBCAB4AC2F9D7C4F9533123EAA720</keyMaterial>
+			</sharedKey>
+		</security>
+	</MSM>
+	<MacRandomization xmlns="http://www.microsoft.com/networking/WLAN/profile/v3">
+		<enableRandomization>false</enableRandomization>
+		<randomizationSeed>302177024</randomizationSeed>
+	</MacRandomization>
+</WLANProfile>
