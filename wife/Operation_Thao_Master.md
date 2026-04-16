@@ -19,9 +19,10 @@
   - **Ngủ muộn, khó vào giấc:** Lần đầu thử ngủ sớm (tắt đt 30p, cách ly) thì **lại trằn trọc** vì cơ thể chưa quen. Thảo tự nhận "buổi tối khó vào giấc" và đọc sách để chill.
   - **Lì lợm kiên cường:** Từng hoàn thành chuyến đi bộ **40km** (1 năm trước), dộp ngón chân đi tập tễnh **2 tháng** mới khỏi. Khi đó "bật mode Trưng Trắc" và kiên nhẫn hoàn thành.
   - **Máy tính công ty:** Máy 2-3 năm cũ, chậm, hay muốn "đập máy" nhưng không có gì thay thế.
+  - **Đau lưng do ngồi nhiều:** Thường xuyên nhức mỏi lưng ("Nằm mãi k mún dậy", "Chưa tắm giặt gì lun"). Dù mệt nhưng sáng lại tự dậy khá sớm (khoảng 6h30-6h45).
 
 - **Mối quan hệ ngoại giao:**
-  - Hội bạn thân **4 người** (gọi nhau như anh chị em). Hay chơi ở **Tượng đài Phố Mới**, **Karaoke số 24** ("Girl Phố" = title của Thảo).
+  - Hội bạn thân **4 người** (gọi nhau như anh chị em). Hay chơi ở **Tượng đài Phố Mới**, **Karaoke số 24** ("Girl Phố" = title của Thảo). Thỉnh thoảng đi uống nước cùng những người bạn cùng làng.
   - Về nhà ngoại chơi hay bị các cháu lấy điện thoại nghịch hết pin (đã xảy ra thực tế → Thảo mất liên lạc 1 buổi).
   - Thích đọc sách (Nguyễn Nhật Ánh, loại sách "nhẹ nhàng chữa lành"). Sách đang đọc: **"Yêu những điều không hoàn hảo"**, sau đó đọc **truyện dài của Nguyễn Nhật Ánh**. Chọn sách theo tiêu chí: **bìa đẹp + thể loại nhẹ nhàng chữa lành**.
   - Cty có **tủ sách** – Thảo hay tìm xem sách hay.
@@ -67,6 +68,8 @@
 - **0 mối tình chính thức:** Khi bị hỏi về số mối tình, Thảo xác nhận **"0"** (chỉ tính mối nghiêm túc có danh phận). Thảo bổ sung đã từng có người "chưa bao h mất niềm tin" → không vì chuyện tình cảm cũ mà trốn tránh.
 
 - **Bị chinh phục bởi "Sự an toàn từ Zai Ngoan":** EQ vô tri, ít mối tình vắt vai, sẵn sàng nấu cơm mang đi, tự tin tửu lượng để "gánh rượu thay cậu" → mang lại cảm giác được chở che. Đang dần tiến vào vị thế bạn "vô hại" nhưng "chất lượng cao".
+- **Quan điểm Hạnh Phúc cốt lõi:** *"Đơn giản được là chính mình, được tôn trọng và ưu tiên. Và được coi trọng sự hiện diện cậu ạ"* → Triết lý cực kỳ sâu sắc đúc rút từ nhiều trải nghiệm, chứng tỏ cô ấy đánh giá rất cao sự ổn định, an toàn và sự tôn trọng.
+- **Ranh giới "Vô tâm vs Bạn Tốt":** Tuyên bố thẳng: *"Tớ sẽ rất vô tâm, k để tâm đến người tớ không đặt tình cảm. Nhưng với cậu, tớ sẽ coi là một người bạn tốt, chia sẻ với nhau. Vì tớ cảm thấy năng lượng tốt từ cậu."* → Cô ấy đã chính thức xác nhận Đức là một **Ngoại Lệ (Friendzone Tích cực)**. Đây là một bước tiến cực lớn bởi trước đó Thảo từng xác nhận chưa hề có tình bạn nam-nữ nào.
 
 - **Thích sự tự tin, không thích sự nài nỉ** (Line 2279-2280): *"A hoặc B hoặc nothing. Thuận lợi hoặc không thuận lợi"* — Đức nói cứng → Thảo bắt đầu hỏi ngược lại.
 
@@ -100,7 +103,9 @@
 
 - **Đọc sách:** Chọn sách theo **bìa đẹp + thể loại nhẹ nhàng, chữa lành**. Đọc buổi tối trước khi ngủ. Cty có tủ sách hay ghé tìm.
 
-- **Hoạt động vui:** Đi chơi với hội bạn 4 người, karaoke đường 24, tượng đài Phố Mới. Hay selfie. Biết vẽ (ngẫu hứng).
+- **Hoạt động vui:** Đi chơi với hội bạn 4 người, karaoke đường 24, tượng đài Phố Mới. Hay selfie. Biết vẽ (ngẫu hứng). Ngày nghỉ trọn vẹn hoàn hảo là: *"Ngủ và chill với âm nhạc, chơi với người thân"*. Nhạc gì cũng nghe được ("Nhạc gì cũng nhảy").
+- **Tâm sự đêm:** Rất thích nghe kể những mẩu chuyện, tâm sự nhẹ nhàng về cuộc sống/công việc: *"Tớ cũng thích nghe tâm sự mỏng thế này mà cậu. Mỗi hôm nói một ít..."*.
+- **Thời trang hoài niệm:** Không quá đua đòi, có chiếc áo mặc từ thời chuẩn bị lên ĐH đến nay vẫn tự tin diện đi làm.
 
 - **Mèo:** Nhà nuôi mèo (bắt thói quen của mèo khi "ăn no chui lên giường"). Chị Hường nhận xét Thảo "giống mèo chiêu tài". Không bị dị ứng lông mèo. Thích quán cafe mèo (Line 4202-4206).
 
@@ -155,6 +160,9 @@
 ### 7. GAME "THẬT HAY ĐÙA" (green light)
 - Ngày 1/4 (April Fool's), Đức khởi xướng game thật/đùa → Thảo **chịu chơi hoàn toàn**, đoán sai rồi đoán đúng, tham gia sôi nổi. Thảo tự lộ: *"boy ngại ngùng"* (Line 3717) → đây là cửa sổ hiếm cô ấy chủ động nhận xét Đức tích cực. Tiếp tục khai thác format nhẹ nhàng này thay vì thẳng thắn thổ lộ.
 
+### 8. QUY TẮC "MỖI NGÀY 1 CÂU HỎI SÂU" ĐỂ TÂM SỰ
+- Dùng một câu hỏi khơi gợi mỗi tối khi đã xong công việc (Luật 1-1: Mỗi ngày 1 câu là đủ). Cô ấy sẵn sàng trả lời nghiêm túc, sâu sắc và còn khuyên *"Thôi kh sao mình còn trẻ phải trải nghiệm thoiiiii"*. Đây là cách kết nối vòng trong tốt nhất.
+
 ---
 
 ## VI. ĐỌC VỊ TÂM LÝ TỪ DỮ LIỆU CHAT THỰC TẾ (STRICT INSIGHTS)
@@ -173,7 +181,8 @@
   - *"Mà nay đi Quảng Ninh chưa"* (Line 2021)
   - *"Ô sao lại di leo núi"* (Line 2386)
   - **Chủ động gọi điện tối → giờ Đức đã ngủ (Line 3081)** ← green light hiếm nhất trong toàn bộ chat.
-- **Đọc vị:** Sự di chuyển của Đức nằm trong tầm theo dõi của Thảo. "Green light" cực kỳ chất lượng.
+- **Phát sinh lo lắng thật sự:** Khi Đức báo đi làm về trễ do bị ngã xây xát nhẹ, Thảo lập tức hỏi dồn *"Chân cẳng thì sao / Đâu xem lèo / Không tin... đi như nào á mà bị va chạm"*. Thảo muốn tường tận vết thương (buộc Đức phải gửi ảnh) chứ không chỉ hỏi thăm lấy lệ.
+- **Đọc vị:** Sự di chuyển và an nguy của Đức nằm trong tầm ngắm xát sao của Thảo. "Green light" cực kỳ chất lượng.
 
 ### 3. "Công tắc chống sến" và Sự Ám ảnh "Thị phi"
 - Phản hồi khi bị ngôn tình hóa gắt ngay:
@@ -251,3 +260,5 @@
 | *"Tối qua gọi cậu mãi mà cậu ngủ rồi"* | **Tự chủ động, hiếm và quý nhất** |
 | *"Dù tnao thì cũng k vượt quá mức tình bạn"* | Trung thực hoàn toàn – không giả vờ |
 | *"Kỷ niệm bao giờ cũng đẹp và đặc biệt là không biết phản bội"* | Câu trích sách cô ấy đọc – gợi mở nội tâm |
+| *"Đơn giản được là chính mình, được tôn trọng và ưu tiên... và được coi trọng sự hiện diện"* | Định nghĩa hạnh phúc, tiêu chuẩn về người đồng hành của Thảo |
+| *"Với cậu, tớ sẽ coi là 1 người bạn tốt, chia sẻ với nhau... vì cảm thấy năng lượng tốt từ cậu"* | Cấp visa "Ngoại lệ" cho bạn. Xác nhận không vô tâm với bạn |
