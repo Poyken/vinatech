@@ -1,0 +1,26 @@
+NAME,DEPARTMENT,DATE GET ISSUE,NAME ISSUE,THE SOLVE,TYPE ISSUE,DATE SOLVE ISSUE,SOLVE ISSUE BY,STATUS,REMARK
+Nguyen Van Duc,EA Team,13/4/2026,Weekly Meeting,Họp đầu tuần.,Meeting,13/4/2026,Nguyen Van Duc,Done,Internal
+Nguyen Van Duc,EA Team,13/4/2026,Hardware Support,"Check lỗi hardware cho chị Thảo Phương và anh Bách.",Support,13/4/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,13/4/2026,Network Support,Support mạng của user.,Support,13/4/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,13/4/2026,ESR Maintenance,Xử lý dây ESR bị lỗi.,Support,13/4/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,13/4/2026,Machine Diagnosis,Check tình trạng máy aging phân cấp không thể làm được.,Research,13/4/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,13/4/2026,ESR Setup,Cài và setup ESR cho user.,Support,13/4/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,13/4/2026,Network Infrastructure,Thay switch mới cho tủ mạng.,Support,13/4/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,13/4/2026,Network QA,Check các lỗi mạng và đảm bảo mạng nhà máy.,Support,13/4/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,14/4/2026,Production Meeting,Họp về lỗi lẫn vỏ nhôm.,Meeting,14/4/2026,Nguyen Van Duc,Done,Internal
+Nguyen Van Duc,EA Team,14/4/2026,Task Research,Tìm hiểu dev task của anh Luân.,Research,14/4/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,14/4/2026,Printer Support,"Support user kết nối máy in (Anh Tâm).",Support,14/4/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,14/4/2026,Wifi Setup,Setup wifi nhà máy.,Support,14/4/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,14/4/2026,Equipment Support,Bàn giao thiết bị cho sản xuất.,Support,14/4/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,14/4/2026,MES Research,Tìm hiểu về MES.,Research,14/4/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,15/4/2026,User Support,Support user.,Support,15/4/2026,Nguyen Van Duc,Done,HW/SW
+Nguyen Van Duc,EA Team,15/4/2026,Network Configuration,Config 3 wifi.,Support,15/4/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,15/4/2026,Asset Support,Thu và cấp đồ cho user.,Support,15/4/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,15/4/2026,MES Support,Support MES cho anh Trịnh Tấn Nhiệm.,Support,15/4/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,15/4/2026,Wifi Deployment,Gắn QR device cho wifi trong các phòng.,Support,15/4/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,15/4/2026,Network Optimization,Đồng nhất wifi xưởng 10%.,Support,15/4/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,16/4/2026,MES Support,Support user fix bug ở MES.,Dev,16/4/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,16/4/2026,Machine Research,Thu nhập thông tin về máy aging phân cấp cỡ trung cùng anh Trường.,Research,16/4/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,16/4/2026,Network Troubleshooting,Sửa lỗi mạng nghi vấn do suy hao switch.,Support,16/4/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,16/4/2026,Production Support,Hỗ trợ user trong quá trình sản xuất.,Support,16/4/2026,Nguyen Van Duc,Done,HW/SW
+Nguyen Van Duc,EA Team,16/4/2026,Wifi Maintenance,Đồng nhất thông tin của các thiết bị wifi trong nhà xưởng.,Support,16/4/2026,Nguyen Van Duc,Done,HW
