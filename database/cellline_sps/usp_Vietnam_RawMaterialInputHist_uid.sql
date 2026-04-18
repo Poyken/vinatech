@@ -1,4 +1,4 @@
-﻿-- =============================================
+-- =============================================
 -- Author : Mr.Tung
 -- Date: 06-15-2021
 
@@ -1819,6 +1819,13 @@ declare @cterminal1			nVARCHAR(300)='',
 					  set @count = 1;
 					end
 			    --end for 1035
+
+                --update for 1025
+				if(@materialCodeCheck IN ('ECVT30-270') and @rawMaterialCheck IN ('CRCEK0-266'))
+				    begin
+					  set @count = 1;
+					end
+			    --end for 1025
 
 				-- end update
 
