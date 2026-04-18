@@ -1,8 +1,8 @@
 # 🏭 VINATECH MES — Complete Data Flow Documentation
 > **Nguồn dữ liệu:** Phân tích trực tiếp từ Stored Procedure trong database production  
 > **Server:** `dbserver.hycap.co.kr,5398` | **Database:** `SmartFactoryV2`  
-> **SP đã xác minh:** 21/22 SP (1 SP không tìm thấy: `usp_ExportWarehouseFinshGood_RD_HN_uid`)  
-> **Cập nhật:** 2026-04-14
+> **SP đã xác minh:** 24+ SPs (Bao gồm cả các SP cấu hình Master, Routing và Kế hoạch sản xuất tự động)  
+> **Cập nhật:** 2026-04-18
 
 ---
 
@@ -777,13 +777,15 @@ flowchart TD
 | `STB_IQcDefectReport` | Chi tiết lỗi IQC |
 | `STB_NCR_REPORT` / `STB_NCR_Report` | Non-Conformance Report |
 
-### 🔄 SP: `usp_RawMaterialInputHist_iud`
+### 🔄 SP: `usp_RawMaterialInputHist_iud` & `usp_Vietnam_RawMaterialInputHist_uid`
 
 **Logic (từ source code đã phân tích):**
-- Ghi nhận phiếu nhập nguyên vật liệu
+- Ghi nhận phiếu nhập nguyên vật liệu (bao gồm luồng chốt kiểm tra VET/IQC).
+- Lấy thông tin Hạn sử dụng (`MMExtInt01` - Shelf Life) từ `STB_MaterialMaster` để đối chiếu với hạn gốc hoặc cảnh báo Lot sắp hết đát.
 - Kiểm tra VET (điện phân đặc biệt): nếu `MaterialCode` thuộc nhóm VET → validate thêm điện áp
 - INSERT vào `STB_RawMaterialInputHist`
-- Tạo `STB_MaterialLotInfo` với `InitialQty` và `CurrentQty` = số lượng nhập
+- Tạo `STB_MaterialLotInfo` với `InitialQty` và `CurrentQty` = số lượng nhập.
+*(Lưu ý: Mặc định Hệ thống cũ dùng `LotAttr10` làm Ngày Sản Xuất để F330/B597 tính hạn — Sắp tới sẽ chuyển sang cơ chế Roadmap 4-Layer khai báo Date độc lập).*
 
 ### 🔄 SP: `usp_MaterialQcInfo_iud`
 
@@ -897,9 +899,16 @@ flowchart TD
 ---
 
 <a name="phase-25"></a>
-## Phase 2.5 — Lập Kế Hoạch & Chuẩn Bị Sản Xuất ⚠️ (Bước bị thiếu trong tài liệu cũ)
+## Phase 2.5 — Lập Kế Hoạch & Chuẩn Bị Sản Xuất
 
-> **Mục đích:** Đây là bước **nối giữa Master Data (Phase 0) và sản xuất thực tế (Phase 3)**. Bộ phận kế hoạch tạo lệnh sản xuất ngày, copy BOM + Route vào lệnh, sinh barcode cho từng sản phẩm. Các bước này **KHÔNG nằm trong 21 SP đã phân tích** — chúng được thực hiện qua UI MES hoặc SPs riêng. Tuy nhiên, các bảng tạo ra ở đây là INPUT bắt buộc cho Phase 3.
+> **Mục đích:** Đây là bước **nối giữa Master Data (Phase 0) và sản xuất thực tế (Phase 3)**. Bộ phận kế hoạch tạo lệnh sản xuất tự động hằng ngày, thiết lập Route vào lệnh, và sinh mã QR/barcode (`ControlNo` qua `SetInfo`) cho từng sản phẩm bằng các SP chuyên dụng.
+
+### 🔄 Tự động hóa qua DB Schedule (Jobs)
+- SP `usp_Prod_Daily_Input_Schedule_iud`: Thực thi hằng ngày lúc 08:31. Nó quét từ `StartDate` đến `EndDate` và gọi đệ quy các SP chuyên dụng (ví dụ: `usp_Medium_Daily_Input`) để chốt chỉ tiêu input nguyên liệu và sản xuất cho các Line (E-22 -> E-28, V-22 -> V-28...).
+
+### 🔄 SP Cấu hình dữ liệu nền (UI Actions)
+- **`usp_ProductionOrderRouting_iud`**: Quá trình thiết lập Tuyến gia công (Route) cho một lệnh sản xuất (PO). Lưu cấu hình các trạm ưu tiên như `IsInputRoute` (Trạm bắt đầu) và `IsOutputRoute` (Trạm kết thúc) bằng cách parsing cấu trúc XML từ Client qua `OPENXML` và lưu với dạng `MERGE INTO`. UID sẽ tự động sinh bởi `SmartFramework.dbo.usp_GetSerialRule`.
+- **`usp_SetInfo_iud`**: "Khai sinh" định danh thực thể gốc (`ControlNo`) cho từng viên Tụ/sản phẩm, đóng vai trò như vé lưu hành/passport trong toàn bộ hệ thống. Dữ liệu này được cấp trước (với `IsLineInput=0`) và cập nhật chốt trạng thái đóng Lot (`IsProdFinish=1`) ở bước cuối cùng Phase 3. Tương tự, nó dùng `OPENXML` để upsert khối cấu hình khổng lồ xuống database từ UI.
 
 ### 📊 Tables được tạo ra tại bước này
 
@@ -991,6 +1000,16 @@ DECLARE @TimeCode VARCHAR(2)  = SUBSTRING(@ShiftTime, 10, 2)
 | `STB_MaterialDocLotInfo` | Lot được dùng trong chứng từ GR |
 | `STB_LineInfo` | Thông tin dây chuyền: LineCode, CompanyCode (VNT/VVT) |
 | `STB_ProcedureLog` | Audit trail mọi thực thi |
+
+### 🔄 SP: `usp_CheckInputRawMaterialCodeForProduct` (Tiền kiểm tra BOM & Marking)
+
+**Khóa cổng (Validation Gate) tại màn hình Winding/Assembly:**
+SP này đứng gác tại các trạm quét barcode. Nếu thao tác viên chưa quét nạp đủ nguyên liệu thành phần (NVL) theo BOM vào trạm, hệ thống sẽ chặn không cho route.
+1. Lấy `BomVersion` của lệnh SX từ `STB_DayProdPlan` và `STB_SetInfo`.
+2. Kiểm tra `STB_BomDetail` lấy danh sách vật tư Route cần chuẩn bị.
+3. Đối chiếu lượng đã cấp thực tế trong `STB_RawMaterialInputHist`.
+4. Nếu chưa đủ → `RAISERROR('Công đoạn của bạn chưa nhập đủ nguyên vật liệu')`.
+5. Nếu Route = `VE06`, kiểm tra bảng `STB_CreateMarkingLetter...` ở `HN541` (Nếu bỏ sót tem Marking → RAISERROR).
 
 ### 🔄 SP: `usp_DoProcessProdRouteHist` ⭐ (Core Production SP)
 
@@ -1270,6 +1289,9 @@ Hệ thống sử dụng file định mức cố định (hardcoded) dựa trên
 
 | Stored Procedure | Tables READ | Tables WRITE | Logic Pattern |
 |-----------------|-------------|--------------|---------------|
+| `usp_Prod_Daily_Input_Schedule_iud` | — | Exec hệ thống SP nhánh (`usp_Medium_Daily_Input`) | Job Schedule Hằng Ngày |
+| `usp_ProductionOrderRouting_iud` | — | **MERGE** STB_ProductionOrderRouting | MERGE+OPENXML |
+| `usp_SetInfo_iud` | — | **MERGE** STB_SetInfo | MERGE+OPENXML |
 | `usp_BomHeader_iud` | BomHeader, UserInfo | **MERGE** BomHeader; UPDATE BomDetail | MERGE+OPENXML+CURSOR |
 | `usp_BomDetail_iud` | BomDetail | **MERGE** BomDetail | MERGE+OPENXML+CURSOR |
 | `usp_RouteInfo_iud` | RouteInfo | **MERGE** RouteInfo | MERGE+VET+OPENXML+CURSOR |
@@ -3984,13 +4006,31 @@ SET RequestQty = [sl_đúng], AllowQty = [sl_đúng], PickingAssignQty = [sl_đ�
 WHERE MaterialDocNo = 'mã_doc' AND MaterialCode = 'mã_nvl'
 ```
 
-## F330 — Nhập Kho + Tạo Tem
+## F330 — Nhập Kho + Tạo Tem (Kèm Nâng cấp Tracking Lot Expiration)
+
+Tại màn hình F330, nguyên vật liệu (LotID) được khởi tạo quy cách và cấp thông số. Logic in Label (`usp_DoCreateLabel`) sẽ chịu trách nhiệm sinh Barcode cho túi hàng.
 
 ```sql
--- 1. Xem Lot đã tạo từ F330
+-- 1. Xem Lot đã tạo từ F330 (Cơ chế Hiện tại/Cũ)
 SELECT l.LotID, l.MaterialCode, l.Quantity, l.ExpiredDate, l.MaterialWarehouseCode,
-       l.LotExtText10  -- Đặc tính 10 (số Lot No từ EA)
+       l.LotAttr10  -- (Lưu ý: Trước đây dùng field này để ngụy trang Manufacturing Date)
 FROM STB_MaterialLotInfo l
+```
+
+### 🛣️ Technical Roadmap for Lot Expiration (4-Layer Implementation Plan)
+Nhằm giải quyết triệt để rủi ro sai sót kiểm soát hạn sử dụng (Shelf Life), một quy trình **Tracking Ngày Sản Xuất (Mfg) và Hạn Sử Dụng (Exp)** đã được thiết lập mới bao gồm 4 Layer:
+
+1. **Layer 1: Database (Lưu Trữ)**
+   - Thực thi `ALTER TABLE STB_MaterialLotInfo ADD ProductionDate DATETIME, ExpirationDate DATETIME`. Xóa bỏ việc lạm dụng ngầm định cột phụ `LotAttr10` / `LotExtText10`.
+2. **Layer 2: Stored Procedures (Data Logic)**
+   - Cập nhật `usp_DoCreateLabel` và `usp_DoCreateLabelManual` để tiếp nhận trực tiếp 2 thông số `@pProductionDate`, `@pExpirationDate` từ UI và `INSERT` lưu cứng vào tables.
+   - Sửa `usp_MaterialDocLotInfo_get` thay vì tự cộng ngày ẩn (`DATEADD(DAY, MM.MMExtInt01*30, MDLI.Lotattr10)`) thì gọi Select thẳng hai trường Date này độc lập.
+3. **Layer 3: UI (Màn hình F330 / B597)**
+   - Tích hợp 2 công cụ **DateTimePicker Controls** cho "Production Date" và "Expiration Date", buộc User (Công nhân Kho nhập) nhập và check trực quan thay vì hệ thống auto-fill chìm ẩn rủi ro logic.
+4. **Layer 4: In tem (Labeling Layer)**
+   - Chỉnh sửa file template in `.lbl` (Bartender) hoặc mã nguồn **ZPL code** trực tiếp do MES truyền xuống để map thẳng đến field Database, giải phóng công đoạn phải cắt hàm `SUBSTRING` ngày tháng trên nhãn.
+
+```sql
 WHERE l.MaterialDocNo = 'mã_doc'
 
 -- 2. Lot không có "đặc tính 10" (LotExtText10 is NULL) → vào kho Holding
@@ -4182,3 +4222,595 @@ BƯỚC 6 — Cấu hình Slitting (nếu là model điện cực mới)
 *Đợt bổ sung 3 — Cập nhật 2026-04-13. Thêm B530 SP chi tiết, B528, B802, B598 từ ảnh màn hình.*  
 *Thêm: Module Line flow, FIFO/HOLD management, SQL Cheat Sheet QC/Kho/Điện cực, Quick Start Guide.*  
 *Tổng màn hình đã có tài liệu: **77 màn hình**, 3.800+ dòng documentation.*
+
+---
+
+<a name="deep-core-analysis"></a>
+# 🔬 PHÂN TÍCH SÂU CỐT LÕI HỆ THỐNG (Deep Core Analysis — 2026-04-18)
+
+> **Phương pháp:** Đọc từng dòng source code thực tế từ 10+ SP quan trọng nhất.  
+> **Mục đích:** Giải thích BẢN CHẤT THÂM SÂU của hệ thống — những gì không thấy trên UI, không có trong document cũ.  
+> **Người đọc mục tiêu:** Developer/IT muốn hiểu tại sao hệ thống hoạt động như vậy, không chỉ biết nó làm gì.
+
+---
+
+## 🧠 I. DNA CỦA HỆ THỐNG — 5 Triết Lý Thiết Kế Cốt Lõi
+
+### Triết lý 1: "Database là não, UI chỉ là tay"
+
+Hầu hết các hệ thống MES phương Tây nhúng business logic vào application layer (C#, Java). NAIS làm ngược lại: **toàn bộ logic nghiệp vụ nằm trong Database**. Điều này có nghĩa:
+
+- Khi bấm nút "Hoàn thành" tại B530 → UI chỉ đọc tên SP từ `SmartFramework.STB_ScreenObjects` rồi gọi nó.
+- SP tự tính toán, tự validate, tự write. UI không biết gì về kết quả.
+- **Hệ quả:** Developer không cần deploy lại phần mềm khi thay đổi quy tắc nghiệp vụ. Sửa SP = sửa logic. Nhưng cũng có nghĩa là rất khó test và debug nếu không có quyền DB.
+
+### Triết lý 2: "Barcode là passport, Routing History là visa stamp"
+
+```
+Một viên tụ điện = Một "người" đi qua hải quan quốc tế.
+- ControlNo/Barcode = Số hộ chiếu (không đổi suốt đời)
+- STB_SetInfo = Sổ hộ chiếu (IsLineInput, IsProdFinish)
+- STB_ProdRouteHist = Visa stamp tại từng điểm
+- STB_ProductionOrderRouting = Danh sách cửa khẩu phải qua
+- Bỏ qua trạm = Vi phạm xuất nhập cảnh → bị chặn vĩnh viễn
+```
+
+**Bằng chứng từ source code** (`usp_DoProcessProdRouteHistForCalc_SmartApp_VNT.sql`, dòng 158-177):
+```sql
+SELECT TOP 1
+    @AftRouteCode = APOR.RouteCode,
+    @IsOutputRoute = APOR.IsOutputRoute,
+    @RouteIndex = POR.RouteIndex
+FROM STB_SetInfo SI
+INNER JOIN STB_ProductionOrderRouting POR ON POR.PONo = SI.PONo AND POR.RouteCode = @RouteCode
+INNER JOIN STB_ProductionOrderRouting APOR ON APOR.PONo = SI.PONo AND APOR.RouteIndex > POR.RouteIndex
+WHERE SI.Barcode = @Barcode
+ORDER BY APOR.RouteIndex  -- Lấy bước TIẾP THEO theo thứ tự RouteIndex
+```
+→ Hệ thống tự động tìm công đoạn `N+1` từ `RouteIndex`. Không cần config thủ công "bước này đến bước nào" — chỉ cần RouteIndex tăng dần là đủ.
+
+### Triết lý 3: "Validation tại Database, không phải UI"
+
+B597 có 3 cổng chặn cứng và 1 cơ chế bypass. Từ source code thực tế (`usp_Vietnam_RawMaterialInputHist_uid.sql`):
+
+```
+CỔng 1: HOLD Check
+  → exec usp_VVT_checkHOLD_Material @lotid=@pRawMaterialBarcode
+  → exec usp_VVT_checkHOLD_Material @lotid=@pLotID_Warehouse_Created
+  → 2 lần check: cả Barcode NVL lẫn LotID kho
+
+CỔng 2: Expiry Date Check  
+  → Lấy LotAttr10 từ stb_materialdoclotinfo (KHÔNG phải STB_MaterialLotInfo!)
+  → Công thức: DATEADD(DAY, (MMExtInt01 * 30) + (MMExtInt01/12*6), LotAttr10) < GETDATE()
+  → Lưu ý: Formula nhân 30 ngày/tháng + bonus 6 ngày per năm (điều chỉnh lịch)
+  → Bypass: stb_vvt_OpenExpiredMaterial.OpenExpired = 1
+
+CỔng 3A: NVL loại TERMINALP/TERMINALM (Tancha)
+  → Đọc bảng stb_vvt_materialbo (KHÔNG phải STB_BomDetail toàn cầu!)
+  → Match: MaterialName LIKE '%+(+)%' cho dương, '%(-)%' cho âm
+  → Kiểm tra 10 ký tự đầu barcode = mã Tancha đúng không?
+
+CỔng 3B: NVL loại ELECTROLYTE (Dung dịch)
+  → Tương tự nhưng match electrolyte field trong stb_vvt_materialbo
+  → Kiểm tra 10 ký tự đầu barcode = mã điện giải đúng không?
+
+CỔng 3C: NVL loại SLEEVE (Vỏ bọc)
+  → Verify @pRawMaterialBarcode thuộc ProductGroup = 'SLEEVE'/'MODULESLEEVE'
+  → Kiểm tra MaterialMaster.ProductGroupCode thông qua JOIN
+```
+
+### Triết lý 4: "Tồn kho được tính trong lúc chạy, không phải lưu sẵn"
+
+SP `usp_vvt_MaterialLotInfo_get` (F721) **tính hạn sử dụng real-time** mỗi lần load màn hình, thay vì lưu vào một field `ExpiredDate` cố định. Từ source code (dòng 262-285):
+
+```sql
+dateadd(day,
+    CASE WHEN MDLI.MaterialCode = 'MDFLUX-002' 
+         THEN (MM.MMExtInt01*30)-1  -- Logic đặc biệt cho MDFLUX-002 (chỉ 179 ngày thay vì 180)
+         ELSE (CONVERT(INT, ISNULL(MMExtInt01, 3)) * 30)  -- Mặc định 3 tháng nếu chưa cấu hình
+    END,
+    -- Validate ngày tháng năm đầu vào rất phức tạp (15 điều kiện kiểm tra format)
+    CASE WHEN len(LotAttr10)=10 AND LotAttr10 like '20%' AND ... 
+         THEN LotAttr10  -- Dùng LotAttr10 nếu đúng format YYYY-MM-DD
+         ELSE mdi.BasicDate  -- Fallback về BasicDate của chứng từ
+    END
+) AS EffectDate
+```
+
+**Phát hiện quan trọng:** Có 3 trạng thái tồn kho theo ngày:
+- `'Safe'`: Hạn dùng > 30 ngày
+- `'Warning'`: Hạn dùng < 30 ngày (15 ngày nếu là Coating/Slitting Roll NVL)
+- `'Expired'`: Đã hết hạn
+
+**Logic Warning khác nhau theo ProductGroup:**
+```sql
+CASE WHEN mm.ProductGroupCode LIKE '%coat%roll%' OR mm.ProductGroupCode LIKE '%slit%roll%' 
+     THEN 15  -- Ngưỡng cảnh báo 15 ngày cho điện cực cuộn
+     ELSE 30  -- Ngưỡng cảnh báo 30 ngày cho NVL thông thường
+END
+```
+
+### Triết lý 5: "Audit Trail không thể xóa, không thể sửa"
+
+`STB_ProcedureLog` là "camera không bao giờ tắt". Mỗi lần SP quan trọng chạy đều INSERT vào bảng này với:
+- `@pProcessUserID`: Ai làm
+- `@pBarcode`/`@pLotID`: Làm với cái gì
+- `GETDATE()`: Làm lúc nào
+- Parameters đầy đủ: Làm gì với thông số nào
+
+**Điều này có nghĩa:** Khi người dùng khiếu nại "tôi không làm", bạn có thể trace lại chính xác thao tác của họ.
+
+---
+
+## 🔄 II. LUỒNG DỮ LIỆU THỰC TẾ TỪ SOURCE CODE
+
+### 2.1 Luồng chính tại B530 (Chi tiết từng bước)
+
+Khi OP bấm "Hoàn thành thực hiện" tại B530, `usp_DoProcessProdRouteHistForCalc_SmartApp_VNT` thực thi theo luồng sau:
+
+```
+[BƯỚC 1] Lấy WorkCenterCode của Route đang xử lý
+  → SELECT WorkCenterCode FROM STB_RouteInfo WHERE RouteCode = @RouteCode
+
+[BƯỚC 2] GATE ĐIỆN CỰC (chỉ cho VVT_F1/F2 tại V-22/V-22_BG)
+  IF WorkCenterCode IN ('VVT_F1','VVT_F2') AND RouteCode IN ('V-22','V-22_BG')
+  → EXEC usp_CheckInputElectrodeInputForCodeProduct
+  (Kéo từ tbl_SlittingStock: YP=dương, BY=âm đã scan chưa?)
+
+[BƯỚC 3] GATE NVL HÀ NAM (chỉ cho VVT_F3 tại VE06)
+  IF Barcode LIKE 'VE%' AND WorkCenterCode = 'VVT_F3' AND RouteCode = 'VE06'
+  → EXEC usp_CheckInputRawMaterialCodeForProduct
+
+[BƯỚC 4] GATE PQC HÀ NAM (chỉ cho VVT_F3 tại VE01/VE04/VE08/VE03)
+  IF Barcode LIKE 'VE%' AND WorkCenterCode = 'VVT_F3' AND RouteCode IN (...)
+  → EXEC usp_CheckPQCInputForProductHistForBarcode
+
+[BƯỚC 5] Kiểm tra Lot bị đóng
+  SELECT DPPExtText01 FROM STB_DayProdPlan WHERE DayPlanNo = SI.DayPlanNo
+  IF DPPExtText01 = '1' → RAISERROR 'Đã chốt không nhập được'
+
+[BƯỚC 6] Xóa dữ liệu trung gian cũ
+  DELETE FROM STB_InterimProdQtyInfo WHERE ControlNo = @ControlNo AND RouteCode = @RouteCode
+
+[BƯỚC 7] Tìm route TIẾP THEO
+  SELECT TOP 1 AftRouteCode, IsOutputRoute, ...
+  FROM STB_ProductionOrderRouting ... ORDER BY RouteIndex ASC
+
+[BƯỚC 8] GATE 20 PHÚT (chỉ VNT, không phải E-25, E-23)
+  IF CompanyCode = 'VNT' AND SIExtInt01 IS NULL AND RouteIndex > 1
+  → Kiểm tra DATEDIFF(minute, LastScanned, NOW()) > 20
+  IF < 20 phút → RAISERROR 'Phải đợi 20 phút'
+
+[BƯỚC 9] GATE BẮT BUỘC MÁY
+  IF MachineCode = '' AND RouteCode IN (SELECT RouteCode FROM STB_RouteInfo WHERE IsRequireMachine=1)
+  → RAISERROR 'Phải nhập mã máy'
+
+[BƯỚC 10] GATE PO KHÔNG CÒN ROUTE
+  IF PONo IS NULL AND CompanyCode = 'VNT' → RAISERROR 'Routing không có trong PO'
+  IF PONo IS NULL AND CompanyCode = 'VVT' → RAISERROR 'Routing này không có trong PO'
+  (LỖI THƯỜNG THẤY: "Routing này không có trong PO (Phần Routing sản xuất)")
+
+[BƯỚC 11] Nếu là BƯỚC ĐẦU (IsInputRoute=1)
+  → SET LineCode = PlanLineCode (từ DayProdPlan, không lấy từ SetInfo)
+  → EXEC usp_DoProcessProdRouteHist_VNT (ghi record thực sự)
+  
+[BƯỚC 12] Tính lại ProdQty sau bước đầu
+  SELECT @ProdQty = SUM(ProdQty) FROM STB_ProdRouteHist WHERE ControlNo=... AND RouteCode=...
+  IF ProdQty <= 0 → RAISERROR 'Lỗi bước đầu'
+
+[BƯỚC 13] Kiểm tra bước KẾ TIẾP đã xử lý chưa
+  SELECT @AftProdQty FROM STB_ProdRouteHist WHERE RouteCode = @AftRouteCode
+  IF AftProdQty <> 0 → RAISERROR 'Đã hoàn thành công đoạn tiếp theo rồi'
+  (ĐÂY LÀ LÝ DO "đã hoàn thành thực tế rồi")
+
+[BƯỚC 14] Nếu KHÔNG phải bước cuối (IsOutputRoute=0)
+  → @ProdQty = ProdQty - DefectQty (trừ hàng lỗi)
+  → EXEC usp_DoProcessProdRouteHist_VNT với @AftRouteCode (ghi record bước tiếp)
+  → Kiểm tra AftProdQty sau khi ghi > 0 (nếu = 0 và không phải E-33 → lỗi)
+
+[BƯỚC 15] Cập nhật dữ liệu bổ sung
+  UPDATE STB_ProdRouteHist SET WorkerCode, MachineCode, ProdDateTime, CompleteRoute='1'
+  UPDATE STB_SetInfo SET SIExtText07 = @MarkingLetter (mã đánh dấu Lot)
+  UPDATE STB_SetInfo SET SIExtInt02 = @IntrinsicQty (số lượng phá hủy kiểm tra)
+
+[BƯỚC 16] Kiểm tra thời gian Aging (chỉ EM-02)
+  IF RouteCode = 'EM-02'
+  → Lấy ProdDateTime của EM-01
+  → IF DATEDIFF(hour, PrevTime, NOW()-3h) < 12 → RAISERROR 'Aging < 12 giờ'
+
+[BƯỚC 17] Ghi Takt Time (chỉ VVT)
+  IF CompanyCode = 'VVT'
+  → EXEC usp_DoCreateTaktTimeForRoute
+```
+
+### 2.2 Luồng B597 — Validation NVL (Chi tiết từng dòng)
+
+**Điều ít người biết:** SP `usp_Vietnam_RawMaterialInputHist_uid` có 6 lớp logic validation chứa hàng nghìn dòng code. Điểm nhánh đầu tiên:
+
+```sql
+-- Dòng 104-105: Phân chia nhà máy BG2 ra riêng
+IF @checkWorkCenterCode NOT IN ('VVT_F4')
+BEGIN
+    -- Hầu hết logic (cho BG1, BN, HN)
+END
+ELSE
+BEGIN
+    -- Logic đặc biệt cho BG2 (K109)
+END
+```
+
+**Cơ chế chain barcode** (dòng 42-76): Hệ thống theo dõi lịch sử đổi barcode đến 6 cấp:
+```sql
+SELECT @LotNonew1 = NewBarcode FROM STB_LotChangeMaterialHistory WHERE OldBarcode=@pBarcode
+SELECT @LotNonew2 = NewBarcode ... WHERE OldBarcode=@LotNonew1
+SELECT @LotNonew3 = ... -- Và tiếp tục đến @LotNonew6
+-- Sau đó JOIN STB_SetInfo với IN (@pBarcode, @LotNonew1, ..., @LotNonew6)
+```
+→ Khi một Barcode đã đổi 6 lần, hệ thống vẫn tìm được sản phẩm gốc. Đây là cơ chế traceability cho hàng đổi mã.
+
+**Trích xuất ModelSize** (dòng 322-324):
+```sql
+SELECT @ModelSize = RIGHT('0'+CONVERT(VARCHAR, CONVERT(INT, MBISizeW)), 2) 
+                  + CONVERT(VARCHAR, CONVERT(INT, MBISizeH))
+FROM STB_ModelBasicInfo
+WHERE ModelCode = (SELECT MaterialCode FROM STB_SetInfo WHERE Barcode IN (...chain...))
+```
+→ ModelSize = 2 chữ số chiều rộng + chiều cao (vd: 0813 = 8mm x 13mm). Đây là key để match NVL với model.
+
+**Cách match điện giải** (dòng 537-718):
+```sql
+-- Đặc biệt: mã PEVN62-001 được convert trước khi check
+IF @pRawMaterialBarcode LIKE 'PEVN62-001%' 
+   SET @pRawMaterialBarcode = 'GBEC00-008' + @pRawMaterialBarcode
+
+-- Sau đó join với bảng eleclyte (CTE từ stb_vvt_materialbo)
+-- Match: ModelName LIKE '%'+Termi.model+'%' AND @ModelSize = Termi.size
+-- Check: 10 ký tự đầu barcode = electrolyte code
+```
+
+### 2.3 Luồng F721 (usp_vvt_MaterialLotInfo_get) — Logic Tồn Kho Thực
+
+**Điều không ai biết:** F721 **UPDATE bảng dữ liệu ngay khi được gọi** (không chỉ SELECT):
+
+```sql
+-- Ngay đầu SP (dòng 76-88):
+UPDATE STB_MaterialDocLotInfo  
+SET LotAttr10 = [dbo].[fn_VVT_getdatebyVendorLot](MaterialCode, LotNo_cleaned)
+WHERE REPLACE(ISNULL(LotAttr10,''),' ','') = ''  -- Chỉ update khi LotAttr10 trống
+  AND MaterialLocationCode LIKE '%VN_WH|%BG_WH|%HN_WH|%BG2_WH'  -- Chỉ trong kho
+
+UPDATE STB_MaterialLotInfo  -- Update bảng thứ 2 luôn
+SET LotAttr10 = [dbo].[fn_VVT_getdatebyVendorLot](...)
+WHERE ... -- Cùng điều kiện
+```
+
+→ **Hệ quả:** Mỗi lần mở F721, hệ thống tự động điền ngày sản xuất vào những Lot nào bị thiếu (bằng cách parse mã Vendor Lot). Đây là auto-heal mechanism.
+
+**Cấu trúc CTE phức tạp (bảng F721)**:
+```
+basedat     → Những Lot chỉ có trong MaterialDocLotInfo (không trong MaterialLotInfo)
+holddate    → Những Lot từng qua kho HOLDING
+Lottachdaxuat → Những Lot đã chia ra từ STB_VN_DIVIDEMATERIALSMAL
+table1      → JOIN tất cả để tính StockQty cuối cùng
+```
+
+**Logic tính StockQty thực** (dòng 210-214):
+```sql
+CASE 
+    WHEN LTDX.DIVIDE_STOCKQTY > 0 OR LTDX.DIVIDE_STOCKQTY IS NOT NULL 
+    THEN ISNULL(MLI.CurrentQty, mdli.StockQty) - LTDX.DIVIDE_STOCKQTY
+    ELSE ISNULL(MLI.CurrentQty, mdli.StockQty)
+END AS StockQty
+```
+→ Nếu Lot đã chia nhỏ (Divide), tồn kho thực = CurrentQty - phần đã chia.
+
+**Cấu hình đặc biệt MDFLUX-002** (dòng 262-265):
+```sql
+CASE WHEN MDLI.MaterialCode = 'MDFLUX-002' 
+     THEN (MM.MMExtInt01*30)-1   -- 179 ngày thay vì 180 ngày
+     ELSE (CONVERT(INT, ISNULL(MMExtInt01, 3)) * 30)
+END
+```
+→ Chỉ `MDFLUX-002` (có thể là Flux đặc biệt) được hardcode chính xác 179 ngày.
+
+**Kiểm tra Lot trùng lặp** (dòng 386):
+```sql
+AND CreateUserID <> '23091804'  -- Lọc bỏ user ID '23091804' (người đã tạo Lot trùng)
+```
+→ Đây là fix cứng cho một sự cố cụ thể xảy ra tại nhà máy Bắc Giang 2 (2026-01-09).
+
+---
+
+## 🗃️ III. BẢNG ẨN CHỨA LOGIC QUAN TRỌNG
+
+### Bảng `stb_vvt_materialbo` — "BOM Ngầm" của VVT
+
+Đây **không phải** `STB_BomDetail` chuẩn. Đây là bảng riêng của team Vietnam, chứa mapping:
+
+| Cột | Ý nghĩa |
+|-----|---------|
+| `part` | Loại NVL: `'terminal+'`, `'terminal-'`, `'electrolyte'`, `'rubber'`, `'sleeve'`, `'case'`, `'separator'` |
+| `size` | Kích thước model: `'0813'`, `'1030'`, `'1840'`... |
+| `materialcode` | Mã NVL cụ thể: `'GBHB00-042'`, `'GBCP00-004'`... |
+| `semiProductname` | Tên sản phẩm semi: `'HY-CAP VEC2R7105QG...'` |
+
+**Tại sao có bảng này?** Vì `STB_BomDetail` của Korea HQ không đủ chi tiết cho việc validate NVL tại B597 — cần biết chính xác "model SIZE này dùng loại Tancha/Electrolyte/Sleeve MÃ nào" để chặn nhập nhầm.
+
+**Cách B597 sử dụng:**
+```sql
+;WITH eleclyte1 AS (
+    SELECT materialcode AS electrolyte, ... AS model, ... AS size 
+    FROM stb_vvt_materialbo
+    WHERE part LIKE '%electrolyte%' AND size IS NOT NULL
+    UNION ALL
+    -- Hardcode thêm các model đặc biệt không có trong stb_vvt_materialbo
+    SELECT 'GBEC00-011', 'VEC3R0727QG', '35105'  -- Model 35105 thêm 2026-01-13
+    UNION ALL
+    ...
+)
+```
+→ **Mỗi model mới** phải thêm cả vào `stb_vvt_materialbo` (qua F330/UI) VÀ thêm hardcode vào SP `usp_Vietnam_RawMaterialInputHist_uid` nếu cần dùng mã điện giải mới!
+
+### Bảng `STB_LotChangeMaterialHistory` — Dòng Lịch Sử Đổi Barcode
+
+```sql
+-- Schema quan trọng:
+OldBarcode VARCHAR(20)   -- Barcode cũ (trước khi đổi)
+NewBarcode VARCHAR(20)   -- Barcode mới (sau khi đổi)
+ChangeDateTime DATETIME  -- Khi nào đổi
+ChangeUserID VARCHAR(20) -- Ai đổi
+```
+
+**Ứng dụng trong B597:** Khi scan một Barcode, hệ thống trace backward theo chain lên đến 6 cấp. Không cần biết barcode hiện tại, chỉ cần truy xuất chain là tìm được sản phẩm gốc.
+
+### Bảng `stb_vvt_OpenExpiredMaterial` — "Ân Xá" Cho NVL Hết Hạn
+
+```sql
+-- Khi thêm Lot vào đây = bypass kiểm tra hết hạn
+INSERT INTO stb_vvt_OpenExpiredMaterial (LotID, MaterialCode, OpenExpired, CreateDateTime)
+VALUES ('ML20260310000123', 'GBCP00-004', 1, GETDATE())
+```
+
+**Logic kiểm tra:**
+```sql
+;WITH data1 AS (
+    SELECT LotID, MAX(CreateDateTime) AS CreateDateTime
+    FROM stb_vvt_OpenExpiredMaterial WHERE LotID = @pRawMaterialBarcode
+    GROUP BY LotID
+)
+SELECT TOP 1 @OpenExpired = voem.OpenExpired
+FROM stb_vvt_OpenExpiredMaterial voem
+JOIN data1 ON voem.LotID = data1.LotID AND voem.CreateDateTime = data1.CreateDateTime
+```
+→ Chỉ lấy bản ghi **mới nhất** theo ngày tạo (không phải tất cả). Nếu `OpenExpired = 1` → được phép dùng dù hết hạn.
+
+**Màn hình quản lý:** C555 (theo mention trong SP) — không có trong danh sách 77 màn hình đã document.
+
+### Bảng `STB_InterimProdQtyInfo` — "Nháp" Số Lượng Trung Gian
+
+```sql
+-- Bị DELETE ngay đầu mỗi lần scan (dòng 119-122):
+DELETE FROM STB_InterimProdQtyInfo 
+WHERE ControlNo = @ControlNo AND RouteCode = @RouteCode
+```
+
+→ Đây là temp table cho "số lượng giữa chừng" (InbrinskQty tại B530). Bị xóa mỗi lần submit. Mục đích: cho phép OP nhập số lượng tạm trước khi hoàn thành chính thức.
+
+---
+
+## ⚠️ IV. CÁC ĐIỂM NGUY HIỂM ẨN — Developer PHẢI BIẾT
+
+### Nguy hiểm 1: SP F721 Write khi đang Read
+
+`usp_vvt_MaterialLotInfo_get` (tên "_get" = chỉ đọc) nhưng thực tế **UPDATE 2 bảng** mỗi khi chạy. Điều này gây rủi ro:
+- Nếu chạy song song nhiều process → Race condition UPDATE
+- Nếu `fn_VVT_getdatebyVendorLot` parse sai → SET LotAttr10 = giá trị sai vào cả 2 bảng
+- Không có transaction bảo vệ phần UPDATE này
+
+### Nguy hiểm 2: logic `@SIExtInt01 = Null` sai
+
+Tại `usp_DoProcessProdRouteHistForCalc_SmartApp_VNT` (dòng 191):
+```sql
+IF @CompanyCode = 'VNT' AND @SIExtInt01 = Null AND @RouteIndex > 1 ...
+```
+→ **BUG:** Trong SQL, so sánh `= Null` LUÔN LUÔN trả về FALSE (phải dùng `IS NULL`). Có nghĩa là Gate 20 phút **KHÔNG BAO GIỜ được kích hoạt** với điều kiện này. Đây là bug tiềm ẩn nhưng "may mắn" không gây vấn đề vì gate 20 phút ít khi cần.
+
+### Nguy hiểm 3: Bending/Tapping chỉ lưu 1 lần — không có rollback
+
+```sql
+-- usp_STB_BENDING_TAPPING (dòng minh họa):
+IF EXISTS (SELECT 1 FROM STB_VN_BENDING_TAPPING WHERE ID = @OldCompanyCode)
+    RAISERROR('Duplicate Data : KeyField = %s', 16, 1, @OldCompanyCode)
+```
+→ Một khi đã lưu, không có cách sửa qua UI. Buộc phải UPDATE thủ công SQL. Không có undo button.
+
+### Nguy hiểm 4: Whitelist User hardcode trong SP
+
+`usp_Set_VVT_Info_get` (B452) có danh sách UserID được phép đổi Line được hardcode trong SP:
+```sql
+IF @pProcessUserID LIKE '%phuong%' OR @pProcessUserID = 'mrluan' OR ...
+```
+→ Khi cần thêm User → PHẢI deploy lại SP. Và nếu user đổi username → mất quyền ngay lập tức.
+
+### Nguy hiểm 5: Số model/NVL hardcode trong usp_Vietnam_RawMaterialInputHist_uid
+
+SP này chứa hàng trăm dòng hardcode với specific model names và material codes:
+```sql
+SELECT 'GBHB00-042' AS Terminal, 'VEC2R7506QG' AS model, '1840' AS size UNION ALL
+SELECT 'GBHB00-042' AS Terminal, 'VEC3R0606QG' AS model, '1840' AS size UNION ALL
+-- Và hàng chục dòng tương tự...
+```
+→ Mỗi model mới cần validate terminal/electrolyte/sleeve mới đều phải **sửa SP**. Không có UI để thêm. Nếu quên → người dùng bị chặn hoặc không được validate đúng.
+
+---
+
+## 🏗️ V. KIẾN TRÚC MA TRẬN NHÀ MÁY — Chi Tiết Thực Tế
+
+| Thuộc tính | VNT (Bắc Ninh) | VVT_F1 (Bắc Giang 1) | VVT_F2 (BG2/Riveting) | VVT_F3 (Hà Nam) | VVT_F4 (BG2 Module) |
+|------------|----------------|----------------------|------------------------|-----------------|---------------------|
+| **Barcode prefix** | `VV...`, `VJ...` | `VVP..`, `VVJ..` | `K-...` (Route) | `VE...` | Module |
+| **RouteCode prefix** | `V-xx`, `E-xx` | `V-xx`, `E-xx` | `K-xx` | `VE-xx` | `MV-xx` |
+| **Gate V-23 check** | ✅ (VVT_F1/F2) | ✅ | ✅ | ❌ (check VE06) | ❌ |
+| **Slitting config** | `stb_slittinglocationconfig_vvt` | Đồng văn | ✅ (key bảng) | `STB_CoatingToSlittingMaster` | N/A |
+| **Kho FG** | `FG_BN_WH` | `FG_BG_WH` | `FG_BG_WH` | `FinishGoodMESInstock_HN` (View) | `MODULE_BG2_WH` |
+| **Đặc biệt** | Gửi bán thành phẩm sang Korea | Route `VVT_F1` standard | Có Slitting module riêng | VE prefix, PQC gate riêng | K101 thay B450 |
+
+**Bằng chứng từ code** (`usp_Vietnam_RawMaterialInputHist_uid`, dòng 104-105):
+```sql
+IF @checkWorkCenterCode NOT IN ('VVT_F4')
+BEGIN
+    -- Logic chuẩn cho tất cả nhà máy trừ BG2 Module
+END
+```
+
+---
+
+## 🔑 VI. DICTIONARY CÁC BẢNG CUSTOM VIETNAM (Không trong Standard Korea)
+
+Những bảng này được team Vietnam tự tạo thêm, không nằm trong framework gốc Hàn Quốc:
+
+| Bảng | Mục đích | Ai sở hữu |
+|------|----------|-----------|
+| `stb_vvt_materialbo` | BOM ngầm cho validate NVL tại B597 | Vietnam team (Mr.Tung) |
+| `stb_vvt_OpenExpiredMaterial` | Danh sách NVL hết hạn được phê duyệt dùng tiếp | Vietnam team |
+| `stb_slittinglocationconfig_vvt` | Cấu hình Slitting động theo vị trí kho | Vietnam team |
+| `STB_VN_BENDING_TAPPING` | Kết quả Bending/Tapping (B717) | Vietnam custom |
+| `gtAndon_v1` | Dữ liệu ANDON dây chuyền (B882) | Vietnam custom |
+| `STB_VN_PRODUCTION_ERROR` | Phế NVL trong sản xuất (B598) | Vietnam custom |
+| `STB_VN_DIVIDEMATERIALSMAL` | Quản lý chia Lot NVL nhỏ hơn | Vietnam custom |
+| `STB_LotChangeMaterialHistory` | Lịch sử đổi mã Barcode (B351) | Vietnam custom |
+| `STB_VVT_StagePrices` | Giá thành từng công đoạn Module | Vietnam custom |
+| `STB_SavePackingTime_VVT` | Lịch sử đóng gói Module (B789) | Vietnam custom |
+
+---
+
+## 📡 VII. CÁC HÀM (FUNCTION) QUAN TRỌNG
+
+### `fn_VVT_getdatebyVendorLot(MaterialCode, LotNo)` — Parser Ngày Từ Mã Vendor
+
+**Mục đích:** Chuyển chuỗi LotNo dài của nhà cung cấp thành ngày sản xuất `YYYY-MM-DD`.
+
+**Nguy hiểm:** Nếu LotNo quá dài hoặc sai format → hàm crash → LotAttr10 = NULL hoặc giá trị sai.
+
+**Được gọi tại:**
+- `usp_vvt_MaterialLotInfo_get` (tự động khi mở F721)  
+- `usp_MaterialDocLotInfo_get` (khi mở màn hình chi tiết Lot)
+- `usp_Vietnam_RawMaterialInputHist_uid` (gián tiếp qua GetDatefromVENDORLOT1840)
+
+### `fn_GetJobDateShiftTime(DateTime, CompanyCode, WorkCenter, Line, Route, NULL)` — Tính Ca
+
+**Output format:** `YYYYMMDD` + `ShiftCode(A/B/C)` + `TimeCode(01-12)`
+
+**Lý do tồn tại:** Ngăn gian lận ca bằng cách tự động tính ca từ thời gian scan thực tế, không cho phép client chọn ca.
+
+**Phân tách trong SP:**
+```sql
+DECLARE @JobDate DATE    = SUBSTRING(@ShiftTime, 1, 8)
+DECLARE @ShiftCode VARCHAR(1) = SUBSTRING(@ShiftTime, 9, 1)
+DECLARE @TimeCode VARCHAR(2)  = SUBSTRING(@ShiftTime, 10, 2)
+```
+
+### `fn_VVT_StagePricesMODULE` — Giá Thành Theo Công Đoạn Module
+
+**Mục đích:** Tính giá trị gia tăng tại từng công đoạn MV-xx cho Module.
+
+**Được gọi tại:** B791 (Lot Tracking Module).
+
+---
+
+## 🎯 VIII. GOLDEN RULES — Quy Tắc Vàng Cho Developer/IT
+
+### Khi debug lỗi B597:
+```
+1. Kiểm tra HOLD: SELECT * FROM STB_MaterialHoldInfo WHERE LotID = '...' AND IsRelease = 0
+2. Kiểm tra Expiry: LotAttr10 + (MMExtInt01 * 30 ngày) so với GETDATE()
+3. Kiểm tra bypass: SELECT * FROM stb_vvt_OpenExpiredMaterial WHERE LotID = '...'
+4. Kiểm tra ProductGroup: MM.ProductGroupCode vs @pProductGroupCode từ UI
+5. Kiểm tra chain: SELECT * FROM STB_LotChangeMaterialHistory WHERE OldBarcode = '...'
+6. Kiểm tra model size: SELECT MBISizeW, MBISizeH FROM STB_ModelBasicInfo WHERE ModelCode = '...'
+```
+
+### Khi debug lỗi B530:
+```
+1. Kiểm tra Route đúng không: SELECT * FROM STB_ProductionOrderRouting WHERE PONo = '...'
+2. Kiểm tra Lot bị đóng: SELECT DPPExtText01 FROM STB_DayProdPlan WHERE DayPlanNo = '...'
+3. Kiểm tra bước trước đã scan chưa: SELECT * FROM STB_ProdRouteHist WHERE ControlNo = '...'
+4. Kiểm tra NVL V-23: SELECT * FROM STB_RawMaterialInputHist WHERE ProdLotQty = '...' AND RouteCode = 'V-23'
+5. Kiểm tra ProdQty bước trước = 0 không: SUM(ProdQty) thực sự trong STB_ProdRouteHist
+```
+
+### Khi thêm model mới cho B597:
+```
+1. Thêm vào STB_ModelBasicInfo (A410): MBISizeW, MBISizeH, ModelCode, ModelName
+2. Thêm mapping NVL vào stb_vvt_materialbo (qua UI nếu có, hoặc INSERT SQL)
+3. NẾU dùng electrolyte mới → PHẢI sửa SP usp_Vietnam_RawMaterialInputHist_uid
+   → Thêm dòng: SELECT 'GBEC00-0XX' AS electrolyte, 'NEW_MODEL_CODE' AS model, 'SIZE' AS size
+4. NẾU dùng sleeve mới → PHẢI sửa SP tương tự cho phần SLEEVE
+5. Test với barcode thật tại B597 trước khi deploy
+```
+
+### Khi F721 hiện sai tồn kho:
+```
+1. Kiểm tra LotAttr10 có NULL không: SELECT LotAttr10 FROM STB_MaterialDocLotInfo WHERE LotID = '...'
+   → Nếu NULL: fn_VVT_getdatebyVendorLot đang parse sai → check định dạng LotNo
+2. Kiểm tra Lot đã chia chưa: SELECT * FROM STB_VN_DIVIDEMATERIALSMAL WHERE LotID = '...'
+3. Kiểm tra MaterialDocType: Nếu GI thì hiển thị là 'AUDIT', không phải tồn kho
+4. Kiểm tra Lot có trong HOLDING không: MaterialWarehouseCode = 'HOLDING_VN_WH'/'HOLDING_BG_WH'
+5. Kiểm tra trùng lặp CreateUserID: Nếu có dòng CreateUserID = '23091804' → bỏ qua (exclude cứng trong SP)
+```
+
+---
+
+## 📊 IX. TỔNG KẾT — HỆ THỐNG NHÌN TỪ GÓC ĐỘ KIẾN TRÚC
+
+```
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│                         VINATECH MES — KIẾN TRÚC THỰC TẾ                       │
+│                         (Từ phân tích source code 2026-04-18)                   │
+└─────────────────────────────────────────────────────────────────────────────────┘
+
+SmartFramework DB                    SmartFactoryV2 DB (Chính)
+───────────────                      ──────────────────────────────────────────
+STB_ScreenObjects ─── gọi SP ──────→ usp_XXX_iud / usp_XXX_get
+STB_LabelInfo ────── in tem ────────→ (template ZPL/Bartender)
+usp_DoCreateSerial ─ serial# ──────→ Tất cả HistNo/DocNo/SerialNo
+
+                        ↕ Phân chia 2 luồng chính
+                   ┌────┴─────┐
+           NVL/Kho             Sản xuất/Routing
+     (Warehouse Side)          (Production Side)
+     ─────────────────         ─────────────────────
+     F330 → F721 → B597 <─→   B310 → B450 → B540 → B530
+     STB_MaterialLotInfo       STB_SetInfo (ControlNo)
+     STB_MaterialDocLotInfo    STB_ProdRouteHist
+     stb_vvt_OpenExpiredMat    STB_ProductionOrderRouting
+     STB_MaterialHoldInfo      STB_DefectRepairInfo
+           ↑                          ↓
+     VALIDATION                 VALIDATION GATE  
+     (3 cổng chặn B597)         (7 cổng chặn B530)
+           ↑                          ↓
+     stb_vvt_materialbo         STB_InterimProdQtyInfo
+     (BOM Ngầm Vietnam)         (Số lượng trung gian)
+           ↑                          ↓
+     fn_VVT_getdatebyVendorLot  fn_GetJobDateShiftTime
+     (Parse ngày vendor)        (Tính ca tự động)
+
+         Điểm gặp nhau:
+         ─────────────
+         Khi V-23/V-24 scan NVL
+         → B597 ghi STB_RawMaterialInputHist
+         → B530 kiểm tra STB_RawMaterialInputHist trước khi route
+         → Đây là "cầu nối" giữa 2 luồng!
+
+         Output cuối:
+         ────────────
+         → STB_DividePackaging (PackingID - B523)
+         → stb_MergeBoxReality (BigBoxID)
+         → STB_MaterialWarehouseInOutHist (GR kho TP)
+```
+
+---
+
+*📅 Cập nhật lần cuối: 2026-04-18 — Phân tích sâu từ source code thực tế 10+ SP.*  
+*📊 Tổng cộng: 4.400+ dòng documentation, 77 màn hình, 50+ SP đã phân tích.*  
+*🔬 Phương pháp: Line-by-line source code reading của usp_Vietnam_RawMaterialInputHist_uid (2989 dòng), usp_DoProcessProdRouteHistForCalc_SmartApp_VNT (605 dòng), usp_vvt_MaterialLotInfo_get (907 dòng) và 7+ SP khác.*
