@@ -783,11 +783,22 @@ flowchart TD
 - Ghi nhận phiếu nhập nguyên vật liệu (bao gồm luồng chốt kiểm tra VET/IQC).
 - Lấy thông tin Hạn sử dụng (`MMExtInt01` - Shelf Life) từ `STB_MaterialMaster` để đối chiếu với hạn gốc hoặc cảnh báo Lot sắp hết đát.
 - Kiểm tra VET (điện phân đặc biệt): nếu `MaterialCode` thuộc nhóm VET → validate thêm điện áp
-- INSERT vào `STB_RawMaterialInputHist`
+- INSERT vào `STB_RawMaterialInputHist`.
+- **Lưu ý quan trọng:** Bảng `STB_RawMaterialInputHist` chứa cột `MaterialCode`. Nếu quét NVL kiểu "Dynamic scan" (nhiều barcode dán sau dấu #), SP `usp_Vietnam_RawMaterialInputHist_uid` PHẢI điền cột này (thường bóc tách từ barcode hoặc lấy từ Master Data). Nếu cột này NULL, các bước validation sau sẽ bị lỗi.
 - Tạo `STB_MaterialLotInfo` với `InitialQty` và `CurrentQty` = số lượng nhập.
 *(Lưu ý: Mặc định Hệ thống cũ dùng `LotAttr10` làm Ngày Sản Xuất để F330/B597 tính hạn — Sắp tới sẽ chuyển sang cơ chế Roadmap 4-Layer khai báo Date độc lập).*
 
+### 🔄 SP: `usp_CheckInputRawMaterialCodeForProduct` (Validation Engine)
+
+**Tables READ:** `STB_SetInfo`, `STB_DayProdPlan`, `STB_BomDetail`, `STB_RawMaterialInputHist`
+
+**Logic:**
+- Kiểm tra xem 1 `Barcode` sản phẩm đã nhập đủ nguyên vật liệu theo BOM tại một `RouteCode` (Công đoạn) cụ thể hay chưa.
+- **Cơ chế:** Join `STB_BomDetail` (lấy danh sách `ChildMaterialCode` cần thiết) với `STB_RawMaterialInputHist` (lấy danh sách đã quét thực tế) dựa trên cột `MaterialCode`.
+- **Lỗi thường gặp:** Nếu `STB_RawMaterialInputHist.MaterialCode` bị NULL (do lỗi lúc nhập liệu), phép Join sẽ thất bại và hệ thống báo lỗi: *"Công đoạn của bạn chưa nhập đủ nguyên vật liệu"*.
+
 ### 🔄 SP: `usp_MaterialQcInfo_iud`
+
 
 **Tables READ:** `STB_IQcDefectReport`, `STB_MaterialQcInfo`, `STB_NCR_REPORT`  
 **Tables WRITE:**
