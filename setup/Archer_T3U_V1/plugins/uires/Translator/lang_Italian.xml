@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<language name="English" guid="{0DAEDE3C-6B94-4a81-9A55-C304FDD69D98}">
+  <context>
+    <!--没有上下文的翻译-->
+  </context>
+  <context name="messagebox">				<!--MessageBox弹窗上的文本信息-->
+    <message>
+      <source>OK</source>					<!--按键相关的文本-->
+      <translation>Si</translation>
+    </message>
+    <message>
+      <source>Cancel</source>
+      <translation>Cancella</translation>
+    </message>
+	<message>
+      <source>Abort</source>
+      <translation>Esci</translation>
+    </message>
+    <message>
+      <source>Retry</source>
+      <translation>Riprova</translation>
+    </message>
+	<message>
+      <source>Yes</source>
+      <translation>OK</translation>
+    </message>
+	<message>
+      <source>No</source>
+      <translation>No</translation>
+    </message>
+	<message>
+      <source>Ignore</source>
+      <translation>Ignora</translation>
+    </message>
+	<message>								<!--MessageBox内提示信息的文本-->
+      <source>Close_Win_Description</source>
+      <translation>Se uscite adesso, non potrete\n completare l'installazione. Siete sicuri\n di volere uscire?</translation>
+    </message>
+	<message>								<!--MessageBox内提示信息的文本-->
+      <source>Run_Already_Tip</source>
+      <translation>Il programma è già avviato.</translation>
+    </message>
+	<message>
+	  <source>Error_Request_Administrator</source>
+	  <translation>Dovete essere amministratore per usare questo software.</translation>
+	</message>
+  </context>
+  
+  <context name="mainWindow">				<!--主界面上的文本信息-->
+	<message>								<!--机型名称-->
+	  <source>Select_Device_Des</source>			
+	  <translation>Installate i seguenti driver.</translation>
+	</message>
+	<message>
+		<source>CopyRight_Info</source>
+		<translation>Copyright © 2024 TP-LINK CORPORATION PTE. LTD. All rights reserved.</translation>
+	</message>
+	<message>
+		<source>Loading_Setup_Tip</source>
+		<translation>Inizializzazione in corso...</translation>
+	</message>
+  </context>
+</language>
