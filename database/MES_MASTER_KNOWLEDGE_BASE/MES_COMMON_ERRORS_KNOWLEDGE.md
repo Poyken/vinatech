@@ -618,6 +618,21 @@ WHERE id IN (183, 184)
 
 ---
 
+### 8.4 Lỗi không lưu được NVL trên B597 (Mã Electrolyte không khớp)
+
+**Nguyên nhân:**
+- Khi quét thẻ QR Code dung dịch ở màn B597 (VNT_SelfInspectionRawMaterial_VVT), hệ thống so sánh mã nguyên liệu đang quét (VD: `GBEC00-011`) với BOM của Model tương ứng (`STB_BomDetail`).
+- Nếu trong BOM đang cấu hình là một mã khác (VD: `GBCP00-001`) mà OP lại quét `GBEC00-011` thì hệ thống sẽ báo lỗi *"Mã Electrolyte/ DUNG DỊCH được thiết lập, khác với mã QRCODE nhập vào B597"*.
+
+**Cách xử lý:**
+1. **Kiểm tra BOM:** Báo với EA/R&D kiểm tra xem sản xuất có đang dùng sai nguyên liệu hay không.
+2. **Sửa tại SP:** Nếu là chủ ý đổi mã nguyên liệu chạy thay thế nhưng chưa đổi BOM, IT có thể vào Stored Procedure `usp_Vietnam_RawMaterialInputHist_uid`.
+   - Tìm đến CTE `eleclyte1`.
+   - Bổ sung lệnh UNION ALL ngoại lệ (ví dụ: `select 'GBEC00-011' AS electrolyte, 'WEC3R0606QG' as model, '1840' size`).
+   - Cập nhật lại SP vào thẻ CSDL.
+
+---
+
 ## 9. 📐 Master Data & Model
 
 ### 9.1 Thêm Model mới vào STB_ModelBasicInfo
