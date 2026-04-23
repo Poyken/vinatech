@@ -3,7 +3,7 @@ $connStr = 'Server=dbserver.hycap.co.kr,5398;Database=SmartFactoryV2;User ID=vin
 $conn = New-Object System.Data.SqlClient.SqlConnection($connStr)
 $conn.Open()
 $cmd = $conn.CreateCommand()
-$cmd.CommandText = "SELECT TOP 10 LineCode, LineName, WorkCenterCode, MaterialWarehouseCode FROM STB_LineInfo WHERE WorkCenterCode = 'VVT_F4'"
+$cmd.CommandText = "SELECT TOP 5 LineCode, MaterialWarehouseCode FROM STB_LineInfo WHERE WorkCenterCode = 'VVT_F4' AND LineCode NOT IN ('VVBG2MD-01', 'VVBG2MD-02', 'VVBG2MD-03')"
 $reader = $cmd.ExecuteReader()
 while ($reader.Read()) {
     Write-Host "LineCode: $($reader['LineCode']), MaterialWarehouseCode: $($reader['MaterialWarehouseCode'])"

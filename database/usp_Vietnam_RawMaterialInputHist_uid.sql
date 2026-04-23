@@ -213,7 +213,7 @@ BEGIN
 		--return
 		
 		 -- Nếu không mở chặn ở màn hình C555 , không phải Lót NVL Ngoại lệ , thì sẽ vào cảnh báo Hết hạn 
-		if(isnull(@OpenExpired,0)=0 or @OpenExpired=0 or convert(bit,@OpenExpired)=0)
+		if((isnull(@OpenExpired,0)=0 or @OpenExpired=0 or convert(bit,@OpenExpired)=0) and @mmmaterialcode not in ('TRAY1320-B015'))
 		 begin try	
 			if  isnull((select  dateadd(day,(ISNULL(MMExtInt01,3) * 30)+ISNULL(MMExtInt01,3)/12*6,@validDate)  from STB_MaterialMaster where MaterialCode= @mmmaterialcode),getdate()-1)
 				< getdate()
@@ -914,6 +914,15 @@ declare @cterminal1			nVARCHAR(300)='',
 				select 'GCMDPT-387' as sleeving, 'WEC6R0504QG-H' as model, '' as size union all 
 
 				select 'PBDM00-185' as sleeving, 'VEC5R4155QG-I (23x17x9)' as model, '' as size union all
+				select 'PBDM00-186' as sleeving, 'WEC6R0255QG-IL' as model, '' as size union all
+				select 'PBDM00-186' as sleeving, 'WEC6R0505QG-I' as model, '' as size union all
+				select 'PBDM00-186' as sleeving, 'WEC6R0505QA-I-L' as model, '' as size union all
+				select 'PBDM00-184' as sleeving, 'WEC6R0505QA-O' as model, '' as size union all
+				select 'PBDM00-184' as sleeving, 'WEC5R4505QG-O' as model, '' as size union all
+				select 'PBDM00-184' as sleeving, 'WEC6R0355QG-OL' as model, '' as size union all
+				select 'PBDM00-171' as sleeving, 'WCI(62mm)' as model, '' as size union all
+				select 'PBDM00-171' as sleeving, 'WCI(35mm)' as model, '' as size union all
+				select 'PBDM00-171' as sleeving, 'WCI(50mm)' as model, '' as size union all
 				select 'GCMDPT-206' as sleeving, 'VEC5R4155QG-I' as model, '' as size union all 
 
 				select 'GCMDPT-206' as sleeving, 'VEC5R4155QG-H' as model, '' as size union all 
@@ -2766,7 +2775,7 @@ BEGIN		-- BEGIN BG2
 		--return
 		
 		 -- Nếu không mở chặn ở màn hình C555 , không phải Lót NVL Ngoại lệ , thì sẽ vào cảnh báo Hết hạn 
-		if(isnull(@OpenExpired,0)=0 or @OpenExpired=0 or convert(bit,@OpenExpired)=0)
+		if((isnull(@OpenExpired,0)=0 or @OpenExpired=0 or convert(bit,@OpenExpired)=0) and @mmmaterialcode not in ('TRAY1320-B015'))
 		 begin try	
 			if  isnull((select  dateadd(day,(ISNULL(MMExtInt01,3) * 30)+ISNULL(MMExtInt01,3)/12*6,@validDate)  from STB_MaterialMaster where MaterialCode= @mmmaterialcode),getdate()-1)
 				< getdate()

@@ -32,64 +32,8 @@ BEGIN
         IF (@pProcessViewName LIKE '%PLATE%')  SET @vMaterialType = 'PLATE';
     END
 
-    -- 1. Dòng TỔNG CỘNG (SUM)
+    -- DỮ LIỆU CHI TIẾT
     SELECT
-        '0' AS SortIndex, -- Để đưa dòng tổng lên đầu
-        'TOTAL' AS SortingErrorNo,
-        NULL AS SortingDate,
-        NULL AS Shift,
-        NULL AS PersonName,
-        NULL AS VendorCode,
-        NULL AS FactoryName,
-        NULL AS MaterialCode,
-        NULL AS LotNo,
-        @vMaterialType AS MaterialType,
-        SUM(SED.QtyCheck) AS QtyCheck,
-        SUM(SED.QtyOK) AS QtyOK,
-        NULL AS Remark,
-
-        -- SUM Lỗi AL Case
-        SUM(SED.ALBuiDust) AS ALBuiDust,
-        SUM(SED.ALMoDent) AS ALMoDent,
-        SUM(SED.ALMepDeform) AS ALMepDeform,
-        SUM(SED.ALXuocScratch) AS ALXuocScratch,
-        SUM(SED.ALBongNBPlating) AS ALBongNBPlating,
-        SUM(SED.ALSanRoughFace) AS ALSanRoughFace,
-        SUM(SED.ALBanDirty) AS ALBanDirty,
-        SUM(SED.ALBanBoDentGroup) AS ALBanBoDentGroup,
-        SUM(SED.ALBienSacDiscolor) AS ALBienSacDiscolor,
-        SUM(SED.ALLoiKhacOther) AS ALLoiKhacOther,
-
-        -- SUM Lỗi Plate
-        SUM(SED.PLBuuNhom) AS PLBuuNhom,
-        SUM(SED.PLBuuNhua) AS PLBuuNhua,
-        SUM(SED.PLBuuRandom) AS PLBuuRandom,
-        SUM(SED.PLBongTamNhieu) AS PLBongTamNhieu,
-        SUM(SED.PLXuocScratch) AS PLXuocScratch,
-        SUM(SED.PLBienDangDeform) AS PLBienDangDeform,
-        SUM(SED.PLMoDongExposed) AS PLMoDongExposed,
-        SUM(SED.PLBienDangCamSu) AS PLBienDangCamSu,
-        SUM(SED.PLNutGoCrackWood) AS PLNutGoCrackWood,
-        SUM(SED.PLBienSacDiscolor) AS PLBienSacDiscolor,
-        SUM(SED.PLOther) AS PLOther,
-
-        -- Tổng cộng & Audit rỗng cho dòng SUM
-        NULL AS TotalDefect,
-        NULL AS DefectRate,
-        NULL AS CreateDateTime, NULL AS CreateUserID, NULL AS ChangeDateTime, NULL AS ChangeUserID
-    FROM STB_VVT_SortingErrorData SED WITH(NOLOCK)
-    WHERE
-        (@pSortingDateFrom IS NULL OR SED.SortingDate >= @pSortingDateFrom)
-        AND (@pSortingDateTo IS NULL OR SED.SortingDate <= @pSortingDateTo)
-        AND (@vMaterialType IS NULL OR SED.MaterialType = @vMaterialType)
-        AND (@pFactoryName IS NULL OR SED.FactoryName LIKE '%' + @pFactoryName + '%')
-        AND (@pMaterialCode IS NULL OR SED.MaterialCode LIKE '%' + @pMaterialCode + '%')
-
-    UNION ALL
-
-    -- 2. Dòng DỮ LIỆU CHI TIẾT
-    SELECT
-        '1' AS SortIndex,
         SED.SortingErrorNo,
         SED.SortingDate,
         SED.Shift,
@@ -137,7 +81,7 @@ BEGIN
         AND (@pFactoryName IS NULL OR SED.FactoryName LIKE '%' + @pFactoryName + '%')
         AND (@pMaterialCode IS NULL OR SED.MaterialCode LIKE '%' + @pMaterialCode + '%')
 
-    ORDER BY SortIndex ASC, SortingDate DESC, SortingErrorNo DESC;
+    ORDER BY SortingDate DESC, SortingErrorNo DESC;
 END
 GO
 

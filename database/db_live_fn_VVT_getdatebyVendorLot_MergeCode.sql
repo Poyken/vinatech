@@ -643,6 +643,7 @@ when @materialcode in (
 		OR @materialcode like 'BEMC00-%'
 		OR @materialcode like 'BEASSY-%'
 		OR @materialcode like 'PBBL00-%'
+		OR @materialcode like 'PBDM00-%'
 		OR @materialcode like 'MCYH00-%'
 		OR @materialcode like 'BEFN00-%'
 		OR @materialcode like 'BEMISC-%'
@@ -743,6 +744,9 @@ when @materialcode in (
 						 ,'153_TRAY_0612-IL'
 						 ,'153_TRAY0825VPC(B)'
 						 ,'153_TRAY1030VPC'
+						 ,'PBDM00-186'
+						 ,'PBDM00-184'
+						 ,'PBDM00-171'
 						 ,'WRHI00-001')  then '20'+ substring(@vendorlot,1,2)+'-'+ substring(@vendorlot,3,2)+'-'+ substring(@vendorlot,5,2)
 
 
