@@ -1,0 +1,11 @@
+﻿CREATE PROCEDURE usp_PopupCodeNVL
+
+
+
+AS
+BEGIN
+select WS.CODENVL,WS.NAMESNVL  from
+  STB_VN_B598 WS
+
+
+END

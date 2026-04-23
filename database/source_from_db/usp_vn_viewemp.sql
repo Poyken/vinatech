@@ -1,0 +1,29 @@
+﻿CREATE proc [dbo].[usp_vn_viewemp] -- exec usp_vn_viewemp '32009001'
+@EMPLOYEES_ID nvarchar(50)
+as
+begin
+
+SELECT
+			
+			EMPLOYEESID,
+			EMPLOYEESNAME,
+			DEPARTMENTNAME,
+			CODEDEPARTMENT,
+			CODELINE,
+			NAMELINE--,
+			--CODELINEMOVE,
+			--NAMELINEMOVE,
+			--POSISTION
+
+		FROM
+				STB_VN_Employees WITH(NOLOCK)
+
+		WHERE
+				EMPLOYEESID = @EMPLOYEES_ID
+
+	--ORDER BY CREATEDATETIME DESC 
+end
+
+--  SELECT * FROM STB_VN_EMPLOYEESTRANSFERLINE
+
+-- select * from STB_VN_Employees

@@ -1,0 +1,53 @@
+﻿CREATE PROC [dbo].[usp_VN_STB_VN_MASTERMODULES]
+@GROUPID NVARCHAR(50),
+@LOTNO NVARCHAR(50),
+@QTY INT,
+@CREATEUSSERID NVARCHAR(50),
+@MaterialCode NVARCHAR(50),
+@MaterialName NVARCHAR(50)
+--@STATUSAGAING NVARCHAR(50)
+AS
+BEGIN
+			
+			DECLARE @Month NVARCHAR(4)
+			SET @Month = MONTH(GETDATE())
+			DECLARE @NewCode NVARCHAR(50)
+			DECLARE @Prefix NVARCHAR(30) = 'MVKQ' + @Month
+			DECLARE @Id INT
+
+			SELECT @Id = ISNULL(MAX(ID),0) + 1 FROM STB_VN_MASTERMODULES 
+			SELECT @NewCode = @Prefix + RIGHT('00' + CAST(@Id AS nvarchar(30)),30)
+
+		INSERT INTO  STB_VN_MASTERMODULES
+		(
+			GROUPID,
+			LOTNO,
+			QTY,
+			CreateDateTime,
+			CreateUserID,
+			ISUSED,
+			PackingID,
+			MATERIALCODE,
+			MARTERIALNAME
+		)
+		VALUES
+		(
+			@GROUPID,
+			@LOTNO,
+			@QTY,
+			GETDATE(),
+			@CREATEUSSERID,
+			'False',
+			@NewCode,
+			@MaterialCode,
+			@MaterialName
+		)
+END
+
+
+-- SELECT * FROM STB_VN_MASTERMODULES
+
+--DECLARE @Month NVARCHAR(4)
+--SET @Month = MONTH(GETDATE())
+--SELECT @Month
+--MVVKQ00499

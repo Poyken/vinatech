@@ -1,0 +1,175 @@
+﻿CREATE PROC [dbo].[usp_vn_customerview] -- exec  usp_vn_customerview 'Nha','VVNL283R010521','00004'
+@pProcessUserID VARCHAR(20),
+@pLOTNO NVARCHAR(50) = NULL,
+@pSERIALNO NVARCHAR(50) = NULL
+AS
+BEGIN
+--SELECT DATEADD(mm, DATEDIFF(mm, 0, GETDATE()), 0)
+DECLARE @Ymd NVARCHAR(50)
+DECLARE @Years NVARCHAR(50)
+DECLARE @Moth NVARCHAR(50)
+DECLARE @Days NVARCHAR(50)
+DECLARE @date date = DATEADD(mm, DATEDIFF(mm, 0, GETDATE()), 0)
+DECLARE @Wk NVARCHAR(50)
+DECLARE @D2 NVARCHAR(150)
+DECLARE @CODELS  NVARCHAR(150)
+DECLARE @Dbrand NVARCHAR(150)
+
+--SELECT  @Wk= RIGHT(Replicate('0', 2) + CAST( DATEPART(wk, @date) AS NVARCHAR), 2)
+
+SET @Wk = DATEPART(WEEK, GETDATE())
+SELECT @Years = DATEPART(year, CURRENT_TIMESTAMP);
+SELECT @Moth = CONVERT(VARCHAR(2), GETDATE(),101) --DATEPART(MONTH, CURRENT_TIMESTAMP);
+SELECT @Days = FORMAT(getdate(), 'dd', 'en-us') ---DATEPART(DAY, CURRENT_TIMESTAMP);
+SET  @Ymd = RIGHT(@Years,2)+@Moth+@Days
+DECLARE @ProcessUserID VARCHAR(20) = @pProcessUserID
+
+DECLARE @RLCS NVARCHAR(150)
+DECLARE @FIXCODE NVARCHAR(150)
+DECLARE @WNCPNVSID NVARCHAR(150)
+DECLARE @PARTNUMBER NVARCHAR(150)
+DECLARE @VINATECHPARTNUMBER NVARCHAR(150)
+DECLARE @MARKING NVARCHAR(150)
+DECLARE @STATUSPRINTER NVARCHAR(150)
+DECLARE @CreateUserID NVARCHAR(150)
+DECLARE @CreateDateTime NVARCHAR(150)
+DECLARE @ChangeDateTime NVARCHAR(150)
+DECLARE @ChangeUserID NVARCHAR(150)
+
+DECLARE @CKD2 NVARCHAR(250)
+
+
+SELECT 
+				@Dbrand=RIGHT(@Years,2)+@Wk+'-VINA TECH',
+				@D2 = RLCS+FIXCODE+@Ymd +@pSERIALNO+','+WNCPNVSID+','+RIGHT(@Years,2)+@Wk+'-VINA TECH'+','+@pLOTNO+','+QTY,
+				@CODELS =RLCS+FIXCODE+@Ymd+@pSERIALNO,
+				@CODELS = RLCS+FIXCODE+@Ymd+@pSERIALNO,
+				@RLCS = RLCS,
+				@FIXCODE =FIXCODE,
+				@WNCPNVSID=  WNCPNVSID,
+				@PARTNUMBER = PARTNUMBER,
+				@VINATECHPARTNUMBER = VINATECHPARTNUMBER,
+				@MARKING =  MARKING,
+				@STATUSPRINTER = STATUSPRINTER
+FROM
+				STB_VN_CUSTOMER_LABLE WITH(NOLOCK)
+		
+
+ORDER BY
+			    CreateDateTime DESC
+
+
+SELECT 
+		@CKD2 = CODERLCS
+FROM
+		STB_VN_CUSTOMER_LABLE WITH(NOLOCK)
+WHERE
+		SERIALNO = @pSERIALNO AND  CONVERT(DATE,CreateDateTime) =  CONVERT(DATE,(DATEADD(HH, -2, GETDATE()))) --
+
+IF @CKD2 IS NOT NULL
+
+	BEGIN
+			declare @err  nvarchar(500)= N'Đã tồn tại SerialNo trùng trong 1 ngày, chọn SerialNo khác !' 
+			raiserror (@err ,16,1);
+	END
+
+ELSE
+
+	BEGIN
+	
+	declare @count INT=0 
+	select  @count=count(*) 
+	from STB_VN_CUSTOMER_LABLE WITH(NOLOCK) 
+	where LOTNO=@pLOTNO  and  isnull(SERIALNO,'')=@pSERIALNO  and  CONVERT(DATE,CreateDateTime) =  CONVERT(DATE,(DATEADD(HH, -2, GETDATE())))
+	
+	if(@count=0)
+		INSERT INTO STB_VN_CUSTOMER_LABLE (DCBRAND,D2QRCODE,CODERLCS,SERIALNO,LOTNO,CreateDateTime,LabelQty,CreateUserID) 
+		VALUES (@Dbrand,@D2,@CODELS,@pSERIALNO,@pLOTNO,DATEADD(HH, -2, GETDATE()),'1',@ProcessUserID)
+	
+	SELECT 
+		       TOP(1)
+				ID,
+				RLCS,
+				FIXCODE,
+				YMD,
+				SERIALNO,
+				WNCPNVSID,
+				PARTNUMBER,
+				DCBRAND,
+				LOTNO,
+				VINATECHPARTNUMBER,
+				MARKING,
+				QTY,
+				D2QRCODE,
+				CODERLCS,
+				LabelQty,
+				CreateUserID,
+				CreateDateTime,
+				ChangeDateTime,
+				ChangeUserID,
+				'Report' AS CommandType
+
+					FROM
+				 STB_VN_CUSTOMER_LABLE WITH(NOLOCK)
+		WHERE
+				 LOTNO=@pLOTNO and CONVERT(DATE,CreateDateTime) =  CONVERT(DATE,(DATEADD(HH, -2, GETDATE())))
+
+	  ORDER BY CreateDateTime DESC
+	END
+
+
+	 -- UPDATE STB_VN_CUSTOMER_LABLE
+	 -- SET
+		--	DCBRAND = @Dbrand,
+		--	D2QRCODE = @D2,
+		--	CODERLCS = @CODELS
+	 --WHERE
+		--	ID = @IDS
+
+		--SELECT 
+		--       TOP(1)
+		--		ID,
+		--		RLCS,
+		--		FIXCODE,
+		--		YMD,
+		--		SERIALNO,
+		--		WNCPNVSID,
+		--		PARTNUMBER,
+		--		DCBRAND= RIGHT(@Years,2)+@Wk+'-VINA TECH',
+		--		LOTNO,
+		--		VINATECHPARTNUMBER,
+		--		MARKING,
+		--		QTY,
+		--		D2QRCODE = RLCS+FIXCODE+@Ymd+SERIALNO+','+ WNCPNVSID+','+RIGHT(@Years,2)+@Wk+'-VINA TECH'+','+LOTNO+','+QTY,
+		--		CODERLCS = RLCS+FIXCODE+@Ymd+SERIALNO,
+		--		LabelQty,
+		--		CreateUserID,
+		--		CreateDateTime,
+		--		ChangeDateTime,
+		--		ChangeUserID,
+		--		'Report' AS CommandType
+
+		--FROM
+		--		 STB_VN_CUSTOMER_LABLE WITH(NOLOCK)
+		--WHERE
+		--		 STATUSPRINTER = 0
+
+	 -- ORDER BY CreateDateTime DESC
+END
+
+ -- select * from  STB_VN_CUSTOMER_LABLE where CreateUserID = 'NGUYENNHA'
+  -- select * from  STB_VN_CUSTOMER_LABLE where CreateUserID = 'Nha'
+ -- delete STB_VN_CUSTOMER_LABLE where CreateUserID = 'NGUYENNHA'
+ -- delete STB_VN_CUSTOMER_LABLE where CreateUserID = 'Nha'
+
+
+
+-- SELECT 
+--		 CODERLCS,CONVERT(DATE,CreateDateTime)
+--FROM
+--		STB_VN_CUSTOMER_LABLE WITH(NOLOCK)
+--WHERE
+--	CONVERT(DATE,CreateDateTime) = DATEADD(HH, -2, GETDATE())  	LOTNO = @pLOTNO AND 
+
+
+--	select CONVERT(DATE,(DATEADD(HH, -2, GETDATE())))

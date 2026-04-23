@@ -1,0 +1,61 @@
+﻿
+CREATE PROC [dbo].[usp_VN_MODULES]
+@pBarcode NVARCHAR(50) = NULL
+AS
+BEGIN
+	DECLARE @Bar NVARCHAR(50) = @pBarcode
+
+	IF @Bar IS NOT NULL
+	BEGIN
+
+		SELECT
+
+				ID,
+				GROUPID,
+				MATERIALCODE,
+				MARTERIALNAME,
+				LOTNO,
+				QTY,
+				DIVIDETHENUMBER,
+				TOTALQTY,
+				VOL,
+				FWAR,
+				PARTNO,
+				SIZE,
+				ISUSED,
+				CreateUserID,
+				CreateDateTime
+				
+		FROM
+				STB_VN_MASTERMODULES WITH (NOLOCK)
+	     WHERE
+				ISUSED = 0 AND LOTNO = @Bar
+	END
+	ELSE
+	BEGIN
+				SELECT
+				ID,
+				GROUPID,
+				MATERIALCODE,
+				MARTERIALNAME,
+				LOTNO,
+				QTY,
+				DIVIDETHENUMBER,
+				TOTALQTY,
+				VOL,
+				FWAR,
+				PARTNO,
+				SIZE,
+				ISUSED,
+				CreateUserID,
+				CreateDateTime
+				
+		FROM
+				STB_VN_MASTERMODULES WITH (NOLOCK)
+		WHERE
+				ISUSED = 0
+	END
+END
+
+-- select * from STB_VN_MODULE_EXPORT_IMPORT
+-- delete STB_VN_MODULE_EXPORT_IMPORT

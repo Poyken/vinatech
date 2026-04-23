@@ -1,0 +1,18 @@
+﻿CREATE PROC usp_VN_Country_Module
+AS
+BEGIN
+		CREATE TABLE #T
+		(
+			NAMES NVARCHAR(50)
+		)
+
+		INSERT INTO #T (NAMES) VALUES (N'Javit')
+		INSERT INTO #T (NAMES) VALUES (N'Hàn Quốc')
+
+		SELECT
+				NAMES
+		FROM 
+				#T
+
+		DROP TABLE #T
+END

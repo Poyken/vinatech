@@ -1,0 +1,13 @@
+﻿CREATE PROC VN_TENLOI
+	@pProcessLanguage VARCHAR(20),
+	@pProcessUserID VARCHAR(20)
+AS
+BEGIN
+SET NOCOUNT ON;
+	SELECT
+				CodeItem,
+				Item
+				
+		FROM STB_VN_ITEM WITH (NOLOCK)
+		WHERE IsUsed=1
+END

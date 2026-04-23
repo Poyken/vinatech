@@ -1,0 +1,125 @@
+﻿CREATE PROC [dbo].[usp_View_Security_BN]  -- exec usp_View_Security_BN 'bv'  , 'VVT_F2'
+@SECURITYAPPERVOER NVARCHAR(50)--,
+--@FACTORY NVARCHAR(50)
+AS
+BEGIN
+
+
+		SELECT
+				ID,
+				GROUPID,
+				Barcode,
+				RouteCode,
+				RouteName,
+				MaterialCode,
+				MaterialName,
+				LineCode,
+				LineName,
+				ProdQty,
+				PERSONAPPROVER_BG AS 'SECURITY',
+
+				CASE
+						WHEN PERSONSTATUSAPPROVER_BG = 1 THEN N'Đã duyệt'
+
+				ELSE ''
+
+				END AS 'PERSONSTATUSAPPROVER'
+
+		FROM
+
+			STB_VN_STAGES_TRANSFER WITH(NOLOCK)
+
+		WHERE
+				PERSONSTATUSAPPROVER_BG = 1 AND SECURITYSTATUS_BG = 1  AND SECURITYAPPERVOER_BN = @SECURITYAPPERVOER AND GROUPID IS NOT NULL AND SECURITYSTATUS_BN IS NULL
+
+UNION ALL
+	
+			SELECT
+						ID,
+						GROUPID,
+						Barcode,
+						RouteCode,
+						RouteName,
+						MaterialCode,
+						MaterialName,
+						LineCode,
+						LineName,
+						ProdQty,
+						PERSONAPPROVER_BN AS 'SECURITY',
+
+						CASE
+								WHEN PERSONSTATUSAPPROVER_BN = 1 THEN N'Đã duyệt'
+
+						ELSE ''
+
+						END AS 'PERSONSTATUSAPPROVER'
+
+				FROM
+
+					STB_VN_STAGES_TRANSFER WITH(NOLOCK)
+
+				WHERE
+						PERSONSTATUSAPPROVER_BN = 1 AND  SECURITYAPPERVOER_BN = @SECURITYAPPERVOER AND GROUPID IS NOT NULL AND SECURITYSTATUS_BN IS NULL
+
+UNION ALL
+
+	SELECT
+				ID,
+				GROUPID,
+				Barcode,
+				RouteCode,
+				RouteName,
+				MaterialCode,
+				MaterialName,
+				LineCode,
+				LineName,
+				ProdQty,
+				PERSONAPPROVER_BN AS 'SECURITY',
+
+				CASE
+						WHEN PERSONSTATUSAPPROVER_BN = 1 THEN N'Đã duyệt'
+
+				ELSE ''
+
+				END AS 'PERSONSTATUSAPPROVER'
+
+		FROM
+
+			STB_VN_STAGES_TRANSFER WITH(NOLOCK)
+
+		WHERE
+				PERSONSTATUSAPPROVER_BN = 1 AND SECURITYSTATUS_BN = 1  AND SECURITYAPPERVOER_BG = @SECURITYAPPERVOER AND GROUPID IS NOT NULL AND SECURITYSTATUS_BG IS NULL
+
+UNION ALL
+
+			SELECT
+						ID,
+						GROUPID,
+						Barcode,
+						RouteCode,
+						RouteName,
+						MaterialCode,
+						MaterialName,
+						LineCode,
+						LineName,
+						ProdQty,
+						PERSONAPPROVER_BN AS 'SECURITY',
+
+						CASE
+								WHEN PERSONSTATUSAPPROVER_BN = 1 THEN N'Đã duyệt'
+
+						ELSE ''
+
+						END AS 'PERSONSTATUSAPPROVER'
+
+				FROM
+
+					STB_VN_STAGES_TRANSFER WITH(NOLOCK)
+
+				WHERE
+						PERSONSTATUSAPPROVER_BG = 1 AND  SECURITYAPPERVOER_BG = @SECURITYAPPERVOER AND GROUPID IS NOT NULL AND SECURITYSTATUS_BG IS NULL
+
+END
+
+
+--SELECT * FROM STB_VN_STAGES_TRANSFER

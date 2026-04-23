@@ -1,0 +1,18 @@
+﻿CREATE PROC usp_VN_Loading_Type_QC
+AS
+BEGIN
+		CREATE TABLE #T1
+		(
+			ID INT IDENTITY(1,1) PRIMARY KEY(ID) NOT NULL,
+			NameType NVARCHAR(10) NULL
+		)
+
+		INSERT INTO #T1 (NameType) VALUES ('ESR')
+		INSERT INTO  #T1 (NameType) VALUES ('SD')
+		INSERT INTO  #T1 (NameType) VALUES ('Dien Dung')
+
+		SELECT
+				 *
+		FROM 
+				#T1
+END

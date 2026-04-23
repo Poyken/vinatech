@@ -1,0 +1,12 @@
+﻿CREATE PROC usp_VN_Get_Size_Module
+AS
+BEGIN
+		SELECT
+					DISTINCT Rating
+		FROM
+			STB_VN_NEW_PRINTER WITH(NOLOCK)
+		WHERE
+				Rating IS NOT NULL
+
+		ORDER BY Rating ASC
+END

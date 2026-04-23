@@ -1,0 +1,224 @@
+﻿-- EXEC usp_VN_ThaiLo_Tronghop 'NGUYENNHA','PKNN0800033','','','','',''
+--
+--PKNN0800033-1
+--PKNN0800033
+-- SELECT * FROM STB_VN_STAMP_THAILO WHERE PACKINGIDSULIERS = 'PKNN0800033-2'
+CREATE PROC [dbo].[usp_VN_ThaiLo_Tronghop] 
+@pProcessUserID NVARCHAR(50),
+@pPackingID NVARCHAR(50) = NULL,
+@pMANUFACTURE NVARCHAR(50) = NULL,
+@pPOLINES NVARCHAR(50) = NULL,
+@pPO_CODECUSTOMERS NVARCHAR(50) = NULL,
+@pPNCELESTICA NVARCHAR(50) = NULL,
+@pQTY NVARCHAR(50) = NULL
+AS
+BEGIN
+
+DECLARE @PID NVARCHAR(50)
+DECLARE @DATEMAKE NVARCHAR(50)
+DECLARE @MADESS NVARCHAR(50)
+DECLARE @DATES NVARCHAR(50)
+DECLARE @WEEK NVARCHAR(50)
+DECLARE @YY NVARCHAR(50)
+DECLARE @YYWK NVARCHAR(50)
+DECLARE @SCAN_PACKINGIDSUPLIERS NVARCHAR(50)
+DECLARE @SCAN_CELESTICAPN NVARCHAR(50)
+DECLARE @SCAN_MANUFACTURE NVARCHAR(50)
+DECLARE @SCAN_QTY NVARCHAR(50)
+DECLARE @SCAN_DATECODE NVARCHAR(50)
+DECLARE @SCAN_PO_CODECUSTOMERS NVARCHAR(50)
+DECLARE @SCAN_POLINES NVARCHAR(50)
+declare @ccount int=0
+
+		SELECT
+				@PID = PackingID,
+				@DATEMAKE = CONVERT(DATE,PrintTime),
+				@DATES = LEFT(@DATEMAKE,4),
+				@WEEK =  DATEPART(WEEK,CONVERT(DATE,PrintTime)),
+				@YY = RIGHT(@DATES,2),
+				@YYWK = --@YY+'0'+@WEEK
+				case 
+					when @WEEK >= 10
+						then
+						@YY+@WEEK
+					else
+						@YY+'0'+@WEEK
+					end
+		FROM
+
+			 STB_SavePackingTime_VVT WITH(NOLOCK)
+
+		WHERE
+				PackingID = @pPackingID
+
+
+
+		select @ccount=count(*) from STB_MaterialLotInfo
+		where PackingID=@pPackingID
+
+		if(@ccount=0) begin
+			raiserror (N'Chưa đóng gói, hoặc đã hủy đóng gói mã PackingID này!',16,1)
+			return
+		end
+	
+
+			INSERT INTO STB_VN_STAMP_THAILO 
+			(
+				PACKINGIDSUPLIERS,
+				CELESTICAPN,
+				MANUFACTURE,
+				QTY,
+				DATECODE,
+				PO_CODECUSTOMERS,
+				POLINES,
+				SCAN_PACKINGIDSUPLIERS,
+				SCAN_CELESTICAPN,
+				SCAN_MANUFACTURE,
+				SCAN_QTY,
+				SCAN_DATECODE,
+				SCAN_PO_CODECUSTOMERS,
+				SCAN_POLINES,
+				CreateUserID,
+				CreateDateTime
+			)
+			VALUES 
+			(
+					@pPackingID,
+					@pPNCELESTICA,
+					@pMANUFACTURE,
+					@pQTY,
+					@YYWK,
+					@pPO_CODECUSTOMERS,
+					@pPOLINES,
+					'3S'+ @PID,
+					'P' + @pPNCELESTICA,
+					'1P' + @pMANUFACTURE,
+					'Q' + @pQTY,
+					'10D' + @YYWK,
+					'K' + @pPO_CODECUSTOMERS,
+					'4K' + @pPOLINES,
+					@pProcessUserID,
+					DATEADD(HH, -2, GETDATE())
+			)
+
+			INSERT INTO STB_VN_STAMP_THAILO 
+			(
+				PACKINGIDSUPLIERS,
+				CELESTICAPN,
+				MANUFACTURE,
+				QTY,
+				DATECODE,
+				PO_CODECUSTOMERS,
+				POLINES,
+				SCAN_PACKINGIDSUPLIERS,
+				SCAN_CELESTICAPN,
+				SCAN_MANUFACTURE,
+				SCAN_QTY,
+				SCAN_DATECODE,
+				SCAN_PO_CODECUSTOMERS,
+				SCAN_POLINES,
+				CreateUserID,
+				CreateDateTime
+			)
+			VALUES 
+			(
+					@pPackingID+'-1',
+					@pPNCELESTICA,
+					@pMANUFACTURE,
+					convert(int,@pQTY)/2,
+					@YYWK,
+					@pPO_CODECUSTOMERS,
+					@pPOLINES,
+					'3S'+ @PID,
+					'P' + @pPNCELESTICA,
+					'1P' + @pMANUFACTURE,
+					'Q' + convert(varchar(10),convert(int,@pQTY)/2),
+					'10D' + @YYWK,
+					'K' + @pPO_CODECUSTOMERS,
+					'4K' + @pPOLINES,
+					@pProcessUserID,
+					DATEADD(HH, -2, GETDATE())
+			)
+
+			INSERT INTO STB_VN_STAMP_THAILO 
+			(
+				PACKINGIDSUPLIERS,
+				CELESTICAPN,
+				MANUFACTURE,
+				QTY,
+				DATECODE,
+				PO_CODECUSTOMERS,
+				POLINES,
+				SCAN_PACKINGIDSUPLIERS,
+				SCAN_CELESTICAPN,
+				SCAN_MANUFACTURE,
+				SCAN_QTY,
+				SCAN_DATECODE,
+				SCAN_PO_CODECUSTOMERS,
+				SCAN_POLINES,
+				CreateUserID,
+				CreateDateTime
+			)
+			VALUES 
+			(
+					@pPackingID+'-2',
+					@pPNCELESTICA,
+					@pMANUFACTURE,
+					convert(int,@pQTY)/2,
+					@YYWK,
+					@pPO_CODECUSTOMERS,
+					@pPOLINES,
+					'3S'+ @PID,
+					'P' + @pPNCELESTICA,
+					'1P' + @pMANUFACTURE,
+					'Q' + convert(varchar(10),convert(int,@pQTY)/2),
+					'10D' + @YYWK,
+					'K' + @pPO_CODECUSTOMERS,
+					'4K' + @pPOLINES,
+					@pProcessUserID,
+					DATEADD(HH, -2, GETDATE())
+			)
+
+			SELECT
+					TOP(3)
+					PACKINGIDSUPLIERS,
+					CELESTICAPN, 
+					MANUFACTURE,
+					QTY,
+					DATECODE,
+					PO_CODECUSTOMERS,
+					POLINES,
+					'VN' AS COO,
+					IsUsed,
+					SCAN_PACKINGIDSUPLIERS,
+					SCAN_CELESTICAPN, 
+					SCAN_MANUFACTURE,
+					SCAN_QTY,
+					SCAN_DATECODE,
+					SCAN_PO_CODECUSTOMERS,
+					SCAN_POLINES,
+					CreateDateTime,
+					CreateUserID,
+					'Report' AS CommandType,
+					LABLELQTY					
+			FROM 
+					STB_VN_STAMP_THAILO  WITH(NOLOCK)
+					
+WHERE
+			CreateUserID = @pProcessUserID
+	
+ORDER BY 
+			CreateDateTime DESC
+
+
+END
+
+
+-- SELECT * FROM DELETE STB_VN_STAMP_THAILO WHERE CreateUserID = 'NGUYENNHA'
+
+
+--ALTER TABLE STB_VN_STAMP_THAILO
+--ADD
+--		LABLELQTY INT NULL
+
+

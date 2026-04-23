@@ -1,0 +1,10 @@
+﻿
+		CREATE PROC VN_STATUS
+		@pProcessUserID VARCHAR(20),
+		@pProcessLanguage VARCHAR(20)
+		AS
+		BEGIN
+				SELECT IDS,NameStatus
+				FROM STB_VN_STATUS WITH(NOLOCK)
+				WHERE Actives=1
+		END

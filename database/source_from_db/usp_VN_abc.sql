@@ -1,0 +1,8 @@
+﻿CREATE PROC usp_VN_abc
+@LotNo NVARCHAR(50)
+AS
+BEGIN
+SELECT LotNo,count(LotNo) AS soluong FROM STB_VN_FINISHGOODS
+WHERE LotNo = @LotNo
+GROUP BY LotNo
+END

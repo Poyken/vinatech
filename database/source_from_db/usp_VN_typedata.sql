@@ -1,0 +1,12 @@
+﻿CREATE Proc usp_VN_typedata
+AS
+BEGIN
+
+	   SELECT 
+			    DISTINCT
+				TYPEDATA
+			
+		FROM
+				STB_PLAN_VN WITH(NOLOCK)
+
+END

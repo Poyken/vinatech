@@ -1,0 +1,25 @@
+﻿CREATE PROC [dbo].[usp_VN_MODULES_TRUE]
+AS
+BEGIN
+
+		SELECT
+				GROUPID,
+				MATERIALCODE
+				MARTERIALNAME,
+				LOTNO,
+				QTY,
+				DIVIDETHENUMBER,
+				TOTALQTY,
+				VOL,
+				FWAR,
+				PARTNO,
+				SIZE,
+				ISUSED,
+				CreateDateTime,
+				CreateUserID
+				
+		FROM
+				STB_VN_MASTERMODULES WITH (NOLOCK)
+	     WHERE
+				ISUSED = 1
+END

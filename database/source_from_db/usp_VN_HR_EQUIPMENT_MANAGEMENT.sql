@@ -1,0 +1,35 @@
+﻿CREATE PROC [dbo].[usp_VN_HR_EQUIPMENT_MANAGEMENT]
+@pBarCode NVARCHAR(50) = NULL
+AS
+BEGIN
+		DECLARE @Barcode NVARCHAR(100)= CASE WHEN ISNULL (@pBarCode, '') = '' THEN '%' ELSE @pBarCode END
+
+	SELECT 
+			ID,
+			IDCODEEQ,
+			LOCATIONS,
+			DEPARTMENT,
+			INSTALLATION,
+			USERUSSING,
+			DEVICECODE,
+			DEVICENAME,
+			UNIT,
+			LAPTOP,
+			CODE,
+			VENDORCOMPANY,
+			PURCHASEDATE,
+			STATUSUSSING,
+			CreateDateTime,
+			CreateUserID,
+			ChangeDateTime,
+			ChangeUserID,
+			'Report' AS CommandType
+	FROM	
+			STB_VN_HR_EQUIPMENT_MANAGEMENT WITH(NOLOCK)
+	WHERE
+			
+			(
+				(IDCODEEQ LIKE @Barcode)
+			)
+
+END

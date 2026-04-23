@@ -1,0 +1,17 @@
+﻿CREATE PROC usp_vn_Updateloginfinishgood
+@pUSERID NVARCHAR(50),
+@pASSWORDS NVARCHAR(100)
+AS
+BEGIN
+		
+		UPDATE	STB_VN_USER_FINISHGOOD 
+			SET 
+				PASSWORDS = @pASSWORDS
+
+		WHERE
+				
+				USERID = @pUSERID
+				AND 
+				IsUse = 1
+
+END

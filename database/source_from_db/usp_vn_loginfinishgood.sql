@@ -1,0 +1,23 @@
+﻿CREATE PROC [dbo].[usp_vn_loginfinishgood]
+@pUSERID NVARCHAR(50),
+@pASSWORDS NVARCHAR(100)
+AS
+BEGIN
+
+		SELECT
+				USERID,
+				PASSWORDS,
+				FULLNAME,
+				IDPermission
+		FROM
+			STB_VN_USER_FINISHGOOD WITH (NOLOCK)
+
+		WHERE
+				
+				USERID = @pUSERID
+				AND
+				PASSWORDS = @pASSWORDS 
+				AND 
+				IsUse = 1
+
+END

@@ -1,0 +1,46 @@
+﻿CREATE proc [dbo].[usp_VN_ERROR]
+AS
+BEGIN
+		CREATE TABLE #T1(ID INT IDENTITY(1,1) NOT NULL PRIMARY KEY(ID), NAMEERROR NVARCHAR(50) NULL, IsUsed BIT NULL)
+
+		INSERT INTO #T1(NAMEERROR,IsUsed) VALUES (N'Bóc kiểm tra-TQC','1')
+		INSERT INTO #T1(NAMEERROR,IsUsed) VALUES (N'Bóc kiểm tra- KTSP','1')
+		INSERT INTO #T1(NAMEERROR,IsUsed) VALUES (N'ESR','1')
+		INSERT INTO #T1(NAMEERROR,IsUsed) VALUES (N'Bẩn đáy','1')
+		INSERT INTO #T1(NAMEERROR,IsUsed) VALUES (N'Tràn dịch','1')
+		INSERT INTO #T1(NAMEERROR,IsUsed) VALUES (N'Cong chân','1')
+		INSERT INTO #T1(NAMEERROR,IsUsed) VALUES (N'Tancha biến sắc','1')
+		INSERT INTO #T1(NAMEERROR,IsUsed) VALUES (N'Lồi đáy','1')
+		INSERT INTO #T1(NAMEERROR,IsUsed) VALUES (N'Lõm đáy','1')
+		INSERT INTO #T1(NAMEERROR,IsUsed) VALUES (N'Bẹp vỏ nhôm','1')
+		INSERT INTO #T1(NAMEERROR,IsUsed) VALUES (N'NG kích thước','1')
+		INSERT INTO #T1(NAMEERROR,IsUsed) VALUES (N'Lỗi setting','1')
+
+		INSERT INTO #T1(NAMEERROR,IsUsed) VALUES (N'Phân tích ESR','1')
+		INSERT INTO #T1(NAMEERROR,IsUsed) VALUES (N'Phân tích tràn dịch','1')
+		INSERT INTO #T1(NAMEERROR,IsUsed) VALUES (N'Phân tích SD','1')
+		INSERT INTO #T1(NAMEERROR,IsUsed) VALUES (N'Phân tích Cap','1')
+		INSERT INTO #T1(NAMEERROR,IsUsed) VALUES (N'Phân tích ngoại quan','1')
+		INSERT INTO #T1(NAMEERROR,IsUsed) VALUES (N'Sản phẩm Test ','1')
+		INSERT INTO #T1(NAMEERROR,IsUsed) VALUES (N'Sản phẩm đo PPM','1')
+		INSERT INTO #T1(NAMEERROR,IsUsed) VALUES (N'Sản phẩm setting','1')
+		INSERT INTO #T1(NAMEERROR,IsUsed) VALUES (N'Sản phẩm test tính năng','1')
+		INSERT INTO #T1(NAMEERROR,IsUsed) VALUES (N'Sản phẩm khác','1')
+
+
+		INSERT INTO #T1(NAMEERROR,IsUsed) VALUES (N'SP rách giấy ngăn','1')
+		INSERT INTO #T1(NAMEERROR,IsUsed) VALUES (N'SP rách điện cực','1')
+		INSERT INTO #T1(NAMEERROR,IsUsed) VALUES (N'SP NG do NVL đầu vào','1')
+		
+
+
+			SELECT 
+				NAMEERROR
+		FROM
+			#T1
+		WHERE
+				IsUsed = 1
+
+
+		DROP TABLE #T1
+END

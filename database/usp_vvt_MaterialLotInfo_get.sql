@@ -390,24 +390,11 @@ print('1')
 		from STB_MaterialLotInfo  WITH(NOLOCK) 
 		where
 		--(isnull(Lotattr09,'') <> ''   )
-		--and LotAttr09 IS NOT NULL
-		--and
-		--lotid='SM20250210000005'
-		--MergeParentId is  null
-		(lotid like 'SP%' or lotid like 'SL%'or lotid like 'SM%' 
-		OR (MaterialCode IN ('MPBT00-001', 'BEINS0-003', 'BEMC00-068', 'BEMC00-105', 'BEMC00-045', 'MDBAR-001', 'MDCLEAN-001', 'MDFLUX-001', 'MDIPA-001', 'BEMC00-043', 'BEMC00-044') 
-			--or MaterialCode LIKE 'BEIN%' 
-			--or MaterialCode LIKE 'BEMC00%'
-			) ) and -- thêm ds BG2
-		 MergeParentId is  null
-		 and MaterialWarehouseCode LIKE @MaterialWarehouseCode
-		or MaterialWarehouseCode= case when @MaterialWarehouseCode not in ('ROH_VN_WH','ROUTE_VN_WH','ROH_BG_WH','ROUTE_BG_WH','ROH_HN_WH','ROUTE_HN_WH', 'MODULE_BG2_WH', 'ROUTE_BG2_WH') then @MaterialWarehouseCode else '' end
-		and (@MaterialCode = '*' OR MaterialCode LIKE @MaterialCode) --Mr.Duy thêm cho tìm kiếm theo mã NVL
 	
 		and  ((IsSlitting is null and PackingIdParent is null) or (PackingIdParent is not null and IsSlitting is not null ) ) --Ms.Ha lay cac lot chua slitting hoac cac lot con da slitting
 		)) mdli --with(nolock) 
 		left outer join STB_MaterialLotInfo mli  with(nolock) on mdli.LotID = mli.LotID
-		left outer join STB_MaterialDocLotInfo mdli11  with(nolock) on (mdli11.LotID = mdli.LotID and mdli11.CreateUserID <> '23091804')-- Mr.Manh update 2026-01-09 because duplicate lot
+		left outer join STB_MaterialDocLotInfo mdli11  with(nolock) on (mdli11.MaterialLotNo = mdli.MaterialLotNo and mdli11.CreateUserID <> '23091804')-- Mr.Manh update 2026-01-09 because duplicate lot
 		left outer join STB_MaterialDocDetail mdd  with(nolock) on (mdd.MaterialDocDetailNo = mdli.MaterialDocDetailNo and mdd.CreateUserID <> '23091804') -- Mr.Manh update 2026-01-09 because duplicate lot
 		left outer join holddate inout with(nolock) on mdli.LotID = inout.LotID
 		left outer join STB_MaterialDocInfo mdi with(nolock)  on mdd.MaterialDocNo = mdi.MaterialDocNo
@@ -772,7 +759,7 @@ begin
 		and  ((IsSlitting is null and PackingIdParent is null) or (PackingIdParent is not null and IsSlitting is not null ) ) --Ms.Ha lay cac lot chua slitting hoac cac lot con da slitting
 		) mdli --with(nolock) 
 		left outer join STB_MaterialLotInfo mli  with(nolock) on mdli.LotID = mli.LotID
-		left outer join STB_MaterialDocLotInfo mdli11  with(nolock) on (mdli11.LotID = mdli.LotID and mdli11.CreateUserID <> '23091804') -- Mr.Manh update 2026-01-09 because duplicate lot
+		left outer join STB_MaterialDocLotInfo mdli11  with(nolock) on (mdli11.MaterialLotNo = mdli.MaterialLotNo and mdli11.CreateUserID <> '23091804') -- Mr.Manh update 2026-01-09 because duplicate lot
 		left outer join STB_MaterialDocDetail mdd  with(nolock) on (mdd.MaterialDocDetailNo = mdli.MaterialDocDetailNo and mdd.CreateUserID <> '23091804')  -- -- Mr.Manh update 2026-01-09 because duplicate lot
 		left outer join holddate inout with(nolock) on mdli.LotID = inout.LotID
 		left outer join STB_MaterialDocInfo mdi with(nolock)  on mdd.MaterialDocNo = mdi.MaterialDocNo 

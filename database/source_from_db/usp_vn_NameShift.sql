@@ -1,0 +1,7 @@
+﻿CREATE PROC usp_vn_NameShift
+AS
+BEGIN
+				UPDATE STB_VN_PRODUCTION_ERROR
+				SET NameShift =N'Ca đêm'
+				WHERE NameShift IS NULL
+END

@@ -1,0 +1,21 @@
+﻿Create proc usp_VN_InOut
+AS
+BEGIN
+CREATE TABLE #T
+(
+	ID INT PRIMARY KEY(ID) IDENTITY(1,1) NOT NULL,
+	TypeInput NVARCHAR(50) NULL,
+	Isued BIT NULL
+)
+INSERT INTO #T (TypeInput,Isued) VALUES(N'Nhập',1)
+INSERT INTO #T (TypeInput,Isued) VALUES(N'Xuất',1)
+
+SELECT
+		*
+FROM
+		#T
+WHERE
+		Isued = 1
+
+		DROP TABLE #T
+END

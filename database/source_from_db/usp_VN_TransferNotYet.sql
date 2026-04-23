@@ -1,0 +1,114 @@
+﻿CREATE PROC usp_VN_TransferNotYet -- exec usp_VN_TransferNotYet '2024-03-01', '2024-03-31'
+@pFrom DATE = NULL,
+@pTo DATE = NULL
+AS
+BEGIN
+		DECLARE @From DATE = @pFrom
+		DECLARE @To DATE = @pTo
+
+		SELECT
+				CASE
+
+					WHEN FACTORYCODE = 'VVT_F1' THEN N'Bắc Ninh'
+					WHEN FACTORYCODE = 'VVT_F2' THEN N'Bắc Giang'
+			    
+				 ELSE ''
+
+				 END AS N'Nhà Máy',
+
+				Barcode,
+				ControlNo,
+				PONo,
+				DayPlanNo,
+				RouteCode,
+				RouteName,
+				MaterialCode,
+				MaterialName,
+				LineCode,
+				LineName,
+				ProdQty,
+				
+				CASE
+						WHEN PERSONAPPROVER_BN = '31811044' THEN N'Trần Thị Siêu Sao'
+
+				ELSE ''
+
+				END AS 'PERSONAPPROVER_BN',
+
+				CASE
+						WHEN PERSONSTATUSAPPROVER_BN IS NULL THEN N'Chưa duyệt'
+
+				ELSE ''
+
+				END AS 'PERSONSTATUSAPPROVER_BN',
+ 
+				
+				CASE
+						WHEN PERSONAPPROVER_BG = '31903012' THEN N'Lò Thị Dương Hoa'
+
+				ELSE ''
+
+				END AS 'PERSONAPPROVER_BG',
+
+					CASE
+						WHEN PERSONSTATUSAPPROVER_BG IS NULL THEN N'Chưa duyệt'
+
+				ELSE ''
+
+				END AS 'PERSONSTATUSAPPROVER_BG',
+
+				CASE
+						WHEN SECURITYAPPERVOER_BG = 'BV_BG' THEN N'Bảo Vệ Bắc Giang'
+				ELSE ''
+
+				END AS 'SECURITYAPPERVOER_BG',
+
+
+				CASE 
+						WHEN SECURITYSTATUS_BG IS NULL THEN N'Chưa duyệt'
+
+				ELSE ''
+
+				END AS  'SECURITYSTATUS_BG',
+
+
+				CASE
+						WHEN SECURITYAPPERVOER_BN = 'BV' THEN N'Bảo Vệ Bắc Ninh'
+				ELSE ''
+
+				END AS 'SECURITYAPPERVOER_BN',
+
+
+				CASE 
+						WHEN SECURITYSTATUS_BN IS NULL THEN N'Chưa duyệt'
+
+				ELSE ''
+
+				END AS  'SECURITYSTATUS_BN',
+
+				CASE 
+						WHEN CREATEBY = '31707007' THEN N'Trần Thế Trung'
+						WHEN CREATEBY = '31809028' THEN N'Nguyễn Đức Chiến'
+						WHEN CREATEBY = '31809027' THEN N'Nguyễn Trọng Cường'
+						WHEN CREATEBY = '32109006' THEN N'Nguyễn Duy Nhất'
+
+				ELSE ''
+
+				END AS 'CREATEBY',
+
+				CONVERT(DATE,DATEBY) AS 'DATEBY',
+				RIGHT(DATEBY,8) AS 'TIMECREATE'
+				
+
+		FROM
+				STB_VN_STAGES_TRANSFER WITH(NOLOCK)
+
+
+		WHERE PERSONSTATUSAPPROVER_BN IS NULL AND PERSONSTATUSAPPROVER_BG IS NULL AND SECURITYSTATUS_BG IS NULL AND SECURITYSTATUS_BN IS NULL AND CONVERT(DATE,DATEBY) BETWEEN @From AND @To
+				
+END
+
+
+-- SELECT * FROM STB_VN_STAGES_TRANSFER
+
+--DELETE STB_VN_STAGES_TRANSFER
