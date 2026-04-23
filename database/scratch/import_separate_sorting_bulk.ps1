@@ -45,21 +45,21 @@ $ss = Get-SharedStrings $zip
 # -----------------------------------------------------------------------------
 # AL CASE
 # -----------------------------------------------------------------------------
-Write-Host "Reading AL Case data..."
+Write-Host "Reading AL Case data (Sheet 2)..."
 $sheetEntry = $zip.Entries | Where-Object { $_.FullName -eq "xl/worksheets/sheet2.xml" }
 $stream = $sheetEntry.Open()
 $sheetXml = [xml](New-Object System.IO.StreamReader($stream)).ReadToEnd()
 $stream.Close()
 
 $dtAl = New-Object System.Data.DataTable
-[void]$dtAl.Columns.Add("SortingErrorNo", [string])
+# Bỏ SortingErrorNo vì là IDENTITY
 [void]$dtAl.Columns.Add("SortingDate", [datetime])
-[void]$dtAl.Columns.Add("Shift", [string])
-[void]$dtAl.Columns.Add("PersonName", [string])
-[void]$dtAl.Columns.Add("VendorCode", [string])
-[void]$dtAl.Columns.Add("FactoryName", [string])
-[void]$dtAl.Columns.Add("MaterialCode", [string])
-[void]$dtAl.Columns.Add("LotNo", [string])
+[void]$dtAl.Columns.Add("Shift")
+[void]$dtAl.Columns.Add("PersonName")
+[void]$dtAl.Columns.Add("VendorCode")
+[void]$dtAl.Columns.Add("FactoryName")
+[void]$dtAl.Columns.Add("MaterialCode")
+[void]$dtAl.Columns.Add("LotNo")
 [void]$dtAl.Columns.Add("QtyCheck", [int])
 [void]$dtAl.Columns.Add("QtyOK", [int])
 [void]$dtAl.Columns.Add("ALBuiDust", [int])
@@ -72,22 +72,18 @@ $dtAl = New-Object System.Data.DataTable
 [void]$dtAl.Columns.Add("ALBanBoDentGroup", [int])
 [void]$dtAl.Columns.Add("ALBienSacDiscolor", [int])
 [void]$dtAl.Columns.Add("ALLoiKhacOther", [int])
-[void]$dtAl.Columns.Add("CreateUserID", [string])
+[void]$dtAl.Columns.Add("CreateUserID")
 [void]$dtAl.Columns.Add("CreateDateTime", [datetime])
 
 $rows = $sheetXml.worksheet.sheetData.row | Where-Object { [int]$_.r -ge 4 }
 foreach ($row in $rows) {
     $cols = $row.c
     $data = @{}
-    foreach ($c in $cols) {
-        $colKey = $c.r -replace '[0-9]', ''
-        $data[$colKey] = Get-CellValue $c $ss
-    }
+    foreach ($c in $cols) { $colKey = $c.r -replace '[0-9]', ''; $data[$colKey] = Get-CellValue $c $ss }
     $d = Convert-ExcelDate $data["A"]
     if (-not $d) { continue }
 
     $nr = $dtAl.NewRow()
-    $nr["SortingErrorNo"] = "AL" + [guid]::NewGuid().ToString().Replace("-","").Substring(0,18)
     $nr["SortingDate"] = $d
     $nr["Shift"] = [string]$data["B"]
     $nr["PersonName"] = [string]$data["C"]
@@ -115,21 +111,21 @@ foreach ($row in $rows) {
 # -----------------------------------------------------------------------------
 # PLATE
 # -----------------------------------------------------------------------------
-Write-Host "Reading Plate data..."
+Write-Host "Reading Plate data (Sheet 1)..."
 $sheetEntry = $zip.Entries | Where-Object { $_.FullName -eq "xl/worksheets/sheet1.xml" }
 $stream = $sheetEntry.Open()
 $sheetXml = [xml](New-Object System.IO.StreamReader($stream)).ReadToEnd()
 $stream.Close()
 
 $dtPl = New-Object System.Data.DataTable
-[void]$dtPl.Columns.Add("SortingErrorNo", [string])
+# Bỏ SortingErrorNo vì là IDENTITY
 [void]$dtPl.Columns.Add("SortingDate", [datetime])
-[void]$dtPl.Columns.Add("Shift", [string])
-[void]$dtPl.Columns.Add("PersonName", [string])
-[void]$dtPl.Columns.Add("VendorCode", [string])
-[void]$dtPl.Columns.Add("FactoryName", [string])
-[void]$dtPl.Columns.Add("MaterialCode", [string])
-[void]$dtPl.Columns.Add("LotNo", [string])
+[void]$dtPl.Columns.Add("Shift")
+[void]$dtPl.Columns.Add("PersonName")
+[void]$dtPl.Columns.Add("VendorCode")
+[void]$dtPl.Columns.Add("FactoryName")
+[void]$dtPl.Columns.Add("MaterialCode")
+[void]$dtPl.Columns.Add("LotNo")
 [void]$dtPl.Columns.Add("QtyCheck", [int])
 [void]$dtPl.Columns.Add("QtyOK", [int])
 [void]$dtPl.Columns.Add("PLBuuNhom", [int])
@@ -143,22 +139,18 @@ $dtPl = New-Object System.Data.DataTable
 [void]$dtPl.Columns.Add("PLNutGoCrackWood", [int])
 [void]$dtPl.Columns.Add("PLBienSacDiscolor", [int])
 [void]$dtPl.Columns.Add("PLOther", [int])
-[void]$dtPl.Columns.Add("CreateUserID", [string])
+[void]$dtPl.Columns.Add("CreateUserID")
 [void]$dtPl.Columns.Add("CreateDateTime", [datetime])
 
 $rows = $sheetXml.worksheet.sheetData.row | Where-Object { [int]$_.r -ge 5 }
 foreach ($row in $rows) {
     $cols = $row.c
     $data = @{}
-    foreach ($c in $cols) {
-        $colKey = $c.r -replace '[0-9]', ''
-        $data[$colKey] = Get-CellValue $c $ss
-    }
+    foreach ($c in $cols) { $colKey = $c.r -replace '[0-9]', ''; $data[$colKey] = Get-CellValue $c $ss }
     $d = Convert-ExcelDate $data["B"]
     if (-not $d) { continue }
 
     $nr = $dtPl.NewRow()
-    $nr["SortingErrorNo"] = "PL" + [guid]::NewGuid().ToString().Replace("-","").Substring(0,18)
     $nr["SortingDate"] = $d
     $nr["Shift"] = [string]$data["C"]
     $nr["PersonName"] = [string]$data["D"]
@@ -188,9 +180,6 @@ foreach ($row in $rows) {
 # BULK COPY TO DATABASE
 # -----------------------------------------------------------------------------
 Write-Host "Connecting to DB for Bulk Copy..."
-$bcAl = New-Object System.Data.SqlClient.SqlBulkCopy($connStr)
-$bcAl.DestinationTableName = "STB_VVT_SortingErrorData_ALCase"
-$bcAl.BulkCopyTimeout = 300
 try {
     $conn = New-Object System.Data.SqlClient.SqlConnection($connStr)
     $conn.Open()
@@ -198,12 +187,21 @@ try {
     $cmd.CommandText = "TRUNCATE TABLE STB_VVT_SortingErrorData_ALCase; TRUNCATE TABLE STB_VVT_SortingErrorData_Plate;"
     $cmd.ExecuteNonQuery()
     
+    # AL Case
+    $bcAl = New-Object System.Data.SqlClient.SqlBulkCopy($connStr)
+    $bcAl.DestinationTableName = "STB_VVT_SortingErrorData_ALCase"
+    $bcAl.BulkCopyTimeout = 300
+    foreach($col in $dtAl.Columns) { [void]$bcAl.ColumnMappings.Add($col.ColumnName, $col.ColumnName) }
+    
     Write-Host "Bulk Copying AL Case ($($dtAl.Rows.Count) rows)..."
     $bcAl.WriteToServer($dtAl)
     
+    # Plate
     $bcPl = New-Object System.Data.SqlClient.SqlBulkCopy($connStr)
     $bcPl.DestinationTableName = "STB_VVT_SortingErrorData_Plate"
     $bcPl.BulkCopyTimeout = 300
+    foreach($col in $dtPl.Columns) { [void]$bcPl.ColumnMappings.Add($col.ColumnName, $col.ColumnName) }
+
     Write-Host "Bulk Copying Plate ($($dtPl.Rows.Count) rows)..."
     $bcPl.WriteToServer($dtPl)
     

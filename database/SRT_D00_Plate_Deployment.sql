@@ -1,10 +1,8 @@
 -- ============================================================
 -- DEPLOYMENT: BẢNG + SP CHO SHEET PLATE (TÁCH RIÊNG)
 -- Database: SmartFactoryV2
--- Người tạo: EA Team
+-- Phiên bản: Cập nhật IDENTITY PK & Date Format & Fix Error Message
 -- Ngày tạo: 2026-04-23
--- Màn hình: SRT_D00 - Sorting Error Data (Plate)
--- Gốc từ: STB_VVT_SortingErrorData (bảng gộp)
 -- ============================================================
 
 USE SmartFactoryV2;
@@ -13,57 +11,53 @@ GO
 -- ============================================================
 -- BƯỚC 1: TẠO BẢNG STB_VVT_SortingErrorData_Plate
 -- ============================================================
-IF NOT EXISTS (SELECT 1 FROM sys.tables WHERE name = 'STB_VVT_SortingErrorData_Plate')
-BEGIN
+IF EXISTS (SELECT 1 FROM sys.tables WHERE name = 'STB_VVT_SortingErrorData_Plate')
+    DROP TABLE STB_VVT_SortingErrorData_Plate;
+GO
 
-    CREATE TABLE [dbo].[STB_VVT_SortingErrorData_Plate] (
-        -- === KEY ===
-        [SortingErrorNo]    VARCHAR(20)     NOT NULL CONSTRAINT PK_STB_VVT_SortingErrorData_Plate PRIMARY KEY,
+CREATE TABLE [dbo].[STB_VVT_SortingErrorData_Plate] (
+    -- === KEY (IDENTITY 1,1) ===
+    [SortingErrorNo]    INT IDENTITY(1,1) NOT NULL CONSTRAINT PK_STB_VVT_SortingErrorData_Plate PRIMARY KEY,
 
-        -- === THÔNG TIN CHUNG ===
-        [SortingDate]       DATE            NOT NULL,
-        [Shift]             VARCHAR(5)      NULL,           -- A / B / C
-        [PersonName]        NVARCHAR(100)   NULL,           -- Tên người sorting
-        [VendorCode]        VARCHAR(50)     NULL,           -- Nhà cung cấp
-        [FactoryName]       NVARCHAR(100)   NULL,           -- Bắc Ninh / Bắc Giang
-        [MaterialCode]      VARCHAR(50)     NULL,           -- Mã vật liệu (VD: 3505, 685)
-        [LotNo]             VARCHAR(100)    NULL,           -- Số lô
-        [QtyCheck]          INT             NULL DEFAULT 0, -- Tổng SL kiểm tra
-        [QtyOK]             INT             NULL DEFAULT 0, -- SL đạt
-        [Remark]            NVARCHAR(200)   NULL,           -- Ghi chú
+    -- === THÔNG TIN CHUNG ===
+    [SortingDate]       DATE            NOT NULL,
+    [Shift]             VARCHAR(5)      NULL,           -- A / B / C
+    [PersonName]        NVARCHAR(100)   NULL,           -- Tên người sorting
+    [VendorCode]        VARCHAR(50)     NULL,           -- Nhà cung cấp
+    [FactoryName]       NVARCHAR(100)   NULL,           -- Bắc Ninh / Bắc Giang
+    [MaterialCode]      VARCHAR(50)     NULL,           -- Mã vật liệu (VD: 3505, 685)
+    [LotNo]             VARCHAR(100)    NULL,           -- Số lô
+    [QtyCheck]          INT             NULL DEFAULT 0, -- Tổng SL kiểm tra
+    [QtyOK]             INT             NULL DEFAULT 0, -- SL đạt
+    [Remark]            NVARCHAR(200)   NULL,           -- Ghi chú
 
-        -- ============================================================
-        -- CÁC CỘT LỖI DÀNH CHO PLATE
-        -- ============================================================
-        [PLBuuNhom]         INT             NULL DEFAULT 0, -- Bựu nhôm
-        [PLBuuNhua]         INT             NULL DEFAULT 0, -- Bựu Nhựa
-        [PLBuuRandom]       INT             NULL DEFAULT 0, -- Bựu random
-        [PLBongTamNhieu]    INT             NULL DEFAULT 0, -- Bóng tâm nhều
-        [PLXuocScratch]     INT             NULL DEFAULT 0, -- Xước/Scratch
-        [PLBienDangDeform]  INT             NULL DEFAULT 0, -- Biến dạng/Deform
-        [PLMoDongExposed]   INT             NULL DEFAULT 0, -- Mở dòng/Exposed
-        [PLBienDangCamSu]   INT             NULL DEFAULT 0, -- Biến dạng cạm su
-        [PLNutGoCrackWood]  INT             NULL DEFAULT 0, -- Nứt gỗ/Crack Wood
-        [PLBienSacDiscolor] INT             NULL DEFAULT 0, -- Biến sắc/Discoloration
-        [PLOther]           INT             NULL DEFAULT 0, -- Other
+    -- ============================================================
+    -- CÁC CỘT LỖI DÀNH CHO PLATE
+    -- ============================================================
+    [PLBuuNhom]         INT             NULL DEFAULT 0, -- Bựu nhôm
+    [PLBuuNhua]         INT             NULL DEFAULT 0, -- Bựu Nhựa
+    [PLBuuRandom]       INT             NULL DEFAULT 0, -- Bựu random
+    [PLBongTamNhieu]    INT             NULL DEFAULT 0, -- Bóng tâm nhều
+    [PLXuocScratch]     INT             NULL DEFAULT 0, -- Xước/Scratch
+    [PLBienDangDeform]  INT             NULL DEFAULT 0, -- Biến dạng/Deform
+    [PLMoDongExposed]   INT             NULL DEFAULT 0, -- Mở dòng/Exposed
+    [PLBienDangCamSu]   INT             NULL DEFAULT 0, -- Biến dạng cạm su
+    [PLNutGoCrackWood]  INT             NULL DEFAULT 0, -- Nứt gỗ/Crack Wood
+    [PLBienSacDiscolor] INT             NULL DEFAULT 0, -- Biến sắc/Discoloration
+    [PLOther]           INT             NULL DEFAULT 0, -- Other
 
-        -- === AUDIT ===
-        [CreateDateTime]    DATETIME        NOT NULL DEFAULT GETDATE(),
-        [CreateUserID]      VARCHAR(20)     NULL,
-        [ChangeDateTime]    DATETIME        NULL,
-        [ChangeUserID]      VARCHAR(20)     NULL
-    );
+    -- === AUDIT ===
+    [CreateDateTime]    DATETIME        NOT NULL DEFAULT GETDATE(),
+    [CreateUserID]      VARCHAR(20)     NULL,
+    [ChangeDateTime]    DATETIME        NULL,
+    [ChangeUserID]      VARCHAR(20)     NULL
+);
 
-    -- Index để search nhanh theo ngày
-    CREATE INDEX IX_VVT_SortingErrorData_Plate_Date 
-        ON STB_VVT_SortingErrorData_Plate (SortingDate);
+-- Index để search nhanh theo ngày
+CREATE INDEX IX_VVT_SortingErrorData_Plate_Date 
+    ON STB_VVT_SortingErrorData_Plate (SortingDate);
 
-    PRINT N'Tạo bảng STB_VVT_SortingErrorData_Plate thành công!';
-END
-ELSE
-BEGIN
-    PRINT N'Bảng STB_VVT_SortingErrorData_Plate đã tồn tại, bỏ qua.';
-END
+PRINT N'Tạo bảng STB_VVT_SortingErrorData_Plate thành công!';
 GO
 
 -- ============================================================
@@ -87,7 +81,7 @@ BEGIN
 
     SELECT
         SED.SortingErrorNo,
-        SED.SortingDate,
+        CONVERT(VARCHAR(10), SED.SortingDate, 23) AS SortingDate, -- Format YYYY-MM-DD
         SED.Shift,
         SED.PersonName,
         SED.VendorCode,
@@ -116,8 +110,7 @@ BEGIN
         AND (@pSortingDateTo IS NULL OR SED.SortingDate <= @pSortingDateTo)
         AND (@pFactoryName IS NULL OR SED.FactoryName LIKE '%' + @pFactoryName + '%')
         AND (@pMaterialCode IS NULL OR SED.MaterialCode LIKE '%' + @pMaterialCode + '%')
-
-    ORDER BY SortingDate DESC, SortingErrorNo DESC;
+    ORDER BY SED.SortingDate DESC, SED.SortingErrorNo DESC;
 END
 GO
 
@@ -143,223 +136,60 @@ BEGIN
     DECLARE @InsertTableName VARCHAR(100) = '/DataSet/' + @pProcessViewName + '_INSERT'
     DECLARE @UpdateTableName VARCHAR(100) = '/DataSet/' + @pProcessViewName + '_UPDATE'
     DECLARE @DeleteTableName VARCHAR(100) = '/DataSet/' + @pProcessViewName + '_DELETE'
-    DECLARE @iDoc INT
-    DECLARE @SortingErrorNo VARCHAR(20)
-    DECLARE @ERROR_MSG NVARCHAR(MAX)
+    DECLARE @iDoc INT;
+    DECLARE @ErrorMsg NVARCHAR(MAX);
 
-    -- Khai báo các biến tương ứng với cột của bảng
-    DECLARE
-        @OldSortingErrorNo  VARCHAR(20),
-        @SortingDate        DATE,
-        @Shift              VARCHAR(5),
-        @PersonName         NVARCHAR(100),
-        @VendorCode         VARCHAR(50),
-        @FactoryName        NVARCHAR(100),
-        @MaterialCode       VARCHAR(50),
-        @LotNo              VARCHAR(100),
-        @QtyCheck           INT,
-        @QtyOK              INT,
-        @Remark             NVARCHAR(200),
-        @PLBuuNhom          INT, @PLBuuNhua           INT, @PLBuuRandom        INT,
-        @PLBongTamNhieu     INT, @PLXuocScratch        INT, @PLBienDangDeform   INT,
-        @PLMoDongExposed    INT, @PLBienDangCamSu      INT, @PLNutGoCrackWood   INT,
-        @PLBienSacDiscolor  INT, @PLOther              INT
-
-    EXEC sp_xml_preparedocument @iDoc OUTPUT, @pXml
+    EXEC sp_xml_preparedocument @iDoc OUTPUT, @pXml;
 
     BEGIN TRY
         BEGIN TRANSACTION;
 
-        -- ============================================================
-        -- XỬ LÝ INSERT
-        -- ============================================================
-        DECLARE cur_insert CURSOR FOR
-        SELECT
-            OldSortingErrorNo, SortingErrorNo, SortingDate, Shift, PersonName,
-            VendorCode, FactoryName, MaterialCode, LotNo, 
-            QtyCheck, QtyOK, Remark,
-            PLBuuNhom, PLBuuNhua, PLBuuRandom, PLBongTamNhieu, PLXuocScratch,
-            PLBienDangDeform, PLMoDongExposed, PLBienDangCamSu, PLNutGoCrackWood,
-            PLBienSacDiscolor, PLOther
-        FROM OPENXML(@iDoc, @InsertTableName, 2) WITH (
-            OldSortingErrorNo  VARCHAR(20),  SortingErrorNo  VARCHAR(20),
-            SortingDate        DATE,          Shift           VARCHAR(5),
-            PersonName         NVARCHAR(100), VendorCode      VARCHAR(50),
-            FactoryName        NVARCHAR(100), MaterialCode    VARCHAR(50),
-            LotNo              VARCHAR(100),  
-            QtyCheck           INT,           QtyOK           INT,
-            Remark             NVARCHAR(200),
-            PLBuuNhom          INT,  PLBuuNhua           INT,  PLBuuRandom        INT,
-            PLBongTamNhieu     INT,  PLXuocScratch        INT,  PLBienDangDeform   INT,
-            PLMoDongExposed    INT,  PLBienDangCamSu      INT,  PLNutGoCrackWood   INT,
-            PLBienSacDiscolor  INT,  PLOther              INT
+        -- DELETE
+        DELETE T FROM STB_VVT_SortingErrorData_Plate T
+        JOIN OPENXML(@iDoc, @DeleteTableName, 2) WITH (SortingErrorNo INT) X
+        ON T.SortingErrorNo = X.SortingErrorNo;
+
+        -- INSERT
+        INSERT INTO STB_VVT_SortingErrorData_Plate (
+            SortingDate, Shift, PersonName, VendorCode, FactoryName, MaterialCode, LotNo, QtyCheck, QtyOK, Remark,
+            PLBuuNhom, PLBuuNhua, PLBuuRandom, PLBongTamNhieu, PLXuocScratch, PLBienDangDeform, PLMoDongExposed, PLBienDangCamSu, PLNutGoCrackWood, PLBienSacDiscolor, PLOther,
+            CreateUserID, CreateDateTime
         )
+        SELECT 
+            SortingDate, Shift, PersonName, VendorCode, FactoryName, MaterialCode, LotNo, QtyCheck, QtyOK, Remark,
+            PLBuuNhom, PLBuuNhua, PLBuuRandom, PLBongTamNhieu, PLXuocScratch, PLBienDangDeform, PLMoDongExposed, PLBienDangCamSu, PLNutGoCrackWood, PLBienSacDiscolor, PLOther,
+            @pProcessUserID, GETDATE()
+        FROM OPENXML(@iDoc, @InsertTableName, 2) WITH (
+            SortingDate DATE, Shift VARCHAR(5), PersonName NVARCHAR(100), VendorCode VARCHAR(50), 
+            FactoryName NVARCHAR(100), MaterialCode VARCHAR(50), LotNo VARCHAR(100), QtyCheck INT, QtyOK INT, Remark NVARCHAR(200),
+            PLBuuNhom INT, PLBuuNhua INT, PLBuuRandom INT, PLBongTamNhieu INT, PLXuocScratch INT, PLBienDangDeform INT, PLMoDongExposed INT, PLBienDangCamSu INT, PLNutGoCrackWood INT, PLBienSacDiscolor INT, PLOther INT
+        );
 
-        OPEN cur_insert
-        FETCH NEXT FROM cur_insert INTO
-            @OldSortingErrorNo, @SortingErrorNo, @SortingDate, @Shift, @PersonName,
-            @VendorCode, @FactoryName, @MaterialCode, @LotNo, 
-            @QtyCheck, @QtyOK, @Remark,
-            @PLBuuNhom, @PLBuuNhua, @PLBuuRandom, @PLBongTamNhieu, @PLXuocScratch,
-            @PLBienDangDeform, @PLMoDongExposed, @PLBienDangCamSu, @PLNutGoCrackWood,
-            @PLBienSacDiscolor, @PLOther
-
-        WHILE @@FETCH_STATUS = 0
-        BEGIN
-            -- Validate bắt buộc
-            IF ISNULL(@SortingDate, '') = '' 
-            BEGIN
-                RAISERROR(N'Ngày Sorting không được để trống!', 16, 1);
-                RETURN;
-            END
-
-            -- Tạo serial number mới
-            EXEC SmartFramework.dbo.usp_DoCreateSerial 'STB_VVT_SortingErrorData_Plate', @SortingErrorNo OUTPUT
-
-            INSERT INTO STB_VVT_SortingErrorData_Plate (
-                SortingErrorNo, SortingDate, Shift, PersonName, VendorCode, FactoryName,
-                MaterialCode, LotNo, QtyCheck, QtyOK, Remark,
-                PLBuuNhom, PLBuuNhua, PLBuuRandom, PLBongTamNhieu, PLXuocScratch,
-                PLBienDangDeform, PLMoDongExposed, PLBienDangCamSu, PLNutGoCrackWood,
-                PLBienSacDiscolor, PLOther,
-                CreateDateTime, CreateUserID, ChangeDateTime, ChangeUserID
-            )
-            VALUES (
-                @SortingErrorNo, @SortingDate, @Shift, @PersonName, @VendorCode, @FactoryName,
-                @MaterialCode, @LotNo, @QtyCheck, @QtyOK, @Remark,
-                @PLBuuNhom, @PLBuuNhua, @PLBuuRandom, @PLBongTamNhieu, @PLXuocScratch,
-                @PLBienDangDeform, @PLMoDongExposed, @PLBienDangCamSu, @PLNutGoCrackWood,
-                @PLBienSacDiscolor, @PLOther,
-                GETDATE(), @pProcessUserID, GETDATE(), @pProcessUserID
-            )
-
-            FETCH NEXT FROM cur_insert INTO
-                @OldSortingErrorNo, @SortingErrorNo, @SortingDate, @Shift, @PersonName,
-                @VendorCode, @FactoryName, @MaterialCode, @LotNo, 
-                @QtyCheck, @QtyOK, @Remark,
-                @PLBuuNhom, @PLBuuNhua, @PLBuuRandom, @PLBongTamNhieu, @PLXuocScratch,
-                @PLBienDangDeform, @PLMoDongExposed, @PLBienDangCamSu, @PLNutGoCrackWood,
-                @PLBienSacDiscolor, @PLOther
-        END
-        CLOSE cur_insert; DEALLOCATE cur_insert;
-
-        -- ============================================================
-        -- XỬ LÝ UPDATE
-        -- ============================================================
+        -- UPDATE
         UPDATE T SET
-            SortingDate        = ISNULL(X.SortingDate, T.SortingDate),
-            Shift              = X.Shift,
-            PersonName         = X.PersonName,
-            VendorCode         = X.VendorCode,
-            FactoryName        = X.FactoryName,
-            MaterialCode       = X.MaterialCode,
-            LotNo              = X.LotNo,
-            QtyCheck           = X.QtyCheck,
-            QtyOK              = X.QtyOK,
-            Remark             = X.Remark,
-            PLBuuNhom          = X.PLBuuNhom,
-            PLBuuNhua          = X.PLBuuNhua,
-            PLBuuRandom        = X.PLBuuRandom,
-            PLBongTamNhieu     = X.PLBongTamNhieu,
-            PLXuocScratch      = X.PLXuocScratch,
-            PLBienDangDeform   = X.PLBienDangDeform,
-            PLMoDongExposed    = X.PLMoDongExposed,
-            PLBienDangCamSu    = X.PLBienDangCamSu,
-            PLNutGoCrackWood   = X.PLNutGoCrackWood,
-            PLBienSacDiscolor  = X.PLBienSacDiscolor,
-            PLOther            = X.PLOther,
-            ChangeDateTime     = GETDATE(),
-            ChangeUserID       = @pProcessUserID
+            SortingDate = X.SortingDate, Shift = X.Shift, PersonName = X.PersonName, VendorCode = X.VendorCode, FactoryName = X.FactoryName,
+            MaterialCode = X.MaterialCode, LotNo = X.LotNo, QtyCheck = X.QtyCheck, QtyOK = X.QtyOK, Remark = X.Remark,
+            PLBuuNhom = X.PLBuuNhom, PLBuuNhua = X.PLBuuNhua, PLBuuRandom = X.PLBuuRandom, PLBongTamNhieu = X.PLBongTamNhieu, PLXuocScratch = X.PLXuocScratch,
+            PLBienDangDeform = X.PLBienDangDeform, PLMoDongExposed = X.PLMoDongExposed, PLBienDangCamSu = X.PLBienDangCamSu, PLNutGoCrackWood = X.PLNutGoCrackWood, PLBienSacDiscolor = X.PLBienSacDiscolor, PLOther = X.PLOther,
+            ChangeUserID = @pProcessUserID, ChangeDateTime = GETDATE()
         FROM STB_VVT_SortingErrorData_Plate T
-        JOIN (
-            SELECT * FROM OPENXML(@iDoc, @UpdateTableName, 2) WITH (
-                OldSortingErrorNo  VARCHAR(20),  SortingDate DATE, Shift VARCHAR(5),
-                PersonName NVARCHAR(100), VendorCode VARCHAR(50), FactoryName NVARCHAR(100),
-                MaterialCode VARCHAR(50), LotNo VARCHAR(100), 
-                QtyCheck INT, QtyOK INT, Remark NVARCHAR(200),
-                PLBuuNhom INT, PLBuuNhua INT, PLBuuRandom INT, PLBongTamNhieu INT,
-                PLXuocScratch INT, PLBienDangDeform INT, PLMoDongExposed INT,
-                PLBienDangCamSu INT, PLNutGoCrackWood INT, PLBienSacDiscolor INT, PLOther INT
-            )
-        ) X ON T.SortingErrorNo = X.OldSortingErrorNo;
-
-        -- ============================================================
-        -- XỬ LÝ DELETE
-        -- ============================================================
-        DELETE T
-        FROM STB_VVT_SortingErrorData_Plate T
-        JOIN (
-            SELECT OldSortingErrorNo
-            FROM OPENXML(@iDoc, @DeleteTableName, 2) WITH (OldSortingErrorNo VARCHAR(20))
-        ) X ON T.SortingErrorNo = X.OldSortingErrorNo;
+        JOIN OPENXML(@iDoc, @UpdateTableName, 2) WITH (
+            SortingErrorNo INT, SortingDate DATE, Shift VARCHAR(5), PersonName NVARCHAR(100), VendorCode VARCHAR(50), 
+            FactoryName NVARCHAR(100), MaterialCode VARCHAR(50), LotNo VARCHAR(100), QtyCheck INT, QtyOK INT, Remark NVARCHAR(200),
+            PLBuuNhom INT, PLBuuNhua INT, PLBuuRandom INT, PLBongTamNhieu INT, PLXuocScratch INT, PLBienDangDeform INT, PLMoDongExposed INT, PLBienDangCamSu INT, PLNutGoCrackWood INT, PLBienSacDiscolor INT, PLOther INT
+        ) X ON T.SortingErrorNo = X.SortingErrorNo;
 
         COMMIT TRANSACTION;
-        EXEC sp_xml_removedocument @iDoc;
-
     END TRY
     BEGIN CATCH
         IF @@TRANCOUNT > 0 ROLLBACK TRANSACTION;
-        EXEC sp_xml_removedocument @iDoc;
-        SET @ERROR_MSG = ERROR_MESSAGE();
-        RAISERROR(@ERROR_MSG, 16, 1);
+        SET @ErrorMsg = ERROR_MESSAGE();
+        RAISERROR(@ErrorMsg, 16, 1);
     END CATCH
+
+    EXEC sp_xml_removedocument @iDoc;
 END
 GO
 
 PRINT N'Tạo SP usp_VVT_SortingErrorData_Plate_iud thành công!';
-GO
-
--- ============================================================
--- BƯỚC 3: ĐĂNG KÝ SERIAL RULE (SmartFramework)
--- ============================================================
-USE SmartFramework;
-GO
-
-IF NOT EXISTS (
-    SELECT 1 FROM dbo.STB_SerialRule WHERE TableName = 'STB_VVT_SortingErrorData_Plate'
-)
-BEGIN
-    INSERT INTO dbo.STB_SerialRule (TableName, SerialColumnName, PrefixData, SerialLen, IsAutoKey, IsLoopIUD, UseYN)
-    VALUES ('STB_VVT_SortingErrorData_Plate', 'SortingErrorNo', 'SPL', 17, 1, 0, 'Y');
-    PRINT N'Đã đăng ký Serial Rule cho STB_VVT_SortingErrorData_Plate.';
-END
-ELSE
-    PRINT N'Serial Rule đã tồn tại.';
-GO
-
--- ============================================================
--- BƯỚC 4: KIỂM TRA KẾT QUẢ
--- ============================================================
-USE SmartFactoryV2;
-GO
-
--- 4.1 Kiểm tra bảng tồn tại
-SELECT 
-    'TABLE EXISTS' AS CheckType,
-    name AS ObjectName, 
-    create_date
-FROM sys.tables 
-WHERE name = 'STB_VVT_SortingErrorData_Plate';
-
--- 4.2 Kiểm tra 2 SP tồn tại
-SELECT 
-    'SP EXISTS' AS CheckType,
-    name AS ObjectName,
-    create_date,
-    modify_date
-FROM sys.procedures 
-WHERE name IN ('usp_VVT_SortingErrorData_Plate_get', 'usp_VVT_SortingErrorData_Plate_iud');
-
--- 4.3 Test gọi SP Search
-EXEC usp_VVT_SortingErrorData_Plate_get
-    @pProcessUserID   = 'vinaadmin',
-    @pProcessLanguage = 'VI',
-    @pProcessViewName = 'SortingDataPlate',
-    @pSortingDateFrom = '2026-01-01',
-    @pSortingDateTo   = '2026-12-31',
-    @pFactoryName     = NULL,
-    @pMaterialCode    = NULL;
-GO
-
-PRINT N'=== DEPLOYMENT PLATE HOÀN TẤT! ===';
 GO
