@@ -1100,5 +1100,56 @@
   </ul>
 </blockquote>
 
+## <span style="color: #8E44AD;">🗓️ Wednesday, April 22, 2026</span>
+<blockquote style="border-left: 4px solid #8E44AD; background-color: #F5EEF8; padding: 10px; margin-bottom: 20px;">
+  <h4 style="margin: 0; color: #2C3E50;">🔹 1. ESR Cabling & MES Support</h4>
+  <ul style="margin-bottom: 10px;">
+    <li><span style="color: #16A085;"><b>Task:</b></span> Fix kéo dây esr cho layout mới sản xuất và sửa lỗi mes từ user.</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Cấu hình lại và kéo cáp esr cho layout mới; tiếp nhận hỗ trợ và fix lỗi MES do user báo cáo.</li>
+    <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done (Morning)</li>
+  </ul>
+
+  <h4 style="margin: 0; color: #2C3E50;">🔹 2. Development Task — Chị Thu QC</h4>
+  <ul>
+    <li><span style="color: #16A085;"><b>Task:</b></span> Dev iss thêm màn của chị Thu QC.</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Thực hiện lập trình, thêm màn hình chức năng mới theo yêu cầu của chị Thu bộ phận QC.</li>
+    <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done (Afternoon)</li>
+  </ul>
+</blockquote>
+
+## <span style="color: #16A085;">🗓️ Thursday, April 23, 2026</span>
+<blockquote style="border-left: 4px solid #16A085; background-color: #E8F8F5; padding: 10px; margin-bottom: 20px;">
+  <h4 style="margin: 0; color: #2C3E50;">🔹 1. New User Equipment Setup</h4>
+  <ul style="margin-bottom: 10px;">
+    <li><span style="color: #16A085;"><b>Task:</b></span> Setup máy cho người mới.</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Chuẩn bị, lắp đặt và cài đặt phần mềm máy tính cho công nhân/nhân viên mới vào làm việc.</li>
+    <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done (Morning)</li>
+  </ul>
+
+  <h4 style="margin: 0; color: #2C3E50;">🔹 2. MES Issue Check — Anh Huấn BG1</h4>
+  <ul>
+    <li><span style="color: #16A085;"><b>Task:</b></span> Check lỗi mes cho a huấn bg1.</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Kiểm tra và xử lý lỗi hệ thống MES được báo từ anh Huấn tại cơ sở BG1.</li>
+    <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done</li>
+  </ul>
+</blockquote>
+
+## <span style="color: #2980B9;">🗓️ Friday, April 24, 2026</span>
+<blockquote style="border-left: 4px solid #2980B9; background-color: #EAF2F8; padding: 10px; margin-bottom: 20px;">
+  <h4 style="margin: 0; color: #2C3E50;">🔹 1. Software Installation & Data Management</h4>
+  <ul style="margin-bottom: 10px;">
+    <li><span style="color: #16A085;"><b>Task:</b></span> Cài nais cho lap mới và xóa data cho chị Hợp.</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Tiến hành cài đặt hệ thống NAIS vào laptop mới. Đồng thời thực hiện xóa dữ liệu thừa/cũ theo yêu cầu của chị Hợp.</li>
+    <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done</li>
+  </ul>
+
+  <h4 style="margin: 0; color: #2C3E50;">🔹 2. UI Development Task — Chị Thu QC</h4>
+  <ul>
+    <li><span style="color: #16A085;"><b>Task:</b></span> Dev task tạo màn hình của chị Thu.</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Tiếp tục code và hoàn thiện giao diện màn hình trên hệ thống theo task được giao từ chị Thu bộ phận QC.</li>
+    <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done</li>
+  </ul>
+</blockquote>
+
 ---
 <p align="center" style="color: #95A5A6; font-size: 13px;"><i>System Generated Document • Compiled gracefully with ✨</i></p>

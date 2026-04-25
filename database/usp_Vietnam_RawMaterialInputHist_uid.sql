@@ -27,10 +27,10 @@ BEGIN
 	Declare @count int=0; 
 	DECLARE @RawMaterialBarcode NVARCHAR(200) =  @pRawMaterialBarcode
 
-	DECLARE @LotMaterialBarcode NVARCHAR(200) =  @pRawMaterialBarcode	-- láº¥y mÃ£ nguyÃªn liá»‡u nháº­p vÃ o khÃ´ng Ä‘Æ°á»£c thay Ä‘á»•i 
-	DECLARE @BarcodeInsert NVARCHAR(200) =  @pBarcode -- láº¥y code cá»§a sáº£n xuáº¥t nháº­p vÃ o khÃ´ng Ä‘Æ°á»£c thay Ä‘á»•i 
+	DECLARE @LotMaterialBarcode NVARCHAR(200) =  @pRawMaterialBarcode	-- lấy mã nguyên liệu nhập vào không được thay đổi 
+	DECLARE @BarcodeInsert NVARCHAR(200) =  @pBarcode -- lấy code của sản xuất nhập vào không được thay đổi 
 
-	declare @ChildMaterialCode varchar(50)=@pMaterialCode -- Ä‘Ã¢y lÃ  láº¥y mÃ£ code nguyÃªn liá»‡u trong BOM
+	declare @ChildMaterialCode varchar(50)=@pMaterialCode -- đây là lấy mã code nguyên liệu trong BOM
 	--raiserror(@MaterialCode,16,1)
 
 	DECLARE @LotNonew1 VARCHAR(20) = ''
@@ -66,7 +66,7 @@ BEGIN
 	
 	declare @bangcode varchar(30)= @pBarcode;
 	DECLARE @checkWorkCenterCode VARCHAR(10) = NULL
-	-- Láº¥y mÃ£ Model Code cá»§a hÃ ng ThÃ nh pháº©m , mÃ£ code Cell hoáº·c Module
+	-- Lấy mã Model Code của hàng Thành phẩm , mã code Cell hoặc Module
 	--select @pBarcode = Barcode , @MaterialCode=MaterialCode
 	--from STB_SetInfo   WITH(NOLOCK) where Barcode in (@pBarcode,@LotNonew1,@LotNonew2,@LotNonew3,@LotNonew4,@LotNonew5,@LotNonew6);
 	
@@ -76,11 +76,11 @@ BEGIN
 	where Barcode in (@pBarcode,@LotNonew1,@LotNonew2,@LotNonew3,@LotNonew4,@LotNonew5,@LotNonew6);
 
 
-	--- Ä‘oáº¡n nÃ y náº¿u Ä‘á»ƒ MÃƒ LÃ³t á»Ÿ bÃªn dÆ°á»›i Ä‘Ã¢y , thÃ¬ sáº½ khÃ´ng kiá»ƒm tra gÃ¬ cáº£ , LÆ°u láº¡i Ä‘Æ°á»£c luÃ´n
+	--- đoạn này nếu để MÃ Lót ở bên dưới đây , thì sẽ không kiểm tra gì cả , Lưu lại được luôn
 	--Md.Diep request pass condition for this Lot 2023-07-31
-	-- Má»Ÿ thÃªm tá»« VVNU013R060614
+	-- Mở thêm từ VVNU013R060614
 
-	--check nvl Ä‘Ã£ Ä‘Æ°á»£c xuáº¥t ra sx hay chÆ°a
+	--check nvl đã được xuất ra sx hay chưa
 
 	--Declare @InputLineCode1 varchar(50),@ExportLineCode
 	
@@ -91,17 +91,17 @@ BEGIN
 	end
 	
 	
-	--Kiá»ƒm tra xem hÃ ng vÃ  nvl xuáº¥t cÃ³ cÃ¹ng line lÃ m hay khÃ´ng 
+	--Kiểm tra xem hàng và nvl xuất có cùng line làm hay không 
 	if(@InputLineCode <> @Linecode)
 	begin
-			declare @errorInput nvarchar(200) = N'Lot : ' +@pRawMaterialBarcode+N' Ä‘Æ°á»£c xuáº¥t ra line : '+@Linecode+N' khÃ´ng pháº£i ra line báº¡n Ä‘ang nháº­p vui lÃ²ng kiá»ƒm tra láº¡i vá»›i kho !'
+			declare @errorInput nvarchar(200) = N'Lot : ' +@pRawMaterialBarcode+N' được xuất ra line : '+@Linecode+N' không phải ra line bạn đang nhập vui lòng kiểm tra lại với kho !'
 
 			RAISERROR(@errorInput,16,1)
 	end
 	*/
 
 
--- Chia nhÃ  mÃ¡y BG2 riÃªng
+-- Chia nhà máy BG2 riêng
 IF @checkWorkCenterCode NOT IN ('VVT_F4')
 BEGIN
 
@@ -109,7 +109,7 @@ BEGIN
 
 
 
---thÃªm Ä‘iá»u kiá»‡n bá» qua khÃ´ng cáº§n check váº­t liá»‡u nháº­p vÃ o
+--thêm điều kiện bỏ qua không cần check vật liệu nhập vào
 declare @check varchar(10)
 	if(@MaterialCode in ('EDVTMD-082')
 	and @pRawMaterialBarcode  in ('0000000000')
@@ -151,16 +151,16 @@ BEGIN
 	set @pLotID_Warehouse_Created =ltrim(rtrim( isnull(@pLotID_Warehouse_Created,'')));
 
 
-	exec usp_VVT_checkHOLD_Material @lotid=@pRawMaterialBarcode        -- check  NVL thÃ´, mÃ£ LÃ³t ML.... náº¿u bá»‹ HOLD thÃ¬ khÃ´ng thá»ƒ LÆ°u láº¡i
+	exec usp_VVT_checkHOLD_Material @lotid=@pRawMaterialBarcode        -- check  NVL thô, mã Lót ML.... nếu bị HOLD thì không thể Lưu lại
 	
-	exec usp_VVT_checkHOLD_Material @lotid=@pLotID_Warehouse_Created   -- check  NVL thÃ´, mÃ£ LÃ³t ML.... náº¿u bá»‹ HOLD thÃ¬ khÃ´ng thá»ƒ LÆ°u láº¡i
+	exec usp_VVT_checkHOLD_Material @lotid=@pLotID_Warehouse_Created   -- check  NVL thô, mã Lót ML.... nếu bị HOLD thì không thể Lưu lại
 	
 
 
 	select @count=count(*) from stb_materialdoclotinfo
 	where lotid in (@pRawMaterialBarcode,@pLotID_Warehouse_Created) and isnull(lotid,'')<>''
-	-- check táº¡m cho bÃªn Ä‘iá»‡n cá»±c
-	-- khi mÃ£ cÃ³ Ä‘áº§u lÃ  sp má»›i kiá»ƒm tra
+	-- check tạm cho bên điện cực
+	-- khi mã có đầu là sp mới kiểm tra
 	if(@count <1 and (@RawMaterialBarcode like '%SP%' or @RawMaterialBarcode like '%SL%' or @RawMaterialBarcode like '%SM%'))
 	begin
 		select @count=count(*) from STB_MaterialLotInfo
@@ -171,14 +171,14 @@ BEGIN
 	--declare @fd varchar(20) = @count
 	
 	--RAISERROR(@pRawMaterialBarcode,16,1)
-	 -- Náº¿u Ä‘Ãºng lÃ  mÃ£ LÃ³t ML.... cá»§a Kho NVL thÃ¬ sáº½ Ä‘Æ°á»£c phÃ©p Ä‘i qua Äoáº¡n nÃ y
-	 -- Náº¿u khÃ´ng pháº£i mÃ£ LÃ³t ML , khÃ´ng pháº£i mÃ£ Äiá»‡n cá»±c , thÃ¬ sáº½ bÃ¡o lá»—i
+	 -- Nếu đúng là mã Lót ML.... của Kho NVL thì sẽ được phép đi qua Đoạn này
+	 -- Nếu không phải mã Lót ML , không phải mã Điện cực , thì sẽ báo lỗi
 	if(@count>0) begin   
 
 
 
-		-- Äoáº¡n nÃ y lÃ  Ä‘iá»u kiá»‡n ngoáº¡i lá»‡ bá» qua ko check Háº¿t háº¡n  NGÃ y thÃ¡ng ná»¯a , 
-		-- chá»‰ cáº§n thÃªm LÃ³t Ngoáº¡i lá»‡ vÃ o mÃ n hÃ¬nh C555 lÃ  sáº½ Ä‘c loáº¡i trá»« Cháº·n háº¿t háº¡n
+		-- Đoạn này là điều kiện ngoại lệ bỏ qua ko check Hết hạn  NGày tháng nữa , 
+		-- chỉ cần thêm Lót Ngoại lệ vào màn hình C555 là sẽ đc loại trừ Chặn hết hạn
 		declare @OpenExpired bit = 0 
 	 	;with data1 as (
 			select LotID,max(createdatetime) as createdatetime
@@ -196,7 +196,7 @@ BEGIN
 		from stb_materialdoclotinfo
 		where lotid in (@pRawMaterialBarcode,@pLotID_Warehouse_Created) and isnull(lotid,'')<>''
 
-		 --kiá»ƒm tra Ä‘Ã£ tÃ¡ch nvl thÃ¬ váº«n cho nháº­p
+		 --kiểm tra đã tách nvl thì vẫn cho nhập
 		if(@mmmaterialcode ='' and  (@RawMaterialBarcode like '%SP%' or @RawMaterialBarcode like '%SL%'or @RawMaterialBarcode like '%SM%'))
 		 begin 
 		--RAISERROR('jf',16,1)
@@ -212,15 +212,15 @@ BEGIN
 		--RAISERROR(@validDate,16,1)
 		--return
 		
-		 -- Náº¿u khÃ´ng má»Ÿ cháº·n á»Ÿ mÃ n hÃ¬nh C555 , khÃ´ng pháº£i LÃ³t NVL Ngoáº¡i lá»‡ , thÃ¬ sáº½ vÃ o cáº£nh bÃ¡o Háº¿t háº¡n 
+		 -- Nếu không mở chặn ở màn hình C555 , không phải Lót NVL Ngoại lệ , thì sẽ vào cảnh báo Hết hạn 
 		if((isnull(@OpenExpired,0)=0 or @OpenExpired=0 or convert(bit,@OpenExpired)=0) and @mmmaterialcode not in ('TRAY1320-B015'))
 		 begin try	
 			if  isnull((select  dateadd(day,(ISNULL(MMExtInt01,3) * 30)+ISNULL(MMExtInt01,3)/12*6,@validDate)  from STB_MaterialMaster where MaterialCode= @mmmaterialcode),getdate()-1)
 				< getdate()
 			begin 
-						set @err=N'NgÃ y thÃ¡ng Sáº£n xuáº¥t cá»§a Vendor Lot quÃ¡ háº¡n sá»­ dá»¥ng,  Hoáº·c chÆ°a thiáº¿t láº­p MMExtInt01 trong mÃ n hÃ¬nh A230: ' + 
+						set @err=N'Ngày tháng Sản xuất của Vendor Lot quá hạn sử dụng,  Hoặc chưa thiết lập MMExtInt01 trong màn hình A230: ' + 
 												@pProductGroupCode+' _ '+ @RawMaterialBarcode +' _ '+
-												@validDate + N'. Vui lÃ²ng kiá»ƒm tra láº¡i!';
+												@validDate + N'. Vui lòng kiểm tra lại!';
 					RAISERROR (@err,16,1);
 					return;
 			end
@@ -228,7 +228,7 @@ BEGIN
 		 end try
 		 begin catch
 
-					set @err=N'KhÃ´ng thá»ƒ chuyá»ƒn Ä‘á»•i kÃ­ tá»± thÃ nh NgÃ y thÃ¡ng,  (Lotattr10)Äáº·c tÃ­nh 10 mÃ n hÃ¬nh F330:' + 
+					set @err=N'Không thể chuyển đổi kí tự thành Ngày tháng,  (Lotattr10)Đặc tính 10 màn hình F330:' + 
 									@pProductGroupCode+' _ '+ @RawMaterialBarcode +' _ '+
 									@validDate ;
 
@@ -241,7 +241,7 @@ BEGIN
 
 	 end
 
-	 	 -- Náº¿u lÃ  CELL, khÃ´ng pháº£i mÃ£ LÃ³t ML , khÃ´ng pháº£i mÃ£ Äiá»‡n cá»±c , khÃ´ng pháº£i MODULE & SINGLECELL , thÃ¬ sáº½ bÃ¡o lá»—i khÃ´ng Ä‘c sá»­ dá»¥ng nhÆ° bÃªn dÆ°á»›i
+	 	 -- Nếu là CELL, không phải mã Lót ML , không phải mã Điện cực , không phải MODULE & SINGLECELL , thì sẽ báo lỗi không đc sử dụng như bên dưới
     else 
 	
 	  
@@ -249,11 +249,11 @@ BEGIN
 		if(isnull(@RawMaterialBarcode,'')<>'' and UPPER(isnull(@pProductGroupCode,'')) not in ( 'ELECTRODEP','ELECTRODEM' ) and UPPER(isnull(@pProductGroupCode,'')) not like 'MODULE%'  and UPPER(isnull(@pProductGroupCode,'')) not like 'SINGLE%'
 		
 		or isnull(@RawMaterialBarcode,'')<>'' and UPPER(isnull(@pProductGroupCode,''))='MODULESLEEVE' 		
-	)  --Cháº·n Label Vendor Lot , Náº¿u khÃ´ng pháº£i mÃ£ Ä‘iá»‡n cá»±c VV.... hoáº·c VJ..... thÃ¬ sáº½ cáº£nh bÃ¡o
+	)  --Chặn Label Vendor Lot , Nếu không phải mã điện cực VV.... hoặc VJ..... thì sẽ cảnh báo
 	 
 	 begin
 	 	--RAISERROR (@pLotID_Warehouse_Created,16,1);
-				set @err=N'KhÃ´ng Ä‘Æ°á»£c sá»­ dá»¥ng mÃ£ Vendor LÃ³t khÃ´ng pháº£i cá»§a Kho NguyÃªn liá»‡u báº¯t Ä‘áº§u = kÃ­ tá»±   ML.... ' + 
+				set @err=N'Không được sử dụng mã Vendor Lót không phải của Kho Nguyên liệu bắt đầu = kí tự   ML.... ' + 
 									isnull(@pProductGroupCode,'') +' _ ' + isnull(@RawMaterialBarcode,'') +' _ '+
 									isnull(@validDate,'') ;
 									
@@ -299,7 +299,7 @@ BEGIN
 
 		
 
-	        -- cháº·n háº¿t háº¡n sá»­ dá»¥ng NVL cá»§a hÃ ng Hela 1840
+	        -- chặn hết hạn sử dụng NVL của hàng Hela 1840
 		exec GetDatefromVENDORLOT1840 
 							@pBarCode = @BarCode,
 							@pProductGroupCode = @ProductGroupCode,
@@ -459,28 +459,28 @@ declare @cterminal1			nVARCHAR(300)='',
 			)
 			,								
 				checkLotNo as (
-					select N'1.KhÃ´ng Ä‘Ãºng LotNo' as infoe
+					select N'1.Không đúng LotNo' as infoe
 					 --where @pBarcode  IN( 'VVPR292R710617','VVPR293R040606')
 					)
 					,
 
 					--select top 1 * from STB_MaterialMaster where MaterialCode='ECVT27-399'
 				checkElectrolyte as (
-					select si.barcode,mm.MaterialCode,MaterialName,N'2.ChÆ°a thiáº¿t láº­p mÃ£ code Tancha cho sáº£n pháº©m nÃ y: '+mm.MaterialCode+' -> '+MaterialName as infoe from 
+					select si.barcode,mm.MaterialCode,MaterialName,N'2.Chưa thiết lập mã code Tancha cho sản phẩm này: '+mm.MaterialCode+' -> '+MaterialName as infoe from 
 					STB_SetInfo si with(nolock) 
 					--where barcode=isnull(@pBarcode,'')
 					join  STB_MaterialMaster mm with(nolock) on mm.materialcode = si.materialcode					
 					where  
 						barcode=isnull(@pBarcode,'') --and  mm.MaterialCode not like 'ECVT%'   -- pass qua model ECVT
-                       --and si.barcode In( 'VVPR292R710617','VVPR293R040606')  -- pass qua barcode cá»¥ thá»ƒ
+                       --and si.barcode In( 'VVPR292R710617','VVPR293R040606')  -- pass qua barcode cụ thể
 					),
 				checkQRCode as (
-					select barcode,MaterialCode,MaterialName,Termi.model,Terminal,N'3.MÃ£ Tancha Ä‘Æ°á»£c thiáº¿t láº­p, khÃ¡c vá»›i mÃ£ QRCODE nháº­p vÃ o B597: '+@pRawMaterialBarcode as infoe 
+					select barcode,MaterialCode,MaterialName,Termi.model,Terminal,N'3.Mã Tancha được thiết lập, khác với mã QRCODE nhập vào B597: '+@pRawMaterialBarcode as infoe 
 					from checkElectrolyte
 					join   Termi on  checkElectrolyte.MaterialName like  '%' + Termi.model + '%' and @ModelSize = Termi.size 		 
 					),
 				chk as(
-					select barcode,checkQRCode.MaterialCode,checkQRCode.MaterialName,model,Terminal,N'3.1. KhÃ´ng Ä‘Ãºng loáº¡i Tancha (DÆ°Æ¡ng)(+) hoáº·c (Ã‚m)(-): '+@pProductGroupCode as infoe 			
+					select barcode,checkQRCode.MaterialCode,checkQRCode.MaterialName,model,Terminal,N'3.1. Không đúng loại Tancha (Dương)(+) hoặc (Âm)(-): '+@pProductGroupCode as infoe 			
 					from checkQRCode 
 					join  STB_MaterialMaster mm2 with(nolock) on mm2.MaterialCode = checkQRCode.Terminal				 
 					   and Terminal = substring(isnull(@pRawMaterialBarcode,''),1,10) 
@@ -507,7 +507,7 @@ declare @cterminal1			nVARCHAR(300)='',
 				   select infoe from checkQRProduct
 				   )
 				   select @err = max(infoe) from collectErr
-						---2. kiem tra loai TanCha tÆ°Æ¡ng á»©ng vs BOM  
+						---2. kiem tra loai TanCha tương ứng vs BOM  
               
 				if(@err <> '4.OK' or @err not like '%.OK'  )begin	
 						set @err = @pBarcode+'_'+substring(@RawMaterialBarcode,1,20)+'...' +' : '+  @err + case when @pProductGroupCode='TERMINALM' then isnull(@cterminal2,'.-')  else isnull(@cterminal1,'.+')  end				
@@ -661,11 +661,11 @@ declare @cterminal1			nVARCHAR(300)='',
 					--VEC2R7107QD GBEC00-008
 					,
 					checkLotNo as (
-					select N'1.KhÃ´ng Ä‘Ãºng LotNo' as infoe
+					select N'1.Không đúng LotNo' as infoe
 					)
 					,
 					checkElectrolyte as (
-					select si.barcode,mm.MaterialCode,MaterialName,N'2.ChÆ°a thiáº¿t láº­p mÃ£ code Electrolyte/ DUNG Dá»ŠCH cho sáº£n pháº©m nÃ y: '+mm.MaterialCode+' -> '+MaterialName as infoe from 
+					select si.barcode,mm.MaterialCode,MaterialName,N'2.Chưa thiết lập mã code Electrolyte/ DUNG DỊCH cho sản phẩm này: '+mm.MaterialCode+' -> '+MaterialName as infoe from 
 					STB_SetInfo si with(nolock) 
 					--where barcode=isnull(@pBarcode,'')
 					join  STB_MaterialMaster mm with(nolock) on mm.materialcode = si.materialcode					
@@ -673,7 +673,7 @@ declare @cterminal1			nVARCHAR(300)='',
 						barcode=isnull(@pBarcode,'') --isnull('VVLT292R710706','')
 					),
 					checkQRCode as (
-					select barcode,MaterialCode,MaterialName,eleclyte.model,electrolyte,N'3.MÃ£ Electrolyte/ DUNG Dá»ŠCH Ä‘Æ°á»£c thiáº¿t láº­p, khÃ¡c vá»›i mÃ£ QRCODE nháº­p vÃ o B597: '+@pRawMaterialBarcode as infoe 
+					select barcode,MaterialCode,MaterialName,eleclyte.model,electrolyte,N'3.Mã Electrolyte/ DUNG DỊCH được thiết lập, khác với mã QRCODE nhập vào B597: '+@pRawMaterialBarcode as infoe 
 					from checkElectrolyte
 					join   eleclyte on  checkElectrolyte.MaterialName like  '%' + eleclyte.model + '%'  and @ModelSize = eleclyte.size 
 					),
@@ -694,7 +694,7 @@ declare @cterminal1			nVARCHAR(300)='',
 				   select infoe from checkQRProduct
 				   )
 				   select @err = max(infoe) from collectErr
-						---2. kiem tra loai dung dá»‹ch tÆ°Æ¡ng á»©ng vs BOM  
+						---2. kiem tra loai dung dịch tương ứng vs BOM  
 
 				if(@err <> '4.OK' or @err not like '%.OK'  )begin 
 					
@@ -719,11 +719,11 @@ declare @cterminal1			nVARCHAR(300)='',
 
 
 
-		--check vá» bá»c
+		--check vỏ bọc
 	if( UPPER(isnull(@pProductGroupCode,'')) in ( 'SLEEVE','MODULESLEEVE' ) ) begin	
 		  select @pRawMaterialBarcode = substring(ltrim(rtrim(@pRawMaterialBarcode)),1,10)
 	 --raiserror(@pRawMaterialBarcode,16,1)
-	 -- Mr.Triá»u chuáº©n bá»‹ audit cháº·n khÃ´ng cho OP nháº­p nháº§m vá» nhÃ´m 	
+	 -- Mr.Triều chuẩn bị audit chặn không cho OP nhập nhầm vỏ nhôm 	
 	DECLARE @MateriaCodeGroupSLEEVE NVARCHAR(50)
 	SELECT  @MateriaCodeGroupSLEEVE=PG.ProductGroupCode from STB_MaterialMaster MM 
 			LEFT OUTER JOIN STB_MaterialType MT WITH(NOLOCK) ON MM.MaterialTypeCode = MT.MaterialTypeCode
@@ -731,7 +731,7 @@ declare @cterminal1			nVARCHAR(300)='',
 	where MM.MaterialCode=@pRawMaterialBarcode
 	if((isnull( @MateriaCodeGroupSLEEVE,'')) not in ( 'SLEEVE','MODULESLEEVE' ))
 	begin
-	   set @err = N'MÃ£ nÃ y khÃ´ng pháº£i lÃ  vá» bá»c cá»§a LotNo: ' +@pBarcode+  N'vá»›i mÃ£ nguyÃªn váº­t liá»‡u: '  + @pRawMaterialBarcode ;
+	   set @err = N'Mã này không phải là vỏ bọc của LotNo: ' +@pBarcode+  N'với mã nguyên vật liệu: '  + @pRawMaterialBarcode ;
 	   raiserror (@err ,16,1) ;
 	   return;
 	end
@@ -743,7 +743,7 @@ declare @cterminal1			nVARCHAR(300)='',
 			select @excluded = count(*) from STB_MaterialMaster
 			where MaterialCode = (select MaterialCode from STB_SetInfo where Barcode=@pBarcode)
 			and MaterialCode in ('EDVTMD-082','EDVTMD-160','EDVTMD-220');
-				----			--bá»• sung ngÃ y 25 thÃ¡ng 2 theo Zalo Mr.Bach 
+				----			--bổ sung ngày 25 tháng 2 theo Zalo Mr.Bach 
 				----select '' as sleeving, 'VEM16R0606QG' as model, '' as size union all 
 				----select '' as sleeving, 'VEM12R0126QG' as model, '' as size 		
 						
@@ -898,7 +898,7 @@ declare @cterminal1			nVARCHAR(300)='',
 			select 'GCMDPT-217' as Sleeving , 'VEC3R0357QG' as model,'3562' as size  union all
 
 			--WEC6R0755QG-WCI(35)(3)
-			--- chá»— dÆ°á»›i Ä‘Ã¢y lÃ  hÃ ng Module nÃªn Ä‘á»ƒ trá»‘ng cá»™t Size
+			--- chỗ dưới đây là hàng Module nên để trống cột Size
 			select 'GCMDPT-445' as sleeving, 'WEC6R0505QA-I' as model, '' as size union all 
 				select 'GCMDPT-205' as sleeving, 'VEC5R4504QG-I' as model, '' as size union all 
 				select 'GCMDPT-205' as sleeving, 'VEC5R4504QG-H' as model, '' as size union all 
@@ -944,10 +944,10 @@ declare @cterminal1			nVARCHAR(300)='',
 				select 'GCMDPT-431' as sleeving, 'WEC6R0155QG-WCI%67%' as model, '' as size union all 
 				select 'GCMDPT-439' as sleeving, 'WEC6R0755QG-WCI(35)(3)' as model, '' as size union all  --Duy Add to Huyen 2023-12-21
 
-				--Mr.Duy bá»• sung
+				--Mr.Duy bổ sung
 				select 'GCMDPT-S10' as sleeving, 'WEC6R0504QD-I' as model, '' as size union all 
 				
-								--back SÆ¡ bá»• sung data ngÃ y 24 thÃ¡ng 1
+								--back Sơ bổ sung data ngày 24 tháng 1
 				select 'GCMDPT-431' as sleeving, 'WEC6R0155QG-IL%ET%' as model, '' as size union all 
 				select 'GCMDPT-472' as sleeving, 'WEC6R0105QA-O' as model, '' as size union all 
 				select 'GCMDPT-387' as sleeving, 'WEC6R0504QG-I%T%' as model, '' as size union all 
@@ -1036,7 +1036,7 @@ declare @cterminal1			nVARCHAR(300)='',
 				select 'GCMDPT-360' as sleeving, 'VEC6R0126QG-H' as model, '' as size union all 
 			 
 
-				--bá»• sung ngÃ y 11 thÃ¡ng 2 theo email Mr.Bach 
+				--bổ sung ngày 11 tháng 2 theo email Mr.Bach 
 				select 'GCMDPT-473' as sleeving, 'WEC3R0205QA' as model, '' as size union all 
 				select 'GCMDPT-208' as sleeving, 'VEC2R7256QG%A' as model, '' as size union all 
 				select 'GCMDPT-249' as sleeving, 'VEC3R0506QG' as model, '' as size union all 
@@ -1050,7 +1050,7 @@ declare @cterminal1			nVARCHAR(300)='',
 				select 'GCMDPT-444' as sleeving, 'WEC3R0556QG' as model, '' as size union all --Mr.back 1359 , ngay 10/11/2022
 				
 
-				--bá»• sung ngÃ y 7 thÃ¡ng 6 theo Huy anh Kaizen system
+				--bổ sung ngày 7 tháng 6 theo Huy anh Kaizen system
 				select 'GCMDPT-434' as sleeving, 'WEC6R0255QD-WC%20%' as model, '' as size	union all 
 				select 'GCMDPT-476' as sleeving, 'VEC3R0105QD' as model, '' as size	union all    --of 0612 model
 				
@@ -1084,11 +1084,11 @@ declare @cterminal1			nVARCHAR(300)='',
 			)
 			,								
 				checkLotNo as (
-					select '1.KhÃ´ng Ä‘Ãºng LotNo' as infoe
+					select '1.Không đúng LotNo' as infoe
 					)
 					,
 				checkElectrolyte as (
-					select si.barcode,mm.MaterialCode,MaterialName,N'2.ChÆ°a thiáº¿t láº­p mÃ£ code Vá» cho sáº£n pháº©m nÃ y: '+mm.MaterialCode+' -> '+MaterialName as infoe from 
+					select si.barcode,mm.MaterialCode,MaterialName,N'2.Chưa thiết lập mã code Vỏ cho sản phẩm này: '+mm.MaterialCode+' -> '+MaterialName as infoe from 
 					STB_SetInfo si with(nolock) 
 					--where barcode=isnull(@pBarcode,'')
 					join  STB_MaterialMaster mm with(nolock) on mm.materialcode = si.materialcode					
@@ -1096,7 +1096,7 @@ declare @cterminal1			nVARCHAR(300)='',
 						barcode=isnull(@pBarcode,'') --isnull('VVLT292R710706','')
 					),
 				checkQRCode as (
-					select barcode,MaterialCode,MaterialName,Sleev.model,Sleeving,N'3.MÃ£ Vá» Ä‘Æ°á»£c thiáº¿t láº­p, khÃ¡c vá»›i mÃ£ QRCODE nháº­p vÃ o B597: '+@pRawMaterialBarcode as infoe 
+					select barcode,MaterialCode,MaterialName,Sleev.model,Sleeving,N'3.Mã Vỏ được thiết lập, khác với mã QRCODE nhập vào B597: '+@pRawMaterialBarcode as infoe 
 					from checkElectrolyte
 					join   Sleev on  checkElectrolyte.MaterialName like  '%' + Sleev.model + '%'  and case when upper(@pProductGroupCode)='MODULESLEEVE' and (Sleev.size='' or Sleev.size is  null) then '' else @ModelSize end = Sleev.size 
 					),
@@ -1117,7 +1117,7 @@ declare @cterminal1			nVARCHAR(300)='',
 				   select infoe from checkQRProduct
 				   )
 				   select @err = max(infoe) from collectErr
-						---2. kiem tra loai dung dá»‹ch tÆ°Æ¡ng á»©ng vs BOM  
+						---2. kiem tra loai dung dịch tương ứng vs BOM  
 
 				if(@err <> '4.OK' or @err not like '%.OK'  )begin	
 					set @err = @pBarcode +'_'+substring(@RawMaterialBarcode,1,20)+'...' +' : '+ @err +  isnull(@csleeve,'.') 
@@ -1143,31 +1143,31 @@ declare @cterminal1			nVARCHAR(300)='',
 
 
 	
-		--Äiá»‡n cá»±c Ã¢m dÆ°Æ¡ng
+		--Điện cực âm dương
 		if( UPPER(isnull(@pProductGroupCode,'')) in ( 'ELECTRODEP','ELECTRODEM' )  ) begin
 			
 
 				select @pRawMaterialBarcode = ltrim(rtrim(@pRawMaterialBarcode));
-				 -- Triá»u thÃªm táº¡m Ä‘á»ƒ check mÃ£ nháº­p vÃ o Ä‘iá»‡n cá»±c
-				--- Kiá»ƒm tra dÃ nh riÃªng cho con low esr vÃ  hÃ ng thÆ°á»ng
+				 -- Triều thêm tạm để check mã nhập vào điện cực
+				--- Kiểm tra dành riêng cho con low esr và hàng thường
 				DECLARE @MaterialCodeNotLowESR VARCHAR(50)
 						DECLARE @MaterialCodeBOM VARCHAR(30)
 				SELECT TOP 1 @MaterialCodeNotLowESR = MaterialCode 
                 FROM STB_SetInfo WITH(NOLOCK) 
                    WHERE Barcode = @pBarcode;
-				-- Náº¿u lÃ  1030 thÃ¬ kiá»ƒm tra thÃªm 1 tÃ­ ná»¯a cÃ³ thá»ƒ dÃ¹ng thÃªm cÃ¡c model khÃ¡c náº¿u cÃ³ yáº¿u cáº§u
+				-- Nếu là 1030 thì kiểm tra thêm 1 tí nữa có thể dùng thêm các model khác nếu có yếu cầu
 				if(@MaterialCodeNotLowESR in('ECVT27-388', 'ECVT30-368')) --'ECVT30-372'
 					BEGIN
-						-- Láº¥y ra mÃ£ NVL Ä‘áº§u vÃ o nháº­p mÃ£ Ä‘iá»‡n cá»±c
+						-- Lấy ra mã NVL đầu vào nhập mã điện cực
 						SELECT TOP 1 @MaterialCodeBOM = MaterialCode 
 						  FROM STB_SetInfo WITH(NOLOCK) 
 						 WHERE Barcode = SUBSTRING(@pRawMaterialBarcode, 1, 14);
-						-- Giá» sáº½ check theo BOM
+						-- Giờ sẽ check theo BOM
 						IF not EXISTS(SELECT 1 FROM STB_BomDetail WHERE MaterialCode=@MaterialCodeNotLowESR AND BomVersion='2001' AND ChildMaterialCode=@MaterialCodeBOM)
 						BEGIN
-							SET @err = N'Lá»—i BOM ' + @MaterialCodeBOM + 
-						   N' khÃ´ng Ä‘Æ°á»£c phÃ©p dÃ¹ng cho Model ' + @MaterialCodeNotLowESR + 
-						   N'. Vui lÃ²ng kiá»ƒm tra láº¡i!';
+							SET @err = N'Lỗi BOM ' + @MaterialCodeBOM + 
+						   N' không được phép dùng cho Model ' + @MaterialCodeNotLowESR + 
+						   N'. Vui lòng kiểm tra lại!';
 							RAISERROR (@err, 16, 1);
 							RETURN;
 
@@ -1175,17 +1175,17 @@ declare @cterminal1			nVARCHAR(300)='',
 
 				ELSE IF (@MaterialCodeNotLowESR in('ECVT30-367'))
 					BEGIn
-						-- Láº¥y ra mÃ£ NVL Ä‘áº§u vÃ o nháº­p mÃ£ Ä‘iá»‡n cá»±c
+						-- Lấy ra mã NVL đầu vào nhập mã điện cực
 						--DECLARE @MaterialCodeBOM VARCHAR(30)
 						SELECT TOP 1 @MaterialCodeBOM = MaterialCode 
 						  FROM STB_SetInfo WITH(NOLOCK) 
 						 WHERE Barcode = SUBSTRING(@pRawMaterialBarcode, 1, 14);
-						-- Giá» sáº½ check theo BOM
+						-- Giờ sẽ check theo BOM
 						IF (@MaterialCodeBOM NOT IN ('CREBO35L', 'CRFYN85L')) OR (not EXISTS(SELECT 1 FROM STB_BomDetail WHERE MaterialCode=@MaterialCodeNotLowESR AND BomVersion='2001' AND ChildMaterialCode=@MaterialCodeBOM))
 						BEGIN
-							SET @err = N'Lá»—i BOM ' + @MaterialCodeBOM + 
-						   N' khÃ´ng Ä‘Æ°á»£c phÃ©p dÃ¹ng cho Model ' + @MaterialCodeNotLowESR + 
-						   N'. Vui lÃ²ng kiá»ƒm tra láº¡i!';
+							SET @err = N'Lỗi BOM ' + @MaterialCodeBOM + 
+						   N' không được phép dùng cho Model ' + @MaterialCodeNotLowESR + 
+						   N'. Vui lòng kiểm tra lại!';
 							RAISERROR (@err, 16, 1);
 							RETURN;
 						END
@@ -1199,24 +1199,24 @@ declare @cterminal1			nVARCHAR(300)='',
 
 			
 
-			   -- Mr.Triá»u cháº·n háº¿t háº¡n sá»­ dá»¥ng NVL Ä‘iá»‡n cá»±c 2025-10-07
-			   -- Cháº·n mÃ£ Ä‘iá»‡n cá»±c háº¿t háº¡n sá»­ dá»¥ng dá»±a vÃ o Ä‘áº·c tÃ­nh 10 trÃªn mÃ n F330
+			   -- Mr.Triều chặn hết hạn sử dụng NVL điện cực 2025-10-07
+			   -- Chặn mã điện cực hết hạn sử dụng dựa vào đặc tính 10 trên màn F330
 			 -- DECLARE @ValidateTime varchar(50);
 			 -- DECLARE @MaterialUnit VARCHAR(50)
 			 -- select @MaterialUnit=MaterialCode  FROM STB_SetInfo WITH (NOLOCK)
     --          WHERE Barcode = SUBSTRING(@pRawMaterialBarcode, 1, 14)
-				--   -- check sá»± tá»“n táº¡i cá»§a thuá»™c tÃ­nh 10
+				--   -- check sự tồn tại của thuộc tính 10
 				   
-			 --  -- Láº¥y ra ngÃ y nháº­p NVL
+			 --  -- Lấy ra ngày nhập NVL
 			 --select TOP 1 @ValidateTime= LotAttr10 from STB_MaterialDocLotInfo where MaterialCode=(select MaterialCode FROM STB_SetInfo WITH (NOLOCK)
     --         WHERE Barcode = SUBSTRING(@pRawMaterialBarcode, 1, 14) and Lotno=SUBSTRING(@pRawMaterialBarcode, 1, 14)) 
 			 --if(@ValidateTime IS NOT NULL AND LTRIM(RTRIM(@ValidateTime)) <> '')
 			 --begin
 		  --      if (isnull((select  dateadd(day,(ISNULL(MMExtInt01,3) * 30)+ISNULL(MMExtInt01,3)/12*6,@ValidateTime)  from STB_MaterialMaster where MaterialCode= @MaterialUnit),getdate()-1) < getdate())
 			 --       begin 
-				--	      set @err=N'NgÃ y thÃ¡ng Sáº£n xuáº¥t cá»§a Vendor Lot quÃ¡ háº¡n sá»­ dá»¥ng,  Hoáº·c chÆ°a thiáº¿t láº­p MMExtInt01 trong mÃ n hÃ¬nh A230: ' + 
+				--	      set @err=N'Ngày tháng Sản xuất của Vendor Lot quá hạn sử dụng,  Hoặc chưa thiết lập MMExtInt01 trong màn hình A230: ' + 
 				--								@pProductGroupCode+' _ '+ @RawMaterialBarcode +' _ '+
-				--								@ValidateTime + N'. Vui lÃ²ng kiá»ƒm tra láº¡i!';
+				--								@ValidateTime + N'. Vui lòng kiểm tra lại!';
 				--	      RAISERROR (@err,16,1);
 				--	      return;
 			 --     end
@@ -1224,9 +1224,9 @@ declare @cterminal1			nVARCHAR(300)='',
 			 -- end
 			
 			
-				--Mr.Duy Cháº·n háº¿t háº¡n Ä‘iá»‡n cá»±c sx táº¡i VN 2023-12-5
+				--Mr.Duy Chặn hết hạn điện cực sx tại VN 2023-12-5
 
-					--kiá»ƒm tra C555
+					--kiểm tra C555
 					declare @OpenExpiredELECTRODE bit = 0 ,@locationWarehouseCode varchar(30),@checkoutproduction int =0
 	 				;with data1 as (
 						select LotID,max(createdatetime) as createdatetime
@@ -1237,7 +1237,7 @@ declare @cterminal1			nVARCHAR(300)='',
 					select top 1 @OpenExpiredELECTRODE = voem.OpenExpired 
 					from stb_vvt_OpenExpiredMaterial voem with(nolock) 
 					join data1 on voem.lotid=data1.lotid and voem.createdatetime = data1.createdatetime
-					--End kiá»ƒm tra C555
+					--End kiểm tra C555
 				
 				if(isnull(@OpenExpiredELECTRODE,0)=0 or @OpenExpiredELECTRODE=0 or convert(bit,@OpenExpiredELECTRODE)=0)
 				 begin 
@@ -1245,22 +1245,22 @@ declare @cterminal1			nVARCHAR(300)='',
 					begin
 						DECLARE @time varchar(20)
 						DECLARE @nDay int
-					    --- LÃ¡y ra NVL mÃ  sx nháº­p vÃ o
+					    --- Láy ra NVL mà sx nhập vào
 
 						SET @time=dbo.fn_VVT_getdatebyVendorLot('SRFYPK0',@pRawMaterialBarcode)
-						-- chexk hÃªt háº¡n 90 ngÃ y
+						-- chexk hêt hạn 90 ngày
 						SET @nDay = Cast(DATEDIFF(dd,@time, GETDATE()) as int)
 							if(@nDay>=90)
 							begin
-								set @err=N'MÃ£ Lot Ä‘Ã£ háº¿t háº¡n.Vui lÃ²ng muá»‘n má»Ÿ liÃªn há»‡ vá»›i QC:' +@pRawMaterialBarcode;
+								set @err=N'Mã Lot đã hết hạn.Vui lòng muốn mở liên hệ với QC:' +@pRawMaterialBarcode;
 							end
 					end
 				 end
 
-			   --End code cháº·n
+			   --End code chặn
 			 
 				
-     			   --cáº¯t mÃ£  nvl Ä‘iá»‡n cá»±c cho Ä‘Ãºng
+     			   --cắt mã  nvl điện cực cho đúng
 					/*
 				if(len(@pRawMaterialBarcode)>14)
 					select @pRawMaterialBarcode = substring(@pRawMaterialBarcode,1,18);
@@ -1270,26 +1270,26 @@ declare @cterminal1			nVARCHAR(300)='',
 				--declare @fd varchar(20)=@count
 				--raiserror (@pProductGroupCode,16,1) ;
 
-				--Kiá»ƒm tra xem lot Ä‘iá»‡n cá»±c Ä‘ang á»Ÿ báº¯c ninh hay báº¯c giang	 
+				--Kiểm tra xem lot điện cực đang ở bắc ninh hay bắc giang	 
 				select  @locationWarehouseCode=WorkCenterCode from STB_ElectrodeSlittingResult where Barcode = @pRawMaterialBarcode
-				--kiá»ƒm tra náº¿u á»Ÿ báº¯c giang sáº½ cháº·n láº¡i náº¿u chÆ°a xuáº¥t ra sáº£n xuáº¥t
+				--kiểm tra nếu ở bắc giang sẽ chặn lại nếu chưa xuất ra sản xuất
 			
 			/*	if(@locationWarehouseCode='VVT_F2')
 				begin
 						select @checkoutproduction=COUNT(*) from Stb_SlittingStock_VVT where Location like '%SANXUAT%'
 						if(@checkoutproduction=0)
 						begin
-							set @err = N'ChÆ°a xuáº¥t Ä‘iá»‡n cá»±c ra sáº£n xuáº¥t cáº§n báº¯n ra sáº£n xuáº¥t trÃªn há»‡ thá»‘ng slitting, hoáº·c sai mÃ£ Lot Slitting Äiá»‡n cá»±c: ' + @pRawMaterialBarcode ;
+							set @err = N'Chưa xuất điện cực ra sản xuất cần bắn ra sản xuất trên hệ thống slitting, hoặc sai mã Lot Slitting Điện cực: ' + @pRawMaterialBarcode ;
 						end
 				 end 
 				 */
-				 -- cháº·n mÃ£ NVL theo chuáº©n BOM náº¿u mÃ  k chuáº©n BOM thi sáº½ báº¯n lá»—i
+				 -- chặn mã NVL theo chuẩn BOM nếu mà k chuẩn BOM thi sẽ bắn lỗi
 
 				select @count=count(*) from STB_SetInfo  si			with(nolock) 
 					join STB_ElectrodeSlittingInfo esi		with(nolock) on si.Barcode = esi.ElectrodeLotNumber
 					join STB_ElectrodeSlittingResult esr	with(nolock) on esi.ElectrodeLotNumber = esr.ElectrodeLotNumber
 					where esr.Barcode=@pRawMaterialBarcode 
-					-- Ä‘á»ƒ táº¡m Ä‘á»ƒ cho sáº£n xuáº¥t lÆ°u
+					-- để tạm để cho sản xuất lưu
 					declare @IsNextModel NVARCHAR(100)
 					select @IsNextModel=MaterialCode from STB_SetInfo with(nolock) where barcode=@pBarcode
 					if(@IsNextModel='ECVT30-309')
@@ -1581,7 +1581,7 @@ declare @cterminal1			nVARCHAR(300)='',
 					--OR @pRawMaterialBarcode LIKE 'VWQL1520001E%'
 					--OR @pRawMaterialBarcode LIKE 'VVQL1520001E%'
 
-					-- Láº¥y danh sÃ¡ch cÃ¡c lot bá»‹ thiáº¿u 
+					-- Lấy danh sách các lot bị thiếu 
 					OR ( @IsNextModel = 'ECVT30-357' AND substring(@pRawMaterialBarcode,1,14) IN (SELECT DISTINCT ElectrodeLotNumber
 																									FROM STB_ElectrodeSlittingResult
 																									WHERE ElectrodeLotNumber NOT IN (
@@ -1602,19 +1602,19 @@ declare @cterminal1			nVARCHAR(300)='',
 			 
 
 				if(@count<1 and @err='')  begin	
-					set @err = N'ChÆ°a nháº­p thÃ´ng tin Slitting Äiá»‡n cá»±c á»Ÿ mÃ n hÃ¬nh B552, hoáº·c sai mÃ£ Lot Slitting Äiá»‡n cá»±c: ' + @pRawMaterialBarcode + '|' + @pProductGroupCode;
+					set @err = N'Chưa nhập thông tin Slitting Điện cực ở màn hình B552, hoặc sai mã Lot Slitting Điện cực: ' + @pRawMaterialBarcode + '|' + @pProductGroupCode;
 				end
 
 				select  @count=count(*)  from STB_SetInfo with(nolock) where barcode=@pBarcode
 
 				if(@count<1 and @err='')  begin	
-					set @err = N'Sai dá»¯ liá»‡u hoáº·c khÃ´ng tá»“n táº¡i LotNo: ' + @pBarcode ;
+					set @err = N'Sai dữ liệu hoặc không tồn tại LotNo: ' + @pBarcode ;
 				end
 
 				select  @count=count(*)  from STB_ModelBasicInfo  with(nolock)  where ModelCode=(select MaterialCode from STB_SetInfo with(nolock) where barcode=@pBarcode)
 
 				if(@count<1 and @err='')  begin	
-					set @err = N'ChÆ°a thiáº¿t láº­p thÃ´ng tin cÆ¡ báº£n cho Sáº£n pháº©m: ' + (select MaterialCode from STB_SetInfo with(nolock) where barcode=@pBarcode) ;
+					set @err = N'Chưa thiết lập thông tin cơ bản cho Sản phẩm: ' + (select MaterialCode from STB_SetInfo with(nolock) where barcode=@pBarcode) ;
 				end
 				
 
@@ -1642,8 +1642,8 @@ declare @cterminal1			nVARCHAR(300)='',
 						where barcode=@pRawMaterialBarcode ;
 					end
 
-					--  pháº§n nÃ y liÃªn quan Ä‘áº¿n tá»“n kho Slitting Zone    http://192.168.1.234:8090/tv  
-					-- khi mÃ£ Slitting Äiá»‡n cá»±c báº¯n vÃ o Ä‘Ã¢y, thÃ¬ sáº½ tá»± Ä‘á»™ng trá»« tá»“n kho á»Ÿ    http://192.168.1.234:8090/tv  
+					--  phần này liên quan đến tồn kho Slitting Zone    http://192.168.1.234:8090/tv  
+					-- khi mã Slitting Điện cực bắn vào đây, thì sẽ tự động trừ tồn kho ở    http://192.168.1.234:8090/tv  
 					exec usp_Vietnam_SlittingStock_get  @pProcessUserID,'EA_PASS','','',@pRawMaterialBarcode,@pBarcode ;
 
 
@@ -1651,8 +1651,8 @@ declare @cterminal1			nVARCHAR(300)='',
 
 
 				DECLARE @pProductGroupCodeM VARCHAR(20) = @pProductGroupCode;
-				--Ä‘Ã¢y lÃ  pháº§n ngoáº¡i lá»‡ hÃ ng Bigsize , lÃ  chá»‰ dÃ¹ng Ä‘iá»‡n cá»±c DÆ°Æ¡ng, khÃ´ng dÃ¹ng Ä‘iá»‡n cá»±c Ã‚m, 
-				--nÃªn thay Ä‘á»•i biáº¿n  @pProductGroupCode tá»« ELECTRODEM -> ELECTRODEP
+				--đây là phần ngoại lệ hàng Bigsize , là chỉ dùng điện cực Dương, không dùng điện cực Âm, 
+				--nên thay đổi biến  @pProductGroupCode từ ELECTRODEM -> ELECTRODEP
 				;with texclude as (
 				select 'VEC2R7107QG' as model union all
 				select 'VEB3R0107QG' as model union all
@@ -1697,7 +1697,7 @@ declare @cterminal1			nVARCHAR(300)='',
 					)
 				
 				/*
-				Láº¥y ra partno 35105 khÃ¡c vá»›i cÃ¡c loáº¡i cÃ²n láº¡i Ä‘á»ƒ kiá»ƒm tra Ä‘iá»u kiá»‡n
+				Lấy ra partno 35105 khác với các loại còn lại để kiểm tra điều kiện
 				*/
 				declare @partNoEle varchar(50)
 				--exec usp_getPartNoElectrone @pRawMaterialBarcode,@partNoEle OUTPUT
@@ -1706,7 +1706,7 @@ declare @cterminal1			nVARCHAR(300)='',
 				--END
 		
 				
-				if(@partNoEle in ('ECVT30-357')) --náº¿u lÃ  hÃ ng nÃ y thÃ¬ Ä‘iá»‡n cá»±c sáº½ khÃ¡c 1 chÃºt pháº£i check thÃªm
+				if(@partNoEle in ('ECVT30-357')) --nếu là hàng này thì điện cực sẽ khác 1 chút phải check thêm
 					begin
 					select  @count=count(*)  from STB_MaterialMaster  with(nolock)  
 						where MaterialCode=(select MaterialCode from STB_SetInfo with(nolock) where barcode=substring(@pRawMaterialBarcode,1,14) )
@@ -1719,13 +1719,13 @@ declare @cterminal1			nVARCHAR(300)='',
 						AND ( MaterialName like  case when  UPPER(isnull(@pProductGroupCode,''))='ELECTRODEM' then '%(-)%' else '%(+)%' end 
 							OR (MaterialName like  '%YP%') ))   -- Mr.Manh update 2026-02-25 
 						
-						-- ThÃªm danh sÃ¡ch cÃ¡c Ä‘iá»‡n cá»±c Ä‘Æ°á»£c báº¯n láº«n lá»™n Ã¢m dÆ°Æ¡ng cho Ä‘á»¡ pháº£i check má»‡t ngÆ°á»i, vÃ¬ tÃªn há» Ä‘áº·t cháº£ theo tiÃªu chuáº©n gÃ¬ cáº£
+						-- Thêm danh sách các điện cực được bắn lẫn lộn âm dương cho đỡ phải check mệt người, vì tên họ đặt chả theo tiêu chuẩn gì cả
 						OR (MaterialCode IN ('CRYPK0-016', 'CRECO85-03', 'CREYO85-04', 'CREYO85-02', 'CREYO85-02', 'CRYPK0-016', 'CRYPK0-017', 'CRYPK0-018', 'CRCEK0-268', 'CRCEK0-266', 'CRYPK0-011', 'CRYPK0-022'))
 
 						)
 					end
 
-				-- UPDATE model 35105 dÃ¹ng 2 Ä‘iá»‡n cá»±c +
+				-- UPDATE model 35105 dùng 2 điện cực +
 				declare @checkElectrodeM int = 0 
 				select @checkElectrodeM = count(*)  from STB_MaterialMaster  with(nolock)  
 						where MaterialCode=(select MaterialCode from STB_SetInfo with(nolock) where barcode=substring(@pRawMaterialBarcode,1,14))
@@ -1738,14 +1738,14 @@ declare @cterminal1			nVARCHAR(300)='',
 				-- END
 
 				if(@count<1 and @err='')  begin	
-					set @err = N'KhÃ´ng Ä‘Ãºng loáº¡i Äiá»‡n cá»±c (DÆ°Æ¡ng)(+Etching) hoáº·c (Ã‚m)(-Forming):  ' 
+					set @err = N'Không đúng loại Điện cực (Dương)(+Etching) hoặc (Âm)(-Forming):  ' 
 									+ @pProductGroupCode +' : '
 									+ (select MaterialCode from STB_SetInfo with(nolock) where barcode=substring(@pRawMaterialBarcode,1,14)) ;
 				end
-				-- cháº·n náº¿u mÃ  khÃ¡c NVL Ä‘iá»‡n cá»±c k thuá»™c model nÃ y thÃ¬ báº¯n lá»—i
+				-- chặn nếu mà khác NVL điện cực k thuộc model này thì bắn lỗi
 				DECLARE @modelOfElectrode VARCHAR(50);
 
-            -- Láº¥y model tÆ°Æ¡ng á»©ng cá»§a Ä‘iá»‡n cá»±c (náº¿u Ä‘Ã£ Ä‘Æ°á»£c gÃ¡n trong SetInfo)
+            -- Lấy model tương ứng của điện cực (nếu đã được gán trong SetInfo)
            
 
 
@@ -1805,7 +1805,7 @@ declare @cterminal1			nVARCHAR(300)='',
 					begin
 						set @err='';
 						set @count=1;
-						--cho phep theo email  VÅ¨ HUY, ngay 28 thÃ¡ng 2 nÄƒm 2023
+						--cho phep theo email  VŨ HUY, ngay 28 tháng 2 năm 2023
 					end
 				--1840
 				
@@ -1841,7 +1841,7 @@ declare @cterminal1			nVARCHAR(300)='',
 
 
 				if(@count<1 and @err='')  begin
-					set @err = N'KhÃ´ng tá»“n táº¡i thiáº¿t láº­p Äiá»‡n cá»±c cá»§a LotNo:  ' +@pBarcode + '  PartNo  = ' 
+					set @err = N'Không tồn tại thiết lập Điện cực của LotNo:  ' +@pBarcode + '  PartNo  = ' 
 								
 								+ isnull((
 									select @ModelSize  
@@ -1850,23 +1850,23 @@ declare @cterminal1			nVARCHAR(300)='',
 									where ModelCode=(select MaterialCode from STB_SetInfo with(nolock) where barcode=@pBarcode)
 								    ),'')
 								
-								+  N'  vá»›i Lot Slitting Äiá»‡n cá»±c:  ' + @pRawMaterialBarcode + N' ,  Chiá»u rá»™ng(Width)  = '
+								+  N'  với Lot Slitting Điện cực:  ' + @pRawMaterialBarcode + N' ,  Chiều rộng(Width)  = '
 								
 								+ isnull((select convert(varchar(8),convert(numeric(5,2),SlittingWidth)) from STB_ElectrodeSlittingResult  with(nolock) where Barcode=@pRawMaterialBarcode),'')
 								
-								+ isnull((select N' ,  Loáº¡i Äiá»‡n cá»±c  = ' + mm.MaterialSource + N' ,  Ä‘á»™ DÃ y = '+ mm.MaterialThickness +'  ,  code = '+ si.MaterialCode + ' : '+ mm.MaterialName 
+								+ isnull((select N' ,  Loại Điện cực  = ' + mm.MaterialSource + N' ,  độ Dày = '+ mm.MaterialThickness +'  ,  code = '+ si.MaterialCode + ' : '+ mm.MaterialName 
 									from  STB_SetInfo si with(nolock) 
 									left outer join STB_MaterialMaster mm  with(nolock)  on si.MaterialCode=mm.MaterialCode
-									where barcode = SUBSTRING(@pRawMaterialBarcode,1,14)  ),'   Thiáº¿t láº­p trong báº£ng  STB_MATERIALMASTER  thiáº¿u dá»¯ liá»‡u  MaterialSource vÃ  MaterialThickness')
+									where barcode = SUBSTRING(@pRawMaterialBarcode,1,14)  ),'   Thiết lập trong bảng  STB_MATERIALMASTER  thiếu dữ liệu  MaterialSource và MaterialThickness')
 
-								+ N'   .   Dá»¯ liá»‡u trong  STB_SLITTINGLOCATIONCONFIG_VVT  = '
+								+ N'   .   Dữ liệu trong  STB_SLITTINGLOCATIONCONFIG_VVT  = '
 								
-								+ isnull((select top 1 SlittingCode+'-'+SlittingSize+N',   Chiá»u rá»™ng(Width)  = '+convert(varchar(8),convert(numeric(5,2),Width))+', Farad ='+convert(varchar(5),convert(INT,Farad))
+								+ isnull((select top 1 SlittingCode+'-'+SlittingSize+N',   Chiều rộng(Width)  = '+convert(varchar(8),convert(numeric(5,2),Width))+', Farad ='+convert(varchar(5),convert(INT,Farad))
 									from STB_SLITTINGLOCATIONCONFIG_VVT with(nolock) where PartNo in (
 									select @ModelSize  + ' , Farad='+MBIExtText05+'F'
 									from STB_ModelBasicInfo  with(nolock)  				
 									where ModelCode=(select MaterialCode from STB_SetInfo with(nolock) where barcode=@pBarcode)
-								    ) ),N'  ChÆ°a  CONFIG  trong báº£ng  :  STB_SLITTINGLOCATIONCONFIG_VVT ') 
+								    ) ),N'  Chưa  CONFIG  trong bảng  :  STB_SLITTINGLOCATIONCONFIG_VVT ') 
 
 				end
 
@@ -1899,7 +1899,7 @@ declare @cterminal1			nVARCHAR(300)='',
 				begin
 					set @err='';
 					set @count=1;
-					--cho phep theo email  VÅ¨ HUY, ngay 28 thÃ¡ng 2 nÄƒm 2023
+					--cho phep theo email  VŨ HUY, ngay 28 tháng 2 năm 2023
 				end
 
 
@@ -1953,7 +1953,7 @@ declare @cterminal1			nVARCHAR(300)='',
 						LotCount = @LotCount
 					where Barcode = @pRawMaterialBarcode
 
-				--Mr.duy thÃªm dá»¯ liá»‡u xuáº¥t ra line cho Ä‘iá»‡n cá»±c
+				--Mr.duy thêm dữ liệu xuất ra line cho điện cực
 				
 					 exec usp_MaterialWarehouseInOutHist_iud_exportElectr @pProcessUserID,@pProcessLanguage,@BarcodeInsert,@LotMaterialBarcode,0,'insert'
 				
@@ -1969,7 +1969,7 @@ declare @cterminal1			nVARCHAR(300)='',
 
 
 
-		--kiá»ƒm tra NVL Tape Pi
+		--kiểm tra NVL Tape Pi
 if( UPPER(isnull(@pProductGroupCode,'')) in ( 'PiTape' )  /*or upper(@pProductGroupCode) like '%TAPE%'  */) begin	
 
 
@@ -1979,7 +1979,7 @@ if( UPPER(isnull(@pProductGroupCode,'')) in ( 'PiTape' )  /*or upper(@pProductGr
 								 or @pRawMaterialBarcode like '%GBRXPL-002%' 
 								 or @pRawMaterialBarcode like '%GBRXPL-003%'
 	 )begin
-				raiserror (N'KhÃ´ng Ä‘Æ°á»£c phÃ©p sá»­ dá»¥ng RONGXIN Tape, vui lÃ²ng liÃªn há»‡ bá»™ pháº­n QC ' ,16,1) ;
+				raiserror (N'Không được phép sử dụng RONGXIN Tape, vui lòng liên hệ bộ phận QC ' ,16,1) ;
 				return;	
 	 end
 	
@@ -2007,7 +2007,7 @@ if( UPPER(isnull(@pProductGroupCode,'')) in ( 'PiTape' )  /*or upper(@pProductGr
 			--TAPEX	GBTPPL-001
 			--TAPEX	GBTPPL-007
 			--TAPEX	GBTPPL-002
-			raiserror (N'Nháº­p sai Ä‘á»‹nh dáº¡ng Tape, khÃ´ng pháº£i Ä‘á»‹nh dáº¡ng RUIBAI hoáº·c TAPEX, vui lÃ²ng liÃªn há»‡ bá»™ pháº­n QC ' ,16,1) ;
+			raiserror (N'Nhập sai định dạng Tape, không phải định dạng RUIBAI hoặc TAPEX, vui lòng liên hệ bộ phận QC ' ,16,1) ;
 			return;	
 	 end
 
@@ -2060,7 +2060,7 @@ if( UPPER(isnull(@pProductGroupCode,'')) in ( 'PiTape' )  /*or upper(@pProductGr
 			--)
 			
 			if(@count=0)  begin
-					set @err = N'KhÃ´ng tá»“n táº¡i thiáº¿t láº­p PiTape cá»§a LotNo: ' +@pBarcode+  N' vá»›i mÃ£ Tape: ' + @pRawMaterialBarcode + @ctape;
+					set @err = N'Không tồn tại thiết lập PiTape của LotNo: ' +@pBarcode+  N' với mã Tape: ' + @pRawMaterialBarcode + @ctape;
 			end		
 			
 			--select *
@@ -2097,7 +2097,7 @@ if( UPPER(isnull(@pProductGroupCode,'')) in ( 'PiTape' )  /*or upper(@pProductGr
 
 
 
-		-- check Giáº¥y
+		-- check Giấy
 if( UPPER(isnull(@pProductGroupCode,'')) in ( 'Separator' )  or lower(@pProductGroupCode) like '%separato%'  ) begin	
 
 
@@ -2109,7 +2109,7 @@ if( UPPER(isnull(@pProductGroupCode,'')) in ( 'Separator' )  or lower(@pProductG
 	where MM.MaterialCode=@pRawMaterialBarcode
 	if((isnull(@MateriaCodeGroupSEPARATOR,'')) not in ( 'SEPARATOR' ))
 	begin
-	   set @err = N'MÃ£ nÃ y khÃ´ng pháº£i lÃ  giáº¥y cá»§a LotNo: ' +@pBarcode+  N'vá»›i mÃ£ nguyÃªn váº­t liá»‡u: '  + @pRawMaterialBarcode ;
+	   set @err = N'Mã này không phải là giấy của LotNo: ' +@pBarcode+  N'với mã nguyên vật liệu: '  + @pRawMaterialBarcode ;
 	   raiserror (@err ,16,1) ;
 	   return;
 	end
@@ -2120,7 +2120,7 @@ if( UPPER(isnull(@pProductGroupCode,'')) in ( 'Separator' )  or lower(@pProductG
 		 select 'GBNKSP-060' as separatocode, 'HY-CAP VEC2R7506QG (1840),' as models  union all
 		-- select 'GBNKSP-054' as separatocode, 'HY-CAP VEC2R7105QG-N (0813),' as models  union all
 		select 'GBNKSP-057' as separatocode, 'VEL08203R8306G (0820),' as models  union all
-		select 'GBNKSP-062' AS separatocode,'WEC3R0156QD (1035)' as models union all  --Mr.Trieu Update ngÃ y 2025-09-06
+		select 'GBNKSP-062' AS separatocode,'WEC3R0156QD (1035)' as models union all  --Mr.Trieu Update ngày 2025-09-06
 		select 'GBNKSP-059' as separatocode,'VET10252R7106G (1025)' as models union all
 		 select materialcode , semiProductname
 			  from stb_vvt_materialbo with(nolock)
@@ -2143,7 +2143,7 @@ if( UPPER(isnull(@pProductGroupCode,'')) in ( 'Separator' )  or lower(@pProductG
 			
 			if(@count=0 --and (@MaterialCode='ECVT27-369' or @ModelSize='1859')
 			)  begin
-					set @err = N'KhÃ´ng tá»“n táº¡i thiáº¿t láº­p Giáº¥y NgÄƒn cá»§a LotNo: ' +@pBarcode+  N' vá»›i mÃ£ Giáº¥y: ' + @pRawMaterialBarcode ;
+					set @err = N'Không tồn tại thiết lập Giấy Ngăn của LotNo: ' +@pBarcode+  N' với mã Giấy: ' + @pRawMaterialBarcode ;
 			end
 				
 
@@ -2187,7 +2187,7 @@ if( UPPER(isnull(@pProductGroupCode,'')) in ( 'RubberPad' )  /*or lower(@pProduc
 	where MM.MaterialCode=@pRawMaterialBarcode
 	if((UPPER(isnull(@MateriaCodeGroupRubberPad,'')) not in ( 'RUBBER-PAD' )))
 	begin
-	   set @err = N'MÃ£ nÃ y khÃ´ng pháº£i lÃ  cao su cá»§a LotNo: ' +@pBarcode+  N'vá»›i mÃ£ nguyÃªn váº­t liá»‡u: '  + @pRawMaterialBarcode ;
+	   set @err = N'Mã này không phải là cao su của LotNo: ' +@pBarcode+  N'với mã nguyên vật liệu: '  + @pRawMaterialBarcode ;
 	   raiserror (@err ,16,1) ;
 	   return;
 	end
@@ -2222,7 +2222,7 @@ if( UPPER(isnull(@pProductGroupCode,'')) in ( 'RubberPad' )  /*or lower(@pProduc
 
 			if(@count=0  --and (@MaterialCode='ECVT27-369' or @ModelSize='1859'			)
 			)  begin
-					set @err = N'KhÃ´ng tá»“n táº¡i thiáº¿t láº­p CAO SU cá»§a LotNo: ' +@pBarcode+  N' vá»›i mÃ£ CAO SU: ' + @pRawMaterialBarcode ;
+					set @err = N'Không tồn tại thiết lập CAO SU của LotNo: ' +@pBarcode+  N' với mã CAO SU: ' + @pRawMaterialBarcode ;
 			end
 				
 
@@ -2250,14 +2250,14 @@ if( UPPER(isnull(@pProductGroupCode,'')) in ( 'RubberPad' )  /*or lower(@pProduc
 
 
 
-   --Cháº·n vá» nhÃ´m
+   --Chặn vỏ nhôm
 if( UPPER(isnull(@pProductGroupCode,'')) in ( 'Case' )  /*or lower(@pProductGroupCode) like '%case%' */ ) begin	
 
  
 
      select @pRawMaterialBarcode = substring(ltrim(rtrim(@pRawMaterialBarcode)),1,10)
 	 --raiserror(@pRawMaterialBarcode,16,1)
-	 -- Mr.Triá»u chuáº©n bá»‹ audit cháº·n khÃ´ng cho OP nháº­p nháº§m vá» nhÃ´m 	
+	 -- Mr.Triều chuẩn bị audit chặn không cho OP nhập nhầm vỏ nhôm 	
 	DECLARE @MateriaCodeGroupCASE NVARCHAR(50)
 	SELECT @MateriaCodeGroupCASE=PG.ProductGroupCode from STB_MaterialMaster MM 
 			LEFT OUTER JOIN STB_MaterialType MT WITH(NOLOCK) ON MM.MaterialTypeCode = MT.MaterialTypeCode
@@ -2265,7 +2265,7 @@ if( UPPER(isnull(@pProductGroupCode,'')) in ( 'Case' )  /*or lower(@pProductGrou
 	where MM.MaterialCode=@pRawMaterialBarcode
 	if((isnull(@MateriaCodeGroupCASE,'')) not in ( 'CASE', 'AL-CASE' )) -- Mr.Manh add AL-CASE
 	begin
-	   set @err = N'MÃ£ nÃ y khÃ´ng pháº£i lÃ  vá» nhÃ´m cá»§a LotNo: ' +@pBarcode+  N'vá»›i mÃ£ nguyÃªn váº­t liá»‡u: '  + @pRawMaterialBarcode ;
+	   set @err = N'Mã này không phải là vỏ nhôm của LotNo: ' +@pBarcode+  N'với mã nguyên vật liệu: '  + @pRawMaterialBarcode ;
 	   raiserror (@err ,16,1) ;
 	   return;
 	end
@@ -2348,7 +2348,7 @@ if( UPPER(isnull(@pProductGroupCode,'')) in ( 'Case' )  /*or lower(@pProductGrou
 
 			if(@count=0  --and (@MaterialCode='ECVT27-369' or @ModelSize='1859') 
 			)  begin
-					set @err = N'KhÃ´ng tá»“n táº¡i thiáº¿t láº­p Vá» NhÃ´m cá»§a LotNo: ' +@pBarcode+  N' vá»›i mÃ£ Vá» NhÃ´m: ' + @pRawMaterialBarcode ;
+					set @err = N'Không tồn tại thiết lập Vỏ Nhôm của LotNo: ' +@pBarcode+  N' với mã Vỏ Nhôm: ' + @pRawMaterialBarcode ;
 			end
 				
 
@@ -2363,22 +2363,22 @@ if( UPPER(isnull(@pProductGroupCode,'')) in ( 'Case' )  /*or lower(@pProductGrou
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------
 
-   -- Mr.Duy thiáº¿t láº­p Ä‘iá»u kiá»‡n cho nhÃ  mÃ¡y hÃ  nam
-   	-- Danh sÃ¡ch biáº¿n
-		DECLARE @pRawMaterialBarcode1 NVARCHAR(200) =  @pRawMaterialBarcode  --barcode cá»§a sáº£n xuáº¥t
-		 , @SizeCode                 VARCHAR(20)   -- láº¥y sizecode Ä‘á»ƒ so sÃ¡nh ra tÃªn tiáº¿ng viá»‡t vá»›i cÃ¡c mÃ£ nguyÃªn liá»‡u lá»—i
+   -- Mr.Duy thiết lập điều kiện cho nhà máy hà nam
+   	-- Danh sách biến
+		DECLARE @pRawMaterialBarcode1 NVARCHAR(200) =  @pRawMaterialBarcode  --barcode của sản xuất
+		 , @SizeCode                 VARCHAR(20)   -- lấy sizecode để so sánh ra tên tiếng việt với các mã nguyên liệu lỗi
 		 , @NameVVT					nvarchar(200)
-		DECLARE @ProductGroupCodeHNCheck NVARCHAR(200) =  @pProductGroupCode -- nhÃ³m mÃ£ nguyÃªn liá»‡u
-		DECLARE @LotMaterialBarcodeHNCheck NVARCHAR(200) =  @LotMaterialBarcode	--barcode nguyÃªn liá»‡u nháº­p vÃ o mÃ n hÃ¬nh
+		DECLARE @ProductGroupCodeHNCheck NVARCHAR(200) =  @pProductGroupCode -- nhóm mã nguyên liệu
+		DECLARE @LotMaterialBarcodeHNCheck NVARCHAR(200) =  @LotMaterialBarcode	--barcode nguyên liệu nhập vào màn hình
 		DECLARE @countcheckHN int =  0
 	--end
 
 
-     --Cháº·n gáº§n nhÆ° táº¥t cáº£ nguyÃªn váº­t liá»‡u Ä‘áº§u vÃ o trá»« dung dá»‹ch,Tapping do 2 cÃ¡i cÃ³ @pProductGroupCode giá»‘ng nhau
+     --Chặn gần như tất cả nguyên vật liệu đầu vào trừ dung dịch,Tapping do 2 cái có @pProductGroupCode giống nhau
 	if( UPPER(isnull(@pProductGroupCode,'')) in ( 'ANODE-FOIL-1','CATHODE-FOIL-1','CON-PAPER-1','HEATING-TAPE-1' ,'RUBBER-1','AL-CASE-1','BASE-PLATE-1','CARRIER-TAPE-1','COVER-TAPE-1','REEL-1','INNER-BOX-1','OUTER-BOX-1')  ) 
 	begin	
 		
-		--láº¥y ra size hÃ ng Ä‘Æ°á»£c config á»Ÿ A410
+		--lấy ra size hàng được config ở A410
 		  SELECT @SizeCode = CASE	
 								WHEN MBIExtText07 = 'CHIP_HN' THEN 'CHIP_HN'
 								WHEN MBIExtText07 = 'NORMAL_HN' THEN 'NORMAL_HN'
@@ -2387,18 +2387,18 @@ if( UPPER(isnull(@pProductGroupCode,'')) in ( 'Case' )  /*or lower(@pProductGrou
 	  FROM STB_ModelBasicInfo with(nolock) 
 	 WHERE ModelCode = (SELECT MaterialCode FROM STB_SetInfo with(nolock)  WHERE Barcode  =@pBarcode )
 
-	 -- Láº¥y ra tÃªn tiáº¿ng viá»‡t
+	 -- Lấy ra tên tiếng việt
 	 select @NameVVT=ProductGroupName_VVT from STB_RawMaterialBaiscInfo where SizeCode = @SizeCode and ProductGroupCode = @pProductGroupCode
 
 
-		select @pRawMaterialBarcode = ltrim(rtrim(@mmmaterialcode)) --mÃ£ code cá»§a nguyÃªn liá»‡u
+		select @pRawMaterialBarcode = ltrim(rtrim(@mmmaterialcode)) --mã code của nguyên liệu
 			--declare @ModelSize1 varchar(10)=@ModelSize
 	 		--raiserror(@pProductGroupCode,16,1)
 			--return;
 		
 			;with getListMaterialBom as ( 				
 
-			 -- Láº¥y danh sÃ¡ch cÃ¡c nguyÃªn liá»‡u Ä‘Æ°á»£c cáº¥u hÃ¬nh trong bom chá»‰ láº¥y á»Ÿ nhÃ  mÃ¡y hÃ  nam theo tÃªn Polymer.
+			 -- Lấy danh sách các nguyên liệu được cấu hình trong bom chỉ lấy ở nhà máy hà nam theo tên Polymer.
 			  select distinct ChildMaterialCode,bd.materialcode,replace(mbi.modelname,'Polymer ','') as models,
 				RIGHT('0'+CONVERT(VARCHAR, CONVERT(INT, MBI.MBISizeW)), 2) + CONVERT(VARCHAR, CONVERT(INT, MBI.MBISizeH)) as size
 				from STB_BomDetail bd with(nolock) 
@@ -2411,25 +2411,25 @@ if( UPPER(isnull(@pProductGroupCode,'')) in ( 'Case' )  /*or lower(@pProductGrou
 			  --replace(replace(models,' ',''),'('+size+')','') models, size 
 			  replace(models,'('+size+')','') models, size 
 			  from getListMaterialBom
-			 where len(size)=3 or len(size)=4 or len(size)=5 --chá»‰ láº¥y 4 vÃ  5 kÃ­ tá»±
+			 where len(size)=3 or len(size)=4 or len(size)=5 --chỉ lấy 4 và 5 kí tự
 			),
-			checkInfomationBarcode as ( -- TÃ¬m kiáº¿m trong thÃ´ng tin cá»§a barcode nháº­p vÃ o
-					select si.barcode,mm.MaterialCode,MaterialName,N'2.ChÆ°a thiáº¿t láº­p mÃ£ code '+@NameVVT+ N'cho sáº£n pháº©m nÃ y: '+mm.MaterialCode+' -> '+MaterialName as infoe from 
+			checkInfomationBarcode as ( -- Tìm kiếm trong thông tin của barcode nhập vào
+					select si.barcode,mm.MaterialCode,MaterialName,N'2.Chưa thiết lập mã code '+@NameVVT+ N'cho sản phẩm này: '+mm.MaterialCode+' -> '+MaterialName as infoe from 
 					STB_SetInfo si with(nolock) 
 					join  STB_MaterialMaster mm with(nolock) on mm.materialcode = si.materialcode					
 					where  
 						barcode=isnull(@pBarcode,'') 
 					),
-				checkConfigBOMBarode as ( -- láº¥y ra cÃ¡c thiáº¿t láº­p cÃ³ sáºµn vá»›i mÃ£ hÃ ng vÃ  size
-					select barcode,cibc.MaterialCode,MaterialName,gsc.models,ChildMaterialCode,N'3.'+@NameVVT+ N' Ä‘Æ°á»£c thiáº¿t láº­p, khÃ¡c vá»›i mÃ£ QRCODE nháº­p vÃ o B597: '+@pRawMaterialBarcode1 as infoe 
+				checkConfigBOMBarode as ( -- lấy ra các thiết lập có sẵn với mã hàng và size
+					select barcode,cibc.MaterialCode,MaterialName,gsc.models,ChildMaterialCode,N'3.'+@NameVVT+ N' được thiết lập, khác với mã QRCODE nhập vào B597: '+@pRawMaterialBarcode1 as infoe 
 					from checkInfomationBarcode cibc
 					join   getSizeCode gsc on  cibc.MaterialCode = gsc.MaterialCode 
 					
 					),
-				checkConfigBOMBarode1 as ( -- láº¥y ra cÃ¡c thiáº¿t láº­p cÃ³ sáºµn vá»›i mÃ£ hÃ ng vÃ  size
+				checkConfigBOMBarode1 as ( -- lấy ra các thiết lập có sẵn với mã hàng và size
 					select barcode,cibc.MaterialCode,cibc.MaterialName,gsc.models,ChildMaterialCode,mm2.ProductGroupCode
-					,N'3.'+@NameVVT+N' Ä‘Æ°á»£c thiáº¿t láº­p, khÃ¡c vá»›i mÃ£ QRCODE nháº­p vÃ o B597: '+@pRawMaterialBarcode1+ CHAR(10) +
-					+N'MÃ£ Ä‘Ãºng sáº½ lÃ  :'+gsc.ChildMaterialCode	
+					,N'3.'+@NameVVT+N' được thiết lập, khác với mã QRCODE nhập vào B597: '+@pRawMaterialBarcode1+ CHAR(10) +
+					+N'Mã đúng sẽ là :'+gsc.ChildMaterialCode	
 					 as infoe
 					
 					from checkInfomationBarcode cibc
@@ -2437,7 +2437,7 @@ if( UPPER(isnull(@pProductGroupCode,'')) in ( 'Case' )  /*or lower(@pProductGrou
 					join  STB_MaterialMaster mm2 with(nolock) on mm2.MaterialCode = gsc.ChildMaterialCode	
 					where mm2.ProductGroupCode = UPPER(isnull( SUBSTRING(@pProductGroupCode, 1, LEN(@pProductGroupCode) - 2),'')) ),
 
-				checkQRProduct as ( -- kiá»ƒm tra xem cÃ¡c mÃ£ thiáº¿t láº­p trong bom vÃ  nháº­p vÃ o cÃ³ khá»›p nhau khÃ´ng náº¿u cÃ³ thÃ¬ sáº½ cÃ³ OK Ä‘á»ƒ k bÃ¡o lá»—i
+				checkQRProduct as ( -- kiểm tra xem các mã thiết lập trong bom và nhập vào có khớp nhau không nếu có thì sẽ có OK để k báo lỗi
 					select '4.OK' as infoe from checkConfigBOMBarode  ccgbb					
 					join  STB_MaterialMaster mm2 with(nolock) on mm2.MaterialCode = ccgbb.ChildMaterialCode			 
 				   and ccgbb.ChildMaterialCode = @pRawMaterialBarcode --isnull('GBCP00-001','') GCMDPT-277
@@ -2453,9 +2453,9 @@ if( UPPER(isnull(@pProductGroupCode,'')) in ( 'Case' )  /*or lower(@pProductGrou
 				   union all
 				   select infoe from checkQRProduct
 				   )
-				  select @err = max(infoe) from collectErr -- láº¥y loáº¡i lá»—i cao nháº¥t
+				  select @err = max(infoe) from collectErr -- lấy loại lỗi cao nhất
 
-		-- Kiá»ƒm tra xem mÃ£ nguyÃªn liá»‡u tÆ°Æ¡ng á»©ng vá»›i mÃ£ nguyÃªn liá»‡u bom hay khÃ´ng
+		-- Kiểm tra xem mã nguyên liệu tương ứng với mã nguyên liệu bom hay không
 
 		if(@err <> '4.OK' or @err not like '%.OK'  )begin
 						
@@ -2467,10 +2467,10 @@ if( UPPER(isnull(@pProductGroupCode,'')) in ( 'Case' )  /*or lower(@pProductGrou
 
 	end
 
-	--Cháº·n nguyÃªn váº­t liá»‡u vá»›i tancha cá»§a hÃ  nam
+	--Chặn nguyên vật liệu với tancha của hà nam
 	if( UPPER(isnull(@pProductGroupCode,'')) in ('LEAD-WIRE-1','LEAD-WIRE-2' )  ) 
 	begin	
-		--láº¥y ra size hÃ ng Ä‘Æ°á»£c config á»Ÿ A410
+		--lấy ra size hàng được config ở A410
 		  SELECT @SizeCode = CASE	
 								WHEN MBIExtText07 = 'CHIP_HN' THEN 'CHIP_HN'
 								WHEN MBIExtText07 = 'NORMAL_HN' THEN 'NORMAL_HN'
@@ -2479,18 +2479,18 @@ if( UPPER(isnull(@pProductGroupCode,'')) in ( 'Case' )  /*or lower(@pProductGrou
 							  FROM STB_ModelBasicInfo with(nolock) 
 							 WHERE ModelCode = (SELECT MaterialCode FROM STB_SetInfo with(nolock)  WHERE Barcode  =@pBarcode )
 
-	 -- Láº¥y ra tÃªn tiáº¿ng viá»‡t
+	 -- Lấy ra tên tiếng việt
 	 select @NameVVT=ProductGroupName_VVT from STB_RawMaterialBaiscInfo where SizeCode = @SizeCode and ProductGroupCode = @pProductGroupCode
 
 
-		select @pRawMaterialBarcode = ltrim(rtrim(@mmmaterialcode)) --mÃ£ code cá»§a nguyÃªn liá»‡u
+		select @pRawMaterialBarcode = ltrim(rtrim(@mmmaterialcode)) --mã code của nguyên liệu
 			--declare @ModelSize1 varchar(10)=@ModelSize
 	 		--raiserror(@pProductGroupCode,16,1)
 			--return;
 
 			;with getListMaterialBom as ( 				
 
-			 -- Láº¥y danh sÃ¡ch cÃ¡c nguyÃªn liá»‡u Ä‘Æ°á»£c cáº¥u hÃ¬nh trong bom chá»‰ láº¥y á»Ÿ nhÃ  mÃ¡y hÃ  nam theo tÃªn Polymer.
+			 -- Lấy danh sách các nguyên liệu được cấu hình trong bom chỉ lấy ở nhà máy hà nam theo tên Polymer.
 			  select distinct ChildMaterialCode,bd.materialcode,replace(mbi.modelname,'Polymer ','') as models,
 				RIGHT('0'+CONVERT(VARCHAR, CONVERT(INT, MBI.MBISizeW)), 2) + CONVERT(VARCHAR, CONVERT(INT, MBI.MBISizeH)) as size
 				from STB_BomDetail bd with(nolock) 
@@ -2503,25 +2503,25 @@ if( UPPER(isnull(@pProductGroupCode,'')) in ( 'Case' )  /*or lower(@pProductGrou
 			  replace(replace(models,' ',''),'('+size+')','') models, size 
 			  --replace(models,'('+size+')','') models, size 
 			  from getListMaterialBom
-			 where len(size)=3 or len(size)=4 or len(size)=5 --chá»‰ láº¥y 4 vÃ  5 kÃ­ tá»±
+			 where len(size)=3 or len(size)=4 or len(size)=5 --chỉ lấy 4 và 5 kí tự
 			),
-			checkInfomationBarcode as ( -- TÃ¬m kiáº¿m trong thÃ´ng tin cá»§a barcode nháº­p vÃ o
-					select si.barcode,mm.MaterialCode,MaterialName,N'2.ChÆ°a thiáº¿t láº­p mÃ£ code '+@NameVVT+ N'cho sáº£n pháº©m nÃ y: '+mm.MaterialCode+' -> '+MaterialName as infoe from 
+			checkInfomationBarcode as ( -- Tìm kiếm trong thông tin của barcode nhập vào
+					select si.barcode,mm.MaterialCode,MaterialName,N'2.Chưa thiết lập mã code '+@NameVVT+ N'cho sản phẩm này: '+mm.MaterialCode+' -> '+MaterialName as infoe from 
 					STB_SetInfo si with(nolock) 
 					join  STB_MaterialMaster mm with(nolock) on mm.materialcode = si.materialcode					
 					where  
 						barcode=isnull(@pBarcode,'') 
 					),
-				checkConfigBOMBarode as ( -- láº¥y ra cÃ¡c thiáº¿t láº­p cÃ³ sáºµn vá»›i mÃ£ hÃ ng vÃ  size
-					select barcode,cibc.MaterialCode,MaterialName,gsc.models,ChildMaterialCode,N'3.'+@NameVVT+ N' Ä‘Æ°á»£c thiáº¿t láº­p, khÃ¡c vá»›i mÃ£ QRCODE nháº­p vÃ o B597: '+@pRawMaterialBarcode1 as infoe 
+				checkConfigBOMBarode as ( -- lấy ra các thiết lập có sẵn với mã hàng và size
+					select barcode,cibc.MaterialCode,MaterialName,gsc.models,ChildMaterialCode,N'3.'+@NameVVT+ N' được thiết lập, khác với mã QRCODE nhập vào B597: '+@pRawMaterialBarcode1 as infoe 
 					from checkInfomationBarcode cibc
 					join   getSizeCode gsc on  cibc.MaterialCode = gsc.MaterialCode 
 					
 					),
-				checkConfigBOMBarode1 as ( -- láº¥y ra cÃ¡c thiáº¿t láº­p cÃ³ sáºµn vá»›i mÃ£ hÃ ng vÃ  size
+				checkConfigBOMBarode1 as ( -- lấy ra các thiết lập có sẵn với mã hàng và size
 					select barcode,cibc.MaterialCode,cibc.MaterialName,gsc.models,ChildMaterialCode,mm2.ProductGroupCode
-					,N'3.'+@NameVVT+N' Ä‘Æ°á»£c thiáº¿t láº­p, khÃ¡c vá»›i mÃ£ QRCODE nháº­p vÃ o B597: '+@pRawMaterialBarcode1+ CHAR(10) +
-					+N'MÃ£ Ä‘Ãºng sáº½ lÃ  :'+gsc.ChildMaterialCode	
+					,N'3.'+@NameVVT+N' được thiết lập, khác với mã QRCODE nhập vào B597: '+@pRawMaterialBarcode1+ CHAR(10) +
+					+N'Mã đúng sẽ là :'+gsc.ChildMaterialCode	
 					 as infoe
 					
 					from checkInfomationBarcode cibc
@@ -2529,14 +2529,14 @@ if( UPPER(isnull(@pProductGroupCode,'')) in ( 'Case' )  /*or lower(@pProductGrou
 					join  STB_MaterialMaster mm2 with(nolock) on mm2.MaterialCode = gsc.ChildMaterialCode	
 					where mm2.ProductGroupCode = UPPER(isnull( SUBSTRING(@pProductGroupCode, 1, LEN(@pProductGroupCode) - 2),'')) 
 					),
-				checkamduong as( -- kiá»ƒm tra xem Ä‘Ãºng loáº¡i tancha Ã¢m dÆ°Æ¡ng khÃ´ng dá»±a vÃ o tÃªn nvl
-					select barcode,cibc.MaterialCode,cibc.MaterialName,N'4. KhÃ´ng Ä‘Ãºng loáº¡i Tancha (DÆ°Æ¡ng)(PT) hoáº·c (Ã‚m)(NT): '+@pProductGroupCode as infoe 			
+				checkamduong as( -- kiểm tra xem đúng loại tancha âm dương không dựa vào tên nvl
+					select barcode,cibc.MaterialCode,cibc.MaterialName,N'4. Không đúng loại Tancha (Dương)(PT) hoặc (Âm)(NT): '+@pProductGroupCode as infoe 			
 					from checkConfigBOMBarode1 cibc
 					join  STB_MaterialMaster mm2 with(nolock) on mm2.MaterialCode = cibc.ChildMaterialCode				 
 					   and mm2.MaterialName like case when  UPPER(isnull(@pProductGroupCode,''))='LEAD-WIRE-1' then '%NT%' else '%PT%' end  
 					   and  UPPER(isnull(mm2.ProductGroupCode,'')) like '%LEAD-WIRE%'				
 					),
-				checkQRProduct as ( -- kiá»ƒm tra xem cÃ¡c mÃ£ thiáº¿t láº­p trong bom vÃ  nháº­p vÃ o cÃ³ khá»›p nhau khÃ´ng náº¿u cÃ³ thÃ¬ sáº½ cÃ³ OK Ä‘á»ƒ k bÃ¡o lá»—i
+				checkQRProduct as ( -- kiểm tra xem các mã thiết lập trong bom và nhập vào có khớp nhau không nếu có thì sẽ có OK để k báo lỗi
 					select '4.OK' as infoe from checkConfigBOMBarode  ccgbb					
 					join  STB_MaterialMaster mm2 with(nolock) on mm2.MaterialCode = ccgbb.ChildMaterialCode			 
 				   and ccgbb.ChildMaterialCode = @pRawMaterialBarcode --isnull('GBCP00-001','') GCMDPT-277
@@ -2554,9 +2554,9 @@ if( UPPER(isnull(@pProductGroupCode,'')) in ( 'Case' )  /*or lower(@pProductGrou
 				   union all
 				   select infoe from checkQRProduct
 				   )
-				  select @err = max(infoe) from collectErr -- láº¥y loáº¡i lá»—i cao nháº¥t
+				  select @err = max(infoe) from collectErr -- lấy loại lỗi cao nhất
 
-		-- Kiá»ƒm tra xem mÃ£ nguyÃªn liá»‡u tÆ°Æ¡ng á»©ng vá»›i mÃ£ nguyÃªn liá»‡u bom hay khÃ´ng
+		-- Kiểm tra xem mã nguyên liệu tương ứng với mã nguyên liệu bom hay không
 
 		if(@err <> '4.OK' or @err not like '%.OK'  )begin
 						
@@ -2566,15 +2566,15 @@ if( UPPER(isnull(@pProductGroupCode,'')) in ( 'Case' )  /*or lower(@pProductGrou
 						set @err=@err;        
 				end		
 
-	end --end cháº·n tancha
+	end --end chặn tancha
 
 
-	--Cháº·n nguyÃªn váº­t liá»‡u vá»›i chemical
+	--Chặn nguyên vật liệu với chemical
 	if( UPPER(isnull(@pProductGroupCode,'')) in ('CHEMICAL-1','CHEMICAL-2','CHEMICAL-3','CHEMICAL-4' )  ) 
 	begin	
 		
 		
-		--láº¥y ra size hÃ ng Ä‘Æ°á»£c config á»Ÿ A410
+		--lấy ra size hàng được config ở A410
 		  SELECT @SizeCode = CASE	
 								WHEN MBIExtText07 = 'CHIP_HN' THEN 'CHIP_HN'
 								WHEN MBIExtText07 = 'NORMAL_HN' THEN 'NORMAL_HN'
@@ -2583,11 +2583,11 @@ if( UPPER(isnull(@pProductGroupCode,'')) in ( 'Case' )  /*or lower(@pProductGrou
 				FROM STB_ModelBasicInfo with(nolock) 
 				WHERE ModelCode = (SELECT MaterialCode FROM STB_SetInfo with(nolock)  WHERE Barcode  =@pBarcode )
 
-	 -- Láº¥y ra tÃªn tiáº¿ng viá»‡t
+	 -- Lấy ra tên tiếng việt
 	 select @NameVVT=ProductGroupName_VVT from STB_RawMaterialBaiscInfo where SizeCode = @SizeCode and ProductGroupCode = @pProductGroupCode
 
 
-		select @pRawMaterialBarcode = ltrim(rtrim(@mmmaterialcode)) --mÃ£ code cá»§a nguyÃªn liá»‡u
+		select @pRawMaterialBarcode = ltrim(rtrim(@mmmaterialcode)) --mã code của nguyên liệu
 			--declare @ModelSize11 varchar(10)=@pProductGroupCode +'---'+@MaterialCode
 	 		--raiserror(@pRawMaterialBarcode,16,1)
 			--return;
@@ -2595,7 +2595,7 @@ if( UPPER(isnull(@pProductGroupCode,'')) in ( 'Case' )  /*or lower(@pProductGrou
 		
 			;with getListMaterialBom as ( 				
 
-			 -- Láº¥y danh sÃ¡ch cÃ¡c nguyÃªn liá»‡u Ä‘Æ°á»£c cáº¥u hÃ¬nh trong bom chá»‰ láº¥y á»Ÿ nhÃ  mÃ¡y hÃ  nam theo tÃªn Polymer.
+			 -- Lấy danh sách các nguyên liệu được cấu hình trong bom chỉ lấy ở nhà máy hà nam theo tên Polymer.
 			  select distinct ChildMaterialCode,bd.materialcode,replace(mbi.modelname,'Polymer ','') as models,
 				RIGHT('0'+CONVERT(VARCHAR, CONVERT(INT, MBI.MBISizeW)), 2) + CONVERT(VARCHAR, CONVERT(INT, MBI.MBISizeH)) as size
 				from STB_BomDetail bd with(nolock) 
@@ -2608,26 +2608,26 @@ if( UPPER(isnull(@pProductGroupCode,'')) in ( 'Case' )  /*or lower(@pProductGrou
 			  replace(replace(models,' ',''),'('+size+')','') models, size 
 			  --replace(models,'('+size+')','') models, size 
 			  from getListMaterialBom
-			 where len(size)=3 or len(size)=4 or len(size)=5 --chá»‰ láº¥y 4 vÃ  5 kÃ­ tá»±
+			 where len(size)=3 or len(size)=4 or len(size)=5 --chỉ lấy 4 và 5 kí tự
 			),
 			
-			checkInfomationBarcode as ( -- TÃ¬m kiáº¿m trong thÃ´ng tin cá»§a barcode nháº­p vÃ o
-					select si.barcode,mm.MaterialCode,MaterialName,N'1.ChÆ°a thiáº¿t láº­p mÃ£ code '+@NameVVT+ N'cho sáº£n pháº©m nÃ y: '+mm.MaterialCode+' -> '+MaterialName as infoe from 
+			checkInfomationBarcode as ( -- Tìm kiếm trong thông tin của barcode nhập vào
+					select si.barcode,mm.MaterialCode,MaterialName,N'1.Chưa thiết lập mã code '+@NameVVT+ N'cho sản phẩm này: '+mm.MaterialCode+' -> '+MaterialName as infoe from 
 					STB_SetInfo si with(nolock) 
 					join  STB_MaterialMaster mm with(nolock) on mm.materialcode = si.materialcode					
 					where  
 						barcode=isnull(@pBarcode,'') 
 					),
-				checkConfigBOMBarode as ( -- láº¥y ra cÃ¡c thiáº¿t láº­p cÃ³ sáºµn vá»›i mÃ£ hÃ ng vÃ  size
-					select barcode,cibc.MaterialCode,MaterialName,gsc.models,ChildMaterialCode,N'2.'+@NameVVT+ N' Ä‘Æ°á»£c thiáº¿t láº­p, khÃ¡c vá»›i mÃ£ QRCODE nháº­p vÃ o B597: '+@pRawMaterialBarcode1 as infoe 
+				checkConfigBOMBarode as ( -- lấy ra các thiết lập có sẵn với mã hàng và size
+					select barcode,cibc.MaterialCode,MaterialName,gsc.models,ChildMaterialCode,N'2.'+@NameVVT+ N' được thiết lập, khác với mã QRCODE nhập vào B597: '+@pRawMaterialBarcode1 as infoe 
 					from checkInfomationBarcode cibc
 					join   getSizeCode gsc on  cibc.MaterialCode = gsc.MaterialCode 
 					
 					),
-				checkConfigBOMBarode1 as ( -- láº¥y ra cÃ¡c thiáº¿t láº­p cÃ³ sáºµn vá»›i mÃ£ hÃ ng vÃ  size
+				checkConfigBOMBarode1 as ( -- lấy ra các thiết lập có sẵn với mã hàng và size
 				select barcode,cibc.MaterialCode,cibc.MaterialName,gsc.models,ChildMaterialCode,mm2.ProductGroupCode
-					,N'3.'+@NameVVT+N' Ä‘Æ°á»£c thiáº¿t láº­p, khÃ¡c vá»›i mÃ£ QRCODE nháº­p vÃ o B597: '+ CHAR(10) 
-					+N'MÃ£ Ä‘Ãºng sáº½ lÃ  :'+@ChildMaterialCode	
+					,N'3.'+@NameVVT+N' được thiết lập, khác với mã QRCODE nhập vào B597: '+ CHAR(10) 
+					+N'Mã đúng sẽ là :'+@ChildMaterialCode	
 					 as infoe
 					
 					from checkInfomationBarcode cibc
@@ -2638,9 +2638,9 @@ if( UPPER(isnull(@pProductGroupCode,'')) in ( 'Case' )  /*or lower(@pProductGrou
 					 and @ChildMaterialCode <> @pRawMaterialBarcode
 					),
 
-			/*	getInputMaterial as ( -- kiá»ƒm tra xem mÃ£ nguyÃªn liá»‡u Ä‘Ã£ nháº­p lÃªn há»‡ thá»‘ng chÆ°a náº¿u nháº­p rá»“i sáº½ bÃ¡o lá»—i
+			/*	getInputMaterial as ( -- kiểm tra xem mã nguyên liệu đã nhập lên hệ thống chưa nếu nhập rồi sẽ báo lỗi
 				
-					select materialcode,N'MÃ£ nguyÃªn liá»‡u nÃ y Ä‘Ã£ nháº­p rá»“i ! ' as infoe from stb_materialdoclotinfo where 
+					select materialcode,N'Mã nguyên liệu này đã nhập rồi ! ' as infoe from stb_materialdoclotinfo where 
 					materialcode  in (
 					select md.materialcode  from STB_RawMaterialInputHist rm
 					inner join stb_materialdoclotinfo  md on rm.LotMaterialCode = md.lotid
@@ -2651,8 +2651,8 @@ if( UPPER(isnull(@pProductGroupCode,'')) in ( 'Case' )  /*or lower(@pProductGrou
 				)
 				,	 */
 		
-				checkQRProduct as ( -- kiá»ƒm tra xem cÃ¡c mÃ£ thiáº¿t láº­p trong bom vÃ  nháº­p vÃ o cÃ³ khá»›p nhau khÃ´ng náº¿u cÃ³ thÃ¬ sáº½ cÃ³ OK.
-					/* -- láº§n lÃ m 1 Ä‘á»ƒ check dá»¯ liá»‡u Ä‘Ãºng hay k
+				checkQRProduct as ( -- kiểm tra xem các mã thiết lập trong bom và nhập vào có khớp nhau không nếu có thì sẽ có OK.
+					/* -- lần làm 1 để check dữ liệu đúng hay k
 					select '4.OK' as infoe  from checkConfigBOMBarode1  cibc1
 					join stb_materialdoclotinfo mdli on cibc1.ChildMaterialCode = mdli.materialcode where 
 					mdli.materialcode not in (
@@ -2679,12 +2679,12 @@ if( UPPER(isnull(@pProductGroupCode,'')) in ( 'Case' )  /*or lower(@pProductGrou
 				   union all
 				   select infoe from checkQRProduct
 				   )
-				  select @err = max(infoe) from collectErr -- láº¥y loáº¡i lá»—i cao nháº¥t
+				  select @err = max(infoe) from collectErr -- lấy loại lỗi cao nhất
 
 				  -- usp_Vietnam_RawMaterialInputHist_uid  '','','','VE241231-001','LEAD-WIRE-1','ML20250102000023','','',''
 			--print (@ModelSize +' '+ @MaterialCode+'_'+ @pRawMaterialBarcode  +'_____________'+@mmmaterialcode +'__'+@pProductGroupCode)
 
-		-- Kiá»ƒm tra xem mÃ£ nguyÃªn liá»‡u tÆ°Æ¡ng á»©ng vá»›i mÃ£ nguyÃªn liá»‡u bom hay khÃ´ng
+		-- Kiểm tra xem mã nguyên liệu tương ứng với mã nguyên liệu bom hay không
 
 				if(@err <> '4.OK' or @err not like '%.OK'  )begin
 						
@@ -2694,7 +2694,7 @@ if( UPPER(isnull(@pProductGroupCode,'')) in ( 'Case' )  /*or lower(@pProductGrou
 						set @err=@err;        
 				end		
 
-	END -- end cháº·n chemical
+	END -- end chặn chemical
 
    		set @RawMaterialBarcode  = substring(case when @pLotID_Warehouse_Created <>'' and @pLotID_Warehouse_Created is not null
 											then isnull(@pLotID_Warehouse_Created,'') +'~'+isnull(@pRawMaterialBarcode,'')
@@ -2706,7 +2706,7 @@ END
 
 END
 
--- NhÃ  mÃ¡y Báº¯c Giang 2
+-- Nhà máy Bắc Giang 2
 ELSE IF @checkWorkCenterCode IN ('VVT_F4')
 BEGIN		-- BEGIN BG2
 	print('bg2')
@@ -2715,16 +2715,16 @@ BEGIN		-- BEGIN BG2
 	set @pLotID_Warehouse_Created =ltrim(rtrim( isnull(@pLotID_Warehouse_Created,'')));
 
 
-	exec usp_VVT_checkHOLD_Material @lotid=@pRawMaterialBarcode        -- check  NVL thÃ´, mÃ£ LÃ³t ML.... náº¿u bá»‹ HOLD thÃ¬ khÃ´ng thá»ƒ LÆ°u láº¡i
+	exec usp_VVT_checkHOLD_Material @lotid=@pRawMaterialBarcode        -- check  NVL thô, mã Lót ML.... nếu bị HOLD thì không thể Lưu lại
 	
-	exec usp_VVT_checkHOLD_Material @lotid=@pLotID_Warehouse_Created   -- check  NVL thÃ´, mÃ£ LÃ³t ML.... náº¿u bá»‹ HOLD thÃ¬ khÃ´ng thá»ƒ LÆ°u láº¡i
+	exec usp_VVT_checkHOLD_Material @lotid=@pLotID_Warehouse_Created   -- check  NVL thô, mã Lót ML.... nếu bị HOLD thì không thể Lưu lại
 	
 
 
 	select @count=count(*) from stb_materialdoclotinfo
 	where lotid in (@pRawMaterialBarcode,@pLotID_Warehouse_Created) and isnull(lotid,'')<>''
-	-- check táº¡m cho bÃªn Ä‘iá»‡n cá»±c
-	-- khi mÃ£ cÃ³ Ä‘áº§u lÃ  sp má»›i kiá»ƒm tra
+	-- check tạm cho bên điện cực
+	-- khi mã có đầu là sp mới kiểm tra
 	if(@count <1 and (@RawMaterialBarcode like '%SP%' or @RawMaterialBarcode like '%SL%' or @RawMaterialBarcode like '%SM%'))
 	begin
 		select @count=count(*) from STB_MaterialLotInfo
@@ -2735,14 +2735,14 @@ BEGIN		-- BEGIN BG2
 	--declare @fd varchar(20) = @count
 	
 	--RAISERROR(@pRawMaterialBarcode,16,1)
-	 -- Náº¿u Ä‘Ãºng lÃ  mÃ£ LÃ³t ML.... cá»§a Kho NVL thÃ¬ sáº½ Ä‘Æ°á»£c phÃ©p Ä‘i qua Äoáº¡n nÃ y
-	 -- Náº¿u khÃ´ng pháº£i mÃ£ LÃ³t ML , khÃ´ng pháº£i mÃ£ Äiá»‡n cá»±c , thÃ¬ sáº½ bÃ¡o lá»—i
+	 -- Nếu đúng là mã Lót ML.... của Kho NVL thì sẽ được phép đi qua Đoạn này
+	 -- Nếu không phải mã Lót ML , không phải mã Điện cực , thì sẽ báo lỗi
 	if(@count>0) begin   
 
 
 
-		-- Äoáº¡n nÃ y lÃ  Ä‘iá»u kiá»‡n ngoáº¡i lá»‡ bá» qua ko check Háº¿t háº¡n  NGÃ y thÃ¡ng ná»¯a , 
-		-- chá»‰ cáº§n thÃªm LÃ³t Ngoáº¡i lá»‡ vÃ o mÃ n hÃ¬nh C555 lÃ  sáº½ Ä‘c loáº¡i trá»« Cháº·n háº¿t háº¡n
+		-- Đoạn này là điều kiện ngoại lệ bỏ qua ko check Hết hạn  NGày tháng nữa , 
+		-- chỉ cần thêm Lót Ngoại lệ vào màn hình C555 là sẽ đc loại trừ Chặn hết hạn
 		--declare @OpenExpiredBG2 bit = 0 
 	 	;with data1 as (
 			select LotID,max(createdatetime) as createdatetime
@@ -2760,7 +2760,7 @@ BEGIN		-- BEGIN BG2
 		from stb_materialdoclotinfo
 		where lotid in (@pRawMaterialBarcode,@pLotID_Warehouse_Created) and isnull(lotid,'')<>''
 
-		 --kiá»ƒm tra Ä‘Ã£ tÃ¡ch nvl thÃ¬ váº«n cho nháº­p
+		 --kiểm tra đã tách nvl thì vẫn cho nhập
 		if(@mmmaterialcode ='' and  (@RawMaterialBarcode like '%SP%' or @RawMaterialBarcode like '%SL%'or @RawMaterialBarcode like '%SM%'))
 		 begin 
 		--RAISERROR('jf',16,1)
@@ -2776,15 +2776,15 @@ BEGIN		-- BEGIN BG2
 		--RAISERROR(@validDate,16,1)
 		--return
 		
-		 -- Náº¿u khÃ´ng má»Ÿ cháº·n á»Ÿ mÃ n hÃ¬nh C555 , khÃ´ng pháº£i LÃ³t NVL Ngoáº¡i lá»‡ , thÃ¬ sáº½ vÃ o cáº£nh bÃ¡o Háº¿t háº¡n 
+		 -- Nếu không mở chặn ở màn hình C555 , không phải Lót NVL Ngoại lệ , thì sẽ vào cảnh báo Hết hạn 
 		if((isnull(@OpenExpired,0)=0 or @OpenExpired=0 or convert(bit,@OpenExpired)=0) and @mmmaterialcode not in ('TRAY1320-B015'))
 		 begin try	
 			if  isnull((select  dateadd(day,(ISNULL(MMExtInt01,3) * 30)+ISNULL(MMExtInt01,3)/12*6,@validDate)  from STB_MaterialMaster where MaterialCode= @mmmaterialcode),getdate()-1)
 				< getdate()
 			begin 
-						set @err=N'NgÃ y thÃ¡ng Sáº£n xuáº¥t cá»§a Vendor Lot quÃ¡ háº¡n sá»­ dá»¥ng,  Hoáº·c chÆ°a thiáº¿t láº­p MMExtInt01 trong mÃ n hÃ¬nh A230: ' + 
+						set @err=N'Ngày tháng Sản xuất của Vendor Lot quá hạn sử dụng,  Hoặc chưa thiết lập MMExtInt01 trong màn hình A230: ' + 
 												@pProductGroupCode+' _ '+ @RawMaterialBarcode +' _ '+
-												@validDate + N'. Vui lÃ²ng kiá»ƒm tra láº¡i!';
+												@validDate + N'. Vui lòng kiểm tra lại!';
 					RAISERROR (@err,16,1);
 					return;
 			end
@@ -2792,7 +2792,7 @@ BEGIN		-- BEGIN BG2
 		 end try
 		 begin catch
 
-					set @err=N'KhÃ´ng thá»ƒ chuyá»ƒn Ä‘á»•i kÃ­ tá»± thÃ nh NgÃ y thÃ¡ng,  (Lotattr10)Äáº·c tÃ­nh 10 mÃ n hÃ¬nh F330:' + 
+					set @err=N'Không thể chuyển đổi kí tự thành Ngày tháng,  (Lotattr10)Đặc tính 10 màn hình F330:' + 
 									@pProductGroupCode+' _ '+ @RawMaterialBarcode +' _ '+
 									@validDate ;
 
@@ -2807,11 +2807,11 @@ BEGIN		-- BEGIN BG2
 
 	 	 
     else 
-		-- Náº¿u lÃ  hÃ ng PCB nháº­p tá»« vendor thÃ¬ khÃ´ng cáº§n báº¯t Ä‘áº§u báº±ng ML
+		-- Nếu là hàng PCB nhập từ vendor thì không cần bắt đầu bằng ML
   
 	 IF isnull(@RawMaterialBarcode,'')<>'' and UPPER(isnull(@pProductGroupCode,''))='PWB164180'
 	 begin
-				set @err=N'KhÃ´ng Ä‘Æ°á»£c sá»­ dá»¥ng mÃ£ Vendor LÃ³t khÃ´ng pháº£i cá»§a Kho NguyÃªn liá»‡u báº¯t Ä‘áº§u = kÃ­ tá»±   ML.... ' + 
+				set @err=N'Không được sử dụng mã Vendor Lót không phải của Kho Nguyên liệu bắt đầu = kí tự   ML.... ' + 
 									isnull(@pProductGroupCode,'') +' _ ' + isnull(@RawMaterialBarcode,'') +' _ '+
 									isnull(@validDate,'') ;
 									
@@ -2827,7 +2827,7 @@ BEGIN		-- BEGIN BG2
 	 SELECT @MaterialWarehouse = MaterialWarehouseCode FROM STB_MaterialLotInfo where LotID = @pRawMaterialBarcode
 	 IF @MaterialWarehouse <> 'ROUTE_BG2_WH'
 		begin
-		   raiserror (N'Lot nÃ y chÆ°a Ä‘Æ°á»£c xuáº¥t ra sáº£n xuáº¥t. HÃ£y kiá»ƒm tra láº¡i' ,16,1) ;
+		   raiserror (N'Lot này chưa được xuất ra sản xuất. Hãy kiểm tra lại' ,16,1) ;
 		   return;
 		end
 
@@ -2878,7 +2878,7 @@ BEGIN		-- BEGIN BG2
 
 		if(@MaterialBG2 <> @TrueMaterialBG2)
 		begin
-		   set @err = N'MÃ£ lot Ä‘Ã£ nháº­p ' +@pRawMaterialBarcode+ ' - ' + @MaterialBG2 +  N' khÃ¡c NVL há»‡ thá»‘ng: '  + @TrueMaterialBG2 + N'. Vui lÃ²ng kiá»ƒm tra láº¡i';
+		   set @err = N'Mã lot đã nhập ' +@pRawMaterialBarcode+ ' - ' + @MaterialBG2 +  N' khác NVL hệ thống: '  + @TrueMaterialBG2 + N'. Vui lòng kiểm tra lại';
 		   raiserror (@err ,16,1) ;
 		   return;
 		end
@@ -2906,7 +2906,7 @@ BEGIN		-- BEGIN BG2
 
 		if(@MaterialBG2 <> @TrueMaterialBG2)
 		begin
-		   set @err = N'MÃ£ lot Ä‘Ã£ nháº­p ' +@pRawMaterialBarcode+ ' - ' + @MaterialBG2 +  N' khÃ¡c NVL há»‡ thá»‘ng: '  + @TrueMaterialBG2 + N'. Vui lÃ²ng kiá»ƒm tra láº¡i';
+		   set @err = N'Mã lot đã nhập ' +@pRawMaterialBarcode+ ' - ' + @MaterialBG2 +  N' khác NVL hệ thống: '  + @TrueMaterialBG2 + N'. Vui lòng kiểm tra lại';
 		   raiserror (@err ,16,1) ;
 		   return;
 		end
@@ -2921,11 +2921,11 @@ BEGIN		-- BEGIN BG2
 		 
 
 		SELECT @MaterialBG2 = MaterialCode FROM STB_MaterialLotInfo where LotID = @pRawMaterialBarcode
-		SELECT @TrueMaterialBG2 = MaterialCode FROM STB_MaterialMaster WHERE MaterialName LIKE 'DOWSILâ„¢ 3140 RTV Coating'
+		SELECT @TrueMaterialBG2 = MaterialCode FROM STB_MaterialMaster WHERE MaterialName LIKE 'DOWSIL™ 3140 RTV Coating'
 
 		if(@MaterialBG2 <> '153_CHATPHUBM-02')
 			begin
-			   set @err = N'MÃ£ lot Ä‘Ã£ nháº­p ' +@pRawMaterialBarcode+ ' - ' + @MaterialBG2 +  N' khÃ¡c NVL há»‡ thá»‘ng: '  + @TrueMaterialBG2 + N'. Vui lÃ²ng kiá»ƒm tra láº¡i';
+			   set @err = N'Mã lot đã nhập ' +@pRawMaterialBarcode+ ' - ' + @MaterialBG2 +  N' khác NVL hệ thống: '  + @TrueMaterialBG2 + N'. Vui lòng kiểm tra lại';
 			   raiserror (@err ,16,1) ;
 			   return;
 			end
@@ -2950,7 +2950,7 @@ BEGIN		-- BEGIN BG2
 
 		if(@MaterialBG2 <> @TrueMaterialBG2)
 			begin
-			   set @err = N'MÃ£ lot Ä‘Ã£ nháº­p ' +@pRawMaterialBarcode+ ' - ' + @MaterialBG2 +  N' khÃ¡c NVL há»‡ thá»‘ng: '  + @TrueMaterialBG2 + N'. Vui lÃ²ng kiá»ƒm tra láº¡i';
+			   set @err = N'Mã lot đã nhập ' +@pRawMaterialBarcode+ ' - ' + @MaterialBG2 +  N' khác NVL hệ thống: '  + @TrueMaterialBG2 + N'. Vui lòng kiểm tra lại';
 			   raiserror (@err ,16,1) ;
 			   return;
 			end
@@ -2958,7 +2958,7 @@ BEGIN		-- BEGIN BG2
 
 END		-- END BG@
 
-		-- Start Mr.Duc EA 2026-04-14 - Luu nhi?u mï¿½ barcode NVL trï¿½n cï¿½ng 1 lot s?n ph?m
+		-- Start Mr.Duc EA 2026-04-14 - Luu nhi?u m� barcode NVL tr�n c�ng 1 lot s?n ph?m
 		DECLARE @existingRawBarcode NVARCHAR(200) = ''
 		SELECT @existingRawBarcode = ISNULL(RawMaterialBarcode, '') FROM STB_RawMaterialInputHist WITH(NOLOCK) WHERE RawMaterialInputHistNo = @pRawMaterialInputHistNo
 		IF @existingRawBarcode <> '' AND CHARINDEX(ISNULL(@RawMaterialBarcode, ''), @existingRawBarcode) = 0

@@ -1,8 +1,8 @@
 -- ============================================================
 -- DEPLOYMENT: BẢNG + SP CHO SHEET PLATE (TÁCH RIÊNG)
 -- Database: SmartFactoryV2
--- Phiên bản: Cập nhật IDENTITY PK & Date Format & Fix Error Message
--- Ngày tạo: 2026-04-23
+-- Phiên bản: Sửa lỗi map nhầm tên cột (mapping đúng theo file Excel Plate)
+-- Ngày tạo: 2026-04-24
 -- ============================================================
 
 USE SmartFactoryV2;
@@ -32,19 +32,18 @@ CREATE TABLE [dbo].[STB_VVT_SortingErrorData_Plate] (
     [Remark]            NVARCHAR(200)   NULL,           -- Ghi chú
 
     -- ============================================================
-    -- CÁC CỘT LỖI DÀNH CHO PLATE
+    -- CÁC CỘT LỖI DÀNH CHO PLATE (Dựa theo Sheet 2)
     -- ============================================================
-    [PLBuuNhom]         INT             NULL DEFAULT 0, -- Bựu nhôm
-    [PLBuuNhua]         INT             NULL DEFAULT 0, -- Bựu Nhựa
-    [PLBuuRandom]       INT             NULL DEFAULT 0, -- Bựu random
-    [PLBongTamNhieu]    INT             NULL DEFAULT 0, -- Bóng tâm nhều
-    [PLXuocScratch]     INT             NULL DEFAULT 0, -- Xước/Scratch
-    [PLBienDangDeform]  INT             NULL DEFAULT 0, -- Biến dạng/Deform
-    [PLMoDongExposed]   INT             NULL DEFAULT 0, -- Mở dòng/Exposed
-    [PLBienDangCamSu]   INT             NULL DEFAULT 0, -- Biến dạng cạm su
-    [PLNutGoCrackWood]  INT             NULL DEFAULT 0, -- Nứt gỗ/Crack Wood
-    [PLBienSacDiscolor] INT             NULL DEFAULT 0, -- Biến sắc/Discoloration
-    [PLOther]           INT             NULL DEFAULT 0, -- Other
+    [PLBurr]            INT             NULL DEFAULT 0, -- Burr
+    [PLMoDent]          INT             NULL DEFAULT 0, -- Mố Dent
+    [PLMepDeform]       INT             NULL DEFAULT 0, -- Mép Deform
+    [PLXuocScratch]     INT             NULL DEFAULT 0, -- Xước Scratch
+    [PLBongMaNG]        INT             NULL DEFAULT 0, -- Bóng mạ NG Plating
+    [PLSanRoughFace]    INT             NULL DEFAULT 0, -- Sần Rough Face
+    [PLBanDirty]        INT             NULL DEFAULT 0, -- Bẩn Dirty
+    [PLLomDayDentBottom]INT             NULL DEFAULT 0, -- Lõm đáy Dent Bottom
+    [PLBienSacDiscolor] INT             NULL DEFAULT 0, -- Biến sắc Discolor
+    [PLOther]           INT             NULL DEFAULT 0, -- Lỗi khác Other
 
     -- === AUDIT ===
     [CreateDateTime]    DATETIME        NOT NULL DEFAULT GETDATE(),
@@ -93,15 +92,14 @@ BEGIN
         SED.Remark,
 
         -- Lỗi Plate
-        SED.PLBuuNhom, SED.PLBuuNhua, SED.PLBuuRandom, SED.PLBongTamNhieu, SED.PLXuocScratch,
-        SED.PLBienDangDeform, SED.PLMoDongExposed, SED.PLBienDangCamSu, SED.PLNutGoCrackWood, 
-        SED.PLBienSacDiscolor, SED.PLOther,
+        SED.PLBurr, SED.PLMoDent, SED.PLMepDeform, SED.PLXuocScratch, SED.PLBongMaNG,
+        SED.PLSanRoughFace, SED.PLBanDirty, SED.PLLomDayDentBottom, SED.PLBienSacDiscolor, SED.PLOther,
 
         -- Tổng lỗi
-        ISNULL(SED.PLBuuNhom,0) + ISNULL(SED.PLBuuNhua,0) + ISNULL(SED.PLBuuRandom,0)
-        + ISNULL(SED.PLBongTamNhieu,0) + ISNULL(SED.PLXuocScratch,0) + ISNULL(SED.PLBienDangDeform,0)
-        + ISNULL(SED.PLMoDongExposed,0) + ISNULL(SED.PLBienDangCamSu,0) + ISNULL(SED.PLNutGoCrackWood,0)
-        + ISNULL(SED.PLBienSacDiscolor,0) + ISNULL(SED.PLOther,0) AS TotalDefect,
+        ISNULL(SED.PLBurr,0) + ISNULL(SED.PLMoDent,0) + ISNULL(SED.PLMepDeform,0)
+        + ISNULL(SED.PLXuocScratch,0) + ISNULL(SED.PLBongMaNG,0) + ISNULL(SED.PLSanRoughFace,0)
+        + ISNULL(SED.PLBanDirty,0) + ISNULL(SED.PLLomDayDentBottom,0) + ISNULL(SED.PLBienSacDiscolor,0)
+        + ISNULL(SED.PLOther,0) AS TotalDefect,
 
         SED.CreateDateTime, SED.CreateUserID, SED.ChangeDateTime, SED.ChangeUserID
     FROM STB_VVT_SortingErrorData_Plate SED WITH(NOLOCK)
@@ -152,31 +150,31 @@ BEGIN
         -- INSERT
         INSERT INTO STB_VVT_SortingErrorData_Plate (
             SortingDate, Shift, PersonName, VendorCode, FactoryName, MaterialCode, LotNo, QtyCheck, QtyOK, Remark,
-            PLBuuNhom, PLBuuNhua, PLBuuRandom, PLBongTamNhieu, PLXuocScratch, PLBienDangDeform, PLMoDongExposed, PLBienDangCamSu, PLNutGoCrackWood, PLBienSacDiscolor, PLOther,
+            PLBurr, PLMoDent, PLMepDeform, PLXuocScratch, PLBongMaNG, PLSanRoughFace, PLBanDirty, PLLomDayDentBottom, PLBienSacDiscolor, PLOther,
             CreateUserID, CreateDateTime
         )
         SELECT 
             SortingDate, Shift, PersonName, VendorCode, FactoryName, MaterialCode, LotNo, QtyCheck, QtyOK, Remark,
-            PLBuuNhom, PLBuuNhua, PLBuuRandom, PLBongTamNhieu, PLXuocScratch, PLBienDangDeform, PLMoDongExposed, PLBienDangCamSu, PLNutGoCrackWood, PLBienSacDiscolor, PLOther,
+            PLBurr, PLMoDent, PLMepDeform, PLXuocScratch, PLBongMaNG, PLSanRoughFace, PLBanDirty, PLLomDayDentBottom, PLBienSacDiscolor, PLOther,
             @pProcessUserID, GETDATE()
         FROM OPENXML(@iDoc, @InsertTableName, 2) WITH (
             SortingDate DATE, Shift VARCHAR(5), PersonName NVARCHAR(100), VendorCode VARCHAR(50), 
             FactoryName NVARCHAR(100), MaterialCode VARCHAR(50), LotNo VARCHAR(100), QtyCheck INT, QtyOK INT, Remark NVARCHAR(200),
-            PLBuuNhom INT, PLBuuNhua INT, PLBuuRandom INT, PLBongTamNhieu INT, PLXuocScratch INT, PLBienDangDeform INT, PLMoDongExposed INT, PLBienDangCamSu INT, PLNutGoCrackWood INT, PLBienSacDiscolor INT, PLOther INT
+            PLBurr INT, PLMoDent INT, PLMepDeform INT, PLXuocScratch INT, PLBongMaNG INT, PLSanRoughFace INT, PLBanDirty INT, PLLomDayDentBottom INT, PLBienSacDiscolor INT, PLOther INT
         );
 
         -- UPDATE
         UPDATE T SET
             SortingDate = X.SortingDate, Shift = X.Shift, PersonName = X.PersonName, VendorCode = X.VendorCode, FactoryName = X.FactoryName,
             MaterialCode = X.MaterialCode, LotNo = X.LotNo, QtyCheck = X.QtyCheck, QtyOK = X.QtyOK, Remark = X.Remark,
-            PLBuuNhom = X.PLBuuNhom, PLBuuNhua = X.PLBuuNhua, PLBuuRandom = X.PLBuuRandom, PLBongTamNhieu = X.PLBongTamNhieu, PLXuocScratch = X.PLXuocScratch,
-            PLBienDangDeform = X.PLBienDangDeform, PLMoDongExposed = X.PLMoDongExposed, PLBienDangCamSu = X.PLBienDangCamSu, PLNutGoCrackWood = X.PLNutGoCrackWood, PLBienSacDiscolor = X.PLBienSacDiscolor, PLOther = X.PLOther,
+            PLBurr = X.PLBurr, PLMoDent = X.PLMoDent, PLMepDeform = X.PLMepDeform, PLXuocScratch = X.PLXuocScratch,
+            PLBongMaNG = X.PLBongMaNG, PLSanRoughFace = X.PLSanRoughFace, PLBanDirty = X.PLBanDirty, PLLomDayDentBottom = X.PLLomDayDentBottom, PLBienSacDiscolor = X.PLBienSacDiscolor, PLOther = X.PLOther,
             ChangeUserID = @pProcessUserID, ChangeDateTime = GETDATE()
         FROM STB_VVT_SortingErrorData_Plate T
         JOIN OPENXML(@iDoc, @UpdateTableName, 2) WITH (
             SortingErrorNo INT, SortingDate DATE, Shift VARCHAR(5), PersonName NVARCHAR(100), VendorCode VARCHAR(50), 
             FactoryName NVARCHAR(100), MaterialCode VARCHAR(50), LotNo VARCHAR(100), QtyCheck INT, QtyOK INT, Remark NVARCHAR(200),
-            PLBuuNhom INT, PLBuuNhua INT, PLBuuRandom INT, PLBongTamNhieu INT, PLXuocScratch INT, PLBienDangDeform INT, PLMoDongExposed INT, PLBienDangCamSu INT, PLNutGoCrackWood INT, PLBienSacDiscolor INT, PLOther INT
+            PLBurr INT, PLMoDent INT, PLMepDeform INT, PLXuocScratch INT, PLBongMaNG INT, PLSanRoughFace INT, PLBanDirty INT, PLLomDayDentBottom INT, PLBienSacDiscolor INT, PLOther INT
         ) X ON T.SortingErrorNo = X.SortingErrorNo;
 
         COMMIT TRANSACTION;

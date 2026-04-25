@@ -1,8 +1,8 @@
 -- ============================================================
 -- DEPLOYMENT: BẢNG + SP CHO SHEET AL CASE (TÁCH RIÊNG)
 -- Database: SmartFactoryV2
--- Phiên bản: Cập nhật IDENTITY PK & Date Format & Fix Error Message
--- Ngày tạo: 2026-04-23
+-- Phiên bản: Sửa lỗi map nhầm tên cột (mapping đúng theo file Excel AL Case)
+-- Ngày tạo: 2026-04-24
 -- ============================================================
 
 USE SmartFactoryV2;
@@ -32,18 +32,19 @@ CREATE TABLE [dbo].[STB_VVT_SortingErrorData_ALCase] (
     [Remark]            NVARCHAR(200)   NULL,           -- Ghi chú
 
     -- ============================================================
-    -- CÁC CỘT LỖI DÀNH CHO AL CASE
+    -- CÁC CỘT LỖI DÀNH CHO AL CASE (Dựa theo Sheet 1)
     -- ============================================================
-    [ALBuiDust]         INT             NULL DEFAULT 0, -- Bụi
-    [ALMoDent]          INT             NULL DEFAULT 0, -- Mố Dent
-    [ALMepDeform]       INT             NULL DEFAULT 0, -- Mép Deform
+    [ALBurrNhom]        INT             NULL DEFAULT 0, -- Burr nhôm Burr Al
+    [ALBurrNhua]        INT             NULL DEFAULT 0, -- Burr Nhựa Burr Plastic
+    [ALBurrCaoSu]       INT             NULL DEFAULT 0, -- Burr caosu
+    [ALBongTamNhua]     INT             NULL DEFAULT 0, -- Bóng tấm nhựa
     [ALXuocScratch]     INT             NULL DEFAULT 0, -- Xước Scratch
-    [ALBongNBPlating]   INT             NULL DEFAULT 0, -- Bóng bu NB Plating
-    [ALSanRoughFace]    INT             NULL DEFAULT 0, -- Sần Rough Face
-    [ALBanDirty]        INT             NULL DEFAULT 0, -- Bẩn Dirty
-    [ALBanBoDentGroup]  INT             NULL DEFAULT 0, -- Bẩn/Bọ Dent Group
-    [ALBienSacDiscolor] INT             NULL DEFAULT 0, -- Biến sắc Discolor
-    [ALLoiKhacOther]    INT             NULL DEFAULT 0, -- Lỗi khác Other
+    [ALBienDangDeform]  INT             NULL DEFAULT 0, -- Biến dạng Deform
+    [ALHoDongExposed]   INT             NULL DEFAULT 0, -- Hở dòng Exposed copper
+    [ALBienDangCaoSu]   INT             NULL DEFAULT 0, -- Biến dạng cao su Deform caosu
+    [ALNutGoCrackWood]  INT             NULL DEFAULT 0, -- Nứt gỗ Crack Wood
+    [ALBienSacDiscolor] INT             NULL DEFAULT 0, -- Biến sắc Discoloration
+    [ALOther]           INT             NULL DEFAULT 0, -- Other
 
     -- === AUDIT ===
     [CreateDateTime]    DATETIME        NOT NULL DEFAULT GETDATE(),
@@ -92,14 +93,14 @@ BEGIN
         SED.Remark,
 
         -- Lỗi AL Case
-        SED.ALBuiDust, SED.ALMoDent, SED.ALMepDeform, SED.ALXuocScratch, SED.ALBongNBPlating,
-        SED.ALSanRoughFace, SED.ALBanDirty, SED.ALBanBoDentGroup, SED.ALBienSacDiscolor, SED.ALLoiKhacOther,
+        SED.ALBurrNhom, SED.ALBurrNhua, SED.ALBurrCaoSu, SED.ALBongTamNhua, SED.ALXuocScratch,
+        SED.ALBienDangDeform, SED.ALHoDongExposed, SED.ALBienDangCaoSu, SED.ALNutGoCrackWood, SED.ALBienSacDiscolor, SED.ALOther,
 
         -- Tổng lỗi
-        ISNULL(SED.ALBuiDust,0) + ISNULL(SED.ALMoDent,0) + ISNULL(SED.ALMepDeform,0)
-        + ISNULL(SED.ALXuocScratch,0) + ISNULL(SED.ALBongNBPlating,0) + ISNULL(SED.ALSanRoughFace,0)
-        + ISNULL(SED.ALBanDirty,0) + ISNULL(SED.ALBanBoDentGroup,0) + ISNULL(SED.ALBienSacDiscolor,0)
-        + ISNULL(SED.ALLoiKhacOther,0) AS TotalDefect,
+        ISNULL(SED.ALBurrNhom,0) + ISNULL(SED.ALBurrNhua,0) + ISNULL(SED.ALBurrCaoSu,0)
+        + ISNULL(SED.ALBongTamNhua,0) + ISNULL(SED.ALXuocScratch,0) + ISNULL(SED.ALBienDangDeform,0)
+        + ISNULL(SED.ALHoDongExposed,0) + ISNULL(SED.ALBienDangCaoSu,0) + ISNULL(SED.ALNutGoCrackWood,0)
+        + ISNULL(SED.ALBienSacDiscolor,0) + ISNULL(SED.ALOther,0) AS TotalDefect,
 
         SED.CreateDateTime, SED.CreateUserID, SED.ChangeDateTime, SED.ChangeUserID
     FROM STB_VVT_SortingErrorData_ALCase SED WITH(NOLOCK)
@@ -150,31 +151,31 @@ BEGIN
         -- INSERT
         INSERT INTO STB_VVT_SortingErrorData_ALCase (
             SortingDate, Shift, PersonName, VendorCode, FactoryName, MaterialCode, LotNo, QtyCheck, QtyOK, Remark,
-            ALBuiDust, ALMoDent, ALMepDeform, ALXuocScratch, ALBongNBPlating, ALSanRoughFace, ALBanDirty, ALBanBoDentGroup, ALBienSacDiscolor, ALLoiKhacOther,
+            ALBurrNhom, ALBurrNhua, ALBurrCaoSu, ALBongTamNhua, ALXuocScratch, ALBienDangDeform, ALHoDongExposed, ALBienDangCaoSu, ALNutGoCrackWood, ALBienSacDiscolor, ALOther,
             CreateUserID, CreateDateTime
         )
         SELECT 
             SortingDate, Shift, PersonName, VendorCode, FactoryName, MaterialCode, LotNo, QtyCheck, QtyOK, Remark,
-            ALBuiDust, ALMoDent, ALMepDeform, ALXuocScratch, ALBongNBPlating, ALSanRoughFace, ALBanDirty, ALBanBoDentGroup, ALBienSacDiscolor, ALLoiKhacOther,
+            ALBurrNhom, ALBurrNhua, ALBurrCaoSu, ALBongTamNhua, ALXuocScratch, ALBienDangDeform, ALHoDongExposed, ALBienDangCaoSu, ALNutGoCrackWood, ALBienSacDiscolor, ALOther,
             @pProcessUserID, GETDATE()
         FROM OPENXML(@iDoc, @InsertTableName, 2) WITH (
             SortingDate DATE, Shift VARCHAR(5), PersonName NVARCHAR(100), VendorCode VARCHAR(50), 
             FactoryName NVARCHAR(100), MaterialCode VARCHAR(50), LotNo VARCHAR(100), QtyCheck INT, QtyOK INT, Remark NVARCHAR(200),
-            ALBuiDust INT, ALMoDent INT, ALMepDeform INT, ALXuocScratch INT, ALBongNBPlating INT, ALSanRoughFace INT, ALBanDirty INT, ALBanBoDentGroup INT, ALBienSacDiscolor INT, ALLoiKhacOther INT
+            ALBurrNhom INT, ALBurrNhua INT, ALBurrCaoSu INT, ALBongTamNhua INT, ALXuocScratch INT, ALBienDangDeform INT, ALHoDongExposed INT, ALBienDangCaoSu INT, ALNutGoCrackWood INT, ALBienSacDiscolor INT, ALOther INT
         );
 
         -- UPDATE
         UPDATE T SET
             SortingDate = X.SortingDate, Shift = X.Shift, PersonName = X.PersonName, VendorCode = X.VendorCode, FactoryName = X.FactoryName,
             MaterialCode = X.MaterialCode, LotNo = X.LotNo, QtyCheck = X.QtyCheck, QtyOK = X.QtyOK, Remark = X.Remark,
-            ALBuiDust = X.ALBuiDust, ALMoDent = X.ALMoDent, ALMepDeform = X.ALMepDeform, ALXuocScratch = X.ALXuocScratch, ALBongNBPlating = X.ALBongNBPlating,
-            ALSanRoughFace = X.ALSanRoughFace, ALBanDirty = X.ALBanDirty, ALBanBoDentGroup = X.ALBanBoDentGroup, ALBienSacDiscolor = X.ALBienSacDiscolor, ALLoiKhacOther = X.ALLoiKhacOther,
+            ALBurrNhom = X.ALBurrNhom, ALBurrNhua = X.ALBurrNhua, ALBurrCaoSu = X.ALBurrCaoSu, ALBongTamNhua = X.ALBongTamNhua, ALXuocScratch = X.ALXuocScratch,
+            ALBienDangDeform = X.ALBienDangDeform, ALHoDongExposed = X.ALHoDongExposed, ALBienDangCaoSu = X.ALBienDangCaoSu, ALNutGoCrackWood = X.ALNutGoCrackWood, ALBienSacDiscolor = X.ALBienSacDiscolor, ALOther = X.ALOther,
             ChangeUserID = @pProcessUserID, ChangeDateTime = GETDATE()
         FROM STB_VVT_SortingErrorData_ALCase T
         JOIN OPENXML(@iDoc, @UpdateTableName, 2) WITH (
             SortingErrorNo INT, SortingDate DATE, Shift VARCHAR(5), PersonName NVARCHAR(100), VendorCode VARCHAR(50), 
             FactoryName NVARCHAR(100), MaterialCode VARCHAR(50), LotNo VARCHAR(100), QtyCheck INT, QtyOK INT, Remark NVARCHAR(200),
-            ALBuiDust INT, ALMoDent INT, ALMepDeform INT, ALXuocScratch INT, ALBongNBPlating INT, ALSanRoughFace INT, ALBanDirty INT, ALBanBoDentGroup INT, ALBienSacDiscolor INT, ALLoiKhacOther INT
+            ALBurrNhom INT, ALBurrNhua INT, ALBurrCaoSu INT, ALBongTamNhua INT, ALXuocScratch INT, ALBienDangDeform INT, ALHoDongExposed INT, ALBienDangCaoSu INT, ALNutGoCrackWood INT, ALBienSacDiscolor INT, ALOther INT
         ) X ON T.SortingErrorNo = X.SortingErrorNo;
 
         COMMIT TRANSACTION;

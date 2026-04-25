@@ -412,18 +412,17 @@ when @materialcode in (
 
 			when @materialcode in ('GBYYPL-001') then '20'+ substring(@vendorlot,1,2)+'-'+ substring(@vendorlot,3,2)+'-'+ substring(@vendorlot,5,2)
 
+	when @materialcode = 'GADACB-001' and len(@vendorlot) >= 5 then 
+		'20' + substring(@vendorlot, 1, 2) + '-' + 
+		(case substring(@vendorlot, 4, 1) 
+			when 'X' then '10' when 'Y' then '11' when 'Z' then '12' 
+			when 'A' then '10' when 'B' then '11' when 'C' then '12'
+			else '0' + substring(@vendorlot, 4, 1) end) + '-' +
+		(case when substring(@vendorlot, 5, 1) between 'A' and 'Z' 
+			then right('0' + cast(ascii(substring(@vendorlot, 5, 1)) - 64 as varchar), 2)
+			else right('0' + substring(@vendorlot, 5, 1), 2) end)
 
-	
-	when (@materialcode IN (
-						'GADACB-001'
-						)
-
-		) and LEFT(@vendorlot, 1) = '2'  then substring(@vendorlot,1,4)+'-'+ substring(@vendorlot,5,2)+'-'+ substring(@vendorlot,7,2)	
-
-	--when @materialcode='GADACB-001' then 
-	--								'20'+ case when substring(@vendorlot,1,1)=1 then '24' else '25' end
-	--								+'-0'+ substring(@vendorlot,4,1) +'-0'+ substring(@vendorlot,6,1)
-	
+			
 	when @materialcode = 'GBEC00-008' then '20' + SUBSTRING(@vendorlot,3,2) +'-'+ SUBSTRING(@vendorlot,5,2)+'-'+ SUBSTRING(@vendorlot,7,2)   -- DinhManh update 2025-06-23 following Ms.Van (warehouse) request
 	when @materialcode in ('GBEC00-005') then '20' + SUBSTRING(@vendorlot,4,2) +'-'+ SUBSTRING(@vendorlot,6,2)+'-'+ SUBSTRING(@vendorlot,8,2)
 	--when @materialcode in ('GBEC00-005','GBEC00-008') then '20' + SUBSTRING(@vendorlot,4,2) +'-'+ SUBSTRING(@vendorlot,6,2)+'-'+ SUBSTRING(@vendorlot,8,2)
