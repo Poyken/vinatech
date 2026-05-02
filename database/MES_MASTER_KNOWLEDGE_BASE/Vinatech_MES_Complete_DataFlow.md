@@ -191,10 +191,10 @@ Hệ thống quản lý theo từng trạm quét (Scan Point), mỗi trạm tư�
 > **Hình dung đơn giản:** Giống như một người đi qua nhiều trạm hải quan. Mỗi trạm đóng dấu (= ghi record). Truy vết = xem lại tất cả các dấu đã đóng trên hộ chiếu.
 
 ```mermaid
-graph TD
+flowchart TD
     A[Raw Material:<br/>LotID / VendorBarcode] -- "Consumption (V-02/V-11)" --> B[Electrode:<br/>ElectrodeLotNumber]
     B -- "Winding (V-22)<br/>Barcode Birth" --> C[WIP Product:<br/>ControlNo / Barcode]
-    C -- "Assembly (V-23 -> V-27)" --> C
+    C -- "Assembly (V-23 &rarr; V-27)" --> C
     C -- "Packing (V-28)" --> D[Finished Good:<br/>PackingID / BigBoxID]
     
     style C fill:#f9f,stroke:#333,stroke-width:2px
@@ -673,16 +673,16 @@ flowchart TD
     P4["🔬 PHASE 4\nAging, Sorting & Defect\nSTB_AgingSortingData\nSTB_DefectInfo\nSTB_VN_SCRAP_..."]
     P5["📫 PHASE 5\nPacking & FG Stock-In\nSTB_DividePackaging\nSTB_MaterialWarehouseInOutHist"]
     FG["🏪 KHO THÀNH PHẨM\nFG_BG_WH / FG_VVT_WH"]
-    FIFO["🔄 FIFO\nvalidFIFO + Expiry\nstb_vvt_OpenExpiredMaterial"]
+    FIFO["🔄 FIFO\nvalidFIFO &rarr; Expiry\nstb_vvt_OpenExpiredMaterial"]
     BOM["📋 BOM Backflush\nusp_DoProcessProdGIMaterialByBOM\nusp_DoProcessProdGRMaterialByOne"]
     LOG["📝 STB_ProcedureLog\nAudit Trail"]
 
-    P0 -->|"BomDetail → ProductionOrderBom\nRouteInfo → ProductionOrderRouting"| P1
+    P0 -->|"BomDetail &rarr; ProductionOrderBom\nRouteInfo &rarr; ProductionOrderRouting"| P1
     P0 -->|"RouteInfo lookup"| P3
     P1 -->|"LotID + CurrentQty"| P2
     P1 --> FIFO
     FIFO -->|"HOLD nếu vi phạm"| P1
-    P2 -->|"ElectrodeLotNo → BarCode"| P3
+    P2 -->|"ElectrodeLotNo &rarr; BarCode"| P3
     P3 --> BOM
     BOM -->|"GI: MaterialDocInfo"| P3
     BOM -->|"GR: MaterialDocLotInfo"| P3
@@ -1324,6 +1324,59 @@ Hệ thống sử dụng file định mức cố định (hardcoded) dựa trên
 | `usp_DivideAndPrintPackagingLabels` | ChangeMaterialCode_Config/HN, CreateMarkingLetterAndQtyForBarcode, DividePackaging, MaterialLotInfo/Master, ModelBasicInfo/LabelInfo, PackingLabelSpec/Standard, SetInfo | INSERT DividePackaging | 11-table read, label print |
 | `usp_Vietnam_DoProcessBigBoxPacking_VVT_F3` | BomDetail, DayPlanInfo, DividePackaging, PackingStandard, ModelBasicInfo | INSERT VN_BigBoxPacking, MaterialDocInfo/Detail | Big box VVT only |
 | `usp_VN_FinishGood_BG_StockIn_iud` | MaterialLotInfo | INSERT MaterialWarehouseInOutHist; UPDATE MaterialLotInfo, ProcedureLog | FG stock-in BG WH |
+
+<a name="phase-6"></a>
+## Phase 6 — Warehouse & Export (Quản lý Kho & Xuất Kho)
+
+> **Mục đích:** Chuyển hàng từ Production sang Inventory, quản lý tồn kho thành phẩm thực tế và thực hiện các thủ tục xuất hàng đi khách hàng (Invoice/Export).
+
+### 📊 Tables liên quan
+
+| Table | Vai trò |
+|-------|---------|
+| `STB_VN_FINISHGOODS_HN_New` | Tồn kho thành phẩm thực tế (Hà Nam) |
+| `STB_VN_FINISHGOODS_HN_Export` | Thông tin phiếu xuất kho / Invoice |
+| `STB_VN_FINISHGOODS_HN_ExportDetail` | Chi tiết các Big Box / Box trong phiếu xuất |
+| `STB_VN_FINISHGOODS_BG` | Tồn kho thành phẩm Bắc Giang |
+| `STB_MaterialLotInfo` | Thông tin Lot gốc (Production) |
+
+### 🔄 SP: `ImportWarehouseFinshGood_uid`
+
+**Mục đích:** "Khai báo" hàng từ xưởng sản xuất vào kho Inventory.
+
+**Logic:**
+1. Nhận danh sách `BigBoxID` hoặc `PackingID` từ Production.
+2. Kiểm tra trạng thái đóng gói (phải hoàn thành Phase 5).
+3. **INSERT** vào `STB_VN_FINISHGOODS_HN_New`:
+   - Tạo ID mới theo format `FGVN_HN...`
+   - Copy thông tin `MaterialCode`, `packQty`, `JobDate`.
+   - Set `StatusImport = 1` (Đã vào kho).
+4. **UPDATE** trạng thái tại bảng gốc Production để tránh nhập trùng.
+
+### 🔄 SP: `ExportWarehouseFinshGood_uid`
+
+**Mục đích:** Thực hiện xuất hàng dựa trên Invoice hoặc kế hoạch xuất.
+
+**Logic:**
+1. **Kiểm tra tồn kho:** Dò trong `STB_VN_FINISHGOODS_HN_New` xem `packQty > packQtyOutput`.
+2. **Xử lý Big Box:** 
+   - Nếu xuất theo Big Box ID → Hệ thống dùng `CURSOR` duyệt qua tất cả các Box con bên trong.
+   - Kiểm tra xem Big Box đó có đang bị **HOLD QC** không.
+3. **Ghi nhận xuất:**
+   - INSERT vào `STB_VN_FINISHGOODS_HN_Export` (Header phiếu xuất).
+   - INSERT vào `STB_VN_FINISHGOODS_HN_ExportDetail` (Chi tiết từng thùng).
+4. **Trừ tồn kho:**
+   - UPDATE `packQtyOutput` tăng lên tương ứng số lượng xuất.
+   - Nếu `packQtyOutput = packQty` → Lot/Box đó coi như đã xuất hết.
+
+### 🔄 SP: `usp_VVT_checkFIFO_FinishGood`
+
+**Mục đích:** Đảm bảo hàng thành phẩm xuất kho theo đúng thứ tự sản xuất (FIFO).
+
+**Logic:**
+1. Tìm Lot thành phẩm cũ nhất của `MaterialCode` đó còn tồn trong kho.
+2. So sánh `JobDate` của Lot đang định xuất với Lot cũ nhất.
+3. Nếu Lot đang xuất "trẻ" hơn Lot cũ nhất → `RAISERROR` cảnh báo vi phạm FIFO thành phẩm.
 
 ---
 
