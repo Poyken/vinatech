@@ -2,7 +2,7 @@
 -- Author : Mr.Tung
 -- Date: 06-15-2021
 
---     usp_Vietnam_RawMaterialInputHist_uid  '','','','VVQM193R072710','ElectrodeM','VWQM1420001E01-012','','','',''
+--     usp_Vietnam_RawMaterialInputHist_uid  '','','','VVPM082R750609','Separator','ML20250225000112','','','',''
 -- =============================================
 CREATE PROCEDURE [dbo].[usp_Vietnam_RawMaterialInputHist_uid]
 	@pProcessUserID VARCHAR(20), 
@@ -213,7 +213,7 @@ BEGIN
 		--return
 		
 		 -- Nếu không mở chặn ở màn hình C555 , không phải Lót NVL Ngoại lệ , thì sẽ vào cảnh báo Hết hạn 
-		if(isnull(@OpenExpired,0)=0 or @OpenExpired=0 or convert(bit,@OpenExpired)=0)
+		if((isnull(@OpenExpired,0)=0 or @OpenExpired=0 or convert(bit,@OpenExpired)=0) and @mmmaterialcode not in ('TRAY1320-B015'))
 		 begin try	
 			if  isnull((select  dateadd(day,(ISNULL(MMExtInt01,3) * 30)+ISNULL(MMExtInt01,3)/12*6,@validDate)  from STB_MaterialMaster where MaterialCode= @mmmaterialcode),getdate()-1)
 				< getdate()
@@ -631,10 +631,13 @@ declare @cterminal1			nVARCHAR(300)='',
 						  UNION ALL
 						  select 'GBEC00-011' AS electrolyte, 'VEP3R0367QG'  as model, '3562' size -- 2026-02-13
 						  UNION ALL
+						  select 'GBEC00-011' AS electrolyte, 'WEC3R0256QG'  as model, '1625' size -- 2026-04-25
+						  UNION ALL
 						  select 'GBCP00-004' AS electrolyte, 'WEC2R7346QA'  as model, '1830' size -- 2026-03-09
 						  UNION ALL
 						   select 'GBEC00-011' AS electrolyte, 'VEC2R7107QG'  as model, '2245' size  UNION ALL
-						  select 'GBEC00-011' AS electrolyte, 'WEC3R0156QG'  as model, '1325' size -- 2026-03-02
+						  select 'GBEC00-011' AS electrolyte, 'WEC3R0156QG'  as model, '1325' size  UNION ALL -- 2026-03-02
+						  select 'GBEC00-011' AS electrolyte, 'WEC3R0606QG'  as model, '1840'
 
 				-- WEC3R0156QG (1325)
 
@@ -914,6 +917,15 @@ declare @cterminal1			nVARCHAR(300)='',
 				select 'GCMDPT-387' as sleeving, 'WEC6R0504QG-H' as model, '' as size union all 
 
 				select 'PBDM00-185' as sleeving, 'VEC5R4155QG-I (23x17x9)' as model, '' as size union all
+				select 'PBDM00-186' as sleeving, 'WEC6R0255QG-IL' as model, '' as size union all
+				select 'PBDM00-186' as sleeving, 'WEC6R0505QG-I' as model, '' as size union all
+				select 'PBDM00-186' as sleeving, 'WEC6R0505QA-I-L' as model, '' as size union all
+				select 'PBDM00-184' as sleeving, 'WEC6R0505QA-O' as model, '' as size union all
+				select 'PBDM00-184' as sleeving, 'WEC5R4505QG-O' as model, '' as size union all
+				select 'PBDM00-184' as sleeving, 'WEC6R0355QG-OL' as model, '' as size union all
+				select 'PBDM00-171' as sleeving, 'WCI(62mm)' as model, '' as size union all
+				select 'PBDM00-171' as sleeving, 'WCI(35mm)' as model, '' as size union all
+				select 'PBDM00-171' as sleeving, 'WCI(50mm)' as model, '' as size union all
 				select 'GCMDPT-206' as sleeving, 'VEC5R4155QG-I' as model, '' as size union all 
 
 				select 'GCMDPT-206' as sleeving, 'VEC5R4155QG-H' as model, '' as size union all 
@@ -1562,6 +1574,7 @@ declare @cterminal1			nVARCHAR(300)='',
 					(@pBarcode= 'VVQK243R072761'	and @pRawMaterialBarcode='VVQK2420001E09-003' and @pProductGroupCode = 'ELECTRODEM') OR
 					(@pBarcode= 'VVQK273R072719'	and @pRawMaterialBarcode='VWQK2220001E04-010' and @pProductGroupCode = 'ELECTRODEM') OR
 					(@pBarcode= 'VVQL193R072753'	and @pRawMaterialBarcode='VWQL1520001E01-004' and @pProductGroupCode = 'ELECTRODEP') OR		--
+					(@pBarcode= 'VVQM193R072798'	and @pRawMaterialBarcode='VWQH1520001E05-004' and @pProductGroupCode = 'ELECTRODEM') OR
 
 					(@pBarcode= 'VVQK143R072774'	and @pProductGroupCode = 'ELECTRODEM') OR
 					(@pBarcode= 'VVPU293R072705'	) OR
@@ -1710,7 +1723,7 @@ declare @cterminal1			nVARCHAR(300)='',
 							OR (MaterialName like  '%YP%') ))   -- Mr.Manh update 2026-02-25 
 						
 						-- Thêm danh sách các điện cực được bắn lẫn lộn âm dương cho đỡ phải check mệt người, vì tên họ đặt chả theo tiêu chuẩn gì cả
-						OR (MaterialCode IN ('CRYPK0-016', 'CRECO85-03', 'CREYO85-04', 'CREYO85-02', 'CREYO85-02', 'CRYPK0-016', 'CRYPK0-017', 'CRYPK0-018', 'CRCEK0-268', 'CRYPK0-011', 'CRYPK0-022'))
+						OR (MaterialCode IN ('CRYPK0-016', 'CRECO85-03', 'CREYO85-04', 'CREYO85-02', 'CREYO85-02', 'CRYPK0-016', 'CRYPK0-017', 'CRYPK0-018', 'CRCEK0-268', 'CRCEK0-266', 'CRYPK0-011', 'CRYPK0-022'))
 
 						)
 					end
@@ -1789,7 +1802,6 @@ declare @cterminal1			nVARCHAR(300)='',
 				or @pBarcode='VVPS023R010601' and @pRawMaterialBarcode='VVPR2920001E36-020' and @pProductGroupCode = 'ELECTRODEM'   -- add on 2025-10-02
 				or @pBarcode='VVPS023R010606' and @pRawMaterialBarcode='VVPR2920001E27-001' and @pProductGroupCode = 'ELECTRODEP'
 				or @pBarcode='VVQK093R060647' and @pRawMaterialBarcode LIKE 'VVQK0620001E27%' and @pProductGroupCode = 'ELECTRODEP'
-				or @pBarcode='VVQM193R072710' and @pRawMaterialBarcode LIKE 'VWQM1420001E09%' and @pProductGroupCode = 'ELECTRODEM'
 
 
 				)
@@ -1810,7 +1822,7 @@ declare @cterminal1			nVARCHAR(300)='',
 				--	join STB_ElectrodeSlittingInfo esi		with(nolock) on si.Barcode = esi.ElectrodeLotNumber
 				--	join STB_ElectrodeSlittingResult esr	with(nolock) on esi.ElectrodeLotNumber = esr.ElectrodeLotNumber
 				--	where esr.Barcode=@pRawMaterialBarcode 
-				if (@materialCodeCheck IN ('ECVT30-357') and @rawMaterialCheck IN ( 'CRYPK0-018','CRYPK0-017', 'CREHCO85', 'SREHCO0', 'CRYPK0-016', 'CRECO85-03', 'CREYO85-04', 'CREYO85-02', 'CREYO85-04', 'CRYPK0-016', 'CRYPK0-017', 'CRYPK0-018', 'CRCEK0-268', 'CRYPK0-016', 'CRECO85-03', 'CREYO85-04', 'CREYO85-02', 'CREYO85-02', 'CRYPK0-016', 'CRYPK0-017', 'CRYPK0-018', 'CRCEK0-268', 'CRYPK0-011', 'CRYPK0-022'))
+				if (@materialCodeCheck IN ('ECVT30-357') and @rawMaterialCheck IN ( 'CRYPK0-018','CRYPK0-017', 'CREHCO85', 'SREHCO0', 'CRYPK0-016', 'CRECO85-03', 'CREYO85-04', 'CREYO85-02', 'CREYO85-04', 'CRYPK0-016', 'CRYPK0-017', 'CRYPK0-018', 'CRCEK0-268', 'CRCEK0-266', 'CRYPK0-016', 'CRECO85-03', 'CREYO85-04', 'CREYO85-02', 'CREYO85-02', 'CRYPK0-016', 'CRYPK0-017', 'CRYPK0-018', 'CRCEK0-268', 'CRYPK0-011', 'CRYPK0-022'))
 					begin
 						set @count=1;
 					end
@@ -1822,7 +1834,7 @@ declare @cterminal1			nVARCHAR(300)='',
 			    --end for 1035
 
                 --update for 1025
-				if(@materialCodeCheck IN ('ECVT30-270') and @rawMaterialCheck IN ('CRCEK0-266'))
+				if(@materialCodeCheck IN ('ECVT30-270') and @rawMaterialCheck IN ('CRCEK0-266', 'CRYPK0-022'))
 				    begin
 					  set @count = 1;
 					end
@@ -1830,12 +1842,6 @@ declare @cterminal1			nVARCHAR(300)='',
 
 				-- end update
 
-				-- update for 35105 dùng CRCEK0-266 by ducnv
-				if(@materialCodeCheck IN ('ECVT30-357') and @rawMaterialCheck IN ('CRCEK0-266'))
-					begin
-						set @count = 1;
-					end
-				-- end for 35105 CRCEK0-266
 
 				if(@count<1 and @err='')  begin
 					set @err = N'Không tồn tại thiết lập Điện cực của LotNo:  ' +@pBarcode + '  PartNo  = ' 
@@ -1889,6 +1895,7 @@ declare @cterminal1			nVARCHAR(300)='',
 				 or @Barcode='VVPR252R710604' and @pRawMaterialBarcode='VVPR1920001E25-003' and @pProductGroupCode = 'ELECTRODEM'
 				 or @Barcode='VVPR253R010606' and @pRawMaterialBarcode='VVPR2320001E23-019' and @pProductGroupCode = 'ELECTRODEM'
 				 or @Barcode='VVPR252R710607' and @pRawMaterialBarcode='VVPR2220001E32-003' and @pProductGroupCode = 'ELECTRODEP' --updated 2025-09-25
+				 or @Barcode='VVQM193R072798' and @pRawMaterialBarcode='VWQH1520001E05-004' and @pProductGroupCode = 'ELECTRODEM' --updated 2026-04-23
 
 				)
 				
@@ -1914,7 +1921,7 @@ declare @cterminal1			nVARCHAR(300)='',
 				-- end update
 				
 				-- update 2026-01-07 for 35105 and HCE electrode slitting
-				if (@materialCodeCheck IN ('ECVT30-357') and @rawMaterialCheck IN ( 'CRYPK0-018','CRYPK0-017', 'CREHCO85', 'SREHCO0', 'CRYPK0-016', 'CRECO85-03', 'CREYO85-04', 'CREYO85-02', 'CREYO85-04', 'CRYPK0-016', 'CRYPK0-017', 'CRYPK0-018', 'CRCEK0-268', 'CRYPK0-016', 'CRECO85-03', 'CREYO85-04', 'CREYO85-02', 'CREYO85-02', 'CRYPK0-016', 'CRYPK0-017', 'CRYPK0-018', 'CRCEK0-268', 'CRYPK0-011', 'CRYPK0-022'))
+				if (@materialCodeCheck IN ('ECVT30-357') and @rawMaterialCheck IN ( 'CRYPK0-018','CRYPK0-017', 'CREHCO85', 'SREHCO0', 'CRYPK0-016', 'CRECO85-03', 'CREYO85-04', 'CREYO85-02', 'CREYO85-04', 'CRYPK0-016', 'CRYPK0-017', 'CRYPK0-018', 'CRCEK0-268', 'CRCEK0-266', 'CRYPK0-016', 'CRECO85-03', 'CREYO85-04', 'CREYO85-02', 'CREYO85-02', 'CRYPK0-016', 'CRYPK0-017', 'CRYPK0-018', 'CRCEK0-268', 'CRYPK0-011', 'CRYPK0-022'))
 					begin
 						set @count=1;
 					end
@@ -2110,12 +2117,24 @@ if( UPPER(isnull(@pProductGroupCode,'')) in ( 'Separator' )  or lower(@pProductG
 	   return;
 	end
 
+	-- MR.Manh update 2026-04-25 following IQC request for 0820 Model
+		declare @paperMaterialCodeCheck varchar(50),
+				@paperRawMaterialCheck Varchar(50),
+				@paperCountCheck INT = 0
+		select @paperMaterialCodeCheck = MaterialCode FROM STB_SetInfo where Barcode = @pBarcode
+		select @paperRawMaterialCheck = MaterialCode FROM STB_MaterialLotInfo where LotID = @pRawMaterialBarcode
+		IF	(@paperMaterialCodeCheck = 'ECVT30-276' and @paperRawMaterialCheck NOT IN ('GBNKSP-057'))
+			or (@paperMaterialCodeCheck = 'LIVT38-010' and @paperRawMaterialCheck NOT IN ('GBNKSP-078'))
+		BEGIN
+			RAISERROR (N'[0820] - Sai mã giấy được thiết lập cho model 0820. Vui lòng kiểm tra lại', 16, 1)
+			RETURN
+		END
+
 	
 		;with separatotable as (
 		
 		 select 'GBNKSP-060' as separatocode, 'HY-CAP VEC2R7506QG (1840),' as models  union all
 		-- select 'GBNKSP-054' as separatocode, 'HY-CAP VEC2R7105QG-N (0813),' as models  union all
-		select 'GBNKSP-057' as separatocode, 'VEL08203R8306G (0820),' as models  union all
 		select 'GBNKSP-062' AS separatocode,'WEC3R0156QD (1035)' as models union all  --Mr.Trieu Update ngày 2025-09-06
 		select 'GBNKSP-059' as separatocode,'VET10252R7106G (1025)' as models union all
 		 select materialcode , semiProductname
@@ -2773,7 +2792,7 @@ BEGIN		-- BEGIN BG2
 		--return
 		
 		 -- Nếu không mở chặn ở màn hình C555 , không phải Lót NVL Ngoại lệ , thì sẽ vào cảnh báo Hết hạn 
-		if(isnull(@OpenExpired,0)=0 or @OpenExpired=0 or convert(bit,@OpenExpired)=0)
+		if((isnull(@OpenExpired,0)=0 or @OpenExpired=0 or convert(bit,@OpenExpired)=0) and @mmmaterialcode not in ('TRAY1320-B015'))
 		 begin try	
 			if  isnull((select  dateadd(day,(ISNULL(MMExtInt01,3) * 30)+ISNULL(MMExtInt01,3)/12*6,@validDate)  from STB_MaterialMaster where MaterialCode= @mmmaterialcode),getdate()-1)
 				< getdate()
@@ -2968,10 +2987,6 @@ END		-- END BG@
 				ProductGroupCode =   ISNULL(@pProductGroupCode,ProductGroupCode),
 				RawMaterialBarcode =   ISNULL(@RawMaterialBarcode,RawMaterialBarcode),
 				LotMaterialCode =  ISNULL(@LotMaterialBarcode,@LotMaterialBarcode),
-				-- start
-				--ducnv follow iss Mrs Hường 20260421 
-				MaterialCode = ISNULL(MaterialCode, CASE WHEN ISNULL(@mmmaterialcode, '') <> '' THEN @mmmaterialcode WHEN CHARINDEX('#', @RawMaterialBarcode) > 0 THEN LEFT(@RawMaterialBarcode, CHARINDEX('#', @RawMaterialBarcode) - 1) ELSE MaterialCode END),
-				--end
 				CreateDateTime =   ISNULL(CreateDateTime,@pCreateDateTime),
 				CreateUserID =   ISNULL(CreateUserID,@pProcessUserID),
 				ChangeDateTime = GETDATE(),
@@ -3004,4 +3019,3 @@ END
 --select * from STB_MaterialLotInfo where LotId='ML2026020900052'
 
 --SELECT * from STB_MaterialDocLotInfo where LotID='ML2026020900052'
-
