@@ -1,1 +1,0 @@
-﻿-- DATABASE: SmartFramework - ALL TABLES

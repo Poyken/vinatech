@@ -1,1 +1,0 @@
-﻿-- DATABASE: SmartFactoryV2 - ALL TABLES
