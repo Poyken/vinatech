@@ -251,10 +251,33 @@ WHERE LotID = 'ML20250430000174'
 
 ---
 
-### 4.9 FIFO NVL
+### 4.9 FIFO & Validation NVL (Tắt/Bật Chặn)
 
 - **Tắt FIFO cho toàn bộ:** Tìm SP `usp_MaterialWarehouseInOutHist_iud`
 - **Tắt FIFO cho NVL cụ thể:** SP `usp_VVTMaterialWarehouse_validFIFO`
+
+> ⚠️ **Lưu ý đặc biệt (Nordex Audit Block):** 
+> Kể từ **2026-02-05**, logic chặn quét sai BOM (`RAISERROR('생산중인 제품 BOM에 적합하지 않은 자재입니다...')`) trong SP `usp_RawMaterialInputHist_iud` đang bị **Comment Out (Vô hiệu hóa tạm thời)**. 
+> - **Hiện tượng:** Công nhân quét NVL không có trong BOM vẫn được hệ thống chấp nhận. 
+> - **Nguyên nhân:** Đang trong giai đoạn Audit hệ thống Nordex.
+
+---
+
+### 4.10 Công thức tính Hạn sử dụng (Expiry Date)
+
+Khi hệ thống báo lỗi **"Hết hạn sử dụng"**, hãy kiểm tra dữ liệu theo công thức sau:
+- **Ngày sản xuất (Base Date):** Cột `LotAttr10` trong bảng `STB_MaterialDocLotInfo`.
+- **Số tháng Shelf Life:** Cột `MMExtInt01` trong bảng `STB_MaterialMaster` của mã vật tư đó.
+- **Hạn sử dụng:** `LotAttr10` + `MMExtInt01` (tháng).
+
+*SQL kiểm tra nhanh:*
+```sql
+SELECT MDLI.LotID, MDLI.Lotattr10 AS [Ngày SX], MM.MMExtInt01 AS [Hạn tháng],
+DATEADD(MONTH, MM.MMExtInt01, MDLI.Lotattr10) AS [Ngày Hết Hạn Thực Tế]
+FROM STB_MaterialDocLotInfo MDLI
+JOIN STB_MaterialMaster MM ON MDLI.MaterialCode = MM.MaterialCode
+WHERE MDLI.LotID = 'ML...'
+```
 
 ---
 

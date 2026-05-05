@@ -70,11 +70,14 @@ Mọi thao tác của OP (Scan barcode, nhập sản lượng, xác nhận đón
 - **Business logic** (tính toán, kiểm tra FIFO, kiểm tra hạn dùng)
 - **Ghi dữ liệu** (INSERT/UPDATE vào DB)
 
-### Trụ cột 3 — Triggers: *"Tồn kho tự cập nhật, không cần ai nhớ"*
+### Trụ cột 3 — Recursive Logic: *"Tồn kho tự cập nhật, không cần triggers"*
 
-Khi SP ghi dữ liệu vào bảng Lot → DB Trigger **tự động** cộng/trừ tồn kho tổng vào `STB_MaterialStock`. Developer thường **quên mất triggers** này khi debug lỗi tồn kho.
-
-> ⚠️ **Lưu ý quan trọng cho Developer:** Nếu tồn kho sai không rõ nguyên nhân → hãy kiểm tra xem có Trigger nào đang âm thầm chạy không trước khi đổ lỗi cho SP.
+> ⚠️ **DB Audit 2026-05-05:** Hệ thống hiện tại **KHÔNG sử dụng Triggers** để cập nhật tồn kho (bảng `Triggers` trống).
+> 
+> Thay vào đó, logic cập nhật tồn kho được thực hiện **trực tiếp** thông qua chuỗi gọi Stored Procedure:
+> `usp_DoProcessProdRouteHist` → `usp_DoProcessProdGIMaterialByBOM` → `usp_DoCreateMaterialDocLotInfo...`.
+> 
+> Developer khi debug lỗi tồn kho cần truy vết các SP này thay vì tìm Triggers ngầm.
 
 ---
 
@@ -202,7 +205,7 @@ flowchart TD
 ```
 
 *   **Barcode Birth (V-22):** Tại máy cuốn, hệ thống "khai sinh" ra `ControlNo`. Mọi lịch sử từ trạm này trở đi sẽ bám theo `ControlNo` này trong bảng `STB_ProdRouteHist`.
-*   **Vết nguyên liệu (BOM Link):** Khi trạm V-22 quét hoàn thành, SP `usp_DoProcessProdGIMaterialByBOM` sẽ chạy ngầm để trừ tồn kho của các `LotID` nguyên liệu cấu thành viên tụ đó (theo BOM).
+*   **Vết nguyên liệu (BOM Link):** Khi một trạm quét được xác nhận, SP `usp_DoProcessProdGIMaterialByBOM` sẽ chạy để trừ tồn kho của các `LotID` nguyên liệu được cấu hình cho **chính công đoạn đó** trong BOM (`STB_ProductionOrderBom.RouteCode`). Việc trừ tồn kho diễn ra rải rác suốt dây chuyền, không chỉ ở bước cuối.
 
 ### 3. Logic Gate-Keeping — Tại Sao Không Thể Bỏ Trạm?
 
@@ -213,7 +216,9 @@ flowchart TD
 2. Kiểm tra xem bước `RouteIndex - 1` đã có bản ghi trong `STB_ProdRouteHist` cho `ControlNo` này chưa.
 3. Nếu chưa (Bỏ trạm) → Hệ thống báo lỗi và không cho lưu.
 
-**Tại sao quan trọng:** Đây là cơ chế đảm bảo **không có sản phẩm nào được bỏ qua bước kiểm tra**. Nếu cần bypass (vì lý do đặc biệt), phải sửa trực tiếp bảng `STB_ProductionOrderRouting` — việc này chỉ EA/IT được làm.
+**Tại sao quan trọng:** Đây là cơ chế đảm bảo **không có sản phẩm nào được bỏ qua bước kiểm tra**. 
+
+> 💡 **Developer Note:** Một số RouteCode đặc biệt được hardcode để **bypass** kiểm tra số lượng (vượt định mức): `('E-28', 'V-28', 'V-28_BG', 'VE10', 'E-33', 'E-34', 'E-29', 'EM-03', 'M-06')`. Đa số là các khâu Đóng gói (V-28) hoặc Xử lý phế (E-33).
 
 
 ### 🔍 Truy Vết 360 Độ (Golden Query)
@@ -787,13 +792,9 @@ flowchart TD
 ### 🔄 SP: `usp_RawMaterialInputHist_iud` & `usp_Vietnam_RawMaterialInputHist_uid`
 
 **Logic (từ source code đã phân tích):**
-- Ghi nhận phiếu nhập nguyên vật liệu (bao gồm luồng chốt kiểm tra VET/IQC).
-- Lấy thông tin Hạn sử dụng (`MMExtInt01` - Shelf Life) từ `STB_MaterialMaster` để đối chiếu với hạn gốc hoặc cảnh báo Lot sắp hết đát.
-- Kiểm tra VET (điện phân đặc biệt): nếu `MaterialCode` thuộc nhóm VET → validate thêm điện áp
-- INSERT vào `STB_RawMaterialInputHist`.
 - **Lưu ý quan trọng:** Bảng `STB_RawMaterialInputHist` chứa cột `MaterialCode`. Nếu quét NVL kiểu "Dynamic scan" (nhiều barcode dán sau dấu #), SP `usp_Vietnam_RawMaterialInputHist_uid` PHẢI điền cột này (thường bóc tách từ barcode hoặc lấy từ Master Data). Nếu cột này NULL, các bước validation sau sẽ bị lỗi.
-- Tạo `STB_MaterialLotInfo` với `InitialQty` và `CurrentQty` = số lượng nhập.
-*(Lưu ý: Mặc định Hệ thống cũ dùng `LotAttr10` làm Ngày Sản Xuất để F330/B597 tính hạn — Sắp tới sẽ chuyển sang cơ chế Roadmap 4-Layer khai báo Date độc lập).*
+- **Tạm khóa (Nordex Audit):** Kể từ **2026-02-05**, logic kiểm tra BOM (`RAISERROR('생산중인 제품 BOM에 적합하지 않은 자재입니다...')`) trong `usp_RawMaterialInputHist_iud` đang bị **COMMENT OUT (Bị khóa)** để phục vụ audit. Hệ thống hiện cho phép quét NVL không có trong BOM.
+- **Tính Hạn Sử Dụng:** Hạn được tính bằng `LotAttr10` (Ngày SX) + `MMExtInt01` (Số tháng Shelf Life) từ `STB_MaterialMaster`.
 
 ### 🔄 SP: `usp_CheckInputRawMaterialCodeForProduct` (Validation Engine)
 
