@@ -1,0 +1,196 @@
+?<?xml version="1.0" encoding="utf-8"?>
+<XtraReportsLayoutSerializer SerializerVersion="19.2.3.0" Ref="0" ControlType="DevExpress.XtraReports.UI.XtraReport, DevExpress.XtraReports.v19.2, Version=19.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Name="XtraReport" DisplayName="SanminaIndiaLabel_ver2" ScriptsSource="&#xD;&#xA;private void barCode6_TextChanged(object sender, System.EventArgs e) {&#xD;&#xA;&#xD;&#xA;}&#xD;&#xA;&#xD;&#xA;private void barCode6_TextChanged_1(object sender, System.EventArgs e) {&#xD;&#xA;&#xD;&#xA;}&#xD;&#xA;" SnapGridSize="25" ReportUnit="TenthsOfAMillimeter" Margins="0, 0, 0, 0" PaperKind="Custom" PageWidth="700" PageHeight="1550" Version="19.2" Dpi="254" Font="Tahoma, 9.75pt">
+  <Parameters>
+    <Item1 Ref="2" Description="SupplierName" Name="SupplierName" />
+    <Item2 Ref="3" Description="SanminaPartNumber" Name="SanminaPartNumber" />
+    <Item3 Ref="4" Description="PartDesc" Name="PartDesc" />
+    <Item4 Ref="5" Description="MFR" Name="MFR" />
+    <Item5 Ref="6" Description="MPN" Name="MPN" />
+    <Item6 Ref="7" Description="Quantity" Name="Quantity" />
+    <Item7 Ref="8" Description="PONumber" Name="PONumber" />
+    <Item8 Ref="10" Description="LotCode" ValueInfo="0" Name="LotCode" Type="#Ref-9" />
+    <Item9 Ref="11" Description="PackingDate" Name="PackingDate" />
+    <Item10 Ref="12" Description="InspEmpID" Name="InspEmpID" />
+    <Item11 Ref="13" Description="InspEmpName" Name="InspEmpName" />
+    <Item12 Ref="14" Description="TotalBoxes" Name="TotalBoxes" />
+    <Item13 Ref="15" Description="CartonBoxNo" Name="CartonBoxNo" />
+  </Parameters>
+  <Bands>
+    <Item1 Ref="16" ControlType="TopMarginBand" Name="TopMargin" HeightF="0" Dpi="254" />
+    <Item2 Ref="17" ControlType="DetailBand" Name="Detail" HeightF="1550" Dpi="254" Font="Tahoma, 8.5pt">
+      <Controls>
+        <Item1 Ref="18" ControlType="XRTable" Name="table1" SizeF="680.000061,1434.36853" LocationFloat="9.999995, 74.09492" Dpi="254" Padding="2,2,0,0,96">
+          <Rows>
+            <Item1 Ref="19" ControlType="XRTableRow" Name="tableRow1" Weight="0.99999999999998979" Dpi="254">
+              <Cells>
+                <Item1 Ref="20" ControlType="XRTableCell" Name="tableCell1" Weight="1" Multiline="true" Text="tableCell1" Dpi="254" Borders="All">
+                  <Controls>
+                    <Item1 Ref="21" ControlType="XRLabel" Name="label24" Multiline="true" Angle="90" Text="" TextAlignment="BottomCenter" SizeF="60.8499756,334.562469" LocationFloat="563.0593, 0" Dpi="254" Font="Tahoma, 9pt, style=Bold" Padding="0,0,0,0,254" Borders="None">
+                      <StylePriority Ref="22" UseFont="false" UsePadding="false" UseBorders="false" UseTextAlignment="false" />
+                    </Item1>
+                    <Item2 Ref="23" ControlType="XRLine" Name="line2" SizeF="574.1458,5.291687" LocationFloat="77.31251, 745.3295" Dpi="254" BorderWidth="0">
+                      <StylePriority Ref="24" UseBorderWidth="false" />
+                    </Item2>
+                    <Item3 Ref="25" ControlType="XRLine" Name="line1" SizeF="579.4375,5" LocationFloat="77.31251, 1098.00916" Dpi="254" BorderWidth="0">
+                      <StylePriority Ref="26" UseBorderWidth="false" />
+                    </Item3>
+                    <Item4 Ref="27" ControlType="XRBarCode" Name="barCode6" Module="5.08" AutoModule="true" BarCodeOrientation="RotateLeft" ShowText="false" KeepTogether="false" SizeF="360.77774,309.562439" LocationFloat="181.103973, 25.0000076" Dpi="254" Padding="26,26,0,0,254" Borders="None">
+                      <Symbology Ref="28" Name="QRCode" CompactionMode="Byte" />
+                      <ExpressionBindings>
+                        <Item1 Ref="29" EventName="BeforePrint" PropertyName="Text" Expression="Concat(?SupplierName, '||', ?SanminaPartNumber, '||', ?PartDesc, '||', ?MFR, '||', ?MPN, '||', ?Quantity, '||', ?PONumber, '||', ?LotCode, '||', ?PackingDate, '||', ?InspEmpName, '||', ?CartonBoxNo)" />
+                      </ExpressionBindings>
+                      <StylePriority Ref="30" UseBorders="false" />
+                    </Item4>
+                    <Item5 Ref="31" ControlType="XRLabel" Name="label22" Multiline="true" Angle="90" Text="Inspector name/Sign" TextAlignment="BottomCenter" SizeF="60.854248,398.666656" LocationFloat="515.4253, 346.654266" Dpi="254" Font="Tahoma, 9pt, style=Bold" Padding="5,5,0,20,254" Borders="None">
+                      <StylePriority Ref="32" UseFont="false" UsePadding="false" UseBorders="false" UseTextAlignment="false" />
+                    </Item5>
+                    <Item6 Ref="33" ControlType="XRLabel" Name="label23" Multiline="true" Angle="90" Text="Supplier  Name" TextAlignment="BottomCenter" SizeF="47.6299438,398.672516" LocationFloat="576.2795, 346.654266" Dpi="254" Font="Tahoma, 8pt" Padding="5,5,0,20,254" Borders="None">
+                      <ExpressionBindings>
+                        <Item1 Ref="34" EventName="BeforePrint" PropertyName="Text" Expression="?InspEmpName" />
+                      </ExpressionBindings>
+                      <StylePriority Ref="35" UseFont="false" UsePadding="false" UseBorders="false" UseTextAlignment="false" />
+                    </Item6>
+                    <Item7 Ref="36" ControlType="XRLabel" Name="label20" Multiline="true" Angle="90" Text="Packing Date" TextAlignment="BottomCenter" SizeF="60.854248,282.25" LocationFloat="383.9863, 463.070923" Dpi="254" Font="Tahoma, 9pt, style=Bold" Padding="5,5,0,20,254" Borders="None">
+                      <StylePriority Ref="37" UseFont="false" UsePadding="false" UseBorders="false" UseTextAlignment="false" />
+                    </Item7>
+                    <Item8 Ref="38" ControlType="XRLabel" Name="label21" Multiline="true" Angle="90" Text="Supplier  Name" TextAlignment="BottomCenter" SizeF="47.6300049,282.255859" LocationFloat="444.840454, 463.070923" Dpi="254" Font="Tahoma, 8pt" Padding="5,5,0,20,254" Borders="None">
+                      <ExpressionBindings>
+                        <Item1 Ref="39" EventName="BeforePrint" PropertyName="Text" Expression="?PackingDate" />
+                      </ExpressionBindings>
+                      <StylePriority Ref="40" UseFont="false" UsePadding="false" UseBorders="false" UseTextAlignment="false" />
+                    </Item8>
+                    <Item9 Ref="41" ControlType="XRLabel" Name="label18" Multiline="true" Angle="90" Text="Lot Code" TextAlignment="BottomCenter" SizeF="60.854248,332.523621" LocationFloat="194.33313, 412.8001" Dpi="254" Font="Tahoma, 9pt, style=Bold" Padding="5,5,0,20,254" Borders="None">
+                      <StylePriority Ref="42" UseFont="false" UsePadding="false" UseBorders="false" UseTextAlignment="false" />
+                    </Item9>
+                    <Item10 Ref="43" ControlType="XRLabel" Name="label19" Multiline="true" Angle="90" Text="Supplier  Name" TextAlignment="BottomCenter" SizeF="47.6300049,332.529419" LocationFloat="255.187317, 412.8001" Dpi="254" Font="Tahoma, 8pt" Padding="5,5,0,20,254" Borders="None">
+                      <ExpressionBindings>
+                        <Item1 Ref="44" EventName="BeforePrint" PropertyName="Text" Expression="?LotCode" />
+                      </ExpressionBindings>
+                      <StylePriority Ref="45" UseFont="false" UsePadding="false" UseBorders="false" UseTextAlignment="false" />
+                    </Item10>
+                    <Item11 Ref="46" ControlType="XRBarCode" Name="barCode5" Module="5.08" AutoModule="true" BarCodeOrientation="RotateLeft" ShowText="false" KeepTogether="false" SizeF="59.99997,332.521667" LocationFloat="302.817474, 412.8001" Dpi="254" Padding="5,5,0,20,254" Borders="None">
+                      <Symbology Ref="47" Name="Code128" />
+                      <ExpressionBindings>
+                        <Item1 Ref="48" EventName="BeforePrint" PropertyName="Text" Expression="?LotCode" />
+                      </ExpressionBindings>
+                      <StylePriority Ref="49" UsePadding="false" UseBorders="false" />
+                    </Item11>
+                    <Item12 Ref="50" ControlType="XRLabel" Name="label16" Multiline="true" Angle="90" Text="PO Number" TextAlignment="BottomCenter" SizeF="60.854248,332.520752" LocationFloat="467.795135, 758.5508" Dpi="254" Font="Tahoma, 9pt, style=Bold" Padding="5,5,0,20,254" Borders="None">
+                      <StylePriority Ref="51" UseFont="false" UsePadding="false" UseBorders="false" UseTextAlignment="false" />
+                    </Item12>
+                    <Item13 Ref="52" ControlType="XRLabel" Name="label14" Multiline="true" Angle="90" Text="Quantity" TextAlignment="BottomCenter" SizeF="60.854248,253.145813" LocationFloat="275.501953, 837.922852" Dpi="254" Font="Tahoma, 9pt, style=Bold" Padding="5,5,0,20,254" Borders="None">
+                      <StylePriority Ref="53" UseFont="false" UsePadding="false" UseBorders="false" UseTextAlignment="false" />
+                    </Item13>
+                    <Item14 Ref="54" ControlType="XRLabel" Name="label11" Multiline="true" Angle="90" Text="Carton box no" TextAlignment="BottomCenter" SizeF="60.854248,315.745" LocationFloat="541.674133, 1110.15991" Dpi="254" Font="Tahoma, 9pt, style=Bold" Padding="5,5,0,20,254" Borders="None">
+                      <StylePriority Ref="55" UseFont="false" UsePadding="false" UseBorders="false" UseTextAlignment="false" />
+                    </Item14>
+                    <Item15 Ref="56" ControlType="XRLabel" Name="label9" Multiline="true" Angle="90" Text="MPN" TextAlignment="BottomCenter" SizeF="60.854248,315.745972" LocationFloat="349.381317, 1110.15894" Dpi="254" Font="Tahoma, 9pt, style=Bold" Padding="5,5,0,20,254" Borders="None">
+                      <StylePriority Ref="57" UseFont="false" UsePadding="false" UseBorders="false" UseTextAlignment="false" />
+                    </Item15>
+                    <Item16 Ref="58" ControlType="XRLabel" Name="label7" Multiline="true" Angle="90" Text="MFR" TextAlignment="BottomCenter" SizeF="60.8542328,315.745" LocationFloat="215.501816, 1110.15991" Dpi="254" Font="Tahoma, 9pt, style=Bold" Padding="5,5,0,20,254" Borders="None">
+                      <StylePriority Ref="59" UseFont="false" UsePadding="false" UseBorders="false" UseTextAlignment="false" />
+                    </Item16>
+                    <Item17 Ref="60" ControlType="XRLabel" Name="label17" Multiline="true" Angle="90" Text="Supplier  Name" TextAlignment="BottomCenter" SizeF="47.63,332.52" LocationFloat="528.6493, 758.5489" Dpi="254" Font="Tahoma, 8pt" Padding="5,5,0,20,254" Borders="None">
+                      <ExpressionBindings>
+                        <Item1 Ref="61" EventName="BeforePrint" PropertyName="Text" Expression="?PONumber" />
+                      </ExpressionBindings>
+                      <StylePriority Ref="62" UseFont="false" UsePadding="false" UseBorders="false" UseTextAlignment="false" />
+                    </Item17>
+                    <Item18 Ref="63" ControlType="XRBarCode" Name="barCode4" Module="5.08" AutoModule="true" BarCodeOrientation="RotateLeft" ShowText="false" KeepTogether="false" SizeF="59.99994,308.7074" LocationFloat="576.2795, 782.3604" Dpi="254" Padding="5,5,0,20,254" Borders="None">
+                      <Symbology Ref="64" Name="Code128" />
+                      <ExpressionBindings>
+                        <Item1 Ref="65" EventName="BeforePrint" PropertyName="Text" Expression="?PONumber" />
+                      </ExpressionBindings>
+                      <StylePriority Ref="66" UsePadding="false" UseBorders="false" />
+                    </Item18>
+                    <Item19 Ref="67" ControlType="XRLabel" Name="label15" Multiline="true" Angle="90" Text="Supplier  Name" TextAlignment="BottomCenter" SizeF="47.6300659,315.745" LocationFloat="602.5284, 1110.15991" Dpi="254" Font="Tahoma, 8pt" Padding="5,5,0,20,254" Borders="None">
+                      <ExpressionBindings>
+                        <Item1 Ref="68" EventName="BeforePrint" PropertyName="Text" Expression="?CartonBoxNo" />
+                      </ExpressionBindings>
+                      <StylePriority Ref="69" UseFont="false" UsePadding="false" UseBorders="false" UseTextAlignment="false" />
+                    </Item19>
+                    <Item20 Ref="70" ControlType="XRLabel" Name="label13" Multiline="true" Angle="90" Text="SHIP TO - Sanmina SCI India Pvt Ltd" TextAlignment="MiddleCenter" SizeF="70.00008,1434.36853" LocationFloat="0, 2.28881836E-05" Dpi="254" Font="Tahoma, 11pt, style=Bold" Padding="5,5,0,20,254" Borders="All" BorderWidth="1">
+                      <StylePriority Ref="71" UseFont="false" UsePadding="false" UseBorders="false" UseBorderWidth="false" UseTextAlignment="false" />
+                    </Item20>
+                    <Item21 Ref="72" ControlType="XRLabel" Name="label12" Multiline="true" Angle="90" Text="Supplier  Name" TextAlignment="BottomCenter" SizeF="47.63,253.15" LocationFloat="336.3561, 837.922852" Dpi="254" Font="Tahoma, 8pt" Padding="5,5,0,20,254" Borders="None">
+                      <ExpressionBindings>
+                        <Item1 Ref="73" EventName="BeforePrint" PropertyName="Text" Expression="?Quantity" />
+                      </ExpressionBindings>
+                      <StylePriority Ref="74" UseFont="false" UsePadding="false" UseBorders="false" UseTextAlignment="false" />
+                    </Item21>
+                    <Item22 Ref="75" ControlType="XRBarCode" Name="barCode3" Module="5.08" AutoModule="true" BarCodeOrientation="RotateLeft" ShowText="false" KeepTogether="false" SizeF="59.99997,253.144958" LocationFloat="383.9863, 837.922852" Dpi="254" Padding="5,5,0,20,254" Borders="None">
+                      <Symbology Ref="76" Name="Code128" />
+                      <ExpressionBindings>
+                        <Item1 Ref="77" EventName="BeforePrint" PropertyName="Text" Expression="?Quantity" />
+                      </ExpressionBindings>
+                      <StylePriority Ref="78" UsePadding="false" UseBorders="false" />
+                    </Item22>
+                    <Item23 Ref="79" ControlType="XRLabel" Name="label10" Multiline="true" Angle="90" Text="Supplier  Name" TextAlignment="BottomCenter" SizeF="47.6300049,315.745" LocationFloat="276.356049, 1110.15991" Dpi="254" Font="Tahoma, 8pt" Padding="5,5,0,20,254" Borders="None">
+                      <ExpressionBindings>
+                        <Item1 Ref="80" EventName="BeforePrint" PropertyName="Text" Expression="?MFR" />
+                      </ExpressionBindings>
+                      <StylePriority Ref="81" UseFont="false" UsePadding="false" UseBorders="false" UseTextAlignment="false" />
+                    </Item23>
+                    <Item24 Ref="82" ControlType="XRLabel" Name="label8" Multiline="true" Angle="90" Text="Supplier  Name" TextAlignment="BottomCenter" SizeF="47.6300354,315.745" LocationFloat="410.235138, 1110.15991" Dpi="254" Font="Tahoma, 8pt" Padding="5,5,0,20,254" Borders="None">
+                      <ExpressionBindings>
+                        <Item1 Ref="83" EventName="BeforePrint" PropertyName="Text" Expression="?MPN" />
+                      </ExpressionBindings>
+                      <StylePriority Ref="84" UseFont="false" UsePadding="false" UseBorders="false" UseTextAlignment="false" />
+                    </Item24>
+                    <Item25 Ref="85" ControlType="XRBarCode" Name="barCode2" Module="5.08" AutoModule="true" BarCodeOrientation="RotateLeft" ShowText="false" KeepTogether="false" SizeF="60,302.5161" LocationFloat="457.865479, 1123.38879" Dpi="254" Padding="5,5,0,20,254" Borders="None">
+                      <Symbology Ref="86" Name="Code128" />
+                      <ExpressionBindings>
+                        <Item1 Ref="87" EventName="BeforePrint" PropertyName="Text" Expression="?MPN" />
+                      </ExpressionBindings>
+                      <StylePriority Ref="88" UsePadding="false" UseBorders="false" />
+                    </Item25>
+                    <Item26 Ref="89" ControlType="XRBarCode" Name="barCode1" Module="5.08" AutoModule="true" BarCodeOrientation="RotateLeft" ShowText="false" KeepTogether="false" SizeF="60,308.707458" LocationFloat="181.103973, 782.360352" Dpi="254" Padding="5,5,0,20,254" Borders="None">
+                      <Symbology Ref="90" Name="Code128" />
+                      <ExpressionBindings>
+                        <Item1 Ref="91" EventName="BeforePrint" PropertyName="Text" Expression="?SanminaPartNumber" />
+                      </ExpressionBindings>
+                      <StylePriority Ref="92" UsePadding="false" UseBorders="false" />
+                    </Item26>
+                    <Item27 Ref="93" ControlType="XRLabel" Name="label5" Multiline="true" Angle="90" Text="Part Description" TextAlignment="BottomCenter" SizeF="60.854248,679.1249" LocationFloat="72.62481, 66.19683" Dpi="254" Font="Tahoma, 9pt, style=Bold" Padding="5,5,0,20,254" Borders="None">
+                      <StylePriority Ref="94" UseFont="false" UsePadding="false" UseBorders="false" UseTextAlignment="false" />
+                    </Item27>
+                    <Item28 Ref="95" ControlType="XRLabel" Name="label6" Multiline="true" Angle="90" Text="Supplier  Name" TextAlignment="BottomCenter" SizeF="47.6250763,679.1249" LocationFloat="133.478973, 66.19683" Dpi="254" Font="Tahoma, 8pt" Padding="5,5,0,20,254" Borders="None">
+                      <ExpressionBindings>
+                        <Item1 Ref="96" EventName="BeforePrint" PropertyName="Text" Expression="?PartDesc" />
+                      </ExpressionBindings>
+                      <StylePriority Ref="97" UseFont="false" UsePadding="false" UseBorders="false" UseTextAlignment="false" />
+                    </Item28>
+                    <Item29 Ref="98" ControlType="XRLabel" Name="label3" Multiline="true" Angle="90" Text="Part Number" TextAlignment="BottomCenter" SizeF="60.854248,332.5208" LocationFloat="72.62481, 758.5508" Dpi="254" Font="Tahoma, 9pt, style=Bold" Padding="5,5,0,20,254" Borders="None">
+                      <StylePriority Ref="99" UseFont="false" UsePadding="false" UseBorders="false" UseTextAlignment="false" />
+                    </Item29>
+                    <Item30 Ref="100" ControlType="XRLabel" Name="label4" Multiline="true" Angle="90" Text="Supplier  Name" TextAlignment="BottomCenter" SizeF="47.6250763,332.5208" LocationFloat="133.478973, 758.5508" Dpi="254" Font="Tahoma, 8pt" Padding="5,5,0,20,254" Borders="None">
+                      <ExpressionBindings>
+                        <Item1 Ref="101" EventName="BeforePrint" PropertyName="Text" Expression="?SanminaPartNumber" />
+                      </ExpressionBindings>
+                      <StylePriority Ref="102" UseFont="false" UsePadding="false" UseBorders="false" UseTextAlignment="false" />
+                    </Item30>
+                    <Item31 Ref="103" ControlType="XRLabel" Name="label2" Multiline="true" Angle="90" Text="Supplier  Name" TextAlignment="BottomCenter" SizeF="47.62506,315.745972" LocationFloat="133.4788, 1110.15894" Dpi="254" Font="Tahoma, 8pt" Padding="5,5,0,20,254" Borders="None">
+                      <ExpressionBindings>
+                        <Item1 Ref="104" EventName="BeforePrint" PropertyName="Text" Expression="?SupplierName" />
+                      </ExpressionBindings>
+                      <StylePriority Ref="105" UseFont="false" UsePadding="false" UseBorders="false" UseTextAlignment="false" />
+                    </Item31>
+                    <Item32 Ref="106" ControlType="XRLabel" Name="label1" Multiline="true" Angle="90" Text="Supplier  Name" TextAlignment="BottomCenter" SizeF="60.85424,315.745" LocationFloat="72.62497, 1110.15991" Dpi="254" Font="Tahoma, 9pt, style=Bold" Padding="5,5,0,20,254" Borders="None">
+                      <StylePriority Ref="107" UseFont="false" UsePadding="false" UseBorders="false" UseTextAlignment="false" />
+                    </Item32>
+                  </Controls>
+                  <StylePriority Ref="108" UseBorders="false" />
+                </Item1>
+              </Cells>
+            </Item1>
+          </Rows>
+        </Item1>
+      </Controls>
+      <StylePriority Ref="109" UseFont="false" />
+    </Item2>
+    <Item3 Ref="110" ControlType="BottomMarginBand" Name="BottomMargin" HeightF="0" Dpi="254" />
+  </Bands>
+  <ObjectStorage>
+    <Item1 ObjectType="DevExpress.XtraReports.Serialization.ObjectStorageInfo, DevExpress.XtraReports.v19.2" Ref="9" Content="System.Int32" Type="System.Type" />
+  </ObjectStorage>
+</XtraReportsLayoutSerializer>
