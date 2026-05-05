@@ -1,0 +1,10 @@
+﻿CREATE TABLE [dbo].[STB_JabilManualLabelPrintHist] (
+    [JabilManualLabelPrintHistNo] VARCHAR(20) NOT NULL DEFAULT ,
+    [DC] CHAR(6) NOT NULL DEFAULT ,
+    [QTY] VARCHAR(20) NOT NULL DEFAULT ,
+    [LOT] VARCHAR(20) NOT NULL DEFAULT ,
+    [CreateDateTime] DATETIME NOT NULL DEFAULT ,
+    [CreateUserID] VARCHAR(20) NOT NULL DEFAULT 
+);
+GO
+

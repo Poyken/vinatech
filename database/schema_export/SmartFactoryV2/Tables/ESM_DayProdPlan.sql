@@ -1,0 +1,32 @@
+﻿CREATE TABLE [dbo].[ESM_DayProdPlan] (
+    [DayPlanNo] VARCHAR(20) NOT NULL DEFAULT ,
+    [OrgDayPlanNo] VARCHAR(20) NOT NULL DEFAULT ,
+    [WorkCenterCode] VARCHAR(20) NOT NULL DEFAULT ,
+    [CdCompany] VARCHAR(20) NOT NULL DEFAULT ,
+    [MaterialCode] VARCHAR(50) NOT NULL DEFAULT ,
+    [LineCode] VARCHAR(20) NOT NULL DEFAULT ,
+    [WorkCenterName] NVARCHAR(50) NULL DEFAULT ,
+    [MaterialName] NVARCHAR(300) NULL DEFAULT ,
+    [MaterialUnit] VARCHAR(10) NULL DEFAULT ,
+    [MaterialUsed] CHAR(1) NULL DEFAULT ,
+    [MaterialTypeCode] VARCHAR(20) NULL DEFAULT ,
+    [BomVersion] VARCHAR(20) NULL DEFAULT ,
+    [PlanQty] NUMERIC(20,4) NULL DEFAULT ,
+    [PlanDate] DATE NULL DEFAULT ,
+    [PlanEndDate] DATE NULL DEFAULT ,
+    [LocationCode] VARCHAR(20) NULL DEFAULT ,
+    [LocationName] NVARCHAR(50) NULL DEFAULT ,
+    [MaterialWarehouseCode] VARCHAR(20) NULL DEFAULT ,
+    [MaterialWarehouseName] NVARCHAR(50) NULL DEFAULT ,
+    [ElectrodeMaterialCode] VARCHAR(20) NULL DEFAULT ,
+    [ElectrodeMaterialName] NVARCHAR(50) NULL DEFAULT ,
+    [ElectrodeMaterialQty] NUMERIC(20,4) NULL DEFAULT ,
+    [MaxRouteCode] VARCHAR(20) NULL DEFAULT ,
+    [CreateDateTime] DATETIME NULL DEFAULT ,
+    [ErpUpdate] NCHAR(1) NULL DEFAULT (N'N'),
+    [ErpUpdateDateTime] DATETIME NULL DEFAULT ,
+    [NotEnd15DayYn] NCHAR(1) NULL DEFAULT ,
+    CONSTRAINT [PK_ESM_DayProdPlan] PRIMARY KEY CLUSTERED ([DayPlanNo], [OrgDayPlanNo], [WorkCenterCode], [CdCompany], [MaterialCode], [LineCode])
+);
+GO
+

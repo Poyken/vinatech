@@ -1,0 +1,16 @@
+﻿CREATE TABLE [dbo].[Stb_CategogyCheckList] (
+    [ID] INT IDENTITY(1,1) NOT NULL DEFAULT ,
+    [TypeCheck] NVARCHAR(100) NULL DEFAULT ,
+    [Stage] NVARCHAR(50) NULL DEFAULT ,
+    [TypeTest] NVARCHAR(100) NULL DEFAULT ,
+    [ItemCheck] NVARCHAR(500) NULL DEFAULT ,
+    [TestMethod] NVARCHAR(100) NULL DEFAULT ,
+    [NoChecks] NVARCHAR(100) NULL DEFAULT ,
+    [CreateDateTime] DATETIME NULL DEFAULT ,
+    [CreateUserID] VARCHAR(20) NULL DEFAULT ,
+    [ChangeDateTime] DATETIME NULL DEFAULT ,
+    [ChangeUserID] VARCHAR(20) NULL DEFAULT ,
+    [IsUsed] BIT NULL DEFAULT 
+);
+GO
+

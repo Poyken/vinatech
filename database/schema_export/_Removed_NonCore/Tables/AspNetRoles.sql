@@ -1,0 +1,8 @@
+﻿CREATE TABLE [dbo].[AspNetRoles] (
+    [Id] NVARCHAR(450) NOT NULL DEFAULT ,
+    [Name] NVARCHAR(256) NULL DEFAULT ,
+    [NormalizedName] NVARCHAR(256) NULL DEFAULT ,
+    [ConcurrencyStamp] NVARCHAR(MAX) NULL DEFAULT 
+);
+GO
+

@@ -1,0 +1,12 @@
+﻿CREATE TABLE [dbo].[STB_VN_SlittingKnifeIOHist] (
+    [ID] INT IDENTITY(1,1) NOT NULL DEFAULT ,
+    [SlittingKnifeLotID] VARCHAR(30) NULL DEFAULT ,
+    [SlittingKnifeCode] VARCHAR(30) NULL DEFAULT ,
+    [IOType] VARCHAR(10) NULL DEFAULT ,
+    [IOQty] INT NULL DEFAULT ,
+    [MachineCode] VARCHAR(20) NULL DEFAULT ,
+    [CreateDateTime] DATETIME NULL DEFAULT ,
+    [CreateUserID] VARCHAR(30) NULL DEFAULT 
+);
+GO
+

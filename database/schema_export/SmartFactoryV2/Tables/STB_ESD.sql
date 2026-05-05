@@ -1,0 +1,10 @@
+﻿CREATE TABLE [dbo].[STB_ESD] (
+    [EsdRequirementSettingCode] VARCHAR(50) NULL DEFAULT ,
+    [ESD_ZONE] NVARCHAR(20) NULL DEFAULT ,
+    [TrackingId] NVARCHAR(20) NULL DEFAULT ,
+    [ESD_Month] VARCHAR(7) NULL DEFAULT ,
+    [ESD_Status] NCHAR(1) NULL DEFAULT ,
+    [ESD_Value] NUMERIC(20,5) NULL DEFAULT 
+);
+GO
+

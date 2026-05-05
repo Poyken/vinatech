@@ -1,0 +1,12 @@
+﻿CREATE TABLE [dbo].[STB_VietNam_CheckBarcode_2624] (
+    [ID] INT IDENTITY(1,1) NOT NULL DEFAULT ,
+    [PartNo] VARCHAR(50) NULL DEFAULT ,
+    [LotNo] VARCHAR(50) NULL DEFAULT ,
+    [Quantity] VARCHAR(50) NULL DEFAULT ,
+    [Remark] NVARCHAR(1000) NULL DEFAULT ,
+    [CreateUserID] VARCHAR(30) NULL DEFAULT ,
+    [CreateDateTime] DATETIME NULL DEFAULT (getdate()),
+    [Levels] INT NULL DEFAULT 
+);
+GO
+

@@ -1,0 +1,5 @@
+﻿CREATE TABLE [dbo].[test1234] (
+    [LotID] VARCHAR(100) NULL DEFAULT 
+);
+GO
+

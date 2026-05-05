@@ -1,0 +1,23 @@
+﻿CREATE TABLE [dbo].[STB_VN_ELECTRODE_REQUESTFORM] (
+    [ID] INT IDENTITY(1,1) NOT NULL DEFAULT ,
+    [GROUPID] NVARCHAR(50) NULL DEFAULT ,
+    [Materialcode] NVARCHAR(50) NULL DEFAULT ,
+    [MaterialName] NVARCHAR(50) NULL DEFAULT ,
+    [GoodQtyLength] NUMERIC(20,5) NULL DEFAULT ,
+    [ActuallyQtyRequest] NUMERIC(20,5) NULL DEFAULT ,
+    [ActuallyQtyProvider] NUMERIC(20,5) NULL DEFAULT ,
+    [Statuss] BIT NULL DEFAULT ,
+    [Line] NVARCHAR(50) NULL DEFAULT ,
+    [CreateDateTime] DATETIME NULL DEFAULT ,
+    [CreateUserID] NVARCHAR(50) NULL DEFAULT ,
+    [ChangeDateTime] DATETIME NULL DEFAULT ,
+    [ChangeUserID] NVARCHAR(50) NULL DEFAULT ,
+    [ApproverBy] NVARCHAR(50) NULL DEFAULT ,
+    [DateApprovered] DATETIME NULL DEFAULT ,
+    [DateOutPut] DATE NULL DEFAULT ,
+    [Description] NVARCHAR(500) NULL DEFAULT ,
+    [SlittingWidth] NUMERIC(20,5) NULL DEFAULT ,
+    [ElectrodeThick] NUMERIC(20,5) NULL DEFAULT 
+);
+GO
+

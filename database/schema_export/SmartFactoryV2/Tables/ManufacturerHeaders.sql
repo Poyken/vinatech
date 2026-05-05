@@ -1,0 +1,14 @@
+﻿CREATE TABLE [dbo].[ManufacturerHeaders] (
+    [Id] INT IDENTITY(1,1) NOT NULL DEFAULT ,
+    [EquipmentId] INT NOT NULL DEFAULT ,
+    [ManufcaturerName] NVARCHAR(MAX) NOT NULL DEFAULT ,
+    [EquipmentTitle] NVARCHAR(MAX) NOT NULL DEFAULT ,
+    [Model] NVARCHAR(MAX) NOT NULL DEFAULT ,
+    [SerialNO] NVARCHAR(MAX) NOT NULL DEFAULT ,
+    [DateOfManufacture] DATETIME2 NULL DEFAULT ,
+    [Weight] NVARCHAR(MAX) NOT NULL DEFAULT ,
+    [Power] NVARCHAR(MAX) NOT NULL DEFAULT ,
+    [Size] NVARCHAR(MAX) NOT NULL DEFAULT 
+);
+GO
+

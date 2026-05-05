@@ -1,0 +1,16 @@
+﻿CREATE TABLE [dbo].[STB_JabilMexicoLabelPrintHist] (
+    [ID] INT IDENTITY(1,1) NOT NULL DEFAULT ,
+    [JabilPartNumber] VARCHAR(50) NULL DEFAULT ,
+    [VinatechPartNumber] VARCHAR(50) NULL DEFAULT ,
+    [PONumber] VARCHAR(50) NULL DEFAULT ,
+    [Quantity] VARCHAR(10) NULL DEFAULT ,
+    [LotCode] VARCHAR(50) NULL DEFAULT ,
+    [DateCode] VARCHAR(4) NULL DEFAULT ,
+    [CoO] VARCHAR(10) NULL DEFAULT ,
+    [MSL] VARCHAR(10) NULL DEFAULT ,
+    [LabelQty] VARCHAR(10) NULL DEFAULT ,
+    [PrintTime] DATETIME NULL DEFAULT ,
+    [PrintUserID] VARCHAR(20) NULL DEFAULT 
+);
+GO
+

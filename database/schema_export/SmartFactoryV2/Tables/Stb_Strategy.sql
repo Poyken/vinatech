@@ -1,0 +1,15 @@
+﻿CREATE TABLE [dbo].[Stb_Strategy] (
+    [ID] INT IDENTITY(1,1) NOT NULL DEFAULT ,
+    [CheckSheetDaily] NVARCHAR(50) NULL DEFAULT ,
+    [Stage] NVARCHAR(50) NULL DEFAULT ,
+    [Issue] NVARCHAR(50) NULL DEFAULT ,
+    [Reason] NVARCHAR(200) NULL DEFAULT ,
+    [Strategy] NVARCHAR(500) NULL DEFAULT ,
+    [PersonCharge] NVARCHAR(100) NULL DEFAULT ,
+    [CreateDateTime] DATETIME NULL DEFAULT ,
+    [CreateUserID] VARCHAR(20) NULL DEFAULT ,
+    [ChangeDateTime] DATETIME NULL DEFAULT ,
+    [ChangeUserID] VARCHAR(20) NULL DEFAULT 
+);
+GO
+

@@ -1,0 +1,26 @@
+﻿CREATE TABLE [dbo].[STB_ProdRouteHist_20220330] (
+    [ProdRouteHistNo] VARCHAR(20) NOT NULL DEFAULT ,
+    [CompanyCode] VARCHAR(20) NULL DEFAULT ,
+    [WorkCenterCode] VARCHAR(20) NULL DEFAULT ,
+    [PONo] VARCHAR(20) NULL DEFAULT ,
+    [DayPlanNo] VARCHAR(20) NULL DEFAULT ,
+    [ControlNo] VARCHAR(20) NULL DEFAULT ,
+    [MaterialCode] VARCHAR(50) NULL DEFAULT ,
+    [BomVersion] VARCHAR(10) NULL DEFAULT ,
+    [JobDate] DATE NULL DEFAULT ,
+    [ShiftCode] VARCHAR(1) NULL DEFAULT ,
+    [TimeCode] VARCHAR(2) NULL DEFAULT ,
+    [LineCode] VARCHAR(20) NULL DEFAULT ,
+    [RouteCode] VARCHAR(20) NULL DEFAULT ,
+    [WorkerCode] VARCHAR(20) NULL DEFAULT ,
+    [MachineCode] VARCHAR(20) NULL DEFAULT ,
+    [ProdQty] NUMERIC(20,5) NULL DEFAULT ,
+    [ProdDateTime] DATETIME NULL DEFAULT ,
+    [CreateDateTime] DATETIME NULL DEFAULT ,
+    [CreateUserID] VARCHAR(20) NULL DEFAULT ,
+    [ChangeDateTime] DATETIME NULL DEFAULT ,
+    [ChangeUserID] VARCHAR(20) NULL DEFAULT ,
+    [DelayCode] VARCHAR(20) NULL DEFAULT 
+);
+GO
+

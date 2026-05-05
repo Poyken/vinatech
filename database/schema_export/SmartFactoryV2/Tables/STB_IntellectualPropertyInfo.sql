@@ -1,0 +1,32 @@
+﻿CREATE TABLE [dbo].[STB_IntellectualPropertyInfo] (
+    [IntellectualPropertyNo] VARCHAR(20) NOT NULL DEFAULT ,
+    [IsDomestic] BIT NULL DEFAULT ,
+    [NationCode] VARCHAR(20) NULL DEFAULT ,
+    [InventionName] NVARCHAR(500) NULL DEFAULT ,
+    [ApplicationNo] VARCHAR(30) NULL DEFAULT ,
+    [TechnologyClass] VARCHAR(20) NULL DEFAULT ,
+    [TechnologyDetailClass] VARCHAR(20) NULL DEFAULT ,
+    [IsCore] BIT NULL DEFAULT ,
+    [ApplicationDate] DATE NULL DEFAULT ,
+    [RegistrationNo] VARCHAR(20) NULL DEFAULT ,
+    [RegistrationDate] DATE NULL DEFAULT ,
+    [PatentStatus] NVARCHAR(20) NULL DEFAULT ,
+    [LegalStatus] NVARCHAR(20) NULL DEFAULT ,
+    [ApplicationOwner] NVARCHAR(50) NULL DEFAULT ,
+    [InventorNames] NVARCHAR(100) NULL DEFAULT ,
+    [RightStatus] NVARCHAR(50) NULL DEFAULT ,
+    [ClaimNumber] INT NULL DEFAULT ,
+    [ExaminationProgressStatus] NVARCHAR(50) NULL DEFAULT ,
+    [ExtinctionReason] NVARCHAR(50) NULL DEFAULT ,
+    [PublicNo] VARCHAR(20) NULL DEFAULT ,
+    [PublicDate] DATE NULL DEFAULT ,
+    [SurvivalExpirationDate] DATE NULL DEFAULT ,
+    [PublicRegistrationNo] VARCHAR(20) NULL DEFAULT ,
+    [PublicRegistrationDate] DATE NULL DEFAULT ,
+    [CreateDateTime] DATETIME NOT NULL DEFAULT (getdate()),
+    [CreateUserID] VARCHAR(20) NULL DEFAULT ,
+    [ChangeDateTime] DATETIME NULL DEFAULT ,
+    [ChangeUserID] VARCHAR(20) NULL DEFAULT 
+);
+GO
+

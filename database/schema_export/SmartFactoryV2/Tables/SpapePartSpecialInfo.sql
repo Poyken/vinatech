@@ -1,0 +1,10 @@
+﻿CREATE TABLE [dbo].[SpapePartSpecialInfo] (
+    [SparePartId] INT IDENTITY(1,1) NOT NULL DEFAULT ,
+    [PartName] NVARCHAR(100) NOT NULL DEFAULT ,
+    [Model] NVARCHAR(100) NULL DEFAULT ,
+    [QtyPerLot] INT NOT NULL DEFAULT ,
+    [CycleReplace] INT NOT NULL DEFAULT ,
+    [Note] NVARCHAR(255) NULL DEFAULT 
+);
+GO
+

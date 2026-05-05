@@ -1,0 +1,30 @@
+﻿CREATE TABLE [dbo].[STB_SalesOrderItem] (
+    [SOISequence] BIGINT IDENTITY(1,1) NOT NULL DEFAULT ,
+    [SalesOrderNo] VARCHAR(20) NULL DEFAULT ,
+    [ModelCode] VARCHAR(50) NULL DEFAULT ,
+    [BomVersion] VARCHAR(20) NULL DEFAULT ,
+    [OrderQty] NUMERIC(20,4) NULL DEFAULT ,
+    [FixedQty] NUMERIC(20,4) NULL DEFAULT ,
+    [ProdPlanQty] NUMERIC(20,4) NULL DEFAULT ,
+    [IsMainAssemblePlan] BIT NULL DEFAULT ,
+    [IsOutboundInspection] BIT NULL DEFAULT ,
+    [StockReservationQty] NUMERIC(20,4) NULL DEFAULT ,
+    [UnitPrice] NUMERIC(20,4) NULL DEFAULT ,
+    [OptionText] NVARCHAR(MAX) NULL DEFAULT ,
+    [RequestDeliveryDate] DATE NULL DEFAULT ,
+    [GIPlanQty] NUMERIC(20,5) NULL DEFAULT ,
+    [GIFixQty] NUMERIC(20,5) NULL DEFAULT ,
+    [DeliveryDate] INT NULL DEFAULT ,
+    [DestInformation] NVARCHAR(100) NULL DEFAULT ,
+    [SOIExtText01] NVARCHAR(200) NULL DEFAULT ,
+    [SOIExtText02] NVARCHAR(200) NULL DEFAULT ,
+    [SOIExtText03] NVARCHAR(200) NULL DEFAULT ,
+    [SOIExtText04] NVARCHAR(200) NULL DEFAULT ,
+    [SOIExtText05] NVARCHAR(200) NULL DEFAULT ,
+    [CreateDateTime] DATETIME NULL DEFAULT ,
+    [CreateUserID] VARCHAR(20) NULL DEFAULT ,
+    [ChangeDateTime] DATETIME NULL DEFAULT ,
+    [ChangeUserID] VARCHAR(20) NULL DEFAULT 
+);
+GO
+

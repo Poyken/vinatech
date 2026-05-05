@@ -1,0 +1,32 @@
+﻿CREATE TABLE [dbo].[STB_ReliabilityTestMeasureInfo] (
+    [RTMeasureNo] VARCHAR(20) NOT NULL DEFAULT ,
+    [RTNo] VARCHAR(20) NOT NULL DEFAULT ,
+    [RTItemCode] VARCHAR(20) NOT NULL DEFAULT ,
+    [RTDate] DATE NULL DEFAULT ,
+    [RTClassCode] VARCHAR(20) NULL DEFAULT ,
+    [RequestDeptCode] VARCHAR(20) NULL DEFAULT ,
+    [RequestEmployeeNo] VARCHAR(20) NULL DEFAULT ,
+    [RequestDate] DATE NULL DEFAULT ,
+    [TestEndDate] DATE NULL DEFAULT ,
+    [ProductType] VARCHAR(20) NULL DEFAULT ,
+    [ModelType] VARCHAR(50) NULL DEFAULT ,
+    [Ocv] NUMERIC(5,2) NULL DEFAULT ,
+    [Temp] NUMERIC(5,2) NULL DEFAULT ,
+    [Humi] NUMERIC(5,2) NULL DEFAULT ,
+    [SampleCnt] INT NULL DEFAULT ,
+    [MeasureCycle] INT NULL DEFAULT ,
+    [CharacterizationCode] VARCHAR(20) NULL DEFAULT ,
+    [CharacterizationCode2] VARCHAR(20) NULL DEFAULT ,
+    [SampleName] NVARCHAR(100) NULL DEFAULT ,
+    [SampleSeqNo] INT NULL DEFAULT ,
+    [MeasureValue] NUMERIC(20,5) NULL DEFAULT ,
+    [TestName] NVARCHAR(300) NULL DEFAULT ,
+    [SampleLotNo] VARCHAR(50) NULL DEFAULT ,
+    [TestPurpose] NVARCHAR(300) NULL DEFAULT ,
+    [CreateDateTime] DATETIME NOT NULL DEFAULT (getdate()),
+    [CreateUserID] VARCHAR(20) NULL DEFAULT ,
+    [ChangeDateTime] DATETIME NULL DEFAULT ,
+    [ChangeUserID] VARCHAR(20) NULL DEFAULT 
+);
+GO
+

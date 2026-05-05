@@ -1,0 +1,13 @@
+﻿CREATE TABLE [dbo].[STB_SetPublicCodeByCompanyCode] (
+    [ID] INT IDENTITY(1,1) NOT NULL DEFAULT ,
+    [CompanyCode] VARCHAR(50) NULL DEFAULT ,
+    [PublicCode] VARCHAR(100) NULL DEFAULT ,
+    [PartNo] VARCHAR(100) NULL DEFAULT ,
+    [IsUsed] BIT NULL DEFAULT ,
+    [CreateDateTime] DATETIME NULL DEFAULT ,
+    [CreateUserID] VARCHAR(20) NULL DEFAULT ,
+    [ChangeDateTime] DATETIME NULL DEFAULT ,
+    [ChangeUserID] VARCHAR(20) NULL DEFAULT 
+);
+GO
+

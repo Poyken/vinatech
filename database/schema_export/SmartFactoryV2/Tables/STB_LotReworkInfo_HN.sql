@@ -1,0 +1,11 @@
+﻿CREATE TABLE [dbo].[STB_LotReworkInfo_HN] (
+    [id] INT IDENTITY(1,1) NOT NULL DEFAULT ,
+    [LotNo] VARCHAR(50) NULL DEFAULT ,
+    [LotNoRework] VARCHAR(50) NULL DEFAULT ,
+    [MaterialCode] VARCHAR(255) NULL DEFAULT ,
+    [ReworkQty] INT NULL DEFAULT ,
+    [CreateUserID] VARCHAR(50) NULL DEFAULT ,
+    [CreateDateTime] DATETIME NULL DEFAULT 
+);
+GO
+

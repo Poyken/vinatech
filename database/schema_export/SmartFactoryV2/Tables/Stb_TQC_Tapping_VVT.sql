@@ -1,0 +1,20 @@
+﻿CREATE TABLE [dbo].[Stb_TQC_Tapping_VVT] (
+    [id] INT IDENTITY(1,1) NOT NULL DEFAULT ,
+    [InspectionItems] NVARCHAR(200) NOT NULL DEFAULT ,
+    [SampleQty] INT NULL DEFAULT ,
+    [LSL] NUMERIC(20,5) NULL DEFAULT ,
+    [USL] NUMERIC(20,5) NULL DEFAULT ,
+    [First] NUMERIC(20,5) NULL DEFAULT ,
+    [Middle] NUMERIC(20,5) NULL DEFAULT ,
+    [Last] NUMERIC(20,5) NULL DEFAULT ,
+    [Result] VARCHAR(50) NULL DEFAULT ,
+    [Remark] NVARCHAR(MAX) NULL DEFAULT ,
+    [CreateDateTime] DATETIME NULL DEFAULT (getdate()),
+    [CreateUserId] VARCHAR(50) NULL DEFAULT ,
+    [ChangeDateTime] DATETIME NULL DEFAULT ,
+    [ChangeUserId] VARCHAR(50) NULL DEFAULT ,
+    [LotNo] VARCHAR(20) NOT NULL DEFAULT ,
+    [ModelName] VARCHAR(200) NULL DEFAULT 
+);
+GO
+

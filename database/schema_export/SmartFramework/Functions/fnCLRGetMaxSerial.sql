@@ -1,0 +1,4 @@
+﻿-- Function: fnCLRGetMaxSerial
+
+GO
+

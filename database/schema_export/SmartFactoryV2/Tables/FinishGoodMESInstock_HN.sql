@@ -1,0 +1,28 @@
+﻿CREATE TABLE [dbo].[FinishGoodMESInstock_HN] (
+    [MaterialCode] NVARCHAR(50) NULL DEFAULT ,
+    [Voltage] DECIMAL(10,2) NULL DEFAULT ,
+    [Farad] DECIMAL(10,2) NULL DEFAULT ,
+    [MBISizeW] DECIMAL(10,2) NULL DEFAULT ,
+    [MBISizeH] DECIMAL(10,2) NULL DEFAULT ,
+    [Marking] NVARCHAR(10) NULL DEFAULT ,
+    [Quantity] INT NULL DEFAULT ,
+    [Unit] NVARCHAR(10) NULL DEFAULT ,
+    [ProductName] NVARCHAR(100) NULL DEFAULT ,
+    [PackingID] NVARCHAR(50) NULL DEFAULT ,
+    [LotNo] NVARCHAR(50) NULL DEFAULT ,
+    [Id] INT IDENTITY(1,1) NOT NULL DEFAULT ,
+    [CreateDateTime] DATETIME NULL DEFAULT ,
+    [CreateUserID] VARCHAR(20) NULL DEFAULT ,
+    [ChangeDateTime] DATETIME NULL DEFAULT ,
+    [ChangeUserID] VARCHAR(20) NULL DEFAULT ,
+    [WarehouseName] NVARCHAR(100) NULL DEFAULT ,
+    [WarehouseType] NVARCHAR(100) NULL DEFAULT ,
+    [MergeBoxSmallID] NVARCHAR(50) NULL DEFAULT ,
+    [QtyOutput] NUMERIC(20,5) NOT NULL DEFAULT ((0)),
+    [CommentType] INT NULL DEFAULT ((0)),
+    [WorkCenterCode] NVARCHAR(50) NOT NULL DEFAULT ('VVT_F3'),
+    [Note] NVARCHAR(500) NULL DEFAULT ,
+    [Locations] VARCHAR(50) NULL DEFAULT 
+);
+GO
+

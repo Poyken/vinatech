@@ -1,0 +1,13 @@
+﻿CREATE TABLE [dbo].[CALENDAR] (
+    [date1] CHAR(8) NOT NULL DEFAULT ,
+    [date2] DATETIME NOT NULL DEFAULT ,
+    [year] CHAR(4) NOT NULL DEFAULT ,
+    [month] CHAR(2) NOT NULL DEFAULT ,
+    [day] VARCHAR(2) NOT NULL DEFAULT ,
+    [day2] VARCHAR(2) NOT NULL DEFAULT ,
+    [day_of_week] TINYINT NOT NULL DEFAULT ,
+    [holi_yn] CHAR(1) NOT NULL DEFAULT ,
+    [remark] VARCHAR(1000) NULL DEFAULT 
+);
+GO
+

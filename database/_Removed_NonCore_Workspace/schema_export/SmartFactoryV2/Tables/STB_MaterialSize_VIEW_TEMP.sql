@@ -1,0 +1,7 @@
+﻿CREATE TABLE [dbo].[STB_MaterialSize_VIEW_TEMP] (
+    [MaterialCode] NVARCHAR(20) NOT NULL DEFAULT ,
+    [SIZE] NVARCHAR(20) NOT NULL DEFAULT ,
+    CONSTRAINT [PK_STB_MaterialSize_VIEW_TEMP] PRIMARY KEY CLUSTERED ([MaterialCode], [SIZE])
+);
+GO
+

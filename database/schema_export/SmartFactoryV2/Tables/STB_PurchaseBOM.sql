@@ -1,0 +1,18 @@
+﻿CREATE TABLE [dbo].[STB_PurchaseBOM] (
+    [BOMIndex] BIGINT IDENTITY(1,1) NOT NULL DEFAULT ,
+    [ProductClassCode] VARCHAR(10) NULL DEFAULT ,
+    [Volt] NUMERIC(3,1) NULL DEFAULT ,
+    [Farad] NUMERIC(10,1) NULL DEFAULT ,
+    [SizeW] INT NULL DEFAULT ,
+    [SizeH] INT NULL DEFAULT ,
+    [SizeCode] VARCHAR(10) NULL DEFAULT ,
+    [MaterialGroupName] VARCHAR(100) NULL DEFAULT ,
+    [MaterialName] VARCHAR(100) NULL DEFAULT ,
+    [UsedQty] NUMERIC(38,20) NULL DEFAULT ,
+    [UnitCode] VARCHAR(10) NULL DEFAULT ,
+    [PurchaseUnitCost] NUMERIC(20,5) NULL DEFAULT ,
+    [UnitCost] NUMERIC(20,5) NULL DEFAULT ,
+    [Remark] VARCHAR(MAX) NULL DEFAULT 
+);
+GO
+

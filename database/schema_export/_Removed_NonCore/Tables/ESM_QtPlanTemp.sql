@@ -1,0 +1,8 @@
+﻿CREATE TABLE [dbo].[ESM_QtPlanTemp] (
+    [DayPlanNo] VARCHAR(20) NOT NULL DEFAULT ,
+    [PlanQty] NUMERIC(20,4) NULL DEFAULT ,
+    [QT_ITEM] NUMERIC(20,4) NULL DEFAULT ,
+    [RouteCode] VARCHAR(20) NULL DEFAULT 
+);
+GO
+

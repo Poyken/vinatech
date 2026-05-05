@@ -1,0 +1,16 @@
+﻿CREATE TABLE [dbo].[STB_UnitPriceForCode] (
+    [Id] INT IDENTITY(1,1) NOT NULL DEFAULT ,
+    [MaterialCode] VARCHAR(255) NOT NULL DEFAULT ,
+    [Model] VARCHAR(255) NOT NULL DEFAULT ,
+    [Size] VARCHAR(255) NOT NULL DEFAULT ,
+    [Part] VARCHAR(255) NOT NULL DEFAULT ,
+    [WorkCenterCode] VARCHAR(255) NOT NULL DEFAULT ,
+    [UnitPrice] VARCHAR(50) NULL DEFAULT ,
+    [IsUsed] BIT NULL DEFAULT ,
+    [CreatedBy] VARCHAR(50) NULL DEFAULT ,
+    [CreatedDate] DATETIME NULL DEFAULT ,
+    [ModifiedBy] VARCHAR(50) NULL DEFAULT ,
+    [ModifiedDate] DATETIME NULL DEFAULT 
+);
+GO
+

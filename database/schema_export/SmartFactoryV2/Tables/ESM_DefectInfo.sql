@@ -1,0 +1,17 @@
+﻿CREATE TABLE [dbo].[ESM_DefectInfo] (
+    [DayPlanNo] VARCHAR(20) NOT NULL DEFAULT ,
+    [OrgDayPlanNo] VARCHAR(20) NOT NULL DEFAULT ,
+    [RouteCode] VARCHAR(20) NOT NULL DEFAULT ,
+    [MaterialCode] VARCHAR(50) NOT NULL DEFAULT ,
+    [WorkCenterCode] VARCHAR(20) NOT NULL DEFAULT ,
+    [CdCompany] VARCHAR(20) NOT NULL DEFAULT ,
+    [DefectCode] VARCHAR(20) NOT NULL DEFAULT ,
+    [BasicDefectName] VARCHAR(200) NULL DEFAULT ,
+    [RepairQty] NUMERIC(20,4) NULL DEFAULT ,
+    [DefectQty] NUMERIC(20,4) NULL DEFAULT ,
+    [DefectM] NUMERIC(20,4) NULL DEFAULT ,
+    [CreateDateTime] DATETIME NULL DEFAULT ,
+    [Barcode] VARCHAR(100) NULL DEFAULT 
+);
+GO
+

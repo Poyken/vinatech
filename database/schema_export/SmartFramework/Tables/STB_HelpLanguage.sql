@@ -1,0 +1,11 @@
+﻿CREATE TABLE [dbo].[STB_HelpLanguage] (
+    [Id] VARCHAR(20) NOT NULL DEFAULT ,
+    [Language] VARCHAR(20) NOT NULL DEFAULT ,
+    [Title] NVARCHAR(100) NOT NULL DEFAULT ,
+    [Contents] VARBINARY(MAX) NULL DEFAULT ,
+    [ChangeDateTime] DATETIME NULL DEFAULT ,
+    [ChangeUserID] VARCHAR(50) NULL DEFAULT ,
+    CONSTRAINT [PK_STB_HelpLanguage] PRIMARY KEY CLUSTERED ([Id], [Language])
+);
+GO
+

@@ -1,0 +1,17 @@
+﻿CREATE TABLE [dbo].[STB_SavePackingTime_VVT] (
+    [PackingID] VARCHAR(30) NULL DEFAULT ,
+    [LotNo] VARCHAR(30) NOT NULL DEFAULT ,
+    [MaterialCode] VARCHAR(30) NOT NULL DEFAULT ,
+    [MaterialName] VARCHAR(200) NULL DEFAULT ,
+    [PackQty] NUMERIC(18,0) NULL DEFAULT ,
+    [PrintTime] DATETIME NULL DEFAULT ,
+    [EmpNo] VARCHAR(30) NULL DEFAULT ,
+    [isPrinted] BIT NULL DEFAULT ,
+    [isModule] BIT NULL DEFAULT ,
+    [PartNo] VARCHAR(50) NULL DEFAULT ,
+    [id] INT IDENTITY(1,1) NOT NULL DEFAULT ,
+    [EmpChange] VARCHAR(30) NULL DEFAULT ,
+    [LableQty] NUMERIC(18,0) NULL DEFAULT 
+);
+GO
+

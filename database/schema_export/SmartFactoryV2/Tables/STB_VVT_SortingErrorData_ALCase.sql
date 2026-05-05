@@ -1,0 +1,30 @@
+﻿CREATE TABLE [dbo].[STB_VVT_SortingErrorData_ALCase] (
+    [ID] INT IDENTITY(1,1) NOT NULL DEFAULT ,
+    [Date] DATE NULL DEFAULT ,
+    [Shift] NVARCHAR(50) NULL DEFAULT ,
+    [Person] NVARCHAR(100) NULL DEFAULT ,
+    [Vendor] NVARCHAR(100) NULL DEFAULT ,
+    [Factory] NVARCHAR(100) NULL DEFAULT ,
+    [MaterialCode] NVARCHAR(100) NULL DEFAULT ,
+    [LotNo] NVARCHAR(100) NULL DEFAULT ,
+    [QtyCheck] INT NULL DEFAULT ,
+    [QtyOK] INT NULL DEFAULT ,
+    [BurrAl] INT NULL DEFAULT ((0)),
+    [BurrPlastic] INT NULL DEFAULT ((0)),
+    [BurrRubber] INT NULL DEFAULT ((0)),
+    [PlasticPeeling] INT NULL DEFAULT ((0)),
+    [Scratch] INT NULL DEFAULT ((0)),
+    [Deform] INT NULL DEFAULT ((0)),
+    [ExposedCopper] INT NULL DEFAULT ((0)),
+    [RubberDeform] INT NULL DEFAULT ((0)),
+    [CrackWood] INT NULL DEFAULT ((0)),
+    [Discoloration] INT NULL DEFAULT ((0)),
+    [OtherError] INT NULL DEFAULT ((0)),
+    [Total] INT NULL DEFAULT ((0)),
+    [CreateUserID] NVARCHAR(50) NULL DEFAULT ,
+    [CreateDateTime] DATETIME NULL DEFAULT (getdate()),
+    [ChangeUserID] NVARCHAR(50) NULL DEFAULT ,
+    [ChangeDateTime] DATETIME NULL DEFAULT 
+);
+GO
+

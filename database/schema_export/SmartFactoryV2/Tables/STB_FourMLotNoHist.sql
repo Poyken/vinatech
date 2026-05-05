@@ -1,0 +1,14 @@
+﻿CREATE TABLE [dbo].[STB_FourMLotNoHist] (
+    [LotNo] VARCHAR(18) NOT NULL DEFAULT ,
+    [Unusual_First] VARCHAR(1000) NULL DEFAULT ,
+    [LotNo2] VARCHAR(18) NULL DEFAULT ,
+    [Unusual_Second] VARCHAR(1000) NULL DEFAULT ,
+    [LotNo3] VARCHAR(18) NULL DEFAULT ,
+    [Unusual_Third] VARCHAR(1000) NULL DEFAULT ,
+    [CreateDateTime] DATETIME NULL DEFAULT ,
+    [CreateUserID] VARCHAR(20) NULL DEFAULT ,
+    [ChangeDateTime] DATETIME NULL DEFAULT ,
+    [ChangeUserID] VARCHAR(20) NULL DEFAULT 
+);
+GO
+

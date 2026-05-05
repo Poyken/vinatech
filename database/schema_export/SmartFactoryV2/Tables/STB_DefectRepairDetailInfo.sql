@@ -1,0 +1,33 @@
+﻿CREATE TABLE [dbo].[STB_DefectRepairDetailInfo] (
+    [DefectSummaryDetailNo] VARCHAR(20) NOT NULL DEFAULT ,
+    [DefectSummaryNo] VARCHAR(20) NULL DEFAULT ,
+    [CauseJobDate] DATE NULL DEFAULT ,
+    [CauseShiftCode] VARCHAR(1) NULL DEFAULT ,
+    [CauseTimeCode] VARCHAR(1) NULL DEFAULT ,
+    [CauseLineCode] VARCHAR(20) NULL DEFAULT ,
+    [CauseFacilityRouteCode] VARCHAR(20) NULL DEFAULT ,
+    [DefectCauseType] VARCHAR(1) NULL DEFAULT ,
+    [DutyCostCenterCode] VARCHAR(20) NULL DEFAULT ,
+    [DutyVendorCode] VARCHAR(20) NULL DEFAULT ,
+    [DefectCauseCode] VARCHAR(20) NULL DEFAULT ,
+    [DefectCauseDetailCode] VARCHAR(20) NULL DEFAULT ,
+    [DefectExtDesc] NVARCHAR(200) NULL DEFAULT ,
+    [RepairType] VARCHAR(10) NULL DEFAULT ,
+    [RepairUserID] VARCHAR(20) NULL DEFAULT ,
+    [RepairDateTime] DATETIME NULL DEFAULT ,
+    [RepairDesc] NVARCHAR(MAX) NULL DEFAULT ,
+    [DefectQty] NUMERIC(20,5) NULL DEFAULT ,
+    [RepairQty] NUMERIC(20,5) NULL DEFAULT ,
+    [LossQty] NUMERIC(20,5) NULL DEFAULT ,
+    [FileID] BIGINT NULL DEFAULT ,
+    [DRIExtText01] NVARCHAR(200) NULL DEFAULT ,
+    [DRIExtText02] NVARCHAR(200) NULL DEFAULT ,
+    [DRIExtText03] NVARCHAR(200) NULL DEFAULT ,
+    [IsDelete] VARCHAR(1) NULL DEFAULT ,
+    [CreateDateTime] DATETIME NULL DEFAULT ,
+    [CreateUserID] VARCHAR(20) NULL DEFAULT ,
+    [ChangeDateTime] DATETIME NULL DEFAULT ,
+    [ChangeUserID] VARCHAR(20) NULL DEFAULT 
+);
+GO
+

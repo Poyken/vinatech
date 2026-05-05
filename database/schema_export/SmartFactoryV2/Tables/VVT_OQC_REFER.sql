@@ -1,0 +1,13 @@
+﻿CREATE TABLE [dbo].[VVT_OQC_REFER] (
+    [lotid] VARCHAR(50) NOT NULL DEFAULT ,
+    [mergeid] VARCHAR(50) NOT NULL DEFAULT ,
+    [mergedate] DATETIME NOT NULL DEFAULT ,
+    [levelB] VARCHAR(7) NOT NULL DEFAULT ,
+    [finished] VARCHAR(10) NULL DEFAULT ,
+    [isSeparated] BIT NULL DEFAULT ,
+    [CreateUserID] VARCHAR(20) NULL DEFAULT ,
+    [CreatedLot] BIT NULL DEFAULT ,
+    [LotNumberBC] VARCHAR(50) NULL DEFAULT 
+);
+GO
+

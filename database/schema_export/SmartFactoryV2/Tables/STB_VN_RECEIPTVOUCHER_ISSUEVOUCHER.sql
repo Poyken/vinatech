@@ -1,0 +1,33 @@
+﻿CREATE TABLE [dbo].[STB_VN_RECEIPTVOUCHER_ISSUEVOUCHER] (
+    [ID] INT IDENTITY(1,1) NOT NULL DEFAULT ,
+    [Nos] INT NULL DEFAULT ,
+    [PersonDeliverer] NVARCHAR(50) NULL DEFAULT ,
+    [Department_Deliverer] NVARCHAR(50) NULL DEFAULT ,
+    [PersonReceiver] NVARCHAR(50) NULL DEFAULT ,
+    [Department_Receiver] NVARCHAR(50) NULL DEFAULT ,
+    [Descriptions] NVARCHAR(500) NULL DEFAULT ,
+    [NoNumber] INT NULL DEFAULT ,
+    [SiteCode] NVARCHAR(50) NULL DEFAULT ,
+    [LOTNO] NVARCHAR(50) NULL DEFAULT ,
+    [MaterialCode] NVARCHAR(50) NULL DEFAULT ,
+    [MaterialName] NVARCHAR(50) NULL DEFAULT ,
+    [PublicCode] NVARCHAR(100) NULL DEFAULT ,
+    [PartNo] NVARCHAR(100) NULL DEFAULT ,
+    [Unit] NVARCHAR(10) NULL DEFAULT ,
+    [PackQty] INT NULL DEFAULT ,
+    [ActualQty] INT NULL DEFAULT ,
+    [Remark] NVARCHAR(200) NULL DEFAULT ,
+    [Statuss] NVARCHAR(20) NULL DEFAULT ,
+    [PrearedBy] NVARCHAR(100) NULL DEFAULT ,
+    [Deliverersig] NVARCHAR(50) NULL DEFAULT ,
+    [StoreKeepersig] NVARCHAR(50) NULL DEFAULT ,
+    [PersonReceiverSig] NVARCHAR(50) NULL DEFAULT ,
+    [Managersig] NVARCHAR(50) NULL DEFAULT ,
+    [StatusPrinter] BIT NULL DEFAULT ,
+    [CreateDateTime] DATETIME NULL DEFAULT ,
+    [CreateUserID] NVARCHAR(50) NULL DEFAULT ,
+    [ChangeDateTime] DATETIME NULL DEFAULT ,
+    [ChangeUserID] NVARCHAR(50) NULL DEFAULT 
+);
+GO
+

@@ -1,0 +1,7 @@
+﻿CREATE TABLE [dbo].[Errors] (
+    [ErrorId] INT IDENTITY(1,1) NOT NULL DEFAULT ,
+    [RouteId] INT NULL DEFAULT ,
+    [ErrorName] NVARCHAR(500) NOT NULL DEFAULT 
+);
+GO
+

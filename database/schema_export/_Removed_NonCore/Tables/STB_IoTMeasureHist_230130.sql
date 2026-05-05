@@ -1,0 +1,12 @@
+﻿CREATE TABLE [dbo].[STB_IoTMeasureHist_230130] (
+    [MeasureNo] VARCHAR(20) NOT NULL DEFAULT ,
+    [DeviceID] VARCHAR(20) NOT NULL DEFAULT ,
+    [MeasureItemCode] VARCHAR(20) NOT NULL DEFAULT ,
+    [MeasureValue] NUMERIC(20,3) NULL DEFAULT ,
+    [CreateDateTime] DATETIME NOT NULL DEFAULT ,
+    [CreateUserID] VARCHAR(20) NULL DEFAULT ,
+    [ChangeDateTime] DATETIME NULL DEFAULT ,
+    [ChangeUserID] VARCHAR(20) NULL DEFAULT 
+);
+GO
+

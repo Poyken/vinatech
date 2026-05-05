@@ -1,0 +1,8 @@
+﻿CREATE TABLE [dbo].[STB_PDAStringResources] (
+    [Lang] VARCHAR(20) NOT NULL DEFAULT ,
+    [Name] NVARCHAR(200) NOT NULL DEFAULT ,
+    [Value] NVARCHAR(400) NULL DEFAULT ,
+    CONSTRAINT [PK_STB_PDAStringResources] PRIMARY KEY CLUSTERED ([Lang], [Name])
+);
+GO
+

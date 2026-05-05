@@ -1,0 +1,8 @@
+﻿CREATE TABLE [dbo].[VNTVN_UserLogins] (
+    [UserId] UNIQUEIDENTIFIER NOT NULL DEFAULT ,
+    [LoginProvider] NVARCHAR(MAX) NULL DEFAULT ,
+    [ProviderKey] NVARCHAR(MAX) NULL DEFAULT ,
+    [ProviderDisplayName] NVARCHAR(MAX) NULL DEFAULT 
+);
+GO
+

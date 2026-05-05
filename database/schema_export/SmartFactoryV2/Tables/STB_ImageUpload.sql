@@ -1,0 +1,16 @@
+﻿CREATE TABLE [dbo].[STB_ImageUpload] (
+    [ImageUploadNo] VARCHAR(20) NOT NULL DEFAULT ,
+    [ImageClassCode] VARCHAR(10) NULL DEFAULT ,
+    [Barcode] VARCHAR(100) NULL DEFAULT ,
+    [ImageFile1] VARBINARY(MAX) NULL DEFAULT ,
+    [ImageFile2] VARBINARY(MAX) NULL DEFAULT ,
+    [ImageFile3] VARBINARY(MAX) NULL DEFAULT ,
+    [ImageFile4] VARBINARY(MAX) NULL DEFAULT ,
+    [ImageFile5] VARBINARY(MAX) NULL DEFAULT ,
+    [CreateDateTime] DATETIME NOT NULL DEFAULT (getdate()),
+    [CreateUserID] VARCHAR(20) NULL DEFAULT ,
+    [ChangeDateTime] DATETIME NULL DEFAULT ,
+    [ChangeUserID] VARCHAR(20) NULL DEFAULT 
+);
+GO
+

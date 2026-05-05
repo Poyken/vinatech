@@ -1,0 +1,22 @@
+﻿CREATE TABLE [dbo].[STB_BloomBoxLabalPrintHist] (
+    [MaterialCode] VARCHAR(50) NULL DEFAULT ,
+    [MaterialName] NVARCHAR(100) NULL DEFAULT ,
+    [LotID] VARCHAR(50) NULL DEFAULT ,
+    [PackingID] VARCHAR(50) NULL DEFAULT ,
+    [LabelQty] INT NOT NULL DEFAULT ,
+    [LotQty] INT NOT NULL DEFAULT ,
+    [CurrentQty] NUMERIC(20,5) NULL DEFAULT ,
+    [LotNo] VARCHAR(20) NULL DEFAULT ,
+    [Voltage] VARCHAR(10) NULL DEFAULT ,
+    [Farad] VARCHAR(10) NULL DEFAULT ,
+    [Rating] VARCHAR(10) NULL DEFAULT ,
+    [PartNo] VARCHAR(50) NULL DEFAULT ,
+    [StockAttrib1] VARCHAR(20) NULL DEFAULT ,
+    [DC] VARCHAR(10) NULL DEFAULT ,
+    [MarkingLetter] VARCHAR(50) NULL DEFAULT ,
+    [BloomBoxLabalPrintNo] BIGINT IDENTITY(1,1) NOT NULL DEFAULT ,
+    [SalesPONo] VARCHAR(50) NULL DEFAULT ,
+    [CreateDateTime] DATETIME NOT NULL DEFAULT (getdate())
+);
+GO
+

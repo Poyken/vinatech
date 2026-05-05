@@ -1,0 +1,10 @@
+﻿CREATE TABLE [dbo].[PROD_Comment] (
+    [사이즈] VARCHAR(20) NOT NULL DEFAULT ,
+    [Comment] VARCHAR(200) NULL DEFAULT ,
+    [CompanyCode] VARCHAR(20) NOT NULL DEFAULT ,
+    [PLANQTY] INT NULL DEFAULT ,
+    [PRODQTY] INT NULL DEFAULT ,
+    CONSTRAINT [PK_PROD_Comment] PRIMARY KEY CLUSTERED ([사이즈], [CompanyCode])
+);
+GO
+

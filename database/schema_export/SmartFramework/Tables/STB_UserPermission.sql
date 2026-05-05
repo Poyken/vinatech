@@ -1,0 +1,9 @@
+﻿CREATE TABLE [dbo].[STB_UserPermission] (
+    [UserID] VARCHAR(20) NOT NULL DEFAULT ,
+    [ScreenID] VARCHAR(10) NOT NULL DEFAULT ,
+    [FuncID] VARCHAR(50) NOT NULL DEFAULT ,
+    [Allow] BIT NULL DEFAULT ,
+    CONSTRAINT [PK_STB_UserPermission] PRIMARY KEY CLUSTERED ([UserID], [ScreenID], [FuncID])
+);
+GO
+

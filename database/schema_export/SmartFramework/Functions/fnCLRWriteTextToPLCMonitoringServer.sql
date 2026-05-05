@@ -1,0 +1,4 @@
+﻿-- Function: fnCLRWriteTextToPLCMonitoringServer
+
+GO
+

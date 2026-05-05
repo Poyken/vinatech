@@ -1,0 +1,7 @@
+﻿CREATE TABLE [dbo].[STB_FavoriteMenu] (
+    [UserID] VARCHAR(20) NOT NULL DEFAULT ,
+    [Name] VARCHAR(50) NOT NULL DEFAULT ,
+    CONSTRAINT [PK_STB_FavoriteMenu] PRIMARY KEY CLUSTERED ([Name], [UserID])
+);
+GO
+

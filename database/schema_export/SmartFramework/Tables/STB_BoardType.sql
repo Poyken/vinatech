@@ -1,0 +1,13 @@
+﻿CREATE TABLE [dbo].[STB_BoardType] (
+    [BoardType] VARCHAR(20) NOT NULL DEFAULT ,
+    [Title] NVARCHAR(100) NULL DEFAULT ,
+    [TopImage] VARBINARY(MAX) NULL DEFAULT ,
+    [UseRange] BIT NULL DEFAULT ,
+    [UsePrivate] BIT NULL DEFAULT ,
+    [CreateDateTime] DATETIME NULL DEFAULT ,
+    [CreateUserID] VARCHAR(20) NULL DEFAULT ,
+    [ChangeDateTime] DATETIME NULL DEFAULT ,
+    [ChangeUserID] VARCHAR(20) NULL DEFAULT 
+);
+GO
+

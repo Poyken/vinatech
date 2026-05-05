@@ -1,0 +1,13 @@
+﻿-- View: VW_DPI
+
+
+CREATE VIEW [dbo].[VW_DPI]
+AS
+	SELECT '200' AS Dpi
+	UNION ALL
+	SELECT '300' AS Dpi
+	UNION ALL
+	SELECT '400' AS Dpi
+
+GO
+

@@ -1,0 +1,14 @@
+﻿CREATE TABLE [dbo].[stb_moudleWeightNG] (
+    [ID] INT IDENTITY(1,1) NOT NULL DEFAULT ,
+    [Model] NVARCHAR(50) NULL DEFAULT ,
+    [PartNo] NVARCHAR(50) NULL DEFAULT ,
+    [Stage] NVARCHAR(50) NULL DEFAULT ,
+    [Weight] DECIMAL(20,5) NULL DEFAULT ,
+    [CreateDate] DATETIME NULL DEFAULT ,
+    [CreateBy] NVARCHAR(20) NULL DEFAULT ,
+    [ChangeDate] DATETIME NULL DEFAULT ,
+    [ChangeBy] NVARCHAR(20) NULL DEFAULT ,
+    [MaterialCode] NVARCHAR(50) NULL DEFAULT 
+);
+GO
+

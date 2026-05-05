@@ -1,0 +1,5 @@
+﻿CREATE TABLE [dbo].[TEMP_TABLE1] (
+    [지시번호] VARCHAR(16) NOT NULL DEFAULT 
+);
+GO
+

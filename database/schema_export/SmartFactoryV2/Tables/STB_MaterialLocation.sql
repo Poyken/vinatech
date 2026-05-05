@@ -1,0 +1,19 @@
+﻿CREATE TABLE [dbo].[STB_MaterialLocation] (
+    [MaterialLocationCode] VARCHAR(20) NOT NULL DEFAULT ,
+    [MaterialWarehouseCode] VARCHAR(20) NULL DEFAULT ,
+    [MaterialLocationName] NVARCHAR(50) NULL DEFAULT ,
+    [MaterialLocationNameL] NVARCHAR(50) NULL DEFAULT ,
+    [IsUseLotID] BIT NULL DEFAULT ,
+    [IsCanPicking] BIT NULL DEFAULT ,
+    [MLExtText01] NVARCHAR(MAX) NULL DEFAULT ,
+    [MLExtText02] NVARCHAR(MAX) NULL DEFAULT ,
+    [MLExtText03] NVARCHAR(MAX) NULL DEFAULT ,
+    [MLExtText04] NVARCHAR(MAX) NULL DEFAULT ,
+    [MLExtText05] NVARCHAR(MAX) NULL DEFAULT ,
+    [CreateDateTime] DATETIME NULL DEFAULT ,
+    [CreateUserID] VARCHAR(20) NULL DEFAULT ,
+    [ChangeDateTime] DATETIME NULL DEFAULT ,
+    [ChangeUserID] VARCHAR(20) NULL DEFAULT 
+);
+GO
+

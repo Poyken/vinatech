@@ -1,0 +1,25 @@
+﻿CREATE TABLE [dbo].[STB_CommInspDocHistoryAudit] (
+    [사업장] NVARCHAR(255) NULL DEFAULT ,
+    [품목코드] NVARCHAR(50) NULL DEFAULT ,
+    [품목명] NVARCHAR(255) NULL DEFAULT ,
+    [자재유형코드] NVARCHAR(50) NULL DEFAULT ,
+    [자재그룹코드] NVARCHAR(50) NULL DEFAULT ,
+    [LotNo] NVARCHAR(50) NULL DEFAULT ,
+    [점도측정값] DECIMAL(18,2) NULL DEFAULT ,
+    [압연밀도하한] DECIMAL(18,2) NULL DEFAULT ,
+    [압연밀도상한] DECIMAL(18,2) NULL DEFAULT ,
+    [전극두께_좌] DECIMAL(18,2) NULL DEFAULT ,
+    [전극두께_중] DECIMAL(18,2) NULL DEFAULT ,
+    [전극두께_우] DECIMAL(18,2) NULL DEFAULT ,
+    [밀도_좌] DECIMAL(18,2) NULL DEFAULT ,
+    [밀도_중] DECIMAL(18,2) NULL DEFAULT ,
+    [밀도_우] DECIMAL(18,2) NULL DEFAULT ,
+    [무게_좌] DECIMAL(18,2) NULL DEFAULT ,
+    [무게_중] DECIMAL(18,2) NULL DEFAULT ,
+    [무게_우] DECIMAL(18,2) NULL DEFAULT ,
+    [작업일자] DATE NULL DEFAULT ,
+    [작업자명] NVARCHAR(100) NULL DEFAULT ,
+    [비고내용] NVARCHAR(MAX) NULL DEFAULT 
+);
+GO
+

@@ -1,0 +1,12 @@
+﻿CREATE TABLE [dbo].[stb_FingerDept] (
+    [ID] INT IDENTITY(1,1) NOT NULL DEFAULT ,
+    [IDD] INT NULL DEFAULT ,
+    [IDZ] INT NULL DEFAULT ,
+    [Dept] NVARCHAR(50) NULL DEFAULT ,
+    [CreateDate] DATETIME NULL DEFAULT ,
+    [Attribute1] NVARCHAR(50) NULL DEFAULT ,
+    [Attribute2] NVARCHAR(50) NULL DEFAULT ,
+    [Attribute3] NVARCHAR(50) NULL DEFAULT 
+);
+GO
+

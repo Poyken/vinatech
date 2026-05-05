@@ -1,0 +1,33 @@
+﻿CREATE TABLE [dbo].[STB_ElectrodeCoatingInfo] (
+    [ElectrodeLotNumber] VARCHAR(20) NOT NULL DEFAULT ,
+    [MachineCode] VARCHAR(20) NULL DEFAULT ,
+    [WorkDate] DATETIME NULL DEFAULT ,
+    [WorkerCode] VARCHAR(20) NULL DEFAULT ,
+    [Temperature] NUMERIC(20,5) NULL DEFAULT ,
+    [Humidity] NUMERIC(20,5) NULL DEFAULT ,
+    [ElectrodeMaterialCode] VARCHAR(20) NULL DEFAULT ,
+    [MaterialLotNumber] VARCHAR(20) NULL DEFAULT ,
+    [OneSideHeadGapLeft] NUMERIC(20,5) NULL DEFAULT ,
+    [OneSideHeadGapRight] NUMERIC(20,5) NULL DEFAULT ,
+    [BothSideHeadGapLeft] NUMERIC(20,5) NULL DEFAULT ,
+    [BothSideHeadGapRight] NUMERIC(20,5) NULL DEFAULT ,
+    [OneSideCoatingWidth] NUMERIC(20,5) NULL DEFAULT ,
+    [BothSideCoatingWidth] NUMERIC(20,5) NULL DEFAULT ,
+    [UnwindingValue] NUMERIC(20,5) NULL DEFAULT ,
+    [RewindingValue] NUMERIC(20,5) NULL DEFAULT ,
+    [ProductionQty] NUMERIC(20,5) NULL DEFAULT ,
+    [GoodQty] NUMERIC(20,5) NULL DEFAULT ,
+    [BadQty] NUMERIC(20,5) NULL DEFAULT ,
+    [Remark] VARCHAR(1000) NULL DEFAULT ,
+    [SpecificComment1] VARCHAR(1000) NULL DEFAULT ,
+    [SpecificComment2] VARCHAR(1000) NULL DEFAULT ,
+    [CreateDateTime] DATETIME NULL DEFAULT (getdate()),
+    [CreateUserID] VARCHAR(20) NULL DEFAULT ,
+    [ChangeDateTime] DATETIME NULL DEFAULT ,
+    [ChangeUserID] VARCHAR(20) NULL DEFAULT ,
+    [PrintYn] BIT NULL DEFAULT ,
+    [CohesionResult] NUMERIC(20,1) NULL DEFAULT ,
+    [CurrentCollectorThickness] NUMERIC(20,2) NULL DEFAULT 
+);
+GO
+

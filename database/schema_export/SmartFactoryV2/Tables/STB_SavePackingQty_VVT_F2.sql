@@ -1,0 +1,12 @@
+﻿CREATE TABLE [dbo].[STB_SavePackingQty_VVT_F2] (
+    [Id] INT IDENTITY(1,1) NOT NULL DEFAULT ,
+    [PartNo] NVARCHAR(50) NOT NULL DEFAULT ,
+    [Qty] INT NULL DEFAULT ,
+    [IsUsed] BIT NULL DEFAULT ,
+    [CreateDateTime] DATETIME NULL DEFAULT ,
+    [CreateUserID] VARCHAR(30) NULL DEFAULT ,
+    [ChangeDateTime] DATETIME NULL DEFAULT ,
+    [ChangeUserID] VARCHAR(30) NULL DEFAULT 
+);
+GO
+

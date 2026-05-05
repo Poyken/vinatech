@@ -1,0 +1,11 @@
+﻿CREATE TABLE [dbo].[Stb_ModelNotFOQC] (
+    [ID] INT IDENTITY(1,1) NOT NULL DEFAULT ,
+    [ModelNo] NVARCHAR(50) NULL DEFAULT ,
+    [Used] BIT NULL DEFAULT ,
+    [CreateDate] DATETIME NULL DEFAULT ,
+    [CreateBy] NVARCHAR(20) NULL DEFAULT ,
+    [ChangeDate] DATETIME NULL DEFAULT ,
+    [ChangeBy] NVARCHAR(20) NULL DEFAULT 
+);
+GO
+

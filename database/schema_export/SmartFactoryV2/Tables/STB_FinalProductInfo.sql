@@ -1,0 +1,21 @@
+﻿CREATE TABLE [dbo].[STB_FinalProductInfo] (
+    [DocNo] VARCHAR(20) NULL DEFAULT ,
+    [BasicDate] DATE NULL DEFAULT ,
+    [DocType] VARCHAR(10) NULL DEFAULT ,
+    [DocStatus] VARCHAR(20) NULL DEFAULT ,
+    [Description] VARCHAR(200) NULL DEFAULT ,
+    [CreateDateTime] DATETIME NULL DEFAULT ,
+    [CreateUserID] VARCHAR(20) NULL DEFAULT ,
+    [ChangeDateTime] DATETIME NULL DEFAULT ,
+    [ChangeUserID] VARCHAR(20) NULL DEFAULT ,
+    [Attribute1] VARCHAR(50) NULL DEFAULT ,
+    [Attribute2] VARCHAR(50) NULL DEFAULT ,
+    [Attribute3] VARCHAR(50) NULL DEFAULT ,
+    [Attribute4] VARCHAR(50) NULL DEFAULT ,
+    [Attribute5] VARCHAR(50) NULL DEFAULT ,
+    [InvoiceNo] VARCHAR(20) NULL DEFAULT ,
+    [ID] INT IDENTITY(1,1) NOT NULL DEFAULT ,
+    [DEPARTMENT] NVARCHAR(100) NULL DEFAULT 
+);
+GO
+

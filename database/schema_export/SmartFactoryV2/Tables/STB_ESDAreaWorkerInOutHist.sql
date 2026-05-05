@@ -1,0 +1,9 @@
+﻿CREATE TABLE [dbo].[STB_ESDAreaWorkerInOutHist] (
+    [Idx] BIGINT IDENTITY(1,1) NOT NULL DEFAULT ,
+    [ESDAreaCode] VARCHAR(10) NOT NULL DEFAULT ,
+    [WorkerCode] VARCHAR(20) NOT NULL DEFAULT ,
+    [InOutCode] VARCHAR(5) NOT NULL DEFAULT ,
+    [CreateDateTime] DATETIME NOT NULL DEFAULT (getdate())
+);
+GO
+

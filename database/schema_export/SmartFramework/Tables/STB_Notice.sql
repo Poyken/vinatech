@@ -1,0 +1,13 @@
+﻿CREATE TABLE [dbo].[STB_Notice] (
+    [SeqNo] BIGINT IDENTITY(1,1) NOT NULL DEFAULT ,
+    [Title] NVARCHAR(100) NOT NULL DEFAULT ,
+    [Contents] NVARCHAR(MAX) NOT NULL DEFAULT ,
+    [FromDate] DATE NOT NULL DEFAULT ,
+    [ToDate] DATE NULL DEFAULT ,
+    [CreateDateTime] DATETIME NULL DEFAULT ,
+    [CreateUserID] VARCHAR(20) NULL DEFAULT ,
+    [ChangeDateTime] DATETIME NULL DEFAULT ,
+    [ChangeUserID] VARCHAR(20) NULL DEFAULT 
+);
+GO
+

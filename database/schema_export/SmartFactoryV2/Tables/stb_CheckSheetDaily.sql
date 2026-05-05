@@ -1,0 +1,17 @@
+﻿CREATE TABLE [dbo].[stb_CheckSheetDaily] (
+    [ID] INT IDENTITY(1,1) NOT NULL DEFAULT ,
+    [No] NVARCHAR(50) NULL DEFAULT ,
+    [PeopleTest] NVARCHAR(50) NULL DEFAULT ,
+    [DateTest] DATE NULL DEFAULT ,
+    [Shifts] NVARCHAR(50) NULL DEFAULT ,
+    [Cellline] NVARCHAR(50) NULL DEFAULT ,
+    [Model] NVARCHAR(100) NULL DEFAULT ,
+    [Part] NVARCHAR(100) NULL DEFAULT ,
+    [TypeCheck] NVARCHAR(100) NULL DEFAULT ,
+    [CreateDateTime] DATETIME NULL DEFAULT ,
+    [CreateUserID] NVARCHAR(50) NULL DEFAULT ,
+    [ChangeDateTime] DATETIME NULL DEFAULT ,
+    [ChangeUserID] NVARCHAR(50) NULL DEFAULT 
+);
+GO
+

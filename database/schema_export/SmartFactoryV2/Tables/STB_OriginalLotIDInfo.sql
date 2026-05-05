@@ -1,0 +1,8 @@
+﻿CREATE TABLE [dbo].[STB_OriginalLotIDInfo] (
+    [Idx] BIGINT IDENTITY(1,1) NOT NULL DEFAULT ,
+    [LotID] VARCHAR(50) NOT NULL DEFAULT ,
+    [PackingID] VARCHAR(50) NOT NULL DEFAULT ,
+    [CreateDateTime] DATETIME NOT NULL DEFAULT (getdate())
+);
+GO
+

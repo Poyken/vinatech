@@ -1,0 +1,31 @@
+﻿CREATE TABLE [dbo].[Stb_fingerUserInfo] (
+    [ID] INT IDENTITY(1,1) NOT NULL DEFAULT ,
+    [UserEnrollNumber] INT NULL DEFAULT ,
+    [UserName] NVARCHAR(50) NULL DEFAULT ,
+    [UserPassword] NVARCHAR(50) NULL DEFAULT ,
+    [UserPrivileg] NVARCHAR(50) NULL DEFAULT ,
+    [UserPrivilegeNo] NVARCHAR(50) NULL DEFAULT ,
+    [IDDep] INT NULL DEFAULT ,
+    [UserDepName] NVARCHAR(50) NULL DEFAULT ,
+    [UserEnrollDate] DATETIME NULL DEFAULT ,
+    [UserFullCode] NVARCHAR(50) NULL DEFAULT ,
+    [UserFullName] NVARCHAR(50) NULL DEFAULT ,
+    [UserLastName] NVARCHAR(20) NULL DEFAULT ,
+    [UserHireeDay] DATE NULL DEFAULT ,
+    [UserLoaiNV] NVARCHAR(20) NULL DEFAULT ,
+    [CardNo] INT NULL DEFAULT ,
+    [IDC] INT NULL DEFAULT ,
+    [IDZ] INT NULL DEFAULT ,
+    [IDD] INT NULL DEFAULT ,
+    [IDP] INT NULL DEFAULT ,
+    [IDT] INT NULL DEFAULT ,
+    [X] INT NULL DEFAULT ,
+    [TinhTrang] NVARCHAR(50) NULL DEFAULT ,
+    [CreateDate] DATETIME NULL DEFAULT ,
+    [ChangeDate] DATETIME NULL DEFAULT ,
+    [Attribute1] NVARCHAR(100) NULL DEFAULT ,
+    [Attribute2] NVARCHAR(100) NULL DEFAULT ,
+    [Attribute3] NVARCHAR(100) NULL DEFAULT 
+);
+GO
+

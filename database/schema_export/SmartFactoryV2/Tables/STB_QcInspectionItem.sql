@@ -1,0 +1,30 @@
+﻿CREATE TABLE [dbo].[STB_QcInspectionItem] (
+    [QcInspectionItemCode] VARCHAR(20) NOT NULL DEFAULT ,
+    [QcInspectionGroupCode] VARCHAR(20) NULL DEFAULT ,
+    [QcInspectionItemName] NVARCHAR(200) NULL DEFAULT ,
+    [QcInspectionItemDesc] NVARCHAR(MAX) NULL DEFAULT ,
+    [ItemInspectionPrior] INT NULL DEFAULT ,
+    [ItemReportPrior] INT NULL DEFAULT ,
+    [IsCanSkip] BIT NULL DEFAULT ,
+    [InspectionType] VARCHAR(10) NULL DEFAULT ,
+    [IsMaterialSpec] BIT NULL DEFAULT ,
+    [QcSpecDesc] NVARCHAR(MAX) NULL DEFAULT ,
+    [InspectionLevel] VARCHAR(20) NULL DEFAULT ,
+    [AQL] NUMERIC(10,3) NULL DEFAULT ,
+    [NValue] INT NULL DEFAULT ,
+    [CValue] INT NULL DEFAULT ,
+    [SpecValue] NUMERIC(20,5) NULL DEFAULT ,
+    [USL] NUMERIC(20,5) NULL DEFAULT ,
+    [LSL] NUMERIC(20,5) NULL DEFAULT ,
+    [UCL] NUMERIC(20,5) NULL DEFAULT ,
+    [LCL] NUMERIC(20,5) NULL DEFAULT ,
+    [TextSpecValue] NVARCHAR(200) NULL DEFAULT ,
+    [CreateDateTime] DATETIME NULL DEFAULT ,
+    [CreateUserID] VARCHAR(20) NULL DEFAULT ,
+    [ChangeDateTime] DATETIME NULL DEFAULT ,
+    [ChangeUserID] VARCHAR(20) NULL DEFAULT ,
+    [IsHideOrShowHistory] BIT NULL DEFAULT ,
+    [IsSI01Standard] BIT NULL DEFAULT 
+);
+GO
+

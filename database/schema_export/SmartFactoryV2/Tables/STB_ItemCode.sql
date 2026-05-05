@@ -1,0 +1,14 @@
+﻿CREATE TABLE [dbo].[STB_ItemCode] (
+    [Id] INT IDENTITY(1,1) NOT NULL DEFAULT ,
+    [MaterialCode] VARCHAR(255) NOT NULL DEFAULT ,
+    [PartNo] VARCHAR(255) NULL DEFAULT ,
+    [Model] VARCHAR(255) NULL DEFAULT ,
+    [IsUsed] BIT NULL DEFAULT ((1)),
+    [WorkCenterCode] VARCHAR(50) NULL DEFAULT ,
+    [CreatedBy] VARCHAR(50) NULL DEFAULT ,
+    [CreateDate] DATETIME NULL DEFAULT ,
+    [ModifiedBy] VARCHAR(50) NULL DEFAULT ,
+    [ModifieDate] DATETIME NULL DEFAULT 
+);
+GO
+

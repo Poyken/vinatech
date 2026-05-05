@@ -1,0 +1,14 @@
+﻿CREATE TABLE [dbo].[STB_ElectrodeSetInfoHist] (
+    [ID] INT IDENTITY(1,1) NOT NULL DEFAULT ,
+    [OldControlNo] VARCHAR(50) NULL DEFAULT ,
+    [ControlNo] VARCHAR(50) NULL DEFAULT ,
+    [PONo] VARCHAR(50) NULL DEFAULT ,
+    [DayPlanNo] VARCHAR(50) NULL DEFAULT ,
+    [MaterialCode] VARCHAR(20) NULL DEFAULT ,
+    [Barcode] VARCHAR(50) NULL DEFAULT ,
+    [Flag] VARCHAR(10) NULL DEFAULT ,
+    [CreateDateTime] DATETIME NULL DEFAULT ,
+    [CreateUserID] VARCHAR(20) NULL DEFAULT 
+);
+GO
+

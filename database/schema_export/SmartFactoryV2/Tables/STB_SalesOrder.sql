@@ -1,0 +1,29 @@
+﻿CREATE TABLE [dbo].[STB_SalesOrder] (
+    [SalesOrderNo] VARCHAR(20) NOT NULL DEFAULT ,
+    [CompanyCode] VARCHAR(20) NULL DEFAULT ,
+    [OrderType] VARCHAR(20) NULL DEFAULT ,
+    [CustomerCode] VARCHAR(20) NULL DEFAULT ,
+    [OrderDate] DATE NULL DEFAULT ,
+    [IsFixedOrder] BIT NULL DEFAULT ,
+    [ApprovalUserID] VARCHAR(20) NULL DEFAULT ,
+    [ApprovalDateTime] DATETIME NULL DEFAULT ,
+    [RequestDeliveryDate] DATE NULL DEFAULT ,
+    [DeliveryDay] INT NULL DEFAULT ,
+    [DestInfomation] NVARCHAR(100) NULL DEFAULT ,
+    [IsCancel] BIT NULL DEFAULT ,
+    [CancelText] NVARCHAR(100) NULL DEFAULT ,
+    [AmountPrice] NUMERIC(20,4) NULL DEFAULT ,
+    [SOExtText01] NVARCHAR(200) NULL DEFAULT ,
+    [SOExtText02] NVARCHAR(200) NULL DEFAULT ,
+    [SOExtText03] NVARCHAR(200) NULL DEFAULT ,
+    [SOExtText04] NVARCHAR(200) NULL DEFAULT ,
+    [SOExtText05] NVARCHAR(200) NULL DEFAULT ,
+    [CreateDateTime] DATETIME NULL DEFAULT ,
+    [CreateUserID] VARCHAR(20) NULL DEFAULT ,
+    [ChangeDateTime] DATETIME NULL DEFAULT ,
+    [ChangeUserID] VARCHAR(20) NULL DEFAULT ,
+    [FixOrderDate] DATE NULL DEFAULT ,
+    [IsFlxedCheck] BIT NULL DEFAULT 
+);
+GO
+

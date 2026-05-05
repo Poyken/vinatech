@@ -1,0 +1,12 @@
+﻿CREATE TABLE [dbo].[STB_InterfaceMachineInfo] (
+    [MachineID] VARCHAR(20) NOT NULL DEFAULT ,
+    [MachineName] NVARCHAR(100) NULL DEFAULT ,
+    [ERPCompanyCode] VARCHAR(20) NULL DEFAULT ,
+    [MESCompanyCode] VARCHAR(20) NULL DEFAULT ,
+    [Password] VARCHAR(100) NULL DEFAULT ,
+    [APIKey] VARCHAR(100) NULL DEFAULT ,
+    [CreateDateTime] DATETIME NULL DEFAULT ,
+    [ChangeDateTime] DATETIME NULL DEFAULT 
+);
+GO
+

@@ -1,0 +1,9 @@
+﻿CREATE TABLE [dbo].[VNTVN_Roles] (
+    [Id] UNIQUEIDENTIFIER NOT NULL DEFAULT ,
+    [Description] NVARCHAR(200) NOT NULL DEFAULT ,
+    [Name] NVARCHAR(MAX) NULL DEFAULT ,
+    [NormalizedName] NVARCHAR(MAX) NULL DEFAULT ,
+    [ConcurrencyStamp] NVARCHAR(MAX) NULL DEFAULT 
+);
+GO
+

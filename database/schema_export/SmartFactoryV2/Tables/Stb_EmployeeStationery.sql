@@ -1,0 +1,17 @@
+﻿CREATE TABLE [dbo].[Stb_EmployeeStationery] (
+    [ID] INT IDENTITY(1,1) NOT NULL DEFAULT ,
+    [CodeEmp] NVARCHAR(20) NULL DEFAULT ,
+    [Name] NVARCHAR(50) NULL DEFAULT ,
+    [Department] NVARCHAR(20) NULL DEFAULT ,
+    [Sex] NVARCHAR(10) NULL DEFAULT ,
+    [Birthday] DATE NULL DEFAULT ,
+    [Address] NVARCHAR(100) NULL DEFAULT ,
+    [PhoneNumber] NVARCHAR(20) NULL DEFAULT ,
+    [IsUsed] BIT NULL DEFAULT ,
+    [CreateDateTime] DATETIME NULL DEFAULT ,
+    [CreateUserID] NVARCHAR(20) NULL DEFAULT ,
+    [ChangeDatetime] DATETIME NULL DEFAULT ,
+    [ChangeUserID] NVARCHAR(20) NULL DEFAULT 
+);
+GO
+

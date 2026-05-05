@@ -1,0 +1,11 @@
+﻿CREATE TABLE [dbo].[STB_PackingLabelSpec] (
+    [LotID] VARCHAR(50) NOT NULL DEFAULT ,
+    [LotNo] VARCHAR(20) NULL DEFAULT ,
+    [Voltage] VARCHAR(10) NULL DEFAULT ,
+    [Farad] VARCHAR(10) NULL DEFAULT ,
+    [PartNo] VARCHAR(50) NULL DEFAULT ,
+    [Rating] VARCHAR(10) NULL DEFAULT ,
+    [CreateDateTime] DATETIME NOT NULL DEFAULT (getdate())
+);
+GO
+

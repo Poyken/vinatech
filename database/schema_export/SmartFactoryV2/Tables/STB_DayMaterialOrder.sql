@@ -1,0 +1,32 @@
+﻿CREATE TABLE [dbo].[STB_DayMaterialOrder] (
+    [PONo] VARCHAR(20) NULL DEFAULT ,
+    [DayPlanNo] VARCHAR(20) NULL DEFAULT ,
+    [ChildMaterialCode] NVARCHAR(50) NULL DEFAULT ,
+    [MaterialName] NVARCHAR(50) NULL DEFAULT ,
+    [LineCode] NVARCHAR(20) NULL DEFAULT ,
+    [Plandate] DATETIME NULL DEFAULT ,
+    [CreateDateTime] DATETIME NULL DEFAULT ,
+    [CreateUserID] NVARCHAR(50) NULL DEFAULT ,
+    [ChangeDateTime] DATETIME NULL DEFAULT ,
+    [ChangeUserID] NVARCHAR(50) NULL DEFAULT ,
+    [MaterialOrderNo] VARCHAR(20) NULL DEFAULT ,
+    [SoLuongKeHoachNgay] INT NULL DEFAULT ,
+    [NVLngay] INT NULL DEFAULT ,
+    [UsedQtyDay] DECIMAL(18,4) NULL DEFAULT ,
+    [IsAdditional] BIT NULL DEFAULT ,
+    [OrderDesc] NVARCHAR(100) NULL DEFAULT ,
+    [CompanyCode] VARCHAR(20) NULL DEFAULT ,
+    [WorkCenterCode] VARCHAR(20) NULL DEFAULT ,
+    [QtyExp] INT NULL DEFAULT ,
+    [QtyByPO] INT NULL DEFAULT ,
+    [Id] INT IDENTITY(1,1) NOT NULL DEFAULT ,
+    [ExportDesc] NVARCHAR(255) NULL DEFAULT ,
+    [ExportDateTime] DATETIME NULL DEFAULT ,
+    [ExportUserID] NVARCHAR(50) NULL DEFAULT ,
+    [ExportChangeTime] DATETIME NULL DEFAULT ,
+    [ExportChangeUserID] NVARCHAR(50) NULL DEFAULT ,
+    [StatusWarehouseConfirm] BIT NULL DEFAULT ,
+    [PlanShiftCode] VARCHAR(1) NULL DEFAULT 
+);
+GO
+

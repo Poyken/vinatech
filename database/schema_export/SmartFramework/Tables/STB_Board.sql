@@ -1,0 +1,15 @@
+﻿CREATE TABLE [dbo].[STB_Board] (
+    [ThreadNo] VARCHAR(20) NOT NULL DEFAULT ,
+    [BoardType] VARCHAR(20) NOT NULL DEFAULT ,
+    [Title] NVARCHAR(200) NULL DEFAULT ,
+    [Contents] NVARCHAR(MAX) NULL DEFAULT ,
+    [ReadCount] INT NULL DEFAULT ,
+    [FromDate] DATE NULL DEFAULT ,
+    [ToDate] DATE NULL DEFAULT ,
+    [IsPrivate] BIT NULL DEFAULT ,
+    [CreateDateTime] DATETIME NULL DEFAULT ,
+    [CreateUserID] VARCHAR(20) NULL DEFAULT ,
+    [ChangeDateTime] DATETIME NULL DEFAULT 
+);
+GO
+

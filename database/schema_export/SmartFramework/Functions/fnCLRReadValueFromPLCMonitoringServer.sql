@@ -1,0 +1,4 @@
+﻿-- Function: fnCLRReadValueFromPLCMonitoringServer
+
+GO
+

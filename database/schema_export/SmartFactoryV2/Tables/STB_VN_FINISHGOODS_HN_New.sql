@@ -1,0 +1,24 @@
+﻿CREATE TABLE [dbo].[STB_VN_FINISHGOODS_HN_New] (
+    [ID] INT IDENTITY(1,1) NOT NULL DEFAULT ,
+    [IDCODE] VARCHAR(100) NULL DEFAULT ,
+    [PackingID] VARCHAR(50) NULL DEFAULT ,
+    [LotNo] VARCHAR(50) NULL DEFAULT ,
+    [PackQty] INT NULL DEFAULT ,
+    [PackQtyOutPut] INT NULL DEFAULT ,
+    [PublicCode] VARCHAR(50) NULL DEFAULT ,
+    [MethodAction] NVARCHAR(50) NULL DEFAULT ,
+    [SoPhieuNhapKho] VARCHAR(50) NULL DEFAULT ,
+    [Locations] VARCHAR(50) NULL DEFAULT ,
+    [TypeInput] VARCHAR(50) NULL DEFAULT ,
+    [WorkCenterCode] VARCHAR(50) NULL DEFAULT ,
+    [CreateDateTime] DATETIME NULL DEFAULT ,
+    [CreateUserID] VARCHAR(50) NULL DEFAULT ,
+    [ChangeDateTime] DATETIME NULL DEFAULT ,
+    [ChangeUserID] VARCHAR(50) NULL DEFAULT ,
+    [StatusImport] BIT NULL DEFAULT ,
+    [PackingNilonToBoxSmallID] NVARCHAR(50) NULL DEFAULT ,
+    [CommentType] INT NOT NULL DEFAULT ((0)),
+    [Note] NVARCHAR(500) NULL DEFAULT 
+);
+GO
+

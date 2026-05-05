@@ -1,0 +1,26 @@
+﻿CREATE TABLE [dbo].[Stb_MeetingAgenda] (
+    [ID] INT IDENTITY(1,1) NOT NULL DEFAULT ,
+    [Years] INT NULL DEFAULT ,
+    [Months] INT NULL DEFAULT ,
+    [Days] INT NULL DEFAULT ,
+    [No] INT NULL DEFAULT ,
+    [Customer] NVARCHAR(100) NULL DEFAULT ,
+    [Size] NVARCHAR(50) NULL DEFAULT ,
+    [RespPlant] NVARCHAR(50) NULL DEFAULT ,
+    [RestTeam] NVARCHAR(50) NULL DEFAULT ,
+    [CompleteDate] DATE NULL DEFAULT ,
+    [Status] NVARCHAR(20) NULL DEFAULT ,
+    [Attribute1] VARCHAR(200) NULL DEFAULT ,
+    [Attribute2] VARCHAR(200) NULL DEFAULT ,
+    [Attribute3] VARCHAR(200) NULL DEFAULT ,
+    [Attribute4] VARCHAR(200) NULL DEFAULT ,
+    [Attribute5] VARCHAR(200) NULL DEFAULT ,
+    [CreateDateTime] DATETIME NULL DEFAULT ,
+    [CreateUserID] VARCHAR(20) NULL DEFAULT ,
+    [ChangeDateTime] DATETIME NULL DEFAULT ,
+    [ChangeUserID] VARCHAR(20) NULL DEFAULT ,
+    [Meeting_Agenda] NVARCHAR(MAX) NULL DEFAULT ,
+    [Date_Meeting] DATE NULL DEFAULT 
+);
+GO
+
