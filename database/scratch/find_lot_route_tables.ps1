@@ -1,2 +1,0 @@
-$sql = "SELECT t.name AS TableName FROM sys.tables t JOIN sys.columns c1 ON t.object_id = c1.object_id JOIN sys.columns c2 ON t.object_id = c2.object_id WHERE (c1.name LIKE '%Barcode%' OR c1.name LIKE '%LotNo%') AND (c2.name LIKE '%RouteCode%' OR c2.name LIKE '%ProcessCode%')"
-Invoke-Sqlcmd -ServerInstance 'dbserver.hycap.co.kr,5398' -Database 'SmartFactoryV2' -Username 'vinaadmin' -Password 'vina1234%6&8' -Query $sql | ConvertTo-Json
