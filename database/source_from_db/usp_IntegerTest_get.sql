@@ -1,9 +1,0 @@
-﻿CREATE PROC usp_IntegerTest_get
-	@pProcessUserID VARCHAR(20)
-   ,@pProcessLanguage VARCHAR(20)
-AS 
-BEGIN
-	SELECT 26.0091 AS val
-	UNION ALL 
-	SELECT 17.1253
-END

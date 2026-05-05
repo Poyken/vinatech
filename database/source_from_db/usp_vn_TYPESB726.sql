@@ -1,5 +1,0 @@
-﻿create PROC [dbo].[usp_vn_TYPESB726]
-as
-begin
-		SELECT DISTINCT TYPES  FROM TYPESCRAP WITH(NOLOCK) 
-end
