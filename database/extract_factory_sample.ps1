@@ -1,6 +1,6 @@
 $connStr = "Server=dbserver.hycap.co.kr,5398;Database=SmartFactoryV2;User ID=vinaadmin;Password=vina1234%6&8;TrustServerCertificate=True;"
 $targetFile = "c:\Users\User Vinatech.DESKTOP-RJJSEQU\Desktop\database\sample_factory_data.sql"
-$materialCode = 'GCMDPT-621'
+$materialCode = 'ECVT30-379'
 
 function Get-InsertScript($tableName, $sql) {
     try {
@@ -63,7 +63,12 @@ $(Get-InsertScript "STB_BasicRoutingDetail" "SELECT * FROM STB_BasicRoutingDetai
 $(Get-InsertScript "STB_BomHeader" "SELECT * FROM STB_BomHeader WHERE MaterialCode = '$materialCode'")
 $(Get-InsertScript "STB_BomDetail" "SELECT * FROM STB_BomDetail WHERE MaterialCode = '$materialCode'")
 
--- 4. LINES & PROCESSES
+-- 4. PRODUCTION TRANSACTIONS (FLOW)
+$(Get-InsertScript "STB_ProductionOrderInfo" "SELECT TOP 5 * FROM STB_ProductionOrderInfo WHERE MaterialCode = '$materialCode' ORDER BY CreateDateTime DESC")
+$(Get-InsertScript "STB_ProdRouteHist" "SELECT TOP 10 RH.* FROM STB_ProdRouteHist RH JOIN STB_ProductionOrderInfo PO ON RH.PONo = PO.PONo WHERE PO.MaterialCode = '$materialCode' ORDER BY RH.CreateDateTime DESC")
+$(Get-InsertScript "STB_SetInfo" "SELECT TOP 10 SI.* FROM STB_SetInfo SI JOIN STB_ProductionOrderInfo PO ON SI.PONo = PO.PONo WHERE PO.MaterialCode = '$materialCode' ORDER BY SI.CreateDateTime DESC")
+
+-- 5. LINES & PROCESSES
 $(Get-InsertScript "STB_LineInfo" "SELECT TOP 10 * FROM STB_LineInfo WHERE IsUsed = 1")
 $(Get-InsertScript "STB_MaterialType" "SELECT TOP 10 * FROM STB_MaterialType")
 
