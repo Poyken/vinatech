@@ -1,7 +1,7 @@
 # 🛠️ NAIS MES — Knowledge Base: Lỗi Thường Gặp & Cách Xử Lý
 
-> **Tổng hợp từ:** `Lỗi trên NAIS System_Tái bản.docx` & `Một số lỗi Nais System.docx`
-> **Cập nhật:** 2026-04-20
+> **Tổng hợp từ:** `Lỗi trên NAIS System_Tái bản.docx` & `Một số lỗi Nais System.docx` (đã extract toàn bộ)
+> **Cập nhật:** 2026-05-06
 > **Cách dùng:** Nhấn `Ctrl + F` để tìm kiếm theo mã màn hình (VD: B597), tên lỗi, hoặc tên bảng DB.
 
 ---
@@ -290,13 +290,33 @@ WHERE MDLI.LotID = 'ML...'
 
 ---
 
-### 4.11 Xóa mã Sparepart thừa (H131)
+### 4.11 Lỗi không lưu được Lot màn F330 Đặc tính 10 (Hà Nam)
+
+**Nguyên nhân:** Lỗi do format mã Lot nhà cung cấp không đúng chuẩn (Vendor Lot format).
+
+**Cách xử lý:**
+1. **Hỏi user** về công thức, Lot No và cách đọc mã cụ thể.
+2. Vào SP `usp_DoChangeMaterialDocLotInfo` (BG2) để xem logic đọc mã.
+3. Tìm trong Function `fn_VVT_getdatebyVendorLot_MergeCode` để tìm nguyên nhân parsing sai.
+
+---
+
+### 4.12 Xóa mã Sparepart thừa (H131)
 
 ```sql
 -- Tìm tới store: STB_VNSparePartInfo
 DELETE FROM STB_VNSparePartInfo
 WHERE sparepartcode = '[Mã sparepart cần xóa]'
 ```
+
+---
+
+### 4.13 FIFO Kho thành phẩm (FG)
+
+- **VVT:** SP `usp_VN_Update_ExportExcel`
+- **Bắc Giang:** SP `usp_VN_Update_ExportExcel_BG`
+
+> Tick option tại màn **F110** để bật/tắt FIFO cho kho thành phẩm.
 
 ---
 
@@ -876,5 +896,25 @@ ORDER BY PRH.CreateDateTime ASC
 
 ---
 
-*Tài liệu được tổng hợp và cập nhật bởi Antigravity AI — Vinatech MES Knowledge Base.*
+## 11.5 🏷️ Fix Part No in tem bỏ hậu tố model (1625 Low ESR)
+
+**Tình huống:** Model `1625 Low ESR` trên hệ thống có tên `HY-CAP WEC3R0256QG-D(1625)` nhưng khi in tem đóng gói tại B523 lại hiện Part No là `WEC3R0256QG` (bỏ mất đuôi `-D`).
+
+**Nguyên nhân:** SP `usp_GetBoxIDForLotNo_VNT` dùng `SUBSTRING` cắt cứng 12 ký tự → đủ chỗ cho `WEC3R0256QG` nhưng không còn chỗ cho `-D`. Danh sách `CASE WHEN` nối thêm đuôi cũng chưa có case `-D`.
+
+**Giải pháp nhanh (Override Part No):**
+```sql
+-- Ghi đè Part No in tem — hệ thống sẽ ưu tiên lấy MMExtText05 thay vì tự tính
+UPDATE STB_MaterialMaster
+SET MMExtText05 = 'WEC3R0256QG'
+WHERE MaterialCode = 'ECVT30-379';
+-- Xác nhận
+SELECT MaterialCode, MaterialName, MMExtText05 FROM STB_MaterialMaster WHERE MaterialCode = 'ECVT30-379';
+```
+
+> **Áp dụng cho các model khác:** Cột `MMExtText05` trong `STB_MaterialMaster` là cơ chế override Part No cho tất cả model. Khi cần in Part No khác với tên hệ thống → điền vào đây.
+
+---
+
+*Tài liệu được tổng hợp và cập nhật bởi Antigravity AI — Vinatech MES Knowledge Base. Cập nhật lần cuối: 2026-05-06*
 
