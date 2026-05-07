@@ -65,7 +65,7 @@ Với **MỌI** yêu cầu, thực hiện theo thứ tự sau:
 | **Server DB** | `dbserver.hycap.co.kr,5398` |
 | **Database chính** | `SmartFactoryV2` |
 | **Database framework** | `SmartFramework` |
-| **Tài khoản dev** | `vanduc` |
+| **Tài khoản dev** | `vinaadmin` |
 | **Hệ thống** | NAIS (SmartFramework by Awoo) |
 | **Các nhà máy** | VVT (Bình Dương), BG (Bắc Giang), HN (Hà Nam) |
 
