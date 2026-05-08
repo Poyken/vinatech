@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Kiểm tra Lotno trước khi vào kho</title>
+  <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+  <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css" />
+  <style>
+    .heading {
+
+      text-align: center;
+      margin: 10px 0px 20px 10px;
+      color: rgb(204, 53, 78);
+    }
+
+    .seperate {
+      color: rgb(204, 53, 78);
+    }
+
+    .container-carton {
+      width: 98%;
+      margin: auto;
+    }
+
+    .infoCarton {
+      display: flex;
+      justify-content: space-between;
+      margin: 40px 0px;
+    }
+
+    .group-item {
+      width: 30%;
+    }
+
+    /* .label-item{
+            display: inline-block;
+            width: 100%;
+        } */
+    .label-item {
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .box {
+      display: flex;
+      /* align-items: center; */
+      width: 100%;
+      border: 1px solid red;
+      margin-bottom: 15px;
+    }
+
+    .box-small {
+      width: 29%;
+
+      padding: 10px;
+    }
+
+    .box-plastic {
+      width: 70%;
+      padding: 10px 10px 20px 10px;
+      border-left: 2px solid red;
+      margin-left: 5px;
+    }
+
+    .box-small .group-item {
+      width: 100%;
+    }
+
+    .plastic-item {
+      display: flex;
+      justify-content: space-around;
+
+    }
+
+    .plastic-item .item {
+      width: 32%;
+    }
+
+    .info {
+      width: 100;
+    }
+
+
+
+  
+
+button {
+    padding: 10px 40px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-weight: 700;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+button:active {
+    background-color: #3e8e41;
+}
+
+.header{
+  margin: 60px 0px;
+  display: flex;
+  align-items: center;
+}
+.new-container{
+  width: 30%;
+}
+.info-barcode{
+  width: 70%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.info-barcode label{
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+}
+.info-barcode select{
+  width: 70%;
+  font-size: 20px;
+}
+.modal-loader .modal-dialog {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh
+    }
+
+    .modal-content{
+      width: unset;
+    }
+
+
+    .container-header {
+  display: flex;
+}
+.section2{
+  width: 70%;
+
+}
+.section2 .heading{
+    text-align: right;
+}
+ .section3 {
+  flex: 1; /* Chia đều không gian cho mỗi phần */
+  padding: 10px; /* Thêm padding để không gần lề quá sát */
+  display: flex;
+  justify-content: flex-end;
+}
+
+.section3 button{
+  background-color: rgb(255, 0, 179);
+  padding: unset;
+}
+
+.section3 button a{
+  color: white;
+  padding: 10px 40px;
+}
+  </style>
+</head>
+
+<body style="background: white" id="body">
+  <div class="container-carton">
+
+    <!-- <div class="header-carton">
+      <h2 class="heading">THÔNG TIN BARCODE THÙNG</h2>
+
+    </div> -->
+    
+    <div class="container-header">
+      <!-- <div class="section1">Phần 1</div> -->
+      <div class="section2"> <h2 class="heading">THÔNG TIN BARCODE THÙNG CHẴN</h2></div>
+      <div class="section3"><button ><a href="./OldCode.html" class="">Bắn thùng lẻ</a></button></div>
+    </div>
+
+    <div class="infoCarton">
+      <div class="group-item">
+        <label for="partNoCarton" class="label-item">PartNo Thùng Ngoài:
+        </label>
+        <input type="text" class="w-100 form-control" id="partNoCarton" />
+      </div>
+
+      <div class="group-item">
+        <label for="lotNoCarton" class="label-item">LotNo Thùng Ngoài:
+        </label>
+        <input type="text" class="w-100 form-control" id="lotNoCarton" readonly />
+      </div>
+
+      <div class="group-item">
+        <label for="qtyCarton" class="label-item">Số Lượng Thùng Ngoài:
+        </label>
+        <input type="text" class="w-100 form-control" id="qtyCarton" min="0" readonly />
+      </div>
+    </div>
+    <!-- --------------------------- -->
+    <div class="info" id="info">
+      <h4 class="heading seperate">----------------------------------------</h4>
+
+    </div>
+
+    <div class="header">
+      <div class="new-container">
+        <button id="reloadButton">Bắn Lot Mới</button>
+        <button id="submitData" style="background-color: chocolate;">Gửi dữ liệu</button>
+     </div>
+
+     <div class="info-barcode">
+      <label for="remark" class="">Người bắn barcode</label>
+      <!--input type="text" class="form-control form-control-lg text-right" id="remark"-->
+      <select id="remark" class="form-control " onchange="setRemarkName(this)">
+        <option value="">---chọn tên ở đây---</option>
+        <option value="Phạm-Thị-Tình">Phạm Thị Tình</option>
+        <option value="Ngô-Thu-Thủy">Ngô Thu Thủy</option>
+        <option value="Thân-Thị-Mai">Thân Thị Mai</option>
+        <option value="Nguyễn-Thị-Tính">Nguyễn Thị Tính</option>
+
+      </select>
+    </div>
+    </div>
+
+
+    <div class="modal modal-loader" tabindex="-1" role="dialog" id="loaderModal">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-body">
+            <!-- Thay đổi nội dung ở đây nếu cần -->
+            <div class="spinner-border text-primary" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  
+
+    <script>
+      function playting() {
+        var audio = document.getElementById("audioting");
+        audio.play();
+      }
+      
+      function playerro() {
+        var audio = document.getElementById("audioerro");
+        audio.play();
+      }
+    </script>
+
+    <audio id="audioting" src="Ting.mp3"></audio>
+    <audio id="audioerro" src="Warning.mp3"></audio>
+
+</body>
+
+<script>
+  window.$ = window.jquery = require("jquery");
+  window.popper = require("popper.js");
+  require("bootstrap");
+
+
+</script>
+<script src="sweetalert2.all.min.js"></script>
+<script src="./app.js"></script>
+<script>
+  sessionStorage.isCell = 1;
+
+  function setRemarkName(id) {
+    var remark = id.value;
+    if (!localStorage.nameremark || localStorage.nameremark != remark) {
+      localStorage.nameremark = remark;
+      localStorage.nameremarkBegin = new Date().toISOString();
+    }
+  }
+
+  Date.prototype.addHours = function (h) {
+    this.setTime(this.getTime() + (h * 60 * 60 * 1000));
+    return this;
+  }
+
+  if (localStorage.nameremark) {
+    if (new Date(localStorage.nameremarkBegin).addHours(12) <= new Date()) {
+      localStorage.nameremark = '';
+      localStorage.nameremarkBegin = new Date().toISOString();
+    }
+    else {
+      var elmnt = document.getElementById("remark");
+      for (var i = 0; i < elmnt.options.length; i++) {
+        console.log(elmnt.options[i].value);
+        if (elmnt.options[i].value == localStorage.nameremark) {
+          elmnt.selectedIndex = i;
+          break;
+        }
+      }
+      //document.getElementById("remark").selectedIndex  = 1;//localStorage.nameremark;
+    }
+  }
+
+
+
+document.getElementById('reloadButton').addEventListener('click', function() {
+    window.location.reload();
+});
+
+function  alert1(str,isReload){
+    
+
+    if(typeof isReload === 'function'){
+        let timerInterval
+        Swal.fire({
+        title: str,
+        html: 'Thông báo tự động tắt sau:  <b></b> giây.',
+        timer: readweighttimer,
+        showConfirmButton: false,
+        showCloseButton: true,
+        timerProgressBar: true,
+        didOpen: () => {
+            Swal.showLoading()
+            const b = Swal.getHtmlContainer().querySelector('b')
+            timerInterval = setInterval(() => {
+            b.textContent = Swal.getTimerLeft()
+            }, 100)
+        },
+        willClose: () => {
+            clearInterval(timerInterval)
+        }
+        }).then((result) => {
+            //isReload();
+        /* Read more about handling dismissals below */
+        if (result.dismiss === Swal.DismissReason.timer) {
+            console.log('I was closed by the timer')
+        }
+        })
+     }
+ else
+ {
+    if(str.indexOf('⚠')>=0 || str.indexOf('☹')>=0){
+        if( sessionStorage.pcsesvalue1=='ok') return;
+		playerro();
+        Swal.fire({
+        icon: 'warning',
+        title: str,
+        text: '',
+        showConfirmButton: false,
+        showCloseButton: true,
+        timer: 2500
+        //footer: '<a href="">Why do I have this issue?</a>'
+        }).then((res)=>{
+           // if(isReload) location.reload();
+        });
+		}
+    else
+	{
+        if( sessionStorage.pcsesvalue1=='ok') return;
+	 playting();
+     
+     Swal.fire({
+        //position: 'top-end',
+        icon: 'info',
+        title: str,
+        text: '',
+        showConfirmButton: false,
+        showCloseButton: true,
+        timer: 1000
+        }).then((res)=>{
+            //if(isReload) location.reload();
+        });
+    } 
+}
+
+
+     
+}
+window.alert=alert1;
+
+</script>
+
+
+</html>
