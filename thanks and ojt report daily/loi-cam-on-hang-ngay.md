@@ -275,4 +275,50 @@
 
 ---
 
-> **Note:** 3 thank-you notes per day. Sundays off. Total: 52 working days × 3 = **156 thank-you notes**.
+## 🗓️ MAY 2026
+
+---
+
+### 📅 Friday — 01/05/2026
+1. Thank you company for the International Workers' Day holiday to recharge my energy.
+2. Thank you to the management for maintaining great welfare policies for all employees.
+3. Thank you Vinatech for providing a peaceful and meaningful day off.
+
+### 📅 Saturday — 02/05/2026
+1. Thank you colleagues for working together to ensure a smooth transition back after the holiday.
+2. Thank you manager for guiding the team's focus for the upcoming busy week.
+3. Thank you kitchen staff for the delicious meals provided for the weekend shift.
+
+### 📅 Monday — 04/05/2026
+1. Thank you seniors for helping me align my weekly goals with the department's priorities.
+2. Thank you colleagues for sharing insights on the new MES system updates.
+3. Thank you company for creating a collaborative environment to start the week effectively.
+
+### 📅 Tuesday — 05/05/2026
+1. Thank you to the DB team for supporting the data correction of the ZHIYUESHENG production lots.
+2. Thank you manager for the guidance during the audit of the MES knowledge base.
+3. Thank you Vinatech for providing the tools and data access needed to resolve complex inventory issues.
+
+### 📅 Wednesday — 06/05/2026
+1. Thank you HR for quickly updating the worker list for the B523 packing station.
+2. Thank you seniors for teaching me how to use PowerShell to extract database procedures efficiently.
+3. Thank you colleagues for the smooth collaboration in resolving user access issues.
+
+### 📅 Thursday — 07/05/2026
+1. Thank you to the warehouse team for collaborating on the Slitting lot status correction.
+2. Thank you engineering team for the insights into the "Warehouse-weight" application logic.
+3. Thank you manager for the patience while I troubleshot the barcode validation errors.
+
+### 📅 Friday — 08/05/2026
+1. Thank you colleagues for working together to identify the cause of duplicate records in the packing system.
+2. Thank you seniors for reviewing my weekly performance report and providing valuable feedback.
+3. Thank you company for maintaining a clear and structured reporting system that tracks our progress.
+
+### 📅 Saturday — 09/05/2026
+1. Thank you team for a productive week and for all the challenges we overcame together.
+2. Thank you manager for acknowledging the successful resolution of the B523 duplication bug.
+3. Thank you for a peaceful weekend to prepare for another week of growth at Vinatech.
+
+---
+
+> **Note:** 3 thank-you notes per day. Sundays off. Total: 60 working days × 3 = **180 thank-you notes**.

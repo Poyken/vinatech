@@ -1,5 +1,5 @@
 <h1 align="center" style="color: #2E86C1;">📊 OJT Weekly Comprehensive Report</h1>
-<p align="center" style="color: #7F8C8D; font-style: italic;">Detailed progress tracking from March 02 to March 10, 2026</p>
+<p align="center" style="color: #7F8C8D; font-style: italic;">Detailed progress tracking from March 02 to May 09, 2026</p>
 
 ---
 
@@ -14,7 +14,7 @@
   </tr>
   <tr>
     <td style="padding: 10px; border: 1px solid #ddd; background-color: #EBF5FB;">📅 <b>Report Period</b></td>
-    <td style="padding: 10px; border: 1px solid #ddd; color: #27AE60;"><b>March 02, 2026 - April 09, 2026</b></td>
+    <td style="padding: 10px; border: 1px solid #ddd; color: #27AE60;"><b>March 02, 2026 - May 09, 2026</b></td>
   </tr>
 </table>
 
@@ -1147,6 +1147,137 @@
   <ul>
     <li><span style="color: #16A085;"><b>Task:</b></span> Dev task tạo màn hình của chị Thu.</li>
     <li><span style="color: #2980B9;"><b>Details:</b></span> Tiếp tục code và hoàn thiện giao diện màn hình trên hệ thống theo task được giao từ chị Thu bộ phận QC.</li>
+    <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done</li>
+  </ul>
+</blockquote>
+
+## <span style="color: #1ABC9C;">🗓️ Monday, May 04, 2026</span>
+<blockquote style="border-left: 4px solid #1ABC9C; background-color: #E8F8F5; padding: 10px; margin-bottom: 20px;">
+  <h4 style="margin: 0; color: #2C3E50;">🔹 1. Software Development — OQC Inspection Detail (Ms. Thu)</h4>
+  <ul style="margin-bottom: 10px;">
+    <li><span style="color: #16A085;"><b>Task:</b></span> Deploy Screen C486 for OQC department.</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Completed the deployment of screen C486 (OQC Inspection Detail) as requested by Ms. Thu QC, ensuring all inspection fields are correctly mapped.</li>
+    <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done</li>
+  </ul>
+
+  <h4 style="margin: 0; color: #2C3E50;">🔹 2. R&D & Production Infrastructure Support</h4>
+  <ul style="margin-bottom: 10px;">
+    <li><span style="color: #16A085;"><b>Task:</b></span> Network configuration and printer setup.</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span>
+      <ul style="margin-top: 5px; list-style-type: circle; color: #34495E;">
+        <li>🌐 <b>R&D:</b> Resolved network connectivity issues and configured hardware devices for the R&D department.</li>
+        <li>🖨️ <b>Production:</b> Set up and configured 2 barcode printers for Cellline 5 and 6 to support production output.</li>
+      </ul>
+    </li>
+    <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done</li>
+  </ul>
+
+  <h4 style="margin: 0; color: #2C3E50;">🔹 3. MES User Support (Anh Tuyên & Chị Hoàng Xuân)</h4>
+  <ul>
+    <li><span style="color: #16A085;"><b>Task:</b></span> Resolve MES login and permission errors.</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Provided technical support to resolve login failures and permission discrepancies for users Anh Tuyên and Chị Hoàng Xuân.</li>
+    <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done</li>
+  </ul>
+</blockquote>
+
+## <span style="color: #8E44AD;">🗓️ Tuesday, May 05, 2026</span>
+<blockquote style="border-left: 4px solid #8E44AD; background-color: #F5EEF8; padding: 10px; margin-bottom: 20px;">
+  <h4 style="margin: 0; color: #2C3E50;">🔹 1. New User Onboarding & NAIS Training</h4>
+  <ul style="margin-bottom: 10px;">
+    <li><span style="color: #16A085;"><b>Task:</b></span> Provision equipment and train new users on NAIS.</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Assigned hardware (Laptops/Desktops) and conducted NAIS system training for new employees to ensure operational readiness.</li>
+    <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done</li>
+  </ul>
+
+  <h4 style="margin: 0; color: #2C3E50;">🔹 2. Production Data Correction — B523 & ZHIYUESHENG</h4>
+  <ul style="margin-bottom: 10px;">
+    <li><span style="color: #16A085;"><b>Task:</b></span> Fix date errors and remap production lots.</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Resolved a systematic date error on the B523 screen. Successfully synchronized and remapped 15 production lots for ZHIYUESHENG to the correct production date (2026-04-25).</li>
+    <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done</li>
+  </ul>
+
+  <h4 style="margin: 0; color: #2C3E50;">🔹 3. Software & Hardware Maintenance</h4>
+  <ul>
+    <li><span style="color: #16A085;"><b>Task:</b></span> General system maintenance and application support.</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Installed specialized and office software as requested by users. Assisted in hardware upgrades and repairs for various production workstations.</li>
+    <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done</li>
+  </ul>
+</blockquote>
+
+## <span style="color: #2980B9;">🗓️ Wednesday, May 06, 2026</span>
+<blockquote style="border-left: 4px solid #2980B9; background-color: #EAF2F8; padding: 10px; margin-bottom: 20px;">
+  <h4 style="margin: 0; color: #2C3E50;">🔹 1. System Administration & Account Management</h4>
+  <ul style="margin-bottom: 10px;">
+    <li><span style="color: #16A085;"><b>Task:</b></span> Manage user accounts and permissions.</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span>
+      <ul style="margin-top: 5px; list-style-type: circle; color: #34495E;">
+        <li>👤 <b>B523:</b> Added new employees to the Packing system and updated <code>STB_UserInfo</code> permissions.</li>
+        <li>🔐 <b>Account:</b> Created and assigned Z410 accounts for new MES users.</li>
+      </ul>
+    </li>
+    <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done</li>
+  </ul>
+
+  <h4 style="margin: 0; color: #2C3E50;">🔹 2. Database Logic Research & Debugging</h4>
+  <ul style="margin-bottom: 10px;">
+    <li><span style="color: #16A085;"><b>Task:</b></span> Audit <code>usp_DoCreateProductionOrder</code> stored procedure.</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Extracted and audited the source code of the PO creation procedure to debug reported errors in the Production Order workflow.</li>
+    <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done</li>
+  </ul>
+
+  <h4 style="margin: 0; color: #2C3E50;">🔹 3. Workshop Hardware Repair</h4>
+  <ul>
+    <li><span style="color: #16A085;"><b>Task:</b></span> Fix specialized production equipment.</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Repaired faulty barcode scanners and electronic scales on the factory floor to prevent production delays.</li>
+    <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done</li>
+  </ul>
+</blockquote>
+
+## <span style="color: #D35400;">🗓️ Thursday, May 07, 2026</span>
+<blockquote style="border-left: 4px solid #D35400; background-color: #FDEDEC; padding: 10px; margin-bottom: 20px;">
+  <h4 style="margin: 0; color: #2C3E50;">🔹 1. Material & Inventory Data Correction</h4>
+  <ul style="margin-bottom: 10px;">
+    <li><span style="color: #16A085;"><b>Task:</b></span> Resolve Slitting lot errors and update material naming.</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span>
+      <ul style="margin-top: 5px; list-style-type: circle; color: #34495E;">
+        <li>📦 <b>Slitting:</b> Corrected export status for lot SL20250909000100, reverting it to <code>ROH_HN_WH</code>.</li>
+        <li>🏷️ <b>Labeling:</b> Updated material name for CREHCO85 to include the "Super'P 6%" suffix for correct label printing.</li>
+      </ul>
+    </li>
+    <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done</li>
+  </ul>
+
+  <h4 style="margin: 0; color: #2C3E50;">🔹 2. Remote & Branch Support</h4>
+  <ul>
+    <li><span style="color: #16A085;"><b>Task:</b></span> Provide technical assistance for Ha Nam and Accounting.</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Resolved MES system issues for users at the Ha Nam branch. Assisted Ms. Ngoc (Accounting) with remote software installation and hardware troubleshooting.</li>
+    <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done</li>
+  </ul>
+</blockquote>
+
+## <span style="color: #27AE60;">🗓️ Friday, May 08, 2026</span>
+<blockquote style="border-left: 4px solid #27AE60; background-color: #E9F7EF; padding: 10px; margin-bottom: 20px;">
+  <h4 style="margin: 0; color: #2C3E50;">🔹 1. Source Code Sync & System Monitoring</h4>
+  <ul style="margin-bottom: 10px;">
+    <li><span style="color: #16A085;"><b>Task:</b></span> Synchronize Git repository and monitor system stability.</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Synchronized local source code changes with the Git server. Monitored the stability of B523 and Slitting modules after data corrections to ensure no recurring issues.</li>
+    <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done</li>
+  </ul>
+
+  <h4 style="margin: 0; color: #2C3E50;">🔹 2. Weekly Performance Review</h4>
+  <ul>
+    <li><span style="color: #16A085;"><b>Task:</b></span> Compile weekly report and plan for next week.</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Compiled the comprehensive weekly performance report (May 4-8) and drafted the task list for the upcoming week.</li>
+    <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done</li>
+  </ul>
+</blockquote>
+
+## <span style="color: #F39C12;">🗓️ Saturday, May 09, 2026</span>
+<blockquote style="border-left: 4px solid #F39C12; background-color: #FEF5E7; padding: 10px; margin-bottom: 20px;">
+  <h4 style="margin: 0; color: #2C3E50;">🔹 1. Weekend Maintenance & Documentation Cleanup</h4>
+  <ul>
+    <li><span style="color: #16A085;"><b>Task:</b></span> Routine maintenance and workspace organization.</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Conducted routine system checks and organized project documentation to ensure a clean start for the following week.</li>
     <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done</li>
   </ul>
 </blockquote>

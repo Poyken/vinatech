@@ -1,0 +1,22 @@
+$connStr = "Server=dbserver.hycap.co.kr,5398;Database=SmartFactoryV2;User ID=vinaadmin;Password=vina1234%6&8;TrustServerCertificate=True;"
+
+$sql = "SELECT definition FROM sys.sql_modules WHERE object_id = OBJECT_ID('usp_PackingQtyPrintB523_get')"
+
+try {
+    $conn = New-Object System.Data.SqlClient.SqlConnection $connStr
+    $conn.Open()
+    $cmd = New-Object System.Data.SqlClient.SqlCommand($sql, $conn)
+    $adapter = New-Object System.Data.SqlClient.SqlDataAdapter($cmd)
+    $dt = New-Object System.Data.DataTable
+    $adapter.Fill($dt) | Out-Null
+    $conn.Close()
+
+    if ($dt.Rows.Count -gt 0) {
+        $dt.Rows[0]['definition'] | Out-File -FilePath "scratch/usp_PackingQtyPrintB523_get.sql"
+        Write-Host "Đã lưu mã nguồn SP vào scratch/usp_PackingQtyPrintB523_get.sql"
+    } else {
+        Write-Host "Không tìm thấy Stored Procedure usp_PackingQtyPrintB523_get."
+    }
+} catch {
+    Write-Error $_.Exception.Message
+}

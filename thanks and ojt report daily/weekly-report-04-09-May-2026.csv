@@ -1,0 +1,20 @@
+NAME,DEPARTMENT,DATE GET ISSUE,NAME ISSUE,THE SOLVE,TYPE ISSUE,DATE SOLVE ISSUE,SOLVE ISSUE BY,STATUS,REMARK
+Nguyen Van Duc,EA Team,4/5/2026,Deploy Screen C486 (Ms. Thu),Triển khai hoàn thành màn hình C486 (OQC Inspection Detail) cho chị Thu QC.,Dev,4/5/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,4/5/2026,RnD Support,Hỗ trợ xử lý sự cố mạng và cấu hình thiết bị cho phòng RnD.,Support,4/5/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,4/5/2026,Printer Setup Cellline 5/6,Setup và cấu hình 2/3 máy in barcode cho sản xuất ở cellline 5 và 6.,Support,4/5/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,4/5/2026,MES Error Support,Xử lý lỗi MES (Login/Permission) cho user anh Tuyên và chị Hoàng Xuân.,Support,4/5/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,5/5/2026,New User Training,Cấp thiết bị (Laptop/Desktop) và training hệ thống NAIS cho new user.,Training,5/5/2026,Nguyen Van Duc,Done,HW/Training
+Nguyen Van Duc,EA Team,5/5/2026,Software Installation,Hỗ trợ cài đặt các phần mềm văn phòng và phần mềm chuyên dụng theo yêu cầu user.,Support,5/5/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,5/5/2026,B523 Packing Issue,Xử lý lỗi sai ngày trên màn hình B523; đồng bộ và remap 15 production lots cho ZHIYUESHENG.,Dev,5/5/2026,Nguyen Van Duc,Done,SW/Data
+Nguyen Van Duc,EA Team,5/5/2026,Hardware Maintenance,Hỗ trợ nâng cấp phần cứng và sửa chữa thiết bị cho user/xưởng sản xuất.,Support,5/5/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,6/5/2026,Packing User Addition,Thêm nhân viên mới vào hệ thống Packing (B523) và phân quyền STB_UserInfo.,Support,6/5/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,6/5/2026,Stored Procedure Audit,Audit và trích xuất source code usp_DoCreateProductionOrder để debug lỗi PO.,Research,6/5/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,6/5/2026,Account Management,Tạo và cấp lại account Z410 trên hệ thống MES cho user mới.,Support,6/5/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,6/5/2026,Hardware Repair,Triển khai sửa lỗi phần cứng (đầu đọc barcode/cân điện tử) cho xưởng sản xuất.,Support,6/5/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,7/5/2026,Slitting Lot Data Fix,Sửa lỗi export status cho lot SL20250909000100; trả về kho ROH_HN_WH từ SLITTING_HN_WH.,Dev,7/5/2026,Nguyen Van Duc,Done,SW/Data
+Nguyen Van Duc,EA Team,7/5/2026,Material Label Update,Cập nhật material name cho CREHCO85 (thêm hậu tố Super'P 6%) phục vụ in tem.,Support,7/5/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,7/5/2026,MES Ha Nam Support,Sửa lỗi hệ thống MES cho user tại chi nhánh Hà Nam.,Support,7/5/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,7/5/2026,Accounting Support (Ms. Ngoc),Hỗ trợ thay thế thiết bị và cài đặt phần mềm từ xa cho user kế toán (chị Ngọc).,Support,7/5/2026,Nguyen Van Duc,Done,HW/SW
+Nguyen Van Duc,EA Team,8/5/2026,Git Synchronization,Đồng bộ source code và đẩy các thay đổi lên Git server để quản lý phiên bản.,Dev,8/5/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,8/5/2026,System Monitoring,Theo dõi tính ổn định của hệ thống sau các đợt fix data B523 và Slitting.,Research,8/5/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,8/5/2026,Weekly Reporting,Tổng hợp báo cáo tuần và lập kế hoạch công việc cho tuần tiếp theo.,Meeting,8/5/2026,Nguyen Van Duc,Done,Internal
