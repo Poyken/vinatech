@@ -1,16 +1,14 @@
-﻿-- =============================================
+﻿??-- =============================================
 
 -- Author:		<Mr.Duy>
 
 -- Create date: <22-12-2023>
 
--- Description:	<Chuyá»ƒn Ä‘á»•i ngÃ y thÃ¡ng khi gá»™p code cÃ¡c nhÃ  cung cáº¥p khÃ¡c nhau Ä‘á»c lotno khÃ¡c nhau>
+-- Description:	<Chuy?n d?i ng�y th�ng khi g?p code c�c nh� cung c?p kh�c nhau d?c lotno kh�c nhau>
 
 --    select [dbo].[fn_VVT_getdatebyVendorLot_MergeCode]('GAHSCB-001','140-231122-014','12471')
 
 --declare @duy varchar(20)=  select [dbo].[fn_VVT_getdatebyVendorLot_MergeCode]('GBNKSP-066','4510N03B','VV040')
-
-
 
 --declare @duy varchar(20)=  [dbo].[fn_VVT_getdatebyVendorLot_MergeCode]('GCMDPT-301','25032988P','10001')
 
@@ -28,8 +26,6 @@ CREATE FUNCTION [dbo].[fn_VVT_getdatebyVendorLot_MergeCode] (
 
 	)
 
-
-
 RETURNS varchar(20) AS
 
 BEGIN
@@ -38,27 +34,13 @@ declare @date varchar(20)=''
 
 declare @test varchar(200)=@materialcode +'--'+@vendorlot+'--'+@sourceCustomerCode
 
-
-
-
-
 	set @materialcode=rtrim(ltrim(@materialcode))
 
 	set @vendorlot=rtrim(ltrim(@vendorlot))
 
-
-
-	
-
-
-
 	if(@vendorlot like '%#%' and CHARINDEX('#',@vendorlot,1)<12) 
 
 		set @vendorlot = stuff(@vendorlot,1,CHARINDEX('#',@vendorlot,1),'')
-
-
-
-	   	
 
 	declare @datetest varchar(10)= getdate() ;
 
@@ -70,44 +52,26 @@ declare @test varchar(200)=@materialcode +'--'+@vendorlot+'--'+@sourceCustomerCo
 
 	--select '2'+right('00'+convert(varchar(3), (DATEPART(year,@datetest )-2000)/25*25 +charindex('q',@YEARstr)-1),3)
 
-	
-
 	declare @YEARofTerminal varchar(100)=  'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
-	   
-
-
-
 	declare @dayStrPBDM00 varchar(100)=  '123456789ABCDEFGHJKLMNRSTUVWXYZ';
-
-
 
 	declare @productGroupCode VARCHAR(20) = NULL
 
 	select @productGroupCode = ProductGroupCode FROM STB_MaterialMaster where MaterialCode = @materialcode
 
-
-
 	set @date = 
-
-
 
 	 case 
 
-	 	 
     WHEN @materialcode = 'GBRLAC-005'  THEN 
-    '20' + SUBSTRING(@vendorlot, 5, 2) + '-' + -- Lấy '26' -> '2026'
-    SUBSTRING(@vendorlot, 7, 2) + '-' +        -- Lấy '03'
-    SUBSTRING(@vendorlot, 9, 2)                -- Lấy '27'
-    
+    '20' + SUBSTRING(@vendorlot, 5, 2) + '-' + -- L?y '26' -> '2026'
+    SUBSTRING(@vendorlot, 7, 2) + '-' +        -- L?y '03'
+    SUBSTRING(@vendorlot, 9, 2)                -- L?y '27'
 
 	 -- 2026-03-02 following Ms.Phuong's request
 
 	 when @materialcode LIKE 'GCMDPT%' and @productGroupCode = 'SLEEVE' then '20'+ substring(@vendorlot,1,2)+'-'+ substring(@vendorlot,3,2)+'-'+ substring(@vendorlot,5,2)
-
-
-
-
 
 	--when @materialcode in ('GCSAAT-001') then 
 
@@ -149,12 +113,6 @@ declare @test varchar(200)=@materialcode +'--'+@vendorlot+'--'+@sourceCustomerCo
 
 	when @materialcode in ('GBDYAC-004', 'GBDYAC-006') and @vendorlot IS NOT NULL then '20' +  substring(@vendorlot,2,2) + '-' + substring(@vendorlot,4,2) + '-0' +substring(@vendorlot,6,1) -- DinhManh update 2025-11-05 following Ms.Van (warehouse) request
 
-
-
-
-
-
-
 	when @materialcode in ('GSJHSC-001') and @vendorlot IN (
 
 		'TO1020-554M',
@@ -177,8 +135,6 @@ declare @test varchar(200)=@materialcode +'--'+@vendorlot+'--'+@sourceCustomerCo
 
 		'TO1020-245L',
 
-
-
 		'TO1021-554K',
 
 		'TO1021-554M',
@@ -186,8 +142,6 @@ declare @test varchar(200)=@materialcode +'--'+@vendorlot+'--'+@sourceCustomerCo
 		'TO1021-533L',
 
 		'TO1021-554L',
-
-
 
 		'TO1020-245L',
 
@@ -199,13 +153,7 @@ declare @test varchar(200)=@materialcode +'--'+@vendorlot+'--'+@sourceCustomerCo
 
 		'TO1020-541M'
 
-
-
-
-
 			) then '2025-10-08' -- DinhManh update 2025-11-10 following Ms.Van (warehouse) request
-
-
 
 	when @materialcode in ('GBNKSP-083') and @vendorlot IN (
 
@@ -218,10 +166,6 @@ declare @test varchar(200)=@materialcode +'--'+@vendorlot+'--'+@sourceCustomerCo
 		'12SR07-5N21'
 
 			) then '2025-11-21' -- DinhManh update 2026-02-26 following Ms.Van (warehouse) request
-
-
-
-	
 
 	when @materialcode in ('GSJHSC-001') and @vendorlot IN (
 
@@ -247,8 +191,6 @@ declare @test varchar(200)=@materialcode +'--'+@vendorlot+'--'+@sourceCustomerCo
 
 			) then '2025-10-12' -- DinhManh update 2025-11-12 following Ms.Van (warehouse) request
 
-
-
 	when @materialcode in ('GCTN00-002') and @vendorlot IN (
 
 		'WL60153510-415'
@@ -263,11 +205,7 @@ declare @test varchar(200)=@materialcode +'--'+@vendorlot+'--'+@sourceCustomerCo
 
 																						+'-'+	substring(@vendorlot,6,2) -- DinhManh update 2026-01-27 following Ms.Van (warehouse) request
 
-
-
-
-
-	-- DinhManh update 2025-12-19			example:	3262511300387205|3262511300387206 cÃ¡ch Ä‘á»c 30/11/2025
+	-- DinhManh update 2025-12-19			example:	3262511300387205|3262511300387206 cách đọc 30/11/2025
 
 	when @materialcode IN ('GBAKAC-060') and @vendorlot LIKE '326%' then '20'+ substring(@vendorlot,4,2) 
 
@@ -279,29 +217,17 @@ declare @test varchar(200)=@materialcode +'--'+@vendorlot+'--'+@sourceCustomerCo
 
 																				+substring(@vendorlot,8,2)
 
-
-
 	when @materialcode in ('GBSN00-008', 'GBSN00-009') then '2025-09-12' -- DinhManh update 2025-09-22 following Ms.Van (warehouse) request
-
-
 
 	-- Mr.Manh add 2025-12-30
 
 	when @materialcode in ('GBLYAC-003', 'GBRLAC-005') and @vendorlot LIKE 'F-%' then substring(@vendorlot,4,2)+'-'+ substring(@vendorlot,7,2)
 
-
-
 	when @materialcode in ('GBAKAC-037') and @vendorlot LIKE 'F%' then substring(@vendorlot,3,2)+'-'+ substring(@vendorlot,6,2)
 
 	-- end add
 
-
-
-
-
 	when @materialcode in ('GAKA00-002') then '20'+ substring(@vendorlot,1,8)
-
-
 
 	when @materialcode in ('GBRLAC-005') then
 
@@ -314,8 +240,6 @@ declare @test varchar(200)=@materialcode +'--'+@vendorlot+'--'+@sourceCustomerCo
 											+ '-'
 
 											+ substring(@vendorlot,8,2)
-
-
 
 	when @materialcode in ('GBRLAC-004',
 
@@ -341,27 +265,13 @@ declare @test varchar(200)=@materialcode +'--'+@vendorlot+'--'+@sourceCustomerCo
 
 																	+'-'+	substring(@vendorlot,9,2)
 
-
-
 	when @materialcode in ('GBTPPL-002') then '20'+ substring(@vendorlot,1,2)
 
 	+'-'+	substring(@vendorlot,3,2)
 
 	+'-'+	substring(@vendorlot,5,2)
 
-
-
-
-
 	when @materialcode IN ('ECVT30-358') then CONVERT(DATE, dbo.fnPharseLotNo(@vendorlot, 'D'),112)
-
-
-
-
-
-
-
-
 
 	/*when @materialcode in ('GBAKAC-S06'
 
@@ -459,7 +369,7 @@ declare @test varchar(200)=@materialcode +'--'+@vendorlot+'--'+@sourceCustomerCo
 
 							case 
 
-							--Kiá»ƒm tra xem NCC nÃ o Ä‘á»ƒ Ä‘á»c lotno tá»«ng nhÃ  cung cáº¥p riÃªng
+							--Kiểm tra xem NCC nào để đọc lotno từng nhà cung cấp riêng
 
 								when @sourceCustomerCode in ('VV033')
 
@@ -547,8 +457,6 @@ declare @test varchar(200)=@materialcode +'--'+@vendorlot+'--'+@sourceCustomerCo
 
 																+substring(@vendorlot,9,2)
 
-									 
-
 											else
 
 											'20'+ substring(@vendorlot,3,2) 
@@ -563,11 +471,7 @@ declare @test varchar(200)=@materialcode +'--'+@vendorlot+'--'+@sourceCustomerCo
 
 											end		
 
-		
-
-
-
-									--ÄÃ¢y cá»§a nhÃ  AOXING cung cáº¥p nhÃ´m
+									--Đây của nhà AOXING cung cấp nhôm
 
 								when @sourceCustomerCode in ('VV040')
 
@@ -582,8 +486,6 @@ declare @test varchar(200)=@materialcode +'--'+@vendorlot+'--'+@sourceCustomerCo
 										,'GBAKAC-060'
 
 										,'GBAKAC-068'
-
-										
 
 										)
 
@@ -643,8 +545,6 @@ declare @test varchar(200)=@materialcode +'--'+@vendorlot+'--'+@sourceCustomerCo
 
 															+substring(@vendorlot,6,2)
 
-									 
-
 										else
 
 										'20'+ substring(@vendorlot,3,2) 
@@ -661,9 +561,7 @@ declare @test varchar(200)=@materialcode +'--'+@vendorlot+'--'+@sourceCustomerCo
 
 							-- End 
 
-									
-
-							-- Náº¿u khÃ´ng thuá»™c nhÃ  cung cáº¥p riÃªng thÃ¬ sáº½ tá»± phÃ¢n tÃ­ch chung
+							-- Nếu không thuộc nhà cung cấp riêng thì sẽ tự phân tích chung
 
 									else
 
@@ -733,12 +631,6 @@ declare @test varchar(200)=@materialcode +'--'+@vendorlot+'--'+@sourceCustomerCo
 
 	-- 2025-11-14 END UPDATE			
 
-
-
-
-
-
-
 when @materialcode in (
 
 						 'GCMDPT-382',
@@ -757,7 +649,7 @@ when @materialcode in (
 
 							case 
 
-							--Kiá»ƒm tra xem NCC nÃ o Ä‘á»ƒ Ä‘á»c lotno tá»«ng nhÃ  cung cáº¥p riÃªng
+							--Kiểm tra xem NCC nào để đọc lotno từng nhà cung cấp riêng
 
 								when @sourceCustomerCode in ('VV034')
 
@@ -791,8 +683,6 @@ when @materialcode in (
 
 															+substring(@vendorlot,5,2)
 
-										 
-
 										else
 
 										'20'+ substring(@vendorlot,1,2) 
@@ -806,8 +696,6 @@ when @materialcode in (
 														+substring(@vendorlot,5,2)
 
 										end
-
-
 
 									else
 
@@ -829,11 +717,7 @@ when @materialcode in (
 
 		when @materialcode in ('GBYCTT-002','GBYCTT-003') then '20'+ substring(@vendorlot,4,2)+'-'+ substring(@vendorlot,6,2)+'-'+ substring(@vendorlot,8,2)
 
-
-
 			when @materialcode in ('GBYYPL-001') then '20'+ substring(@vendorlot,1,2)+'-'+ substring(@vendorlot,3,2)+'-'+ substring(@vendorlot,5,2)
-
-
 
 	when @materialcode = 'GADACB-001' and len(@vendorlot) >= 5 then 
 
@@ -853,8 +737,6 @@ when @materialcode in (
 
 			else right('0' + substring(@vendorlot, 5, 1), 2) end)
 
-
-
 /*	when (@materialcode IN (
 
 			'GADACB-001'
@@ -862,8 +744,6 @@ when @materialcode in (
 			)
 
 		) and LEFT(@vendorlot, 1) = '2'  then substring(@vendorlot,1,4)+'-'+ substring(@vendorlot,5,2)+'-'+ substring(@vendorlot,7,2)	
-
-
 
 	when @materialcode='GADACB-001' then 
 
@@ -879,11 +759,7 @@ when @materialcode in (
 
 	--when @materialcode in ('GBEC00-005','GBEC00-008') then '20' + SUBSTRING(@vendorlot,4,2) +'-'+ SUBSTRING(@vendorlot,6,2)+'-'+ SUBSTRING(@vendorlot,8,2)
 
-
-
 	when @materialcode='GADPCB-002' then '20'+ substring(@vendorlot,1,2)+'-'+ substring(@vendorlot,3,2) + '-15'
-
-
 
 	--when @materialcode='PBDM00-187' then 
 
@@ -904,10 +780,6 @@ when @materialcode in (
 	--										+'-'
 
 	--										+ right('0'+convert(varchar(3),CHARINDEX('z',@dayStrPBDM00)),2)
-
-	
-
-
 
 	when @materialcode in  ('GCTN00-S01',
 
@@ -933,8 +805,6 @@ when @materialcode in (
 
 											+ substring(@vendorlot,6,2)
 
-
-
 	when @materialcode IN ('GAHCCA-001') --6250118
 
 							then   '202' 	+ substring(@vendorlot,1,1) 
@@ -946,8 +816,6 @@ when @materialcode in (
 											+ '-0' 
 
 											+ substring(@vendorlot,3,1)
-
-
 
 	when @materialcode in  (
 
@@ -1045,8 +913,6 @@ when @materialcode in (
 
 							,'GBNKSP-072'
 
-
-
 								)   then 
 
 											'202'+ substring(@vendorlot,1,1) 
@@ -1066,8 +932,6 @@ when @materialcode in (
 											+ '-' 
 
 											+ substring(@vendorlot,3,2)
-
-	
 
 	when @materialcode IN (	'GBSN00-007',
 
@@ -1092,10 +956,6 @@ when @materialcode in (
 											+ '-' 
 
 											+ substring(@vendorlot,10,2)		-- 2026-04-02
-
-
-
-
 
 	when @materialcode in  ('GBSN00-003')   
 
@@ -1136,8 +996,6 @@ when @materialcode in (
 											+ '-' 
 
 											+ substring(@vendorlot,10,2)
-
-
 
 	when @materialcode in  (
 
@@ -1187,8 +1045,6 @@ when @materialcode in (
 
 											+ substring(@vendorlot,5,2)
 
-
-
 	when @materialcode in ('GAPOCA-006','GAPOCA-009') then 
 
 											'20' + substring(@vendorlot,5,2) 
@@ -1222,8 +1078,6 @@ when @materialcode in (
 											when substring(@vendorlot,7,1)='M' then '12' end)
 
 											+'-'+substring(@vendorlot,8,2)											
-
-
 
 	when (@materialcode IN (
 
@@ -1291,8 +1145,6 @@ when @materialcode in (
 
 						'GCSAAT-001',
 
-						
-
 						'BEPCBA-004'
 
 						)
@@ -1328,8 +1180,6 @@ when @materialcode in (
 		OR @materialcode LIKE 'SILDOW-%'
 
 		) and LEFT(@vendorlot, 1) = '2'  then substring(@vendorlot,1,4)+'-'+ substring(@vendorlot,5,2)+'-'+ substring(@vendorlot,7,2)		-- update 2026-02-03 because this material dont have vendor lot BG2
-
-
 
 	when @materialcode IN ( '16485-A', '164855-B', '164855-C', '164855-S')
 
@@ -1381,12 +1231,6 @@ when @materialcode in (
 
 					+'-' + substring(@vendorlot,5,2)		-- 2026-04-08 add for 35105 BG2
 
-							
-
-
-
-
-
 	when @materialcode IN (
 
 							'BEASSY-002',
@@ -1416,8 +1260,6 @@ when @materialcode in (
 							'BEFN00-028',
 
 							'BEFN00-029')  then substring(@vendorlot,3,4)+'-'+ substring(@vendorlot,7,2)+'-'+ substring(@vendorlot,9,2) -- 2026-02-11 - BG2
-
-
 
     when @materialcode in ('GAZOCB-001' 
 
@@ -1523,10 +1365,6 @@ when @materialcode in (
 
 						 ,'WRHI00-001')  then '20'+ substring(@vendorlot,1,2)+'-'+ substring(@vendorlot,3,2)+'-'+ substring(@vendorlot,5,2)
 
-
-
-
-
 	when @materialcode in ('CRNCA5-002','CRPSC0-002','SREYPK0','SRFYPK0')  or substring(@vendorlot,1,2) in ('VV','VJ') and left(right(@vendorlot,3),1)='E'
 
 													                   then 
@@ -1565,30 +1403,16 @@ when @materialcode in (
 
 																			+ substring(@vendorlot,5,2)
 
-
-
-
-
 	when @materialcode in('GAJCFO-002' ,'GAJCFO-010') then '20'+ substring(@vendorlot,1,2)+'-'+ substring(@vendorlot,3,2)+'-'+ (case when substring(@vendorlot,5,2)='1' then '07' when substring(@vendorlot,5,2)='2' then '14' when substring(@vendorlot,5,2)='3' 
 then '21' when substring(@vendorlot,5,2)='4' then '28' else '01' end)
 
-	
-
 	when @materialcode in ('GBRBPL-001' ,'GBRBPL-002','GBRBPL-003')  then  '20'+ substring(@vendorlot,9,2)+'-'+ substring(@vendorlot,11,2)+'-'+ substring(@vendorlot,13,2)
-
-
 
 	when @materialcode='GAHSCB-001' then '20'+ substring(@vendorlot,4,2)+'-'+ substring(@vendorlot,6,2)+'-'+ substring(@vendorlot,8,2)
 
-	
-
 	when @materialcode='WRHI00-002' then convert(varchar(10),convert(date,@vendorlot, 103),120)
 
-
-
 	else '' end	
-
-
 
 	--declare @tung varchar(20)= [dbo].[fn_VVT_getdatebyVendorLot]('GAKA00-002','23-04-11-1')
 
@@ -1596,13 +1420,4 @@ then '21' when substring(@vendorlot,5,2)='4' then '28' else '01' end)
 
 	return @date
 
-
-
 end
-
-
-
-
-
-
-
