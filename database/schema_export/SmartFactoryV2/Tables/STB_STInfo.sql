@@ -1,6 +1,0 @@
-﻿CREATE TABLE [dbo].[STB_STInfo] (
-    [MaterialCode] VARCHAR(20) NOT NULL DEFAULT ,
-    [STDST] NUMERIC(20,5) NULL DEFAULT 
-);
-GO
-

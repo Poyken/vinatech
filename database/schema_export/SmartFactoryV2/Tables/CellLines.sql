@@ -1,6 +1,0 @@
-﻿CREATE TABLE [dbo].[CellLines] (
-    [CellLineID] INT IDENTITY(1,1) NOT NULL DEFAULT ,
-    [CellLineName] NVARCHAR(100) NOT NULL DEFAULT 
-);
-GO
-

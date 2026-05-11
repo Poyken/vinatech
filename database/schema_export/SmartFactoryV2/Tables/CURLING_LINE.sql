@@ -1,6 +1,0 @@
-﻿CREATE TABLE [dbo].[CURLING_LINE] (
-    [지시번호] VARCHAR(16) NOT NULL DEFAULT ,
-    [라인명] VARCHAR(14) NOT NULL DEFAULT 
-);
-GO
-

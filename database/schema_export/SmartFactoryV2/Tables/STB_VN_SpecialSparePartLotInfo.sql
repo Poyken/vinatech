@@ -1,7 +1,0 @@
-﻿CREATE TABLE [dbo].[STB_VN_SpecialSparePartLotInfo] (
-    [ID] INT IDENTITY(1,1) NOT NULL DEFAULT ,
-    [SparePartLotID] VARCHAR(30) NULL DEFAULT ,
-    [LotID] VARCHAR(30) NULL DEFAULT 
-);
-GO
-

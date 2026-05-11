@@ -1,7 +1,0 @@
-﻿CREATE TABLE [dbo].[STB_ProdRouteWorkerHist] (
-    [PRWHNo] BIGINT IDENTITY(1,1) NOT NULL DEFAULT ,
-    [ProdRouteHistNo] VARCHAR(20) NOT NULL DEFAULT ,
-    [WorkerCode] VARCHAR(20) NULL DEFAULT 
-);
-GO
-

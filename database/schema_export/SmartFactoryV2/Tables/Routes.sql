@@ -1,7 +1,0 @@
-﻿CREATE TABLE [dbo].[Routes] (
-    [RouteId] INT IDENTITY(1,1) NOT NULL DEFAULT ,
-    [Code] NVARCHAR(50) NOT NULL DEFAULT ,
-    [RouteName] NVARCHAR(255) NOT NULL DEFAULT 
-);
-GO
-

@@ -1,6 +1,0 @@
-﻿CREATE TABLE [dbo].[ProcessSteps] (
-    [StepID] INT IDENTITY(1,1) NOT NULL DEFAULT ,
-    [StepName] NVARCHAR(100) NOT NULL DEFAULT 
-);
-GO
-

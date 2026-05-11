@@ -1,7 +1,0 @@
-﻿CREATE TABLE [dbo].[STB_DefectCauseNG] (
-    [Id] VARCHAR(100) NULL DEFAULT ,
-    [DefectCause] NVARCHAR(255) NULL DEFAULT ,
-    [IsUsed] INT NOT NULL DEFAULT 
-);
-GO
-

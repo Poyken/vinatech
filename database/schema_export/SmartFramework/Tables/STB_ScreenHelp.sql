@@ -1,6 +1,0 @@
-﻿CREATE TABLE [dbo].[STB_ScreenHelp] (
-    [Name] VARCHAR(50) NULL DEFAULT ,
-    [Id] VARCHAR(20) NULL DEFAULT 
-);
-GO
-

@@ -1,9 +1,0 @@
-﻿CREATE TABLE [dbo].[STB_TypeImport_HN] (
-    [ID] INT IDENTITY(1,1) NOT NULL DEFAULT ,
-    [TypeCode] VARCHAR(50) NULL DEFAULT ,
-    [TypeName] NVARCHAR(50) NULL DEFAULT ,
-    [CreateDateTime] DATETIME NULL DEFAULT ,
-    [CreateUserID] VARCHAR(50) NULL DEFAULT 
-);
-GO
-

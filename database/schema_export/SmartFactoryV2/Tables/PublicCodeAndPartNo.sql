@@ -1,8 +1,0 @@
-﻿CREATE TABLE [dbo].[PublicCodeAndPartNo] (
-    [ID] INT IDENTITY(1,1) NOT NULL DEFAULT ,
-    [PublicCode] VARCHAR(50) NOT NULL DEFAULT ,
-    [PartNo] VARCHAR(100) NOT NULL DEFAULT ,
-    [materialCode] VARCHAR(50) NULL DEFAULT 
-);
-GO
-

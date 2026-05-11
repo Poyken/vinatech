@@ -1,8 +1,0 @@
-﻿CREATE TABLE [dbo].[AspNetRoleClaims] (
-    [Id] INT IDENTITY(1,1) NOT NULL DEFAULT ,
-    [RoleId] NVARCHAR(450) NOT NULL DEFAULT ,
-    [ClaimType] NVARCHAR(MAX) NULL DEFAULT ,
-    [ClaimValue] NVARCHAR(MAX) NULL DEFAULT 
-);
-GO
-

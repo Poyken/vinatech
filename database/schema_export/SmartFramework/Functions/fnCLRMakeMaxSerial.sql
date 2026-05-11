@@ -1,4 +1,0 @@
-﻿-- Function: fnCLRMakeMaxSerial
-
-GO
-

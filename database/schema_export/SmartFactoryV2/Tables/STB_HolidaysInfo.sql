@@ -1,8 +1,0 @@
-﻿CREATE TABLE [dbo].[STB_HolidaysInfo] (
-    [BaseDate] DATE NOT NULL DEFAULT ,
-    [HolidayName] NVARCHAR(100) NULL DEFAULT ,
-    [CreateDateTime] DATETIME NULL DEFAULT ,
-    [Idx] BIGINT IDENTITY(1,1) NOT NULL DEFAULT 
-);
-GO
-
