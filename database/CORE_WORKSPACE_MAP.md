@@ -12,6 +12,7 @@
 - **Nội dung:** Toàn bộ cấu trúc Tables, SPs, Functions, Views lấy trực tiếp từ Database Production ngày 2026-05-05. 
   - Đã loại bỏ 350+ files rác, backup cũ, file test.
   - Đây là nguồn tham khảo chính xác nhất về code SP đang chạy thực tế.
+- **Agent / Cursor:** Khi thư mục này được đồng bộ vào workspace, có thể đối chiếu SP/function với tài liệu mà không cần SELECT trực tiếp production. **Tùy chọn khác:** MCP SQL chỉ đọc (SELECT) + tài khoản tối thiểu quyền — cấu hình ngoài repo, tuân quy tắc vận hành.
 
 ## 3. 📦 ARCHIVE (Dữ liệu lịch sử)
 - **Thư mục:** `_AUDIT_ARCHIVE\`

@@ -43,6 +43,18 @@
       "summary": "Form copy-paste khi báo bug/trace: màn hình, thao tác, định danh Lot/Barcode/PO, thời gian, môi trường."
     },
     {
+      "path": "VERIFY_DB_DOCUMENTATION.sql",
+      "type": "sql",
+      "tags": ["verify", "readonly", "smartfactory", "smartframework", "documentation"],
+      "summary": "Script SELECT kiểm tra function vendor lot + regression GBSN00-002, tồn tại SP lõi và bảng metadata; chạy SSMS rồi paste kết quả để đối chiếu DataFlow/KB."
+    },
+    {
+      "path": "MCP_SQLSERVER_SETUP.md",
+      "type": "md",
+      "tags": ["mcp", "cursor", "sqlserver", "security"],
+      "summary": "Hướng dẫn gắn MCP SQL (mcp-node-mssql / Toolbox), TLS Encrypt+TrustServerCertificate, hai catalog SFV2+SFW; không lưu password trong Git."
+    },
+    {
       "path": "MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md",
       "type": "md",
       "tags": ["kb", "index"],

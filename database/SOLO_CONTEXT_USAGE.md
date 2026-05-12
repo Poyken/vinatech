@@ -24,3 +24,9 @@ Mỗi kết luận quan trọng sẽ đi kèm ít nhất 1 trong các bằng ch�
 - `.docx` đã được bỏ qua theo yêu cầu.
 - Các file `.sql` là “đề xuất/script”. Việc chạy trên production phải do bạn quyết định và tự thực thi.
 
+## 5) Kiểm chứng tài liệu với database thật
+Agent không kết nối được SQL Server của bạn theo mặc định. Để xác minh DataFlow/KB khớp DB:
+- Chạy read-only [`VERIFY_DB_DOCUMENTATION.sql`](VERIFY_DB_DOCUMENTATION.sql) trên SSMS (và [`test_GBSN00_002.sql`](test_GBSN00_002.sql) cho case vendor lot).
+- Gửi **kết quả grid** (hoặc ảnh) vào chat để đối chiếu.
+- Tùy chọn: đồng bộ `schema_export\` vào workspace ([`CORE_WORKSPACE_MAP.md`](CORE_WORKSPACE_MAP.md)) hoặc cấu hình MCP SQL chỉ SELECT để agent tra cứu không cần paste tay.
+
