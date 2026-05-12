@@ -1,12 +1,15 @@
 # SOLO CONTEXT — Cách dùng nhanh
 
 ## 1) File nào cần mở trước khi debug?
-1) `SOLO_CONTEXT_OVERVIEW.md` (file này) → để biết map tổng quan.
+1) `SOLO_CONTEXT_OVERVIEW.md` → map tổng quan (đọc file này trước).
 2) `MES_MASTER_KNOWLEDGE_BASE\KB_05_TRACE_BUG_METHODOLOGY.md` → quy trình trace.
 3) `MES_MASTER_KNOWLEDGE_BASE\Vinatech_MES_Complete_DataFlow.md` → flow & SP/bảng theo phase.
 4) `MES_MASTER_KNOWLEDGE_BASE\KB_INDEX.md` → mở đúng KB_01..KB_06 theo triệu chứng.
 
 ## 2) Khi bạn nhờ “trace lỗi”, hãy gửi tối thiểu
+Copy form trong [`BUG_REPORT_TEMPLATE.md`](BUG_REPORT_TEMPLATE.md) (đủ field = trace nhanh hơn).
+
+Tóm tắt tối thiểu:
 - Màn hình/TCode (B597/B523/F330/…)
 - Barcode/ControlNo/LotID/MaterialDocNo/PONo
 - Lỗi hiển thị (copy text hoặc ảnh)

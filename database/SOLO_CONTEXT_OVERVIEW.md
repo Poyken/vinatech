@@ -61,11 +61,12 @@ Nguồn: `MES_MASTER_KNOWLEDGE_BASE\KB_INDEX.md`
 - **KB_06_MASTER_DATA_TOOLS.md**: master data/model, SQL tools, manual bypass…
 
 ## 7) SQL artifacts trong thư mục gốc
-- `fn_VVT_getdatebyVendorLot_MergeCode.sql`: function parse ngày từ vendor lot theo nhiều ngoại lệ/materialcode.
-- `test_GBSN00_002.sql`: test case cho `GBSN00-002` vendor lot `12SR03-4628` → kỳ vọng `2024-06-28`.
+- `fn_VVT_getdatebyVendorLot_MergeCode.sql`: **neo + hướng dẫn export** — body function lấy từ DB (`OBJECT_DEFINITION`); không nhân bản logic dài trong repo.
+- `test_GBSN00_002.sql`: test regression `GBSN00-002` + lot `12SR03-4628` → kỳ vọng `2024-06-28` (chạy trên `SmartFactoryV2`).
+- [`BUG_REPORT_TEMPLATE.md`](BUG_REPORT_TEMPLATE.md): form gửi bug/trace để đủ context.
 
 ## 8) Cách bạn đưa yêu cầu để mình trace nhanh (template)
-Khi bạn nhờ debug/trace lỗi, hãy gửi theo form:
+Ưu tiên copy form trong [`BUG_REPORT_TEMPLATE.md`](BUG_REPORT_TEMPLATE.md). Tóm tắt tối thiểu:
 1) **Màn hình/TCode**: (VD: B523, B597, HN523…)  
 2) **Thao tác**: bấm nút gì / scan gì / lưu gì  
 3) **Mã đối tượng**: Barcode / ControlNo / LotID / MaterialDocNo / PONo  

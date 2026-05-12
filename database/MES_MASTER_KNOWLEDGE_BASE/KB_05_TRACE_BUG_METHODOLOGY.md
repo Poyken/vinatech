@@ -1,6 +1,8 @@
 # KB_05 — Phương pháp Truy vết Bug & Dữ liệu trong Vinatech MES
 > Tác giả: Antigravity AI | Cập nhật: 2026-05-07
 
+**Gửi yêu cầu trace:** dùng form [`BUG_REPORT_TEMPLATE.md`](../BUG_REPORT_TEMPLATE.md) ở thư mục gốc `database` (đủ field = ít vòng hỏi lại).
+
 ---
 
 ## 1. NGUYÊN TẮC CỐT LÕI

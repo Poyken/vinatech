@@ -2,8 +2,8 @@
   "scope": {
     "root": "database",
     "excluded_extensions": [".docx"],
-    "generated_at_local": "2026-05-11",
-    "note": "Index này dùng để SOLO tra cứu nhanh và mở đúng file nguồn khi debug/trace bug. Không chứa nội dung đầy đủ của từng file."
+    "generated_at_local": "2026-05-12",
+    "note": "Index cho SOLO tra cứu khi debug/trace. fn_VVT_getdatebyVendorLot_MergeCode.sql là file neo (export body từ DB). BUG_REPORT_TEMPLATE.md: form gửi bug đủ context."
   },
   "files": [
     {
@@ -27,14 +27,20 @@
     {
       "path": "fn_VVT_getdatebyVendorLot_MergeCode.sql",
       "type": "sql",
-      "tags": ["sql", "function", "vendorlot", "date-parse", "wms"],
-      "summary": "SQL function parse ngày từ vendor lot theo nhiều case/exception theo MaterialCode và SourceCustomerCode; liên quan lỗi vendor lot/đặc tính 10/F330."
+      "tags": ["sql", "function", "vendorlot", "date-parse", "wms", "stub"],
+      "summary": "File neo: hướng dẫn export dbo.fn_VVT_getdatebyVendorLot từ SmartFactoryV2 (OBJECT_DEFINITION). Body không lưu trong repo. Liên quan F330/F721/B597."
     },
     {
       "path": "test_GBSN00_002.sql",
       "type": "sql",
       "tags": ["sql", "test", "vendorlot", "gbsn00-002"],
-      "summary": "Test script cho case GBSN00-002 lot 12SR03-4628: kỳ vọng function trả về 2024-06-28."
+      "summary": "Regression SELECT: GBSN00-002 + lot 12SR03-4628; kỳ vọng DATE 2024-06-28. Gọi fn_VVT_getdatebyVendorLot hoặc fn_VVT_getdatebyVendorLot_MergeCode nếu tồn tại."
+    },
+    {
+      "path": "BUG_REPORT_TEMPLATE.md",
+      "type": "md",
+      "tags": ["bug", "template", "trace", "solo"],
+      "summary": "Form copy-paste khi báo bug/trace: màn hình, thao tác, định danh Lot/Barcode/PO, thời gian, môi trường."
     },
     {
       "path": "MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md",

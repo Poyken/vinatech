@@ -6,16 +6,19 @@ Khi làm việc với User Vinatech (DESKTOP-RJJSEQU), **trước khi trả lờ
 
 ---
 
+---
+
 ## ⚡ Nguyên Tắc Vàng (Hoạt Động)
 
 1. **Không sửa DB production khi chưa SELECT xem dữ liệu trước**: Luôn kiểm chứng trạng thái hiện tại.
 2. **Luôn backup bằng SELECT trước UPDATE/DELETE**: Đảm bảo có thể khôi phục dữ liệu nếu có sai sót.
-3. **Nhớ Triggers**: Tồn kho tự cập nhật qua triggers — đừng quên logic ngầm này khi debug.
+3. **Triggers & SP**: Tồn kho có thể cập nhật qua trigger **hoặc** chuỗi SP. Khi debug tồn kho, kiểm tra cả hai hướng.
 4. **3 Bảng Kho**: Khi sửa kho, thường phải update đồng thời `STB_MaterialDocInfo` + `STB_MaterialDocDetail` + `STB_MaterialLotInfo`.
-5. **Knowledge First**: Luôn tra cứu `KB_INDEX.md` trong thư mục `MES_MASTER_KNOWLEDGE_BASE` trước khi tự suy luận hoặc viết SQL mới.
-6. **Fetch Before Edit**: Mỗi lần thao tác với bất kỳ Stored Procedure nào, **BẮT BUỘC** phải lấy bản mới nhất từ database về (`fetch_sp.ps1`) rồi mới tiến hành chỉnh sửa. Tuyệt đối không tự ý sửa trên file local cũ.
-7. **NO DIRECT UID (Tối Quan Trọng)**: Antigravity **TUYỆT ĐỐI KHÔNG** được tự ý chạy các câu lệnh thay đổi dữ liệu (Update, Insert, Delete - UID) trực tiếp trên Production. Chỉ được phép tìm phương án, viết script (Fix script) và đề xuất. Việc thực thi bắt kỳ script thay đổi dữ liệu nào **PHẢI** do User quyết định và tự chạy tay qua SSMS.
-8. **HỎI TRƯỚC KHI LÀM**: Luôn hỏi đầy đủ thông tin, yêu cầu rõ ràng từ User trước khi thực hiện. Phải tuân thủ **ĐÚNG THEO TÀI LIỆU** và quy trình đã đề ra, không tự ý phỏng đoán hoặc nhảy cóc các bước.
+5. **Knowledge First**: Luôn tra cứu `KB_INDEX.md` và `MES_UNIFIED_DEBUG_MAP.md` trước khi tự suy luận.
+6. **Fetch Before Edit**: Luôn lấy bản mới nhất từ database về (`fetch_sp.ps1`) trước khi sửa SP.
+7. **NO DIRECT UID**: Antigravity **TUYỆT ĐỐI KHÔNG** được tự ý chạy `UPDATE/INSERT/DELETE` trực tiếp trên Production. Chỉ viết script đề xuất.
+8. **Quy Trình 5 Bước**: Tuân thủ quy trình điều tra tại `BUG_INVESTIGATION_FLOW.md`.
+9. **HỎI TRƯỚC KHI LÀM**: Nếu thiếu thông tin (mã Lot, Screen ID) -> Dừng lại và hỏi User ngay.
 
 ---
 
@@ -29,18 +32,24 @@ Khi làm việc với User Vinatech (DESKTOP-RJJSEQU), **trước khi trả lờ
 **Khi nào đọc:** Khi có bất kỳ yêu cầu sửa lỗi, fix data, hoặc xử lý sự cố.
 
 ### 2. 📊 Vinatech_MES_Complete_DataFlow.md
-**Path:** `c:\Users\User Vinatech.DESKTOP-RJJSEQU\Desktop\database\Vinatech_MES_Complete_DataFlow.md`
+**Path:** `c:\Users\User Vinatech.DESKTOP-RJJSEQU\Desktop\database\MES_MASTER_KNOWLEDGE_BASE\Vinatech_MES_Complete_DataFlow.md`
 **Mục đích:**
 - Hiểu kiến trúc hệ thống (Metadata, SP, Triggers).
 - Nắm rõ luồng dữ liệu (Data flow Phase 0→5) và dependency giữa các bảng.
 **Khi nào đọc:** Khi cần debug Stored Procedures, viết truy vấn phức tạp hoặc thiết kế tính năng.
 
-### 3. 📋 ZALO_MES_MASTER_TASKS.md
-**Path:** `c:\Users\User Vinatech.DESKTOP-RJJSEQU\Desktop\database\ZALO_MES_MASTER_TASKS.md`
+### 4. 🗺️ MES_UNIFIED_DEBUG_MAP.md
+**Path:** `c:\Users\User Vinatech.DESKTOP-RJJSEQU\Desktop\database\MES_UNIFIED_DEBUG_MAP.md`
 **Mục đích:**
-- Xem danh sách các task đang pending hoặc đã xử lý.
-- Cập nhật trạng thái sau khi hoàn thành.
-**Khi nào đọc:** Khi nhận task mới.
+- Tra cứu nhanh Screen ID -> SP -> Tables.
+- Tổng hợp các "điểm nóng" của hệ thống (F330, B523, B781...).
+**Khi nào đọc:** Khi bắt đầu điều tra một Bug cụ thể trên màn hình MES.
+
+### 5. 🛠️ BUG_INVESTIGATION_FLOW.md
+**Path:** `c:\Users\User Vinatech.DESKTOP-RJJSEQU\Desktop\database\BUG_INVESTIGATION_FLOW.md`
+**Mục đích:**
+- Quy trình 5 bước để điều tra bug an toàn và hiệu quả.
+**Khi nào đọc:** Áp dụng cho mọi case sửa lỗi data/logic.
 
 ---
 
@@ -70,4 +79,4 @@ Với **MỌI** yêu cầu, thực hiện theo thứ tự sau:
 | **Các nhà máy** | VVT (Bình Dương), BG (Bắc Giang), HN (Hà Nam) |
 
 ---
-*Cập nhật lần cuối: 2026-05-06*
+*Cập nhật lần cuối: 2026-05-12*
