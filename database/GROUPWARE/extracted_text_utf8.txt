@@ -1,0 +1,1029 @@
+﻿File: Hướng dẫn Draft Document.pptx
+Hướng dẫn sử dụng chức năng Draft Document
+ EA Team Việt Nam
+1.Đăng nhập hệ thống Groupware
+I. Đăng nhập Groupware
+Có hai cách để bạn đăng nhập vào hệ thống Groupware
+     + Bạn có thể truy cập bằng link sau đây: https://gw.vinatech.com/login.
+  + Bạn có thể chọn buổi tượng như hình dưới đây:
+     + Bạn mở trình duyệt lên và ỏ góc phải màn hình có biểu tượng=> bạn chọn tới icon của công ty có chữ groupware click vào đó
+2.Thông tin đăng nhập vào Groupware
+2. Thông tin đăng nhập
+- Bước 1: Thông tin tài khoản cũng như mật khẩu của bạn chính là mã nhân viên trên hệ thống ERP, mật khẩu mặc định từ 1 tới 4, trong trường hợp không được bạn liên hệ lại với EA
+Bước 2: Trước khi login, bạn cần chọn Vinatech vina Co.,Ltd. 
+Bước 3: khi đã chọn xong, bạn nhập mã nhân viên và mật khẩu nhấn nút login để vào hệ thống. 
+Draft Document
+Mục đích: Khi làm phê duyệt không yêu cầu biểu mẫu nhập liệu đặc biệt, chỉ đơn giản là xin ý kiến, xin phê duyệt.
+
+
+Vào menu Electronic Document => Chọn mục Basic => Chọn chức năng Draft Document
+
+Bước 1: Chọn dòng phê duyệt
+Tại giao diện, có thể chọn dòng phê duyệt mặc định là Team Leader => Group Leader.
+Bạn cũng có thể thêm người phê duyệt vào form, hoặc thêm người CC vào form
+Cuối cùng chọn Áp dụng dòng phê duyệt
+Bước 2: Điền các trường cần thiết
+Thêm tiêu đề của phê duyệt (2.1)
+Thêm tập tin đính kèm nếu có (2.2)
+
+Nếu làm hộ phê duyệt cho ai đó, chọn Thay đổi người sử dụng (2.3)
+Điền nội dung của phê duyệt (2.4)
+
+Sau khi hoàn tất, ấn Gửi đi, sau đó xác nhận Gửi đi
+Hủy đơn đăng ký
+Trường hợp bạn muốn rút lại đơn để chỉnh sửa/hủy đơn: Bấm chọn Hủy đơn đăng ký (3)
+Lưu ý: Chỉ hủy được trong trường hợp phê duyệt chưa được duyệt xong
+
+Sau khi hủy, phê duyệt sẽ chuyển sang mục lưu trữ tạm thời Temporary Storage (4). Bạn có thể truy cập vào đó để chỉnh sửa/xóa
+------------------------
+File: Hướng dẫn Finished Good warehouse.pptx
+Hướng dẫn sử dụng chức năng tạo xuất hàng
+ EA Team Việt Nam
+Đăng nhập hệ thống
+1. Đăng nhập hệ thống với các thông tin tài khoản của bạn, như hình bên.
+
+Xuất ra kho tạm.
+1. Bạn cho và menu “Xuất ra kho tạm”
+2. Bạn scan Packing ID của box
+3. Sau khi đã scan xong, bạn nhập tên khách hàng vào.
+4. Kiểm tra lại lần cuối rồi nhấn lưu “Lưu dữ liệu”.
+In tem dán lên pallet.
+Sau khi bạn xuất ra kho tạm từ FG01 , bạn sẽ tiếp tục vào màn hinh B750 in tem và dán lên pallet
+Dán lên Pallet
+Hình ảnh bên cạnh là đã dán tem lên pallet
+Xuất lên xe
+Sau khi xong bạn có thể sử dụng menu “Xuất lên công te lơ”,  bạn chỉ cần scan là xong.
+Kiểm tra chi tiết.
+Bạn sử dụng màn hình B752 để kiểm lại chi tiết các pallet, như hình bên trai.
+------------------------
+File: Hướng dẫn Form nghỉ việc - Employee Retire Document.pptx
+Hướng dẫn sử dụng chức năng Employee Retire Document
+ EA Team Việt Nam
+1.Đăng nhập hệ thống Groupware
+I. Đăng nhập Groupware
+Có hai cách để bạn đăng nhập vào hệ thống Groupware
+     + Bạn có thể truy cập bằng link sau đây: https://gw.vinatech.com/login.
+  + Bạn có thể chọn buổi tượng như hình dưới đây:
+     + Bạn mở trình duyệt lên và ỏ góc phải màn hình có biểu tượng=> bạn chọn tới icon của công ty có chữ groupware click vào đó
+2.Thông tin đăng nhập vào Groupware
+2. Thông tin đăng nhập
+- Bước 1: Thông tin tài khoản cũng như mật khẩu của bạn chính là mã nhân viên trên hệ thống ERP, mật khẩu mặc định từ 1 tới 4, trong trường hợp không được bạn liên hệ lại với EA
+Bước 2: Trước khi login, bạn cần chọn Vinatech vina Co.,Ltd. 
+Bước 3: khi đã chọn xong, bạn nhập mã nhân viên và mật khẩu nhấn nút login để vào hệ thống. 
+Employee Retire Document
+Mục đích: Làm phê duyệt nghỉ việc
+
+
+Vào menu Electronic Document => Chọn mục Human Sources => Chọn chức năng Employee Retire Document
+
+Bước 1: Chọn người phê duyệt
+Tại giao diện, có thể chọn dòng phê duyệt mặc định là Team Leader => Group Leader => Quản lý người Hàn => Bác Jang => Bác COO
+Bạn cũng có thể thêm người phê duyệt vào form, hoặc thêm người CC vào form
+Cuối cùng chọn Áp dụng dòng phê duyệt
+Chú ý:Nếu bạn đăng ký hộ, vui lòng chọn Người dùng là người được đăng ký hộNếu không, mặc định hệ thống sẽ là đăng ký cho người làm form
+Bước 2: Điền tiêu đề và các trường cần thiết
+1 – Ngày nghỉ việc
+2 – Ngày làm việc cuối cùng
+3 – Người đảm nhiệm công việc thay thế
+4 – Thông tin liên lạc sau khi nghỉ việc
+5 – Địa chỉ liên hệ sau khi nghỉ
+6 – Lý do xin nghỉ
+Bước 3: Hoàn thiện nội dung chi tiết và Gửi đi
+Hoàn thiện phần Nội dung chi tiết hoặc yêu cầu thêm nếu có
+
+Ấn nút Gửi đi để hoàn tất yêu cầu 
+Hủy đơn đăng ký
+Trường hợp bạn muốn rút lại đơn để chỉnh sửa/hủy đơn: Bấm chọn Hủy đơn đăng ký
+Lưu ý: Chỉ hủy được trong trường hợp phê duyệt chưa được duyệt xong
+
+Sau khi hủy, phê duyệt sẽ chuyển sang mục lưu trữ tạm thời Temporary Storage. Bạn có thể truy cập vào đó để chỉnh sửa/xóa
+------------------------
+File: Hướng dẫn Form Yêu cầu tuyển dụng - Emp Request.pptx
+Hướng dẫn sử dụng chức năng Emp Request
+ EA Team Việt Nam
+1.Đăng nhập hệ thống Groupware
+I. Đăng nhập Groupware
+Có hai cách để bạn đăng nhập vào hệ thống Groupware
+     + Bạn có thể truy cập bằng link sau đây: https://gw.vinatech.com/login.
+  + Bạn có thể chọn buổi tượng như hình dưới đây:
+     + Bạn mở trình duyệt lên và ỏ góc phải màn hình có biểu tượng=> bạn chọn tới icon của công ty có chữ groupware click vào đó
+2.Thông tin đăng nhập vào Groupware
+2. Thông tin đăng nhập
+- Bước 1: Thông tin tài khoản cũng như mật khẩu của bạn chính là mã nhân viên trên hệ thống ERP, mật khẩu mặc định từ 1 tới 4, trong trường hợp không được bạn liên hệ lại với EA
+Bước 2: Trước khi login, bạn cần chọn Vinatech vina Co.,Ltd. 
+Bước 3: khi đã chọn xong, bạn nhập mã nhân viên và mật khẩu nhấn nút login để vào hệ thống. 
+Emp Request
+Mục đích: Làm phê duyệt yêu cầu tuyển dụng nhân viên cho phòng ban
+
+
+Vào menu Electronic Document => Chọn mục Human Sources => Chọn chức năng Emp Request
+
+Bước 1: Chọn người phê duyệt
+Tại giao diện, có thể chọn dòng phê duyệt mặc định là Team Leader => Group Leader.
+Bạn cũng có thể thêm người phê duyệt vào form, hoặc thêm người CC vào form
+Cuối cùng chọn Áp dụng dòng phê duyệt
+Bước 2: Điền các trường cần thiết
+1 – Phân loại tuyển dụng: Tuyển dụng thay thế, Tuyển dụng mới hoặc Tuyển dụng bổ sung
+2 – Phân loại nhân viên: Nhân viên chính thức, Thử việc, Công nhân thời vụ
+3 – Số lượng tuyển dụng
+4 – Ngày đến hạn yêu cầu
+5 – Kinh nghiệm
+6 – Trình độ học vấn
+7 – Chuyên ngành liên quan
+8 – Giới tính ưu tiên
+Bước 3: Hoàn thiện nội dung chi tiết và Gửi đi
+Hoàn thiện phần Nội dung chi tiết hoặc yêu cầu thêm nếu có
+
+Ấn nút gửi đi để hoàn tất yêu cầu 
+Hủy đơn đăng ký
+Trường hợp bạn muốn rút lại đơn để chỉnh sửa/hủy đơn: Bấm chọn Hủy đơn đăng ký
+Lưu ý: Chỉ hủy được trong trường hợp phê duyệt chưa được duyệt xong
+
+Sau khi hủy, phê duyệt sẽ chuyển sang mục lưu trữ tạm thời Temporary Storage. Bạn có thể truy cập vào đó để chỉnh sửa/xóa
+------------------------
+File: Hướng dẫn Groupware_Form đi công tác.pptx
+Hướng dẫn sử dụng chức năng SBC trên hệ thống Groupware
+ EA Team Việt Nam
+1.Đăng nhập hệ thống Groupware
+I. Đăng nhập Groupware
+Có hai cách để bạn đăng nhập vào hệ thống Groupware
+     + Bạn có thể truy cập bằng link sau đây: https://gw.vinatech.com/login.
+  + Bạn có thể chọn buổi tượng như hình dưới đây:
+     + Bạn mở trình duyệt lên và ỏ góc phải màn hình có biểu tượng=> bạn chọn tới icon của công ty có chữ groupware click vào đó
+2.Thông tin đăng nhập vào Groupware
+2. Thông tin đăng nhập
+- Bước 1: Thông tin tài khoản cũng như mật khẩu của bạn chính là mã nhân viên trên hệ thống ERP, mật khẩu mặc định từ 1 tới 4, trong trường hợp không được bạn liên hệ lại với EA
+Bước 2: Trước khi login, bạn cần chọn Vinatech vina Co.,Ltd. 
+Bước 3: khi đã chọn xong, bạn nhập mã nhân viên và mật khẩu nhấn nút login để vào hệ thống. 
+
+2.Form đăng đi công tác.
+1. Bạn truy cập vào phần menu chọn mục Electronic Document => Tiếp theo bạn chọn mục Holiday work request => bạn chọn chức năng “Business Trip Document”
+Bước 1: Chọn đường line phê duyệt, ở đây bạn có thể chọn hai kiểu đường line phê duyệt.
+  + Một đã được cài đặt trong hệ thống, bạn chỉ cần chọn.
+  + Hai bạn có thể tự lựa chọn những ai có thể duyệt form cho bạn.
+
+Form đăng ký đi công tác.
+Đây là phần chọn để định hình form này là đi công tác trong nước hay công tác tại nước ngoài, trong trường hợp bạn chọn nước ngoài, nhưng phần dưới bạn chọn trong nước form sẽ báo sai.
+2.Form đăng ký đi công tác
+Tiêu đề: Bạn cũng có thể đặt tiêu đề cho form đăng ký đi công tác của mình như hình ở bên.
+Ngoài ra trong trường hợp bạn làm hộ ai đó, bạn vẫn có thể đưa tên người đó vào như hình dưới bên cạnh
+Ngoài ra bạn cũng có thể upload một file hoặc nhiều file cùng một lúc
+
+2.Form đăng ký đi công tác.
+Số 1 là yêu cầu bạn phải nhập tên địa điểm khi bạn tới công tác:
+Số2: Chọn tên quốc gia khi bạn tới công tác, nếu công tác trong nước bạn có thể chọn là Việt Nam
+Số 3: Trường hợp bạn chọn tên quốc gia nó hiển thị ra thành phố thì bạn chọn nếu trường hợp nó không hiển thị ra thành phố thì bạn không cần phải chọn nữa.
+Form đăng ký đi công tác.
+Số 1: theo mặc định form sẽ tự động lấy tên người đăng ký, trường hợp bạn không đi công tác mà làm hộ người khác bạn có thể xóa để thêm người mới vào.
+Số 2: bạn có thể chọn nhiều người dùng trong một form.
+Form đăng ký đi công tác
+Sau khi bạn click vào thêm nhiều người hơn: một cửa số mới sẽ mở ra và ở đó bạn sẽ có 3 lựa chọn để tìm kiếm người
+Số 1: tìm kiếm người theo phòng ban, sau đó chọn ai thì tick vào
+Số 2: chọn theo tên nhân viên, rồi tick vào.
+Số 3:  tìm theo mã nhân viên cũng tương tự hai số ở trên.
+2.Form đăng ký đi công tác
+Số 1: là tổng số tiền được trợ cấp theo chức vụ tiền trợ cấp tiêu chuẩn của nhân sự.
+Số 2: Tiền ăn mỗi ngày theo tiêu chuẩn của nhân sự.
+Số 3: chọn thời gian đi công tác từ ngày nào tới ngày nào.
+Số 4: Ngày của hộ chiếu, thời hạn của hộ chiếu hoặc visa.
+Số 5: là nhập tổng số bữa ăn trên tổng ngày đi công tác.
+Số 6: là hiển thị tổng số tiền chung của mọi người đi công tác trong form đó.
+
+2.Form đăng ký đi công tác
+Đây là phần bạn miêu tả nội dung. Trong phần này bạn có thể đưa các video vào, hình ảnh, cũng như, các loại font chữ, đồng, thời bạn cũng có thể tạo các bảng , bạn cũng có thể thêm các link vào trực tiếp nội dung.
+
+2.Form đăng ký đi công tác
+Số 1: bạn có thể gửi form tới người duyệt.
+Số 2: là bạn có thể lưu lại tạm thời, để khi nào cần thì bạn có thể dùng.
+Số 3: là bạn có thể xóa nhớ tạm thời đi để làm lại
+Số 4: bạn có thể xem lại tổng thể form một lần nữa
+Số 5: là reset lại form làm mới và nhập mới thông tin lại từ đầu.
+
+2.Form đăng ký đi công tác
+Trong trường hợp bạn đã đăng ký form đi công tác thành công và được duyệt, để chánh mất thời gian bạn có thể copy lại form và sửa thông tin và gửi đi như một form mới.
+Bạn vào menu Electronic Document => My Documents.=> và bạn tìm form của mình như hình minh họa dưới đây
+
+2.Form đăng ký đi công tác
+Một form đã được duyệt hết, khi bạn nhấn vào “Sao chép tài liệu điều ấy có nghĩa là bạn đã sao chép lại toàn bộ dữ liệu của form cũ, và bạn có thể hay đổi lại một số thông tin nếu cần và gửi đi như một form mới.
+
+2.Form đăng ký đi công tác
+Ở màn hình bên trai trường hợp form đã gửi đi rồi, nhưng chưa được duyệt hết tới người cuối cùng thì bạn có thể “Hủy đơn đăng ký” điều ấy có nghĩa là form sẽ được gọi lại để bạn sửa hoặc cập nhật thông tin nào đó, sau đó bạn có thể gửi đi tiếp.
+
+
+
+
+
+CHỨC NĂNG VIẾT BÁO CÁO KHI
+ ĐI CÔNG TÁC VỀ.
+2.Form báo cáo khi đi công tác về.
+Sau khi bạn đi công tác về dù nước ngoài , hay trong nước bạn đều cần phải có form báo cáo, ở đây phần hình ảnh bên trái, bạn vào Business Trip => Business Trip Report.
+
+2. Form báo cáo khi đi công tác về.
+Số 1: chọn người phê duyệt cho form của bạn.
+Số 2: Viết tiêu đề cho form của bạn
+Số 3: tệp đính kèm, thường là file báo cáo của bạn bằng, word, excel, powerpoint..etc..
+Số 4: chọn người mà mình làm form giúp.
+Số 5: chọn loại đi công tác, công tác trong nước, hay công tác nước ngoài.
+
+2. Form báo cáo khi đi công tác về.
+Số 1: bạn click vào đó thì một cửa số mới sẽ hiển thị ra.
+Số 2: bạn có rất nhiều lựa chọn nhưng bạn chỉ cần tập chúng vào phần “tài liệu của tôi”.
+Số 3: Nhấn kiểm tra, thì lập tức một cửa số mới sẽ hiển thị ra.
+
+Form báo cáo khi đi công tác về.
+Ở hình ảnh trên đầu bên trái, sau khi bạn chọn xong form đi công tác đã được duyệt, bạn sẽ thấy thông tin chi tiết hiển thị.
+Ở hình ảnh thứ hai, bạn cần chọn một số thôn tin
+Số 1: đây là những người thực tế đi công tác, khi bạn lick chọn vào thì các thông tin khác sẽ hiển thị cùng.
+Số 2: là ngày thực tế bạn đi về, nếu không thay đổi gì hệ thống sẽ tự động lấy ngày mà đã đăng ký đi.
+Số 3: bạn phải chọn hãng máy bay nào bạn đi.
+Số 4 bạn cần chọn file hình ảnh là cuốn máy bay của bạn để upload lên, hoặc vé tàu xe của bạn
+
+2. Form báo cáo khi đi công tác về.
+Ở đây tất cả các form bạn đã được duyệt khi đi công tác sẽ hiển thị ra, trong trường hợp rất nhiều vào thí số 1 là bạn có thể tìm kiếm.
+Số 2: sau khi tìm kiếm xong thì bạn có thể chọn 1 form bạn cần làm báo cáo
+
+2. Form báo cáo khi đi công tác về.
+Đây là phần bạn miêu tả nội dung. Trong phần này bạn có thể đưa các video vào, hình ảnh, cũng như, các loại font chữ, đồng, thời bạn cũng có thể tạo các bảng , bạn cũng có thể thêm các link vào trực tiếp nội dung.
+
+
+
+
+
+THAY ĐỔI THÔNG TIN FORM
+ ĐI CÔNG TÁC.
+2.Thay đổi form đăng ký đi công tác
+Trong trường hợp form của bạn đã được duyệt, nhưng bạn chưa làm form báo cáo, bạn có thể sử dụng chức năng này để thay đổi, cấp nhật thêm thông tin, để làm báo cáo.
+Bạn vào menu Electronice Document =>Business Trip => Business Trip Change Document.
+
+2. Form thay đổi báo cáo khi đi công tác về.
+Tương tự như các form ở trên, form này hình ảnh đầu tiên là bạn chọn đường line phê duyệt.
+Tiếp theo hình ảnh thứ hai bạn có thể đặt tên cho form, sau đó nếu có file  đính kèm bạn có thể đính kèm, bạn cũng có thể chọn người làm hộ form.
+Bạn cũng phải cần chọn loại form đi công tác là form trong nước, hay form nước ngoài.
+
+2. Form thay đổi báo cáo khi đi công tác về.
+Ở hình ảnh đâu tiên bạn có thể tìm kiếm các form đã được duyệt rồi như hình ảnh bên trai, khi bạn click nó sẽ mở ra cho bạn một giao diện, bạn chọn loại tài liệu cần tìm kiếm, sau khi chọn xong bạn kiểm tra, và nó sẽ hiển thị toàn bộ các dữ liệu các form mà bạn đã đang ký và được duyệt, tiếp đó bạn có thể chọn bất kỳ form nào để thay đổi, trước khi làm báo cáo.
+
+2. Form thay đổi báo cáo khi đi công tác về.
+Ở màn hình bên trái bạn sẽ thấy nút them người, ở đây bạn có thể thêm bất kỳ ai trong chuyến công tác và vẫn cần làm các bước như lúc bạn làm form đi công tác.
+
+2.Form đăng ký đi công tác
+Số 1: là tổng số tiền được trợ cấp theo chức vụ tiền trợ cấp tiêu chuẩn của nhân sự.
+Số 2: Tiền ăn mỗi ngày theo tiêu chuẩn của nhân sự.
+Số 3: chọn thời gian đi công tác từ ngày nào tới ngày nào.
+Số 4: Ngày của hộ chiếu, thời hạn của hộ chiếu hoặc visa.
+Số 5: là nhập tổng số bữa ăn trên tổng ngày đi công tác.
+Số 6: là hiển thị tổng số tiền chung của mọi người đi công tác trong form đó.
+
+2. Form báo cáo khi đi công tác về.
+Đây là phần bạn miêu tả nội dung. Trong phần này bạn có thể đưa các video vào, hình ảnh, cũng như, các loại font chữ, đồng, thời bạn cũng có thể tạo các bảng , bạn cũng có thể thêm các link vào trực tiếp nội dung.
+Ngoài ra bạn cũng có thể chọn ngày cần thanh toán, và chọn chi phí này sẽ được tính vào phòng ban nào
+
+------------------------
+File: Hướng dẫn Groupware_Form đăng ký nhà thầu_khách hàng.pptx
+Hướng dẫn sử dụng chức năng SBC trên hệ thống Groupware
+ EA Team Việt Nam
+1.Đăng nhập hệ thống Groupware
+I. Đăng nhập Groupware
+Có hai cách để bạn đăng nhập vào hệ thống Groupware
+     + Bạn có thể truy cập bằng link sau đây: https://gw.vinatech.com/login.
+  + Bạn có thể chọn buổi tượng như hình dưới đây:
+     + Bạn mở trình duyệt lên và ỏ góc phải màn hình có biểu tượng=> bạn chọn tới icon của công ty có chữ groupware click vào đó
+2.Thông tin đăng nhập vào Groupware
+2. Thông tin đăng nhập
+- Bước 1: Thông tin tài khoản cũng như mật khẩu của bạn chính là mã nhân viên trên hệ thống ERP, mật khẩu mặc định từ 1 tới 4, trong trường hợp không được bạn liên hệ lại với EA
+Bước 2: Trước khi login, bạn cần chọn Vinatech vina Co.,Ltd. 
+Bước 3: khi đã chọn xong, bạn nhập mã nhân viên và mật khẩu nhấn nút login để vào hệ thống. 
+
+Form đăng ký nhà thầu khách hàng.
+1. Bạn truy cập vào phần menu chọn mục Electronic Document => Tiếp theo bạn chọn mục Basic=> bạn chọn chức năng “Partner Managerment”
+Bước 1: Chọn đường line phê duyệt, ở đây bạn có thể chọn hai kiểu đường line phê duyệt.
+  + Một đã được cài đặt trong hệ thống, bạn chỉ cần chọn.
+  + Hai bạn có thể tự lựa chọn những ai có thể duyệt form cho bạn.
+
+Form đăng ký nhà thầu khách hàng.
+Số 1: bạn cần viết tiêu đề form của bạn.
+Số 2: bạn có thể đính kèm file ở đây.
+Số 3: là thông tin người làm form, bạn có thể điền tên người làm form hộ bạn ở đây
+Form đăng ký đi nhà thầu khách hàng.
+Số 1: Chọn quốc gia công ty đó đang ở.
+Số 2: Nhập tên công ty.
+Số 3: Nhập tên đại diện của công ty.
+Số 4:  Nhập điện chỉ email 
+Số 5: Nhập mã số thuế của công ty.
+Số 6: Chọn danh mục thuế của doanh nghiệp đó. (thường thì lên chọn”người nộp thuế chung” vì doanh nghiệp đó cả hai phương thức vừa mua và vừa bán)
+Số 7: Chọn đây là công ty chính hay là công ty con của công ty chính (thường là bạn chọn N). 
+Số 8: Chọn định dạng hóa đơn phát hành của nhà thầu, khách hàng, hoặc vendor đó.( đây là kiểu hóa đơn)
+Số 9: Mục đích là để phân biệt xem đối tác kinh doanh được đăng ký là khách hàng bán hàng, khách hàng mua hàng, công ty thẻ tín dụng hay đối tác ngân hàng.
+Số 10: Chọn phân loại khách hàng là, mua, hay bán, hoặc khác.
+Số 11: Chọn loại hình của đối tác đang kinh doan.
+Số 12: Nhập lĩnh vực kinh doanh của đối tác.
+Số 13: Nhập địa chỉ chi tiết của công ty.
+Số 14: Nhập địa chỉ chi tiết của công ty.
+Số 15:  Trạng thái công ty hay vendor này còn hoạt động hay không.
+Số 16: Chọn sửa dụng hoặc không sử dụng
+           + Trường hợp bạn chọn : Use là đã sử dụng nhà thầu, khách hàng này trong hệ thống.
+           + Trường hợp bạn chọn: For mass use, tức là bạn chưa sử dụng.
+
+Form đăng ký nhà thầu khách hàng.
+Số 1: Bạn cần chọn ngân hàng mà khách hàng hoặc nhà thầu, hoặc vendor đang sử dụng, để giao dịch với công ty mình.
+Số 2: Số tài khoản của khách hàng, nhà thấu, hoặc vendor.
+Số 3: Cần nhập số tài khoản của khách hàng, nhà thầu, vendor.
+Form đăng ký nhà thầu khách hàng.
+Số 1: bạn có thể gửi form tới người duyệt.
+Số 2: là bạn có thể lưu lại tạm thời, để khi nào cần thì bạn có thể dùng.
+Số 3: là bạn có thể xóa nhớ tạm thời đi để làm lại
+Số 4: bạn có thể xem lại tổng thể form một lần nữa
+Số 5: là reset lại form làm mới và nhập mới thông tin lại từ đầu.
+
+Form đăng ký nhà thầu khách hàng.
+Số 1: theo mặc định form sẽ tự động lấy tên người đăng ký, trường hợp bạn không đi công tác mà làm hộ người khác bạn có thể xóa để thêm người mới vào.
+Số 2: bạn có thể chọn nhiều người dùng trong một form.
+Form đăng ký nhà thầu khách hàng.
+Số 1: Bạn có thể ghi nội dung về nhà thầu, khách hàng vendor ở đây.
+Số 2: Bạn có thể nhấn nút gửi đi, tới người duyệt ở đây.
+Số 3: Bạn có thể lưu trữ tạm thời form, để sau này gửi ở đây
+Số 4: Bạn có thể xóa  form lưu trữ tạm thời đi.
+Số 5: Bạn có thể xem trước, để review lại form mình đã làm
+Số 5: Làm lại mới hoàn toàn.
+
+
+
+
+
+THAY ĐỔI, CẬP NHẬT LẠI THÔNG TIN CỦA NHÀ THẦU, KHÁCH HÀNG.
+Cập nhật lại thông tin nhà thầu, khách hàng.
+Đầu tiên bạn vào menu Basic => Sau đó bạn chọn chức năng => Modify Partner Managerment.
+Số 1: chọn người phê duyệt cho form của bạn.
+Số 2: Đặt tiêu đề cho form.
+Số 3: thêm tệp đính kèm nếu có.
+Số 4: chọn nhà thầu vendor , khách hàng cần thay đổi thông tin.
+Cập nhật lại thông tin nhà thầu, khách hàng.
+Ở màn hình bên tay trái nếu bạn muốn thay đổi bất kỳ thông tin nào, bạn có thể thay đổi thông tin đó, bằng việc nhập các thông tin vào. Các textbox hoặc chọn lại các thông tin trong combox.
+
+Cập nhật lại thông tin nhà thầu, khách hàng.
+Cũng ở hình ảnh bên tay trái bạn cũng có thể ghi, các thông tin ghi chú, và nhấn nút gửi đi, hoặc bạn cũng có thể lưu trữ tạm thời, để sau này gửi lại, ngoài ra bạn cũng có thể xem trước được.
+
+------------------------
+File: Hướng dẫn Groupware_Form đăng ký đi làm ngày lễ_ngày nghỉ.pptx
+Hướng dẫn sử dụng chức năng SBC trên hệ thống Groupware
+ EA Team Việt Nam
+1.Đăng nhập hệ thống Groupware
+I. Đăng nhập Groupware
+Có hai cách để bạn đăng nhập vào hệ thống Groupware
+     + Bạn có thể truy cập bằng link sau đây: https://gw.vinatech.com/login.
+  + Bạn có thể chọn buổi tượng như hình dưới đây:
+     + Bạn mở trình duyệt lên và ỏ góc phải màn hình có biểu tượng=> bạn chọn tới icon của công ty có chữ groupware click vào đó
+2.Thông tin đăng nhập vào Groupware
+2. Thông tin đăng nhập
+- Bước 1: Thông tin tài khoản cũng như mật khẩu của bạn chính là mã nhân viên trên hệ thống ERP, mật khẩu mặc định từ 1 tới 4, trong trường hợp không được bạn liên hệ lại với EA
+Bước 2: Trước khi login, bạn cần chọn Vinatech vina Co.,Ltd. 
+Bước 3: khi đã chọn xong, bạn nhập mã nhân viên và mật khẩu nhấn nút login để vào hệ thống. 
+
+Form đăng ký đi làm ngày lễ, ngày nghỉ
+1. Bạn truy cập vào phần menu chọn mục Electronic Document => Holiday Work Reuqest”.
+Bước 1: Chọn đường line phê duyệt, ở đây bạn có thể chọn hai kiểu đường line phê duyệt.
+  + Một đã được cài đặt trong hệ thống, bạn chỉ cần chọn.
+  + Hai bạn có thể tự lựa chọn những ai có thể duyệt form cho bạn.
+
+Form đăng ký đi làm ngày lễ, ngày nghỉ.
+Số 1: bạn cần viết tiêu đề form của bạn.
+Số 2: bạn có thể đính kèm file ở đây.
+Số 3: là thông tin người làm form, bạn có thể điền tên người làm form hộ bạn ở đây
+Form đăng ký đi làm ngày lễ, ngày nghỉ.
+Số 1: Lựa chọn nhân viên để đi làm.
+Số 2: Chọn thêm người đi làm nếu cần trong form.
+Số 3: Chọn ngày đi làm.
+Số 4:  Thời gian đi làm tính theo tiếng
+Số 5: Số giờ hệ thống tự động tính.
+Số 6: Thêm ngày giời, cho người đã có trong danh sách
+
+Form đăng ký nhà thầu khách hàng.
+Ghi chú chi tiết các nếu bạn cần thiết.
+Sau khi các thông tin form đã chính xác, bạn có thể nhấn vào nút “Gửi đi”
+Trường hợp bạn chưa muốn gửi đi ngày, bạn có thể nhấn vào nút “Lưu trữ tạm thời”
+Trường hợp bạn cũng có thể xóa nhớ tạm thời”
+Khi các thông tin đã nhập xong bạn có thể xem lại bằng cách nhấn vào nút “Xem trước”
+Bạn cũng có thể làm mới lại form.
+
+
+
+
+FORM VIẾT BÁO CÁO KHI ĐI LÀM NGÀY NGHỈ, NGÀY LỄ.
+Form đăng ký báo cáo đi làm ngày nghỉ, ngày lễ.
+Đầu tiên bạn vào menu Electronic => Sau đó bạn chọn chức năng => Attendance => Holiday Work Request.
+Số 1: Bạn click vào nút “Liên kết tài liệu”.
+Một hộp thoại mới mở ra, bạn sẽ nhìn thấy toàn bộ form xin đi làm ngày nghỉ, ngày lễ đã được duyệt sẽ hiện ra.
+Số 2: Bạn có thể xem nhấn vào nút “Nhìn” bạn sẽ xem được chi tiết.
+Số 3: Bạn có thể nhấn vào nút “lựa chọn”.
+Form đăng ký báo cáo đi làm ngày nghỉ, ngày lễ.
+Sau khi bạn chọn form đăng ký làm việc ngày nghỉ, ngày lễ, một giao diện mới sẽ được tạo ra ở đây
+Gồm thông tin bạn đã đăng ký đi làm ngày lễ, ngày nghỉ.
+
+
+Form đăng ký báo cáo đi làm ngày nghỉ, ngày lễ.
+Trong form này bạn có thể chỉnh sửa lại thời gian thực tế bạn đã làm trong ngày nghỉ, ngày lễ.
+Bạn có thể lại sửa thông tin tin về giờ ra bắt đầu, thời gian kết thúc, ngày làm việc thực tế.
+Ngoài ra bạn cũng cần upload file báo cáo vào cùng bạn đã làm được việc gì trong ngày hôm đó (cái này không bắt buộc có hoặc không tùy bạn)
+
+
+
+
+
+FORM TỔNG HỢP  KHI ĐI LÀM NGÀY NGHỈ, NGÀY LỄ.
+Form xem đăng ký đi làm vào ngày nghỉ, lễ.
+Để xem được thông tin tổng hợp đã đăng ký đi làm vào ngày nghỉ, lễ bạn vào menu sau đây: Management => Holiday Work Management => Holiday Work Ledger.
+Ở đây bạn có thể xem được toàn bộ những người đã đăng ký đi làm, với điều kiện là form của họ đã được duyệt
+Bạn cũng có thể xuất file excel ra.
+Note: phần này là dành cho nhân sự kiểm tra dữ liệu
+Form đăng ký báo cáo đi làm ngày nghỉ, ngày lễ.
+Với hình ảnh bên góc trái là bạn có thể tìm kiếm được các form bạn đã đăng ký đi làm thêm vào ngày nghỉ, ngày lễ, với điều kiện là bạn đã làm báo cáo nó mới hiển thị ra.
+Bạn cần vào menu sau: management => Holiday Work Management => Holiday Work Calculate Management.
+Note: Phần này là dành cho kế toán để thanh toán
+------------------------
+File: Hướng dẫn Groupware_Yêu cầu mua.pptx
+Hướng dẫn sử dụng chức năng SBC trên hệ thống Groupware
+ EA Team Việt Nam
+1.Đăng nhập hệ thống Groupware
+I. Đăng nhập Groupware
+Có hai cách để bạn đăng nhập vào hệ thống Groupware
+     + Bạn có thể truy cập bằng link sau đây: https://gw.vinatech.com/login.
+  + Bạn có thể chọn buổi tượng như hình dưới đây:
+     + Bạn mở trình duyệt lên và ỏ góc phải màn hình có biểu tượng=> bạn chọn tới icon của công ty có chữ groupware click vào đó
+2.Thông tin đăng nhập vào Groupware
+2. Thông tin đăng nhập
+- Bước 1: Thông tin tài khoản cũng như mật khẩu của bạn chính là mã nhân viên trên hệ thống ERP, mật khẩu mặc định từ 1 tới 4, trong trường hợp không được bạn liên hệ lại với EA
+Bước 2: Trước khi login, bạn cần chọn Vinatech vina Co.,Ltd. 
+Bước 3: khi đã chọn xong, bạn nhập mã nhân viên và mật khẩu nhấn nút login để vào hệ thống. 
+
+2.Form đăng ký mua
+1. Bạn truy cập vào phần menu chọn mục Electronic Document => Tiếp theo bạn chọn mục Cost => bạn chọn chức năng “Expense Report Document”
+Bước 1: Chọn đường line phê duyệt, ở đây bạn có thể chọn hai kiểu đường line phê duyệt.
+  + Một đã được cài đặt trong hệ thống, bạn chỉ cần chọn.
+  + Hai bạn có thể tự lựa chọn những ai có thể duyệt form cho bạn.
++ Ngoài ra bạn cũng có thể upload một file hoặc nhiều file cùng một lúc
+
+2.Form đăng ký mua
+Tiêu đề: Bạn cũng có thể đặt tiêu đề cho form đăng ký mua của mình như hình ở bên.
+Ngoài ra trong trường hợp bạn làm hộ ai đó, bạn vẫn có thể đưa tên người đó vào như hình dưới bên cạnh
+2.Form đăng ký mua
+Ở đây có hai trường hợp:
+Trường hợp 1: Mua hàng trong nước thì bạn cần nhập VAT, và không cần chọn phần đổi ngoại tệ
+Trường hợp hai bạn mua hàng nước ngoài cần chuyển đổi ngoại tệ, thì sẽ không cần nhập VAT, lưu ý nó sẽ tính giá trị tiền tệ tại thời điểm bạn đang làm form.
+Note: cả hai trường hợp trên đều phải nhập số tiền của nhà cung cấp.
+2.Form đăng ký mua
+Đây là phần bạn miêu tả nội dung. Trong phần này bạn có thể đưa các video vào, hình ảnh, cũng như, các loại font chữ, đồng, thời bạn cũng có thể tạo các bảng , bạn cũng có thể thêm các link vào trực tiếp nội dung.
+
+Yêu cầu trả lời trong form mua bán
+Nếu trong quá trình bạn làm form, người duyệt có câu hỏi yêu cầu bạn trả lời, thì nó sẽ hiển thị như hình trên đây:
+Bạn sẽ click vào rồi trả lời cho người approval
+Bước 2: Click “Xác nhận”
+Phần II: NGƯỜI DUYỆT FORM MUA BÁN
+3.Duyệt form mua bán
+Khi bạn có một yêu cầu duyệt form mua bán hoặc một form cần thanh toán,
+Bạn cần đăng nhập vào hệ thống rồi chọn tới menu “Electronic Document” => Approval Documents.
+Khi người dùng yêu cầu bạn duyệt, lập tức một email sẽ được gửi tới bạn, bạn có thể click vào đó để vào hệ thống.
+Ngoài hai cách trên khi vào hệ thống sẽ có một bảng hiển thị các form chờ bạn ký duyệt
+
+Duyệt form mua bán
+Khi bạn nhận được form yêu cầu duyệt bạn có 3 trường hợp:
+Trường hợp 1: Bạn duyệt cho người dùng bán nhấn nút bên trái
+Trường hợp 2: Bạn reject form, không đồng ý bạn nhấn nút đỏ ở giữa.
+Trường hợp 3 bạn có câu hỏi với người làm form, bạn nhập câu hỏi vào rồi, nhấn nút ở bên phải gửi đi, bạn chọn người cần hỏi
+------------------------
+File: Hướng dẫn groupware_Yêu cầu thanh toán.pptx
+Hướng dẫn yêu cầu thanh toán trên Groupware.
+Developer by EA Team VietNam
+Form yêu cầu thanh toán
+I. Purpose
+- Đăng nhập vào hệ thống bằng mã nhân viên và mật khẩu từ ERP với link dưới đây: https://gw.vinatech.com/
+Hoặc bạn có thể truy cập thống qua biểu tượng dưới đây:
+
+Form yêu cầu thanh toán.
+Sau khi bạn truy cập vào hệ thống Groupware, một giao diện như ở dưới hiện ra và bạn có thể dùng mã nhân viên và mật khẩu để đăng nhập vào
+
+Form yêu cầu thanh toán
+Khi bạn đăng nhập thành công trên menu chính bạn chọn “Electronic Document” => “Cost” => “Dusbursenment Document”
+Vui lòng xem hình bên cạnh
+Form yêu cầu thanh toán.
+Trong form yêu cầu thanh toán, đầu tiên bạn cần chọn đường line phê duyệt cho form của bạn như hình đầu tiền bên phải.
+
+
+Form yêu cầu thanh toán
+Sau khi bạn chọn xong đường line phê duyệt, bạn cần đặt tên cho form yêu cầu phê duyệt
+Ngoài ra bạn cũng có thể đính kèm các file đính kèm liên quan
+Trong trường hợp bạn đăng ký giúp người khác, bạn có thể chọn tên người yêu cầu bạn đăng ký hộ
+Form yêu cầu thanh toán
+- Với nút số 1 bạn có thể chọn form yêu cầu mua đã được duyệt.
+Với nút số 2 bạn có thể chọn nữa thêm mới vendor cần thanh toán. Mà không nhất thiết phải có form yêu cầu mua.
+Form yêu cầu thanh toán.
+Nếu bạn chọn “Liên kế tài liệu”, sẽ có một màn hình mới hiện thị một màn hình như bên trái, bạn có thể lựa chọn form bạn đã duyệt, để atteached vào form yêu cầu mua.
+- Hộp thoại mở lên bạn chọn trong combox sau đó rồi ấn kiểm tra, lập tức một màn hình mới tự hiện ra, các form yêu cầu mua đã được duyệt, bạn có thể chọn một, hoặc nhiều form
+
+Form yêu cầu thanh toán.
+Bạn cần phải click vào “Tín dụng” để chọn một tài khoản thanh toán, nếu bạn mua hàng ở Việt nam, thì bạn cần chọn tài khoản thanh toán ở Việt Nam, nếu bạn chọn mua hàng ở nước ngoài thì tài khoản thanh toán sẽ là đồng USD.
+Các hình ảnh bên trái là tài khoản USD
+
+Form yêu cầu thanh toán.
+Ngoài ra bạn cũng phải chọn mã tài khoản cho loại hàng mà bạn muốn thanh toán như hình bên trái, bạn cần phải tìm.
+Khi bạn click vào button “Bản ghi nợ” một cửa số mới hiện ra, ở đây có tất cả các mã tài khoản theo từng loại hàng mà bạn cần thanh toán.
+Form yêu cầu thanh toán.
+Ở hình ảnh bên trái số 1 là loại hóa đơn bạn cần chọn
+Ở hình số là mục chi phí này sẽ được tính cho phòng ban nào.
+Form yêu cầu thanh toán
+Số 1 là các loại thanh toán, đã được fix sẵn ngày trong tháng để thanh toán.
+Số 2 trong trường hợp bạn cần thanh toán vào ngày khác bạn có thể chọn
+Note: ở mục số hai còn phục thuộc vào trường hợp kế toán có đồng ý ngày thanh toán của bạn không.
+
+Form yêu cầu thanh toán
+Số 1 là các loại thanh toán, đã được fix sẵn ngày trong tháng để thanh toán.
+Số 2 trong trường hợp bạn cần thanh toán vào ngày khác bạn có thể chọn
+Note: ở mục số hai còn phục thuộc vào trường hợp kế toán có đồng ý ngày thanh toán của bạn không.
+
+List evaluate and form Evaluate
+-Step 3: Click button “Submit” to save information.
+- Step 4: Click confirm to confirm information and not change data.
+Update Status Transfer of HR
+Purpose: Only HR click Transfer in this page then Head Quarter Leader will see information to evaluate.
+------------------------
+File: Hướng dẫn sửa đổi BOM trên ERP và Groupware.pptx
+Hướng dẫn sử dụng chức năng tạo Ebom trên hệ thống ERP và sửa Bom trên hệ thống Groupware
+ EA Team Việt Nam
+1.Đăng nhập hệ thống ERP
+I. Đăng nhập hệ thống ERP.
+- Để có thể them mới được mã code BOM, trước tiên bạn cần đăng nhập vào hệ thống ERP như dưới đây:
+Thông tin tài khoản là mã nhân viên của bạn và mật khẩu
+Tìm kiếm menu EBOM trên ERP
+Sau khi bạn đăng nhập thành công ở bên góc phải màn hình có biểu tượng tìm kiếm bạn click vào đó và gõ chữ EBOM, sau đó chức năng sẽ hiển thị cho bạn, như các hình dưới đây.
+Giao diện khi truy cập
+Sau khi bạn tìm kiếm trên thanh công cụ, bạn nhấn enter thì một giao diện sẽ hiện ra như hình ở bên trái
+1. Bạn cần nữa chọn một  mã code đã được đăng ký
+2. Sau đó bạn nhấn vào tìm kiếm
+3. Nhập phiên bản của BOM
+4. Thêm các dòng dữ liệu
+5. Chọn mã nguyên vật liệu
+6. Chọn số lượng nguyên vật liệu
+7. Lưu lại
+
+Thay đổi cập nhật lại thông tin BOM.
+1. Tìm kiếm mã code của thành phẩm bán thành phẩm, hoặc của nvl
+2.Nhấn tìm kiếm để ra các thông tin cần thay đổi
+3. bạn nhấn vào nút số 3 để thay đổi phiên bản
+4. Sau khi xong hết thông tin bạn có thể cập nhật lại
+2.Xác nhận các thông tin đã đăng ký BOM trên Groupware
+Sau khi bạn đã đăng ký các loại nguyên vật liệu BOM xong bạn có thể xuống Groupware system, vào chức năng “Electronic Document => Production/Development => BOM Addition And update document”
+1. Chọn line phê duyệt.
+2. Đặt tên cho form của bạn.
+3. đính kèm file nếu có.
+4. Thêm mục hay tìm kiếm code, nếu có code sẽ tự sinh ra các mã đi kèm theo.
+5. Tương tự như mục 4
+6. Ghi chú hoặc giải thích
+
+Kiểm tra lại BOM trên MES.
+Sau khi hoàn tất các thao tác tạo code, tạo BOM, bạn có thể kiể tra nó trên MES, bằng màn hình A310, nếu bạn làm PO thì bạn có thể xem trên màn hình B310, bạn muốn xem lại code thì bạn có thể xem màn hình A230
+------------------------
+File: Hướng dẫn tạo PO trên Groupware.pptx
+Hướng dẫn sử dụng chức năng tạo PO và kế hoạch sản xuất trên hệ thống Groupware
+ EA Team Việt Nam
+1.Đăng nhập hệ thống Groupware
+I. Đăng nhập Groupware
+Có hai cách để bạn đăng nhập vào hệ thống Groupware
+     + Bạn có thể truy cập bằng link sau đây: https://gw.vinatech.com/login.
+  + Bạn có thể chọn buổi tượng như hình dưới đây:
+     + Bạn mở trình duyệt lên và ỏ góc phải màn hình có biểu tượng=> bạn chọn tới icon của công ty có chữ groupware click vào đó
+2.Thông tin đăng nhập vào Groupware
+2. Thông tin đăng nhập
+- Bước 1: Thông tin tài khoản cũng như mật khẩu của bạn chính là mã nhân viên trên hệ thống ERP, mật khẩu mặc định từ 1 tới 4, trong trường hợp không được bạn liên hệ lại với EA
+Bước 2: Trước khi login, bạn cần chọn Vinatech vina Co.,Ltd. 
+Bước 3: khi đã chọn xong, bạn nhập mã nhân viên và mật khẩu nhấn nút login để vào hệ thống. 
+Giao diện khi truy cập
+Như bạn biết thì trên hệ thống MES, nếu bạn cần tạo PO và kế hoạch sản xuất bạn cần phải làm hai bước
+Bước 1: Tạo PO ở màn hình B310, để tạo các thông tin cơ bản, như chọn nguyên vật liệu, chọn công đoạn, chọn công đoạn đầu vào và đầu ra
+Bước 2: khi bước 1 đã được thiết lập thì bước 2 sẽ được link các dữ liệu từ bước 1 sang bước 2, với màn hình B450, xác nhận lại các thông tin và cập thông tin chi tiết, đồng thời bạn có thể in mã LOT.
+- Màn hình PO là theo tháng, màn hình kế hoạch sản xuất là theo ngày, chúng link dữ liệu với nhau, từ màn hình tạo PO sang màn hình tạo kế hoạch sản xuất theo ngày.
+Màn hình tạo PO và kế hoạch sản xuất trên Groupware.
+1. Khi bạn đã truy cập vào hệ thống Groupware xong, hệ thống mặc định bạn đã ở menu “Home”=> trong menu Home => bạn vào menu => “Month Production Plan”.
+
+Trước khi tạo PO
+1. Sau khi click vào link menu, bạn sẽ có một giao diện như hình bên tay trai của bạn.
+Note: ở hình ảnh số hai có hai điểm bạn cần lưu ý
+Có chữ MES là bạn đăng ký PO nó sẽ hiện ra
+Có chữ “Đơn đặt hàng” thì đây là các đơn hàng do Sales của hàn quốc hoặc Sales Việt nam làm.
+Màn hình tạo PO và kế hoạch sản xuất trên Groupware.
+1. Nếu bạn muốn tạo mới PO thì bạn click vào “thêm kế hoạch”.
+2. Nếu trường hợp bạn sửa đổi thông tin của PO đã có bạn sẽ dùng nút  “Lưu kế hoạch”.
+3. Ở mục 3, bạn muốn xóa kế hoạch thì việc đầu tiên, là bạn lick vào “Xóa kế hoạch” => Sau đó bạn có thể lựa chọn các dòng dữ liệu để xóa (với điều kiện dữ liệu đó chưa được xác nhận). Rồi bạn ấn lại “Xóa kế hoạch” thêm một lần nữa là ok.
+4. Ở mục số 4 bạn có rất nhiều điều kiện để lựa chọn tìm kiếm PO đã được tạo
+5. Ngoài ra hệ thống còn hiển thị mặc định cho bạn 3 tháng gần nhất của PO
+Các nút trong tạo PO
+1. Sau khi bạn click vào “Thêm kế hoạch”, bạn kéo choột xuống dưới chân trang,một giao diện mới sẽ hiển thị ra cho bạn như hình bên trai.
+2. Số 1 là bạn có thể copy dữ liệu của một tháng bất kỳ
+3. Số 2 bạn sẽ click vào để chọn loại sản phẩm cần làm.
+4. Số 3 bạn xác nhận mọi thông tin, kiểu như lưu lại dữ liệu
+5. Số 4 là hủy bỏ đi
+Sao chép PO theo tháng.
+Khi bạn click vào “Sao chép kế hoạch sản xuất”, ngày lập tức một hộp thoại sẽ hiển thị ra, bạn chỉ cần chọn lựa tháng bạn cần, và hệ thống sẽ tự động sao chép toàn bộ dữ liệu cho bọn.
+
+Ví dụ ở đây tôi chọn tháng tư bạn sẽ thấy nó copy hết toàn bộ các BOM (con hàng trong tháng tư cho bạn)
+Các tác tạo PO
+1.  Khi bạn click vào “Thêm kế hoạch” bạn kéo choột của mình xuống cuối, bạn sẽ thấy một phần giao diện hiện ra, tại đây bạn có thể click tiếp vào nút “Yêu cầu đặt hàng”, thực tế đây là các BOM.
+2. Một hộp thoại mới như ảnh bên tay trai bạn sẽ hiển thị ra cho bạn, bạn có thể chọn nhiều BOM cùng một lúc cũng được, sau khi chọn xong bạn nhấn vào nút màu xanh “Áp dụng mục đã chọn”
+3. Khi bạn chọn mã xong trên hội thoại bạn muốn hủy đi bạn có thể click trực tiếp vào mã, lúc tức nó sẽ bị mất đi cho bạn
+Các tạo PO.
+1. Số 1 bạn chọn tháng sẽ làm PO
+2. Số 2 bạn chọn tổng số lượng PO trong tháng sẽ làm.
+3. Chọn kiểu của PO, có hai dạng một là “Sản xuất” tức là sẽ đồng ý tạo , hai là “không làm” tức là sẽ không tạo PO.
+4. Số 4 vui lòng chọn phiên bản của BOM ở đây bắt buộc phải chọn BOM phiên bản 2001, ngoài ra không được chọn bất kỳ loại phiên bản BOM nào cả
+5. Số 5 bạn có thể xóa dòng dữ liệu của loại PO đó đi
+6. Số bạn có thể hủy hết đi để làm lại
+Các tác tạo PO
+1.  Sau khi điền đầy đủ thông tin bạn sẽ thấy như hình ảnh đầu tiên ở bên trái.
+2. Nếu tất cả đã xong bạn nhấn “Đăng ký gói” nó sẽ hiển thị ra một hộp thoại và bạn có hai nữa chọn, nhấn vào “Sự đăng ký” hoặc hủy bỏ form.
+------------------------
+File: Hướng dẫn tạo PO và Kế hoạch ngày trên Groupware.pptx
+Hướng dẫn sử dụng chức năng tạo PO và kế hoạch ngày trên hệ thống Groupware
+ EA Team Việt Nam
+1.Đăng nhập hệ thống Groupware
+I. Đăng nhập Groupware
+Có hai cách để đăng nhập vào hệ thống Groupware
+     + Cách 1: Truy cập bằng link sau đây: https://gw.vinatech.com/login.
+  + Cách 2: Mở trình duyệt lên và ỏ góc phải màn hình có biểu tượng=> chọn tới icon của công ty có chữ groupware
+2.Thông tin đăng nhập vào Groupware
+2. Thông tin đăng nhập
+- Bước 1: Thông tin tài khoản cũng như mật khẩu của chính là mã nhân viên trên hệ thống ERP, mật khẩu mặc định từ 1 tới 6. Trong trường hợp không được vui lòng liên hệ lại với EA
+Bước 2: Trước khi login, cần chọn Vinatech vina Co.,Ltd. 
+Bước 3: khi đã chọn xong, nhập mã nhân viên và mật khẩu nhấn nút login để vào hệ thống. 
+Giao diện khi truy cập
+Như bạn biết thì trên hệ thống MES, nếu bạn cần tạo PO và kế hoạch sản xuất bạn cần phải làm hai bước
+Bước 1: Tạo PO ở màn hình B310, để tạo các thông tin cơ bản, như chọn nguyên vật liệu, chọn công đoạn, chọn công đoạn đầu vào và đầu ra
+Bước 2: Khi đã hoàn thành bước 1, dữ liệu sẽ được link với màn hình B450. Ở màn hình B450 bạn có thể tạo kế hoạch ngày, và tạo lot theo kế hoạch ngày tương ứng, đồng thời bạn có thể in tem.
+- Màn hình PO là theo tháng, màn hình kế hoạch sản xuất là theo ngày, chúng link dữ liệu với nhau, từ màn hình tạo PO sang màn hình tạo kế hoạch sản xuất theo ngày.
+Màn hình tạo PO và kế hoạch sản xuất trên Groupware.
+1. Khi đã truy cập vào hệ thống Groupware,  từ Home => click menu Production Management => Month Production Plan.
+
+Trước khi tạo PO
+1. Sau khi click vào link menu, sẽ có một giao diện như hình bên trái
+Note: ở hình ảnh số hai có các điểm cần lưu ý
+MES :đăng ký PO trên MES
+Kế hoạch bán hàng :là các đơn hàng do Sales của hàn quốc hoặc Sales Việt nam làm.
+Phần mềm nhóm là PO tạo thủ công trên Groupware
+Màn hình tạo PO và kế hoạch sản xuất trên Groupware.
+1. Xác nhận lô hàng: Trong trường hợp đã chắc chắn xác nhận lô hàng và gửi đi để cấp trên duyệt
+2. Thêm kế hoạch: Nếu bạn muốn tạo mới PO 
+3. Lưu kế hoạch: Nếu trường hợp bạn sửa đổi thông tin của PO đã có 
+4. Xóa kế hoạch: nếu bạn muốn xóa kế hoạch thì việc đầu tiên, là bạn lick vào 4 => Sau đó bạn có thể lựa chọn các dòng dữ liệu để xóa (với điều kiện dữ liệu đó chưa được xác nhận). Rồi bạn ấn lại “Xóa kế hoạch” thêm một lần nữa là ok.
+5. Ở mục số 5 bạn có rất nhiều điều kiện để lựa chọn tìm kiếm PO đã được tạo
+Ngoài ra hệ thống còn hiển thị mặc định cho bạn 3 tháng gần nhất của PO
+I . Chức năng thêm PO
+Sau khi bạn click vào “Thêm kế hoạch”, kéo chuột xuống cuối trang, một giao diện mới sẽ hiển thị ra cho bạn như hình bên trái.
+1. Có thể copy dữ liệu của một tháng bất kỳ
+2. Chọn loại model cần làm.
+3. Xác nhận thông tin đã đăng ký (Lưu lại)
+4. Hủy yêu cầu thêm
+Sao chép kế hoạch sản xuất
+Khi click vào “Sao chép kế hoạch sản xuất”, ngay lập tức một hộp thoại sẽ hiển thị ra, sau đó bạn cần  lựa chọn tháng cần sao chép. 
+Sau khi chọn xong, chỉnh sửa và điền các thông tin cần thiết. Ấn Đăng ký gói để xác nhận
+Yêu cầu mặt hàng
+Khi click vào nút Yêu cầu mặt hàng, một bảng chọn danh mục mặt hàng hiện lên, tìm kiếm mã/tên hàng cần chọn và ấn Áp dụng mục đã chọn
+Sau khi đã chọn danh sách các model cần tạo:
+1. Chọn tháng tạo PO
+2. Điền số lượng PO trong tháng sẽ làm.
+3. Chọn kiểu của PO, có hai dạng một là “Sản xuất” tức là sẽ fix (đã chắc chắn và không sửa đổi), hai là “không được tạo”: không chắc chắn, có thể sửa đổi
+4. Chọn phiên bản của BOM. (Lưu ý chọn BOM phiên bản 2001 – mã BOM của VN)
+5. Có thể xóa dòng dữ liệu của loại PO đó đi
+6. Hủy yêu cầu thêm.
+ 
+1.  Sau khi điền đầy đủ thông tin, ấn Đăng ký gói để xác nhận.
+2. Sau đó ấn Gửi đi.
+Kết quả
+II . Chức năng sửa PO
+Để sửa đổi PO, click vào dữ liệu cần sửa (1) và điền đầy đủ lý do sửa (2)
+Để Hủy bỏ thao tác sửa, ấn nút Hủy bỏ (3)
+
+
+
+
+
+
+
+Để lưu lại dữ liệu vừa sửa, kéo lên đầu trang và ấn nút Lưu kế hoạch
+II . Chức năng sửa PO
+Để sửa đổi PO, click vào dữ liệu cần sửa (1) và điền đầy đủ lý do sửa (2)
+Để Hủy bỏ thao tác sửa, ấn nút Hủy bỏ (3)
+
+
+
+
+
+
+
+Để lưu lại dữ liệu vừa sửa, kéo lên đầu trang và ấn nút Lưu kế hoạch (4)
+Sau đó chọn Điều chỉnh (5) để xác nhận
+II . Chức năng xóa PO
+Bước 1: Click nút Xóa kế hoạch
+Bước 2: Chọn dòng cần xóa (Lưu ý khi được chọn thì dòng sẽ chuyển màu đỏ)
+Bước 3: Ấn Xóa đối tượng đã chọn để Xác nhận xóa
+Bước 4: Ấn Xóa
+
+
+
+Ấn Hủy bỏ (5) để hủy thao tác
+
+
+ 
+Để chốt PO, click chọn trước PO và ấn nút Xác nhận lô hàng. Khi đó PO chuyển từ trạng thái không được tạo sang sản xuất
+III . Xem chi tiết và tạo kế hoạch ngày
+ 
+Để chốt PO, click chọn trước PO và ấn nút Xác nhận lô hang. Khi đó PO chuyển từ trạng thái không được tạo sang sản xuất
+ 
+Để xem chi tiết PO, click Chi tiết
+ 
+Để xác nhận PO, hãy click vào dòng Vui long tạo lệnh sản xuất PO. 
+
+ Sau đó, chọn BOM 
+Lưu ý: Mã BOM Việt Nam sử dụng là 2001
+
+Cuối cùng chọn Sản xuất và chọn Đã xác nhận
+ 
+Sau khi xác nhận, bên dưới sẽ hiện ra các trường thông tin để tạo kế hoạch ngày:- Nơi làm việc: Tạo kế hoạch ngày cho nhà máy nào- Ngày lập kế hoạch: Tạo kế hoạch cho ngày nào- Cell Line- Ca làm việc- Số lượng: 
+Lưu ý:- Có thể ấn dấu + để tạo them kế hoạch. Dấu – để hủy- Tổng số lượng sản xuất của kế hoạch ngày phải nhỏ hơn hoặc bằng    tổng số lượng của PO
+ 
+Sau khi đã điền đầy đủ các thông tin bước trên, hãy chọn các kế hoạch ngày, hãy click chọn các dòng cần xác nhận (dòng sau khi được chọn sẽ có màu xanh)
+Sau đó ấn nút Mục tiêu lựa chọn Đã xác nhận, rồi Áp dụng
+Hệ thống thông báo thành công
+ 
+Ấn nút Chi tiết của kế hoạch ngày cần tạo Lot
+
+Khi ấn nút Lot Sản xuất, một ô nhập số lượng mỗi Lot hiện lên
+Điền số lượng vào và ấn Áp dụng
+
+Lưu ý: Đây là số lượng của mỗi Lot. Trong ví dụ: Tổng số lượng kế hoạch ngày là 50000Số lượng mỗi lot nhập vào là 5000Như vậy ta sẽ tạo được 50000/5000 = 10 Lot
+IV. Tạo Lot
+ 
+Kết quả
+------------------------
+File: Hướng dẫn đăng ký các loại code.pptx
+Hướng dẫn sử dụng chức năng tạo code và sửa BOMtrên Groupware
+ EA Team Việt Nam
+1.Đăng nhập hệ thống Groupware
+I. Đăng nhập Groupware
+Có hai cách để bạn đăng nhập vào hệ thống Groupware
+     + Bạn có thể truy cập bằng link sau đây: https://gw.vinatech.com/login.
+  + Bạn có thể chọn buổi tượng như hình dưới đây:
+     + Bạn mở trình duyệt lên và ỏ góc phải màn hình có biểu tượng=> bạn chọn tới icon của công ty có chữ groupware click vào đó
+2.Thông tin đăng nhập vào Groupware
+2. Thông tin đăng nhập
+- Bước 1: Thông tin tài khoản cũng như mật khẩu của bạn chính là mã nhân viên trên hệ thống ERP, mật khẩu mặc định từ 1 tới 4, trong trường hợp không được bạn liên hệ lại với EA
+Bước 2: Trước khi login, bạn cần chọn Vinatech vina Co.,Ltd. 
+Bước 3: khi đã chọn xong, bạn nhập mã nhân viên và mật khẩu nhấn nút login để vào hệ thống. 
+
+Thay thế MES bằng Groupware.
+Như bạn biết trước đây người dùng có thể dùng màn hình A230, là màn hình cấu hình các loại nguyên vật liệu cho cell line, module, điện cực.
+Theo yêu cầu của EA hàn quốc toàn bộ các dữ liệu các code của A230 trên hệ thống MES sẽ được đăng ký trên hệ thống Groupware.
+Sau khi bạn đăng nhập vào hệ thống thành công, bạn vào menu sau => Electronic Document => Item => Item Registration Document.
+
+Chọn thông tin phê duyệt, tiêu đề, người làm form, upload file.
+1. Chọn người duyệt
+2. Ghi tiêu đề form
+3. Tải file đính kèm.
+4. Làm form giúp ai đó không phải mình làm.
+Chọn kiểu code của vật liệu.
+Trong phần “Phân loại tài liệu” có ba loại code để bạn chọn
+1. Module
+2. Cell
+3. Raw material
+Khi bạn chọn đường line phê duyệt, vui lòng đúng phần loại như dưới đây
+[Cell] = > Single Cell
+[Module] => Module
+ [Raw material] => Raw materials
+Item Registration Document Classification.
+1. Ở nút “Add” bạn có thể them một tab nữa để thêm các mã code khác
+2. Ở nút “Copy” bạn có thể nguyên nội dung của tab trước và có thể sửa lại
+3. Ở nút “Delete”, trường hợp bạn không cần nữa bạn có thể xóa các tab đi.
+4. Chọn kiểu của mã code (ở đây bạn có thể chọn kiểu bán thành phầm, nguyên vật liệu, 
+5. ở đây bạn có thể nhập thông số như Voltage (ví dụ: 12- 3.0 C035)
+6. Ở đây bạn có thể nhập Farad (Ví dụ: 3.5 mm).
+The request information
+1. Chọn loại hàng, hàng để phát triển, hàng để sản xuất hàng loạt.
+2. Tên của khách hàng.
+3. Mặt hàng này thuộc bộ phận nào sản xuất
+4. Người dùng loại code này là ai
+5.Ngày đặt hàng dự kiến khi nào.
+Kiểm tra chi tiết.
+1. Chọn đơn vị 
+2. Chọn danh mục loại hàng
+3. Chọn phân loại hàng
+4. Chọn nhóm danh mục sản phẩm
+5. Chọn kích cỡ con hàng.
+6. Chọn kiểu mua sắm con hàng
+7. Chọn kiểu loại mặt hàng
+8. Chọn kiểu ở trong nước hay ở nước ngoài.
+
+
+
+THAY ĐỔI THÔNG TIN CỦA CÁC LOẠI CODE
+Cập nhật lại thông tin code.
+Để thay đổi, hoặc cập nhật bất kỳ thông tin nào cho mã code, bạn cần vào menu như hình bên trai => Electronic => Item => Item Change Document.
+Chọn loại mã code để cập nhật
+1. ở nút “Tìm kiếm mặt hàng”, bạn cần click choột vào đó
+2. Một cửa số mới sẽ hiện ra, bạn có thể tìm kiếm và chọn bất kỳ mã code hàng nào bạn cần cập nhật lại.
+3 Sau khi đã chọn xong bạn có thể nhấn Áp dụng nữa chọn
+Cập nhật lại thông tin code.
+Sau khi bạn chọn một mã code bất kỳ chương trình sẽ tự động sinh ra cho bạn các mã code như hình bên cạnh, sau đó bạn thể cập nhật lại thông tin, theo ý muốn của bạn.
+Cập nhật lại thông tin code.
+1. Chọn kiểu loại mua hàng
+2. Chọn kho đưa vào
+3. Chọn kho đưa ra
+4. Chọn bộ phận chịu cost
+Cập nhật lại thông tin code.
+1. Gửi tới người duyệt.
+2. Lưu tạm vào hệ thống, để sửa sau, hoặc dùng sau.
+3. Xóa form đi.
+4. Xem tổng thể trước khi gửi đi.
+5. Nhập lại mới các thông tin.
+6. Giải thích tại sao cần cập nhật.
+Người
+------------------------
+File: [GROUPWARE] Purchase Manual.pptx
+Groupware Purchase Process
+1. Overview of the Groupware Purchase Process 
+2. Process Flow for Groupware Document (Purchase)
+3. Process Flow for Groupware Document (Purchase Closing)
+4. Purchase Management for Groupware Document
+
+Overview of the Groupware Purchase Process
+[MES] - [C220] 
+IQC Inspection
+ * IQC PassCan proceed only after the inspection is passed.
+Need Return 
+[MES] - [F330] 
+Material Receipt And Print Label
+Upon completion of Arrival Confirmation,
+the receipt data will be registered in MES.
+Write a Purchase Resolution 
+by retrieving Receiving and Return Documents.
+[GROUP WARE] Sales Order Document (headquarter)
+ * Direct Import via HQ  - When the vendor is HQ,      a sales order is automatically created in HQ  - This process is applied 
+     when HQ purchases items, equipment, etc.
+1. Lựa chọn đối tác đặt hàng
+1. Chọn định dạng tài liệu muốn kết nối
+Kết nối tài liệu nhóm cần chứng từ khi đặt hàng (ví dụ: đơn yêu cầu mua hàng)
+Process Flow for Groupware Document (Purchase)
+Purchase Order Registration Document ( Electronic document - Purchase )
+Đối với nhập trực tiếp từ HQ, cần chọn mã nhà cung cấp HQ.
+Purchase Order Registration Document ( Electronic document - Purchase )
+Giao dịch phân phối- Giao dịch mua hàng không phải để nhập kho mà để phân phối- Khi nhấn nút này, quá trình nhập kho và xử lý nhập kho liên quan đến MES sẽ không được thực hiện.
+Khi phê duyệt tài liệu này xong, dữ liệu sẽ tự động được đăng ký vào hệ thống ERP.
+Process Flow for Groupware Document (Purchase)
+Purchase Order Registration Document (Electronic document - Purchase )
+1. Chọn mặt hàng muốn mua
+2. Nhập đơn giá, số lượng, giá trị, VAT, ngày giao hàng, kho, và trung tâm chi phí của từng mặt hang   - Khi nhập số lượng và đơn giá, giá trị và VAT sẽ được tính toán tự động.
+Process Flow for Groupware Document (Purchase)
+Arrival Confirmation Document (Electronic document - Purchase )
+Chọn đơn yêu cầu đặt hàng đã được tạo trước đó
+Process Flow for Groupware Document (Purchase)
+Arrival Confirmation Document (Electronic document - Purchase )
+Thông tin đơn đặt hàng đã đăng ký trước đó
+Trong trường hợp nhập khẩu, nhập thông tin B/L- Trong trường hợp giao dịch trong nước, mục này sẽ không hiển thị trên màn hình, nên không cần nhập
+1) Nhập số B/L2) Ngày thanh toán số tiền cho đối tác
+3) Điều kiện thanh toán cho đối tác (T/T, D/P, D/A, v.v.)4) Incoterms5) Tỷ giá được ghi trong B/L
+Process Flow for Groupware Document (Purchase)
+Arrival Confirmation Document (Electronic document - Purchase )
+1) Chọn bộ phận mua hang
+2) Ngày thanh toán do người dùng chọn, không phải ngày thanh toán tự động tính toán từ số tiền đã tính3) Ngày thanh toán theo quy định của công ty (ví dụ: ngày 15 của tháng sau)4) Ngày phát hành tài liệu B/L = Ngày ghi sổ5) Tổng số tiền
+Trong trường hợp nhập khẩu, Chi phí phụ B/L- Trong trường hợp giao dịch trong nước, mục này sẽ không hiển thị trên màn hình, nên không cần nhập
+
+Trong trường hợp nhập khẩu, Đăng ký thông tin thông quan- Trong trường hợp giao dịch trong nước, mục này sẽ không hiển thị trên màn hình, nên không cần nhập
+
+1) Đăng ký số thông quan
+2) Nhập số hóa đơn
+3) Ngày khai báo trong chứng nhận khai báo nhập khẩu
+4) Tỷ giá trong chứng nhận khai báo nhập khẩu
+Trong trường hợp nhập khẩu, dữ liệu sẽ tự động được đăng ký vào ERP B/L, chi phí phụ B/L và thông quan.
+Process Flow for Groupware Document (Purchase)
+Arrival Confirmation Document (Electronic document - Purchase )
+Chọn mặt hàng nhập kho và nhập thông tin
+1. Chọn mặt hàng muốn mua
+Nhập ngày hàng hóa thực tế mua về đến công ty
+Số tiền áp dụng tỷ giá B/L và số tiền áp dụng tỷ giá trong chứng nhận khai báo nhập khẩu
+Process Flow for Groupware Document (Purchase)
+Arrival Confirmation Document (Electronic document - Purchase )
+Nhân viên kho nhập thông tin liên quan đến việc phát hành nhãn MES trên màn hình tiếp nhận [F330]
+Số lượng lot mỗi bao bì
+Số lượng nhãn
+Tạo nhãn thủ công
+Khi nhập thông tin vào mục này, dữ liệu sẽ tự động được điền vào việc phát hành nhãn MES F330
+Khi hoàn tất tiếp nhận mà không cần nhấn nút tạo nhãn thủ công, nhãn sẽ được tạo tự động
+Nhân viên kho chọn mặt hàng xuất kho
+Process Flow for Groupware Document (Purchase)
+Arrival Confirmation Document (Electronic document - Purchase )
+Nhân viên kho nhập thông tin liên quan đến việc phát hành nhãn MES trên màn hình tiếp nhận [F330]
+Khi tiếp nhận hoàn tất, thông báo và email sẽ được gửi đến người nhận tài liệu (ví dụ: đội chất lượng). Khi đội này hoàn tất kiểm tra nhập khẩu theo từng mẫu [C220], email và thông báo xác nhận hoàn tất sẽ được gửi đến tất cả người tiếp nhận.
+Process Flow for Groupware Document (Purchase)
+Receiving Confirmation Document (Electronic document - Purchase )
+Tải danh sách đơn yêu cầu nhập hàng đã tạo
+Process Flow for Groupware Document (Purchase)
+Receiving Confirmation Document (Electronic document - Purchase )
+Thông tin đơn đặt hàng đã đăng ký trước đó
+Thêm mặt hàng đã hoàn tất kiểm tra nhập khẩu
+Chỉ các mục đã được kiểm tra nhập khẩu hiển thị trên màn hình, và chỉ những mặt hàng đạt kiểm tra mới có thể chọn.
+Process Flow for Groupware Document (Purchase)
+Receiving Confirmation Document (Electronic document - Purchase )
+Số lượng đạt tiêu chuẩn và số tiền của mặt hàng đã chọn sẽ được tự động tính toán và hiển thị. Đối với kho, hệ thống sẽ tự động điền theo kho đã được nhập trong Arrival Confirmation Document.
+Có thể kiểm tra chi tiết nội dung kiểm tra của từng mặt hàng
+Khi tiếp nhận hoàn tất, quá trình nhập kho sẽ được xử lý trong ERP và MES, đồng thời dữ liệu tồn kho sẽ được cập nhật.
+Process Flow for Groupware Document (Purchase)
+Return Product Document (Electronic document - Purchase )
+Trường hợp trả lại các mặt hàng đã nhập kho
+1. Chọn tài liệu nhập kho đã được tạo
+Process Flow for Groupware Document (Purchase)
+Return Product Document (Electronic document - Purchase )
+Thông tin đơn đặt hàng đã đăng ký trước đó
+Chọn mặt hàng muốn trả lại và điền thông tin
+Process Flow for Groupware Document (Purchase)
+Return Product Document (Electronic document - Purchase )
+Thông tin đơn đặt hàng đã đăng ký trước đó
+Có thể chọn LOT của mặt hàng muốn trả lại
+Đối với LOT trả lại, sẽ được xử lý chuyển vào kho lỗi trong MES.Xử lý liên quan đến việc trả lại trong ERP sẽ được tự động đăng ký.
+Process Flow for Groupware Document (Purchase)
+Return Product Document (Electronic document - Purchase )
+Thông tin đơn đặt hàng đã đăng ký trước đó
+1
+2
+3
+4
+5
+1) Ngày trả lại2) Chọn loại hình trả lại3) Chọn xem việc trả lại là sau khi mua nguyên vật liệu hay sau khi mua gia công ngoài4) Phân loại VAT5) Tỷ giá     - Đối với đơn vị tiền tệ, tỷ giá áp dụng là tỷ giá khi mua hàng.
+Process Flow for Groupware Document (Purchase)
+Purchase Order Data Delete Document (Electronic document - Purchase )
+Viết tài liệu yêu cầu xóa khi dữ liệu bị nhập sai
+1. Chọn tài liệu đơn đặt hàng
+Nếu đơn đặt hàng đã được xử lý nhập kho, không thể xóa
+Process Flow for Groupware Document (Purchase)
+Purchase Order Data Delete Document (Electronic document -  Purchase )
+Chọn mặt hàng muốn xóa
+Đối với đơn nhập khẩu, tất cả thông tin đã được đăng ký về B/L và thông quan cũng sẽ bị xóa.Tài liệu này sẽ xóa dữ liệu, vì vậy cần sử dụng cẩn thận.
+Process Flow for Groupware Document (Purchase)
+Purchase Resolution Document (Electronic document - Cost Management )
+Đây là tài liệu dùng để hoàn tất công việc đóng sổ cho các đơn mua hàng đã hoàn tất nhập kho.
+Lưu ý theo từng tài liệuArrival Confirmation Document : - Trường hợp số tiền cần phải được thanh toán trước khi hoàn tất kiểm tra nhập khẩu (trước khi xử lý nhập kho)Receiving Confirmation Document : - Khi thực tế nhập kho xong và tiến hành công việc đóng sổ
+Return Product Document : - Khi tiến hành đóng sổ cho đơn mua hàng đã được xử lý trả lại
+Process Flow for Groupware Document (Purchase Closing)
+1) Giá trị ghi nợ và ghi có trên chứng từ - giá trị cố định
+2) Mô tả trên chứng từ sẽ được tự động điền, nên không cần phải ghi riêng.3) Ngày thanh toán khi chứng từ được phát hành.
+4) Số thông quan, số B/L được nhập trong tài liệu trước đó5) Khi đăng ký các chi phí phụ (ví dụ: chi phí vận chuyển) và chi phí thông quan, số tiền sẽ được hiển thị.6) Số lượng và giá trị của các mặt hàng đã nhập kho, cùng với số tiền thanh toán dựa trên tỷ lệ thuế nhập khẩu.
+Trong trường hợp nhập khẩu
+1
+2
+3
+5
+4
+6
+Purchase Resolution Document (Electronic document - Cost Management )
+Process Flow for Groupware Document (Purchase Closing)
+Purchase Resolution Document ( Electronic document - Cost Management )
+1. Chọn đối tác cần thanh toán các chi phí phụ (chi phí vận chuyển, v.v.) và chi phí thông quan
+Process Flow for Groupware Document (Purchase Closing)
+Purchase Resolution Document (Electronic document - Cost Management )
+1
+1) Giá trị ghi nợ và ghi có trên chứng từ - giá trị cố định
+2) Dùng khi cần thêm các mục chi phí phụ khác cho cùng một đối tác
+3) Danh sách chi phí phụ4) Mô tả trên chứng từ sẽ được tự động điền, nên không cần phải ghi riêng.
+5) Phòng ban phụ trách mục chi phí phụ này(Nhóm mua hang)
+6) Phát hành bảng kê giao dịch điện tử (cố định)
+7) Số tiền phải thanh toán cho nhà cung cấp (Tổng số tiền X)
+8)  - 8-1 : Ngày thanh toán do người dùng chọn, không phải ngày thanh toán tự động tính toán từ số tiền đã tính - 8-2 : Ngày thanh toán theo quy định của công ty (ví dụ: ngày 15 của tháng sau)
+ - 8-3 : Ngày phát hành liên quan đến số tiền chi phí phụ9) Chọn loại thuế10) VAT
+3
+4
+5
+9
+6
+7
+10
+2
+8
+Khi tài liệu được phòng kế toán tiếp nhận hoàn tất, chứng từ ERP sẽ được xử lý tự động.
+Process Flow for Groupware Document (Purchase Closing)
+8. Purchase Total List (Home -  Purchase Management)
+1
+2
+3
+4
+1) Bộ lọc tìm kiếm và tra cứu
+2) Khi thông tin đơn đặt hàng cần được thay đổi, nhấn nút và sau đó chỉnh sửa thông tin.
+3) Khi cần in đơn đặt hàng, nhấn vào đây.
+4) Tên tài liệu đơn đặt hàng trong Groupware - Khi nhấn vào, sẽ in nội dung tài liệu.
+5) Thông tin đơn đặt hàng
+6) Số lượng đặt hàng, nhập kho, và nhập kho thực tế
+7) Tình trạng tiến trình toàn bộ tài liệu theo từng đơn đặt hàng
+5
+6
+7
+Purchase Management for Groupware Document
+8. Purchase Total List (Home -  Purchase Management)
+Sửa đổi thông tin đơn đặt hàng muốn thay đổi- Tuy nhiên, đối với các đơn đặt hàng đang trong quá trình nhập kho và nhập kho thực tế, không thể sửa đổi.- Khi nhấn nút thay đổi, đơn yêu cầu thay đổi đơn đặt hàng sẽ được tạo tự động.
+Purchase Management for Groupware Document
+8. Purchase Total List (Home -  Purchase Management)
+In đơn đặt hàng - Có thể chỉnh sửa nội dung cần in (trừ các mục liên quan đến mặt hàng).
+Purchase Management for Groupware Document
+------------------------

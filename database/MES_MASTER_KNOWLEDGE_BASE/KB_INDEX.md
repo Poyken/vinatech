@@ -15,6 +15,7 @@
 | [KB_04_DONG_GOI_IN_TEM.md](KB_04_DONG_GOI_IN_TEM.md) | Tiêu chuẩn đóng gói, fix PartNo in tem, sửa mã Lot B523 | B523, B789, B351, A419 |
 | [KB_05_QC_ELECTRODE.md](KB_05_QC_ELECTRODE.md) | QC B597/C443/C512, Điện cực Slitting B552, Lỗi chuỗi độ dày | B597, C443, C512, B552 |
 | [KB_06_MASTER_DATA_TOOLS.md](KB_06_MASTER_DATA_TOOLS.md) | Model mới, Vol/Farad, SQL Utilities, Manual Bypass in tem khẩn | A410, STB_ModelBasicInfo, SQL tools |
+| [KB_07_GROUPWARE_INTEGRATION.md](KB_07_GROUPWARE_INTEGRATION.md) | Tích hợp Groupware: Mua hàng, Kế hoạch Sản Xuất, Đăng ký Code | Groupware, F330, C220, B310, B450 |
 
 ---
 
@@ -32,3 +33,4 @@
 | Không tìm thấy Lot ở C512 | KB_05 |
 | Giá lên B682/B781 | KB_01 |
 | Slitting chiều rộng B552 | KB_05 |
+| Groupware: Lỗi duyệt PO, sai BOM, hàng nhập chưa có QC | KB_07 |
