@@ -55,6 +55,14 @@ Khi User gửi bug report, thực hiện theo quy trình sau:
 
 ---
 
+## ⚡ AI EFFICIENCY PROTOCOLS (Tối Ưu Hiệu Suất)
+1. **Schema Check:** LUÔN đọc `DATABASE_SCHEMA_QUICKREF.md` trước khi viết Query để dùng chính xác tên cột (`ControlNo`, `LotID`, `CurrentQty`), tuyệt đối không đoán mò.
+2. **Self-Correction:** Nếu chạy `sqlcmd` bị lỗi sai tên cột/bảng, lập tức dùng `sp_help 'TableName'` để lấy Schema thật thay vì cố thử sai nhiều lần.
+3. **Log Filter:** Khi check `STB_ProcedureLog`, LUÔN lọc theo `CreateDateTime` (khoảng 1-2 giờ quanh thời điểm lỗi) để tránh tràn bộ nhớ output.
+4. **Tool Priority:** Ưu tiên dùng `grep_search` để tìm keyword trong SP/File thay vì đọc toàn bộ file dài.
+
+---
+
 ## 📋 Template Bug Report Chuẩn
 
 Khi User gửi bug, cần có:
