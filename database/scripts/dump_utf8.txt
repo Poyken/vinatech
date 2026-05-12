@@ -1,0 +1,331 @@
+﻿
+--- Table: STB_MaterialDocInfo | DocNo: 260512000200 ---
+MaterialDocNo: 260512000200
+BasicDate: 05/12/2026 00:00:00
+MaterialDocType: GR
+MaterialDocTypeCode: GR_NORMAL
+DocStatus: ARRIVAL
+SourceCustomerCode: AT06583V
+TargetCompanyCode: VVT
+TargetWorkCenterCode: VVT_F4
+TargetMaterialWarehouseCode: MODULE_BG2_WH
+RequestDateTime: 05/12/2026 11:03:25
+RequestUserID: Mr.Cuong
+RequestPlanDate: 05/12/2026 00:00:00
+IsRequestFix: False
+IsRequestApproval: False
+IsAssignPicking: False
+IsPickingFix: False
+IsSourceFinish: False
+IsTargetFinish: False
+MRMIExtText02: 20260303
+IsCancel: False
+CreateDateTime: 05/12/2026 11:03:25
+CreateUserID: Mr.Cuong
+ChangeDateTime: 05/12/2026 11:08:28
+ChangeUserID: Mr.Cuong
+
+--- Table: STB_MaterialDocDetail | DocNo: 260512000200 ---
+MaterialDocDetailNo: 260512000200
+MaterialDocNo: 260512000200
+MaterialCode: BEMISC-013
+MaterialStockAttribute: NORMAL
+RequestQty: 1000.00000
+AllowQty: 1000.00000
+PickingAssignQty: 1000.00000
+PickingQty: 0.00000
+ProcessFixQty: 0.00000
+UnitPriceQty: 1.00000
+UnitPrice: 0.00000
+MaterialIqcNo: 26051200005
+InspectionType: NONE
+MRMDExtText03: 20260402
+MRMDExtText04: 2026-05-12T00:00:00+07:00
+CreateDateTime: 05/12/2026 19:50:50
+CreateUserID: Mr.Cuong
+ChangeDateTime: 05/12/2026 19:50:50
+ChangeUserID: Mr.Cuong
+MRMDExtText06: E31
+ManufacturerCode: AT06652V
+WeekCode: 1026
+
+--- Table: STB_MaterialDocLotInfo | DocNo: 260512000200 ---
+MaterialDocDetailNo: 260512000200
+MDLISeqNo: 1
+LotID: ML20260512000013
+MaterialCode: BEMISC-013
+MaterialStockAttribute: NORMAL
+StockQty: 1000.00000
+IsChecked: True
+MaterialLocationCode: MODULE_BG2_WH_01
+MaterialDocNo: 260512000200
+PackingID: ML20260512000013
+LotNo: 20250928
+LotAttr03: CONG TY TNHH STC VINA
+LotAttr09: B03-03-04
+LotAttr10: 2025-09-28
+CreateDateTime: 05/12/2026 11:09:04
+CreateUserID: Mr.Cuong
+ChangeDateTime: 05/12/2026 11:09:48
+ChangeUserID: Mr.Cuong
+SAMPArrived: False
+
+--- Table: STB_MaterialDocInfo | DocNo: 260512000347 ---
+MaterialDocNo: 260512000347
+BasicDate: 05/12/2026 00:00:00
+MaterialDocType: GR
+MaterialDocTypeCode: GR_NORMAL
+DocStatus: ARRIVAL
+SourceCustomerCode: AT06652V
+TargetCompanyCode: VVT
+TargetWorkCenterCode: VVT_F4
+TargetMaterialWarehouseCode: MODULE_BG2_WH
+RequestDateTime: 05/12/2026 18:08:09
+RequestUserID: Mr.Cuong
+RequestPlanDate: 05/12/2026 00:00:00
+IsRequestFix: False
+IsRequestApproval: False
+IsAssignPicking: False
+IsPickingFix: False
+IsSourceFinish: False
+IsTargetFinish: False
+MRMIExtText02: 20260402
+IsCancel: False
+CreateDateTime: 05/12/2026 18:08:09
+CreateUserID: Mr.Cuong
+ChangeDateTime: 05/12/2026 18:08:34
+ChangeUserID: Mr.Cuong
+
+--- Table: STB_MaterialDocDetail | DocNo: 260512000347 ---
+MaterialDocDetailNo: 260512000347
+MaterialDocNo: 260512000347
+MaterialCode: BEMISC-013
+MaterialStockAttribute: NORMAL
+RequestQty: 72000.00000
+AllowQty: 1000.00000
+PickingAssignQty: 1000.00000
+PickingQty: 0.00000
+ProcessFixQty: 0.00000
+UnitPriceQty: 1.00000
+UnitPrice: 0.00000
+MaterialIqcNo: 26051200005
+InspectionType: NONE
+MRMDExtText03: 20260402
+MRMDExtText04: 2026-05-12T00:00:00+07:00
+CreateDateTime: 05/12/2026 19:55:11
+CreateUserID: Mr.Cuong
+ChangeDateTime: 05/12/2026 19:55:11
+ChangeUserID: Mr.Cuong
+MRMDExtText06: E31
+ManufacturerCode: AT06652V
+WeekCode: 1026
+
+--- Table: STB_MaterialDocLotInfo | DocNo: 260512000347 ---
+MaterialDocDetailNo: 260512000347
+MDLISeqNo: 1
+LotID: ML20260512000917
+MaterialCode: BEMISC-013
+MaterialStockAttribute: NORMAL
+StockQty: 1000.00000
+IsChecked: True
+MaterialLocationCode: MODULE_BG2_WH_01
+MaterialDocNo: 260512000347
+PackingID: ML20260512000917
+LotNo: 20260202
+LotAttr03: TNHH THUONG MAI TONG HOP VA DICH VU TRONG NGHIA
+LotAttr09: B03-03-03
+LotAttr10: 2026-02-02
+CreateDateTime: 05/12/2026 18:08:59
+CreateUserID: Mr.Cuong
+ChangeDateTime: 05/12/2026 18:17:20
+ChangeUserID: Mr.Cuong
+SAMPArrived: False
+
+--- Table: STB_MaterialDocLotInfo | DocNo: 260512000347 ---
+MaterialDocDetailNo: 260512000347
+MDLISeqNo: 2
+LotID: ML20260512000918
+MaterialCode: BEMISC-013
+MaterialStockAttribute: NORMAL
+StockQty: 1000.00000
+IsChecked: True
+MaterialLocationCode: MODULE_BG2_WH_01
+MaterialDocNo: 260512000347
+PackingID: ML20260512000918
+LotNo: 20260202
+LotAttr03: TNHH THUONG MAI TONG HOP VA DICH VU TRONG NGHIA
+LotAttr09: B03-03-03
+LotAttr10: 2026-02-02
+CreateDateTime: 05/12/2026 18:08:59
+CreateUserID: Mr.Cuong
+ChangeDateTime: 05/12/2026 18:17:20
+ChangeUserID: Mr.Cuong
+SAMPArrived: False
+
+--- Table: STB_MaterialDocLotInfo | DocNo: 260512000347 ---
+MaterialDocDetailNo: 260512000347
+MDLISeqNo: 3
+LotID: ML20260512000919
+MaterialCode: BEMISC-013
+MaterialStockAttribute: NORMAL
+StockQty: 1000.00000
+IsChecked: True
+MaterialLocationCode: MODULE_BG2_WH_01
+MaterialDocNo: 260512000347
+PackingID: ML20260512000919
+LotNo: 20260202
+LotAttr03: TNHH THUONG MAI TONG HOP VA DICH VU TRONG NGHIA
+LotAttr09: B03-03-03
+LotAttr10: 2026-02-02
+CreateDateTime: 05/12/2026 18:08:59
+CreateUserID: Mr.Cuong
+ChangeDateTime: 05/12/2026 18:17:20
+ChangeUserID: Mr.Cuong
+SAMPArrived: False
+
+--- Table: STB_MaterialDocLotInfo | DocNo: 260512000347 ---
+MaterialDocDetailNo: 260512000347
+MDLISeqNo: 4
+LotID: ML20260512000920
+MaterialCode: BEMISC-013
+MaterialStockAttribute: NORMAL
+StockQty: 1000.00000
+IsChecked: True
+MaterialLocationCode: MODULE_BG2_WH_01
+MaterialDocNo: 260512000347
+PackingID: ML20260512000920
+LotNo: 20260202
+LotAttr03: TNHH THUONG MAI TONG HOP VA DICH VU TRONG NGHIA
+LotAttr09: B03-03-03
+LotAttr10: 2026-02-02
+CreateDateTime: 05/12/2026 18:08:59
+CreateUserID: Mr.Cuong
+ChangeDateTime: 05/12/2026 18:17:20
+ChangeUserID: Mr.Cuong
+SAMPArrived: False
+
+--- Table: STB_MaterialDocLotInfo | DocNo: 260512000347 ---
+MaterialDocDetailNo: 260512000347
+MDLISeqNo: 5
+LotID: ML20260512000921
+MaterialCode: BEMISC-013
+MaterialStockAttribute: NORMAL
+StockQty: 1000.00000
+IsChecked: True
+MaterialLocationCode: MODULE_BG2_WH_01
+MaterialDocNo: 260512000347
+PackingID: ML20260512000921
+LotNo: 20260202
+LotAttr03: TNHH THUONG MAI TONG HOP VA DICH VU TRONG NGHIA
+LotAttr09: B03-03-03
+LotAttr10: 2026-02-02
+CreateDateTime: 05/12/2026 18:08:59
+CreateUserID: Mr.Cuong
+ChangeDateTime: 05/12/2026 18:17:20
+ChangeUserID: Mr.Cuong
+SAMPArrived: False
+
+--- Table: STB_MaterialDocLotInfo | DocNo: 260512000347 ---
+MaterialDocDetailNo: 260512000347
+MDLISeqNo: 6
+LotID: ML20260512000922
+MaterialCode: BEMISC-013
+MaterialStockAttribute: NORMAL
+StockQty: 1000.00000
+IsChecked: True
+MaterialLocationCode: MODULE_BG2_WH_01
+MaterialDocNo: 260512000347
+PackingID: ML20260512000922
+LotNo: 20260202
+LotAttr03: TNHH THUONG MAI TONG HOP VA DICH VU TRONG NGHIA
+LotAttr09: B03-03-03
+LotAttr10: 2026-02-02
+CreateDateTime: 05/12/2026 18:08:59
+CreateUserID: Mr.Cuong
+ChangeDateTime: 05/12/2026 18:17:20
+ChangeUserID: Mr.Cuong
+SAMPArrived: False
+
+--- Table: STB_MaterialDocLotInfo | DocNo: 260512000347 ---
+MaterialDocDetailNo: 260512000347
+MDLISeqNo: 7
+LotID: ML20260512000923
+MaterialCode: BEMISC-013
+MaterialStockAttribute: NORMAL
+StockQty: 1000.00000
+IsChecked: True
+MaterialLocationCode: MODULE_BG2_WH_01
+MaterialDocNo: 260512000347
+PackingID: ML20260512000923
+LotNo: 20260202
+LotAttr03: TNHH THUONG MAI TONG HOP VA DICH VU TRONG NGHIA
+LotAttr09: B03-03-03
+LotAttr10: 2026-02-02
+CreateDateTime: 05/12/2026 18:08:59
+CreateUserID: Mr.Cuong
+ChangeDateTime: 05/12/2026 18:17:20
+ChangeUserID: Mr.Cuong
+SAMPArrived: False
+
+--- Table: STB_MaterialDocLotInfo | DocNo: 260512000347 ---
+MaterialDocDetailNo: 260512000347
+MDLISeqNo: 8
+LotID: ML20260512000924
+MaterialCode: BEMISC-013
+MaterialStockAttribute: NORMAL
+StockQty: 1000.00000
+IsChecked: True
+MaterialLocationCode: MODULE_BG2_WH_01
+MaterialDocNo: 260512000347
+PackingID: ML20260512000924
+LotNo: 20260202
+LotAttr03: TNHH THUONG MAI TONG HOP VA DICH VU TRONG NGHIA
+LotAttr09: B03-03-03
+LotAttr10: 2026-02-02
+CreateDateTime: 05/12/2026 18:08:59
+CreateUserID: Mr.Cuong
+ChangeDateTime: 05/12/2026 18:17:20
+ChangeUserID: Mr.Cuong
+SAMPArrived: False
+
+--- Table: STB_MaterialDocLotInfo | DocNo: 260512000347 ---
+MaterialDocDetailNo: 260512000347
+MDLISeqNo: 9
+LotID: ML20260512000925
+MaterialCode: BEMISC-013
+MaterialStockAttribute: NORMAL
+StockQty: 1000.00000
+IsChecked: True
+MaterialLocationCode: MODULE_BG2_WH_01
+MaterialDocNo: 260512000347
+PackingID: ML20260512000925
+LotNo: 20260202
+LotAttr03: TNHH THUONG MAI TONG HOP VA DICH VU TRONG NGHIA
+LotAttr09: B03-03-03
+LotAttr10: 2026-02-02
+CreateDateTime: 05/12/2026 18:08:59
+CreateUserID: Mr.Cuong
+ChangeDateTime: 05/12/2026 18:17:20
+ChangeUserID: Mr.Cuong
+SAMPArrived: False
+
+--- Table: STB_MaterialDocLotInfo | DocNo: 260512000347 ---
+MaterialDocDetailNo: 260512000347
+MDLISeqNo: 10
+LotID: ML20260512000926
+MaterialCode: BEMISC-013
+MaterialStockAttribute: NORMAL
+StockQty: 1000.00000
+IsChecked: True
+MaterialLocationCode: MODULE_BG2_WH_01
+MaterialDocNo: 260512000347
+PackingID: ML20260512000926
+LotNo: 20260202
+LotAttr03: TNHH THUONG MAI TONG HOP VA DICH VU TRONG NGHIA
+LotAttr09: B03-03-03
+LotAttr10: 2026-02-02
+CreateDateTime: 05/12/2026 18:08:59
+CreateUserID: Mr.Cuong
+ChangeDateTime: 05/12/2026 18:17:20
+ChangeUserID: Mr.Cuong
+SAMPArrived: False
