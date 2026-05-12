@@ -188,7 +188,7 @@
   <h4 style="margin: 0; color: #2C3E50;">🔹 2. Project Task Reception & Brainstorming</h4>
   <ul style="margin-bottom: 10px;">
     <li><span style="color: #16A085;"><b>Task:</b></span> Receive and conceptualize the Excel-to-Database import module.</li>
-    <li><span style="color: #2980B9;"><b>Details:</b></span> Collaborated with <span style="color: #E67E22;">Anh Truong</span> to brainstorm the architecture for importing data from Excel files into the local database environment.</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Collaborated with <span style="color: #E67E22;">Mr. Truong</span> to brainstorm the architecture for importing data from Excel files into the local database environment.</li>
     <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done (Afternoon session)</li>
   </ul>
 </blockquote>
@@ -200,7 +200,7 @@
     <li><span style="color: #16A085;"><b>Task:</b></span> Initiate Excel Import development & NAIS installation.</li>
     <li><span style="color: #2980B9;"><b>Details:</b></span> 
       <ul style="margin-top: 5px; list-style-type: circle; color: #34495E;">
-        <li>💻 <b>Dev:</b> Commenced coding for the data import task assigned by Anh Truong.</li>
+        <li>💻 <b>Dev:</b> Commenced coding for the data import task assigned by Mr. Truong.</li>
         <li>🛠️ <b>Setup:</b> Installed NAIS for the new OQC workstation (Ms. Phuong Thom) to ensure inspection readiness.</li>
       </ul>
     </li>
@@ -266,7 +266,7 @@
   <h4 style="margin: 0; color: #2C3E50;">🔹 2. On-site Workshop Support</h4>
   <ul>
     <li><span style="color: #16A085;"><b>Task:</b></span> Factory floor technical assistance.</li>
-    <li><span style="color: #2980B9;"><b>Details:</b></span> Collaborated with <span style="color: #E67E22;">Anh Hải</span> on the production floor to carry out tasks as instructed.
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Collaborated with <span style="color: #E67E22;">Mr. Hai</span> on the production floor to carry out tasks as instructed.
       <ul style="margin-top: 5px; list-style-type: circle; color: #34495E;">
         <li>🏭 <b>Gemba Activity:</b> Observed actual manufacturing sequences to better align software features with operator requirements.</li>
         <li>🛠️ <b>Hardware Interaction:</b> Assisted in configuring departmental IT equipment to maintain high production uptime.</li>
@@ -289,7 +289,7 @@
   <h4 style="margin: 0; color: #2C3E50;">🔹 2. IT Infrastructure Maintenance & Site Visit</h4>
   <ul style="margin-bottom: 10px;">
     <li><span style="color: #16A085;"><b>Task:</b></span> Storage expansion training and remote network support.</li>
-    <li><span style="color: #2980B9;"><b>Details:</b></span> Learned hard drive capacity expansion techniques with <span style="color: #E67E22;">Anh Mạnh</span>. Traveled to <span style="color: #16A085;">Bac Giang 1</span> at noon to resolve network issues for end-users.</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Learned hard drive capacity expansion techniques with <span style="color: #E67E22;">Mr. Manh</span>. Traveled to <span style="color: #16A085;">Bac Giang 1</span> at noon to resolve network issues for end-users.</li>
     <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done</li>
   </ul>
 
@@ -336,8 +336,8 @@
 
   <h4 style="margin: 0; color: #2C3E50;">🔹 2. Bug Investigation & Fix under Mentor Guidance</h4>
   <ul>
-    <li><span style="color: #16A085;"><b>Task:</b></span> Check and fix bugs with guidance from <span style="color: #E67E22;">Anh Mạnh</span>.</li>
-    <li><span style="color: #2980B9;"><b>Details:</b></span> Worked under the supervision of <span style="color: #E67E22;">Anh Mạnh</span> to identify, diagnose, and resolve software bugs. Gained hands-on debugging experience and learned systematic troubleshooting approaches from the mentor.</li>
+    <li><span style="color: #16A085;"><b>Task:</b></span> Check and fix bugs with guidance from <span style="color: #E67E22;">Mr. Manh</span>.</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Worked under the supervision of <span style="color: #E67E22;">Mr. Manh</span> to identify, diagnose, and resolve software bugs. Gained hands-on debugging experience and learned systematic troubleshooting approaches from the mentor.</li>
     <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done (Afternoon session)</li>
   </ul>
 </blockquote>
@@ -429,7 +429,7 @@
   <h4 style="margin: 0; color: #2C3E50;">🔹 1. Comprehensive Network Infrastructure Repair — Bac Ninh & Bac Giang 1</h4>
   <ul style="margin-bottom: 10px;">
     <li><span style="color: #16A085;"><b>Task:</b></span> Full-day on-site troubleshooting and infrastructure maintenance across two facilities.</li>
-    <li><span style="color: #2980B9;"><b>Details:</b></span> Collaborated intensively with <span style="color: #E67E22;">Anh Hải</span> to restore and optimize network connectivity and integrity.
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Collaborated intensively with <span style="color: #E67E22;">Mr. Hai</span> to restore and optimize network connectivity and integrity.
       <ul style="margin-top: 5px; list-style-type: circle; color: #34495E;">
         <li>🔍 <b>Diagnostic Phase:</b> Performed comprehensive rack and patch panel inspections at both sites to identify source of reported connectivity drops and high latency.</li>
         <li>🛠️ <b>Physical Layer Repair:</b> Replaced or re-terminated faulty RJ45 connectors and identified degraded Cat6 cabling in high-traffic production zones.</li>
@@ -449,7 +449,7 @@
     <li><span style="color: #16A085;"><b>Task:</b></span> Network repair and QC room setup.</li>
     <li><span style="color: #2980B9;"><b>Details:</b></span> 
       <ul style="margin-top: 5px; list-style-type: circle; color: #34495E;">
-        <li>🔧 <b>Network Fix:</b> Collaborated with <span style="color: #E67E22;">Anh Hải</span> in the morning to continue resolving localized network disruptions.</li>
+        <li>🔧 <b>Network Fix:</b> Collaborated with <span style="color: #E67E22;">Mr. Hai</span> in the morning to continue resolving localized network disruptions.</li>
         <li>🔐 <b>Security Config:</b> Executed the administrative password change for the QC department.</li>
       </ul>
     </li>
@@ -539,37 +539,37 @@
 
 ## <span style="color: #C0392B;">🗓️ Monday, March 30, 2026</span>
 <blockquote style="border-left: 4px solid #C0392B; background-color: #FDEDEC; padding: 10px; margin-bottom: 20px;">
-  <h4 style="margin: 0; color: #2C3E50;">🔹 1. Production Support — Label Printing (Chị Dương Hoa)</h4>
+  <h4 style="margin: 0; color: #2C3E50;">🔹 1. Production Support — Label Printing (Ms. Duong Hoa)</h4>
   <ul style="margin-bottom: 10px;">
     <li><span style="color: #16A085;"><b>Task:</b></span> Assist production user with label printing issue.</li>
-    <li><span style="color: #2980B9;"><b>Details:</b></span> Hỗ trợ sản xuất xử lý user chị Dương Hoa: gỡ lỗi và thao tác in tem nhãn phục vụ dây chuyền sản xuất.
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Supported production user Ms. Duong Hoa with troubleshooting and label printing operations for the production line.
       <ul style="margin-top: 5px; list-style-type: circle; color: #34495E;">
-        <li>🏷️ <b>Issue:</b> User gặp lỗi in tem, cần được hỗ trợ cấu hình và thực hiện lệnh in đúng cách.</li>
-        <li>✅ <b>Resolution:</b> Đã reset hàng đợi in, kiểm tra driver và thực hiện in thành công.</li>
+        <li>🏷️ <b>Issue:</b> User encountered a label printing error; required configuration support and assistance with executing the print command correctly.</li>
+        <li>✅ <b>Resolution:</b> Reset the print queue, verified drivers, and successfully completed the printing process.</li>
       </ul>
     </li>
     <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done</li>
   </ul>
 
-  <h4 style="margin: 0; color: #2C3E50;">🔹 2. Printer Repair (Anh Trần Tuyên)</h4>
+  <h4 style="margin: 0; color: #2C3E50;">🔹 2. Printer Repair (Mr. Tran Tuyen)</h4>
   <ul style="margin-bottom: 10px;">
-    <li><span style="color: #16A085;"><b>Task:</b></span> Diagnose and repair a faulty printer for Anh Trần Tuyên.</li>
-    <li><span style="color: #2980B9;"><b>Details:</b></span> Kiểm tra máy in bị lỗi: kiểm tra cơ học, kết nối và driver.
+    <li><span style="color: #16A085;"><b>Task:</b></span> Diagnose and repair a faulty printer for Mr. Tran Tuyen.</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Inspected the faulty printer: checked mechanical parts, connections, and drivers.
       <ul style="margin-top: 5px; list-style-type: circle; color: #34495E;">
-        <li>🖨️ <b>Diagnosis:</b> Xác định nguyên nhân lỗi (kẹt giấy / lỗi tín hiệu kết nối).</li>
-        <li>🔧 <b>Fix:</b> Vệ sinh, căn chỉnh và khôi phục hoạt động bình thường cho máy in.</li>
+        <li>🖨️ <b>Diagnosis:</b> Identified the cause of the error (paper jam / connection signal issue).</li>
+        <li>🔧 <b>Fix:</b> Cleaned, calibrated, and restored normal operation for the printer.</li>
       </ul>
     </li>
     <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done</li>
   </ul>
 
-  <h4 style="margin: 0; color: #2C3E50;">🔹 3. Email Permission Configuration (Chị Vũ Trang CS)</h4>
+  <h4 style="margin: 0; color: #2C3E50;">🔹 3. Email Permission Configuration (Ms. Vu Trang CS)</h4>
   <ul>
-    <li><span style="color: #16A085;"><b>Task:</b></span> Configure and grant email access permissions for Chị Vũ Trang (CS department).</li>
-    <li><span style="color: #2980B9;"><b>Details:</b></span> Phân quyền mail chị Vũ Trang CS: thiết lập quyền truy cập hộp thư đúng với vai trò và phòng ban.
+    <li><span style="color: #16A085;"><b>Task:</b></span> Configure and grant email access permissions for Ms. Vu Trang (CS department).</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Configured email permissions for Ms. Vu Trang (CS): set up mailbox access rights according to role and department.
       <ul style="margin-top: 5px; list-style-type: circle; color: #34495E;">
-        <li>📧 <b>Config:</b> Cập nhật quyền trên hệ thống quản lý mail nội bộ.</li>
-        <li>🔐 <b>Security:</b> Đảm bảo chỉ cấp quyền phù hợp theo đúng chức năng công việc.</li>
+        <li>📧 <b>Config:</b> Updated permissions on the internal email management system.</li>
+        <li>🔐 <b>Security:</b> Ensured permissions were granted appropriately based on job functions.</li>
       </ul>
     </li>
     <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done</li>
@@ -578,13 +578,13 @@
 
 ## <span style="color: #7D3C98;">🗓️ Tuesday, March 31, 2026</span>
 <blockquote style="border-left: 4px solid #7D3C98; background-color: #F5EEF8; padding: 10px; margin-bottom: 20px;">
-  <h4 style="margin: 0; color: #2C3E50;">🔹 1. Network Repair — Bắc Giang 2 (with Anh Hải)</h4>
+  <h4 style="margin: 0; color: #2C3E50;">🔹 1. Network Repair — Bắc Giang 2 (with Mr. Hai)</h4>
   <ul style="margin-bottom: 10px;">
     <li><span style="color: #16A085;"><b>Task:</b></span> On-site network troubleshooting and repair at Bắc Giang 2 factory.</li>
-    <li><span style="color: #2980B9;"><b>Details:</b></span> Cùng <span style="color: #E67E22;">Anh Hải</span> sang Bắc Giang 2 sửa mạng: kiểm tra hạ tầng switch/cáp, xác định điểm đứt/nhiễu và khôi phục kết nối.
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Accompanied Mr. Hai to Bac Giang 2 for network repair: inspected switch/cable infrastructure, identified break/interference points, and restored connectivity.
       <ul style="margin-top: 5px; list-style-type: circle; color: #34495E;">
-        <li>🔍 <b>Inspection:</b> Kiểm tra toàn bộ rack, patch panel và đường cáp tại Bắc Giang 2.</li>
-        <li>🛠️ <b>Repair:</b> Xử lý điểm đứt cáp và cấu hình lại thiết bị mạng bị lỗi.</li>
+        <li>🔍 <b>Inspection:</b> Inspected the entire rack, patch panel, and cabling at Bac Giang 2.</li>
+        <li>🛠️ <b>Repair:</b> Fixed cable break points and reconfigured faulty network equipment.</li>
       </ul>
     </li>
     <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done</li>
@@ -593,10 +593,10 @@
   <h4 style="margin: 0; color: #2C3E50;">🔹 2. Admin Account Updates — Korean Manager Accounts</h4>
   <ul style="margin-bottom: 10px;">
     <li><span style="color: #16A085;"><b>Task:</b></span> Change admin credentials and downgrade permissions for 2 Korean manager accounts.</li>
-    <li><span style="color: #2980B9;"><b>Details:</b></span> Đổi mật khẩu admin và hạ quyền 2 tài khoản của 2 anh manager người Hàn, đảm bảo phân quyền đúng theo chính sách bảo mật công ty.
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Changed admin passwords and downgraded permissions for 2 Korean manager accounts, ensuring compliance with the company's security policy.
       <ul style="margin-top: 5px; list-style-type: circle; color: #34495E;">
-        <li>🔐 <b>Password Change:</b> Cập nhật thông tin xác thực admin cho 2 tài khoản.</li>
-        <li>⬇️ <b>Permission Downgrade:</b> Hạ quyền từ admin xuống user thường theo yêu cầu quản lý.</li>
+        <li>🔐 <b>Password Change:</b> Updated admin authentication details for the 2 accounts.</li>
+        <li>⬇️ <b>Permission Downgrade:</b> Downgraded from admin to regular user as per management request.</li>
       </ul>
     </li>
     <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done</li>
@@ -605,10 +605,10 @@
   <h4 style="margin: 0; color: #2C3E50;">🔹 3. Printer Repair — Scale/Scrap Machine (Unresolved)</h4>
   <ul style="margin-bottom: 10px;">
     <li><span style="color: #16A085;"><b>Task:</b></span> Investigate and repair the printer on the scrap-weight (cân phế) machine.</li>
-    <li><span style="color: #2980B9;"><b>Details:</b></span> Cố gắng sửa máy in cân phế nhưng chưa khắc phục được. Đã thực hiện các bước kiểm tra cơ bản nhưng lỗi cần điều tra sâu hơn.
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Attempted to repair the scrap-scale printer but was unsuccessful. Basic checks were performed, but the error requires deeper investigation.
       <ul style="margin-top: 5px; list-style-type: circle; color: #34495E;">
-        <li>🔎 <b>Attempted:</b> Kiểm tra driver, kết nối, cơ chế in và firmware.</li>
-        <li>⚠️ <b>Blocker:</b> Chưa xác định được nguyên nhân gốc rễ, cần thêm thời gian và tài liệu kỹ thuật của nhà sản xuất.</li>
+        <li>🔎 <b>Attempted:</b> Checked drivers, connections, printing mechanism, and firmware.</li>
+        <li>⚠️ <b>Blocker:</b> Root cause not yet identified; requires more time and manufacturer's technical documentation.</li>
       </ul>
     </li>
     <li><span style="color: #D35400;"><b>Status:</b></span> ⚠️ Pending — Unresolved, requires further investigation</li>
@@ -617,10 +617,10 @@
   <h4 style="margin: 0; color: #2C3E50;">🔹 4. WiFi & Factory Network Configuration Research</h4>
   <ul>
     <li><span style="color: #16A085;"><b>Task:</b></span> Study WiFi device configuration and factory network architecture.</li>
-    <li><span style="color: #2980B9;"><b>Details:</b></span> Tìm hiểu cách cấu hình thiết bị wifi (access point, controller) và nghiên cứu mô hình mạng nhà máy để chuẩn bị cho các công việc triển khai tiếp theo.
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Learned how to configure WiFi devices (access points, controllers) and studied the factory network model in preparation for upcoming deployment tasks.
       <ul style="margin-top: 5px; list-style-type: circle; color: #34495E;">
-        <li>📡 <b>WiFi Config:</b> Nghiên cứu cách thiết lập SSID, VLAN, bảo mật WPA2-Enterprise trên access point.</li>
-        <li>🏭 <b>Factory Network:</b> Tìm hiểu sơ đồ mạng tổng thể và các điểm kết nối quan trọng.</li>
+        <li>📡 <b>WiFi Config:</b> Researched SSID, VLAN, and WPA2-Enterprise security setup on access points.</li>
+        <li>🏭 <b>Factory Network:</b> Studied the overall network diagram and critical connection points.</li>
       </ul>
     </li>
     <li><span style="color: #D35400;"><b>Status:</b></span> 🔄 In Progress</li>
@@ -629,14 +629,14 @@
 
 ## <span style="color: #1A5276;">🗓️ Wednesday, April 01, 2026</span>
 <blockquote style="border-left: 4px solid #1A5276; background-color: #EAF2F8; padding: 10px; margin-bottom: 20px;">
-  <h4 style="margin: 0; color: #2C3E50;">🔹 1. Network Repair — Signal Interference (with Anh Hải)</h4>
+  <h4 style="margin: 0; color: #2C3E50;">🔹 1. Network Repair — Signal Interference (with Mr. Hai)</h4>
   <ul style="margin-bottom: 10px;">
     <li><span style="color: #16A085;"><b>Task:</b></span> Investigate and resolve network signal collision/interference issue.</li>
-    <li><span style="color: #2980B9;"><b>Details:</b></span> Sửa mạng với <span style="color: #E67E22;">Anh Hải</span>: xác định và xử lý lỗi mạng bị xung (broadcast storm / tín hiệu bị nhiễu) gây mất kết nối cục bộ.
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Repaired the network with Mr. Hai: identified and resolved network collision issues (broadcast storm / signal interference) causing local disconnections.
       <ul style="margin-top: 5px; list-style-type: circle; color: #34495E;">
-        <li>⚡ <b>Symptom:</b> Mạng bị xung — các thiết bị bị ngắt kết nối đột ngột, băng thông bị giảm mạnh.</li>
-        <li>🔧 <b>Fix:</b> Kiểm tra và tắt các port gây loop, cấu hình lại STP/RSTP để ổn định mạng.</li>
-        <li>✅ <b>Outcome:</b> Mạng ổn định sau khi xử lý xung.</li>
+        <li>⚡ <b>Symptom:</b> Network collision — devices disconnected abruptly, bandwidth dropped significantly.</li>
+        <li>🔧 <b>Fix:</b> Inspected and disabled loop-causing ports, reconfigured STP/RSTP to stabilize the network.</li>
+        <li>✅ <b>Outcome:</b> Network stabilized after resolving the collision.</li>
       </ul>
     </li>
     <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done</li>
@@ -645,10 +645,10 @@
   <h4 style="margin: 0; color: #2C3E50;">🔹 2. Software Bug Fix — 2x Sorting Machine PCs</h4>
   <ul style="margin-bottom: 10px;">
     <li><span style="color: #16A085;"><b>Task:</b></span> Resolve software errors on 2 sorting machine workstations.</li>
-    <li><span style="color: #2980B9;"><b>Details:</b></span> Sửa lỗi phần mềm chạy ở 2 máy tính điều khiển máy sorting: debug, xác định lỗi runtime và khôi phục hoạt động bình thường.
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Fixed software errors on 2 sorting machine control PCs: debugged, identified runtime errors, and restored normal operation.
       <ul style="margin-top: 5px; list-style-type: circle; color: #34495E;">
-        <li>🖥️ <b>Sorting Machine 1:</b> Lỗi phần mềm không khởi động được — đã xử lý dependency bị thiếu.</li>
-        <li>🖥️ <b>Sorting Machine 2:</b> Crash khi xử lý dữ liệu — đã vá lỗi và kiểm tra lại.</li>
+        <li>🖥️ <b>Sorting Machine 1:</b> Software failed to start — resolved missing dependencies.</li>
+        <li>🖥️ <b>Sorting Machine 2:</b> Crashed during data processing — patched the bug and re-verified.</li>
       </ul>
     </li>
     <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done</li>
@@ -657,7 +657,7 @@
   <h4 style="margin: 0; color: #2C3E50;">🔹 3. General User Support</h4>
   <ul>
     <li><span style="color: #16A085;"><b>Task:</b></span> Provide general IT support to end-users throughout the day.</li>
-    <li><span style="color: #2980B9;"><b>Details:</b></span> Hỗ trợ user các vấn đề kỹ thuật phát sinh trong ngày: phần cứng, phần mềm và kết nối mạng.</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Provided technical support for daily issues: hardware, software, and network connectivity.</li>
     <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done (Full day)</li>
   </ul>
 </blockquote>
@@ -667,10 +667,10 @@
   <h4 style="margin: 0; color: #2C3E50;">🔹 1. Hardware Installation — Bắc Giang 2 (Morning)</h4>
   <ul style="margin-bottom: 10px;">
     <li><span style="color: #16A085;"><b>Task:</b></span> Travel to Bắc Giang 2 to install hardware equipment.</li>
-    <li><span style="color: #2980B9;"><b>Details:</b></span> Sang <span style="color: #E67E22;">Bắc Giang 2</span> lắp máy buổi sáng: triển khai và cài đặt thiết bị phần cứng mới theo kế hoạch.
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Traveled to Bac Giang 2 in the morning for machine installation: deployed and installed new hardware equipment as planned.
       <ul style="margin-top: 5px; list-style-type: circle; color: #34495E;">
-        <li>🔩 <b>Installation:</b> Lắp đặt thiết bị đúng vị trí, kết nối nguồn và mạng.</li>
-        <li>🧪 <b>Testing:</b> Kiểm tra thiết bị hoạt động ổn định sau khi lắp đặt.</li>
+        <li>🔩 <b>Installation:</b> Installed equipment in the correct position, connected power and network.</li>
+        <li>🧪 <b>Testing:</b> Verified stable operation of equipment after installation.</li>
       </ul>
     </li>
     <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done (Morning session)</li>
@@ -679,18 +679,18 @@
   <h4 style="margin: 0; color: #2C3E50;">🔹 2. Equipment Pickup — Bắc Ninh (for Support Team)</h4>
   <ul style="margin-bottom: 10px;">
     <li><span style="color: #16A085;"><b>Task:</b></span> Travel to Bắc Ninh facility to retrieve equipment for the support team.</li>
-    <li><span style="color: #2980B9;"><b>Details:</b></span> Sang <span style="color: #E67E22;">Bắc Ninh</span> lấy đồ hỗ trợ team: thu gom thiết bị cần thiết và vận chuyển về điểm sử dụng.</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Traveled to Bac Ninh to retrieve equipment for the support team: collected necessary equipment and transported it to the point of use.</li>
     <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done</li>
   </ul>
 
   <h4 style="margin: 0; color: #2C3E50;">🔹 3. Network Speed Survey & Equipment Assessment — Bắc Giang 1 (Afternoon)</h4>
   <ul>
     <li><span style="color: #16A085;"><b>Task:</b></span> Survey network performance across all departments at Bắc Giang 1 and assess equipment condition.</li>
-    <li><span style="color: #2980B9;"><b>Details:</b></span> Chiều về <span style="color: #E67E22;">Bắc Giang 1</span> khảo sát tốc độ mạng của tất cả các phòng ban, đánh giá và lập kế hoạch sửa chữa/thay thế thiết bị mạng.
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Returned to Bac Giang 1 in the afternoon to survey network speeds across all departments, assessed and planned for network equipment repair/replacement.
       <ul style="margin-top: 5px; list-style-type: circle; color: #34495E;">
-        <li>📊 <b>Speed Test:</b> Đo tốc độ mạng từng phòng ban bằng công cụ kiểm thử chuyên dụng.</li>
-        <li>🔎 <b>Assessment:</b> Ghi nhận các thiết bị switch/router cũ, hư hỏng hoặc hoạt động kém hiệu quả.</li>
-        <li>📋 <b>Report:</b> Lập danh sách thiết bị cần sửa chữa hoặc thay thế để báo cáo lên quản lý.</li>
+        <li>📊 <b>Speed Test:</b> Measured network speeds for each department using specialized testing tools.</li>
+        <li>🔎 <b>Assessment:</b> Recorded old, damaged, or inefficient switch/router devices.</li>
+        <li>📋 <b>Report:</b> Compiled a list of equipment requiring repair or replacement for management report.</li>
       </ul>
     </li>
     <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done (Afternoon session)</li>
@@ -702,11 +702,11 @@
   <h4 style="margin: 0; color: #2C3E50;">🔹 1. Auto Layout Setup Support — New Temporary Production Layout</h4>
   <ul style="margin-bottom: 10px;">
     <li><span style="color: #16A085;"><b>Task:</b></span> Assist with auto-configuration of a new temporary production line layout.</li>
-    <li><span style="color: #2980B9;"><b>Details:</b></span> Hỗ trợ auto setup layout mới tạm thời cho dây chuyền sản xuất buổi sáng: cấu hình thông số, kiểm tra và xác nhận layout chạy đúng.
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Assisted with auto-setup of a new temporary production line layout in the morning: configured parameters, tested and confirmed the layout ran correctly.
       <ul style="margin-top: 5px; list-style-type: circle; color: #34495E;">
-        <li>⚙️ <b>Config:</b> Thiết lập thông số layout mới theo yêu cầu của bộ phận sản xuất.</li>
-        <li>🧪 <b>Validation:</b> Chạy thử và xác nhận mọi máy trong dây chuyền nhận đúng layout.</li>
-        <li>📝 <b>Note:</b> Layout mang tính tạm thời trong khi chờ phê duyệt layout chính thức.</li>
+        <li>⚙️ <b>Config:</b> Set up new layout parameters as requested by the production department.</li>
+        <li>🧪 <b>Validation:</b> Performed test runs and confirmed all machines in the line received the correct layout.</li>
+        <li>📝 <b>Note:</b> Layout is temporary pending official layout approval.</li>
       </ul>
     </li>
     <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done (Morning session)</li>
@@ -715,11 +715,11 @@
   <h4 style="margin: 0; color: #2C3E50;">🔹 2. New WiFi Provisioning — QC Department</h4>
   <ul>
     <li><span style="color: #16A085;"><b>Task:</b></span> Provision and configure new WiFi access for the QC department.</li>
-    <li><span style="color: #2980B9;"><b>Details:</b></span> Cấp mới wifi cho bộ phận QC: cài đặt/cấu hình access point mới, thiết lập SSID riêng và bàn giao kết nối không dây đạt yêu cầu.
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Provisioned new WiFi for the QC department: installed/configured new access points, set up a dedicated SSID, and handed over the wireless connection meeting requirements.
       <ul style="margin-top: 5px; list-style-type: circle; color: #34495E;">
-        <li>📡 <b>AP Setup:</b> Cấu hình access point: SSID, mật khẩu, VLAN, băng thông giới hạn phù hợp.</li>
-        <li>🔐 <b>Security:</b> Áp dụng WPA2 và lọc MAC address để đảm bảo an toàn mạng nội bộ QC.</li>
-        <li>✅ <b>Handover:</b> Bàn giao và hướng dẫn user QC kết nối thiết bị thành công.</li>
+        <li>📡 <b>AP Setup:</b> Configured access points: SSID, password, VLAN, and appropriate bandwidth limits.</li>
+        <li>🔐 <b>Security:</b> Applied WPA2 and MAC address filtering to ensure the security of the QC internal network.</li>
+        <li>✅ <b>Handover:</b> Handed over and guided QC users to successfully connect their devices.</li>
       </ul>
     </li>
     <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done (Morning session)</li>
@@ -733,14 +733,14 @@
   <h4 style="margin: 0; color: #2C3E50;">🔹 1. Weekly Start & Production Alignment Meetings</h4>
   <ul style="margin-bottom: 10px;">
     <li><span style="color: #16A085;"><b>Task:</b></span> Attend the weekly departmental meeting and production sync.</li>
-    <li><span style="color: #2980B9;"><b>Details:</b></span> Sáng: Tham gia cuộc họp đầu tuần của bộ phận và trực tiếp họp với khối sản xuất để nắm bắt các vấn đề phát sinh và kế hoạch tuần.</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Morning: Attended the weekly departmental meeting and met directly with the production block to grasp emerging issues and the weekly plan.</li>
     <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done (Morning session)</li>
   </ul>
 
   <h4 style="margin: 0; color: #2C3E50;">🔹 2. General End-User Support</h4>
   <ul>
     <li><span style="color: #16A085;"><b>Task:</b></span> Resolve user tickets and IT issues on the factory floor.</li>
-    <li><span style="color: #2980B9;"><b>Details:</b></span> Chiều: Support user xử lý các issue phần mềm và phần cứng phát sinh trong quá trình làm việc.</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Afternoon: Supported users in resolving software and hardware issues arising during work.</li>
     <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done (Afternoon session)</li>
   </ul>
 </blockquote>
@@ -749,18 +749,18 @@
 <blockquote style="border-left: 4px solid #2980B9; background-color: #EAF2F8; padding: 10px; margin-bottom: 20px;">
   <h4 style="margin: 0; color: #2C3E50;">🔹 1. Software Issue Development & Fixes</h4>
   <ul style="margin-bottom: 10px;">
-    <li><span style="color: #16A085;"><b>Task:</b></span> Develop solutions for issues reported by Anh Tuyên and Chị Phương.</li>
-    <li><span style="color: #2980B9;"><b>Details:</b></span> Sáng: Dev và fix 2 issue phần mềm do anh Tuyên và chị Phương yêu cầu, đảm bảo đáp ứng đúng nghiệp vụ nội bộ.</li>
+    <li><span style="color: #16A085;"><b>Task:</b></span> Develop solutions for issues reported by Mr. Tuyen and Ms. Phuong.</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Morning: Developed and fixed 2 software issues requested by Mr. Tuyen and Ms. Phuong, ensuring they meet internal business requirements.</li>
     <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done (Morning session)</li>
   </ul>
 
   <h4 style="margin: 0; color: #2C3E50;">🔹 2. R&D Software Deployment Evaluation & Infrastructure Cabling</h4>
   <ul>
     <li><span style="color: #16A085;"><b>Task:</b></span> Software deployment planning and kiosk network cabling.</li>
-    <li><span style="color: #2980B9;"><b>Details:</b></span> Chiều:
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Afternoon:
       <ul style="margin-top: 5px; list-style-type: circle; color: #34495E;">
-        <li>🤖 <b>Software Assessment:</b> Làm việc trực tiếp với Chị Hạnh để tìm phương án triển khai phần mềm mới cho máy sạc xả, tuy nhiên đánh giá hiện tại là không khả thi.</li>
-        <li>🔌 <b>Cabling:</b> Tiến hành kéo dây tín hiệu/mạng (ESR) phục vụ kết nối cho 2 kiosk sản xuất.</li>
+        <li>🤖 <b>Software Assessment:</b> Worked directly with Ms. Hanh to find deployment options for new software for the charge-discharge machine; however, current assessment is not feasible.</li>
+        <li>🔌 <b>Cabling:</b> Proceeded with signal/network cabling (ESR) to support connectivity for 2 production kiosks.</li>
       </ul>
     </li>
     <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done (Afternoon session)</li>
@@ -772,7 +772,7 @@
   <h4 style="margin: 0; color: #2C3E50;">🔹 1. Defect Analysis & Development Prep</h4>
   <ul style="margin-bottom: 10px;">
     <li><span style="color: #16A085;"><b>Task:</b></span> Research solutions post-meeting regarding mixed aluminum shell defects.</li>
-    <li><span style="color: #2980B9;"><b>Details:</b></span> Sáng: Nghiên cứu các issue cần dev/xử lý bằng phần mềm sau cuộc họp liên quan đến "LỖI LẪN VỎ NHÔM MODEL 3582" của anh Chiến.</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Morning: Researched issues requiring development/software resolution following the meeting regarding "MODEL 3582 MIXED ALUMINUM SHELL ERROR" from Mr. Chien.</li>
     <li><span style="color: #D35400;"><b>Status:</b></span> 🔄 In Progress / Done</li>
   </ul>
 
@@ -781,9 +781,9 @@
     <li><span style="color: #16A085;"><b>Task:</b></span> IT support for new users, hardware repair, and network audit.</li>
     <li><span style="color: #2980B9;"><b>Details:</b></span>
       <ul style="margin-top: 5px; list-style-type: circle; color: #34495E;">
-        <li>💻 <b>Software Setup:</b> Cài đặt phần mềm và thiết lập tài khoản cho user mới (Chị Thảo Phương).</li>
-        <li>🖨️ <b>Hardware Fix:</b> Sửa máy in cho khu vực bộ phận sản xuất (đã bàn giao lại cho chị Ngọc bên ngoại quan).</li>
-        <li>🌐 <b>Network Audit:</b> Thực hiện rà soát đường truyền và thiết bị mạng tại xưởng Bắc Giang 1.</li>
+        <li>💻 <b>Software Setup:</b> Installed software and set up accounts for a new user (Ms. Thao Phuong).</li>
+        <li>🖨️ <b>Hardware Fix:</b> Repaired a printer for the production area (handed back to Ms. Ngoc in the inspection department).</li>
+        <li>🌐 <b>Network Audit:</b> Conducted a review of network lines and equipment at the Bac Giang 1 workshop.</li>
       </ul>
     </li>
     <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done</li>
@@ -794,16 +794,16 @@
 <blockquote style="border-left: 4px solid #16A085; background-color: #E8F8F5; padding: 10px; margin-bottom: 20px;">
   <h4 style="margin: 0; color: #2C3E50;">🔹 1. Custom Software Development (Dev Tasks)</h4>
   <ul style="margin-bottom: 10px;">
-    <li><span style="color: #16A085;"><b>Task:</b></span> Resolve coding & application issues for Anh Văn Luân and Chị Kim Phượng.</li>
-    <li><span style="color: #2980B9;"><b>Details:</b></span> Tham gia dev và sửa lỗi các chức năng trên hệ thống do anh Văn Luân và chị Kim Phượng request.</li>
+    <li><span style="color: #16A085;"><b>Task:</b></span> Resolve coding & application issues for Mr. Van Luan and Ms. Kim Phuong.</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Participated in development and bug fixing for system functions requested by Mr. Van Luan and Ms. Kim Phuong.</li>
     <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done</li>
   </ul>
 
   <h4 style="margin: 0; color: #2C3E50;">🔹 2. Administrative & Vendor Application Support</h4>
   <ul>
     <li><span style="color: #16A085;"><b>Task:</b></span> Office suite renewals and diagnostic vendor support.</li>
-        <li>🔎 <b>Attempted:</b> Kiểm tra driver, kết nối, cơ chế in và firmware.</li>
-        <li>⚠️ <b>Blocker:</b> Chưa xác định được nguyên nhân gốc rễ, cần thêm thời gian và tài liệu kỹ thuật của nhà sản xuất.</li>
+        <li>🔎 <b>Attempted:</b> Inspected drivers, connections, printing mechanisms, and firmware.</li>
+        <li>⚠️ <b>Blocker:</b> Root cause not yet identified; requires more time and manufacturer's technical documentation.</li>
       </ul>
     </li>
     <li><span style="color: #D35400;"><b>Status:</b></span> ⚠️ Pending — Unresolved, requires further investigation</li>
@@ -812,10 +812,10 @@
   <h4 style="margin: 0; color: #2C3E50;">🔹 4. WiFi & Factory Network Configuration Research</h4>
   <ul>
     <li><span style="color: #16A085;"><b>Task:</b></span> Study WiFi device configuration and factory network architecture.</li>
-    <li><span style="color: #2980B9;"><b>Details:</b></span> Tìm hiểu cách cấu hình thiết bị wifi (access point, controller) và nghiên cứu mô hình mạng nhà máy để chuẩn bị cho các công việc triển khai tiếp theo.
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Learned how to configure WiFi devices (access points, controllers) and studied the factory network model in preparation for upcoming deployment tasks.
       <ul style="margin-top: 5px; list-style-type: circle; color: #34495E;">
-        <li>📡 <b>WiFi Config:</b> Nghiên cứu cách thiết lập SSID, VLAN, bảo mật WPA2-Enterprise trên access point.</li>
-        <li>🏭 <b>Factory Network:</b> Tìm hiểu sơ đồ mạng tổng thể và các điểm kết nối quan trọng.</li>
+        <li>📡 <b>WiFi Config:</b> Researched SSID, VLAN, and WPA2-Enterprise security setup on access points.</li>
+        <li>🏭 <b>Factory Network:</b> Studied the overall network diagram and critical connection points.</li>
       </ul>
     </li>
     <li><span style="color: #D35400;"><b>Status:</b></span> 🔄 In Progress</li>
@@ -824,14 +824,14 @@
 
 ## <span style="color: #1A5276;">🗓️ Wednesday, April 01, 2026</span>
 <blockquote style="border-left: 4px solid #1A5276; background-color: #EAF2F8; padding: 10px; margin-bottom: 20px;">
-  <h4 style="margin: 0; color: #2C3E50;">🔹 1. Network Repair — Signal Interference (with Anh Hải)</h4>
+  <h4 style="margin: 0; color: #2C3E50;">🔹 1. Network Repair — Signal Interference (with Mr. Hai)</h4>
   <ul style="margin-bottom: 10px;">
     <li><span style="color: #16A085;"><b>Task:</b></span> Investigate and resolve network signal collision/interference issue.</li>
-    <li><span style="color: #2980B9;"><b>Details:</b></span> Sửa mạng với <span style="color: #E67E22;">Anh Hải</span>: xác định và xử lý lỗi mạng bị xung (broadcast storm / tín hiệu bị nhiễu) gây mất kết nối cục bộ.
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Repaired the network with Mr. Hai: identified and resolved network collision issues (broadcast storm / signal interference) causing local disconnections.
       <ul style="margin-top: 5px; list-style-type: circle; color: #34495E;">
-        <li>⚡ <b>Symptom:</b> Mạng bị xung — các thiết bị bị ngắt kết nối đột ngột, băng thông bị giảm mạnh.</li>
-        <li>🔧 <b>Fix:</b> Kiểm tra và tắt các port gây loop, cấu hình lại STP/RSTP để ổn định mạng.</li>
-        <li>✅ <b>Outcome:</b> Mạng ổn định sau khi xử lý xung.</li>
+        <li>⚡ <b>Symptom:</b> Network collision — devices disconnected abruptly, bandwidth dropped significantly.</li>
+        <li>🔧 <b>Fix:</b> Inspected and disabled loop-causing ports, reconfigured STP/RSTP to stabilize the network.</li>
+        <li>✅ <b>Outcome:</b> Network stabilized after resolving the collision.</li>
       </ul>
     </li>
     <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done</li>
@@ -840,10 +840,10 @@
   <h4 style="margin: 0; color: #2C3E50;">🔹 2. Software Bug Fix — 2x Sorting Machine PCs</h4>
   <ul style="margin-bottom: 10px;">
     <li><span style="color: #16A085;"><b>Task:</b></span> Resolve software errors on 2 sorting machine workstations.</li>
-    <li><span style="color: #2980B9;"><b>Details:</b></span> Sửa lỗi phần mềm chạy ở 2 máy tính điều khiển máy sorting: debug, xác định lỗi runtime và khôi phục hoạt động bình thường.
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Fixed software errors on 2 sorting machine control PCs: debugged, identified runtime errors, and restored normal operation.
       <ul style="margin-top: 5px; list-style-type: circle; color: #34495E;">
-        <li>🖥️ <b>Sorting Machine 1:</b> Lỗi phần mềm không khởi động được — đã xử lý dependency bị thiếu.</li>
-        <li>🖥️ <b>Sorting Machine 2:</b> Crash khi xử lý dữ liệu — đã vá lỗi và kiểm tra lại.</li>
+        <li>🖥️ <b>Sorting Machine 1:</b> Software failed to start — resolved missing dependencies.</li>
+        <li>🖥️ <b>Sorting Machine 2:</b> Crashed during data processing — patched the bug and re-verified.</li>
       </ul>
     </li>
     <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done</li>
@@ -852,7 +852,7 @@
   <h4 style="margin: 0; color: #2C3E50;">🔹 3. General User Support</h4>
   <ul>
     <li><span style="color: #16A085;"><b>Task:</b></span> Provide general IT support to end-users throughout the day.</li>
-    <li><span style="color: #2980B9;"><b>Details:</b></span> Hỗ trợ user các vấn đề kỹ thuật phát sinh trong ngày: phần cứng, phần mềm và kết nối mạng.</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Provided technical support for daily issues: hardware, software, and network connectivity.</li>
     <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done (Full day)</li>
   </ul>
 </blockquote>
@@ -862,10 +862,10 @@
   <h4 style="margin: 0; color: #2C3E50;">🔹 1. Hardware Installation — Bắc Giang 2 (Morning)</h4>
   <ul style="margin-bottom: 10px;">
     <li><span style="color: #16A085;"><b>Task:</b></span> Travel to Bắc Giang 2 to install hardware equipment.</li>
-    <li><span style="color: #2980B9;"><b>Details:</b></span> Sang <span style="color: #E67E22;">Bắc Giang 2</span> lắp máy buổi sáng: triển khai và cài đặt thiết bị phần cứng mới theo kế hoạch.
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Traveled to Bac Giang 2 in the morning for machine installation: deployed and installed new hardware equipment as planned.
       <ul style="margin-top: 5px; list-style-type: circle; color: #34495E;">
-        <li>🔩 <b>Installation:</b> Lắp đặt thiết bị đúng vị trí, kết nối nguồn và mạng.</li>
-        <li>🧪 <b>Testing:</b> Kiểm tra thiết bị hoạt động ổn định sau khi lắp đặt.</li>
+        <li>🔩 <b>Installation:</b> Installed equipment in the correct position, connected power and network.</li>
+        <li>🧪 <b>Testing:</b> Verified stable operation of equipment after installation.</li>
       </ul>
     </li>
     <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done (Morning session)</li>
@@ -874,18 +874,18 @@
   <h4 style="margin: 0; color: #2C3E50;">🔹 2. Equipment Pickup — Bắc Ninh (for Support Team)</h4>
   <ul style="margin-bottom: 10px;">
     <li><span style="color: #16A085;"><b>Task:</b></span> Travel to Bắc Ninh facility to retrieve equipment for the support team.</li>
-    <li><span style="color: #2980B9;"><b>Details:</b></span> Sang <span style="color: #E67E22;">Bắc Ninh</span> lấy đồ hỗ trợ team: thu gom thiết bị cần thiết và vận chuyển về điểm sử dụng.</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Traveled to Bac Ninh to retrieve equipment for the support team: collected necessary equipment and transported it to the point of use.</li>
     <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done</li>
   </ul>
 
   <h4 style="margin: 0; color: #2C3E50;">🔹 3. Network Speed Survey & Equipment Assessment — Bắc Giang 1 (Afternoon)</h4>
   <ul>
     <li><span style="color: #16A085;"><b>Task:</b></span> Survey network performance across all departments at Bắc Giang 1 and assess equipment condition.</li>
-    <li><span style="color: #2980B9;"><b>Details:</b></span> Chiều về <span style="color: #E67E22;">Bắc Giang 1</span> khảo sát tốc độ mạng của tất cả các phòng ban, đánh giá và lập kế hoạch sửa chữa/thay thế thiết bị mạng.
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Returned to Bac Giang 1 in the afternoon to survey network speeds across all departments, assessed and planned for network equipment repair/replacement.
       <ul style="margin-top: 5px; list-style-type: circle; color: #34495E;">
-        <li>📊 <b>Speed Test:</b> Đo tốc độ mạng từng phòng ban bằng công cụ kiểm thử chuyên dụng.</li>
-        <li>🔎 <b>Assessment:</b> Ghi nhận các thiết bị switch/router cũ, hư hỏng hoặc hoạt động kém hiệu quả.</li>
-        <li>📋 <b>Report:</b> Lập danh sách thiết bị cần sửa chữa hoặc thay thế để báo cáo lên quản lý.</li>
+        <li>📊 <b>Speed Test:</b> Measured network speeds for each department using specialized testing tools.</li>
+        <li>🔎 <b>Assessment:</b> Recorded old, damaged, or inefficient switch/router devices.</li>
+        <li>📋 <b>Report:</b> Compiled a list of equipment requiring repair or replacement for management report.</li>
       </ul>
     </li>
     <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done (Afternoon session)</li>
@@ -897,11 +897,11 @@
   <h4 style="margin: 0; color: #2C3E50;">🔹 1. Auto Layout Setup Support — New Temporary Production Layout</h4>
   <ul style="margin-bottom: 10px;">
     <li><span style="color: #16A085;"><b>Task:</b></span> Assist with auto-configuration of a new temporary production line layout.</li>
-    <li><span style="color: #2980B9;"><b>Details:</b></span> Hỗ trợ auto setup layout mới tạm thời cho dây chuyền sản xuất buổi sáng: cấu hình thông số, kiểm tra và xác nhận layout chạy đúng.
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Assisted with auto-setup of a new temporary production line layout in the morning: configured parameters, tested and confirmed the layout ran correctly.
       <ul style="margin-top: 5px; list-style-type: circle; color: #34495E;">
-        <li>⚙️ <b>Config:</b> Thiết lập thông số layout mới theo yêu cầu của bộ phận sản xuất.</li>
-        <li>🧪 <b>Validation:</b> Chạy thử và xác nhận mọi máy trong dây chuyền nhận đúng layout.</li>
-        <li>📝 <b>Note:</b> Layout mang tính tạm thời trong khi chờ phê duyệt layout chính thức.</li>
+        <li>⚙️ <b>Config:</b> Set up new layout parameters as requested by the production department.</li>
+        <li>🧪 <b>Validation:</b> Performed test runs and confirmed all machines in the line received the correct layout.</li>
+        <li>📝 <b>Note:</b> Layout is temporary pending official layout approval.</li>
       </ul>
     </li>
     <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done (Morning session)</li>
@@ -910,11 +910,11 @@
   <h4 style="margin: 0; color: #2C3E50;">🔹 2. New WiFi Provisioning — QC Department</h4>
   <ul>
     <li><span style="color: #16A085;"><b>Task:</b></span> Provision and configure new WiFi access for the QC department.</li>
-    <li><span style="color: #2980B9;"><b>Details:</b></span> Cấp mới wifi cho bộ phận QC: cài đặt/cấu hình access point mới, thiết lập SSID riêng và bàn giao kết nối không dây đạt yêu cầu.
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Provisioned new WiFi for the QC department: installed/configured new access points, set up a dedicated SSID, and handed over the wireless connection meeting requirements.
       <ul style="margin-top: 5px; list-style-type: circle; color: #34495E;">
-        <li>📡 <b>AP Setup:</b> Cấu hình access point: SSID, mật khẩu, VLAN, băng thông giới hạn phù hợp.</li>
-        <li>🔐 <b>Security:</b> Áp dụng WPA2 và lọc MAC address để đảm bảo an toàn mạng nội bộ QC.</li>
-        <li>✅ <b>Handover:</b> Bàn giao và hướng dẫn user QC kết nối thiết bị thành công.</li>
+        <li>📡 <b>AP Setup:</b> Configured access points: SSID, password, VLAN, and appropriate bandwidth limits.</li>
+        <li>🔐 <b>Security:</b> Applied WPA2 and MAC address filtering to ensure the security of the QC internal network.</li>
+        <li>✅ <b>Handover:</b> Handed over and guided QC users to successfully connect their devices.</li>
       </ul>
     </li>
     <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done (Morning session)</li>
@@ -928,14 +928,14 @@
   <h4 style="margin: 0; color: #2C3E50;">🔹 1. Weekly Start & Production Alignment Meetings</h4>
   <ul style="margin-bottom: 10px;">
     <li><span style="color: #16A085;"><b>Task:</b></span> Attend the weekly departmental meeting and production sync.</li>
-    <li><span style="color: #2980B9;"><b>Details:</b></span> Sáng: Tham gia cuộc họp đầu tuần của bộ phận và trực tiếp họp với khối sản xuất để nắm bắt các vấn đề phát sinh và kế hoạch tuần.</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Morning: Attended the weekly departmental meeting and met directly with the production block to grasp emerging issues and the weekly plan.</li>
     <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done (Morning session)</li>
   </ul>
 
   <h4 style="margin: 0; color: #2C3E50;">🔹 2. General End-User Support</h4>
   <ul>
     <li><span style="color: #16A085;"><b>Task:</b></span> Resolve user tickets and IT issues on the factory floor.</li>
-    <li><span style="color: #2980B9;"><b>Details:</b></span> Chiều: Support user xử lý các issue phần mềm và phần cứng phát sinh trong quá trình làm việc.</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Afternoon: Supported users in resolving software and hardware issues arising during work.</li>
     <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done (Afternoon session)</li>
   </ul>
 </blockquote>
@@ -944,18 +944,18 @@
 <blockquote style="border-left: 4px solid #2980B9; background-color: #EAF2F8; padding: 10px; margin-bottom: 20px;">
   <h4 style="margin: 0; color: #2C3E50;">🔹 1. Software Issue Development & Fixes</h4>
   <ul style="margin-bottom: 10px;">
-    <li><span style="color: #16A085;"><b>Task:</b></span> Develop solutions for issues reported by Anh Tuyên and Chị Phương.</li>
-    <li><span style="color: #2980B9;"><b>Details:</b></span> Sáng: Dev và fix 2 issue phần mềm do anh Tuyên và chị Phương yêu cầu, đảm bảo đáp ứng đúng nghiệp vụ nội bộ.</li>
+    <li><span style="color: #16A085;"><b>Task:</b></span> Develop solutions for issues reported by Mr. Tuyen and Ms. Phuong.</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Morning: Developed and fixed 2 software issues requested by Mr. Tuyen and Ms. Phuong, ensuring they meet internal business requirements.</li>
     <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done (Morning session)</li>
   </ul>
 
   <h4 style="margin: 0; color: #2C3E50;">🔹 2. R&D Software Deployment Evaluation & Infrastructure Cabling</h4>
   <ul>
     <li><span style="color: #16A085;"><b>Task:</b></span> Software deployment planning and kiosk network cabling.</li>
-    <li><span style="color: #2980B9;"><b>Details:</b></span> Chiều:
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Afternoon:
       <ul style="margin-top: 5px; list-style-type: circle; color: #34495E;">
-        <li>🤖 <b>Software Assessment:</b> Làm việc trực tiếp với Chị Hạnh để tìm phương án triển khai phần mềm mới cho máy sạc xả, tuy nhiên đánh giá hiện tại là không khả thi.</li>
-        <li>🔌 <b>Cabling:</b> Tiến hành kéo dây tín hiệu/mạng (ESR) phục vụ kết nối cho 2 kiosk sản xuất.</li>
+        <li>🤖 <b>Software Assessment:</b> Worked directly with Ms. Hanh to find deployment options for new software for the charge-discharge machine; however, current assessment is not feasible.</li>
+        <li>🔌 <b>Cabling:</b> Proceeded with signal/network cabling (ESR) to support connectivity for 2 production kiosks.</li>
       </ul>
     </li>
     <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done (Afternoon session)</li>
@@ -967,7 +967,7 @@
   <h4 style="margin: 0; color: #2C3E50;">🔹 1. Defect Analysis & Development Prep</h4>
   <ul style="margin-bottom: 10px;">
     <li><span style="color: #16A085;"><b>Task:</b></span> Research solutions post-meeting regarding mixed aluminum shell defects.</li>
-    <li><span style="color: #2980B9;"><b>Details:</b></span> Sáng: Nghiên cứu các issue cần dev/xử lý bằng phần mềm sau cuộc họp liên quan đến "LỖI LẪN VỎ NHÔM MODEL 3582" của anh Chiến.</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Morning: Researched issues requiring development/software resolution following the meeting regarding "MODEL 3582 MIXED ALUMINUM SHELL ERROR" from Mr. Chien.</li>
     <li><span style="color: #D35400;"><b>Status:</b></span> 🔄 In Progress / Done</li>
   </ul>
 
@@ -976,9 +976,9 @@
     <li><span style="color: #16A085;"><b>Task:</b></span> IT support for new users, hardware repair, and network audit.</li>
     <li><span style="color: #2980B9;"><b>Details:</b></span>
       <ul style="margin-top: 5px; list-style-type: circle; color: #34495E;">
-        <li>💻 <b>Software Setup:</b> Cài đặt phần mềm và thiết lập tài khoản cho user mới (Chị Thảo Phương).</li>
-        <li>🖨️ <b>Hardware Fix:</b> Sửa máy in cho khu vực bộ phận sản xuất (đã bàn giao lại cho chị Ngọc bên ngoại quan).</li>
-        <li>🌐 <b>Network Audit:</b> Thực hiện rà soát đường truyền và thiết bị mạng tại xưởng Bắc Giang 1.</li>
+        <li>💻 <b>Software Setup:</b> Installed software and set up accounts for a new user (Ms. Thao Phuong).</li>
+        <li>🖨️ <b>Hardware Fix:</b> Repaired a printer for the production area (handed back to Ms. Ngoc in the inspection department).</li>
+        <li>🌐 <b>Network Audit:</b> Conducted a review of network lines and equipment at the Bac Giang 1 workshop.</li>
       </ul>
     </li>
     <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done</li>
@@ -989,15 +989,15 @@
 <blockquote style="border-left: 4px solid #16A085; background-color: #E8F8F5; padding: 10px; margin-bottom: 20px;">
   <h4 style="margin: 0; color: #2C3E50;">🔹 1. Custom Software Development (Dev Tasks)</h4>
   <ul style="margin-bottom: 10px;">
-    <li><span style="color: #16A085;"><b>Task:</b></span> Resolve coding & application issues for Anh Văn Luân and Chị Kim Phượng.</li>
-    <li><span style="color: #2980B9;"><b>Details:</b></span> Tham gia dev và sửa lỗi các chức năng trên hệ thống do anh Văn Luân và chị Kim Phượng request.</li>
+    <li><span style="color: #16A085;"><b>Task:</b></span> Resolve coding & application issues for Mr. Van Luan and Ms. Kim Phuong.</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Participated in development and bug fixing for system functions requested by Mr. Van Luan and Ms. Kim Phuong.</li>
     <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done</li>
   </ul>
 
   <h4 style="margin: 0; color: #2C3E50;">🔹 2. Administrative & Vendor Application Support</h4>
   <ul>
     <li><span style="color: #16A085;"><b>Task:</b></span> Office suite renewals and diagnostic vendor support.</li>
-    <li><span style="color: #2980B9;"><b>Details:</b></span> Cung cấp hỗ trợ đa dạng cho end-user, bao gồm việc gia hạn license ứng dụng văn phòng (Excel) và phân tích, giải thích các lỗi phát sinh trực tiếp từ vendor hệ thống.</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Provided diverse support to end-users, including office application license renewals (Excel) and analysis/explanation of errors arising directly from system vendors.</li>
     <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done</li>
   </ul>
 </blockquote>
@@ -1006,24 +1006,24 @@
 
 ## <span style="color: #C0392B;">🗓️ Friday, April 18, 2026</span>
 <blockquote style="border-left: 4px solid #C0392B; background-color: #FDEDEC; padding: 10px; margin-bottom: 20px;">
-  <h4 style="margin: 0; color: #2C3E50;">🔹 1. MES System Issue Support (Chị Phương Anh)</h4>
+  <h4 style="margin: 0; color: #2C3E50;">🔹 1. MES System Issue Support (Ms. Phuong Anh)</h4>
   <ul style="margin-bottom: 10px;">
-    <li><span style="color: #16A085;"><b>Task:</b></span> Hỗ trợ user xử lý issue MES System cho chị Phương Anh.</li>
-    <li><span style="color: #2980B9;"><b>Details:</b></span> Tiếp nhận và xử lý lỗi phát sinh trên hệ thống MES do chị Phương Anh báo cáo. Xác định nguyên nhân, kiểm tra log và thực hiện fix issue.</li>
+    <li><span style="color: #16A085;"><b>Task:</b></span> Support user in resolving MES System issues for Ms. Phuong Anh.</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Received and processed errors on the MES system reported by Ms. Phuong Anh. Identified causes, checked logs, and implemented fixes.</li>
     <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done</li>
   </ul>
 
   <h4 style="margin: 0; color: #2C3E50;">🔹 2. Network Incident Response — Bắc Giang 2 & Bắc Ninh</h4>
   <ul style="margin-bottom: 10px;">
-    <li><span style="color: #16A085;"><b>Task:</b></span> Phối hợp xử lý sự cố mạng tại Bắc Giang 2 và Bắc Ninh.</li>
-    <li><span style="color: #2980B9;"><b>Details:</b></span> Tham gia hỗ trợ cùng team xử lý sự cố đường truyền mạng phát sinh đồng thời tại hai cơ sở Bắc Giang 2 và Bắc Ninh. Kiểm tra hạ tầng switch, cáp và các điểm kết nối, khôi phục đường truyền ổn định.</li>
+    <li><span style="color: #16A085;"><b>Task:</b></span> Coordinate network incident resolution at Bac Giang 2 and Bac Ninh.</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Joined the team in supporting the resolution of network line incidents occurring simultaneously at Bac Giang 2 and Bac Ninh. Inspected switch infrastructure, cables, and connection points; restored stable lines.</li>
     <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done</li>
   </ul>
 
   <h4 style="margin: 0; color: #2C3E50;">🔹 3. WiFi Config & Setup — Meeting Room Bắc Giang 1</h4>
   <ul>
-    <li><span style="color: #16A085;"><b>Task:</b></span> Config và setup wifi phòng họp Bắc Giang 1.</li>
-    <li><span style="color: #2980B9;"><b>Details:</b></span> Cấu hình và triển khai wifi cho phòng họp tại cơ sở Bắc Giang 1: thiết lập access point, SSID, bảo mật và kiểm tra kết nối để đảm bảo phòng họp hoạt động ổn định.</li>
+    <li><span style="color: #16A085;"><b>Task:</b></span> Configure and set up WiFi for the Bac Giang 1 meeting room.</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Configured and deployed WiFi for the meeting room at the Bac Giang 1 facility: set up access points, SSID, security, and tested connectivity to ensure stable operation.</li>
     <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done</li>
   </ul>
 </blockquote>
@@ -1032,8 +1032,8 @@
 <blockquote style="border-left: 4px solid #8E44AD; background-color: #F5EEF8; padding: 10px; margin-bottom: 20px;">
   <h4 style="margin: 0; color: #2C3E50;">🔹 1. Network Setup — New Sale Department Layout</h4>
   <ul>
-    <li><span style="color: #16A085;"><b>Task:</b></span> Setup mạng cho layout mới của bộ phận Sale.</li>
-    <li><span style="color: #2980B9;"><b>Details:</b></span> Triển khai hạ tầng mạng phục vụ layout mới của bộ phận Sale: kéo cáp, cấu hình switch/AP, kiểm tra kết nối cho từng vị trí làm việc theo layout mới đã được phê duyệt.</li>
+    <li><span style="color: #16A085;"><b>Task:</b></span> Set up network for the new Sales department layout.</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Deployed network infrastructure for the new Sales department layout: pulled cables, configured switches/APs, and tested connectivity for each workstation according to the approved layout.</li>
     <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done</li>
   </ul>
 </blockquote>
@@ -1042,60 +1042,60 @@
 <blockquote style="border-left: 4px solid #1ABC9C; background-color: #E8F8F5; padding: 10px; margin-bottom: 20px;">
   <h4 style="margin: 0; color: #2C3E50;">🔹 1. Weekly Meeting</h4>
   <ul style="margin-bottom: 10px;">
-    <li><span style="color: #16A085;"><b>Task:</b></span> Họp đầu tuần.</li>
-    <li><span style="color: #2980B9;"><b>Details:</b></span> Tham dự cuộc họp đầu tuần cùng team, nắm bắt kế hoạch và các vấn đề cần xử lý trong tuần.</li>
+    <li><span style="color: #16A085;"><b>Task:</b></span> Weekly meeting.</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Attended the weekly meeting with the team, grasped the plan and issues to be handled during the week.</li>
     <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done</li>
   </ul>
 
   <h4 style="margin: 0; color: #2C3E50;">🔹 2. WiFi Cabinet 3 Installation</h4>
   <ul style="margin-bottom: 10px;">
-    <li><span style="color: #16A085;"><b>Task:</b></span> Lắp mạng wifi tủ 3.</li>
-    <li><span style="color: #2980B9;"><b>Details:</b></span> Tiến hành lắp đặt và cấu hình thiết bị wifi cho tủ mạng số 3: gắn access point, kết nối nguồn/cáp uplink, cấu hình và kiểm tra phủ sóng.</li>
+    <li><span style="color: #16A085;"><b>Task:</b></span> Install WiFi network for Cabinet 3.</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Proceeded with installation and configuration of WiFi equipment for Network Cabinet 3: mounted access point, connected power/uplink cables, configured and tested coverage.</li>
     <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done</li>
   </ul>
 
   <h4 style="margin: 0; color: #2C3E50;">🔹 3. X-Ray Machine Network Check (Vị trí mới)</h4>
   <ul style="margin-bottom: 10px;">
-    <li><span style="color: #16A085;"><b>Task:</b></span> Check mạng cho máy x-ray mới đổi vị trí.</li>
-    <li><span style="color: #2980B9;"><b>Details:</b></span> Kiểm tra và đảm bảo kết nối mạng cho máy x-ray sau khi đổi vị trí mới: xác nhận IP, ping test, kiểm tra kết nối về hệ thống quản lý.</li>
+    <li><span style="color: #16A085;"><b>Task:</b></span> Check network for the X-ray machine after relocation.</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Inspected and ensured network connectivity for the X-ray machine after moving to a new position: confirmed IP, performed ping tests, and checked connectivity to the management system.</li>
     <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done</li>
   </ul>
 
   <h4 style="margin: 0; color: #2C3E50;">🔹 4. Equipment Provisioning & User Setup</h4>
   <ul style="margin-bottom: 10px;">
-    <li><span style="color: #16A085;"><b>Task:</b></span> Cấp phát thiết bị và cài đặt cho user.</li>
-    <li><span style="color: #2980B9;"><b>Details:</b></span> Cấp phát thiết bị IT cho user mới/có nhu cầu thay thế. Thực hiện cài đặt phần mềm, tài khoản và cấu hình cần thiết để user sẵn sàng làm việc.</li>
+    <li><span style="color: #16A085;"><b>Task:</b></span> Provision equipment and set up for users.</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Provisioned IT equipment for new users or those needing replacements. Performed software installation, account setup, and necessary configurations for user readiness.</li>
     <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done</li>
   </ul>
 
   <h4 style="margin: 0; color: #2C3E50;">🔹 5. MES Bug Fix for User</h4>
   <ul>
-    <li><span style="color: #16A085;"><b>Task:</b></span> Sửa lỗi MES cho user.</li>
-    <li><span style="color: #2980B9;"><b>Details:</b></span> Tiếp nhận và xử lý lỗi MES do user báo cáo trong ngày. Debug, xác định nguyên nhân và khắc phục để đảm bảo dây chuyền vận hành liên tục.</li>
+    <li><span style="color: #16A085;"><b>Task:</b></span> Fix MES errors for users.</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Received and resolved MES errors reported by users during the day. Debugged, identified causes, and fixed issues to ensure continuous production line operation.</li>
     <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done</li>
   </ul>
 </blockquote>
 
 ## <span style="color: #E67E22;">🗓️ Tuesday, April 21, 2026 (Morning)</span>
 <blockquote style="border-left: 4px solid #E67E22; background-color: #FEF9E7; padding: 10px; margin-bottom: 20px;">
-  <h4 style="margin: 0; color: #2C3E50;">🔹 1. MES Issue Handling (Chị Phương Anh)</h4>
+  <h4 style="margin: 0; color: #2C3E50;">🔹 1. MES Issue Handling (Ms. Phuong Anh)</h4>
   <ul style="margin-bottom: 10px;">
-    <li><span style="color: #16A085;"><b>Task:</b></span> Xử lý issue MES cho chị Phương Anh.</li>
-    <li><span style="color: #2980B9;"><b>Details:</b></span> Tiếp tục hỗ trợ và xử lý dứt điểm các issue trên hệ thống MES phát sinh theo yêu cầu của chị Phương Anh. Phân tích log, kiểm tra dữ liệu và xác nhận hệ thống hoạt động đúng sau khi fix.</li>
+    <li><span style="color: #16A085;"><b>Task:</b></span> Process MES issues for Ms. Phuong Anh.</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Continued supporting and finalized MES system issues arising at Ms. Phuong Anh's request. Analyzed logs, checked data, and confirmed the system worked correctly after the fix.</li>
     <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done (Morning)</li>
   </ul>
 
-  <h4 style="margin: 0; color: #2C3E50;">🔹 2. Software Issue — Chị Thơm QC</h4>
+  <h4 style="margin: 0; color: #2C3E50;">🔹 2. Software Issue — Ms. Thom QC</h4>
   <ul style="margin-bottom: 10px;">
-    <li><span style="color: #16A085;"><b>Task:</b></span> Xử lý issue phần mềm cho chị Thơm QC.</li>
-    <li><span style="color: #2980B9;"><b>Details:</b></span> Hỗ trợ chị Thơm bộ phận QC xử lý sự cố phần mềm phát sinh trong quá trình làm việc. Kiểm tra nguyên nhân, hướng dẫn sử dụng và cài đặt lại nếu cần.</li>
+    <li><span style="color: #16A085;"><b>Task:</b></span> Process software issues for Ms. Thom (QC).</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Supported Ms. Thom in the QC department with software incidents arising during work. Checked causes, provided usage guidance, and reinstalled if necessary.</li>
     <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done (Morning)</li>
   </ul>
 
-  <h4 style="margin: 0; color: #2C3E50;">🔹 3. Network & Position Setup — Production (Anh Được & Anh Trung)</h4>
+  <h4 style="margin: 0; color: #2C3E50;">🔹 3. Network & Position Setup — Production (Mr. Duoc & Mr. Trung)</h4>
   <ul>
-    <li><span style="color: #16A085;"><b>Task:</b></span> Hỗ trợ setup vị trí và mạng cho anh Được và anh Trung sản xuất.</li>
-    <li><span style="color: #2980B9;"><b>Details:</b></span> Phối hợp cùng anh Được và anh Trung bộ phận sản xuất để thiết lập vị trí làm việc mới: sắp xếp thiết bị, kéo và cấu hình kết nối mạng, đảm bảo các máy trạm sẵn sàng vận hành trong dây chuyền sản xuất.</li>
+    <li><span style="color: #16A085;"><b>Task:</b></span> Support position and network setup for Mr. Duoc and Mr. Trung (Production).</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Coordinated with Mr. Duoc and Mr. Trung in the production department to set up new workstations: arranged equipment, pulled and configured network connections, ensuring workstations are ready for operation in the production line.</li>
     <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done (Morning)</li>
   </ul>
 </blockquote>
@@ -1104,15 +1104,15 @@
 <blockquote style="border-left: 4px solid #8E44AD; background-color: #F5EEF8; padding: 10px; margin-bottom: 20px;">
   <h4 style="margin: 0; color: #2C3E50;">🔹 1. ESR Cabling & MES Support</h4>
   <ul style="margin-bottom: 10px;">
-    <li><span style="color: #16A085;"><b>Task:</b></span> Fix kéo dây esr cho layout mới sản xuất và sửa lỗi mes từ user.</li>
-    <li><span style="color: #2980B9;"><b>Details:</b></span> Cấu hình lại và kéo cáp esr cho layout mới; tiếp nhận hỗ trợ và fix lỗi MES do user báo cáo.</li>
+    <li><span style="color: #16A085;"><b>Task:</b></span> Fixed ESR cabling for new production layout and resolved MES errors for users.</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Reconfigured and pulled ESR cables for the new layout; received support requests and fixed MES errors reported by users.</li>
     <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done (Morning)</li>
   </ul>
 
-  <h4 style="margin: 0; color: #2C3E50;">🔹 2. Development Task — Chị Thu QC</h4>
+  <h4 style="margin: 0; color: #2C3E50;">🔹 2. Development Task — Ms. Thu QC</h4>
   <ul>
-    <li><span style="color: #16A085;"><b>Task:</b></span> Dev iss thêm màn của chị Thu QC.</li>
-    <li><span style="color: #2980B9;"><b>Details:</b></span> Thực hiện lập trình, thêm màn hình chức năng mới theo yêu cầu của chị Thu bộ phận QC.</li>
+    <li><span style="color: #16A085;"><b>Task:</b></span> Developed and added new screen for Ms. Thu (QC).</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Performed programming and added a new functional screen as requested by Ms. Thu in the QC department.</li>
     <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done (Afternoon)</li>
   </ul>
 </blockquote>
@@ -1121,15 +1121,15 @@
 <blockquote style="border-left: 4px solid #16A085; background-color: #E8F8F5; padding: 10px; margin-bottom: 20px;">
   <h4 style="margin: 0; color: #2C3E50;">🔹 1. New User Equipment Setup</h4>
   <ul style="margin-bottom: 10px;">
-    <li><span style="color: #16A085;"><b>Task:</b></span> Setup máy cho người mới.</li>
-    <li><span style="color: #2980B9;"><b>Details:</b></span> Chuẩn bị, lắp đặt và cài đặt phần mềm máy tính cho công nhân/nhân viên mới vào làm việc.</li>
+    <li><span style="color: #16A085;"><b>Task:</b></span> Set up machines for newcomers.</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Prepared, installed, and set up computer software for new workers/staff.</li>
     <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done (Morning)</li>
   </ul>
 
-  <h4 style="margin: 0; color: #2C3E50;">🔹 2. MES Issue Check — Anh Huấn BG1</h4>
+  <h4 style="margin: 0; color: #2C3E50;">🔹 2. MES Issue Check — Mr. Huan BG1</h4>
   <ul>
-    <li><span style="color: #16A085;"><b>Task:</b></span> Check lỗi mes cho a huấn bg1.</li>
-    <li><span style="color: #2980B9;"><b>Details:</b></span> Kiểm tra và xử lý lỗi hệ thống MES được báo từ anh Huấn tại cơ sở BG1.</li>
+    <li><span style="color: #16A085;"><b>Task:</b></span> Check MES errors for Mr. Huan (BG1).</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Inspected and resolved MES system errors reported by Mr. Huan at the BG1 facility.</li>
     <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done</li>
   </ul>
 </blockquote>
@@ -1138,15 +1138,15 @@
 <blockquote style="border-left: 4px solid #2980B9; background-color: #EAF2F8; padding: 10px; margin-bottom: 20px;">
   <h4 style="margin: 0; color: #2C3E50;">🔹 1. Software Installation & Data Management</h4>
   <ul style="margin-bottom: 10px;">
-    <li><span style="color: #16A085;"><b>Task:</b></span> Cài nais cho lap mới và xóa data cho chị Hợp.</li>
-    <li><span style="color: #2980B9;"><b>Details:</b></span> Tiến hành cài đặt hệ thống NAIS vào laptop mới. Đồng thời thực hiện xóa dữ liệu thừa/cũ theo yêu cầu của chị Hợp.</li>
+    <li><span style="color: #16A085;"><b>Task:</b></span> Install NAIS for new laptop and clear data for Ms. Hop.</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Proceeded with NAIS system installation on the new laptop. Simultaneously performed clearing of redundant/old data at Ms. Hop's request.</li>
     <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done</li>
   </ul>
 
-  <h4 style="margin: 0; color: #2C3E50;">🔹 2. UI Development Task — Chị Thu QC</h4>
+  <h4 style="margin: 0; color: #2C3E50;">🔹 2. UI Development Task — Ms. Thu QC</h4>
   <ul>
-    <li><span style="color: #16A085;"><b>Task:</b></span> Dev task tạo màn hình của chị Thu.</li>
-    <li><span style="color: #2980B9;"><b>Details:</b></span> Tiếp tục code và hoàn thiện giao diện màn hình trên hệ thống theo task được giao từ chị Thu bộ phận QC.</li>
+    <li><span style="color: #16A085;"><b>Task:</b></span> Developed task to create a screen for Ms. Thu.</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Continued coding and finalized the system screen interface according to the task assigned by Ms. Thu in the QC department.</li>
     <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done</li>
   </ul>
 </blockquote>
@@ -1172,10 +1172,10 @@
     <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done</li>
   </ul>
 
-  <h4 style="margin: 0; color: #2C3E50;">🔹 3. MES User Support (Anh Tuyên & Chị Hoàng Xuân)</h4>
+  <h4 style="margin: 0; color: #2C3E50;">🔹 3. MES User Support (Mr. Tuyen & Ms. Hoang Xuan)</h4>
   <ul>
     <li><span style="color: #16A085;"><b>Task:</b></span> Resolve MES login and permission errors.</li>
-    <li><span style="color: #2980B9;"><b>Details:</b></span> Provided technical support to resolve login failures and permission discrepancies for users Anh Tuyên and Chị Hoàng Xuân.</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Provided technical support to resolve login failures and permission discrepancies for users Mr. Tuyen and Ms. Hoang Xuan.</li>
     <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done</li>
   </ul>
 </blockquote>
