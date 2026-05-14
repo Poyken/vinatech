@@ -1,0 +1,1457 @@
+<?xml version="1.0" encoding="utf-16"?>
+<ScreenInfo xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <IsReadOnly>false</IsReadOnly>
+  <DeveloperVerion>1.3.123</DeveloperVerion>
+  <Version>1</Version>
+  <MaxVersion>1</MaxVersion>
+  <CreateUserID>DinhManh</CreateUserID>
+  <CreateDateTime>2025-08-29 01:44:13</CreateDateTime>
+  <ChangeUserID>DinhManh</ChangeUserID>
+  <ChangeDateTime>2025-09-16 15:24:52</ChangeDateTime>
+  <SearchFunctions>
+    <GUIFunction>
+      <Description />
+      <Author />
+      <CreateDate />
+      <Group />
+      <Language>Default</Language>
+      <Source>Default</Source>
+      <Target>SmartFactory</Target>
+      <ReturnTables />
+      <Name>usp_PACLabelCartonWeight_get_Vietnam</Name>
+      <FunctionName>usp_PACLabelCartonWeight_get_Vietnam</FunctionName>
+      <IsMain>true</IsMain>
+      <UseCLRWithXML>false</UseCLRWithXML>
+      <Timeout>30</Timeout>
+      <BatchRowCount>0</BatchRowCount>
+      <Parameters>
+        <GUIParameter>
+          <DataType>String</DataType>
+          <Name>ProcessUserID</Name>
+          <EditorType>None</EditorType>
+          <IsNewLine>false</IsNewLine>
+          <IsMandatory>false</IsMandatory>
+          <IsVisible>false</IsVisible>
+          <IsReadOnly>false</IsReadOnly>
+          <DefaultValueType>None</DefaultValueType>
+          <DefaultValueSourceScreen>Self</DefaultValueSourceScreen>
+          <Caption>^ProcessUserID^</Caption>
+          <Width>100</Width>
+          <UseBarcodeScan>false</UseBarcodeScan>
+          <OpenSelectDialogOption>
+            <DialogSize>
+              <Width>800</Width>
+              <Height>480</Height>
+            </DialogSize>
+            <NotPassCaller>false</NotPassCaller>
+            <ParameterMappings />
+            <DirectSearch>false</DirectSearch>
+            <Mappings />
+          </OpenSelectDialogOption>
+          <HyperLinkOption>
+            <NotPassCaller>false</NotPassCaller>
+            <ParameterMappings />
+            <WindowStyle>Normal</WindowStyle>
+          </HyperLinkOption>
+          <SearchWhenEnter>false</SearchWhenEnter>
+          <SelectAllWhenFocused>false</SelectAllWhenFocused>
+          <IsStringSource>false</IsStringSource>
+          <ComboBoxOption>
+            <ShowClearButton>false</ShowClearButton>
+          </ComboBoxOption>
+          <DateEditOption />
+        </GUIParameter>
+        <GUIParameter>
+          <DataType>String</DataType>
+          <Name>ProcessLanguage</Name>
+          <EditorType>None</EditorType>
+          <IsNewLine>false</IsNewLine>
+          <IsMandatory>false</IsMandatory>
+          <IsVisible>false</IsVisible>
+          <IsReadOnly>false</IsReadOnly>
+          <DefaultValueType>None</DefaultValueType>
+          <DefaultValueSourceScreen>Self</DefaultValueSourceScreen>
+          <Caption>^ProcessLanguage^</Caption>
+          <Width>100</Width>
+          <UseBarcodeScan>false</UseBarcodeScan>
+          <OpenSelectDialogOption>
+            <DialogSize>
+              <Width>800</Width>
+              <Height>480</Height>
+            </DialogSize>
+            <NotPassCaller>false</NotPassCaller>
+            <ParameterMappings />
+            <DirectSearch>false</DirectSearch>
+            <Mappings />
+          </OpenSelectDialogOption>
+          <HyperLinkOption>
+            <NotPassCaller>false</NotPassCaller>
+            <ParameterMappings />
+            <WindowStyle>Normal</WindowStyle>
+          </HyperLinkOption>
+          <SearchWhenEnter>false</SearchWhenEnter>
+          <SelectAllWhenFocused>false</SelectAllWhenFocused>
+          <IsStringSource>false</IsStringSource>
+          <ComboBoxOption>
+            <ShowClearButton>false</ShowClearButton>
+          </ComboBoxOption>
+          <DateEditOption />
+        </GUIParameter>
+        <GUIParameter>
+          <DataType>Integer</DataType>
+          <Name>NumberLabel</Name>
+          <EditorType>None</EditorType>
+          <IsNewLine>false</IsNewLine>
+          <IsMandatory>false</IsMandatory>
+          <IsVisible>true</IsVisible>
+          <IsReadOnly>false</IsReadOnly>
+          <DefaultValueType>Const</DefaultValueType>
+          <DefaultValue>1</DefaultValue>
+          <DefaultValueSourceScreen>Self</DefaultValueSourceScreen>
+          <Caption>^NumberLabel^</Caption>
+          <Width>100</Width>
+          <UseBarcodeScan>false</UseBarcodeScan>
+          <OpenSelectDialogOption>
+            <DialogSize>
+              <Width>800</Width>
+              <Height>480</Height>
+            </DialogSize>
+            <NotPassCaller>false</NotPassCaller>
+            <ParameterMappings />
+            <DirectSearch>false</DirectSearch>
+            <Mappings />
+          </OpenSelectDialogOption>
+          <HyperLinkOption>
+            <NotPassCaller>false</NotPassCaller>
+            <ParameterMappings />
+            <WindowStyle>Normal</WindowStyle>
+          </HyperLinkOption>
+          <SearchWhenEnter>false</SearchWhenEnter>
+          <SelectAllWhenFocused>false</SelectAllWhenFocused>
+          <IsStringSource>false</IsStringSource>
+          <ComboBoxOption>
+            <ShowClearButton>false</ShowClearButton>
+          </ComboBoxOption>
+          <DateEditOption />
+        </GUIParameter>
+        <GUIParameter>
+          <DataType>String</DataType>
+          <Name>IsWeightLabel</Name>
+          <EditorType>CheckEdit</EditorType>
+          <IsNewLine>false</IsNewLine>
+          <IsMandatory>false</IsMandatory>
+          <IsVisible>true</IsVisible>
+          <IsReadOnly>false</IsReadOnly>
+          <DefaultValueType>Const</DefaultValueType>
+          <DefaultValue>false</DefaultValue>
+          <DefaultValueSourceScreen>Self</DefaultValueSourceScreen>
+          <Caption>^IsWeightLabel^</Caption>
+          <Width>100</Width>
+          <UseBarcodeScan>false</UseBarcodeScan>
+          <OpenSelectDialogOption>
+            <DialogSize>
+              <Width>800</Width>
+              <Height>480</Height>
+            </DialogSize>
+            <NotPassCaller>false</NotPassCaller>
+            <ParameterMappings />
+            <DirectSearch>false</DirectSearch>
+            <Mappings />
+          </OpenSelectDialogOption>
+          <HyperLinkOption>
+            <NotPassCaller>false</NotPassCaller>
+            <ParameterMappings />
+            <WindowStyle>Normal</WindowStyle>
+          </HyperLinkOption>
+          <SearchWhenEnter>false</SearchWhenEnter>
+          <SelectAllWhenFocused>false</SelectAllWhenFocused>
+          <IsStringSource>false</IsStringSource>
+          <ComboBoxOption>
+            <ShowClearButton>false</ShowClearButton>
+          </ComboBoxOption>
+          <DateEditOption />
+        </GUIParameter>
+      </Parameters>
+      <DataSetInfo>
+        <Tables>
+          <TableInfo>
+            <SearchFunctionName>usp_PACLabelCartonWeight_get_Vietnam</SearchFunctionName>
+            <Index>0</Index>
+            <Name>PACLabelCartonWeight_Vietnam</Name>
+            <Caption>^PACLabelCartonWeight_Vietnam^</Caption>
+            <Columns>
+              <ColumnInfo>
+                <Name>TypeLabel</Name>
+                <Caption>^TypeLabel^</Caption>
+                <DataType>String</DataType>
+              </ColumnInfo>
+              <ColumnInfo>
+                <Name>NumberCarton</Name>
+                <Caption>^NumberCarton^</Caption>
+                <DataType>String</DataType>
+              </ColumnInfo>
+              <ColumnInfo>
+                <Name>Weight</Name>
+                <Caption>^Weight^</Caption>
+                <DataType>String</DataType>
+              </ColumnInfo>
+              <ColumnInfo>
+                <Name>LabelQty</Name>
+                <Caption>^LabelQty^</Caption>
+                <DataType>Integer</DataType>
+              </ColumnInfo>
+              <ColumnInfo>
+                <Name>CommandType</Name>
+                <Caption>^CommandType^</Caption>
+                <DataType>String</DataType>
+              </ColumnInfo>
+            </Columns>
+          </TableInfo>
+        </Tables>
+        <Relations />
+      </DataSetInfo>
+      <UseTransaction>false</UseTransaction>
+      <ParameterMappings />
+      <DataSetFormat>Xml</DataSetFormat>
+      <ExecuteWithMain>false</ExecuteWithMain>
+      <Append>false</Append>
+    </GUIFunction>
+  </SearchFunctions>
+  <ExecuteFunctions />
+  <Views>
+    <ViewInfo>
+      <CanAdd>true</CanAdd>
+      <CanEdit>true</CanEdit>
+      <CanDelete>true</CanDelete>
+      <CanImport>true</CanImport>
+      <CanExport>true</CanExport>
+      <SupportAdd>false</SupportAdd>
+      <SupportEdit>false</SupportEdit>
+      <SupportDelete>false</SupportDelete>
+      <SupportExport>true</SupportExport>
+      <SupportImport>false</SupportImport>
+      <SupportSave>false</SupportSave>
+      <SupportPaste>false</SupportPaste>
+      <SupportEmail>false</SupportEmail>
+      <SupportPrint>true</SupportPrint>
+      <SupportLayout>true</SupportLayout>
+      <SupportGrid>true</SupportGrid>
+      <SupportPivotGrid>false</SupportPivotGrid>
+      <SupportChart>false</SupportChart>
+      <SupportTreeList>false</SupportTreeList>
+      <SupportVerticalGrid>false</SupportVerticalGrid>
+      <SupportFormLayout>false</SupportFormLayout>
+      <SupportBandedGrid>false</SupportBandedGrid>
+      <SupportLayoutControl>false</SupportLayoutControl>
+      <SupportMonitoring>false</SupportMonitoring>
+      <SupportReport>false</SupportReport>
+      <SupportPDFViewer>false</SupportPDFViewer>
+      <SupportScheduler>false</SupportScheduler>
+      <SupportDynamicGrid>false</SupportDynamicGrid>
+      <SupportCustomControl>false</SupportCustomControl>
+      <SupportWebBrowser>false</SupportWebBrowser>
+      <SupportPLCMonitoring>false</SupportPLCMonitoring>
+      <SupportSnap>false</SupportSnap>
+      <SupportLabel>false</SupportLabel>
+      <SupportImageSlider>false</SupportImageSlider>
+      <SearchFunctionName>usp_PACLabelCartonWeight_get_Vietnam</SearchFunctionName>
+      <DataValidationTime>Save</DataValidationTime>
+      <AddNewRowAfterDataBinding>false</AddNewRowAfterDataBinding>
+      <AutoRefreshInterval>0</AutoRefreshInterval>
+      <DisableAddExpressions />
+      <DisableDeleteExpressions />
+      <DisableSaveExpressions />
+      <Name>PACLabelCartonWeight_Vietnam</Name>
+      <Tables>
+        <ViewTableInfo>
+          <Name>PACLabelCartonWeight_Vietnam</Name>
+          <Columns>
+            <ViewColumnInfo>
+              <Caption>^TypeLabel^</Caption>
+              <Name>TypeLabel</Name>
+              <FieldName>TypeLabel</FieldName>
+              <EditorType>None</EditorType>
+              <IsMandatory>true</IsMandatory>
+              <IsMake>true</IsMake>
+              <IsKey>false</IsKey>
+              <IsPrimaryKey>false</IsPrimaryKey>
+              <IsVisible>true</IsVisible>
+              <IsReadOnly>true</IsReadOnly>
+              <IsIgnoreSave>false</IsIgnoreSave>
+              <DefaultValueType>None</DefaultValueType>
+              <DefaultValueSourceScreen>Self</DefaultValueSourceScreen>
+              <FileEditOption>
+                <AllowSaveToLocal>false</AllowSaveToLocal>
+                <MaxFileSize>0</MaxFileSize>
+                <AnonymousAccessAzure>false</AnonymousAccessAzure>
+                <AzureUri />
+                <DownloadFromServer>false</DownloadFromServer>
+                <UseAzure>false</UseAzure>
+              </FileEditOption>
+              <AzureFileOption>
+                <AllowSaveToLocal>false</AllowSaveToLocal>
+                <MaxFileSize>0</MaxFileSize>
+                <AnonymousAccessAzure>false</AnonymousAccessAzure>
+                <AzureUri />
+              </AzureFileOption>
+              <SpreadEditOption />
+              <FormLayoutOption>
+                <VisibleCaption>true</VisibleCaption>
+                <NewLine>false</NewLine>
+                <ColSpan>1</ColSpan>
+                <RowSpan>1</RowSpan>
+              </FormLayoutOption>
+              <OpenSelectDialogOption>
+                <DialogSize>
+                  <Width>800</Width>
+                  <Height>480</Height>
+                </DialogSize>
+                <NotPassCaller>false</NotPassCaller>
+                <ParameterMappings />
+                <DirectSearch>false</DirectSearch>
+                <ViewMappings />
+                <RefreshViewAfterClose>false</RefreshViewAfterClose>
+              </OpenSelectDialogOption>
+              <SpreadOption>
+                <RowIncrease>0</RowIncrease>
+                <ColumnIncrease>0</ColumnIncrease>
+              </SpreadOption>
+              <MobileOption>
+                <UseBarcodeScan>false</UseBarcodeScan>
+                <IsPhoneVisible>true</IsPhoneVisible>
+                <IsTabletVisible>true</IsTabletVisible>
+              </MobileOption>
+              <EditorOption>
+                <DisplayFormatType>None</DisplayFormatType>
+                <EditFormatType>None</EditFormatType>
+                <IsStringSource>false</IsStringSource>
+                <PictureSizeMode>Zoom</PictureSizeMode>
+              </EditorOption>
+              <GridOption>
+                <FixedStyle>None</FixedStyle>
+                <AllowCellMerge>false</AllowCellMerge>
+                <SummaryType>None</SummaryType>
+                <SummaryDisplayFormat>{0:n0}</SummaryDisplayFormat>
+              </GridOption>
+              <BandedGridOption>
+                <FixedStyle>None</FixedStyle>
+                <AllowCellMerge>false</AllowCellMerge>
+                <SummaryType>None</SummaryType>
+                <SummaryDisplayFormat>{0:n0}</SummaryDisplayFormat>
+                <RowIndex>0</RowIndex>
+                <RowCount>0</RowCount>
+              </BandedGridOption>
+              <TreeListOption>
+                <ApplyChild>false</ApplyChild>
+                <RecursiveApplyChild>true</RecursiveApplyChild>
+                <FixedStyle>None</FixedStyle>
+              </TreeListOption>
+              <SchedulerOption>
+                <ResourcesVisibleIndex>-1</ResourcesVisibleIndex>
+              </SchedulerOption>
+              <PivotGridOption>
+                <Area>FilterArea</Area>
+              </PivotGridOption>
+              <LabelOption />
+              <HyperLinkOption>
+                <NotPassCaller>false</NotPassCaller>
+                <ParameterMappings />
+                <WindowStyle>Normal</WindowStyle>
+              </HyperLinkOption>
+              <Width>150</Width>
+              <Height>0</Height>
+              <UseCustom>false</UseCustom>
+              <FontSize>0</FontSize>
+              <FontStyle>Regular</FontStyle>
+              <ForeColorValue>-1</ForeColorValue>
+              <ComboBoxOption>
+                <ShowClearButton>false</ShowClearButton>
+              </ComboBoxOption>
+              <LayoutOption>
+                <TextWidth>0</TextWidth>
+              </LayoutOption>
+              <CellAlignment>Default</CellAlignment>
+              <HeaderAlignment>Default</HeaderAlignment>
+            </ViewColumnInfo>
+            <ViewColumnInfo>
+              <Caption>^NumberCarton^</Caption>
+              <Name>NumberCarton</Name>
+              <FieldName>NumberCarton</FieldName>
+              <EditorType>None</EditorType>
+              <IsMandatory>false</IsMandatory>
+              <IsMake>true</IsMake>
+              <IsKey>false</IsKey>
+              <IsPrimaryKey>false</IsPrimaryKey>
+              <IsVisible>true</IsVisible>
+              <IsReadOnly>true</IsReadOnly>
+              <IsIgnoreSave>false</IsIgnoreSave>
+              <DefaultValueType>None</DefaultValueType>
+              <DefaultValueSourceScreen>Self</DefaultValueSourceScreen>
+              <FileEditOption>
+                <AllowSaveToLocal>false</AllowSaveToLocal>
+                <MaxFileSize>0</MaxFileSize>
+                <AnonymousAccessAzure>false</AnonymousAccessAzure>
+                <AzureUri />
+                <DownloadFromServer>false</DownloadFromServer>
+                <UseAzure>false</UseAzure>
+              </FileEditOption>
+              <AzureFileOption>
+                <AllowSaveToLocal>false</AllowSaveToLocal>
+                <MaxFileSize>0</MaxFileSize>
+                <AnonymousAccessAzure>false</AnonymousAccessAzure>
+                <AzureUri />
+              </AzureFileOption>
+              <SpreadEditOption />
+              <FormLayoutOption>
+                <VisibleCaption>true</VisibleCaption>
+                <NewLine>false</NewLine>
+                <ColSpan>1</ColSpan>
+                <RowSpan>1</RowSpan>
+              </FormLayoutOption>
+              <OpenSelectDialogOption>
+                <DialogSize>
+                  <Width>800</Width>
+                  <Height>480</Height>
+                </DialogSize>
+                <NotPassCaller>false</NotPassCaller>
+                <ParameterMappings />
+                <DirectSearch>false</DirectSearch>
+                <ViewMappings />
+                <RefreshViewAfterClose>false</RefreshViewAfterClose>
+              </OpenSelectDialogOption>
+              <SpreadOption>
+                <RowIncrease>0</RowIncrease>
+                <ColumnIncrease>0</ColumnIncrease>
+              </SpreadOption>
+              <MobileOption>
+                <UseBarcodeScan>false</UseBarcodeScan>
+                <IsPhoneVisible>true</IsPhoneVisible>
+                <IsTabletVisible>true</IsTabletVisible>
+              </MobileOption>
+              <EditorOption>
+                <DisplayFormatType>None</DisplayFormatType>
+                <EditFormatType>None</EditFormatType>
+                <IsStringSource>false</IsStringSource>
+                <PictureSizeMode>Zoom</PictureSizeMode>
+              </EditorOption>
+              <GridOption>
+                <FixedStyle>None</FixedStyle>
+                <AllowCellMerge>false</AllowCellMerge>
+                <SummaryType>None</SummaryType>
+                <SummaryDisplayFormat>{0:n0}</SummaryDisplayFormat>
+              </GridOption>
+              <BandedGridOption>
+                <FixedStyle>None</FixedStyle>
+                <AllowCellMerge>false</AllowCellMerge>
+                <SummaryType>None</SummaryType>
+                <SummaryDisplayFormat>{0:n0}</SummaryDisplayFormat>
+                <RowIndex>0</RowIndex>
+                <RowCount>0</RowCount>
+              </BandedGridOption>
+              <TreeListOption>
+                <ApplyChild>false</ApplyChild>
+                <RecursiveApplyChild>true</RecursiveApplyChild>
+                <FixedStyle>None</FixedStyle>
+              </TreeListOption>
+              <SchedulerOption>
+                <ResourcesVisibleIndex>-1</ResourcesVisibleIndex>
+              </SchedulerOption>
+              <PivotGridOption>
+                <Area>FilterArea</Area>
+              </PivotGridOption>
+              <LabelOption />
+              <HyperLinkOption>
+                <NotPassCaller>false</NotPassCaller>
+                <ParameterMappings />
+                <WindowStyle>Normal</WindowStyle>
+              </HyperLinkOption>
+              <Width>100</Width>
+              <Height>0</Height>
+              <UseCustom>false</UseCustom>
+              <FontSize>0</FontSize>
+              <FontStyle>Regular</FontStyle>
+              <ForeColorValue>-1</ForeColorValue>
+              <ComboBoxOption>
+                <ShowClearButton>false</ShowClearButton>
+              </ComboBoxOption>
+              <LayoutOption>
+                <TextWidth>0</TextWidth>
+              </LayoutOption>
+              <CellAlignment>Default</CellAlignment>
+              <HeaderAlignment>Default</HeaderAlignment>
+            </ViewColumnInfo>
+            <ViewColumnInfo>
+              <Caption>^Weight^</Caption>
+              <Name>Weight</Name>
+              <FieldName>Weight</FieldName>
+              <EditorType>None</EditorType>
+              <IsMandatory>false</IsMandatory>
+              <IsMake>true</IsMake>
+              <IsKey>false</IsKey>
+              <IsPrimaryKey>false</IsPrimaryKey>
+              <IsVisible>true</IsVisible>
+              <IsReadOnly>true</IsReadOnly>
+              <IsIgnoreSave>false</IsIgnoreSave>
+              <DefaultValueType>None</DefaultValueType>
+              <DefaultValueSourceScreen>Self</DefaultValueSourceScreen>
+              <FileEditOption>
+                <AllowSaveToLocal>false</AllowSaveToLocal>
+                <MaxFileSize>0</MaxFileSize>
+                <AnonymousAccessAzure>false</AnonymousAccessAzure>
+                <AzureUri />
+                <DownloadFromServer>false</DownloadFromServer>
+                <UseAzure>false</UseAzure>
+              </FileEditOption>
+              <AzureFileOption>
+                <AllowSaveToLocal>false</AllowSaveToLocal>
+                <MaxFileSize>0</MaxFileSize>
+                <AnonymousAccessAzure>false</AnonymousAccessAzure>
+                <AzureUri />
+              </AzureFileOption>
+              <SpreadEditOption />
+              <FormLayoutOption>
+                <VisibleCaption>true</VisibleCaption>
+                <NewLine>false</NewLine>
+                <ColSpan>1</ColSpan>
+                <RowSpan>1</RowSpan>
+              </FormLayoutOption>
+              <OpenSelectDialogOption>
+                <DialogSize>
+                  <Width>800</Width>
+                  <Height>480</Height>
+                </DialogSize>
+                <NotPassCaller>false</NotPassCaller>
+                <ParameterMappings />
+                <DirectSearch>false</DirectSearch>
+                <ViewMappings />
+                <RefreshViewAfterClose>false</RefreshViewAfterClose>
+              </OpenSelectDialogOption>
+              <SpreadOption>
+                <RowIncrease>0</RowIncrease>
+                <ColumnIncrease>0</ColumnIncrease>
+              </SpreadOption>
+              <MobileOption>
+                <UseBarcodeScan>false</UseBarcodeScan>
+                <IsPhoneVisible>true</IsPhoneVisible>
+                <IsTabletVisible>true</IsTabletVisible>
+              </MobileOption>
+              <EditorOption>
+                <DisplayFormatType>None</DisplayFormatType>
+                <EditFormatType>None</EditFormatType>
+                <IsStringSource>false</IsStringSource>
+                <PictureSizeMode>Zoom</PictureSizeMode>
+              </EditorOption>
+              <GridOption>
+                <FixedStyle>None</FixedStyle>
+                <AllowCellMerge>false</AllowCellMerge>
+                <SummaryType>None</SummaryType>
+                <SummaryDisplayFormat>{0:n0}</SummaryDisplayFormat>
+              </GridOption>
+              <BandedGridOption>
+                <FixedStyle>None</FixedStyle>
+                <AllowCellMerge>false</AllowCellMerge>
+                <SummaryType>None</SummaryType>
+                <SummaryDisplayFormat>{0:n0}</SummaryDisplayFormat>
+                <RowIndex>0</RowIndex>
+                <RowCount>0</RowCount>
+              </BandedGridOption>
+              <TreeListOption>
+                <ApplyChild>false</ApplyChild>
+                <RecursiveApplyChild>true</RecursiveApplyChild>
+                <FixedStyle>None</FixedStyle>
+              </TreeListOption>
+              <SchedulerOption>
+                <ResourcesVisibleIndex>-1</ResourcesVisibleIndex>
+              </SchedulerOption>
+              <PivotGridOption>
+                <Area>FilterArea</Area>
+              </PivotGridOption>
+              <LabelOption />
+              <HyperLinkOption>
+                <NotPassCaller>false</NotPassCaller>
+                <ParameterMappings />
+                <WindowStyle>Normal</WindowStyle>
+              </HyperLinkOption>
+              <Width>100</Width>
+              <Height>0</Height>
+              <UseCustom>false</UseCustom>
+              <FontSize>0</FontSize>
+              <FontStyle>Regular</FontStyle>
+              <ForeColorValue>-1</ForeColorValue>
+              <ComboBoxOption>
+                <ShowClearButton>false</ShowClearButton>
+              </ComboBoxOption>
+              <LayoutOption>
+                <TextWidth>0</TextWidth>
+              </LayoutOption>
+              <CellAlignment>Default</CellAlignment>
+              <HeaderAlignment>Default</HeaderAlignment>
+            </ViewColumnInfo>
+            <ViewColumnInfo>
+              <Caption>^LabelQty^</Caption>
+              <Name>LabelQty</Name>
+              <FieldName>LabelQty</FieldName>
+              <EditorType>None</EditorType>
+              <IsMandatory>false</IsMandatory>
+              <IsMake>true</IsMake>
+              <IsKey>false</IsKey>
+              <IsPrimaryKey>false</IsPrimaryKey>
+              <IsVisible>false</IsVisible>
+              <IsReadOnly>true</IsReadOnly>
+              <IsIgnoreSave>false</IsIgnoreSave>
+              <DefaultValueType>None</DefaultValueType>
+              <DefaultValueSourceScreen>Self</DefaultValueSourceScreen>
+              <FileEditOption>
+                <AllowSaveToLocal>false</AllowSaveToLocal>
+                <MaxFileSize>0</MaxFileSize>
+                <AnonymousAccessAzure>false</AnonymousAccessAzure>
+                <AzureUri />
+                <DownloadFromServer>false</DownloadFromServer>
+                <UseAzure>false</UseAzure>
+              </FileEditOption>
+              <AzureFileOption>
+                <AllowSaveToLocal>false</AllowSaveToLocal>
+                <MaxFileSize>0</MaxFileSize>
+                <AnonymousAccessAzure>false</AnonymousAccessAzure>
+                <AzureUri />
+              </AzureFileOption>
+              <SpreadEditOption />
+              <FormLayoutOption>
+                <VisibleCaption>true</VisibleCaption>
+                <NewLine>false</NewLine>
+                <ColSpan>1</ColSpan>
+                <RowSpan>1</RowSpan>
+              </FormLayoutOption>
+              <OpenSelectDialogOption>
+                <DialogSize>
+                  <Width>800</Width>
+                  <Height>480</Height>
+                </DialogSize>
+                <NotPassCaller>false</NotPassCaller>
+                <ParameterMappings />
+                <DirectSearch>false</DirectSearch>
+                <ViewMappings />
+                <RefreshViewAfterClose>false</RefreshViewAfterClose>
+              </OpenSelectDialogOption>
+              <SpreadOption>
+                <RowIncrease>0</RowIncrease>
+                <ColumnIncrease>0</ColumnIncrease>
+              </SpreadOption>
+              <MobileOption>
+                <UseBarcodeScan>false</UseBarcodeScan>
+                <IsPhoneVisible>true</IsPhoneVisible>
+                <IsTabletVisible>true</IsTabletVisible>
+              </MobileOption>
+              <EditorOption>
+                <DisplayFormatType>None</DisplayFormatType>
+                <EditFormatType>None</EditFormatType>
+                <IsStringSource>false</IsStringSource>
+                <PictureSizeMode>Zoom</PictureSizeMode>
+              </EditorOption>
+              <GridOption>
+                <FixedStyle>None</FixedStyle>
+                <AllowCellMerge>false</AllowCellMerge>
+                <SummaryType>None</SummaryType>
+                <SummaryDisplayFormat>{0:n0}</SummaryDisplayFormat>
+              </GridOption>
+              <BandedGridOption>
+                <FixedStyle>None</FixedStyle>
+                <AllowCellMerge>false</AllowCellMerge>
+                <SummaryType>None</SummaryType>
+                <SummaryDisplayFormat>{0:n0}</SummaryDisplayFormat>
+                <RowIndex>0</RowIndex>
+                <RowCount>0</RowCount>
+              </BandedGridOption>
+              <TreeListOption>
+                <ApplyChild>false</ApplyChild>
+                <RecursiveApplyChild>true</RecursiveApplyChild>
+                <FixedStyle>None</FixedStyle>
+              </TreeListOption>
+              <SchedulerOption>
+                <ResourcesVisibleIndex>-1</ResourcesVisibleIndex>
+              </SchedulerOption>
+              <PivotGridOption>
+                <Area>FilterArea</Area>
+              </PivotGridOption>
+              <LabelOption />
+              <HyperLinkOption>
+                <NotPassCaller>false</NotPassCaller>
+                <ParameterMappings />
+                <WindowStyle>Normal</WindowStyle>
+              </HyperLinkOption>
+              <Width>0</Width>
+              <Height>0</Height>
+              <UseCustom>false</UseCustom>
+              <FontSize>0</FontSize>
+              <FontStyle>Regular</FontStyle>
+              <ForeColorValue>-1</ForeColorValue>
+              <ComboBoxOption>
+                <ShowClearButton>false</ShowClearButton>
+              </ComboBoxOption>
+              <LayoutOption>
+                <TextWidth>0</TextWidth>
+              </LayoutOption>
+              <CellAlignment>Default</CellAlignment>
+              <HeaderAlignment>Default</HeaderAlignment>
+            </ViewColumnInfo>
+            <ViewColumnInfo>
+              <Caption>^CommandType^</Caption>
+              <Name>CommandType</Name>
+              <FieldName>CommandType</FieldName>
+              <EditorType>None</EditorType>
+              <IsMandatory>false</IsMandatory>
+              <IsMake>true</IsMake>
+              <IsKey>false</IsKey>
+              <IsPrimaryKey>false</IsPrimaryKey>
+              <IsVisible>false</IsVisible>
+              <IsReadOnly>true</IsReadOnly>
+              <IsIgnoreSave>false</IsIgnoreSave>
+              <DefaultValueType>None</DefaultValueType>
+              <DefaultValueSourceScreen>Self</DefaultValueSourceScreen>
+              <FileEditOption>
+                <AllowSaveToLocal>false</AllowSaveToLocal>
+                <MaxFileSize>0</MaxFileSize>
+                <AnonymousAccessAzure>false</AnonymousAccessAzure>
+                <AzureUri />
+                <DownloadFromServer>false</DownloadFromServer>
+                <UseAzure>false</UseAzure>
+              </FileEditOption>
+              <AzureFileOption>
+                <AllowSaveToLocal>false</AllowSaveToLocal>
+                <MaxFileSize>0</MaxFileSize>
+                <AnonymousAccessAzure>false</AnonymousAccessAzure>
+                <AzureUri />
+              </AzureFileOption>
+              <SpreadEditOption />
+              <FormLayoutOption>
+                <VisibleCaption>true</VisibleCaption>
+                <NewLine>false</NewLine>
+                <ColSpan>1</ColSpan>
+                <RowSpan>1</RowSpan>
+              </FormLayoutOption>
+              <OpenSelectDialogOption>
+                <DialogSize>
+                  <Width>800</Width>
+                  <Height>480</Height>
+                </DialogSize>
+                <NotPassCaller>false</NotPassCaller>
+                <ParameterMappings />
+                <DirectSearch>false</DirectSearch>
+                <ViewMappings />
+                <RefreshViewAfterClose>false</RefreshViewAfterClose>
+              </OpenSelectDialogOption>
+              <SpreadOption>
+                <RowIncrease>0</RowIncrease>
+                <ColumnIncrease>0</ColumnIncrease>
+              </SpreadOption>
+              <MobileOption>
+                <UseBarcodeScan>false</UseBarcodeScan>
+                <IsPhoneVisible>true</IsPhoneVisible>
+                <IsTabletVisible>true</IsTabletVisible>
+              </MobileOption>
+              <EditorOption>
+                <DisplayFormatType>None</DisplayFormatType>
+                <EditFormatType>None</EditFormatType>
+                <IsStringSource>false</IsStringSource>
+                <PictureSizeMode>Zoom</PictureSizeMode>
+              </EditorOption>
+              <GridOption>
+                <FixedStyle>None</FixedStyle>
+                <AllowCellMerge>false</AllowCellMerge>
+                <SummaryType>None</SummaryType>
+                <SummaryDisplayFormat>{0:n0}</SummaryDisplayFormat>
+              </GridOption>
+              <BandedGridOption>
+                <FixedStyle>None</FixedStyle>
+                <AllowCellMerge>false</AllowCellMerge>
+                <SummaryType>None</SummaryType>
+                <SummaryDisplayFormat>{0:n0}</SummaryDisplayFormat>
+                <RowIndex>0</RowIndex>
+                <RowCount>0</RowCount>
+              </BandedGridOption>
+              <TreeListOption>
+                <ApplyChild>false</ApplyChild>
+                <RecursiveApplyChild>true</RecursiveApplyChild>
+                <FixedStyle>None</FixedStyle>
+              </TreeListOption>
+              <SchedulerOption>
+                <ResourcesVisibleIndex>-1</ResourcesVisibleIndex>
+              </SchedulerOption>
+              <PivotGridOption>
+                <Area>FilterArea</Area>
+              </PivotGridOption>
+              <LabelOption />
+              <HyperLinkOption>
+                <NotPassCaller>false</NotPassCaller>
+                <ParameterMappings />
+                <WindowStyle>Normal</WindowStyle>
+              </HyperLinkOption>
+              <Width>0</Width>
+              <Height>0</Height>
+              <UseCustom>false</UseCustom>
+              <FontSize>0</FontSize>
+              <FontStyle>Regular</FontStyle>
+              <ForeColorValue>-1</ForeColorValue>
+              <ComboBoxOption>
+                <ShowClearButton>false</ShowClearButton>
+              </ComboBoxOption>
+              <LayoutOption>
+                <TextWidth>0</TextWidth>
+              </LayoutOption>
+              <CellAlignment>Default</CellAlignment>
+              <HeaderAlignment>Default</HeaderAlignment>
+            </ViewColumnInfo>
+          </Columns>
+          <Caption>^PACLabelCartonWeight_Vietnam^</Caption>
+        </ViewTableInfo>
+      </Tables>
+      <Caption>^PACLabelCartonWeight_Vietnam^</Caption>
+      <ViewType>GridView</ViewType>
+      <SaveRange>Changed</SaveRange>
+      <SizeUnit>Percent</SizeUnit>
+      <Size>100</Size>
+      <UseDefaultHeaderColor>true</UseDefaultHeaderColor>
+      <DefaultReadOnlyHeaderColorArgb>-8388608</DefaultReadOnlyHeaderColorArgb>
+      <DefaultEditableHeaderColorArgb>-16777088</DefaultEditableHeaderColorArgb>
+      <ModifiedCellForeColorArgb>-8388608</ModifiedCellForeColorArgb>
+      <PreventBestfit>false</PreventBestfit>
+      <UseCustomCulumn>false</UseCustomCulumn>
+      <MobileGridOption>
+        <EditMode>batch</EditMode>
+      </MobileGridOption>
+      <MobileChartOption>
+        <SeriesTemplate>
+          <ViewType>bar</ViewType>
+        </SeriesTemplate>
+        <Series />
+        <ArgumentAxis />
+      </MobileChartOption>
+      <MobilePivotOption>
+        <Fields />
+      </MobilePivotOption>
+      <BandedGridOption>
+        <MultiSelect>false</MultiSelect>
+        <UseCheckBoxRowSelect>false</UseCheckBoxRowSelect>
+        <ShowGroupPanel>true</ShowGroupPanel>
+        <ShowFooter>false</ShowFooter>
+        <RowAutoHeight>false</RowAutoHeight>
+        <PreventChangeRowWhenChildViewModified>false</PreventChangeRowWhenChildViewModified>
+        <AllowCellMerge>false</AllowCellMerge>
+        <IndicatorWidth>40</IndicatorWidth>
+        <Bands />
+        <ShowBands>true</ShowBands>
+      </BandedGridOption>
+      <MonitoringOption>
+        <IsStretch>false</IsStretch>
+        <AutoRefresh>false</AutoRefresh>
+        <AutoRefreshInterval>5</AutoRefreshInterval>
+        <ShowSettingsPanel>false</ShowSettingsPanel>
+        <IsLoop>false</IsLoop>
+        <BlinkInterval>500</BlinkInterval>
+        <AutoSwitchitLayout>false</AutoSwitchitLayout>
+        <RefreshDataWhenSwitchLayout>false</RefreshDataWhenSwitchLayout>
+        <ItemVariableSettings />
+      </MonitoringOption>
+      <DetailOption />
+      <GridOption>
+        <MultiSelect>false</MultiSelect>
+        <UseCheckBoxRowSelect>false</UseCheckBoxRowSelect>
+        <Settings>?&lt;XtraSerializer version="1.0" application="View"&gt;
+  &lt;property name="FormatRules" iskey="true" value="0" /&gt;
+  &lt;property name="FormatConditions" iskey="true" value="0" /&gt;
+&lt;/XtraSerializer&gt;</Settings>
+        <ShowGroupPanel>true</ShowGroupPanel>
+        <ShowFooter>false</ShowFooter>
+        <RowAutoHeight>false</RowAutoHeight>
+        <PreventChangeRowWhenChildViewModified>false</PreventChangeRowWhenChildViewModified>
+        <AllowCellMerge>false</AllowCellMerge>
+        <IndicatorWidth>40</IndicatorWidth>
+      </GridOption>
+      <TreeListOption>
+        <MultiSelect>false</MultiSelect>
+        <ExpandAllAfterBinding>false</ExpandAllAfterBinding>
+        <AllowFindPanel>true</AllowFindPanel>
+        <AllowDragNode>false</AllowDragNode>
+        <PreventChangeRowWhenChildViewModified>false</PreventChangeRowWhenChildViewModified>
+        <ShowBandsMode>false</ShowBandsMode>
+        <AllowBandColumnsMultiRow>false</AllowBandColumnsMultiRow>
+        <GridStyle>false</GridStyle>
+        <IsDynamicColumn>false</IsDynamicColumn>
+        <SaveAsOriginal>false</SaveAsOriginal>
+      </TreeListOption>
+      <FormLayoutOption>
+        <ColumnCount>1</ColumnCount>
+      </FormLayoutOption>
+      <ReportOption>
+        <Range>All</Range>
+        <LayoutNameType>None</LayoutNameType>
+        <Layouts />
+        <ShowInternalPrintButton>true</ShowInternalPrintButton>
+      </ReportOption>
+      <SpreadOption />
+      <VerticalGridOption>
+        <RecordWidth>0</RecordWidth>
+        <RowHeaderWidth>0</RowHeaderWidth>
+      </VerticalGridOption>
+      <LayoutOption />
+      <PivotGridOption>
+        <ShowCustomizationForm>false</ShowCustomizationForm>
+        <HideChart>false</HideChart>
+      </PivotGridOption>
+      <PDFViewerOption />
+      <SchedulerOption>
+        <ActiveViewType>Month</ActiveViewType>
+        <Appointments />
+        <Resources />
+        <AppointmentDependencies />
+        <ResourcePerPage>10</ResourcePerPage>
+        <ResourcesTreeWidth>200</ResourcesTreeWidth>
+      </SchedulerOption>
+      <EmailOption>
+        <ExportType>Pdf</ExportType>
+      </EmailOption>
+      <DynamicBandedGridOption>
+        <MultiSelect>false</MultiSelect>
+        <UseCheckBoxRowSelect>false</UseCheckBoxRowSelect>
+        <ShowGroupPanel>true</ShowGroupPanel>
+        <ShowFooter>false</ShowFooter>
+        <RowAutoHeight>false</RowAutoHeight>
+        <PreventChangeRowWhenChildViewModified>false</PreventChangeRowWhenChildViewModified>
+        <AllowCellMerge>false</AllowCellMerge>
+        <IndicatorWidth>40</IndicatorWidth>
+        <Bands />
+        <SaveAsOriginal>false</SaveAsOriginal>
+        <ShowBands>true</ShowBands>
+      </DynamicBandedGridOption>
+      <CustomControlOption />
+      <WebBrowserOption />
+      <PLCMonitoringOption>
+        <AutoRefresh>false</AutoRefresh>
+        <AutoRefreshInterval>5</AutoRefreshInterval>
+        <ShowSettingsPanel>false</ShowSettingsPanel>
+        <DisplayPauseTime>10</DisplayPauseTime>
+      </PLCMonitoringOption>
+      <SnapControlOption />
+      <LabelControlOption>
+        <ShowParameter>false</ShowParameter>
+      </LabelControlOption>
+      <ImageSliderOption>
+        <DownloadFromServer>false</DownloadFromServer>
+        <UseAzure>false</UseAzure>
+        <AnonymousAccessAzure>false</AnonymousAccessAzure>
+        <AzureUri />
+        <MaxImageSize>1</MaxImageSize>
+        <AnimationTime>700</AnimationTime>
+        <LayoutMode>Squeeze</LayoutMode>
+        <AutoSlide>None</AutoSlide>
+        <AutoSlideInterval>1000</AutoSlideInterval>
+        <AllowLooping>false</AllowLooping>
+      </ImageSliderOption>
+      <ShowCaption>true</ShowCaption>
+      <DragOptions>
+        <AllowDrag>false</AllowDrag>
+        <AllowDrop>false</AllowDrop>
+        <DeleteFromSourceAfterDrop>false</DeleteFromSourceAfterDrop>
+        <DragColumnMapping />
+        <DisableExpressions />
+      </DragOptions>
+      <SupportAdvBandedGrid>false</SupportAdvBandedGrid>
+      <DoubleClickActionEvenEmpty>false</DoubleClickActionEvenEmpty>
+      <ChartOption />
+      <ApplyReadOnlyExpressionWhenFocusedRowChange>false</ApplyReadOnlyExpressionWhenFocusedRowChange>
+      <ApplyMandatoryExpressionWhenFocusedRowChange>false</ApplyMandatoryExpressionWhenFocusedRowChange>
+      <ChildViewRefreshMode>FocusedRowChanged</ChildViewRefreshMode>
+    </ViewInfo>
+  </Views>
+  <PopupGrids />
+  <Actions>
+    <Action>
+      <Type>SetData</Type>
+      <DisplayType>Button</DisplayType>
+      <NextActionNameAfterSuccess>PrintWeightLabel</NextActionNameAfterSuccess>
+      <Name>SetLabelQty</Name>
+      <Caption>^Tem Cân N?ng^</Caption>
+      <Width>100</Width>
+      <AttachViewName>PACLabelCartonWeight_Vietnam</AttachViewName>
+      <ShowInLayout>false</ShowInLayout>
+      <DisableExpressions />
+      <HideExpressions />
+      <OpenDialogOption>
+        <DialogSize>
+          <Width>800</Width>
+          <Height>480</Height>
+        </DialogSize>
+        <NotPassCaller>false</NotPassCaller>
+        <ParameterMappings />
+        <DirectSearch>false</DirectSearch>
+      </OpenDialogOption>
+      <OpenMenuOption>
+        <ParameterMappings />
+        <DirectSearch>false</DirectSearch>
+      </OpenMenuOption>
+      <ExecuteFunctionOption>
+        <SourceViewRange>Changed</SourceViewRange>
+        <SkipErrorWhenChanged>false</SkipErrorWhenChanged>
+      </ExecuteFunctionOption>
+      <RefreshViewOption>
+        <FocusedRowPosition>Current</FocusedRowPosition>
+        <ParameterMappings />
+      </RefreshViewOption>
+      <CopyDataOption>
+        <SourceViewRange>Changed</SourceViewRange>
+        <SourceScreen>Self</SourceScreen>
+        <TargetScreen>Self</TargetScreen>
+        <DefaultValues />
+      </CopyDataOption>
+      <MoveDataOption>
+        <SourceViewRange>Changed</SourceViewRange>
+        <SourceScreen>Self</SourceScreen>
+        <TargetScreen>Self</TargetScreen>
+        <DefaultValues />
+      </MoveDataOption>
+      <OpenSelectDialogOption>
+        <DialogSize>
+          <Width>800</Width>
+          <Height>480</Height>
+        </DialogSize>
+        <NotPassCaller>false</NotPassCaller>
+        <ParameterMappings />
+        <DirectSearch>false</DirectSearch>
+        <ViewMappings />
+        <SaveDirectly>false</SaveDirectly>
+      </OpenSelectDialogOption>
+      <SetDataOption>
+        <TargetViewName>PACLabelCartonWeight_Vietnam</TargetViewName>
+        <TargetViewRange>All</TargetViewRange>
+        <TargetFilterExpression />
+        <TargetFieldName>LabelQty</TargetFieldName>
+        <ValueType>None</ValueType>
+        <InputType>Typing</InputType>
+        <PopupDialogSize>
+          <Width>400</Width>
+          <Height>600</Height>
+        </PopupDialogSize>
+        <InputDialogCaption>^Nh?p s? lu?ng tem Cân n?ng^</InputDialogCaption>
+      </SetDataOption>
+      <DeleteDataOption>
+        <TargetScreen>Self</TargetScreen>
+        <TargetViewRange>Changed</TargetViewRange>
+      </DeleteDataOption>
+      <ExportReportOption>
+        <MasterViewRange>Changed</MasterViewRange>
+        <ParameterMappings />
+        <ExportType>Pdf</ExportType>
+      </ExportReportOption>
+      <PrintLabelOption>
+        <SourceViewRange>Changed</SourceViewRange>
+        <PrintCount>1</PrintCount>
+        <SelectPrinter>false</SelectPrinter>
+        <Interval>0</Interval>
+      </PrintLabelOption>
+      <SummaryOption>
+        <SummaryType>Sum</SummaryType>
+      </SummaryOption>
+      <FocusSearchItemOption />
+      <RefreshFieldsOption>
+        <ParameterMappings />
+        <ColumnMappings />
+      </RefreshFieldsOption>
+      <SaveViewOption />
+      <ValidateViewOption>
+        <ViewRange>All</ViewRange>
+        <Combine>And</Combine>
+      </ValidateViewOption>
+      <OpenWebOption />
+      <ConditionRunOption>
+        <ConditionActions />
+      </ConditionRunOption>
+      <PrintViewOption>
+        <SelectPrinter>false</SelectPrinter>
+      </PrintViewOption>
+      <SetVariableOption>
+        <ValueType>None</ValueType>
+        <InputType>ValueType</InputType>
+        <PopupDialogSize>
+          <Width>400</Width>
+          <Height>600</Height>
+        </PopupDialogSize>
+      </SetVariableOption>
+      <Allow>true</Allow>
+      <EnableWithoutBinding>false</EnableWithoutBinding>
+    </Action>
+    <Action>
+      <Type>PrintLabel</Type>
+      <DisplayType>Button</DisplayType>
+      <Name>CartonNumberLabel</Name>
+      <Caption>^Tem thùng Carton^</Caption>
+      <Width>100</Width>
+      <AttachViewName>PACLabelCartonWeight_Vietnam</AttachViewName>
+      <ShowInLayout>false</ShowInLayout>
+      <DisableExpressions />
+      <HideExpressions />
+      <OpenDialogOption>
+        <DialogSize>
+          <Width>800</Width>
+          <Height>480</Height>
+        </DialogSize>
+        <NotPassCaller>false</NotPassCaller>
+        <ParameterMappings />
+        <DirectSearch>false</DirectSearch>
+      </OpenDialogOption>
+      <OpenMenuOption>
+        <ParameterMappings />
+        <DirectSearch>false</DirectSearch>
+      </OpenMenuOption>
+      <ExecuteFunctionOption>
+        <SourceViewRange>Changed</SourceViewRange>
+        <SkipErrorWhenChanged>false</SkipErrorWhenChanged>
+      </ExecuteFunctionOption>
+      <RefreshViewOption>
+        <FocusedRowPosition>Current</FocusedRowPosition>
+        <ParameterMappings />
+      </RefreshViewOption>
+      <CopyDataOption>
+        <SourceViewRange>Changed</SourceViewRange>
+        <SourceScreen>Self</SourceScreen>
+        <TargetScreen>Self</TargetScreen>
+        <DefaultValues />
+      </CopyDataOption>
+      <MoveDataOption>
+        <SourceViewRange>Changed</SourceViewRange>
+        <SourceScreen>Self</SourceScreen>
+        <TargetScreen>Self</TargetScreen>
+        <DefaultValues />
+      </MoveDataOption>
+      <OpenSelectDialogOption>
+        <DialogSize>
+          <Width>800</Width>
+          <Height>480</Height>
+        </DialogSize>
+        <NotPassCaller>false</NotPassCaller>
+        <ParameterMappings />
+        <DirectSearch>false</DirectSearch>
+        <ViewMappings />
+        <SaveDirectly>false</SaveDirectly>
+      </OpenSelectDialogOption>
+      <SetDataOption>
+        <TargetViewRange>Changed</TargetViewRange>
+        <ValueType>None</ValueType>
+        <InputType>ValueType</InputType>
+        <PopupDialogSize>
+          <Width>400</Width>
+          <Height>600</Height>
+        </PopupDialogSize>
+      </SetDataOption>
+      <DeleteDataOption>
+        <TargetScreen>Self</TargetScreen>
+        <TargetViewRange>Changed</TargetViewRange>
+      </DeleteDataOption>
+      <ExportReportOption>
+        <MasterViewRange>Changed</MasterViewRange>
+        <ParameterMappings />
+        <ExportType>Pdf</ExportType>
+      </ExportReportOption>
+      <PrintLabelOption>
+        <SourceViewName>PACLabelCartonWeight_Vietnam</SourceViewName>
+        <SourceViewRange>All</SourceViewRange>
+        <LabelType>PACCartonNumberLabel</LabelType>
+        <FormatName>PACCartonNumberLabel</FormatName>
+        <PrintCount>1</PrintCount>
+        <CommandTypeFieldName>CommandType</CommandTypeFieldName>
+        <SelectPrinter>true</SelectPrinter>
+        <Interval>0</Interval>
+      </PrintLabelOption>
+      <SummaryOption>
+        <SummaryType>Sum</SummaryType>
+      </SummaryOption>
+      <FocusSearchItemOption />
+      <RefreshFieldsOption>
+        <ParameterMappings />
+        <ColumnMappings />
+      </RefreshFieldsOption>
+      <SaveViewOption />
+      <ValidateViewOption>
+        <ViewRange>All</ViewRange>
+        <Combine>And</Combine>
+      </ValidateViewOption>
+      <OpenWebOption />
+      <ConditionRunOption>
+        <ConditionActions />
+      </ConditionRunOption>
+      <PrintViewOption>
+        <SelectPrinter>false</SelectPrinter>
+      </PrintViewOption>
+      <SetVariableOption>
+        <ValueType>None</ValueType>
+        <InputType>ValueType</InputType>
+        <PopupDialogSize>
+          <Width>400</Width>
+          <Height>600</Height>
+        </PopupDialogSize>
+      </SetVariableOption>
+      <Allow>true</Allow>
+      <EnableWithoutBinding>false</EnableWithoutBinding>
+    </Action>
+    <Action>
+      <Type>PrintLabel</Type>
+      <DisplayType>None</DisplayType>
+      <Name>PrintWeightLabel</Name>
+      <Caption>^PrintWeightLabel^</Caption>
+      <Width>100</Width>
+      <AttachViewName>PACLabelCartonWeight_Vietnam</AttachViewName>
+      <ShowInLayout>false</ShowInLayout>
+      <DisableExpressions />
+      <HideExpressions />
+      <OpenDialogOption>
+        <DialogSize>
+          <Width>800</Width>
+          <Height>480</Height>
+        </DialogSize>
+        <NotPassCaller>false</NotPassCaller>
+        <ParameterMappings />
+        <DirectSearch>false</DirectSearch>
+      </OpenDialogOption>
+      <OpenMenuOption>
+        <ParameterMappings />
+        <DirectSearch>false</DirectSearch>
+      </OpenMenuOption>
+      <ExecuteFunctionOption>
+        <SourceViewRange>Changed</SourceViewRange>
+        <SkipErrorWhenChanged>false</SkipErrorWhenChanged>
+      </ExecuteFunctionOption>
+      <RefreshViewOption>
+        <FocusedRowPosition>Current</FocusedRowPosition>
+        <ParameterMappings />
+      </RefreshViewOption>
+      <CopyDataOption>
+        <SourceViewRange>Changed</SourceViewRange>
+        <SourceScreen>Self</SourceScreen>
+        <TargetScreen>Self</TargetScreen>
+        <DefaultValues />
+      </CopyDataOption>
+      <MoveDataOption>
+        <SourceViewRange>Changed</SourceViewRange>
+        <SourceScreen>Self</SourceScreen>
+        <TargetScreen>Self</TargetScreen>
+        <DefaultValues />
+      </MoveDataOption>
+      <OpenSelectDialogOption>
+        <DialogSize>
+          <Width>800</Width>
+          <Height>480</Height>
+        </DialogSize>
+        <NotPassCaller>false</NotPassCaller>
+        <ParameterMappings />
+        <DirectSearch>false</DirectSearch>
+        <ViewMappings />
+        <SaveDirectly>false</SaveDirectly>
+      </OpenSelectDialogOption>
+      <SetDataOption>
+        <TargetViewRange>Changed</TargetViewRange>
+        <ValueType>None</ValueType>
+        <InputType>ValueType</InputType>
+        <PopupDialogSize>
+          <Width>400</Width>
+          <Height>600</Height>
+        </PopupDialogSize>
+      </SetDataOption>
+      <DeleteDataOption>
+        <TargetScreen>Self</TargetScreen>
+        <TargetViewRange>Changed</TargetViewRange>
+      </DeleteDataOption>
+      <ExportReportOption>
+        <MasterViewRange>Changed</MasterViewRange>
+        <ParameterMappings />
+        <ExportType>Pdf</ExportType>
+      </ExportReportOption>
+      <PrintLabelOption>
+        <SourceViewName>PACLabelCartonWeight_Vietnam</SourceViewName>
+        <SourceViewRange>All</SourceViewRange>
+        <LabelType>PACWeightLabel</LabelType>
+        <FormatName>PACWeightLabel</FormatName>
+        <PrintCountFieldName>LabelQty</PrintCountFieldName>
+        <PrintCount>1</PrintCount>
+        <CommandTypeFieldName>CommandType</CommandTypeFieldName>
+        <SelectPrinter>true</SelectPrinter>
+        <Interval>0</Interval>
+      </PrintLabelOption>
+      <SummaryOption>
+        <SummaryType>Sum</SummaryType>
+      </SummaryOption>
+      <FocusSearchItemOption />
+      <RefreshFieldsOption>
+        <ParameterMappings />
+        <ColumnMappings />
+      </RefreshFieldsOption>
+      <SaveViewOption />
+      <ValidateViewOption>
+        <ViewRange>All</ViewRange>
+        <Combine>And</Combine>
+      </ValidateViewOption>
+      <OpenWebOption />
+      <ConditionRunOption>
+        <ConditionActions />
+      </ConditionRunOption>
+      <PrintViewOption>
+        <SelectPrinter>false</SelectPrinter>
+      </PrintViewOption>
+      <SetVariableOption>
+        <ValueType>None</ValueType>
+        <InputType>ValueType</InputType>
+        <PopupDialogSize>
+          <Width>400</Width>
+          <Height>600</Height>
+        </PopupDialogSize>
+      </SetVariableOption>
+      <Allow>true</Allow>
+      <EnableWithoutBinding>false</EnableWithoutBinding>
+    </Action>
+    <Action>
+      <Type>PrintLabel</Type>
+      <DisplayType>Button</DisplayType>
+      <Name>PrintTestLabel</Name>
+      <Caption>^PrintTestLabel^</Caption>
+      <Width>100</Width>
+      <AttachViewName>PACLabelCartonWeight_Vietnam</AttachViewName>
+      <ShowInLayout>false</ShowInLayout>
+      <DisableExpressions />
+      <HideExpressions />
+      <OpenDialogOption>
+        <DialogSize>
+          <Width>800</Width>
+          <Height>480</Height>
+        </DialogSize>
+        <NotPassCaller>false</NotPassCaller>
+        <ParameterMappings />
+        <DirectSearch>false</DirectSearch>
+      </OpenDialogOption>
+      <OpenMenuOption>
+        <ParameterMappings />
+        <DirectSearch>false</DirectSearch>
+      </OpenMenuOption>
+      <ExecuteFunctionOption>
+        <SourceViewRange>Changed</SourceViewRange>
+        <SkipErrorWhenChanged>false</SkipErrorWhenChanged>
+      </ExecuteFunctionOption>
+      <RefreshViewOption>
+        <FocusedRowPosition>Current</FocusedRowPosition>
+        <ParameterMappings />
+      </RefreshViewOption>
+      <CopyDataOption>
+        <SourceViewRange>Changed</SourceViewRange>
+        <SourceScreen>Self</SourceScreen>
+        <TargetScreen>Self</TargetScreen>
+        <DefaultValues />
+      </CopyDataOption>
+      <MoveDataOption>
+        <SourceViewRange>Changed</SourceViewRange>
+        <SourceScreen>Self</SourceScreen>
+        <TargetScreen>Self</TargetScreen>
+        <DefaultValues />
+      </MoveDataOption>
+      <OpenSelectDialogOption>
+        <DialogSize>
+          <Width>800</Width>
+          <Height>480</Height>
+        </DialogSize>
+        <NotPassCaller>false</NotPassCaller>
+        <ParameterMappings />
+        <DirectSearch>false</DirectSearch>
+        <ViewMappings />
+        <SaveDirectly>false</SaveDirectly>
+      </OpenSelectDialogOption>
+      <SetDataOption>
+        <TargetViewRange>Changed</TargetViewRange>
+        <ValueType>None</ValueType>
+        <InputType>ValueType</InputType>
+        <PopupDialogSize>
+          <Width>400</Width>
+          <Height>600</Height>
+        </PopupDialogSize>
+      </SetDataOption>
+      <DeleteDataOption>
+        <TargetScreen>Self</TargetScreen>
+        <TargetViewRange>Changed</TargetViewRange>
+      </DeleteDataOption>
+      <ExportReportOption>
+        <MasterViewRange>Changed</MasterViewRange>
+        <ParameterMappings />
+        <ExportType>Pdf</ExportType>
+      </ExportReportOption>
+      <PrintLabelOption>
+        <SourceViewName>PACLabelCartonWeight_Vietnam</SourceViewName>
+        <SourceViewRange>All</SourceViewRange>
+        <FormatName>TestLabel_Manh</FormatName>
+        <PrintCountFieldName />
+        <PrintCount>1</PrintCount>
+        <CommandTypeFieldName>CommandType</CommandTypeFieldName>
+        <SelectPrinter>true</SelectPrinter>
+        <Interval>0</Interval>
+      </PrintLabelOption>
+      <SummaryOption>
+        <SummaryType>Sum</SummaryType>
+      </SummaryOption>
+      <FocusSearchItemOption />
+      <RefreshFieldsOption>
+        <ParameterMappings />
+        <ColumnMappings />
+      </RefreshFieldsOption>
+      <SaveViewOption />
+      <ValidateViewOption>
+        <ViewRange>All</ViewRange>
+        <Combine>And</Combine>
+      </ValidateViewOption>
+      <OpenWebOption />
+      <ConditionRunOption>
+        <ConditionActions />
+      </ConditionRunOption>
+      <PrintViewOption>
+        <SelectPrinter>false</SelectPrinter>
+      </PrintViewOption>
+      <SetVariableOption>
+        <ValueType>None</ValueType>
+        <InputType>ValueType</InputType>
+        <PopupDialogSize>
+          <Width>400</Width>
+          <Height>600</Height>
+        </PopupDialogSize>
+      </SetVariableOption>
+      <Allow>true</Allow>
+      <EnableWithoutBinding>false</EnableWithoutBinding>
+    </Action>
+  </Actions>
+  <MVCSettings />
+  <Name>PACLabelCartonAndWeight</Name>
+  <ParentName>vi_Productionqty</ParentName>
+  <TCode>B756</TCode>
+  <IsDirectSearch>false</IsDirectSearch>
+  <IsNeverClose>false</IsNeverClose>
+  <ShowAfterStart>false</ShowAfterStart>
+  <UseSearch>true</UseSearch>
+  <UseReport>true</UseReport>
+  <UseSaveAll>false</UseSaveAll>
+  <PreventCloseDialogExpressions />
+  <References />
+  <IsDetachWindow>false</IsDetachWindow>
+  <IsDialog>false</IsDialog>
+  <IsFullWindow>false</IsFullWindow>
+  <ChooseDisplayMonitor>false</ChooseDisplayMonitor>
+  <WindowLocation>
+    <X>0</X>
+    <Y>0</Y>
+  </WindowLocation>
+  <WindowSize>
+    <Width>1024</Width>
+    <Height>768</Height>
+  </WindowSize>
+  <IsMonitoring>false</IsMonitoring>
+  <MonitoringScreens />
+  <LayoutView>
+    <ViewName>PACLabelCartonWeight_Vietnam</ViewName>
+  </LayoutView>
+  <Caption>^PAC Carton &amp; Weight Label^</Caption>
+  <ExpressionVersion>1</ExpressionVersion>
+  <Variables />
+</ScreenInfo>
+
+(1 rows affected)

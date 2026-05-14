@@ -51,20 +51,40 @@ BEGIN
 END
 ```
 
-### Bước 3: Cấu hình màn hình in tem mới (B790)
-Vì chị chưa có màn hình này, em đề xuất tạo mới màn hình **B790 (Phoenix Label Print)**.
-*   **Screen ID:** `B790`
-*   **Caption:** In Tem Phoenix Contact
-*   **Tính năng:** Cho phép quét `PackingID` hoặc `BoxID` để in hàng loạt cho 711 thùng.
+### Bước 3: Cấu hình màn hình in tem mới (B790 - Giao diện kiểu B756)
+Vì chị muốn tính năng chọn số lượng tem như màn **B756**, giao diện B790 sẽ bao gồm:
+*   **Ô nhập liệu:** `Number Label` (Mặc định = 1).
+*   **Logic in:** Hệ thống sẽ gọi SP `usp_Vietnam_PhoenixContactLabelPrint_get` kèm theo tham số số lượng.
+*   **Tính năng:** Hỗ trợ in bù, in thêm tem khi tem gốc bị hỏng/mất.
 
 ---
 
-## 3. Kế hoạch hỗ trợ tiếp theo
-Để kịp áp dụng vào ngày **15/05/2026**, em sẽ thực hiện các việc sau:
-1.  **Deploy SQL:** Em sẽ gửi câu lệnh SQL hoàn chỉnh để chị duyệt và chạy trên SSMS (để tạo SP và đăng ký màn hình).
-2.  **Mapping Label:** Đăng ký mã tem này cho Model `VEC3R0367QG` trong bảng `STB_ModelLabelInfo`.
+## 3. Cách Design tem trong Z530 (Nâng cao)
+Để hỗ trợ việc in nhiều bản, trong **Z530**, chị có thể thêm các trường sau vào mẫu thiết kế:
+1.  **Datecode:** `@DateCode` (Định dạng YYMMDD).
+2.  **Số thứ tự tem:** `@CurrentIndex / @TotalQty` (Ví dụ: 1/3, 2/3).
+3.  **Mã vạch:** Chứa thông tin `PackingID` để truy vết thùng hàng.
+
+---
+
+## 5. Hướng dẫn Test & Nghiệm thu
+Để đảm bảo tem in ra đúng yêu cầu của khách hàng trước ngày 15/05, chị hãy thực hiện test theo các bước sau:
+
+### Bước 1: Test Logic dữ liệu (SQL)
+Chạy lệnh sau trong SSMS để kiểm tra Datecode và số lượng tem:
+```sql
+EXEC [dbo].[usp_Vietnam_PhoenixContactLabelPrint_get] 
+     @pPackingID = 'MÃ_PACKING_THỰC_TẾ', 
+     @pNumberLabel = 2
+```
+*   **Kỳ vọng:** Trả ra 2 dòng, cột `DateCode` có định dạng `YYMMDD`.
+
+### Bước 2: Kiểm tra nút bấm trên UI
+Nếu màn hình **B790** chưa hiện nút, chị hãy kiểm tra lại cấu hình `Action` trong `STB_ScreenObjects`. Nút bấm phải được gán Function thực thi là SP `usp_Vietnam_PhoenixContactLabelPrint_get`.
+
+---
 
 > [!IMPORTANT]
-> Chị xác nhận giúp em: Chị muốn in tem này **ngay khi đóng thùng xong (V-28)** hay in rời tại một màn hình riêng sau khi đã có danh sách `LotNo`?
+> **Xác nhận cuối cùng:** Em đã cover cả 2 mã `-098` và `-197` như chị dặn. Dù chị dùng mã nào thì hệ thống cũng sẽ tự động nhận diện mẫu tem Phoenix này.
 
-Chị xem qua mẫu thiết kế và phản hồi giúp em nhé!
+Chị Hoa cần em hỗ trợ thêm phần đăng ký menu hay phân quyền cho màn hình này không ạ?

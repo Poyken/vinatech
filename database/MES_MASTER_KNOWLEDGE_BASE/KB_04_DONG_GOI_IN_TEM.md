@@ -43,3 +43,22 @@ UPDATE STB_MaterialLotInfo
 SET MaterialCode = 'LIVT38-025'
 WHERE MaterialLotNo = 20240612000524
 ```
+---
+
+### 6.4 Thiết kế tem Phoenix Contact (Yêu cầu Sale 05/2026)
+
+- **Đặc điểm:** Tem 5x8 cm, lấy Datecode (YYMMDD) từ công đoạn Winding (`InputJobDate` trong `STB_SetInfo`).
+- **Màn hình in:** Đề xuất **B790** (Giao diện kiểu B756 có ô nhập số lượng `Number Label`).
+- **Stored Procedure:** `usp_Vietnam_PhoenixContactLabelPrint_get`.
+- **Logic lấy Datecode:**
+```sql
+-- Chuyển đổi InputJobDate sang YYMMDD
+CONVERT(VARCHAR(6), SI.InputJobDate, 12) AS [DateCode]
+```
+- **Mapping Model (Z530):**
+```sql
+-- Map cho cả mã cũ và mã mới của dự án 3562
+INSERT INTO STB_ModelLabelInfo (ModelCode, LabelType, FormatName, CreateDateTime, CreateUserID)
+VALUES ('ECVT30-197', 'Phoenix_Label', 'Phoenix_Contact_V1', GETDATE(), 'Antigravity'),
+       ('ECVT30-098', 'Phoenix_Label', 'Phoenix_Contact_V1', GETDATE(), 'Antigravity')
+```

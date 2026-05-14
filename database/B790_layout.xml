@@ -1,0 +1,1116 @@
+<?xml version="1.0" encoding="utf-16"?>
+<ScreenInfo xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <MVCSettings />
+  <Name>InTemPhoenixContact</Name>
+  <ParentName>DucTest</ParentName>
+  <TCode>B790</TCode>
+  <IsDirectSearch>false</IsDirectSearch>
+  <IsNeverClose>false</IsNeverClose>
+  <ShowAfterStart>false</ShowAfterStart>
+  <UseSearch>true</UseSearch>
+  <UseReport>true</UseReport>
+  <UseSaveAll>false</UseSaveAll>
+  <PreventCloseDialogExpressions />
+  <References />
+  <IsDetachWindow>false</IsDetachWindow>
+  <IsDialog>false</IsDialog>
+  <IsFullWindow>false</IsFullWindow>
+  <ChooseDisplayMonitor>false</ChooseDisplayMonitor>
+  <WindowLocation>
+    <X>0</X>
+    <Y>0</Y>
+  </WindowLocation>
+  <WindowSize>
+    <Width>1024</Width>
+    <Height>768</Height>
+  </WindowSize>
+  <IsMonitoring>false</IsMonitoring>
+  <MonitoringScreens />
+  <LayoutView>
+    <ViewName>Vietnam_PhoenixContactLabelPrint</ViewName>
+  </LayoutView>
+  <Caption>^In Tem Phoenix Contact^</Caption>
+  <ExpressionVersion>1</ExpressionVersion>
+  <Variables />
+  <IsReadOnly>false</IsReadOnly>
+  <DeveloperVerion>1.3.123</DeveloperVerion>
+  <Version>1</Version>
+  <MaxVersion>1</MaxVersion>
+  <CreateUserID>vanduc</CreateUserID>
+  <CreateDateTime>2026-05-14 11:56:54</CreateDateTime>
+  <ChangeUserID>vanduc</ChangeUserID>
+  <ChangeDateTime>2026-05-14 14:05:31</ChangeDateTime>
+  <SearchFunctions>
+    <GUIFunction>
+      <Description />
+      <Author />
+      <CreateDate />
+      <Group />
+      <Language>Default</Language>
+      <Source>Default</Source>
+      <Target>SmartFactory</Target>
+      <ReturnTables />
+      <Name>usp_Vietnam_PhoenixContactLabelPrint_get</Name>
+      <FunctionName>usp_Vietnam_PhoenixContactLabelPrint_get</FunctionName>
+      <IsMain>true</IsMain>
+      <UseCLRWithXML>false</UseCLRWithXML>
+      <Timeout>30</Timeout>
+      <BatchRowCount>0</BatchRowCount>
+      <Parameters>
+        <GUIParameter>
+          <DataType>String</DataType>
+          <Name>LotNo</Name>
+          <EditorType>None</EditorType>
+          <IsNewLine>false</IsNewLine>
+          <IsMandatory>false</IsMandatory>
+          <IsVisible>true</IsVisible>
+          <IsReadOnly>false</IsReadOnly>
+          <DefaultValueType>None</DefaultValueType>
+          <DefaultValueSourceScreen>Self</DefaultValueSourceScreen>
+          <Caption>^LotNo^</Caption>
+          <Width>100</Width>
+          <UseBarcodeScan>false</UseBarcodeScan>
+          <OpenSelectDialogOption>
+            <DialogSize>
+              <Width>800</Width>
+              <Height>480</Height>
+            </DialogSize>
+            <NotPassCaller>false</NotPassCaller>
+            <ParameterMappings />
+            <DirectSearch>false</DirectSearch>
+            <Mappings />
+          </OpenSelectDialogOption>
+          <HyperLinkOption>
+            <NotPassCaller>false</NotPassCaller>
+            <ParameterMappings />
+            <WindowStyle>Normal</WindowStyle>
+          </HyperLinkOption>
+          <SearchWhenEnter>false</SearchWhenEnter>
+          <SelectAllWhenFocused>false</SelectAllWhenFocused>
+          <IsStringSource>false</IsStringSource>
+          <ComboBoxOption>
+            <ShowClearButton>false</ShowClearButton>
+          </ComboBoxOption>
+          <DateEditOption />
+        </GUIParameter>
+      </Parameters>
+      <DataSetInfo>
+        <Tables>
+          <TableInfo>
+            <SearchFunctionName>usp_Vietnam_PhoenixContactLabelPrint_get</SearchFunctionName>
+            <Index>0</Index>
+            <Name>Vietnam_PhoenixContactLabelPrint</Name>
+            <Caption>^Vietnam_PhoenixContactLabelPrint^</Caption>
+            <Columns>
+              <ColumnInfo>
+                <Name>Mã Lot</Name>
+                <Caption>^Mã Lot^</Caption>
+                <DataType>String</DataType>
+              </ColumnInfo>
+              <ColumnInfo>
+                <Name>Tên Model</Name>
+                <Caption>^Tên Model^</Caption>
+                <DataType>String</DataType>
+              </ColumnInfo>
+              <ColumnInfo>
+                <Name>Mã V?t Tu</Name>
+                <Caption>^Mã V?t Tu^</Caption>
+                <DataType>String</DataType>
+              </ColumnInfo>
+              <ColumnInfo>
+                <Name>DateCode</Name>
+                <Caption>^DateCode^</Caption>
+                <DataType>String</DataType>
+              </ColumnInfo>
+              <ColumnInfo>
+                <Name>Ngày S?n Xu?t</Name>
+                <Caption>^Ngày S?n Xu?t^</Caption>
+                <DataType>DateTime</DataType>
+              </ColumnInfo>
+              <ColumnInfo>
+                <Name>S? Lu?ng</Name>
+                <Caption>^S? Lu?ng^</Caption>
+                <DataType>String</DataType>
+              </ColumnInfo>
+              <ColumnInfo>
+                <Name>PrintTime</Name>
+                <Caption>^PrintTime^</Caption>
+                <DataType>DateTime</DataType>
+              </ColumnInfo>
+            </Columns>
+          </TableInfo>
+        </Tables>
+        <Relations />
+      </DataSetInfo>
+      <UseTransaction>false</UseTransaction>
+      <ParameterMappings />
+      <DataSetFormat>Xml</DataSetFormat>
+      <ExecuteWithMain>false</ExecuteWithMain>
+      <Append>true</Append>
+    </GUIFunction>
+  </SearchFunctions>
+  <ExecuteFunctions />
+  <Views>
+    <ViewInfo>
+      <CanAdd>false</CanAdd>
+      <CanEdit>false</CanEdit>
+      <CanDelete>false</CanDelete>
+      <CanImport>false</CanImport>
+      <CanExport>false</CanExport>
+      <SupportAdd>true</SupportAdd>
+      <SupportEdit>true</SupportEdit>
+      <SupportDelete>true</SupportDelete>
+      <SupportExport>true</SupportExport>
+      <SupportImport>true</SupportImport>
+      <SupportSave>true</SupportSave>
+      <SupportPaste>true</SupportPaste>
+      <SupportEmail>false</SupportEmail>
+      <SupportPrint>true</SupportPrint>
+      <SupportLayout>true</SupportLayout>
+      <SupportGrid>true</SupportGrid>
+      <SupportPivotGrid>false</SupportPivotGrid>
+      <SupportChart>false</SupportChart>
+      <SupportTreeList>false</SupportTreeList>
+      <SupportVerticalGrid>false</SupportVerticalGrid>
+      <SupportFormLayout>false</SupportFormLayout>
+      <SupportBandedGrid>false</SupportBandedGrid>
+      <SupportLayoutControl>false</SupportLayoutControl>
+      <SupportMonitoring>false</SupportMonitoring>
+      <SupportReport>false</SupportReport>
+      <SupportPDFViewer>false</SupportPDFViewer>
+      <SupportScheduler>false</SupportScheduler>
+      <SupportDynamicGrid>false</SupportDynamicGrid>
+      <SupportCustomControl>false</SupportCustomControl>
+      <SupportWebBrowser>false</SupportWebBrowser>
+      <SupportPLCMonitoring>false</SupportPLCMonitoring>
+      <SupportSnap>false</SupportSnap>
+      <SupportLabel>false</SupportLabel>
+      <SupportImageSlider>false</SupportImageSlider>
+      <SearchFunctionName>usp_Vietnam_PhoenixContactLabelPrint_get</SearchFunctionName>
+      <DataValidationTime>Save</DataValidationTime>
+      <AddNewRowAfterDataBinding>false</AddNewRowAfterDataBinding>
+      <AutoRefreshInterval>0</AutoRefreshInterval>
+      <DisableAddExpressions />
+      <DisableDeleteExpressions />
+      <DisableSaveExpressions />
+      <Name>Vietnam_PhoenixContactLabelPrint</Name>
+      <Tables>
+        <ViewTableInfo>
+          <Name>Vietnam_PhoenixContactLabelPrint</Name>
+          <Columns>
+            <ViewColumnInfo>
+              <Caption>^Mã Lot^</Caption>
+              <Name>Mã Lot</Name>
+              <FieldName>Mã Lot</FieldName>
+              <EditorType>None</EditorType>
+              <IsMandatory>false</IsMandatory>
+              <IsMake>true</IsMake>
+              <IsKey>false</IsKey>
+              <IsPrimaryKey>false</IsPrimaryKey>
+              <IsVisible>true</IsVisible>
+              <IsReadOnly>false</IsReadOnly>
+              <IsIgnoreSave>false</IsIgnoreSave>
+              <DefaultValueType>None</DefaultValueType>
+              <DefaultValueSourceScreen>Self</DefaultValueSourceScreen>
+              <FileEditOption>
+                <AllowSaveToLocal>false</AllowSaveToLocal>
+                <MaxFileSize>0</MaxFileSize>
+                <AnonymousAccessAzure>false</AnonymousAccessAzure>
+                <AzureUri />
+                <DownloadFromServer>false</DownloadFromServer>
+                <UseAzure>false</UseAzure>
+              </FileEditOption>
+              <AzureFileOption>
+                <AllowSaveToLocal>false</AllowSaveToLocal>
+                <MaxFileSize>0</MaxFileSize>
+                <AnonymousAccessAzure>false</AnonymousAccessAzure>
+                <AzureUri />
+              </AzureFileOption>
+              <SpreadEditOption />
+              <FormLayoutOption>
+                <VisibleCaption>true</VisibleCaption>
+                <NewLine>false</NewLine>
+                <ColSpan>1</ColSpan>
+                <RowSpan>1</RowSpan>
+              </FormLayoutOption>
+              <OpenSelectDialogOption>
+                <DialogSize>
+                  <Width>800</Width>
+                  <Height>480</Height>
+                </DialogSize>
+                <NotPassCaller>false</NotPassCaller>
+                <ParameterMappings />
+                <DirectSearch>false</DirectSearch>
+                <ViewMappings />
+                <RefreshViewAfterClose>false</RefreshViewAfterClose>
+              </OpenSelectDialogOption>
+              <SpreadOption>
+                <RowIncrease>0</RowIncrease>
+                <ColumnIncrease>0</ColumnIncrease>
+              </SpreadOption>
+              <MobileOption>
+                <UseBarcodeScan>false</UseBarcodeScan>
+                <IsPhoneVisible>true</IsPhoneVisible>
+                <IsTabletVisible>true</IsTabletVisible>
+              </MobileOption>
+              <EditorOption>
+                <DisplayFormatType>None</DisplayFormatType>
+                <EditFormatType>None</EditFormatType>
+                <IsStringSource>false</IsStringSource>
+                <PictureSizeMode>Zoom</PictureSizeMode>
+              </EditorOption>
+              <GridOption>
+                <FixedStyle>None</FixedStyle>
+                <AllowCellMerge>false</AllowCellMerge>
+                <SummaryType>None</SummaryType>
+                <SummaryDisplayFormat>{0:n0}</SummaryDisplayFormat>
+              </GridOption>
+              <BandedGridOption>
+                <FixedStyle>None</FixedStyle>
+                <AllowCellMerge>false</AllowCellMerge>
+                <SummaryType>None</SummaryType>
+                <SummaryDisplayFormat>{0:n0}</SummaryDisplayFormat>
+                <RowIndex>0</RowIndex>
+                <RowCount>0</RowCount>
+              </BandedGridOption>
+              <TreeListOption>
+                <ApplyChild>false</ApplyChild>
+                <RecursiveApplyChild>true</RecursiveApplyChild>
+                <FixedStyle>None</FixedStyle>
+              </TreeListOption>
+              <SchedulerOption>
+                <ResourcesVisibleIndex>-1</ResourcesVisibleIndex>
+              </SchedulerOption>
+              <PivotGridOption>
+                <Area>FilterArea</Area>
+              </PivotGridOption>
+              <LabelOption />
+              <HyperLinkOption>
+                <NotPassCaller>false</NotPassCaller>
+                <ParameterMappings />
+                <WindowStyle>Normal</WindowStyle>
+              </HyperLinkOption>
+              <Width>0</Width>
+              <Height>0</Height>
+              <UseCustom>false</UseCustom>
+              <FontSize>0</FontSize>
+              <FontStyle>Regular</FontStyle>
+              <ForeColorValue>-1</ForeColorValue>
+              <ComboBoxOption>
+                <ShowClearButton>false</ShowClearButton>
+              </ComboBoxOption>
+              <LayoutOption>
+                <TextWidth>0</TextWidth>
+              </LayoutOption>
+              <CellAlignment>Default</CellAlignment>
+              <HeaderAlignment>Default</HeaderAlignment>
+            </ViewColumnInfo>
+            <ViewColumnInfo>
+              <Caption>^Tên Model^</Caption>
+              <Name>Tên Model</Name>
+              <FieldName>Tên Model</FieldName>
+              <EditorType>None</EditorType>
+              <IsMandatory>false</IsMandatory>
+              <IsMake>true</IsMake>
+              <IsKey>false</IsKey>
+              <IsPrimaryKey>false</IsPrimaryKey>
+              <IsVisible>true</IsVisible>
+              <IsReadOnly>false</IsReadOnly>
+              <IsIgnoreSave>false</IsIgnoreSave>
+              <DefaultValueType>None</DefaultValueType>
+              <DefaultValueSourceScreen>Self</DefaultValueSourceScreen>
+              <FileEditOption>
+                <AllowSaveToLocal>false</AllowSaveToLocal>
+                <MaxFileSize>0</MaxFileSize>
+                <AnonymousAccessAzure>false</AnonymousAccessAzure>
+                <AzureUri />
+                <DownloadFromServer>false</DownloadFromServer>
+                <UseAzure>false</UseAzure>
+              </FileEditOption>
+              <AzureFileOption>
+                <AllowSaveToLocal>false</AllowSaveToLocal>
+                <MaxFileSize>0</MaxFileSize>
+                <AnonymousAccessAzure>false</AnonymousAccessAzure>
+                <AzureUri />
+              </AzureFileOption>
+              <SpreadEditOption />
+              <FormLayoutOption>
+                <VisibleCaption>true</VisibleCaption>
+                <NewLine>false</NewLine>
+                <ColSpan>1</ColSpan>
+                <RowSpan>1</RowSpan>
+              </FormLayoutOption>
+              <OpenSelectDialogOption>
+                <DialogSize>
+                  <Width>800</Width>
+                  <Height>480</Height>
+                </DialogSize>
+                <NotPassCaller>false</NotPassCaller>
+                <ParameterMappings />
+                <DirectSearch>false</DirectSearch>
+                <ViewMappings />
+                <RefreshViewAfterClose>false</RefreshViewAfterClose>
+              </OpenSelectDialogOption>
+              <SpreadOption>
+                <RowIncrease>0</RowIncrease>
+                <ColumnIncrease>0</ColumnIncrease>
+              </SpreadOption>
+              <MobileOption>
+                <UseBarcodeScan>false</UseBarcodeScan>
+                <IsPhoneVisible>true</IsPhoneVisible>
+                <IsTabletVisible>true</IsTabletVisible>
+              </MobileOption>
+              <EditorOption>
+                <DisplayFormatType>None</DisplayFormatType>
+                <EditFormatType>None</EditFormatType>
+                <IsStringSource>false</IsStringSource>
+                <PictureSizeMode>Zoom</PictureSizeMode>
+              </EditorOption>
+              <GridOption>
+                <FixedStyle>None</FixedStyle>
+                <AllowCellMerge>false</AllowCellMerge>
+                <SummaryType>None</SummaryType>
+                <SummaryDisplayFormat>{0:n0}</SummaryDisplayFormat>
+              </GridOption>
+              <BandedGridOption>
+                <FixedStyle>None</FixedStyle>
+                <AllowCellMerge>false</AllowCellMerge>
+                <SummaryType>None</SummaryType>
+                <SummaryDisplayFormat>{0:n0}</SummaryDisplayFormat>
+                <RowIndex>0</RowIndex>
+                <RowCount>0</RowCount>
+              </BandedGridOption>
+              <TreeListOption>
+                <ApplyChild>false</ApplyChild>
+                <RecursiveApplyChild>true</RecursiveApplyChild>
+                <FixedStyle>None</FixedStyle>
+              </TreeListOption>
+              <SchedulerOption>
+                <ResourcesVisibleIndex>-1</ResourcesVisibleIndex>
+              </SchedulerOption>
+              <PivotGridOption>
+                <Area>FilterArea</Area>
+              </PivotGridOption>
+              <LabelOption />
+              <HyperLinkOption>
+                <NotPassCaller>false</NotPassCaller>
+                <ParameterMappings />
+                <WindowStyle>Normal</WindowStyle>
+              </HyperLinkOption>
+              <Width>0</Width>
+              <Height>0</Height>
+              <UseCustom>false</UseCustom>
+              <FontSize>0</FontSize>
+              <FontStyle>Regular</FontStyle>
+              <ForeColorValue>-1</ForeColorValue>
+              <ComboBoxOption>
+                <ShowClearButton>false</ShowClearButton>
+              </ComboBoxOption>
+              <LayoutOption>
+                <TextWidth>0</TextWidth>
+              </LayoutOption>
+              <CellAlignment>Default</CellAlignment>
+              <HeaderAlignment>Default</HeaderAlignment>
+            </ViewColumnInfo>
+            <ViewColumnInfo>
+              <Caption>^Mã V?t Tu^</Caption>
+              <Name>Mã V?t Tu</Name>
+              <FieldName>Mã V?t Tu</FieldName>
+              <EditorType>None</EditorType>
+              <IsMandatory>false</IsMandatory>
+              <IsMake>true</IsMake>
+              <IsKey>false</IsKey>
+              <IsPrimaryKey>false</IsPrimaryKey>
+              <IsVisible>true</IsVisible>
+              <IsReadOnly>false</IsReadOnly>
+              <IsIgnoreSave>false</IsIgnoreSave>
+              <DefaultValueType>None</DefaultValueType>
+              <DefaultValueSourceScreen>Self</DefaultValueSourceScreen>
+              <FileEditOption>
+                <AllowSaveToLocal>false</AllowSaveToLocal>
+                <MaxFileSize>0</MaxFileSize>
+                <AnonymousAccessAzure>false</AnonymousAccessAzure>
+                <AzureUri />
+                <DownloadFromServer>false</DownloadFromServer>
+                <UseAzure>false</UseAzure>
+              </FileEditOption>
+              <AzureFileOption>
+                <AllowSaveToLocal>false</AllowSaveToLocal>
+                <MaxFileSize>0</MaxFileSize>
+                <AnonymousAccessAzure>false</AnonymousAccessAzure>
+                <AzureUri />
+              </AzureFileOption>
+              <SpreadEditOption />
+              <FormLayoutOption>
+                <VisibleCaption>true</VisibleCaption>
+                <NewLine>false</NewLine>
+                <ColSpan>1</ColSpan>
+                <RowSpan>1</RowSpan>
+              </FormLayoutOption>
+              <OpenSelectDialogOption>
+                <DialogSize>
+                  <Width>800</Width>
+                  <Height>480</Height>
+                </DialogSize>
+                <NotPassCaller>false</NotPassCaller>
+                <ParameterMappings />
+                <DirectSearch>false</DirectSearch>
+                <ViewMappings />
+                <RefreshViewAfterClose>false</RefreshViewAfterClose>
+              </OpenSelectDialogOption>
+              <SpreadOption>
+                <RowIncrease>0</RowIncrease>
+                <ColumnIncrease>0</ColumnIncrease>
+              </SpreadOption>
+              <MobileOption>
+                <UseBarcodeScan>false</UseBarcodeScan>
+                <IsPhoneVisible>true</IsPhoneVisible>
+                <IsTabletVisible>true</IsTabletVisible>
+              </MobileOption>
+              <EditorOption>
+                <DisplayFormatType>None</DisplayFormatType>
+                <EditFormatType>None</EditFormatType>
+                <IsStringSource>false</IsStringSource>
+                <PictureSizeMode>Zoom</PictureSizeMode>
+              </EditorOption>
+              <GridOption>
+                <FixedStyle>None</FixedStyle>
+                <AllowCellMerge>false</AllowCellMerge>
+                <SummaryType>None</SummaryType>
+                <SummaryDisplayFormat>{0:n0}</SummaryDisplayFormat>
+              </GridOption>
+              <BandedGridOption>
+                <FixedStyle>None</FixedStyle>
+                <AllowCellMerge>false</AllowCellMerge>
+                <SummaryType>None</SummaryType>
+                <SummaryDisplayFormat>{0:n0}</SummaryDisplayFormat>
+                <RowIndex>0</RowIndex>
+                <RowCount>0</RowCount>
+              </BandedGridOption>
+              <TreeListOption>
+                <ApplyChild>false</ApplyChild>
+                <RecursiveApplyChild>true</RecursiveApplyChild>
+                <FixedStyle>None</FixedStyle>
+              </TreeListOption>
+              <SchedulerOption>
+                <ResourcesVisibleIndex>-1</ResourcesVisibleIndex>
+              </SchedulerOption>
+              <PivotGridOption>
+                <Area>FilterArea</Area>
+              </PivotGridOption>
+              <LabelOption />
+              <HyperLinkOption>
+                <NotPassCaller>false</NotPassCaller>
+                <ParameterMappings />
+                <WindowStyle>Normal</WindowStyle>
+              </HyperLinkOption>
+              <Width>0</Width>
+              <Height>0</Height>
+              <UseCustom>false</UseCustom>
+              <FontSize>0</FontSize>
+              <FontStyle>Regular</FontStyle>
+              <ForeColorValue>-1</ForeColorValue>
+              <ComboBoxOption>
+                <ShowClearButton>false</ShowClearButton>
+              </ComboBoxOption>
+              <LayoutOption>
+                <TextWidth>0</TextWidth>
+              </LayoutOption>
+              <CellAlignment>Default</CellAlignment>
+              <HeaderAlignment>Default</HeaderAlignment>
+            </ViewColumnInfo>
+            <ViewColumnInfo>
+              <Caption>^DateCode^</Caption>
+              <Name>DateCode</Name>
+              <FieldName>DateCode</FieldName>
+              <EditorType>None</EditorType>
+              <IsMandatory>false</IsMandatory>
+              <IsMake>true</IsMake>
+              <IsKey>false</IsKey>
+              <IsPrimaryKey>false</IsPrimaryKey>
+              <IsVisible>true</IsVisible>
+              <IsReadOnly>false</IsReadOnly>
+              <IsIgnoreSave>false</IsIgnoreSave>
+              <DefaultValueType>None</DefaultValueType>
+              <DefaultValueSourceScreen>Self</DefaultValueSourceScreen>
+              <FileEditOption>
+                <AllowSaveToLocal>false</AllowSaveToLocal>
+                <MaxFileSize>0</MaxFileSize>
+                <AnonymousAccessAzure>false</AnonymousAccessAzure>
+                <AzureUri />
+                <DownloadFromServer>false</DownloadFromServer>
+                <UseAzure>false</UseAzure>
+              </FileEditOption>
+              <AzureFileOption>
+                <AllowSaveToLocal>false</AllowSaveToLocal>
+                <MaxFileSize>0</MaxFileSize>
+                <AnonymousAccessAzure>false</AnonymousAccessAzure>
+                <AzureUri />
+              </AzureFileOption>
+              <SpreadEditOption />
+              <FormLayoutOption>
+                <VisibleCaption>true</VisibleCaption>
+                <NewLine>false</NewLine>
+                <ColSpan>1</ColSpan>
+                <RowSpan>1</RowSpan>
+              </FormLayoutOption>
+              <OpenSelectDialogOption>
+                <DialogSize>
+                  <Width>800</Width>
+                  <Height>480</Height>
+                </DialogSize>
+                <NotPassCaller>false</NotPassCaller>
+                <ParameterMappings />
+                <DirectSearch>false</DirectSearch>
+                <ViewMappings />
+                <RefreshViewAfterClose>false</RefreshViewAfterClose>
+              </OpenSelectDialogOption>
+              <SpreadOption>
+                <RowIncrease>0</RowIncrease>
+                <ColumnIncrease>0</ColumnIncrease>
+              </SpreadOption>
+              <MobileOption>
+                <UseBarcodeScan>false</UseBarcodeScan>
+                <IsPhoneVisible>true</IsPhoneVisible>
+                <IsTabletVisible>true</IsTabletVisible>
+              </MobileOption>
+              <EditorOption>
+                <DisplayFormatType>None</DisplayFormatType>
+                <EditFormatType>None</EditFormatType>
+                <IsStringSource>false</IsStringSource>
+                <PictureSizeMode>Zoom</PictureSizeMode>
+              </EditorOption>
+              <GridOption>
+                <FixedStyle>None</FixedStyle>
+                <AllowCellMerge>false</AllowCellMerge>
+                <SummaryType>None</SummaryType>
+                <SummaryDisplayFormat>{0:n0}</SummaryDisplayFormat>
+              </GridOption>
+              <BandedGridOption>
+                <FixedStyle>None</FixedStyle>
+                <AllowCellMerge>false</AllowCellMerge>
+                <SummaryType>None</SummaryType>
+                <SummaryDisplayFormat>{0:n0}</SummaryDisplayFormat>
+                <RowIndex>0</RowIndex>
+                <RowCount>0</RowCount>
+              </BandedGridOption>
+              <TreeListOption>
+                <ApplyChild>false</ApplyChild>
+                <RecursiveApplyChild>true</RecursiveApplyChild>
+                <FixedStyle>None</FixedStyle>
+              </TreeListOption>
+              <SchedulerOption>
+                <ResourcesVisibleIndex>-1</ResourcesVisibleIndex>
+              </SchedulerOption>
+              <PivotGridOption>
+                <Area>FilterArea</Area>
+              </PivotGridOption>
+              <LabelOption />
+              <HyperLinkOption>
+                <NotPassCaller>false</NotPassCaller>
+                <ParameterMappings />
+                <WindowStyle>Normal</WindowStyle>
+              </HyperLinkOption>
+              <Width>0</Width>
+              <Height>0</Height>
+              <UseCustom>false</UseCustom>
+              <FontSize>0</FontSize>
+              <FontStyle>Regular</FontStyle>
+              <ForeColorValue>-1</ForeColorValue>
+              <ComboBoxOption>
+                <ShowClearButton>false</ShowClearButton>
+              </ComboBoxOption>
+              <LayoutOption>
+                <TextWidth>0</TextWidth>
+              </LayoutOption>
+              <CellAlignment>Default</CellAlignment>
+              <HeaderAlignment>Default</HeaderAlignment>
+            </ViewColumnInfo>
+            <ViewColumnInfo>
+              <Caption>^Ngày S?n Xu?t^</Caption>
+              <Name>Ngày S?n Xu?t</Name>
+              <FieldName>Ngày S?n Xu?t</FieldName>
+              <EditorType>None</EditorType>
+              <IsMandatory>false</IsMandatory>
+              <IsMake>true</IsMake>
+              <IsKey>false</IsKey>
+              <IsPrimaryKey>false</IsPrimaryKey>
+              <IsVisible>true</IsVisible>
+              <IsReadOnly>false</IsReadOnly>
+              <IsIgnoreSave>false</IsIgnoreSave>
+              <DefaultValueType>None</DefaultValueType>
+              <DefaultValueSourceScreen>Self</DefaultValueSourceScreen>
+              <FileEditOption>
+                <AllowSaveToLocal>false</AllowSaveToLocal>
+                <MaxFileSize>0</MaxFileSize>
+                <AnonymousAccessAzure>false</AnonymousAccessAzure>
+                <AzureUri />
+                <DownloadFromServer>false</DownloadFromServer>
+                <UseAzure>false</UseAzure>
+              </FileEditOption>
+              <AzureFileOption>
+                <AllowSaveToLocal>false</AllowSaveToLocal>
+                <MaxFileSize>0</MaxFileSize>
+                <AnonymousAccessAzure>false</AnonymousAccessAzure>
+                <AzureUri />
+              </AzureFileOption>
+              <SpreadEditOption />
+              <FormLayoutOption>
+                <VisibleCaption>true</VisibleCaption>
+                <NewLine>false</NewLine>
+                <ColSpan>1</ColSpan>
+                <RowSpan>1</RowSpan>
+              </FormLayoutOption>
+              <OpenSelectDialogOption>
+                <DialogSize>
+                  <Width>800</Width>
+                  <Height>480</Height>
+                </DialogSize>
+                <NotPassCaller>false</NotPassCaller>
+                <ParameterMappings />
+                <DirectSearch>false</DirectSearch>
+                <ViewMappings />
+                <RefreshViewAfterClose>false</RefreshViewAfterClose>
+              </OpenSelectDialogOption>
+              <SpreadOption>
+                <RowIncrease>0</RowIncrease>
+                <ColumnIncrease>0</ColumnIncrease>
+              </SpreadOption>
+              <MobileOption>
+                <UseBarcodeScan>false</UseBarcodeScan>
+                <IsPhoneVisible>true</IsPhoneVisible>
+                <IsTabletVisible>true</IsTabletVisible>
+              </MobileOption>
+              <EditorOption>
+                <DisplayFormatType>None</DisplayFormatType>
+                <EditFormatType>None</EditFormatType>
+                <IsStringSource>false</IsStringSource>
+                <PictureSizeMode>Zoom</PictureSizeMode>
+              </EditorOption>
+              <GridOption>
+                <FixedStyle>None</FixedStyle>
+                <AllowCellMerge>false</AllowCellMerge>
+                <SummaryType>None</SummaryType>
+                <SummaryDisplayFormat>{0:n0}</SummaryDisplayFormat>
+              </GridOption>
+              <BandedGridOption>
+                <FixedStyle>None</FixedStyle>
+                <AllowCellMerge>false</AllowCellMerge>
+                <SummaryType>None</SummaryType>
+                <SummaryDisplayFormat>{0:n0}</SummaryDisplayFormat>
+                <RowIndex>0</RowIndex>
+                <RowCount>0</RowCount>
+              </BandedGridOption>
+              <TreeListOption>
+                <ApplyChild>false</ApplyChild>
+                <RecursiveApplyChild>true</RecursiveApplyChild>
+                <FixedStyle>None</FixedStyle>
+              </TreeListOption>
+              <SchedulerOption>
+                <ResourcesVisibleIndex>-1</ResourcesVisibleIndex>
+              </SchedulerOption>
+              <PivotGridOption>
+                <Area>FilterArea</Area>
+              </PivotGridOption>
+              <LabelOption />
+              <HyperLinkOption>
+                <NotPassCaller>false</NotPassCaller>
+                <ParameterMappings />
+                <WindowStyle>Normal</WindowStyle>
+              </HyperLinkOption>
+              <Width>0</Width>
+              <Height>0</Height>
+              <UseCustom>false</UseCustom>
+              <FontSize>0</FontSize>
+              <FontStyle>Regular</FontStyle>
+              <ForeColorValue>-1</ForeColorValue>
+              <ComboBoxOption>
+                <ShowClearButton>false</ShowClearButton>
+              </ComboBoxOption>
+              <LayoutOption>
+                <TextWidth>0</TextWidth>
+              </LayoutOption>
+              <CellAlignment>Default</CellAlignment>
+              <HeaderAlignment>Default</HeaderAlignment>
+            </ViewColumnInfo>
+            <ViewColumnInfo>
+              <Caption>^S? Lu?ng^</Caption>
+              <Name>S? Lu?ng</Name>
+              <FieldName>S? Lu?ng</FieldName>
+              <EditorType>None</EditorType>
+              <IsMandatory>false</IsMandatory>
+              <IsMake>true</IsMake>
+              <IsKey>false</IsKey>
+              <IsPrimaryKey>false</IsPrimaryKey>
+              <IsVisible>true</IsVisible>
+              <IsReadOnly>false</IsReadOnly>
+              <IsIgnoreSave>false</IsIgnoreSave>
+              <DefaultValueType>None</DefaultValueType>
+              <DefaultValueSourceScreen>Self</DefaultValueSourceScreen>
+              <FileEditOption>
+                <AllowSaveToLocal>false</AllowSaveToLocal>
+                <MaxFileSize>0</MaxFileSize>
+                <AnonymousAccessAzure>false</AnonymousAccessAzure>
+                <AzureUri />
+                <DownloadFromServer>false</DownloadFromServer>
+                <UseAzure>false</UseAzure>
+              </FileEditOption>
+              <AzureFileOption>
+                <AllowSaveToLocal>false</AllowSaveToLocal>
+                <MaxFileSize>0</MaxFileSize>
+                <AnonymousAccessAzure>false</AnonymousAccessAzure>
+                <AzureUri />
+              </AzureFileOption>
+              <SpreadEditOption />
+              <FormLayoutOption>
+                <VisibleCaption>true</VisibleCaption>
+                <NewLine>false</NewLine>
+                <ColSpan>1</ColSpan>
+                <RowSpan>1</RowSpan>
+              </FormLayoutOption>
+              <OpenSelectDialogOption>
+                <DialogSize>
+                  <Width>800</Width>
+                  <Height>480</Height>
+                </DialogSize>
+                <NotPassCaller>false</NotPassCaller>
+                <ParameterMappings />
+                <DirectSearch>false</DirectSearch>
+                <ViewMappings />
+                <RefreshViewAfterClose>false</RefreshViewAfterClose>
+              </OpenSelectDialogOption>
+              <SpreadOption>
+                <RowIncrease>0</RowIncrease>
+                <ColumnIncrease>0</ColumnIncrease>
+              </SpreadOption>
+              <MobileOption>
+                <UseBarcodeScan>false</UseBarcodeScan>
+                <IsPhoneVisible>true</IsPhoneVisible>
+                <IsTabletVisible>true</IsTabletVisible>
+              </MobileOption>
+              <EditorOption>
+                <DisplayFormatType>None</DisplayFormatType>
+                <EditFormatType>None</EditFormatType>
+                <IsStringSource>false</IsStringSource>
+                <PictureSizeMode>Zoom</PictureSizeMode>
+              </EditorOption>
+              <GridOption>
+                <FixedStyle>None</FixedStyle>
+                <AllowCellMerge>false</AllowCellMerge>
+                <SummaryType>None</SummaryType>
+                <SummaryDisplayFormat>{0:n0}</SummaryDisplayFormat>
+              </GridOption>
+              <BandedGridOption>
+                <FixedStyle>None</FixedStyle>
+                <AllowCellMerge>false</AllowCellMerge>
+                <SummaryType>None</SummaryType>
+                <SummaryDisplayFormat>{0:n0}</SummaryDisplayFormat>
+                <RowIndex>0</RowIndex>
+                <RowCount>0</RowCount>
+              </BandedGridOption>
+              <TreeListOption>
+                <ApplyChild>false</ApplyChild>
+                <RecursiveApplyChild>true</RecursiveApplyChild>
+                <FixedStyle>None</FixedStyle>
+              </TreeListOption>
+              <SchedulerOption>
+                <ResourcesVisibleIndex>-1</ResourcesVisibleIndex>
+              </SchedulerOption>
+              <PivotGridOption>
+                <Area>FilterArea</Area>
+              </PivotGridOption>
+              <LabelOption />
+              <HyperLinkOption>
+                <NotPassCaller>false</NotPassCaller>
+                <ParameterMappings />
+                <WindowStyle>Normal</WindowStyle>
+              </HyperLinkOption>
+              <Width>0</Width>
+              <Height>0</Height>
+              <UseCustom>false</UseCustom>
+              <FontSize>0</FontSize>
+              <FontStyle>Regular</FontStyle>
+              <ForeColorValue>-1</ForeColorValue>
+              <ComboBoxOption>
+                <ShowClearButton>false</ShowClearButton>
+              </ComboBoxOption>
+              <LayoutOption>
+                <TextWidth>0</TextWidth>
+              </LayoutOption>
+              <CellAlignment>Default</CellAlignment>
+              <HeaderAlignment>Default</HeaderAlignment>
+            </ViewColumnInfo>
+            <ViewColumnInfo>
+              <Caption>^PrintTime^</Caption>
+              <Name>PrintTime</Name>
+              <FieldName>PrintTime</FieldName>
+              <EditorType>None</EditorType>
+              <IsMandatory>false</IsMandatory>
+              <IsMake>true</IsMake>
+              <IsKey>false</IsKey>
+              <IsPrimaryKey>false</IsPrimaryKey>
+              <IsVisible>true</IsVisible>
+              <IsReadOnly>false</IsReadOnly>
+              <IsIgnoreSave>false</IsIgnoreSave>
+              <DefaultValueType>None</DefaultValueType>
+              <DefaultValueSourceScreen>Self</DefaultValueSourceScreen>
+              <FileEditOption>
+                <AllowSaveToLocal>false</AllowSaveToLocal>
+                <MaxFileSize>0</MaxFileSize>
+                <AnonymousAccessAzure>false</AnonymousAccessAzure>
+                <AzureUri />
+                <DownloadFromServer>false</DownloadFromServer>
+                <UseAzure>false</UseAzure>
+              </FileEditOption>
+              <AzureFileOption>
+                <AllowSaveToLocal>false</AllowSaveToLocal>
+                <MaxFileSize>0</MaxFileSize>
+                <AnonymousAccessAzure>false</AnonymousAccessAzure>
+                <AzureUri />
+              </AzureFileOption>
+              <SpreadEditOption />
+              <FormLayoutOption>
+                <VisibleCaption>true</VisibleCaption>
+                <NewLine>false</NewLine>
+                <ColSpan>1</ColSpan>
+                <RowSpan>1</RowSpan>
+              </FormLayoutOption>
+              <OpenSelectDialogOption>
+                <DialogSize>
+                  <Width>800</Width>
+                  <Height>480</Height>
+                </DialogSize>
+                <NotPassCaller>false</NotPassCaller>
+                <ParameterMappings />
+                <DirectSearch>false</DirectSearch>
+                <ViewMappings />
+                <RefreshViewAfterClose>false</RefreshViewAfterClose>
+              </OpenSelectDialogOption>
+              <SpreadOption>
+                <RowIncrease>0</RowIncrease>
+                <ColumnIncrease>0</ColumnIncrease>
+              </SpreadOption>
+              <MobileOption>
+                <UseBarcodeScan>false</UseBarcodeScan>
+                <IsPhoneVisible>true</IsPhoneVisible>
+                <IsTabletVisible>true</IsTabletVisible>
+              </MobileOption>
+              <EditorOption>
+                <DisplayFormatType>None</DisplayFormatType>
+                <EditFormatType>None</EditFormatType>
+                <IsStringSource>false</IsStringSource>
+                <PictureSizeMode>Zoom</PictureSizeMode>
+              </EditorOption>
+              <GridOption>
+                <FixedStyle>None</FixedStyle>
+                <AllowCellMerge>false</AllowCellMerge>
+                <SummaryType>None</SummaryType>
+                <SummaryDisplayFormat>{0:n0}</SummaryDisplayFormat>
+              </GridOption>
+              <BandedGridOption>
+                <FixedStyle>None</FixedStyle>
+                <AllowCellMerge>false</AllowCellMerge>
+                <SummaryType>None</SummaryType>
+                <SummaryDisplayFormat>{0:n0}</SummaryDisplayFormat>
+                <RowIndex>0</RowIndex>
+                <RowCount>0</RowCount>
+              </BandedGridOption>
+              <TreeListOption>
+                <ApplyChild>false</ApplyChild>
+                <RecursiveApplyChild>true</RecursiveApplyChild>
+                <FixedStyle>None</FixedStyle>
+              </TreeListOption>
+              <SchedulerOption>
+                <ResourcesVisibleIndex>-1</ResourcesVisibleIndex>
+              </SchedulerOption>
+              <PivotGridOption>
+                <Area>FilterArea</Area>
+              </PivotGridOption>
+              <LabelOption />
+              <HyperLinkOption>
+                <NotPassCaller>false</NotPassCaller>
+                <ParameterMappings />
+                <WindowStyle>Normal</WindowStyle>
+              </HyperLinkOption>
+              <Width>0</Width>
+              <Height>0</Height>
+              <UseCustom>false</UseCustom>
+              <FontSize>0</FontSize>
+              <FontStyle>Regular</FontStyle>
+              <ForeColorValue>-1</ForeColorValue>
+              <ComboBoxOption>
+                <ShowClearButton>false</ShowClearButton>
+              </ComboBoxOption>
+              <LayoutOption>
+                <TextWidth>0</TextWidth>
+              </LayoutOption>
+              <CellAlignment>Default</CellAlignment>
+              <HeaderAlignment>Default</HeaderAlignment>
+            </ViewColumnInfo>
+          </Columns>
+          <Caption>^Vietnam_PhoenixContactLabelPrint^</Caption>
+        </ViewTableInfo>
+      </Tables>
+      <Caption>^Vietnam_PhoenixContactLabelPrint^</Caption>
+      <ViewType>GridView</ViewType>
+      <SaveRange>Changed</SaveRange>
+      <SizeUnit>Percent</SizeUnit>
+      <Size>100</Size>
+      <UseDefaultHeaderColor>true</UseDefaultHeaderColor>
+      <DefaultReadOnlyHeaderColorArgb>-8388608</DefaultReadOnlyHeaderColorArgb>
+      <DefaultEditableHeaderColorArgb>-16777088</DefaultEditableHeaderColorArgb>
+      <ModifiedCellForeColorArgb>-8388608</ModifiedCellForeColorArgb>
+      <PreventBestfit>false</PreventBestfit>
+      <UseCustomCulumn>false</UseCustomCulumn>
+      <MobileGridOption>
+        <EditMode>batch</EditMode>
+      </MobileGridOption>
+      <MobileChartOption>
+        <SeriesTemplate>
+          <ViewType>bar</ViewType>
+        </SeriesTemplate>
+        <Series />
+        <ArgumentAxis />
+      </MobileChartOption>
+      <MobilePivotOption>
+        <Fields />
+      </MobilePivotOption>
+      <BandedGridOption>
+        <MultiSelect>false</MultiSelect>
+        <UseCheckBoxRowSelect>false</UseCheckBoxRowSelect>
+        <ShowGroupPanel>true</ShowGroupPanel>
+        <ShowFooter>false</ShowFooter>
+        <RowAutoHeight>false</RowAutoHeight>
+        <PreventChangeRowWhenChildViewModified>false</PreventChangeRowWhenChildViewModified>
+        <AllowCellMerge>false</AllowCellMerge>
+        <IndicatorWidth>40</IndicatorWidth>
+        <Bands />
+        <ShowBands>true</ShowBands>
+      </BandedGridOption>
+      <MonitoringOption>
+        <IsStretch>false</IsStretch>
+        <AutoRefresh>false</AutoRefresh>
+        <AutoRefreshInterval>5</AutoRefreshInterval>
+        <ShowSettingsPanel>false</ShowSettingsPanel>
+        <IsLoop>false</IsLoop>
+        <BlinkInterval>500</BlinkInterval>
+        <AutoSwitchitLayout>false</AutoSwitchitLayout>
+        <RefreshDataWhenSwitchLayout>false</RefreshDataWhenSwitchLayout>
+        <ItemVariableSettings />
+      </MonitoringOption>
+      <DetailOption />
+      <GridOption>
+        <MultiSelect>false</MultiSelect>
+        <UseCheckBoxRowSelect>false</UseCheckBoxRowSelect>
+        <Settings>?&lt;XtraSerializer version="1.0" application="View"&gt;
+  &lt;property name="FormatRules" iskey="true" value="0" /&gt;
+  &lt;property name="FormatConditions" iskey="true" value="0" /&gt;
+&lt;/XtraSerializer&gt;</Settings>
+        <ShowGroupPanel>true</ShowGroupPanel>
+        <ShowFooter>false</ShowFooter>
+        <RowAutoHeight>false</RowAutoHeight>
+        <PreventChangeRowWhenChildViewModified>false</PreventChangeRowWhenChildViewModified>
+        <AllowCellMerge>false</AllowCellMerge>
+        <IndicatorWidth>40</IndicatorWidth>
+      </GridOption>
+      <TreeListOption>
+        <MultiSelect>false</MultiSelect>
+        <ExpandAllAfterBinding>false</ExpandAllAfterBinding>
+        <AllowFindPanel>true</AllowFindPanel>
+        <AllowDragNode>false</AllowDragNode>
+        <PreventChangeRowWhenChildViewModified>false</PreventChangeRowWhenChildViewModified>
+        <ShowBandsMode>false</ShowBandsMode>
+        <AllowBandColumnsMultiRow>false</AllowBandColumnsMultiRow>
+        <GridStyle>false</GridStyle>
+        <IsDynamicColumn>false</IsDynamicColumn>
+        <SaveAsOriginal>false</SaveAsOriginal>
+      </TreeListOption>
+      <FormLayoutOption>
+        <ColumnCount>1</ColumnCount>
+      </FormLayoutOption>
+      <ReportOption>
+        <Range>All</Range>
+        <LayoutNameType>None</LayoutNameType>
+        <Layouts />
+        <ShowInternalPrintButton>true</ShowInternalPrintButton>
+      </ReportOption>
+      <SpreadOption />
+      <VerticalGridOption>
+        <RecordWidth>0</RecordWidth>
+        <RowHeaderWidth>0</RowHeaderWidth>
+      </VerticalGridOption>
+      <LayoutOption />
+      <PivotGridOption>
+        <ShowCustomizationForm>false</ShowCustomizationForm>
+        <HideChart>false</HideChart>
+      </PivotGridOption>
+      <PDFViewerOption />
+      <SchedulerOption>
+        <ActiveViewType>Month</ActiveViewType>
+        <Appointments />
+        <Resources />
+        <AppointmentDependencies />
+        <ResourcePerPage>10</ResourcePerPage>
+        <ResourcesTreeWidth>200</ResourcesTreeWidth>
+      </SchedulerOption>
+      <EmailOption>
+        <ExportType>Pdf</ExportType>
+      </EmailOption>
+      <DynamicBandedGridOption>
+        <MultiSelect>false</MultiSelect>
+        <UseCheckBoxRowSelect>false</UseCheckBoxRowSelect>
+        <ShowGroupPanel>true</ShowGroupPanel>
+        <ShowFooter>false</ShowFooter>
+        <RowAutoHeight>false</RowAutoHeight>
+        <PreventChangeRowWhenChildViewModified>false</PreventChangeRowWhenChildViewModified>
+        <AllowCellMerge>false</AllowCellMerge>
+        <IndicatorWidth>40</IndicatorWidth>
+        <Bands />
+        <SaveAsOriginal>false</SaveAsOriginal>
+        <ShowBands>true</ShowBands>
+      </DynamicBandedGridOption>
+      <CustomControlOption />
+      <WebBrowserOption />
+      <PLCMonitoringOption>
+        <AutoRefresh>false</AutoRefresh>
+        <AutoRefreshInterval>5</AutoRefreshInterval>
+        <ShowSettingsPanel>false</ShowSettingsPanel>
+        <DisplayPauseTime>10</DisplayPauseTime>
+      </PLCMonitoringOption>
+      <SnapControlOption />
+      <LabelControlOption>
+        <ShowParameter>false</ShowParameter>
+      </LabelControlOption>
+      <ImageSliderOption>
+        <DownloadFromServer>false</DownloadFromServer>
+        <UseAzure>false</UseAzure>
+        <AnonymousAccessAzure>false</AnonymousAccessAzure>
+        <AzureUri />
+        <MaxImageSize>1</MaxImageSize>
+        <AnimationTime>700</AnimationTime>
+        <LayoutMode>Squeeze</LayoutMode>
+        <AutoSlide>None</AutoSlide>
+        <AutoSlideInterval>1000</AutoSlideInterval>
+        <AllowLooping>false</AllowLooping>
+      </ImageSliderOption>
+      <ShowCaption>true</ShowCaption>
+      <DragOptions>
+        <AllowDrag>false</AllowDrag>
+        <AllowDrop>false</AllowDrop>
+        <DeleteFromSourceAfterDrop>false</DeleteFromSourceAfterDrop>
+        <DragColumnMapping />
+        <DisableExpressions />
+      </DragOptions>
+      <SupportAdvBandedGrid>false</SupportAdvBandedGrid>
+      <DoubleClickActionEvenEmpty>false</DoubleClickActionEvenEmpty>
+      <ChartOption />
+      <ApplyReadOnlyExpressionWhenFocusedRowChange>false</ApplyReadOnlyExpressionWhenFocusedRowChange>
+      <ApplyMandatoryExpressionWhenFocusedRowChange>false</ApplyMandatoryExpressionWhenFocusedRowChange>
+      <ChildViewRefreshMode>FocusedRowChanged</ChildViewRefreshMode>
+    </ViewInfo>
+  </Views>
+  <PopupGrids />
+  <Actions />
+</ScreenInfo>
+
+(1 rows affected)
