@@ -4,6 +4,7 @@
 
 ## 🟢 Đang Xử Lý (In Progress)
 * **Task 6:** Xử lý lỗi gộp túi bóng qty 0 cho Lot SP260516-003 (16/05/2026) - *Đã xác định nguyên nhân CurrentQty = 0 tại STB_MaterialLotInfo. Đã cung cấp script SQL để user thực thi thủ công.*
+* **Task 7:** Lỗi "Thiếu thiết lập Vỏ Nhôm" model 3562 (16/05/2026) - *Đã đọc kỹ Docx (Dòng 985-989) và đối soát với SP usp_Vietnam_RawMaterialInputHist_uid (Dòng 2364). Đang thực hiện cập nhật SP để cho phép mã vỏ GBDYAC-004.*
 
 ---
 

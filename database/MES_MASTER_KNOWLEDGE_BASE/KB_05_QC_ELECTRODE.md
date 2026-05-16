@@ -148,3 +148,22 @@ INSERT INTO stb_slittinglocationconfig_vvt
 VALUES
     ('1025', 'BY', '200', '10', '17.7', 'VVT_F2', 'kho2'); -- Thay đổi giá trị thực tế
 ```
+
+---
+
+### 8.6 Sửa hạng mục kiểm tra chung (B597/C443)
+- **Triệu chứng:** Khi vào B597 hoặc C443, hệ thống tự load lại các hạng mục kiểm tra cũ của lần trước, không cho sửa hoặc hiển thị sai hạng mục mới.
+- **Nguyên nhân:** Do `STB_CommInspDocHistory` đã tồn tại bản ghi cũ cho Barcode này.
+- **Cách xử lý:** Xóa lịch sử kiểm tra cũ để hệ thống khởi tạo lại.
+```sql
+-- 1. Tìm CommInspDocNo từ Barcode
+SELECT CIDH.CommInspDocNo 
+FROM STB_CommInspDocHistory CIDH
+JOIN STB_SetInfo SI ON CIDH.ProdNo = SI.ControlNo
+WHERE SI.Barcode = 'VVPO093R010707';
+
+-- 2. Xóa lịch sử trong 2 bảng (Dùng mã DocNo tìm được)
+DELETE FROM STB_CommInspDocItem WHERE CommInspDocNo = '...';
+DELETE FROM STB_CommInspDocHistory WHERE CommInspDocNo = '...';
+```
+> **Lưu ý:** Sau khi xóa, QC cần tắt màn hình và mở lại để hệ thống load bộ tiêu chuẩn mới.

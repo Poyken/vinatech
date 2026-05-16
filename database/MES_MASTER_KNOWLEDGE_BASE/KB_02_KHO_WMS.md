@@ -189,4 +189,22 @@ SELECT * FROM STB_AluCaseMapping_VVT
 WHERE AluCaseCode = 'GBDYAC-004' AND ModelCode = 'GBACAC-037'
 ```
 
+---
+
+### 4.15 Chỉnh sửa kho Holding (Nhập sai kho)
+- **Triệu chứng:** Hàng bị nhập sai vào kho Holding (ví dụ thay vì vào kho ROH_VN_WH lại vào kho Holding).
+- **Cách xử lý:** Cập nhật lại mã kho trong lịch sử và trạng thái hiện tại. Không cần xóa lịch sử xuất nhập.
+```sql
+-- 1. Cập nhật lịch sử xuất nhập
+UPDATE STB_MaterialWarehouseInOutHist
+SET TargetMaterialWarehouseCode = 'ROH_VN_WH'
+WHERE LotID = 'ML20250430000174';
+
+-- 2. Cập nhật trạng thái kho hiện tại của Lot
+UPDATE STB_MaterialLotInfo 
+SET MaterialWarehouseCode = 'ROH_VN_WH',
+    MaterialLocationCode = 'ROH_VN_WH_01' -- Cập nhật đúng vị trí kho mới
+WHERE LotID = 'ML20250430000174';
+```
+
 > Tick option tại màn **F110** để bật/tắt FIFO cho kho thành phẩm.

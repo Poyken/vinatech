@@ -199,3 +199,28 @@ ORDER BY CreateDateTime;
 - **Cách xử lý:** 
     - Nếu chưa sản xuất: Hủy kế hoạch cũ tại B450 và tạo lại đúng Line.
     - Nếu đã có sản lượng: Phải dùng script **Chuyển Line sản xuất** (Mục 5.8) cho các Barcode đã lỡ sản xuất.
+---
+
+### 5.13 Cập nhật giá công đoạn (Stage Prices) - Màn B682, B781
+- **Triệu chứng:** Giá công đoạn không hiển thị hoặc bị sai trên màn hình báo cáo B682, B781.
+- **Cách xử lý:** Insert trực tiếp vào bảng giá công đoạn.
+```sql
+INSERT INTO STB_VVT_StagePrices (model, RouteV22, PriceV22, RouteV23, PriceV23, RouteV24, PriceV24, RouteV25, PriceV25, RouteV26, PriceV26, RouteV27, PriceV27, RouteV28, PriceV28, CreateDate)
+VALUES ('MÃ_MODEL', 'V-22', 0, 'V-23', 0, 'V-24', 0, 'V-25', 0, 'V-26', 0, 'V-27', 0, 'V-28', 0, GETDATE());
+```
+
+---
+
+### 5.14 Sửa/Xóa số lượng đóng gói (Packing Qty) - Màn B789
+- **Triệu chứng:** Sai lệch số lượng đã đóng gói trong lịch sử B789.
+- **Cách xử lý:** 
+```sql
+-- Tìm ID bản ghi sai
+SELECT * FROM STB_SavePackingTime_VVT WHERE LotNo = 'Barcode_Cần_Sửa';
+
+-- Cập nhật PackQty theo ID
+UPDATE STB_SavePackingTime_VVT SET PackQty = 500 WHERE LotNo = '...' AND id = '...';
+
+-- Xóa bản ghi thừa
+DELETE FROM STB_SavePackingTime_VVT WHERE LotNo = '...' AND id = '...';
+```
