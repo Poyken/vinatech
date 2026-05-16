@@ -130,3 +130,21 @@ WHERE id IN (183, 184)
    - Tìm đến CTE `eleclyte1`.
    - Bổ sung lệnh UNION ALL ngoại lệ (ví dụ: `select 'GBEC00-011' AS electrolyte, 'WEC3R0606QG' as model, '1840' size`).
    - Cập nhật lại SP vào thẻ CSDL.
+
+---
+
+### 8.5 Lỗi thiếu cấu hình Slitting (STB_SLITTINGLOCATIONCONFIG_VVT)
+- **Triệu chứng:** Khi lưu kết quả tự kiểm tra hoặc nhập liệu, báo lỗi: *"Không tồn tại thiết lập Điện cực của LotNo... Chưa CONFIG trong bảng: STB_SLITTINGLOCATIONCONFIG_VVT"*.
+- **Nguyên nhân:** Mã sản phẩm (PartNo) và thông số kỹ thuật (Size/Farad/Width) chưa được khai báo trong bảng vị trí Slitting.
+- **Cách xử lý:** Tra cứu thông số bị thiếu trong câu báo lỗi (VD: PartNo=1025, Farad=10F, Width=17.7) và thực hiện INSERT vào bảng master.
+- **SQL mẫu:**
+```sql
+-- Kiểm tra dữ liệu hiện có cho PartNo đó
+SELECT * FROM stb_slittinglocationconfig_vvt WHERE PartNo = '1025'
+
+-- Thêm cấu hình mới (Dựa trên thông số lỗi báo)
+INSERT INTO stb_slittinglocationconfig_vvt
+    (PartNo, SlittingCode, SlittingSize, Farad, Width, WarehouseLocation, LocationWarehouse)
+VALUES
+    ('1025', 'BY', '200', '10', '17.7', 'VVT_F2', 'kho2'); -- Thay đổi giá trị thực tế
+```

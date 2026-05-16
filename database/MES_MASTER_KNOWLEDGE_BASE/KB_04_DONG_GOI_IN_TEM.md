@@ -71,3 +71,21 @@ VALUES ('ECVT30-197', 'Phoenix_Label', 'Phoenix_Contact_V1', GETDATE(), 'Antigra
 | :--- | :--- | :--- | :--- | :--- |
 | Phoenix (VVT) | ECVT30-197 / ECVT30-098 | B790 | `usp_Vietnam_PhoenixContactLabelPrint_get` | In tem Phoenix (Datecode YYMMDD) |
 | Ha Nam (VVT_F3) | 10140105055 (Anode Foil) | F721 / Kho | `STB_ModelLabelInfo` (PartLabel) | Mở in tem 자재라벨 cho chị Hoàng Xuân (13/05/2026) |
+
+---
+
+### 6.6 Lỗi gộp túi bóng/box bị mất số lượng (Qty = 0) - Màn HN544
+- **Triệu chứng:** Sau khi gộp túi bóng thành hộp nhỏ, số lượng trong grid hiển thị bằng 0, không cho in tem.
+- **Nguyên nhân:** Cột `CurrentQty` và `InitialQty` trong bảng `STB_MaterialLotInfo` bị reset về 0 do lỗi logic khi thực hiện gộp (thường gặp ở Hà Nam).
+- **Cách xử lý:**
+    1. Kiểm tra sản lượng gốc của Lot tại `STB_SetInfo` (cột `ProdQty`).
+    2. Nếu gộp nhiều túi vào 1, dồn tổng sản lượng vào 1 `LotID` duy nhất và xóa các `LotID` thừa.
+    3. Nếu chia đều, cập nhật `UPDATE` lại số lượng cho từng `LotID` trong `STB_MaterialLotInfo`.
+- **SQL mẫu:**
+```sql
+-- Kiểm tra số lượng hiện tại
+SELECT LotID, LotNo, CurrentQty, PackingID FROM STB_MaterialLotInfo WHERE LotNo = 'SP260516-003'
+
+-- Fix số lượng (Ví dụ dồn 20 cái vào 1 túi)
+UPDATE STB_MaterialLotInfo SET InitialQty = 20, CurrentQty = 20 WHERE LotID = 'Mã_Túi_Cần_Giữ'
+```

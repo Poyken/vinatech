@@ -34,3 +34,6 @@
 | Giá lên B682/B781 | KB_01 |
 | Slitting chiều rộng B552 | KB_05 |
 | Groupware: Lỗi duyệt PO, sai BOM, hàng nhập chưa có QC | KB_07 |
+| **Gộp túi bóng bị mất số lượng (Qty = 0)** | **KB_04** |
+| **Lỗi "Chưa CONFIG trong STB_SLITTINGLOCATIONCONFIG_VVT"** | **KB_05** |
+| **Lỗi "Không tồn tại thiết lập Vỏ Nhôm"** | **KB_02** |

@@ -174,4 +174,19 @@ WHERE sparepartcode = '[Mã sparepart cần xóa]'
 - **VVT:** SP `usp_VN_Update_ExportExcel`
 - **Bắc Giang:** SP `usp_VN_Update_ExportExcel_BG`
 
+---
+
+### 4.14 Lỗi thiếu thiết lập Vỏ Nhôm (Case Mapping)
+- **Triệu chứng:** Khi lưu kết quả sản xuất/kiểm tra, báo lỗi: *"Không tồn tại thiết lập Vỏ Nhôm của LotNo... với mã Vỏ Nhôm: [Mã_Vỏ] <<>> [Mã_Model]"*.
+- **Nguyên nhân:** Lot Vỏ nhôm (Aluminum Case) đang sử dụng chưa được khai báo liên kết với Model sản phẩm trong bảng cấu hình Master Data.
+- **Cách xử lý:** 
+    1. Kiểm tra mã Vỏ nhôm và mã Model trong câu thông báo lỗi.
+    2. Cập nhật bổ sung vào bảng cấu hình mapping (thường dùng `STB_AluCaseMapping_VVT` hoặc thông qua màn hình Master Data).
+- **SQL kiểm tra:**
+```sql
+-- Kiểm tra xem mã vỏ đã được map với model chưa
+SELECT * FROM STB_AluCaseMapping_VVT 
+WHERE AluCaseCode = 'GBDYAC-004' AND ModelCode = 'GBACAC-037'
+```
+
 > Tick option tại màn **F110** để bật/tắt FIFO cho kho thành phẩm.
