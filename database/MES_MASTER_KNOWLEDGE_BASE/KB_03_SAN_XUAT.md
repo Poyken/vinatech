@@ -181,3 +181,21 @@ WHERE ControlNo IN (
 **SP:** `usp_Vietnam_AndonDetail_get`
 
 → Vào SP → Chỉnh lại điều kiện tìm kiếm theo tháng user yêu cầu.
+---
+
+### 5.12 Lỗi lập kế hoạch ngày (Daily Plan) sai Line
+- **Triệu chứng:** 2 Model khác nhau hiển thị sản lượng trên cùng 1 dây chuyền trong các báo cáo Excel/Pivot (Ví dụ: Model 3562 và 35105 cùng chạy trên Line `VVBNTC-01`).
+- **Nguyên nhân:** Nhân viên lập kế hoạch chọn nhầm `LineCode` khi tạo kế hoạch ở màn **B450** (`STB_DayProdPlan`).
+- **Cách truy vết:**
+    1. Kiểm tra bảng `STB_DayProdPlan` lọc theo `LineCode` và `PlanDate`.
+    2. Xác định `CreateUserID` và `DayPlanNo` bị xung đột.
+- **SQL truy vết mẫu:**
+```sql
+SELECT DayPlanNo, PlanDate, MaterialCode, LineCode, CreateUserID, CreateDateTime 
+FROM STB_DayProdPlan 
+WHERE LineCode = 'VVBNTC-01' AND PlanDate = '20260516'
+ORDER BY CreateDateTime;
+```
+- **Cách xử lý:** 
+    - Nếu chưa sản xuất: Hủy kế hoạch cũ tại B450 và tạo lại đúng Line.
+    - Nếu đã có sản lượng: Phải dùng script **Chuyển Line sản xuất** (Mục 5.8) cho các Barcode đã lỡ sản xuất.
