@@ -16,6 +16,7 @@
 | [KB_05_QC_ELECTRODE.md](KB_05_QC_ELECTRODE.md) | QC B597/C443/C512, Điện cực Slitting B552, Lỗi chuỗi độ dày | B597, C443, C512, B552 |
 | [KB_06_MASTER_DATA_TOOLS.md](KB_06_MASTER_DATA_TOOLS.md) | Model mới, Vol/Farad, SQL Utilities, Manual Bypass in tem khẩn | A410, STB_ModelBasicInfo, SQL tools |
 | [KB_07_GROUPWARE_INTEGRATION.md](KB_07_GROUPWARE_INTEGRATION.md) | Tích hợp Groupware: Mua hàng, Kế hoạch Sản Xuất, Đăng ký Code | Groupware, F330, C220, B310, B450 |
+| [NAIS_SYSTEM_MASTER_TROUBLESHOOTING.md](NAIS_SYSTEM_MASTER_TROUBLESHOOTING.md) | **[MỚI]** Cẩm nang xử lý lỗi NAIS tổng hợp từ Docx & Hình ảnh | Toàn bộ hệ thống |
 
 ---
 
@@ -37,3 +38,4 @@
 | **Gộp túi bóng bị mất số lượng (Qty = 0)** | **KB_04** |
 | **Lỗi "Chưa CONFIG trong STB_SLITTINGLOCATIONCONFIG_VVT"** | **KB_05** |
 | **Lỗi "Không tồn tại thiết lập Vỏ Nhôm"** | **KB_02** |
+| **TRA CỨU TỔNG HỢP (ẢNH + SQL)** | **NAIS_SYSTEM_MASTER_TROUBLESHOOTING** |
