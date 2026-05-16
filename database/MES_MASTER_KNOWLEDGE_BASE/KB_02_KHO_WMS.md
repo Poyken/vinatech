@@ -1,70 +1,134 @@
 # KB_02 — Kho Nguyên Vật Liệu (WMS)
 
-> **Màn hình liên quan:** F330, F312, F430, F110, F721
+> **Màn hình liên quan:** F330, F312, F430, F110, F721, C220
 > ← [Về INDEX](KB_INDEX.md)
 
 ---
 
 ## 4. 📦 Kho Nguyên Vật Liệu (WMS)
 
-### 4.1 Tìm kiếm theo mã nguyên liệu ra cả danh sách (F721)
+### 4.1 Tìm kiếm F721 trả về cả danh sách (không lọc được)
 
-**Nguyên nhân:** Điều kiện tìm kiếm trong SP bị sai.
+**Nguyên nhân:** Điều kiện lọc trong SP bị sai hoặc tham số truyền vào rỗng.
 
-**Cách xử lý:** Vào `usp_vvt_MaterialLotInfo_get` → Kiểm tra lại điều kiện tìm kiếm.
+**Debug:**
+```sql
+-- Xem SP đang dùng điều kiện gì
+SELECT OBJECT_DEFINITION(OBJECT_ID('usp_vvt_MaterialLotInfo_get'))
+-- Tìm đến phần WHERE → Kiểm tra điều kiện lọc theo MaterialCode
+```
 
 ---
 
-### 4.2 Không tìm thấy mã lot khi tìm kiếm ở C512
+### 4.2 Không tìm thấy mã lot ở màn C512
 
-- **TH1:** Liên hệ anh Huy để anh thêm thông tin model ở màn **B410**.
-- **TH2 (Hà Nam):** Các mã test tháng 12 bắt đầu từ Route `VE02` nên không hiện.
+**3 Nguyên nhân phổ biến:**
+
+| # | Nguyên nhân | Cách xử lý |
+|---|-------------|------------|
+| TH1 | Lot đã tồn tại rồi, không cần tạo lại | Báo lại user kiểm tra lại barcode |
+| TH2 | Chưa thiết lập A410 (OQC Type, Inspection Type) | Liên hệ anh Huy setup A410, sau đó tắt C151 → mở lại |
+| TH3 (Hà Nam) | Mã test bắt đầu từ Route `VE02` nên không hiện | Kiểm tra route bắt đầu của Lot |
+
+```sql
+-- Kiểm tra Lot đang ở route nào
+SELECT Barcode, CurrentRouteCode, InputLineCode FROM STB_SetInfo
+WHERE Barcode = 'Mã_Barcode_Cần_Tìm'
+
+-- Kiểm tra A410 đã setup chưa (ModelBasicInfo)
+SELECT * FROM STB_ModelBasicInfo WHERE ModelCode = 'Mã_Model'
+-- Nếu OqcType hoặc InspectionType NULL → chưa setup → cần anh Huy
+```
+
+> ⚠️ Mã Barcode ở C512 phải do bên **Sản xuất** cung cấp cho QC, không tự nhập.
 
 ---
 
 ### 4.3 Chỉnh lại Kho bị nhập sai ở màn F330
 
-> ⚠️ Phải update đồng thời **3 bảng**: `STB_MaterialDocInfo`, `STB_MaterialDocDetail`, `STB_MaterialDocLotInfo` và `STB_MaterialLotInfo`.
+**Triệu chứng:** Hàng nhập vào đúng nhưng kho bị chọn sai (VD: nhập vào kho BG nhưng lẽ ra phải vào kho BN).
 
+> ⚠️ Phải UPDATE đồng thời **3 bảng**: `STB_MaterialDocInfo`, `STB_MaterialDocLotInfo`, `STB_MaterialLotInfo`.
+> Không update đủ 3 bảng sẽ gây lệch dữ liệu giữa phiếu và thực tế tồn kho.
+
+**Quy trình sửa:**
 ```sql
--- B1: Xem và sửa Header
+-- Bước 1: Xác định MaterialDocNo từ thông tin user cung cấp
 SELECT * FROM STB_MaterialDocInfo WHERE MaterialDocNo = '250221000220'
+-- Ghi nhớ: TargetMaterialWarehouseCode hiện tại đang là gì
+
+-- Bước 2: Sửa header phiếu
 UPDATE STB_MaterialDocInfo
-SET TargetMaterialWarehouseCode = 'ROH_HN_WH'
+SET TargetMaterialWarehouseCode = 'ROH_HN_WH'  -- Thay bằng mã kho đúng
 WHERE MaterialDocNo = '250221000220'
 
--- B2: Tìm các LotID trong phiếu
-SELECT * FROM STB_MaterialDocLotInfo WHERE MaterialDocNo = '250221000220'
+-- Bước 3: Tìm các LotID trong phiếu
+SELECT LotID, MaterialLocationCode FROM STB_MaterialDocLotInfo
+WHERE MaterialDocNo = '250221000220'
+-- Ghi lại danh sách LotID
 
--- B3: Update tất cả các LotID (thay các LotID vào IN)
+-- Bước 4: Update vị trí trong phiếu
 UPDATE STB_MaterialDocLotInfo
-SET MaterialLocationCode = 'ROH_HN_WH_01'
-WHERE LotID IN (...)
+SET MaterialLocationCode = 'ROH_HN_WH_01'  -- Thay bằng Location đúng
+WHERE LotID IN ('LotID1', 'LotID2', ...)  -- Dán danh sách LotID vào đây
 
+-- Bước 5: Update tồn kho thực tế (quan trọng nhất)
 UPDATE STB_MaterialLotInfo
-SET MaterialWarehouseCode = 'ROH_HN_WH', MaterialLocationCode = 'ROH_HN_WH_01'
-WHERE LotID IN (...)
+SET MaterialWarehouseCode = 'ROH_HN_WH',
+    MaterialLocationCode = 'ROH_HN_WH_01'
+WHERE LotID IN ('LotID1', 'LotID2', ...)
 ```
+
+**Mã kho hay dùng:**
+
+| Nhà máy | WarehouseCode | LocationCode |
+|---------|--------------|-------------|
+| Bắc Giang | `ROH_BG_WH` | `ROH_BG_WH_01` |
+| Hà Nam | `ROH_HN_WH` | `ROH_HN_WH_01` |
+| Bắc Ninh (VVT) | `ROH_VN_WH` | `ROH_VN_WH_01` |
 
 ---
 
 ### 4.4 Chỉnh Code NVL nhập sai ở màn F312
 
-> **Cột "Số tài liệu"** = `MaterialDocNo`. Sửa ở 2 bảng: `STB_MaterialDocDetail` và `STB_MaterialDocLotInfo`.
+**Triệu chứng:** Nhập nhầm mã NVL khi làm phiếu nhập kho F312 (cột "Số tài liệu" = `MaterialDocNo`).
 
 ```sql
+-- Bước 1: Xem phiếu hiện tại
 SELECT * FROM STB_MaterialDocInfo WHERE MaterialDocNo = '250806000399'
 SELECT * FROM STB_MaterialDocDetail WHERE MaterialDocNo = '250806000399'
 SELECT * FROM STB_MaterialDocLotInfo WHERE MaterialDocNo = '250806000399'
 
--- Sau khi xác định → UPDATE MaterialCode tại STB_MaterialDocDetail và STB_MaterialDocLotInfo
+-- Bước 2: Sửa mã NVL trong Detail (dòng phiếu)
+UPDATE STB_MaterialDocDetail
+SET MaterialCode = 'MÃ_ĐÚNG'
+WHERE MaterialDocNo = '250806000399' AND MaterialCode = 'MÃ_SAI'
+
+-- Bước 3: Sửa mã NVL trong LotInfo (từng lô hàng)
+UPDATE STB_MaterialDocLotInfo
+SET MaterialCode = 'MÃ_ĐÚNG'
+WHERE MaterialDocNo = '250806000399' AND MaterialCode = 'MÃ_SAI'
+
+-- Bước 4: Sửa tồn kho thực tế
+UPDATE STB_MaterialLotInfo
+SET MaterialCode = 'MÃ_ĐÚNG'
+WHERE LotID IN (
+    SELECT LotID FROM STB_MaterialDocLotInfo WHERE MaterialDocNo = '250806000399'
+)
 ```
 
 ---
 
 ### 4.5 Sửa số lượng màn F312 (Kho chị Xuân)
 
+**Triệu chứng:** Số lượng phiếu nhập bị sai.
+
 ```sql
+-- Bước 1: Xem số lượng hiện tại
+SELECT * FROM STB_MaterialDocDetail
+WHERE MaterialDocNo = '250213000154' AND MaterialCode = '122507G1PT0'
+
+-- Bước 2: Sửa tất cả các cột số lượng
 UPDATE STB_MaterialDocDetail
 SET RequestQty = 200000, AllowQty = 200000, PickingAssignQty = 200000
 WHERE MaterialDocNo = '250213000154' AND MaterialCode = '122507G1PT0'
@@ -72,112 +136,179 @@ WHERE MaterialDocNo = '250213000154' AND MaterialCode = '122507G1PT0'
 
 ---
 
-### 4.6 Sửa ngày xuất màn F430
+### 4.6 Sửa ngày xuất kho màn F430
+
+**Triệu chứng:** Hàng xuất kho bị ghi nhận sai ngày (VD: xuất ngày 30/06 nhưng hệ thống ghi 01/07).
 
 ```sql
--- Xem trước
+-- Bước 1: Tìm bản ghi cần sửa
 SELECT * FROM STB_MaterialWarehouseInOutHist
-WHERE LotID IN ('ML20250620000036', 'ML20250520000061', 'ML20250527000412')
+WHERE LotID IN ('ML20250620000036', 'ML20250520000061')
 
--- Cập nhật ngày xuất (SP: usp_MaterialWarehouseInOutHist_get)
+-- Bước 2: Sửa ngày (giữ nguyên giờ phút giây)
 UPDATE STB_MaterialWarehouseInOutHist
 SET CreateDateTime = CAST('2025-06-30' AS DATETIME) + CAST(CreateDateTime AS TIME)
-WHERE LotID IN ('ML20250620000036', 'ML20250520000061', 'ML20250527000412')
+WHERE LotID IN ('ML20250620000036', 'ML20250520000061')
 ```
 
 ---
 
-### 4.7 Chỉnh sửa từ kho Holding ra kho chính (Theo yêu cầu chị Phượng)
+### 4.7 Chuyển Lot từ kho Holding ra kho chính
 
-> Không cần xóa lịch sử xuất nhập — chỉ cần chuyển mã kho.
+**Nguyên nhân phổ biến:** Hàng nhập vào kho Holding do chờ kiểm tra IQC, sau khi IQC pass muốn chuyển sang kho chính.
+
+> Không cần xóa lịch sử — chỉ cần cập nhật lại mã kho và location.
 
 ```sql
--- Xem dữ liệu
-SELECT * FROM STB_MaterialWarehouseInOutHist WHERE LotID = 'ML20250430000174'
-SELECT * FROM STB_MaterialLotInfo WHERE LotID = 'ML20250430000174'
+-- Bước 1: Xem trạng thái Lot hiện tại
+SELECT LotID, MaterialWarehouseCode, MaterialLocationCode
+FROM STB_MaterialLotInfo
+WHERE LotID = 'ML20250430000174'
 
--- Cập nhật lịch sử xuất
+-- Bước 2: Cập nhật lịch sử xuất nhập (nếu có)
 UPDATE STB_MaterialWarehouseInOutHist
 SET TargetMaterialWarehouseCode = 'ROH_VN_WH'
 WHERE LotID = 'ML20250430000174'
 
--- Cập nhật trạng thái hiện tại
+-- Bước 3: Cập nhật trạng thái tồn kho hiện tại
 UPDATE STB_MaterialLotInfo
-SET MaterialWarehouseCode = 'ROH_VN_WH', MaterialLocationCode = 'ROH_VN_WH_01'
+SET MaterialWarehouseCode = 'ROH_VN_WH',
+    MaterialLocationCode = 'ROH_VN_WH_01'
 WHERE LotID = 'ML20250430000174'
 ```
 
 ---
 
-### 4.8 Chỉnh sửa Location (Thuộc tính LotAttr09)
+### 4.8 Sửa Location vật tư (F721 - Thuộc tính LotAttr09)
 
-- **Xem ở màn F721**
-- **Xem tại bảng:** `STB_MaterialDocLotInfo`
-- **Xem tại màn hình Location:** `192.168.1.234:9000/tv`
-- **Xem tại bảng:** `STB_MaterialLotInfo`
+**Bảng liên quan:** `STB_MaterialDocLotInfo` (LotAttr09), `STB_MaterialLotInfo`
+
+```sql
+-- Xem location hiện tại
+SELECT LotID, LotAttr09 AS [Location], MaterialLocationCode
+FROM STB_MaterialDocLotInfo
+WHERE LotID = 'ML...'
+
+-- Sửa location
+UPDATE STB_MaterialDocLotInfo SET LotAttr09 = 'Vị_Trí_Mới' WHERE LotID = 'ML...'
+UPDATE STB_MaterialLotInfo SET MaterialLocationCode = 'Vị_Trí_Mới' WHERE LotID = 'ML...'
+```
+> **Xem vị trí trực quan:** `192.168.1.234:9000/tv`
 
 ---
 
-### 4.9 FIFO & Validation NVL (Tắt/Bật Chặn)
+### 4.9 FIFO & Validation NVL (Tắt/Bật chặn)
 
-- **Tắt FIFO cho toàn bộ:** Tìm SP `usp_MaterialWarehouseInOutHist_iud`
+**Khi nào tắt:** Nhà máy cần sử dụng hàng mới mà chưa hết hàng cũ (bypass FIFO), hoặc cần nhập NVL không có trong BOM tạm thời.
+
+- **Tắt FIFO cho toàn bộ:** Tìm SP `usp_MaterialWarehouseInOutHist_iud` → Comment out dòng FIFO check
 - **Tắt FIFO cho NVL cụ thể:** SP `usp_VVTMaterialWarehouse_validFIFO`
 
-> ⚠️ **Lưu ý đặc biệt (Nordex Audit Block):** 
-> Kể từ **2026-02-05**, logic chặn quét sai BOM (`RAISERROR('생산중인 제품 BOM에 적합하지 않은 자재입니다...')`) trong SP `usp_RawMaterialInputHist_iud` đang bị **Comment Out (Vô hiệu hóa tạm thời)**. 
-> - **Hiện tượng:** Công nhân quét NVL không có trong BOM vẫn được hệ thống chấp nhận. 
-> - **Nguyên nhân:** Đang trong giai đoạn Audit hệ thống Nordex.
+> ⚠️ **Lưu ý Nordex Audit (từ 2026-02-05):** Logic chặn quét sai BOM (`RAISERROR('생산중인 제품 BOM...')`) trong SP `usp_RawMaterialInputHist_iud` đang bị **Comment Out tạm thời**. Hệ thống hiện chấp nhận NVL không có trong BOM — cần bật lại sau khi audit xong.
 
 ---
 
-### 4.10 Công thức tính Hạn sử dụng (Expiry Date)
+### 4.10 Kiểm tra Hạn sử dụng NVL (Expiry Date)
 
-Khi hệ thống báo lỗi **"Hết hạn sử dụng"**, hãy kiểm tra dữ liệu theo công thức sau:
-- **Ngày sản xuất (Base Date):** Cột `LotAttr10` trong bảng `STB_MaterialDocLotInfo`.
-- **Số tháng Shelf Life:** Cột `MMExtInt01` trong bảng `STB_MaterialMaster` của mã vật tư đó.
-- **Hạn sử dụng:** `LotAttr10` + `MMExtInt01` (tháng).
+**Khi B597 báo "Hết hạn sử dụng"**, tra cứu theo công thức:
 
-*SQL kiểm tra nhanh:*
+- **Ngày sản xuất:** Cột `LotAttr10` trong `STB_MaterialDocLotInfo`
+- **Shelf Life:** Cột `MMExtInt01` trong `STB_MaterialMaster`
+- **Hạn dùng = LotAttr10 + MMExtInt01 (tháng)**
+
 ```sql
-SELECT MDLI.LotID, MDLI.Lotattr10 AS [Ngày SX], MM.MMExtInt01 AS [Hạn tháng],
-DATEADD(MONTH, MM.MMExtInt01, MDLI.Lotattr10) AS [Ngày Hết Hạn Thực Tế]
+-- Tra cứu nhanh hạn sử dụng của 1 Lot
+SELECT
+    MDLI.LotID,
+    MDLI.LotAttr10 AS [Ngày_SX],
+    MM.MMExtInt01 AS [Hạn_Tháng],
+    DATEADD(MONTH, MM.MMExtInt01, MDLI.LotAttr10) AS [Ngày_Hết_Hạn],
+    CASE WHEN DATEADD(MONTH, MM.MMExtInt01, MDLI.LotAttr10) < GETDATE()
+         THEN 'ĐÃ HẾT HẠN' ELSE 'CÒN HẠN' END AS [Trạng_Thái]
 FROM STB_MaterialDocLotInfo MDLI
 JOIN STB_MaterialMaster MM ON MDLI.MaterialCode = MM.MaterialCode
 WHERE MDLI.LotID = 'ML...'
 ```
 
----
-
-### 4.11 Lỗi không lưu được Lot màn F330 Đặc tính 10 (Hà Nam)
-
-**Nguyên nhân:** Lỗi do format mã Lot nhà cung cấp không đúng chuẩn (Vendor Lot format).
-
-**Cách xử lý:**
-1. **Hỏi user** về công thức, Lot No và cách đọc mã cụ thể.
-2. Vào SP `usp_DoChangeMaterialDocLotInfo` (BG2) để xem logic đọc mã.
-3. Tìm trong Function `fn_VVT_getdatebyVendorLot_MergeCode` để tìm nguyên nhân parsing sai.
+**Xử lý nếu hết hạn nhưng hàng vẫn dùng được:**
+1. Báo với bộ phận QC để xác nhận gia hạn
+2. Sau khi QC đồng ý → Sửa `LotAttr10` sang ngày mới hơn hoặc tăng `MMExtInt01` trong MaterialMaster
 
 ---
 
-### 4.12 Xóa mã Sparepart thừa (H131)
+### 4.11 Lỗi không lưu được F330 - Định dạng Vendor Lot sai (Hà Nam)
+
+**Triệu chứng:** F330 báo lỗi khi nhập mã Lot nhà cung cấp ở "Đặc tính 10".
+
+**Nguyên nhân:** Nhà cung cấp đổi định dạng mã Lot, hệ thống không parse được ngày tháng.
+
+**Debug:**
+1. Lấy mã Lot lỗi từ user (VD: `25062001234`)
+2. Xem hàm parse:
+```sql
+SELECT OBJECT_DEFINITION(OBJECT_ID('fn_VVT_getdatebyVendorLot_MergeCode'))
+-- Đọc logic cắt chuỗi hiện tại
+-- VD: 2 ký tự đầu = năm (25=2025), 2 tiếp = tháng, 2 tiếp = ngày
+```
+3. Nếu định dạng mới không match → Báo anh Tùng sửa Function, hoặc:
+   - Workaround tạm: Nhập tay ngày tháng vào cột `LotAttr10` bằng SQL sau khi nhập phiếu
+
+---
+
+### 4.12 Xóa mã Sparepart thừa
 
 ```sql
--- Tìm tới store: STB_VNSparePartInfo
-DELETE FROM STB_VNSparePartInfo
-WHERE sparepartcode = '[Mã sparepart cần xóa]'
+-- Tìm trước
+SELECT * FROM STB_VNSparePartInfo WHERE sparepartcode = '[Mã cần xóa]'
+-- Xóa
+DELETE FROM STB_VNSparePartInfo WHERE sparepartcode = '[Mã cần xóa]'
 ```
 
 ---
 
-### 4.13 FIFO Kho thành phẩm (FG)
+### 4.13 FIFO Kho thành phẩm (FG00)
 
-- **VVT:** SP `usp_VN_Update_ExportExcel`
+- **VVT (Bắc Ninh):** SP `usp_VN_Update_ExportExcel`
 - **Bắc Giang:** SP `usp_VN_Update_ExportExcel_BG`
+- **Bật/tắt FIFO cho FG:** Vào màn **F110** → Tích/bỏ tích option FIFO
 
 ---
 
-### 4.14 Lỗi thiếu thiết lập Vỏ Nhôm (Case Mapping)
-> Xem chi tiết phương pháp và script tại: [KB_06_MASTER_DATA_TOOLS.md](KB_06_MASTER_DATA_TOOLS.md#4-lỗi-thiết-lập-vỏ-nhôm-aluminum-case-mapping)
+### 4.14 Lỗi "Không tồn tại thiết lập Vỏ Nhôm"
 
+**Triệu chứng:** B597 báo lỗi `"Không tồn tại thiết lập Vỏ Nhôm của LotNo... với mã Vỏ Nhôm: GBDYAC-004 <> ECVT30-367"`
 
-> Tick option tại màn **F110** để bật/tắt FIFO cho kho thành phẩm.
+**Debug:**
+```sql
+-- Kiểm tra mapping hiện tại
+SELECT * FROM STB_AluCaseMapping_VVT WHERE ModelCode = 'ECVT30-367'
+```
+
+**Xử lý:**
+- Nếu chưa có → Thêm mapping:
+```sql
+INSERT INTO STB_AluCaseMapping_VVT (AluCaseCode, ModelCode, CreateUserID, CreateDateTime)
+VALUES ('GBDYAC-004', 'ECVT30-367', 'vinaadmin', GETDATE())
+```
+- Nếu đã có nhưng sai mã → Cập nhật trong SP `usp_Vietnam_RawMaterialInputHist_uid`, tìm đến điều kiện IF chặn AluCase, thêm mã mới vào `NOT IN`.
+
+---
+
+### 4.15 Luồng nhập kho đầy đủ (F330) — Tham chiếu nhanh
+
+```
+Groupware (Arrival Confirmation duyệt xong)
+    ↓
+F330 — Nhận hàng, in tem NVL, gán Lot vào kho
+    ↓
+C220 — IQC kiểm tra chất lượng → PASS
+    ↓
+Groupware (Receiving Confirmation)
+    ↓
+NVL sẵn sàng cho sản xuất
+```
+
+> Nếu user báo "không nhập được F330" → Hỏi lại: Groupware đã duyệt "Arrival Confirmation" chưa?
+> Nếu user báo "không làm được Receiving Confirmation" → Hỏi lại: C220 đã PASS chưa?
+
+*Cập nhật: 2026-05-17*
