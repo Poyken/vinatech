@@ -1,5 +1,5 @@
 # 📒 Daily Thank-You Notes — Vinatech Vina (Bac Ninh)
-## From March 2, 2026 to April 30, 2026
+## From March 2, 2026 to May 16, 2026
 
 ---
 
@@ -318,6 +318,32 @@
 1. Thank you team for a productive week and for all the challenges we overcame together.
 2. Thank you manager for acknowledging the successful resolution of the B523 duplication bug.
 3. Thank you for a peaceful weekend to prepare for another week of growth at Vinatech.
+
+
+### 📅 Monday — 11/05/2026
+1. Thank you Ha Nam users for cooperating during the system support and label correction process.
+2. Thank you Nhat Trung for working hard to complete the MES data entry accurately.
+3. Thank you Vinatech for providing a supportive environment where we help each other every day.
+
+### 📅 Tuesday — 12/05/2026
+1. Thank you production users for being patient while we resolved the operational errors on the production screens.
+2. Thank you engineering team for collaborating on the deployment of the auto-import software for sorting machines.
+3. Thank you manager for trusting me with the deployment of critical production software at Bac Giang 1.
+
+### 📅 Wednesday — 13/05/2026
+1. Thank you Ms. Duong Hoa for the clear requirements regarding the Phoenix customer label printing screen.
+2. Thank you maintenance team for helping with the network cabling for the new sorting machines.
+3. Thank you company for investing in infrastructure to improve production efficiency at Bac Giang 1.
+
+### 📅 Thursday — 14/05/2026
+1. Thank you seniors for providing technical guidance on the development of the auto-import sorting software.
+2. Thank you team for the smooth installation of 9 Mini PCs to support production line monitoring.
+3. Thank you Vinatech for encouraging innovation and automation in our daily work processes.
+
+### 📅 Friday — 15/05/2026
+1. Thank you users for cooperating during the ECM application update process today.
+2. Thank you Ha Nam team for the great coordination during the MES system troubleshooting sessions.
+3. Thank you for a successful week of technical progress, infrastructure upgrades, and system stabilization.
 
 ---
 

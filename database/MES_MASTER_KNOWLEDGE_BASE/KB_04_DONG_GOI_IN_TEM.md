@@ -62,3 +62,12 @@ INSERT INTO STB_ModelLabelInfo (ModelCode, LabelType, FormatName, CreateDateTime
 VALUES ('ECVT30-197', 'Phoenix_Label', 'Phoenix_Contact_V1', GETDATE(), 'Antigravity'),
        ('ECVT30-098', 'Phoenix_Label', 'Phoenix_Contact_V1', GETDATE(), 'Antigravity')
 ```
+
+---
+
+### 6.5 Danh sách các mã vật tư đã mở in tem (Support History)
+
+| Dự án / Nhà máy | Model / Material Code | Màn hình | Stored Procedure / Logic | Ghi chú |
+| :--- | :--- | :--- | :--- | :--- |
+| Phoenix (VVT) | ECVT30-197 / ECVT30-098 | B790 | `usp_Vietnam_PhoenixContactLabelPrint_get` | In tem Phoenix (Datecode YYMMDD) |
+| Ha Nam (VVT_F3) | 10140105055 (Anode Foil) | F721 / Kho | `STB_ModelLabelInfo` (PartLabel) | Mở in tem 자재라벨 cho chị Hoàng Xuân (13/05/2026) |

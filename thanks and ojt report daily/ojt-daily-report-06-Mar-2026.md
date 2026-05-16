@@ -1,5 +1,5 @@
 <h1 align="center" style="color: #2E86C1;">📊 OJT Weekly Comprehensive Report</h1>
-<p align="center" style="color: #7F8C8D; font-style: italic;">Detailed progress tracking from March 02 to May 09, 2026</p>
+<p align="center" style="color: #7F8C8D; font-style: italic;">Detailed progress tracking from March 02 to May 16, 2026</p>
 
 ---
 
@@ -14,7 +14,7 @@
   </tr>
   <tr>
     <td style="padding: 10px; border: 1px solid #ddd; background-color: #EBF5FB;">📅 <b>Report Period</b></td>
-    <td style="padding: 10px; border: 1px solid #ddd; color: #27AE60;"><b>March 02, 2026 - May 09, 2026</b></td>
+    <td style="padding: 10px; border: 1px solid #ddd; color: #27AE60;"><b>March 02, 2026 - May 16, 2026</b></td>
   </tr>
 </table>
 
@@ -1264,10 +1264,10 @@
     <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done</li>
   </ul>
 
-  <h4 style="margin: 0; color: #2C3E50;">🔹 2. Weekly Performance Review</h4>
+  <h4 style="margin: 0; color: #2C3E50;">🔹 3. IT Infrastructure & User Support</h4>
   <ul>
-    <li><span style="color: #16A085;"><b>Task:</b></span> Compile weekly report and plan for next week.</li>
-    <li><span style="color: #2980B9;"><b>Details:</b></span> Compiled the comprehensive weekly performance report (May 4-8) and drafted the task list for the upcoming week.</li>
+    <li><span style="color: #16A085;"><b>Task:</b></span> Resolve MES errors, maintain hardware, and deploy network.</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Fixed MES errors for users and repaired printers in the workshop. Deployed 2 network positions at BG1 (for Mr. Kien and Mr. Tam) and HDMI cabling for the BG1 meeting room.</li>
     <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done</li>
   </ul>
 </blockquote>
@@ -1278,6 +1278,108 @@
   <ul>
     <li><span style="color: #16A085;"><b>Task:</b></span> Routine maintenance and workspace organization.</li>
     <li><span style="color: #2980B9;"><b>Details:</b></span> Conducted routine system checks and organized project documentation to ensure a clean start for the following week.</li>
+    <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done</li>
+  </ul>
+</blockquote>
+
+## <span style="color: #34495E;">🗓️ Sunday, May 10, 2026</span>
+<blockquote style="border-left: 4px solid #34495E; background-color: #EAECEE; padding: 10px; margin-bottom: 20px;">
+  <h4 style="margin: 0; color: #2C3E50;">🔹 1. User Software & Account Management</h4>
+  <ul style="margin-bottom: 10px;">
+    <li><span style="color: #16A085;"><b>Task:</b></span> Install software and create Groupware account.</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Installed required software for users and created a Groupware account for Ms. Dinh Thu.</li>
+    <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done</li>
+  </ul>
+
+  <h4 style="margin: 0; color: #2C3E50;">🔹 2. MES Branch Support & Data Entry</h4>
+  <ul>
+    <li><span style="color: #16A085;"><b>Task:</b></span> Support Ha Nam factory and assist with BG2 data entry.</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Provided MES system support for the Ha Nam factory. Assisted Mr. Cuong at the Bac Giang 2 factory with data entry tasks.</li>
+    <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done</li>
+  </ul>
+</blockquote>
+
+## <span style="color: #8E44AD;">🗓️ Monday, May 11, 2026</span>
+<blockquote style="border-left: 4px solid #8E44AD; background-color: #F5EEF8; padding: 10px; margin-bottom: 20px;">
+  <h4 style="margin: 0; color: #2C3E50;">🔹 1. User Support & Label Correction</h4>
+  <ul style="margin-bottom: 10px;">
+    <li><span style="color: #16A085;"><b>Task:</b></span> Support Ha Nam users and update labels.</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Provided technical support for Ha Nam users (Ms. Hoang Xuan, Ms. Phuong Hong). Corrected label templates for Ms. Duong Hoa.</li>
+    <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done</li>
+  </ul>
+
+  <h4 style="margin: 0; color: #2C3E50;">🔹 2. MES Data Entry Assistance</h4>
+  <ul>
+    <li><span style="color: #16A085;"><b>Task:</b></span> Support Nhat Trung with MES data entry.</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Assisted Nhat Trung in entering production data into the MES system to ensure record accuracy.</li>
+    <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done</li>
+  </ul>
+</blockquote>
+
+## <span style="color: #2980B9;">🗓️ Tuesday, May 12, 2026</span>
+<blockquote style="border-left: 4px solid #2980B9; background-color: #EAF2F8; padding: 10px; margin-bottom: 20px;">
+  <h4 style="margin: 0; color: #2C3E50;">🔹 1. Production Screen Troubleshooting</h4>
+  <ul style="margin-bottom: 10px;">
+    <li><span style="color: #16A085;"><b>Task:</b></span> Resolve user errors on production screens.</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Assisted production users in resolving operational errors encountered on various manufacturing interface screens.</li>
+    <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done</li>
+  </ul>
+
+  <h4 style="margin: 0; color: #2C3E50;">🔹 2. Auto Import Software Deployment (BG1)</h4>
+  <ul>
+    <li><span style="color: #16A085;"><b>Task:</b></span> Deploy Excel auto-import software for sorting machines.</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Successfully deployed the Excel data auto-import software for the new sorting machines at the Bac Giang 1 factory.</li>
+    <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done</li>
+  </ul>
+</blockquote>
+
+## <span style="color: #D35400;">🗓️ Wednesday, May 13, 2026</span>
+<blockquote style="border-left: 4px solid #D35400; background-color: #FDEDEC; padding: 10px; margin-bottom: 20px;">
+  <h4 style="margin: 0; color: #2C3E50;">🔹 1. Phoenix Customer Label Support</h4>
+  <ul style="margin-bottom: 10px;">
+    <li><span style="color: #16A085;"><b>Task:</b></span> Deploy label printing screen for Phoenix customer.</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Deployed the specialized label printing screen for Phoenix customer requirements (requested by Ms. Duong Hoa) and supported MES users.</li>
+    <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done</li>
+  </ul>
+
+  <h4 style="margin: 0; color: #2C3E50;">🔹 2. Network Infrastructure (BG1)</h4>
+  <ul>
+    <li><span style="color: #16A085;"><b>Task:</b></span> Install network cabling for sorting machines.</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Ran 4 new network lines to provide connectivity for the new sorting machines at the Bac Giang 1 factory.</li>
+    <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done</li>
+  </ul>
+</blockquote>
+
+## <span style="color: #16A085;">🗓️ Thursday, May 14, 2026</span>
+<blockquote style="border-left: 4px solid #16A085; background-color: #E8F8F5; padding: 10px; margin-bottom: 20px;">
+  <h4 style="margin: 0; color: #2C3E50;">🔹 1. MES Support & Software Development</h4>
+  <ul style="margin-bottom: 10px;">
+    <li><span style="color: #16A085;"><b>Task:</b></span> Support MES users and develop auto-import sorting software.</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Provided ongoing support for MES system users and continued development of the auto-import data software for sorting operations.</li>
+    <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done</li>
+  </ul>
+
+  <h4 style="margin: 0; color: #2C3E50;">🔹 2. Mini PC Installation (BG1)</h4>
+  <ul>
+    <li><span style="color: #16A085;"><b>Task:</b></span> Install Mini PCs at Bac Giang 1.</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Set up and installed 9 Mini PCs at the Bac Giang 1 factory to support production line monitoring.</li>
+    <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done</li>
+  </ul>
+</blockquote>
+
+## <span style="color: #27AE60;">🗓️ Friday, May 15, 2026</span>
+<blockquote style="border-left: 4px solid #27AE60; background-color: #E9F7EF; padding: 10px; margin-bottom: 20px;">
+  <h4 style="margin: 0; color: #2C3E50;">🔹 1. ECM System Update</h4>
+  <ul style="margin-bottom: 10px;">
+    <li><span style="color: #16A085;"><b>Task:</b></span> Deploy ECM updates for users.</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Managed the deployment of ECM application updates for end-users to ensure system compatibility and performance.</li>
+    <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done</li>
+  </ul>
+
+  <h4 style="margin: 0; color: #2C3E50;">🔹 2. MES Branch Support (Ha Nam)</h4>
+  <ul>
+    <li><span style="color: #16A085;"><b>Task:</b></span> Support Ha Nam users on the MES system.</li>
+    <li><span style="color: #2980B9;"><b>Details:</b></span> Provided technical assistance and troubleshooting for MES users at the Ha Nam branch.</li>
     <li><span style="color: #D35400;"><b>Status:</b></span> ✅ Done</li>
   </ul>
 </blockquote>
