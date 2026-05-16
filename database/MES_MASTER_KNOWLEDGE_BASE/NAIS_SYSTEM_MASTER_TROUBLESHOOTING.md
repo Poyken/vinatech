@@ -1,92 +1,114 @@
-# NAIS SYSTEM MASTER TROUBLESHOOTING GUIDE (Vinatech MES)
+# 📘 NAIS SYSTEM MASTER TUTORIAL & TROUBLESHOOTING
 
-> **Tài liệu gốc:** `Lỗi trên NAIS System_Tái bản.docx`
-> **Mục tiêu:** Tra cứu nhanh lỗi dựa trên triệu chứng hình ảnh và mã màn hình.
+Tài liệu này được thiết kế để bạn có thể **tự Trace và tự Fix** lỗi hệ thống NAIS dựa trên phương pháp bài bản.
 
 ---
 
-## 1. MÀN HÌNH B597 (KIỂM TRA CÔNG ĐOẠN - QC)
+## 1. LỖI THIẾU THIẾT LẬP VỎ NHÔM (SCREEN B597 - QC)
 
-### 🚨 Lỗi: Sai mã Nguyên liệu/Dung dịch (Electrolyte)
-- **Triệu chứng:** [image11.png] Thông báo "Mã Electrolyte... được thiết lập khác với mã QRCODE nhập vào".
-- **Nguyên nhân:** Hard-code kiểm tra trong Stored Procedure chưa cập nhật mã vật tư mới.
-- **Cách xử lý:** 
-    - Sửa SP: `usp_Vietnam_RawMaterialInputHist_uid`
-    - Tìm đoạn code kiểm tra `@MaterialCode` và `@pRawMaterialBarcode`.
-    - Thêm điều kiện `OR` cho mã vật tư mới (Ví dụ: `ECVT30-367` đi với vỏ `GBDYAC-004`).
+### 🔴 Triệu chứng
+Thông báo lỗi: *"Không tồn tại thiết lập Vỏ Nhôm của LotNo... với mã Vỏ Nhôm: GBDYAC-004 <<>> ECVT30-367"*.
 
-### 🚨 Lỗi: Không hiện được hạng mục kiểm tra mới
-- **Triệu chứng:** Hệ thống load lại hạng mục cũ, không cho nhập kết quả mới.
-- **Nguyên nhân:** Tồn tại bản ghi cũ trong `STB_CommInspDocHistory`.
-- **Cách xử lý:** Xóa lịch sử cũ.
+### 🔍 Cách Trace (Phương pháp)
+1. **Đọc mã lỗi:** Xác định cặp giá trị gây lỗi (Ví dụ: Vỏ `GBDYAC-004` và Model `ECVT30-367`).
+2. **Tìm điểm chặn trong Code:** Mở Stored Procedure `usp_Vietnam_RawMaterialInputHist_uid`. 
+3. **Search từ khóa:** Tìm đoạn code xử lý `@MaterialCode = 'ECVT30-367'`. Bạn sẽ thấy một đoạn `IF` đang chặn (Hard-code) chỉ cho phép một mã vỏ nhất định.
+
+### 🛠️ Logic xử lý & Script
+Chúng ta cần "nới lỏng" điều kiện `IF` để cho phép cả mã vỏ mới.
+**Mẫu script sửa:**
 ```sql
-DELETE FROM STB_CommInspDocItem WHERE CommInspDocNo = (SELECT CommInspDocNo FROM STB_CommInspDocHistory WHERE ProdNo = (SELECT ControlNo FROM STB_SetInfo WHERE Barcode = '...'));
-DELETE FROM STB_CommInspDocHistory WHERE ProdNo = (SELECT ControlNo FROM STB_SetInfo WHERE Barcode = '...');
+-- Tìm đến dòng có MaterialCode bị lỗi
+IF (@MaterialCode = 'ECVT30-367' AND @pRawMaterialBarcode NOT IN ('GBRLAC-004', 'GBDYAC-004')) 
+BEGIN
+    SET @count = 0; -- Nếu không nằm trong danh sách cho phép thì báo lỗi
+END
+```
+*Lưu ý: Luôn dùng `NOT IN` để có thể thêm nhiều mã vỏ hợp lệ vào danh sách.*
+
+---
+
+## 2. LỖI GỘP TÚI BÓNG QTY = 0 (SCREEN HN544 - PACKING)
+
+### 🔴 Triệu chứng
+Màn hình HN544 hiển thị Qty = 0 cho các túi vừa gộp, dẫn đến không in được tem.
+
+### 🔍 Cách Trace (Phương pháp)
+Kiểm tra "Sức khỏe" của Lot trong bảng Material Info.
+```sql
+SELECT MaterialLotNo, CurrentQty, InitialQty, CreateUserID 
+FROM STB_MaterialLotInfo 
+WHERE MaterialLotNo = 'Mã_Lot_Bị_Lỗi';
+```
+Nếu `CurrentQty = 0` nhưng thực tế hàng vẫn còn, nghĩa là logic gộp của SP đã Reset nhầm số lượng về 0.
+
+### 🛠️ Logic xử lý & Script
+Phải khôi phục lại số lượng dựa trên tổng số lượng của các túi con đã gộp vào.
+```sql
+UPDATE STB_MaterialLotInfo 
+SET CurrentQty = [Số_Lượng_Thực_Tế],
+    InitialQty = [Số_Lượng_Thực_Tế]
+WHERE MaterialLotNo = 'Mã_Lot_Cần_Sửa';
 ```
 
 ---
 
-## 2. MÀN HÌNH F330 (NHẬP KHO NVL)
+## 3. LỖI VENDOR LOT (SCREEN F330 - NHẬP KHO NVL)
 
-### 🚨 Lỗi: Không thể chuyển đổi mã Vendor Lot thành ngày tháng
-- **Triệu chứng:** [image13.png] Lỗi tại cột "Đặc tính 10" (LotAttr10) khi lưu.
-- **Nguyên nhân:** Định dạng Vendor Lot không khớp với quy tắc đọc ngày tháng trong hệ thống.
-- **Cách xử lý:** 
-    - Kiểm tra Stored Procedure: `usp_DoChangeMaterialDocLotInfo`
-    - Kiểm tra Function: `fn_VVT_getdatebyVendorLot_MergeCode`
-    - Cập nhật logic parse date cho đầu mã Lot mới.
+### 🔴 Triệu chứng
+Lỗi: *"Không thể chuyển đổi mã Vendor Lot thành ngày tháng"*.
 
----
+### 🔍 Cách Trace (Phương pháp)
+Hệ thống NAIS thường đọc ngày sản xuất từ mã Vendor Lot (Ví dụ: Lot `250620...` -> Ngày 20/06/2025). Nếu nhà cung cấp đổi định dạng mã Lot, hệ thống sẽ không đọc được.
+**Hàm cần kiểm tra:** `fn_VVT_getdatebyVendorLot_MergeCode`.
 
-## 3. MÀN HÌNH B523 / HN544 (GỘP BOX - PACKING)
-
-### 🚨 Lỗi: Không gộp được Box (Packing Error)
-- **Triệu chứng:** [image21.png] Không tìm thấy Lot để gộp hoặc nút gộp không hoạt động.
-- **Cách xử lý:** Kiểm tra cấu hình tại màn **F110**.
-    - Phải tích chọn `IsUseBarcode` và `IsLotUse` cho mã vật tư tương ứng.
-
-### 🚨 Lỗi: Qty = 0 khi in tem
-- **Triệu chứng:** [image14.png] Packing Qty bị âm hoặc bằng 0 tại B523.
-- **Cách xử lý:** 
-    - Sửa SP: `usp_savePackingLabelQty_VVT`
-    - Kiểm tra bảng: `STB_SavePackingTime_VVT`
+### 🛠️ Logic xử lý & Script
+Cần cập nhật Function để nó biết cách "cắt chuỗi" mới.
+**Ví dụ logic:**
+- Nếu 2 ký tự đầu là '25' -> Năm 2025.
+- Nếu 2 ký tự tiếp là '06' -> Tháng 6.
+- Nếu 2 ký tự tiếp là '20' -> Ngày 20.
 
 ---
 
-## 4. MÀN HÌNH B270 (THÔNG TIN THIẾT BỊ)
+## 4. LỖI TRACE KẾ HOẠCH SAI LINE (SCREEN B450)
 
-### 🚨 Lỗi: Popup "Mã Route" bị trống
-- **Triệu chứng:** [image2.png] Không chọn được công đoạn cho máy.
-- **Cách xử lý:** Vào màn **B230** (Thông tin cấu trúc công đoạn trong Line) để thiết lập mapping giữa máy và route.
+### 🔴 Triệu chứng
+2 Model khác nhau nhảy chung vào 1 Line trên báo cáo.
 
----
+### 🔍 Cách Trace (Phương pháp - CỰC KỲ QUAN TRỌNG)
+Sử dụng **"Kỹ thuật Quét cửa sổ thời gian (Time Window)"**.
+1. Tìm 1 mã `DayPlanNo` bị sai.
+2. Xem `CreateUserID` và `CreateDateTime` (chú ý cả phần nghìn giây).
+3. Quét tất cả kế hoạch của User đó trong vòng 5-10 giây xung quanh.
 
-## 5. MÀN HÌNH B450 (KẾ HOẠCH SẢN XUẤT)
-
-### 🚨 Lỗi: Không in được tem sản xuất
-- **Triệu chứng:** Lỗi khi nhấn nút in tem tại B450.
-- **Cách xử lý:** Kiểm tra cấu hình tem tại màn **A460**.
-    - Đảm bảo đã gán `AssembleLabel` (cho SX) và `PartLabel` (cho Kho).
-
----
-
-## 6. MÀN HÌNH B782 / B781 (LỊCH SỬ ROUTING/PACKING)
-
-### 🚨 Nghiệp vụ: Chuyển JobDate (Sửa ngày báo cáo)
-- **Công thức chuẩn:** `SET ProdDateTime = CAST('YYYY-MM-DD' AS DATETIME) + CAST(ProdDateTime AS TIME), JobDate = 'YYYY-MM-DD'`.
-- **Bảng liên quan:**
-    - B782: `STB_ProdRouteHist`
-    - B781: `STB_SavePackingTime_VVT`
-    - B598: `STB_VN_PRODUCTION_ERROR`
-    - B726: `STB_VN_SCRAP_AFTERPRODUCTIONS`
+**Script Trace mẫu:**
+```sql
+SELECT DayPlanNo, PlanDate, LineCode, CreateDateTime 
+FROM STB_DayProdPlan 
+WHERE CreateUserID = 'ID_Người_Lập'
+AND CreateDateTime BETWEEN 'Giờ_Sai - 5 giây' AND 'Giờ_Sai + 5 giây'
+ORDER BY DayPlanNo ASC;
+```
 
 ---
 
-## 7. QUẢN LÝ ĐIỆN CỰC (ELECTRODE)
+## 5. LỖI POPUP TRỐNG (SCREEN B270)
 
-### 🚨 Lỗi: Sai độ dày điện cực (Thickness Error)
-- **Nguyên tắc:** Độ dày phải là số nguyên (không có `.00000`).
-- **Các bảng cần sửa đồng bộ:**
-    - `STB_MaterialMaster` (Cấu hình gốc)
-    - `STB_SetInfo` (Sửa cột `SIExtReal03`)
-    - `STB_ElectrodeWastePriceNew` & `STB_ElectrodeWasteInfoNew` (Sửa cột `ElectrodeThickness`)
+### 🔴 Triệu chứng
+Nhấn vào nút chọn (Popup) nhưng không hiện ra dữ liệu để chọn.
+
+### 🔍 Cách Trace (Phương pháp)
+Lỗi này 90% là do thiếu **Master Data Mapping**. 
+- B270 là màn hình Máy (Machine).
+- Nếu không hiện Route để chọn -> Nghĩa là Máy chưa được gán vào Line/Route đó.
+
+### 🛠️ Logic xử lý
+Vào màn hình **B230** (Cấu trúc công đoạn) để thực hiện map Máy vào đúng Line và Công đoạn (Route) tương ứng.
+
+---
+
+## 💡 NGUYÊN TẮC VÀNG KHI TỰ SỬA (RULES)
+1. **Luôn SELECT trước khi UPDATE:** Để đảm bảo điều kiện WHERE của bạn chỉ tác động đúng dòng cần sửa.
+2. **Kiểm tra Transaction:** Nếu sửa dữ liệu lớn, hãy dùng `BEGIN TRAN ... ROLLBACK/COMMIT`.
+3. **Bám sát Docx:** File `Lỗi trên NAIS System_Tái bản.docx` là "sách giáo khoa", luôn tra cứu từ khóa trong đó trước khi hỏi mentor.
