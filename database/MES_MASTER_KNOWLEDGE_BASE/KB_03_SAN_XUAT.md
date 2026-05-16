@@ -202,12 +202,7 @@ ORDER BY CreateDateTime;
 ---
 
 ### 5.13 Cập nhật giá công đoạn (Stage Prices) - Màn B682, B781
-- **Triệu chứng:** Giá công đoạn không hiển thị hoặc bị sai trên màn hình báo cáo B682, B781.
-- **Cách xử lý:** Insert trực tiếp vào bảng giá công đoạn.
-```sql
-INSERT INTO STB_VVT_StagePrices (model, RouteV22, PriceV22, RouteV23, PriceV23, RouteV24, PriceV24, RouteV25, PriceV25, RouteV26, PriceV26, RouteV27, PriceV27, RouteV28, PriceV28, CreateDate)
-VALUES ('MÃ_MODEL', 'V-22', 0, 'V-23', 0, 'V-24', 0, 'V-25', 0, 'V-26', 0, 'V-27', 0, 'V-28', 0, GETDATE());
-```
+> Xem chi tiết phương pháp và script tại: [KB_06_MASTER_DATA_TOOLS.md](KB_06_MASTER_DATA_TOOLS.md#3-fix-giá-công-đoạn-stage-prices)
 
 ---
 

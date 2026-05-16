@@ -177,34 +177,7 @@ WHERE sparepartcode = '[Mã sparepart cần xóa]'
 ---
 
 ### 4.14 Lỗi thiếu thiết lập Vỏ Nhôm (Case Mapping)
-- **Triệu chứng:** Khi lưu kết quả sản xuất/kiểm tra, báo lỗi: *"Không tồn tại thiết lập Vỏ Nhôm của LotNo... với mã Vỏ Nhôm: [Mã_Vỏ] <<>> [Mã_Model]"*.
-- **Nguyên nhân:** Lot Vỏ nhôm (Aluminum Case) đang sử dụng chưa được khai báo liên kết với Model sản phẩm trong bảng cấu hình Master Data.
-- **Cách xử lý:** 
-    1. Kiểm tra mã Vỏ nhôm và mã Model trong câu thông báo lỗi.
-    2. Cập nhật bổ sung vào bảng cấu hình mapping (thường dùng `STB_AluCaseMapping_VVT` hoặc thông qua màn hình Master Data).
-- **SQL kiểm tra:**
-```sql
--- Kiểm tra xem mã vỏ đã được map với model chưa
-SELECT * FROM STB_AluCaseMapping_VVT 
-WHERE AluCaseCode = 'GBDYAC-004' AND ModelCode = 'GBACAC-037'
-```
+> Xem chi tiết phương pháp và script tại: [KB_06_MASTER_DATA_TOOLS.md](KB_06_MASTER_DATA_TOOLS.md#4-lỗi-thiết-lập-vỏ-nhôm-aluminum-case-mapping)
 
----
-
-### 4.15 Chỉnh sửa kho Holding (Nhập sai kho)
-- **Triệu chứng:** Hàng bị nhập sai vào kho Holding (ví dụ thay vì vào kho ROH_VN_WH lại vào kho Holding).
-- **Cách xử lý:** Cập nhật lại mã kho trong lịch sử và trạng thái hiện tại. Không cần xóa lịch sử xuất nhập.
-```sql
--- 1. Cập nhật lịch sử xuất nhập
-UPDATE STB_MaterialWarehouseInOutHist
-SET TargetMaterialWarehouseCode = 'ROH_VN_WH'
-WHERE LotID = 'ML20250430000174';
-
--- 2. Cập nhật trạng thái kho hiện tại của Lot
-UPDATE STB_MaterialLotInfo 
-SET MaterialWarehouseCode = 'ROH_VN_WH',
-    MaterialLocationCode = 'ROH_VN_WH_01' -- Cập nhật đúng vị trí kho mới
-WHERE LotID = 'ML20250430000174';
-```
 
 > Tick option tại màn **F110** để bật/tắt FIFO cho kho thành phẩm.

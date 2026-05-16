@@ -47,54 +47,17 @@
 ## 3. 💰 Giá & Module (Stage Prices)
 
 ### 3.1 Add giá lên màn B682 & B781
-
-```sql
--- Template INSERT giá theo từng Route cho 1 model
-INSERT INTO STB_VVT_StagePrices (
-    model, RouteV22, PriceV22, RouteV23, PriceV23,
-    RouteV24, PriceV24, RouteV25, PriceV25, RouteV26, PriceV26,
-    RouteV27, PriceV27, RouteV28, PriceV28, CreateDate
-)
-VALUES (
-    'ECVT27-399',
-    'V-22', 0.0657356, 'V-23', 0.0718827,
-    'V-24', 0.0897135, 'V-25', 0.0945566,
-    'V-26', 0.0945566, 'V-27', 0.1100989,
-    'V-28', 0.1183676,
-    GETDATE()
-);
-```
+> Xem chi tiết phương pháp và script tại: [KB_06_MASTER_DATA_TOOLS.md](KB_06_MASTER_DATA_TOOLS.md#3-fix-giá-công-đoạn-stage-prices)
 
 ---
 
 ### 3.2 Add giá Module lên màn B789 & B791
-
-**Vị trí xử lý:** Function `fn_VVT_StagePricesMODULE`
-
-```sql
--- Ví dụ thêm giá MODULE
-select 'EDVTMD-214', '0.254127629071929', '0.257442076659429', '0.258507610420299'
-union all
--- ... thêm các dòng tiếp theo
-```
+**Vị trí xử lý:** Function `fn_VVT_StagePricesMODULE` (Xem chi tiết tại [KB_06](KB_06_MASTER_DATA_TOOLS.md))
 
 ---
 
 ### 3.3 Xóa / Sửa số lượng Packing ở màn B789
-
-```sql
--- 1. Tìm record sai số lượng
-SELECT * FROM STB_SavePackingTime_VVT WHERE LotNo = '[Điền LotNo]'
-
--- 2. Sửa số lượng
-UPDATE STB_SavePackingTime_VVT
-SET PackQty = [Số lượng mới]
-WHERE LotNo = '[LotNo]' AND id = '[ID]'
-
--- 3. Xóa nếu cần
-DELETE FROM STB_SavePackingTime_VVT
-WHERE LotNo = '[LotNo]' AND id = '[ID]'
-```
+> Xem chi tiết phương pháp và script tại: [KB_03_SAN_XUAT.md](KB_03_SAN_XUAT.md#514-sửa-xóa-số-lượng-đóng-gói-packing-qty---màn-b789)
 
 ---
 

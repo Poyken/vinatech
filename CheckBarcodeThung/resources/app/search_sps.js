@@ -14,9 +14,9 @@ const config = {
 async function searchSPs() {
     try {
         await sql.connect(config);
-        console.log(`--- SEARCHING FOR PROCEDURES ---`);
+        console.log(`--- SEARCHING FOR PROCEDURES RELATED TO HN544 ---`);
         
-        const result = await sql.query`SELECT name FROM sys.procedures WHERE name LIKE '%FinishGood%' OR name LIKE '%ExportWarehouse%' OR name LIKE '%HN551%' OR name LIKE '%HN866%'`;
+        const result = await sql.query`SELECT name FROM sys.procedures WHERE name LIKE '%HN544%' OR name LIKE '%GopTui%' OR name LIKE '%BoxID%' OR name LIKE '%PackingTime%'`;
         
         console.table(result.recordset);
         

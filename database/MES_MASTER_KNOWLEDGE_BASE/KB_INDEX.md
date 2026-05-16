@@ -32,10 +32,10 @@
 | Model mới không hiện Vol/Farad | KB_06 |
 | Cần in tem khẩn không có Lot trên hệ thống | KB_06 |
 | Không tìm thấy Lot ở C512 | KB_05 |
-| Giá lên B682/B781 | KB_01 |
+| Giá lên B682/B781 | KB_06 |
 | Slitting chiều rộng B552 | KB_05 |
 | Groupware: Lỗi duyệt PO, sai BOM, hàng nhập chưa có QC | KB_07 |
 | **Gộp túi bóng bị mất số lượng (Qty = 0)** | **KB_04** |
 | **Lỗi "Chưa CONFIG trong STB_SLITTINGLOCATIONCONFIG_VVT"** | **KB_05** |
-| **Lỗi "Không tồn tại thiết lập Vỏ Nhôm"** | **KB_02** |
+| **Lỗi "Không tồn tại thiết lập Vỏ Nhôm"** | **KB_06** |
 | **TRA CỨU TỔNG HỢP (ẢNH + SQL)** | **NAIS_SYSTEM_MASTER_TROUBLESHOOTING** |

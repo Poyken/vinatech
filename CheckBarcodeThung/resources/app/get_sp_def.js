@@ -1,4 +1,5 @@
 const sql = require('mssql');
+const fs = require('fs');
 
 const config = {
     user: "vinaadmin",
@@ -11,25 +12,26 @@ const config = {
     },
 };
 
-async function getSPDefinition() {
+async function getSPContent() {
     try {
         await sql.connect(config);
-        const spName = 'ExportWarehouseFinishGoodInventory_uid';
-        console.log(`--- FETCHING DEFINITION FOR: ${spName} ---`);
+        const spName = 'usp_Vietnam_GetBoxIDForLotNo_VVT';
+        console.log(`--- SAVING CONTENT OF PROCEDURE: ${spName} ---`);
         
-        const result = await sql.query`SELECT OBJECT_DEFINITION(OBJECT_ID(${spName})) AS Definition`;
+        const result = await sql.query`SELECT OBJECT_DEFINITION(OBJECT_ID(${spName})) as content`;
         
-        if (result.recordset.length > 0 && result.recordset[0].Definition) {
-            console.log(result.recordset[0].Definition);
+        if (result.recordset.length > 0) {
+            fs.writeFileSync('sp_definition.sql', result.recordset[0].content);
+            console.log('Saved to sp_definition.sql');
         } else {
-            console.log('❌ LỖI: Không tìm thấy định nghĩa cho SP này.');
+            console.log('Not found');
         }
         
     } catch (err) {
-        console.error('❌ LỖI KẾT NỐI:', err.message);
+        console.error('❌ LỖI:', err.message);
     } finally {
         await sql.close();
     }
 }
 
-getSPDefinition();
+getSPContent();
