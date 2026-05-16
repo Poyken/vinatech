@@ -24,7 +24,7 @@ B523 → Đóng gói & In label thùng hàng
 ```
 
 > ⚠️ **Cột IsFixed ở B450 phải được tích** mới tạo được Lot.
-> ⚠️ **B530 bắt buộc nhập chữ "Making"** nếu không đến V25 bị chặn.
+> ⚠️ **B530 bắt buộc nhập chữ "Making"** (chọn ở cột Status) nếu không công đoạn V25 sẽ bị chặn không cho lưu. Đây là điều kiện tiên quyết để hệ thống ghi nhận đang sản xuất.
 
 ---
 
@@ -304,6 +304,41 @@ JOIN STB_MaterialMaster MM ON SI.MaterialCode = MM.MaterialCode
 LEFT JOIN STB_ProdRouteHist PRH ON SI.ControlNo = PRH.ControlNo
 WHERE SI.Barcode = 'VVPO273R010713'
 ORDER BY PRH.ProdDateTime ASC
+```
+
+### 5.16 Logic bóc tách Part No từ Model Name
+
+**Mục đích:** Khi cần lấy mã Part No rút gọn (VD: `VEC3R0606QG`) từ chuỗi Model Name đầy đủ (VD: `HY-CAP VEC3R0606QG (1840)`).
+
+```sql
+-- Cách 1: Dùng chuỗi REPLACE lồng nhau (loại bỏ prefix/suffix)
+SELECT REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE('HY-CAP VEC3R0606QG (1840)','HY-CAP ',''),'HY-CAP',''),'-C',''),'-M',''),'MSP',''),'(CY)','') AS model
+
+-- Cách 2: Dùng SUBSTRING (lấy 12 ký tự sau dấu cách đầu tiên)
+SELECT (RTRIM(LTRIM(SUBSTRING('HY-CAP VEC3R0606QG (1840)', CHARINDEX(' ', 'HY-CAP VEC3R0606QG (1840)'), 12)))) AS partno
+```
+
+---
+
+### 5.17 Tra cứu Model Code và Size tại màn B597
+
+**Mục đích:** Khi cần kiểm tra nhanh Size của Barcode tại công đoạn QC inline.
+
+```sql
+DECLARE @ModelSize VARCHAR(10) = '';
+DECLARE @ModelName NVARCHAR(200) = '';
+
+-- Bước 1: Lấy Size từ ModelBasicInfo (W x H)
+SELECT @ModelSize = RIGHT('0'+CONVERT(VARCHAR, CONVERT(INT, MBISizeW)), 2) + CONVERT(VARCHAR, CONVERT(INT, MBISizeH))
+FROM STB_ModelBasicInfo WITH(NOLOCK)
+WHERE ModelCode = (SELECT MaterialCode FROM STB_SetInfo WITH(NOLOCK) WHERE Barcode = 'VVPR293R018602')
+
+-- Bước 2: Lấy ModelName rút gọn
+SELECT @ModelName = REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(ModelName,@ModelSize,''),'(',''),')',''),' ',''),'HY-CAP ',''),'HY-CAP',''),'-','%')
+FROM STB_ModelBasicInfo WITH(NOLOCK)
+WHERE ModelCode = (SELECT MaterialCode FROM STB_SetInfo WITH(NOLOCK) WHERE Barcode = 'VVPR293R018602')
+
+PRINT (@ModelName + ' ' + @ModelSize)
 ```
 
 *Cập nhật: 2026-05-17*

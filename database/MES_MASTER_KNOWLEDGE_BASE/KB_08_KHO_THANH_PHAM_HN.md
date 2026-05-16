@@ -47,9 +47,9 @@ WHERE PackingOutPutFinishGoodsID = @PackingID
 -- Xem logic: SELECT OBJECT_DEFINITION(OBJECT_ID('ExportWarehouseFinshGoodInventory_uid'))
 
 -- Fix thủ công nếu SP bị lỗi giữa chừng
+-- ⚠️ Xác minh DB (2026-05-17): Bảng KHÔNG có cột StatusInstock -- chỉ có QtyOutput
 UPDATE FinishGoodMESInstock_HN
-SET QtyOutput = Qty,
-    StatusInstock = 1  -- 1 = đã xuất
+SET QtyOutput = Quantity  -- Quantity là cột tổng số lượng thực tế
 WHERE PackingID = @PackingID
 
 UPDATE STB_VN_FINISHGOODS_HN_Export

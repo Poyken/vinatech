@@ -86,7 +86,8 @@
 | `STB_MaterialMaster` | Master vật tư | A230, F721 |
 | `STB_DayProdPlan` | Kế hoạch ngày | B450 |
 | `STB_CommInspDocHistory` | Lịch sử kiểm tra QC | B597, C443 |
-| `STB_AluCaseMapping_VVT` | Mapping vỏ nhôm | B597 |
+| `STB_AluCaseMapping_VVT` | ⚠️ KHÔNG TỒN TẠI — Logic vỏ nhôm nằm trong SP | B597 |
+
 | `stb_slittinglocationconfig_vvt` | Config điện cực Slitting | B552, B597 |
 | `STB_SavePackingTime_VVT` | Lịch sử đóng gói | B781, B789 |
 | `STB_VVT_StagePrices` | Giá công đoạn Cell | B682, B781 |
@@ -105,4 +106,4 @@
 4. **Sửa đồng bộ đủ bảng** — Thiếu 1 bảng gây lệch dữ liệu
 5. **Ghi log tất cả thay đổi** — Để audit sau
 
-*Cập nhật: 2026-05-17*
+*Cập nhật: 2026-05-17 | Đã kiểm chứng bằng SELECT trực tiếp từ SmartFactoryV2*

@@ -77,28 +77,25 @@ SELECT CurrentRouteCode FROM STB_SetInfo WHERE Barcode = 'Mã_Barcode'
 
 **Triệu chứng:** `"Không tồn tại thiết lập Vỏ Nhôm của LotNo... với mã Vỏ Nhôm: GBDYAC-004 <> ECVT30-367"`
 
+> ⚠️ **Đã xác minh (2026-05-17):** Bảng `STB_AluCaseMapping_VVT` **KHÔNG TỒN TẠI** trong `SmartFactoryV2`. Logic kiểm tra vỏ nhôm được **hardcode hoàn toàn** bên trong SP `usp_Vietnam_RawMaterialInputHist_uid` (bằng IF/NOT IN). Không có bảng mapping rười!
+
 **Debug:**
 ```sql
--- Kiểm tra mapping hiện tại
-SELECT * FROM STB_AluCaseMapping_VVT WHERE ModelCode = 'ECVT30-367'
+-- Không có bảng để query -- phải đọc thẳng vào SP:
+SELECT OBJECT_DEFINITION(OBJECT_ID('usp_Vietnam_RawMaterialInputHist_uid'))
+-- Ctrl+F tìm từ khóa 'Vỏ Nhôm' hoặc 'AluCase' hoặc 'GBDYAC'
+-- Tìm đến khối IF chặn → Thêm mã vỏ mới vào danh sách NOT IN
 ```
 
-**Fix (chọn 1 trong 2 cách):**
-
-**Cách 1 - Thêm vào bảng mapping:**
-```sql
-INSERT INTO STB_AluCaseMapping_VVT (AluCaseCode, ModelCode, CreateUserID, CreateDateTime)
-VALUES ('GBDYAC-004', 'ECVT30-367', 'vinaadmin', GETDATE())
-```
-
-**Cách 2 - Sửa trong SP (khi bảng mapping không đủ):**
+**Fix (chỉ có 1 cách duy nhất) - Sửa trong SP:**
 ```sql
 -- Tìm đoạn code chặn trong SP
 SELECT OBJECT_DEFINITION(OBJECT_ID('usp_Vietnam_RawMaterialInputHist_uid'))
--- Ctrl+F tìm từ khóa 'ECVT30-367' hoặc 'AluCase'
--- Tìm đến điều kiện IF/CASE → Thêm mã mới vào NOT IN list
--- VD: IF (@MaterialCode = 'ECVT30-367' AND @pRawMaterialBarcode NOT IN ('GBRLAC-004', 'GBDYAC-004'))
+-- VD tìm tới dòng:
+-- IF (@MaterialCode = 'ECVT30-367' AND @pRawMaterialBarcode NOT IN ('GBRLAC-004', 'GBDYAC-004'))
+-- → Thêm mã vỏ mới vào NOT IN list rồi deploy lại SP
 ```
+
 
 ---
 
@@ -167,18 +164,23 @@ UPDATE STB_ElectrodeWasteInfoNew SET ElectrodeThickness = 200 WHERE [Điều_Ki�
 
 **Nguyên nhân:** Lô NVL đang ở trạng thái HOLD do chưa qua IQC hoặc bị hold thủ công.
 
-```sql
--- Kiểm tra trạng thái IQC của Lot NVL
-SELECT LotID, InspectionStatus, HoldReason
-FROM STB_MaterialQcInfo
-WHERE LotID = 'ML...'
--- InspectionStatus = 'HOLD' → Hàng đang bị giữ
+> ⚠️ **Xác minh DB (2026-05-17):** `STB_MaterialQcInfo` KHÔNG có cột `InspectionStatus` hay `HoldReason`. HOLD được xác định qua `MaterialWarehouseCode` trong `STB_MaterialLotInfo` (giá trị: `HOLDING_VN_WH`, `HOLDING_BG_WH`, `HOLDING_HN_WH`).
 
--- Muốn bỏ HOLD (cần có sự đồng ý của QC)
-UPDATE STB_MaterialQcInfo
-SET InspectionStatus = 'PASS'
+```sql
+-- Kiểm tra Lot NVL có đang HOLD không
+SELECT LotID, MaterialWarehouseCode, MaterialCode, CurrentQty
+FROM STB_MaterialLotInfo
+WHERE LotID = 'ML...'
+-- Nếu MaterialWarehouseCode LIKE 'HOLDING_%' → Hàng đang bị giữ
+
+-- Muốn bỏ HOLD (cần có sự đồng ý của QC) → Chuyển sang kho chính:
+UPDATE STB_MaterialLotInfo
+SET MaterialWarehouseCode = 'ROH_VN_WH',  -- Thay bằng kho đúng
+    MaterialLocationCode = 'ROH_VN_WH_01'
 WHERE LotID = 'ML...'
 ```
+
+> Các giá trị HOLDING thực tế: `HOLDING_VN_WH` (Bắc Ninh), `HOLDING_BG_WH` (Bắc Giang), `HOLDING_HN_WH` (Hà Nam)
 
 ---
 
@@ -247,12 +249,12 @@ WHERE PartNo IN ('1025', '1325', '1030')
 
 ```
 Theo thứ tự SP usp_Vietnam_RawMaterialInputHist_uid kiểm tra:
-□ 1. HOLDING? → Kiểm tra STB_MaterialQcInfo.InspectionStatus
+□ 1. HOLDING? → SELECT MaterialWarehouseCode FROM STB_MaterialLotInfo (Check 'HOLDING_%')
 □ 2. Hết hạn? → Kiểm tra LotAttr10 + MMExtInt01 (xem KB_02 Mục 4.10)
 □ 3. Sai chủng loại? → Kiểm tra BOM có mã NVL đó không (STB_BomDetail)
-□ 4. Sai độ dày điện cực? → Kiểm tra MaterialThickness (số nguyên vs thập phân)
+□ 4. Sai độ dày điện cực? → Kiểm tra MaterialThickness (phải là số nguyên)
 □ 5. Sai mã Electrolyte? → Kiểm tra CTE eleclyte1 trong SP
-□ 6. Thiếu cấu hình Vỏ Nhôm? → Kiểm tra STB_AluCaseMapping_VVT
+□ 6. Thiếu cấu hình Vỏ Nhôm? → Sửa hardcode trong SP (Bảng AluCaseMapping không tồn tại)
 □ 7. Thiếu cấu hình Slitting? → Kiểm tra STB_SLITTINGLOCATIONCONFIG_VVT
 ```
 
@@ -267,9 +269,17 @@ Mã lot kho nguyên liệu: ML...
 P (BY) = Cực Dương (+)
 M (YP) = Cực Âm (-)
 
-Kiểm tra tồn kho điện cực → tbl_SlittingStock
+Kiểm tra tồn kho điện cực → **Stb_SlittingStock_VVT**
 ```
 
 > Điện cực phải dùng mã Lot kho (prefix `ML`) khi nhập kho nguyên liệu.
+
+### 8.5 Lỗi popup không hiện dữ liệu ở B270
+
+**Triệu chứng:** Khi gán máy vào Line ở màn B270, nhấn popup tìm kiếm không ra dữ liệu máy.
+
+**Cách sửa:** Vào màn **B230** (Quản lý thiết bị/máy móc) → Kiểm tra máy đó đã được khai báo đúng Line/Route chưa.
+
+---
 
 *Cập nhật: 2026-05-17*

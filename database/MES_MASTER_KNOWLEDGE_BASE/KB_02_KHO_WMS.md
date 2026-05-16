@@ -159,6 +159,8 @@ WHERE LotID IN ('ML20250620000036', 'ML20250520000061')
 
 > Không cần xóa lịch sử — chỉ cần cập nhật lại mã kho và location.
 
+> **Mã HOLDING thực tế (xác minh DB):** `HOLDING_VN_WH` (Bắc Ninh), `HOLDING_BG_WH` (Bắc Giang), `HOLDING_HN_WH` (Hà Nam).
+
 ```sql
 -- Bước 1: Xem trạng thái Lot hiện tại
 SELECT LotID, MaterialWarehouseCode, MaterialLocationCode
@@ -205,6 +207,8 @@ UPDATE STB_MaterialLotInfo SET MaterialLocationCode = 'Vị_Trí_Mới' WHERE Lo
 - **Tắt FIFO cho NVL cụ thể:** SP `usp_VVTMaterialWarehouse_validFIFO`
 
 > ⚠️ **Lưu ý Nordex Audit (từ 2026-02-05):** Logic chặn quét sai BOM (`RAISERROR('생산중인 제품 BOM...')`) trong SP `usp_RawMaterialInputHist_iud` đang bị **Comment Out tạm thời**. Hệ thống hiện chấp nhận NVL không có trong BOM — cần bật lại sau khi audit xong.
+
+> ⚠️ **HOLD Warehouse Codes thực tế (xác minh DB 2026-05-17):** `HOLDING_VN_WH` (Bắc Ninh), `HOLDING_BG_WH` (Bắc Giang), `HOLDING_HN_WH` (Hà Nam). Kiểm tra HOLD bằng cách SELECT `MaterialWarehouseCode` từ `STB_MaterialLotInfo`.
 
 ---
 
@@ -278,19 +282,18 @@ DELETE FROM STB_VNSparePartInfo WHERE sparepartcode = '[Mã cần xóa]'
 
 **Triệu chứng:** B597 báo lỗi `"Không tồn tại thiết lập Vỏ Nhôm của LotNo... với mã Vỏ Nhôm: GBDYAC-004 <> ECVT30-367"`
 
-**Debug:**
+> ⚠️ **Đã xác minh (2026-05-17):** Bảng `STB_AluCaseMapping_VVT` **KHÔNG TỒN TẠI** trong `SmartFactoryV2`. Logic kiểm tra vỏ nhôm được hardcode trong SP `usp_Vietnam_RawMaterialInputHist_uid`.
+
+**Fix — Chỉ có cách sửa SP:**
 ```sql
--- Kiểm tra mapping hiện tại
-SELECT * FROM STB_AluCaseMapping_VVT WHERE ModelCode = 'ECVT30-367'
+-- Đọc SP để tìm khối IF kiểm tra vỏ nhôm
+SELECT OBJECT_DEFINITION(OBJECT_ID('usp_Vietnam_RawMaterialInputHist_uid'))
+-- Tìm tới đoạn IF chặn (VD: NOT IN ('GBRLAC-004', ...))
+-- Thêm mã vỏ mới vào danh sách NOT IN → Deploy lại SP
 ```
 
-**Xử lý:**
-- Nếu chưa có → Thêm mapping:
-```sql
-INSERT INTO STB_AluCaseMapping_VVT (AluCaseCode, ModelCode, CreateUserID, CreateDateTime)
-VALUES ('GBDYAC-004', 'ECVT30-367', 'vinaadmin', GETDATE())
-```
-- Nếu đã có nhưng sai mã → Cập nhật trong SP `usp_Vietnam_RawMaterialInputHist_uid`, tìm đến điều kiện IF chặn AluCase, thêm mã mới vào `NOT IN`.
+**Muốn biết mã vỏ nào đang được cho phép:** Đọc source SP (fetch bằng `fetch_sp.ps1`) và tìm đoạn xử lý AluCase/Vỏ Nhôm.
+
 
 ---
 
@@ -310,5 +313,26 @@ NVL sẵn sàng cho sản xuất
 
 > Nếu user báo "không nhập được F330" → Hỏi lại: Groupware đã duyệt "Arrival Confirmation" chưa?
 > Nếu user báo "không làm được Receiving Confirmation" → Hỏi lại: C220 đã PASS chưa?
+
+### 4.15 Sửa mã NVL (MaterialCode) nhập sai ở màn F312
+
+**Triệu chứng:** Thủ kho (chị Xuân) nhập nhầm mã NVL cho phiếu nhập kho, cần sửa lại mà không muốn hủy phiếu.
+
+```sql
+-- Bước 1: Tìm MaterialDocNo từ màn hình (Số tài liệu)
+-- Bước 2: Sửa đồng bộ ở 2 bảng Detail và LotInfo
+DECLARE @DocNo NVARCHAR(50) = '250806000399'
+DECLARE @CorrectCode NVARCHAR(50) = 'GCTN00-S01'
+
+UPDATE STB_MaterialDocDetail
+SET MaterialCode = @CorrectCode
+WHERE MaterialDocNo = @DocNo
+
+UPDATE STB_MaterialDocLotInfo
+SET MaterialCode = @CorrectCode
+WHERE MaterialDocNo = @DocNo
+```
+
+---
 
 *Cập nhật: 2026-05-17*

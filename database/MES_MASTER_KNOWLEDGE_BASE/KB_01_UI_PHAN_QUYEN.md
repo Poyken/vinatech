@@ -18,8 +18,9 @@
    - Setting: `Alias: nais` | `Url: http://mes.hycap.co.kr:9952`
 3. **Kiểm tra tài khoản DB:**
 ```sql
-SELECT UserID, UserName, IsUse FROM STB_UserInfo WHERE UserID = 'tên_user'
--- IsUse = 0 → tài khoản bị khóa → vào Z410 mở lại
+SELECT UserID, UserName, AllowFlag FROM SmartFramework.dbo.STB_UserInfo WHERE UserID = 'tên_user'
+-- AllowFlag = 0 → tài khoản bị khóa → vào Z410 bật lại
+-- ⚠️ Cột là AllowFlag, KHÔNG PHẢI IsUse
 ```
 
 ---
@@ -61,18 +62,24 @@ SELECT * FROM STB_ProductMachine WHERE MachineCode = 'Mã_Máy'
 |--------|----------|---------|
 | Thêm công nhân | **B260** | Gán vào Line |
 | Tạo tài khoản MES mới | **Z410** | UserID + password |
-| Phân quyền (Role) | **Z220** | Gán RoleCode |
+| Phân quyền (Role) | **Z220** | Gán quyền theo User |
 | Thêm màn hình cho User | **Z330** | Khi user báo "không thấy màn hình X" |
 
-**SQL kiểm tra quyền user:**
+**SQL kiểm tra quyền user (SmartFramework):**
 ```sql
--- Xem user đang có những màn hình nào
-SELECT UI.UserID, UI.UserName, SM.ScreenID
-FROM STB_UserInfo UI
-JOIN STB_UserRole UR ON UI.UserID = UR.UserID
-JOIN STB_RoleScreenMapping SM ON UR.RoleCode = SM.RoleCode
-WHERE UI.UserID = 'tên_user'
+-- Xem user đang có quyền vào màn hình nào
+SELECT UserID, ScreenID, FuncID, Allow
+FROM SmartFramework.dbo.STB_UserPermission
+WHERE UserID = 'tên_user' AND Allow = 1
+
+-- Kiểm tra thông tin user (AllowFlag thay cho IsUse)
+SELECT UserID, UserName, AllowFlag
+FROM SmartFramework.dbo.STB_UserInfo
+WHERE UserID = 'tên_user'
+-- AllowFlag = 0 → tài khoản bị khóa
 ```
+
+> ⚠️ **Xác minh DB (2026-05-17):** Không có bảng `STB_UserRole` hay `STB_RoleScreenMapping` trong SmartFramework. Phân quyền dùng bảng `STB_UserPermission` (UserID, ScreenID, FuncID, Allow).
 
 ---
 

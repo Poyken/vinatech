@@ -106,18 +106,23 @@ WHERE MaterialCode = 'Mã_NVL'
 
 > Áp dụng khi màn hình B682, B781, B789 không hiện giá hoặc sai đơn giá.
 
+> ⚠️ **Xác minh DB (2026-05-17):** Bảng `STB_VVT_StagePrices` thực tế có thêm nhiều cột: `RouteV29`→`RouteV34`, `RouteVE01`→`RouteVE10` (cho Hà Nam), `WorkCenterCode` (để phân biệt nhà máy). Hà Nam cần dùng `WorkCenterCode = 'VVT_F3'` và điền các route VE.
+
 ```sql
 -- Kiểm tra đã có giá chưa
 SELECT * FROM STB_VVT_StagePrices WHERE model = 'Mã_Model'
 
--- Thêm giá cho Cell Line (B682/B781)
+-- Thêm giá cho Cell Line (B682/B781) -- Bắc Ninh và Bắc Giang (V routes)
 INSERT INTO STB_VVT_StagePrices (
     model, RouteV22, PriceV22, RouteV23, PriceV23, RouteV24, PriceV24,
-    RouteV25, PriceV25, RouteV26, PriceV26, RouteV27, PriceV27, RouteV28, PriceV28, CreateDate
+    RouteV25, PriceV25, RouteV26, PriceV26, RouteV27, PriceV27, RouteV28, PriceV28, 
+    WorkCenterCode, CreateDate
 )
 VALUES (
     'MÃ_MODEL', 'V-22', 0.065, 'V-23', 0.071, 'V-24', 0.089, 'V-25', 0.094,
-    'V-26', 0.094, 'V-27', 0.110, 'V-28', 0.118, GETDATE()
+    'V-26', 0.094, 'V-27', 0.110, 'V-28', 0.118, 
+    'VVT_F2',  -- VVT_F1=Bắc Ninh, VVT_F2=Bắc Giang, VVT_F3=Hà Nam
+    GETDATE()
 );
 
 -- Với Module (B789/B791) → Sửa trong Function:

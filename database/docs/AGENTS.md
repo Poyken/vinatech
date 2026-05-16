@@ -9,7 +9,8 @@
 | **Framework DB** | `SmartFramework` |
 | **Username** | `vinaadmin` |
 | **Platform** | NAIS / SmartFramework by Awoo |
-| **Nhà máy** | VVT (Bắc Giang), VNT (Bắc Ninh), HN (Hà Nam) |
+| **Nhà máy** | VVT_F1 = Bắc Ninh, VVT_F2 = Bắc Giang, VVT_F3 = Hà Nam, VVT_F4 = Bắc Giang 2 |
+
 
 ---
 
@@ -150,7 +151,8 @@ Nếu cần xem source code của SP:
 - [ ] **STB_BaseCode, STB_ConstCodeInfo, STB_MaterialHoldInfo** không tồn tại trong SmartFactoryV2
 - [ ] HOLD logic dùng `MaterialWarehouseCode = 'HOLDING%'` thay vì bảng riêng
 - [ ] FIFO validation nằm trong SP, không phải cột trong MaterialMaster
-- [ ] Route prefix: VNT = E-xx, VVT = V-xx, HN = VE-xx
+- [ ] **Route prefix thực tế (xác minh DB 2026-05-17):** CompanyCode `VVT` dùng cho cả 4 nhà máy. WorkCenter phân biệt: `VVT_F1`=Bắc Ninh, `VVT_F2`=Bắc Giang, `VVT_F3`=Hà Nam, `VVT_F4`=Bắc Giang 2. Line code phân biệt: `VVBGC-xx`=Bắc Giang Cell, `VVBNTC-xx`=Bắc Ninh, `VELINE-xx`=Hà Nam.
+- [ ] **STB_AluCaseMapping_VVT KHÔNG TỒN TẠI** — logic vỏ nhôm là hardcode trong SP `usp_Vietnam_RawMaterialInputHist_uid`.
 
 ---
 

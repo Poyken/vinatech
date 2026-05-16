@@ -15,15 +15,18 @@
 
 **Xử lý:**
 1. Vào màn **A419** → Thêm số lượng đóng gói cho Model đó
-2. Hoặc insert trực tiếp bằng SQL (tham chiếu dữ liệu model cùng dòng sản phẩm):
+2. Hoặc INSERT trực tiếp bằng SQL:
 ```sql
--- Kiểm tra tiêu chuẩn đóng gói hiện có của model tương tự
-SELECT * FROM STB_PackingStandard WHERE MaterialCode LIKE 'ECVT30-%' LIMIT 5
+-- Kiểm tra tiêu chuẩn đóng gói hiện có
+SELECT * FROM STB_PackingStandard WHERE MaterialTypeCode = 'FERT'
 
--- Thêm tiêu chuẩn mới
-INSERT INTO STB_PackingStandard (MaterialCode, PackQty, CreateDateTime, CreateUserID)
-VALUES ('MÃ_MODEL_MỚI', 500, GETDATE(), 'vinaadmin')
+-- Thêm tiêu chuẩn mới (theo MaterialTypeCode + Size, không theo MaterialCode)
+-- Cấu trúc bảng: MaterialTypeCode, Size, Voltage, Farad, VinylBagQty, InnerBoxQty, OutBoxQty
+INSERT INTO STB_PackingStandard (MaterialTypeCode, Size, Voltage, Farad, VinylBagQty, InnerBoxQty, OutBoxQty, CreateDateTime, CreateUserID)
+VALUES ('FERT', '0813', NULL, NULL, 500, 4000, 8000, GETDATE(), 'vinaadmin')
 ```
+
+> ⚠️ **Xác minh DB (2026-05-17):** Bảng `STB_PackingStandard` KHÔNG có cột `MaterialCode` hay `PackQty`. Tra theo `MaterialTypeCode` (FERT) + `Size` (0813=8x13mm). Quản lý số lượng đóng gói chủ yếu qua **màn A419**.
 
 **Tiêu chuẩn cân:** Vào SP `usp_Vvt_TieuChuanPacking_Vvt` → Thêm dòng cho Model mới.
 
