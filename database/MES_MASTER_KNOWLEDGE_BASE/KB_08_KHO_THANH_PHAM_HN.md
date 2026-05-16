@@ -1,0 +1,184 @@
+# KB_08 — Kho Thành Phẩm (HN) & Xuất Kho
+
+> **Màn hình liên quan:** HN551, HN544, HN866, FG00, B523
+> ← [Về INDEX](KB_INDEX.md)
+
+---
+
+## 1. 🔴 Lỗi Hàng xuất ở HN551 nhưng tồn kho HN866 vẫn còn
+
+**Triệu chứng:** Đã quét mã Packing xuất kho ở HN551 thành công, nhưng vào HN866 vẫn thấy hàng còn tồn.
+
+**Tư duy trace:** Hệ thống MES hoạt động theo nguyên tắc **"Màn hình A làm - Màn hình B hưởng"**:
+- **HN551 (Xuất):** Ghi vào "Sổ xuất kho" (`STB_VN_FINISHGOODS_HN_Export`) và đánh dấu "đã đi" vào "Sổ tồn kho".
+- **HN866 (Tồn):** Chỉ đơn giản mở "Sổ tồn kho" ra xem — cái nào chưa đánh dấu "đã đi" (`QtyOutput = 0`) thì hiện lên.
+
+**→ Nguyên nhân thường gặp:** HN551 đã ghi "Sổ xuất" nhưng **quên đánh dấu** vào "Sổ tồn kho."
+
+---
+
+**Script trace tổng hợp (thay PackingID ở dòng đầu):**
+```sql
+DECLARE @PackingID NVARCHAR(50) = 'PKHN023117' -- THAY MÃ CẦN TRACE
+
+-- BƯỚC 1: Kiểm tra trạng thái xuất kho
+-- StatusExport = 1 → Đã xuất về chứng từ
+SELECT CodeExport, PackingID, LotNo, Qty, StatusExport, CreateDateTime
+FROM STB_VN_FINISHGOODS_HN_Export
+WHERE PackingID = @PackingID
+
+-- BƯỚC 2: Kiểm tra tồn kho thực tế
+-- QtyOutput = 0 nhưng BƯỚC 1 có data → LỖI LOGIC TRỪ KHO
+SELECT PackingID, Qty, QtyOutput, StatusInstock
+FROM FinishGoodMESInstock_HN
+WHERE PackingID = @PackingID
+
+-- BƯỚC 3: Kiểm tra Packing là "Tem To" hay "Tem Nhỏ"
+-- Tem To (Pallet/Gộp) = có trong STB_PackingOutPutFinishGoods_HN
+-- Tem Nhỏ (Box đơn) = không có trong bảng đó
+SELECT PackingID FROM STB_PackingOutPutFinishGoods_HN
+WHERE PackingOutPutFinishGoodsID = @PackingID
+-- Có kết quả → Tem To → xuất 1 mã này sẽ tự động xuất các box con bên trong
+```
+
+**Fix (nếu QtyOutput sai):**
+```sql
+-- SP xuất kho xử lý cả Tem To và Tem Nhỏ
+-- Xem logic: SELECT OBJECT_DEFINITION(OBJECT_ID('ExportWarehouseFinshGoodInventory_uid'))
+
+-- Fix thủ công nếu SP bị lỗi giữa chừng
+UPDATE FinishGoodMESInstock_HN
+SET QtyOutput = Qty,
+    StatusInstock = 1  -- 1 = đã xuất
+WHERE PackingID = @PackingID
+
+UPDATE STB_VN_FINISHGOODS_HN_Export
+SET StatusExport = 1
+WHERE PackingID = @PackingID
+```
+
+> **SP xuất kho:** `ExportWarehouseFinshGoodInventory_uid`
+
+---
+
+## 2. 🔴 Lỗi Lot bị đổi MaterialCode sau khi sản xuất (5H1 → 6D1)
+
+**Triệu chứng:** Hàng đang nhập liệu với Making = 5H1 nhưng sau đó trên hệ thống bị chuyển sang 6D1.
+
+**Các Packing liên quan: pkpt2000146, pkpt2000147, pkpt2000145**
+
+**Script trace:**
+```sql
+-- Bước 1: Kiểm tra MaterialCode hiện tại của các Lot
+SELECT SI.Barcode, SI.MaterialCode, SI.InputLineCode, SI.CreateDateTime
+FROM STB_SetInfo SI
+WHERE SI.Barcode IN ('pkpt2000146', 'pkpt2000147', 'pkpt2000145')
+
+-- Bước 2: Kiểm tra lịch sử thay đổi MaterialCode
+SELECT * FROM STB_LotChangeMaterialHistory
+WHERE NewBarcode IN ('pkpt2000146', 'pkpt2000147', 'pkpt2000145')
+OR OldBarcode IN ('pkpt2000146', 'pkpt2000147', 'pkpt2000145')
+ORDER BY CreateDateTime DESC
+
+-- Bước 3: Kiểm tra ai đã thay đổi và khi nào
+SELECT * FROM STB_MaterialLotInfo
+WHERE LotNo IN ('pkpt2000146', 'pkpt2000147', 'pkpt2000145')
+```
+
+**Fix (nếu bị đổi sai):**
+```sql
+-- Đổi lại MaterialCode đúng (lấy giá trị cũ từ LotChangeMaterialHistory)
+UPDATE STB_SetInfo SET MaterialCode = '5H1_MATERIAL_CODE_ĐÚNG'
+WHERE Barcode IN ('pkpt2000146', 'pkpt2000147', 'pkpt2000145')
+
+UPDATE STB_MaterialLotInfo SET MaterialCode = '5H1_MATERIAL_CODE_ĐÚNG'
+WHERE LotNo IN ('pkpt2000146', 'pkpt2000147', 'pkpt2000145')
+```
+
+---
+
+## 3. 🔴 Lỗi màn HNC321 (Nhập phế — báo lỗi)
+
+**Triệu chứng:** Nhập phế liệu ở HNC321 báo lỗi, không lưu được.
+
+**Debug:**
+```sql
+-- Kiểm tra SP xử lý nhập phế
+SELECT OBJECT_DEFINITION(OBJECT_ID('usp_Vietnam_ScrapInput_HN'))
+-- hoặc tìm SP theo tên màn hình
+SELECT ObjectName, ProcedureName FROM SmartFramework.dbo.STB_ScreenObjects
+WHERE ScreenName LIKE '%HNC321%' AND ObjectType = 'Action'
+```
+
+---
+
+## 4. 🔴 Xóa nhập sản lượng công đoạn (VD: VE260509-004)
+
+**Triệu chứng:** Cần hủy/xóa dữ liệu nhập sản lượng ở 1 công đoạn cụ thể của 1 Barcode.
+
+```sql
+-- Bước 1: Xem lịch sử routing của Barcode
+SELECT * FROM STB_ProdRouteHist
+WHERE ControlNo = (SELECT ControlNo FROM STB_SetInfo WHERE Barcode = 'VE260509-004')
+ORDER BY ProdDateTime DESC
+
+-- Bước 2: Ghi nhớ RouteCode cần xóa (VD: VE08)
+-- Bước 3: Xóa dòng lịch sử routing đó
+DELETE FROM STB_ProdRouteHist
+WHERE ControlNo = (SELECT ControlNo FROM STB_SetInfo WHERE Barcode = 'VE260509-004')
+AND RouteCode = 'VE08'
+
+-- Bước 4: Nếu có nhập NG/DefectQty ở công đoạn đó, reset lại
+UPDATE STB_SetInfo
+SET DefectQty = 0, IsDefect = 0
+WHERE Barcode = 'VE260509-004'
+-- Chỉ làm nếu DefectQty thực sự cần reset
+```
+
+---
+
+## 5. 🔴 Xóa dữ liệu bị đánh dấu ở màn F330 (Hủy nhập kho)
+
+**Triệu chứng:** User muốn xóa phiếu nhập kho đã lỡ nhập ở F330 nhưng phiếu đã bị "đánh dấu" (Confirmed).
+
+```sql
+-- Bước 1: Tìm phiếu cần hủy
+SELECT * FROM STB_MaterialDocInfo WHERE MaterialDocNo = 'Số_Tài_Liệu'
+
+-- Bước 2: Kiểm tra xem đã có IQC chưa
+SELECT * FROM STB_MaterialQcInfo
+WHERE MaterialDocNo = 'Số_Tài_Liệu'
+-- Nếu đã có IQC PASS → Không thể xóa đơn giản, cần xóa cả IQC records
+
+-- Bước 3: Lấy danh sách LotID trong phiếu
+SELECT LotID FROM STB_MaterialDocLotInfo WHERE MaterialDocNo = 'Số_Tài_Liệu'
+
+-- Bước 4: Xóa theo thứ tự ngược lại (tránh lỗi FK)
+DELETE FROM STB_MaterialLotInfo WHERE LotID IN (
+    SELECT LotID FROM STB_MaterialDocLotInfo WHERE MaterialDocNo = 'Số_Tài_Liệu'
+)
+DELETE FROM STB_MaterialDocLotInfo WHERE MaterialDocNo = 'Số_Tài_Liệu'
+DELETE FROM STB_MaterialDocDetail WHERE MaterialDocNo = 'Số_Tài_Liệu'
+DELETE FROM STB_MaterialDocInfo WHERE MaterialDocNo = 'Số_Tài_Liệu'
+```
+
+> ⚠️ **Chỉ làm khi hàng chưa được xuất kho hoặc dùng sản xuất.** Nếu đã dùng → báo với QC xử lý.
+
+---
+
+## 6. 📖 Phân biệt Tem To và Tem Nhỏ (Hà Nam)
+
+| Loại tem | Định nghĩa | Bảng DB | Khi xuất |
+|----------|-----------|---------|---------|
+| **Tem To** (Pallet/Gộp) | Đại diện cho nhiều thùng gộp lại | `STB_PackingOutPutFinishGoods_HN` | Tự động xuất tất cả box con bên trong |
+| **Tem Nhỏ** (Box đơn) | Dán trên từng thùng riêng lẻ | Không có trong bảng trên | Xuất từng box riêng |
+
+```sql
+-- Kiểm tra PackingID là Tem To hay Tem Nhỏ
+SELECT COUNT(*) AS [SoKetQua]
+FROM STB_PackingOutPutFinishGoods_HN
+WHERE PackingOutPutFinishGoodsID = 'PKHN023117'
+-- Có kết quả → Tem To | Không có → Tem Nhỏ
+```
+
+*Cập nhật: 2026-05-17*
