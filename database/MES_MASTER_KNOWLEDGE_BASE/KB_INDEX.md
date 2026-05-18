@@ -1,7 +1,8 @@
 # 🗂️ NAIS MES — Knowledge Base Index
 
-> **Cập nhật:** 2026-05-17 | **Tổng hợp từ:** Lỗi thực tế + Docx gốc (đã extract toàn bộ)
+> **Cập nhật:** 2026-05-18 | **Tổng hợp từ:** Lỗi thực tế + Docx gốc (đã extract toàn bộ) + Xác minh DB trực tiếp
 > **Cách dùng:** Đọc file INDEX này trước, sau đó mở file KB chuyên biệt theo nhóm lỗi.
+> **Groupware KB:** Xem → [`../GROUPWARE_KNOWLEDGE_BASE/GW_INDEX.md`](../GROUPWARE_KNOWLEDGE_BASE/GW_INDEX.md)
 
 ---
 
