@@ -20,7 +20,7 @@
 □ 5. A419 (STB_PackingStandard) — Tiêu chuẩn đóng gói
 □ 6. A460 (STB_LabelInfo) — Mẫu tem in
 □ 7. STB_VVT_StagePrices — Giá công đoạn (cho B682/B781)
-□ 8. STB_AluCaseMapping_VVT — Mapping vỏ nhôm (nếu là Cell)
+□ 8. Cấu hình Vỏ nhôm — ⚠️ Bảng STB_AluCaseMapping_VVT KHÔNG TỒN TẠI; logic mapping được hardcode trong SP usp_Vietnam_RawMaterialInputHist_uid.
 ```
 
 **SQL thêm ModelBasicInfo:**

@@ -60,7 +60,7 @@ if ($PONo) {
         
         # Check 2: PO status
         Write-Host "`n[2] Check: PO status" -ForegroundColor Green
-        $sql = "SELECT IsFinish, IsFix, PlannedQty, ProdFinishQty FROM STB_ProductionOrderInfo WHERE PONo = '$PONo'"
+        $sql = "SELECT IsFinish, IsFix, PlanQty, ProdFinishQty FROM STB_ProductionOrderInfo WHERE PONo = '$PONo'"
         $result = sqlcmd -S $server -d $database -U $user -P $password -C -Q $sql -W -s "," -h -1
         Write-Host $result
         

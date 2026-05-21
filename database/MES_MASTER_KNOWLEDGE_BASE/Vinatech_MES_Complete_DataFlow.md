@@ -933,9 +933,9 @@ flowchart TD
 
 | Table | Vai trò | Nguồn dữ liệu |
 |-------|---------|--------------|
-| `STB_DayPlanInfo` | Kế hoạch SX ngày: DayPlanNo, LineCode, JobDate, PlannedQty | Nhập tay hoặc auto từ MRP |
+| `STB_DayPlanInfo` | Kế hoạch SX ngày: DayPlanNo, LineCode, JobDate, PlanQty | Nhập tay hoặc auto từ MRP |
 | `STB_DayPlanDetail` | Chi tiết kế hoạch theo ModelCode + Qty | `STB_DayPlanInfo` |
-| `STB_ProductionOrderInfo` | Lệnh SX (PONo): MaterialCode, BomVersion, PlannedQty, WorkCenterCode | Từ `STB_DayPlanDetail` |
+| `STB_ProductionOrderInfo` | Lệnh SX (PONo): MaterialCode, BomVersion, PlanQty, WorkCenterCode | Từ `STB_DayPlanDetail` |
 | `STB_ProductionOrderRouting` | Tuyến gia công của lệnh: copy từ `STB_RouteInfo` với IsInputRoute, IsOutputRoute, **RouteIndex** | Copy từ `STB_RouteInfo` (Phase 0) |
 | `STB_ProductionOrderBom` | BOM của lệnh: copy từ `STB_BomDetail` theo ModelCode + BomVersion | Copy từ `STB_BomDetail` (Phase 0) |
 | `STB_SetInfo` | **ControlNo / Barcode của từng đơn vị sản phẩm** sẽ sản xuất: IsLineInput=0, IsProdFinish=0 | Sinh khi in barcode sản xuất |
@@ -947,10 +947,10 @@ flowchart TD
 [Bộ phận kế hoạch]
     1. Tạo STB_DayPlanInfo (mỗi ngày / mỗi line)
        → STB_DayPlanNo: DPN20260408001
-       → LineCode, JobDate, PlannedQty
+       → LineCode, JobDate, PlanQty
 
     2. Tạo STB_ProductionOrderInfo (PONo)
-       → MaterialCode (FG model), BomVersion, PlannedQty
+       → MaterialCode (FG model), BomVersion, PlanQty
        → CompanyCode (VNT / VVT / HN)
 
     3. Copy Route → STB_ProductionOrderRouting
@@ -1005,7 +1005,7 @@ DECLARE @TimeCode VARCHAR(2)  = SUBSTRING(@ShiftTime, 10, 2)
 
 | Table | Vai trò |
 |-------|---------|
-| `STB_ProductionOrderInfo` | Lệnh sản xuất: PONo, MaterialCode (FG), PlannedQty, ProdFinishQty |
+| `STB_ProductionOrderInfo` | Lệnh sản xuất: PONo, MaterialCode (FG), PlanQty, ProdFinishQty |
 | `STB_ProductionOrderRouting` | Tuyến gia công của lệnh: RouteCode, **RouteIndex** (thứ tự), IsInputRoute, IsOutputRoute |
 | `STB_SetInfo` | **Tracking đơn vị sản phẩm:** ControlNo (barcode), IsLineInput, IsProdFinish, InputDateTime, ProdFinishDateTime |
 | `STB_ProdRouteHist` | Bản ghi mỗi lần quét: PONo, ControlNo, RouteCode, ProdQty, JobDate, ShiftCode |
@@ -1652,7 +1652,7 @@ ORDER BY CreateDateTime DESC
 ## 📺 B310 — Tạo Production Order (PO)
 
 ### Vận hành
-1. Bộ phận kế hoạch tạo PO → nhập `MaterialCode`, `BomVersion`, `PlannedQty`, `WorkCenterCode`
+1. Bộ phận kế hoạch tạo PO → nhập `MaterialCode`, `BomVersion`, `PlanQty`, `WorkCenterCode`
 2. Hệ thống copy BOM từ `STB_BomDetail` → `STB_ProductionOrderBom`
 3. Hệ thống copy Route từ `STB_RouteInfo` → `STB_ProductionOrderRouting`
 4. PO được gắn vào `STB_DayProdPlan.PONo`

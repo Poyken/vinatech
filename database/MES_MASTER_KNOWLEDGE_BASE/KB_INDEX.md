@@ -107,4 +107,4 @@
 4. **Sửa đồng bộ đủ bảng** — Thiếu 1 bảng gây lệch dữ liệu
 5. **Ghi log tất cả thay đổi** — Để audit sau
 
-*Cập nhật: 2026-05-17 | Đã kiểm chứng bằng SELECT trực tiếp từ SmartFactoryV2*
+*Cập nhật: 2026-05-20 | Đã kiểm chứng bằng SELECT trực tiếp từ SmartFactoryV2*

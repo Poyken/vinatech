@@ -29,7 +29,7 @@ WHERE PackingID = @PackingID
 
 -- BƯỚC 2: Kiểm tra tồn kho thực tế
 -- QtyOutput = 0 nhưng BƯỚC 1 có data → LỖI LOGIC TRỪ KHO
-SELECT PackingID, Qty, QtyOutput, StatusInstock
+SELECT PackingID, Quantity, QtyOutput
 FROM FinishGoodMESInstock_HN
 WHERE PackingID = @PackingID
 
@@ -105,8 +105,8 @@ WHERE LotNo IN ('pkpt2000146', 'pkpt2000147', 'pkpt2000145')
 ```sql
 -- Kiểm tra SP xử lý nhập phế
 SELECT OBJECT_DEFINITION(OBJECT_ID('usp_Vietnam_ScrapInput_HN'))
--- hoặc tìm SP theo tên màn hình
-SELECT ObjectName, ProcedureName FROM SmartFramework.dbo.STB_ScreenObjects
+-- hoặc tìm Action theo tên màn hình
+SELECT ObjectName, Caption, ObjectType FROM SmartFramework.dbo.STB_ScreenObjects
 WHERE ScreenName LIKE '%HNC321%' AND ObjectType = 'Action'
 ```
 

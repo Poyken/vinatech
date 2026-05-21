@@ -157,17 +157,19 @@ SELECT * FROM STB_SavePackingTime_VVT WHERE LotNo = 'Mã_Lot'
 ### 4.1 Tìm màn hình theo TCode
 
 ```sql
-SELECT ScreenID, ScreenName, TCode FROM SmartFramework.dbo.STB_ScreenInfo
-WHERE ScreenName LIKE '%B597%' OR TCode LIKE '%597%'
+-- ScreenInfo uses Name (acts as ScreenID) and Caption (acts as ScreenName)
+SELECT Name AS ScreenID, Caption AS ScreenName, TCode 
+FROM SmartFramework.dbo.STB_ScreenInfo
+WHERE Name LIKE '%B597%' OR TCode LIKE '%597%'
 ```
 
-### 4.2 Tìm SP được gọi khi bấm nút trên màn hình
+### 4.2 Tìm Action Button trên màn hình
 
 ```sql
--- Tìm action button trên màn hình
-SELECT ObjectName, Caption, ProcedureName
+-- Tìm action button trên màn hình (STB_ScreenObjects không chứa cột ProcedureName)
+SELECT ObjectName, Caption, ObjectType
 FROM SmartFramework.dbo.STB_ScreenObjects
 WHERE ScreenName LIKE '%[Tên màn hình]%' AND ObjectType = 'Action'
 ```
 
-*Cập nhật: 2026-05-17*
+*Cập nhật: 2026-05-20*

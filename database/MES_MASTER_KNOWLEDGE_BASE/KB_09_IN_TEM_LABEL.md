@@ -80,10 +80,12 @@ WHERE LotNo = 'Mã_Barcode' OR LotID = 'Mã_Barcode'
 
 **PA1 - Cho phép in tem không cần Lot (Tạm thời):**
 ```sql
--- Kiểm tra quyền in tem của user
-SELECT * FROM STB_UserRole WHERE UserID = 'user_cần_in'
+-- Kiểm tra quyền in tem của user trên các màn hình in tem (B756, B767, B790)
+SELECT UserID, ScreenID, FuncID, Allow 
+FROM SmartFramework.dbo.STB_UserPermission 
+WHERE UserID = 'user_cần_in' AND ScreenID IN ('B756', 'B767', 'B790')
 
--- Nếu user thiếu quyền → Thêm quyền tạm thời vào Z220
+-- Nếu user thiếu quyền → Thêm quyền tạm thời vào màn hình tương ứng
 -- Không có SP bypass chuẩn → Cần tạo Lot dummy hoặc dùng PA2
 ```
 
@@ -96,17 +98,21 @@ SELECT * FROM STB_UserRole WHERE UserID = 'user_cần_in'
 
 | Tác vụ | Màn hình |
 |--------|---------|
-| Chỉnh sửa design mẫu tem (Label Template) | **A460** |
-| Cấu hình mapping Model → Mẫu tem | **Z530** (STB_ModelLabelInfo) |
+| Chỉnh sửa design mẫu tem (Label Template) | **Z530** (STB_LabelInfo) |
+| Cấu hình mapping Model → Mẫu tem | **A460** (STB_ModelLabelInfo) |
 | In tem theo nhiều định dạng | **B756**, **B767**, **B790** |
 
 **Tìm màn hình in tem cho 1 LotNo:**
 ```sql
--- Kiểm tra LotNo đang dùng màn nào để in
-SELECT SO.ScreenName, SO.Caption, SO.ProcedureName
-FROM SmartFramework.dbo.STB_ScreenObjects SO
-WHERE SO.ProcedureName LIKE '%Label%Print%'
-AND SO.ObjectType = 'Action'
+-- Tìm các Action liên quan đến In/Tem trong ScreenObjects
+SELECT ScreenName, ObjectName, Caption, ObjectType
+FROM SmartFramework.dbo.STB_ScreenObjects
+WHERE (ObjectName LIKE '%Print%' OR ObjectName LIKE '%Label%')
+  AND ObjectType = 'Action'
+
+-- Hoặc tìm các Stored Procedure in tem trong DB SmartFactoryV2
+SELECT name FROM sys.procedures 
+WHERE name LIKE '%Label%Print%' OR name LIKE '%Print%Label%'
 ```
 
 ---
@@ -116,13 +122,13 @@ AND SO.ObjectType = 'Action'
 **Triệu chứng:** Vào B767 in tem nhưng format bị sai hoặc không ra template đúng.
 
 ```sql
--- Kiểm tra template đang gán cho model
+-- Kiểm tra template đang gán cho model (Z530)
 SELECT * FROM SmartFramework.dbo.STB_LabelInfo
 WHERE FormatName LIKE '%[Tên/Mã Model]%'
 AND IsApproval = 1
 ORDER BY ApplyDate DESC
 
--- Kiểm tra mapping Z530
+-- Kiểm tra mapping A460 (STB_ModelLabelInfo)
 SELECT * FROM STB_ModelLabelInfo WHERE ModelCode = 'Mã_Model'
 ```
 
@@ -132,16 +138,16 @@ SELECT * FROM STB_ModelLabelInfo WHERE ModelCode = 'Mã_Model'
 
 **Checklist:**
 ```
-□ 1. A460 — Tạo/chọn mẫu tem (Format Name), set IsApproval = 1
-□ 2. Z530 — Map Model → FormatName trong STB_ModelLabelInfo
+□ 1. Z530 — Tạo/chọn mẫu tem (Format Name) trong STB_LabelInfo, set IsApproval = 1
+□ 2. A460 — Map Model → FormatName trong STB_ModelLabelInfo
 □ 3. F110 — Bật IsLotUse = 1, IsUseBarcode = 1 cho mã NVL
 □ 4. Test in thử 1 tem → Xác nhận format đúng
 ```
 
-**SQL thêm mapping Z530:**
+**SQL thêm mapping A460:**
 ```sql
 INSERT INTO STB_ModelLabelInfo (ModelCode, LabelType, FormatName, CreateDateTime, CreateUserID)
-VALUES ('MÃ_MODEL', 'AssembleLabel', 'Tên_Format_Trong_A460', GETDATE(), 'vinaadmin')
+VALUES ('MÃ_MODEL', 'AssembleLabel', 'Tên_Format_Trong_Z530', GETDATE(), 'vinaadmin')
 ```
 
 *Cập nhật: 2026-05-17*

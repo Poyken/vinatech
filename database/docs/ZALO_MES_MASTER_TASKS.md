@@ -4,6 +4,7 @@
 
 ## 🟢 Đang Xử Lý (In Progress)
 * **Task 7:** Lỗi "Thiếu thiết lập Vỏ Nhôm" model 3562 (16/05/2026) - *Đã xác minh (17/05/2026): Bảng `STB_AluCaseMapping_VVT` KHÔNG TỒN TẠI trong DB. Logic vỏ nhôm hardcode trong SP `usp_Vietnam_RawMaterialInputHist_uid`. Chỉ có thể fix bằng cách sửa SP (thêm mã vỏ vào NOT IN list). Đã cung cấp hướng dẫn, chờ user deploy lại SP.*
+* **Task 8:** Lỗi unique constraint màn HN544 mã PKQN2100175 (21/05/2026) - *Đang xử lý: Lỗi do SP `usp_GetMaterialLotInfo_Packing_VVT_F3` trả về 2 dòng khi quét mã cha chưa phân tách (gộp túi bóng). Đang chuẩn bị script hủy giao dịch lỗi và script sửa SP triệt để.*
 
 ---
 

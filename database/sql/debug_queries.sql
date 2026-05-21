@@ -276,7 +276,7 @@ DECLARE @Barcode NVARCHAR(50) = 'VVQN1220001E17'
 SELECT
     POI.PONo,
     POI.MaterialCode,
-    POI.PlannedQty,
+    POI.PlanQty,
     POI.ProdFinishQty,
     POI.POType,
     POI.CompanyCode,

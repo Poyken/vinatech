@@ -43,7 +43,7 @@ $poNo = sqlcmd -S $server -d $database -U $user -P $password -C -Q "SELECT PONo 
 $poNo = $poNo.Trim()
 
 if ($poNo -ne "" -and $poNo -ne "PONo") {
-    $sql3 = "SELECT PONo, MaterialCode, PlannedQty, ProdFinishQty, POType, IsFinish FROM STB_ProductionOrderInfo WHERE PONo = '$poNo'"
+    $sql3 = "SELECT PONo, MaterialCode, PlanQty, ProdFinishQty, POType, IsFinish FROM STB_ProductionOrderInfo WHERE PONo = '$poNo'"
     $result3 = sqlcmd -S $server -d $database -U $user -P $password -C -Q $sql3 -W -s "," -h -1
     Write-Host $result3
 }
