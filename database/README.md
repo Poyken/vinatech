@@ -11,8 +11,8 @@
 ```
 database/
 ├── README.md                    # File này - Entry point
+├── AI_CONFIG.md                 # Hướng dẫn AI debug lỗi & cấu hình AI
 ├── docs/                        # Tất cả documentation
-│   ├── AGENTS.md               # Hướng dẫn AI debug lỗi
 │   ├── DATABASE_SCHEMA_QUICKREF.md  # Schema nhanh
 │   ├── DataFlow.md             # Data flow
 │   ├── MES_QUICK_START_GUIDE.md  # Quick start guide
@@ -21,8 +21,7 @@ database/
 │   ├── MASTER_DECISION_TREE.md  # Decision tree
 │   ├── INTELLIGENT_ROUTING.md  # Intelligent routing
 │   ├── TOP_10_COMMON_ERRORS.md  # Top 10 lỗi thường gặp
-│   ├── OPTIMIZED_QUICK_REFERENCE.md  # Cheat sheet
-│   └── ZALO_MES_MASTER_TASKS.md  # Tasks từ Zalo
+│   └── OPTIMIZED_QUICK_REFERENCE.md  # Cheat sheet
 ├── scripts/                     # Tất cả PowerShell scripts
 │   ├── auto_debug_barcode.ps1  # Auto debug barcode
 │   ├── auto_check_common_issues.ps1  # Check lỗi thường gặp
@@ -40,26 +39,12 @@ database/
 │   ├── KB_05_QC_ELECTRODE.md   # QC/Điện cực
 │   ├── KB_06_MASTER_DATA_TOOLS.md  # Master Data
 │   ├── KB_07_GROUPWARE_INTEGRATION.md  # Groupware
+│   ├── KB_08_KHO_THANH_PHAM_HN.md  # Kho thành phẩm Hà Nam
+│   ├── KB_09_IN_TEM_LABEL.md   # In tem Label
 │   ├── KB_05_TRACE_BUG_METHODOLOGY.md  # Trace bug
-│   ├── Vinatech_MES_Complete_DataFlow.md  # Data flow đầy đủ
-│   └── Lỗi trên NAIS System_Tái bản.docx
+│   └── Vinatech_MES_Complete_DataFlow.md  # Data flow đầy đủ
 ├── GROUPWARE/                   # Groupware documentation
-│   ├── extracted_text.txt       # Text extract từ 14 PPTX
-│   ├── Hướng dẫn Draft Document.pptx
-│   ├── Hướng dẫn Finished Good warehouse.pptx
-│   ├── Hướng dẫn Form Yêu cầu tuyển dụng.pptx
-│   ├── Hướng dẫn Form nghỉ việc.pptx
-│   ├── Hướng dẫn Groupware_Form đi công tác.pptx
-│   ├── Hướng dẫn Groupware_Form đăng ký nhà thầu.pptx
-│   ├── Hướng dẫn Groupware_Form đăng ký đi làm ngày lễ.pptx
-│   ├── Hướng dẫn Groupware_Yêu cầu mua.pptx
-│   ├── Hướng dẫn groupware_Yêu cầu thanh toán.pptx
-│   ├── Hướng dẫn sửa đổi BOM trên ERP và Groupware.pptx
-│   ├── Hướng dẫn tạo PO trên Groupware.pptx
-│   ├── Hướng dẫn tạo PO và Kế hoạch ngày trên Groupware.pptx
-│   ├── Hướng dẫn đăng ký các loại code.pptx
-│   ├── [GROUPWARE] Purchase Manual.pptx
-│   └── Bee Logistics_Vina tech_By_Air_Inv-2925431946.pdf
+│   └── extracted_text_utf8.txt  # Text extract từ 14 PPTX
 └── .windsurf/                   # Windsurf plans
 ```
 
@@ -110,7 +95,7 @@ database/
 - **KB_05_TRACE_BUG_METHODOLOGY.md** - Phương pháp trace bug
 
 ### Groupware (GROUPWARE/)
-- **extracted_text.txt** - Nội dung đầy đủ từ 14 PPTX files
+- **extracted_text_utf8.txt** - Nội dung đầy đủ từ 14 PPTX files
 
 ---
 

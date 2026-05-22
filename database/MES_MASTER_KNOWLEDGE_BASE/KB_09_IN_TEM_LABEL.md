@@ -151,3 +151,43 @@ VALUES ('MÃ_MODEL', 'AssembleLabel', 'Tên_Format_Trong_Z530', GETDATE(), 'vina
 ```
 
 *Cập nhật: 2026-05-17*
+
+---
+
+## 8. 🏷️ Hướng Dẫn Thiết Kế & Triển Khai Tem Khách Hàng Phoenix Contact
+
+(Tham khảo thêm từ file hướng dẫn cũ)
+
+**1. Phân tích Luồng Dữ liệu (Data Logic)**
+*   **Model:** `VEC3R0367QG` (3562)
+    *   **Mã hệ thống hỗ trợ:** `ECVT30-197` (Active) và `ECVT30-098` (Old).
+*   **Datecode:** Lấy từ bảng `STB_SetInfo`, cột `InputJobDate` (Đây là ngày ghi nhận tại công đoạn cuốn).
+*   **Quy cách in:** In theo lô hàng (`LotNo` hoặc `PackingID`) tại trạm đóng gói.
+*   **Số lượng:** 120 pcs/thùng.
+
+**2. Các bước Triển khai Hệ thống**
+*   **Bước 1: Thiết kế mẫu tem trong Z530 (Label Design)**
+    *   **Label Type:** `Phoenix_Label`
+    *   **Format Name:** `Phoenix_Contact_V1`
+    *   **Kích thước:** 80mm x 50mm (8x5 cm).
+    *   **Nội dung:** Gán biến `@DateCode` để hiển thị định dạng `YYMMDD`.
+*   **Bước 2: Viết Stored Procedure lấy dữ liệu in**
+    *   Sử dụng SP `usp_Vietnam_PhoenixContactLabelPrint_get` (đã có sẵn).
+*   **Bước 3: Cấu hình màn hình in tem mới (B790 - Giao diện kiểu B756)**
+    *   **Ô nhập liệu:** `Number Label` (Mặc định = 1).
+    *   Hệ thống gọi SP `usp_Vietnam_PhoenixContactLabelPrint_get` kèm theo tham số số lượng.
+
+**3. Cách Design tem trong Z530 (Nâng cao)**
+1.  **Datecode:** `@DateCode` (Định dạng YYMMDD).
+2.  **Số thứ tự tem:** `@CurrentIndex / @TotalQty` (Ví dụ: 1/3, 2/3).
+3.  **Mã vạch:** Chứa thông tin `PackingID` để truy vết thùng hàng.
+
+**4. Hướng dẫn Test & Nghiệm thu**
+*   **Test Logic dữ liệu (SQL)**
+    ```sql
+    EXEC [dbo].[usp_Vietnam_PhoenixContactLabelPrint_get] 
+         @pPackingID = 'MÃ_PACKING_THỰC_TẾ', 
+         @pNumberLabel = 2
+    ```
+    *Kỳ vọng:* Trả ra 2 dòng, cột `DateCode` có định dạng `YYMMDD`.
+```

@@ -182,3 +182,53 @@ WHERE PackingOutPutFinishGoodsID = 'PKHN023117'
 ```
 
 *Cập nhật: 2026-05-17*
+
+---
+
+## 7. 🔄 Hướng dẫn thu hồi Lot từ F430 về kho ROH_HN_WH
+
+**Tình huống:** Cần thu hồi (revert) hàng đã xuất ở F430 về lại kho Hà Nam.
+
+**1. Cách kiểm tra tình trạng hiện tại (Script Kiểm tra)**
+```sql
+-- 1. Xem trạng thái tồn kho hiện tại (Đang ở kho nào?)
+SELECT LotID, MaterialWarehouseCode, MaterialLocationCode, CurrentQty, CreateDateTime, ChangeDateTime
+FROM STB_MaterialLotInfo 
+WHERE LotID = 'ML20260407000696';
+
+-- 2. Xem lịch sử xuất nhập (Tìm ID để xóa)
+-- Tìm dòng có WarehouseInOutCode = 'O' (Output) và Target = 'ROUTE_HN_WH'
+SELECT MaterialWarehouseInOutHistNo, SourceMaterialWarehouseCode, TargetMaterialWarehouseCode, CreateDateTime, CreateUserID
+FROM STB_MaterialWarehouseInOutHist 
+WHERE LotID = 'ML20260407000696' 
+ORDER BY CreateDateTime DESC;
+
+-- 3. Xem vị trí gốc lúc mới nhập kho (Để biết cần trả về đâu)
+SELECT LotID, MaterialLocationCode 
+FROM STB_MaterialDocLotInfo 
+WHERE LotID = 'ML20260407000696';
+```
+
+**2. Các bước xử lý (SQL Script Revert)**
+```sql
+BEGIN TRAN;
+
+-- 1. Xóa lịch sử xuất kho tại F430 (Mã giao dịch lấy từ bước trên)
+DELETE FROM STB_MaterialWarehouseInOutHist 
+WHERE MaterialWarehouseInOutHistNo = 'MÃ_GIAO_DỊCH_CẦN_XÓA';
+
+-- 2. Cập nhật lại trạng thái tồn kho cho Lot (Về ROH_HN_WH_01)
+UPDATE STB_MaterialLotInfo
+SET 
+    MaterialWarehouseCode = 'ROH_HN_WH',
+    MaterialLocationCode = 'ROH_HN_WH_01'
+WHERE LotID = 'ML20260407000696';
+
+-- KIỂM TRA TRƯỚC KHI CHỐT:
+-- SELECT * FROM STB_MaterialLotInfo WHERE LotID = 'ML20260407000696';
+-- COMMIT; Hoặc ROLLBACK;
+```
+
+**Tại sao phải xóa ở `STB_MaterialWarehouseInOutHist`?**
+Vì màn hình **F430** ghi nhận mọi lượt xuất/nhập vào bảng này. Nếu chỉ sửa kho ở bảng tồn kho mà không xóa lịch sử, báo cáo xuất nhập tồn cuối tháng sẽ bị lệch.
+```

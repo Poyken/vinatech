@@ -184,6 +184,67 @@ WHERE LotID = 'ML...'
 
 ---
 
+### 7.8 Màn hình C486 (Error Data Sorting): Nâng cấp giao diện (Thêm cột, Rebuild bảng & Fix layout grid)
+
+**Yêu cầu:** Thêm 2 cột mới cho màn hình C486: `Invoice` (nằm trước `LotNo`) và `Note` (nằm sau `Total`) cho cả 2 nguyên vật liệu **ALCase** và **Plate**, giữ nguyên dữ liệu lịch sử và đúng thứ tự cột khi `SELECT *`.
+
+#### 1. Phương pháp Rebuild bảng để giữ đúng thứ tự cột vật lý:
+Do SQL Server không có lệnh `ALTER TABLE ADD COLUMN ... BEFORE/AFTER` giống MySQL, giải pháp là tạo bảng tạm `_NEW` đúng thứ tự -> Copy dữ liệu -> Drop bảng cũ -> Rename bảng mới:
+```sql
+BEGIN TRANSACTION;
+BEGIN TRY
+    -- B1. Tạo bảng tạm với đúng thứ tự cột mong muốn
+    CREATE TABLE [dbo].[STB_VVT_SortingErrorData_ALCase_NEW] (
+        [ID] INT IDENTITY(1,1) NOT NULL,
+        ...
+        [MaterialCode] NVARCHAR(50) NULL,
+        [Invoice] NVARCHAR(100) NULL, -- << Cột mới đặt trước LotNo
+        [LotNo] NVARCHAR(50) NULL,
+        ...
+        [Total] INT NULL,
+        [Note] NVARCHAR(500) NULL, -- << Cột mới đặt sau Total
+        [CreateUserID] VARCHAR(20) NULL, ...
+    );
+
+    -- B2. Bật IDENTITY_INSERT để copy dữ liệu lịch sử (cột mới để NULL)
+    SET IDENTITY_INSERT [dbo].[STB_VVT_SortingErrorData_ALCase_NEW] ON;
+    INSERT INTO [dbo].[STB_VVT_SortingErrorData_ALCase_NEW] (ID, [Date], ..., Invoice, LotNo, ..., Total, Note, ...)
+    SELECT ID, [Date], ..., NULL AS Invoice, LotNo, ..., Total, NULL AS Note, ...
+    FROM [dbo].[STB_VVT_SortingErrorData_ALCase];
+    SET IDENTITY_INSERT [dbo].[STB_VVT_SortingErrorData_ALCase_NEW] OFF;
+
+    -- B3. Drop bảng cũ và đổi tên bảng mới
+    DROP TABLE [dbo].[STB_VVT_SortingErrorData_ALCase];
+    EXEC sp_rename 'STB_VVT_SortingErrorData_ALCase_NEW', 'STB_VVT_SortingErrorData_ALCase';
+    EXEC sp_rename 'PK_STB_VVT_SortingErrorData_ALCase_NEW', 'PK_STB_VVT_SortingErrorData_ALCase';
+
+    COMMIT TRANSACTION;
+END TRY
+BEGIN CATCH
+    IF @@TRANCOUNT > 0 ROLLBACK TRANSACTION;
+    THROW;
+END CATCH
+```
+
+#### 2. Cập nhật các Stored Procedure:
+* **SP GET (`usp_VVT_SortingErrorData_ALCase_get` / `usp_VVT_SortingErrorData_Plate_get`):** 
+  Thêm cột mới vào đúng vị trí trong danh sách SELECT. Tránh lặp alias vô ích như `Note, Note AS [Note]`. Giữ nguyên ép kiểu `CAST(Qty AS VARCHAR(10))` để tránh lỗi định dạng khi người dùng copy-paste từ Excel vào Grid trên giao diện.
+* **SP IUD (`usp_VVT_SortingErrorData_ALCase_iud` / `usp_VVT_SortingErrorData_Plate_iud`):** 
+  Do SmartFramework đẩy dữ liệu lưu dưới dạng `@pXml`, cần thêm map các cột mới (`Invoice`, `Note`) ở 3 vị trí trong SP: phần `UPDATE T SET ...`, cấu trúc `WITH` của `OPENXML` (cho cả Update và Insert) và lệnh `INSERT INTO ... SELECT ...`.
+
+#### 3. Xử lý lỗi layout grid (Ví dụ: Dư cột `Note1` trên giao diện):
+* **Triệu chứng:** Cột `Note1` hiện ra trên Grid dù trong cấu trúc bảng DB không có cột này.
+* **Nguyên nhân:** Khi người dùng thiết kế giao diện và nhấn **Save Layout**, SmartFramework chụp lại cấu hình lưới và lưu dưới dạng XML vào bảng `SmartFramework.dbo.STB_ScreenLayoutInfo`. Nếu trước đó có cột `Note1` (do gõ nhầm hoặc test), grid sẽ tự khôi phục cột này lên giao diện.
+* **Cách check nhanh bằng SQL:**
+  ```sql
+  SELECT Name, DATALENGTH(XmlLayout) AS XmlLength, CHARINDEX('Note1', XmlLayout) AS Note1Position
+  FROM SmartFramework.dbo.STB_ScreenLayoutInfo WITH (NOLOCK)
+  WHERE Name = 'ErrorDataSorting'
+  ```
+* **Cách sửa triệt để:** Mở màn hình **C486**, kéo bỏ cột `Note1` ra khỏi lưới (hoặc ẩn đi trong Column Chooser), sau đó chuột phải chọn **Save Layout** để cập nhật đè cấu hình XML sạch lên database.
+
+---
+
 ## 8. ⚡ Điện cực (Electrode)
 
 ### 8.1 Chỉnh chiều rộng Slitting (B552)

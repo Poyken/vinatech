@@ -287,3 +287,39 @@ Common error → docs/TOP_10_COMMON_ERRORS.md
 ---
 
 **AI đã cấu hình để hoạt động tối ưu với structure mới!**
+
+---
+
+## 🏢 THÔNG TIN HỆ THỐNG (SYSTEM INFO)
+
+| Thông tin | Giá trị |
+|-----------|---------|
+| **Server** | `dbserver.hycap.co.kr,5398` |
+| **Database** | `SmartFactoryV2` |
+| **Framework DB** | `SmartFramework` |
+| **Username** | `vinaadmin` |
+| **Platform** | NAIS / SmartFramework by Awoo |
+| **Nhà máy** | VVT_F1 = Bắc Ninh, VVT_F2 = Bắc Giang, VVT_F3 = Hà Nam, VVT_F4 = Bắc Giang 2 |
+
+---
+
+## ⚡ COMMON QUERIES SẴN SÀNG (TỪ AGENTS)
+
+Khi cần debug nhanh:
+
+```sql
+-- 1. Golden Query - full traceability
+-- → Dùng template #1 trong debug_queries.sql
+
+-- 2. Check HOLD/Expiry
+-- → Dùng template #3 trong debug_queries.sql
+
+-- 3. Check FIFO (Lot nào đang chặn)
+-- → Dùng template #4 trong debug_queries.sql
+
+-- 4. Check NVL scan tại V-23/V-24
+-- → Dùng template #5 trong debug_queries.sql
+
+-- 5. Check QC status
+-- → Dùng template #6 trong debug_queries.sql
+```

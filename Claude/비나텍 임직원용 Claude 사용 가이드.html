@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light" style=""><head><meta charset="utf-8">
+    
+    
+    <title>Claude 사용 가이드 — 비나텍</title>
+    
+    <style>
+      :root {
+        --navy: #1b2b5e;
+        --lime: #7ac143;
+        --teal: #2ba67f;
+        --orange: #f39c3d;
+        --red: #e74c3c;
+        --bg: #ffffff;
+        --section-bg: #f3f4f6;
+        --gray-text: #6b7280;
+        --dark-text: #1f2937;
+        --light-gray: #f8f9fa;
+        --border: #e5e7eb;
+      }
+
+      body {
+        font-family:
+          'Pretendard',
+          'Noto Sans KR',
+          -apple-system,
+          BlinkMacSystemFont,
+          sans-serif;
+        letter-spacing: -0.01em;
+        line-height: 1.6;
+        color: var(--dark-text);
+        background: #e8eaed;
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      .page {
+        max-width: 794px;
+        margin: 24px auto;
+        background: white;
+        padding: 40px 44px;
+      }
+
+      /* Header */
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+      }
+      .header-left {
+        display: flex;
+        flex-direction: column;
+      }
+      .header-tag {
+        font-size: 11px;
+        letter-spacing: 0.15em;
+        color: var(--navy);
+        font-weight: 700;
+      }
+      .header-title {
+        font-size: 38px;
+        font-weight: 800;
+        color: var(--navy);
+        margin: 6px 0 0 0;
+      }
+      .header-sub {
+        font-size: 14px;
+        color: var(--gray-text);
+        margin-top: 4px;
+      }
+      .header-right img {
+        width: 140px;
+        height: auto;
+      }
+      .divider {
+        height: 3px;
+        background: var(--lime);
+        margin-top: 18px;
+        border-radius: 2px;
+      }
+
+      /* Common */
+      .section-chip {
+        display: inline-block;
+        background: var(--navy);
+        color: white;
+        padding: 6px 14px;
+        border-radius: 999px;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        margin-bottom: 16px;
+      }
+      .section-chip.red {
+        background: #c0392b;
+      }
+      .section-chip.teal {
+        background: var(--teal);
+      }
+      .section-chip.orange {
+        background: var(--orange);
+      }
+
+      /* Section 1 */
+      .section-1 {
+        margin-top: 40px;
+      }
+      .section-1-content {
+        display: flex;
+        gap: 24px;
+        align-items: center;
+      }
+      .section-1-text {
+        flex: 7;
+      }
+      .price-highlight-wrap {
+        flex: 3;
+        display: flex;
+        justify-content: flex-end;
+      }
+      .section-1-text h2 {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--gray-text);
+        line-height: 1.45;
+        margin: 0;
+        letter-spacing: -0.01em;
+      }
+      .section-1-text h2 strong {
+        color: var(--navy);
+        font-weight: 700;
+      }
+      .section-1-text p {
+        font-size: 14.5px;
+        color: var(--dark-text);
+        line-height: 1.7;
+        margin-top: 12px;
+      }
+      .avg-emphasis {
+        font-size: 21px;
+        font-weight: 800;
+        color: var(--navy);
+        line-height: 1.45;
+        margin-top: 10px;
+        letter-spacing: -0.015em;
+      }
+      .avg-emphasis .lime-hl {
+        background: rgba(122, 193, 67, 0.25);
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-weight: 800;
+        color: var(--navy);
+      }
+      .avg-emphasis .src {
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--gray-text);
+      }
+      .extend-line {
+        margin-top: 10px;
+        font-size: 14.5px;
+        color: var(--dark-text);
+        line-height: 1.6;
+      }
+      .extend-line .under {
+        border-bottom: 2px solid var(--navy);
+        padding-bottom: 1px;
+        font-weight: 600;
+      }
+      .price-highlight {
+        width: 144px;
+        background: var(--navy);
+        color: white;
+        padding: 16px 14px;
+        border-radius: 12px;
+        text-align: center;
+        position: relative;
+        box-shadow: 0 4px 14px rgba(27, 43, 94, 0.16);
+      }
+      .price-highlight .corner-tag {
+        position: absolute;
+        top: -8px;
+        right: 10px;
+        background: var(--lime);
+        color: white;
+        font-size: 9px;
+        font-weight: 800;
+        letter-spacing: 0.04em;
+        padding: 2px 7px;
+        border-radius: 999px;
+      }
+      .price-highlight .label-top {
+        font-size: 10px;
+        color: var(--lime);
+        letter-spacing: 0.1em;
+        font-weight: 700;
+      }
+      .price-highlight .amount {
+        font-size: 38px;
+        font-weight: 900;
+        line-height: 1;
+        margin: 4px 0 2px;
+        color: white;
+        letter-spacing: -0.02em;
+      }
+      .price-highlight .label-bottom {
+        font-size: 11px;
+        color: #c7d2e8;
+      }
+      .price-highlight .label-note {
+        font-size: 9.5px;
+        color: #e2e8f0;
+        border-top: 1px solid rgba(122, 193, 67, 0.5);
+        margin-top: 7px;
+        padding-top: 4px;
+        letter-spacing: 0.02em;
+      }
+
+      /* Section 2 */
+      .section-2 {
+        margin-top: 40px;
+      }
+      .intro-statement {
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--navy);
+        line-height: 1.45;
+      }
+      .intro-statement .strong-line {
+        display: inline-block;
+        font-size: 26px;
+        font-weight: 800;
+        color: var(--navy);
+        line-height: 1.4;
+        margin-top: 4px;
+      }
+      .intro-statement .lime-hl {
+        background: rgba(122, 193, 67, 0.22);
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-weight: 800;
+      }
+      .info-hint {
+        margin-top: 14px;
+        background: #f8f9fa;
+        border: 1px dashed #cbd5e1;
+        border-radius: 8px;
+        padding: 9px 14px;
+        font-size: 12.5px;
+        color: #374151;
+        font-weight: 500;
+      }
+      .controllable-callout {
+        margin-top: 16px;
+        background: #f4faea;
+        border-left: 5px solid var(--lime);
+        border-radius: 8px;
+        padding: 14px 18px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+      }
+      .controllable-callout .title {
+        font-size: 15px;
+        font-weight: 800;
+        color: var(--navy);
+        line-height: 1.45;
+      }
+      .controllable-callout .desc {
+        font-size: 12.5px;
+        color: #374151;
+        margin-top: 6px;
+        line-height: 1.55;
+      }
+      .intro-sub {
+        font-size: 13px;
+        color: var(--gray-text);
+        margin-top: 8px;
+      }
+      .usage-panel {
+        margin-top: 20px;
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 22px 24px;
+      }
+      .panel-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .panel-title {
+        font-size: 16px;
+        font-weight: 700;
+        color: #1f2937;
+      }
+      .panel-badge {
+        background: var(--lime);
+        color: white;
+        padding: 3px 10px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 700;
+      }
+      .panel-divider {
+        margin: 14px 0;
+        border-top: 1px solid #f3f4f6;
+      }
+      .usage-item-header {
+        display: flex;
+        justify-content: space-between;
+      }
+      .usage-label {
+        font-size: 14px;
+        font-weight: 600;
+      }
+      .usage-value {
+        font-size: 13px;
+        color: var(--gray-text);
+      }
+      .usage-subtext {
+        font-size: 12px;
+        color: var(--gray-text);
+        margin-top: 2px;
+      }
+      .progress-bar {
+        height: 8px;
+        background: #e5e7eb;
+        border-radius: 999px;
+        margin-top: 8px;
+        overflow: hidden;
+      }
+      .progress-fill {
+        width: 49%;
+        height: 100%;
+        background: #3b82f6;
+        border-radius: 999px;
+      }
+      .progress-fill-16 {
+        width: 16%;
+      }
+      .progress-fill-0 {
+        width: 0%;
+      }
+      .usage-item-2 {
+        margin-top: 18px;
+      }
+      .usage-link {
+        color: #3b82f6;
+        font-size: 12px;
+        text-decoration: underline;
+      }
+      .usage-sub-item {
+        margin-top: 12px;
+        padding-left: 8px;
+      }
+
+      .limit-cards {
+        display: flex;
+        gap: 14px;
+        margin-top: 22px;
+      }
+      .limit-card {
+        flex: 1;
+        background: white;
+        border: 2px solid;
+        border-radius: 12px;
+        padding: 16px 14px;
+      }
+      .limit-card.red {
+        border-color: var(--red);
+      }
+      .limit-card.navy {
+        border-color: var(--navy);
+      }
+      .limit-card.orange {
+        border-color: var(--orange);
+      }
+
+      .card-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .card-icon {
+        font-size: 22px;
+      }
+      .card-title {
+        font-size: 14.5px;
+        font-weight: 700;
+      }
+      .card-list {
+        list-style: none;
+        padding: 0;
+        margin: 10px 0 0 0;
+      }
+      .card-list li {
+        font-size: 12.5px;
+        color: #374151;
+        padding: 3px 0 3px 12px;
+        position: relative;
+        line-height: 1.5;
+      }
+      .card-list.red li::before {
+        content: '•';
+        position: absolute;
+        left: 0;
+        color: var(--red);
+      }
+      .card-list.navy li::before {
+        content: '•';
+        position: absolute;
+        left: 0;
+        color: var(--navy);
+      }
+      .card-list.orange li::before {
+        content: '•';
+        position: absolute;
+        left: 0;
+        color: var(--orange);
+      }
+
+      .warning-box {
+        background: #fef2f2;
+        border: 1px solid var(--red);
+        border-radius: 8px;
+        padding: 8px 10px;
+        font-size: 12px;
+        color: var(--red);
+        font-weight: 700;
+        margin: 10px 0;
+      }
+      .warning-strip {
+        margin-top: 18px;
+        background: var(--red);
+        color: white;
+        padding: 16px 20px;
+        border-radius: 12px;
+        text-align: center;
+        border: 2px solid #b03124;
+        box-shadow: 0 4px 14px rgba(231, 76, 60, 0.22);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+      }
+      .warning-strip .warn-icon {
+        font-size: 30px;
+        line-height: 1;
+      }
+      .warning-strip .warn-text {
+        text-align: left;
+      }
+      .warning-strip .warn-main {
+        font-size: 16px;
+        font-weight: 800;
+        line-height: 1.3;
+      }
+      .warning-strip .warn-sub {
+        font-size: 12.5px;
+        font-weight: 500;
+        margin-top: 3px;
+        opacity: 0.95;
+      }
+      .channel-note {
+        margin-top: 10px;
+        font-size: 11.5px;
+        color: var(--gray-text);
+        text-align: center;
+      }
+
+      /* Section 3 */
+      .section-3 {
+        margin-top: 40px;
+      }
+      .model-table {
+        width: 100%;
+        border-collapse: collapse;
+        border-radius: 12px;
+        overflow: hidden;
+        font-size: 13px;
+      }
+      .model-table thead tr {
+        background: var(--navy);
+        color: white;
+      }
+      .model-table th {
+        padding: 12px;
+        font-weight: 700;
+        text-align: left;
+        font-size: 13px;
+      }
+      .model-table tbody tr td {
+        padding: 13px 12px;
+        vertical-align: middle;
+        border-bottom: 1px solid #f3f4f6;
+        line-height: 1.55;
+      }
+      .model-table tbody tr:nth-child(odd) {
+        background: #f8f9fa;
+      }
+      .model-table tbody tr:nth-child(even) {
+        background: white;
+      }
+      .model-table th.usecase-col {
+        color: #d8f0b9;
+      }
+      .model-table td.usecase-cell {
+        background: #eaf7dd;
+        color: var(--navy);
+        font-weight: 600;
+      }
+      .model-table tbody tr:nth-child(odd) td.usecase-cell {
+        background: #e3f2cf;
+      }
+      .model-name {
+        font-weight: 700;
+        color: var(--navy);
+      }
+      .token-dots {
+        font-family: monospace;
+        letter-spacing: 2px;
+        color: var(--navy);
+      }
+      .token-empty {
+        color: #d1d5db;
+      }
+      .token-meter {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+      }
+      .token-meter .bar {
+        width: 100px;
+        height: 10px;
+        background: #e5e7eb;
+        border-radius: 999px;
+        overflow: hidden;
+        border: 1px solid #d1d5db;
+      }
+      .token-meter .bar > span {
+        display: block;
+        height: 100%;
+        border-radius: 999px;
+      }
+      .token-meter .fill-100 {
+        width: 100%;
+        background: var(--navy);
+      }
+      .token-meter .fill-75 {
+        width: 75%;
+        background: var(--teal);
+      }
+      .token-meter .fill-50 {
+        width: 50%;
+        background: var(--lime);
+      }
+      .token-meter .fill-25 {
+        width: 25%;
+        background: #9ca3af;
+      }
+      .token-meter .label {
+        font-size: 11.5px;
+        font-weight: 700;
+        color: #374151;
+      }
+
+      /* Section 4 */
+      .section-4 {
+        margin-top: 40px;
+      }
+      .ui-flow {
+        margin-top: 16px;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+      }
+      .flow-step {
+        display: flex;
+        gap: 16px;
+        align-items: flex-start;
+      }
+      .step-num {
+        flex: 0 0 36px;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--navy);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 15px;
+        margin-top: 4px;
+      }
+      .step-body {
+        flex: 1;
+        min-width: 0;
+      }
+      .step-caption {
+        font-size: 12.5px;
+        color: var(--navy);
+        font-weight: 700;
+        margin-bottom: 8px;
+      }
+      .flow-arrow {
+        display: flex;
+        justify-content: center;
+        margin: 6px 0;
+        font-size: 22px;
+        color: var(--lime);
+        font-weight: 700;
+        line-height: 1;
+      }
+      .chat-mockup {
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 14px 16px;
+        max-width: 460px;
+      }
+      .placeholder-text {
+        font-size: 12px;
+        color: #9ca3af;
+      }
+      .model-btn {
+        margin-top: 40px;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        background: #f3f4f6;
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 600;
+        color: #374151;
+        border: 1.5px solid var(--lime);
+      }
+      .callout {
+        margin-top: 8px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px;
+        color: var(--navy);
+        font-weight: 600;
+      }
+      .callout-circle {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: var(--lime);
+        color: white;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 12px;
+      }
+
+      .dropdown-popup {
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 8px 0;
+        font-size: 12.5px;
+        max-width: 460px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+      }
+      .popup-item {
+        padding: 8px 14px;
+      }
+      .popup-title {
+        font-weight: 600;
+        color: #1f2937;
+      }
+      .popup-desc {
+        font-size: 11px;
+        color: var(--gray-text);
+        margin-top: 2px;
+      }
+      .lime-check {
+        color: var(--lime);
+        margin-right: 4px;
+      }
+      .popup-divider {
+        border-top: 1px solid #f3f4f6;
+        margin: 6px 0;
+      }
+      .toggle-row {
+        padding: 8px 14px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .toggle-switch {
+        width: 28px;
+        height: 16px;
+        background: #d1d5db;
+        border-radius: 999px;
+        position: relative;
+      }
+      .toggle-circle {
+        width: 12px;
+        height: 12px;
+        background: white;
+        border-radius: 50%;
+        position: absolute;
+        top: 2px;
+        left: 2px;
+      }
+
+      .expanded-popup {
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 8px 0;
+        font-size: 12.5px;
+        max-width: 460px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+      }
+      .expanded-item-plain {
+        padding: 9px 14px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+      }
+      .expanded-item-plain .left {
+        font-weight: 700;
+        color: var(--navy);
+        font-size: 13px;
+      }
+      .expanded-item-plain .left .star {
+        color: #f39c12;
+        margin-right: 4px;
+        font-size: 13px;
+      }
+      .expanded-item-plain .pill {
+        display: inline-block;
+        background: #5da82f;
+        color: white;
+        padding: 3px 9px;
+        border-radius: 999px;
+        font-size: 10.5px;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+      }
+      .expanded-item-highlight + .expanded-item-highlight {
+        margin-top: 4px;
+      }
+      .expanded-item-highlight .star {
+        color: var(--orange);
+        margin-right: 2px;
+      }
+      .step-callout-list {
+        margin-top: 10px;
+      }
+      .popup-label {
+        padding: 6px 14px;
+        font-size: 11px;
+        color: var(--gray-text);
+        font-weight: 700;
+        border-bottom: 1px solid #f3f4f6;
+      }
+      .expanded-item-highlight {
+        padding: 10px 14px;
+        background: #f0f9e8;
+        border-left: 3px solid var(--lime);
+      }
+      .expanded-item-highlight-title {
+        font-weight: 700;
+        color: var(--navy);
+      }
+      .expanded-item-tag {
+        display: inline-block;
+        background: var(--lime);
+        color: white;
+        padding: 2px 8px;
+        border-radius: 6px;
+        font-size: 10.5px;
+        font-weight: 700;
+        margin-left: 6px;
+      }
+      .expanded-item-gray {
+        padding: 8px 14px;
+        color: #9ca3af;
+        font-size: 12px;
+      }
+      .expanded-item-gray span {
+        font-size: 10px;
+      }
+
+      .dropdown-callouts {
+        margin-top: 12px;
+      }
+
+      .tip-banner {
+        margin-top: 22px;
+        background: var(--lime); /* Fallback */
+        background: linear-gradient(90deg, var(--lime) 0%, #6bb13a 100%);
+        color: white;
+        padding: 14px 18px;
+        border-radius: 12px;
+        font-size: 14px;
+        font-weight: 700;
+        text-align: center;
+      }
+
+      /* FAQ box */
+      .faq-box {
+        margin-top: 36px;
+        background: #f8f9fa;
+        border-left: 5px solid var(--lime);
+        border-radius: 8px;
+        padding: 14px 18px;
+      }
+      .faq-box .faq-title {
+        font-size: 14px;
+        font-weight: 800;
+        color: var(--navy);
+        margin-bottom: 6px;
+      }
+      .faq-box ol {
+        margin: 0;
+        padding-left: 18px;
+      }
+      .faq-box ol li {
+        font-size: 12.5px;
+        color: #374151;
+        line-height: 1.6;
+        padding: 2px 0;
+      }
+
+      /* Footer */
+      .footer {
+        margin-top: 28px;
+        padding-top: 16px;
+        border-top: 1px solid var(--navy);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+      }
+      .footer-text {
+        flex: 1;
+        text-align: center;
+        font-size: 11.5px;
+        color: var(--gray-text);
+        letter-spacing: 0.04em;
+      }
+      .popup-star {
+        color: #f39c12;
+        margin-right: 3px;
+      }
+      .model-name .star-inline {
+        color: #f39c12;
+        margin-right: 3px;
+      }
+      .usecase-cell .rec-label {
+        display: block;
+        font-size: 10.5px;
+        font-weight: 500;
+        color: var(--gray-text);
+        margin-top: 3px;
+        letter-spacing: 0;
+      }
+
+      @media print {
+        @page {
+          size: A4;
+          margin: 0;
+        }
+        body {
+          background: white;
+        }
+        .page {
+          box-shadow: none;
+          margin: 0;
+          max-width: none;
+          padding: 30px 36px;
+        }
+        .section,
+        .usage-panel,
+        .limit-card,
+        .warning-strip,
+        .controllable-callout,
+        .faq-box,
+        .flow-step,
+        .model-table tr {
+          page-break-inside: avoid;
+          break-inside: avoid;
+        }
+      }
+    </style>
+  </head>
+  <body style="">
+    <div class="page">
+      <div class="header">
+        <div class="header-left">
+          <span class="header-tag">GUIDE FOR VINA</span>
+          <h1 class="header-title">Claude 사용 가이드</h1>
+          <div class="header-sub">요금제 · 한도 · 모델 선택</div>
+        </div>
+        <div class="header-right">
+          <img src="https://images.roa.ai/company_logo/0modJuPN.png" alt="VINATech" data-height-listener-added="true">
+        </div>
+      </div>
+      <div class="divider"></div>
+
+      <div class="section section-1">
+        <div class="section-chip">01 요금제</div>
+        <div class="section-1-content">
+          <div class="section-1-text">
+            <h2>비나텍은 <strong>Team Standard</strong> 요금제 도입</h2>
+            <div class="avg-emphasis">
+              Claude 사용자 평균 월 사용량 약 <span class="lime-hl">$30~35</span>
+              <span class="src">(출처: Anthropic)</span>
+            </div>
+            <div class="extend-line">
+              비나텍은 이를 상회하는 <strong style="color: var(--navy)">인당 월 $40 한도</strong>로 설정.<br>
+              <span class="under">한도 부족 시</span><br>
+              <span class="under">관리자에게 요청하면 증액 가능.</span>
+            </div>
+          </div>
+          <div class="price-highlight-wrap">
+            <div class="price-highlight">
+              <div class="corner-tag">비나텍 한도</div>
+              <div class="label-top">월 한도</div>
+              <div class="amount">$40</div>
+              <div class="label-bottom">/ 인</div>
+              <div class="label-note">월 / 인 · 회사 설정</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      </br></br>
+      <div class="section section-2">
+        <div class="section-chip red">02 한도 구조 · 핵심 주의사항</div>
+        <div class="intro-statement">
+          Claude는 월간 한도와 별개로<br>
+          <span class="strong-line"><span class="lime-hl">5시간 세션 한도</span> + <span class="lime-hl">주간 한도</span> 존재</span>
+        </div>
+        <div class="intro-sub">Team Standard 요금제 고정 · 회사 조절 불가 · 신중한 사용 필요</div>
+
+        <div class="info-hint">💻 Claude 좌측 메뉴 → 설정(⚙️) → 사용량 에서 직접 확인 가능</div>
+
+        <div class="usage-panel">
+          <div class="panel-header">
+            <div class="panel-title">플랜 사용량 한도</div>
+            <div class="panel-badge">Team</div>
+          </div>
+          <div class="panel-divider"></div>
+
+          <div class="usage-item">
+            <div class="usage-item-header">
+              <span class="usage-label">현재 세션</span>
+              <span class="usage-value">49% 사용됨</span>
+            </div>
+            <div class="usage-subtext">2시간 54분 후 재설정</div>
+            <div class="progress-bar">
+              <div class="progress-fill"></div>
+            </div>
+          </div>
+
+          <div class="usage-item-2">
+            <div class="usage-item-header">
+              <span class="usage-label">주간 한도</span>
+              <span class="usage-link">사용량 한도에 대해 자세히 알아보기</span>
+            </div>
+
+            <div class="usage-sub-item">
+              <div class="usage-item-header">
+                <span class="usage-label" style="font-size: 13px">모든 모델</span>
+                <span class="usage-value">16% 사용됨</span>
+              </div>
+              <div class="usage-subtext">(화) 오전 8:00에 재설정</div>
+              <div class="progress-bar">
+                <div class="progress-fill progress-fill-16"></div>
+              </div>
+            </div>
+
+            <div class="usage-sub-item">
+              <div class="usage-item-header">
+                <span class="usage-label" style="font-size: 13px">Claude Design ⓘ</span>
+                <span class="usage-value">0% 사용됨</span>
+              </div>
+              <div class="usage-subtext">아직 사용하지 않음</div>
+              <div class="progress-bar">
+                <div class="progress-fill progress-fill-0"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="limit-cards">
+          <div class="limit-card red">
+            <div class="card-header">
+              <span class="card-icon">⏱️</span>
+              <span class="card-title">5시간 세션 한도</span>
+            </div>
+            <ul class="card-list red">
+              <li>토큰 기준 차감</li>
+              <li>무거운 모델일수록 빨리 소진</li>
+            </ul>
+            <div class="warning-box">⚠️ 소진 시 재설정까지<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;대기 외 방법 없음</div>
+            <ul class="card-list red">
+              <li>사용 시 신중 관리 필요</li>
+            </ul>
+          </div>
+
+          <div class="limit-card navy">
+            <div class="card-header">
+              <span class="card-icon">📅</span>
+              <span class="card-title">주간 한도 (7일)</span>
+            </div>
+            <ul class="card-list navy">
+              <li>전체 모델 한도</li>
+              <li>각각 독립 적용</li>
+              <li>매주 정해진 요일·시각 재설정</li>
+            </ul>
+          </div>
+
+          <div class="limit-card orange">
+            <div class="card-header">
+              <span class="card-icon">💰</span>
+              <span class="card-title">월간 비용 한도</span>
+            </div>
+            <ul class="card-list orange">
+              <li>$40 / 인 (회사 설정)</li>
+              <li>관리자 증액 가능</li>
+              <li>위 두 한도와 무관</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="warning-strip">
+          <span class="warn-icon">⚠️</span>
+          <div class="warn-text">
+            <div class="warn-main">월간 비용 ≠ 5시간 / 주간 한도</div>
+            <div class="warn-sub">비용이 남아도 세션/주간 한도 소진 시 사용 차단 · 요금제 구조상 회사 조절 불가</div>
+          </div>
+        </div>
+
+        <div class="controllable-callout">
+          <div class="title">✅ 회사가 조절 가능한 것은 '월간 비용 한도'</div>
+          <div class="desc">5시간 세션 한도와 주간 한도는 Team Standard 요금제에 고정 · Anthropic 정책 · 회사 임의 조정 불가</div>
+        </div>
+
+        <div class="channel-note">claude.ai · Claude Desktop · Claude Code · 모든 채널 한도 공유</div>
+      </div>
+
+
+      </br></br>
+      <div class="section section-3">
+        <div class="section-chip teal">03 모델별 특징</div>
+        <table class="model-table">
+          <thead>
+            <tr>
+              <th style="width: 16%">모델</th>
+              <th style="width: 36%">특징</th>
+              <th style="width: 18%">토큰 소모</th>
+              <th class="usecase-col" style="width: 30%">추천 용도</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="model-name"><span class="star-inline">⭐</span>Opus 4.7</td>
+              <td>최고 성능 · 복잡한 분석 우수 · 프롬프트 명확 필요</td>
+              <td>
+                <div class="token-meter">
+                  <div class="bar"><span class="fill-100"></span></div>
+                  <div class="label">매우 높음</div>
+                </div>
+              </td>
+              <td class="usecase-cell">장문 분석 · 전략 수립<span class="rec-label">복잡한 분석 · 전략 수립 시 추천</span></td>
+            </tr>
+            <tr>
+              <td class="model-name"><span class="star-inline">⭐</span>Opus 4.6</td>
+              <td>자연스러운 대화 · 맥락 파악 우수 · 편한 대화형</td>
+              <td>
+                <div class="token-meter">
+                  <div class="bar"><span class="fill-75"></span></div>
+                  <div class="label">높음</div>
+                </div>
+              </td>
+              <td class="usecase-cell">보고서 작성 · 아이디어 논의<span class="rec-label">대화 · 보고서 작성 시 추천</span></td>
+            </tr>
+            <tr>
+              <td class="model-name"><span class="star-inline">⭐</span>Sonnet 4.6</td>
+              <td>빠르고 균형 잡힌 범용 · 기본값 추천</td>
+              <td>
+                <div class="token-meter">
+                  <div class="bar"><span class="fill-50"></span></div>
+                  <div class="label">보통</div>
+                </div>
+              </td>
+              <td class="usecase-cell">이메일/문서 · 번역 · 일반 질문<span class="rec-label">일상 업무 · 기본값 추천</span></td>
+            </tr>
+            <tr>
+              <td class="model-name">Haiku 4.5</td>
+              <td>가장 빠르고 가벼움 · 단순 작업 충분</td>
+              <td>
+                <div class="token-meter">
+                  <div class="bar"><span class="fill-25"></span></div>
+                  <div class="label">낮음</div>
+                </div>
+              </td>
+              <td class="usecase-cell">간단 질문 · 짧은 번역<span class="rec-label">단순 · 빠른 작업</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      </br></br>
+      <div class="section section-4">
+        <div class="section-chip orange">04 선택 방법</div>
+
+        <div class="ui-flow">
+          
+          <div class="flow-step">
+            <div class="step-num">①</div>
+            <div class="step-body">
+              <div class="step-caption">모델명 클릭</div>
+              <div class="chat-mockup">
+                <div class="placeholder-text">메시지를 입력하세요...</div>
+                <div class="model-btn">Sonnet 4.6 ▾</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="flow-arrow">▼</div>
+
+          
+          <div class="flow-step">
+            <div class="step-num">②</div>
+            <div class="step-body">
+              <div class="step-caption">드롭다운 팝업 · 주력 3종 표시</div>
+              <div class="dropdown-popup">
+                <div class="popup-item">
+                  <div class="popup-title"><span class="popup-star">⭐</span>Opus 4.7</div>
+                  <div class="popup-desc">Most capable for ambitious work</div>
+                </div>
+                <div class="popup-item">
+                  <div class="popup-title"><span class="lime-check">✓</span><span class="popup-star">⭐</span>Sonnet 4.6</div>
+                  <div class="popup-desc">Responsive everyday work</div>
+                </div>
+                <div class="popup-item">
+                  <div class="popup-title">Haiku 4.5</div>
+                  <div class="popup-desc">Fastest, most efficient</div>
+                </div>
+                <div class="popup-divider"></div>
+                <div class="toggle-row">
+                  <span style="font-weight: 500">적응형 사고</span>
+                  <div class="toggle-switch"><div class="toggle-circle"></div></div>
+                </div>
+                <div class="popup-divider"></div>
+                <div class="popup-item" style="padding-bottom: 4px">
+                  <div class="popup-title">더 많은 모델 ▸</div>
+                </div>
+              </div>
+              <div class="step-callout-list">
+                <div class="callout">
+                  <span class="callout-circle">③</span> 적응형 사고 · 일상 OFF 권장 (켜면 토큰 증가)
+                </div>
+                <div class="callout"><span class="callout-circle">④</span> 더 많은 모델 ▸ 클릭</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="flow-arrow">▼</div>
+
+          
+          <div class="flow-step">
+            <div class="step-num">④</div>
+            <div class="step-body">
+              <div class="step-caption">'더 많은 모델' 클릭 · 작업별 추천 모델 선택</div>
+              <div class="expanded-popup">
+                <div class="popup-label">더 많은 모델</div>
+                <div class="expanded-item-plain">
+                  <span class="left"><span class="star">⭐</span>Opus 4.7</span>
+                  <span class="pill">복잡한 분석·전략</span>
+                </div>
+                <div class="expanded-item-plain">
+                  <span class="left"><span class="star">⭐</span>Opus 4.6</span>
+                  <span class="pill">대화·보고서</span>
+                </div>
+                <div class="expanded-item-gray">Opus 3 <span>· 구버전</span></div>
+                <div class="expanded-item-gray">Sonnet 4.5 <span>· 구버전</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="faq-box">
+        <div class="faq-title">🆘 갑자기 사용이 막혔을 때</div>
+        <ol>
+          <li>설정 → 사용량 에서 어느 한도 소진인지 확인</li>
+          <li>5시간 / 주간 한도 소진 → 재설정 시각까지 대기 (회사 조치 불가)</li>
+          <li>월간 비용 한도 소진 → 관리자에게 증액 요청</li>
+        </ol>
+      </div>
+
+      <div class="footer">
+        <div class="footer-text">제작 : 기획부문  |  2026.05</div>
+      </div>
+    </div>
+  
+
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v833ccba57c9e4d2798f2e76cebdd09a11778172276447" integrity="sha512-57MDmcccJXYtNnH+ZiBwzC4jb2rvgVCEokYN+L/nLlmO8rfYT/gIpW2A569iJ/3b+0UEasghjuZH/ma3wIs/EQ==" data-cf-beacon='{"version":"2024.11.0","token":"4edd5f8ec12a48cfa682ab8261b80a79","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+</body></html>

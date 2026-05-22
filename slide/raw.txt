@@ -1,0 +1,62 @@
+1. Quy trình process sales
+- Company overview
+- Project potential/ Territory 
+- Product proposal: MP or RD
+- Quotation
+- PO => CS
+2. Others
+- Điều tra về thị trường: thái lan, indonesia vv
+- Điều tra về khách hàng tiềm năng
+- Điều tra đối thủ cạnh tranh
+- Form check yêu cầu của khách
+- Datasheet
+- Form báo giá
+3. Quản lý team
+- KPI từng thành viên
+- Chi phí công tác phí
+- Giao tiếp khách hàng
+- Confirm phê duyệt cấp bậc về giá trước khi gửi khách hàng
+Khảo sát hệ thống mới				
+Bộ phận: QC Team				
+No	Hạng mục đề cập	Nội dung chi tiết	Bộ phận	Remark
+1	 Quy trình nghiệp vụ của các phòng ban hiện tại.	QUY TRÌNH KIỂM TRA IQC	IQC	
+		QUY TRÌNH KIỂM TRA PQC	PQC	
+		QUY TRÌNH KIỂM TRA OQC,FOQC	QA	
+2	Khó khăn và hạn chế của hệ thống.	IQC sorting 100% nhập tay và quản lý file excell	IQC	
+		IQC sampling check nhập tay và quản lý file excell	IQC	
+		Nguyên vật liệu IQC NG lọt Line sản xuất thu hồi chuyển ra kho vật tư không có dữ liệu thống kê	IQC	
+		Kết quả kiểm tra 2D lưu file excel	IQC	
+		Kết quả kiểm tra kích thước lưu file excel	IQC	
+		Kết quả kiểm tra hạng mục test dầu lưu file excel	IQC	
+3	Mong muốn cũng như yêu cầu của các phòng ban với hệ thống mới là gì.	1. Tải được data dữ liệu kết quả test độ tin cậy ở trên hệ thống 	QA	
+		2. Up hệ thống QMS trên hệ thống và sửa đổi và quản lý thay đổi được trên hệ thống	QA	
+		3. Đề xuất tạo màn hình mới để quản lý lỗi khách hàng 	CS	
+		4. CS (Customer Claim báo cáo phân tích/ 8D report updae lên hệ thống	CS	
+		5. Báo cáo IQC, PQC, OQC hàng ngày, tuần, tháng quý lên hệ thống	QC	
+		6. Báo cáo 4M change, báo cáo TF, báo cáo test kiểm chứng.... update hệ thống	QC	
+		7. Báo cáo IQC, PQC, OQC hàng ngày, tuần, tháng quý lên hệ thống	QC	
+		8. Báo cáo 4M change, báo cáo TF, báo cáo test kiểm chứng.... update hệ thống	QC
+
+
+#cs belong sales
+		Quy trình bên em hiện tại không dùng ERP cũng như MES, tất cả bên em đang dùng trên GW hết.
+Về hiện tại cơ bản GW cũng không có vấn đề gì to tát cả, có một số lỗi nhỏ về hiển thị hoặc dịch thuật cần sửa đổi hoặc thời gian phản hồi hơi chậm.
+EM xin khái quát quy trình nghiệp vụ hiện tại của phòng CS như bản vẽ dưới
+Đối với hệ thống mới em có yêu cầu như sau:
+
+1. Bối cảnh hiện tại: Trong lưu trình làm việc của bộ phận CS, việc tốn thời gian nhất là xác nhận lịch xuất hàng với bộ phận Sản xuất. Hiện tại, khi có PO (Đơn đặt hàng) mới, CS phải thông báo thủ công cho Sản xuất (về số lượng, thời gian yêu cầu). Sau khi quản lý sản xuất tính toán thủ công sẽ phản hồi lại lịch xuất cho CS. Quy trình này mất nhiều thời gian và dễ gây tắc nghẽn thông tin.
+
+2. Yêu cầu đối với hệ thống mới:
+Quản lý sản xuất theo đơn hàng (MTO): Định danh và theo dõi toàn bộ quá trình sản xuất lot sản phẩm gắn liền với từng mã PO/khách hàng cụ thể.
+Quản lý tiến độ & Dự đoán ngày hoàn thành (Lead-time Forecasting): Dựa trên năng lực sản xuất thực tế (Capacity) và tiến độ các công đoạn, hệ thống tự động tính toán và đưa ra ngày dự kiến hoàn thành đơn hàng.
+Thông báo tự động (Auto-notification): Hệ thống tự động gửi thông báo (qua Email/Hệ thống) cho CS ngay khi đơn hàng được sản xuất xong (đóng gói/nhập kho thành công).
+Quản lý tồn kho theo đơn hàng (Inventory by PO): Quản lý rõ ràng lượng hàng tồn kho thuộc về đơn hàng nào, khách hàng nào, ngày dự kiến xuất hàng, tránh việc lấy nhầm hàng của đơn này xuất cho đơn khác.
+
+
+#production engineer team
+2. Vấn đề tồn đọng (VIE)
+ 1. Hệ thống hiện tại đã có đầy đủ chức năng để điều hành quản lý vận hành sản xuất tuy nhiên người dùng chưa được đào tạo đủ kỹ để vận hành toàn bộ chức năng của hệ thống (tôi ước chừng chỉ dùng được 50%)
+ 2. Hệ thống hiện tại hạn chế về chức năng phân tích và tổng hợp dữ liệu dashboard để báo cáo trực quan và phải thông qua phần mềm thứ 3 (PowerBI) để phân tích, báo cáo.
+ 3. MES và ERP không đồng bộ nên dữ liệu tồn kho (tài sản)-Kết quả kinh doanh (chi phí và doanh thu) không có sự liên kết đồng bộ khiến việc phân tích hiệu quả kinh doanh không được đồng nhất và tự động hóa.
+ 4. Thiếu người am hiều chuyên sâu về vận hành hệ thống MES-ERP để có thể chủ động nắm bắt hiện trạng và phát triển hệ thống cho tất cả các phòng ban trong công ty nên hệ thống vận hành không đồng bộ.
+ => Từ những vấn đề tồn đọng trên, tôi hy vọng EA team nắm bắt hiện trạng vấn đề và cải tiến trong tương lai

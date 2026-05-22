@@ -14,7 +14,7 @@
 | [KB_02_KHO_WMS.md](KB_02_KHO_WMS.md) | Kho NVL: F330 sai kho, F312, F430, FIFO, Holding, Hạn dùng | F330, F312, F430, F110, F721, C220 |
 | [KB_03_SAN_XUAT.md](KB_03_SAN_XUAT.md) | Sửa JobDate, Chuyển Line, VV→VJ, Xóa PO, NG, Andon | B782, B781, B598, B726, B791, B310, B450 |
 | [KB_04_DONG_GOI_IN_TEM.md](KB_04_DONG_GOI_IN_TEM.md) | Tiêu chuẩn đóng gói, fix B523 không gộp, sửa mã Lot, Qty=0 | B523, B789, B781, B351, A419 |
-| [KB_05_QC_ELECTRODE.md](KB_05_QC_ELECTRODE.md) | QC B597/C443/C512, Điện cực Slitting B552, Lỗi chuỗi độ dày | B597, C443, C512, B552 |
+| [KB_05_QC_ELECTRODE.md](KB_05_QC_ELECTRODE.md) | QC B597/C443/C512/C486, Điện cực Slitting B552, Lỗi chuỗi độ dày, Rebuild bảng & Fix layout | B597, C443, C512, C486, B552 |
 | [KB_05_TRACE_BUG_METHODOLOGY.md](KB_05_TRACE_BUG_METHODOLOGY.md) | Phương pháp trace bug 5 bước, Log hệ thống, Bảng quan trọng | Toàn bộ |
 | [KB_06_MASTER_DATA_TOOLS.md](KB_06_MASTER_DATA_TOOLS.md) | Model mới, Vol/Farad, Thêm Cell/Line, SQL Utilities, Bypass | A410, B250, B270, SQL tools |
 | [KB_07_GROUPWARE_INTEGRATION.md](KB_07_GROUPWARE_INTEGRATION.md) | Tích hợp Groupware: Mua hàng, Kế hoạch SX, Master Data | Groupware, F330, C220, B310, B450 |
@@ -59,6 +59,8 @@
 | B597 lỗi Electrolyte không khớp | KB_05 § 7.5 |
 | B597 lỗi chuỗi điện cực | KB_05 § 7.6 |
 | Lỗi HOLDING | KB_05 § 7.7 |
+| Cột Note1 thừa trên Grid (C486) | KB_05 § 7.8 |
+| Thêm cột mới giữ đúng thứ tự (Rebuild) | KB_05 § 7.8 |
 | Lỗi "Chưa CONFIG Slitting" | KB_05 § 8.2 |
 | Lỗi chiều rộng Slitting B552 | KB_05 § 8.1 |
 | Model mới không hiện Vol/Farad | KB_06 § 1.2 |
