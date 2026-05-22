@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ColumnMapping xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="www.awoo.co.kr">
+  <ColumnMappingInfo>
+    <IsKeyColumn>false</IsKeyColumn>
+    <SourceFieldName />
+    <SourceCaption />
+    <TargetFieldName>ID</TargetFieldName>
+    <TargetCaption>ID</TargetCaption>
+    <FillPreviousValueWhenNull>false</FillPreviousValueWhenNull>
+  </ColumnMappingInfo>
+  <ColumnMappingInfo>
+    <IsKeyColumn>false</IsKeyColumn>
+    <SourceFieldName>Date</SourceFieldName>
+    <SourceCaption>Date</SourceCaption>
+    <TargetFieldName>Date</TargetFieldName>
+    <TargetCaption>Date</TargetCaption>
+    <FillPreviousValueWhenNull>false</FillPreviousValueWhenNull>
+  </ColumnMappingInfo>
+  <ColumnMappingInfo>
+    <IsKeyColumn>false</IsKeyColumn>
+    <SourceFieldName>Shift</SourceFieldName>
+    <SourceCaption>Shift</SourceCaption>
+    <TargetFieldName>Shift</TargetFieldName>
+    <TargetCaption>Shift</TargetCaption>
+    <FillPreviousValueWhenNull>false</FillPreviousValueWhenNull>
+  </ColumnMappingInfo>
+  <ColumnMappingInfo>
+    <IsKeyColumn>false</IsKeyColumn>
+    <SourceFieldName>Person</SourceFieldName>
+    <SourceCaption>Person</SourceCaption>
+    <TargetFieldName>Person</TargetFieldName>
+    <TargetCaption>Person</TargetCaption>
+    <FillPreviousValueWhenNull>false</FillPreviousValueWhenNull>
+  </ColumnMappingInfo>
+  <ColumnMappingInfo>
+    <IsKeyColumn>false</IsKeyColumn>
+    <SourceFieldName>Vendor</SourceFieldName>
+    <SourceCaption>Vendor</SourceCaption>
+    <TargetFieldName>Vendor</TargetFieldName>
+    <TargetCaption>VENDOR</TargetCaption>
+    <FillPreviousValueWhenNull>false</FillPreviousValueWhenNull>
+  </ColumnMappingInfo>
+  <ColumnMappingInfo>
+    <IsKeyColumn>false</IsKeyColumn>
+    <SourceFieldName>Factory</SourceFieldName>
+    <SourceCaption>Factory</SourceCaption>
+    <TargetFieldName>Factory</TargetFieldName>
+    <TargetCaption>Factory</TargetCaption>
+    <FillPreviousValueWhenNull>false</FillPreviousValueWhenNull>
+  </ColumnMappingInfo>
+  <ColumnMappingInfo>
+    <IsKeyColumn>false</IsKeyColumn>
+    <SourceFieldName>Code Marterial</SourceFieldName>
+    <SourceCaption>Code Marterial</SourceCaption>
+    <TargetFieldName>MaterialCode</TargetFieldName>
+    <TargetCaption>Material Code</TargetCaption>
+    <FillPreviousValueWhenNull>false</FillPreviousValueWhenNull>
+  </ColumnMappingInfo>
+  <ColumnMappingInfo>
+    <IsKeyColumn>false</IsKeyColumn>
+    <SourceFieldName>Invoice</SourceFieldName>
+    <SourceCaption>Invoice</SourceCaption>
+    <TargetFieldName>Invoice</TargetFieldName>
+    <TargetCaption>Invoice</TargetCaption>
+    <FillPreviousValueWhenNull>false</FillPreviousValueWhenNull>
+  </ColumnMappingInfo>
+  <ColumnMappingInfo>
+    <IsKeyColumn>false</IsKeyColumn>
+    <SourceFieldName>Lot no</SourceFieldName>
+    <SourceCaption>Lot no</SourceCaption>
+    <TargetFieldName>LotNo</TargetFieldName>
+    <TargetCaption>LotNo</TargetCaption>
+    <FillPreviousValueWhenNull>false</FillPreviousValueWhenNull>
+  </ColumnMappingInfo>
+  <ColumnMappingInfo>
+    <IsKeyColumn>false</IsKeyColumn>
+    <SourceFieldName>Q'Ty Check</SourceFieldName>
+    <SourceCaption>Q'Ty Check</SourceCaption>
+    <TargetFieldName>QtyCheck</TargetFieldName>
+    <TargetCaption>Qty Check</TargetCaption>
+    <FillPreviousValueWhenNull>false</FillPreviousValueWhenNull>
+  </ColumnMappingInfo>
+  <ColumnMappingInfo>
+    <IsKeyColumn>false</IsKeyColumn>
+    <SourceFieldName>Q'ty OK</SourceFieldName>
+    <SourceCaption>Q'ty OK</SourceCaption>
+    <TargetFieldName>QtyOK</TargetFieldName>
+    <TargetCaption>QtyOK</TargetCaption>
+    <FillPreviousValueWhenNull>false</FillPreviousValueWhenNull>
+  </ColumnMappingInfo>
+  <ColumnMappingInfo>
+    <IsKeyColumn>false</IsKeyColumn>
+    <SourceFieldName>Burr nhôm
+Burr Al</SourceFieldName>
+    <SourceCaption>Burr nhôm
+Burr Al</SourceCaption>
+    <TargetFieldName>BurrAl</TargetFieldName>
+    <TargetCaption>Burr Al</TargetCaption>
+    <FillPreviousValueWhenNull>false</FillPreviousValueWhenNull>
+  </ColumnMappingInfo>
+  <ColumnMappingInfo>
+    <IsKeyColumn>false</IsKeyColumn>
+    <SourceFieldName>Burr Nhựa
+Burr Plastic</SourceFieldName>
+    <SourceCaption>Burr Nhựa
+Burr Plastic</SourceCaption>
+    <TargetFieldName>BurrPlastic</TargetFieldName>
+    <TargetCaption>Burr Plastic</TargetCaption>
+    <FillPreviousValueWhenNull>false</FillPreviousValueWhenNull>
+  </ColumnMappingInfo>
+  <ColumnMappingInfo>
+    <IsKeyColumn>false</IsKeyColumn>
+    <SourceFieldName>Burr caosu</SourceFieldName>
+    <SourceCaption>Burr caosu</SourceCaption>
+    <TargetFieldName>BurrRubber</TargetFieldName>
+    <TargetCaption>Burr Rubber</TargetCaption>
+    <FillPreviousValueWhenNull>false</FillPreviousValueWhenNull>
+  </ColumnMappingInfo>
+  <ColumnMappingInfo>
+    <IsKeyColumn>false</IsKeyColumn>
+    <SourceFieldName>Bong tấm nhựa</SourceFieldName>
+    <SourceCaption>Bong tấm nhựa</SourceCaption>
+    <TargetFieldName>PlasticPeeling</TargetFieldName>
+    <TargetCaption>Plastic Peeling</TargetCaption>
+    <FillPreviousValueWhenNull>false</FillPreviousValueWhenNull>
+  </ColumnMappingInfo>
+  <ColumnMappingInfo>
+    <IsKeyColumn>false</IsKeyColumn>
+    <SourceFieldName>Xước 
+Scratch</SourceFieldName>
+    <SourceCaption>Xước 
+Scratch</SourceCaption>
+    <TargetFieldName>Scratch</TargetFieldName>
+    <TargetCaption>Scratch</TargetCaption>
+    <FillPreviousValueWhenNull>false</FillPreviousValueWhenNull>
+  </ColumnMappingInfo>
+  <ColumnMappingInfo>
+    <IsKeyColumn>false</IsKeyColumn>
+    <SourceFieldName>Biến dạng
+Deform</SourceFieldName>
+    <SourceCaption>Biến dạng
+Deform</SourceCaption>
+    <TargetFieldName>Deform</TargetFieldName>
+    <TargetCaption>Deform</TargetCaption>
+    <FillPreviousValueWhenNull>false</FillPreviousValueWhenNull>
+  </ColumnMappingInfo>
+  <ColumnMappingInfo>
+    <IsKeyColumn>false</IsKeyColumn>
+    <SourceFieldName>Hở đồng
+Exposed copper</SourceFieldName>
+    <SourceCaption>Hở đồng
+Exposed copper</SourceCaption>
+    <TargetFieldName>ExposedCopper</TargetFieldName>
+    <TargetCaption>Exposed Copper</TargetCaption>
+    <FillPreviousValueWhenNull>false</FillPreviousValueWhenNull>
+  </ColumnMappingInfo>
+  <ColumnMappingInfo>
+    <IsKeyColumn>false</IsKeyColumn>
+    <SourceFieldName>Biến dạng cao su
+Deform caosu</SourceFieldName>
+    <SourceCaption>Biến dạng cao su
+Deform caosu</SourceCaption>
+    <TargetFieldName>RubberDeform</TargetFieldName>
+    <TargetCaption>Rubber Deform</TargetCaption>
+    <FillPreviousValueWhenNull>false</FillPreviousValueWhenNull>
+  </ColumnMappingInfo>
+  <ColumnMappingInfo>
+    <IsKeyColumn>false</IsKeyColumn>
+    <SourceFieldName>Nứt gỗ
+Crack Wood</SourceFieldName>
+    <SourceCaption>Nứt gỗ
+Crack Wood</SourceCaption>
+    <TargetFieldName>CrackWood</TargetFieldName>
+    <TargetCaption>Crack Wood</TargetCaption>
+    <FillPreviousValueWhenNull>false</FillPreviousValueWhenNull>
+  </ColumnMappingInfo>
+  <ColumnMappingInfo>
+    <IsKeyColumn>false</IsKeyColumn>
+    <SourceFieldName>Biến sắc
+Discoloration</SourceFieldName>
+    <SourceCaption>Biến sắc
+Discoloration</SourceCaption>
+    <TargetFieldName>Discoloration</TargetFieldName>
+    <TargetCaption>Discoloration</TargetCaption>
+    <FillPreviousValueWhenNull>false</FillPreviousValueWhenNull>
+  </ColumnMappingInfo>
+  <ColumnMappingInfo>
+    <IsKeyColumn>false</IsKeyColumn>
+    <SourceFieldName>Other</SourceFieldName>
+    <SourceCaption>Other</SourceCaption>
+    <TargetFieldName>OtherError</TargetFieldName>
+    <TargetCaption>Other Error</TargetCaption>
+    <FillPreviousValueWhenNull>false</FillPreviousValueWhenNull>
+  </ColumnMappingInfo>
+  <ColumnMappingInfo>
+    <IsKeyColumn>false</IsKeyColumn>
+    <SourceFieldName>Total</SourceFieldName>
+    <SourceCaption>Total</SourceCaption>
+    <TargetFieldName>Total</TargetFieldName>
+    <TargetCaption>Total</TargetCaption>
+    <FillPreviousValueWhenNull>false</FillPreviousValueWhenNull>
+  </ColumnMappingInfo>
+  <ColumnMappingInfo>
+    <IsKeyColumn>false</IsKeyColumn>
+    <SourceFieldName>Note</SourceFieldName>
+    <SourceCaption>Note</SourceCaption>
+    <TargetFieldName>Note</TargetFieldName>
+    <TargetCaption>Note</TargetCaption>
+    <FillPreviousValueWhenNull>false</FillPreviousValueWhenNull>
+  </ColumnMappingInfo>
+  <ColumnMappingInfo>
+    <IsKeyColumn>false</IsKeyColumn>
+    <SourceFieldName />
+    <SourceCaption />
+    <TargetFieldName>Status</TargetFieldName>
+    <TargetCaption>Status</TargetCaption>
+    <FillPreviousValueWhenNull>false</FillPreviousValueWhenNull>
+  </ColumnMappingInfo>
+</ColumnMapping>

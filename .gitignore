@@ -2,3 +2,7 @@
 *.zip
 *.exe
 *.mdb
+node_modules/
+
+*.pptx
+*.pdf

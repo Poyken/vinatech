@@ -1,7 +1,7 @@
 # 🚀 VINATECH MES & GROUPWARE - SYSTEM INDEX
 
 > **Mục đích:** Entry point chính cho toàn bộ hệ thống MES & Groupware
-> **Cập nhật:** 2026-05-12
+> **Cập nhật:** 2026-05-22
 > **Quy tắc:** NO DIRECT UID - Database là nguồn sự thật duy nhất
 
 ---
@@ -10,42 +10,66 @@
 
 ```
 database/
-├── README.md                    # File này - Entry point
-├── AI_CONFIG.md                 # Hướng dẫn AI debug lỗi & cấu hình AI
-├── docs/                        # Tất cả documentation
-│   ├── DATABASE_SCHEMA_QUICKREF.md  # Schema nhanh
-│   ├── DataFlow.md             # Data flow
-│   ├── MES_QUICK_START_GUIDE.md  # Quick start guide
-│   ├── REQUEST_TEMPLATES.md    # 5 templates yêu cầu
-│   ├── TOOLS_SUMMARY.md        # Tổng hợp tools
-│   ├── MASTER_DECISION_TREE.md  # Decision tree
-│   ├── INTELLIGENT_ROUTING.md  # Intelligent routing
-│   ├── TOP_10_COMMON_ERRORS.md  # Top 10 lỗi thường gặp
-│   └── OPTIMIZED_QUICK_REFERENCE.md  # Cheat sheet
-├── scripts/                     # Tất cả PowerShell scripts
-│   ├── auto_debug_barcode.ps1  # Auto debug barcode
-│   ├── auto_check_common_issues.ps1  # Check lỗi thường gặp
-│   ├── PERFORMANCE_METRICS.ps1  # Performance metrics
-│   ├── extract_pptx.ps1        # Extract PPTX text
-│   └── fetch_sp.ps1            # Fetch SP từ DB
-├── sql/                         # SQL files
-│   └── debug_queries.sql       # 20+ SQL templates
-├── MES_MASTER_KNOWLEDGE_BASE/  # Knowledge Base MES
-│   ├── KB_INDEX.md             # Index KB
-│   ├── KB_01_UI_PHAN_QUYEN.md  # UI/Phân quyền
-│   ├── KB_02_KHO_WMS.md        # Kho WMS
-│   ├── KB_03_SAN_XUAT.md       # Sản xuất
-│   ├── KB_04_DONG_GOI_IN_TEM.md  # Đóng gói
-│   ├── KB_05_QC_ELECTRODE.md   # QC/Điện cực
-│   ├── KB_06_MASTER_DATA_TOOLS.md  # Master Data
-│   ├── KB_07_GROUPWARE_INTEGRATION.md  # Groupware
-│   ├── KB_08_KHO_THANH_PHAM_HN.md  # Kho thành phẩm Hà Nam
-│   ├── KB_09_IN_TEM_LABEL.md   # In tem Label
-│   ├── KB_05_TRACE_BUG_METHODOLOGY.md  # Trace bug
-│   └── Vinatech_MES_Complete_DataFlow.md  # Data flow đầy đủ
-├── GROUPWARE/                   # Groupware documentation
-│   └── extracted_text_utf8.txt  # Text extract từ 14 PPTX
-└── .windsurf/                   # Windsurf plans
+├── README.md                        # File này - Entry point
+├── AI_CONFIG.md                     # Hướng dẫn AI debug lỗi & cấu hình
+├── Phoenix_Contact_Label_Setup.sql  # SQL cài đặt máy in tem Phoenix
+├── docs/                            # Documentation tham khảo
+│   ├── DATABASE_SCHEMA_QUICKREF.md  # Schema nhanh các bảng chính
+│   └── DataFlow.md                  # Data flow tổng quan
+├── scripts/                         # PowerShell scripts tự động hóa
+│   ├── auto_debug_barcode.ps1       # Auto debug theo Barcode
+│   ├── auto_check_common_issues.ps1 # Check lỗi thường gặp
+│   ├── PERFORMANCE_METRICS.ps1      # Track performance scripts
+│   ├── extract_pptx.ps1             # Extract text từ PPTX
+│   └── fetch_sp.ps1                 # Fetch Stored Procedure từ DB
+├── sql/                             # SQL files
+│   ├── debug_queries.sql            # 20+ SQL templates debug
+│   ├── C486_FINAL_DEPLOY.sql        # Deploy QC C486 (production)
+│   ├── check_doping_routing.sql     # Check routing Doping
+│   └── check_packing_lots.sql       # Check Lots đóng gói
+├── sp_output/                       # Stored Procedures lấy từ DB
+│   ├── usp_SetInfo_iud.sql
+│   ├── usp_SetInfo_get.sql
+│   ├── usp_vvt_MaterialLotInfo_get.sql
+│   ├── usp_BomHeader_iud.sql
+│   ├── usp_RouteInfo_iud.sql
+│   ├── usp_ProductionOrderInfo_get.sql
+│   ├── usp_MaterialWarehouseInOutHist_iud.sql
+│   ├── usp_DoProcessProdGIMaterialByBOM.sql
+│   ├── usp_DoProcessProdRouteHist.sql
+│   ├── usp_GetMaterialLotInfo_Packing_VVT_F3.sql
+│   ├── usp_VVTMaterialWarehouse_validFIFO.sql
+│   ├── usp_getMergePackingBoxSmall_HN.sql
+│   ├── usp_Vietnam_RawMaterialInputHist_uid.sql
+│   ├── usp_VVT_SortingErrorData_ALCase_get.sql
+│   ├── usp_VVT_SortingErrorData_ALCase_iud.sql
+│   ├── usp_VVT_SortingErrorData_Plate_get.sql
+│   └── usp_VVT_SortingErrorData_Plate_iud.sql
+├── MES_MASTER_KNOWLEDGE_BASE/       # Knowledge Base MES (chính)
+│   ├── KB_INDEX.md                  # ← BẮT ĐẦU TỪ ĐÂY
+│   ├── KB_01_UI_PHAN_QUYEN.md
+│   ├── KB_02_KHO_WMS.md
+│   ├── KB_03_SAN_XUAT.md
+│   ├── KB_04_DONG_GOI_IN_TEM.md
+│   ├── KB_05_QC_ELECTRODE.md
+│   ├── KB_05_TRACE_BUG_METHODOLOGY.md
+│   ├── KB_06_MASTER_DATA_TOOLS.md
+│   ├── KB_07_GROUPWARE_INTEGRATION.md
+│   ├── KB_08_KHO_THANH_PHAM_HN.md
+│   ├── KB_09_IN_TEM_LABEL.md
+│   ├── NAIS_SYSTEM_MASTER_TROUBLESHOOTING.md
+│   └── Vinatech_MES_Complete_DataFlow.md  # DataFlow đầy đủ (261KB)
+├── GROUPWARE_KNOWLEDGE_BASE/        # Knowledge Base Groupware
+│   ├── GW_INDEX.md
+│   ├── GW_01_DANG_NHAP.md
+│   ├── GW_02_MUA_HANG.md
+│   ├── GW_03_KE_HOACH_SX.md
+│   ├── GW_04_MASTER_DATA.md
+│   ├── GW_05_HANH_CHINH.md
+│   ├── GW_06_THANH_TOAN.md
+│   └── GW_07_KHO_THANH_PHAM.md
+└── GROUPWARE/
+    └── extracted_text_utf8.txt      # Raw text extract từ 14 PPTX
 ```
 
 ---
@@ -53,110 +77,88 @@ database/
 ## 🎯 QUICK START
 
 ### Khi nhận yêu cầu Bug MES:
-1. Đọc `docs/MES_QUICK_START_GUIDE.md`
+1. Tra ngay `MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md` → tìm theo triệu chứng
 2. Chạy `scripts/auto_debug_barcode.ps1 -Barcode "xxx"`
 3. Chạy `scripts/auto_check_common_issues.ps1 -Barcode "xxx"`
-4. Tra `MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md`
-5. Dùng `sql/debug_queries.sql` template
+4. Dùng `sql/debug_queries.sql` template phù hợp
 
 ### Khi nhận yêu cầu SQL Query:
-1. Đọc `docs/REQUEST_TEMPLATES.md` → Template 2
-2. Dùng `sql/debug_queries.sql` template phù hợp
-3. Chạy query kiểm tra kết quả
+1. Dùng `sql/debug_queries.sql` → chọn template phù hợp
+2. Chạy query kiểm tra kết quả trước khi đề xuất
 
 ### Khi nhận yêu cầu Groupware:
-1. Đọc `MES_MASTER_KNOWLEDGE_BASE/KB_07_GROUPWARE_INTEGRATION.md`
-2. Check `GROUPWARE/extracted_text.txt`
-3. Đề xuất giải pháp theo quy trình
+1. Tra `GROUPWARE_KNOWLEDGE_BASE/GW_INDEX.md`
+2. Đọc file GW_0X tương ứng
 
 ---
 
-## 📋 DOCUMENTATION INDEX
+## 📋 KNOWLEDGE BASE INDEX
 
-### Core Guides (docs/)
-- **MES_QUICK_START_GUIDE.md** - Bắt đầu từ đây khi nhận yêu cầu
-- **OPTIMIZED_QUICK_REFERENCE.md** - Cheat sheet nhanh nhất
-- **MASTER_DECISION_TREE.md** - Decision tree cho mọi yêu cầu
-- **INTELLIGENT_ROUTING.md** - Auto-detect và routing
-- **TOP_10_COMMON_ERRORS.md** - Giải pháp 10 lỗi thường gặp
+### MES (MES_MASTER_KNOWLEDGE_BASE/)
+| File | Phạm vi | Màn hình |
+|------|---------|----------|
+| KB_01_UI_PHAN_QUYEN | Login, phân quyền, Stage Prices | A460, Z410, Z220 |
+| KB_02_KHO_WMS | Kho NVL, FIFO, Holding, Hạn dùng | F330, F312, F430 |
+| KB_03_SAN_XUAT | JobDate, ChuyểnLine, Xóa PO, NG | B782, B781, B310 |
+| KB_04_DONG_GOI_IN_TEM | Đóng gói, fix B523, Lot | B523, B789, B351 |
+| KB_05_QC_ELECTRODE | QC B597/C443/C486, Điện cực B552 | B597, C443, C486 |
+| KB_05_TRACE_BUG_METHODOLOGY | Phương pháp trace bug 5 bước | Toàn bộ |
+| KB_06_MASTER_DATA_TOOLS | Model mới, Cell/Line, Bypass | A410, B250, B270 |
+| KB_07_GROUPWARE_INTEGRATION | Mua hàng→F330, Kế hoạch→B310 | F330, B310, B450 |
+| KB_08_KHO_THANH_PHAM_HN | Kho TP Hà Nam, xuất/hủy/xóa | HN551, HN866 |
+| KB_09_IN_TEM_LABEL | Tem đặc biệt, in khẩn, sai mẫu | B450, B756, B767 |
 
-### Templates (docs/)
-- **REQUEST_TEMPLATES.md** - 5 templates cho các loại yêu cầu
-
-### Knowledge Base (MES_MASTER_KNOWLEDGE_BASE/)
-- **KB_INDEX.md** - Index tra cứu KB theo triệu chứng
-- **KB_01** - UI/Đăng nhập/Phân quyền
-- **KB_02** - Kho WMS
-- **KB_03** - Sản xuất
-- **KB_04** - Đóng gói
-- **KB_05** - QC/Điện cực
-- **KB_06** - Master Data
-- **KB_07** - Groupware Integration
-- **KB_05_TRACE_BUG_METHODOLOGY.md** - Phương pháp trace bug
-
-### Groupware (GROUPWARE/)
-- **extracted_text_utf8.txt** - Nội dung đầy đủ từ 14 PPTX files
+### Groupware (GROUPWARE_KNOWLEDGE_BASE/)
+| File | Phạm vi |
+|------|---------|
+| GW_02_MUA_HANG | Mua hàng, PO, nhà cung cấp |
+| GW_03_KE_HOACH_SX | Kế hoạch sản xuất |
+| GW_04_MASTER_DATA | BOM, Model, Vật tư |
+| GW_05_HANH_CHINH | Hành chính, nhân sự |
+| GW_06_THANH_TOAN | Thanh toán, công nợ |
 
 ---
 
-## 🔧 SCRIPTS INDEX (scripts/)
+## 🔧 SCRIPTS INDEX
 
 | Script | Mục đích | Cách dùng |
-|--------|----------|----------|
-| auto_debug_barcode.ps1 | Debug barcode | `.\auto_debug_barcode.ps1 -Barcode "VE260506-001"` |
-| auto_check_common_issues.ps1 | Check lỗi thường gặp | `.\auto_check_common_issues.ps1 -Barcode "xxx" -PONo "xxx"` |
-| PERFORMANCE_METRICS.ps1 | Track performance | `.\PERFORMANCE_METRICS.ps1 -Script "auto_debug_barcode.ps1"` |
+|--------|----------|-----------|
+| auto_debug_barcode.ps1 | Debug theo barcode | `.\auto_debug_barcode.ps1 -Barcode "VE260506-001"` |
+| auto_check_common_issues.ps1 | Check lỗi thường gặp | `.\auto_check_common_issues.ps1 -Barcode "xxx"` |
+| fetch_sp.ps1 | Xem code SP từ DB | `.\fetch_sp.ps1 -SPName "usp_DoProcessProdRouteHist"` |
+| PERFORMANCE_METRICS.ps1 | Track performance | `.\PERFORMANCE_METRICS.ps1` |
 | extract_pptx.ps1 | Extract PPTX text | `.\extract_pptx.ps1` |
-| fetch_sp.ps1 | Fetch SP từ DB | `.\fetch_sp.ps1 -SPName "usp_DoProcessProdRouteHist"` |
 
 ---
 
-## 🗄️ SQL INDEX (sql/)
+## 🗄️ SQL INDEX
 
-| File | Mục đích | Templates |
-|------|----------|-----------|
-| debug_queries.sql | 20+ SQL templates | Golden Query, SetInfo, Holding, FIFO, NVL, QC, Electrode, Barcode Change, Material Doc, Defect, Packing, PO, BOM, Logs, Stock, User Audit |
+| File | Mục đích |
+|------|---------|
+| debug_queries.sql | 20+ templates: Golden Query, SetInfo, Holding, FIFO, QC, Electrode, Packing, BOM, Logs... |
+| C486_FINAL_DEPLOY.sql | Deploy đầy đủ cho màn hình C486 QC Electrode |
+| check_doping_routing.sql | Kiểm tra routing công đoạn Doping |
+| check_packing_lots.sql | Kiểm tra Lots trong quá trình đóng gói |
 
 ---
 
 ## ⚠️ QUY TẮC QUAN TRỌNG
 
-1. **NO DIRECT UID** - Không tự ý run UPDATE/INSERT/DELETE
-2. **SELECT TRƯỚC** - Luôn kiểm tra dữ liệu trước khi sửa
-3. **KNOWLEDGE FIRST** - Tra KB trước khi suy đoán
-4. **SINGLE SOURCE OF TRUTH** - Database là nguồn sự thật duy nhất
-5. **BACKUP TRƯỚC** - Luôn SELECT trước UPDATE/DELETE
+1. **NO DIRECT UID** — Không tự ý chạy UPDATE/INSERT/DELETE
+2. **SELECT TRƯỚC** — Luôn kiểm tra dữ liệu trước khi sửa
+3. **BEGIN TRAN** — Dùng transaction để xem kết quả trước khi COMMIT
+4. **KNOWLEDGE FIRST** — Tra KB trước khi suy đoán
+5. **SINGLE SOURCE OF TRUTH** — Database là nguồn sự thật duy nhất
 
 ---
 
-## 📊 PERFORMANCE METRICS
+## 🔧 THÔNG TIN HỆ THỐNG
 
-| Task | Thời gian trước | Thời gian sau | Cải tiến |
-|------|----------------|---------------|----------|
-| Định tuyến yêu cầu | 30-60s | 0.7s | 85x nhanh hơn |
-| Debug Bug MES | 8-10m | 2-3m | 70% nhanh hơn |
-| SQL Query | 5-7m | 1-2m | 70% nhanh hơn |
-| Groupware | 10-15m | 2-3m | 80% nhanh hơn |
-| Top 10 lỗi | 5-10m | <2m | 80% nhanh hơn |
-
----
-
-## 🎯 WORKFLOW CHUẨN
-
-```
-1. Nhận yêu cầu → 2. Phân tích (MASTER_DECISION_TREE.md)
-→ 3. Debug (scripts/ + sql/) → 4. Đề xuất → 5. User chạy
-```
-
----
-
-## 📞 KHI CẦN HỖ TRỢ
-
-1. Đọc `docs/OPTIMIZED_QUICK_REFERENCE.md`
-2. Check `docs/TOP_10_COMMON_ERRORS.md`
-3. Tra `MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md`
-4. Chạy script tương ứng trong `scripts/`
-
----
-
-**Hệ thống đã restructure để tối ưu hiệu suất làm việc!**
+| Thông tin | Giá trị |
+|-----------|---------|
+| **Server** | `dbserver.hycap.co.kr,5398` |
+| **Database** | `SmartFactoryV2` |
+| **Framework DB** | `SmartFramework` |
+| **Username** | `vinaadmin` |
+| **Platform** | NAIS / SmartFramework by Awoo |
+| **Nhà máy** | VVT_F1=Bắc Ninh, VVT_F2=Bắc Giang, VVT_F3=Hà Nam, VVT_F4=Bắc Giang 2 |
