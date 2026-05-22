@@ -156,5 +156,9 @@ WHERE CreateUserID = 'ID_Người_Lập'
   AND CreateDateTime BETWEEN '2026-05-16 08:00:00' AND '2026-05-16 08:00:10'
 ORDER BY DayPlanNo ASC
 ```
+**Fix:**
+- Chưa có sản lượng → Hủy kế hoạch sai tại B450 → Tạo lại đúng Line
+- Đã có sản lượng → Dùng script Chuyển Line (xem [KB_03_SAN_XUAT.md § 5.9](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/MES_MASTER_KNOWLEDGE_BASE/KB_03_SAN_XUAT.md))
+
 
 *Cập nhật: 2026-05-22*

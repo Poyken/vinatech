@@ -141,16 +141,7 @@ ORDER BY PRH.CreateDateTime ASC
 ## 6. 🛠️ TROUBLESHOOTING (Lỗi Hệ Thống & Kiến Trúc)
 
 ### 6.1 Lỗi không đăng nhập được MES
-**Triệu chứng:** Màn hình login bị lỗi.
-**Root cause:** Lỗi client update, hoặc tài khoản bị khóa trong `SmartFramework`.
+> 👉 Hướng dẫn chi tiết cách xử lý lỗi đăng nhập MES, vui lòng xem tại [KB_01_UI_PHAN_QUYEN.md § 1.1](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/MES_MASTER_KNOWLEDGE_BASE/KB_01_UI_PHAN_QUYEN.md).
 
-**Fix theo thứ tự:**
-1. Chạy file Update trong folder cài đặt → vào lại NAIS.
-2. Xóa tất cả thư mục trong `C:\AwooSystem` → cài lại từ `http://mes.hycap.co.kr:9952/`.
-3. Kiểm tra tài khoản DB:
-```sql
-SELECT UserID, UserName, AllowFlag FROM SmartFramework.dbo.STB_UserInfo WHERE UserID = 'tên_user'
--- AllowFlag = 0 → tài khoản bị khóa → vào Z410 bật lại
-```
 
 *Cập nhật: 2026-05-22*

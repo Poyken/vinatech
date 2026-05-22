@@ -275,16 +275,8 @@ SELECT OBJECT_DEFINITION(OBJECT_ID('usp_Vietnam_RawMaterialInputHist_uid'))
 ```
 
 **Fix — chỉ có 1 cách:**
-```sql
--- Thêm mã vỏ mới vào danh sách NOT IN trong SP
--- Ví dụ đoạn cần sửa:
-IF (@MaterialCode = 'ECVT30-367' AND @pRawMaterialBarcode NOT IN ('GBRLAC-004', 'GBDYAC-004'))
-BEGIN
-    SET @count = 0;
-END
--- → Thêm mã vỏ mới: NOT IN ('GBRLAC-004', 'GBDYAC-004', 'MÃ_VỎ_MỚI')
--- → ALTER PROCEDURE để deploy lại
-```
+> 👉 Chi tiết hướng dẫn và SQL script để thêm mã vỏ nhôm, vui lòng xem tại [KB_05_QC_ELECTRODE.md § 7.4](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/MES_MASTER_KNOWLEDGE_BASE/KB_05_QC_ELECTRODE.md).
+
 
 **Checklist đầy đủ khi gặp lỗi B597:**
 ```
