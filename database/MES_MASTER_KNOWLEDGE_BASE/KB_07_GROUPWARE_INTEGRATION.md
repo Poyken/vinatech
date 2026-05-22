@@ -1,40 +1,199 @@
-# KB_07: GROUPWARE & MES INTEGRATION (Nghiệp vụ Groupware)
+# KB_07 — Groupware & MES Integration
+
+> **Màn hình liên quan:** Groupware (gw.vinatech.com), F330, C220, B310, B450, A230, A310
+> ← [Về INDEX](KB_INDEX.md)
+
+---
 
 ## 1. Tổng Quan
-Hệ thống Groupware (gw.vinatech.com) là nơi phê duyệt các quy trình hành chính, nhân sự, và đặc biệt là phê duyệt luồng **Mua Hàng (Purchase)**, **Kế Hoạch Sản Xuất (PO & Plan)** và **Master Data (Mã Code, BOM)** trước khi dữ liệu được đồng bộ xuống MES và ERP.
+
+Hệ thống Groupware là nơi phê duyệt các quy trình **Mua Hàng**, **Kế Hoạch Sản Xuất** và **Master Data** trước khi dữ liệu được đồng bộ xuống MES và ERP.
+
+---
 
 ## 2. Luồng Mua Hàng & Nhập Kho (Purchase Flow)
-Luồng xử lý mua hàng và kiểm tra đầu vào cần đi qua các bước kết hợp giữa Groupware và MES:
-1. **Purchase Order Registration (Groupware):** Khởi tạo đơn đặt hàng. Khi được duyệt, dữ liệu đẩy xuống ERP.
-2. **Arrival Confirmation (Groupware):** Khai báo hàng về đến công ty. Đối với hàng nhập khẩu, khai báo B/L và thông tin hải quan.
-3. **Tiếp Nhận & In Tem (MES - F330):** Thủ kho dùng màn hình `F330` để nhận hàng thực tế và in tem nhãn (Label).
-4. **IQC Inspection (MES - C220):** Đội QC kiểm tra chất lượng lô hàng. **Lưu ý: Hàng phải PASS IQC mới được đi tiếp.**
-5. **Receiving Confirmation (Groupware):** Sau khi C220 Pass, nhân viên làm thao tác này trên Groupware để chính thức ghi nhận tồn kho vào hệ thống ERP và MES.
-6. **Purchase Resolution (Groupware):** Đóng sổ, thanh toán chi phí cho Vendor.
+
+```
+1. Purchase Order Registration (Groupware) → Khởi tạo đơn đặt hàng → đẩy xuống ERP
+2. Arrival Confirmation (Groupware) → Khai báo hàng về đến công ty
+   (Hàng nhập khẩu: khai báo B/L và thông tin hải quan)
+3. F330 (MES) → Thủ kho nhận hàng thực tế + in tem nhãn
+4. C220 (MES) → QC kiểm tra chất lượng → PASS IQC
+5. Receiving Confirmation (Groupware) → Ghi nhận tồn kho vào ERP và MES
+6. Purchase Resolution (Groupware) → Đóng sổ, thanh toán Vendor
+```
+
+**Debug nhanh:**
+- Không nhập được F330 → Groupware chưa duyệt **Arrival Confirmation**?
+- Không làm được Receiving Confirmation → C220 chưa PASS?
+
+```sql
+-- Kiểm tra trạng thái IQC của lô hàng
+SELECT * FROM STB_MaterialQcInfo WHERE MaterialDocNo = 'Số_Tài_Liệu'
+-- Nếu chưa có record hoặc QcResult != 'PASS' → QC chưa làm C220
+```
+
+---
 
 ## 3. Luồng Kế Hoạch Sản Xuất (PO & Production Plan)
-Kế hoạch sản xuất được làm trên Groupware và đồng bộ xuống MES:
-* **Month Production Plan (Groupware):** Đăng ký PO theo tháng. Cần chọn phiên bản BOM chuẩn (Version 2001 áp dụng cho Việt Nam). Chọn trạng thái là "Sản xuất" để xác nhận.
-* **Đồng bộ xuống MES (B310 & B450):** 
-    * Thông tin PO được link xuống màn hình `B310` (Tạo PO) trên MES.
-    * Kế hoạch theo ngày (Daily Plan) được link xuống `B450` để tạo LOT sản xuất và in tem.
+
+```
+Month Production Plan (Groupware)
+    → Đăng ký PO theo tháng
+    → BOM Version: 2001 (áp dụng cho Việt Nam)
+    → Trạng thái: "Sản xuất" để xác nhận
+    ↓
+B310 (MES) → Thông tin PO được link xuống
+    ↓
+B450 (MES) → Kế hoạch theo ngày → Tạo LOT sản xuất + in tem
+```
+
+**Debug nhanh:**
+- Không thấy PO trên MES (B310/B450) → Kiểm tra Groupware:
+  - Đã "Xác nhận lô hàng" (chuyển sang Sản xuất) chưa?
+  - BOM Version có đúng `2001` không?
+
+```sql
+-- Kiểm tra PO đã có trên MES chưa
+SELECT PONo, MaterialCode, CompanyCode, PlanQty, CreateDateTime
+FROM STB_ProductionOrderInfo
+WHERE MaterialCode = 'Mã_Model' AND MONTH(CreateDateTime) = MONTH(GETDATE())
+ORDER BY CreateDateTime DESC
+```
+
+---
 
 ## 4. Master Data (Đăng Ký Code & BOM)
-* **EBOM (ERP):** Mã BOM được khởi tạo trên hệ thống ERP (nhập version, thêm nguyên vật liệu, định lượng).
-* **BOM Addition & Update (Groupware):** Gửi duyệt thay đổi BOM. Sau khi duyệt, BOM có hiệu lực.
-* **MES Checking:** Người dùng có thể kiểm tra BOM trên MES qua `A310`, kiểm tra Code qua `A230`.
-* **Item Registration Document (Groupware):** Dùng để đăng ký các mã vật tư mới thay vì làm trực tiếp trên A230 như trước kia. Gồm: `Cell` (Single Cell), `Module` (Module), `Raw material` (Nguyên vật liệu thô).
+
+**Luồng đăng ký mã vật tư mới:**
+```
+Item Registration Document (Groupware)
+    → Loại: Cell / Module / Raw material
+    → Sau khi duyệt → sync xuống A230 (STB_MaterialMaster)
+    ↓
+A230 (MES) → Kiểm tra mã đã sync chưa
+A310 (MES) → Kiểm tra BOM đã sync chưa
+```
+
+**Đăng ký/cập nhật BOM:**
+```
+EBOM (ERP) → Khởi tạo BOM version, thêm NVL, định lượng
+    ↓
+BOM Addition & Update (Groupware) → Gửi duyệt thay đổi BOM
+    → Sau khi duyệt → BOM có hiệu lực
+    ↓
+A310 (MES) → Kiểm tra BOM đã cập nhật chưa
+```
+
+```sql
+-- Kiểm tra BOM của model trên MES
+SELECT BH.BomHeaderNo, BH.MaterialCode, BH.BomVersion,
+       BD.ChildMaterialCode, BD.Qty, BD.Unit, BD.RouteCode
+FROM STB_BomHeader BH
+JOIN STB_BomDetail BD ON BH.BomHeaderNo = BD.BomHeaderNo
+WHERE BH.MaterialCode = 'Mã_Model'
+ORDER BY BD.RouteCode, BD.ChildMaterialCode
+```
+
+---
 
 ## 5. Hành Chính & Nhân Sự
-Ngoài các quy trình sản xuất, Groupware quản lý các phê duyệt sau:
-* **Business Trip Document:** Form đi công tác (trong nước/nước ngoài), yêu cầu làm **Business Trip Report** sau khi về để làm cơ sở thanh toán.
-* **Holiday Work Request:** Form đăng ký đi làm ngày lễ/ngày nghỉ.
-* **Emp Request / Employee Retire:** Tuyển dụng / Nghỉ việc.
-* **Draft Document:** Trình ký văn bản nội bộ.
-* **Disbursement Document:** Yêu cầu thanh toán chi phí (chọn đúng tài khoản VNĐ hoặc USD tùy vào mua trong nước hay nước ngoài).
-* **Partner Management:** Đăng ký Khách hàng / Nhà cung cấp mới.
 
-## 6. Các điểm cần chú ý khi Debug
-* **Không thấy PO trên MES (B310/B450):** Kiểm tra lại trạng thái PO trên Groupware xem đã được "Xác nhận lô hàng" (chuyển sang Sản xuất) chưa, và BOM Version có đúng `2001` không.
-* **Không nhập được kho F330:** Kiểm tra đơn Arrival Confirmation trên Groupware đã được duyệt chưa.
-* **Không làm được Receiving Confirmation:** Kiểm tra lại lô hàng đã được đội QC test Pass trên màn hình C220 của MES chưa.
+| Document | Mục đích | Lưu ý |
+|----------|----------|-------|
+| **Business Trip Document** | Đi công tác trong/ngoài nước | Phải làm **Business Trip Report** sau khi về để thanh toán |
+| **Holiday Work Request** | Đăng ký đi làm ngày lễ/nghỉ | — |
+| **Emp Request / Employee Retire** | Tuyển dụng / Nghỉ việc | — |
+| **Draft Document** | Trình ký văn bản nội bộ | — |
+| **Disbursement Document** | Yêu cầu thanh toán chi phí | Chọn đúng tài khoản VNĐ hoặc USD |
+| **Partner Management** | Đăng ký Khách hàng / Nhà cung cấp mới | — |
+
+---
+
+## 6. Chỉ Định NCC ↔ NVL (F130 / F140)
+
+**F130 — Từ 1 Nhà cung cấp, chỉ định được cung cấp những NVL nào:**
+1. Tìm kiếm nhà cung cấp (trái) → Click chọn NCC
+2. Bên phải hiển thị danh sách NVL
+3. **Tick vào ô "Sử dụng"** cho từng NVL được phép → Lưu
+
+**F140 — Từ 1 Vật liệu, chỉ định có thể mua từ những NCC nào:**
+1. Tìm kiếm NVL (trái) → Click chọn NVL
+2. Bên phải hiển thị danh sách NCC
+3. **Tick vào ô "Sử dụng"** cho từng NCC được phép → Lưu
+
+> **Tác động:** F130/F140 ảnh hưởng đến popup chọn NCC khi tạo tài liệu nhập kho ở F312.
+
+```sql
+-- Kiểm tra NCC nào được phép cung cấp NVL này
+SELECT * FROM STB_MaterialVendorMapping
+WHERE MaterialCode = 'Mã_NVL' AND IsUsed = 1
+
+-- Thêm mapping mới (nếu cần)
+INSERT INTO STB_MaterialVendorMapping (MaterialCode, VendorCode, IsUsed, CreateDateTime, CreateUserID)
+VALUES ('Mã_NVL', 'Mã_NCC', 1, GETDATE(), 'vinaadmin')
+```
+
+---
+
+## 7. Luồng Master Data Chi Tiết (A210, F130/F140)
+
+**A210 — Đăng ký mã vật tư mới:**
+```
+Item Registration Document (Groupware)
+    → Loại: Cell / Module / Raw material
+    → Điền đầy đủ: MaterialCode, MaterialName, Unit, MaterialType
+    → Sau khi duyệt → sync xuống A230 (STB_MaterialMaster)
+    ↓
+A230 (MES) → Kiểm tra mã đã sync chưa
+    ↓
+F110 (MES) → Cấu hình IsLotUse, IsUseBarcode
+    ↓
+F130/F140 (MES) → Chỉ định NCC được phép cung cấp
+```
+
+```sql
+-- Kiểm tra mã vật tư đã sync từ Groupware chưa
+SELECT MaterialCode, MaterialName, MaterialTypeCode, Unit, CreateDateTime
+FROM STB_MaterialMaster
+WHERE MaterialCode = 'Mã_NVL_Mới'
+ORDER BY CreateDateTime DESC
+
+-- Nếu chưa có → Kiểm tra Groupware đã duyệt chưa
+-- Nếu đã duyệt nhưng chưa sync → Liên hệ IT kiểm tra job sync
+```
+
+*Cập nhật: 2026-05-22*
+
+
+---
+
+## 7. Luồng Master Data Chi Tiết (A210, F130/F140)
+
+**A210 — Đăng ký mã vật tư mới:**
+```
+Item Registration Document (Groupware)
+    → Loại: Cell / Module / Raw material
+    → Điền đầy đủ thông tin: MaterialCode, MaterialName, Unit, MaterialTypeCode
+    → Sau khi duyệt → sync xuống A230 (STB_MaterialMaster)
+    ↓
+A230 (MES) — Kiểm tra mã đã sync chưa
+    ↓
+F130/F140 — Chỉ định NCC được phép cung cấp NVL này
+    ↓
+F110 — Cấu hình thuộc tính kho (IsLotUse, IsUseBarcode)
+    ↓
+A310 — Kiểm tra BOM đã có NVL này chưa
+```
+
+**Kiểm tra mã vật tư đã sync từ Groupware:**
+```sql
+-- Kiểm tra mã vật tư trong MES
+SELECT MaterialCode, MaterialName, MaterialTypeCode, Unit, CreateDateTime
+FROM STB_MaterialMaster
+WHERE MaterialCode = 'Mã_NVL_Mới'
+ORDER BY CreateDateTime DESC
+
+-- Nếu chưa có → Kiểm tra Groupware đã duyệt chưa
+-- Nếu đã duyệt nhưng chưa sync → Liên hệ IT kiểm tra job sync
+```

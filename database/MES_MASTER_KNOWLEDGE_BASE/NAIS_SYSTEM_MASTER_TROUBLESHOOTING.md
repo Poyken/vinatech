@@ -1,114 +1,182 @@
-# 📘 NAIS SYSTEM MASTER TUTORIAL & TROUBLESHOOTING
+# 📘 NAIS SYSTEM MASTER TROUBLESHOOTING
 
-Tài liệu này được thiết kế để bạn có thể **tự Trace và tự Fix** lỗi hệ thống NAIS dựa trên phương pháp bài bản.
+> Tài liệu tổng hợp các lỗi thực tế đã xử lý, kèm phương pháp trace và script fix.
+> Để tra cứu chi tiết theo chủ đề → xem các file KB_0x tương ứng.
 
 ---
 
-## 1. LỖI THIẾU THIẾT LẬP VỎ NHÔM (SCREEN B597 - QC)
+## 1. LỖI THIẾU THIẾT LẬP VỎ NHÔM (B597)
 
-### 🔴 Triệu chứng
-Thông báo lỗi: *"Không tồn tại thiết lập Vỏ Nhôm của LotNo... với mã Vỏ Nhôm: GBDYAC-004 <<>> ECVT30-367"*.
+**Triệu chứng:** `"Không tồn tại thiết lập Vỏ Nhôm của LotNo... với mã Vỏ Nhôm: GBDYAC-004 <<>> ECVT30-367"`
 
-### 🔍 Cách Trace (Phương pháp)
-1. **Đọc mã lỗi:** Xác định cặp giá trị gây lỗi (Ví dụ: Vỏ `GBDYAC-004` và Model `ECVT30-367`).
-2. **Tìm điểm chặn trong Code:** Mở Stored Procedure `usp_Vietnam_RawMaterialInputHist_uid`. 
-3. **Search từ khóa:** Tìm đoạn code xử lý `@MaterialCode = 'ECVT30-367'`. Bạn sẽ thấy một đoạn `IF` đang chặn (Hard-code) chỉ cho phép một mã vỏ nhất định.
+**Root cause:** Bảng `STB_AluCaseMapping_VVT` **KHÔNG TỒN TẠI**. Logic kiểm tra vỏ nhôm được hardcode hoàn toàn bên trong SP `usp_Vietnam_RawMaterialInputHist_uid` bằng IF/NOT IN.
 
-### 🛠️ Logic xử lý & Script
-Chúng ta cần "nới lỏng" điều kiện `IF` để cho phép cả mã vỏ mới.
-**Mẫu script sửa:**
+**Trace:**
 ```sql
--- Tìm đến dòng có MaterialCode bị lỗi
-IF (@MaterialCode = 'ECVT30-367' AND @pRawMaterialBarcode NOT IN ('GBRLAC-004', 'GBDYAC-004')) 
+SELECT OBJECT_DEFINITION(OBJECT_ID('usp_Vietnam_RawMaterialInputHist_uid'))
+-- Ctrl+F tìm: 'Vỏ Nhôm' hoặc 'GBDYAC'
+-- Tìm đến đoạn: IF (@MaterialCode = 'ECVT30-367' AND @pRawMaterialBarcode NOT IN (...))
+```
+
+**Fix — chỉ có 1 cách:**
+```sql
+-- Thêm mã vỏ mới vào danh sách NOT IN trong SP
+-- Ví dụ đoạn cần sửa:
+IF (@MaterialCode = 'ECVT30-367' AND @pRawMaterialBarcode NOT IN ('GBRLAC-004', 'GBDYAC-004'))
 BEGIN
-    SET @count = 0; -- Nếu không nằm trong danh sách cho phép thì báo lỗi
+    SET @count = 0;
 END
+-- → Thêm mã vỏ mới: NOT IN ('GBRLAC-004', 'GBDYAC-004', 'MÃ_VỎ_MỚI')
+-- → ALTER PROCEDURE để deploy lại
 ```
-*Lưu ý: Luôn dùng `NOT IN` để có thể thêm nhiều mã vỏ hợp lệ vào danh sách.*
 
 ---
 
-## 2. LỖI GỘP TÚI BÓNG QTY = 0 (SCREEN HN544 - PACKING)
+## 2. LỖI GỘP TÚI BÓNG QTY = 0 (HN544)
 
-### 🔴 Triệu chứng
-Màn hình HN544 hiển thị Qty = 0 cho các túi vừa gộp, dẫn đến không in được tem.
+**Triệu chứng:** Màn hình HN544 hiển thị Qty = 0 cho các túi vừa gộp, không in được tem.
 
-### 🔍 Cách Trace (Phương pháp)
-Kiểm tra "Sức khỏe" của Lot trong bảng Material Info.
+**Trace:**
 ```sql
-SELECT MaterialLotNo, CurrentQty, InitialQty, CreateUserID 
-FROM STB_MaterialLotInfo 
-WHERE MaterialLotNo = 'Mã_Lot_Bị_Lỗi';
+SELECT MaterialLotNo, CurrentQty, InitialQty, CreateUserID
+FROM STB_MaterialLotInfo
+WHERE MaterialLotNo = 'Mã_Lot_Bị_Lỗi'
+-- CurrentQty = 0 nhưng thực tế hàng vẫn còn → SP đã Reset nhầm số lượng về 0
 ```
-Nếu `CurrentQty = 0` nhưng thực tế hàng vẫn còn, nghĩa là logic gộp của SP đã Reset nhầm số lượng về 0.
 
-### 🛠️ Logic xử lý & Script
-Phải khôi phục lại số lượng dựa trên tổng số lượng của các túi con đã gộp vào.
+**Fix:**
 ```sql
-UPDATE STB_MaterialLotInfo 
+UPDATE STB_MaterialLotInfo
 SET CurrentQty = [Số_Lượng_Thực_Tế],
     InitialQty = [Số_Lượng_Thực_Tế]
-WHERE MaterialLotNo = 'Mã_Lot_Cần_Sửa';
+WHERE MaterialLotNo = 'Mã_Lot_Cần_Sửa'
 ```
 
 ---
 
-## 3. LỖI VENDOR LOT (SCREEN F330 - NHẬP KHO NVL)
+## 3. LỖI VENDOR LOT (F330 — Nhập kho NVL)
 
-### 🔴 Triệu chứng
-Lỗi: *"Không thể chuyển đổi mã Vendor Lot thành ngày tháng"*.
+**Triệu chứng:** `"Không thể chuyển đổi mã Vendor Lot thành ngày tháng"`
 
-### 🔍 Cách Trace (Phương pháp)
-Hệ thống NAIS thường đọc ngày sản xuất từ mã Vendor Lot (Ví dụ: Lot `250620...` -> Ngày 20/06/2025). Nếu nhà cung cấp đổi định dạng mã Lot, hệ thống sẽ không đọc được.
-**Hàm cần kiểm tra:** `fn_VVT_getdatebyVendorLot_MergeCode`.
+**Root cause:** Nhà cung cấp đổi định dạng mã Lot, hàm `fn_VVT_getdatebyVendorLot_MergeCode` không parse được.
 
-### 🛠️ Logic xử lý & Script
-Cần cập nhật Function để nó biết cách "cắt chuỗi" mới.
-**Ví dụ logic:**
-- Nếu 2 ký tự đầu là '25' -> Năm 2025.
-- Nếu 2 ký tự tiếp là '06' -> Tháng 6.
-- Nếu 2 ký tự tiếp là '20' -> Ngày 20.
-
----
-
-## 4. LỖI TRACE KẾ HOẠCH SAI LINE (SCREEN B450)
-
-### 🔴 Triệu chứng
-2 Model khác nhau nhảy chung vào 1 Line trên báo cáo.
-
-### 🔍 Cách Trace (Phương pháp - CỰC KỲ QUAN TRỌNG)
-Sử dụng **"Kỹ thuật Quét cửa sổ thời gian (Time Window)"**.
-1. Tìm 1 mã `DayPlanNo` bị sai.
-2. Xem `CreateUserID` và `CreateDateTime` (chú ý cả phần nghìn giây).
-3. Quét tất cả kế hoạch của User đó trong vòng 5-10 giây xung quanh.
-
-**Script Trace mẫu:**
+**Trace:**
 ```sql
-SELECT DayPlanNo, PlanDate, LineCode, CreateDateTime 
-FROM STB_DayProdPlan 
+SELECT OBJECT_DEFINITION(OBJECT_ID('fn_VVT_getdatebyVendorLot_MergeCode'))
+-- Đọc logic cắt chuỗi hiện tại
+-- VD: 2 ký tự đầu = năm (25=2025), 2 tiếp = tháng, 2 tiếp = ngày
+```
+
+**Fix:** Báo anh Tùng cập nhật Function để nhận dạng định dạng mới. Workaround tạm: nhập tay `LotAttr10` bằng SQL sau khi nhập phiếu.
+
+---
+
+## 4. LỖI TRACE KẾ HOẠCH SAI LINE (B450)
+
+**Triệu chứng:** 2 Model khác nhau nhảy chung vào 1 Line trên báo cáo.
+
+**Kỹ thuật Quét cửa sổ thời gian (Time Window):**
+```sql
+-- Tìm 1 mã DayPlanNo bị sai → lấy CreateUserID và CreateDateTime
+-- Quét tất cả kế hoạch của User đó trong vòng 5-10 giây xung quanh
+SELECT DayPlanNo, PlanDate, LineCode, MaterialCode, CreateDateTime
+FROM STB_DayProdPlan
 WHERE CreateUserID = 'ID_Người_Lập'
-AND CreateDateTime BETWEEN 'Giờ_Sai - 5 giây' AND 'Giờ_Sai + 5 giây'
-ORDER BY DayPlanNo ASC;
+  AND CreateDateTime BETWEEN '2026-05-16 08:00:00' AND '2026-05-16 08:00:10'
+ORDER BY DayPlanNo ASC
+```
+
+**Fix:**
+- Chưa có sản lượng → Hủy kế hoạch sai tại B450 → Tạo lại đúng Line
+- Đã có sản lượng → Dùng script Chuyển Line (KB_03 §5.9)
+
+---
+
+## 5. LỖI POPUP TRỐNG (B270)
+
+**Triệu chứng:** Nhấn vào nút chọn (Popup) nhưng không hiện ra dữ liệu.
+
+**Root cause:** Máy chưa được gán vào Line/Route đó.
+
+```sql
+-- Kiểm tra mapping
+SELECT * FROM STB_ProductMachine WHERE MachineCode = 'Mã_Máy'
+-- Nếu trống → vào B230 thêm mapping
+```
+
+**Fix — Thêm mapping Route cho máy:**
+```sql
+BEGIN TRANSACTION
+INSERT INTO STB_ProductMachine (MachineCode, LineCode, RouteCode, CreateDateTime, CreateUserID)
+SELECT 'MÃ_MÁY', 'MÃ_LINE', r.RouteCode, GETDATE(), 'vinaadmin'
+FROM (
+    SELECT 'V-22_BG' AS RouteCode UNION ALL SELECT 'V-23_BG' UNION ALL SELECT 'V-24_BG' UNION ALL
+    SELECT 'V-25_BG' UNION ALL SELECT 'V-26_BG' UNION ALL SELECT 'V-27_BG' UNION ALL SELECT 'V-28_BG'
+) r
+WHERE NOT EXISTS (
+    SELECT 1 FROM STB_ProductMachine WHERE MachineCode = 'MÃ_MÁY' AND RouteCode = r.RouteCode
+)
+COMMIT
 ```
 
 ---
 
-## 5. LỖI POPUP TRỐNG (SCREEN B270)
+## 6. LỖI KHÔNG ĐĂNG NHẬP ĐƯỢC MES
 
-### 🔴 Triệu chứng
-Nhấn vào nút chọn (Popup) nhưng không hiện ra dữ liệu để chọn.
+**Triệu chứng:** Màn hình login bị lỗi.
 
-### 🔍 Cách Trace (Phương pháp)
-Lỗi này 90% là do thiếu **Master Data Mapping**. 
-- B270 là màn hình Máy (Machine).
-- Nếu không hiện Route để chọn -> Nghĩa là Máy chưa được gán vào Line/Route đó.
-
-### 🛠️ Logic xử lý
-Vào màn hình **B230** (Cấu trúc công đoạn) để thực hiện map Máy vào đúng Line và Công đoạn (Route) tương ứng.
+**Fix theo thứ tự:**
+1. Chạy file Update trong folder cài đặt → vào lại NAIS
+2. Xóa tất cả thư mục trong `C:\AwooSystem` → cài lại từ `http://mes.hycap.co.kr:9952/`
+3. Kiểm tra tài khoản DB:
+```sql
+SELECT UserID, UserName, AllowFlag FROM SmartFramework.dbo.STB_UserInfo WHERE UserID = 'tên_user'
+-- AllowFlag = 0 → tài khoản bị khóa → vào Z410 bật lại
+```
 
 ---
 
-## 💡 NGUYÊN TẮC VÀNG KHI TỰ SỬA (RULES)
-1. **Luôn SELECT trước khi UPDATE:** Để đảm bảo điều kiện WHERE của bạn chỉ tác động đúng dòng cần sửa.
-2. **Kiểm tra Transaction:** Nếu sửa dữ liệu lớn, hãy dùng `BEGIN TRAN ... ROLLBACK/COMMIT`.
-3. **Bám sát Docx:** File `Lỗi trên NAIS System_Tái bản.docx` là "sách giáo khoa", luôn tra cứu từ khóa trong đó trước khi hỏi mentor.
+## 7. LỖI B597 — CHECKLIST ĐẦY ĐỦ
+
+```
+Theo thứ tự SP usp_Vietnam_RawMaterialInputHist_uid kiểm tra:
+□ 1. HOLDING? → SELECT MaterialWarehouseCode FROM STB_MaterialLotInfo (Check 'HOLDING_%')
+□ 2. Hết hạn? → Kiểm tra LotAttr10 + MMExtInt01
+□ 3. Sai chủng loại? → Kiểm tra BOM có mã NVL đó không (STB_BomDetail)
+□ 4. Sai độ dày điện cực? → Kiểm tra MaterialThickness (phải là số nguyên, không có .000)
+□ 5. Sai mã Electrolyte? → Kiểm tra CTE eleclyte1 trong SP
+□ 6. Thiếu cấu hình Vỏ Nhôm? → Sửa hardcode trong SP (xem §1 trên)
+□ 7. Thiếu cấu hình Slitting? → Kiểm tra stb_slittinglocationconfig_vvt
+```
+
+**Chi tiết kiểm tra hạn sử dụng NVL:**
+```sql
+-- Tra cứu nhanh hạn sử dụng của 1 Lot
+SELECT
+    MDLI.LotID,
+    MDLI.LotAttr10 AS [Ngày_SX],
+    MM.MMExtInt01 AS [Hạn_Tháng],
+    DATEADD(MONTH, MM.MMExtInt01, MDLI.LotAttr10) AS [Ngày_Hết_Hạn],
+    CASE WHEN DATEADD(MONTH, MM.MMExtInt01, MDLI.LotAttr10) < GETDATE()
+         THEN 'ĐÃ HẾT HẠN' ELSE 'CÒN HẠN' END AS [Trạng_Thái]
+FROM STB_MaterialDocLotInfo MDLI
+JOIN STB_MaterialMaster MM ON MDLI.MaterialCode = MM.MaterialCode
+WHERE MDLI.LotID = 'ML...'
+
+-- Bypass NVL hết hạn (khi QC đã đồng ý)
+INSERT INTO stb_vvt_OpenExpiredMaterial
+    (MaterialCode, LotID, ExpiredDate, OpenDate, OpenUserID, Remark)
+VALUES
+    ('mã_nvl', 'lot_id', '2026-04-10', GETDATE(), 'admin', 'QC đã kiểm tra OK')
+```
+
+---
+
+## 💡 NGUYÊN TẮC VÀNG KHI TỰ SỬA
+
+1. **Luôn SELECT trước khi UPDATE** — đảm bảo WHERE chỉ tác động đúng dòng cần sửa
+2. **Dùng BEGIN TRAN ... ROLLBACK/COMMIT** khi sửa dữ liệu quan trọng
+3. **Sửa đủ bảng** — thiếu 1 bảng gây lệch dữ liệu (VD: F330 cần sửa 3 bảng)
+4. **Ghi log thao tác** — để audit sau
+
+*Cập nhật: 2026-05-22*

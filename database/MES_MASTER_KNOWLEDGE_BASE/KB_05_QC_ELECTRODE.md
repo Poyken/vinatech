@@ -344,3 +344,358 @@ Kiểm tra tồn kho điện cực → **Stb_SlittingStock_VVT**
 ---
 
 *Cập nhật: 2026-05-17*
+
+---
+
+## 9. 🔬 QC Flow Đầy Đủ — IQC → PQC → OQC → Bending/Cutting
+
+### 9.1 IQC (Incoming Quality Control — Kiểm tra NVL đầu vào)
+
+```
+C121 (Nhóm hạng mục kiểm tra)
+    → Thêm nhóm kiểm tra IQC → Tích "Sử dụng" → Lưu
+    → Thêm hạng mục trong từng nhóm
+    ↓
+C122 (Chỉ định hạng mục cho từng NVL)
+    → Tìm NVL → Ấn "Chọn trong nhóm/Hạng mục" → Tick → OK → Lưu
+    ↓
+C220 (Kiểm tra NVL đầu vào)
+    → Khi NVL về kho → IQC vào C220 để nhập kết quả kiểm tra
+```
+
+```sql
+-- Kiểm tra hạng mục IQC của NVL
+SELECT cit.CommInspTypeName, ci.CommInspItemName, ci.CommInspUpperLimit, ci.CommInspLowerLimit
+FROM STB_CommInspItem ci
+JOIN STB_CommInspType cit ON cit.CommInspTypeCode = ci.CommInspTypeCode
+JOIN STB_CommInspIndividualSpec cs ON cs.CommInspItemCode = ci.CommInspItemCode
+WHERE cs.MaterialCode = 'mã_nvl'
+
+-- Xem lịch sử kiểm tra IQC theo NVL
+SELECT * FROM STB_CommInspDocHistory
+WHERE MaterialCode = 'mã_nvl' AND CreateDateTime >= '2026-04-01'
+```
+
+---
+
+### 9.2 PQC (Process Quality Control — Kiểm tra trong quá trình SX)
+
+```
+C141 (Thiết lập chung PQC cho tất cả model)
+    → Hạng mục, loại input (1=số, 2=checkbox)
+    ↓
+C143 (Hạng mục kiểm tra riêng theo từng model)
+    → Mapping MaterialCode → hạng mục cụ thể
+    ↓
+C443 (Kiểm tra công đoạn ngoài cell line)
+    → Scan Barcode → Nhập giá trị → Hoàn thành
+    → SP: usp_GetCommInspection_HistoryForBarcode_Vietnam
+    ↓
+C430 (Lịch sử kiểm tra công đoạn Cell Line)
+C321 (Sửa chữa lỗi — Reliability Assy)
+```
+
+**C443 — SP đầy đủ:**
+
+| SP | Loại | Chức năng |
+|----|------|-----------|
+| `usp_GetCommInspection_HistoryForBarcode_Vietnam` | Search | Lấy lịch sử + template hạng mục |
+| `usp_DoAddCommInspMeasureHistForBarcode` | Execute | Thêm kết quả đo từng hạng mục |
+| `usp_DoFinishCommInspDoc` | Execute | Hoàn thành tài liệu kiểm tra |
+| `usp_DoAddCommInspDoc_VNT` | Execute | Tạo mới tài liệu kiểm tra VNT |
+
+```sql
+-- Sửa hạng mục kiểm tra tại C443 (xóa CommInspDoc cũ rồi tạo lại)
+-- Bước 1: Tìm CommInspDocNo theo Barcode
+SELECT * FROM STB_CommInspDocHistory
+WHERE ProdNo = (SELECT ControlNo FROM STB_SetInfo WHERE Barcode = 'VVPP163R072732')
+
+-- Bước 2: Xóa để tạo lại
+DELETE FROM STB_CommInspDocItem WHERE CommInspDocNo = '...'
+DELETE FROM STB_CommInspDocHistory WHERE CommInspDocNo = '...'
+```
+
+---
+
+### 9.3 OQC (Outgoing Quality Control — Kiểm tra thành phẩm)
+
+```
+C121 (Nhóm hạng mục — dùng chung với IQC)
+    ↓
+C151 (Hạng mục kiểm tra OQC theo từng sản phẩm)
+    → Tìm MaterialCode → Chọn trong nhóm → Tick → OK → Lưu
+    → Nếu Model không có trong popup: Vào A410 → Thiết lập OQCType/InspectionLevel → Tắt C151 và vào lại
+    ↓
+C512 (Quản lý Lot kiểm tra sản phẩm)
+    → Dán Barcode → Tìm kiếm → Tạo Lot
+    → TH1 không thấy: Đã tạo Lot rồi → sang C530
+    → TH2 không thấy: Chưa thiết lập hạng mục tại A410
+    → TH3 (HN): Mã test tháng 12 bắt đầu Route VE02 → không hiện (thiết kế hệ thống)
+    ↓
+C530 (Kiểm tra sản phẩm theo từng mẫu)
+    → Nhập Barcode + Mã NV → Tìm kiếm
+    → Chọn hạng mục → Nhập giá trị bên phải → Save bên phải
+    → Chọn Pass ở bên trái → Save bên trái → Đánh giá OK → Lưu
+    → Nếu thêm/sửa hạng mục ở C151 → Ấn "Tổng hợp hạng mục" để reset
+    ↓
+C540 (Lịch sử kiểm tra từ C530)
+    ↓
+C510 → C546 → C541 (Kiểm tra ESR xuất kho)
+```
+
+```sql
+-- Model đã config OQC chưa
+SELECT ModelCode, OqcType, OqcInspectionRuleType, InspectionType, InspectionLevel
+FROM STB_ModelBasicInfo WHERE ModelCode = 'mã_model'
+
+-- Nếu NULL → update:
+UPDATE STB_ModelBasicInfo
+SET OqcType = 'MANUAL', OqcInspectionRuleType = 'BY_MODEL',
+    InspectionType = 'SAMPLE', InspectionLevel = 'SAMPLE'
+WHERE ModelCode = 'mã_model'
+
+-- Xóa CommInspDoc bị sai → tạo lại từ C512
+DELETE FROM STB_CommInspDocItem WHERE CommInspDocNo = '...'
+DELETE FROM STB_CommInspDocHistory WHERE CommInspDocNo = '...'
+
+-- Sửa kết quả OQC
+UPDATE STB_CommInspDocHistory
+SET CommInspResult = 'PASS', FinishDateTime = GETDATE()
+WHERE CommInspDocNo = '...'
+```
+
+---
+
+### 9.4 Bending/Cutting QC (C561~C564)
+
+```
+C561 (Hạng mục kiểm tra Bending/Cutting theo từng model)
+    → Tìm MaterialCode → Chọn nhóm → Tick → OK → Lưu
+    ↓
+C562 (Tạo Lot kiểm tra Bending/Cutting)
+    → Dán Barcode → Tìm kiếm → Tạo Lot
+    ↓
+C563 (Kiểm tra Lot Bending/Cutting)
+    → Giống C530: Nhập barcode → Chọn hạng mục → Nhập giá trị → Save → Đánh giá OK
+    → Nếu sửa C561 → Ấn "Tổng hợp hạng mục" để reset giá trị
+    ↓
+C564 (Lịch sử kiểm tra Bending/Cutting)
+```
+
+---
+
+### 9.5 C321 — PQC Reliability Assy (Sửa Chữa Lỗi Cell Line)
+
+**Chức năng:** PQC quản lý hàng phát sinh lỗi cần sửa chữa trong quá trình sản xuất.
+
+| SP | Chức năng |
+|----|-----------|
+| `usp_Vietnam_GetDefectRepairInfo_ForRepair` | Lấy thông tin lỗi cần sửa chữa |
+| `usp_GetDefectRepairDetailInfo_ForRepair` | Lấy chi tiết nguyên nhân lỗi |
+| `usp_GetDefectRepairPartInfo` | Lấy thông tin vật tư thay thế |
+| `usp_DoProcessLossForBarcode_VNT` | Xử lý tổn thất — ghi nhận lỗi |
+
+```sql
+-- Kiểm tra lỗi theo barcode
+SELECT * FROM STB_DefectRepairInfo WHERE ControlNo IN (
+    SELECT ControlNo FROM STB_SetInfo WHERE Barcode = 'VV...'
+)
+```
+
+> ⚠️ SQL sửa DefectQty và ProdQty công đoạn sau → xem [KB_03 Mục 5.8](KB_03_SAN_XUAT.md#58-sửa-số-lượng-ng-defectqty-màn-b791) để tránh trùng lặp.
+
+---
+
+## 10. ⚡ Điện Cực — Slitting Hà Nam (F743~F748, C243)
+
+### 10.1 Flow Slitting Hà Nam
+
+```
+F744 (Thiết lập chiều rộng)
+    → Thêm MaterialCode + Width + Đơn vị (M2 hoặc KG)
+    → NG_ConPaper + NG_Poil: 2 mã đặc biệt KHÔNG được xóa/sửa
+    ↓
+F743 (Thực hiện Slitting)
+    → Chọn MaterialCode → Tìm kiếm → Xem foil ban đầu (trái) + đã cắt (phải)
+    → Thêm foil đã cắt: (+) → Chọn mã NVL con → Nhập Length → Save
+    → Sau khi xong: Ấn "Chốt Slitting" → Chuyển sang C243
+    → In tem: Tick chọn → Ấn "Phát hành tem" → Chọn máy in
+    ↓
+C243 (QC Kiểm tra Lot Slitting)
+    → QC check sau khi Slitting đã chốt
+    → Đánh giá OK: Tự động Pass + Chuyển NG_ConPaper/NG_Poil → kho NG
+    → Đánh giá NG: Lot bị Reject → kho NG
+    ↓
+F746 (Lịch sử Slitting) → F747 (Lịch sử check NG/Pass) → F748 (Chuyển về kho NVL)
+```
+
+**Lỗi thường gặp Slitting:**
+
+| Lỗi | Nguyên nhân | Giải pháp |
+|-----|-------------|-----------|
+| "Trùng mã nguyên liệu" | Mã NVL đã thiết lập trong F744 rồi | Kiểm tra và sửa bản ghi cũ |
+| Lot không tồn tại khi chuyển F430 | Lot chưa được QC check ở C243 | Vào C243 check trước |
+| Không chuyển về kho được | Lot bị QC đánh Reject | Không thể chuyển — xử lý theo quy trình NG |
+
+```sql
+-- Thiết lập chiều rộng Slitting (F744/B552)
+UPDATE stb_slittinglocationconfig_vvt
+SET width = 16
+WHERE SlittingCode = 'YP' AND SlittingSize = 200 AND PartNo = '1625' AND id = 12
+
+-- Thêm config mới
+INSERT INTO stb_slittinglocationconfig_vvt
+    (PartNo, SlittingCode, SlittingSize, Farad, Width, WarehouseLocation, LocationWarehouse)
+VALUES
+    ('1025', 'BY', '200', '10', '17.7', 'VVT_F2', 'kho2'),
+    ('1025', 'YP', '180', '10', '17.7', 'VVT_F2', 'kho2')
+
+-- Lưu ý: WarehouseLocation, LocationWarehouse phải match STB_ElectrodeSlittingResult
+```
+
+---
+
+## 11. 🔬 Deep Core Analysis — Bản Chất Hệ Thống (2026-04-18)
+
+### 11.1 DNA Hệ Thống — 5 Triết Lý Thiết Kế
+
+**Triết lý 1: "Database là não, UI chỉ là tay"**
+- Mỗi nút "Save" → UI chỉ đọc tên SP từ `SmartFramework.STB_ScreenObjects` rồi gọi nó
+- Sửa SP = sửa logic, không cần deploy lại phần mềm
+
+**Triết lý 2: "Barcode là passport, Routing History là visa stamp"**
+```
+ControlNo/Barcode = Số hộ chiếu (không đổi suốt đời)
+STB_SetInfo = Sổ hộ chiếu (IsLineInput, IsProdFinish)
+STB_ProdRouteHist = Visa stamp tại từng điểm
+STB_ProductionOrderRouting = Danh sách cửa khẩu phải qua
+```
+
+**Triết lý 3: "Validation tại Database, không phải UI"**
+- B597 có 3 cổng chặn cứng + 1 cơ chế bypass
+- Không thể bypass từ UI — phải sửa DB hoặc SP
+
+**Triết lý 4: "Tồn kho được tính trong lúc chạy, không phải lưu sẵn"**
+- F721 tính hạn sử dụng real-time mỗi lần load màn hình
+- Công thức: `DATEADD(DAY, (MMExtInt01 * 30) + (MMExtInt01/12*6), LotAttr10)`
+- Đặc biệt `MDFLUX-002`: hardcode 179 ngày thay vì 180
+
+**Triết lý 5: "Audit Trail không thể xóa, không thể sửa"**
+- `STB_ProcedureLog` ghi mọi thao tác quan trọng
+- ~4000+ records/ngày, top SP: `usp_DoProcessProdGRMaterialByOne`
+
+---
+
+### 11.2 Bảng Ẩn Chứa Logic Quan Trọng
+
+| Bảng | Mục đích | Ghi chú |
+|------|----------|---------|
+| `stb_vvt_materialbo` | BOM ngầm cho validate NVL tại B597 | Không phải STB_BomDetail chuẩn |
+| `stb_vvt_OpenExpiredMaterial` | NVL hết hạn được phê duyệt dùng tiếp | Bypass kiểm tra hết hạn |
+| `stb_slittinglocationconfig_vvt` | Cấu hình Slitting động theo vị trí kho | Mỗi model mới phải INSERT |
+| `STB_VN_BENDING_TAPPING` | Kết quả Bending/Tapping (B717) | Chỉ lưu 1 lần |
+| `STB_LotChangeMaterialHistory` | Lịch sử đổi mã Barcode (B351) | Chain đến 6 cấp |
+| `STB_VVT_StagePrices` | Giá thành từng công đoạn | Cell + Module |
+| `STB_SavePackingTime_VVT` | Lịch sử đóng gói Module (B789) | |
+| `STB_InterimProdQtyInfo` | Số lượng trung gian (nháp) | Bị DELETE đầu mỗi lần scan |
+| `STB_VN_DIVIDEMATERIALSMAL` | Quản lý chia Lot NVL nhỏ hơn | |
+
+---
+
+### 11.3 Các Điểm Nguy Hiểm Ẩn — Developer PHẢI BIẾT
+
+**Nguy hiểm 1: SP F721 Write khi đang Read**
+- `usp_vvt_MaterialLotInfo_get` (tên "_get") nhưng **UPDATE 2 bảng** mỗi khi chạy
+- Không có transaction bảo vệ phần UPDATE → Race condition nếu chạy song song
+
+**Nguy hiểm 2: Gate 20 phút KHÔNG BAO GIỜ HOẠT ĐỘNG**
+```sql
+-- BUG trong usp_DoProcessProdRouteHistForCalc_SmartApp_VNT:
+IF @CompanyCode = 'VNT' AND @SIExtInt01 = Null AND @RouteIndex > 1 ...
+-- Phải là IS NULL, không phải = Null → Gate luôn FALSE
+```
+**Fix:** Sửa SP — thay `@SIExtInt01 = Null` thành `@SIExtInt01 IS NULL`:
+```sql
+-- Tìm dòng trong SP:
+SELECT OBJECT_DEFINITION(OBJECT_ID('usp_DoProcessProdRouteHistForCalc_SmartApp_VNT'))
+-- Ctrl+F tìm: @SIExtInt01 = Null
+-- Sửa thành: @SIExtInt01 IS NULL
+-- Sau đó ALTER PROCEDURE để deploy lại
+```
+> ⚠️ Hiện tại gate này không hoạt động nên OP VNT có thể scan hàng loạt < 20 phút mà không bị chặn. Nếu muốn enforce → phải fix SP.
+
+**Nguy hiểm 3: Bending/Tapping chỉ lưu 1 lần — không có rollback**
+- Một khi đã lưu, không có cách sửa qua UI → phải UPDATE thủ công SQL
+
+**Nguy hiểm 4: Whitelist User hardcode trong SP**
+- `usp_Set_VVT_Info_get` (B452) có danh sách UserID hardcode
+- Khi cần thêm User → PHẢI deploy lại SP
+
+**Nguy hiểm 5: Model/NVL hardcode trong usp_Vietnam_RawMaterialInputHist_uid**
+- Hàng trăm dòng hardcode với specific model names và material codes
+- Mỗi model mới cần validate terminal/electrolyte/sleeve mới đều phải **sửa SP**
+
+---
+
+### 11.4 Cơ Chế Chain Barcode (6 Cấp)
+
+```sql
+-- SP B597 theo dõi lịch sử đổi barcode đến 6 cấp:
+SELECT @LotNonew1 = NewBarcode FROM STB_LotChangeMaterialHistory WHERE OldBarcode=@pBarcode
+SELECT @LotNonew2 = NewBarcode ... WHERE OldBarcode=@LotNonew1
+-- ... đến @LotNonew6
+-- Sau đó JOIN STB_SetInfo với IN (@pBarcode, @LotNonew1, ..., @LotNonew6)
+```
+
+---
+
+### 11.5 Cơ Chế Tính Tồn Kho F721 (Logic Thực Tế)
+
+```sql
+-- Logic tính StockQty thực (có trừ phần đã chia):
+CASE
+    WHEN LTDX.DIVIDE_STOCKQTY > 0 OR LTDX.DIVIDE_STOCKQTY IS NOT NULL
+    THEN ISNULL(MLI.CurrentQty, mdli.StockQty) - LTDX.DIVIDE_STOCKQTY
+    ELSE ISNULL(MLI.CurrentQty, mdli.StockQty)
+END AS StockQty
+
+-- 3 trạng thái tồn kho theo ngày:
+-- 'Safe': Hạn dùng > 30 ngày (15 ngày nếu là Coating/Slitting Roll NVL)
+-- 'Warning': Hạn dùng < 30 ngày
+-- 'Expired': Đã hết hạn
+
+-- Kiểm tra Lot trùng lặp (fix cứng cho sự cố BG2 2026-01-09):
+AND CreateUserID <> '23091804'
+```
+
+---
+
+### 11.6 DB Audit Trail (2026-05-05) — Kết Quả Xác Minh
+
+| Hạng mục | Verified | Đúng | Sai | Tỉ lệ |
+|----------|----------|------|-----|--------|
+| Tables | 68 | 61 | 7 | 89.7% |
+| Stored Procedures | 46 | 46 | 0 | 100% |
+| Triggers | 2 | 2 | 0 | 100% |
+| Functions | 5 | 5 | 0 | 100% |
+| **TỔNG** | **~168** | **~158** | **~10** | **94.0%** |
+
+**3 Bug thực sự phát hiện:**
+
+| # | Bug | Impact |
+|---|-----|--------|
+| 1 | Gate 20 phút KHÔNG BAO GIỜ HOẠT ĐỘNG (`= Null` thay vì `IS NULL`) | OP có thể scan hàng loạt < 20 phút trên VNT |
+| 2 | `STB_MaterialHoldInfo` KHÔNG TỒN TẠI — HOLD dùng `MaterialWarehouseCode = 'HOLDING_*'` | Tài liệu cũ sai |
+| 3 | `CompleteRoute='1'` được set cho MỌI route, không chỉ route cuối | Mô tả sai nghĩa — **không cần fix**, đây là behavior đúng của hệ thống. Khi debug đừng dùng `CompleteRoute` để xác định route cuối — dùng `IsOutputRoute` trong `STB_ProductionOrderRouting` thay thế |
+
+**Các lỗi tài liệu đã sửa:**
+
+| Lỗi | Vị trí | Hành động |
+|-----|--------|----------|
+| `STB_BaseCode`, `STB_ConstCodeInfo` không có trong SmartFactoryV2 | System DNA | Nằm trong SmartFramework |
+| Factory Matrix route prefix sai (VNT=V-, VVT=E-) | Factory Matrix | Sửa: VNT=E-, VVT=V- |
+| `tbl_SlittingStock`, `tbl_BomDetail` không tồn tại | B597 | Dùng STB_BomDetail + stb_vvt_materialbo |
+| Cột `IsFIFO` trong `STB_MaterialMaster` không tồn tại | FIFO | Logic FIFO nằm trong SP |
+| View `FinishGoodMESInstock_HN` không tồn tại | HN00 | Deprecated/đổi tên |
+
+*Cập nhật: 2026-05-22 — Bổ sung QC flow đầy đủ, Slitting HN, Deep Core Analysis, DB Audit Trail*

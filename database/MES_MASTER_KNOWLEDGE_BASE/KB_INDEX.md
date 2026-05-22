@@ -1,6 +1,6 @@
 # 🗂️ NAIS MES — Knowledge Base Index
 
-> **Cập nhật:** 2026-05-18 | **Tổng hợp từ:** Lỗi thực tế + Docx gốc (đã extract toàn bộ) + Xác minh DB trực tiếp
+> **Cập nhật:** 2026-05-22 | **Tổng hợp từ:** Lỗi thực tế + Docx gốc (đã extract toàn bộ) + Xác minh DB trực tiếp + Phân tích 41 SP + Deep Core Analysis (2026-04-18) + DB Audit (2026-05-05)
 > **Cách dùng:** Đọc file INDEX này trước, sau đó mở file KB chuyên biệt theo nhóm lỗi.
 > **Groupware KB:** Xem → [`../GROUPWARE_KNOWLEDGE_BASE/GW_INDEX.md`](../GROUPWARE_KNOWLEDGE_BASE/GW_INDEX.md)
 
@@ -12,14 +12,18 @@
 |------|----------|-------------------|
 | [KB_01_UI_PHAN_QUYEN.md](KB_01_UI_PHAN_QUYEN.md) | Login, cài đặt, phân quyền User, Stage Prices | Login, A460, Z410, Z220, Z330, B682, B781 |
 | [KB_02_KHO_WMS.md](KB_02_KHO_WMS.md) | Kho NVL: F330 sai kho, F312, F430, FIFO, Holding, Hạn dùng | F330, F312, F430, F110, F721, C220 |
-| [KB_03_SAN_XUAT.md](KB_03_SAN_XUAT.md) | Sửa JobDate, Chuyển Line, VV→VJ, Xóa PO, NG, Andon | B782, B781, B598, B726, B791, B310, B450 |
+| [KB_03_SAN_XUAT.md](KB_03_SAN_XUAT.md) | Sửa JobDate, Chuyển Line, VV→VJ, Xóa PO, NG, Andon, **Cell Line vận hành chi tiết B310→B882**, Module Line, B351/B528/B598/B717/B802, In tem PAC/Digi-Key, Spare Part H301-H305, K101/K109 | B782, B781, B598, B726, B791, B310, B450, B530, B540, B523, B525, B528, B717, B802, B351, B452, B754-B758, H301-H305, K101, K109 |
 | [KB_04_DONG_GOI_IN_TEM.md](KB_04_DONG_GOI_IN_TEM.md) | Tiêu chuẩn đóng gói, fix B523 không gộp, sửa mã Lot, Qty=0 | B523, B789, B781, B351, A419 |
-| [KB_05_QC_ELECTRODE.md](KB_05_QC_ELECTRODE.md) | QC B597/C443/C512/C486, Điện cực Slitting B552, Lỗi chuỗi độ dày, Rebuild bảng & Fix layout | B597, C443, C512, C486, B552 |
+| [KB_05_QC_ELECTRODE.md](KB_05_QC_ELECTRODE.md) | QC B597/C443/C512/C486, Điện cực Slitting B552, Lỗi chuỗi độ dày, Rebuild bảng & Fix layout, **QC Flow đầy đủ IQC→PQC→OQC→Bending/Cutting**, Slitting Hà Nam F743-F748 | B597, C443, C512, C486, B552, C121-C564, F743-F748 |
 | [KB_05_TRACE_BUG_METHODOLOGY.md](KB_05_TRACE_BUG_METHODOLOGY.md) | Phương pháp trace bug 5 bước, Log hệ thống, Bảng quan trọng | Toàn bộ |
-| [KB_06_MASTER_DATA_TOOLS.md](KB_06_MASTER_DATA_TOOLS.md) | Model mới, Vol/Farad, Thêm Cell/Line, SQL Utilities, Bypass | A410, B250, B270, SQL tools |
+| [KB_06_MASTER_DATA_TOOLS.md](KB_06_MASTER_DATA_TOOLS.md) | Model mới, Vol/Farad, Thêm Cell/Line, SQL Utilities, Bypass, **Quick Start Checklist đầy đủ**, B210-B240 Line/Route, A418, B260, Địa chỉ hệ thống, Bảng 77 màn hình | A410, B210-B240, B250, B260, B270, A418, SQL tools |
 | [KB_07_GROUPWARE_INTEGRATION.md](KB_07_GROUPWARE_INTEGRATION.md) | Tích hợp Groupware: Mua hàng, Kế hoạch SX, Master Data | Groupware, F330, C220, B310, B450 |
 | [KB_08_KHO_THANH_PHAM_HN.md](KB_08_KHO_THANH_PHAM_HN.md) | Kho TP Hà Nam: Xuất HN551, Tồn HN866, Hủy F330, Xóa sản lượng | HN551, HN866, HN544, FG00 |
 | [KB_09_IN_TEM_LABEL.md](KB_09_IN_TEM_LABEL.md) | Các loại tem đặc biệt, lỗi sai mẫu, in tem khẩn | B450, B756, B767, B790, A460 |
+| [KB_10_KIEN_TRUC_TONG_QUAN.md](KB_10_KIEN_TRUC_TONG_QUAN.md) | Kiến trúc tổng quan hệ thống NAIS, 3 Trụ cột, Vòng đời dữ liệu, Dictionary Bảng, Ma trận nhà máy | System |
+| [KB_11_SP_DATAFLOW.md](KB_11_SP_DATAFLOW.md) | End-to-End Data Flow, Sơ đồ SP từng Phase (0-6), Dictionary SP, Key Identifiers | DB/SP |
+| [KB_12_DEEP_CORE_ANALYSIS.md](KB_12_DEEP_CORE_ANALYSIS.md) | Phân tích sâu cốt lõi, 5 triết lý DNA, Bảng ẩn Custom Vietnam, Điểm nguy hiểm cho Dev | DB/SP |
+| [KB_13_DB_AUDIT.md](KB_13_DB_AUDIT.md) | DB Audit Trail, 3 bugs thực tế, 7 sai lệch logic, Production Metrics | DB/Audit |
 | [NAIS_SYSTEM_MASTER_TROUBLESHOOTING.md](NAIS_SYSTEM_MASTER_TROUBLESHOOTING.md) | Cẩm nang xử lý lỗi NAIS tổng hợp từ Docx & Hình ảnh | Toàn bộ |
 
 ---
@@ -72,6 +76,38 @@
 | Không PO trên MES từ Groupware | KB_07 § 6 |
 | Không nhập được F330 (chưa duyệt) | KB_07 § 2 |
 | Trace lỗi không biết bắt đầu từ đâu | KB_05_TRACE_BUG_METHODOLOGY |
+| **Cell Line vận hành chi tiết (B310→B882)** | KB_03 § 6 |
+| B530 báo "Routing không có trong PO" | KB_03 § 6.3 |
+| B530 báo "Đã hoàn thành thực tế rồi" | KB_03 § 6.3 |
+| B530 Gate 20 phút không hoạt động (bug) | KB_05 § 11.3 |
+| B540 Module hiển thị thông số Cell | KB_03 § 6.4 |
+| B523 quy trình mới (in tem Box To trước chia box) | KB_03 § 6.5 |
+| B717 nhập sai số lượng Bending/Tapping | KB_03 § 6.6 |
+| B452 không đổi được Line | KB_03 § 6.7 |
+| Module Line flow (MV-xx routes) | KB_03 § 6.8 |
+| B351 chuyển đổi Lot/Material | KB_03 § 6.9 |
+| B528 Barrel Barcode | KB_03 § 6.10 |
+| B802 lịch sử SX điện cực | KB_03 § 6.11 |
+| B598 báo phế NVL (sửa JobDate đặc biệt) | KB_03 § 6.12 |
+| In tem PAC (B754-B756) / Digi-Key (B757-B758) | KB_03 § 6.16 |
+| Spare Part H301-H305 | KB_03 § 6.15 |
+| K101/K109 nhà máy BG2 | KB_03 § 6.14 |
+| QC Flow đầy đủ IQC→PQC→OQC | KB_05 § 9 |
+| C321 sửa chữa lỗi Cell Line | KB_05 § 9.5 |
+| Slitting Hà Nam F743-F748 | KB_05 § 10 |
+| Deep Core Analysis — DNA hệ thống | KB_12 § 1 |
+| Bảng ẩn chứa logic quan trọng | KB_12 § 3 |
+| Điểm nguy hiểm ẩn cho Developer | KB_12 § 4 |
+| DB Audit Trail 2026-05-05 | KB_13 |
+| End-to-End Data Flow | KB_11 § 1 |
+| Kiến trúc tổng quan (3 Trụ cột) | KB_10 § 1 |
+| Quick Start checklist model mới (đầy đủ 7 bước) | KB_06 § 9.1 |
+| Checklist onboard user mới | KB_06 § 9.2 |
+| Thiết lập Line/Route B210-B240 | KB_06 § 10 |
+| A418 số lượng đóng gói theo Size | KB_06 § 11 |
+| B260 nhân viên SX (WorkerGroupCode='VE-01') | KB_06 § 12 |
+| Địa chỉ URL truy cập hệ thống | KB_06 § 13 |
+| Bảng tổng hợp 77 màn hình | KB_06 § 14 |
 
 ---
 
@@ -109,4 +145,4 @@
 4. **Sửa đồng bộ đủ bảng** — Thiếu 1 bảng gây lệch dữ liệu
 5. **Ghi log tất cả thay đổi** — Để audit sau
 
-*Cập nhật: 2026-05-20 | Đã kiểm chứng bằng SELECT trực tiếp từ SmartFactoryV2*
+*Cập nhật: 2026-05-22 | Đã kiểm chứng bằng SELECT trực tiếp từ SmartFactoryV2 | Bổ sung: Cell Line chi tiết, Module Line, QC Flow đầy đủ, Deep Core Analysis, DB Audit Trail, 77 màn hình*

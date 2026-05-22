@@ -347,3 +347,197 @@ ROLLBACK  -- Đổi thành COMMIT khi chắc chắn đúng
 ```
 
 *Cập nhật: 2026-05-17*
+
+---
+
+## 9. 🚀 Quick Start — Checklist Đầy Đủ Khi Thêm Model / Hàng Mới
+
+### 9.1 Checklist Thêm Model Mới (7 bước)
+
+```
+BƯỚC 1 — Master Data (Groupware/SAP)
+□ Đăng ký MaterialCode mới trong Groupware
+□ Đăng ký BOM trong Groupware
+□ Chờ sync sang MES (thường 1-2 ngày làm việc)
+
+BƯỚC 2 — Cấu hình MES (IT thực hiện)
+□ A210: Kiểm tra MaterialTypeCode đúng chưa (FERT/HALB/MDL/ROH?)
+□ A230: Kiểm tra Material đã sync chưa
+□ A310: Kiểm tra BOM đã sync chưa
+□ A410:
+   □ Nhập MBISizeD (kích thước = Length x Diameter)
+   □ Chọn InspectionType = SAMPLE
+   □ Chọn OqcType = MANUAL
+   □ Chọn OqcInspectionRuleType = BY_MODEL
+□ A418: Thêm ProdSize (= MBISizeD) → PackQty (số lượng mỗi box)
+□ B210/B220/B230: Kiểm tra Line và Route đã cấu hình chưa
+□ B260: Kiểm tra công nhân Line mới đã đăng ký chưa (WorkerGroupCode='VE-01')
+
+BƯỚC 3 — Cấu hình QC
+□ C141: Kiểm tra hạng mục PQC đã có chưa
+□ C143: Thêm hạng mục PQC riêng cho model nếu cần
+□ C121: Kiểm tra nhóm hạng mục OQC đã có chưa
+□ C151: Thêm hạng mục OQC cho model mới
+
+BƯỚC 4 — Cấu hình Giá Thành
+□ INSERT INTO STB_VVT_StagePrices (MaterialCode, RouteCode, Price, IsUsed)
+   → Mỗi RouteCode 1 dòng, Price từ kế toán cung cấp
+
+BƯỚC 5 — Cấu hình Slitting (nếu là model điện cực mới)
+□ F744: Thêm thiết lập chiều rộng Slitting
+□ stb_slittinglocationconfig_vvt: INSERT config mới
+□ B552: Test nhập dữ liệu Mixing → Coating → Rollpress → Slitting
+
+BƯỚC 6 — Cấu hình NVL đặc biệt (nếu dùng electrolyte/sleeve/terminal mới)
+□ Thêm vào stb_vvt_materialbo (qua UI nếu có, hoặc INSERT SQL)
+□ NẾU dùng electrolyte mới → PHẢI sửa SP usp_Vietnam_RawMaterialInputHist_uid
+   → Thêm dòng: SELECT 'GBEC00-0XX' AS electrolyte, 'NEW_MODEL_CODE' AS model, 'SIZE' AS size
+
+BƯỚC 7 — Test
+□ B310: Tạo PO test
+□ B450: Tạo kế hoạch ngày test
+□ B540: Tạo Lot test
+□ B530: Nhập sản lượng từng công đoạn
+□ B597: Scan NVL tại V-23/V-24
+□ B523: Gộp Box
+□ C512: Tạo Lot OQC
+□ C530: Nhập kết quả kiểm tra
+```
+
+---
+
+### 9.2 Checklist Onboard User Mới
+
+```
+□ Z410: Tạo tài khoản User
+□ Z220: Phân nhóm quyền phù hợp theo vai trò:
+   - Công nhân SX: Chỉ xem B530, B540, B597
+   - Tổ trưởng: B530, B540, B597, B523, B598, B717
+   - QC: C141-C530-C540 range
+   - Kho: F312, F330, F430, F721
+   - IT: Tất cả + Z410, Z220
+□ Z330: Kiểm tra màn hình đã publish ra production chưa
+□ B260: Đăng ký nhân viên SX (nếu là công nhân) với WorkerGroupCode='VE-01'
+□ usp_Set_VVT_Info_get: Thêm UserID vào whitelist nếu cần đổi Line (B452)
+```
+
+---
+
+## 10. 🏗️ Thiết Lập Line & Route (B210/B220/B230/B240)
+
+> Bộ tứ màn hình Master Data quan trọng nhất về Thiết lập Định tuyến sản xuất.
+
+| Màn Hình | Tên Chức Năng | Mục Đích | Bảng Tác Động |
+|----------|---------------|----------|---------------|
+| **B210** | Đăng ký Line | Khai báo tên chuyền vật lý thuộc công ty nào | `STB_LineInfo` |
+| **B220** | Đăng ký Route | Khai báo tên công đoạn (V-01, V-23, MV-01) | `STB_RouteInfo` |
+| **B230** | Phân quyền Route vào Line | Map chuyền VVBNC-01 chạy những công đoạn nào | `STB_LineRouteMapping` |
+| **B240** | Đăng ký Máy | Phân quyền Máy móc vào Công đoạn | `STB_MachineInfo` |
+
+**Lỗi phổ biến:**
+- **B450 không thấy Line:** B210 chưa gán `IsUse=1` hoặc sai WorkCenterCode
+- **B530 không cho chọn Máy:** B240 chưa phân bổ Máy đó thuộc Route hiện tại
+- **In tem lỗi không ra Tên Line (B525):** `STB_LineInfo.LineName` bị sai ở B210
+
+---
+
+## 11. 📐 A418 — Số Lượng Đóng Gói Theo Size
+
+**Luồng dữ liệu:** A410 (MBISizeD) → A418 (PackQty) → B523 (popup số lượng gộp box)
+
+```sql
+-- Kiểm tra đã có tiêu chuẩn đóng gói chưa
+SELECT * FROM STB_PackingStandard WHERE ProdSize = 'MBISizeD_của_model'
+
+-- Lỗi "Chưa có tiêu chuẩn đóng gói ở B523":
+-- → Vào A418 → thêm ProdSize mới → nhập PackQty → Lưu
+-- → Cũng phải thêm tiêu chuẩn cân vào SP: usp_Vvt_TieuChuanPacking_Vvt
+```
+
+---
+
+## 12. 👥 B260 — Thông Tin Nhân Viên Sản Xuất
+
+> ⚠️ **WorkerGroupCode PHẢI là `VE-01`** — Nếu điền sai → nhân viên không hiển thị trong dropdown tại B530, B540
+
+| Thao tác | Bước thực hiện |
+|----------|---------------|
+| Thêm | (+) → Điền thông tin → WorkerGroupCode='VE-01' → Lưu |
+| Sửa | Click vào field → Sửa → Lưu |
+| Xóa | Chọn dòng → (-) → Yes → Lưu |
+
+**Filter tìm kiếm:** Mã công ty `VVT`, Mã địa điểm `VVT_F1`, `VVT_F2`, `VVT_F3` (Hà Nam)
+
+---
+
+## 13. 🌐 Địa Chỉ Truy Cập Hệ Thống VINATECH
+
+| Hệ thống | URL | Ghi chú |
+|----------|-----|---------|
+| MES chính | `http://mes.hycap.co.kr:9952` | Link tải + cấu hình MES |
+| ESR SVN | `https://192.168.1.234/svn/Document/ESR` | Phần mềm ESR mới nhất |
+| Location BG2 | `http://192.168.112.254:6005` | Hệ thống Locations nhà máy BG2 |
+| ANDON BG1 | `http://192.168.112.254:8006/andon` | Màn ANDON nhà máy BG1 |
+| Kho NVL BG1 | `http://192.168.112.254:7006` | Kho Nguyên Vật Liệu BG1 |
+| Kho TP BG1 | `http://192.168.112.254:9006` | Kho Thành Phẩm BG1 |
+| ANDON BN | `http://192.168.112.254:8000/andon` | Màn ANDON nhà máy Bắc Ninh |
+| Kho NVL BN | `http://192.168.112.254:7000` | Kho Nguyên Vật Liệu Bắc Ninh |
+| Kho TP BN | `http://192.168.112.254:9999` | Kho Thành Phẩm Bắc Ninh |
+| Location SX | `http://192.168.1.234:9000/tv` | Màn hình Location tại SX |
+
+---
+
+## 14. 📊 Bảng Tổng Hợp 77 Màn Hình (Quick Reference)
+
+| Nhóm | Màn hình | Mô tả |
+|------|----------|--------|
+| **A** | A210 | Loại vật liệu (FERT/HALB/MDL/ROH...) |
+| **A** | A230 | Thông tin NVL Master |
+| **A** | A310 | BOM |
+| **A** | A410 | Model Basic Info + OQC config |
+| **A** | A418 | Số lượng đóng gói theo Size |
+| **B** | B210/B220/B230/B240 | Đăng ký Line/Route/Máy |
+| **B** | B260 | Nhân viên SX (WorkerGroupCode='VE-01') |
+| **B** | B310 | Tạo PO tháng |
+| **B** | B351 | Chuyển đổi Lot/Material |
+| **B** | B450 | Kế hoạch SX ngày |
+| **B** | B452 | Đổi Line sai |
+| **B** | B453 | In tem INNER/OUTER |
+| **B** | B523 | Gộp Box Cell + Chia Box (quy trình mới) |
+| **B** | B525 | Gộp Box Module |
+| **B** | B528 | Barrel Barcode (Gộp thùng xuất hàng) |
+| **B** | B530 | Nhập sản lượng công đoạn |
+| **B** | B540 | Assy Card Info |
+| **B** | B552 | Electrode Measure Result |
+| **B** | B597 | Kiểm tra thường xuyên + scan NVL |
+| **B** | B598 | Báo phế NVL |
+| **B** | B717 | Bending & Tapping (chỉ lưu 1 lần) |
+| **B** | B754-B756 | In tem PAC (Inner/Outer/Carton) |
+| **B** | B757-B758 | In tem Digi-Key (SP + Logistic) |
+| **B** | B789 | Lịch sử đóng gói Module |
+| **B** | B802 | Lịch sử SX điện cực + giá thành |
+| **B** | B882 | ANDON |
+| **B** | B934/B935 | Import/Xem dữ liệu máy phân cấp bigsize |
+| **C** | C121/C122 | Nhóm/Hạng mục kiểm tra IQC |
+| **C** | C141/C143 | Thiết lập PQC chung/riêng theo model |
+| **C** | C151 | OQC riêng theo sản phẩm |
+| **C** | C220 | Kiểm tra NVL đầu vào (IQC) |
+| **C** | C243 | Kiểm tra Lot Slitting |
+| **C** | C321 | PQC Reliability / Sửa lỗi Cell |
+| **C** | C443 | Kiểm tra công đoạn ngoài line |
+| **C** | C510/C512/C530/C540 | Quản lý Lot OQC + Kiểm tra mẫu |
+| **C** | C546/C541 | Kiểm tra ESR xuất kho |
+| **C** | C561-C564 | Bending/Cutting QC |
+| **F** | F110 | Nhập/Xuất kho thành phẩm |
+| **F** | F130/F140 | Chỉ định NCC ↔ NVL |
+| **F** | F312 | Ghi chú NVL (Invoice) |
+| **F** | F330 | Nhập kho + in tem NVL |
+| **F** | F430 | Lịch sử xuất/nhập kho |
+| **F** | F721 | Tồn kho NVL |
+| **F** | F743-F748 | Slitting LOT Material Hà Nam |
+| **FG** | FG00/FG01/FG02 | Tổng hợp TP BN + BG |
+| **H** | H301-H305 | Spare Part |
+| **HN** | HN00/HN101 | Thành phẩm + Đơn giá Hà Nam |
+| **K** | K101/K109 | Kế hoạch SX ngày + Kiểm tra thường xuyên BG2 |
+
+*Cập nhật: 2026-05-22 — Bổ sung Quick Start checklist, B210-B240, A418, B260, địa chỉ hệ thống, bảng 77 màn hình*
