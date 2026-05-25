@@ -75,26 +75,7 @@ WHERE UserID = 'user_cần_in' AND ScreenID IN ('B756', 'B767', 'B790')
 ```
 
 **Phương án 2 — Tạo Lot thủ công (rủi ro cao, cần phê duyệt quản lý):**
-```sql
--- Bước 1: Khởi tạo Lot thủ công
-INSERT INTO STB_SetInfo
-    (Barcode, MaterialCode, PONo, DayPlanNo, ProdQty, InputLineCode,
-     InputJobDate, CreateDateTime, CreateUserID)
-VALUES
-    ('VVXX123R000001', 'Mã_Model', 'PONo', 'DayPlanNo', 1000,
-     'LineCode', CONVERT(CHAR(8), GETDATE(), 112), GETDATE(), 'vinaadmin')
-
--- Bước 2: QC Pass
-UPDATE STB_SetInfo
-SET LotDecisionResult = 'PASS', IsDefect = 0
-WHERE Barcode = 'VVXX123R000001'
-
--- Bước 3: Link Packing
-INSERT INTO STB_MaterialLotInfo
-    (LotID, LotNo, MaterialCode, InitialQty, CurrentQty, CreateDateTime, CreateUserID)
-VALUES
-    ('VVXX123R000001', 'VVXX123R000001', 'Mã_Model', 1000, 1000, GETDATE(), 'vinaadmin')
-```
+👉 **Chi tiết Script Fix:** Xem tại [KB_06_MASTER_DATA_TOOLS.md § 6](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/MES_MASTER_KNOWLEDGE_BASE/KB_06_MASTER_DATA_TOOLS.md)
 
 > ⚠️ Ghi lại tất cả thao tác này để audit sau.
 

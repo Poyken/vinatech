@@ -189,57 +189,16 @@ WHERE SI.Barcode = 'VE260507-007'
 ## 7. CÁC LỖI THƯỜNG GẶP & CÁCH XỬ LÝ NHANH
 
 ### Không gộp box được ở HN523 / B523
-
-```sql
--- 1. F110 đã cấu hình chưa?
-SELECT * FROM STB_MaterialStockAttributeInfo WHERE MaterialCode = 'MÃ_VẬT_TƯ'
--- Rỗng → Vào F110 Save
-
--- 2. QC đã Pass chưa?
-SELECT LotDecisionResult, IsDefect FROM STB_SetInfo WHERE Barcode = 'MÃ_BARCODE'
--- NULL hoặc Fail → Yêu cầu QC đánh giá
-
--- 3. Đã gộp vào Box khác chưa?
-SELECT PackingID, CurrentQty FROM STB_MaterialLotInfo WHERE LotNo = 'MÃ_LOT'
--- Có PackingID → Đã gộp rồi
-```
+👉 **Chi tiết Trace & Fix:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.4](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/MES_MASTER_KNOWLEDGE_BASE/KB_04_DONG_GOI_IN_TEM.md)
 
 ### Số lượng sai ở B789
-
-```sql
-SELECT * FROM STB_SavePackingTime_VVT WHERE LotNo = 'MÃ_LOT'
--- Tìm id bị sai → UPDATE hoặc DELETE theo id cụ thể
-UPDATE STB_SavePackingTime_VVT SET PackQty = [Số_Đúng]
-WHERE LotNo = 'MÃ_LOT' AND id = [ID_Cụ_Thể]
-```
+👉 **Chi tiết Trace & Fix:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.6](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/MES_MASTER_KNOWLEDGE_BASE/KB_04_DONG_GOI_IN_TEM.md)
 
 ### Không in được tem ở B450
-
-```sql
--- Kiểm tra mẫu tem có tồn tại không
-SELECT FormatName, IsApproval, ApplyDate
-FROM SmartFramework.dbo.STB_LabelInfo
-WHERE FormatName LIKE '%HN%' AND IsApproval = 1
-```
+👉 **Chi tiết Trace & Fix:** Xem tại [KB_01_UI_PHAN_QUYEN.md § 1.2](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/MES_MASTER_KNOWLEDGE_BASE/KB_01_UI_PHAN_QUYEN.md)
 
 ### Lỗi kế hoạch ngày chọn nhầm Line (B450) — Time Window technique
-
-**Triệu chứng:** 2 Model khác nhau nhảy chung vào 1 Line trên báo cáo.
-
-**Kỹ thuật Quét cửa sổ thời gian (Time Window):**
-```sql
--- Tìm 1 mã DayPlanNo bị sai → lấy CreateUserID và CreateDateTime
--- Quét tất cả kế hoạch của User đó trong vòng 5-10 giây xung quanh
-SELECT DayPlanNo, PlanDate, LineCode, MaterialCode, CreateDateTime
-FROM STB_DayProdPlan
-WHERE CreateUserID = 'ID_Người_Lập'
-  AND CreateDateTime BETWEEN '2026-05-16 08:00:00' AND '2026-05-16 08:00:10'
-ORDER BY DayPlanNo ASC
-```
-
-**Fix:**
-- Chưa có sản lượng → Hủy kế hoạch sai tại B450 → Tạo lại đúng Line
-- Đã có sản lượng → Chuyển Line bằng script (xem KB_03 §5.9)
+👉 **Chi tiết Trace & Fix:** Xem tại [KB_03_SAN_XUAT.md § 5.11](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/MES_MASTER_KNOWLEDGE_BASE/KB_03_SAN_XUAT.md)
 
 ---
 

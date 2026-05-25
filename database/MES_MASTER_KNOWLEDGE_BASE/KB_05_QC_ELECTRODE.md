@@ -337,9 +337,7 @@ Kiểm tra tồn kho điện cực → **Stb_SlittingStock_VVT**
 
 ### 8.5 Lỗi popup không hiện dữ liệu ở B270
 
-**Triệu chứng:** Khi gán máy vào Line ở màn B270, nhấn popup tìm kiếm không ra dữ liệu máy.
-
-**Cách sửa:** Vào màn **B230** (Quản lý thiết bị/máy móc) → Kiểm tra máy đó đã được khai báo đúng Line/Route chưa.
+👉 **Chi tiết Trace & Fix:** Xem tại [KB_01_UI_PHAN_QUYEN.md § 1.3](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/MES_MASTER_KNOWLEDGE_BASE/KB_01_UI_PHAN_QUYEN.md)
 
 ---
 
@@ -537,21 +535,7 @@ F746 (Lịch sử Slitting) → F747 (Lịch sử check NG/Pass) → F748 (Chuy�
 | Lot không tồn tại khi chuyển F430 | Lot chưa được QC check ở C243 | Vào C243 check trước |
 | Không chuyển về kho được | Lot bị QC đánh Reject | Không thể chuyển — xử lý theo quy trình NG |
 
-```sql
--- Thiết lập chiều rộng Slitting (F744/B552)
-UPDATE stb_slittinglocationconfig_vvt
-SET width = 16
-WHERE SlittingCode = 'YP' AND SlittingSize = 200 AND PartNo = '1625' AND id = 12
-
--- Thêm config mới
-INSERT INTO stb_slittinglocationconfig_vvt
-    (PartNo, SlittingCode, SlittingSize, Farad, Width, WarehouseLocation, LocationWarehouse)
-VALUES
-    ('1025', 'BY', '200', '10', '17.7', 'VVT_F2', 'kho2'),
-    ('1025', 'YP', '180', '10', '17.7', 'VVT_F2', 'kho2')
-
--- Lưu ý: WarehouseLocation, LocationWarehouse phải match STB_ElectrodeSlittingResult
-```
+👉 **Chi tiết Script Fix (Thiết lập & Cấu hình Slitting):** Xem tại [§ 8.1](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/MES_MASTER_KNOWLEDGE_BASE/KB_05_QC_ELECTRODE.md) và [§ 8.2](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/MES_MASTER_KNOWLEDGE_BASE/KB_05_QC_ELECTRODE.md) của file này.
 
 ---
 

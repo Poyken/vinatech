@@ -25,14 +25,13 @@
 | Danh sách người đi | Mặc định lấy người đăng nhập. Thêm người: Click "Thêm nhiều người" → Tìm theo phòng ban/tên/mã NV |
 
 ### Thông tin tài chính:
-| Trường | Mô tả |
-|--------|-------|
-| Tổng tiền trợ cấp | Theo chức vụ của nhân sự |
-| Tiền ăn/ngày | Theo tiêu chuẩn nhân sự |
-| Thời gian | Từ ngày → đến ngày |
-| Hộ chiếu/Visa | Ngày và hạn (nếu đi nước ngoài) |
-| Tổng số bữa ăn | Nhập tổng bữa trên toàn bộ ngày |
-| Tổng tiền chung | Hiển thị tự động cho cả nhóm |
+Hệ thống định lượng tài chính dự trù rất chi tiết:
+- **Phụ cấp chức vụ (Tổng tiền trợ cấp):** Mặc định lấy từ cấp HR.
+- **Phụ cấp ăn uống từng ngày (Tiền ăn/ngày):** Theo tiêu chuẩn nhân sự.
+- **Tổng ngày công tác (Thời gian):** Từ ngày → đến ngày.
+- **Số bữa ăn thực tế (Tổng số bữa ăn):** Khai báo tổng số bữa ăn thực tế để nhân hệ số dự trù.
+- **Tổng tiền chung:** Tự động tính toán cho cả nhóm.
+- **Đính kèm:** Bắt buộc đính kèm hình ảnh/tài liệu mô tả lộ trình đi công tác.
 
 ### Gửi đi:
 - **Gửi đi (1):** Gửi đến người duyệt
@@ -60,20 +59,27 @@
 1. Click vào **"Liên kết tài liệu"** → Hộp thoại mở ra
 2. Chọn **"Tài liệu của tôi"** → Tìm form đi công tác đã được duyệt
 3. Nhấn **"Kiểm tra"** → Danh sách form hiển thị → Chọn form cần báo cáo
-4. Điền thông tin thực tế:
+4. Điền thông tin thực tế khi trở về:
    - Người thực tế đi công tác
    - Ngày về thực tế
-   - Hãng máy bay / vé tàu xe
-   - Upload file hình ảnh vé/cuống vé
+   - **Hãng Hàng Không đã chuyên chở** / vé tàu xe (bắt buộc khai báo)
+   - **Upload Cuống máy bay/Vé Tàu** và **Report File** dưới dạng hình ảnh, PDF.
 5. Viết nội dung báo cáo → Gửi đi
+
+> 💡 **Quy trình quyết toán (Kế toán & HR):** Kế toán sẽ đối chiếu phần chi phí chênh lệch thực tế để tiến hành thanh toán thêm hoặc thu hồi tạm ứng. Bộ phận chịu chi phí phân rã (Cost Center) sẽ được cài đặt ngay tại bước này.
 
 ---
 
-## 3. 🔄 Thay Đổi Thông Tin Công Tác (Business Trip Change)
+## 3. 🔄 Thay Đổi Thông Tin Công Tác (Trip Change Document)
 
 **Vào:** Electronic Document → Business Trip → Business Trip Change Document
 
-Dùng khi form đã duyệt nhưng cần cập nhật thêm thông tin trước khi làm báo cáo.
+Dùng khi lịch trình công tác có biến động so với ban đầu (Đổi chuyến bay, đi trễ, gia hạn ngày công tác) sau khi form Pha 1 đã được duyệt.
+
+### Cách thực hiện:
+1. Click vào **"Liên kết tài liệu"** để gọi lại form đi công tác đã duyệt của chuyến đi đó.
+2. Tiến hành thay đổi thông tin và cập nhật **Ghi chú**.
+3. Trình duyệt lại lịch trình mới.
 
 ---
 
@@ -93,14 +99,14 @@ Dùng khi form đã duyệt nhưng cần cập nhật thêm thông tin trước 
 | Số giờ | Hệ thống tự tính |
 
 ### Báo cáo sau khi đi làm (Holiday Work Report):
-**Vào:** Attendance → Holiday Work Request  
-1. Click **"Liên kết tài liệu"** → Chọn form đã duyệt
-2. Chỉnh sửa thời gian thực tế: Giờ bắt đầu, giờ kết thúc, ngày thực tế
-3. Upload file báo cáo công việc (không bắt buộc)
+**Vào:** Attendance → Holiday Work Request (hoặc liên kết liên quan)
+1. Click **"Liên kết tài liệu"** → Chọn form đăng ký đi làm ngày lễ đã được duyệt trước đó.
+2. Cập nhật lại thời gian thực tế: **"Thời gian vào" (Check-in start)** và **"Kết thúc" (Check-out end)**.
+3. Đính kèm báo cáo tóm tắt công việc đã thực hiện trong ngày lễ/ngày nghỉ đó (Tùy chọn).
 
-### Xem tổng hợp (cho Nhân sự & Kế toán):
-- **Tổng hợp:** Management → Holiday Work Management → **Holiday Work Ledger** (Nhân sự kiểm tra)
-- **Thanh toán:** Management → Holiday Work Management → **Holiday Work Calculate Management** (Kế toán thanh toán)
+### Quy trình quản lý dòng chạy (HR & Kế toán):
+- **HR Admin:** Truy cập menu `Management -> Holiday Work Management -> Holiday Work Ledger` để giám sát toàn cục ai đang thực tế đi làm ngày lễ và có thể **Export Excel** để phục vụ Audit.
+- **Kế toán:** Vào giao diện `Holiday Work Calculate Management` chạy lệnh duyệt thanh toán hoặc cập nhật phiếu lương tính thêm ngày công.
 
 ---
 
@@ -108,17 +114,16 @@ Dùng khi form đã duyệt nhưng cần cập nhật thêm thông tin trước 
 
 **Vào:** Electronic Document → Human Sources → Emp Request
 
-### Các trường cần điền:
-| Trường | Mô tả |
-|--------|-------|
-| Phân loại tuyển dụng | Thay thế / Mới / Bổ sung |
-| Phân loại nhân viên | Chính thức / Thử việc / Thời vụ |
-| Số lượng | Số NV cần tuyển |
-| Ngày đến hạn | Khi nào cần có người |
-| Kinh nghiệm | Yêu cầu kinh nghiệm |
-| Học vấn | Trình độ học vấn yêu cầu |
-| Chuyên ngành | Ngành liên quan |
-| Giới tính | Ưu tiên giới tính |
+### Các trường bắt buộc cần điền:
+- **Phân loại tuyển dụng (Phân loại tuyển):** Tuyển mới / Thay thế / Bổ sung.
+- **Cơ cấu hợp đồng (Phân loại nhân viên):** Nhân viên chính thức / Thử việc / Công nhân thời vụ.
+- **Chi tiết cá nhân & Nghề nghiệp:**
+  - Số lượng tuyển dụng.
+  - Giới tính ưu tiên.
+  - Kinh nghiệm yêu cầu.
+  - Trình độ học vấn.
+  - Chuyên ngành được đào tạo.
+  - **Ngày đến hạn kết thúc phê duyệt / tuyển dụng:** Bắt buộc nhập để xác định thời hạn có nhân sự.
 
 Hoàn thiện nội dung chi tiết → Gửi đi
 
@@ -128,20 +133,17 @@ Hoàn thiện nội dung chi tiết → Gửi đi
 
 **Vào:** Electronic Document → Human Sources → Employee Retire Document
 
-### Đường line phê duyệt:
+### Đường line phê duyệt mặc định:
 Team Leader → Group Leader → Quản lý người Hàn → Bác Jang → Bác COO
 
-> ⚠️ Nếu đăng ký hộ → Chọn đúng **"Người dùng"** là người được đăng ký hộ
+> ⚠️ **Đăng ký hộ:** Nếu quản lý làm hộ cho nhân sự/công nhân dưới quyền → Click chọn **"Người dùng"** (User được áp dụng) phù hợp. Nếu không, hệ thống mặc định lấy người đang đăng nhập gửi đơn.
 
-### Các trường:
-| Trường | Mô tả |
-|--------|-------|
-| 1 | Ngày nghỉ việc |
-| 2 | Ngày làm việc cuối cùng |
-| 3 | Người đảm nhiệm công việc thay thế |
-| 4 | Thông tin liên lạc sau khi nghỉ |
-| 5 | Địa chỉ liên hệ sau khi nghỉ |
-| 6 | Lý do xin nghỉ |
+### Các trường thông tin bắt buộc:
+- **Ngày nghỉ việc / Ngày chính thức nghỉ**
+- **Ngày làm việc cuối cùng** (phải nhập chính xác)
+- **Người tiếp nhận bàn giao ("Người đảm nhiệm công việc thay thế")**
+- **Thông tin liên lạc sau khi nghỉ / Địa chỉ liên hệ sau khi nghỉ:** Dùng để phòng nhân sự xuất các loại giấy tờ bưu điện chốt Bảo hiểm xã hội (BHXH) sau khi nghỉ.
+- **Lý do xin nghỉ**
 
 ---
 
@@ -149,19 +151,22 @@ Team Leader → Group Leader → Quản lý người Hàn → Bác Jang → Bác
 
 **Vào:** Electronic Document → Basic → Draft Document
 
-**Mục đích:** Khi cần xin ý kiến hoặc xin phê duyệt mà không cần biểu mẫu nhập liệu đặc biệt.
+**Mục đích:** Phục vụ cho các hoạt động phê duyệt tự do, không theo biểu mẫu nhập liệu cố định.
 
-### Đường line phê duyệt mặc định:
-Team Leader → Group Leader
+### Đặc tính hoạt động:
+- Cho phép chèn File đính kèm không giới hạn.
+- Cho phép đổi người trình biểu mẫu (**"Thay đổi người sử dụng"** để làm hộ người khác).
+- Biểu mẫu gửi đi **có thể hủy** (chỉ thực hiện được nếu cấp trên chưa ký duyệt). Sau khi hủy, tài liệu tự động được đưa vào **Temporary Storage (Lưu trữ tạm thời)** để chỉnh sửa/xóa.
 
-### Bước làm:
-1. Chọn đường line phê duyệt → Thêm người duyệt/CC nếu cần → Áp dụng
+### Quy trình thực hiện:
+1. Chọn đường line phê duyệt → Thêm người duyệt/CC nếu cần → Áp dụng (Mặc định: Team Leader → Group Leader)
 2. Thêm tiêu đề phê duyệt
 3. Đính kèm file (nếu có)
-4. Chọn người làm hộ (nếu cần) — **"Thay đổi người sử dụng"**
-5. Điền nội dung phê duyệt
-6. Nhấn **"Gửi đi"** → Xác nhận
+4. Chọn người làm hộ (nếu cần) — sử dụng nút **"Thay đổi người sử dụng"**
+5. Điền nội dung phê duyệt bằng trình Rich-text Editor
+   > 💡 **Tính năng "✨ AI Tinh Chỉnh":** Tại khung soạn thảo Ghi chú/Nội dung trình bày, hệ thống trang bị nút hỗ trợ **"✨ AI Tinh Chỉnh"**. Tính năng này cho phép nhân sự tự động rà soát từ vựng, ngữ pháp để văn bản chuyên nghiệp hơn (sử dụng AI tích hợp) trước khi trình Sếp nước ngoài hoặc Quản lý cấp cao.
+6. Nhấn **"Gửi đi"** → Xác nhận.
 
 ---
 
-*Cập nhật: 2026-05-18 | Nguồn: Hướng dẫn Form đi công tác, nghỉ lễ, tuyển dụng, nghỉ việc, Draft Document.pptx*
+*Cập nhật: 2026-05-25 | Nguồn: Hướng dẫn Draft Document.pptx + Hướng dẫn Groupware_Form đi công tác.pptx + Hướng dẫn Form nghỉ việc - Employee Retire Document.pptx + Hướng dẫn Form Yêu cầu tuyển dụng - Emp Request.pptx + Hướng dẫn Groupware_Form đăng ký đi làm ngày lễ_ngày nghỉ.pptx + Comprehensive_Groupware_Report.md*

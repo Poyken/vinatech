@@ -110,82 +110,27 @@ SELECT OBJECT_DEFINITION(OBJECT_ID('usp_Set_VVT_Info_get'))
 
 ## 3. 💰 Giá & Stage Prices
 
-### 3.1 Add giá lên màn B682 & B781 (Cell Line)
+### 3.1 & 3.2 Sửa giá công đoạn Stage Prices (B682, B781, B789, B791)
 
-**Triệu chứng:** Cột "Giá/Chi phí" bị trống dù có sản lượng.
-
-> ⚠️ **Xác minh DB (2026-05-17):** Bảng `STB_VVT_StagePrices` có thêm nhiều cột: `RouteV29`→`RouteV34`, `RouteVE01`→`RouteVE10` (cho Hà Nam), `WorkCenterCode` (để phân biệt nhà máy).
-
-```sql
--- Kiểm tra xem model đã có giá chưa
-SELECT * FROM STB_VVT_StagePrices WHERE model = 'Mã_Model'
-
--- Thêm giá cho Cell Line (B682/B781) — Bắc Ninh và Bắc Giang (V routes)
-INSERT INTO STB_VVT_StagePrices (
-    model, RouteV22, PriceV22, RouteV23, PriceV23, RouteV24, PriceV24,
-    RouteV25, PriceV25, RouteV26, PriceV26, RouteV27, PriceV27, RouteV28, PriceV28,
-    WorkCenterCode, CreateDate)
-VALUES (
-    'MÃ_MODEL', 'V-22', 0.065, 'V-23', 0.071, 'V-24', 0.089, 'V-25', 0.094,
-    'V-26', 0.094, 'V-27', 0.110, 'V-28', 0.118,
-    'VVT_F2',  -- VVT_F1=Bắc Ninh, VVT_F2=Bắc Giang, VVT_F3=Hà Nam
-    GETDATE());
-```
-> Điều chỉnh giá trị theo đơn giá từ kế toán.
-
----
-
-### 3.2 Add giá Module (B789 & B791)
-
-```sql
--- Sửa trực tiếp Function fn_VVT_StagePricesMODULE
-SELECT OBJECT_DEFINITION(OBJECT_ID('fn_VVT_StagePricesMODULE'))
--- Tìm dòng SELECT → Thêm UNION ALL với Model mới và giá mới
--- Ví dụ:
--- SELECT 'RDMD00-368', '0.254127629071929', '0.257442076659429', '0.258507610420299' UNION ALL ...
-```
+👉 **Chi tiết Script Fix:** Xem tại [KB_06_MASTER_DATA_TOOLS.md § 3](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/MES_MASTER_KNOWLEDGE_BASE/KB_06_MASTER_DATA_TOOLS.md)
 
 ---
 
 ### 3.3 Sửa số lượng Packing ở B789
 
-```sql
--- Bước 1: Tìm bản ghi sai
-SELECT * FROM STB_SavePackingTime_VVT WHERE LotNo = 'Mã_Barcode'
-
--- Bước 2: Sửa số lượng (dùng id cụ thể)
-UPDATE STB_SavePackingTime_VVT SET PackQty = [Số_Đúng]
-WHERE LotNo = 'Mã_Barcode' AND id = [ID_Cụ_Thể]
-
--- Bước 3: Xóa bản ghi thừa
-DELETE FROM STB_SavePackingTime_VVT WHERE id = [ID_Thừa]
-```
+👉 **Chi tiết Script Fix:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.6](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/MES_MASTER_KNOWLEDGE_BASE/KB_04_DONG_GOI_IN_TEM.md)
 
 ---
 
 ### 3.4 Tắt in VV → VJ cho model
 
-```sql
-UPDATE STB_Vietnam_PackingPrinting SET PrintVJ = 0
-WHERE MaterialCode = '[Mã NVL]'
-```
+👉 **Chi tiết Script Fix:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.7](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/MES_MASTER_KNOWLEDGE_BASE/KB_04_DONG_GOI_IN_TEM.md)
 
 ---
 
 ### 3.5 Lỗi Packing Qty âm ở B523
 
-**SP liên quan:** `usp_savePackingLabelQty_VVT`
-
-```sql
--- Kiểm tra số lượng hiện tại trong từng bảng
-SELECT CurrentQty, InitialQty FROM STB_MaterialLotInfo WHERE LotNo = 'Mã_Lot'
-SELECT PackQty FROM STB_SavePackingTime_VVT WHERE LotNo = 'Mã_Lot'
-
--- Nếu CurrentQty âm → Reset về số lượng đúng
-UPDATE STB_MaterialLotInfo
-SET CurrentQty = [Số_Lượng_Thực]
-WHERE LotNo = 'Mã_Lot'
-```
+👉 **Chi tiết Script Fix:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.6](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/MES_MASTER_KNOWLEDGE_BASE/KB_04_DONG_GOI_IN_TEM.md)
 
 ---
 
@@ -278,11 +223,7 @@ WHERE ScreenName = 'Tên_Màn_Hình_Kỹ_Thuật'
 -- Bắc Giang: usp_VN_Update_ExportExcel_BG
 -- Bắc Ninh: usp_VN_Update_ExportExcel
 
--- Sửa ngày nhập/xuất kho thành phẩm BG
-UPDATE STB_VN_FINISHGOODS_BG
-SET CreateDate = CAST('2025-01-11' AS DATE),
-    DateExport = CAST('2025-01-11' AS DATE)
-WHERE IDCODE = 'FGVN_BG20250211054041195484931'
+-- 👉 Sửa ngày nhập/xuất kho thành phẩm BG: Xem tại [KB_08_KHO_THANH_PHAM_HN.md § 8](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/MES_MASTER_KNOWLEDGE_BASE/KB_08_KHO_THANH_PHAM_HN.md)
 ```
 
 *Cập nhật: 2026-05-22*

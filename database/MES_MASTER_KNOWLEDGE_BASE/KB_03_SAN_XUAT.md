@@ -115,19 +115,7 @@ WHERE ID IN (6030, 6032, 6027, 6025, 6026, 6031)
 
 ### 5.6 Sửa ngày màn FG00 (Kho Thành Phẩm BG)
 
-> **Ngày nhập:** `CreateDate` | **Ngày xuất:** `DateExport`
-
-```sql
--- Xem trước
-SELECT IDCODE, CreateDate, DateExport FROM STB_VN_FINISHGOODS_BG
-WHERE IDCODE = 'FGVN_BG20250211054041195484931'
-
--- Sửa cả 2 cột ngày
-UPDATE STB_VN_FINISHGOODS_BG
-SET CreateDate = CAST('2025-01-11' AS DATE),
-    DateExport = CAST('2025-01-11' AS DATE)
-WHERE IDCODE = 'FGVN_BG20250211054041195484931'
-```
+👉 **Chi tiết Script Fix:** Xem tại [KB_08_KHO_THANH_PHAM_HN.md § 8](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/MES_MASTER_KNOWLEDGE_BASE/KB_08_KHO_THANH_PHAM_HN.md)
 
 ---
 
@@ -262,17 +250,7 @@ ORDER BY DayPlanNo ASC
 
 ### 5.13 Sửa/Xóa số lượng đóng gói (B789)
 
-```sql
--- Tìm ID bản ghi sai
-SELECT * FROM STB_SavePackingTime_VVT WHERE LotNo = 'Barcode_Cần_Sửa'
-
--- Cập nhật PackQty
-UPDATE STB_SavePackingTime_VVT SET PackQty = 500
-WHERE LotNo = 'Barcode_Cần_Sửa' AND id = [ID_Cụ_Thể]
-
--- Xóa bản ghi thừa
-DELETE FROM STB_SavePackingTime_VVT WHERE id = [ID_Thừa]
-```
+👉 **Chi tiết Script Fix:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.6](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/MES_MASTER_KNOWLEDGE_BASE/KB_04_DONG_GOI_IN_TEM.md)
 
 ---
 

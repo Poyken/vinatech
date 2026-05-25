@@ -23,32 +23,7 @@ SELECT OBJECT_DEFINITION(OBJECT_ID('usp_vvt_MaterialLotInfo_get'))
 
 ### 4.2 Không tìm thấy mã lot ở màn C512
 
-**3 Nguyên nhân phổ biến:**
-
-| # | Nguyên nhân | Cách xử lý |
-|---|-------------|------------|
-| TH1 | Lot đã tồn tại rồi, không cần tạo lại | Báo lại user kiểm tra lại barcode |
-| TH2 | Chưa thiết lập A410 (OQC Type, Inspection Type) | Liên hệ anh Huy setup A410, sau đó tắt C151 → mở lại |
-| TH3 (Hà Nam) | Mã test bắt đầu từ Route `VE02` nên không hiện | Kiểm tra route bắt đầu của Lot |
-
-```sql
--- Kiểm tra Lot đang ở route nào
-SELECT Barcode, CurrentRouteCode, InputLineCode FROM STB_SetInfo
-WHERE Barcode = 'Mã_Barcode_Cần_Tìm'
-
--- Kiểm tra A410 đã setup chưa
-SELECT ModelCode, OqcType, InspectionType, OqcInspectionRuleType
-FROM STB_ModelBasicInfo WHERE ModelCode = 'Mã_Model'
--- Nếu OqcType hoặc InspectionType NULL → chưa setup → cần anh Huy
-
--- Fix nếu NULL:
-UPDATE STB_ModelBasicInfo
-SET OqcType = 'MANUAL', OqcInspectionRuleType = 'BY_MODEL',
-    InspectionType = 'SAMPLE', InspectionLevel = 'SAMPLE'
-WHERE ModelCode = 'Mã_Model'
-```
-
-> ⚠️ Mã Barcode ở C512 phải do bên **Sản xuất** cung cấp cho QC, không tự nhập.
+👉 **Chi tiết Nguyên nhân & Cách xử lý:** Xem tại [KB_05_QC_ELECTRODE.md § 7.2](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/MES_MASTER_KNOWLEDGE_BASE/KB_05_QC_ELECTRODE.md)
 
 ---
 
@@ -279,16 +254,7 @@ SELECT OBJECT_DEFINITION(OBJECT_ID('usp_Vietnam_RawMaterialInputHist_uid'))
 
 
 **Checklist đầy đủ khi gặp lỗi B597:**
-```
-Theo thứ tự SP usp_Vietnam_RawMaterialInputHist_uid kiểm tra:
-□ 1. HOLDING? → SELECT MaterialWarehouseCode FROM STB_MaterialLotInfo (Check 'HOLDING_%')
-□ 2. Hết hạn? → Kiểm tra LotAttr10 + MMExtInt01 (xem §4.10)
-□ 3. Sai chủng loại? → Kiểm tra BOM có mã NVL đó không (STB_BomDetail)
-□ 4. Sai độ dày điện cực? → Kiểm tra MaterialThickness (phải là số nguyên, không có .000)
-□ 5. Sai mã Electrolyte? → Kiểm tra CTE eleclyte1 trong SP
-□ 6. Thiếu cấu hình Vỏ Nhôm? → Sửa hardcode trong SP (xem trên)
-□ 7. Thiếu cấu hình Slitting? → Kiểm tra stb_slittinglocationconfig_vvt
-```
+👉 Xem tại [KB_05_QC_ELECTRODE.md § 8.3](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/MES_MASTER_KNOWLEDGE_BASE/KB_05_QC_ELECTRODE.md)
 
 ---
 

@@ -9,17 +9,19 @@
 ## 🗺️ Tổng Quan Luồng Mua Hàng
 
 ```
-[1] Purchase Order Registration  ← Tạo đơn đặt hàng
+[1] Expense Report Document      ← Yêu cầu mua hàng (Local: auto VAT / Overseas: lock VAT + Currency Conversion)
+           ↓
+[2] Purchase Order Registration  ← Tạo đơn đặt hàng (liên kết từ Expense Report)
            ↓ (Sau khi duyệt → tự đẩy vào ERP)
-[2] Arrival Confirmation         ← Khai báo hàng về đến công ty
+[3] Arrival Confirmation         ← Khai báo hàng về đến công ty
            ↓
 [MES] F330                       ← Thủ kho nhận hàng, in tem NVL
            ↓
 [MES] C220 (IQC)                 ← QC kiểm tra chất lượng → PASS
            ↓
-[3] Receiving Confirmation       ← Xác nhận nhập kho chính thức (ERP + MES cập nhật tồn kho)
+[4] Receiving Confirmation       ← Xác nhận nhập kho chính thức (ERP + MES cập nhật tồn kho)
            ↓
-[4] Purchase Resolution          ← Đóng sổ, thanh toán Vendor
+[5] Purchase Resolution          ← Đóng sổ, thanh toán Vendor
 
 [Phụ] Return Product Document    ← Nếu cần trả hàng
 [Phụ] PO Delete Document         ← Nếu PO sai cần xóa
@@ -27,7 +29,23 @@
 
 ---
 
-## 1. 📋 Purchase Order Registration (Tạo Đơn Mua Hàng)
+## 1. 📋 Yêu Cầu Mua Hàng (Expense Report Document)
+
+**Vào:** Electronic Document → Purchase → Expense Report Document (hoặc Tab hành chính/mua hàng liên quan)
+
+Dùng để đề xuất nhu cầu mua sắm trước khi lập Đơn mua hàng (PO). Hệ thống tự phân loại xử lý dựa trên nguồn gốc nhà cung cấp:
+
+- **Mua hàng nội địa (Local Vendor):**
+  - Người khởi tạo bắt buộc nhập giá trị tiền hàng.
+  - Hệ thống tự động kích hoạt cơ chế tự nhảy Thuế Giá Trị Gia Tăng (VAT).
+- **Mua hàng nước ngoài (Overseas Vendor):**
+  - Hệ thống tự động **khóa** trường nhập VAT.
+  - Kích hoạt bảng chuyển đổi **"Tỷ giá hối đoái ngoại tệ" (Currency Conversion)**.
+  - Hệ thống tự động nội suy tỷ giá thực tế tại khoảnh khắc bấm nút tạo biểu mẫu.
+
+---
+
+## 2. 📋 Purchase Order Registration (Tạo Đơn Mua Hàng)
 
 **Vào:** Electronic Document → Purchase → Purchase Order Registration Document
 
@@ -36,7 +54,7 @@
 
 ### Bước 2: Điền thông tin đơn hàng
 - **Đối tác (Vendor):** Chọn nhà cung cấp
-- **Kết nối tài liệu:** Nếu có form yêu cầu mua trước → chọn để link vào
+- **Kết nối tài liệu:** Chọn biểu mẫu **Yêu Cầu Mua Hàng (Expense Report Document)** đã duyệt trước đó để liên kết vào.
 - **Mặt hàng:** Chọn từng item cần mua
 - **Cho mỗi item:** Nhập đơn giá, số lượng, VAT, ngày giao hàng, kho, trung tâm chi phí
   - Khi nhập số lượng + đơn giá → Giá trị và VAT **tự tính toán**
@@ -49,7 +67,7 @@
 
 ---
 
-## 2. 📦 Arrival Confirmation (Xác Nhận Hàng Về)
+## 3. 📦 Arrival Confirmation (Xác Nhận Hàng Về)
 
 **Vào:** Electronic Document → Purchase → Arrival Confirmation Document
 
@@ -88,7 +106,7 @@ Tại phần liên quan đến MES F330:
 
 ---
 
-## 3. ✅ Receiving Confirmation (Xác Nhận Nhập Kho)
+## 4. ✅ Receiving Confirmation (Xác Nhận Nhập Kho)
 
 **Vào:** Electronic Document → Purchase → Receiving Confirmation Document
 
@@ -106,7 +124,7 @@ Tại phần liên quan đến MES F330:
 
 ---
 
-## 4. 🔄 Return Product Document (Trả Hàng)
+## 5. 🔄 Return Product Document (Trả Hàng)
 
 **Vào:** Electronic Document → Purchase → Return Product Document
 
@@ -120,7 +138,7 @@ Tại phần liên quan đến MES F330:
 
 ---
 
-## 5. 🗑️ Purchase Order Delete Document (Xóa PO Sai)
+## 6. 🗑️ Purchase Order Delete Document (Xóa PO Sai)
 
 **Vào:** Electronic Document → Purchase → Purchase Order Data Delete Document
 
@@ -138,7 +156,7 @@ Tại phần liên quan đến MES F330:
 
 ---
 
-## 6. 💰 Purchase Resolution (Đóng Sổ Thanh Toán)
+## 7. 💰 Purchase Resolution (Đóng Sổ Thanh Toán)
 
 **Vào:** Electronic Document → Cost Management → Purchase Resolution Document
 
@@ -162,7 +180,7 @@ Dùng để hoàn tất công việc đóng sổ cho các đơn mua hàng đã n
 
 ---
 
-## 7. 📊 Xem Tổng Hợp Đơn Mua Hàng (Purchase Total List)
+## 8. 📊 Xem Tổng Hợp Đơn Mua Hàng (Purchase Total List)
 
 **Vào:** Home → Purchase Management → Purchase Total List
 
@@ -175,7 +193,7 @@ Dùng để hoàn tất công việc đóng sổ cho các đơn mua hàng đã n
 
 ---
 
-## 8. ❓ Các Lỗi Thường Gặp
+## 9. ❓ Các Lỗi Thường Gặp
 
 | Lỗi | Nguyên nhân | Xử lý |
 |-----|-------------|-------|
@@ -186,4 +204,4 @@ Dùng để hoàn tất công việc đóng sổ cho các đơn mua hàng đã n
 
 ---
 
-*Cập nhật: 2026-05-18 | Nguồn: [GROUPWARE] Purchase Manual.pptx + extracted_text_utf8.txt*
+*Cập nhật: 2026-05-25 | Nguồn: [GROUPWARE] Purchase Manual.pptx + Comprehensive_Groupware_Report.md*

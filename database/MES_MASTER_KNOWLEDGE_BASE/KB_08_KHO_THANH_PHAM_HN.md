@@ -130,27 +130,7 @@ WHERE Barcode = 'VE260509-004'
 ```
 
 **Xóa phiếu nhập kho F330 (có IQC):**
-```sql
--- Bước 1: Tìm phiếu cần hủy
-SELECT * FROM STB_MaterialDocInfo WHERE MaterialDocNo = 'Số_Tài_Liệu'
-
--- Bước 2: Kiểm tra xem đã có IQC chưa — nếu có phải xóa IQC records trước
-SELECT * FROM STB_MaterialQcInfo WHERE MaterialDocNo = 'Số_Tài_Liệu'
--- Nếu có IQC PASS → xóa thêm:
-DELETE FROM STB_IQcDefectReport WHERE MaterialDocNo = 'Số_Tài_Liệu'
-DELETE FROM STB_MaterialQcInfo WHERE MaterialDocNo = 'Số_Tài_Liệu'
-
--- Bước 3: Lấy danh sách LotID
-SELECT LotID FROM STB_MaterialDocLotInfo WHERE MaterialDocNo = 'Số_Tài_Liệu'
-
--- Bước 4: Xóa theo thứ tự ngược (tránh lỗi FK)
-DELETE FROM STB_MaterialLotInfo WHERE LotID IN (
-    SELECT LotID FROM STB_MaterialDocLotInfo WHERE MaterialDocNo = 'Số_Tài_Liệu'
-)
-DELETE FROM STB_MaterialDocLotInfo WHERE MaterialDocNo = 'Số_Tài_Liệu'
-DELETE FROM STB_MaterialDocDetail WHERE MaterialDocNo = 'Số_Tài_Liệu'
-DELETE FROM STB_MaterialDocInfo WHERE MaterialDocNo = 'Số_Tài_Liệu'
-```
+👉 **Chi tiết Script Fix:** Xem tại [KB_02_KHO_WMS.md § 4.16](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/MES_MASTER_KNOWLEDGE_BASE/KB_02_KHO_WMS.md)
 
 ---
 
@@ -169,30 +149,6 @@ SELECT PackingID, MaterialCode, Quantity, QtyOutput,
 FROM FinishGoodMESInstock_HN
 WHERE Quantity - QtyOutput > 0
 ORDER BY CreateDateTime DESC
-```
-
----
-
-## 6A. FG02 — Tồn Kho Thành Phẩm (Bắc Giang)
-
-**Chức năng:** Màn hình quản lý thành phẩm riêng cho nhà máy **Bắc Giang**.
-
-- Route: Bắc Giang dùng prefix `V-` (giống Bắc Ninh)
-- Barcode: `VVXX123R000001` format
-- Bảng DB: `STB_VN_FINISHGOODS_BG`
-
-```sql
--- Kiểm tra tồn kho thành phẩm Bắc Giang
-SELECT IDCODE, MaterialCode, Quantity, DateExport, CreateDate
-FROM STB_VN_FINISHGOODS_BG
-WHERE DateExport IS NULL OR DateExport > GETDATE()
-ORDER BY CreateDate DESC
-
--- Sửa ngày nếu cần
-UPDATE STB_VN_FINISHGOODS_BG
-SET CreateDate = CAST('2025-01-11' AS DATE),
-    DateExport = CAST('2025-01-11' AS DATE)
-WHERE IDCODE = 'FGVN_BG20250211054041195484931'
 ```
 
 ---

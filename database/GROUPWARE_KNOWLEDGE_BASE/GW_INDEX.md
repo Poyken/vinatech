@@ -25,14 +25,15 @@
 |-----------|------------|
 | Không đăng nhập được Groupware | GW_01 § 1 |
 | Không nhớ mật khẩu | GW_01 § 2 |
-| Tạo đơn mua hàng (PO) mới | GW_02 § 1 |
-| Làm Arrival Confirmation | GW_02 § 2 |
-| Không nhập được kho F330 | GW_02 § 2 (chưa duyệt Arrival?) |
-| Làm Receiving Confirmation | GW_02 § 3 |
-| Không làm được Receiving | GW_02 § 3 (C220 đã PASS chưa?) |
-| Trả hàng về nhà cung cấp | GW_02 § 4 |
-| Xóa đơn mua hàng bị sai | GW_02 § 5 |
-| Đóng sổ thanh toán (Purchase Resolution) | GW_02 § 6 |
+| Yêu cầu mua hàng (Expense Report) | GW_02 § 1 |
+| Tạo đơn mua hàng (PO) mới | GW_02 § 2 |
+| Làm Arrival Confirmation | GW_02 § 3 |
+| Không nhập được kho F330 | GW_02 § 3 (chưa duyệt Arrival?) |
+| Làm Receiving Confirmation | GW_02 § 4 |
+| Không làm được Receiving | GW_02 § 4 (C220 đã PASS chưa?) |
+| Trả hàng về nhà cung cấp | GW_02 § 5 |
+| Xóa đơn mua hàng bị sai | GW_02 § 6 |
+| Đóng sổ thanh toán (Purchase Resolution) | GW_02 § 7 |
 | Tạo PO theo tháng | GW_03 § 1 |
 | PO không hiện trên MES (B310/B450) | GW_03 § 2 |
 | Tạo kế hoạch ngày + Lot | GW_03 § 3 |
@@ -42,10 +43,11 @@
 | Đăng ký nhà thầu/khách hàng mới | GW_04 § 4 |
 | Form đi công tác | GW_05 § 1 |
 | Báo cáo công tác về | GW_05 § 2 |
-| Đăng ký đi làm ngày nghỉ/lễ | GW_05 § 3 |
-| Yêu cầu tuyển dụng (Emp Request) | GW_05 § 4 |
-| Form nghỉ việc (Employee Retire) | GW_05 § 5 |
-| Phê duyệt văn bản nội bộ (Draft) | GW_05 § 6 |
+| Thay đổi thông tin công tác (Trip Change) | GW_05 § 3 |
+| Đăng ký đi làm ngày nghỉ/lễ | GW_05 § 4 |
+| Yêu cầu tuyển dụng (Emp Request) | GW_05 § 5 |
+| Form nghỉ việc (Employee Retire) | GW_05 § 6 |
+| Phê duyệt văn bản nội bộ (Draft) | GW_05 § 7 |
 | Làm yêu cầu thanh toán | GW_06 § 1 |
 | Duyệt yêu cầu thanh toán | GW_06 § 2 |
 | Xuất kho thành phẩm | GW_07 § 1 |
@@ -90,4 +92,4 @@ Daily Plan (Kế hoạch ngày) ───────→ B450 (Tạo Lot, in tem
 
 ---
 
-*Cập nhật: 2026-05-18 | Tổng hợp từ: extracted_text_utf8.txt + [GROUPWARE] Purchase Manual.pptx*
+*Cập nhật: 2026-05-25 | Tổng hợp từ: [GROUPWARE] Purchase Manual.pptx + Comprehensive_Groupware_Report.md*

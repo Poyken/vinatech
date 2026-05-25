@@ -57,4 +57,24 @@ Nhiều form trong Groupware cho phép làm hộ người khác:
 
 ---
 
-*Cập nhật: 2026-05-18*
+## 5. 🖥️ Tổng Quan Dashboard Trung Tâm
+
+Ngay sau khi đăng nhập, màn hình chính cung cấp hệ thống điều khiển nhanh:
+- **Pending Approval (Việc cần bạn duyệt):** Danh sách các chứng từ đang chờ bạn xử lý.
+- **My expense document (Việc đang chờ người khác duyệt):** Danh sách các chứng từ bạn tạo đang chờ duyệt.
+- **Vina Daily Insight:** Cổng cung cấp tổng quan trực quan và kết xuất nhanh thư nội bộ hoặc VinaOneQ.
+
+---
+
+## 6. ✍️ Quy Chuẩn Duyệt Toàn Hệ Thống (Approval Line)
+
+Bất kể nghiệp vụ nào đều tuân thủ nguyên tắc chọn người ký. Phân rõ vai trò:
+- **Người duyệt (Approver):** Người có quyền quyết định cuối cùng.
+- **Người Đồng ý (Agreement):** Người có liên đới cần xác nhận.
+- **Người Tham chiếu (Reference):** Người chỉ nhận thông báo để biết.
+
+> 💡 **Tính năng "Đặt Câu hỏi":** Nếu biểu mẫu bị vướng mắc, người duyệt có quyền "Đặt Câu hỏi trực tiếp" và người khởi tạo có thể "Trả lời" ngay trên tờ trình thay vì bị huỷ/reject tức khắc.
+
+---
+
+*Cập nhật: 2026-05-25*

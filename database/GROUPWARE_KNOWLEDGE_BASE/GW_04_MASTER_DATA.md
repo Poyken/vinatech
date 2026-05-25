@@ -31,20 +31,21 @@
 | Tab | Chức năng |
 |-----|-----------|
 | **Add** | Thêm tab mới để nhập code khác |
-| **Copy** | Copy nội dung tab trước, chỉnh sửa lại |
+| **Copy** | Copy nội dung tab trước, chỉnh sửa lại (Tính năng **"Copy thông số cũ sửa lại"** giúp quản lý khai báo nhanh chóng mà không cần nhập lại từ đầu khi đăng ký các sản phẩm tương đương) |
 | **Delete** | Xóa tab không cần |
 
 Các trường cần điền:
 - **Kiểu code:** Bán thành phẩm / Nguyên vật liệu
-- **Voltage:** VD: `12-3.0 C035`
-- **Farad:** VD: `3.5 mm`
+- **Thông số kỹ thuật (Spec Values):**
+  - **Voltage (Điện áp cấu hình):** VD: `12-3.0 C035`
+  - **Farad (Tiêu chuẩn tiết diện/kích cỡ Điện dung Faraday):** VD: `3.5 mm`
 
 ### Bước 4: Thông tin yêu cầu (Request Information)
-- Loại hàng: Phát triển hay sản xuất hàng loạt
-- Tên khách hàng
-- Bộ phận sản xuất
-- Người dùng code
-- Ngày đặt hàng dự kiến
+- **Loại hàng:** Sản xuất chạy thử/phát triển (**Dev**) hoặc Sản xuất hàng loạt (**Mass Production**).
+- **Tên khách hàng**
+- **Bộ phận sản xuất:** Khai báo nhóm bộ phận hưởng lượng kinh phí khi làm ra mặt hàng này.
+- **Người dùng code**
+- **Ngày đặt hàng dự kiến:** Khai báo dự kiến đơn hàng bao giờ Order.
 
 ### Bước 5: Kiểm tra chi tiết (Detail Check)
 - Đơn vị, danh mục, phân loại, nhóm sản phẩm, kích cỡ
@@ -74,7 +75,9 @@ Các trường cần điền:
 
 1. Chọn mã code thành phẩm/bán thành phẩm
 2. Nhấn Tìm kiếm
-3. Nhập phiên bản BOM
+3. Nhập phiên bản BOM:
+   > [!WARNING]
+   > **CẢNH BÁO BẮT BUỘC:** Mọi nhân sự/công nhân Việt Nam khi đăng ký phiên bản BOM trên hệ thống bắt buộc phải chọn hoặc nhập đúng mã BOM version code chuẩn mực của Việt Nam là **2001**. Tuyệt đối không chọn hoặc nhập version khác.
 4. Thêm dòng dữ liệu
 5. Chọn mã nguyên vật liệu
 6. Chọn số lượng NVL
@@ -82,7 +85,7 @@ Các trường cần điền:
 
 **Cập nhật BOM đã có:**
 1. Tìm mã code thành phẩm
-2. Nhấn Tìm kiếm → chọn phiên bản cần sửa
+2. Nhấn Tìm kiếm → chọn phiên bản cần sửa (chọn bản **2001**)
 3. Thay đổi thông tin → Lưu
 
 ### 3.2 Phê Duyệt BOM trên Groupware
@@ -95,16 +98,15 @@ Các trường cần điền:
 | 2 | Đặt tên form |
 | 3 | Đính kèm file |
 | 4 | Thêm mục / tìm kiếm code → Hệ thống tự sinh các mã đi kèm |
-| 5 | Ghi chú / giải thích lý do thay đổi |
+| 5 | Ghi chú / giải thích lý do thay đổi (chèn Note giải thích rõ ràng lý do thay đổi để trình Approve) |
 | 6 | Gửi đi duyệt |
 
-### 3.3 Kiểm Tra BOM Sau Khi Duyệt
+### 3.3 Kiểm Tra BOM Sau Khi Duyệt & Đồng Bộ MES
 
-| Màn hình MES | Mục đích |
-|--------------|----------|
-| **A310** | Kiểm tra BOM |
-| **B310** | Xem khi làm PO |
-| **A230** | Xem lại mã code |
+Tiến trình đồng bộ BOM từ ERP/Groupware sang MES sẽ tự động chạy sau khi được duyệt:
+- **A310 (Màn Quản Trị MES):** Sử dụng để kiểm tra BOM đã đồng bộ chính xác chưa.
+- **B310 (Màn Giám Sát PO cấp xưởng MES):** Xem khi làm PO xem BOM đã được áp dụng.
+- **A230 (Màn Thiết Lập MES):** Xem lại mã code.
 
 ---
 
@@ -116,18 +118,19 @@ Các trường cần điền:
 | Trường | Mô tả |
 |--------|-------|
 | Quốc gia | Nước của công ty đối tác |
-| Tên công ty | Tên đầy đủ |
-| Người đại diện | Tên đại diện pháp lý |
-| Email | Email liên hệ chính |
-| Mã số thuế | MST của doanh nghiệp |
+| Tên công ty | Tên Đăng ký Doanh nghiệp (DKKD) đầy đủ |
+| Người đại diện | Tên Giám đốc đại diện pháp lý |
+| Email | Email liên hệ chính của công ty |
+| Địa chỉ | Địa chỉ thực tế của doanh nghiệp |
+| Mã số thuế | **Bắt buộc** điền chính xác mã số thuế |
 | Danh mục thuế | Thường chọn "Người nộp thuế chung" |
 | Công ty chính/con | Thường chọn **N** (không phải công ty con) |
-| Định dạng hóa đơn | Chọn kiểu hóa đơn phát hành |
-| Mục đích | Khách hàng mua, bán, công ty thẻ tín dụng, ngân hàng |
+| Định dạng hóa đơn | Xác định định dạng hóa đơn phát hành |
+| Mục đích | Định tuyến ngầm Customer Business: Khách hàng mua (Khách Mua) / Nhà cung cấp bán (Khách Bán) / Thẻ tín dụng tổ chức / Ngân hàng thụ hưởng |
 | Phân loại | Mua / Bán / Khác |
-| Ngân hàng | Ngân hàng giao dịch + số tài khoản |
+| Ngân hàng | Khai báo chính xác ngân hàng giao dịch và số tài khoản/số thẻ |
 | Trạng thái | Còn hoạt động hay không |
-| Use / For mass use | **Use** = Đã dùng | **For mass use** = Chưa dùng |
+| Use / For mass use | Đặt cờ trạng thái **Use** (Lưu lên hệ thống cho mọi người dùng cùng sử dụng) chứ không chọn **For mass use** (Bản nháp thụ động) |
 
 ### Cập nhật thông tin đối tác:
 **Vào:** Electronic Document → Basic → Modify Partner Management
@@ -139,4 +142,4 @@ Các trường cần điền:
 
 ---
 
-*Cập nhật: 2026-05-18 | Nguồn: Hướng dẫn đăng ký các loại code.pptx + Hướng dẫn sửa đổi BOM.pptx*
+*Cập nhật: 2026-05-25 | Nguồn: Hướng dẫn đăng ký các loại code.pptx + Hướng dẫn sửa đổi BOM.pptx + Comprehensive_Groupware_Report.md*

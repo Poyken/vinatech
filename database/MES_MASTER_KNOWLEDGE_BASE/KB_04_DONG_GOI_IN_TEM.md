@@ -195,12 +195,7 @@ Module Line (B528/B598/B717/B802)
 | `usp_savePackingLabelQty_VVT` | Lưu số lượng trên tem |
 
 **Lỗi NVL mới không gộp Box được:**
-```sql
--- Kiểm tra F110
-SELECT MaterialCode, IsUseBarcode, IsLotUse
-FROM STB_MaterialStockAttributeInfo WHERE MaterialCode = 'Mã_NVL'
--- Nếu không có dòng → Vào F110 nhập và Save
--- Nếu IsLotUse = 0 → Vào F110 tích và Save
+👉 **Trường hợp do F110:** Xem tại [KB_06_MASTER_DATA_TOOLS.md § 2.1](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/MES_MASTER_KNOWLEDGE_BASE/KB_06_MASTER_DATA_TOOLS.md)
 
 -- Thêm model mới vào ModelBasicInfo nếu thiếu Vol/Farad
 SELECT * FROM STB_ModelBasicInfo WHERE ModelCode = 'RDMD00-368'
