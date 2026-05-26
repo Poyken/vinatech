@@ -15,7 +15,6 @@
 | [KB_03_SAN_XUAT.md](KB_03_SAN_XUAT.md) | Sửa JobDate, Chuyển Line, VV→VJ, Xóa PO, NG, Andon, **Cell Line vận hành chi tiết B310→B882**, Module Line, B351/B528/B598/B717/B802, In tem PAC/Digi-Key, Spare Part H301-H305, K101/K109 | B782, B781, B598, B726, B791, B310, B450, B530, B540, B523, B525, B528, B717, B802, B351, B452, B754-B758, H301-H305, K101, K109 |
 | [KB_04_DONG_GOI_IN_TEM.md](KB_04_DONG_GOI_IN_TEM.md) | Tiêu chuẩn đóng gói, fix B523 không gộp, sửa mã Lot, Qty=0 | B523, B789, B781, B351, A419 |
 | [KB_05_QC_ELECTRODE.md](KB_05_QC_ELECTRODE.md) | QC B597/C443/C512/C486, Điện cực Slitting B552, Lỗi chuỗi độ dày, Rebuild bảng & Fix layout, **QC Flow đầy đủ IQC→PQC→OQC→Bending/Cutting**, Slitting Hà Nam F743-F748 | B597, C443, C512, C486, B552, C121-C564, F743-F748 |
-| [KB_05_TRACE_BUG_METHODOLOGY.md](KB_05_TRACE_BUG_METHODOLOGY.md) | Phương pháp trace bug 5 bước, Log hệ thống, Bảng quan trọng | Toàn bộ |
 | [KB_06_MASTER_DATA_TOOLS.md](KB_06_MASTER_DATA_TOOLS.md) | Model mới, Vol/Farad, Thêm Cell/Line, SQL Utilities, Bypass, **Quick Start Checklist đầy đủ**, B210-B240 Line/Route, A418, B260, Địa chỉ hệ thống, Bảng 77 màn hình | A410, B210-B240, B250, B260, B270, A418, SQL tools |
 | [KB_07_GROUPWARE_INTEGRATION.md](KB_07_GROUPWARE_INTEGRATION.md) | Tích hợp Groupware: Mua hàng, Kế hoạch SX, Master Data | Groupware, F330, C220, B310, B450 |
 | [KB_08_KHO_THANH_PHAM_HN.md](KB_08_KHO_THANH_PHAM_HN.md) | Kho TP Hà Nam: Xuất HN551, Tồn HN866, Hủy F330, Xóa sản lượng | HN551, HN866, HN544, FG00 |
@@ -24,6 +23,7 @@
 | [KB_11_SP_DATAFLOW.md](KB_11_SP_DATAFLOW.md) | End-to-End Data Flow, Sơ đồ SP từng Phase (0-6), Dictionary SP, Key Identifiers | DB/SP |
 | [KB_12_DEEP_CORE_ANALYSIS.md](KB_12_DEEP_CORE_ANALYSIS.md) | Phân tích sâu cốt lõi, 5 triết lý DNA, Bảng ẩn Custom Vietnam, Điểm nguy hiểm cho Dev | DB/SP |
 | [KB_13_DB_AUDIT.md](KB_13_DB_AUDIT.md) | DB Audit Trail, 3 bugs thực tế, 7 sai lệch logic, Production Metrics | DB/Audit |
+| [KB_14_TRACE_BUG_METHODOLOGY.md](KB_14_TRACE_BUG_METHODOLOGY.md) | Phương pháp trace bug 5 bước, Log hệ thống, Bảng quan trọng | Toàn bộ |
 | [NAIS_SYSTEM_MASTER_TROUBLESHOOTING.md](NAIS_SYSTEM_MASTER_TROUBLESHOOTING.md) | Cẩm nang xử lý lỗi NAIS tổng hợp từ Docx & Hình ảnh | Toàn bộ |
 
 ---
@@ -75,7 +75,7 @@
 | Màn HNC321 nhập phế lỗi | KB_08 § 3 |
 | Không PO trên MES từ Groupware | KB_07 § 6 |
 | Không nhập được F330 (chưa duyệt) | KB_07 § 2 |
-| Trace lỗi không biết bắt đầu từ đâu | KB_05_TRACE_BUG_METHODOLOGY |
+| Trace lỗi không biết bắt đầu từ đâu | KB_14_TRACE_BUG_METHODOLOGY |
 | **Cell Line vận hành chi tiết (B310→B882)** | KB_03 § 6 |
 | B530 báo "Routing không có trong PO" | KB_03 § 6.3 |
 | B530 báo "Đã hoàn thành thực tế rồi" | KB_03 § 6.3 |

@@ -52,13 +52,16 @@ database/
 │   ├── KB_03_SAN_XUAT.md
 │   ├── KB_04_DONG_GOI_IN_TEM.md
 │   ├── KB_05_QC_ELECTRODE.md
-│   ├── KB_05_TRACE_BUG_METHODOLOGY.md
 │   ├── KB_06_MASTER_DATA_TOOLS.md
 │   ├── KB_07_GROUPWARE_INTEGRATION.md
 │   ├── KB_08_KHO_THANH_PHAM_HN.md
 │   ├── KB_09_IN_TEM_LABEL.md
-│   ├── NAIS_SYSTEM_MASTER_TROUBLESHOOTING.md
-│   └── Vinatech_MES_Complete_DataFlow.md  # DataFlow đầy đủ (261KB)
+│   ├── KB_10_KIEN_TRUC_TONG_QUAN.md
+│   ├── KB_11_SP_DATAFLOW.md
+│   ├── KB_12_DEEP_CORE_ANALYSIS.md
+│   ├── KB_13_DB_AUDIT.md
+│   ├── KB_14_TRACE_BUG_METHODOLOGY.md
+│   └── NAIS_SYSTEM_MASTER_TROUBLESHOOTING.md
 ├── GROUPWARE_KNOWLEDGE_BASE/        # Knowledge Base Groupware
 │   ├── GW_INDEX.md
 │   ├── GW_01_DANG_NHAP.md
@@ -102,11 +105,15 @@ database/
 | KB_03_SAN_XUAT | JobDate, ChuyểnLine, Xóa PO, NG | B782, B781, B310 |
 | KB_04_DONG_GOI_IN_TEM | Đóng gói, fix B523, Lot | B523, B789, B351 |
 | KB_05_QC_ELECTRODE | QC B597/C443/C486, Điện cực B552 | B597, C443, C486 |
-| KB_05_TRACE_BUG_METHODOLOGY | Phương pháp trace bug 5 bước | Toàn bộ |
 | KB_06_MASTER_DATA_TOOLS | Model mới, Cell/Line, Bypass | A410, B250, B270 |
 | KB_07_GROUPWARE_INTEGRATION | Mua hàng→F330, Kế hoạch→B310 | F330, B310, B450 |
 | KB_08_KHO_THANH_PHAM_HN | Kho TP Hà Nam, xuất/hủy/xóa | HN551, HN866 |
 | KB_09_IN_TEM_LABEL | Tem đặc biệt, in khẩn, sai mẫu | B450, B756, B767 |
+| KB_10_KIEN_TRUC_TONG_QUAN | Kiến trúc hệ thống, vòng đời dữ liệu | Toàn bộ |
+| KB_11_SP_DATAFLOW | End-to-End Data Flow, Dictionary SP | DB/SP |
+| KB_12_DEEP_CORE_ANALYSIS | Phân tích sâu cốt lõi, DNA hệ thống | DB/SP |
+| KB_13_DB_AUDIT | Nhật ký Audit DB, lỗi thực tế | DB/Audit |
+| KB_14_TRACE_BUG_METHODOLOGY | Phương pháp trace bug 5 bước & Cẩm nang chi tiết | Toàn bộ |
 
 ### Groupware (GROUPWARE_KNOWLEDGE_BASE/)
 | File | Phạm vi |
