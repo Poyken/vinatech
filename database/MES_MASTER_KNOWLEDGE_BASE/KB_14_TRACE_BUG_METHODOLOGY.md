@@ -137,111 +137,265 @@ Cột `Data` trong bảng `STB_ProcessTerminalDataLog` lưu chuỗi dữ liệu 
 
 ---
 
-## 4. 🚀 HƯỚNG DẪN THỰC HÀNH DEMO THỰC TẾ (WALKTHROUGH DEMO)
+## 4. 🚀 HƯỚNG DẪN CHI TIẾT TỪNG STEP CHO 4 LỖI TRỌNG ĐIỂM (WITH DEMO CASES)
 
-### 🔴 Tình huống giả định:
-> Công nhân Nguyễn Văn Đức báo lỗi: *"Tôi đang quét Lot `SP20260525-001` tại màn hình đóng gói **B523** để gộp vào Box ID `BOX-VNT-999` thì hệ thống báo lỗi đỏ: **[ERROR] Barcode không hợp lệ hoặc chưa qua QC kiểm tra**"*.
-
-Dưới đây là tiến trình truy vết và giải quyết lỗi theo đúng 5 bước:
+Dưới đây là cẩm nang hướng dẫn xử lý chi tiết từng bước (Step-by-step) cho 4 nhóm lỗi kinh điển trên hệ thống NAIS MES, được thiết kế dưới dạng "cầm tay chỉ việc", đảm bảo kỹ sư vận hành có thể tự tin xử lý an toàn kèm ví dụ demo thực tế.
 
 ---
 
-### Step 1: Xác định triệu chứng
-* **Màn hình:** `B523` (Đóng gói sản phẩm).
-* **Mã Lot:** `SP20260525-001`.
-* **Thao tác:** Gộp Box (Packing).
-* **Thông báo lỗi:** "Barcode không hợp lệ hoặc chưa qua QC kiểm tra".
+### 4.1 LỖI KHÔNG GỘP ĐƯỢC BOX (MÀN HÌNH B523)
 
----
+#### 🔴 Triệu chứng hiện trường:
+Công nhân scan Lot/Barcode sản phẩm tại màn hình đóng gói **B523**, nhưng hệ thống báo lỗi đỏ: *"Chưa có tiêu chuẩn đóng gói"* hoặc *"Barcode không đủ điều kiện gộp box"*.
 
-### Step 2: Tìm Stored Procedure xử lý
-Chạy truy vấn tra cứu trong SSMS:
-```sql
--- Tìm xem màn B523 tên là gì
-SELECT Name, Caption FROM SmartFramework.dbo.STB_ScreenInfo WHERE TCode = 'B523';
--- Kết quả trả về: Name = 'Vietnam_Donggoi_Hnam'
+#### 🔍 Quy trình truy vết & xử lý (4 bước chuẩn):
 
--- Tìm SP xử lý nút bấm trên màn hình đó
-SELECT ObjectName, Caption, LinkURL FROM SmartFramework.dbo.STB_ScreenObjects
-WHERE ScreenName = 'Vietnam_Donggoi_Hnam' AND ObjectType = 'Action';
--- Kết quả trả về: LinkURL = 'usp_Vietnam_DoProcessProdPacking_VVT_F3'
-```
-➔ Chúng ta xác định được SP cốt lõi xử lý logic này là: **`usp_Vietnam_DoProcessProdPacking_VVT_F3`**.
+*   **Bước 1: Kiểm tra cấu hình FIFO & Barcode trong Master (F110)**
+    Hệ thống chỉ cho phép gộp box đối với các vật tư được khai báo sử dụng Barcode và quản lý Lot.
+    ```sql
+    -- Query kiểm tra master thuộc tính vật tư
+    SELECT MaterialCode, IsUseBarcode, IsLotUse 
+    FROM STB_MaterialStockAttributeInfo 
+    WHERE MaterialCode = 'Mã_Vật_Tư'; -- Ví dụ: 'LIVT38-025'
+    ```
+    *   *Cách xử lý:* Nếu bảng trả về không có dữ liệu hoặc `IsLotUse = 0`, yêu cầu Master Data vào màn hình **F110** tìm mã vật tư và tích chọn **Use Barcode** + **Lot Use**, sau đó bấm **Save**.
+    *   *Bypass nhanh bằng SQL:*
+        ```sql
+        UPDATE STB_MaterialStockAttributeInfo 
+        SET IsLotUse = 1, IsUseBarcode = 1 
+        WHERE MaterialCode = 'Mã_Vật_Tư';
+        ```
 
----
-
-### Step 3: Kiểm tra sức khỏe dữ liệu thực tế
-Truy vấn trực tiếp bảng `STB_SetInfo` để xem Lot này đang ở trạng thái nào:
-```sql
-SELECT Barcode, MaterialCode, ProdQty, LotDecisionResult, IsDefect, IsProdFinish
-FROM STB_SetInfo
-WHERE Barcode = 'SP20260525-001';
-```
-
-**Bảng kết quả trả về từ Database:**
-| Barcode | MaterialCode | ProdQty | LotDecisionResult | IsDefect | IsProdFinish |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| SP20260525-001 | 10VHV1000MD12 | 1000 | **NULL** | 0 | 1 |
-
-> 🔍 **Phân tích dữ liệu:**
-> - `IsProdFinish = 1` ➔ Lot đã hoàn thành sản xuất (Đạt).
-> - `IsDefect = 0` ➔ Lot không bị đánh dấu NG (Đạt).
-> - `LotDecisionResult = NULL` ➔ **ĐÂY CHÍNH LÀ NGUYÊN NHÂN.** Giá trị `NULL` nghĩa là Lot này chưa được phòng QC kiểm tra và bấm xác nhận "PASS" tại công đoạn kiểm tra chất lượng ngoại quan (Màn hình QC `B597`).
-
----
-
-### Step 4: Kiểm tra log hệ thống (Xác minh bổ sung)
-Truy vấn log gói tin thô để xem thời điểm quét hệ thống phản hồi thế nào:
-```sql
-SELECT ProcessDateTime, IPAddress, Data, ProcessResult
-FROM STB_ProcessTerminalDataLog
-WHERE Data LIKE '%SP20260525-001%'
-ORDER BY ProcessDateTime DESC;
-```
-*Kết quả cột `ProcessResult` trả về:* `NG: [B523_VALIDATION] Lot SP20260525-001 chua duoc QC phe duyet tai man hinh B597.` ➔ Khớp hoàn toàn với phân tích ở Step 3.
-
----
-
-### Step 5: Đề xuất giải pháp sửa lỗi an toàn (Demo Transaction)
-
-#### Phương án 1 (Khuyên dùng - Chuẩn nghiệp vụ):
-Yêu cầu nhân viên QC vào màn hình `B597`, tìm mã Lot `SP20260525-001` và thực hiện đánh giá chất lượng sản phẩm sang **PASS**. Sau đó công nhân Đức quét lại trên B523 sẽ gộp box thành công.
-
-#### Phương án 2 (Cứu hộ khẩn cấp bằng SQL - Chỉ chạy khi có chỉ thị từ Quản lý):
-Nếu đây là đơn hàng gấp và Quản lý QC xác nhận lô này thực tế đã đạt nhưng hệ thống bị lỗi mạng chưa lưu kịp, chúng ta viết Script cập nhật an toàn bằng Transaction gửi cho User tự chạy:
-
-```sql
--- SCRIPT FIX DỮ LIỆU AN TOÀN - CHỈ DÙNG KHI CÓ CHỈ THỊ CỦA QUẢN LÝ
-BEGIN TRANSACTION;
-BEGIN TRY
-    -- 1. SELECT kiểm tra trước khi sửa
-    SELECT Barcode, LotDecisionResult 
+*   **Bước 2: Kiểm tra trạng thái đánh giá chất lượng (QC Pass)**
+    Hệ thống NAIS MES chặn cứng không cho đóng gói sản phẩm nếu lô hàng chưa qua kiểm tra QC hoặc bị QC đánh giá FAIL.
+    ```sql
+    -- Query kiểm tra kết quả đánh giá QC
+    SELECT Barcode, LotDecisionResult, IsDefect, DefectQty 
     FROM STB_SetInfo 
-    WHERE Barcode = 'SP20260525-001';
+    WHERE Barcode = 'Mã_Barcode_Sản_Phẩm'; -- Ví dụ: 'VVPO093R010707'
+    ```
+    *   *Cách xử lý:* Nếu `LotDecisionResult` is `NULL` hoặc `'FAIL'`, yêu cầu tổ QC vào màn hình **B597** đánh giá chất lượng lô hàng sang **PASS**. (Xem thêm mục 4.2 nếu cần hủy kết quả QC cũ để đánh giá lại).
 
-    -- 2. Cập nhật trạng thái QC sang PASS để bypass validation
-    UPDATE STB_SetInfo
-    SET LotDecisionResult = 'PASS',
-        ChangeUserID = 'system_fix',
-        ChangeDateTime = GETDATE()
-    WHERE Barcode = 'SP20260525-001'
-      AND LotDecisionResult IS NULL; -- Điều kiện ràng buộc an toàn
+*   **Bước 3: Kiểm tra xem Lot đã bị gộp vào Box khác chưa**
+    ```sql
+    -- Query kiểm tra xem Lot đã có PackingID (Box ID) gắn vào chưa
+    SELECT LotID, LotNo, PackingID, CurrentQty 
+    FROM STB_MaterialLotInfo 
+    WHERE LotNo = 'Mã_Barcode_Sản_Phẩm';
+    ```
+    *   *Cách xử lý:* Nếu cột `PackingID` hiển thị một mã khác (Ví dụ: `'PKHN023117'`), nghĩa là Lot này đã được gộp vào Box đó rồi. Công nhân không thể gộp tiếp. Cần rã Box cũ ra trước (Xem mục 4.3).
 
-    -- 3. SELECT kiểm tra lại sau khi sửa
-    SELECT Barcode, LotDecisionResult 
-    FROM STB_SetInfo 
-    WHERE Barcode = 'SP20260525-001';
+*   **Bước 4: Kiểm tra tiêu chuẩn đóng gói (Packing Standard)**
+    Mỗi Model khi đóng gói cần có cấu hình số lượng mỗi túi (`VinylBagQty`), hộp nhỏ (`InnerBoxQty`), thùng to (`OutBoxQty`).
+    ```sql
+    -- Query kiểm tra tiêu chuẩn đóng gói theo loại vật tư và kích thước (Size)
+    SELECT * FROM STB_PackingStandard 
+    WHERE MaterialTypeCode = 'FERT' 
+      AND Size = 'Kích_Thước_Model'; -- Ví dụ: '0813' (đại diện size 8x13mm)
+    ```
+    *   *Cách xử lý:* Nếu bảng trống, yêu cầu Master Data vào màn hình **A419** thêm tiêu chuẩn đóng gói tương ứng với Size của Model đó.
 
-    -- Nếu kết quả hiển thị đã chuyển sang 'PASS', tiến hành COMMIT thực thi
-    COMMIT TRANSACTION;
-    PRINT 'Đã sửa dữ liệu thành công và lưu lại.';
-END TRY
-BEGIN CATCH
-    -- Nếu có bất kỳ lỗi nào xảy ra trong quá trình chạy, quay ngược dữ liệu lại
-    ROLLBACK TRANSACTION;
-    PRINT 'Lỗi xảy ra: ' + ERROR_MESSAGE() + '. Đã ROLLBACK dữ liệu an toàn.';
-END CATCH;
-```
+---
+
+### 4.2 LỖI USER MUỐN HỦY KẾT QUẢ, HỦY CÔNG ĐOẠN
+
+Trong vận hành thực tế, việc công nhân scan nhầm, nhập sai số lượng phế (Defect Qty) hoặc QC đánh giá nhầm rất thường xảy ra. Dưới đây là phương pháp hủy an toàn trực tiếp từ DB.
+
+#### 📐 KỊCH BẢN A: Hủy/Xóa sản lượng công đoạn sản xuất (Màn hình B530)
+*   **Triệu chứng:** Công nhân scan nhầm sản lượng vào công đoạn `V-26` (Aging) trong khi Lot chưa chạy xong công đoạn `V-25`. Cần hủy công đoạn `V-26`.
+*   **Ví dụ Demo:** Hủy công đoạn sản xuất mã `VE08` của Lot `VE260509-004`.
+*   **Quy trình xử lý bằng Transaction:**
+    ```sql
+    BEGIN TRANSACTION;
+    BEGIN TRY
+        -- 1. Xem lịch sử công đoạn của Barcode để xác định sequence (ProcSeq)
+        SELECT PRH.ControlNo, PRH.ProcSeq, PRH.RouteCode, PRH.ProdQty, PRH.CreateDateTime
+        FROM STB_ProdRouteHist PRH
+        JOIN STB_SetInfo SI ON PRH.ControlNo = SI.ControlNo
+        WHERE SI.Barcode = 'VE260509-004'
+        ORDER BY PRH.ProcSeq DESC; -- Dòng mới nhất hiện lên đầu
+
+        -- 2. Thực hiện xóa công đoạn bị nhầm (Ví dụ: RouteCode = 'VE08')
+        -- Ràng buộc xóa theo ControlNo và đúng RouteCode của dòng cuối
+        DELETE FROM STB_ProdRouteHist
+        WHERE ControlNo = (SELECT ControlNo FROM STB_SetInfo WHERE Barcode = 'VE260509-004')
+          AND RouteCode = 'VE08';
+
+        -- 3. Cập nhật reset trạng thái lỗi (DefectQty) trên SetInfo nếu cần
+        UPDATE STB_SetInfo
+        SET DefectQty = 0, IsDefect = 0
+        WHERE Barcode = 'VE260509-004';
+
+        COMMIT TRANSACTION;
+        PRINT 'Hủy công đoạn thành công!';
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        PRINT 'Lỗi: ' + ERROR_MESSAGE();
+    END CATCH;
+    ```
+
+#### 🔬 KỊCH BẢN B: Hủy kết quả kiểm tra chất lượng QC (B597 / C443)
+*   **Triệu chứng:** QC đánh giá nhầm Lot hàng sang FAIL hoặc load nhầm hạng mục kiểm tra cũ, muốn hủy kết quả để đo lại từ đầu.
+*   **Ví dụ Demo:** Hủy tài liệu QC bị sai cho Barcode `VVPP163R072732`.
+*   **Quy trình xử lý bằng Transaction:**
+    ```sql
+    BEGIN TRANSACTION;
+    BEGIN TRY
+        -- 1. Tìm CommInspDocNo (Mã tài liệu QC) đang liên kết với Barcode
+        DECLARE @DocNo NVARCHAR(50);
+        SELECT @DocNo = CIDH.CommInspDocNo
+        FROM STB_CommInspDocHistory CIDH
+        JOIN STB_SetInfo SI ON CIDH.ProdNo = SI.ControlNo
+        WHERE SI.Barcode = 'VVPP163R072732';
+
+        IF @DocNo IS NOT NULL
+        BEGIN
+            PRINT 'Tìm thấy tài liệu QC: ' + @DocNo;
+
+            -- 2. Xóa các hạng mục kiểm tra chi tiết trước (STB_CommInspDocItem)
+            DELETE FROM STB_CommInspDocItem WHERE CommInspDocNo = @DocNo;
+
+            -- 3. Xóa lịch sử tài liệu QC (STB_CommInspDocHistory)
+            DELETE FROM STB_CommInspDocHistory WHERE CommInspDocNo = @DocNo;
+            
+            PRINT 'Đã xóa hoàn toàn kết quả QC cũ.';
+        END
+        ELSE
+        BEGIN
+            PRINT 'Không tìm thấy kết quả QC nào cho Barcode này.';
+        END
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        PRINT 'Lỗi xảy ra: ' + ERROR_MESSAGE();
+    END CATCH;
+    ```
+    > ⚠️ **Lưu ý:** Sau khi chạy script, yêu cầu QC **tắt hoàn toàn màn hình B597/C443 và mở lại** để hệ thống xóa bộ nhớ đệm (cache) và tải lại spec mới từ đầu.
+
+#### 📦 KỊCH BẢN C: Hủy/Sửa kết quả OQC Thành phẩm (C512 / C530)
+*   **Triệu chứng:** Lô thành phẩm bị đánh giá nhầm trạng thái FAIL khiến thủ kho không thể nhập kho ở F110.
+*   **Quy trình xử lý nhanh (Bypass sang PASS):**
+    ```sql
+    -- Cập nhật trực tiếp kết quả OQC sang PASS để thông luồng nhập kho
+    UPDATE STB_CommInspDocHistory
+    SET CommInspResult = 'PASS',
+        FinishDateTime = GETDATE(),
+        ChangeUserID = 'admin_fix'
+    WHERE CommInspDocNo = (
+        SELECT TOP 1 CIDH.CommInspDocNo 
+        FROM STB_CommInspDocHistory CIDH
+        JOIN STB_SetInfo SI ON CIDH.ProdNo = SI.ControlNo
+        WHERE SI.Barcode = 'Mã_Barcode_Thành_Phẩm'
+        ORDER BY CIDH.CreateDateTime DESC
+    );
+    ```
+
+---
+
+### 4.3 LỖI GỘP BOX 2 LẦN BỊ NHẦM (HỦY GỘP BOX & RÃ BOX)
+
+#### 🔴 Triệu chứng hiện trường:
+Công nhân đóng gói scan gộp nhầm 5 Lot con vào một Box ID (`PackingID`), hoặc gộp box 2 lần bị trùng lặp dẫn đến số lượng hiển thị trên tem bị sai lệch, số lượng tồn kho hiển thị âm hoặc bằng `0` (Lỗi HN544).
+
+#### 🛠️ KỊCH BẢN A: Hủy gộp box / Rã box để đóng gói lại
+*   **Ví dụ Demo:** Hủy gộp box (rã box) mã `PKHN023117` để giải phóng các Lot con bên trong.
+*   **Quy trình xử lý bằng Transaction:**
+    ```sql
+    BEGIN TRANSACTION;
+    BEGIN TRY
+        -- 1. Xem danh sách các Lot con đang nằm trong Box bị gộp nhầm
+        SELECT MaterialLotNo, LotNo, PackingID, CurrentQty, InitialQty 
+        FROM STB_MaterialLotInfo 
+        WHERE PackingID = 'PKHN023117';
+
+        -- 2. Hủy liên kết Box: Set PackingID = NULL để giải phóng các Lot con ra ngoài
+        UPDATE STB_MaterialLotInfo 
+        SET PackingID = NULL 
+        WHERE PackingID = 'PKHN023117';
+
+        -- 3. Xóa thông tin Box lịch sử đóng gói trong bảng Divide (hàng Cell)
+        DELETE FROM STB_DividePackaging WHERE PackingID = 'PKHN023117';
+
+        -- 4. Xóa thông tin Box lịch sử đóng gói trong bảng SavePackingTime (nếu là hàng Module)
+        DELETE FROM STB_SavePackingTime_VVT WHERE PackingID = 'PKHN023117';
+
+        COMMIT TRANSACTION;
+        PRINT 'Rã Box và giải phóng Lot thành công!';
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        PRINT 'Lỗi rã Box: ' + ERROR_MESSAGE();
+    END CATCH;
+    ```
+
+#### 🛠️ KỊCH BẢN B: Lỗi gộp box bị mất số lượng (Qty = 0 hoặc Qty âm)
+*   **Triệu chứng:** Sau khi gộp box, do lỗi xung đột SP `usp_savePackingLabelQty_VVT` hoặc scan đúp, số lượng Lot hiện tại bị dồn về `0` hoặc âm.
+*   **Ví dụ Demo:** Khôi phục số lượng thực tế là `20` cho Lot `SP260516-003` và xóa các Lot trùng lặp phát sinh.
+*   **Quy trình xử lý:**
+    ```sql
+    BEGIN TRANSACTION;
+    BEGIN TRY
+        -- 1. Cập nhật số lượng thực tế cho Lot chuẩn cần giữ lại
+        UPDATE STB_MaterialLotInfo
+        SET InitialQty = 20, 
+            CurrentQty = 20
+        WHERE LotNo = 'SP260516-003';
+
+        -- 2. Xóa bỏ các Lot ID con thừa/trùng lặp do hệ thống tự sinh sai khi scan đúp
+        -- Dùng danh sách cụ thể thu thập được khi SELECT ở bước trước
+        DELETE FROM STB_MaterialLotInfo 
+        WHERE MaterialLotNo IN ('LotID_Thừa_1', 'LotID_Thừa_2');
+
+        COMMIT TRANSACTION;
+        PRINT 'Khôi phục số lượng gộp box thành công!';
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        PRINT 'Lỗi: ' + ERROR_MESSAGE();
+    END CATCH;
+    ```
+
+---
+
+### 4.4 LỖI KHÔNG CHỐT ĐƯỢC CÔNG ĐOẠN (MÀN HÌNH B530)
+
+Màn hình **B530** là nơi công nhân ghi nhận sản lượng hoàn thành của từng công đoạn sản xuất. Dưới đây là 3 nguyên nhân chặn chốt công đoạn phổ biến nhất.
+
+#### 📐 KỊCH BẢN A: Chặn do quên scan Nguyên vật liệu tại trạm trước (V-23 / V-24)
+*   **Triệu chứng:** Khi bấm chốt công đoạn `V-23` (Lắp cao su) hoặc `V-24` (Curling), hệ thống báo lỗi: *"Chưa nhập NVL cho Lắp Cao Su"* hoặc *"Chưa nhập NVL cho Curling"*.
+*   **Nguyên nhân:** SP `usp_CheckInputRawMaterialCodeForProduct` kiểm tra và phát hiện barcode sản phẩm chưa được scan gán Lot vật tư đầu vào tại trạm **B540**.
+*   **Cách khắc phục chuẩn:** Yêu cầu công nhân quay lại màn hình **B540**, scan barcode sản phẩm và quét đúng mã Lot NVL (cao su, sleeve) tương ứng.
+*   **Bypass khẩn cấp bằng SQL (IT chèn dữ liệu giả lập NVL để thông luồng):**
+    ```sql
+    -- Chèn trực tiếp bản ghi scan NVL cho Barcode
+    INSERT INTO STB_RawMaterialInputHist 
+        (Barcode, RouteCode, MaterialCode, RawMaterialBarcode, CreateDateTime, CreateUserID)
+    VALUES 
+        ('Mã_Barcode_Bị_Lỗi', 'V-23', 'Mã_Vật_Tư_Cao_Su', 'Mã_Lot_NVL_Thực_Tế', GETDATE(), 'vinaadmin');
+    ```
+
+#### 📐 KỊCH BẢN B: Chặn do công đoạn phía sau đã được scan trước ("Đã hoàn thành thực tế rồi")
+*   **Triệu chứng:** Công nhân quên chốt công đoạn `V-25` nhưng đã scan chốt công đoạn `V-26`. Khi quay lại chốt `V-25` thì hệ thống báo lỗi: *"Đã hoàn thành thực tế rồi"*.
+*   **Nguyên nhân:** SP chặn chốt công đoạn trước nếu công đoạn sau đã có dữ liệu sản lượng (`AftProdQty <> 0`).
+*   **Cách khắc phục:**
+    1.  Chạy script **hủy công đoạn sau** (`V-26`) trước (Xem mục 4.2).
+    2.  Yêu cầu công nhân scan chốt công đoạn trước (`V-25`) trên UI.
+    3.  Sau đó scan chốt lại công đoạn sau (`V-26`) đúng thứ tự.
+
+#### 📐 KỊCH BẢN C: Chặn do Gate 20 phút (Chỉ áp dụng tại nhà máy Bắc Ninh - VNT)
+*   **Triệu chứng:** Khi bấm chốt công đoạn, hệ thống báo lỗi: *"Thời gian scan quá nhanh, phải đợi tối thiểu 20 phút từ công đoạn trước"*.
+*   **Nguyên nhân:** SP `usp_DoProcessProdRouteHistForCalc_SmartApp_VNT` chặn đăng ký liên tiếp giữa các công đoạn có thời gian chênh lệch dưới 20 phút nhằm chống scan khống.
+*   **Cách khắc phục (Bypass lùi giờ scan trước):**
+    ```sql
+    -- Lùi thời gian scan của công đoạn ngay trước đó về 25 phút trước
+    UPDATE STB_ProdRouteHist
+    SET CreateDateTime = DATEADD(MINUTE, -25, GETDATE())
+    WHERE ControlNo = (SELECT ControlNo FROM STB_SetInfo WHERE Barcode = 'Mã_Barcode_Bị_Chặn')
+      AND RouteCode = 'Mã_Công_Đoạn_Trước'; -- Ví dụ: 'V-22'
+    ```
 
 ---
 
@@ -250,9 +404,9 @@ END CATCH;
 ### A. Kiểm tra nhanh lịch sử di chuyển Lot (Routing Trace)
 Khi Lot không hiển thị ở công đoạn hiện tại, kiểm tra xem nó đã qua công đoạn trước chưa:
 ```sql
-SELECT Barcode, ProcSeq, ProcessCode, MachineCode, InQty, OutQty, JobDate, CreateUserID
+SELECT Barcode, ProcSeq, ProcessCode, MachineCode, InQty, OutQty, JobDate, CreateUserID, CreateDateTime
 FROM STB_ProdRouteHist
-WHERE Barcode = 'SP20260525-001'
+WHERE Barcode = 'Mã_Barcode_Cần_Tra'
 ORDER BY ProcSeq ASC;
 ```
 
@@ -265,6 +419,12 @@ WHERE MaterialLotNo = 'Mã_Lot_NVL_Cần_Check';
 -- LotState: 'U' = Đang sử dụng (Active), 'H' = Holding (Bị khóa), 'D' = Báo phế
 ```
 
+### C. Tra cứu nhanh các ngoại lệ bỏ qua chặn FIFO/Hạn sử dụng
+Nếu một Lot NVL hết hạn nhưng được phép dùng tiếp, kiểm tra xem đã được khai báo bypass chưa:
+```sql
+SELECT * FROM stb_vvt_OpenExpiredMaterial WHERE LotID = 'Mã_Lot_NVL';
+```
+
 ---
 
 ## 6. ⚠️ CHECKLIST AN TOÀN TUYỆT ĐỐI CHO DEVELOPER
@@ -274,4 +434,4 @@ WHERE MaterialLotNo = 'Mã_Lot_NVL_Cần_Check';
 
 ---
 
-*Cập nhật: 2026-05-25 | Tổng hợp và chuẩn hóa bởi Antigravity AI.*
+*Cập nhật: 2026-05-26 | Tổng hợp và chuẩn hóa bởi Antigravity AI.*
