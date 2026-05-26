@@ -41,6 +41,53 @@
 
 ---
 
+## 8. LỖI KHÔNG GỘP ĐƯỢC BOX (B523) — 4 BƯỚC DEBUG CHUẨN
+👉 **Chi tiết Trace & Fix (4 bước chuẩn):** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.4](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/MES_MASTER_KNOWLEDGE_BASE/KB_04_DONG_GOI_IN_TEM.md)
+👉 **Demo case + Script SQL:** Xem tại [KB_14_TRACE_BUG_METHODOLOGY.md § 4.1](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/MES_MASTER_KNOWLEDGE_BASE/KB_14_TRACE_BUG_METHODOLOGY.md)
+
+---
+
+## 9. LỖI USER MUỐN HỦY KẾT QUẢ / HỦY CÔNG ĐOẠN
+👉 **3 kịch bản (Hủy routing, Hủy QC, Hủy OQC):** Xem tại [KB_14_TRACE_BUG_METHODOLOGY.md § 4.2](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/MES_MASTER_KNOWLEDGE_BASE/KB_14_TRACE_BUG_METHODOLOGY.md)
+👉 **Xóa nhập sản lượng công đoạn:** Xem tại [KB_08_KHO_THANH_PHAM_HN.md § 5](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/MES_MASTER_KNOWLEDGE_BASE/KB_08_KHO_THANH_PHAM_HN.md)
+
+---
+
+## 10. LỖI GỘP BOX 2 LẦN BỊ NHẦM / GỘP BOX SAI SỐ LƯỢNG
+👉 **Hủy gộp box + Rã box + Khôi phục Qty:** Xem tại [KB_14_TRACE_BUG_METHODOLOGY.md § 4.3](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/MES_MASTER_KNOWLEDGE_BASE/KB_14_TRACE_BUG_METHODOLOGY.md)
+👉 **Gộp túi bóng Qty=0 (HN544):** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.5](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/MES_MASTER_KNOWLEDGE_BASE/KB_04_DONG_GOI_IN_TEM.md)
+👉 **Packing Qty âm:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.6](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/MES_MASTER_KNOWLEDGE_BASE/KB_04_DONG_GOI_IN_TEM.md)
+
+---
+
+## 11. LỖI KHÔNG CHỐT ĐƯỢC CÔNG ĐOẠN (B530)
+👉 **3 kịch bản (NVL chưa scan, công đoạn đảo thứ tự, Gate 20 phút):** Xem tại [KB_14_TRACE_BUG_METHODOLOGY.md § 4.4](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/MES_MASTER_KNOWLEDGE_BASE/KB_14_TRACE_BUG_METHODOLOGY.md)
+
+---
+
+## 12. LỖI KHÔNG IN ĐƯỢC TEM (B450 / B523 / B756)
+👉 **5 bước kiểm tra + Checklist đầy đủ:** Xem tại [KB_14_TRACE_BUG_METHODOLOGY.md § 4.5](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/MES_MASTER_KNOWLEDGE_BASE/KB_14_TRACE_BUG_METHODOLOGY.md)
+👉 **Checklist 7 bước khi user báo không in được:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.12](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/MES_MASTER_KNOWLEDGE_BASE/KB_04_DONG_GOI_IN_TEM.md)
+
+---
+
+## 13. LỖI MÀN HNC321 NHẬP PHẾ BÁO LỖI TIẾNG HÀN
+👉 **Bypass nghiệp vụ + Bypass SQL (chèn lịch sử giả lập):** Xem tại [KB_14_TRACE_BUG_METHODOLOGY.md § 4.6](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/MES_MASTER_KNOWLEDGE_BASE/KB_14_TRACE_BUG_METHODOLOGY.md)
+👉 **Cũng có tại:** [KB_08_KHO_THANH_PHAM_HN.md § 4](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/MES_MASTER_KNOWLEDGE_BASE/KB_08_KHO_THANH_PHAM_HN.md)
+
+---
+
+## 14. LỖI NHẢY BƯỚC CÂN ĐIỆN CỰC MIXING (electrode.weighing)
+👉 **Nguyên nhân checkbox CA ĐÊM + Reset Lot kẹt:** Xem tại [KB_14_TRACE_BUG_METHODOLOGY.md § 4.7](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/MES_MASTER_KNOWLEDGE_BASE/KB_14_TRACE_BUG_METHODOLOGY.md)
+👉 **Bao gồm cả:** Mã HCE lỗi, sản xuất không ghi nhận, cân than nhảy thứ tự
+
+---
+
+## 15. ĐIỆN CỰC MÃ 3582-600F CY KHÔNG TẠO ĐƯỢC TEM
+👉 **Thêm config Slitting + ModelBasicInfo:** Xem tại [KB_14_TRACE_BUG_METHODOLOGY.md § 4.8](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/MES_MASTER_KNOWLEDGE_BASE/KB_14_TRACE_BUG_METHODOLOGY.md)
+
+---
+
 ## 💡 NGUYÊN TẮC VÀNG KHI TỰ SỬA
 
 1. **Luôn SELECT trước khi UPDATE** — đảm bảo WHERE chỉ tác động đúng dòng cần sửa
@@ -48,4 +95,4 @@
 3. **Sửa đủ bảng** — thiếu 1 bảng gây lệch dữ liệu (VD: F330 cần sửa 3 bảng)
 4. **Ghi log thao tác** — để audit sau
 
-*Cập nhật: 2026-05-25*
+*Cập nhật: 2026-05-26*

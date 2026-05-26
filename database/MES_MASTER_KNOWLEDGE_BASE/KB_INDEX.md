@@ -1,6 +1,6 @@
 # 🗂️ NAIS MES — Knowledge Base Index
 
-> **Cập nhật:** 2026-05-22 | **Tổng hợp từ:** Lỗi thực tế + Docx gốc (đã extract toàn bộ) + Xác minh DB trực tiếp + Phân tích 41 SP + Deep Core Analysis (2026-04-18) + DB Audit (2026-05-05)
+> **Cập nhật:** 2026-05-26 | **Tổng hợp từ:** Lỗi thực tế + Docx gốc (đã extract toàn bộ) + Xác minh DB trực tiếp + Phân tích 41 SP + Deep Core Analysis (2026-04-18) + DB Audit (2026-05-05) + Electrode Weighing (2026-05-26)
 > **Cách dùng:** Đọc file INDEX này trước, sau đó mở file KB chuyên biệt theo nhóm lỗi.
 > **Groupware KB:** Xem → [`../GROUPWARE_KNOWLEDGE_BASE/GW_INDEX.md`](../GROUPWARE_KNOWLEDGE_BASE/GW_INDEX.md)
 
@@ -76,6 +76,16 @@
 | Không PO trên MES từ Groupware | KB_07 § 6 |
 | Không nhập được F330 (chưa duyệt) | KB_07 § 2 |
 | Trace lỗi không biết bắt đầu từ đâu | KB_14_TRACE_BUG_METHODOLOGY |
+| **Không in được tem (nhiều mã)** | KB_14 § 4.5, KB_04 § 6.12 |
+| **HNC321 nhập phế báo lỗi tiếng Hàn** | KB_14 § 4.6, KB_08 § 4 |
+| **Nhảy bước cân điện cực Mixing (electrode.weighing)** | KB_14 § 4.7 |
+| **Mã HCE lỗi không thao tác được** | KB_14 § 4.7 |
+| **Sản xuất ra không ghi nhận trên hệ thống** | KB_14 § 4.7 |
+| **Mã 3582-600F CY không tạo được tem** | KB_14 § 4.8 |
+| **Hủy kết quả QC / Hủy công đoạn** | KB_14 § 4.2 |
+| **Gộp box 2 lần bị nhầm / Rã box** | KB_14 § 4.3 |
+| **Gộp box sai số lượng** | KB_14 § 4.3, KB_04 § 6.5 |
+| **Không chốt được công đoạn B530** | KB_14 § 4.4 |
 | **Cell Line vận hành chi tiết (B310→B882)** | KB_03 § 6 |
 | B530 báo "Routing không có trong PO" | KB_03 § 6.3 |
 | B530 báo "Đã hoàn thành thực tế rồi" | KB_03 § 6.3 |
