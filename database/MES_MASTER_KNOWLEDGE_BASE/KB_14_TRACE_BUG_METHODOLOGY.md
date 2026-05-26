@@ -399,6 +399,101 @@ Màn hình **B530** là nơi công nhân ghi nhận sản lượng hoàn thành 
 
 ---
 
+### 4.5 LỖI KHÔNG IN ĐƯỢC TEM (B450 / B523 / B756 / A460)
+
+#### 🔴 Triệu chứng hiện trường:
+Người dùng thao tác tạo Lot sản xuất hoặc in tem đóng gói nhưng máy in không phản hồi hoặc giao diện báo lỗi: *"Không tìm thấy định dạng nhãn"* hoặc tem in ra bị thiếu các thông số bắt buộc (Vol, Farad, Datecode...).
+
+#### 🔍 Quy trình truy vết & xử lý (5 bước kiểm tra):
+
+*   **Bước 1: Kiểm tra cấu hình nhãn in trong SmartFramework (Màn hình A460)**
+    Lỗi `"Không tìm thấy định dạng nhãn"` xảy ra khi template nhãn chưa được thiết lập hoặc chưa được phê duyệt.
+    ```sql
+    -- Kiểm tra sự tồn tại và trạng thái active của mẫu tem
+    SELECT FormatName, IsApproval, ApplyDate, FormatType
+    FROM SmartFramework.dbo.STB_LabelInfo 
+    WHERE FormatName LIKE '%HN%' -- Lọc theo tên nhà máy/mẫu
+      AND IsApproval = 1;
+    ```
+    *   *Cách xử lý:* Nếu trống, vào màn hình **A460** chọn cấu hình: **`AssembleLabel`** (Dòng 2) dùng cho sản xuất, **`PartLabel`** dùng cho tem kho nguyên vật liệu, tích chọn **IsApproval = 1** và bấm **Save**.
+
+*   **Bước 2: Kiểm tra cấu hình Vol/Farad của Model (Màn hình A410)**
+    Khi in tem đóng gói, nếu Model thiếu cấu hình giá trị Điện áp (Voltage) và Điện dung (Farad), hệ thống sẽ chặn không cho in hoặc in ra tem trống thông số.
+    ```sql
+    -- Kiểm tra thông số Model cơ bản
+    SELECT ModelCode, ModelName, MBIExtText04 AS Voltage, MBIExtText05 AS Farad 
+    FROM STB_ModelBasicInfo 
+    WHERE ModelCode = 'Mã_Model'; -- Ví dụ: 'RDMD00-368'
+    ```
+    *   *Cách xử lý:* Nếu các cột Vol/Farad bị rỗng (`NULL`), yêu cầu Master Data vào màn hình **A410** nhập đầy đủ thông số cho Model đó và bấm **Lưu**.
+
+*   **Bước 3: Kiểm tra trạng thái QC Pass của Lot (Xem mục 4.1)**
+    Lot chưa QC Pass (`LotDecisionResult IS NULL`) sẽ chặn in tem đóng gói.
+
+*   **Bước 4: Kiểm tra cấu hình in tem VJ của mã sản phẩm**
+    Nếu in tem không ra đúng đầu mã VJ mà ra mã VV:
+    ```sql
+    -- Kiểm tra thiết lập chuyển đổi mã VV -> VJ
+    SELECT * FROM STB_Vietnam_PackingPrinting WHERE MaterialCode = 'Mã_Vật_Tư';
+    ```
+    *   *Cách xử lý:* Đảm bảo cờ `PrintVJ = 1` để hệ thống tự động đổi đầu mã khi in.
+
+---
+
+### 4.6 LỖI NHẬP PHẾ MÀN HNC321 BÁO LỖI TIẾNG HÀN (이전 공정에 실적처리 이력이 없습니다)
+
+#### 🔴 Triệu chứng hiện trường:
+Tại màn hình **HNC321** *(Qc nhập NG sản phẩm mang đi kiểm tra)*, khi nhập số lượng phế cho Barcode `ve260509-001` tại công đoạn `VE08` (Mã lỗi `VE08_34` - Taping khác...), hệ thống báo lỗi đỏ:
+`Failed to save: 이전 공정에 실적처리 이력이 없습니다.`
+*(Dịch nghĩa: Không có lịch sử xử lý sản lượng ở công đoạn trước).*
+
+#### 🔍 Nguyên nhân gốc rễ:
+Stored Procedure xử lý nghiệp vụ nhập phế (`usp_Vietnam_ScrapInput_HN`) chặn không cho phép nhập phế liệu tại công đoạn `VE08` nếu sản phẩm này chưa từng có dữ liệu chốt sản lượng (Routing History) ở công đoạn ngay trước đó (Ví dụ: `VE07` hoặc trạm trước của `VE08` trong cấu hình Routing của PO).
+
+#### 🛠️ Kịch bản xử lý từng bước (Bypass bằng SQL):
+Khi công đoạn trước bị bỏ qua không quét chốt và hàng thực tế đã phế, IT tiến hành chèn một dòng lịch sử sản lượng giả lập cho trạm trước để thông luồng:
+
+*   **Step 1:** Truy vấn mã `ControlNo` của Barcode bị lỗi:
+    ```sql
+    SELECT ControlNo, Barcode, PONo, MaterialCode FROM STB_SetInfo WHERE Barcode = 've260509-001';
+    ```
+*   **Step 2:** Truy vấn xem công đoạn ngay trước `VE08` trong cấu hình Route của PO đó là gì:
+    ```sql
+    SELECT RouteCode, RouteIndex 
+    FROM STB_ProductionOrderRouting 
+    WHERE PONo = (SELECT PONo FROM STB_SetInfo WHERE Barcode = 've260509-001')
+    ORDER BY RouteIndex ASC;
+    -- Kết quả xác định được công đoạn trước là 'VE07'
+    ```
+*   **Step 3:** Thực hiện chèn bản ghi lịch sử Routing giả lập cho trạm `VE07` bằng Transaction an toàn:
+    ```sql
+    BEGIN TRANSACTION;
+    BEGIN TRY
+        DECLARE @CtrlNo NVARCHAR(50) = (SELECT ControlNo FROM STB_SetInfo WHERE Barcode = 've260509-001');
+
+        INSERT INTO STB_ProdRouteHist 
+            (ControlNo, ProcSeq, RouteCode, LineCode, MachineCode, InQty, OutQty, JobDate, ShiftCode, CreateUserID, CreateDateTime)
+        VALUES 
+            (@CtrlNo, 
+             (SELECT ISNULL(MAX(ProcSeq), 0) + 1 FROM STB_ProdRouteHist WHERE ControlNo = @CtrlNo), 
+             'VE07',            -- Mã công đoạn trước VE08
+             'MCVC20220',       -- Mã Line phát sinh
+             'MCVC20220',       -- Mã máy
+             20, 20,            -- Số lượng phế
+             CAST(GETDATE() AS DATE), 'A', 
+             'vinaadmin', GETDATE());
+
+        COMMIT TRANSACTION;
+        PRINT 'Đã chèn lịch sử giả lập thành công! Hãy bảo công nhân bấm Lưu (Save) lại trên giao diện HNC321.';
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        PRINT 'Lỗi: ' + ERROR_MESSAGE();
+    END CATCH;
+    ```
+
+---
+
 ## 5. 🛠️ CÁC CÂU LỆNH SQL UTILITIES CỨU HỘ NHANH
 
 ### A. Kiểm tra nhanh lịch sử di chuyển Lot (Routing Trace)
