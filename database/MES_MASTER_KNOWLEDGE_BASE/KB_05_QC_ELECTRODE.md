@@ -341,7 +341,49 @@ Kiểm tra tồn kho điện cực → **Stb_SlittingStock_VVT**
 
 ---
 
-*Cập nhật: 2026-05-17*
+### 8.6 Quy trình cân điện cực Mixing & Phần mềm Cân điện cực (electrode.weighing)
+
+#### A. Giới thiệu phần mềm Cân điện cực (`electrode.weighing`):
+*   **Mục đích:** Ứng dụng Electron Desktop App dùng để quản lý quá trình cân nguyên liệu (Than hoạt tính, chất dẫn điện, chất kết dính, nước cất...) trước khi cho vào máy trộn (Mixing) để tạo dung dịch Slurry.
+*   **Kết nối phần cứng:** Kết nối cổng COM (RS232) đọc số cân trực tiếp từ cân điện tử, chống công nhân nhập tay sai số.
+*   **Kết nối Database:** Kết nối trực tiếp đến database `SmartFactoryV2` của Vinatech qua tài khoản `vinaadmin`.
+*   **Logic xử lý:** Khi scan mã Lot điện cực, ứng dụng gọi SP `usp_ElectroStep_Vietnam` (hoặc `usp_ElectrodeStep_Vietnam`) để load công thức và thứ tự bước cân (`Seq`). Khi cân đúng khoảng spec (`StdMinVal` - `StdMaxVal`), phần mềm lưu dữ liệu qua SP `usp_DoCreateElectrodeMixStepInfo_electron` và chốt mẻ trộn để chuyển sang công đoạn tráng phủ (Coating).
+
+#### B. Các lỗi thường gặp và cách khắc phục:
+
+##### 1. Lỗi nhảy bước cân, không cân lần lượt từ trên xuống (Than hoạt tính bị đẩy xuống dưới)
+*   **Triệu chứng:** "Các bước cân cứ nhảy không đúng thứ tự process nên không cân được", "Mã điện cực HCE đang lỗi chưa thao tác được, sản xuất ra mà không được ghi nhận trên hệ thống".
+*   **Nguyên nhân:** 
+    *   Trên giao diện phần mềm có checkbox **"CA ĐÊM CHUẨN BỊ TRƯỚC"** (`isnight`). Ở ca đêm, Binder/CMC cần khuấy trước (20-40 phút) nên hệ thống cung cấp tùy chọn này để đảo thứ tự cân, đưa Binder lên trước Than hoạt tính (SP sẽ nhận tham số `@pOrder = 'kdem'`).
+    *   Nếu ca ngày làm việc mà **quên bỏ tích checkbox này**, thứ tự cân sẽ bị nhảy lộn xộn khiến công nhân không thể cân lần lượt từ trên xuống và bị hệ thống chặn. Mẻ trộn bị kẹt không thể chốt hoàn thành, dẫn đến sản phẩm sản xuất ra không được ghi nhận trên MES.
+*   **Cách khắc phục:**
+    *   *Bước 1 (Vận hành):* Công nhân ca ngày **bỏ tích checkbox "CA ĐÊM CHUẨN BỊ TRƯỚC"** trên giao diện chính của phần mềm, sau đó bấm nút **"Làm mới màn hình"** để quay lại thứ tự cân than trước.
+    *   *Bước 2 (IT reset Lot bị kẹt):* Nếu Lot điện cực (Ví dụ: Lot của mã `HCE-202`) đã bị ghi nhận sai thứ tự và kẹt giữa chừng, IT chạy lệnh xóa dữ liệu cân tạm của Lot đó để cân lại đúng từ đầu:
+        ```sql
+        BEGIN TRANSACTION;
+        DELETE FROM STB_ElectrodeMixStepInfo WHERE ElectrodeLotNumber = 'Mã_Lot_Điện_Cực_HCE';
+        COMMIT TRANSACTION;
+        ```
+
+##### 2. Điện cực mã liệu `3582-600F CY` không tạo/in được tem
+*   **Triệu chứng:** Khi sản xuất điện cực mã liệu `3582-600F CY`, hệ thống không cho in tem điện cực.
+*   **Nguyên nhân:** Đây là model mới hoặc chưa được cấu hình Slitting trong Master Data. Hệ thống yêu cầu phải có cấu hình quy cách Slitting trong bảng `stb_slittinglocationconfig_vvt` (Màn hình B552) thì mới cho in tem.
+*   **Cách khắc phục:**
+    *   *Bước 1:* Thêm cấu hình Slitting cho model `3582` (cả cực dương `BY` và cực âm `YP`):
+        ```sql
+        BEGIN TRANSACTION;
+        INSERT INTO stb_slittinglocationconfig_vvt
+            (PartNo, SlittingCode, SlittingSize, Farad, Width, WarehouseLocation, LocationWarehouse, RollQty, PositiveLocation, NegativeLocation)
+        VALUES
+            ('3582', 'BY', '200', '600', '39.34', 'VVT_F2', 'kho2', 20, 'A6-T3', 'B6-T3'),
+            ('3582', 'YP', '180', '600', '39.34', 'VVT_F2', 'kho2', 20, 'A6-T3', 'B6-T3');
+        COMMIT TRANSACTION;
+        ```
+    *   *Bước 2:* Đảm bảo đã khai báo model `3582-600F CY` vào bảng `STB_ModelBasicInfo` (A410) đầy đủ thông số Vol/Farad (Vol = '3R0', Farad = '600.0').
+
+---
+
+*Cập nhật: 2026-05-26*
 
 ---
 
