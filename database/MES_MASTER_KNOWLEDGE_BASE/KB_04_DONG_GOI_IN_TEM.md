@@ -283,4 +283,43 @@ EXEC [dbo].[usp_Vietnam_PhoenixContactLabelPrint_get]
 □ 7. STB_ModelBasicInfo — Model đã có MBIExtText04/05 (Vol/Farad) chưa?
 ```
 
-*Cập nhật: 2026-05-22*
+---
+
+### 6.13 Phân tích nguyên nhân lỗi "Gộp box tùy chỉnh" trên màn hình HN523 (Sản lượng hiển thị = 0 / Cảnh báo tiếng Hàn)
+
+**Triệu chứng:** Khi nhấn nút "Gộp box tùy chỉnh" cho một mã Lot, hệ thống báo lỗi tiếng Hàn: `"Bạn chưa nhập kết quả sản xuất cho công đoạn này"` (hoặc sản lượng OutputQty hiển thị bằng 0), mặc dù thực tế công nhân đã hoàn thành đầy đủ các công đoạn sản xuất.
+
+**Cơ chế hoạt động:**
+- Màn hình sử dụng Stored Procedure `usp_Vietnam_GetProdPackingForBarcode_VVT` để load dữ liệu lên Grid `ProdPackingForBarcode`.
+- Trong SP này, hệ thống thực hiện phép `JOIN` giữa mã Lot với bảng Cấu hình Quy trình (`STB_ProductionOrderRouting` map từ PONo).
+- Điều kiện tính toán `OutputQty` bắt buộc là: Chỉ lấy sản lượng từ công đoạn nào được đánh dấu là `IsOutputRoute = 1` (Công đoạn đầu ra). Nếu không có công đoạn nào được đánh dấu `IsOutputRoute = 1`, hệ thống mặc định sản lượng đầu ra là `0` và chặn không cho gộp box.
+
+**Quy trình debug & khắc phục:**
+1. **Kiểm tra Lịch sử quét của công nhân:**
+   ```sql
+   SELECT RouteCode, ProdQty, CreateDateTime 
+   FROM STB_ProdRouteHist 
+   WHERE ControlNo = (SELECT ControlNo FROM STB_SetInfo WHERE Barcode = 'Mã_Barcode')
+   ORDER BY CreateDateTime ASC;
+   ```
+   *Mục tiêu:* Đảm bảo công nhân đã quét hoàn thành đầy đủ các bước (ví dụ: từ `VE01` đến `VE10`).
+2. **Kiểm tra cấu hình quy trình sản xuất (Routing):**
+   ```sql
+   SELECT RouteCode, RouteIndex, IsOutputRoute 
+   FROM STB_ProductionOrderRouting 
+   WHERE PONo = (SELECT PONo FROM STB_SetInfo WHERE Barcode = 'Mã_Barcode')
+   ORDER BY RouteIndex;
+   ```
+   *Mục tiêu:* Kiểm tra xem đã có công đoạn nào được tích `IsOutputRoute = 1` (True) chưa.
+3. **Cách xử lý:**
+   - **Vận hành:** Báo bộ phận Quản lý sản xuất cập nhật lại BOM/Routing trên Groupware và đồng bộ sang MES để tích chọn đúng công đoạn đầu ra.
+   - **Sửa nhanh DB (Bypass tạm thời):** Update trực tiếp quy trình của PO hiện tại để đặt công đoạn cuối làm công đoạn đầu ra:
+     ```sql
+     BEGIN TRANSACTION;
+     UPDATE STB_ProductionOrderRouting
+     SET IsOutputRoute = 1
+     WHERE PONo = 'Mã_PO_Tìm_Được' AND RouteCode = 'Mã_Công_Đoạn_Cuối'; -- Ví dụ: VE10
+     COMMIT TRANSACTION;
+     ```
+
+*Cập nhật: 2026-05-27*

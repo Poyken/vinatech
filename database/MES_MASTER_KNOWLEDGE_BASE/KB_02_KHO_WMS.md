@@ -358,4 +358,39 @@ BEGIN TRAN
 
 > **Tại sao phải xóa `STB_MaterialWarehouseInOutHist`?** Nếu chỉ sửa kho mà không xóa lịch sử, báo cáo xuất nhập tồn cuối tháng sẽ bị lệch.
 
-*Cập nhật: 2026-05-22*
+#### 📝 Ví dụ thực tế (Hủy xuất / Trả lại kho Hà Nam):
+Giao dịch xuất sai lúc 12:07 trưa ngày 11/05/2026 cho Lot `ML20260209000136`.
+1. **Kiểm tra trạng thái hiện tại:**
+   ```sql
+   -- Kiểm tra Lot đang ở kho nào
+   SELECT MaterialWarehouseCode, MaterialLocationCode FROM STB_MaterialLotInfo WHERE LotID = 'ML20260209000136';
+   -- Kết quả: Lot đang ở kho ROUTE_HN_WH (đã lên chuyền).
+
+   -- Trích xuất lịch sử xuất/nhập để tìm MaterialWarehouseInOutHistNo đại diện cho cú click xuất sai tại F430
+   SELECT * FROM STB_MaterialWarehouseInOutHist
+   WHERE LotID = 'ML20260209000136'
+   ORDER BY CreateDateTime DESC;
+   -- Kết quả: Tìm được MaterialWarehouseInOutHistNo = '20260511000320' (xuất bởi user VES-019 lên chuyền VELINE-09 lúc 12:07:31).
+   ```
+2. **Kịch bản sửa lỗi an toàn bằng Transaction:**
+   ```sql
+   BEGIN TRAN;
+
+   -- B1: Xóa vệt log giao dịch xuất kho tại F430
+   DELETE FROM STB_MaterialWarehouseInOutHist 
+   WHERE LotID = 'ML20260209000136' AND MaterialWarehouseInOutHistNo = '20260511000320';
+
+   -- B2: Kéo cuộn nguyên liệu từ kho ảo trên chuyền (ROUTE_HN_WH) quay trở về kho vật lý gốc (ROH_HN_WH)
+   UPDATE STB_MaterialLotInfo
+   SET 
+       MaterialWarehouseCode = 'ROH_HN_WH', 
+       MaterialLocationCode = 'ROH_HN_WH_01'
+   WHERE LotID = 'ML20260209000136';
+
+   -- Kiểm tra lại trước khi chốt
+   SELECT * FROM STB_MaterialLotInfo WHERE LotID = 'ML20260209000136';
+
+   COMMIT TRAN; -- Hoặc ROLLBACK nếu có lỗi
+   ```
+
+*Cập nhật: 2026-05-27*

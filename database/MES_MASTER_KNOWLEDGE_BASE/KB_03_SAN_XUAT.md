@@ -266,7 +266,7 @@ ORDER BY DayPlanNo ASC
 ### 5.15 Truy vết lịch sử 1 Barcode từ A→Z
 
 ```sql
--- Query tổng hợp toàn bộ hành trình của 1 Barcode
+-- 1. Query tổng hợp toàn bộ hành trình của 1 Barcode (Trực quan nhất)
 SELECT
     SI.Barcode,
     SI.MaterialCode,
@@ -283,8 +283,26 @@ FROM STB_SetInfo SI
 JOIN STB_MaterialMaster MM ON SI.MaterialCode = MM.MaterialCode
 LEFT JOIN STB_ProdRouteHist PRH ON SI.ControlNo = PRH.ControlNo
 WHERE SI.Barcode = 'VVPO273R010713'
-ORDER BY PRH.ProdDateTime ASC
+ORDER BY PRH.ProdDateTime ASC;
+
+-- 2. Đối soát Công đoạn thực tế đã qua vs Công đoạn chuẩn theo PO:
+-- B1: Lấy thông tin PONo và ControlNo từ Barcode
+SELECT Barcode, ControlNo, PONo, MaterialCode FROM STB_SetInfo WHERE Barcode = 'VE260509-001';
+
+-- B2: Tra cứu công đoạn đã thực hiện trong thực tế (dùng ControlNo tìm được ở B1)
+SELECT RouteCode, ProdQty, CreateDateTime 
+FROM STB_ProdRouteHist 
+WHERE ControlNo = '20260507000467' 
+ORDER BY CreateDateTime ASC;
+
+-- B3: Tra cứu cấu hình định tuyến (Routing) chuẩn của PO (dùng PONo tìm được ở B1)
+SELECT RouteCode, RouteIndex, IsOutputRoute, IsRequireMachine 
+FROM STB_ProductionOrderRouting 
+WHERE PONo = '260506000015' 
+ORDER BY RouteIndex ASC;
 ```
+
+---
 
 ### 5.16 Logic bóc tách Part No từ Model Name
 
@@ -321,7 +339,88 @@ WHERE ModelCode = (SELECT MaterialCode FROM STB_SetInfo WITH(NOLOCK) WHERE Barco
 PRINT (@ModelName + ' ' + @ModelSize)
 ```
 
-*Cập nhật: 2026-05-17*
+---
+
+### 5.18 Quy trình 3 bước "Thám tử" truy vết và Hủy công đoạn / NG nhầm (Ví dụ: Lot VE260506-001)
+
+Khi cần thực hiện rollback một Lot sản phẩm (ví dụ: `VE260506-001`) quay lại công đoạn trước (ví dụ: từ `VE09` về `VE07`) do công nhân nhập nhầm số lượng phế (NG) hoặc scan sai công đoạn, thực hiện theo 3 bước điều tra dữ liệu để đưa ra script xử lý chuẩn xác:
+
+1. **Bước 1: Tìm mã định danh nội bộ (ControlNo) của Lot**
+   ```sql
+   SELECT Barcode, ControlNo, PONo 
+   FROM STB_SetInfo 
+   WHERE Barcode = 'VE260506-001';
+   -- Kết quả: ControlNo là 20260428000408.
+   ```
+2. **Bước 2: Tra cứu lịch sử di chuyển (Routing History)**
+   ```sql
+   SELECT ProdRouteHistNo, RouteCode, ProdQty, CreateDateTime 
+   FROM STB_ProdRouteHist 
+   WHERE ControlNo = '20260428000408' 
+   ORDER BY CreateDateTime ASC;
+   -- Kết quả: Thấy danh sách các công đoạn quét. Ta xác định được VE08 và VE09 mới được quét nhầm chiều nay. Cần xóa hai bản ghi này.
+   ```
+3. **Bước 3: Tìm các bản ghi lỗi (NG) liên quan phát sinh**
+   ```sql
+   SELECT DefectSummaryNo, FindRouteCode, DefectQty, CreateDateTime 
+   FROM STB_DefectRepairInfo 
+   WHERE ControlNo = '20260428000408' 
+     AND CreateDateTime >= '2026-05-11 16:00:00'; -- Lọc các lỗi nhập nhầm
+   -- Kết quả: Tìm được các dòng lỗi với mã DefectSummaryNo.
+   ```
+
+**Kịch bản xử lý (Rollback / Revert):**
+```sql
+BEGIN TRANSACTION;
+
+-- 1. Xóa Routing các bước quét nhầm (VE08, VE09)
+DELETE FROM STB_ProdRouteHist 
+WHERE ControlNo = (SELECT ControlNo FROM STB_SetInfo WHERE Barcode = 'VE260506-001')
+  AND RouteCode IN ('VE08', 'VE09');
+
+-- 2. Xóa các bản ghi lỗi (NG) nhập nhầm ở công đoạn sau và trạm trước lúc quét chuyển
+-- Giải thích: Việc thêm trạm VE07 với mốc thời gian chèn nhầm là để xóa đi lượng phế
+-- nhập nhầm cho trạm VE07 lúc khai báo chuyển tiếp VE08. Nếu giữ nguyên lượng phế này,
+-- sản lượng của Lot khi chốt sang VE08 sẽ luôn bị hệ thống tự động trừ đi, không thể 
+-- đưa về sản lượng gốc 5883 để công nhân nhập lại.
+DELETE FROM STB_DefectRepairInfo 
+WHERE ControlNo = (SELECT ControlNo FROM STB_SetInfo WHERE Barcode = 'VE260506-001')
+  AND (
+    FindRouteCode IN ('VE08', 'VE09')
+    OR 
+    (FindRouteCode = 'VE07' AND CreateDateTime >= '2026-05-11 16:00:00')
+  );
+
+-- 3. Kiểm tra lại: Lot phải khôi phục về trạng thái cuối cùng ở VE07 với ProdQty = 5883
+SELECT RouteCode, ProdQty, CreateDateTime 
+FROM STB_ProdRouteHist 
+WHERE ControlNo = (SELECT ControlNo FROM STB_SetInfo WHERE Barcode = 'VE260506-001')
+ORDER BY CreateDateTime ASC;
+
+-- COMMIT; -- Chạy dòng này khi thấy kết quả đã đúng
+-- ROLLBACK; -- Chạy dòng này để hủy nếu sai
+```
+
+---
+
+### 5.19 Kiểm tra và truy vết nguồn gốc thay đổi Ký hiệu in phun (Marking Letter / MarkingCode)
+
+Khi cần kiểm tra ký hiệu in phun dán nhãn của Lot sản phẩm (ví dụ: `VE251120-002`) và truy tìm ai đã thiết lập hoặc thay đổi ký hiệu này:
+
+```sql
+-- 1. Tra cứu MarkingCode của mã Lot
+SELECT MarkingCode, LotNo, MaterialCode FROM STB_MaterialLotInfo WHERE LotNo = 'VE251120-002';
+-- Kết quả: Lấy được MarkingCode = 'MK00000974'
+
+-- 2. Đi ngược từ MarkingCode về bảng Master để xem người tạo/người thay đổi và thời gian thay đổi
+SELECT MarkingCode, MarkingName, Barcode, 
+       CreateUserID, CreateDateTime, 
+       ChangeUserID, ChangeDateTime 
+FROM STB_CreateMarkingLetterAndQtyForBarcode 
+WHERE MarkingCode = 'MK00000974';
+```
+
+*Cập nhật: 2026-05-27*
 
 ---
 

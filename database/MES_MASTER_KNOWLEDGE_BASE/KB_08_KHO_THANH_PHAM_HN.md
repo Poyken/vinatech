@@ -85,6 +85,28 @@ WHERE Barcode IN ('pkpt2000146', 'pkpt2000147', 'pkpt2000145')
 
 UPDATE STB_MaterialLotInfo SET MaterialCode = '5H1_MATERIAL_CODE_ĐÚNG'
 WHERE LotNo IN ('pkpt2000146', 'pkpt2000147', 'pkpt2000145')
+
+### 3.1 Đăng ký thay đổi mã vật tư thủ công qua STB_ChangeMaterialCode_HN (Màn hình HN15)
+Trong một số trường hợp tại nhà máy Hà Nam, khi người dùng thực hiện thay đổi mã vật tư cho Lot đóng gói và cần ghi nhận lịch sử vào hệ thống để theo dõi và đồng bộ kho, ta thực hiện chèn dữ liệu lịch sử đổi mã vật tư:
+```sql
+INSERT INTO STB_ChangeMaterialCode_HN (
+    oldMaterialCode, 
+    IsUsed, 
+    CreateDateTime, 
+    CreateUserID, 
+    NewMaterialCode, 
+    PackingID, 
+    LotID
+)
+VALUES (
+    '2VSC820MC8XXXXVC01', -- Mã vật tư cũ
+    1,                    -- Trạng thái sử dụng (Active)
+    GETDATE(),            -- Ngày tạo
+    'vanduc',             -- User thực hiện
+    '2RSC820MC7XXXXB001', -- Mã vật tư mới
+    'PKQN1100015',        -- Mã thùng đóng gói (PackingID)
+    'SP260511-001'        -- Mã Lot sản phẩm (LotID)
+);
 ```
 
 ---

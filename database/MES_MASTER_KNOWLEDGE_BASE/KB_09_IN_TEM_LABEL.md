@@ -101,6 +101,20 @@ WHERE (ObjectName LIKE '%Print%' OR ObjectName LIKE '%Label%')
   AND ObjectType = 'Action'
 ```
 
+### 5.1 Kiến trúc in tem nhãn (Mô hình Giá sách ➔ Danh mục ➔ Người đọc)
+Để dễ hình dung luồng xử lý in tem trong hệ thống NAIS MES, hãy tượng tượng:
+1. **Z530 (Label Info) — "Giá sách" (Thư viện mẫu):**
+   * Là nơi cất giữ toàn bộ thiết kế mẫu tem (Design layout).
+   * Dữ liệu được lưu trong bảng `SmartFramework.dbo.STB_LabelInfo` (cột `XmlLayout` chứa mã XML thiết kế), quản lý theo tên mẫu (FormatName), ví dụ: `'Phoenix_Contact_V1'`.
+   * Mẫu tem mới thiết kế xong chỉ nằm ở đây, chưa được chỉ định cho sản phẩm nào.
+2. **STB_ModelLabelInfo (A460) — "Cuốn danh mục" (Bản đồ Mapping):**
+   * Là nơi chỉ định: *"Nếu sản xuất mã hàng (ModelCode) A, hãy dùng mẫu thiết kế B ở Z530"*.
+   * Mapping này giúp tái sử dụng thiết kế: 10 sản phẩm xuất cho cùng 1 khách hàng chỉ cần map vào 1 mẫu tem duy nhất ở Z530, không cần vẽ lại tem 10 lần.
+3. **Màn hình in tem (B790, B523...) — "Người đọc":**
+   * Khi quét mã Lot, hệ thống hỏi: *"Lot này thuộc Model nào?"* (ví dụ: `ECVT30-197`).
+   * Hệ thống tra "Cuốn danh mục" (`STB_ModelLabelInfo`): *"Mã `ECVT30-197` dùng tem gì?"* ➔ Trả về `'Phoenix_Contact_V1'`.
+   * Hệ thống ra "Giá sách" (`Z530`): *"Cho tôi xin nội dung file thiết kế của mẫu `Phoenix_Contact_V1` để gửi ra máy in"*.
+
 ---
 
 ## 6. Lỗi in tem B767 (sai format)
@@ -228,4 +242,37 @@ DELETE FROM STB_ESRData
 WHERE Barcode = 'Mã_Barcode' AND CreateDateTime = 'Thời_Gian_Import'
 ```
 
-*Cập nhật: 2026-05-22*
+---
+
+## 12. Tra cứu SP và thiết kế tem cho Khách hàng mới (Ví dụ: Sanmina)
+
+Khi có yêu cầu kiểm tra hoặc thiết lập mẫu in tem cho một khách hàng mới (ví dụ: Sanmina), hãy chạy các script sau để truy tìm Stored Procedure và cấu hình đang chạy:
+
+```sql
+-- 1. Tìm các Stored Procedure in tem liên quan đến khách hàng Sanmina
+SELECT OBJECT_NAME(id) AS SP_Name, text
+FROM syscomments
+WHERE text LIKE '%Sanmina%' 
+  AND text LIKE '%Label%'
+ORDER BY SP_Name;
+
+-- 2. Tìm tất cả SP có chứa từ khóa 'Sanmina' (Group by để tránh trùng lặp)
+SELECT OBJECT_NAME(id) AS SP_Name
+FROM syscomments
+WHERE text LIKE '%Sanmina%'
+GROUP BY OBJECT_NAME(id);
+
+-- 3. Kiểm tra thiết kế tem Sanmina trong thư viện Z530
+SELECT 
+    LabelType, 
+    FormatName, 
+    LabelRemark,
+    DataSourceViewName, -- Nếu cột này trống, hãy nhìn vào các cột lân cận để xem view nguồn
+    CreateUserID,
+    ChangeDateTime
+FROM SmartFramework.dbo.STB_LabelInfo
+WHERE LabelType = 'SanminaIndiaLabel_ver2' 
+   OR FormatName = 'SanminaIndiaLabel_ver2';
+```
+
+*Cập nhật: 2026-05-27*

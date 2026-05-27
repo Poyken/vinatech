@@ -574,6 +574,19 @@ Nếu một Lot NVL hết hạn nhưng được phép dùng tiếp, kiểm tra x
 SELECT * FROM stb_vvt_OpenExpiredMaterial WHERE LotID = 'Mã_Lot_NVL';
 ```
 
+### D. Kiểm tra block session (Khóa bảng/Database bị treo)
+Khi hệ thống phản hồi cực kỳ chậm hoặc giao diện bị xoay vòng vô tận (hang) do tranh chấp tài nguyên dữ liệu, chạy query sau để tìm session đang khóa (block) các session khác:
+```sql
+SELECT 
+    blocking_session_id AS [ID Người Chặn],
+    session_id AS [ID Bị Chặn],
+    wait_time / 1000 AS [Thời gian đợi (s)],
+    wait_type AS [Loại đợi],
+    last_wait_type AS [Loại đợi cuối]
+FROM sys.dm_exec_requests
+WHERE blocking_session_id <> 0;
+```
+
 ---
 
 ## 6. ⚠️ CHECKLIST AN TOÀN TUYỆT ĐỐI CHO DEVELOPER

@@ -1,6 +1,6 @@
 # 🗂️ NAIS MES — Knowledge Base Index
 
-> **Cập nhật:** 2026-05-26 | **Tổng hợp từ:** Lỗi thực tế + Docx gốc (đã extract toàn bộ) + Xác minh DB trực tiếp + Phân tích 41 SP + Deep Core Analysis (2026-04-18) + DB Audit (2026-05-05) + Electrode Weighing (2026-05-26)
+> **Cập nhật:** 2026-05-27 | **Tổng hợp từ:** Lỗi thực tế + Docx gốc (đã extract toàn bộ) + Xác minh DB trực tiếp + Phân tích 41 SP + Deep Core Analysis (2026-04-18) + DB Audit (2026-05-05) + Electrode Weighing (2026-05-26)
 > **Cách dùng:** Đọc file INDEX này trước, sau đó mở file KB chuyên biệt theo nhóm lỗi.
 > **Groupware KB:** Xem → [`../GROUPWARE_KNOWLEDGE_BASE/GW_INDEX.md`](../GROUPWARE_KNOWLEDGE_BASE/GW_INDEX.md)
 
@@ -118,6 +118,16 @@
 | B260 nhân viên SX (WorkerGroupCode='VE-01') | KB_06 § 12 |
 | Địa chỉ URL truy cập hệ thống | KB_06 § 13 |
 | Bảng tổng hợp 77 màn hình | KB_06 § 14 |
+| Gộp box tùy chỉnh HN523 Qty = 0 (thiếu IsOutputRoute) | KB_04 § 6.13 |
+| Đổi mã vật tư tự động (STB_ChangeMaterialCode_HN) | KB_08 § 3.1 |
+| Đăng ký mã vật tư mới (STB_MaterialMaster) | KB_06 § 1.3 |
+| Tra cứu SP in tem cho khách hàng mới (Sanmina) | KB_09 § 12 |
+| Hệ thống chậm/treo do tranh chấp database (block session) | KB_14 § 5.D |
+| Hủy/Rollback Slitting F742 (xóa F746 trước) | KB_05 § 10.1 |
+| Giải mã quy tắc đặt tên Model Name (3562) | KB_06 § 1.4 |
+| Kiến trúc in tem nhãn (Z530/A460) | KB_09 § 5.1 |
+| Truy vết ký hiệu in phun (Marking Letter) | KB_03 § 5.19 |
+| Quy trình 3 bước hủy công đoạn / NG nhầm | KB_03 § 5.18 |
 
 ---
 

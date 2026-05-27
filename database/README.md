@@ -1,7 +1,7 @@
 # 🚀 VINATECH MES & GROUPWARE - SYSTEM INDEX
 
 > **Mục đích:** Entry point chính cho toàn bộ hệ thống MES & Groupware
-> **Cập nhật:** 2026-05-22
+> **Cập nhật:** 2026-05-27
 > **Quy tắc:** NO DIRECT UID - Database là nguồn sự thật duy nhất
 
 ---
@@ -101,19 +101,20 @@ database/
 | File | Phạm vi | Màn hình |
 |------|---------|----------|
 | KB_01_UI_PHAN_QUYEN | Login, phân quyền, Stage Prices | A460, Z410, Z220 |
-| KB_02_KHO_WMS | Kho NVL, FIFO, Holding, Hạn dùng | F330, F312, F430 |
-| KB_03_SAN_XUAT | JobDate, ChuyểnLine, Xóa PO, NG | B782, B781, B310 |
-| KB_04_DONG_GOI_IN_TEM | Đóng gói, fix B523, Lot | B523, B789, B351 |
-| KB_05_QC_ELECTRODE | QC B597/C443/C486, Điện cực B552 | B597, C443, C486 |
-| KB_06_MASTER_DATA_TOOLS | Model mới, Cell/Line, Bypass | A410, B250, B270 |
+| KB_02_KHO_WMS | Kho NVL, FIFO, Holding, Hạn dùng, Revert F430 | F330, F312, F430 |
+| KB_03_SAN_XUAT | JobDate, ChuyểnLine, Xóa PO, NG, Rollback công đoạn, Marking Letter | B782, B781, B310, B530 |
+| KB_04_DONG_GOI_IN_TEM | Đóng gói, fix B523, Lot, HN523 Qty=0 (IsOutputRoute) | B523, B789, B351, HN523 |
+| KB_05_QC_ELECTRODE | QC B597/C443/C486, Điện cực B552, Rollback Slitting F742 | B597, C443, C486, F742/F746 |
+| KB_06_MASTER_DATA_TOOLS | Model mới, Cell/Line, Bypass, MaterialMaster SQL, Giải mã ModelName | A410, B250, B270, A230 |
 | KB_07_GROUPWARE_INTEGRATION | Mua hàng→F330, Kế hoạch→B310 | F330, B310, B450 |
-| KB_08_KHO_THANH_PHAM_HN | Kho TP Hà Nam, xuất/hủy/xóa | HN551, HN866 |
-| KB_09_IN_TEM_LABEL | Tem đặc biệt, in khẩn, sai mẫu | B450, B756, B767 |
+| KB_08_KHO_THANH_PHAM_HN | Kho TP Hà Nam, xuất/hủy/xóa, STB_ChangeMaterialCode_HN | HN551, HN866, HN15 |
+| KB_09_IN_TEM_LABEL | Tem đặc biệt, in khẩn, sai mẫu, kiến trúc Z530/A460, Sanmina | B450, B756, B767, Z530 |
 | KB_10_KIEN_TRUC_TONG_QUAN | Kiến trúc hệ thống, vòng đời dữ liệu | Toàn bộ |
 | KB_11_SP_DATAFLOW | End-to-End Data Flow, Dictionary SP | DB/SP |
 | KB_12_DEEP_CORE_ANALYSIS | Phân tích sâu cốt lõi, DNA hệ thống | DB/SP |
 | KB_13_DB_AUDIT | Nhật ký Audit DB, lỗi thực tế | DB/Audit |
-| KB_14_TRACE_BUG_METHODOLOGY | Phương pháp trace bug 5 bước & Cẩm nang chi tiết | Toàn bộ |
+| KB_14_TRACE_BUG_METHODOLOGY | Phương pháp trace bug 5 bước, Block Session DB, Cẩm nang chi tiết | Toàn bộ |
+| NAIS_SYSTEM_MASTER_TROUBLESHOOTING | **Master Index 20 lỗi trọng điểm** — tra đây trước, link đến KB chi tiết | Toàn bộ |
 
 ### Groupware (GROUPWARE_KNOWLEDGE_BASE/)
 | File | Phạm vi |

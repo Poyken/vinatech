@@ -79,6 +79,44 @@ WHERE ModelCode = 'Mã_Model'
 
 ---
 
+### 1.3 Đăng ký mã vật tư mới vào STB_MaterialMaster (A230) qua SQL
+Nếu dữ liệu chưa tự động đồng bộ từ SAP/Groupware sang MES và cần chèn khẩn cấp bằng SQL để sản xuất:
+```sql
+INSERT INTO STB_MaterialMaster (
+    MaterialCode, 
+    MaterialName, 
+    MaterialTypeCode, 
+    ProductGroupCode, 
+    IsProdPlan, 
+    BasicRoutingCode
+)
+VALUES (
+    '50VHV39MD12XXXVC01', 
+    N'Polymer AL-Cap', 
+    'FERT', 
+    'SMD', 
+    1, 
+    'VE_ChipRouting'
+);
+```
+
+---
+
+### 1.4 Giải mã quy tắc đặt tên Model Name (Model Name Anatomy)
+
+Trong hệ thống MES Vinatech, một sản phẩm thường có hai loại mã định danh:
+1. **ModelCode:** Mã quản lý nội bộ của hệ thống (Ví dụ: `ECVT30-197` hoặc `ECVT30-098`). Khi truy vấn SQL hoặc viết code, bắt buộc phải dùng `ModelCode`.
+2. **ModelName:** Tên thương mại hiển thị cho người dùng, chứa thông số kỹ thuật chi tiết.
+   * *Ví dụ:* `HY-CAP VEC3R0367QG (3562)` đại diện cho:
+     * **HY-CAP:** Thương hiệu sản phẩm tụ điện của Vinatech.
+     * **VEC:** Viết tắt của dòng sản phẩm (Dòng tụ điện EDLC).
+     * **3R0:** Ký hiệu mức Điện áp (Voltage) là `3.0V` (`R` tương ứng dấu phẩy).
+     * **367:** Ký hiệu Điện dung (Capacitance) là `360 Farad` (`36` nhân với `10^7` pF, tương đương `360F`).
+     * **QG:** Mã quy định kiểu chân pin hoặc tiêu chuẩn đóng gói của sản phẩm.
+     * **(3562):** Mã dự án (Project Code) do bộ phận Sales quản lý.
+
+---
+
 ## 2. ⚙️ Cấu hình Vận hành (F110)
 
 ### 2.1 Lỗi NVL mới không gộp Box được

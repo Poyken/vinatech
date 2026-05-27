@@ -364,6 +364,14 @@ Kiểm tra tồn kho điện cực → **Stb_SlittingStock_VVT**
         DELETE FROM STB_ElectrodeMixStepInfo WHERE ElectrodeLotNumber = 'Mã_Lot_Điện_Cực_HCE';
         COMMIT TRANSACTION;
         ```
+        *Mẹo:* Có thể dùng 2 Stored Procedures sau để kiểm tra cấu hình và bước cân hiện tại của bến điện cực CMC (kết hợp đọc code JavaScript trong phần mềm):
+        ```sql
+        -- Kiểm tra bước hiện tại (tham số thứ 2 truyền 'kdem' nếu là ca đêm)
+        EXEC usp_GetElectroMixPresentStep_vietnam 'VVQN1620001E28', '';
+        
+        -- Lấy chi tiết cấu hình bước cân trộn
+        EXEC usp_Vietnam_ElectrodeMixingConfig_get 'VVQN1620001E28', '', 'ML20260124000020', '';
+        ```
 
 ##### 2. Điện cực mã liệu `3582-600F CY` không tạo/in được tem
 *   **Triệu chứng:** Khi sản xuất điện cực mã liệu `3582-600F CY`, hệ thống không cho in tem điện cực.
@@ -568,6 +576,9 @@ C243 (QC Kiểm tra Lot Slitting)
     ↓
 F746 (Lịch sử Slitting) → F747 (Lịch sử check NG/Pass) → F748 (Chuyển về kho NVL)
 ```
+
+#### ⚠️ Hủy/Rollback Slitting (F742)
+*   **Quy tắc:** Để thực hiện rollback cắt điện cực và cho phép cắt lại ở màn hình **F742**, bắt buộc phải xóa lịch sử ghi nhận ở màn hình **F746** trước.
 
 **Lỗi thường gặp Slitting:**
 

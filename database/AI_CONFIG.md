@@ -1,7 +1,7 @@
 # 🤖 AI CONFIGURATION - VINATECH MES & GROUPWARE
 
 > **Mục đích:** Quy tắc vận hành AI để làm việc hiệu quả nhất
-> **Cập nhật:** 2026-05-22
+> **Cập nhật:** 2026-05-27
 > **Quy tắc cốt lõi:** NO DIRECT UID — Database là nguồn sự thật duy nhất
 
 ---
