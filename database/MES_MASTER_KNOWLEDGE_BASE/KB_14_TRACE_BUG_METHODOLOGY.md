@@ -209,11 +209,11 @@ Trong vận hành thực tế, việc công nhân scan nhầm, nhập sai số l
     BEGIN TRANSACTION;
     BEGIN TRY
         -- 1. Xem lịch sử công đoạn của Barcode để xác định sequence (ProcSeq)
-        SELECT PRH.ControlNo, PRH.ProcSeq, PRH.RouteCode, PRH.ProdQty, PRH.CreateDateTime
+        SELECT PRH.ControlNo, PRH.RouteCode, PRH.ProdQty, PRH.CreateDateTime
         FROM STB_ProdRouteHist PRH
         JOIN STB_SetInfo SI ON PRH.ControlNo = SI.ControlNo
-        WHERE SI.Barcode = 'VE260509-004'
-        ORDER BY PRH.ProcSeq DESC; -- Dòng mới nhất hiện lên đầu
+        WHERE SI.Barcode = 'VE260521-002'
+
 
         -- 2. Thực hiện xóa công đoạn bị nhầm (Ví dụ: RouteCode = 'VE08')
         -- Ràng buộc xóa theo ControlNo và đúng RouteCode của dòng cuối
@@ -225,6 +225,7 @@ Trong vận hành thực tế, việc công nhân scan nhầm, nhập sai số l
         UPDATE STB_SetInfo
         SET DefectQty = 0, IsDefect = 0
         WHERE Barcode = 'VE260509-004';
+        --thường là sẽ cần phải xóa ng theo nhưng nếu user quên chưa nhập ng (nv vẫn =0) thì không cần xóa ng
 
         COMMIT TRANSACTION;
         PRINT 'Hủy công đoạn thành công!';
