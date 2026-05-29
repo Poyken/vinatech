@@ -216,6 +216,28 @@ WHERE MDLI.LotID = 'ML...'
 1. Báo QC xác nhận gia hạn
 2. Thêm vào `stb_vvt_OpenExpiredMaterial` (xem §4.9) hoặc sửa `LotAttr10` / tăng `MMExtInt01`
 
+**Hướng dẫn thay đổi hạn sử dụng NVL (Ví dụ: từ 5 tháng lên 6 tháng ở màn F330):**
+- **Cách 1 (Qua UI):** Vào màn hình **A230 (Thông tin NVL Master)** -> Tìm kiếm theo mã nguyên vật liệu -> Tại cột cấu hình hạn sử dụng (**Shelf Life (tháng)** hoặc **MMExtInt01**) sửa đổi giá trị (VD từ `5` lên `6`) -> Bấm **Save** để lưu.
+- **Cách 2 (Qua SQL Query):**
+  ```sql
+  -- Bước 1: SELECT kiểm tra trước
+  SELECT MaterialCode, MaterialName, MMExtInt01
+  FROM STB_MaterialMaster
+  WHERE MaterialCode = 'MÃ_NVL'; -- VD: 'MDFLUX-003'
+
+  -- Bước 2: UPDATE qua Transaction
+  BEGIN TRAN;
+  UPDATE STB_MaterialMaster
+  SET MMExtInt01 = 6 -- Số tháng hạn dùng mới
+  WHERE MaterialCode = 'MÃ_NVL';
+  
+  -- SELECT lại xác nhận
+  SELECT MaterialCode, MaterialName, MMExtInt01 FROM STB_MaterialMaster WHERE MaterialCode = 'MÃ_NVL';
+  
+  COMMIT TRAN; -- hoặc ROLLBACK TRAN;
+  ```
+- **Lưu ý:** Sau khi thay đổi, ngày hết hạn mới ở màn F330 sẽ tự động cập nhật real-time theo cấu hình mới. Đối với các mã dung môi đặc biệt (như `MDFLUX-002`), hệ thống áp dụng logic `(MMExtInt01 * 30) - 1` ngày (6 tháng tương đương 179 ngày).
+
 ---
 
 ### 4.11 Lỗi không lưu được F330 — Định dạng Vendor Lot sai

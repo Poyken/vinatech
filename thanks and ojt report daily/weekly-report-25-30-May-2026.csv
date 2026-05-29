@@ -1,0 +1,23 @@
+NAME,DEPARTMENT,DATE GET ISSUE,NAME ISSUE,THE SOLVE,TYPE ISSUE,DATE SOLVE ISSUE,SOLVE ISSUE BY,STATUS,REMARK
+Nguyen Van Duc,EA Team,25/5/2026,MES Bug Support,Sửa lỗi hệ thống MES cho user.,Support,25/5/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,25/5/2026,Report Compilation,Sửa đổi và hoàn thiện nội dung PowerPoint báo cáo công việc.,Support,25/5/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,26/5/2026,Kiosk Installation BG2,Lắp đặt thiết bị Kiosk mới tại nhà máy Bắc Giang 2.,Support,26/5/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,26/5/2026,NAIS System Setup BG2,Cấu hình hệ thống NAIS và phân quyền quản trị (Admin) trên kiosk mới.,Support,26/5/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,26/5/2026,MES User Support BG2,Hỗ trợ xử lý lỗi hệ thống MES cho người dùng tại Bắc Giang 2.,Support,26/5/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,26/5/2026,Electrode Weight Software Research,Nghiên cứu tìm hiểu logic và tính năng của phần mềm cân điện cực (Electrode Weight).,Research,26/5/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,27/5/2026,MES Support BG2,Hỗ trợ khắc phục lỗi màn hình MES cho các user Nguyễn Duyên;Vân Ốc;Khánh Huyền;Phùng Hoài.,Support,27/5/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,27/5/2026,MES User Support,Hỗ trợ sửa lỗi hệ thống MES cho chị Hằng Nguyễn và anh Huấn.,Support,27/5/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,27/5/2026,Production Line Support,Hỗ trợ kỹ thuật trực tiếp cho dây chuyền sản xuất.,Support,27/5/2026,Nguyen Van Duc,Done,HW/SW
+Nguyen Van Duc,EA Team,28/5/2026,MES User Support,Hỗ trợ sửa lỗi phần mềm MES cho chị Trần Lan và chị Đoàn Hạnh.,Support,28/5/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,28/5/2026,ECM Software Support,Hỗ trợ khắc phục lỗi kết nối và sử dụng ECM cho chị Vân Ốc.,Support,28/5/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,28/5/2026,Charge-Discharge Machine Survey BG1,Di chuyển sang nhà máy Bắc Giang 1 khảo sát máy sạc xả theo yêu cầu chị Hạnh.,Research,28/5/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,28/5/2026,MES User Support BG1,Hỗ trợ xử lý sự cố sử dụng hệ thống MES cho chị Xuyên.,Support,28/5/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,28/5/2026,Network Deployment BG1,Kéo dây mạng kết nối internet cho kho đóng gói tại nhà máy Bắc Giang 1.,Support,28/5/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,29/5/2026,Weekly Report Compilation,Tổng hợp dữ liệu báo cáo tuần và cập nhật lịch sử di chuyển.,Support,29/5/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,29/5/2026,System Monitoring,Theo dõi tính ổn định và hiệu năng của hệ thống MES/NAIS.,Research,29/5/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,30/5/2026,Weekend Support & Maintenance,Hỗ trợ kỹ thuật và bảo trì hệ thống định kỳ trong ca trực thứ Bảy.,Support,30/5/2026,Nguyen Van Duc,Done,HW/SW
+Nguyen Van Tuan,EA Team,25/5/2026,Ha Nam Demo & Permission Deployment,Demo phần mềm cho Hà Nam, nhận yêu cầu mới, triển khai lên hệ thống nội bộ và phân quyền user.,Support,25/5/2026,Nguyen Van Tuan,Done,SW/Training
+Nguyen Van Tuan,EA Team,26/5/2026,Temp & Humidity Dashboard,Thiết kế biểu đồ hiển thị trực quan biến động nhiệt độ và độ ẩm theo ngày cho từng kho.,Dev,26/5/2026,Nguyen Van Tuan,Done,SW
+Nguyen Van Tuan,EA Team,26/5/2026,Box Splitting Support,Hỗ trợ nghiệp vụ tách box sản phẩm tại kho hàng.,Support,26/5/2026,Nguyen Van Tuan,Done,SW
+Nguyen Van Tuan,EA Team,27/5/2026,Ha Nam MES Error Support,Hỗ trợ sửa lỗi hệ thống MES cho chi nhánh Hà Nam.,Support,27/5/2026,Nguyen Van Tuan,Done,SW
+Nguyen Van Tuan,EA Team,27/5/2026,SP Optimization BN Warehouse,Tối ưu và viết lại các Stored Procedure của hệ thống kho tại Bắc Ninh.,Dev,27/5/2026,Nguyen Van Tuan,Done,SW         

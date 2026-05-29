@@ -1,5 +1,5 @@
 # 🚗 Lịch sử di chuyển sang các cơ sở khác (Bắc Giang 1 & Bắc Giang 2)
-### Thời gian: Từ ngày 27/04/2026 đến nay (26/05/2026)
+### Thời gian: Từ ngày 27/04/2026 đến nay (28/05/2026)
 
 Dưới đây là chi tiết các lần di chuyển làm việc tại nhà máy Bắc Giang 1 (BG1) và Bắc Giang 2 (BG2) được tổng hợp từ báo cáo tuần và thông tin bổ sung của bạn:
 
@@ -12,6 +12,9 @@ Dưới đây là chi tiết các lần di chuyển làm việc tại nhà máy 
 | **14/05/2026** *(Thứ Năm)* | **Bắc Giang 1** | - Lắp đặt 9 máy Mini PC phục vụ giám sát dây chuyền sản xuất. | `weekly-report-11-16-May-2026.csv`<br>`ojt-daily-report-06-Mar-2026.md` |
 | **15/05/2026** *(Thứ Sáu)* | **Bắc Giang 1** | - Triển khai cập nhật / cài đặt phần mềm (ECM) cho người dùng tại Bắc Giang 1. | `weekly-report-11-16-May-2026.csv`<br>Người dùng bổ sung |
 | **23/05/2026** *(Thứ Bảy)* | **Bắc Giang 1** | - Di chuyển sang nhà máy Bắc Giang 1 làm việc. | Người dùng bổ sung |
+| **26/05/2026** *(Thứ Ba)* | **Bắc Giang 2** | - Lắp kios mới cho BG2, setup hệ thống NAIS và phân quyền admin.<br>- Hỗ trợ người dùng trên hệ thống MES. | `weekly-report-25-30-May-2026.csv`<br>Người dùng bổ sung |
+| **27/05/2026** *(Thứ Tư)* | **Bắc Giang 2** | - Hỗ trợ người dùng trên MES ở BG2 (Nguyễn Duyên, Vân Ốc, Khánh Huyền, Phùng Hoài). | `weekly-report-25-30-May-2026.csv`<br>Người dùng bổ sung |
+| **28/05/2026** *(Thứ Năm)* | **Bắc Giang 1** | - Khảo sát máy sạc xả theo yêu cầu chị Hạnh.<br>- Hỗ trợ người dùng trên MES (chị Xuyên).<br>- Kéo dây mạng cho kho đóng gói. | `weekly-report-25-30-May-2026.csv`<br>Người dùng bổ sung |
 
 ---
 
@@ -24,6 +27,9 @@ Dưới đây là chi tiết các lần di chuyển làm việc tại nhà máy 
 * **14/05/2026**: Lắp đặt 9 máy Mini PC phục vụ giám sát dây chuyền sản xuất tại Bắc Giang 1
 * **15/05/2026**: Triển khai cập nhật / cài đặt phần mềm (ECM) cho người dùng tại Bắc Giang 1
 * **23/05/2026**: Di chuyển sang nhà máy Bắc Giang 1 làm việc
+* **26/05/2026**: Lắp kios mới, setup hệ thống NAIS và phân quyền admin, hỗ trợ MES tại Bắc Giang 2
+* **27/05/2026**: Hỗ trợ người dùng trên MES ở Bắc Giang 2 (Nguyễn Duyên, Vân Ốc, Khánh Huyền, Phùng Hoài)
+* **28/05/2026**: Khảo sát máy sạc xả, hỗ trợ MES chị Xuyên và kéo dây mạng cho kho đóng gói tại Bắc Giang 1
 
 ---
-*Ghi chú: Lịch sử được cập nhật vào ngày 26/05/2026.*
+*Ghi chú: Lịch sử được cập nhật vào ngày 29/05/2026.*

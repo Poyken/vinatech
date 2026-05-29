@@ -1,4 +1,4 @@
-# 📒 Daily Thank-You Notes — Vinatech Vina (Bac Ninh)
+﻿# 📒 Daily Thank-You Notes — Vinatech Vina (Bac Ninh)
 ## From March 2, 2026 to May 16, 2026
 
 ---
@@ -347,4 +347,37 @@
 
 ---
 
-> **Note:** 3 thank-you notes per day. Sundays off. Total: 60 working days × 3 = **180 thank-you notes**.
+### 📅 Monday — 25/05/2026
+1. Thank you colleagues for your assistance and guidance during the MES bug fixing process today.
+2. Thank you manager for the valuable feedback to help me refine and complete the PowerPoint presentation.
+3. Thank you Vinatech for providing a great learning and working environment.
+
+### 📅 Tuesday — 26/05/2026
+1. Thank you BG2 technical team for the swift collaboration in installing and cabling the new Kiosks.
+2. Thank you colleagues for sharing reference materials and insights about the electrode weight software.
+3. Thank you production operators for your patience and coordination during the NAIS system installation.
+
+### 📅 Wednesday — 27/05/2026
+1. Thank you Ms. Nguyen Duyen, Ms. Van Oc, Ms. Khanh Huyen, and Ms. Phung Hoai for the smooth collaboration during the morning MES support at BG2.
+2. Thank you Ms. Hang Nguyen and Mr. Huan for the excellent cooperation to resolve the MES interface errors quickly.
+3. Thank you production team for the timely assistance on the shop floor to ensure smooth operations.
+
+### 📅 Thursday — 28/05/2026
+1. Thank you Ms. Tran Lan and Ms. Doan Hanh for the prompt feedback during the morning MES support session.
+2. Thank you Ms. Van Oc for the great coordination while troubleshooting the ECM application issues.
+3. Thank you Ms. Hanh at BG1 for the warm guidance and support during the charge-discharge machine survey this afternoon.
+4. Thank you Ms. Xuyen for the trust during MES support and the packaging warehouse team for assisting with network cabling.
+
+### 📅 Friday — 29/05/2026
+1. Thank you team members for the continuous support in helping me complete all assigned weekly tasks.
+2. Thank you manager for the dedicated supervision and constructive feedback that helps me grow daily.
+3. Thank you company for maintaining a highly professional and structured workplace.
+
+### 📅 Saturday — 30/05/2026
+1. Thank you Saturday shift team for the hard work and dedication to maintain production line stability.
+2. Thank you security and logistics staff for being helpful and supportive during the weekend shift.
+3. Thank you for a highly productive week filled with practical learning and experience across three facilities.
+
+---
+
+> **Note:** 3 thank-you notes per day. Sundays off. Total: 66 working days × 3 = **198 thank-you notes**.
