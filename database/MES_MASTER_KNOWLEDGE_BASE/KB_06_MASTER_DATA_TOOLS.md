@@ -1,4 +1,4 @@
-# KB_06 — Master Data, SQL Tools & Manual Bypass
+# KB_06 - Master Data, SQL Tools & Manual Bypass
 
 > **Màn hình liên quan:** A230, A310, A410, B250, B270, SQL Server, STB_ModelBasicInfo
 > ← [Về INDEX](KB_INDEX.md)
@@ -9,18 +9,18 @@
 
 ### 1.1 Thêm Model mới vào STB_ModelBasicInfo (A410)
 
-> ⚠️ Nếu model có trong `STB_MaterialMaster` (A230) nhưng **không có** trong `STB_ModelBasicInfo` → C512 không tìm thấy, B597 không chọn được, Vol/Farad không hiện.
+> ⚠️ Nếu model có trong `STB_MaterialMaster` (A230) nhưng **không có** trong `STB_ModelBasicInfo` -> C512 không tìm thấy, B597 không chọn được, Vol/Farad không hiện.
 
 **Checklist khi thêm model mới:**
 ```
-□ 1. A230 (STB_MaterialMaster) — Mã vật tư và tên
-□ 2. A310 (STB_BomHeader/Detail) — BOM nguyên liệu — Anh Huy phụ trách
-□ 3. A320 (STB_RouteInfo) — Công đoạn sản xuất
-□ 4. A410 (STB_ModelBasicInfo) — Thông số kỹ thuật (Vol, Farad, OQC Type)
-□ 5. A419 (STB_PackingStandard) — Tiêu chuẩn đóng gói
-□ 6. A460 (STB_LabelInfo) — Mẫu tem in
-□ 7. STB_VVT_StagePrices — Giá công đoạn (cho B682/B781)
-□ 8. Cấu hình Vỏ nhôm — ⚠️ Bảng STB_AluCaseMapping_VVT KHÔNG TỒN TẠI; logic mapping được hardcode trong SP usp_Vietnam_RawMaterialInputHist_uid.
+□ 1. A230 (STB_MaterialMaster) - Mã vật tư và tên
+□ 2. A310 (STB_BomHeader/Detail) - BOM nguyên liệu - Anh Huy phụ trách
+□ 3. A320 (STB_RouteInfo) - Công đoạn sản xuất
+□ 4. A410 (STB_ModelBasicInfo) - Thông số kỹ thuật (Vol, Farad, OQC Type)
+□ 5. A419 (STB_PackingStandard) - Tiêu chuẩn đóng gói
+□ 6. A460 (STB_LabelInfo) - Mẫu tem in
+□ 7. STB_VVT_StagePrices - Giá công đoạn (cho B682/B781)
+□ 8. Cấu hình Vỏ nhôm - ⚠️ Bảng STB_AluCaseMapping_VVT KHÔNG TỒN TẠI; logic mapping được hardcode trong SP usp_Vietnam_RawMaterialInputHist_uid.
 ```
 
 **SQL thêm ModelBasicInfo:**
@@ -130,8 +130,8 @@ SELECT MaterialCode, IsUseBarcode, IsLotUse
 FROM STB_MaterialStockAttributeInfo
 WHERE MaterialCode = 'Mã_NVL'
 
--- Nếu không có dòng → Vào F110 nhập và Save
--- Nếu IsLotUse = 0 → Vào F110 tích và Save
+-- Nếu không có dòng -> Vào F110 nhập và Save
+-- Nếu IsLotUse = 0 -> Vào F110 tích và Save
 -- Hoặc INSERT/UPDATE trực tiếp:
 UPDATE STB_MaterialStockAttributeInfo
 SET IsLotUse = 1, IsUseBarcode = 1
@@ -144,7 +144,7 @@ WHERE MaterialCode = 'Mã_NVL'
 
 > Áp dụng khi màn hình B682, B781, B789 không hiện giá hoặc sai đơn giá.
 
-> ⚠️ **Xác minh DB (2026-05-17):** Bảng `STB_VVT_StagePrices` thực tế có thêm nhiều cột: `RouteV29`→`RouteV34`, `RouteVE01`→`RouteVE10` (cho Hà Nam), `WorkCenterCode` (để phân biệt nhà máy). Hà Nam cần dùng `WorkCenterCode = 'VVT_F3'` và điền các route VE.
+> ⚠️ **Xác minh DB (2026-05-17):** Bảng `STB_VVT_StagePrices` thực tế có thêm nhiều cột: `RouteV29`->`RouteV34`, `RouteVE01`->`RouteVE10` (cho Hà Nam), `WorkCenterCode` (để phân biệt nhà máy). Hà Nam cần dùng `WorkCenterCode = 'VVT_F3'` và điền các route VE.
 
 ```sql
 -- Kiểm tra đã có giá chưa
@@ -163,20 +163,20 @@ VALUES (
     GETDATE()
 );
 
--- Với Module (B789/B791) → Sửa trong Function:
+-- Với Module (B789/B791) -> Sửa trong Function:
 SELECT OBJECT_DEFINITION(OBJECT_ID('fn_VVT_StagePricesMODULE'))
--- Tìm dòng SELECT → Thêm UNION ALL với Model và giá mới
+-- Tìm dòng SELECT -> Thêm UNION ALL với Model và giá mới
 ```
 
 ---
 
 ## 4. 🛢️ Lỗi Vỏ Nhôm (Aluminum Case Mapping)
 
-→ Xem [KB_05 Mục 7.4](KB_05_QC_ELECTRODE.md#74-b597-báo-lỗi-không-tồn-tại-thiết-lập-vỏ-nhôm) để debug và fix.
+-> Xem [KB_05 Mục 7.4](KB_05_QC_ELECTRODE.md#74-b597-báo-lỗi-không-tồn-tại-thiết-lập-vỏ-nhôm) để debug và fix.
 
 ---
 
-## 5. 🔎 SQL Utilities — Truy vấn hỗ trợ
+## 5. 🔎 SQL Utilities - Truy vấn hỗ trợ
 
 ### 5.1 Golden Query: Kiểm tra lịch sử toàn bộ 1 Barcode
 
@@ -287,21 +287,21 @@ ORDER BY CreateDateTime DESC
 
 **Quy trình 3 bước:**
 
-**Bước 1 — Khởi tạo Lot thủ công:**
+**Bước 1 - Khởi tạo Lot thủ công:**
 ```sql
 -- Tạo bản ghi trong SetInfo
 INSERT INTO STB_SetInfo (Barcode, MaterialCode, PONo, DayPlanNo, ProdQty, InputLineCode, InputJobDate, CreateDateTime, CreateUserID)
 VALUES ('VVXX123R000001', 'Mã_Model', 'PONo', 'DayPlanNo', 1000, 'LineCode', CONVERT(CHAR(8), GETDATE(), 112), GETDATE(), 'vinaadmin')
 ```
 
-**Bước 2 — QC Pass:**
+**Bước 2 - QC Pass:**
 ```sql
 UPDATE STB_SetInfo
 SET LotDecisionResult = 'PASS', IsDefect = 0
 WHERE Barcode = 'VVXX123R000001'
 ```
 
-**Bước 3 — Link Packing:**
+**Bước 3 - Link Packing:**
 ```sql
 INSERT INTO STB_MaterialLotInfo (LotID, LotNo, MaterialCode, InitialQty, CurrentQty, CreateDateTime, CreateUserID)
 VALUES ('VVXX123R000001', 'VVXX123R000001', 'Mã_Model', 1000, 1000, GETDATE(), 'vinaadmin')
@@ -333,7 +333,7 @@ IF NOT EXISTS (SELECT 1 FROM STB_MachineMaster WHERE MachineCode = 'VVBNTC-05')
 INSERT INTO STB_MachineMaster (MachineCode, CompanyCode, WorkCenterCode, MachineName, IsProdMachine, MachineTypeCode, IsUsed, CreateDateTime, CreateUserID)
 VALUES ('VVBNTC-05', 'VVT', 'VVT_F2', 'BN Manual (P20)', 1, 'M00001', 1, GETDATE(), 'vinaadmin');
 
--- Bước 4: Thêm mapping Route (B270) — link đủ V22→V28
+-- Bước 4: Thêm mapping Route (B270) - link đủ V22->V28
 INSERT INTO STB_ProductMachine (MachineCode, LineCode, RouteCode, CreateDateTime, CreateUserID)
 SELECT 'VVBNTC-05', 'VVBNTC-05', r.RouteCode, GETDATE(), 'vinaadmin'
 FROM (
@@ -365,7 +365,7 @@ DELETE FROM STB_LineInfo WHERE LineCode = 'VVBNTC-05'
 
 ## 8. 🔧 Nguyên Tắc An Toàn Khi IUD
 
-> ⚠️ **LUÔN SELECT TRƯỚC — IUD SAU**
+> ⚠️ **LUÔN SELECT TRƯỚC - IUD SAU**
 
 ```sql
 -- Mẫu an toàn tuyệt đối:
@@ -388,17 +388,17 @@ ROLLBACK  -- Đổi thành COMMIT khi chắc chắn đúng
 
 ---
 
-## 9. 🚀 Quick Start — Checklist Đầy Đủ Khi Thêm Model / Hàng Mới
+## 9. 🚀 Quick Start - Checklist Đầy Đủ Khi Thêm Model / Hàng Mới
 
 ### 9.1 Checklist Thêm Model Mới (7 bước)
 
 ```
-BƯỚC 1 — Master Data (Groupware/SAP)
+BƯỚC 1 - Master Data (Groupware/SAP)
 □ Đăng ký MaterialCode mới trong Groupware
 □ Đăng ký BOM trong Groupware
 □ Chờ sync sang MES (thường 1-2 ngày làm việc)
 
-BƯỚC 2 — Cấu hình MES (IT thực hiện)
+BƯỚC 2 - Cấu hình MES (IT thực hiện)
 □ A210: Kiểm tra MaterialTypeCode đúng chưa (FERT/HALB/MDL/ROH?)
 □ A230: Kiểm tra Material đã sync chưa
 □ A310: Kiểm tra BOM đã sync chưa
@@ -407,31 +407,31 @@ BƯỚC 2 — Cấu hình MES (IT thực hiện)
    □ Chọn InspectionType = SAMPLE
    □ Chọn OqcType = MANUAL
    □ Chọn OqcInspectionRuleType = BY_MODEL
-□ A418: Thêm ProdSize (= MBISizeD) → PackQty (số lượng mỗi box)
+□ A418: Thêm ProdSize (= MBISizeD) -> PackQty (số lượng mỗi box)
 □ B210/B220/B230: Kiểm tra Line và Route đã cấu hình chưa
 □ B260: Kiểm tra công nhân Line mới đã đăng ký chưa (WorkerGroupCode='VE-01')
 
-BƯỚC 3 — Cấu hình QC
+BƯỚC 3 - Cấu hình QC
 □ C141: Kiểm tra hạng mục PQC đã có chưa
 □ C143: Thêm hạng mục PQC riêng cho model nếu cần
 □ C121: Kiểm tra nhóm hạng mục OQC đã có chưa
 □ C151: Thêm hạng mục OQC cho model mới
 
-BƯỚC 4 — Cấu hình Giá Thành
+BƯỚC 4 - Cấu hình Giá Thành
 □ INSERT INTO STB_VVT_StagePrices (MaterialCode, RouteCode, Price, IsUsed)
-   → Mỗi RouteCode 1 dòng, Price từ kế toán cung cấp
+   -> Mỗi RouteCode 1 dòng, Price từ kế toán cung cấp
 
-BƯỚC 5 — Cấu hình Slitting (nếu là model điện cực mới)
+BƯỚC 5 - Cấu hình Slitting (nếu là model điện cực mới)
 □ F744: Thêm thiết lập chiều rộng Slitting
 □ stb_slittinglocationconfig_vvt: INSERT config mới
-□ B552: Test nhập dữ liệu Mixing → Coating → Rollpress → Slitting
+□ B552: Test nhập dữ liệu Mixing -> Coating -> Rollpress -> Slitting
 
-BƯỚC 6 — Cấu hình NVL đặc biệt (nếu dùng electrolyte/sleeve/terminal mới)
+BƯỚC 6 - Cấu hình NVL đặc biệt (nếu dùng electrolyte/sleeve/terminal mới)
 □ Thêm vào stb_vvt_materialbo (qua UI nếu có, hoặc INSERT SQL)
-□ NẾU dùng electrolyte mới → PHẢI sửa SP usp_Vietnam_RawMaterialInputHist_uid
-   → Thêm dòng: SELECT 'GBEC00-0XX' AS electrolyte, 'NEW_MODEL_CODE' AS model, 'SIZE' AS size
+□ NẾU dùng electrolyte mới -> PHẢI sửa SP usp_Vietnam_RawMaterialInputHist_uid
+   -> Thêm dòng: SELECT 'GBEC00-0XX' AS electrolyte, 'NEW_MODEL_CODE' AS model, 'SIZE' AS size
 
-BƯỚC 7 — Test
+BƯỚC 7 - Test
 □ B310: Tạo PO test
 □ B450: Tạo kế hoạch ngày test
 □ B540: Tạo Lot test
@@ -479,30 +479,30 @@ BƯỚC 7 — Test
 
 ---
 
-## 11. 📐 A418 — Số Lượng Đóng Gói Theo Size
+## 11. 📐 A418 - Số Lượng Đóng Gói Theo Size
 
-**Luồng dữ liệu:** A410 (MBISizeD) → A418 (PackQty) → B523 (popup số lượng gộp box)
+**Luồng dữ liệu:** A410 (MBISizeD) -> A418 (PackQty) -> B523 (popup số lượng gộp box)
 
 ```sql
 -- Kiểm tra đã có tiêu chuẩn đóng gói chưa
 SELECT * FROM STB_PackingStandard WHERE ProdSize = 'MBISizeD_của_model'
 
 -- Lỗi "Chưa có tiêu chuẩn đóng gói ở B523":
--- → Vào A418 → thêm ProdSize mới → nhập PackQty → Lưu
--- → Cũng phải thêm tiêu chuẩn cân vào SP: usp_Vvt_TieuChuanPacking_Vvt
+-- -> Vào A418 -> thêm ProdSize mới -> nhập PackQty -> Lưu
+-- -> Cũng phải thêm tiêu chuẩn cân vào SP: usp_Vvt_TieuChuanPacking_Vvt
 ```
 
 ---
 
-## 12. 👥 B260 — Thông Tin Nhân Viên Sản Xuất
+## 12. 👥 B260 - Thông Tin Nhân Viên Sản Xuất
 
-> ⚠️ **WorkerGroupCode PHẢI là `VE-01`** — Nếu điền sai → nhân viên không hiển thị trong dropdown tại B530, B540
+> ⚠️ **WorkerGroupCode PHẢI là `VE-01`** - Nếu điền sai -> nhân viên không hiển thị trong dropdown tại B530, B540
 
 | Thao tác | Bước thực hiện |
 |----------|---------------|
-| Thêm | (+) → Điền thông tin → WorkerGroupCode='VE-01' → Lưu |
-| Sửa | Click vào field → Sửa → Lưu |
-| Xóa | Chọn dòng → (-) → Yes → Lưu |
+| Thêm | (+) -> Điền thông tin -> WorkerGroupCode='VE-01' -> Lưu |
+| Sửa | Click vào field -> Sửa -> Lưu |
+| Xóa | Chọn dòng -> (-) -> Yes -> Lưu |
 
 **Filter tìm kiếm:** Mã công ty `VVT`, Mã địa điểm `VVT_F1`, `VVT_F2`, `VVT_F3` (Hà Nam)
 
@@ -525,57 +525,149 @@ SELECT * FROM STB_PackingStandard WHERE ProdSize = 'MBISizeD_của_model'
 
 ---
 
-## 14. 📊 Bảng Tổng Hợp 77 Màn Hình (Quick Reference)
 
-| Nhóm | Màn hình | Mô tả |
-|------|----------|--------|
-| **A** | A210 | Loại vật liệu (FERT/HALB/MDL/ROH...) |
-| **A** | A230 | Thông tin NVL Master |
-| **A** | A310 | BOM |
-| **A** | A410 | Model Basic Info + OQC config |
-| **A** | A418 | Số lượng đóng gói theo Size |
-| **B** | B210/B220/B230/B240 | Đăng ký Line/Route/Máy |
-| **B** | B260 | Nhân viên SX (WorkerGroupCode='VE-01') |
-| **B** | B310 | Tạo PO tháng |
-| **B** | B351 | Chuyển đổi Lot/Material |
-| **B** | B450 | Kế hoạch SX ngày |
-| **B** | B452 | Đổi Line sai |
-| **B** | B453 | In tem INNER/OUTER |
-| **B** | B523 | Gộp Box Cell + Chia Box (quy trình mới) |
-| **B** | B525 | Gộp Box Module |
-| **B** | B528 | Barrel Barcode (Gộp thùng xuất hàng) |
-| **B** | B530 | Nhập sản lượng công đoạn |
-| **B** | B540 | Assy Card Info |
-| **B** | B552 | Electrode Measure Result |
-| **B** | B597 | Kiểm tra thường xuyên + scan NVL |
-| **B** | B598 | Báo phế NVL |
-| **B** | B717 | Bending & Tapping (chỉ lưu 1 lần) |
-| **B** | B754-B756 | In tem PAC (Inner/Outer/Carton) |
-| **B** | B757-B758 | In tem Digi-Key (SP + Logistic) |
-| **B** | B789 | Lịch sử đóng gói Module |
-| **B** | B802 | Lịch sử SX điện cực + giá thành |
-| **B** | B882 | ANDON |
-| **B** | B934/B935 | Import/Xem dữ liệu máy phân cấp bigsize |
-| **C** | C121/C122 | Nhóm/Hạng mục kiểm tra IQC |
-| **C** | C141/C143 | Thiết lập PQC chung/riêng theo model |
-| **C** | C151 | OQC riêng theo sản phẩm |
-| **C** | C220 | Kiểm tra NVL đầu vào (IQC) |
-| **C** | C243 | Kiểm tra Lot Slitting |
-| **C** | C321 | PQC Reliability / Sửa lỗi Cell |
-| **C** | C443 | Kiểm tra công đoạn ngoài line |
-| **C** | C510/C512/C530/C540 | Quản lý Lot OQC + Kiểm tra mẫu |
-| **C** | C546/C541 | Kiểm tra ESR xuất kho |
-| **C** | C561-C564 | Bending/Cutting QC |
-| **F** | F110 | Nhập/Xuất kho thành phẩm |
-| **F** | F130/F140 | Chỉ định NCC ↔ NVL |
-| **F** | F312 | Ghi chú NVL (Invoice) |
-| **F** | F330 | Nhập kho + in tem NVL |
-| **F** | F430 | Lịch sử xuất/nhập kho |
-| **F** | F721 | Tồn kho NVL |
-| **F** | F743-F748 | Slitting LOT Material Hà Nam |
-| **FG** | FG00/FG01/FG02 | Tổng hợp TP BN + BG |
-| **H** | H301-H305 | Spare Part |
-| **HN** | HN00/HN101 | Thành phẩm + Đơn giá Hà Nam |
-| **K** | K101/K109 | Kế hoạch SX ngày + Kiểm tra thường xuyên BG2 |
+## 14. 📊 Bảng Tổng Hợp Màn Hình MES (Mở Rộng - Quick Reference)
 
-*Cập nhật: 2026-05-22 — Bổ sung Quick Start checklist, B210-B240, A418, B260, địa chỉ hệ thống, bảng 77 màn hình*
+> Tổng hợp từ hình ảnh flowchart + bảng danh sách Screen ID chính thức. Nhóm theo chức năng nghiệp vụ.
+
+### 14.1 Đăng Ký Thông Tin Cơ Bản (Master Data)
+
+| Màn hình | Mô tả | Bảng DB chính |
+|----------|-------|---------------|
+| **A210** | Loại vật liệu (FERT/HALB/MDL/ROH...) | `STB_MaterialTypeInfo` |
+| **A230** | Thông tin NVL Master | `STB_MaterialMaster` |
+| **A310** | Thiết lập BOM / Cấu trúc sản phẩm | `STB_BomHeader`, `STB_BomDetail` |
+| **A320** | Thiết lập Route sản xuất | `STB_RouteInfo` |
+| **A410** | Model Basic Info + OQC config | `STB_ModelBasicInfo` |
+| **A418** | Số lượng đóng gói theo Size | `STB_PackingStandard` |
+| **A419** | Tiêu chuẩn đóng gói | `STB_PackingStandard` |
+| **A460** | Thiết lập mẫu nhãn in | `STB_LabelInfo` (SmartFramework) |
+
+### 14.2 Đăng Ký Máy Móc, Line & Route
+
+| Màn hình | Mô tả | Bảng DB chính |
+|----------|-------|---------------|
+| **B210** | Đăng ký Line | `STB_LineInfo` |
+| **B220** | Đăng ký Route | `STB_RouteInfo` |
+| **B230** | Phân quyền Route vào Line | `STB_LineRouteMapping` |
+| **B240** | Đăng ký Máy | `STB_MachineInfo` |
+| **B250** | Phân bổ Máy vào công đoạn | `STB_MachineMaster` |
+| **B260** | Nhân viên SX (WorkerGroupCode='VE-01') | `STB_WorkerInfo` |
+| **B270** | Kiểm tra phân bổ máy-route | `STB_ProductMachine` |
+
+### 14.3 Quản Lý Kế Hoạch Sản Xuất
+
+| Màn hình | Mô tả | Bảng DB chính |
+|----------|-------|---------------|
+| **B310** | Tạo PO kế hoạch tháng | `STB_ProductionOrderInfo` |
+| **B450** | Kế hoạch SX ngày + Tạo Lot | `STB_DayProdPlan` |
+| **B452** | Đổi Line sai | `STB_DayProdPlan` |
+
+### 14.4 Sản Xuất (Cell Line)
+
+| Màn hình | Mô tả | Bảng DB chính |
+|----------|-------|---------------|
+| **B530** | Nhập sản lượng công đoạn | `STB_ProdRouteHist` |
+| **B540** | Assy Card Info | `STB_SetInfo` |
+| **B552** | Electrode Measure Result | `STB_ElectrodeSlittingResult` |
+| **B597** | Kiểm tra thường xuyên + scan NVL | `STB_CommInspDocHistory`, `STB_RawMaterialInputHist` |
+
+### 14.5 Đóng Gói & Đóng Thùng Xuất Hàng
+
+| Màn hình | Mô tả | Bảng DB chính |
+|----------|-------|---------------|
+| **B351** | Chuyển đổi Lot/Material | `STB_SetInfo` |
+| **B453** | In tem INNER/OUTER | `STB_DividePackaging` |
+| **B523** | Gộp Box Cell + Chia Box (quy trình mới) | `STB_DividePackaging`, `STB_MaterialLotInfo` |
+| **B525** | Gộp Box Module | `STB_DividePackaging` |
+| **B528** | Barrel Barcode (Gộp thùng xuất hàng) | `STB_DividePackaging` |
+| **B717** | Bending & Tapping (chỉ lưu 1 lần) | `STB_ProdRouteHist` |
+
+### 14.6 Báo Cáo / Lịch Sử Sản Xuất
+
+| Màn hình | Mô tả | Bảng DB chính |
+|----------|-------|---------------|
+| **B598** | Báo phế NVL | `STB_VN_SCRAP_AFTERPRODUCTIONS` |
+| **B781** | Lịch sử đóng gói / Packing History | `STB_SavePackingTime_VVT` |
+| **B782** | Kiểm tra sản lượng theo công đoạn | `STB_ProdRouteHist` |
+| **B789** | Lịch sử đóng gói Module | `STB_SavePackingTime_VVT` |
+| **B802** | Lịch sử SX điện cực + giá thành | `STB_ElectrodeCoatingInfo` |
+| **B882** | ANDON | - |
+| **B934/B935** | Import/Xem dữ liệu máy phân cấp bigsize | - |
+
+### 14.7 In Tem Đặc Biệt
+
+| Màn hình | Mô tả | Bảng DB chính |
+|----------|-------|---------------|
+| **B754-B756** | In tem PAC (Inner/Outer/Carton) | `STB_LabelInfo` |
+| **B757-B758** | In tem Digi-Key (SP + Logistic) | `STB_LabelInfo` |
+
+### 14.8 Kho NVL (WMS)
+
+| Màn hình | Mô tả | Bảng DB chính |
+|----------|-------|---------------|
+| **F110** | Nhập/Xuất kho thành phẩm | `STB_MaterialStockAttributeInfo` |
+| **F130** | Chỉ định NCC <-> NVL | `STB_MaterialSupplierMapping` |
+| **F140** | Chỉ định NVL theo NCC | `STB_MaterialSupplierMapping` |
+| **F312** | Ghi chú NVL (Invoice / PO chi tiết) | `STB_MaterialDocDetail` |
+| **F330** | Nhập kho + in tem NVL | `STB_MaterialDocInfo`, `STB_MaterialDocLotInfo`, `STB_MaterialLotInfo` |
+| **F430** | Lịch sử xuất/nhập kho | `STB_MaterialWarehouseInOutHist` |
+| **F721** | Tồn kho NVL | `STB_MaterialLotInfo` |
+| **F741** | Tách Lot theo số lượng mong muốn | `STB_MaterialLotInfo` |
+| **F743-F748** | Slitting LOT Material Hà Nam | `stb_slittinglocationconfig_vvt` |
+
+### 14.9 QC - IQC (Kiểm Tra Đầu Vào)
+
+| Màn hình | Mô tả | Bảng DB chính |
+|----------|-------|---------------|
+| **C121** | Nhóm hạng mục kiểm tra IQC | `STB_InspectionGroupInfo` |
+| **C122** | Hạng mục kiểm tra IQC chi tiết | `STB_InspectionItemInfo` |
+| **C220** | Kiểm tra NVL đầu vào (IQC) | `STB_MaterialQcInfo` |
+
+### 14.10 QC - PQC (Kiểm Tra Trong Quá Trình SX)
+
+| Màn hình | Mô tả | Bảng DB chính |
+|----------|-------|---------------|
+| **C131** | Đăng ký thông tin nhóm lần PQC | `STB_InspectionGroupInfo` |
+| **C132** | Cấu hình lần PQC chi tiết | `STB_InspectionItemInfo` |
+| **C141** | Thiết lập thông số kiểm tra PQC chung | `STB_CommInspDocHistory` |
+| **C143** | Thiết lập spec PQC riêng theo model | `STB_CommInspDocHistory` |
+| **C243** | Kiểm tra Lot Slitting | - |
+| **C321** | Thông tin phế công đoạn trên cell line / PQC Reliability | - |
+| **C430** | Lịch sử kiểm tra công đoạn mỗi cell line | `STB_CommInspDocHistory` |
+| **C443** | Kiểm tra PQC công đoạn ngoài line | `STB_CommInspDocHistory` |
+
+### 14.11 QC - OQC (Kiểm Tra Đầu Ra)
+
+| Màn hình | Mô tả | Bảng DB chính |
+|----------|-------|---------------|
+| **C451** | Tạo Lot kiểm tra OQC | - |
+| **C510/C512** | Quản lý Lot OQC + Tìm kiếm | `STB_ModelBasicInfo` |
+| **C530** | Nhập kết quả kiểm tra OQC mẫu | - |
+| **C540** | Lịch sử kiểm tra OQC | - |
+| **C546/C541** | Kiểm tra ESR xuất kho | - |
+| **C560** | Mẫu kiểm tra OQC | - |
+| **C561-C564** | Bending/Cutting QC | - |
+
+### 14.12 Kho Thành Phẩm
+
+| Màn hình | Mô tả | Bảng DB chính |
+|----------|-------|---------------|
+| **FG00/FG01/FG02** | Tổng hợp TP Bắc Ninh + Bắc Giang | - |
+| **HN551** | Xuất hàng Hà Nam | `STB_VN_FINISHGOODS_HN_New` |
+| **HN866** | Tồn kho thành phẩm Hà Nam | `STB_VN_FINISHGOODS_HN_New` |
+| **HNC321** | Nhập phế Hà Nam | - |
+| **HN00/HN101** | Thành phẩm + Đơn giá Hà Nam | - |
+
+### 14.13 Hỗ Trợ & Khác
+
+| Màn hình | Mô tả | Bảng DB chính |
+|----------|-------|---------------|
+| **H301-H305** | Spare Part | `STB_VNSparePartInfo` |
+| **K101** | Kế hoạch SX ngày nhà máy BG2 | `STB_DayProdPlan` |
+| **K109** | Kiểm tra thường xuyên BG2 | `STB_CommInspDocHistory` |
+| **Z220** | Phân nhóm quyền User | `STB_UserGroupInfo` (SmartFramework) |
+| **Z330** | Publish màn hình ra production | `STB_ScreenInfo` (SmartFramework) |
+| **Z410** | Quản lý tài khoản User | `STB_UserInfo` (SmartFramework) |
+
+*Cập nhật: 2026-05-30 - Mở rộng từ 77 lên ~90 màn hình, tổ chức theo nhóm chức năng, bổ sung C131/C132/C430/C451/C560/F741/A320/A419*

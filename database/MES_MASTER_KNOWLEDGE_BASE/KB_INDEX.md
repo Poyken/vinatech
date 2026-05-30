@@ -11,11 +11,11 @@
 | File | Nội dung | Màn hình liên quan |
 |------|----------|-------------------|
 | [KB_01_UI_PHAN_QUYEN.md](KB_01_UI_PHAN_QUYEN.md) | Login, cài đặt, phân quyền User, Stage Prices | Login, A460, Z410, Z220, Z330, B682, B781 |
-| [KB_02_KHO_WMS.md](KB_02_KHO_WMS.md) | Kho NVL: F330 sai kho, F312, F430, FIFO, Holding, Hạn dùng | F330, F312, F430, F110, F721, C220 |
+| [KB_02_KHO_WMS.md](KB_02_KHO_WMS.md) | Kho NVL: F330 sai kho, F312, F430, FIFO, Holding, Hạn dùng | F330, F312, F430, F110, F721, F741, C220 |
 | [KB_03_SAN_XUAT.md](KB_03_SAN_XUAT.md) | Sửa JobDate, Chuyển Line, VV→VJ, Xóa PO, NG, Andon, **Cell Line vận hành chi tiết B310→B882**, Module Line, B351/B528/B598/B717/B802, In tem PAC/Digi-Key, Spare Part H301-H305, K101/K109 | B782, B781, B598, B726, B791, B310, B450, B530, B540, B523, B525, B528, B717, B802, B351, B452, B754-B758, H301-H305, K101, K109 |
 | [KB_04_DONG_GOI_IN_TEM.md](KB_04_DONG_GOI_IN_TEM.md) | Tiêu chuẩn đóng gói, fix B523 không gộp, sửa mã Lot, Qty=0 | B523, B789, B781, B351, A419 |
 | [KB_05_QC_ELECTRODE.md](KB_05_QC_ELECTRODE.md) | QC B597/C443/C512/C486, Điện cực Slitting B552, Lỗi chuỗi độ dày, Rebuild bảng & Fix layout, **QC Flow đầy đủ IQC→PQC→OQC→Bending/Cutting**, Slitting Hà Nam F743-F748 | B597, C443, C512, C486, B552, C121-C564, F743-F748 |
-| [KB_06_MASTER_DATA_TOOLS.md](KB_06_MASTER_DATA_TOOLS.md) | Model mới, Vol/Farad, Thêm Cell/Line, SQL Utilities, Bypass, **Quick Start Checklist đầy đủ**, B210-B240 Line/Route, A418, B260, Địa chỉ hệ thống, Bảng 77 màn hình | A410, B210-B240, B250, B260, B270, A418, SQL tools |
+| [KB_06_MASTER_DATA_TOOLS.md](KB_06_MASTER_DATA_TOOLS.md) | Model mới, Vol/Farad, Thêm Cell/Line, SQL Utilities, Bypass, **Quick Start Checklist đầy đủ**, B210-B240 Line/Route, A418, B260, Địa chỉ hệ thống, Bảng tổng hợp màn hình MES (Mở rộng) | A410, B210-B240, B250, B260, B270, A418, A419, C131, C132, C430, C451, C560, F741 |
 | [KB_07_GROUPWARE_INTEGRATION.md](KB_07_GROUPWARE_INTEGRATION.md) | Tích hợp Groupware: Mua hàng, Kế hoạch SX, Master Data | Groupware, F330, C220, B310, B450 |
 | [KB_08_KHO_THANH_PHAM_HN.md](KB_08_KHO_THANH_PHAM_HN.md) | Kho TP Hà Nam: Xuất HN551, Tồn HN866, Hủy F330, Xóa sản lượng | HN551, HN866, HN544, FG00 |
 | [KB_09_IN_TEM_LABEL.md](KB_09_IN_TEM_LABEL.md) | Các loại tem đặc biệt, lỗi sai mẫu, in tem khẩn | B450, B756, B767, B790, A460 |
@@ -117,7 +117,7 @@
 | A418 số lượng đóng gói theo Size | KB_06 § 11 |
 | B260 nhân viên SX (WorkerGroupCode='VE-01') | KB_06 § 12 |
 | Địa chỉ URL truy cập hệ thống | KB_06 § 13 |
-| Bảng tổng hợp 77 màn hình | KB_06 § 14 |
+| Bảng tổng hợp màn hình MES (Mở rộng) | KB_06 § 14 |
 | Gộp box tùy chỉnh HN523 Qty = 0 (thiếu IsOutputRoute) | KB_04 § 6.13 |
 | Đổi mã vật tư tự động (STB_ChangeMaterialCode_HN) | KB_08 § 3.1 |
 | Đăng ký mã vật tư mới (STB_MaterialMaster) | KB_06 § 1.3 |
@@ -165,7 +165,7 @@
 4. **Sửa đồng bộ đủ bảng** — Thiếu 1 bảng gây lệch dữ liệu
 5. **Ghi log tất cả thay đổi** — Để audit sau
 
-*Cập nhật: 2026-05-22 | Đã kiểm chứng bằng SELECT trực tiếp từ SmartFactoryV2 | Bổ sung: Cell Line chi tiết, Module Line, QC Flow đầy đủ, Deep Core Analysis, DB Audit Trail, 77 màn hình*
+*Cập nhật: 2026-05-30 | Đã kiểm chứng bằng SELECT trực tiếp từ SmartFactoryV2 | Bổ sung: Cell Line chi tiết, Module Line, QC Flow đầy đủ, Deep Core Analysis, DB Audit Trail, Mở rộng Bảng tổng hợp màn hình MES*
 
 
 Add giá B682, B781, B789, B791 ➔ Đã match vào KB_06 (§3)
