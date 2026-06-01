@@ -1,8 +1,8 @@
 # 🤖 AI CONFIGURATION - VINATECH MES & GROUPWARE
 
 > **Mục đích:** Quy tắc vận hành AI để làm việc hiệu quả nhất
-> **Cập nhật:** 2026-05-27
-> **Quy tắc cốt lõi:** NO DIRECT UID — Database là nguồn sự thật duy nhất
+> **Cập nhật:** 2026-06-02
+> **Quy tắc cốt lõi:** NO DIRECT UID — Database là nguồn sự thật duy nhất | Áp dụng Andrej Karpathy Skills
 
 ---
 
@@ -10,13 +10,14 @@
 
 ```
 1. README.md                                    → Entry point, hiểu structure
-2. MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md        → Tra theo triệu chứng lỗi
-3. MES_MASTER_KNOWLEDGE_BASE/KB_0X_...md        → File chuyên biệt theo nhóm
-4. sql/debug_queries.sql                        → SQL templates debug
-5. scripts/auto_debug_barcode.ps1               → Automation có barcode
-6. scripts/auto_check_common_issues.ps1         → Automation check nhanh
-7. GROUPWARE_KNOWLEDGE_BASE/GW_INDEX.md         → Khi liên quan Groupware
-8. GROUPWARE/extracted_text_utf8.txt            → Raw text PPTX đào tạo
+2. CLAUDE.md                                    → Quy tắc hành vi coding cốt lõi (Karpathy Skills)
+3. MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md        → Tra theo triệu chứng lỗi
+4. MES_MASTER_KNOWLEDGE_BASE/KB_0X_...md        → File chuyên biệt theo nhóm
+5. sql/debug_queries.sql                        → SQL templates debug
+6. scripts/auto_debug_barcode.ps1               → Automation có barcode
+7. scripts/auto_check_common_issues.ps1         → Automation check nhanh
+8. GROUPWARE_KNOWLEDGE_BASE/GW_INDEX.md         → Khi liên quan Groupware
+9. GROUPWARE/extracted_text_utf8.txt            → Raw text PPTX đào tạo
 ```
 
 ---
@@ -70,16 +71,15 @@ MASTER_DATA:
 
 ## 🔒 SAFETY RULES (BẮT BUỘC)
 
-### NO DIRECT UID (CRITICAL)
+### SELECT-ONLY DATABASE USE (CRITICAL)
 ```
 TUYỆT ĐỐI KHÔNG:
-  ❌ Chạy UPDATE/INSERT/DELETE trực tiếp
-  ❌ Tự ý thay đổi dữ liệu production
+  ❌ Thực thi bất kỳ câu lệnh INSERT/UPDATE/DELETE nào trên database.
+  ❌ Tự ý thay đổi dữ liệu trên server.
 
-CHỈ ĐƯỢC:
-  ✅ Viết Fix Script và đề xuất
-  ✅ Chạy SELECT để kiểm tra
-  ✅ User tự quyết định và chạy qua SSMS
+CHỈ ĐƯỢC PHÉP:
+  ✅ Chạy lệnh SELECT để kiểm tra dữ liệu, cấu trúc và log.
+  ✅ Viết script sửa đổi (INSERT/UPDATE/DELETE) và hướng dẫn chi tiết từng bước để USER tự chạy bằng tay qua SSMS.
 ```
 
 ### Database Rules
@@ -89,6 +89,18 @@ CHỈ ĐƯỢC:
 3. Luôn dùng PK (ID cụ thể) trong WHERE
 4. Sửa đồng bộ đủ bảng → thiếu 1 bảng gây lệch dữ liệu
 5. Ghi log tất cả thay đổi để audit
+6. Luôn dùng WITH(NOLOCK) khi SELECT trên các bảng giao dịch để tránh treo DB (block session)
+7. Tuyệt đối không dùng SELECT *; luôn liệt kê rõ tên cột
+8. Tuyệt đối không dùng Triggers (hệ thống chạy logic trực tiếp từ SP)
+```
+
+### Andrej Karpathy Coding Skills & SP Management (CLAUDE.md)
+```
+1. Think Before Coding: Khai báo rõ ràng các giả định; hỏi USER nếu mơ hồ; trình bày các giải pháp thay thế.
+2. Simplicity First: Viết lượng SQL tối thiểu, tránh cấu hình phức tạp/phòng hờ tương lai không yêu cầu.
+3. Surgical Changes: Chỉ can thiệp vùng cần sửa, không reformat code xung quanh, khớp style hiện tại.
+4. Goal-Driven Execution: Chuyển đổi yêu cầu thành mục tiêu kiểm chứng qua các câu lệnh SELECT xác thực.
+5. Stored Procedure Management: Mỗi khi cần SP, bắt buộc query bản mới nhất từ database. Sau khi hoàn thành yêu cầu hiện tại, và ngay khi nhận yêu cầu tiếp theo, bắt buộc xóa các file SP đã tạo/tải để giữ sạch không gian làm việc.
 ```
 
 ---
