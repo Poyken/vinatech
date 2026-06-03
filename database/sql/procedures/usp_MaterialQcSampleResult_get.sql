@@ -86,9 +86,9 @@ BEGIN
 		IF @MaterialQcNo LIKE 'F%' BEGIN
 			SET @RealLotNo = SUBSTRING(@MaterialQcNo, 2, LEN(@MaterialQcNo)-1)
 		END
-		
-		select @materialqcnooldvalue=OldBarCode  FROM STB_LotChangeMaterialHistory WHERE NewBarcode =@RealLotNo
 		/*END*/
+		
+		select @materialqcnooldvalue=OldBarCode  FROM STB_LotChangeMaterialHistory WHERE NewBarcode =/*vanduc edited by Mrs.Hang 20260603 START*/@RealLotNo/*END*/
 
 		select @valueT1 =count(*) from STB_SDINFORBYLOT where lotno=@materialqcnooldvalue and attribute1 is null
 		select @valueT2 = count(*) from Stb_ESRValueMonitor where lotno = @materialqcnooldvalue and UploadToMes is null
@@ -102,15 +102,11 @@ BEGIN
 		end
 		else
 		begin
-			/*vanduc edited by Mrs.Hang 20260603 START*/
-			set @value3=@RealLotNo
-			/*END*/
+			set @value3=/*vanduc edited by Mrs.Hang 20260603 START*/@RealLotNo/*END*/
 		end
 		if @materialqcnooldvalue is null
 		begin
-			/*vanduc edited by Mrs.Hang 20260603 START*/
-			set @value3=@RealLotNo
-			/*END*/
+			set @value3=/*vanduc edited by Mrs.Hang 20260603 START*/@RealLotNo/*END*/
 		end
 
 		--if @materialqcnooldvalue is null
@@ -145,9 +141,7 @@ BEGIN
 			set  @SampleQty = 3 
 		end
 		
-		/*vanduc edited by Mrs.Hang 20260603 START*/
-		if (@PatternID='IQC_GPD_19' or @PatternID='PQC_V01_08' or @PatternID='FOQC_V01_08')
-		/*END*/
+		if (@PatternID='IQC_GPD_19' or @PatternID='PQC_V01_08' /*vanduc edited by Mrs.Hang 20260603 START*/or @PatternID='FOQC_V01_08'/*END*/)
 		--if (@pMaterialQcDetailNo = 19)
 		begin
 			
@@ -177,9 +171,7 @@ BEGIN
 		end
 
 
-		/*vanduc edited by Mrs.Hang 20260603 START*/
-		if (@PatternID='PQC_V01_07' or @PatternID='FOQC_V01_07')
-		/*END*/
+		if (@PatternID='PQC_V01_07' /*vanduc edited by Mrs.Hang 20260603 START*/or @PatternID='FOQC_V01_07'/*END*/)
 		--if (@pMaterialQcDetailNo = 19)
 		begin
 			
@@ -228,9 +220,7 @@ BEGIN
 
 		--set @abc = CAST(@SampleQty as varchar(10))
 		-- RAISERROR(@abc ,16,1)
-		/*vanduc edited by Mrs.Hang 20260603 START*/
-		if (@PatternID='IQC_GPD_18' OR @PatternID='IQC_GPD_20' OR @PatternID='IQC_GPD_19' or  @PatternID='PQC_V01_09' or @PatternID='PQC_V01_08' or @PatternID='PQC_V01_07' or @PatternID='FOQC_V01_07' or @PatternID='FOQC_V01_08')
-		/*END*/
+		if (@PatternID='IQC_GPD_18' OR @PatternID='IQC_GPD_20' OR @PatternID='IQC_GPD_19' or  @PatternID='PQC_V01_09' or @PatternID='PQC_V01_08' or @PatternID='PQC_V01_07' /*vanduc edited by Mrs.Hang 20260603 START*/or @PatternID='FOQC_V01_07' or @PatternID='FOQC_V01_08'/*END*/)
 		begin
 			while @cnt < @SampleQty 
 			begin
@@ -291,9 +281,7 @@ BEGIN
 
 
 					
-					/*vanduc edited by Mrs.Hang 20260603 START*/
-					if (@PatternID='IQC_GPD_19'  or @PatternID='PQC_V01_08' or @PatternID='FOQC_V01_08')
-					/*END*/
+					if (@PatternID='IQC_GPD_19'  or @PatternID='PQC_V01_08' /*vanduc edited by Mrs.Hang 20260603 START*/or @PatternID='FOQC_V01_08'/*END*/)
 					begin
 						/*vanduc edited by Mrs.Hang 20260603 START*/
 						select top(1) @value = Val, @value1 = MonitorID from @TempESR where RowID = (@cnt + 1)
@@ -302,9 +290,7 @@ BEGIN
 						set @value5 = @USL
 						set @value6 = @value
 						
-						/*vanduc edited by Mrs.Hang 20260603 START*/
-						if (@value4 <=@value6 and @value6<=@value5  and @value IS NOT NULL)
-						/*END*/
+						if (@value4 <=@value6 and @value6<=@value5  and /*vanduc edited by Mrs.Hang 20260603 START*/@value IS NOT NULL/*END*/)
 						begin
 							insert into STB_MaterialQcSampleResult(MaterialQCNo, MaterialQCDetailNo,materialqcsampleno, testvalue,createdatetime, CreateUserID ) values(@MaterialQcNo,@pMaterialQcDetailNo,@SampleNo+1,@value, DATEADD(HH, -2, GETDATE()),'system')
 							/*vanduc edited by Mrs.Hang 20260603 START*/
@@ -320,9 +306,7 @@ BEGIN
 
 					end
 
-					/*vanduc edited by Mrs.Hang 20260603 START*/
-					if (@PatternID='PQC_V01_07' or @PatternID='FOQC_V01_07')
-					/*END*/
+					if (@PatternID='PQC_V01_07' /*vanduc edited by Mrs.Hang 20260603 START*/or @PatternID='FOQC_V01_07'/*END*/)
 					begin
 						/*vanduc edited by Mrs.Hang 20260603 START*/
 						select top(1) @value = Val, @value1 = MonitorID from @TempOCV where RowID = (@cnt + 1)
@@ -331,9 +315,7 @@ BEGIN
 						set @value5 = @USL
 						set @value6 = @value
 						
-						/*vanduc edited by Mrs.Hang 20260603 START*/
-						if (@value4 <=@value6 and @value6<=@value5  and @value IS NOT NULL)
-						/*END*/
+						if (@value4 <=@value6 and @value6<=@value5  and /*vanduc edited by Mrs.Hang 20260603 START*/@value IS NOT NULL/*END*/)
 						begin
 							insert into STB_MaterialQcSampleResult(MaterialQCNo, MaterialQCDetailNo,materialqcsampleno, testvalue,createdatetime, CreateUserID ) values(@MaterialQcNo,@pMaterialQcDetailNo,@SampleNo+1,@value, DATEADD(HH, -2, GETDATE()),'system')
 							/*vanduc edited by Mrs.Hang 20260603 START*/
