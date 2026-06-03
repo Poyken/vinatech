@@ -9,7 +9,7 @@ $connection.Open()
 
 $sqlPath = "sql\procedures\usp_MaterialQcSampleResult_get.sql"
 if (Test-Path $sqlPath) {
-    $sqlText = Get-Content -Raw -Path $sqlPath
+    $sqlText = Get-Content -Raw -Path $sqlPath -Encoding UTF8
     
     # Clean SQL text for ADO.NET execution (strip USE and GO statements)
     $sqlText = $sqlText -replace "(?mi)^\s*USE\s+\[?\w+\]?\s*(\r?\n|$)", ""
