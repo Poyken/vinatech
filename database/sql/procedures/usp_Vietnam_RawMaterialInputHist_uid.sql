@@ -1,10 +1,10 @@
-﻿-- =============================================
+-- =============================================
 -- Author : Mr.Tung
 -- Date: 06-15-2021
 
 --     usp_Vietnam_RawMaterialInputHist_uid  '','','','VVPM082R750609','Separator','ML20250225000112','','','',''
 -- =============================================
-CREATE PROCEDURE [dbo].[usp_Vietnam_RawMaterialInputHist_uid]
+ALTER PROCEDURE [dbo].[usp_Vietnam_RawMaterialInputHist_uid]
 	@pProcessUserID VARCHAR(20), 
 	@pProcessLanguage VARCHAR(20), 
 	@pRawMaterialInputHistNo VARCHAR(20)= NULL, 
@@ -1738,13 +1738,16 @@ declare @cterminal1			nVARCHAR(300)='',
 							OR (MaterialName like  '%YP%') ))   -- Mr.Manh update 2026-02-25 
 						
 						-- Thêm danh sách các điện cực được bắn lẫn lộn âm dương cho đỡ phải check mệt người, vì tên họ đặt chả theo tiêu chuẩn gì cả
-						OR (MaterialCode IN ('CRYPK0-016', 'CRECO85-03', 'CREYO85-04', 'CREYO85-02', 'CREYO85-02', 'CRYPK0-016', 'CRYPK0-017', 'CRYPK0-018', 'CRCEK0-268', 'CRCEK0-266', 'CRYPK0-011', 'CRYPK0-022'))
-
+						--vanduc edited by Mrs.Nhu 20260531
+						--START
+						--OR (MaterialCode IN ('CRYPK0-016', 'CRECO85-03', 'CREYO85-04', 'CREYO85-02', 'CREYO85-02', 'CRYPK0-016', 'CRYPK0-017', 'CRYPK0-018', 'CRCEK0-268', 'CRCEK0-266', 'CRYPK0-011', 'CRYPK0-022'))
+						--END by vanduc
 						)
 					end
-
+				--vanduc edited by Mrs.Nhu 20260531
 				-- UPDATE model 35105 dùng 2 điện cực +
-				declare @checkElectrodeM int = 0 
+				--START 
+				/*declare @checkElectrodeM int = 0 
 				select @checkElectrodeM = count(*)  from STB_MaterialMaster  with(nolock)  
 						where MaterialCode=(select MaterialCode from STB_SetInfo with(nolock) where barcode=substring(@pRawMaterialBarcode,1,14))
 							and MaterialName LIKE '%(+)%'
@@ -1754,7 +1757,8 @@ declare @cterminal1			nVARCHAR(300)='',
 						set @count=1;
 					END
 				-- END
-
+				*/
+				--END by vanduc
 				if(@count<1 and @err='')  begin	
 					set @err = N'Không đúng loại Điện cực (Dương)(+Etching) hoặc (Âm)(-Forming):  ' 
 									+ @pProductGroupCode +' : '
@@ -1947,11 +1951,31 @@ declare @cterminal1			nVARCHAR(300)='',
 				-- end update
 				
 				-- update 2026-01-07 for 35105 and HCE electrode slitting
-				if (@materialCodeCheck IN ('ECVT30-357') and @rawMaterialCheck IN ( 'CRYPK0-018','CRYPK0-017', 'CREHCO85', 'SREHCO0', 'CRYPK0-016', 'CRECO85-03', 'CREYO85-04', 'CREYO85-02', 'CREYO85-04', 'CRYPK0-016', 'CRYPK0-017', 'CRYPK0-018', 'CRCEK0-268', 'CRCEK0-266', 'CRYPK0-016', 'CRECO85-03', 'CREYO85-04', 'CREYO85-02', 'CREYO85-02', 'CRYPK0-016', 'CRYPK0-017', 'CRYPK0-018', 'CRCEK0-268', 'CRYPK0-011', 'CRYPK0-022'))
+				--vanduc edited by Mrs.Nhu
+				--START
+				/*if (@materialCodeCheck IN ('ECVT30-357') and @rawMaterialCheck IN ( 'CRYPK0-018','CRYPK0-017', 'CREHCO85', 'SREHCO0', 'CRYPK0-016', 'CRECO85-03', 'CREYO85-04', 'CREYO85-02', 'CREYO85-04', 'CRYPK0-016', 'CRYPK0-017', 'CRYPK0-018', 'CRCEK0-268', 'CRCEK0-266', 'CRYPK0-016', 'CRECO85-03', 'CREYO85-04', 'CREYO85-02', 'CREYO85-02', 'CRYPK0-016', 'CRYPK0-017', 'CRYPK0-018', 'CRCEK0-268', 'CRYPK0-011', 'CRYPK0-022'))
 					begin
 						set @count=1;
-					end
+					end*/
 
+				-- UPDATE : Tách rõ ràng Điện cực Dương (+) và Âm (-) cho 35105
+				IF (@materialCodeCheck IN ('ECVT30-357'))
+				BEGIN
+					-- 1. Cho phép quét vào slot Điện Cực DƯƠNG (+)
+					IF UPPER(ISNULL(@pProductGroupCode,'')) = 'ELECTRODEP' 
+						AND @rawMaterialCheck IN ('CRYPK0-018', 'CRYPK0-017', 'CRYPK0-016', 'CRECO85-03', 'CRCEK0-268', 'CRCEK0-266', 'CRYPK0-011', 'CRYPK0-022', 'SRFCO85')
+					BEGIN
+						SET @count = 1;
+					END
+					
+					-- 2. Cho phép quét vào slot Điện Cực ÂM (-)
+					IF UPPER(ISNULL(@pProductGroupCode,'')) = 'ELECTRODEM' 
+						AND @rawMaterialCheck IN ('CREHCO85', 'SREHCO0', 'CREYO85-04', 'CREYO85-02', 'SREYO85')
+					BEGIN
+						SET @count = 1;
+					END
+				END
+				--END vanduc
 					--update for 1035
 				if (@materialCodeCheck IN ('ECVT30-309') and @rawMaterialCheck IN ('CRFYO85-02','CREYO85-04'))
 					begin
@@ -2347,6 +2371,7 @@ if( UPPER(isnull(@pProductGroupCode,'')) in ( 'Case' )  /*or lower(@pProductGrou
 							  select 'GBRLAC-006' as Sleeving, 'VEL13253R8157G' as model,'1325' as size union all  -- add 2025-11-03
 							  select 'GBRLAC-007' as Sleeving, 'VEC3R0505QG' as model,'1020' as size union all	-- add 2025-11-03
 							  select 'GBLYAC-006' as Sleeving, 'VEL10403R8157D' as model,'1040' as size union all	-- add 2025-11
+							  select 'GBLYAC-006' as Sleeving, 'VEL10403R8157G' as model,'1040' as size union all	-- add 2026-06-03
 							  select 'GBRLAC-011' as casecode, 'WEC2R7346QA' as model,'1830' as size union all	-- add 2025-11
 							  select 'GBDYAC-006' as casecode, 'VEC3R0727QG' as model,'35105' as size union all	-- add 2026-03-30
 							  select 'GBRLAC-007' as casecode, 'VEC2R7705QG' as models, '1020' as size  union all

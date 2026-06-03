@@ -74,12 +74,13 @@ MASTER_DATA:
 ### SELECT-ONLY DATABASE USE (CRITICAL)
 ```
 TUYỆT ĐỐI KHÔNG:
+  ❌ Tự ý cập nhật Stored Procedure (SP), View, Function hoặc thực thi bất kỳ lệnh DDL nào trên server mà không có sự đồng ý/yêu cầu cụ thể từ USER.
   ❌ Thực thi bất kỳ câu lệnh INSERT/UPDATE/DELETE nào trên database.
   ❌ Tự ý thay đổi dữ liệu trên server.
 
 CHỈ ĐƯỢC PHÉP:
   ✅ Chạy lệnh SELECT để kiểm tra dữ liệu, cấu trúc và log.
-  ✅ Viết script sửa đổi (INSERT/UPDATE/DELETE) và hướng dẫn chi tiết từng bước để USER tự chạy bằng tay qua SSMS.
+  ✅ Viết script sửa đổi (INSERT/UPDATE/DELETE/DDL) và hướng dẫn chi tiết từng bước để USER tự chạy bằng tay qua SSMS hoặc khi được USER yêu cầu chạy rõ ràng.
 ```
 
 ### Database Rules

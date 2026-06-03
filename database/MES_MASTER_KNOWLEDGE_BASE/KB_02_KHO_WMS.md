@@ -578,4 +578,42 @@ Giao dịch xuất sai lúc 12:07 trưa ngày 11/05/2026 cho Lot `ML202602090001
    COMMIT TRAN; -- Hoặc ROLLBACK nếu có lỗi
    ```
 
-*Cập nhật: 2026-05-27*
+---
+
+### 4.14 Fix: LIKE filter sai cho MaterialLocationCode khi cập nhật LotAttr10 (Đặc tính 10)
+
+> **Ngày phát hiện:** 2026-06-03
+> **Màn hình:** F330, F710
+> **SP liên quan:** `usp_DoChangeMaterialDocLotInfo`, `usp_vvt_MaterialLotInfo_get`
+> **Root cause:** Điều kiện `LIKE` filter cho `MaterialLocationCode` không match vì thiếu trailing `%`
+
+#### Mô tả lỗi
+- Khi nhập nguyên vật liệu vào kho BG2 (`MODULE_BG2_WH_01`), trường `LotAttr10` (Đặc tính 10 / Ngày SX Vendor) không được tự động parse từ `LotNo`.
+- Giá trị `LotAttr10` giữ nguyên `1900-01-01` thay vì chuyển thành ngày đúng (ví dụ: `20260528` → `2026-05-28`).
+
+#### Nguyên nhân gốc
+Trong 2 SP `usp_DoChangeMaterialDocLotInfo` và `usp_vvt_MaterialLotInfo_get`, đoạn UPDATE `LotAttr10` có điều kiện:
+```sql
+MaterialLocationCode LIKE '%BG2_WH'  -- ❌ SAI
+```
+Nhưng tất cả location code đều có suffix `_01`, ví dụ:
+- `MODULE_BG2_WH_01` ← không match `'%BG2_WH'`
+- `HEADQUARTER_VN_WH_01` ← không match `'%VN_WH'`
+
+Lỗi tương tự xảy ra cho `%VN_WH`, `%BG_WH`, `%HN_WH`.
+
+#### Cách fix
+Thêm trailing `%` vào tất cả LIKE pattern:
+```sql
+MaterialLocationCode LIKE '%BG2_WH%'  -- ✅ ĐÚNG
+MaterialLocationCode LIKE '%VN_WH%'   -- ✅ ĐÚNG
+MaterialLocationCode LIKE '%BG_WH%'   -- ✅ ĐÚNG
+MaterialLocationCode LIKE '%HN_WH%'   -- ✅ ĐÚNG
+```
+
+#### Lưu ý quan trọng
+- Lỗi này ảnh hưởng **tất cả các kho** nếu location code có suffix (không chỉ BG2).
+- Sau khi fix SP, cần chờ user mở lại F330/F710 để SP tự động cập nhật các lot cũ.
+- Hàm `fn_VVT_getdatebyVendorLot_MergeCode` parse ngày **hoạt động đúng** — lỗi chỉ nằm ở WHERE clause.
+
+*Cập nhật: 2026-06-03*

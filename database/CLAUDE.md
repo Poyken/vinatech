@@ -17,6 +17,7 @@ When executing tasks, refer to these files as the absolute sources of truth:
 ## 2. SQL Coding & Safety Constraints
 
 ### ❌ Negative Constraints (Strict Prohibitions)
+-   **No Unauthorized Stored Procedure/Data Updates**: The AI is NOT allowed to directly update stored procedures, views, functions, or database data on the server without the USER's explicit instruction and approval. All modifications must be proposed to the USER first.
 -   **SELECT-Only Tool Restriction**: The AI is ONLY allowed to run `SELECT` queries on the database. NEVER execute `INSERT`, `UPDATE`, or `DELETE` statements directly using tools.
 -   **No Direct Production Mutation**: Always write data modification scripts inside a Transaction block (`BEGIN TRAN ... ROLLBACK / COMMIT`) and guide the USER to run them on SSMS.
 -   **Never Use `SELECT *`**: Always list columns explicitly in proposed queries to keep them performant and clear.
