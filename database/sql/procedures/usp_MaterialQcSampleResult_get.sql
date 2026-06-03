@@ -293,43 +293,61 @@ BEGIN
 					
 					/*vanduc edited by Mrs.Hang 20260603 START*/
 					if (@PatternID='IQC_GPD_19'  or @PatternID='PQC_V01_08' or @PatternID='FOQC_V01_08')
+					/*END*/
 					begin
+						/*vanduc edited by Mrs.Hang 20260603 START*/
 						select top(1) @value = Val, @value1 = MonitorID from @TempESR where RowID = (@cnt + 1)
+						/*END*/
 						set @value4 = @LSL
 						set @value5 = @USL
 						set @value6 = @value
 						
+						/*vanduc edited by Mrs.Hang 20260603 START*/
 						if (@value4 <=@value6 and @value6<=@value5  and @value IS NOT NULL)
+						/*END*/
 						begin
 							insert into STB_MaterialQcSampleResult(MaterialQCNo, MaterialQCDetailNo,materialqcsampleno, testvalue,createdatetime, CreateUserID ) values(@MaterialQcNo,@pMaterialQcDetailNo,@SampleNo+1,@value, DATEADD(HH, -2, GETDATE()),'system')
+							/*vanduc edited by Mrs.Hang 20260603 START*/
 							update Stb_ESRValueMonitor set UploadToMes='OK' where ID = @value1
+							/*END*/
 						end
+						/*vanduc edited by Mrs.Hang 20260603 START*/
 						else if (@value IS NOT NULL)
 						begin
 							update Stb_ESRValueMonitor set UploadToMes='FAIL' where ID = @value1
 						end
+						/*END*/
 
 					end
 
+					/*vanduc edited by Mrs.Hang 20260603 START*/
 					if (@PatternID='PQC_V01_07' or @PatternID='FOQC_V01_07')
+					/*END*/
 					begin
+						/*vanduc edited by Mrs.Hang 20260603 START*/
 						select top(1) @value = Val, @value1 = MonitorID from @TempOCV where RowID = (@cnt + 1)
+						/*END*/
 						set @value4 = @LSL
 						set @value5 = @USL
 						set @value6 = @value
 						
+						/*vanduc edited by Mrs.Hang 20260603 START*/
 						if (@value4 <=@value6 and @value6<=@value5  and @value IS NOT NULL)
+						/*END*/
 						begin
 							insert into STB_MaterialQcSampleResult(MaterialQCNo, MaterialQCDetailNo,materialqcsampleno, testvalue,createdatetime, CreateUserID ) values(@MaterialQcNo,@pMaterialQcDetailNo,@SampleNo+1,@value, DATEADD(HH, -2, GETDATE()),'system')
+							/*vanduc edited by Mrs.Hang 20260603 START*/
 							update Stb_ESRValueMonitor set UploadOCVToMess='OK' where ID = @value1
+							/*END*/
 						end
+						/*vanduc edited by Mrs.Hang 20260603 START*/
 						else if (@value IS NOT NULL)
 						begin
 							update Stb_ESRValueMonitor set UploadOCVToMess='FAIL' where ID = @value1
 						end
+						/*END*/
 
 					end
-					/*END*/
 									
 				SET @cnt = @cnt + 1;
 				--select @cnt= count(*) from STB_MaterialQcSampleResult  where MaterialQcNo=@pMaterialQcNo and MaterialQcDetailNo = @pMaterialQcDetailNo
