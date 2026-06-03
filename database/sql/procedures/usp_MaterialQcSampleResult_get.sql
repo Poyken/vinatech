@@ -168,7 +168,12 @@ BEGIN
 			ORDER BY ID
 			/*END*/
 			
-			set @SampleQty=20
+			/*vanduc edited by Mrs.Hang 20260603 START*/
+			if (@PatternID='FOQC_V01_08')
+				set @SampleQty=50
+			else
+				set @SampleQty=20
+			/*END*/
 		end
 
 
@@ -194,7 +199,12 @@ BEGIN
 			ORDER BY ID
 			/*END*/
 			
-			set @SampleQty=20
+			/*vanduc edited by Mrs.Hang 20260603 START*/
+			if (@PatternID='FOQC_V01_07')
+				set @SampleQty=50
+			else
+				set @SampleQty=20
+			/*END*/
 		end
 
 
