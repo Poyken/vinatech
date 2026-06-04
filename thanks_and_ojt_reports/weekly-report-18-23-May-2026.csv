@@ -1,0 +1,4 @@
+NAME,DEPARTMENT,DATE GET ISSUE,NAME ISSUE,THE SOLVE,TYPE ISSUE,DATE SOLVE ISSUE,SOLVE ISSUE BY,STATUS,REMARK
+Nguyen Van Tuan,EA Team,22/5/2026,Temp & Humidity Project Init,Khởi tạo dự án quản lý Nhiệt độ & Độ ẩm, cài đặt môi trường và thiết kế database.,Dev,22/5/2026,Nguyen Van Tuan,Done,SW
+Nguyen Van Tuan,EA Team,23/5/2026,Data Loading & CRUD Features,Xây dựng chức năng load dữ liệu, giao diện hiển thị và CRUD nhiệt độ/độ ẩm theo kho.,Dev,23/5/2026,Nguyen Van Tuan,Done,SW
+Nguyen Van Tuan,EA Team,24/5/2026,Authentication & Incident Reports,Phát triển giao diện đăng nhập, chức năng thêm và xử lý báo cáo bất thường.,Dev,24/5/2026,Nguyen Van Tuan,Done,SW

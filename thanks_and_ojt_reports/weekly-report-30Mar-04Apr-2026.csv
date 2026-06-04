@@ -1,0 +1,16 @@
+NAME,DEPARTMENT,DATE GET ISSUE,NAME ISSUE,THE SOLVE,TYPE ISSUE,DATE SOLVE ISSUE,SOLVE ISSUE BY,STATUS,REMARK
+Nguyen Van Duc,EA Team,30/3/2026,Production Support — Label Printing (Chi Duong Hoa),"Hỗ trợ sản xuất xử lý user chị Dương Hoa: in tem nhãn cho dây chuyền sản xuất.",Support,30/3/2026,Nguyen Van Duc,Done,HW/SW
+Nguyen Van Duc,EA Team,30/3/2026,Printer Repair (Anh Tran Tuyen),"Sửa máy in báo lỗi cho anh Trần Tuyên, kiểm tra và khắc phục sự cố cơ học.",Support,30/3/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,30/3/2026,Email Permission Config (Chi Vu Trang CS),"Phân quyền mail cho chị Vũ Trang CS: cấu hình và cấp quyền truy cập email phù hợp.",Support,30/3/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,31/3/2026,Network Repair — Bac Giang 2 (with Anh Hai),"Sang Bắc Giang 2 sửa mạng cùng anh Hải: kiểm tra hạ tầng, khắc phục đường truyền bị lỗi.",Support,31/3/2026,Tran Thanh Hai,Done,HW
+Nguyen Van Duc,EA Team,31/3/2026,Account Admin Update — Korean Manager Accounts,"Đổi admin và hạ quyền 2 account của 2 anh manager người Hàn tại Bắc Giang 2.",Support,31/3/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,31/3/2026,Printer Repair — Scale/Scrap Machine,"Cố gắng sửa máy in cân phế nhưng chưa khắc phục được, cần điều tra thêm.",Support,31/3/2026,Nguyen Van Duc,Pending,HW
+Nguyen Van Duc,EA Team,31/3/2026,WiFi & Factory Network Configuration Research,"Tìm hiểu cách cấu hình thiết bị wifi và nghiên cứu hệ thống mạng nhà máy.",Research,31/3/2026,Nguyen Van Duc,In Progress,HW/SW
+Nguyen Van Duc,EA Team,1/4/2026,Network Repair with Anh Hai — Signal Interference Issue,"Sửa mạng với anh Hải: xử lý lỗi mạng bị xung (tín hiệu nhiễu) ảnh hưởng kết nối.",Support,1/4/2026,Tran Thanh Hai,Done,HW
+Nguyen Van Duc,EA Team,1/4/2026,Software Bug Fix — 2x Sorting Machines,"Xử lý lỗi phần mềm chạy ở 2 máy sorting: debug và restore tính năng hoạt động bình thường.",Support,1/4/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,1/4/2026,User Support — General Technical Assistance,"Support user các vấn đề kỹ thuật phát sinh trong ngày.",Support,1/4/2026,Nguyen Van Duc,Done,HW/SW
+Nguyen Van Duc,EA Team,2/4/2026,Hardware Installation — Bac Giang 2 (Morning),"Sáng sang Bắc Giang 2 lắp máy, triển khai thiết bị phần cứng theo kế hoạch.",Support,2/4/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,2/4/2026,Equipment Pickup — Bac Ninh for Support Team,"Sang Bắc Ninh lấy đồ hỗ trợ team, vận chuyển thiết bị cần thiết.",Support,2/4/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,2/4/2026,Network Speed Survey — Bac Giang 1 (Afternoon),"Chiều về Bắc Giang 1 khảo sát tốc độ mạng của tất cả các phòng ban, đánh giá hiện trạng thiết bị cần sửa chữa hoặc thay thế.",Research / Support,2/4/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,3/4/2026,Auto Layout Setup Support — Temporary New Layout,"Sáng support cài đặt auto setup layout mới tạm thời cho dây chuyền sản xuất.",Support,3/4/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,3/4/2026,New WiFi Provisioning — QC Department,"Cấp mới wifi cho bộ phận QC: cấu hình và bàn giao kết nối không dây.",Support,3/4/2026,Nguyen Van Duc,Done,HW/SW

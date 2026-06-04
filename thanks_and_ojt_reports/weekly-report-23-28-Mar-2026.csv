@@ -1,0 +1,13 @@
+NAME,DEPARTMENT,DATE GET ISSUE,NAME ISSUE,THE SOLVE,TYPE ISSUE,DATE SOLVE ISSUE,SOLVE ISSUE BY,STATUS,REMARK
+Nguyen Van Duc,EA Team,23/3/2026,User Issue Troubleshooting,"Sáng fix lỗi cho user: chẩn đoán và khắc phục các sự cố kỹ thuật do end-users báo cáo.",Support,23/3/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,23/3/2026,System Architecture Study,"Tìm hiểu về kiến trúc hệ thống nội bộ và quy trình vận hành.",Research,23/3/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,23/3/2026,PC Troubleshooting — Ms. May,"Chiều fix lỗi máy tính cho chị May nhưng chưa khắc phục được, cần điều tra thêm.",Support,23/3/2026,Nguyen Van Duc,Pending,HW
+Nguyen Van Duc,EA Team,23/3/2026,Meeting Room Equipment Inspection,"Kiểm tra toàn bộ thiết bị phòng họp (máy chiếu, loa, màn hình, mạng) — tất cả hoạt động tốt.",Support,23/3/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,23/3/2026,Self-study WinForms,"Tự học WinForms: form design patterns, control customization và event-driven architecture.",Research,23/3/2026,Nguyen Van Duc,In Progress,HW
+Nguyen Van Duc,EA Team,24/3/2026,Network Infrastructure Repair,"Sửa mạng cùng anh Hải tại hai nhà máy Bắc Ninh và Bắc Giang 1.",Support,24/3/2026,Tran Thanh Hai,Done,HW
+Nguyen Van Duc,EA Team,25/3/2026,Network & Security Updates,"Sáng sửa mạng với anh Hải và đổi pass admin cho phòng QC.",Support,25/3/2026,Tran Thanh Hai,Done,HW
+Nguyen Van Duc,EA Team,25/3/2026,Network & Workshop Security,"Chiều cover công việc, nghiên cứu hệ thống mạng Bac Giang 1 và đổi password admin cho các máy tính tại xưởng.",Research / Support,25/3/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,26/3/2026,Hardware User Support,"Cả ngày support user sửa hardware như máy in, tivi...",Support,26/3/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,26/3/2026,Software User Support,"Support user làm việc về phần mềm như app ECM, NAIS system.",Support,26/3/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,27/3/2026,User Support & WinForms Study,"Support kỹ thuật cho người dùng và tiếp tục tự học WinForms: lập trình hướng sự kiện và xử lý dữ liệu.",Support / Research,27/3/2026,Nguyen Van Duc,Done,SW/HW
+Nguyen Van Duc,EA Team,28/3/2026,Daily Support & WinForms Review,"Duy trì support hệ thống và tổng kết kiến thức WinForms đã học trong tuần.",Support / Research,28/3/2026,Nguyen Van Duc,Done,HW/SW

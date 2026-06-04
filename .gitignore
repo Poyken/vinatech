@@ -1,0 +1,30 @@
+# Ignore installers and setups
+/setup/
+/backup_data/
+/notebooklm/node_modules/
+
+# Ignore archive/binary/executable files
+*.rar
+*.zip
+*.exe
+*.dll
+*.msi
+*.mdb
+*.pdf
+*.pptx
+
+# Ignore node_modules
+node_modules/
+
+# Ignore Agent and Windsurf files
+/database agent 1/
+/database agent 2/
+/database agent 3/
+/database agent 4/
+.gemini/
+.brain/
+.windsurf/
+*.log
+
+# Windows desktop ini
+desktop.ini

@@ -1,0 +1,23 @@
+NAME,DEPARTMENT,DATE GET ISSUE,NAME ISSUE,THE SOLVE,TYPE ISSUE,DATE SOLVE ISSUE,SOLVE ISSUE BY,STATUS,REMARK
+Nguyen Van Duc,EA Team,8/5/2026,MES Error Support,Sửa lỗi MES cho user.,Support,8/5/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,8/5/2026,Printer Repair,Sửa máy in dưới xưởng.,Support,8/5/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,8/5/2026,Network Repair BG1,Sửa 2 vị trí mạng ở xưởng BG1 (anh Kiên và anh Tâm).,Support,8/5/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,8/5/2026,Printer Setup,Cài máy in cho user.,Support,8/5/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,8/5/2026,HDMI Deployment,Triển khai dây HDMI cho phòng họp BG1.,Support,8/5/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,11/5/2026,Software Installation,Cài phần mềm cho user.,Support,10/5/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,11/5/2026,MES Ha Nam Support,Hỗ trợ Nhà máy Hà Nam trên hệ thống MES.,Support,10/5/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,11/5/2026,Data Entry BG2,Nhập dữ liệu cho anh Cường ở nhà máy Bắc Giang 2.,Support,10/5/2026,Nguyen Van Duc,Done,Data
+Nguyen Van Duc,EA Team,11/5/2026,Groupware Account,Tạo account groupware cho chị Đinh Thư.,Support,10/5/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,11/5/2026,User Support Ha Nam,Hỗ trợ user Hà Nam (chị Hoàng Xuân;chị Phương Hồng).,Support,11/5/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,12/5/2026,Label Update,Sửa lại tem cho chị Dương Hoa.,Support,11/5/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,12/5/2026,MES Data Entry Support,Hỗ trợ Nhật Trung nhập dữ liệu MES.,Support,11/5/2026,Nguyen Van Duc,Done,Data
+Nguyen Van Duc,EA Team,12/5/2026,Production Screen Support,Hỗ trợ user thao tác lỗi trên các màn hình sản xuất.,Support,12/5/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,12/5/2026,Auto Import Software Deployment,Triển khai phần mềm auto import data excel cho các máy sorting mới ở nhà máy Bắc Giang 1.,Dev,12/5/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,13/5/2026,Phoenix Label Printing,Triển khai màn hình in tem cho khách hàng Phoenix (Chị Dương Hoa).,Dev,13/5/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,13/5/2026,MES User Support,Hỗ trợ user trên hệ thống MES.,Support,13/5/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,13/5/2026,Network Deployment BG1,Đi 4 dây mạng cho máy sorting mới ở nhà máy Bắc Giang 1.,Support,13/5/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,14/5/2026,MES User Support,Hỗ trợ user trên hệ thống MES.,Support,14/5/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,14/5/2026,Software Development,Phát triển phần mềm auto import data sorting.,Dev,14/5/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,14/5/2026,Mini PC Installation BG1,Lắp đặt 9 mini pc ở nhà máy bắc giang 1.,Support,14/5/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,15/5/2026,ECM Update Deployment,Triển khai update ecm cho users.,Support,15/5/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,15/5/2026,MES Ha Nam Support,Hỗ trợ user Hà Nam trên hệ thống MES.,Support,15/5/2026,Nguyen Van Duc,Done,SW
