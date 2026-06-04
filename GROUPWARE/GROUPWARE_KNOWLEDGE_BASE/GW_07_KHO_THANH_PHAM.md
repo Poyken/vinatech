@@ -72,4 +72,4 @@ Sau khi lưu dữ liệu xuất ra kho tạm thành công trên FG01:
 
 ---
 
-*Cập nhật: 2026-05-25 | Nguồn: Hướng dẫn Finished Good warehouse.pptx + Comprehensive_Groupware_Report.md*
+*Cập nhật: 2026-06-04 | Nguồn: Hướng dẫn Finished Good warehouse.pptx + Comprehensive_Groupware_Report.md*

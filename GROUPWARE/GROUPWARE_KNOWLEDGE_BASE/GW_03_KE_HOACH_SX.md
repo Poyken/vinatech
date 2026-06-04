@@ -59,30 +59,54 @@ MES: B450 (Kế hoạch ngày, tạo Lot, in tem)
 
 ## 4. ✏️ Sửa / Xóa PO
 
-**Sửa:** Click vào dòng PO → Điền lý do sửa → Lưu kế hoạch → Chọn "Điều chỉnh"
+### 4.1 Quy trình sửa đổi thông tin PO:
+1. Click chọn trực tiếp vào dòng PO cần sửa đổi (1).
+2. Điền đầy đủ lý do sửa đổi vào ô nhập liệu (2).
+3. (Nếu muốn hủy bỏ thao tác sửa → ấn nút **"Hủy bỏ"** (3)).
+4. Kéo chuột lên đầu trang, nhấn nút **"Lưu kế hoạch"** (4).
+5. Hộp thoại hiện ra → chọn **"Điều chỉnh"** (5) để xác nhận cập nhật dữ liệu.
 
-**Xóa:** Nhấn "Xóa kế hoạch" → Chọn dòng (chuyển đỏ) → "Xóa đối tượng đã chọn"
-> ⚠️ Chỉ xóa được khi PO **chưa xác nhận** (trạng thái "Không được tạo" / "Không làm")
+### 4.2 Quy trình xóa PO:
+1. Nhấn nút **"Xóa kế hoạch"** (1).
+2. Click chọn dòng PO muốn xóa trong danh sách.
+   * 💡 **Nhận diện:** Dòng PO được chọn sẽ tự động **chuyển sang màu đỏ**.
+3. Nhấn nút **"Xóa đối tượng đã chọn"** (3).
+4. Hộp thoại xác nhận hiện ra → nhấn **"Xóa"** (4) để hoàn tất.
+5. (Nếu muốn hủy bỏ thao tác xóa → ấn nút **"Hủy bỏ"** (5)).
+
+> ⚠️ **Quy tắc:** Chỉ có thể xóa hoặc sửa đổi PO khi PO đang ở trạng thái **chưa xác nhận** (trạng thái hiển thị là "Không được tạo" hoặc "Không làm"). Một khi đã xác nhận lô hàng, PO sẽ bị khóa cứng.
+
 
 ---
 
 ## 5. ✅ Chốt PO & Tạo Kế Hoạch Ngày
 
 ### Bước 1 – Chốt PO
-- Chọn PO → **"Xác nhận lô hàng"** → PO tự động chuyển trạng thái từ **"Không được tạo"** sang **"Sản xuất"** (cấm xóa).
-- PO xuất hiện trên **MES B310** (Màn hình giám sát PO cấp xưởng).
+- Chọn PO cần chốt trong danh sách.
+- Nhấn nút **"Xác nhận lô hàng"** → PO tự động chuyển trạng thái từ **"Không được tạo"** (hoặc "Không làm") sang **"Sản xuất"** (trạng thái khóa cứng, cấm xóa).
+- PO lúc này sẽ tự động xuất hiện trên màn hình **MES B310** (Màn hình giám sát PO cấp xưởng).
 
 ### Bước 2 – Xác nhận và tạo kế hoạch ngày
-1. Click **"Vui lòng tạo lệnh sản xuất PO"**
-2. Chọn BOM **version 2001** → **"Sản xuất"** → **"Đã xác nhận"**
-3. Điền kế hoạch ngày, cấu hình rõ: **"Nơi làm việc"** (Nhà máy), **"Cell Line"** và **"Ca Làm Việc"** (Ca).
-4. Thiết lập số lượng tổng (Yêu cầu: **Số lượng kế hoạch ngày phải <= Lượng PO gốc**).
-5. Chọn các dòng (màu xanh) → **"Mục tiêu lựa chọn Đã xác nhận"** → Áp dụng.
+1. Click chọn dòng thông báo **"Vui lòng tạo lệnh sản xuất PO"**.
+2. Tại đây, chọn đúng phiên bản BOM **2001** (mã BOM Việt Nam) → Chọn **"Sản xuất"** → Click chọn **"Đã xác nhận"**.
+3. Phần nhập liệu bên dưới sẽ xuất hiện để tạo kế hoạch ngày. Cấu hình rõ:
+   - **Nơi làm việc:** Chọn nhà máy sản xuất tương ứng.
+   - **Ngày lập kế hoạch:** Chọn ngày chạy máy thực tế.
+   - **Cell Line:** Chọn dây chuyền sản xuất.
+   - **Ca làm việc:** Chọn ca làm việc (ca A, B, v.v.).
+   - **Số lượng:** Điền số lượng sản xuất chi tiết.
+   * 💡 **Thao tác nhanh:** Có thể nhấn nút **"+"** để tạo thêm dòng kế hoạch ngày mới, hoặc nhấn nút **"-"** để xóa dòng.
+   * ⚠️ **Quy tắc:** Tổng số lượng sản xuất của toàn bộ kế hoạch ngày cộng lại **phải nhỏ hơn hoặc bằng** tổng số lượng của PO gốc.
+4. Sau khi điền đầy đủ, click chọn các dòng kế hoạch ngày cần xác nhận.
+   * 💡 **Nhận diện:** Dòng được chọn thành công sẽ tự động **chuyển sang màu xanh**.
+5. Nhấn nút **"Mục tiêu lựa chọn Đã xác nhận"** → Chọn **"Áp dụng"**. Hệ thống sẽ thông báo thao tác thành công.
 
 ### Bước 3 – Tạo Lô (LOT) & In Tem Mã
-- Nhấn **"Chi tiết"** → **"Lot Sản xuất"** (hoặc nút **Tạo Lô (LOT)**).
-- Nhập giới hạn số lượng nhỏ nhất cho 1 Lot (Ví dụ: nhập **5000**).
-- Hệ thống sẽ lấy Tổng Kế Hoạch (ví dụ: **50.000**) chia cho số lượng 1 Lot (5000) để **tự động cắm Cờ IN RA 10 LÔ TEM MÃ** trực tiếp trên trạm **B450** của MES.
+- Nhấn nút **"Chi tiết"** của kế hoạch ngày cần tạo Lot.
+- Nhấn tiếp nút **"Lot Sản xuất"** (hoặc nút **Tạo Lô (LOT)**) → Một ô nhập liệu nhỏ sẽ hiển thị.
+- Nhập giới hạn số lượng của **mỗi Lot** (Ví dụ: nhập **5000**).
+- Hệ thống tự động chia lô: lấy Tổng số lượng kế hoạch ngày (ví dụ: **50.000**) chia cho số lượng mỗi lot (5000) để **tự động cắm Cờ IN RA 10 LÔ TEM MÃ** (50.000 / 5000 = 10 Lot) trực tiếp trên trạm **MES B450**.
+
 
 ---
 
@@ -96,4 +120,4 @@ MES: B450 (Kế hoạch ngày, tạo Lot, in tem)
 
 ---
 
-*Cập nhật: 2026-05-25 | Nguồn: Hướng dẫn tạo PO và Kế hoạch ngày trên Groupware.pptx + Comprehensive_Groupware_Report.md*
+*Cập nhật: 2026-06-04 | Nguồn: Hướng dẫn tạo PO và Kế hoạch ngày trên Groupware.pptx + Comprehensive_Groupware_Report.md*

@@ -7,47 +7,51 @@
 
 ## 1. ✈️ Form Đi Công Tác (Business Trip Document)
 
-**Vào:** Electronic Document → Holiday Work Request → Business Trip Document
+**Vào:** Electronic Document → Holiday work request → Business Trip Document
 
 ### Bước 1: Chọn đường line phê duyệt
-- Chọn line đã cài sẵn trong hệ thống, hoặc tự chọn người duyệt
+- Chọn line đã cài sẵn trong hệ thống, hoặc tự chọn người duyệt thủ công.
 
 ### Bước 2: Điền thông tin
-| Trường | Mô tả |
-|--------|-------|
-| Loại công tác | Trong nước / Nước ngoài — **PHẢI chọn đúng** |
-| Tiêu đề | Tên chuyến công tác |
-| File đính kèm | Upload nếu có |
-| Người làm form hộ | Nếu làm thay cho ai |
-| Địa điểm | Tên nơi đến công tác |
-| Quốc gia | Chọn đúng quốc gia (VN = trong nước) |
-| Thành phố | Chọn nếu hiển thị ra |
-| Danh sách người đi | Mặc định lấy người đăng nhập. Thêm người: Click "Thêm nhiều người" → Tìm theo phòng ban/tên/mã NV |
+- **Loại công tác:** Trong nước / Nước ngoài — ⚠️ **PHẢI chọn đúng**. Nếu chọn loại là Nước ngoài nhưng địa điểm/quốc gia nhập là trong nước, form sẽ báo lỗi khi gửi.
+- **Tiêu đề:** Tên chuyến công tác.
+- **File đính kèm:** Cho phép tải lên một hoặc nhiều file mô tả chuyến đi.
+- **Người làm form hộ:** Nhập tên người cần làm hộ (nếu làm giúp người khác).
+- **Địa điểm:** Tên nơi đến công tác chi tiết.
+- **Quốc gia:** Chọn đúng quốc gia đến (Việt Nam = trong nước).
+- **Thành phố:** Chọn nếu hiển thị ra (không bắt buộc nếu không tự xổ ra).
+- **Danh sách người đi:** Mặc định lấy tên người đăng nhập.
+  * *Cách thêm người:* Click nút **"Thêm nhiều người"** (hoặc thêm người đi công tác). Cửa sổ mới mở ra cung cấp 3 cách tìm:
+    1. Tìm theo phòng ban (tick chọn nhân viên).
+    2. Tìm theo tên nhân viên.
+    3. Tìm theo mã nhân viên.
 
 ### Thông tin tài chính:
 Hệ thống định lượng tài chính dự trù rất chi tiết:
 - **Phụ cấp chức vụ (Tổng tiền trợ cấp):** Mặc định lấy từ cấp HR.
-- **Phụ cấp ăn uống từng ngày (Tiền ăn/ngày):** Theo tiêu chuẩn nhân sự.
+- **Phụ cấp ăn uống từng ngày (Tiền ăn/ngày):** Theo tiêu chuẩn chức danh của nhân sự.
 - **Tổng ngày công tác (Thời gian):** Từ ngày → đến ngày.
-- **Số bữa ăn thực tế (Tổng số bữa ăn):** Khai báo tổng số bữa ăn thực tế để nhân hệ số dự trù.
-- **Tổng tiền chung:** Tự động tính toán cho cả nhóm.
+- **Thời hạn hộ chiếu/visa:** Đối với đi công tác nước ngoài, bắt buộc nhập ngày của hộ chiếu, thời hạn hộ chiếu hoặc visa.
+- **Số bữa ăn thực tế (Tổng số bữa ăn):** Khai báo tổng số bữa ăn thực tế trong chuyến đi để nhân hệ số dự trù.
+- **Tổng tiền chung:** Hệ thống tự động tính toán tổng chi phí dự trù cho cả nhóm đi trong form.
 - **Đính kèm:** Bắt buộc đính kèm hình ảnh/tài liệu mô tả lộ trình đi công tác.
 
 ### Gửi đi:
-- **Gửi đi (1):** Gửi đến người duyệt
-- **Lưu trữ tạm thời (2):** Lưu để gửi sau
-- **Xóa nhớ tạm (3):** Xóa form đang soạn
-- **Xem trước (4):** Review toàn bộ form
-- **Reset (5):** Làm mới hoàn toàn
+- **Gửi đi (1):** Gửi đến người duyệt.
+- **Lưu trữ tạm thời (2):** Lưu để gửi sau (lưu nháp).
+- **Xóa nhớ tạm (3):** Xóa form đang soạn.
+- **Xem trước (4):** Review toàn bộ form.
+- **Reset (5):** Làm mới form để nhập lại thông tin.
 
 ### Hủy form đã gửi:
-- Vào **Electronic Document → My Documents** → Tìm form → Nhấn **"Hủy đơn đăng ký"**
-- ⚠️ Chỉ hủy được khi **chưa duyệt xong**
-- Sau khi hủy → Form vào **Temporary Storage** → Có thể chỉnh sửa hoặc xóa
+- Vào **Electronic Document → My Documents** → Tìm form tương ứng.
+- Nhấn **"Hủy đơn đăng ký"** để gọi lại form để sửa hoặc cập nhật thông tin.
+- ⚠️ **Quy tắc:** Chỉ hủy được đơn khi chưa được duyệt hết tới người cuối cùng. Sau khi hủy, form sẽ chuyển vào mục lưu trữ tạm thời **Temporary Storage**.
 
 ### Copy form cũ:
-- Vào My Documents → Tìm form đã duyệt → Nhấn **"Sao chép tài liệu"**
-- Chỉnh sửa thông tin → Gửi đi như form mới
+- Vào **Electronic Document → My Documents** → Tìm form đã duyệt thành công.
+- Nhấn **"Sao chép tài liệu"** để copy toàn bộ dữ liệu của form cũ.
+- Thay đổi một số thông tin cần thiết → Gửi đi như form mới để tiết kiệm thời gian.
 
 ---
 
@@ -55,18 +59,20 @@ Hệ thống định lượng tài chính dự trù rất chi tiết:
 
 **Vào:** Business Trip → Business Trip Report
 
-### Cách làm:
-1. Click vào **"Liên kết tài liệu"** → Hộp thoại mở ra
-2. Chọn **"Tài liệu của tôi"** → Tìm form đi công tác đã được duyệt
-3. Nhấn **"Kiểm tra"** → Danh sách form hiển thị → Chọn form cần báo cáo
-4. Điền thông tin thực tế khi trở về:
-   - Người thực tế đi công tác
-   - Ngày về thực tế
-   - **Hãng Hàng Không đã chuyên chở** / vé tàu xe (bắt buộc khai báo)
-   - **Upload Cuống máy bay/Vé Tàu** và **Report File** dưới dạng hình ảnh, PDF.
-5. Viết nội dung báo cáo → Gửi đi
+### Quy trình thực hiện báo cáo:
+1. Chọn line phê duyệt, tiêu đề, tệp đính kèm (báo cáo word, excel, powerpoint, v.v.).
+2. Click vào nút **"Liên kết tài liệu"** (1) → Hộp thoại mở ra.
+3. Chọn mục **"Tài liệu của tôi"** (2) → Nhấn **"Kiểm tra"** (3) để hiển thị danh sách các form đi công tác đã được duyệt.
+4. Lọc/Tìm kiếm và chọn đúng form đi công tác tương ứng cần làm báo cáo.
+5. Điền thông tin thực tế khi trở về:
+   - Chọn người thực tế đi công tác trong danh sách.
+   - Chọn ngày về thực tế (mặc định lấy ngày đăng ký ban đầu).
+   - **Hãng Hàng Không đã chuyên chở:** Bắt buộc chọn đúng hãng bay đã di chuyển (hoặc phương tiện vé tàu xe).
+   - **Đính kèm bắt buộc:** Upload ảnh chụp **Cuống máy bay (vé máy bay)** hoặc **vé tàu xe** thực tế.
+6. Soạn thảo nội dung báo cáo chi tiết → Nhấn **"Gửi đi"** (Submit).
 
-> 💡 **Quy trình quyết toán (Kế toán & HR):** Kế toán sẽ đối chiếu phần chi phí chênh lệch thực tế để tiến hành thanh toán thêm hoặc thu hồi tạm ứng. Bộ phận chịu chi phí phân rã (Cost Center) sẽ được cài đặt ngay tại bước này.
+> 💡 **Quy trình quyết toán (Kế toán & HR):** Kế toán đối chiếu chi phí chênh lệch thực tế để làm thanh toán thêm hoặc thu hồi tạm ứng. Bộ phận chịu chi phí phân rã (Cost Center) và ngày cần thanh toán sẽ được thiết lập ngay tại bước này.
+
 
 ---
 
@@ -85,28 +91,34 @@ Dùng khi lịch trình công tác có biến động so với ban đầu (Đổ
 
 ## 4. 🏖️ Form Đi Làm Ngày Nghỉ / Lễ (Holiday Work Request)
 
-**Vào:** Electronic Document → Holiday Work Request
+**Vào:** Electronic Document → Holiday Work Reuqest (hoặc Holiday Work Request)
 
-### Bước 1: Chọn đường line phê duyệt
-### Bước 2: Điền thông tin
-| Trường | Mô tả |
-|--------|-------|
-| Tiêu đề | Nội dung công việc |
-| Nhân viên | Chọn người đi làm |
-| Thêm người | Thêm nhiều người vào 1 form |
-| Ngày đi làm | Chọn ngày cụ thể |
-| Thời gian (giờ) | Số giờ làm việc |
-| Số giờ | Hệ thống tự tính |
+### Bước 1: Chọn đường line phê duyệt (Mặc định hoặc tự chọn)
+### Bước 2: Điền thông tin đăng ký
+- **Tiêu đề:** Nội dung/Lý do tăng ca đi làm ngày nghỉ, ngày lễ.
+- **File đính kèm:** Đính kèm file liên quan (nếu có).
+- **Người làm form hộ:** Nhập tên người đăng ký giúp (mặc định lấy tên người đăng nhập).
+- **Lựa chọn nhân viên:** Chọn người đi làm tăng ca.
+- **Thêm người:** Thêm nhiều người cùng làm việc vào chung một biểu mẫu.
+- **Chọn ngày đi làm:** Ngày lễ hoặc ngày nghỉ cuối tuần thực tế.
+- **Thời gian đi làm tính theo tiếng:** Số giờ đăng ký làm việc dự kiến.
+- **Số giờ:** Hệ thống tự động tính toán.
+- **Thêm dòng/ngày giờ:** Thêm ngày giờ chi tiết cho từng người trong danh sách.
+- Nhấn **"Gửi đi"** để trình duyệt, hoặc **"Lưu trữ tạm thời"** để lưu nháp, hoặc **"Xem trước"** để review, hoặc **"Reset"** để làm mới form.
 
 ### Báo cáo sau khi đi làm (Holiday Work Report):
-**Vào:** Attendance → Holiday Work Request (hoặc liên kết liên quan)
-1. Click **"Liên kết tài liệu"** → Chọn form đăng ký đi làm ngày lễ đã được duyệt trước đó.
-2. Cập nhật lại thời gian thực tế: **"Thời gian vào" (Check-in start)** và **"Kết thúc" (Check-out end)**.
-3. Đính kèm báo cáo tóm tắt công việc đã thực hiện trong ngày lễ/ngày nghỉ đó (Tùy chọn).
+**Vào:** Electronic Document → Attendance → Holiday Work Request
+
+1. Click nút **"Liên kết tài liệu"** (1) → Hộp thoại mở ra danh sách các đơn đăng ký đi làm lễ đã duyệt.
+2. Người dùng có thể nhấn nút **"Nhìn"** để xem trước chi tiết đơn đăng ký, hoặc nhấn **"Lựa chọn"** để liên kết form đó vào báo cáo.
+3. Cập nhật lại thời gian làm việc thực tế: **"Thời gian vào" (Check-in start)** và **"Kết thúc" (Check-out end)**, ngày làm việc thực tế.
+4. Đính kèm báo cáo tóm tắt công việc đã thực hiện trong ngày lễ/ngày nghỉ đó (Không bắt buộc).
+5. Nhập nội dung mô tả chi tiết công việc → Nhấn gửi đi.
 
 ### Quy trình quản lý dòng chạy (HR & Kế toán):
-- **HR Admin:** Truy cập menu `Management -> Holiday Work Management -> Holiday Work Ledger` để giám sát toàn cục ai đang thực tế đi làm ngày lễ và có thể **Export Excel** để phục vụ Audit.
-- **Kế toán:** Vào giao diện `Holiday Work Calculate Management` chạy lệnh duyệt thanh toán hoặc cập nhật phiếu lương tính thêm ngày công.
+- **HR Admin:** Truy cập menu `Management -> Holiday Work Management -> Holiday Work Ledger` để giám sát toàn cục thông tin những ai đã đăng ký đi làm lễ (với điều kiện đơn của họ đã được phê duyệt) và thực hiện **Export file Excel** để phục vụ kiểm tra/Audit.
+- **Kế toán:** Truy cập menu `Management -> Holiday Work Management -> Holiday Work Calculate Management` để tìm kiếm các form đi làm lễ đã làm báo cáo, phục vụ chạy lệnh duyệt thanh toán/làm phiếu lương cộng thêm ngày công.
+
 
 ---
 
@@ -169,4 +181,15 @@ Team Leader → Group Leader → Quản lý người Hàn → Bác Jang → Bác
 
 ---
 
-*Cập nhật: 2026-05-25 | Nguồn: Hướng dẫn Draft Document.pptx + Hướng dẫn Groupware_Form đi công tác.pptx + Hướng dẫn Form nghỉ việc - Employee Retire Document.pptx + Hướng dẫn Form Yêu cầu tuyển dụng - Emp Request.pptx + Hướng dẫn Groupware_Form đăng ký đi làm ngày lễ_ngày nghỉ.pptx + Comprehensive_Groupware_Report.md*
+## 8. 🔄 Trạng Thái Luân Chuyển Nhân Sự (Update Status Transfer of HR)
+
+**Vào:** Chức năng quản lý nhân sự chuyên biệt của HR
+
+### Quy tắc luân chuyển:
+- Màn hình này dành riêng cho phòng Nhân sự (HR) để cập nhật trạng thái luân chuyển của cán bộ nhân viên trong công ty.
+- **Quy trình phê duyệt liên thông:** Sau khi cập nhật thông tin luân chuyển, Nhân sự bắt buộc phải nhấn nút **"Transfer"** (Luân chuyển) trên trang này. Khi đó, lãnh đạo cấp cao tại Trụ sở chính (Head Quarter Leader) mới có thể nhìn thấy thông tin để tiến hành đánh giá, nhận xét và phê duyệt.
+
+---
+
+*Cập nhật: 2026-06-04 | Nguồn: Hướng dẫn Draft Document.pptx + Hướng dẫn Groupware_Form đi công tác.pptx + Hướng dẫn Form nghỉ việc - Employee Retire Document.pptx + Hướng dẫn Form Yêu cầu tuyển dụng - Emp Request.pptx + Hướng dẫn Groupware_Form đăng ký đi làm ngày lễ_ngày nghỉ.pptx + Comprehensive_Groupware_Report.md*
+

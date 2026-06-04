@@ -1,6 +1,6 @@
 # 🗂️ GROUPWARE — Knowledge Base Index
 
-> **Cập nhật:** 2026-05-18 | **Nguồn:** extracted_text_utf8.txt + GROUPWARE Purchase Manual
+> **Cập nhật:** 2026-06-04 | **Nguồn:** extracted_text_utf8.txt + GROUPWARE Purchase Manual
 > **Cách dùng:** Đọc file INDEX này trước, sau đó mở file GW chuyên biệt theo nhóm chức năng.
 
 ---
@@ -92,4 +92,4 @@ Daily Plan (Kế hoạch ngày) ───────→ B450 (Tạo Lot, in tem
 
 ---
 
-*Cập nhật: 2026-05-25 | Tổng hợp từ: [GROUPWARE] Purchase Manual.pptx + Comprehensive_Groupware_Report.md*
+*Cập nhật: 2026-06-04 | Tổng hợp từ: [GROUPWARE] Purchase Manual.pptx + Comprehensive_Groupware_Report.md*
