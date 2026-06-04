@@ -1,6 +1,6 @@
 # KB_05 — Kiểm tra Chất lượng (QC) & Điện cực
 
-> **Màn hình liên quan:** B597, C443, C512, B270, B540, B552
+> **Màn hình liên quan:** B597, C443, C512, C530, C546, B270, B540, B552
 > ← [Về INDEX](KB_INDEX.md)
 
 ---
@@ -554,6 +554,81 @@ SELECT * FROM STB_DefectRepairInfo WHERE ControlNo IN (
 
 ---
 
+### 9.6 C546 (FOQC) — OCV/ESR chỉ hiển thị 20ea thay vì 50ea
+
+**Triệu chứng:** Trên tab C546 (FOQC_시료별제품검사), hạng mục OCV (`FOQC_V01_07`) chỉ hiển thị tối đa 20 dòng đo thực tế từ máy (hoặc 0 dòng nếu chưa đo) thay vì hiển thị đủ 50 dòng theo tiêu chuẩn mẫu (SampleQty=50). 
+
+**Nguyên nhân gốc (Root Causes):**
+1. **Lỗi trong SP lấy kết quả đo (`usp_MaterialQcSampleResult_get`):** Phiên bản cũ không hỗ trợ pattern `FOQC_V01_07` (chỉ hỗ trợ `PQC_V01_07`) nên bị nhảy sang logic mặc định `SampleQty=20` và gán trùng giá trị OCV. (Đã sửa).
+2. **Thiếu Block OCV trong SP khởi tạo dòng trống (`usp_Vietnam_MaterialFOQcDetail_get`):** 
+   - Khi QC mở màn hình C546, hệ thống gọi SP `usp_Vietnam_MaterialFOQcDetail_get` để khởi tạo các dòng mẫu trống trong bảng `STB_MaterialQcSampleResult` cho đủ số lượng `SampleQty=50`.
+   - Trong SP này, lập trình viên đã viết các khối loop `WHILE` để tạo dòng trống cho `DetailNo = 19` (20ea), `DetailNo = 3` (ESR - 50ea), và `DetailNo = 4` (10ea), nhưng **hoàn toàn bỏ quên hạng mục OCV (DetailNo = 2)**!
+   - Vì không được khởi tạo dòng trống, lưới OCV trên giao diện chỉ có thể hiển thị tối đa số dòng thực tế đo được từ máy (20 dòng) mà không thể lấp đầy đủ 50 dòng.
+
+**Giải pháp sửa đổi:**
+1. **Deploy lại Stored Procedure `usp_Vietnam_MaterialFOQcDetail_get`:**
+   - Thêm khối loop `WHILE` cho `DetailNo = 2` để tự động tạo đủ 50 dòng trống cho OCV.
+   - Nội dung block thêm mới:
+     ```sql
+     -- OCV Block (DetailNo = 2)
+     set @MaterialQcSampleNo1  = (select COUNT(MaterialQcSampleNo) from STB_MaterialQcSampleResult WITH(NOLOCK) where MaterialQcDetailNo=2 and MaterialQcNo=@FoqcMaterialQcNo) + 1
+     set @sampleqty  = (select sampleqty from STB_MaterialQcDetail where MaterialQcDetailNo=2 and MaterialQcNo=@FoqcMaterialQcNo)
+
+     WHILE @MaterialQcSampleNo1 <= @sampleqty
+     BEGIN						
+         select @tung= @tung +'.3'	
+         insert into STB_MaterialQcSampleResult (MaterialQcNo, MaterialQcDetailNo, MaterialQcSampleNo, SampleSerialNo, TestUserID, TestDateTime, TestValue, TestResult, CreateDateTime, CreateUserID, ChangeDateTime, ChangeUserID)
+         values (@FoqcMaterialQcNo, 2, (select isnull(MAX(MaterialQcSampleNo),0) from STB_MaterialQcSampleResult WITH(NOLOCK) where MaterialQcDetailNo=2 and MaterialQcNo=@FoqcMaterialQcNo) + 1 , NULL, NULL, NULL, NULL, NULL, getdate(), @pProcessUserID, NULL, NULL)
+         SELECT @MaterialQcSampleNo1 = (select COUNT(MaterialQcSampleNo) from STB_MaterialQcSampleResult WITH(NOLOCK) where MaterialQcDetailNo=2 and MaterialQcNo=@FoqcMaterialQcNo) + 1
+     END
+     ```
+
+**Debug & Kiểm tra dữ liệu (SSMS):**
+```sql
+-- 1. Kiểm tra SampleQty và Pattern hiện tại của Lot FOQC
+SELECT MaterialQcNo, MaterialQcDetailNo, QcInspectionItemCode, SampleQty, PassedSampleQty, DecisionResult
+FROM STB_MaterialQcDetail WHERE MaterialQcNo = 'F' + 'Mã_Barcode'
+
+-- 2. Kiểm tra số dòng thực tế đã ghi nhận trong bảng SampleResult
+SELECT MaterialQcDetailNo, COUNT(*) AS Total,
+       SUM(CASE WHEN TestValue IS NOT NULL THEN 1 ELSE 0 END) AS WithValue,
+       SUM(CASE WHEN TestValue IS NULL THEN 1 ELSE 0 END) AS EmptyRows
+FROM STB_MaterialQcSampleResult 
+WHERE MaterialQcNo = 'F' + 'Mã_Barcode'
+GROUP BY MaterialQcDetailNo
+
+-- 3. Kiểm tra dữ liệu thô từ máy đo trong Monitor
+SELECT ID, lotno, value AS ESR, valueocv AS OCV, UploadToMes, UploadOCVToMess
+FROM Stb_ESRValueMonitor WHERE lotno = 'Mã_Barcode' ORDER BY ID
+```
+
+**Fix data khi bị lệch số dòng:**
+*Xem chi tiết các bước chạy rollback và reset dữ liệu tại file script [fix_c546_ocv_lots.sql](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/sql/scripts/fix_c546_ocv_lots.sql)*
+
+**Các Stored Procedure liên quan (C546):**
+
+| SP | Loại | Chức năng |
+|----|------|-----------|
+| `usp_GetMaterialOQcInfo` | Search | Lấy thông tin Lot QC |
+| `usp_MaterialQcDetail_get` | Search | Lấy danh sách hạng mục kiểm tra |
+| `usp_MaterialQcSampleResult_get` | Search | **Lấy giá trị đo từ Stb_ESRValueMonitor** |
+| `usp_MaterialQcSampleResult_iud` | Execute | Lưu giá trị đo thủ công |
+| `usp_DoMakeMaterialQcSampleResult` | Execute | Tạo sample result |
+| `usp_DoUpdateMaterialQcInfo_Success` | Execute | Đánh giá OK |
+| `usp_DoUpdateMaterialQcInfo_Fail` | Execute | Đánh giá NG |
+
+**Bảng DB liên quan:**
+
+| Bảng | Vai trò |
+|------|---------|
+| `STB_MaterialQcInfo` | Lot QC header (chứa CompanyCode) |
+| `STB_MaterialQcDetail` | Hạng mục kiểm tra (SampleQty, LSL, USL, Pattern) |
+| `STB_MaterialQcSampleResult` | Kết quả đo từng mẫu (TestValue) |
+| `Stb_ESRValueMonitor` | Dữ liệu nguồn từ máy đo ESR/OCV |
+| `STB_LotChangeMaterialHistory` | Lịch sử đổi barcode (SP tra ngược OldBarcode) |
+
+---
+
 ## 10. ⚡ Điện Cực — Slitting Hà Nam (F743~F748, C243)
 
 ### 10.1 Flow Slitting Hà Nam
@@ -735,4 +810,23 @@ AND CreateUserID <> '23091804'
 | Cột `IsFIFO` trong `STB_MaterialMaster` không tồn tại | FIFO | Logic FIFO nằm trong SP |
 | View `FinishGoodMESInstock_HN` không tồn tại | HN00 | Deprecated/đổi tên |
 
-*Cập nhật: 2026-05-22 — Bổ sung QC flow đầy đủ, Slitting HN, Deep Core Analysis, DB Audit Trail*
+*Cập nhật: 2026-06-04 — Bổ sung § 9.6 C530/C546 FOQC OCV/ESR bug + SP reference table*
+
+---
+
+### 8.7 Hỗ trợ lưu nhiều mã vạch nguyên vật liệu (Multi-barcode Appending) cho Điện cực và Vỏ Case
+
+**Triệu chứng:** Khi sản xuất, một số Lot nguyên liệu (đặc biệt là điện cực hoặc vỏ Case) bị hết giữa chừng và cần bắn nối tiếp cuộn mới. Trước đây, hệ thống chỉ hỗ trợ tính năng này cho Điện cực, dẫn đến vỏ Case bị chặn hoặc ghi đè dữ liệu.
+
+**Cách khắc phục:**
+1. Cập nhật `usp_Vietnam_RawMaterialInputHist_uid` để:
+   - Tách chuỗi barcode chứa dấu `;` khi kiểm tra trạng thái HOLD bằng hàm `usp_VVT_checkHOLD_Material`.
+   - Tính toán `@count` hợp lệ bằng cách đếm và cộng dồn tất cả các barcode con trong danh sách.
+   - Bật tính năng tự động nối chuỗi (`RawMaterialBarcode = existingRawBarcode + ' ; ' + newRawBarcode`) cho nhóm 자재 `Case` thuộc các dòng máy size `3562`, `3582`, `35105` (bên cạnh nhóm `ELECTRODEP` và `ELECTRODEM` dùng cho mọi size).
+   - Ghi nhận lịch sử cho cả hai nhóm này.
+2. Cập nhật `usp_RawMaterialInputHist_get` sử dụng `FOR XML PATH('')` để gộp các barcode đã bắn thành chuỗi `; ` hiển thị lên lưới của màn hình.
+
+*Chi tiết mã nguồn tham khảo các file:*
+- SP UID: [usp_Vietnam_RawMaterialInputHist_uid.sql](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/sql/procedures/usp_Vietnam_RawMaterialInputHist_uid.sql)
+- SP GET: [usp_RawMaterialInputHist_get.sql](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/sql/procedures/usp_RawMaterialInputHist_get.sql)
+

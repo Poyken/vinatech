@@ -151,28 +151,91 @@ BEGIN
 	set @pLotID_Warehouse_Created =ltrim(rtrim( isnull(@pLotID_Warehouse_Created,'')));
 
 
-	exec usp_VVT_checkHOLD_Material @lotid=@pRawMaterialBarcode        -- check  NVL thô, mã Lót ML.... nếu bị HOLD thì không thể Lưu lại
+	-- check  NVL thô, mã Lót ML.... nếu bị HOLD thì không thể Lưu lại
+	IF CHARINDEX(';', @pRawMaterialBarcode) > 0
+	BEGIN
+		DECLARE @TempHoldBarcodes NVARCHAR(500) = @pRawMaterialBarcode
+		DECLARE @SingleHoldBarcode NVARCHAR(100)
+		DECLARE @PosHold INT
+
+		WHILE LEN(@TempHoldBarcodes) > 0
+		BEGIN
+			SET @PosHold = CHARINDEX(';', @TempHoldBarcodes)
+			IF @PosHold > 0
+			BEGIN
+				SET @SingleHoldBarcode = LTRIM(RTRIM(SUBSTRING(@TempHoldBarcodes, 1, @PosHold - 1)))
+				SET @TempHoldBarcodes = SUBSTRING(@TempHoldBarcodes, @PosHold + 1, LEN(@TempHoldBarcodes) - @PosHold)
+			END
+			ELSE
+			BEGIN
+				SET @SingleHoldBarcode = LTRIM(RTRIM(@TempHoldBarcodes))
+				SET @TempHoldBarcodes = ''
+			END
+
+			IF @SingleHoldBarcode <> ''
+			BEGIN
+				EXEC usp_VVT_checkHOLD_Material @lotid = @SingleHoldBarcode
+			END
+		END
+	END
+	ELSE
+	BEGIN
+		EXEC usp_VVT_checkHOLD_Material @lotid = @pRawMaterialBarcode
+	END
 	
-	exec usp_VVT_checkHOLD_Material @lotid=@pLotID_Warehouse_Created   -- check  NVL thô, mã Lót ML.... nếu bị HOLD thì không thể Lưu lại
-	
+	EXEC usp_VVT_checkHOLD_Material @lotid = @pLotID_Warehouse_Created
 
 
-	select @count=count(*) from stb_materialdoclotinfo
-	where lotid in (@pRawMaterialBarcode,@pLotID_Warehouse_Created) and isnull(lotid,'')<>''
-	-- check tạm cho bên điện cực
-	-- khi mã có đầu là sp mới kiểm tra
-	if(@count <1 and (@RawMaterialBarcode like '%SP%' or @RawMaterialBarcode like '%SL%' or @RawMaterialBarcode like '%SM%'))
-	begin
-		select @count=count(*) from STB_MaterialLotInfo
-		where lotid in (@pRawMaterialBarcode,@pLotID_Warehouse_Created) and isnull(lotid,'')<>''
-	end
-	
+	-- Calculate @count (handling concatenated barcode lists)
+	DECLARE @IsConcat INT = 0
+	IF CHARINDEX(';', @pRawMaterialBarcode) > 0
+		SET @IsConcat = 1
 
-	--declare @fd varchar(20) = @count
+	IF @IsConcat = 1
+	BEGIN
+		DECLARE @TempCountBarcodes NVARCHAR(500) = @pRawMaterialBarcode
+		DECLARE @SingleCountBarcode NVARCHAR(100)
+		DECLARE @PosCount INT
+		SET @count = 0
+
+		WHILE LEN(@TempCountBarcodes) > 0
+		BEGIN
+			SET @PosCount = CHARINDEX(';', @TempCountBarcodes)
+			IF @PosCount > 0
+			BEGIN
+				SET @SingleCountBarcode = LTRIM(RTRIM(SUBSTRING(@TempCountBarcodes, 1, @PosCount - 1)))
+				SET @TempCountBarcodes = SUBSTRING(@TempCountBarcodes, @PosCount + 1, LEN(@TempCountBarcodes) - @PosCount)
+			END
+			ELSE
+			BEGIN
+				SET @SingleCountBarcode = LTRIM(RTRIM(@TempCountBarcodes))
+				SET @TempCountBarcodes = ''
+			END
+
+			IF @SingleCountBarcode <> ''
+			BEGIN
+				DECLARE @c1 INT = 0
+				SELECT @c1 = COUNT(*) FROM stb_materialdoclotinfo WHERE lotid = @SingleCountBarcode
+				IF @c1 < 1 AND (@SingleCountBarcode LIKE '%SP%' OR @SingleCountBarcode LIKE '%SL%' OR @SingleCountBarcode LIKE '%SM%')
+				BEGIN
+					SELECT @c1 = COUNT(*) FROM STB_MaterialLotInfo WHERE lotid = @SingleCountBarcode
+				END
+				SET @count = @count + @c1
+			END
+		END
+	END
+	ELSE
+	BEGIN
+		SELECT @count = COUNT(*) FROM stb_materialdoclotinfo
+		WHERE lotid in (@pRawMaterialBarcode,@pLotID_Warehouse_Created) and isnull(lotid,'')<>''
+		
+		IF (@count < 1 AND (@RawMaterialBarcode LIKE '%SP%' OR @RawMaterialBarcode LIKE '%SL%' OR @RawMaterialBarcode LIKE '%SM%'))
+		BEGIN
+			SELECT @count = COUNT(*) FROM STB_MaterialLotInfo
+			WHERE lotid in (@pRawMaterialBarcode,@pLotID_Warehouse_Created) and isnull(lotid,'')<>''
+		END
+	END
 	
-	--RAISERROR(@pRawMaterialBarcode,16,1)
-	 -- Nếu đúng là mã Lót ML.... của Kho NVL thì sẽ được phép đi qua Đoạn này
-	 -- Nếu không phải mã Lót ML , không phải mã Điện cực , thì sẽ báo lỗi
 	if(@count>0) begin   
 
 
@@ -3033,11 +3096,26 @@ BEGIN		-- BEGIN BG2
 		
 END		-- END BG@
 
-		-- Start Mr.Duc EA 2026-04-14 - Luu nhi?u m� barcode NVL tr�n c�ng 1 lot s?n ph?m
+		-- Start Mr.Duc EA 2026-04-14 - Luu nhieu ma barcode NVL tren cung 1 lot san pham
+		-- Updated by Agent 2026-06-04: Conditional append for Electrode (all) + Case (3562/3582/35105)
 		DECLARE @existingRawBarcode NVARCHAR(200) = ''
 		SELECT @existingRawBarcode = ISNULL(RawMaterialBarcode, '') FROM STB_RawMaterialInputHist WITH(NOLOCK) WHERE RawMaterialInputHistNo = @pRawMaterialInputHistNo
-		IF @existingRawBarcode <> '' AND CHARINDEX(ISNULL(@RawMaterialBarcode, ''), @existingRawBarcode) = 0
-			SET @RawMaterialBarcode = @existingRawBarcode + ' ; ' + ISNULL(@RawMaterialBarcode, '')
+		
+		DECLARE @ShouldAppend INT = 0
+		IF @pProductGroupCode IN ('ELECTRODEP', 'ELECTRODEM')
+		BEGIN
+			SET @ShouldAppend = 1
+		END
+		ELSE IF @pProductGroupCode = 'Case' AND @ModelSize IN ('3562', '3582', '35105')
+		BEGIN
+			SET @ShouldAppend = 1
+		END
+
+		IF @ShouldAppend = 1
+		BEGIN
+			IF @existingRawBarcode <> '' AND CHARINDEX(ISNULL(@RawMaterialBarcode, ''), @existingRawBarcode) = 0
+				SET @RawMaterialBarcode = @existingRawBarcode + ' ; ' + ISNULL(@RawMaterialBarcode, '')
+		END
 		-- End Mr.Duc
 					
 		UPDATE STB_RawMaterialInputHist
@@ -3054,9 +3132,10 @@ END		-- END BG@
 		WHERE   RawMaterialInputHistNo = @pRawMaterialInputHistNo
 
 		--Mr Truong update add history save raw material input 2025-12-13
+		-- Updated by Agent 2026-06-04: Also log history for Case (3562/3582/35105)
 		IF @@ROWCOUNT > 0
 		BEGIN 
-		  IF @pProductGroupCode IN ('ELECTRODEP', 'ELECTRODEM')
+		  IF @pProductGroupCode IN ('ELECTRODEP', 'ELECTRODEM') OR (@pProductGroupCode = 'Case' AND @ModelSize IN ('3562', '3582', '35105'))
 		  BEGIN
 		    IF NOT EXISTS (
                SELECT 1 

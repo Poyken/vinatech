@@ -224,8 +224,12 @@ BEGIN
 		begin
 			while @cnt < @SampleQty 
 			begin
+				-- Reset loop variables to prevent retaining values from previous iterations
+				set @value = NULL
+				set @value1 = NULL
+				set @value8 = NULL
+				set @cntinfor = 0
 
-				
 				select @SampleNo = COALESCE(max(materialqcsampleno),0) from STB_MaterialQcSampleResult where MaterialQcNo=@MaterialQcNo and MaterialQcDetailNo=@pMaterialQcDetailNo
 					
 					
@@ -243,8 +247,12 @@ BEGIN
 								insert into STB_MaterialQcSampleResult(MaterialQCNo, MaterialQCDetailNo,materialqcsampleno, testvalue,createdatetime, CreateUserID ) values(@MaterialQcNo,@pMaterialQcDetailNo,@SampleNo+1,@value8, DATEADD(HH, -2, GETDATE()),'system')
 								update top(1) STB_SDINFORBYLOT set attribute1='OK'  where lotno=@value3 and attribute1 is null and pattern like '%SD%' and sd=@value
 							end
-							else begin
+							else if (@value is not null) begin
+								insert into STB_MaterialQcSampleResult(MaterialQCNo, MaterialQCDetailNo,materialqcsampleno, testvalue,createdatetime, CreateUserID ) values(@MaterialQcNo,@pMaterialQcDetailNo,@SampleNo+1,@value8, DATEADD(HH, -2, GETDATE()),'system')
 								update top(1) STB_SDINFORBYLOT set attribute1='FAIL'  where lotno=@value3 and attribute1 is null and pattern like '%SD%' and sd=@value
+							end
+							else begin
+								insert into STB_MaterialQcSampleResult(MaterialQCNo, MaterialQCDetailNo,materialqcsampleno, testvalue,createdatetime, CreateUserID ) values(@MaterialQcNo,@pMaterialQcDetailNo,@SampleNo+1,NULL, GETDATE(),'system')
 							end
 						end
 
@@ -265,16 +273,15 @@ BEGIN
 						set @value6 = @value
 						--if (@value4 <=@value6 and @value6<=@value5  and @cntinfor > 0 )
 						
+						if (@value IS NOT NULL)
 						begin	
-						    
 							insert into STB_MaterialQcSampleResult(MaterialQCNo, MaterialQCDetailNo,materialqcsampleno, testvalue,createdatetime, CreateUserID ) values(@MaterialQcNo,@pMaterialQcDetailNo,@SampleNo+1,@value, DATEADD(HH, -2, GETDATE()),'system')
 							update top(1) STB_SDINFORBYLOT set attribute1='OK'  where lotno=@value3 and attribute1 is null and (pattern like '%'+'DUNGLUONG'+'%' OR pattern like '%'+'??'+'%') and capacity=@value
 						end
-						--else
-						--begin
-						--  -- RAISERROR(@cntinfor,16,1)
-						--	update top(1) STB_SDINFORBYLOT set attribute1='FAIL'  where lotno=@value3 and attribute1 is null and (pattern like '%'+'DUNGLUONG'+'%' OR pattern like '%'+'??'+'%') and capacity=@value
-						--end
+						else
+						begin
+							insert into STB_MaterialQcSampleResult(MaterialQCNo, MaterialQCDetailNo,materialqcsampleno, testvalue,createdatetime, CreateUserID ) values(@MaterialQcNo,@pMaterialQcDetailNo,@SampleNo+1,NULL, GETDATE(),'system')
+						end
 							
 
 					end
@@ -300,9 +307,14 @@ BEGIN
 						/*vanduc edited by Mrs.Hang 20260603 START*/
 						else if (@value IS NOT NULL)
 						begin
+							insert into STB_MaterialQcSampleResult(MaterialQCNo, MaterialQCDetailNo,materialqcsampleno, testvalue,createdatetime, CreateUserID ) values(@MaterialQcNo,@pMaterialQcDetailNo,@SampleNo+1,@value, DATEADD(HH, -2, GETDATE()),'system')
 							update Stb_ESRValueMonitor set UploadToMes='FAIL' where ID = @value1
 						end
 						/*END*/
+						else
+						begin
+							insert into STB_MaterialQcSampleResult(MaterialQCNo, MaterialQCDetailNo,materialqcsampleno, testvalue,createdatetime, CreateUserID ) values(@MaterialQcNo,@pMaterialQcDetailNo,@SampleNo+1,NULL, GETDATE(),'system')
+						end
 
 					end
 
@@ -325,9 +337,14 @@ BEGIN
 						/*vanduc edited by Mrs.Hang 20260603 START*/
 						else if (@value IS NOT NULL)
 						begin
+							insert into STB_MaterialQcSampleResult(MaterialQCNo, MaterialQCDetailNo,materialqcsampleno, testvalue,createdatetime, CreateUserID ) values(@MaterialQcNo,@pMaterialQcDetailNo,@SampleNo+1,@value, DATEADD(HH, -2, GETDATE()),'system')
 							update Stb_ESRValueMonitor set UploadOCVToMess='FAIL' where ID = @value1
 						end
 						/*END*/
+						else
+						begin
+							insert into STB_MaterialQcSampleResult(MaterialQCNo, MaterialQCDetailNo,materialqcsampleno, testvalue,createdatetime, CreateUserID ) values(@MaterialQcNo,@pMaterialQcDetailNo,@SampleNo+1,NULL, GETDATE(),'system')
+						end
 
 					end
 									

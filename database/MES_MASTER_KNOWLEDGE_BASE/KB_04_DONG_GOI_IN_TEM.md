@@ -322,4 +322,27 @@ EXEC [dbo].[usp_Vietnam_PhoenixContactLabelPrint_get]
      COMMIT TRANSACTION;
      ```
 
-*Cập nhật: 2026-05-27*
+### 6.14 Lỗi cắt chuỗi danh sách tem nhỏ (B560 - Truncation in InBoxLabelList)
+
+**Triệu chứng:** Khi in tem thùng Hela trên màn hình B560, nếu số lượng tem hộp nhỏ (InBoxLabel) vượt quá khoảng 73 tem, hệ thống sẽ tự động cắt ngắn chuỗi `InBoxLabelList` khiến màn hình B560 chỉ hiển thị `InBoxLabelCount = 73` thay vì 80 tem như thực tế.
+
+**Nguyên nhân gốc:** 
+1. Stored Procedure `usp_DoCreateHelaInBoxBarcodeList` khai báo biến cục bộ `@InBoxLabelList VARCHAR(1000)` quá ngắn. Mỗi nhãn tem nhỏ có định dạng dạng `"S026060400XXX"` dài khoảng 14 ký tự (bao gồm cả dấu phẩy). Khi có 80 tem, độ dài chuỗi cần khoảng `80 * 14 = 1120` ký tự, vượt quá giới hạn 1000 ký tự.
+2. Cột `InBoxLabelList` trong bảng `STB_HelaBarcodeOutBoxHist` chỉ được thiết lập là `VARCHAR(1000)` hoặc `VARCHAR(4000)` tùy phiên bản, dẫn đến việc cắt chuỗi khi lưu dữ liệu.
+
+**Cách khắc phục:**
+1. Thay đổi kiểu dữ liệu cột `InBoxLabelList` trong bảng `STB_HelaBarcodeOutBoxHist` thành `VARCHAR(MAX)`.
+2. Thay đổi khai báo biến `@InBoxLabelList` trong stored procedure `usp_DoCreateHelaInBoxBarcodeList` thành `VARCHAR(MAX)`.
+3. Thay đổi khai báo biến `@InQClList` trong stored procedure `usp_DoCreateReport` thành `VARCHAR(MAX)`.
+4. Chạy script khôi phục lại chuỗi dữ liệu đã bị cắt cho các Lot bị lỗi (ví dụ lô `VVQO032R750613` có 80 tem):
+   ```sql
+   UPDATE STB_HelaBarcodeOutBoxHist 
+   SET InBoxLabelList = 'S026060400161,S026060400162,S026060400163,S026060400164,S026060400165,S026060400166,S026060400167,S026060400168,S026060400169,S026060400170,S026060400171,S026060400172,S026060400173,S026060400174,S026060400175,S026060400176,S026060400177,S026060400178,S026060400179,S026060400180,S026060400181,S026060400182,S026060400183,S026060400184,S026060400185,S026060400186,S026060400187,S026060400188,S026060400189,S026060400190,S026060400191,S026060400192,S026060400193,S026060400194,S026060400195,S026060400196,S026060400197,S026060400198,S026060400199,S026060400200,S026060400201,S026060400202,S026060400203,S026060400204,S026060400205,S026060400206,S026060400207,S026060400208,S026060400209,S026060400210,S026060400211,S026060400212,S026060400213,S026060400214,S026060400215,S026060400216,S026060400217,S026060400218,S026060400219,S026060400220,S026060400221,S026060400222,S026060400223,S026060400224,S026060400225,S026060400226,S026060400227,S026060400228,S026060400229,S026060400230,S026060400231,S026060400232,S026060400233,S026060400234,S026060400235,S026060400236,S026060400237,S026060400238,S026060400239,S026060400240'
+   WHERE LotNo = 'VVQO032R750613';
+   ```
+
+*Chi tiết thay đổi và các bước deploy cụ thể tham khảo file script [fix_b560_inboxlabellist_length.sql](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/sql/scripts/fix_b560_inboxlabellist_length.sql)*
+
+---
+
+*Cập nhật: 2026-06-04*

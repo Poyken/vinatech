@@ -1,6 +1,6 @@
 # 🗂️ NAIS MES — Knowledge Base Index
 
-> **Cập nhật:** 2026-05-27 | **Tổng hợp từ:** Lỗi thực tế + Docx gốc (đã extract toàn bộ) + Xác minh DB trực tiếp + Phân tích 41 SP + Deep Core Analysis (2026-04-18) + DB Audit (2026-05-05) + Electrode Weighing (2026-05-26)
+> **Cập nhật:** 2026-06-04 | **Tổng hợp từ:** Lỗi thực tế + Docx gốc (đã extract toàn bộ) + Xác minh DB trực tiếp + Phân tích 41 SP + Deep Core Analysis (2026-04-18) + DB Audit (2026-05-05) + Electrode Weighing (2026-05-26) + Consolidation (2026-06-04)
 > **Cách dùng:** Đọc file INDEX này trước, sau đó mở file KB chuyên biệt theo nhóm lỗi.
 > **Groupware KB:** Xem → [`../GROUPWARE_KNOWLEDGE_BASE/GW_INDEX.md`](../GROUPWARE_KNOWLEDGE_BASE/GW_INDEX.md)
 
@@ -67,6 +67,7 @@
 | Thêm cột mới giữ đúng thứ tự (Rebuild) | KB_05 § 7.8 |
 | Lỗi "Chưa CONFIG Slitting" | KB_05 § 8.2 |
 | Lỗi chiều rộng Slitting B552 | KB_05 § 8.1 |
+| C546 FOQC OCV/ESR chỉ hiển thị 20ea thay vì 50ea | KB_05 § 9.6 |
 | Model mới không hiện Vol/Farad | KB_06 § 1.2 |
 | In tem khẩn không có Lot | KB_06 § 6, KB_09 § 4 |
 | Thêm Cell/Line mới (B250/B270) | KB_06 § 7 |
@@ -128,6 +129,9 @@
 | Kiến trúc in tem nhãn (Z530/A460) | KB_09 § 5.1 |
 | Truy vết ký hiệu in phun (Marking Letter) | KB_03 § 5.19 |
 | Quy trình 3 bước hủy công đoạn / NG nhầm | KB_03 § 5.18 |
+| Lỗi cắt chuỗi danh sách tem nhỏ (B560 - 73/80 tem) | KB_04 § 6.14 |
+| Cấu hình/Đồng bộ mã lỗi B530 Bắc Giang (BG) | KB_03 § 6.18 |
+| Bắn nối nhiều cuộn nguyên liệu (Electrode & Case 3562/3582/35105) | KB_03 § 6.19, KB_05 § 8.7 |
 
 ---
 
