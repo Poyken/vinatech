@@ -811,3 +811,22 @@ AND CreateUserID <> '23091804'
 | View `FinishGoodMESInstock_HN` không tồn tại | HN00 | Deprecated/đổi tên |
 
 *Cập nhật: 2026-06-04 — Bổ sung § 9.6 C530/C546 FOQC OCV/ESR bug + SP reference table*
+
+---
+
+### 8.7 Hỗ trợ lưu nhiều mã vạch nguyên vật liệu (Multi-barcode Appending) cho Điện cực và Vỏ Case
+
+**Triệu chứng:** Khi sản xuất, một số Lot nguyên liệu (đặc biệt là điện cực hoặc vỏ Case) bị hết giữa chừng và cần bắn nối tiếp cuộn mới. Trước đây, hệ thống chỉ hỗ trợ tính năng này cho Điện cực, dẫn đến vỏ Case bị chặn hoặc ghi đè dữ liệu.
+
+**Cách khắc phục:**
+1. Cập nhật `usp_Vietnam_RawMaterialInputHist_uid` để:
+   - Tách chuỗi barcode chứa dấu `;` khi kiểm tra trạng thái HOLD bằng hàm `usp_VVT_checkHOLD_Material`.
+   - Tính toán `@count` hợp lệ bằng cách đếm và cộng dồn tất cả các barcode con trong danh sách.
+   - Bật tính năng tự động nối chuỗi (`RawMaterialBarcode = existingRawBarcode + ' ; ' + newRawBarcode`) cho nhóm 자재 `Case` thuộc các dòng máy size `3562`, `3582`, `35105` (bên cạnh nhóm `ELECTRODEP` và `ELECTRODEM` dùng cho mọi size).
+   - Ghi nhận lịch sử cho cả hai nhóm này.
+2. Cập nhật `usp_RawMaterialInputHist_get` sử dụng `FOR XML PATH('')` để gộp các barcode đã bắn thành chuỗi `; ` hiển thị lên lưới của màn hình.
+
+*Chi tiết mã nguồn tham khảo các file:*
+- SP UID: [usp_Vietnam_RawMaterialInputHist_uid.sql](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/sql/procedures/usp_Vietnam_RawMaterialInputHist_uid.sql)
+- SP GET: [usp_RawMaterialInputHist_get.sql](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/sql/procedures/usp_RawMaterialInputHist_get.sql)
+

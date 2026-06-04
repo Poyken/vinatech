@@ -847,4 +847,54 @@ Truy cập K109 qua: B540 → Ấn nút **"Việt Nam_Kiểm tra thường xuyê
 10. CHƯA NHẬP "MAKING" ĐẾN V-25 BỊ CHẶN → MarkingLetter rỗng tại bước trước
 ```
 
-*Cập nhật: 2026-05-22 — Bổ sung từ phân tích 41 SP + ảnh màn hình 2026-04-13*
+### 6.18 Cấu hình danh mục mã lỗi B530 nhà máy Bắc Giang (BG)
+
+**Yêu cầu:** Đồng bộ danh mục mã lỗi trên màn hình B530 tại nhà máy Bắc Giang để tránh trùng lặp và phản ánh chính xác các lỗi phát sinh trong thực tế.
+
+**1. Vô hiệu hóa (Disable) 28 mã lỗi trùng lặp/dư thừa:**
+Set `IsUsed = 0` trong bảng `STB_DefectInfo` cho các mã lỗi sau:
+- **Winding (V-22_BG):** `V-22_CC_BG`, `V-22_X12_BG`, `V-22_Z03_BG`, `V-22_Z04_BG`
+- **Rubber/Riveting (V-23_BG):** `V-23_02_BG`, `V-23_2DR_BG`, `V-23_NE1_BG`, `V-23_NE2_BG`, `V-23_QQ_BG`, `V-23_XZ2_BG`, `V-23_X12_BG`, `V-24_2RY_BG`
+- **Curling (V-24_BG):** `V-24_NE4_BG`, `V-24_22CT_BG`, `V-24_2CT_BG`, `V-24_2DR_BG`, `V-24_5VV_BG`, `V-24_NE22_BG`
+- **Sleeving (V-25_BG):** `V-25_01_BG`, `V-25_2CT_BG`, `V-25_X03_BG`, `V-25_X12_BG`
+- **Ngoại quan (V-27_BG):** `V-27_ZC_BG`, `V-27_ZD_BG`, `V-27_4GV_BG`, `V-27_5VI_BG`, `V-27_XP1_BG`, `V-27_RELY_BG`
+
+*Chi tiết SQL tham khảo file script [fix_b530_disable_defects_BG.sql](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/sql/scripts/fix_b530_disable_defects_BG.sql)*
+
+**2. Thêm mới 7 mã lỗi thực tế vận hành:**
+INSERT vào bảng `STB_DefectInfo` các mã lỗi sau:
+- **Winding:** `V-22_BM_BG` (Winding_Xocha đen đầu đáy)
+- **Rubber:** `V-23_DV_BG` (Rubber/riveting_Dập vỡ Tancha pan)
+- **Rubber:** `V-23_RD_BG` (Rubber/riveting_Rách đáy xocha khi đưa vào vỏ nhôm)
+- **Riveting:** `V-23_XZ3_BG` (Riveting_Thiếu thừa vòng đệm)
+- **Curling:** `V-24_NE6_BG` (Curling_NG thừa thiếu cân nặng)
+- **Curling:** `V-24_NE7_BG` (Curling_Xước chân tancha)
+- **Curling:** `V-24_NE8_BG` (Curling_Lỗi mẻ miệng curling)
+
+*Chi tiết SQL tham khảo file script [fix_b530_add_defects_BG.sql](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/sql/scripts/fix_b530_add_defects_BG.sql)*
+
+---
+
+### 6.19 Hỗ trợ lưu nhiều mã vạch nguyên vật liệu (Multi-barcode Appending) cho Điện cực và Vỏ Case
+
+**Mô tả:** Hệ thống hỗ trợ bắn nối tiếp nhiều cuộn nguyên vật liệu khác nhau (ngăn cách bởi dấu `;`) trên cùng một Lot sản phẩm để tránh trường hợp cuộn cũ hết giữa chừng nhưng Lot chưa chạy xong.
+
+**1. Logic kiểm tra và Lưu trong `usp_Vietnam_RawMaterialInputHist_uid`:**
+- **Kiểm tra trạng thái HOLD:** Nếu chuỗi `@pRawMaterialBarcode` chứa dấu `;`, hệ thống sử dụng một vòng lặp `WHILE` tách từng barcode con ra để kiểm tra trạng thái HOLD qua SP `usp_VVT_checkHOLD_Material`. Nếu có bất kỳ barcode con nào bị HOLD, hệ thống sẽ chặn không cho lưu.
+- **Tính toán số lượng hợp lệ (`@count`):** Thay vì chỉ kiểm tra đơn lẻ, hệ thống lặp qua danh sách barcode ngăn cách bởi dấu `;`, đếm số lượng bản ghi tồn tại trong `stb_materialdoclotinfo` (hoặc `STB_MaterialLotInfo` đối với điện cực mới) và cộng dồn lại để validate.
+- **Giới hạn điều kiện nối chuỗi (Append):**
+  - **Điện cực (`ELECTRODEP`, `ELECTRODEM`):** Luôn cho phép nối chuỗi cho tất cả các size.
+  - **Vỏ Case (`Case`):** Chỉ cho phép nối chuỗi đối với các size model đặc thù: `3562`, `3582`, `35105`.
+  - Cấu trúc nối chuỗi: `RawMaterialBarcode = existingRawBarcode + ' ; ' + newRawBarcode`.
+  - Hệ thống ghi nhận lịch sử vào bảng lịch sử phụ đối với Điện cực và Case (3562/3582/35105).
+
+*Chi tiết mã nguồn tham khảo file [usp_Vietnam_RawMaterialInputHist_uid.sql](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/sql/procedures/usp_Vietnam_RawMaterialInputHist_uid.sql)*
+
+**2. Gộp hiển thị trên lưới trong `usp_RawMaterialInputHist_get`:**
+Khi load danh sách nguyên vật liệu đã bắn của Lot, hệ thống sử dụng `FOR XML PATH('')` gộp các dòng barcode có cùng `ProductGroupCode` và `Barcode` lại thành một chuỗi ngăn cách bởi `; ` hiển thị trong cột `RawBacodeList` đối với `ELECTRODEP`, `ELECTRODEM`, và `Case`.
+
+*Chi tiết mã nguồn tham khảo file [usp_RawMaterialInputHist_get.sql](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/sql/procedures/usp_RawMaterialInputHist_get.sql)*
+
+---
+
+*Cập nhật: 2026-06-04*
