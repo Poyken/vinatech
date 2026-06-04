@@ -134,39 +134,7 @@ INSERT INTO STB_MaterialVendorMapping (MaterialCode, VendorCode, IsUsed, CreateD
 VALUES ('Mã_NVL', 'Mã_NCC', 1, GETDATE(), 'vinaadmin')
 ```
 
----
 
-## 7. Luồng Master Data Chi Tiết (A210, F130/F140)
-
-**A210 — Đăng ký mã vật tư mới:**
-```
-Item Registration Document (Groupware)
-    → Loại: Cell / Module / Raw material
-    → Điền đầy đủ: MaterialCode, MaterialName, Unit, MaterialType
-    → Sau khi duyệt → sync xuống A230 (STB_MaterialMaster)
-    ↓
-A230 (MES) → Kiểm tra mã đã sync chưa
-    ↓
-F110 (MES) → Cấu hình IsLotUse, IsUseBarcode
-    ↓
-F130/F140 (MES) → Chỉ định NCC được phép cung cấp
-```
-
-```sql
--- Kiểm tra mã vật tư đã sync từ Groupware chưa
-SELECT MaterialCode, MaterialName, MaterialTypeCode, Unit, CreateDateTime
-FROM STB_MaterialMaster
-WHERE MaterialCode = 'Mã_NVL_Mới'
-ORDER BY CreateDateTime DESC
-
--- Nếu chưa có → Kiểm tra Groupware đã duyệt chưa
--- Nếu đã duyệt nhưng chưa sync → Liên hệ IT kiểm tra job sync
-```
-
-*Cập nhật: 2026-05-22*
-
-
----
 
 ## 7. Luồng Master Data Chi Tiết (A210, F130/F140)
 

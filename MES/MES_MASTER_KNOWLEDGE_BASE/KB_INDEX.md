@@ -25,6 +25,10 @@
 | [KB_13_DB_AUDIT.md](KB_13_DB_AUDIT.md) | DB Audit Trail, 3 bugs thực tế, 7 sai lệch logic, Production Metrics | DB/Audit |
 | [KB_14_TRACE_BUG_METHODOLOGY.md](KB_14_TRACE_BUG_METHODOLOGY.md) | Phương pháp trace bug 5 bước, Log hệ thống, Bảng quan trọng | Toàn bộ |
 | [NAIS_SYSTEM_MASTER_TROUBLESHOOTING.md](NAIS_SYSTEM_MASTER_TROUBLESHOOTING.md) | Cẩm nang xử lý lỗi NAIS tổng hợp từ Docx & Hình ảnh | Toàn bộ |
+| [KB_15_EA_MES_CASE_STUDY_XUONG_MAY.md](KB_15_EA_MES_CASE_STUDY_XUONG_MAY.md) | Tổng hợp các Case Study thực tế dành cho kỹ sư EA/MES khi xuống xưởng | Vận hành/Hỗ trợ |
+| [KB_16_GIAI_THICH_DON_GIAN_LUONG_MES.md](KB_16_GIAI_THICH_DON_GIAN_LUONG_MES.md) | Bản dịch bình dân: Hiểu sơ đồ luồng dữ liệu MES trong 5 phút (Analogy Bánh Tráng Trộn) | Onboarding |
+| [KB_17_HUONG_DAN_CAU_HINH_DBMAIL.md](KB_17_HUONG_DAN_CAU_HINH_DBMAIL.md) | Hướng dẫn cấu hình Database Mail trong SQL Server | Vận hành/Hỗ trợ |
+| [KB_18_DATABASE_SCHEMA_QUICKREF.md](KB_18_DATABASE_SCHEMA_QUICKREF.md) | Bảng tra cứu nhanh các cột dữ liệu quan trọng trong database | DB/Schema |
 
 ---
 
