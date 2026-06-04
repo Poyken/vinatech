@@ -1,0 +1,11 @@
+electrode.weighing/
+*.zip
+*.exe
+*.dll
+node_modules/
+
+# Ignore Agent files
+.gemini/
+.brain/
+.windsurf/
+*.log
