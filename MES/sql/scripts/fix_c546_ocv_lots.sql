@@ -1,7 +1,7 @@
 -- ==========================================================================================
 -- FIX SCRIPT: C546 (FOQC) OCV/ESR lỗi hiển thị cho Lot FVVQK113R825702 và Lot FVVQK283R825705
 -- Ngày: 2026-06-04
--- Người tạo: Antigravity (theo yêu cầu IT Vinatech)
+-- Người tạo: vanduc 2026-06-04 (theo yêu cầu IT Vinatech)
 -- ==========================================================================================
 -- ⚠️ PHÂN TÍCH LỖI GỐC (ROOT CAUSE) MÀN HÌNH C546:
 -- 1. SP get kết quả mẫu [usp_MaterialQcSampleResult_get] bị thiếu pattern 'FOQC_V01_07/08' (Đã sửa).

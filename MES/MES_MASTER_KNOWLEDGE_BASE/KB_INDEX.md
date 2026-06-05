@@ -29,6 +29,7 @@
 | [KB_16_GIAI_THICH_DON_GIAN_LUONG_MES.md](KB_16_GIAI_THICH_DON_GIAN_LUONG_MES.md) | Bản dịch bình dân: Hiểu sơ đồ luồng dữ liệu MES trong 5 phút (Analogy Bánh Tráng Trộn) | Onboarding |
 | [KB_17_HUONG_DAN_CAU_HINH_DBMAIL.md](KB_17_HUONG_DAN_CAU_HINH_DBMAIL.md) | Hướng dẫn cấu hình Database Mail trong SQL Server | Vận hành/Hỗ trợ |
 | [KB_18_DATABASE_SCHEMA_QUICKREF.md](KB_18_DATABASE_SCHEMA_QUICKREF.md) | Bảng tra cứu nhanh các cột dữ liệu quan trọng trong database | DB/Schema |
+| [KB_19_PHAN_TICH_LOT_SIZE_VÀ_MÃ_LỖI_B530.md](KB_19_PHAN_TICH_LOT_SIZE_VÀ_MÃ_LỖI_B530.md) | Báo cáo phân tích đối soát dữ liệu Thay đổi số lượng Lot No và chuẩn hóa Defect Codes B530 | Cấu hình/Đối soát |
 
 ---
 

@@ -13,7 +13,7 @@ GO
 --            품질관리 > 제품검사 > 2번째 Grid
 -- Description:	Outgoing QC (FOQC) Detail retrieval and initialization
 -- Modified: 
---  2026-06-04: Fixed missing block for DetailNo = 2 (OCV) to ensure 50 sample result rows are pre-created for manual or automatic population.
+--  vanduc 2026-06-04: Fixed missing block for DetailNo = 2 (OCV) to ensure 50 sample result rows are pre-created for manual or automatic population.
 -- =======================================================================================================================
 ALTER PROCEDURE [dbo].[usp_Vietnam_MaterialFOQcDetail_get]
 								@pProcessUserID VARCHAR(20),
@@ -227,7 +227,7 @@ BEGIN
 			 SELECT @MaterialQcSampleNo1 = (select COUNT(MaterialQcSampleNo) from STB_MaterialQcSampleResult  WITH(NOLOCK) where MaterialQcDetailNo=19 and MaterialQcNo=@FoqcMaterialQcNo) + 1
 		  END
 
-		  -- OCV Block (DetailNo = 2) - Fixed by Antigravity on 2026-06-04
+		  -- vanduc 2026-06-04: Fixed missing block for DetailNo = 2 (OCV) to ensure 50 sample result rows are pre-created for manual or automatic population
 		  set @MaterialQcSampleNo1  = (select COUNT(MaterialQcSampleNo) from STB_MaterialQcSampleResult  WITH(NOLOCK) where MaterialQcDetailNo=2 and MaterialQcNo=@FoqcMaterialQcNo) + 1
 
 		  set @sampleqty  = (select sampleqty from  STB_MaterialQcDetail where MaterialQcDetailNo=2 and MaterialQcNo=@FoqcMaterialQcNo)
