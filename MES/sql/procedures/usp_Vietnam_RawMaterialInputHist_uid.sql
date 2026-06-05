@@ -1,4 +1,4 @@
--- =============================================
+﻿-- =============================================
 -- Author : Mr.Tung
 -- Date: 06-15-2021
 
@@ -1215,27 +1215,58 @@ declare @cterminal1			nVARCHAR(300)='',
 		--Điện cực âm dương
 		if( UPPER(isnull(@pProductGroupCode,'')) in ( 'ELECTRODEP','ELECTRODEM' )  ) begin
 			
-
 				select @pRawMaterialBarcode = ltrim(rtrim(@pRawMaterialBarcode));
 
-				-- 2026-05-17 Mr.Manh update không cho bắn lung tung nhiều mã
-				IF LEN(@pRawMaterialBarcode) > 18
+				-- 2026-06-05 vanduc update: Hỗ trợ quét nhiều mã cho Điện cực (tách chuỗi bằng ';') và khai báo biến vòng lặp
+				DECLARE @OriginalRawMaterialBarcode NVARCHAR(200) = @pRawMaterialBarcode
+				DECLARE @TempELECTRODEBarcodes NVARCHAR(500) = @OriginalRawMaterialBarcode
+				DECLARE @SingleELECTRODEBarcode NVARCHAR(100)
+				DECLARE @PosELECTRODE INT
+
+				DECLARE @MaterialCodeNotLowESR VARCHAR(50)
+				DECLARE @MaterialCodeBOM VARCHAR(30)
+				DECLARE @OpenExpiredELECTRODE bit
+				DECLARE @locationWarehouseCode varchar(30)
+				DECLARE @checkoutproduction int
+				DECLARE @time varchar(20)
+				DECLARE @nDay int
+				DECLARE @IsNextModel NVARCHAR(100)
+				DECLARE @LotCount int
+
+				WHILE LEN(@TempELECTRODEBarcodes) > 0
+				BEGIN
+					SET @PosELECTRODE = CHARINDEX(';', @TempELECTRODEBarcodes)
+					IF @PosELECTRODE > 0
 					BEGIN
-						RAISERROR (N'Không đúng định dạng Lot điện cực', 16, 1);
-						RETURN;
+						SET @SingleELECTRODEBarcode = LTRIM(RTRIM(SUBSTRING(@TempELECTRODEBarcodes, 1, @PosELECTRODE - 1)))
+						SET @TempELECTRODEBarcodes = SUBSTRING(@TempELECTRODEBarcodes, @PosELECTRODE + 1, LEN(@TempELECTRODEBarcodes) - @PosELECTRODE)
+					END
+					ELSE
+					BEGIN
+						SET @SingleELECTRODEBarcode = LTRIM(RTRIM(@TempELECTRODEBarcodes))
+						SET @TempELECTRODEBarcodes = ''
 					END
 
+					IF @SingleELECTRODEBarcode <> ''
+					BEGIN
+						-- Set temporary variable for existing checks
+						SET @pRawMaterialBarcode = @SingleELECTRODEBarcode
 
+						-- Mr.Manh update không cho bắn lung tung nhiều mã (checks single barcode)
+						IF LEN(@pRawMaterialBarcode) > 18
+							BEGIN
+								RAISERROR (N'Không đúng định dạng Lot điện cực', 16, 1);
+								RETURN;
+							END
 
-				 -- Triều thêm tạm để check mã nhập vào điện cực
-				--- Kiểm tra dành riêng cho con low esr và hàng thường
-				DECLARE @MaterialCodeNotLowESR VARCHAR(50)
-						DECLARE @MaterialCodeBOM VARCHAR(30)
-				SELECT TOP 1 @MaterialCodeNotLowESR = MaterialCode 
-                FROM STB_SetInfo WITH(NOLOCK) 
-                   WHERE Barcode = @pBarcode;
-				-- Nếu là 1030 thì kiểm tra thêm 1 tí nữa có thể dùng thêm các model khác nếu có yếu cầu
-				if(@MaterialCodeNotLowESR in('ECVT27-388', 'ECVT30-368')) --'ECVT30-372'
+						 -- Triều thêm tạm để check mã nhập vào điện cực
+						--- Kiểm tra dành riêng cho con low esr và hàng thường
+						SELECT TOP 1 @MaterialCodeNotLowESR = MaterialCode 
+						FROM STB_SetInfo WITH(NOLOCK) 
+						WHERE Barcode = @pBarcode;
+
+						-- Nếu là 1030 thì kiểm tra thêm 1 tí nữa có thể dùng thêm các model khác nếu có yếu cầu
+						if(@MaterialCodeNotLowESR in('ECVT27-388', 'ECVT30-368')) --'ECVT30-372'
 					BEGIN
 						-- Lấy ra mã NVL đầu vào nhập mã điện cực
 						SELECT TOP 1 @MaterialCodeBOM = MaterialCode 
@@ -1306,7 +1337,9 @@ declare @cterminal1			nVARCHAR(300)='',
 				--Mr.Duy Chặn hết hạn điện cực sx tại VN 2023-12-5
 
 					--kiểm tra C555
-					declare @OpenExpiredELECTRODE bit = 0 ,@locationWarehouseCode varchar(30),@checkoutproduction int =0
+					SET @OpenExpiredELECTRODE = 0
+					SET @locationWarehouseCode = NULL
+					SET @checkoutproduction = 0
 	 				;with data1 as (
 						select LotID,max(createdatetime) as createdatetime
 						from stb_vvt_OpenExpiredMaterial  with(nolock) 
@@ -1322,8 +1355,8 @@ declare @cterminal1			nVARCHAR(300)='',
 				 begin 
 					if(@pRawMaterialBarcode like 'VV%' or @pRawMaterialBarcode like 'VJ%')
 					begin
-						DECLARE @time varchar(20)
-						DECLARE @nDay int
+						SET @time = NULL
+						SET @nDay = 0
 					    --- Láy ra NVL mà sx nhập vào
 
 						SET @time=dbo.fn_VVT_getdatebyVendorLot('SRFYPK0',@pRawMaterialBarcode)
@@ -1369,7 +1402,7 @@ declare @cterminal1			nVARCHAR(300)='',
 					join STB_ElectrodeSlittingResult esr	with(nolock) on esi.ElectrodeLotNumber = esr.ElectrodeLotNumber
 					where esr.Barcode=@pRawMaterialBarcode 
 					-- để tạm để cho sản xuất lưu
-					declare @IsNextModel NVARCHAR(100)
+					SET @IsNextModel = NULL
 					select @IsNextModel=MaterialCode from STB_SetInfo with(nolock) where barcode=@pBarcode
 					if(@IsNextModel='ECVT30-309')
 					BEGIN
@@ -2057,8 +2090,7 @@ declare @cterminal1			nVARCHAR(300)='',
 					set @err=@err; --  vvmm2820001e01  
 				end		
 								
-
-				declare @LotCount int = 0;
+				SET @LotCount = 0;
 				select  @LotCount = (case when upper(ListUsed) like '%'+upper(@pBarcode)+'%' then isnull(LotCount,0) else isnull(LotCount,0)+1 end)
 				from Stb_SlittingStock_VVT where barcode=@pRawMaterialBarcode ;
 
@@ -2071,9 +2103,12 @@ declare @cterminal1			nVARCHAR(300)='',
 
 				--Mr.duy thêm dữ liệu xuất ra line cho điện cực
 				
-					 exec usp_MaterialWarehouseInOutHist_iud_exportElectr @pProcessUserID,@pProcessLanguage,@BarcodeInsert,@LotMaterialBarcode,0,'insert'
+					 exec usp_MaterialWarehouseInOutHist_iud_exportElectr @pProcessUserID,@pProcessLanguage,@BarcodeInsert,@pRawMaterialBarcode,0,'insert' -- 2026-06-05 vanduc update: Truyền @pRawMaterialBarcode thay vì @LotMaterialBarcode để xuất kho từng mã đơn lẻ trong danh sách quét nhiều mã
 				
 				--end
+					END
+				END
+				SET @pRawMaterialBarcode = @OriginalRawMaterialBarcode
 		end		 					
 
 		
@@ -2379,15 +2414,44 @@ if( UPPER(isnull(@pProductGroupCode,'')) in ( 'RubberPad' )  /*or lower(@pProduc
 
 
 
-   --Chặn vỏ nhôm
+   -- Cháº·n vá» nhÃ´m (Há»— trá»£ quÃ©t nhiá»u mÃ£ cho cÃ¡c model Case 3562, 3582, 35105)
 if( UPPER(isnull(@pProductGroupCode,'')) in ( 'Case' )  /*or lower(@pProductGroupCode) like '%case%' */ ) begin	
 
- 
+		-- 2026-06-05 vanduc update: Hỗ trợ quét nhiều mã cho Điện cực (tách chuỗi bằng ';') và khai báo biến vòng lặp
+		DECLARE @OriginalCASEBarcode NVARCHAR(200) = @pRawMaterialBarcode
+		DECLARE @TempCASEBarcodes NVARCHAR(500) = @OriginalCASEBarcode
+		DECLARE @SingleCASEBarcode NVARCHAR(100)
+		DECLARE @PosCASE INT
+		DECLARE @MateriaCodeGroupCASE NVARCHAR(50)
+		DECLARE @DelimiterCASE NVARCHAR(5) = ';'
 
-     select @pRawMaterialBarcode = substring(ltrim(rtrim(@pRawMaterialBarcode)),1,10)
-	 --raiserror(@pRawMaterialBarcode,16,1)
-	 -- Mr.Triều chuẩn bị audit chặn không cho OP nhập nhầm vỏ nhôm 	
-	DECLARE @MateriaCodeGroupCASE NVARCHAR(50)
+		IF CHARINDEX('#', @OriginalCASEBarcode) > 0
+		BEGIN
+			SET @DelimiterCASE = '; ;'
+		END
+
+		WHILE LEN(@TempCASEBarcodes) > 0
+		BEGIN
+			SET @PosCASE = CHARINDEX(@DelimiterCASE, @TempCASEBarcodes)
+			IF @PosCASE > 0
+			BEGIN
+				SET @SingleCASEBarcode = LTRIM(RTRIM(SUBSTRING(@TempCASEBarcodes, 1, @PosCASE - 1)))
+				SET @TempCASEBarcodes = SUBSTRING(@TempCASEBarcodes, @PosCASE + LEN(@DelimiterCASE), LEN(@TempCASEBarcodes) - @PosCASE - LEN(@DelimiterCASE) + 1)
+			END
+			ELSE
+			BEGIN
+				SET @SingleCASEBarcode = LTRIM(RTRIM(@TempCASEBarcodes))
+				SET @TempCASEBarcodes = ''
+			END
+
+			IF @SingleCASEBarcode <> ''
+			BEGIN
+				-- Set temporary variable for existing checks
+				SET @pRawMaterialBarcode = @SingleCASEBarcode
+
+				select @pRawMaterialBarcode = substring(ltrim(rtrim(@pRawMaterialBarcode)),1,10)
+				--raiserror(@pRawMaterialBarcode,16,1)
+				-- Mr.Triá»‡u chuáº©n bá»‹ audit cháº·n khÃ´ng cho OP nháº­p nháº§m vá» nhÃ´m (QuÃ©t vÃ²ng láº·p kiá»ƒm tra tá»«ng mÃ£ Case)
 	SELECT @MateriaCodeGroupCASE=PG.ProductGroupCode from STB_MaterialMaster MM 
 			LEFT OUTER JOIN STB_MaterialType MT WITH(NOLOCK) ON MM.MaterialTypeCode = MT.MaterialTypeCode
 			LEFT OUTER JOIN STB_ProductGroup PG WITH(NOLOCK) ON MM.ProductGroupCode = PG.ProductGroupCode
@@ -2496,7 +2560,9 @@ if( UPPER(isnull(@pProductGroupCode,'')) in ( 'Case' )  /*or lower(@pProductGrou
 					return;
 					set @err=@err;        
 			end		
-
+			END
+		END
+		SET @pRawMaterialBarcode = @OriginalCASEBarcode
    end
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -3097,7 +3163,7 @@ BEGIN		-- BEGIN BG2
 END		-- END BG@
 
 		-- Start Mr.Duc EA 2026-04-14 - Luu nhieu ma barcode NVL tren cung 1 lot san pham
-		-- Updated by Agent 2026-06-04: Conditional append for Electrode (all) + Case (3562/3582/35105)
+		-- 2026-06-05 vanduc update: Cho phép gộp nhiều mã cho Điện cực (tất cả) và Case (sizes 3562, 3582, 35105)
 		DECLARE @existingRawBarcode NVARCHAR(200) = ''
 		SELECT @existingRawBarcode = ISNULL(RawMaterialBarcode, '') FROM STB_RawMaterialInputHist WITH(NOLOCK) WHERE RawMaterialInputHistNo = @pRawMaterialInputHistNo
 		
@@ -3132,7 +3198,7 @@ END		-- END BG@
 		WHERE   RawMaterialInputHistNo = @pRawMaterialInputHistNo
 
 		--Mr Truong update add history save raw material input 2025-12-13
-		-- Updated by Agent 2026-06-04: Also log history for Case (3562/3582/35105)
+		-- 2026-06-05 vanduc update: Lưu lịch sử đa mã cho cả Điện cực và Case (sizes 3562, 3582, 35105)
 		IF @@ROWCOUNT > 0
 		BEGIN 
 		  IF @pProductGroupCode IN ('ELECTRODEP', 'ELECTRODEM') OR (@pProductGroupCode = 'Case' AND @ModelSize IN ('3562', '3582', '35105'))
