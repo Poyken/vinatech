@@ -63,6 +63,87 @@ WHERE PackingOutPutFinishGoodsID = 'PKHN023117'
 
 ---
 
+## 2.1 Lỗi Unique Constraint khi Gộp Túi Bóng (HN544) — PKQN2100175
+
+**Triệu chứng:** Khi User nhập `Packing ID: PKQN2100175` trên màn hình **[HN544] Gộp túi bóng thành hộp nhỏ** và nhấn Tìm kiếm, hệ thống báo lỗi:
+> **Column 'LotID' is constrained to be unique. Value '63RHHL180ME16XB001QN2100012' is already present.**
+
+#### 🔴 Nguyên nhân gốc rễ:
+Stored Procedure `usp_GetMaterialLotInfo_Packing_VVT_F3` sử dụng `UNION ALL` để gộp 3 truy vấn:
+
+1. **Truy vấn 1:** Quét `STB_MaterialLotInfo` có `PackingID = 'PKQN2100175'` → Tìm **1 dòng** (LotID: `63RHHL180ME16XB001QN2100012`)
+2. **Truy vấn 2:** Quét từ `STB_PackingNilonToBoxSmall_HN` (hộp nhỏ gộp)
+3. **Truy vấn 3 (LỖI):** Quét `STB_DividePackaging` có `PackingID = 'PKQN2100175'`
+   - Dòng này là **mã cha chưa được chia tách**, nên cột `PackingParentID` bị **NULL/trống**
+   - JOIN condition: `LEFT JOIN STB_MaterialLotInfo MLI ON MLI.LotNo = DP.LotNo and MLI.PackingID = DP.PackingParentID`
+   - Vì `DP.PackingParentID = NULL`, LEFT JOIN không khớp → **trả về dòng dummy với `LotID = NULL`**
+   - Kết quả: Truy vấn 3 trả về **dòng thứ 2 có `LotID = NULL`**
+
+4. **Khi DataTable nhận dữ liệu:** DataTable có constraint `Unique = true` trên cột `LotID`
+   - Client-side code điền giá trị mặc định từ dòng 1 → **Duplicate LotID**
+   - Ngoại lệ được ném ra
+
+#### 🛠️ **Giải pháp:**
+
+**Script 1: Hủy giao dịch lỗi (Revert Merge)**
+```sql
+BEGIN TRANSACTION;
+BEGIN TRY
+
+    -- 1. SAO LƯU BẢNG HỘP NHỎ TRƯỚC KHI XÓA
+    IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'STB_PackingNilonToBoxSmall_HN_BK')
+    BEGIN
+        SELECT * INTO STB_PackingNilonToBoxSmall_HN_BK 
+        FROM STB_PackingNilonToBoxSmall_HN 
+        WHERE PackingNilonToBoxSmallID = 'PK202605210000000005';
+    END
+    ELSE
+    BEGIN
+        INSERT INTO STB_PackingNilonToBoxSmall_HN_BK
+        SELECT * 
+        FROM STB_PackingNilonToBoxSmall_HN 
+        WHERE PackingNilonToBoxSmallID = 'PK202605210000000005';
+    END
+
+    -- 2. XÓA GIAO DỊCH LỖI Ở STB_DividePackaging
+    DELETE FROM STB_DividePackaging 
+    WHERE PackingID = 'PKQN2100175';
+    
+    -- 3. XÓA RECORD HỘP NHỎ
+    DELETE FROM STB_PackingNilonToBoxSmall_HN 
+    WHERE PackingNilonToBoxSmallID = 'PK202605210000000005';
+
+    COMMIT TRANSACTION;
+    PRINT '==> HOÀN THÀNH HỦY GIAO DỊCH THÀNH CÔNG!';
+
+END TRY
+BEGIN CATCH
+    ROLLBACK TRANSACTION;
+    PRINT '==> CÓ LỖI XẢY RA. ĐÃ ROLLBACK!';
+    SELECT ERROR_MESSAGE() AS ErrorMessage;
+END CATCH;
+```
+
+**Script 2: Sửa Stored Procedure (Ngăn chặn lỗi lặp lại)**
+
+Sửa đổi câu truy vấn 3 để loại trừ các mã cha chưa phân tách:
+
+```sql
+USE [SmartFactoryV2]
+GO
+
+-- Tìm ra phần UNION ALL cuối cùng (truy vấn 3)
+-- Thêm điều kiện: AND ISNULL(DP.PackingParentID, '') <> ''
+
+-- THÊM DÒNG NÀY vào cuối WHERE clause của UNION ALL thứ 3:
+WHERE DP.PackingID = @pPackingID  
+  AND ISNULL(DP.PackingParentID, '') <> ''  -- ← DÒNG MỚI
+```
+
+> **SP đầy đủ:** Xem tệp [hn544_error_analysis.md](c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop.worktrees/agents-sql-command-line-execution/database/docs/hn544_error_analysis.md) để copy toàn bộ ALTER PROCEDURE
+
+---
+
 ## 3. Lỗi Lot bị đổi MaterialCode sau khi sản xuất (VD: 5H1 → 6D1)
 
 **Triệu chứng:** Hàng đang nhập liệu với Making = 5H1 nhưng sau đó trên hệ thống bị chuyển sang 6D1.

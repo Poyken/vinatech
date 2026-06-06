@@ -251,10 +251,19 @@ FROM (
 			TotalReport.MaterialCode, 
 			TotalReport.materialunit
 ) AS FinalReport
-LEFT JOIN STB_InventoryOfGoodsReport r ON r.ItemCodeVN = REPLACE(FinalReport.PublicCode, 'VN', 'VV')
-LEFT JOIN (
-	SELECT ItemCodeKorea, MAX(UnitPrice) AS UnitPrice
+OUTER APPLY (
+	SELECT TOP 1 UnitPrice
 	FROM STB_InventoryOfGoodsReport
-	GROUP BY ItemCodeKorea
-) r_kr ON r_kr.ItemCodeKorea = FinalReport.MaterialCode AND r.UnitPrice IS NULL
+	WHERE ItemCodeVN = FinalReport.PublicCode
+	  AND ItemCodeVN IS NOT NULL AND ItemCodeVN <> ''
+	ORDER BY ID DESC
+) r
+OUTER APPLY (
+	SELECT TOP 1 UnitPrice
+	FROM STB_InventoryOfGoodsReport
+	WHERE ItemCodeKorea = FinalReport.MaterialCode
+	  AND ItemCodeKorea IS NOT NULL AND ItemCodeKorea <> ''
+	  AND r.UnitPrice IS NULL
+	ORDER BY ID DESC
+) r_kr
 END
