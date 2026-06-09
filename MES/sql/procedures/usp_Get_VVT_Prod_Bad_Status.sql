@@ -50,7 +50,11 @@ BEGIN
 		 left outer join  STB_ProdRouteHist b	 with(nolock) on c.ControlNo=b.ControlNo	 
 		 where b.CompanyCode='VVT' and b.WorkCenterCode = @WorkCenterCode  and isnull(b.ProdDateTime,b.CreateDateTime)>@FromDate 
 		 and isnull(b.ProdDateTime,b.CreateDateTime)<@ToDate and  SUBSTRING (c.Barcode, 1, 1) !='M'
-		 and b.RouteCode LIKE 'V%' and b.RouteCode NOT LIKE 'VE%' and b.RouteCode NOT LIKE 'VP%' -- vanduc 2026-06-05: Loc lay cong doan Cell Line (loai bo VE, VP)
+		 -- vanduc 2026-06-05: Loc lay cong doan Cell Line (loai bo VE, VP) START
+		AND b.RouteCode LIKE 'V%'
+ 		AND (@WorkCenterCode = 'VVT_F3' OR (b.RouteCode NOT LIKE 'VE%' AND b.RouteCode NOT LIKE 'VP%'))
+		 --END
+
 	 ),
 RawView as (
  	select  c.Barcode,isnull(b.RouteCode,a.FindRouteCode) RouteCode,isnull(b.RouteCode,a.FindRouteCode) as FindRouteCode,c.ControlNo,c.MaterialCode,
@@ -64,7 +68,10 @@ RawView as (
 		 where c.Barcode in (select  Barcode  from  ViewBarcode  with(nolock) ) 
 		 and	a.DefectQty >=1
 		 and    (isnull(b.ProdDateTime,a.CreateDateTime)>@FromDate and b.WorkCenterCode = @WorkCenterCode  and isnull(b.ProdDateTime,a.CreateDateTime)<@ToDate)
-		 and    a.FindRouteCode LIKE 'V%' and a.FindRouteCode NOT LIKE 'VE%' and a.FindRouteCode NOT LIKE 'VP%' -- vanduc 2026-06-05: Loc lay loi tu Cell Line va C530 OQC
+		 -- vanduc 2026-06-05: Loc lay loi tu Cell Line va C530 OQC START
+		 AND b.RouteCode LIKE 'V%'
+ 		 AND (@WorkCenterCode = 'VVT_F3' OR (b.RouteCode NOT LIKE 'VE%' AND b.RouteCode NOT LIKE 'VP%'))
+		 --END
 		 group by c.Barcode,b.RouteCode,a.FindRouteCode,c.ControlNo,c.MaterialCode,InputLineCode,b.MachineCode,b.WorkerCode,SIExtText07,SIExtInt01,DefectCode,POI.DefectSummaryNoBeforeDroping--,a.DefectCauseID
 )
 ,
