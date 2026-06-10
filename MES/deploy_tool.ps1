@@ -22,7 +22,7 @@ $connection = New-Object System.Data.SqlClient.SqlConnection($connectionString)
 $connection.Open()
 
 try {
-    $sqlText = Get-Content -Raw -Path $SqlPath -Encoding UTF8
+    $sqlText = [System.IO.File]::ReadAllText($SqlPath, [System.Text.Encoding]::UTF8)
     
     # Clean SQL text for ADO.NET execution (strip USE statements)
     $sqlText = $sqlText -replace "(?mi)^\s*USE\s+\[?\w+\]?\s*(\r?\n|$)", ""
