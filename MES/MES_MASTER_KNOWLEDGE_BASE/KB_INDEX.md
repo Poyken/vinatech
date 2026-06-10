@@ -38,6 +38,8 @@
 | [KB_25_VINAENESSOL_HUNG_YEN.md](KB_25_VINAENESSOL_HUNG_YEN.md) | Phân hệ VinaEnesol, đóng gói & in nhãn (Inner/Outer Box), khớp box (Box Matching), vận hành Hưng Yên | D000, D051, D100, D110, HungYenFactory |
 | [KB_26_LIEN_KET_HE_THONG_VA_BUG_LOGIC.md](KB_26_LIEN_KET_HE_THONG_VA_BUG_LOGIC.md) | Liên kết WMS-Sản xuất-QC-Xuất hàng, Cơ chế trừ kho Trigger, Phân tích 4 lỗi logic lớn | B597, B530, C443, C512, C530, C546, HN551, FG00 |
 | [KB_27_SCM_REWORK_TRA_HANG_KIEM_KE.md](KB_27_SCM_REWORK_TRA_HANG_KIEM_KE.md) | Phân hệ SCM (Sales Order/Delivery), Rework (Làm lại), Trả hàng (Returns & RMA), Kiểm kê (Stocktaking F750) | F750, B618, SCM01, FG00, HN551 |
+| [KB_28_SYSTEM_OBJECTS_MAP.md](KB_28_SYSTEM_OBJECTS_MAP.md) | Bản đồ đối tượng toàn hệ thống (976 bảng, 3,314 SPs & 1,442 màn hình) | SmartFramework |
+
 
 
 ---
