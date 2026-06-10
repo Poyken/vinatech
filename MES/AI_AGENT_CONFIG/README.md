@@ -30,10 +30,9 @@ MES/
 │   ├── KB_INDEX.md            ← Mục lục tra cứu nhanh
 │   └── KB_01 → KB_30          ← Tài liệu chuyên sâu từng phân hệ
 ├── sql/                       ← Thư mục chứa mã nguồn CSDL
-│   ├── procedures/            ← Các Stored Procedure (đã bỏ _ORIGINAL)
-│   ├── hotfixes/              ← 5 SQL hotfix scripts đã deploy
+│   ├── hotfixes/              ← 5 SQL hotfix scripts đã triển khai (lịch sử)
 │   └── scripts/               ← Các script tiện ích
-├── db_sync_tool.ps1           ← Công cụ tải SP từ DB
+├── db_sync_tool.ps1           ← Công cụ tải SP tạm thời từ DB (không check-in Git)
 ├── deploy_tool.ps1            ← Công cụ triển khai SQL lên DB
 └── README.md                  ← Tổng quan dự án
 ```

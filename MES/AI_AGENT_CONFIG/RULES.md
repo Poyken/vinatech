@@ -35,7 +35,7 @@ Bước 5: Xác nhận — SELECT lại sau khi user chạy
 - ❌ Đoán mò — Mọi kết luận phải có SELECT chứng minh.
 - ❌ Ghi nhớ/dùng SP cũ — Luôn query định nghĩa mới nhất từ `sys.sql_modules` hoặc dùng `db_sync_tool.ps1`.
 - ❌ Tự ý reformat toàn bộ code/SP — chỉ thực hiện sửa đổi cục bộ (Surgical Changes) tại đúng dòng/khu vực cần thiết để giữ sạch Git diff.
-- ❌ Lưu trữ SP rác — Thực hiện xóa ngay các file SQL SP tạm thời/backup trong workspace khi phiên hoàn tất (chỉ giữ lại bản chính thức đã sửa đổi).
+- ❌ Lưu trữ Stored Procedure trên Git — Cấm check-in các file stored procedure (.sql) vào Git. Khi làm việc, AI chỉ được phép tải tạm thời bằng `db_sync_tool.ps1` để phân tích cục bộ và bắt buộc phải xóa/revert các file SQL tạm thời này trước khi thực hiện commit.
 - ❌ Phức tạp hóa — Ưu tiên sự đơn giản, không tự ý viết thêm các tính năng/tối ưu hóa khi chưa được yêu cầu (Simplicity First).
 
 ## 5. KẾT NỐI DB

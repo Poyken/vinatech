@@ -25,21 +25,14 @@ MES/
 │   ├── ... (các file chi tiết từ KB_01 đến KB_30)
 │   └── NAIS_SYSTEM_MASTER_TROUBLESHOOTING.md # Tra cứu nhanh lỗi trọng điểm
 ├── sql/                                   # Mã nguồn đối tượng CSDL
-│   ├── procedures/                        # Các Stored Procedure đang hoạt động (đã bỏ _ORIGINAL)
-│   │   ├── usp_DoCreateHelaInBoxBarcodeList.sql
-│   │   ├── usp_FinishGoodAllFactoryReport.sql
-│   │   ├── usp_Get_VVT_Prod_Bad_Status.sql
-│   │   ├── usp_Get_VVT_Prod_Bad_Stat_tail.sql
-│   │   ├── usp_Vietnam_MaterialFOQcDetail_get.sql
-│   │   └── ...
-│   ├── hotfixes/                          # 5 SQL hotfix scripts đã deploy trên production
+│   ├── hotfixes/                          # Lịch sử 5 SQL hotfix scripts đã triển khai trên production
 │   │   ├── 01_FIX_DRY_OVEN_OPERATOR_PRIORITY.sql
 │   │   ├── 02_FIX_DOPING_JIG_HISTORY_SYNC.sql
 │   │   ├── 03_FIX_SLITTING_KNIFE_LIFE_METRIC.sql
 │   │   ├── 04_FIX_REWORK_HARDCODED_PERMISSION.sql
 │   │   └── 05_FIX_RETURNS_FG_IQC_VALIDATION.sql
 │   └── scripts/                           # Các script thiết lập hệ thống
-├── db_sync_tool.ps1                       # Tiện ích PowerShell để tải SP từ DB
+├── db_sync_tool.ps1                       # Tiện ích PowerShell để tải SP tạm thời từ DB (không check-in Git)
 └── deploy_tool.ps1                        # Tiện ích PowerShell để triển khai SQL lên DB
 ```
 
