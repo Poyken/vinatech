@@ -37,6 +37,8 @@
 | [KB_24_RELIABILITY_TEST.md](KB_24_RELIABILITY_TEST.md) | Kiểm tra độ tin cậy (Reliability Test): Mẫu kiểm tra, kết quả đo chu kỳ | RTM, Sample, Measure |
 | [KB_25_VINAENESSOL_HUNG_YEN.md](KB_25_VINAENESSOL_HUNG_YEN.md) | Phân hệ VinaEnesol, đóng gói & in nhãn (Inner/Outer Box), khớp box (Box Matching), vận hành Hưng Yên | D000, D051, D100, D110, HungYenFactory |
 | [KB_26_LIEN_KET_HE_THONG_VA_BUG_LOGIC.md](KB_26_LIEN_KET_HE_THONG_VA_BUG_LOGIC.md) | Liên kết WMS-Sản xuất-QC-Xuất hàng, Cơ chế trừ kho Trigger, Phân tích 4 lỗi logic lớn | B597, B530, C443, C512, C530, C546, HN551, FG00 |
+| [KB_27_SCM_REWORK_TRA_HANG_KIEM_KE.md](KB_27_SCM_REWORK_TRA_HANG_KIEM_KE.md) | Phân hệ SCM (Sales Order/Delivery), Rework (Làm lại), Trả hàng (Returns & RMA), Kiểm kê (Stocktaking F750) | F750, B618, SCM01, FG00, HN551 |
+
 
 ---
 
@@ -164,8 +166,12 @@
 | **Chặn sản lượng do PQC chưa nhập lỗi (lô đạt)** | KB_26 § 3.1 |
 | **Không đổi được trạng thái Reject sang Pass ở QC Audit** | KB_26 § 3.2 |
 | **Trống hàng QC Audit ở kho Hà Nam/Hưng Yên** | KB_26 § 3.3 |
-| **Lỗi validation khi xuất hàng trùng lot & số lượng** | KB_26 § 3.4 |
 | **Cơ chế trừ kho tự động (WMS ↔ Sản xuất Triggers)** | KB_26 § 2 |
+| **Lỗi phân quyền màn hình Rework (B618)** | KB_27 § 2 |
+| **Lỗi quét barcode trả hàng không thành công (Customer Return)** | KB_27 § 3 |
+| **Quy trình tự động cân bằng kho (Kiểm kê F750)** | KB_27 § 4 |
+| **Quy trình chia lô tự động chất mang/substrate** | KB_27 § 5 |
+
 
 ---
 
@@ -192,6 +198,12 @@
 | `STB_ProcedureLog` | Log biến trong SP | Debug |
 | `usp_Vietnam_RawMaterialInputHist_uid` | SP kiểm tra NVL (B597) | B597 |
 | `usp_Vietnam_DoProcessProdPacking_VVT` | SP gộp Box | B523 |
+| `STB_LotReworkInfo_HN` | Thông tin Lot Rework Hà Nam | B618 |
+| `STB_StocktakingDoc` | Chứng từ kiểm kê kho | F750 |
+| `STB_StocktakingPlanResult` | Kết quả chi tiết kiểm kê kho | F750 |
+| `usp_GetInforLotReworkHaNamFactory_uid` | SP xử lý Lot Rework Hà Nam | B618 |
+| `usp_DoApplyStocktakingToStock` | SP cập nhật kết quả kiểm kê kho | F750 |
+
 
 ---
 
