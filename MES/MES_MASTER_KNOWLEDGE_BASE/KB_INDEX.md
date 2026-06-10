@@ -1,6 +1,6 @@
 # 🗂️ NAIS MES — Knowledge Base Index
 
-> **Cập nhật:** 2026-06-04 | **Tổng hợp từ:** Lỗi thực tế + Docx gốc (đã extract toàn bộ) + Xác minh DB trực tiếp + Phân tích 41 SP + Deep Core Analysis (2026-04-18) + DB Audit (2026-05-05) + Electrode Weighing (2026-05-26) + Consolidation (2026-06-04)
+> **Cập nhật:** 2026-06-10 | **Tổng hợp từ:** Lỗi thực tế + Docx gốc (đã extract toàn bộ) + Xác minh DB trực tiếp + Phân tích 41 SP + Deep Core Analysis (2026-04-18) + DB Audit (2026-05-05) + Electrode Weighing (2026-05-26) + Consolidation (2026-06-04) + **System Discovery & Gap Analysis (2026-06-10)**
 > **Cách dùng:** Đọc file INDEX này trước, sau đó mở file KB chuyên biệt theo nhóm lỗi.
 > **Groupware KB:** Xem → [`../GROUPWARE_KNOWLEDGE_BASE/GW_INDEX.md`](../GROUPWARE_KNOWLEDGE_BASE/GW_INDEX.md)
 
@@ -16,7 +16,7 @@
 | [KB_04_DONG_GOI_IN_TEM.md](KB_04_DONG_GOI_IN_TEM.md) | Tiêu chuẩn đóng gói, fix B523 không gộp, sửa mã Lot, Qty=0 | B523, B789, B781, B351, A419 |
 | [KB_05_QC_ELECTRODE.md](KB_05_QC_ELECTRODE.md) | QC B597/C443/C512/C486, Điện cực Slitting B552, Lỗi chuỗi độ dày, Rebuild bảng & Fix layout, **QC Flow đầy đủ IQC→PQC→OQC→Bending/Cutting**, Slitting Hà Nam F743-F748 | B597, C443, C512, C486, B552, C121-C564, F743-F748 |
 | [KB_06_MASTER_DATA_TOOLS.md](KB_06_MASTER_DATA_TOOLS.md) | Model mới, Vol/Farad, Thêm Cell/Line, SQL Utilities, Bypass, **Quick Start Checklist đầy đủ**, B210-B240 Line/Route, A418, B260, Địa chỉ hệ thống, Bảng tổng hợp màn hình MES (Mở rộng) | A410, B210-B240, B250, B260, B270, A418, A419, C131, C132, C430, C451, C560, F741 |
-| [KB_07_GROUPWARE_INTEGRATION.md](KB_07_GROUPWARE_INTEGRATION.md) | Tích hợp Groupware: Mua hàng, Kế hoạch SX, Master Data | Groupware, F330, C220, B310, B450 |
+| [KB_07_GROUPWARE_INTEGRATION.md](KB_07_GROUPWARE_INTEGRATION.md) | Tích hợp Groupware: Mua hàng, Kế hoạch SX, Master Data, **ESM Bridge Tables (18 bảng)**, **BOM Management**, **Danh sách 100+ kho active** | Groupware, F330, C220, B310, B450, F110, F130, F140 |
 | [KB_08_KHO_THANH_PHAM_HN.md](KB_08_KHO_THANH_PHAM_HN.md) | Kho TP Hà Nam: Xuất HN551, Tồn HN866, Hủy F330, Xóa sản lượng | HN551, HN866, HN544, FG00 |
 | [KB_09_IN_TEM_LABEL.md](KB_09_IN_TEM_LABEL.md) | Các loại tem đặc biệt, lỗi sai mẫu, in tem khẩn | B450, B756, B767, B790, A460 |
 | [KB_10_KIEN_TRUC_TONG_QUAN.md](KB_10_KIEN_TRUC_TONG_QUAN.md) | Kiến trúc tổng quan hệ thống NAIS, 3 Trụ cột, Vòng đời dữ liệu, Dictionary Bảng, Ma trận nhà máy | System |
@@ -30,6 +30,12 @@
 | [KB_17_HUONG_DAN_CAU_HINH_DBMAIL.md](KB_17_HUONG_DAN_CAU_HINH_DBMAIL.md) | Hướng dẫn cấu hình Database Mail trong SQL Server | Vận hành/Hỗ trợ |
 | [KB_18_DATABASE_SCHEMA_QUICKREF.md](KB_18_DATABASE_SCHEMA_QUICKREF.md) | Bảng tra cứu nhanh các cột dữ liệu quan trọng trong database | DB/Schema |
 | [KB_19_PHAN_TICH_LOT_SIZE_VÀ_MÃ_LỖI_B530.md](KB_19_PHAN_TICH_LOT_SIZE_VÀ_MÃ_LỖI_B530.md) | Báo cáo phân tích đối soát dữ liệu Thay đổi số lượng Lot No và chuẩn hóa Defect Codes B530 | Cấu hình/Đối soát |
+| [KB_20_MAY_MOC_BAO_TRI.md](KB_20_MAY_MOC_BAO_TRI.md) | Máy móc, Bảo trì & Sửa chữa, Hiệu chuẩn thiết bị đo, **Spare Part Management đầy đủ** | B250, B270, MCM, H301-H305 |
+| [KB_21_NHAN_SU_WORKER.md](KB_21_NHAN_SU_WORKER.md) | Nhân sự SX, Nhóm ca/tổ, Giao ca (Takeover), Tracking công nhân theo Barcode, Chấm công | B260, K101, WorkGroup |
+| [KB_22_DASHBOARD_ANDON_MONITORING.md](KB_22_DASHBOARD_ANDON_MONITORING.md) | Dashboard sản lượng, Andon display, UPH Tracking | Dashboard, Andon |
+| [KB_23_4M_CHANGE_CAPA.md](KB_23_4M_CHANGE_CAPA.md) | 4M Change Management, CAPA process, Defect Repair, Phân loại lỗi | 4M Change, CAPA, QC |
+| [KB_24_RELIABILITY_TEST.md](KB_24_RELIABILITY_TEST.md) | Kiểm tra độ tin cậy (Reliability Test): Mẫu kiểm tra, kết quả đo chu kỳ | RTM, Sample, Measure |
+| [KB_25_VINAENESSOL_HUNG_YEN.md](KB_25_VINAENESSOL_HUNG_YEN.md) | Phân hệ VinaEnesol, đóng gói & in nhãn (Inner/Outer Box), khớp box (Box Matching), vận hành Hưng Yên | D000, D051, D100, D110, HungYenFactory |
 
 ---
 
@@ -137,6 +143,23 @@
 | Lỗi cắt chuỗi danh sách tem nhỏ (B560 - 73/80 tem) | KB_04 § 6.14 |
 | Cấu hình/Đồng bộ mã lỗi B530 Bắc Giang (BG) | KB_03 § 6.18 |
 | Bắn nối nhiều cuộn nguyên liệu (Electrode & Case 3562/3582/35105) | KB_03 § 6.19, KB_05 § 8.7 |
+| **Máy hỏng / Lịch sử sửa chữa** | KB_20 § 3 |
+| **Hiệu chuẩn thiết bị đo** | KB_20 § 4 |
+| **Spare Part tồn kho / xuất nhập** | KB_20 § 5 |
+| **Giao ca (Takeover) giữa các ca** | KB_21 § 4 |
+| **Ai xử lý viên tụ nào (Worker tracking)** | KB_21 § 5 |
+| **Dashboard sản lượng / UPH** | KB_22 § 2, 4 |
+| **Andon hiển thị** | KB_22 § 3 |
+| **4M Change (Man/Machine/Material/Method)** | KB_23 § 2 |
+| **CAPA (hành động khắc phục)** | KB_23 § 3 |
+| **Phân loại mã lỗi / Defect Code** | KB_23 § 5 |
+| **ESM sync MES ↔ ERP (Douzone)** | KB_07 § 8 |
+| **BOM Management chi tiết** | KB_07 § 9 |
+| **Danh sách kho đầy đủ (100+ kho)** | KB_07 § 10 |
+| **Kiểm tra độ tin cậy (Reliability Test)** | KB_24 |
+| **Đóng gói & In tem VinaEnesol** | KB_25 |
+| **Gộp/Khớp hộp lớn, hộp nhỏ (Box Matching) Enesol** | KB_25 § 4.3 |
+| **Quy tắc sinh Lot No Enesol** | KB_25 § 4.1 |
 
 ---
 

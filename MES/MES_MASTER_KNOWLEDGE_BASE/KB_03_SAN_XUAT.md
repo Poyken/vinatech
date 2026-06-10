@@ -620,7 +620,7 @@ DELETE FROM STB_VN_BENDING_TAPPING WHERE LOTNO = 'mã_lot'
 
 ---
 
-### 6.8 Module Line — Quy Trình Đầy Đủ
+### 6.8 Module Line — Quy Trình Đầy Đủ & Liên Kết Single Cell
 
 **Khác biệt Cell vs Module:**
 
@@ -628,15 +628,97 @@ DELETE FROM STB_VN_BENDING_TAPPING WHERE LOTNO = 'mã_lot'
 |----------|-----------|-------------|
 | RouteCode prefix | `V-01`, `V-23`... | `MV-01`, `MV-xx`... |
 | POType | CELL | MODULE |
-| Đóng gói | B523 → PackingID = VJ... | B525 → BoxID Module |
+| Đóng gói | B523 → PackingID = VJ... | B525 → BoxID Module (Lưu bảng `STB_VN_MASTERMODULES`, `STB_VN_DETAILMODULES`) |
 | Lịch sử | B782, B786, B791 | B789, B791 |
 | Gate V-23/V-24 | ✅ Có check NVL | ❌ Không check |
 
 **Flow Module Line:**
 ```
-B310 (POType=MODULE) → B450 (Module Line Code) → B540 (không cần scan điện cực)
+B310 (POType=MODULE) → B450 (Module Line Code) → B540 (Không check điện cực)
 → B530 (RouteCode = MV-xx) → B525 (Gộp Box Module) → B789 (Lịch sử) → B791 (Tracking)
 ```
+
+#### 6.8.1 Các Bảng Cơ Sở Dữ Liệu Module & Cấu Trúc Schema
+Hệ thống quản lý Module sử dụng một tập hợp các bảng cơ sở dữ liệu chuyên biệt để liên kết, theo dõi chất lượng, và lưu trữ lịch sử cấu hình lắp ráp:
+
+1. **[STB_SingleCellModuleMappingHist](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03_SAN_XUAT.md) (Lịch sử mapping Single Cell ↔ Module Lot):**
+   * Lưu thông tin mapping giữa Single Cell và Module Lot.
+   * *Schema:* `ModuleLotNo` (varchar(20)), `Seq` (int), `SingleCellLotNo` (varchar(20)), `CreateDateTime` (datetime), `CreateUserID` (varchar(20)).
+
+2. **[STB_ModuleProductionInfo](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03_SAN_XUAT.md) & [STB_ModuleProductionHist](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03_SAN_XUAT.md) (Thông tin & Lịch sử sản xuất module):**
+   * Theo dõi tiến độ sản xuất, lượng pinhole, thay cell lỗi, thông số kiểm đo ESR/Farad của module.
+   * *Schema chính:* `ModuleProductionNo` (varchar(20)), `JobStartDate` (date), `SemiProdLotNo1` (varchar(20)), `SemiProdLotNo2` (varchar(20)), `PinHoleQty` (numeric), `ChangeCellQty` (numeric), `Farad` (numeric), `ESR` (numeric), `FinishedProdLotNo` (varchar(20)), `ShipmentDate` (date), `ShipmentQty` (numeric).
+
+3. **[STB_ModuleSemiProductionInfo](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03_SAN_XUAT.md) (Thông tin bán thành phẩm Module):**
+   * Liên kết bản mạch PCB và các Single Cell cấu thành bán thành phẩm.
+   * *Schema:* `ModuleSemiProductionNo` (varchar(20)), `ProdDate` (date), `Grade` (varchar(10)), `PCBLotNo` (varchar(20)), `SemiProdLotNo` (varchar(20)), `SingleCellLotNo1` (varchar(20)), `SingleCellLotNo2` (varchar(20)), `SingleCellLotNo3` (varchar(20)).
+
+4. **[STB_SubAssemblyInfoForBE](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03_SAN_XUAT.md) (Mapping bán thành phẩm BE):**
+   * Bản ghi liên kết thùng và mạch PCB cho công đoạn lắp ráp BE.
+   * *Schema:* `SubAssemblyNo` (varchar(20)), `BoxBarcode` (varchar(20)), `PcbBarcode` (varchar(20)).
+
+5. **[STB_ModuleLabelInfo](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03_SAN_XUAT.md) (Thông tin Serial Label Module):**
+   * Liên kết mã serial nhãn in với Single Cell tương ứng.
+   * *Schema:* `ModuleSerialNo` (varchar(20)), `ProductNo` (varchar(20)), `RevisionNo` (varchar(20)), `SingleLotNo` (varchar(20)).
+
+6. **[STB_ModuleAssemblyLabelInfo](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03_SAN_XUAT.md) (Lịch sử tách/phát hành Lot con cho ráp Module):**
+   * Lưu thông tin quan hệ giữa Lot ráp con (Assembly Lot) và Lot mẹ (Parent Lot).
+   * *Schema:* `ModuleAssemblyLotNo` (varchar(20)), `ModuleParentLotNo` (varchar(20)), `IsPacking` (bit), `IsShipment` (bit).
+
+7. **[STB_AssemblyCellWeightInfo](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03_SAN_XUAT.md) (Cân nặng Cell lắp ráp):**
+   * Lưu dữ liệu cân nặng ghi nhận tại công đoạn lắp ráp.
+   * *Schema:* `LineCode` (varchar(20)), `CellWeight` (numeric), `CreateDateTime` (datetime).
+
+8. **[STB_VN_MASTERMODULES](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03_SAN_XUAT.md) & [STB_VN_DETAILMODULES](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03_SAN_XUAT.md) (Đóng gói gộp box module Việt Nam):**
+   * *Master:* Lưu thông tin thùng (`GROUPID`, `LOTNO`, `QTY`, `TOTALQTY`, `VOL`, `FWAR`, `PARTNO`, `SIZE`, `PackingID` dạng `MVKQ[Month]...`).
+   * *Detail:* Lưu chi tiết của từng Lot trong thùng (`GROUPID`, `LOTNO`, `QTYACT`, `LineCode`, `RouteCode`, `ProdQty`).
+
+#### 6.8.2 Chi Tiết Các Logic Báo Cáo & Xử Lý Stored Procedures
+
+##### 1. Logic Liên kết Cell vào Module Lot (`usp_DoCreateModuleLot`)
+Khi thực hiện binding giữa Single Cell Barcode và Module Barcode:
+* Hệ thống kiểm tra xem mã Module Barcode tồn tại trong `STB_SetInfo` hay không. Nếu không, raise lỗi: `'Mã Module Lot không tồn tại'`.
+* Tiến hành update cột `ModuleBarcode` trong bảng `STB_SetInfo` cho Single Cell tương ứng:
+  ```sql
+  UPDATE STB_SetInfo SET ModuleBarcode = @ModuleBarcode WHERE Barcode = @Barcode;
+  ```
+* Tính toán số `Seq` tiếp theo và insert lịch sử vào bảng mapping:
+  ```sql
+  SELECT @NextSeq = ISNULL(MAX(seq), 0) + 1 FROM STB_SingleCellModuleMappingHist WHERE ModuleLotNo = @ModuleBarcode;
+  INSERT INTO STB_SingleCellModuleMappingHist (ModuleLotNo, Seq, SingleCellLotNo, CreateUserID)
+  VALUES (@ModuleBarcode, @NextSeq, @Barcode, @pProcessUserID);
+  ```
+
+##### 2. Logic Sinh Lot Ráp Module Từ Lot Mẹ (`usp_DoCreateModuleAssemblyLotNo`)
+Khi chia Lot Module mẹ (Parent Lot) thành nhiều Lot con (mỗi Lot con có số lượng = 1) để dán nhãn lắp ráp:
+* Hệ thống truy vấn thông tin `ProdQty`, `MaterialCode`, `PONo`, `DayPlanNo` từ `STB_SetInfo` của Lot mẹ.
+* Kiểm tra xem Lot mẹ đã được tách trước đó chưa (bằng cách check `STB_ModuleAssemblyLabelInfo`). Nếu có, raise lỗi: `'Mã Lot đã tồn tại'`.
+* Reset Serial Số trong `STB_SerialInfo` cho `@Header` về `0` để các Lot con bắt đầu từ `001`:
+  ```sql
+  UPDATE STB_SerialInfo SET SerialNo = 0 WHERE MaterialCode = '' AND Header = @Header;
+  ```
+* Lặp qua số lượng `ProdQty` lần, mỗi lần:
+  * Gọi `usp_GetNewSerialNoForBarcode` để sinh `@SerialNo`.
+  * Định dạng `@Barcode = @Header + RIGHT('000' + CONVERT(VARCHAR, @SerialNo), 3)`.
+  * Insert vào `STB_ModuleAssemblyLabelInfo` và gọi `usp_DoCreateSetInfo` tạo thông tin Lot mới.
+* Cuối cùng, thực hiện xóa Lot mẹ ra khỏi danh sách `STB_SetInfo` để tránh trùng lặp dữ liệu:
+  ```sql
+  DELETE FROM STB_SetInfo WHERE Barcode = @ModuleParentLotNo;
+  ```
+
+##### 3. Logic Tạo Số Serial Cho Nhãn Module (`usp_DoCreateModuleLabelInfo`)
+* Sinh mã nhãn module định dạng: `PLS` + `[Ký tự cuối của RevisionNo]` + `[YY]` + `[Tuần trong năm]` + `V` + `[4 số serial tự tăng]`.
+* Lấy số Index lớn nhất hiện tại:
+  ```sql
+  SELECT @StartIndex = ISNULL(MAX(RIGHT(ModuleSerialNo, 4)), 0) + 1 FROM STB_ModuleLabelInfo WHERE ModuleSerialNo LIKE @SerialHeader + '%';
+  ```
+* Insert danh sách serial tương ứng vào `STB_ModuleLabelInfo`.
+
+##### 4. Tra cứu thông số Phân cấp Module Việt Nam (`usp_VN_PartNoModule`)
+Cung cấp bảng ánh xạ cứng các dải thông số Điện áp (`VOL`) và Điện dung (`FARD`) theo Part No (NAMES) của Module để phục vụ kiểm tra ngoại quan và QC:
+* Ví dụ:
+  * `VEC2R7105QG(0813)`: `45~130` V, `≥2.50V`
+  * `WEC3R0335QG(0820)`: `22~85` V, `≥2.55V`
 
 **Giá thành Module:**
 ```sql
