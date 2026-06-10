@@ -132,22 +132,18 @@ VALUES (..., @LengthSlitting * (@WidthSlitting*(1.0)/1000), @LengthSlitting)
     ```sql
     SELECT @Stg = routecode FROM STB_ProdRouteHist WITH(NOLOCK)
     WHERE 1=1 
-      AND routecode='V-22' OR routecode='V-22_BG'  -- Lỗi ở đây! AND có độ ưu tiên cao hơn OR
+      AND routecode='V-22' OR routecode='V-22_BG' -- Lỗi ở đây! AND có độ ưu tiên cao hơn OR
       AND controlno = (select controlno from stb_setinfo ...)
     ```
     Biểu thức trên bị hiểu thành: `(routecode='V-22') OR (routecode='V-22_BG' AND controlno = ...)`. Do đó, nếu bảng lịch sử có bất kỳ Lot nào từng chạy `V-22`, điều kiện kiểm tra luôn đúng với mọi Lot khác, bỏ qua việc kiểm tra `controlno` thực tế.
-*   **Giải pháp sửa lỗi:** Thêm dấu ngoặc đơn để gom cụm điều kiện `OR`:
+*   **Giải pháp sửa lỗi:** Thêm dấu ngoặc đơn để gom cụm điều kiện `OR`. Đã tạo bản vá SQL bọc transaction và kịch bản test.
+*   **Hotfix Script:** [01_FIX_DRY_OVEN_OPERATOR_PRIORITY.sql](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/HOTFIX_SCRIPTS/01_FIX_DRY_OVEN_OPERATOR_PRIORITY.sql)
+*   **Mã SQL thay thế:**
     ```sql
-    -- SCRIPT FIX BUG TOÁN TỬ LOGIC V-22
-    BEGIN TRAN
-    ALTER PROCEDURE [dbo].[usp_VN_DryOver]
-    ...
-    -- Thay thế đoạn kiểm tra @Stg:
     SELECT @Stg = routecode FROM STB_ProdRouteHist WITH(NOLOCK)
-    WHERE (routecode='V-22' OR routecode='V-22_BG')
+    WHERE 1=1 
+      AND (routecode='V-22' OR routecode='V-22_BG') -- Sửa thêm ngoặc đơn
       AND controlno = (select controlno from stb_setinfo WITH(NOLOCK) where barcode in (@BarCode,@LotNonew1,@LotNonew2,@LotNonew3,@LotNonew4,@LotNonew5,@LotNonew6))
-    ...
-    COMMIT TRAN
     ```
 
 ### 🔴 Bug #2: Bug thời gian ghi nhận lịch sử Doping JIG khiến mất dữ liệu log (`usp_Vietnam_DopingJIG_uid`)
@@ -162,17 +158,15 @@ VALUES (..., @LengthSlitting * (@WidthSlitting*(1.0)/1000), @LengthSlitting)
     where status like '%autoend%'
       and ChangeDateTime > dateadd(second,5,getdate()) -- Lỗi nghiêm trọng! ChangeDateTime (vừa gán bằng getdate()) không bao giờ lớn hơn getdate() cộng 5 giây.
     ```
-*   **Giải pháp sửa lỗi:** Thay đổi điều kiện lọc thời gian lưu lịch sử hợp lý (lưu các bản ghi có `ChangeDateTime` trong vòng vài giây hoặc phút gần đây):
+*   **Giải pháp sửa lỗi:** Thay đổi điều kiện lọc thời gian lưu lịch sử hợp lý (lưu các bản ghi có `ChangeDateTime` trong vòng vài giây hoặc phút gần đây). Đã tạo bản vá SQL bọc transaction và kịch bản test.
+*   **Hotfix Script:** [02_FIX_DOPING_JIG_HISTORY_SYNC.sql](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/HOTFIX_SCRIPTS/02_FIX_DOPING_JIG_HISTORY_SYNC.sql)
+*   **Mã SQL thay thế:**
     ```sql
-    -- SCRIPT FIX BUG LỊCH SỬ DOPING JIG
-    BEGIN TRAN
-    -- Thay thế đoạn kiểm tra thời gian ghi history:
     insert into Stb_VVT_DopingJIG_History
     select JigID, LotInUsed, Status, LastJig, BeginDateTime, EndDateTime, Comment1, Comment2, getdate()
     from Stb_VVT_DopingJIG
     where status like '%autoend%'
-      and ChangeDateTime > dateadd(second,-5,getdate()) -- Sửa thành dấu TRỪ (-5 giây) thay vì dấu CỘNG (+5 giây)
-    COMMIT TRAN
+      and ChangeDateTime > dateadd(second,-5,getdate()) -- Sửa dấu + thành -5 giây để lấy các bản ghi vừa cập nhật
     ```
 
 ### 🔴 Bug #3: Mismatch logic tuổi thọ dao và Hardcode địa lý Bắc Giang (`usp_DoCreateSlittingResult`)
@@ -184,17 +178,14 @@ VALUES (..., @LengthSlitting * (@WidthSlitting*(1.0)/1000), @LengthSlitting)
     2. Đếm số lần cắt thay vì số mét cắt:
        `SELECT @ProdQtyCheck = COUNT(ProductionQty) from STB_ElectrodeSlittingResult where SlittingKnifeLotID = @SlittingKnifeLotID`.
        `StandardQty` lưu tuổi thọ theo mét cắt thiết kế (ví dụ 50,000m), nhưng hệ thống lại so sánh với **số lần cắt (số cuộn cực con)** dẫn đến dao mới chạy vài nghìn mét đã bị khóa do đếm số lần cắt vượt quá StandardQty.
-*   **Giải pháp sửa lỗi:**
-    1. Loại bỏ lọc cứng RouteCode Bắc Giang để áp dụng kiểm tra dao cho toàn hệ thống hoặc kiểm tra qua bảng phân quyền máy.
-    2. Sửa logic tính tuổi thọ bằng `SUM(GoodQtyLength)` thay vì `COUNT`:
+*   **Giải pháp sửa lỗi:** Loại bỏ lọc cứng RouteCode Bắc Giang và thay đổi cơ chế tính tuổi thọ bằng `SUM(GoodQtyLength)`. Đã tạo bản vá SQL bọc transaction và kịch bản test.
+*   **Hotfix Script:** [03_FIX_SLITTING_KNIFE_LIFE_METRIC.sql](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/HOTFIX_SCRIPTS/03_FIX_SLITTING_KNIFE_LIFE_METRIC.sql)
+*   **Mã SQL thay thế:**
     ```sql
-    -- SCRIPT FIX BUG TUỔI THỌ DAO SLITTING
-    BEGIN TRAN
-    -- 1. Sử dụng SUM thay vì COUNT để đo quãng đường thực tế
-    SELECT @ProdQtyCheck = ISNULL(SUM(GoodQtyLength), 0) from STB_ElectrodeSlittingResult where SlittingKnifeLotID = @SlittingKnifeLotID
+    -- 1. Sửa RouteCode check hỗ trợ toàn hệ thống
+    IF @MachineCode IN (select MachineCode from STB_ProductMachine where RouteCode LIKE 'V-11%') and @KnifeCheck > 0
     
-    -- 2. Kiểm tra nếu tổng mét cắt vượt StandardQty mét
-    IF(@ProdQtyCheck >= @StandardQty)
-    ...
-    COMMIT TRAN
+    -- 2. Đo tuổi thọ thực tế bằng tổng số mét cắt
+    SELECT @ProdQtyCheck = ISNULL(SUM(GoodQtyLength), 0) from STB_ElectrodeSlittingResult where SlittingKnifeLotID = @SlittingKnifeLotID
     ```
+
