@@ -1,4 +1,4 @@
-Text                                                                                                                                                                                                                                                           
+ÔªøText                                                                                                                                                                                                                                                           
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 -- =============================================
                                                                                                                                                                                                              
@@ -760,7 +760,7 @@ BEGIN
                                                                                                                                                                                                                                                    
 			 			SELECT @ProcessedLotID AS LotID
                                                                                                                                                                                                                        
-						, case when lower(@pProcessUserID) like 'vi%' then '–„ xu?t kho' else '????' end  AS ProcessedResult          -- ???? ??? [????]
+						, case when lower(@pProcessUserID) like 'vi%' then '√ê√£ xu?t kho' else '????' end  AS ProcessedResult          -- ???? ??? [????]
                                                                                                                        
 
                                                                                                                                                                                                                                                              
@@ -798,7 +798,7 @@ BEGIN
                                                                                                                                                                                                                  
 							SELECT @ProcessedLotID AS LotID
                                                                                                                                                                                                                        
-							, case when lower(@pProcessUserID) like 'vi%' then 'Ho‡n tr? xong' else '????' end  AS ProcessedResult          -- ???? ??? [????]
+							, case when lower(@pProcessUserID) like 'vi%' then 'Ho√†n tr? xong' else '????' end  AS ProcessedResult          -- ???? ??? [????]
                                                                                                                     
 					END
                                                                                                                                                                                                                                                      
@@ -930,7 +930,7 @@ BEGIN
                                                                                                                                                                                                                                                    
 			 			SELECT @ProcessedLotID AS LotID
                                                                                                                                                                                                                        
-						, case when lower(@pProcessUserID) like 'vi%' then '–„ xu?t kho' else '????' end  AS ProcessedResult    -- ???? ??? [????]
+						, case when lower(@pProcessUserID) like 'vi%' then '√ê√£ xu?t kho' else '????' end  AS ProcessedResult    -- ???? ??? [????]
                                                                                                                              
 				END
                                                                                                                                                                                                                                                       
@@ -962,7 +962,7 @@ BEGIN
                                                                                                                                                                                                                 
 								SELECT @ProcessedLotID AS LotID
                                                                                                                                                                                                                       
-								, case when lower(@pProcessUserID) like 'vi%' then 'Ho‡n tr? xong' else '????' end  AS ProcessedResult   -- ???? ??? [????]
+								, case when lower(@pProcessUserID) like 'vi%' then 'Ho√†n tr? xong' else '????' end  AS ProcessedResult   -- ???? ??? [????]
                                                                                                                           
 							  END
                                                                                                                                                                                                                                                  

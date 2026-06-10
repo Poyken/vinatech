@@ -1,5 +1,5 @@
-﻿
-CREATE PROCEDURE [dbo].[usp_InventoryOfGoodsReport_get]
+
+ALTER PROCEDURE [dbo].[usp_InventoryOfGoodsReport_get]
     @pItemCode NVARCHAR(50) = NULL,   -- Tìm chung cho Mã VN hoặc Mã Korea
     @pItemName NVARCHAR(255) = NULL,  -- Tìm theo Tên vật tư
     @pModel NVARCHAR(50) = NULL,      -- Tìm theo Model (VD: 0612, 0820)

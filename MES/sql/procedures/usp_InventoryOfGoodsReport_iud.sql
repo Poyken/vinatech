@@ -1,5 +1,5 @@
-﻿
-create PROCEDURE [dbo].[usp_InventoryOfGoodsReport_iud]
+
+ALTER PROCEDURE [dbo].[usp_InventoryOfGoodsReport_iud]
     @pProcessUserID VARCHAR(20) = NULL, 
     @pProcessLanguage VARCHAR(20) = NULL,
     @pProcessViewName VARCHAR(50) = NULL, 
