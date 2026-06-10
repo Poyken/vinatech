@@ -1,6 +1,24 @@
 param (
-    [string]$SPName
+    [string]$SPName,
+    [switch]$Clean
 )
+
+$procDir = Join-Path $PSScriptRoot "sql\procedures"
+
+if ($Clean) {
+    if (Test-Path $procDir) {
+        $files = Get-ChildItem -Path $procDir -Filter "*.sql"
+        if ($files.Count -gt 0) {
+            $files | Remove-Item -Force
+            Write-Host "Cleaned $($files.Count) temporary stored procedure file(s) from $procDir" -ForegroundColor Green
+        } else {
+            Write-Host "No temporary stored procedure files to clean in $procDir." -ForegroundColor Gray
+        }
+    } else {
+        Write-Host "Procedures directory does not exist." -ForegroundColor Gray
+    }
+    exit 0
+}
 
 $server = "dbserver.hycap.co.kr,5398"
 $database = "SmartFactoryV2"
@@ -8,7 +26,6 @@ $user = "vinaadmin"
 $password = "vina1234%6&8"
 $cs = "Server=$server;Database=$database;User Id=$user;Password=$password;TrustServerCertificate=True;Timeout=30;"
 
-$procDir = Join-Path $PSScriptRoot "sql\procedures"
 if (!(Test-Path $procDir)) {
     New-Item -ItemType Directory -Force -Path $procDir | Out-Null
 }

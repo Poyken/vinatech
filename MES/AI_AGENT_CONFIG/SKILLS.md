@@ -5,25 +5,19 @@
 
 ---
 
-## 1. 🔌 KẾT NỐI DB TEMPLATE (PowerShell)
+## 1. 🔌 KẾT NỐI DB & CHẠY QUERY NHANH
+
+Dùng trực tiếp công cụ `run_query.ps1` ở thư mục gốc để truy vấn nhanh mà không cần viết boilerplate code:
 
 ```powershell
-$server = "dbserver.hycap.co.kr,5398"
-$user = "vinaadmin"
-$password = "vina1234%6&8"
-$cs = "Server=$server;User Id=$user;Password=$password;TrustServerCertificate=True;Timeout=30;"
-$conn = New-Object System.Data.SqlClient.SqlConnection($cs)
-$conn.Open()
+# Truy vấn dạng bảng (Mặc định)
+.\run_query.ps1 -Query "SELECT TOP 10 Barcode, MaterialCode FROM STB_SetInfo WITH(NOLOCK)"
 
-# Chạy query
-$cmd = $conn.CreateCommand()
-$cmd.CommandText = "SELECT TOP 10 * FROM SmartFactoryV2.dbo.STB_SetInfo WITH(NOLOCK)"
-$reader = $cmd.ExecuteReader()
-while ($reader.Read()) {
-    Write-Host "$($reader.GetValue(0))`t$($reader.GetValue(1))"
-}
-$reader.Close()
-$conn.Close()
+# Truy vấn ra JSON (Cho các cấu trúc phức tạp cần AI parse)
+.\run_query.ps1 -Query "SELECT TOP 10 * FROM STB_SetInfo WITH(NOLOCK)" -Format JSON
+
+# Truy vấn từ file sql có sẵn
+.\run_query.ps1 -SqlPath "sql/scripts/my_query.sql" -Format CSV
 ```
 
 ---

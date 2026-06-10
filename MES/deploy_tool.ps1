@@ -1,15 +1,30 @@
 param (
-    [string]$SqlPath
+    [string]$SqlPath,
+    [switch]$Force
 )
 
 if ([string]::IsNullOrEmpty($SqlPath)) {
-    Write-Host "Usage: .\deploy_tool.ps1 -SqlPath <path_to_sql_file>" -ForegroundColor Yellow
-    exit
+    Write-Host "Usage: .\deploy_tool.ps1 -SqlPath <path_to_sql_file> [-Force]" -ForegroundColor Yellow
+    exit 1
 }
 
 if (!(Test-Path $SqlPath)) {
     Write-Host "File not found: $SqlPath" -ForegroundColor Red
-    exit
+    exit 1
+}
+
+# Run safety validation
+$validateScript = Join-Path $PSScriptRoot "validate_sql.ps1"
+if (Test-Path $validateScript) {
+    if ($Force) {
+        & $validateScript -SqlPath $SqlPath -AllowDangerous
+    } else {
+        & $validateScript -SqlPath $SqlPath
+        if ($LASTEXITCODE -ne 0) {
+            Write-Host "Deployment aborted due to safety validation failure. Use -Force to override." -ForegroundColor Red
+            exit 1
+        }
+    }
 }
 
 $server = "dbserver.hycap.co.kr,5398"
