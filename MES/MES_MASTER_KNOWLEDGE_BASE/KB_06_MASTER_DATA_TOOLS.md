@@ -470,7 +470,7 @@ BƯỚC 7 - Test
 | **B210** | Đăng ký Line | Khai báo tên chuyền vật lý thuộc công ty nào | `STB_LineInfo` |
 | **B220** | Đăng ký Route | Khai báo tên công đoạn (V-01, V-23, MV-01) | `STB_RouteInfo` |
 | **B230** | Phân quyền Route vào Line | Map chuyền VVBNC-01 chạy những công đoạn nào | `STB_LineRouteMapping` |
-| **B240** | Đăng ký Máy | Phân quyền Máy móc vào Công đoạn | `STB_MachineInfo` |
+| **B240** | Đăng ký Máy | Phân quyền Máy móc vào Công đoạn | `STB_MachineMaster` |
 
 **Lỗi phổ biến:**
 - **B450 không thấy Line:** B210 chưa gán `IsUse=1` hoặc sai WorkCenterCode
@@ -550,9 +550,9 @@ SELECT * FROM STB_PackingStandard WHERE ProdSize = 'MBISizeD_của_model'
 | **B210** | Đăng ký Line | `STB_LineInfo` |
 | **B220** | Đăng ký Route | `STB_RouteInfo` |
 | **B230** | Phân quyền Route vào Line | `STB_LineRouteMapping` |
-| **B240** | Đăng ký Máy | `STB_MachineInfo` |
+| **B240** | Đăng ký Máy | `STB_MachineMaster` |
 | **B250** | Phân bổ Máy vào công đoạn | `STB_MachineMaster` |
-| **B260** | Nhân viên SX (WorkerGroupCode='VE-01') | `STB_WorkerInfo` |
+| **B260** | Nhân viên SX (WorkerGroupCode='VE-01') | `STB_ProdWorkerInfo` |
 | **B270** | Kiểm tra phân bổ máy-route | `STB_ProductMachine` |
 
 ### 14.3 Quản Lý Kế Hoạch Sản Xuất
@@ -620,16 +620,16 @@ SELECT * FROM STB_PackingStandard WHERE ProdSize = 'MBISizeD_của_model'
 
 | Màn hình | Mô tả | Bảng DB chính |
 |----------|-------|---------------|
-| **C121** | Nhóm hạng mục kiểm tra IQC | `STB_InspectionGroupInfo` |
-| **C122** | Hạng mục kiểm tra IQC chi tiết | `STB_InspectionItemInfo` |
+| **C121** | Nhóm hạng mục kiểm tra IQC | `STB_QcInspectionGroup` |
+| **C122** | Hạng mục kiểm tra IQC chi tiết | `STB_QcInspectionItem` |
 | **C220** | Kiểm tra NVL đầu vào (IQC) | `STB_MaterialQcInfo` |
 
 ### 14.10 QC - PQC (Kiểm Tra Trong Quá Trình SX)
 
 | Màn hình | Mô tả | Bảng DB chính |
 |----------|-------|---------------|
-| **C131** | Đăng ký thông tin nhóm lần PQC | `STB_InspectionGroupInfo` |
-| **C132** | Cấu hình lần PQC chi tiết | `STB_InspectionItemInfo` |
+| **C131** | Đăng ký thông tin nhóm lần PQC | `STB_QcInspectionGroup` |
+| **C132** | Cấu hình lần PQC chi tiết | `STB_QcInspectionItem` |
 | **C141** | Thiết lập thông số kiểm tra PQC chung | `STB_CommInspDocHistory` |
 | **C143** | Thiết lập spec PQC riêng theo model | `STB_CommInspDocHistory` |
 | **C243** | Kiểm tra Lot Slitting | - |
@@ -666,7 +666,7 @@ SELECT * FROM STB_PackingStandard WHERE ProdSize = 'MBISizeD_của_model'
 | **H301-H305** | Spare Part | `STB_VNSparePartInfo` |
 | **K101** | Kế hoạch SX ngày nhà máy BG2 | `STB_DayProdPlan` |
 | **K109** | Kiểm tra thường xuyên BG2 | `STB_CommInspDocHistory` |
-| **Z220** | Phân nhóm quyền User | `STB_UserGroupInfo` (SmartFramework) |
+| **Z220** | Phân nhóm quyền User | `STB_UserPermissionGroup` (SmartFramework) |
 | **Z330** | Publish màn hình ra production | `STB_ScreenInfo` (SmartFramework) |
 | **Z410** | Quản lý tài khoản User | `STB_UserInfo` (SmartFramework) |
 

@@ -233,13 +233,14 @@ WHERE SI.Barcode = 'Mã_Barcode'
 
 ```sql
 -- Kiểm tra dữ liệu ESR đã import
-SELECT * FROM STB_ESRData
+SELECT * FROM STB_VVT_ESRDATA
 WHERE Barcode = 'Mã_Barcode'
 ORDER BY CreateDateTime DESC
 
 -- Xóa dữ liệu ESR nếu import sai
-DELETE FROM STB_ESRData
+DELETE FROM STB_VVT_ESRDATA
 WHERE Barcode = 'Mã_Barcode' AND CreateDateTime = 'Thời_Gian_Import'
+
 ```
 
 ---
