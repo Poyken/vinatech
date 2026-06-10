@@ -36,6 +36,7 @@
 | [KB_23_4M_CHANGE_CAPA.md](KB_23_4M_CHANGE_CAPA.md) | 4M Change Management, CAPA process, Defect Repair, Phân loại lỗi | 4M Change, CAPA, QC |
 | [KB_24_RELIABILITY_TEST.md](KB_24_RELIABILITY_TEST.md) | Kiểm tra độ tin cậy (Reliability Test): Mẫu kiểm tra, kết quả đo chu kỳ | RTM, Sample, Measure |
 | [KB_25_VINAENESSOL_HUNG_YEN.md](KB_25_VINAENESSOL_HUNG_YEN.md) | Phân hệ VinaEnesol, đóng gói & in nhãn (Inner/Outer Box), khớp box (Box Matching), vận hành Hưng Yên | D000, D051, D100, D110, HungYenFactory |
+| [KB_26_LIEN_KET_HE_THONG_VA_BUG_LOGIC.md](KB_26_LIEN_KET_HE_THONG_VA_BUG_LOGIC.md) | Liên kết WMS-Sản xuất-QC-Xuất hàng, Cơ chế trừ kho Trigger, Phân tích 4 lỗi logic lớn | B597, B530, C443, C512, C530, C546, HN551, FG00 |
 
 ---
 
@@ -160,6 +161,11 @@
 | **Đóng gói & In tem VinaEnesol** | KB_25 |
 | **Gộp/Khớp hộp lớn, hộp nhỏ (Box Matching) Enesol** | KB_25 § 4.3 |
 | **Quy tắc sinh Lot No Enesol** | KB_25 § 4.1 |
+| **Chặn sản lượng do PQC chưa nhập lỗi (lô đạt)** | KB_26 § 3.1 |
+| **Không đổi được trạng thái Reject sang Pass ở QC Audit** | KB_26 § 3.2 |
+| **Trống hàng QC Audit ở kho Hà Nam/Hưng Yên** | KB_26 § 3.3 |
+| **Lỗi validation khi xuất hàng trùng lot & số lượng** | KB_26 § 3.4 |
+| **Cơ chế trừ kho tự động (WMS ↔ Sản xuất Triggers)** | KB_26 § 2 |
 
 ---
 
