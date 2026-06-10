@@ -95,7 +95,7 @@ Stored Procedure này xử lý thêm/sửa/xóa thông tin Lot Rework từ giao 
   END
   ```
 * **Giải pháp khắc phục:** Đã tạo bản vá SQL an toàn kết hợp cơ chế kiểm tra quyền hạn động qua `SmartFramework.dbo.STB_UserPermission` (cho ScreenID `'B618'`) và cơ chế Fallback danh sách user cũ để tránh làm gián đoạn sản xuất.
-  * **Hotfix Script:** [04_FIX_REWORK_HARDCODED_PERMISSION.sql](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/HOTFIX_SCRIPTS/04_FIX_REWORK_HARDCODED_PERMISSION.sql)
+  * **Hotfix Script:** [04_FIX_REWORK_HARDCODED_PERMISSION.sql](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/sql/hotfixes/04_FIX_REWORK_HARDCODED_PERMISSION.sql)
   * **Mã SQL thay thế:**
     ```sql
     -- Kiểm tra phân quyền động kết hợp Fallback an toàn
@@ -162,11 +162,12 @@ Phân hệ Trả hàng giải quyết các trường hợp: (1) Trả lại nguy
   ```
   Tuy nhiên, hàng trả về từ khách hàng (Customer Return) là **Thành phẩm** do nhà máy sản xuất ra, không phải là Nguyên vật liệu mua ngoài nên hoàn toàn không đi qua quy trình IQC mua hàng đầu vào (IQC chỉ dành cho NVL nhà cung cấp). Điều này chặn đứng không cho phép nhận hàng khách trả lại.
 * **Giải pháp khắc phục:** Đã tạo bản vá SQL an toàn để bỏ qua kiểm tra IQC đối với thành phẩm (FERT) hoặc bán thành phẩm (HALB) sản xuất nội bộ khi khách trả hàng, chỉ bắt buộc check IQC đối với NVL nhập mua ngoài (ROH).
-  * **Hotfix Script:** [05_FIX_RETURNS_FG_IQC_VALIDATION.sql](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/HOTFIX_SCRIPTS/05_FIX_RETURNS_FG_IQC_VALIDATION.sql)
+  * **Hotfix Script:** [05_FIX_RETURNS_FG_IQC_VALIDATION.sql](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/sql/hotfixes/05_FIX_RETURNS_FG_IQC_VALIDATION.sql)
   * **Mã SQL thay thế:**
     ```sql
     -- Lấy loại vật tư từ STB_MaterialMaster để phân biệt
     SELECT @MaterialTypeCode = MaterialTypeCode FROM STB_MaterialMaster WHERE MaterialCode = @MaterialCode
+
 
     IF @MaterialDocType = 'GR' BEGIN
         -- Chỉ bắt buộc kiểm tra IQC nếu là Nguyên vật liệu mua ngoài (ROH)

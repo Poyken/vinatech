@@ -31,11 +31,12 @@ Bước 4: Script Fix — Viết SQL template có TRAN, gửi user
 Bước 5: Xác nhận — SELECT lại sau khi user chạy
 ```
 
-## 4. CẤM
-
-- ❌ Đoán mò — Mọi kết luận phải có SELECT chứng minh
-- ❌ Ghi nhớ SP cũ — Luôn query fresh từ `sys.sql_modules`
-- ❌ Tự ý reformat code/SP — chỉ sửa đúng chỗ cần sửa
+## 4. CẤM & HẠN CHẾ
+- ❌ Đoán mò — Mọi kết luận phải có SELECT chứng minh.
+- ❌ Ghi nhớ/dùng SP cũ — Luôn query định nghĩa mới nhất từ `sys.sql_modules` hoặc dùng `db_sync_tool.ps1`.
+- ❌ Tự ý reformat toàn bộ code/SP — chỉ thực hiện sửa đổi cục bộ (Surgical Changes) tại đúng dòng/khu vực cần thiết để giữ sạch Git diff.
+- ❌ Lưu trữ SP rác — Thực hiện xóa ngay các file SQL SP tạm thời/backup trong workspace khi phiên hoàn tất (chỉ giữ lại bản chính thức đã sửa đổi).
+- ❌ Phức tạp hóa — Ưu tiên sự đơn giản, không tự ý viết thêm các tính năng/tối ưu hóa khi chưa được yêu cầu (Simplicity First).
 
 ## 5. KẾT NỐI DB
 

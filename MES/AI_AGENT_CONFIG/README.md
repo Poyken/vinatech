@@ -21,24 +21,27 @@
 
 ```
 MES/
-├── AI_AGENT_CONFIG/          ← BẠN ĐANG ĐÂY — Config cho AI agent
-│   ├── README.md             ← File này — Entry point
-│   ├── RULES.md              ← Quy tắc bắt buộc (SELECT-only, safety)
-│   ├── KNOWLEDGE.md          ← Cheat sheet bảng/SP/factory matrix
-│   └── SKILLS.md             ← SQL/PS templates + lessons learned
-├── MES_MASTER_KNOWLEDGE_BASE/ ← 30 KB files chi tiết (đọc khi cần)
+├── AI_AGENT_CONFIG/           ← BẠN ĐANG ĐÂY — Config cho AI agent
+│   ├── README.md              ← File này — Entry point
+│   ├── RULES.md               ← Quy tắc bắt buộc (SELECT-only, safety, surgical changes)
+│   ├── KNOWLEDGE.md           ← Cheat sheet bảng/SP/factory matrix
+│   └── SKILLS.md              ← SQL/PS templates + lessons learned
+├── MES_MASTER_KNOWLEDGE_BASE/  ← 29 KB files chi tiết (đọc khi cần)
 │   ├── KB_INDEX.md            ← Mục lục tra cứu nhanh
 │   └── KB_01 → KB_30          ← Tài liệu chuyên sâu từng phân hệ
-├── HOTFIX_SCRIPTS/            ← 5 SQL hotfix scripts (chưa deploy)
-├── AI_CONFIG.md               ← Config cũ (legacy, tham khảo)
-├── CLAUDE.md                  ← Coding rules cũ (legacy, tham khảo)
+├── sql/                       ← Thư mục chứa mã nguồn CSDL
+│   ├── procedures/            ← Các Stored Procedure (đã bỏ _ORIGINAL)
+│   ├── hotfixes/              ← 5 SQL hotfix scripts đã deploy
+│   └── scripts/               ← Các script tiện ích
+├── db_sync_tool.ps1           ← Công cụ tải SP từ DB
+├── deploy_tool.ps1            ← Công cụ triển khai SQL lên DB
 └── README.md                  ← Tổng quan dự án
 ```
 
 ## FAQ
 
-**Q: Tôi có nên đọc AI_CONFIG.md và CLAUDE.md không?**
-A: Không cần. Nội dung đã được tổng hợp và nén gọn vào RULES.md + SKILLS.md.
+**Q: Tôi có nên đọc các file KB không?**
+A: Chỉ đọc khi RULES + KNOWLEDGE + SKILLS chưa đủ thông tin hoặc khi được chỉ định rõ bởi KB_INDEX.md.
 
-**Q: Token budget thấp, tôi chỉ đọc 1 file?**
-A: Đọc RULES.md — đây là file quan trọng nhất.
+**Q: Token budget thấp, tôi nên ưu tiên đọc file nào?**
+A: Đọc RULES.md — đây là file bắt buộc chứa toàn bộ quy tắc an toàn CSDL.

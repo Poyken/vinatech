@@ -137,7 +137,7 @@ VALUES (..., @LengthSlitting * (@WidthSlitting*(1.0)/1000), @LengthSlitting)
     ```
     Biểu thức trên bị hiểu thành: `(routecode='V-22') OR (routecode='V-22_BG' AND controlno = ...)`. Do đó, nếu bảng lịch sử có bất kỳ Lot nào từng chạy `V-22`, điều kiện kiểm tra luôn đúng với mọi Lot khác, bỏ qua việc kiểm tra `controlno` thực tế.
 *   **Giải pháp sửa lỗi:** Thêm dấu ngoặc đơn để gom cụm điều kiện `OR`. Đã tạo bản vá SQL bọc transaction và kịch bản test.
-*   **Hotfix Script:** [01_FIX_DRY_OVEN_OPERATOR_PRIORITY.sql](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/HOTFIX_SCRIPTS/01_FIX_DRY_OVEN_OPERATOR_PRIORITY.sql)
+*   **Hotfix Script:** [01_FIX_DRY_OVEN_OPERATOR_PRIORITY.sql](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/sql/hotfixes/01_FIX_DRY_OVEN_OPERATOR_PRIORITY.sql)
 *   **Mã SQL thay thế:**
     ```sql
     SELECT @Stg = routecode FROM STB_ProdRouteHist WITH(NOLOCK)
@@ -159,7 +159,7 @@ VALUES (..., @LengthSlitting * (@WidthSlitting*(1.0)/1000), @LengthSlitting)
       and ChangeDateTime > dateadd(second,5,getdate()) -- Lỗi nghiêm trọng! ChangeDateTime (vừa gán bằng getdate()) không bao giờ lớn hơn getdate() cộng 5 giây.
     ```
 *   **Giải pháp sửa lỗi:** Thay đổi điều kiện lọc thời gian lưu lịch sử hợp lý (lưu các bản ghi có `ChangeDateTime` trong vòng vài giây hoặc phút gần đây). Đã tạo bản vá SQL bọc transaction và kịch bản test.
-*   **Hotfix Script:** [02_FIX_DOPING_JIG_HISTORY_SYNC.sql](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/HOTFIX_SCRIPTS/02_FIX_DOPING_JIG_HISTORY_SYNC.sql)
+*   **Hotfix Script:** [02_FIX_DOPING_JIG_HISTORY_SYNC.sql](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/sql/hotfixes/02_FIX_DOPING_JIG_HISTORY_SYNC.sql)
 *   **Mã SQL thay thế:**
     ```sql
     insert into Stb_VVT_DopingJIG_History
@@ -179,7 +179,7 @@ VALUES (..., @LengthSlitting * (@WidthSlitting*(1.0)/1000), @LengthSlitting)
        `SELECT @ProdQtyCheck = COUNT(ProductionQty) from STB_ElectrodeSlittingResult where SlittingKnifeLotID = @SlittingKnifeLotID`.
        `StandardQty` lưu tuổi thọ theo mét cắt thiết kế (ví dụ 50,000m), nhưng hệ thống lại so sánh với **số lần cắt (số cuộn cực con)** dẫn đến dao mới chạy vài nghìn mét đã bị khóa do đếm số lần cắt vượt quá StandardQty.
 *   **Giải pháp sửa lỗi:** Loại bỏ lọc cứng RouteCode Bắc Giang và thay đổi cơ chế tính tuổi thọ bằng `SUM(GoodQtyLength)`. Đã tạo bản vá SQL bọc transaction và kịch bản test.
-*   **Hotfix Script:** [03_FIX_SLITTING_KNIFE_LIFE_METRIC.sql](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/HOTFIX_SCRIPTS/03_FIX_SLITTING_KNIFE_LIFE_METRIC.sql)
+*   **Hotfix Script:** [03_FIX_SLITTING_KNIFE_LIFE_METRIC.sql](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/sql/hotfixes/03_FIX_SLITTING_KNIFE_LIFE_METRIC.sql)
 *   **Mã SQL thay thế:**
     ```sql
     -- 1. Sửa RouteCode check hỗ trợ toàn hệ thống
