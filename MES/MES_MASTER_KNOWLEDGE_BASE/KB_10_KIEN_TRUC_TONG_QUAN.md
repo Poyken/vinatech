@@ -29,7 +29,7 @@ Mọi thao tác của OP đều được ghi vào bảng lịch sử (`Hist`) th
 ### Trụ cột 3 — Recursive Logic: *"Tồn kho tự cập nhật, không cần triggers"*
 > ⚠️ **Cảnh báo (Audit 2026-05-05):** Hệ thống hiện tại **KHÔNG sử dụng Triggers** để cập nhật tồn kho.
 Thay vào đó, logic cập nhật tồn kho được thực hiện **trực tiếp** thông qua chuỗi gọi Stored Procedure:
-`usp_DoProcessProdRouteHist` → `usp_DoProcessProdGIMaterialByBOM` → `usp_DoCreateMaterialDocLotInfo...`.
+`usp_DoProcessProdRouteHist` → `usp_DoProcessProdGIMaterialByBOM` → `usp_DoCreateMaterialDocLotInfoNotUsedBarcode`.
 
 ---
 
@@ -117,7 +117,7 @@ ORDER BY PRH.CreateDateTime ASC
                                    │ copy xuống
             ┌──────────────────────▼────────────────────────────────────┐
             │              KẾ HOẠCH & LỆNH SX (Nhóm 2)                  │
-            │   STB_DayPlanInfo → STB_ProductionOrderInfo                │
+            │   STB_DayProdPlan → STB_ProductionOrderInfo                │
             │   STB_ProductionOrderRouting (← RouteInfo)                 │
             │   STB_ProductionOrderBom (← BomDetail)                     │
             │   STB_SetInfo (ControlNo/Barcode)                          │

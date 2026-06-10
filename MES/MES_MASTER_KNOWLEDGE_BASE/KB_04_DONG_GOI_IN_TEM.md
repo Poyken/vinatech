@@ -189,8 +189,8 @@ Module Line (B528/B598/B717/B802)
 | SP | Chức năng |
 |----|-----------|
 | `usp_Vietnam_GetProdPackingForBarcode_VVT` | Lấy thông tin đóng gói theo Barcode |
-| `usp_DeProcessProdPacking_VVT` | Gộp Box Module |
-| `usp_DoCancelProdPacking_Lotlo` | Hủy đóng gói Lot |
+| `usp_Vietnam_DoProcessProdPacking_VVT` | Gộp Box Module |
+| `usp_DoCancelProdPacking_LotNo` | Hủy đóng gói Lot |
 | `usp_SplitPackingBox` | Chia Box (tách 1 box lớn thành nhiều box nhỏ) |
 | `usp_savePackingLabelQty_VVT` | Lưu số lượng trên tem |
 

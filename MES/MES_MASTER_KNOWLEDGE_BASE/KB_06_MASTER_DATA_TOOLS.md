@@ -534,7 +534,7 @@ SELECT * FROM STB_PackingStandard WHERE ProdSize = 'MBISizeD_của_model'
 
 | Màn hình | Mô tả | Bảng DB chính |
 |----------|-------|---------------|
-| **A210** | Loại vật liệu (FERT/HALB/MDL/ROH...) | `STB_MaterialTypeInfo` |
+| **A210** | Loại vật liệu (FERT/HALB/MDL/ROH...) | `STB_MaterialType` |
 | **A230** | Thông tin NVL Master | `STB_MaterialMaster` |
 | **A310** | Thiết lập BOM / Cấu trúc sản phẩm | `STB_BomHeader`, `STB_BomDetail` |
 | **A320** | Thiết lập Route sản xuất | `STB_RouteInfo` |
@@ -607,8 +607,8 @@ SELECT * FROM STB_PackingStandard WHERE ProdSize = 'MBISizeD_của_model'
 | Màn hình | Mô tả | Bảng DB chính |
 |----------|-------|---------------|
 | **F110** | Nhập/Xuất kho thành phẩm | `STB_MaterialStockAttributeInfo` |
-| **F130** | Chỉ định NCC <-> NVL | `STB_MaterialSupplierMapping` |
-| **F140** | Chỉ định NVL theo NCC | `STB_MaterialSupplierMapping` |
+| **F130** | Chỉ định NCC <-> NVL | `STB_MaterialSupplierMapping` (⚠️ logic quản lý trong SP, bảng có thể đã tích hợp) |
+| **F140** | Chỉ định NVL theo NCC | `STB_MaterialSupplierMapping` (⚠️ logic quản lý trong SP, bảng có thể đã tích hợp) |
 | **F312** | Ghi chú NVL (Invoice / PO chi tiết) | `STB_MaterialDocDetail` |
 | **F330** | Nhập kho + in tem NVL | `STB_MaterialDocInfo`, `STB_MaterialDocLotInfo`, `STB_MaterialLotInfo` |
 | **F430** | Lịch sử xuất/nhập kho | `STB_MaterialWarehouseInOutHist` |

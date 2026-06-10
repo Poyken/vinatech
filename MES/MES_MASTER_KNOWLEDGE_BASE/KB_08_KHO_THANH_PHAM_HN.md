@@ -199,7 +199,7 @@ VALUES (
 *(Dịch nghĩa: Không có lịch sử xử lý sản lượng ở công đoạn trước).*
 
 #### 🔍 Nguyên nhân gốc rễ:
-Stored Procedure xử lý (`usp_Vietnam_ScrapInput_HN`) chặn không cho phép nhập phế liệu tại công đoạn `VE08` nếu sản phẩm này chưa từng được scan ghi nhận sản lượng hoàn thành (Routing History) ở công đoạn ngay trước đó (Ví dụ: `VE07` hoặc trạm trước của `VE08` trong cấu hình Routing của PO).
+Stored Procedure xử lý (`usp_Vietnam_ScrapInput_HN` — ⚠️ SP nội bộ chuyên dùng cho nhà máy Hà Nam, có thể là alias hoặc được gọi gián tiếp qua SP khác) chặn không cho phép nhập phế liệu tại công đoạn `VE08` nếu sản phẩm này chưa từng được scan ghi nhận sản lượng hoàn thành (Routing History) ở công đoạn ngay trước đó (Ví dụ: `VE07` hoặc trạm trước của `VE08` trong cấu hình Routing của PO).
 
 #### 🛠️ Giải pháp khắc phục:
 
@@ -303,7 +303,7 @@ ORDER BY CreateDateTime DESC
 **Quy trình:** Tìm kiếm → (+) Thêm → Điền đầy đủ → Lưu
 
 ```sql
--- Kiểm tra đơn giá đã có chưa
+-- Kiểm tra đơn giá đã có chưa (⚠️ Bảng nội bộ Hà Nam, có thể là View hoặc bảng tạm)
 SELECT * FROM STB_HN_AccountingPrice WHERE MaterialCode = 'Mã_Model'
 
 -- Thêm đơn giá mới

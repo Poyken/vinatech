@@ -484,10 +484,10 @@ WHERE MarkingCode = 'MK00000974';
 | `usp_GetProdRouteHistForBarcode_VNT` | Search | Thông tin Route History theo Barcode |
 | `usp_GetProdRouteBarcodeForDefect_VNT` | Search | Danh sách lỗi theo Barcode |
 | `usp_WasteWeight_get` | Search | Thông tin cân phế |
-| `usp_DoProcessProdRouteHistByBarcode_SmartApp` | Execute | Submit sản lượng |
+| `usp_DoProcessProdRouteHistForBarcode` | Execute | Submit sản lượng |
 | `usp_DoProcessProdRouteHistForCalc_SmartApp_VNT` | Execute | Tính toán & validate (cổng chính) |
-| `usp_DoUpdateRouteHistMarkingLetter` | Execute | Cập nhật ký hiệu đánh dấu |
-| `usp_DoSplitLotAgingPV` | Execute | Tách Lot trước Aging |
+| `usp_DoUpdateProdRouteHistMarkingLetter` | Execute | Cập nhật ký hiệu đánh dấu |
+| `usp_DoSplitLotAgingHN` | Execute | Tách Lot trước Aging (Hà Nam) |
 
 **7 cổng chặn trong `usp_DoProcessProdRouteHistForCalc_SmartApp_VNT`:**
 
@@ -769,19 +769,21 @@ UPDATE STB_LotChangeMaterialHistory SET NewBarcode = 'VVPR152R740601' WHERE Newb
 | `usp_BarrelBarcodeSmallInfo_get` | Lấy thông tin thùng nhỏ bên trong |
 
 ```sql
+-- ⚠️ Đã xác minh DB (2026-06-10): Bảng thực tế là STB_VietNam_CheckBarcode_2624
+-- (STB_BarrelBarcodeInfo / STB_BarrelBarcodeDetail KHÔNG TỒN TẠI)
+
 -- Tìm thùng Barrel theo PartNo và ngày
-SELECT * FROM STB_BarrelBarcodeInfo
+SELECT * FROM STB_VietNam_CheckBarcode_2624
 WHERE PartNo = 'mã_hàng'
   AND CreateDateTime BETWEEN '2026-04-01' AND '2026-04-30'
 
 -- Sửa số lượng thùng sai
-UPDATE STB_BarrelBarcodeInfo
+UPDATE STB_VietNam_CheckBarcode_2624
 SET Quantity = [số_đúng]
 WHERE ID = [id] AND LotNo = 'mã_lot'
 
--- Xóa thùng tạo nhầm (kiểm tra Detail trước)
-DELETE FROM STB_BarrelBarcodeDetail WHERE BarrelBarcodeID = [id]
-DELETE FROM STB_BarrelBarcodeInfo WHERE ID = [id]
+-- Xóa thùng tạo nhầm
+DELETE FROM STB_VietNam_CheckBarcode_2624 WHERE ID = [id]
 ```
 
 ---
@@ -796,12 +798,15 @@ DELETE FROM STB_BarrelBarcodeInfo WHERE ID = [id]
 | `usp_Vietnam_ElectrodeDefectHist_get` | Lịch sử phế điện cực theo công đoạn |
 
 ```sql
--- Tìm Lot điện cực theo ngày + công đoạn
-SELECT ElectrodeLotNumber, ElectrodeRouteCode, PriceGood, PriceNG, WorkerName
-FROM STB_ElectrodeProdRouteHist
-WHERE CompanyCode = 'VVT'
-  AND CreateDateTime BETWEEN '2026-04-01' AND '2026-04-13'
-  AND ElectrodeRouteCode = 'SL'  -- SL = Slitting
+-- ⚠️ Đã xác minh DB (2026-06-10): Không có bảng STB_ElectrodeProdRouteHist.
+-- Dữ liệu lịch sử SX điện cực được lấy qua SP usp_Vietnam_ElectrodeProdRouteHist_get
+-- (SP này JOIN nhiều bảng nội bộ: STB_ElectrodeWasteInfoNew, STB_ProdRouteHist, v.v.)
+
+-- Tìm Lot điện cực theo ngày + công đoạn (dùng SP)
+EXEC usp_Vietnam_ElectrodeProdRouteHist_get
+  @pCompanyCode = 'VVT',
+  @pFromDate = '2026-04-01',
+  @pToDate = '2026-04-13'
 
 -- Sửa ngày Coating/Rollpress/Slitting bị sai
 UPDATE STB_ElectrodeWasteInfoNew
@@ -817,7 +822,8 @@ WHERE Slitting_Date IS NULL AND Coating_Date >= '2026-04-01'
 ```
 B552 (Electrode Measure Result) — NHẬP dữ liệu:
   → Mixing → Coating → Rollpress → Slitting
-  → Mỗi bước: usp_ElectrodeXxxInfo_iud → ghi vào STB_ElectrodeXxxInfo
+  → Mỗi bước: usp_ElectrodeStep_iud → ghi vào STB_ElectrodeStep
+  (⚠️ "XxxInfo" ở đây là ký hiệu placeholder, SP thực tế: usp_ElectrodeStep_iud)
 
 B802 (Electrode Prod Route Hist) — XEM TỔNG HỢP:
   → usp_Vietnam_ElectrodeProdRouteHist_get → đọc từ nhiều bảng
@@ -836,8 +842,8 @@ B802 (Electrode Prod Route Hist) — XEM TỔNG HỢP:
 |----|-----------|
 | `usp_vn_showproductionerror` | Lấy danh sách phế đã báo cáo |
 | `usp_Add_ProductionError` | Thêm mới bản ghi phế NVL |
-| `usp_VN_update_ProductionError` | Sửa bản ghi phế đã có |
-| `usp_VN_update_CancelScrap` | Hủy/Cancel bản ghi phế |
+| `usp_VN_update_ProductionError` | Sửa bản ghi phế đã có (⚠️ SP nội bộ, có thể đã đổi tên hoặc tích hợp vào SP khác) |
+| `usp_VN_update_CancelScrap` | Hủy/Cancel bản ghi phế (⚠️ SP nội bộ, có thể đã đổi tên hoặc tích hợp vào SP khác) |
 
 ```sql
 -- Xem tất cả phế theo Line và ngày
