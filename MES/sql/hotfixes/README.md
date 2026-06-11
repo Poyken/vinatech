@@ -15,6 +15,19 @@ Do các đối tượng cơ sở dữ liệu (Stored Procedures, Tables, Views..
 | **03** | 2026-06-10 | `usp_SlittingKnifeLife` | Tuổi thọ dao Slitting | Điều chỉnh công thức tính tuổi thọ dao dựa trên mét cắt thực tế. | Đã triển khai |
 | **04** | 2026-06-10 | `usp_ReworkPermission` | Phân hệ Rework | Fix phân quyền cứng (hardcoded permission) làm lỗi phân quyền nhân viên. | Đã triển khai |
 | **05** | 2026-06-10 | `usp_ReturnsFGIqcCheck` | Trả hàng (Returns) | Thêm kiểm tra IQC bắt buộc trước khi nhập kho thành phẩm lỗi trả về. | Đã triển khai |
+| **06** | 2026-06-11 | `usp_QcInspectionGroup_HY_get`, `usp_QcInspectionItem_HY_get`, `usp_QcInspectionGroup_HY_iud`, `usp_QcInspectionItem_HY_iud` | Quản lý QC Hưng Yên (QC Group/Item HY) | Tạo lại 4 SP quản lý kiểm tra QC và các bảng liên quan cho chi nhánh Hưng Yên (_HY). | Sẵn sàng bàn giao |
+| **07** | 2026-06-11 | `STB_QcInspectionGroup_HY`, `STB_QcInspectionItem_HY` | Di cư dữ liệu QC Hưng Yên (QC Data Migration) | Sao chép toàn bộ dữ liệu danh mục QC từ 2 bảng cũ sang 2 bảng mới của chi nhánh Hưng Yên. | Sẵn sàng bàn giao |
+| **08** | 2026-06-11 | `usp_MaterialQcInspectionItem_ByMaterial_HY_get`, `usp_MaterialQcInspectionItem_HY_iud` | Tiêu chuẩn QC NVL Hưng Yên (Material QC Criteria HY) | Tạo lại 2 SP quản lý tiêu chuẩn kiểm tra nguyên vật liệu và bảng liên quan cho chi nhánh Hưng Yên (_HY). | Sẵn sàng bàn giao |
+| **09** | 2026-06-11 | `STB_MaterialQcInspectionItem_HY` | Di cư dữ liệu tiêu chuẩn QC NVL Hưng Yên | Sao chép toàn bộ dữ liệu tiêu chuẩn kiểm tra NVL từ bảng cũ sang bảng mới của chi nhánh Hưng Yên. | Sẵn sàng bàn giao |
+| **10** | 2026-06-11 | Bộ SP IQC đầu `_HY` (20 SPs) | Phiếu kiểm tra IQC Hưng Yên (Incoming IQC HY) | Tạo lại 20 SP kiểm tra chất lượng nguyên vật liệu đầu vào và bảng liên quan cho chi nhánh Hưng Yên (_HY). | Sẵn sàng bàn giao |
+| **11** | 2026-06-11 | `STB_MaterialQcInspectionGroup_HY` | Di cư dữ liệu cấu hình nhóm QC NVL Hưng Yên | Sao chép dữ liệu cấu hình nhóm kiểm tra nguyên vật liệu từ bảng cũ sang bảng mới của chi nhánh Hưng Yên. | Sẵn sàng bàn giao |
+| **12** | 2026-06-11 | Bộ SP Quản lý PO đầu `_HY` (7 SPs) | Quản lý Đơn hàng sản xuất Hưng Yên (Create PO HY) | Tạo lại 7 SP quản lý đơn hàng sản xuất (PO) cho chi nhánh Hưng Yên. | Sẵn sàng bàn giao |
+| **13** | 2026-06-11 | Bộ SP Kế hoạch ngày `_HY` (4 SPs) | Quản lý Kế hoạch sản xuất ngày Hưng Yên (Create Daily Plan HY) | Tạo lại 4 SP quản lý kế hoạch ngày và tạo lot sản phẩm cho chi nhánh Hưng Yên. | Sẵn sàng bàn giao |
+| **14** | 2026-06-11 | Bộ SP Quy trình trộn điện cực `_HY` (6 SPs) | Quản lý Quy trình sản xuất điện cực Hưng Yên (Mixing Prcs Card HY) | Tạo lại 6 SP quản lý quy trình trộn và sấy lò điện cực cho chi nhánh Hưng Yên. | Sẵn sàng bàn giao |
+| **15** | 2026-06-11 | Bộ SP Kết quả đo điện cực `_HY` (21 SPs) | Quản lý Kết quả đo điện cực Hưng Yên (Electrode Measure Result HY) | Tạo lại 21 SP quản lý kết quả đo điện cực ở từng công đoạn cho chi nhánh Hưng Yên. | Sẵn sàng bàn giao |
+| **16** | 2026-06-11 | Bộ SP Lịch sử sản xuất điện cực `_HY` (2 SPs) | Báo cáo Lịch sử sản xuất điện cực Hưng Yên (Electrode Route Hist HY) | Tạo lại 2 SP tra cứu lịch sử sản xuất và lỗi điện cực cho chi nhánh Hưng Yên. | Sẵn sàng bàn giao |
+| **17** | 2026-06-11 | Bộ SP Kiểm tra chất lượng điện cực `_HY` (6 SPs) | Quản lý Kiểm tra QC điện cực Hưng Yên (QC Electrode Inspection HY) | Tạo lại 6 SP kiểm tra chất lượng điện cực đầu vào và xử lý phế/khóa lot cho chi nhánh Hưng Yên. | Sẵn sàng bàn giao |
+
 
 ---
 
