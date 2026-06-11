@@ -27,20 +27,72 @@ Tài liệu này ghi nhận kết quả đối soát thực tế giữa yêu c�
 | **Điều chỉnh số lượng Lot `FVVQK113R825702`** trong thùng từ 140 về 135 (Sheet 1) | Mã Lot `FVVQK113R825702` và các Barcode thùng liên quan (`VVT_HELA_IN_BOX_260424_0083` -> `0091`) không tồn tại trong DB hiện tại. | **Không tìm thấy** | Đây là dữ liệu cũ từ tháng 04/2024. Có thể đã được đóng/lưu trữ lịch sử hoặc thuộc phân hệ của nhà máy khác. |
 | **Cấu hình Lot Size cho các model khác** (1320, 1325, 1346, 1625, VPC...) | Các thông số đóng gói của các size này đã tồn tại trong `STB_PackingStandard`. | **Đã cover một phần** | Cấu hình quy mô Lot sản xuất được kiểm soát tại màn hình tạo PO/kế hoạch ngày (**B310**/**B450**). |
 
-### 2.2 File `File báo cáo chỉnh sửa lỗi hệ thống ...xlsx` ( ĐÃ COVER ĐẦY ĐỦ 100%)
+#### Chi tiết cấu hình quy mô Lot No sản xuất & Test phá hủy (Bắc Giang 1)
+Dưới đây là bảng tổng hợp chi tiết cấu hình Lot Size, phương pháp sấy (Normal drying vs. Infrared drying), số lượng mẫu test phá hủy và thông số định mức cuộn nguyên liệu cho các model:
 
-Toàn bộ các yêu cầu chỉnh sửa danh mục mã lỗi hiển thị trên màn hình **B530** (Nhập sản lượng công đoạn) tại nhà máy Bắc Giang đã được triển khai hoàn chỉnh:
+| Model | Lot Size Trước | Sấy Trước | Lot Size Sau | Sấy Sau | Quy cách đóng gói | Số mẫu phá hủy trước | Số mẫu phá hủy sau | Đặc tính cuộn nguyên liệu (Foil/Roll Specs) |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **1320** | 1280 | Thường | 2000 / 4000 | Hồng ngoại | 2400 (1 máy 2 khay x 1k) | 21 / 63 | 13 / 39 (test 6) | 1 roll nhỏ = 400m / 167mm * 0.95 * 1000 = 2,275 pcs |
+| **1325** | 1280 | Thường | 1700 / 3400 | Hồng ngoại | 2400 (1 máy 2 khay x 850) | 21 / 63 | 15 / 45 (test 6) | 1 roll nhỏ = 400m / 179mm * 0.95 * 1000 = 2,122 pcs |
+| **1346** | 600 | Thường | 800 / 1600 | Hồng ngoại | 1200 (1 máy 2 khay x 400) | 17 / 51 | 12 / 36 (test 6) | 1 small roll = 400m / 185mm * 0.95 * 1000 = 2,054 pcs |
+| **1625** | 900 | Thường | 1400 / 2400 | Hồng ngoại | 1400 (1 máy 2 khay x 700) | 20 / 60 | 13 / 39 (test 6) | Giữ nguyên |
+| **1840** | 500 | Thường | 1000 / 2000 | Hồng ngoại | Thường: 500, Hela: 640 | 36 / 108 | 18 / 54 (test 6) | 1 small roll = 400m / 387mm * 0.95 * 1000 = 981 pcs |
+| **1859** | 300 | Thường | 900 | Thường | 1 máy sấy 3 ngăn | - | - (test 6) | 1 small roll = 400m / 338mm * 0.95 * 1000 = 1,124 pcs |
+| **VPC 0820** | 3000 | Thường | 3000 | Thường | 1 máy sấy 3 ngăn | - | - (test 6) | - |
+| **VPC 0825** | 3000 | Thường | 3000 | Thường | 1 máy sấy 3 ngăn | - | - (test 6) | - |
+| **VPC 1030** | 2000 | Thường | 2000 / 3000 | Thường | 1 máy sấy 3 ngăn | - | - (test 6) | 1 small roll = 400m / 165mm * 0.95 * 1000 = 2,303 pcs |
+| **VPC 1040** | 2000 | Thường | 2000 / 3000 | Thường | 1 máy sấy 3 ngăn | - | - (test 6) | 1 small roll = 400m / 205mm * 0.95 * 1000 = 1,853 pcs |
+| **VPC 1325** | 1000 | Thường | 3000 | Thường | 1 máy sấy 3 ngăn | - | - (test 6) | 1 small roll = 400m / 295mm * 0.95 * 1000 = 1,288 pcs |
+| **VPC 1335** | 1000 | Thường | 3000 | Thường | 1 máy sấy 3 ngăn | - | - (test 6) | 1 small roll = 400m / 295mm * 0.95 * 1000 = 1,288 pcs |
+| **2245** | 430 | Thường | 1290 | Thường | - | 10.46 | 3.48 (test 2) | 1 small roll = 400m / 575mm * 0.95 * 1000 = 660 pcs |
+| **2570** | 300 | Thường | 900 | Thường | - | 8.33 | 2.77 (test 2) | 1 small roll = 400m / 575mm * 0.95 * 1000 = 660 pcs |
+| **3562** | 179 | Thường | 537 / 1074 | Thường | 600 (1 ngăn 6 khay, 2 lot) | 50 | 17 (test 2) | 1 small roll = 400m / 1520mm * 0.95 * 1000 = 250 pcs |
+| **3582** | 179 | Thường | 358 / 716 / 1074 | Thường | 600 (1 ngăn 4 khay, 2 lot) | 16 | 8 (test 2) | 1 small roll = 400m / 1520mm * 0.95 * 1000 = 250 pcs |
+| **35105**| 179 | Thường | 358 / 716 / 1074 | Thường | 600 (1 ngăn 4 khay, 2 lot) | 16 | 8 (test 2) | 1 small roll = 400m / 1520mm * 0.95 * 1000 = 250 pcs |
 
-*   **Disable 28 mã lỗi cũ (`IsUsed = 0`):** Đã vô hiệu hóa các mã trùng lặp/dư thừa tại các công đoạn:
-    *   *Winding (V-22_BG):* `V-22_CC_BG`, `V-22_X12_BG`, `V-22_Z03_BG`, `V-22_Z04_BG`
-    *   *Rubber/Riveting (V-23_BG):* `V-23_02_BG`, `V-23_2DR_BG`, `V-23_NE1_BG`, `V-23_NE2_BG`, `V-23_QQ_BG`, `V-23_XZ2_BG`, `V-23_X12_BG`, `V-24_2RY_BG`
-    *   *Curling (V-24_BG):* `V-24_NE4_BG`, `V-24_22CT_BG`, `V-24_2CT_BG`, `V-24_2DR_BG`, `V-24_5VV_BG`, `V-24_NE22_BG`
-    *   *Sleeving (V-25_BG):* `V-25_01_BG`, `V-25_2CT_BG`, `V-25_X03_BG`, `V-25_X12_BG`
-    *   *Ngoại quan (V-27_BG):* `V-27_ZC_BG`, `V-27_ZD_BG`, `V-27_4GV_BG`, `V-27_5VI_BG`, `V-27_XP1_BG`, `V-27_RELY_BG`
-*   **Thêm mới 7 mã lỗi thực tế (`IsUsed = 1`):** Đã bổ sung thành công vào bảng master mã lỗi `STB_DefectInfo`:
-    *   *Winding:* `V-22_BM_BG` (Winding_Xocha đen đầu đáy)
-    *   *Rubber/Riveting:* `V-23_DV_BG` (Rubber/riveting_Dập vỡ Tancha pan), `V-23_RD_BG` (Rubber/riveting_Rách đáy xocha), `V-23_XZ3_BG` (Riveting_Thiếu thừa vòng đệm)
-    *   *Curling:* `V-24_NE6_BG` (Curling_NG thừa thiếu cân nặng), `V-24_NE7_BG` (Curling_Xước chân tancha), `V-24_NE8_BG` (Curling_Lỗi mẻ miệng curling)
+---
+
+### 2.2 File `File báo cáo chỉnh sửa lỗi hệ thống ...xlsx` (⚠️ ĐÃ COVER ĐẦY ĐỦ 100%)
+
+Toàn bộ các yêu cầu chỉnh sửa danh mục mã lỗi hiển thị trên màn hình **B530** (Nhập sản lượng công đoạn) tại nhà máy Bắc Giang (BG) đã được triển khai hoàn chỉnh. Chi tiết ma trận mã lỗi thay đổi theo từng công đoạn:
+
+| Công đoạn | Trạng thái thay đổi | Mã lỗi | Tên lỗi trên hệ thống | Ghi chú từ nhà máy |
+| :--- | :--- | :--- | :--- | :--- |
+| **Winding** (Cuốn) | ❌ **Vô hiệu hóa** (Delete) | `V-22_CC_BG` | Winding_NG kích thước điện cực_Electrode NG | Lỗi cũ/trùng |
+| | ❌ **Vô hiệu hóa** (Delete) | `V-22_X12_BG` | Winding_Kiểm tra sample_Sample NG | Lỗi mẫu |
+| | ❌ **Vô hiệu hóa** (Delete) | `V-22_Z03_BG` | Winding_NG lẫn băng dính đỏ_Red tape mixed | Lỗi trùng |
+| | ❌ **Vô hiệu hóa** (Delete) | `V-22_Z04_BG` | Winding_NG vết dập_점철부손상 | Lỗi trùng |
+| | Add new | `V-22_BM_BG` | Winding_Xocha đen đầu ,đáy _The product has black marks on the top and bottom | Thêm mới thực tế |
+| **Rubber/Riveting** (Lắp cao su/Dập tancha) | ❌ **Vô hiệu hóa** (Delete) | `V-23_02_BG` | Rubber_Test chức năng đo short_NG short test | Lỗi trùng |
+| | ❌ **Vô hiệu hóa** (Delete) | `V-23_2DR_BG` | Rubber/riveting_Rơi hàng trong máy_Drop defect | Lỗi trùng |
+| | ❌ **Vô hiệu hóa** (Delete) | `V-23_NE1_BG` | Rubber_NG short_NG short | Lỗi trùng |
+| | ❌ **Vô hiệu hóa** (Delete) | `V-23_NE2_BG` | Rubber_Rơi xô cha trước chèn cao su_Drop defect before rubber insert | Lỗi trùng |
+| | ❌ **Vô hiệu hóa** (Delete) | `V-23_QQ_BG` | Rubber_Bóc tách kiểm tra_Decap to check | Lỗi mẫu |
+| | ❌ **Vô hiệu hóa** (Delete) | `V-23_XZ2_BG` | Riveting_ Thiếu vòng đệm_Lack washer | Sửa thành mã chung |
+| | ❌ **Vô hiệu hóa** (Delete) | `V-23_X12_BG` | Rubber_Kiểm tra sample_Sample NG | Lỗi mẫu |
+| | ❌ **Vô hiệu hóa** (Delete) | `V-24_2RY_BG` | Riveting_NG đo short_Short check voltage | Lỗi trùng |
+| | Add new | `V-23_DV_BG` | Rubber/riveting_Dập vỡ Tancha pan_ATL bent or broke when stamped | Thêm mới thực tế |
+| | Add new | `V-23_RD_BG` | Rubber/riveting_Rách đáy xocha (rách giấy) khi đưa vào vỏ nhôm | Thêm mới thực tế |
+| | Add new | `V-23_XZ3_BG` | Riveting_Riveting_Thiếu,thừa vòng đệm_Insufficient or excessive gasket | Thêm mới thực tế |
+| **Curling** (Bo miệng/Rửa) | ❌ **Vô hiệu hóa** (Delete) | `V-24_NE4_BG` | Curling_Cong chân tancha trước curling_Terminal lead it bent | Lỗi trùng |
+| | ❌ **Vô hiệu hóa** (Delete) | `V-24_22CT_BG` | Curling_Cong chân tancha_Terminal lead it bent | Lỗi trùng |
+| | ❌ **Vô hiệu hóa** (Delete) | `V-24_2CT_BG` | Curling_Cong chân tancha_Terminal lead it bent | Lỗi trùng |
+| | ❌ **Vô hiệu hóa** (Delete) | `V-24_2DR_BG` | Curling_Rơi xô cha khi chèn cao su_Xocha drop when insert rubber | Lỗi trùng |
+| | ❌ **Vô hiệu hóa** (Delete) | `V-24_5VV_BG` | Curling_Tràn dịch lỗ cao su_Leakage at rubber hold | Lỗi trùng |
+| | ❌ **Vô hiệu hóa** (Delete) | `V-24_NE22_BG` | Curling_Cong chân tancha trước curling_Terminal lead it bent | Lỗi trùng |
+| | Add new | `V-24_NE6_BG` | Curling_NG thừa, thiếu cân nặng_Overweight or underweight | Thêm mới thực tế |
+| | Add new | `V-24_NE7_BG` | Curling_ Xước chân tancha_Lead terminal is Scrash | Thêm mới thực tế |
+| | Add new | `V-24_NE8_BG` | Curling_Lỗi mẻ miệng curling_Deformation around the mouth of the product | Thêm mới thực tế |
+| **Sleeving** (Bọc vỏ) | ❌ **Vô hiệu hóa** (Delete) | `V-25_01_BG` | VISUAL MACHINE REPAIR_VISUAL SUA MAY | Lỗi bảo trì |
+| | ❌ **Vô hiệu hóa** (Delete) | `V-25_2CT_BG` | SLEEVING_리드꼬임불량_SLEEVING_LỖI>>> | Lỗi trùng |
+| | ❌ **Vô hiệu hóa** (Delete) | `V-25_X03_BG` | SLEEVING_셋업검증_KIỂM TRA SETUP Máy | Lỗi setup |
+| | ❌ **Vô hiệu hóa** (Delete) | `V-25_X12_BG` | SLEEVING_샘플_SLEEVING_MẪU | Lỗi mẫu |
+| **Ngoại quan** (QC/OQC) | ❌ **Vô hiệu hóa** (Delete) | `V-27_ZC_BG` | Ngoại quan_NG thiếu cân nặng_Product weight under spec | Đưa về Curling |
+| | ❌ **Vô hiệu hóa** (Delete) | `V-27_ZD_BG` | Ngoại quan_NG thừa cân nặng_Product weight out spec | Đưa về Curling |
+| | ❌ **Vô hiệu hóa** (Delete) | `V-27_4GV_BG` | Ngoại quan_NG ESR_NG ESR | Lỗi trùng |
+| | ❌ **Vô hiệu hóa** (Delete) | `V-27_5VI_BG` | Ngoại quan_Ngược cực_Reverse polarity | Lỗi trùng |
+| | ❌ **Vô hiệu hóa** (Delete) | `V-27_XP1_BG` | Ngoại quan_Cong chân, xước chân_Lead terminal is Scrash | Đưa về Curling |
+| | ❌ **Vô hiệu hóa** (Delete) | `V-27_RELY_BG` | Ngoại quan_QC kiểm tra_QC inspect | Lỗi mẫu |
 
 *Giao diện popup lỗi màn B530 load động qua stored procedure `usp_DefectInfo_popup_B530` đã tự động cập nhật danh sách mới.*
 

@@ -884,12 +884,55 @@ GROUP BY LineCode ORDER BY TongPhe DESC
 
 ---
 
-### 6.14 Nhà Máy BG2 — K101 & K109
+### 6.14 Nhà Máy BG2 — Cấu Hình Triển Khai Hệ Thống MES
 
-**K101** = tương đương B450 nhưng cho nhà máy BG2.
-**K109** = tương đương B597 nhưng cho BG2 (`WorkCenterCode = 'VVT_BG2'`).
+Hệ thống MES tại nhà máy Bắc Giang 2 (BG2) sử dụng hai màn hình giao dịch chính được tùy biến riêng:
+*   **K101 (Kế hoạch sản xuất ngày BG2):** Tương đương với màn hình tiêu chuẩn **B450** nhưng chạy logic riêng cho nhà máy BG2.
+*   **K109 (Kiểm tra thường xuyên BG2):** Tương đương với màn hình tiêu chuẩn **B597** nhưng lọc riêng cho nhà máy BG2 (`WorkCenterCode = 'VVT_BG2'`). Để truy cập K109, OP vào màn **B540** -> Nhấn nút **"Việt Nam_Kiểm tra thường xuyên_BG2"**.
 
-Truy cập K109 qua: B540 → Ấn nút **"Việt Nam_Kiểm tra thường xuyên_BG2"**
+Dưới đây là ma trận trạng thái các hạng mục công việc đã triển khai và các hạng mục còn tồn đọng (Pending) tại nhà máy BG2:
+
+#### 1. Hạng mục đã hoàn thành 100%
+*   **Phân hệ Kho NVL (WMS):**
+    *   Cấu hình chỉ định nhà cung cấp cho từng mã nguyên vật liệu (màn hình **F140**).
+    *   Tạo phiếu ghi chú đơn hàng nhập khẩu về kho (màn hình **F312**).
+    *   Xác nhận nhập kho thực tế (màn hình **F320**) tự động liên kết sau khi bên IQC đánh giá PASS ở màn hình **C220**.
+    *   Chia nhỏ lô hàng nhập khẩu thành các Lot con theo đúng quy tắc tem nhãn của VINA Thị (màn hình **F330** - dùng tem ML khi chia, còn chia nhỏ Lot theo số lượng mong muốn thì dùng màn hình **F740**).
+    *   Cấp phát NVL ra CellLine và tra cứu lịch sử xuất kho (màn hình **F430**), hỗ trợ check FIFO phục vụ Audit khách hàng.
+    *   Quản lý tồn kho NVL và quét Barcode để gán vị trí vật lý (màn hình **F721**).
+    *   Triển khai phần mềm hiển thị sơ đồ vị trí (Location map) trực quan trên Tivi giám sát trong kho NVL.
+*   **Phân hệ Sản xuất (Cell Line):**
+    *   Cấu hình tạo PO mặc định theo Cellline.
+    *   Tạo BOM trên hệ thống Groupware.
+    *   Cấu hình định tuyến sản xuất (Routing) chi tiết cho sản phẩm.
+    *   Cấu hình chọn máy sản xuất khi kết thúc công đoạn.
+    *   Cấu hình danh mục lỗi chi tiết theo từng công đoạn sản xuất, tách biệt hoàn toàn giữa các nhà máy Bắc Ninh, Bắc Giang, Hà Nam (màn hình **C132**).
+    *   Quản lý và tách biệt tài khoản công nhân vận hành của 3 nhà máy.
+    *   Chốt sản lượng hoàn thành từng công đoạn dựa theo Routing sản phẩm (màn hình **B530**).
+    *   Hỗ trợ OP chọn trạng thái Pass hoặc Fail cho từng công đoạn.
+    *   Nhập và scan barcode NVL thô cho từng con hàng (màn hình **K109**), tích hợp logic ngăn chặn việc nhập sai mã NVL.
+    *   Tra cứu thông tin chi tiết của con hàng đang sản xuất (màn hình **B540**).
+
+#### 2. Hạng mục chưa hoàn thành (Pending / Đang triển khai)
+*   **Phân hệ QC:**
+    *   Triển khai quy trình tạo Lot kiểm tra OQC thành phẩm (màn hình **C151**).
+    *   Triển khai màn hình kiểm tra dữ liệu đo kiểm thực tế OQC (màn hình **C153**).
+    *   Thiết lập spec kiểm tra chất lượng chi tiết cho từng con hàng/model.
+    *   Cấu hình lưu lịch sử kiểm tra OQC.
+*   **Phân hệ Sản xuất & Kho:**
+    *   Triển khai chức năng báo phế nguyên vật liệu trực tiếp trên CellLine (màn hình **B598**).
+    *   Thiết lập chặn lưu NVL trên màn hình **K109** theo đúng tiêu chuẩn BOM (hiện tại mới đang ở mức thử nghiệm và chưa chặn cứng).
+    *   Chưa cấu hình tiêu chuẩn BOM chi tiết chia theo từng công đoạn sản xuất.
+    *   Chưa triển khai màn hình in tem đóng gói của sản xuất và kho.
+*   **Hỗ trợ Sản xuất (Báo cáo & Giá thành):**
+    *   Thiết lập đơn giá cho từng sản phẩm trên hệ thống.
+    *   Thiết lập đơn giá cho nguyên vật liệu để tính toán chi phí phế thải sản xuất.
+    *   Thiết lập đơn giá công đoạn sản xuất.
+    *   Xây dựng báo cáo tổng hợp sản lượng nhập/xuất kho NVL.
+*   **Spare Part (Thiết bị bảo trì):**
+    *   *Chưa triển khai:* Cấu hình thông tin, quy trình nhập/xuất kho, lịch sử xuất kho, báo cáo tồn kho và thông tin nhân viên bảo trì.
+*   **Kho thành phẩm:**
+    *   *Đạt 90%:* In tem nhãn đóng gói, nhập kho bằng phần mềm, kiểm tra dữ liệu nhập/xuất kho trên hệ thống MES, xuất kho thành phẩm. Cần tích hợp nốt phần in ấn và đồng bộ dữ liệu xuất hàng.
 
 ---
 
