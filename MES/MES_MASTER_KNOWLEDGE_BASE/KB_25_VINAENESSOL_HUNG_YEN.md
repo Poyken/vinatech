@@ -325,3 +325,53 @@ Dưới đây là bảng đối soát tiến độ triển khai cấu hình các
 | | Thông tin thiết bị máy móc (**B250**) | Mr. Triều | **100%** | Đã cấu hình hoạt động |
 
 ---
+
+## 7. 🛠️ Triển Khai & Cấu Hình 9 Màn Hình Mới Hưng Yên (VVT_F5)
+
+Nhằm đảm bảo tính độc lập vận hành cho xưởng Hưng Yên (`VVT_F5`) mà không làm ảnh hưởng tới logic của các nhà máy Bắc Ninh, Bắc Giang, và Hà Nam, hệ thống thực hiện nhân bản khép kín **78 Stored Procedures** và **9 màn hình chức năng** tương ứng.
+
+### 7.1 Danh Sách 9 Màn Hình Được Nhân Bản (HY TCodes)
+
+| STT | ScreenName | TCode | Phân hệ | Màn hình gốc | SP Chính Liên Quan |
+|---|---|---|---|---|---|
+| 1 | `QcInspectionGroup_HY` | `HY121` | Quality Control (QC) | `C121` | `usp_QcInspectionGroup_HY_get`/`_iud` |
+| 2 | `MaterialQcInspectionItemByMaterial_HY` | `HY122` | Quality Control (QC) | `C122` | `usp_MaterialQcInspectionItem_ByMaterial_HY_get`/`_iud` |
+| 3 | `MaterialIqcInfoSampleManagement_HY` | `HY220` | Quality Control (QC) | `C220` | Bộ SP IQC đầu `_HY` (Detail, SampleResult...) |
+| 4 | `ProductionOrderInfo_HY` | `HY310` | Production (PO) | `B310` | `usp_ProductionOrderInfo_HY_get`, `usp_DoFixProductionOrder_HY` |
+| 5 | `ElectrodePlan_HY` | `HY442` | Electrode (Điện cực) | `B442` | `usp_DayProdPlan_HY_get`, `usp_SetInfo_HY_get` |
+| 6 | `ElectrodePrcsCard_HY` | `HY470` | Electrode (Điện cực) | `B470` | `usp_ElectrodeStep_HY_get`/`_iud`, `_Oven_HY_get` |
+| 7 | `ElectrodeMeasureResult_HY` | `HY552` | Electrode (Điện cực) | `B552` | Bộ SP kết quả công đoạn điện cực (Coating, Rollpress...) |
+| 8 | `ElectrodeProdRouteHist_HY` | `HY802` | Electrode (Điện cực) | `B802` | `usp_Vietnam_ElectrodeProdRouteHist_HY_get` |
+| 9 | `ElectrodeInspectionHistoryForBarcode_HY` | `HY460` | Electrode (Điện cực) | `C460` | `usp_GetElectrodeInspectionHistoryForBarcode_HY` |
+
+### 7.2 Quy Tắc Đặt Tên & Logic Của SP Nhân Bản
+*   **Quy tắc đặt tên:**
+    *   Hàm lấy dữ liệu: `[Tên SP Gốc]_get` $\rightarrow$ `[Tên SP Gốc]_HY_get` (Ví dụ: `usp_QcInspectionGroup_HY_get`).
+    *   Hàm ghi/sửa dữ liệu: `[Tên SP Gốc]_iud` $\rightarrow$ `[Tên SP Gốc]_HY_iud` (Ví dụ: `usp_QcInspectionGroup_HY_iud`).
+    *   Các SP nghiệp vụ khác: Thêm hậu tố `_HY` (Ví dụ: `usp_GetMaterialGIForPO_HY`).
+*   **Logic độc lập:** Các SP được tự động quét và sửa các lời gọi chéo nhau bên trong thân hàm. Nếu SP A gọi SP B, phiên bản SP A_HY sẽ tự động gọi sang SP B_HY để đảm bảo cô lập dữ liệu hoàn toàn.
+
+### 7.3 Bẫy Mã Hóa Tiếng Hàn (Encoding Trap)
+*   **Vấn đề:** Các Stored Procedure tiêu chuẩn chứa rất nhiều bình luận (comment) bằng tiếng Hàn và tiếng Việt có dấu, cũng như các biến logic có ký tự Hàn (Ví dụ: `@sumSampleQty공정`).
+*   **Giải pháp:** Khi xuất bản hoặc ghi đè file SQL bằng PowerShell, bắt buộc phải dùng thuộc tính `-Encoding UTF8` (hoặc định dạng UTF-8 with BOM). Nếu ghi bằng mã ANSI/ASCII mặc định, các ký tự tiếng Hàn sẽ bị biến đổi thành dấu hỏi chấm (`??`), gây lỗi biên dịch nghiêm trọng trên SQL Server.
+
+### 7.4 Tự Động Nhân Bản Layout Màn Hình (Server-Side Cloning)
+*   **Vấn đề WAN:** File thiết kế màn hình (`XmlLayout` - nvarchar và `Layout` - varbinary) lưu trong bảng `STB_ScreenLayoutInfo` (DB `SmartFramework`) có dung lượng rất lớn. Việc tải các tệp nhị phân này về máy trạm local rồi đẩy ngược lên DB server qua đường truyền WAN quốc tế (đi Hàn Quốc) rất dễ bị nghẽn (hang/timeout).
+*   **Giải pháp T-SQL:** Thực hiện sao chép và cập nhật trực tiếp trên server bằng câu lệnh T-SQL để tận dụng bộ nhớ trong của DB Server:
+    1.  Thực hiện `INSERT INTO ... SELECT` để clone nguyên trạng bản ghi của màn hình gốc sang màn hình `_HY` (giữ nguyên cột nhị phân `Layout` và `Snapshot` mà không cần truyền tải qua mạng).
+    2.  Dùng hàm `REPLACE` trong SQL để cập nhật lại toàn bộ các thẻ tham chiếu SP gốc thành SP `_HY` bên trong cột văn bản `XmlLayout` (Ví dụ: thay thế `usp_ProductionOrderInfo_get` thành `usp_ProductionOrderInfo_HY_get`).
+
+*Các script hỗ trợ đã được tạo sẵn trong thư mục [sql/scripts/](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/sql/scripts):*
+*   [generated_hy_sps.sql](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/sql/scripts/generated_hy_sps.sql) — Script tạo 78 SPs Hưng Yên mới.
+*   [register_hy_screens.sql](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/sql/scripts/register_hy_screens.sql) — Script đăng ký ScreenInfo & ScreenObjects trên DB `SmartFramework`.
+*   [clone_screen_layouts.sql](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/sql/scripts/clone_screen_layouts.sql) — Script T-SQL chạy trực tiếp trên `SmartFramework` để nhân bản giao diện và cập nhật mapping.
+
+### 7.5 Bài Học Kinh Nghiệm Từ Sự Cố Khởi Động Client (Menu Initialization Failed)
+*   **Hiện tượng:** Khi chạy script đăng ký màn hình `register_hy_screens.sql` nhưng chưa nhân bản hoặc nhân bản thiếu layout tương ứng trong bảng `STB_ScreenLayoutInfo` (ví dụ do timeout đường truyền WAN khi clone layout), Client MES khi khởi động sẽ lập tức báo lỗi nghiêm trọng: **"Menu initialization failed. Internal Server Error. Please contact your administrator."**
+*   **Nguyên nhân gốc rễ:** WCF Web Service của NAIS MES khi boot sẽ tải danh mục toàn bộ menu dựa trên bảng `STB_ScreenInfo` rồi thực hiện đối chiếu/khởi tạo với dữ liệu giao diện layout trong `STB_ScreenLayoutInfo`. Việc có bản ghi đăng ký màn hình trong `STB_ScreenInfo` nhưng bị thiếu/NULL layout XML trong `STB_ScreenLayoutInfo` khiến hàm `MenuManager.Initialize` ở phía WCF Service bị crash lỗi 500 NullReferenceException, dẫn đến toàn bộ Client không thể đăng nhập.
+*   **Khắc phục & Phòng ngừa:**
+    1.  **Quy trình rollback:** Phải thực hiện xóa đồng bộ các bản ghi của màn hình lỗi ở cả 6 bảng cấu hình hệ thống: `STB_ScreenInfo`, `STB_ScreenObjects`, `STB_ScreenLayoutInfo`, `STB_UserTypeBasicPermission`, `STB_UserTypeViewPermission`, và `STB_UserTypeFunctionPermission`.
+    2.  **Nguyên tắc nguyên tử (Atomicity):** Khi thêm màn hình mới, tuyệt đối không được để trạng thái "màn hình đã đăng ký nhưng chưa có layout". Cần chạy script chèn đồng thời cả ScreenInfo và ScreenLayoutInfo dưới dạng một Transaction duy nhất.
+
+---
+
