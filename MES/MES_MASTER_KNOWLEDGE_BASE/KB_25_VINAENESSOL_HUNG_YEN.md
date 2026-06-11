@@ -366,12 +366,26 @@ Nhằm đảm bảo tính độc lập vận hành cho xưởng Hưng Yên (`VVT
 *   [register_hy_screens.sql](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/sql/scripts/register_hy_screens.sql) — Script đăng ký ScreenInfo & ScreenObjects trên DB `SmartFramework`.
 *   [clone_screen_layouts.sql](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/sql/scripts/clone_screen_layouts.sql) — Script T-SQL chạy trực tiếp trên `SmartFramework` để nhân bản giao diện và cập nhật mapping.
 
-### 7.5 Bài Học Kinh Nghiệm Từ Sự Cố Khởi Động Client (Menu Initialization Failed)
+### 7.5 Tổng Hợp Bài Học Kinh Nghiệm & Khắc Phục Sự Cố
+
+#### 7.5.1 Lỗi Khởi Động Client (Menu Initialization Failed)
 *   **Hiện tượng:** Khi chạy script đăng ký màn hình `register_hy_screens.sql` nhưng chưa nhân bản hoặc nhân bản thiếu layout tương ứng trong bảng `STB_ScreenLayoutInfo` (ví dụ do timeout đường truyền WAN khi clone layout), Client MES khi khởi động sẽ lập tức báo lỗi nghiêm trọng: **"Menu initialization failed. Internal Server Error. Please contact your administrator."**
 *   **Nguyên nhân gốc rễ:** WCF Web Service của NAIS MES khi boot sẽ tải danh mục toàn bộ menu dựa trên bảng `STB_ScreenInfo` rồi thực hiện đối chiếu/khởi tạo với dữ liệu giao diện layout trong `STB_ScreenLayoutInfo`. Việc có bản ghi đăng ký màn hình trong `STB_ScreenInfo` nhưng bị thiếu/NULL layout XML trong `STB_ScreenLayoutInfo` khiến hàm `MenuManager.Initialize` ở phía WCF Service bị crash lỗi 500 NullReferenceException, dẫn đến toàn bộ Client không thể đăng nhập.
 *   **Khắc phục & Phòng ngừa:**
     1.  **Quy trình rollback:** Phải thực hiện xóa đồng bộ các bản ghi của màn hình lỗi ở cả 6 bảng cấu hình hệ thống: `STB_ScreenInfo`, `STB_ScreenObjects`, `STB_ScreenLayoutInfo`, `STB_UserTypeBasicPermission`, `STB_UserTypeViewPermission`, và `STB_UserTypeFunctionPermission`.
     2.  **Nguyên tắc nguyên tử (Atomicity):** Khi thêm màn hình mới, tuyệt đối không được để trạng thái "màn hình đã đăng ký nhưng chưa có layout". Cần chạy script chèn đồng thời cả ScreenInfo và ScreenLayoutInfo dưới dạng một Transaction duy nhất.
+
+#### 7.5.2 Lỗi Nghẽn/Timeout Kết Nối Mạng WAN (Database Connection Timeout)
+*   **Hiện tượng:** Quá trình clone layout giao diện bị treo hoặc trả về lỗi Timeout từ SQL Server (mặc định 30s) khi thực hiện cập nhật/thay thế các thẻ XML Layout trực tiếp bằng các vòng lặp SQL.
+*   **Nguyên nhân gốc rễ:** Bản ghi layout trong bảng `STB_ScreenLayoutInfo` chứa dữ liệu XML dung lượng rất lớn (`XmlLayout` dưới dạng text XML và `Layout` dưới dạng nhị phân `varbinary`). Đường truyền WAN kết nối đến DB Server đặt tại Hàn Quốc có độ trễ lớn và băng thông giới hạn. Việc thực hiện hàng trăm lệnh UPDATE lớn qua mạng hoặc xử lý XML trực tiếp trên SQL Server thông qua các lệnh query lặp đi lặp lại rất dễ vượt ngưỡng Command Timeout 30 giây.
+*   **Giải pháp xử lý tối ưu:**
+    1.  Tận dụng lệnh `INSERT INTO ... SELECT` trực tiếp trên server để copy cột nhị phân `Layout` và `Snapshot` mà không truyền dữ liệu nhị phân qua WAN.
+    2.  Thực hiện thay thế chuỗi XML (Replace tên SP cũ thành SP `_HY`) trong bộ nhớ phía Client (ví dụ sử dụng script PowerShell local) trước khi insert để tránh thực hiện các câu lệnh UPDATE XML nặng nề trên SQL Server.
+
+#### 7.5.3 Vấn Đề Mã Hóa Tiếng Hàn (Korean Encoding Trap)
+*   **Hiện tượng:** Các stored procedure sau khi nhân bản bị báo lỗi cú pháp hoặc bị lỗi hiển thị ký tự (dấu chấm hỏi `??`) tại các phần bình luận tiếng Hàn hoặc các biến logic tiếng Hàn (Ví dụ: `@sumSampleQty공정`).
+*   **Nguyên nhân gốc rễ:** SQL Server và các script mặc định lưu ở mã hóa ANSI/ASCII sẽ làm hỏng các ký tự Unicode tiếng Hàn.
+*   **Giải pháp:** Bắt buộc phải lưu và thực thi toàn bộ các file script SQL bằng mã hóa **UTF-8 với BOM** (`UTF-8 with Signature`) bằng cách sử dụng tham số `-Encoding UTF8` trong PowerShell hoặc lưu đúng định dạng trong editor, giúp bảo toàn tính toàn vẹn của mã nguồn tiếng Hàn.
 
 ---
 
