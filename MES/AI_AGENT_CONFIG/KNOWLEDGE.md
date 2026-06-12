@@ -51,26 +51,26 @@
 ### Mẫu 1: Dành cho sản phẩm Cell & Module (Chiếm 80% trường hợp)
 ```sql
 SELECT 
-    SI.Barcode AS [Physical Barcode],
-    SI.ControlNo AS [Internal ControlNo],
-    SI.PONo AS [PO Number],
-    SI.MaterialCode AS [Model Code],
-    SI.InputLineCode AS [Line Code],
-    SI.LotDecisionResult AS [QC Result (SetInfo)],
-    SI.IsDefect AS [Is Defect Y/N],
-    PRH.RouteCode AS [Step Code],
-    RI.RouteName AS [Step Name],
-    PRH.ProdQty AS [Step Produced Qty],
-    PRH.CreateDateTime AS [Step Date Time],
-    MLI.CurrentQty AS [WMS Inventory Qty],
-    MLI.WarehouseCode AS [Current Warehouse],
-    MLI.LocationCode AS [Current Location],
-    DP.PackingID AS [Inner Box ID],
-    DP.ParentPackingID AS [Outer Pallet ID]
+    SI.Barcode,
+    SI.ControlNo,
+    SI.PONo,
+    SI.MaterialCode,
+    SI.InputLineCode,
+    SI.LotDecisionResult,
+    SI.IsDefect,
+    PRH.RouteCode,
+    RI.RouteName,
+    PRH.ProdQty,
+    PRH.CreateDateTime,
+    MLI.CurrentQty,
+    MLI.MaterialWarehouseCode,
+    MLI.MaterialLocationCode,
+    DP.PackingID,
+    DP.ParentPackingID
 FROM STB_SetInfo SI WITH(NOLOCK)
 LEFT JOIN STB_ProdRouteHist PRH WITH(NOLOCK) ON SI.ControlNo = PRH.ControlNo
 LEFT JOIN STB_RouteInfo RI WITH(NOLOCK) ON PRH.RouteCode = RI.RouteCode
-LEFT JOIN STB_MaterialLotInfo MLI WITH(NOLOCK) ON SI.Barcode = MLI.LotNo
+LEFT JOIN STB_MaterialLotInfo MLI WITH(NOLOCK) ON SI.Barcode = MLI.MaterialLotNo
 LEFT JOIN STB_DividePackaging DP WITH(NOLOCK) ON SI.Barcode = DP.LotNo
 WHERE SI.Barcode = 'MÃ_BARCODE_CELL_MODULE' 
    OR SI.ControlNo = 'MÃ_BARCODE_CELL_MODULE'
@@ -78,43 +78,42 @@ ORDER BY PRH.CreateDateTime ASC;
 ```
 
 ### Mẫu 2: Dành cho cuộn điện cực (Coating/Slitting/Curling - Electrode)
-*Lưu ý: Điện cực chạy ở bảng lịch sử riêng `STB_ElectrodeProdRouteHist` thay vì `STB_ProdRouteHist`.*
 ```sql
 SELECT 
-    MLI.LotNo AS [Electrode Roll Lot],
-    MLI.MaterialCode AS [Electrode Model],
-    MLI.CurrentQty AS [Current Length (m)],
-    MLI.WarehouseCode AS [Warehouse],
-    MLI.LocationCode AS [Location],
-    EPRH.RouteCode AS [Electrode Step Code],
-    RI.RouteName AS [Electrode Step Name],
-    EPRH.ProdQty AS [Produced Qty],
-    EPRH.CreateDateTime AS [Scan Date Time]
+    MLI.MaterialLotNo,
+    MLI.MaterialCode,
+    MLI.CurrentQty,
+    MLI.MaterialWarehouseCode,
+    MLI.MaterialLocationCode,
+    C.MachineCode,
+    C.WorkDate,
+    P.MachineCode,
+    P.WorkDate,
+    S.ProductionQty,
+    S.CreateDateTime
 FROM STB_MaterialLotInfo MLI WITH(NOLOCK)
-LEFT JOIN STB_ElectrodeProdRouteHist EPRH WITH(NOLOCK) ON MLI.LotNo = EPRH.ElectrodeLotID
-LEFT JOIN STB_RouteInfo RI WITH(NOLOCK) ON EPRH.RouteCode = RI.RouteCode
-WHERE MLI.LotNo = 'MÃ_LOT_CUỘN_ĐIỆN_CỰC'
-ORDER BY EPRH.CreateDateTime ASC;
+LEFT JOIN STB_ElectrodeCoatingInfo C WITH(NOLOCK) ON MLI.MaterialLotNo = C.ElectrodeLotNumber
+LEFT JOIN STB_ElectrodeRollPressingInfo P WITH(NOLOCK) ON MLI.MaterialLotNo = P.ElectrodeLotNumber
+LEFT JOIN STB_ElectrodeSlittingResult S WITH(NOLOCK) ON MLI.MaterialLotNo = S.ElectrodeLotNumber
+WHERE MLI.MaterialLotNo = 'MÃ_LOT_CUỘN_ĐIỆN_CỰC';
 ```
 
 ### Mẫu 3: Dành cho Nguyên Vật Liệu (Raw Materials - WMS & Line Input)
-*Lưu ý: NVL nhập mua không chạy qua Routing sản xuất mà chỉ đi qua các trạm quét đầu vào ở chuyền (`STB_RawMaterialInputHist`).*
 ```sql
 SELECT 
-    MLI.LotNo AS [Material LotNo],
-    MLI.MaterialCode AS [Material Code],
-    MM.MaterialName AS [Material Name],
-    MLI.CurrentQty AS [Current Stock Qty],
-    MLI.WarehouseCode AS [Warehouse],
-    MLI.LocationCode AS [Location],
-    MLI.LotDecisionResult AS [IQC Status],
-    RMIH.LineCode AS [Scanned Line],
-    RMIH.RouteCode AS [Scanned Step],
-    RMIH.CreateDateTime AS [Scan Input Time]
+    MLI.MaterialLotNo,
+    MLI.MaterialCode,
+    MM.MaterialName,
+    MLI.CurrentQty,
+    MLI.MaterialWarehouseCode,
+    MLI.MaterialLocationCode,
+    RMIH.MachineCode,
+    RMIH.RouteCode,
+    RMIH.CreateDateTime
 FROM STB_MaterialLotInfo MLI WITH(NOLOCK)
 LEFT JOIN STB_MaterialMaster MM WITH(NOLOCK) ON MLI.MaterialCode = MM.MaterialCode
-LEFT JOIN STB_RawMaterialInputHist RMIH WITH(NOLOCK) ON MLI.LotNo = RMIH.MaterialLotNo
-WHERE MLI.LotNo = 'MÃ_LOT_NGUYÊN_VẬT_LIỆU'
+LEFT JOIN STB_RawMaterialInputHist RMIH WITH(NOLOCK) ON MLI.MaterialLotNo = RMIH.MaterialLotNo
+WHERE MLI.MaterialLotNo = 'MÃ_LOT_NGUYÊN_VẬT_LIỆU'
 ORDER BY RMIH.CreateDateTime DESC;
 ```
 
