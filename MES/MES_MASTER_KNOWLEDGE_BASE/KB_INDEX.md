@@ -19,12 +19,9 @@
 | [KB_07_GROUPWARE_INTEGRATION.md](KB_07_GROUPWARE_INTEGRATION.md) | Tích hợp Groupware: Mua hàng, Kế hoạch SX, Master Data, **ESM Bridge Tables (18 bảng)**, **BOM Management**, **Danh sách 100+ kho active** | Groupware, F330, C220, B310, B450, F110, F130, F140 |
 | [KB_08_KHO_THANH_PHAM_HN.md](KB_08_KHO_THANH_PHAM_HN.md) | Kho TP Hà Nam: Xuất HN551, Tồn HN866, Hủy F330, Xóa sản lượng | HN551, HN866, HN544, FG00 |
 | [KB_09_IN_TEM_LABEL.md](KB_09_IN_TEM_LABEL.md) | Các loại tem đặc biệt, lỗi sai mẫu, in tem khẩn | B450, B756, B767, B790, A460 |
-| [KB_10_KIEN_TRUC_TONG_QUAN.md](KB_10_KIEN_TRUC_TONG_QUAN.md) | Kiến trúc tổng quan hệ thống NAIS, 3 Trụ cột, Vòng đời dữ liệu, Dictionary Bảng, Ma trận nhà máy | System |
-| [KB_11_SP_DATAFLOW.md](KB_11_SP_DATAFLOW.md) | End-to-End Data Flow, Sơ đồ SP từng Phase (0-6), Dictionary SP, Key Identifiers | DB/SP |
-| [KB_12_DEEP_CORE_ANALYSIS.md](KB_12_DEEP_CORE_ANALYSIS.md) | Phân tích sâu cốt lõi, 5 triết lý DNA, Bảng ẩn Custom Vietnam, Điểm nguy hiểm cho Dev | DB/SP |
-| [KB_13_DB_AUDIT.md](KB_13_DB_AUDIT.md) | DB Audit Trail, 3 bugs thực tế, 7 sai lệch logic, Production Metrics | DB/Audit |
+| [KB_10_KIEN_TRUC_VA_DATAFLOW.md](KB_10_KIEN_TRUC_VA_DATAFLOW.md) | Kiến trúc tổng quan hệ thống NAIS, 3 Trụ cột, Sơ đồ End-to-End Data Flow, Phân tích SP, Ma trận nhà máy | System |
+| [KB_12_DEEP_CORE_ANALYSIS_AND_AUDIT.md](KB_12_DEEP_CORE_ANALYSIS_AND_AUDIT.md) | Phân tích sâu cốt lõi, 5 triết lý DNA, Bảng ẩn, Điểm nguy hiểm cho Dev, Kết quả DB Audit & Bugs | DB/Audit |
 | [KB_14_TRACE_BUG_METHODOLOGY.md](KB_14_TRACE_BUG_METHODOLOGY.md) | Phương pháp trace bug 5 bước, Log hệ thống, Bảng quan trọng | Toàn bộ |
-| [NAIS_SYSTEM_MASTER_TROUBLESHOOTING.md](NAIS_SYSTEM_MASTER_TROUBLESHOOTING.md) | Cẩm nang xử lý lỗi NAIS tổng hợp từ Docx & Hình ảnh | Toàn bộ |
 | [KB_15_EA_MES_CASE_STUDY_XUONG_MAY.md](KB_15_EA_MES_CASE_STUDY_XUONG_MAY.md) | Tổng hợp các Case Study thực tế dành cho kỹ sư EA/MES khi xuống xưởng | Vận hành/Hỗ trợ |
 | [KB_16_GIAI_THICH_DON_GIAN_LUONG_MES.md](KB_16_GIAI_THICH_DON_GIAN_LUONG_MES.md) | Bản dịch bình dân: Hiểu sơ đồ luồng dữ liệu MES trong 5 phút (Analogy Bánh Tráng Trộn) | Onboarding |
 | [KB_17_HUONG_DAN_CAU_HINH_DBMAIL.md](KB_17_HUONG_DAN_CAU_HINH_DBMAIL.md) | Hướng dẫn cấu hình Database Mail trong SQL Server | Vận hành/Hỗ trợ |
@@ -126,12 +123,12 @@
 | QC Flow đầy đủ IQC→PQC→OQC | KB_05 § 9 |
 | C321 sửa chữa lỗi Cell Line | KB_05 § 9.5 |
 | Slitting Hà Nam F743-F748 | KB_05 § 10 |
-| Deep Core Analysis — DNA hệ thống | KB_12 § 1 |
-| Bảng ẩn chứa logic quan trọng | KB_12 § 3 |
-| Điểm nguy hiểm ẩn cho Developer | KB_12 § 4 |
-| DB Audit Trail 2026-05-05 | KB_13 |
-| End-to-End Data Flow | KB_11 § 1 |
-| Kiến trúc tổng quan (3 Trụ cột) | KB_10 § 1 |
+| Deep Core Analysis — DNA hệ thống | KB_12_DEEP_CORE_ANALYSIS_AND_AUDIT.md § 1 |
+| Bảng ẩn chứa logic quan trọng | KB_12_DEEP_CORE_ANALYSIS_AND_AUDIT.md § 4 |
+| Điểm nguy hiểm ẩn cho Developer | KB_12_DEEP_CORE_ANALYSIS_AND_AUDIT.md § 5 |
+| DB Audit Trail 2026-05-05 | KB_12_DEEP_CORE_ANALYSIS_AND_AUDIT.md § 2 |
+| End-to-End Data Flow | KB_10_KIEN_TRUC_VA_DATAFLOW.md § 2.1 |
+| Kiến trúc tổng quan (3 Trụ cột) | KB_10_KIEN_TRUC_VA_DATAFLOW.md § 1.1 |
 | Quick Start checklist model mới (đầy đủ 7 bước) | KB_06 § 9.1 |
 | Checklist onboard user mới | KB_06 § 9.2 |
 | Thiết lập Line/Route B210-B240 | KB_06 § 10 |
@@ -181,79 +178,9 @@
 
 ---
 
-## 🔑 Bảng DB & SP Quan Trọng Nhất
-
-| Bảng / SP | Chức năng | Màn hình |
-|-----------|-----------|---------|
-| `STB_SetInfo` | Thông tin Barcode/Lot gốc | B450, B530, B540 |
-| `STB_ProdRouteHist` | Lịch sử công đoạn | B782, B530 |
-| `STB_MaterialLotInfo` | Tồn kho & PackingID | B523, F721 |
-| `STB_MachineMaster` | Master máy móc | B250 |
-| `STB_ProductMachine` | Mapping máy-route | B270 |
-| `STB_LineInfo` | Master Line sản xuất | B450 |
-| `STB_ModelBasicInfo` | Thông số kỹ thuật model | A410, C512 |
-| `STB_MaterialMaster` | Master vật tư | A230, F721 |
-| `STB_DayProdPlan` | Kế hoạch ngày | B450 |
-| `STB_CommInspDocHistory` | Lịch sử kiểm tra QC | B597, C443 |
-| `STB_AluCaseMapping_VVT` | ⚠️ KHÔNG TỒN TẠI — Logic vỏ nhôm nằm trong SP | B597 |
-
-| `stb_slittinglocationconfig_vvt` | Config điện cực Slitting | B552, B597 |
-| `STB_SavePackingTime_VVT` | Lịch sử đóng gói | B781, B789 |
-| `STB_VVT_StagePrices` | Giá công đoạn Cell | B682, B781 |
-| `STB_ProcessTerminalDataLog` | Log gói tin từ UI | Debug |
-| `STB_ProcedureLog` | Log biến trong SP | Debug |
-| `usp_Vietnam_RawMaterialInputHist_uid` | SP kiểm tra NVL (B597) | B597 |
-| `usp_Vietnam_DoProcessProdPacking_VVT` | SP gộp Box | B523 |
-| `STB_LotReworkInfo_HN` | Thông tin Lot Rework Hà Nam | B618 |
-| `STB_StocktakingDoc` | Chứng từ kiểm kê kho | F750 |
-| `STB_StocktakingPlanResult` | Kết quả chi tiết kiểm kê kho | F750 |
-| `usp_GetInforLotReworkHaNamFactory_uid` | SP xử lý Lot Rework Hà Nam | B618 |
-| `usp_DoApplyStocktakingToStock` | SP cập nhật kết quả kiểm kê kho | F750 |
-
-
 ---
 
-## 🛡️ Nguyên Tắc Vàng Khi Sửa DB
+> 📌 **Bảng DB & SP quan trọng:** Xem chi tiết tại [KNOWLEDGE.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/AI_AGENT_CONFIG/KNOWLEDGE.md) §1-2 và [KB_18_DATABASE_SCHEMA_QUICKREF.md](KB_18_DATABASE_SCHEMA_QUICKREF.md).
+> 🛡️ **Nguyên tắc sửa DB:** Xem tại [RULES.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/AI_AGENT_CONFIG/RULES.md).
 
-1. **Luôn SELECT trước, IUD sau** — Đếm số dòng bị ảnh hưởng
-2. **Dùng BEGIN TRAN ... ROLLBACK/COMMIT** — Xem kết quả trước khi commit
-3. **Luôn dùng PK (ID cụ thể)** trong WHERE — Không dùng điều kiện mờ
-4. **Sửa đồng bộ đủ bảng** — Thiếu 1 bảng gây lệch dữ liệu
-5. **Ghi log tất cả thay đổi** — Để audit sau
-
-*Cập nhật: 2026-05-30 | Đã kiểm chứng bằng SELECT trực tiếp từ SmartFactoryV2 | Bổ sung: Cell Line chi tiết, Module Line, QC Flow đầy đủ, Deep Core Analysis, DB Audit Trail, Mở rộng Bảng tổng hợp màn hình MES*
-
-
-Add giá B682, B781, B789, B791 ➔ Đã match vào KB_06 (§3)
-Xóa/sửa số lượng B789 / B523 ➔ Đã match vào KB_04 (§6.6)
-Lỗi popup trống B270 (setup B230) ➔ Đã match vào KB_01 (§1.3)
-Sửa hạng mục kiểm tra B597 & C443 (STB_CommInspDocHistory) ➔ Đã match vào KB_05 (§1.1)
-Không tìm thấy lot ở C512 (A410, VE02) ➔ Đã match vào KB_05 (§7.2)
-Lỗi không in được tem B450 (Màn A460) ➔ Đã match vào KB_01 (§1.2)
-Chuyển JobDate màn B782 (Routing) ➔ Đã match vào KB_03 (§5.2)
-Chuyển JobDate màn B781 (Packing) ➔ Đã match vào KB_03 (§5.3)
-Chuyển tháng kho thành phẩm FG00 ➔ Đã match vào KB_08 (§8)
-Sửa số lượng kho F312 (Kho chị Xuân) ➔ Đã match vào KB_02 (§4.5)
-Chuyển jobdate màn B598 (Báo phế) ➔ Đã match vào KB_03 (§5.4)
-Chuyển lại kho nhập sai ở màn F330 ➔ Đã match vào KB_02 (§4.3)
-Chuyển JobDate B726 (STB_VN_SCRAP_AFTERPRODUCTIONS) ➔ Đã match vào KB_03 (§5.5)
-Xóa PO ở 2 màn B450 và B310 ➔ Đã match vào KB_03 (§5.7)
-Sửa số lượng NG DefectQty màn B791 ➔ Đã match vào KB_03 (§5.8)
-Bỏ in VV thành VJ theo mã NVL ➔ Đã match vào KB_04 (§6.7)
-Tiêu chuẩn đóng gói B523 (Sửa A419) ➔ Đã match vào KB_06 (§11)
-Không lưu được NVL trên B597 (Vỏ nhôm) ➔ Đã match vào KB_05 (§7.4)
-Chỉnh số dòng hiển thị Andon ➔ Đã match vào KB_03 (§7)
-Chỉnh chiều rộng slitting B552 ➔ Đã match vào KB_05 (§8.1 & 8.2)
-Không lưu được Lot F330 đặc tính 10 ➔ Đã match vào KB_02 (§4.11)
-Sửa ngày xuất F430 ➔ Đã match vào KB_02 (§4.6)
-Chỉnh sửa từ kho holding ra ngoài ➔ Đã match vào KB_02 (§4.8)
-Chỉnh Location (LotAttr09) ➔ Đã match vào KB_02 (§4.15)
-FIFO Kho NVL ➔ Đã match vào KB_11 & KB_02 (§2.1)
-Chỉnh Code NVL nhập sai màn F312 ➔ Đã match vào KB_02 (§4.4)
-Chỉnh LotNo, Vol, Farad (Thêm ModelBasicInfo) ➔ Đã match vào KB_06 (§1.1 & 1.2)
-NVL mới không gộp box được (Tích F110) ➔ Đã match vào KB_06 (§2.1)
-FIFO Kho thành phẩm xuất Excel ➔ Đã match vào KB_01 (§5.3)
-Sửa tên Lot sau B351 ➔ Đã match vào KB_04 (§6.2)
-Lấy Part No từ hàm xử lý chuỗi ➔ Đã match vào KB_06 (§5.2)
-Tra ModelName & ModelSize cho B597 ➔ Đã match vào KB_03 (§6.10)
-Lỗi chuỗi điện cực (MaterialThickness số nguyên) ➔ Đã match vào KB_05 (§7.6)
+*Cập nhật: 2026-06-12 | Tái cấu trúc theo Phương án B — gộp file và dọn dẹp nội dung trùng lặp*

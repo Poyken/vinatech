@@ -22,8 +22,7 @@ MES/
 │   ├── KB_INDEX.md                        # ← BẮT ĐẦU TRA CỨU TỪ ĐÂY
 │   ├── KB_01_UI_PHAN_QUYEN.md             # Đăng nhập, phân quyền, Stage Prices
 │   ├── KB_02_KHO_WMS.md                   # Kho NVL, FIFO, Hạn dùng, tách Lot
-│   ├── ... (các file chi tiết từ KB_01 đến KB_30)
-│   └── NAIS_SYSTEM_MASTER_TROUBLESHOOTING.md # Tra cứu nhanh lỗi trọng điểm
+│   └── ... (các file chi tiết)
 ├── sql/                                   # Mã nguồn đối tượng CSDL
 │   ├── hotfixes/                          # Lịch sử 5 SQL hotfix scripts đã triển khai trên production
 │   │   ├── 01_FIX_DRY_OVEN_OPERATOR_PRIORITY.sql
@@ -66,17 +65,14 @@ MES/
 | [KB_07_GROUPWARE_INTEGRATION.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_07_GROUPWARE_INTEGRATION.md) | Tích hợp Groupware: Mua hàng→F330, Kế hoạch→B310 | F330, B310, B450 |
 | [KB_08_KHO_THANH_PHAM_HN.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_08_KHO_THANH_PHAM_HN.md) | Kho TP Hà Nam, xuất/hủy/xóa, STB_ChangeMaterialCode_HN | HN551, HN866, HN15 |
 | [KB_09_IN_TEM_LABEL.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_09_IN_TEM_LABEL.md) | Tem đặc biệt, in khẩn, sai mẫu, kiến trúc Z530/A460 | B450, B756, B767, Z530 |
-| [KB_10_KIEN_TRUC_TONG_QUAN.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_10_KIEN_TRUC_TONG_QUAN.md) | Kiến trúc hệ thống, vòng đời dữ liệu | Toàn bộ |
-| [KB_11_SP_DATAFLOW.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_11_SP_DATAFLOW.md) | End-to-End Data Flow, Dictionary SP | DB/SP |
-| [KB_12_DEEP_CORE_ANALYSIS.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_12_DEEP_CORE_ANALYSIS.md) | Phân tích sâu cốt lõi, DNA hệ thống | DB/SP |
-| [KB_13_DB_AUDIT.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_13_DB_AUDIT.md) | Nhật ký Audit DB, lỗi thực tế | DB/Audit |
+| [KB_10_KIEN_TRUC_VA_DATAFLOW.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_10_KIEN_TRUC_VA_DATAFLOW.md) | Kiến trúc hệ thống, sơ đồ Data Flow, SPs | Toàn bộ |
+| [KB_12_DEEP_CORE_ANALYSIS_AND_AUDIT.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_12_DEEP_CORE_ANALYSIS_AND_AUDIT.md) | Phân tích sâu cốt lõi, DNA, Kết quả DB Audit | DB/Audit |
 | [KB_14_TRACE_BUG_METHODOLOGY.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_14_TRACE_BUG_METHODOLOGY.md) | Phương pháp trace bug 5 bước, Block Session DB | Toàn bộ |
 | [KB_26_LIEN_KET_HE_THONG_VA_BUG_LOGIC.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_26_LIEN_KET_HE_THONG_VA_BUG_LOGIC.md) | Liên kết WMS-Sản xuất-QC-Xuất hàng, Cơ chế trừ kho Trigger | QC/WMS |
 | [KB_27_SCM_REWORK_TRA_HANG_KIEM_KE.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_27_SCM_REWORK_TRA_HANG_KIEM_KE.md) | Phân hệ SCM, Rework, Trả hàng (Returns), Kiểm kê (Stocktaking) | SCM/Rework |
 | [KB_28_SYSTEM_OBJECTS_MAP.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_28_SYSTEM_OBJECTS_MAP.md) | Bản đồ đối tượng hệ thống (Bảng, SPs, Màn hình) | SmartFramework |
 | [KB_29_SUPER_DEEP_SYSTEM_DISCOVERY_PROMPT.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_29_SUPER_DEEP_SYSTEM_DISCOVERY_PROMPT.md) | Siêu Prompt đào sâu bản chất màn hình & liên kết nghiệp vụ | Meta-Prompt |
 | [KB_30_THIET_BI_PHU_TRO_SAY_GA_DAO.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_30_THIET_BI_PHU_TRO_SAY_GA_DAO.md) | Phân hệ lò sấy (Dry Oven), Gá nạp Doping, Tuổi thọ dao Slitting | Thiết bị phụ trợ |
-| [NAIS_SYSTEM_MASTER_TROUBLESHOOTING.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/NAIS_SYSTEM_MASTER_TROUBLESHOOTING.md) | Master Index lỗi trọng điểm - liên kết trực tiếp đến KB | Toàn bộ |
 
 ---
 
