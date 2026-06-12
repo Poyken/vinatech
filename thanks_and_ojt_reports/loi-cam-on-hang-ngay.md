@@ -1,5 +1,5 @@
-﻿# 📒 Daily Thank-You Notes — Vinatech Vina (Bac Ninh)
-## From March 2, 2026 to May 16, 2026
+# 📒 Daily Thank-You Notes — Vinatech Vina (Bac Ninh)
+## From March 2, 2026 to June 11, 2026
 
 ---
 
@@ -378,6 +378,49 @@
 2. Thank you security and logistics staff for being helpful and supportive during the weekend shift.
 3. Thank you for a highly productive week filled with practical learning and experience across three facilities.
 
+### 📅 Sunday — 31/05/2026
+1. Thank you BG1 team for assisting me during the Sunday shift to pull network cables for the Auto line.
+2. Thank you Auto team members for the smooth coordination on the factory floor.
+3. Thank you Vinatech for providing a clean and safe work environment, even on weekends.
+
 ---
 
-> **Note:** 3 thank-you notes per day. Sundays off. Total: 66 working days × 3 = **198 thank-you notes**.
+## 🗓️ JUNE 2026
+
+---
+
+### 📅 Monday — 01/06/2026
+1. Thank you BG2 team for the warm welcome and support during my regular Monday shift.
+2. Thank you production operators at BG2 for cooperating and helping me complete system checks today.
+3. Thank you manager for organizing our weekly tasks and giving clear instructions for the new month.
+
+### 📅 Friday — 05/06/2026
+1. Thank you Mr. Nhat Trung, Ms. Tran Lan, and Mr. Le Cuong for your patience and cooperation during the MES support session today.
+2. Thank you seniors for guiding me on resolving the complex MES user interface errors.
+3. Thank you Vinatech Vina for providing a supportive environment where we can help each other resolve daily issues.
+
+### 📅 Monday — 08/06/2026
+1. Thank you BG1 team for the warm welcome and smooth collaboration during the IT equipment handover for 4 new users.
+2. Thank you Ms. Tran Thom, Muoi Chip, Mr. Luan, and Mr. Nhiem for cooperating while troubleshooting the MES system at BG1.
+3. Thank you Mr. Tuan for your cooperation during the ECM configuration and setup process.
+4. Thank you warehouse team for assisting me in repairing and calibrating the printer at the finished goods warehouse.
+
+### 📅 Tuesday — 09/06/2026
+1. Thank you Mr. Cong Hieu for the smooth cooperation during the provisioning and setup of your new IT equipment.
+2. Thank you Mr. Jayden for your patience while we successfully configured and repaired the CAD software license.
+3. Thank you Auto line members for your assistance while we deployed and ran the 2 new network lines.
+4. Thank you warehouse team for the support while resolving the printer issue at the finished goods warehouse.
+
+### 📅 Wednesday — 10/06/2026
+1. Thank you Mr. Bach, Ms. Van Oc, and Ms. Dinh Thu for the great coordination during the MES user support session today.
+2. Thank you Mr. Cong Hieu for your cooperation during the ECM login and credential setup.
+3. Thank you Mr. Tinh for cooperating while we diagnosed and fixed the Kiosk hardware and software issues.
+
+### 📅 Thursday — 11/06/2026
+1. Thank you Mr. Cong for the smooth collaboration during the Excel and add-in configuration troubleshooting.
+2. Thank you Ms. Linh for your cooperation while we set up and configured your new work station equipment.
+3. Thank you Mr. Nhiem for the patience and feedback while we resolved the database issues on your MES screen.
+
+---
+
+> **Note:** 3 thank-you notes per day. Sundays off. Total: 73 working days × 3 = **219 thank-you notes**.

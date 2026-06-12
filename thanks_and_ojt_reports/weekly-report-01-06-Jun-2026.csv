@@ -1,0 +1,4 @@
+NAME,DEPARTMENT,DATE GET ISSUE,NAME ISSUE,THE SOLVE,TYPE ISSUE,DATE SOLVE ISSUE,SOLVE ISSUE BY,STATUS,REMARK
+Nguyen Van Duc,EA Team,31/5/2026,Network Deployment BG1,Di chuyển sang nhà máy Bắc Giang 1 kéo dây mạng kết nối cho dây chuyền Auto.,Support,31/5/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,1/6/2026,BG2 Support & Operations,Di chuyển sang làm việc tại nhà máy Bắc Giang 2 và hỗ trợ vận hành hệ thống.,Support,1/6/2026,Nguyen Van Duc,Done,HW/SW
+Nguyen Van Duc,EA Team,5/6/2026,MES User Support,Hỗ trợ sửa lỗi hệ thống MES cho các user: anh Nhật Trung; chị Trần Lan; anh Lê Cường.,Support,5/6/2026,Nguyen Van Duc,Done,SW

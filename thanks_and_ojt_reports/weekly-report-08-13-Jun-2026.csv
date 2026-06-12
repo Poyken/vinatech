@@ -1,0 +1,17 @@
+NAME,DEPARTMENT,DATE GET ISSUE,NAME ISSUE,THE SOLVE,TYPE ISSUE,DATE SOLVE ISSUE,SOLVE ISSUE BY,STATUS,REMARK
+Nguyen Van Duc,EA Team,8/6/2026,BG2 Support & Operations,Di chuyển sang làm việc tại nhà máy Bắc Giang 2 và hỗ trợ vận hành hệ thống.,Support,8/6/2026,Nguyen Van Duc,Done,HW/SW
+Nguyen Van Duc,EA Team,8/6/2026,Warehouse Printer Repair,Khắc phục sự cố và sửa chữa máy in tại kho thành phẩm.,Support,8/6/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,8/6/2026,Equipment Handover BG1,Bàn giao thiết bị công nghệ thông tin tại nhà máy Bắc Giang 1 cho 4 user mới.,Support,8/6/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,8/6/2026,MES Bug Support BG1,Sửa lỗi hệ thống MES cho các user tại BG1: chị Trần Thơm; mười chip; anh Luân; anh Nhiệm.,Support,8/6/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,8/6/2026,ECM Software Setup,Hỗ trợ cấu hình tài khoản và cài đặt phần mềm ECM cho anh Tuân.,Support,8/6/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,9/6/2026,Equipment Provisioning,Cấp phát và bàn giao thiết bị làm việc mới cho anh Công Hiếu (bộ phận Sản xuất).,Support,9/6/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,9/6/2026,Warehouse Printer Repair,Sửa lỗi kẹt giấy và căn chỉnh đầu in máy in tại kho thành phẩm.,Support,9/6/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,9/6/2026,CAD Software Support,Khắc phục sự cố phần mềm CAD cho user Jayden.,Support,9/6/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,9/6/2026,Network Deployment,Kéo và bấm đầu 2 dây mạng mới phục vụ phòng/máy Auto.,Support,9/6/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,9/6/2026,MES User Support,Tiếp nhận và hỗ trợ sửa lỗi hệ thống MES cho người dùng trong ca.,Support,9/6/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,10/6/2026,MES User Support,Hỗ trợ sửa lỗi hiển thị và nghiệp vụ trên MES cho anh Bách; chị Vân Ốc; chị Đinh Thư.,Support,10/6/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,10/6/2026,ECM Support,Hỗ trợ đăng nhập và phân quyền sử dụng hệ thống ECM cho anh Công Hiếu.,Support,10/6/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,10/6/2026,Kiosk Repair,Khắc phục sự cố hoạt động của máy Kiosk cho anh Tỉnh.,Support,10/6/2026,Nguyen Van Duc,Done,HW/SW
+Nguyen Van Duc,EA Team,11/6/2026,Excel Config Support,Kiểm tra và cấu hình lại add-in Excel cho anh Công (bộ phận Purchase).,Support,11/6/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,11/6/2026,IT Equipment Setup,Lắp đặt và cấu hình thiết bị làm việc cho chị Linh.,Support,11/6/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,11/6/2026,MES Support,Sửa lỗi phát sinh trên hệ thống MES cho anh Nhiệm.,Support,11/6/2026,Nguyen Van Duc,Done,SW
