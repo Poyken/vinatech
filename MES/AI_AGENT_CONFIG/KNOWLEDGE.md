@@ -71,10 +71,11 @@ ORDER BY PRH.CreateDateTime ASC
 | Kho HN lỗi | KB_08 |
 | ESR/Aging | KB_05 §9.7 |
 
-## 6. KB FILES MAP (29 files)
+## 6. KB FILES MAP (30 files)
 
 | # | File | Phạm vi |
 |---|------|---------|
+| 00 | KB_SCREEN_BUG_REF | Cẩm nang tra cứu lỗi theo Screen ID |
 | 01 | KB_01_UI_PHAN_QUYEN | Login, phân quyền, stage prices |
 | 02 | KB_02_KHO_WMS | Kho NVL, FIFO, hạn dùng, tách lot |
 | 03 | KB_03_SAN_XUAT | Sản xuất Cell/Module, B530/B597 |

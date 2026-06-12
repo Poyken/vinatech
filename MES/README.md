@@ -56,6 +56,7 @@ MES/
 
 | File | Phạm vi nghiệp vụ | Màn hình liên quan |
 |------|-------------------|-------------------|
+| [KB_SCREEN_BUG_REF.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_SCREEN_BUG_REF.md) | **Cẩm nang tra cứu lỗi tập trung theo Screen ID** | Toàn bộ màn hình |
 | [KB_01_UI_PHAN_QUYEN.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_01_UI_PHAN_QUYEN.md) | Login, phân quyền, Stage Prices | A460, Z410, Z220 |
 | [KB_02_KHO_WMS.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_02_KHO_WMS.md) | Kho NVL, FIFO, Holding, Hạn dùng, Revert F430 | F330, F312, F430 |
 | [KB_03_SAN_XUAT.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03_SAN_XUAT.md) | JobDate, Chuyển Line, Xóa PO, NG, Cell Line | B782, B781, B310, B530 |

@@ -1,7 +1,9 @@
 # 🗂️ NAIS MES — Knowledge Base Index
 
-> **Cập nhật:** 2026-06-10 | **Tổng hợp từ:** Lỗi thực tế + Docx gốc (đã extract toàn bộ) + Xác minh DB trực tiếp + Phân tích 41 SP + Deep Core Analysis (2026-04-18) + DB Audit (2026-05-05) + Electrode Weighing (2026-05-26) + Consolidation (2026-06-04) + **System Discovery & Gap Analysis (2026-06-10)**
-> **Cách dùng:** Đọc file INDEX này trước, sau đó mở file KB chuyên biệt theo nhóm lỗi.
+> **Cập nhật:** 2026-06-12 | **Tổng hợp từ:** Lỗi thực tế + Docx gốc (đã extract toàn bộ) + Xác minh DB trực tiếp + Phân tích 41 SP + Deep Core Analysis (2026-04-18) + DB Audit (2026-05-05) + Electrode Weighing (2026-05-26) + Consolidation (2026-06-04) + **System Discovery & Gap Analysis (2026-06-10)**
+> **Cách dùng:** 
+> 1. Đọc file INDEX này trước để có cái nhìn tổng quan.
+> 2. **Tìm kiếm siêu tốc theo màn hình:** Nhấn `Ctrl + Shift + F` nhập `## Mã_Màn_Hình` (Ví dụ: `## C512`, `## B597`) để chuyển trực tiếp đến cẩm nang sửa lỗi theo Screen ID.
 > **Groupware KB:** Xem → [`../GROUPWARE_KNOWLEDGE_BASE/GW_INDEX.md`](../GROUPWARE_KNOWLEDGE_BASE/GW_INDEX.md)
 
 ---
@@ -10,6 +12,7 @@
 
 | File | Nội dung | Màn hình liên quan |
 |------|----------|-------------------|
+| [KB_SCREEN_BUG_REF.md](KB_SCREEN_BUG_REF.md) | **Cẩm nang tra cứu lỗi tập trung phân loại theo Screen ID (Bắt đầu tra cứu lỗi từ đây)** | Toàn bộ các màn hình |
 | [KB_01_UI_PHAN_QUYEN.md](KB_01_UI_PHAN_QUYEN.md) | Login, cài đặt, phân quyền User, Stage Prices | Login, A460, Z410, Z220, Z330, B682, B781 |
 | [KB_02_KHO_WMS.md](KB_02_KHO_WMS.md) | Kho NVL: F330 sai kho, F312, F430, FIFO, Holding, Hạn dùng | F330, F312, F430, F110, F721, F741, C220 |
 | [KB_03_SAN_XUAT.md](KB_03_SAN_XUAT.md) | Sửa JobDate, Chuyển Line, VV→VJ, Xóa PO, NG, Andon, **Cell Line vận hành chi tiết B310→B882**, Module Line, B351/B528/B598/B717/B802, In tem PAC/Digi-Key, Spare Part H301-H305, K101/K109 | B782, B781, B598, B726, B791, B310, B450, B530, B540, B523, B525, B528, B717, B802, B351, B452, B754-B758, H301-H305, K101, K109 |
