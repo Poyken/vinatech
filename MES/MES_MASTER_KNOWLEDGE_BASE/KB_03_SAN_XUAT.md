@@ -117,7 +117,7 @@ WHERE ID IN (6030, 6032, 6027, 6025, 6026, 6031)
 
 ### 5.6 Sửa ngày màn FG00 (Kho Thành Phẩm BG)
 
-👉 **Chi tiết Script Fix:** Xem tại [KB_08_KHO_THANH_PHAM_HN.md § 8](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/MES_MASTER_KNOWLEDGE_BASE/KB_08_KHO_THANH_PHAM_HN.md)
+👉 **Chi tiết Script Fix:** Xem tại [KB_08_KHO_THANH_PHAM_HN.md § 8](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_08_KHO_THANH_PHAM_HN.md)
 
 ---
 
@@ -252,7 +252,7 @@ ORDER BY DayPlanNo ASC
 
 ### 5.13 Sửa/Xóa số lượng đóng gói (B789)
 
-👉 **Chi tiết Script Fix:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.6](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/MES_MASTER_KNOWLEDGE_BASE/KB_04_DONG_GOI_IN_TEM.md)
+👉 **Chi tiết Script Fix:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.6](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_04_DONG_GOI_IN_TEM.md)
 
 ---
 
@@ -990,7 +990,7 @@ Set `IsUsed = 0` trong bảng `STB_DefectInfo` cho các mã lỗi sau:
 - **Sleeving (V-25_BG):** `V-25_01_BG`, `V-25_2CT_BG`, `V-25_X03_BG`, `V-25_X12_BG`
 - **Ngoại quan (V-27_BG):** `V-27_ZC_BG`, `V-27_ZD_BG`, `V-27_4GV_BG`, `V-27_5VI_BG`, `V-27_XP1_BG`, `V-27_RELY_BG`
 
-*Chi tiết SQL tham khảo file script [fix_b530_disable_defects_BG.sql](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/sql/scripts/fix_b530_disable_defects_BG.sql)*
+*Chi tiết SQL tham khảo file script [fix_b530_disable_defects_BG.sql](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/sql/scripts/fix_b530_disable_defects_BG.sql)*
 
 **2. Thêm mới 7 mã lỗi thực tế vận hành:**
 INSERT vào bảng `STB_DefectInfo` các mã lỗi sau:
@@ -1002,7 +1002,7 @@ INSERT vào bảng `STB_DefectInfo` các mã lỗi sau:
 - **Curling:** `V-24_NE7_BG` (Curling_Xước chân tancha)
 - **Curling:** `V-24_NE8_BG` (Curling_Lỗi mẻ miệng curling)
 
-*Chi tiết SQL tham khảo file script [fix_b530_add_defects_BG.sql](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/sql/scripts/fix_b530_add_defects_BG.sql)*
+*Chi tiết SQL tham khảo file script [fix_b530_add_defects_BG.sql](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/sql/scripts/fix_b530_add_defects_BG.sql)*
 
 ---
 
@@ -1019,12 +1019,12 @@ INSERT vào bảng `STB_DefectInfo` các mã lỗi sau:
   - Cấu trúc nối chuỗi: `RawMaterialBarcode = existingRawBarcode + ' ; ' + newRawBarcode`.
   - Hệ thống ghi nhận lịch sử vào bảng lịch sử phụ đối với Điện cực và Case (3562/3582/35105).
 
-*Chi tiết mã nguồn tham khảo file [usp_Vietnam_RawMaterialInputHist_uid.sql](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/sql/procedures/usp_Vietnam_RawMaterialInputHist_uid.sql)*
+*Chi tiết mã nguồn tham khảo file [usp_Vietnam_RawMaterialInputHist_uid.sql](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/sql/procedures/usp_Vietnam_RawMaterialInputHist_uid.sql)*
 
 **2. Gộp hiển thị trên lưới trong `usp_RawMaterialInputHist_get`:**
 Khi load danh sách nguyên vật liệu đã bắn của Lot, hệ thống sử dụng `FOR XML PATH('')` gộp các dòng barcode có cùng `ProductGroupCode` và `Barcode` lại thành một chuỗi ngăn cách bởi `; ` hiển thị trong cột `RawBacodeList` đối với `ELECTRODEP`, `ELECTRODEM`, và `Case`.
 
-*Chi tiết mã nguồn tham khảo file [usp_RawMaterialInputHist_get.sql](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/sql/procedures/usp_RawMaterialInputHist_get.sql)*
+*Chi tiết mã nguồn tham khảo file [usp_RawMaterialInputHist_get.sql](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/sql/procedures/usp_RawMaterialInputHist_get.sql)*
 
 ---
 

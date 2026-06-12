@@ -225,7 +225,7 @@ WHERE Barcode = 'VE260509-004'
 ```
 
 **Xóa phiếu nhập kho F330 (có IQC):**
-👉 **Chi tiết Script Fix:** Xem tại [KB_02_KHO_WMS.md § 4.16](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/MES_MASTER_KNOWLEDGE_BASE/KB_02_KHO_WMS.md)
+👉 **Chi tiết Script Fix:** Xem tại [KB_02_KHO_WMS.md § 4.16](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_02_KHO_WMS.md)
 
 ---
 
