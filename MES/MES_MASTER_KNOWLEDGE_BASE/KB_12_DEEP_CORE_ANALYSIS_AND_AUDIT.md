@@ -101,11 +101,28 @@ Khi OP bấm "Hoàn thành", `usp_DoProcessProdRouteHistForCalc_SmartApp_VNT` th
 *   **Ghi Takt Time:** Cho VVT.
 
 ### 3.2 Luồng B597 (Scan NVL) — Lớp Validation khổng lồ
-*   Cơ chế **Chain Barcode**: Trace lịch sử đổi mã barcode đến 6 cấp qua bảng `STB_LotChangeMaterialHistory`.
+*   Cơ chế **Chain Barcode**: Trace lịch sử đổi mã barcode đến 6 cấp qua bảng `STB_LotChangeMaterialHistory` để so khớp:
+    ```sql
+    -- SP B597 theo dõi lịch sử đổi barcode đến 6 cấp:
+    SELECT @LotNonew1 = NewBarcode FROM STB_LotChangeMaterialHistory WHERE OldBarcode=@pBarcode
+    SELECT @LotNonew2 = NewBarcode ... WHERE OldBarcode=@LotNonew1
+    -- ... đến @LotNonew6
+    -- Sau đó JOIN STB_SetInfo với danh sách IN (@pBarcode, @LotNonew1, ..., @LotNonew6)
+    ```
 *   Trích xuất **ModelSize**: Kích thước như 0813 (8x13mm) được bóc từ `STB_ModelBasicInfo` để match với điện giải.
 
-### 3.3 Luồng F721 — UPDATE khi đang SELECT
-SP `usp_vvt_MaterialLotInfo_get` (F721) thực tế có lệnh **UPDATE** 2 bảng `STB_MaterialDocLotInfo` và `STB_MaterialLotInfo` mỗi khi chạy. Hàm `fn_VVT_getdatebyVendorLot` parse mã Vendor Lot để điền ngày sản xuất nếu bị thiếu. Việc này là auto-heal nhưng tiềm ẩn lỗi Race condition.
+### 3.3 Luồng F721 — UPDATE khi đang SELECT & Logic Tồn Kho
+*   SP `usp_vvt_MaterialLotInfo_get` (F721) thực tế có lệnh **UPDATE** 2 bảng `STB_MaterialDocLotInfo` và `STB_MaterialLotInfo` mỗi khi chạy. Hàm `fn_VVT_getdatebyVendorLot` parse mã Vendor Lot để điền ngày sản xuất nếu bị thiếu. Việc này là auto-heal nhưng tiềm ẩn lỗi Race condition.
+*   **Logic tính StockQty thực tế** (sau khi cấn trừ phần đã chia lô):
+    ```sql
+    CASE
+        WHEN LTDX.DIVIDE_STOCKQTY > 0 OR LTDX.DIVIDE_STOCKQTY IS NOT NULL
+        THEN ISNULL(MLI.CurrentQty, mdli.StockQty) - LTDX.DIVIDE_STOCKQTY
+        ELSE ISNULL(MLI.CurrentQty, mdli.StockQty)
+    END AS StockQty
+    ```
+*   **Trạng thái hạn dùng (Aging):** 'Safe' (Hạn dùng > 30 ngày, hoặc > 15 ngày đối với Coating/Slitting), 'Warning' (< 30 ngày), 'Expired' (đã hết hạn).
+*   **Loại trừ Lot trùng lặp (Sự cố BG2):** Thêm điều kiện lọc cứng `AND CreateUserID <> '23091804'`.
 
 ---
 
@@ -120,6 +137,7 @@ Những bảng này do team Vietnam tự tạo thêm, không nằm trong framewo
 | `stb_vvt_OpenExpiredMaterial` | Danh sách "Ân Xá" cho NVL hết hạn. Thêm LotID vào bảng này = Bypass kiểm tra Hạn Sử Dụng. |
 | `STB_InterimProdQtyInfo` | Bảng nháp số lượng giữa chừng (InbrinskQty tại B530). Bị xóa trắng mỗi lần Submit. |
 | `stb_slittinglocationconfig_vvt` | Cấu hình Slitting động. Tránh việc hard-code cấu hình trong SP. |
+| `STB_VN_DIVIDEMATERIALSMAL` | Quản lý chia nhỏ Lot nguyên vật liệu thành các lô nhỏ hơn. |
 
 ---
 

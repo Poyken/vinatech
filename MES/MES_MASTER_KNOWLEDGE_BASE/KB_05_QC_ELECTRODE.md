@@ -428,6 +428,24 @@ Quy trình sản xuất điện cực gồm 4 công đoạn chính và mỗi cô
 
 ---
 
+### 8.8 Hỗ trợ lưu nhiều mã vạch nguyên vật liệu (Multi-barcode Appending) cho Điện cực và Vỏ Case
+
+**Triệu chứng:** Khi sản xuất, một số Lot nguyên liệu (đặc biệt là điện cực hoặc vỏ Case) bị hết giữa chừng và cần bắn nối tiếp cuộn mới. Trước đây, hệ thống chỉ hỗ trợ tính năng này cho Điện cực, dẫn đến vỏ Case bị chặn hoặc ghi đè dữ liệu.
+
+**Cách khắc phục:**
+1. Cập nhật `usp_Vietnam_RawMaterialInputHist_uid` để:
+   - Tách chuỗi barcode chứa dấu `;` khi kiểm tra trạng thái HOLD bằng hàm `usp_VVT_checkHOLD_Material`.
+   - Tính toán `@count` hợp lệ bằng cách đếm và cộng dồn tất cả các barcode con trong danh sách.
+   - Bật tính năng tự động nối chuỗi (`RawMaterialBarcode = existingRawBarcode + ' ; ' + newRawBarcode`) cho nhóm vật liệu `Case` thuộc các dòng máy size `3562`, `3582`, `35105` (bên cạnh nhóm `ELECTRODEP` và `ELECTRODEM` dùng cho mọi size).
+   - Ghi nhận lịch sử cho cả hai nhóm này.
+2. Cập nhật `usp_RawMaterialInputHist_get` sử dụng `FOR XML PATH('')` để gộp các barcode đã bắn thành chuỗi `; ` hiển thị lên lưới của màn hình.
+
+*Chi tiết mã nguồn tham khảo các file:*
+- SP UID: [usp_Vietnam_RawMaterialInputHist_uid.sql](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/sql/procedures/usp_Vietnam_RawMaterialInputHist_uid.sql)
+- SP GET: [usp_RawMaterialInputHist_get.sql](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/sql/procedures/usp_RawMaterialInputHist_get.sql)
+
+---
+
 ## 9. 🔬 QC Flow Đầy Đủ — IQC → PQC → OQC → Bending/Cutting
 
 ### 9.1 IQC (Incoming Quality Control — Kiểm tra NVL đầu vào)
@@ -743,170 +761,9 @@ F746 (Lịch sử Slitting) → F747 (Lịch sử check NG/Pass) → F748 (Chuy�
 | Lot không tồn tại khi chuyển F430 | Lot chưa được QC check ở C243 | Vào C243 check trước |
 | Không chuyển về kho được | Lot bị QC đánh Reject | Không thể chuyển — xử lý theo quy trình NG |
 
-👉 **Chi tiết Script Fix (Thiết lập & Cấu hình Slitting):** Xem tại [§ 8.1](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/MES_MASTER_KNOWLEDGE_BASE/KB_05_QC_ELECTRODE.md) và [§ 8.2](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/MES_MASTER_KNOWLEDGE_BASE/KB_05_QC_ELECTRODE.md) của file này.
+👉 **Chi tiết Script Fix (Thiết lập & Cấu hình Slitting):** Xem tại [KB_12_DEEP_CORE_ANALYSIS_AND_AUDIT.md § 4](KB_12_DEEP_CORE_ANALYSIS_AND_AUDIT.md).
 
 ---
 
-## 11. 🔬 Deep Core Analysis — Bản Chất Hệ Thống (2026-04-18)
-
-### 11.1 DNA Hệ Thống — 5 Triết Lý Thiết Kế
-
-**Triết lý 1: "Database là não, UI chỉ là tay"**
-- Mỗi nút "Save" → UI chỉ đọc tên SP từ `SmartFramework.STB_ScreenObjects` rồi gọi nó
-- Sửa SP = sửa logic, không cần deploy lại phần mềm
-
-**Triết lý 2: "Barcode là passport, Routing History là visa stamp"**
-```
-ControlNo/Barcode = Số hộ chiếu (không đổi suốt đời)
-STB_SetInfo = Sổ hộ chiếu (IsLineInput, IsProdFinish)
-STB_ProdRouteHist = Visa stamp tại từng điểm
-STB_ProductionOrderRouting = Danh sách cửa khẩu phải qua
-```
-
-**Triết lý 3: "Validation tại Database, không phải UI"**
-- B597 có 3 cổng chặn cứng + 1 cơ chế bypass
-- Không thể bypass từ UI — phải sửa DB hoặc SP
-
-**Triết lý 4: "Tồn kho được tính trong lúc chạy, không phải lưu sẵn"**
-- F721 tính hạn sử dụng real-time mỗi lần load màn hình
-- Công thức: `DATEADD(DAY, (MMExtInt01 * 30) + (MMExtInt01/12*6), LotAttr10)`
-- Đặc biệt `MDFLUX-002`: hardcode 179 ngày thay vì 180
-
-**Triết lý 5: "Audit Trail không thể xóa, không thể sửa"**
-- `STB_ProcedureLog` ghi mọi thao tác quan trọng
-- ~4000+ records/ngày, top SP: `usp_DoProcessProdGRMaterialByOne`
-
----
-
-### 11.2 Bảng Ẩn Chứa Logic Quan Trọng
-
-| Bảng | Mục đích | Ghi chú |
-|------|----------|---------|
-| `stb_vvt_materialbo` | BOM ngầm cho validate NVL tại B597 | Không phải STB_BomDetail chuẩn |
-| `stb_vvt_OpenExpiredMaterial` | NVL hết hạn được phê duyệt dùng tiếp | Bypass kiểm tra hết hạn |
-| `stb_slittinglocationconfig_vvt` | Cấu hình Slitting động theo vị trí kho | Mỗi model mới phải INSERT |
-| `STB_VN_BENDING_TAPPING` | Kết quả Bending/Tapping (B717) | Chỉ lưu 1 lần |
-| `STB_LotChangeMaterialHistory` | Lịch sử đổi mã Barcode (B351) | Chain đến 6 cấp |
-| `STB_VVT_StagePrices` | Giá thành từng công đoạn | Cell + Module |
-| `STB_SavePackingTime_VVT` | Lịch sử đóng gói Module (B789) | |
-| `STB_InterimProdQtyInfo` | Số lượng trung gian (nháp) | Bị DELETE đầu mỗi lần scan |
-| `STB_VN_DIVIDEMATERIALSMAL` | Quản lý chia Lot NVL nhỏ hơn | |
-
----
-
-### 11.3 Các Điểm Nguy Hiểm Ẩn — Developer PHẢI BIẾT
-
-**Nguy hiểm 1: SP F721 Write khi đang Read**
-- `usp_vvt_MaterialLotInfo_get` (tên "_get") nhưng **UPDATE 2 bảng** mỗi khi chạy
-- Không có transaction bảo vệ phần UPDATE → Race condition nếu chạy song song
-
-**Nguy hiểm 2: Gate 20 phút KHÔNG BAO GIỜ HOẠT ĐỘNG**
-```sql
--- BUG trong usp_DoProcessProdRouteHistForCalc_SmartApp_VNT:
-IF @CompanyCode = 'VNT' AND @SIExtInt01 = Null AND @RouteIndex > 1 ...
--- Phải là IS NULL, không phải = Null → Gate luôn FALSE
-```
-**Fix:** Sửa SP — thay `@SIExtInt01 = Null` thành `@SIExtInt01 IS NULL`:
-```sql
--- Tìm dòng trong SP:
-SELECT OBJECT_DEFINITION(OBJECT_ID('usp_DoProcessProdRouteHistForCalc_SmartApp_VNT'))
--- Ctrl+F tìm: @SIExtInt01 = Null
--- Sửa thành: @SIExtInt01 IS NULL
--- Sau đó ALTER PROCEDURE để deploy lại
-```
-> ⚠️ Hiện tại gate này không hoạt động nên OP VNT có thể scan hàng loạt < 20 phút mà không bị chặn. Nếu muốn enforce → phải fix SP.
-
-**Nguy hiểm 3: Bending/Tapping chỉ lưu 1 lần — không có rollback**
-- Một khi đã lưu, không có cách sửa qua UI → phải UPDATE thủ công SQL
-
-**Nguy hiểm 4: Whitelist User hardcode trong SP**
-- `usp_Set_VVT_Info_get` (B452) có danh sách UserID hardcode
-- Khi cần thêm User → PHẢI deploy lại SP
-
-**Nguy hiểm 5: Model/NVL hardcode trong usp_Vietnam_RawMaterialInputHist_uid**
-- Hàng trăm dòng hardcode với specific model names và material codes
-- Mỗi model mới cần validate terminal/electrolyte/sleeve mới đều phải **sửa SP**
-
----
-
-### 11.4 Cơ Chế Chain Barcode (6 Cấp)
-
-```sql
--- SP B597 theo dõi lịch sử đổi barcode đến 6 cấp:
-SELECT @LotNonew1 = NewBarcode FROM STB_LotChangeMaterialHistory WHERE OldBarcode=@pBarcode
-SELECT @LotNonew2 = NewBarcode ... WHERE OldBarcode=@LotNonew1
--- ... đến @LotNonew6
--- Sau đó JOIN STB_SetInfo với IN (@pBarcode, @LotNonew1, ..., @LotNonew6)
-```
-
----
-
-### 11.5 Cơ Chế Tính Tồn Kho F721 (Logic Thực Tế)
-
-```sql
--- Logic tính StockQty thực (có trừ phần đã chia):
-CASE
-    WHEN LTDX.DIVIDE_STOCKQTY > 0 OR LTDX.DIVIDE_STOCKQTY IS NOT NULL
-    THEN ISNULL(MLI.CurrentQty, mdli.StockQty) - LTDX.DIVIDE_STOCKQTY
-    ELSE ISNULL(MLI.CurrentQty, mdli.StockQty)
-END AS StockQty
-
--- 3 trạng thái tồn kho theo ngày:
--- 'Safe': Hạn dùng > 30 ngày (15 ngày nếu là Coating/Slitting Roll NVL)
--- 'Warning': Hạn dùng < 30 ngày
--- 'Expired': Đã hết hạn
-
--- Kiểm tra Lot trùng lặp (fix cứng cho sự cố BG2 2026-01-09):
-AND CreateUserID <> '23091804'
-```
-
----
-
-### 11.6 DB Audit Trail (2026-05-05) — Kết Quả Xác Minh
-
-| Hạng mục | Verified | Đúng | Sai | Tỉ lệ |
-|----------|----------|------|-----|--------|
-| Tables | 68 | 61 | 7 | 89.7% |
-| Stored Procedures | 46 | 46 | 0 | 100% |
-| Triggers | 2 | 2 | 0 | 100% |
-| Functions | 5 | 5 | 0 | 100% |
-| **TỔNG** | **~168** | **~158** | **~10** | **94.0%** |
-
-**3 Bug thực sự phát hiện:**
-
-| # | Bug | Impact |
-|---|-----|--------|
-| 1 | Gate 20 phút KHÔNG BAO GIỜ HOẠT ĐỘNG (`= Null` thay vì `IS NULL`) | OP có thể scan hàng loạt < 20 phút trên VNT |
-| 2 | `STB_MaterialHoldInfo` KHÔNG TỒN TẠI — HOLD dùng `MaterialWarehouseCode = 'HOLDING_*'` | Tài liệu cũ sai |
-| 3 | `CompleteRoute='1'` được set cho MỌI route, không chỉ route cuối | Mô tả sai nghĩa — **không cần fix**, đây là behavior đúng của hệ thống. Khi debug đừng dùng `CompleteRoute` để xác định route cuối — dùng `IsOutputRoute` trong `STB_ProductionOrderRouting` thay thế |
-
-**Các lỗi tài liệu đã sửa:**
-
-| Lỗi | Vị trí | Hành động |
-|-----|--------|----------|
-| `STB_BaseCode`, `STB_ConstCodeInfo` không có trong SmartFactoryV2 | System DNA | Nằm trong SmartFramework |
-| Factory Matrix route prefix sai (VNT=V-, VVT=E-) | Factory Matrix | Sửa: VNT=E-, VVT=V- |
-| `tbl_SlittingStock`, `tbl_BomDetail` không tồn tại | B597 | Dùng STB_BomDetail + stb_vvt_materialbo |
-| Cột `IsFIFO` trong `STB_MaterialMaster` không tồn tại | FIFO | Logic FIFO nằm trong SP |
-| View `FinishGoodMESInstock_HN` không tồn tại | HN00 | Deprecated/đổi tên |
-
-*Cập nhật: 2026-06-04 — Bổ sung § 9.6 C530/C546 FOQC OCV/ESR bug + SP reference table*
-
----
-
-### 8.7 Hỗ trợ lưu nhiều mã vạch nguyên vật liệu (Multi-barcode Appending) cho Điện cực và Vỏ Case
-
-**Triệu chứng:** Khi sản xuất, một số Lot nguyên liệu (đặc biệt là điện cực hoặc vỏ Case) bị hết giữa chừng và cần bắn nối tiếp cuộn mới. Trước đây, hệ thống chỉ hỗ trợ tính năng này cho Điện cực, dẫn đến vỏ Case bị chặn hoặc ghi đè dữ liệu.
-
-**Cách khắc phục:**
-1. Cập nhật `usp_Vietnam_RawMaterialInputHist_uid` để:
-   - Tách chuỗi barcode chứa dấu `;` khi kiểm tra trạng thái HOLD bằng hàm `usp_VVT_checkHOLD_Material`.
-   - Tính toán `@count` hợp lệ bằng cách đếm và cộng dồn tất cả các barcode con trong danh sách.
-   - Bật tính năng tự động nối chuỗi (`RawMaterialBarcode = existingRawBarcode + ' ; ' + newRawBarcode`) cho nhóm 자재 `Case` thuộc các dòng máy size `3562`, `3582`, `35105` (bên cạnh nhóm `ELECTRODEP` và `ELECTRODEM` dùng cho mọi size).
-   - Ghi nhận lịch sử cho cả hai nhóm này.
-2. Cập nhật `usp_RawMaterialInputHist_get` sử dụng `FOR XML PATH('')` để gộp các barcode đã bắn thành chuỗi `; ` hiển thị lên lưới của màn hình.
-
-*Chi tiết mã nguồn tham khảo các file:*
-- SP UID: [usp_Vietnam_RawMaterialInputHist_uid.sql](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/sql/procedures/usp_Vietnam_RawMaterialInputHist_uid.sql)
-- SP GET: [usp_RawMaterialInputHist_get.sql](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/sql/procedures/usp_RawMaterialInputHist_get.sql)
+> 📌 **Phân tích sâu & DB Audit:** Xem chi tiết phân tích kiến trúc database, DNA hệ thống và kết quả Audit tại [KB_12_DEEP_CORE_ANALYSIS_AND_AUDIT.md](KB_12_DEEP_CORE_ANALYSIS_AND_AUDIT.md).
 
