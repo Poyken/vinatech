@@ -44,16 +44,34 @@
 | Bắc Giang (Cell) | VVT (F1/F2) | `V-xx` | `VV...(Cell)` `VJ...(convert)` | `STB_VN_FINISHGOODS_BG` |
 | Hà Nam | VVT_F3 | `VE-xx` | `VE260507-001` | `FinishGoodMESInstock_HN` |
 
-## 4. GOLDEN QUERY — Full Trace Barcode
+## 4. GOLDEN QUERY — Full Trace Barcode (Truy vết 360°)
 
 ```sql
-SELECT PRH.ControlNo, PRH.PONo, RI.RouteName, PRH.CreateDateTime,
-       DP.PackingID, DP.ParentPackingID
-FROM STB_ProdRouteHist PRH WITH(NOLOCK)
+SELECT 
+    SI.Barcode AS [Physical Barcode],
+    SI.ControlNo AS [Internal ControlNo],
+    SI.PONo AS [PO Number],
+    SI.MaterialCode AS [Model Code],
+    SI.InputLineCode AS [Line Code],
+    SI.LotDecisionResult AS [QC Result (SetInfo)],
+    SI.IsDefect AS [Is Defect Y/N],
+    PRH.RouteCode AS [Step Code],
+    RI.RouteName AS [Step Name],
+    PRH.ProdQty AS [Step Produced Qty],
+    PRH.CreateDateTime AS [Step Date Time],
+    MLI.CurrentQty AS [WMS Inventory Qty],
+    MLI.WarehouseCode AS [Current Warehouse],
+    MLI.LocationCode AS [Current Location],
+    DP.PackingID AS [Inner Box ID],
+    DP.ParentPackingID AS [Outer Pallet ID]
+FROM STB_SetInfo SI WITH(NOLOCK)
+LEFT JOIN STB_ProdRouteHist PRH WITH(NOLOCK) ON SI.ControlNo = PRH.ControlNo
 LEFT JOIN STB_RouteInfo RI WITH(NOLOCK) ON PRH.RouteCode = RI.RouteCode
-LEFT JOIN STB_DividePackaging DP WITH(NOLOCK) ON PRH.ControlNo = DP.LotNo
-WHERE PRH.ControlNo = 'MÃ_BARCODE'
-ORDER BY PRH.CreateDateTime ASC
+LEFT JOIN STB_MaterialLotInfo MLI WITH(NOLOCK) ON SI.Barcode = MLI.LotNo
+LEFT JOIN STB_DividePackaging DP WITH(NOLOCK) ON SI.Barcode = DP.LotNo
+WHERE SI.Barcode = 'MÃ_BARCODE_HOẶC_LOT_NO' 
+   OR SI.ControlNo = 'MÃ_BARCODE_HOẶC_LOT_NO'
+ORDER BY PRH.CreateDateTime ASC;
 ```
 
 ## 5. TOP 10 LỖI THƯỜNG GẶP → KB FILE
