@@ -784,4 +784,905 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
 *   **Chi tiết nghiệp vụ:** Xem tại [KB_01_UI_PHAN_QUYEN.md § 1.1 và § 1.4](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_01_UI_PHAN_QUYEN.md#11-lỗi-không-đăng-nhập-được-mes-allowflag).
 
 ---
-*Cập nhật: 2026-06-12 — Hoàn thiện cẩm nang tra cứu lỗi tập trung theo Screen ID phục vụ phím tắt Ctrl+Shift+F cho toàn bộ các màn.*
+
+## A210 — Material Master Registration (Đăng ký mã vật tư mới)
+
+> 🔗 **Xem thêm:** Mục [F130 / F140 / A210](#f130--f140--a210--supplier-mapping--material-sync) phía trên đã có chi tiết luồng tích hợp NCC & đồng bộ vật tư.
+
+### Lỗi 1: Mã vật tư mới đăng ký trên A210 nhưng không hiển thị khi nhập kho F330
+*   **Triệu chứng:** Thủ kho tạo phiếu nhập kho mới, nhập mã vật tư mà không tìm thấy trong popup chọn MaterialCode.
+*   **Nguyên nhân gốc:** Mã vật tư được tạo trong `STB_MaterialMaster` nhưng chưa được mapping nhà cung cấp trong `STB_MaterialVendorMapping` (F130/F140) và chưa khai báo thuộc tính kho `STB_MaterialStockAttributeInfo` (F110).
+*   **Cách khắc phục:** Chạy checklist 3 bước: (1) Đăng ký A210, (2) Map NCC tại F130/F140, (3) Bật cờ F110.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_07_GROUPWARE_INTEGRATION.md § 6](KB_07_GROUPWARE_INTEGRATION.md) và [KB_06_MASTER_DATA_TOOLS.md § 1.3](KB_06_MASTER_DATA_TOOLS.md).
+
+---
+
+## A320 — Route Configuration (Cấu hình Route sản xuất)
+
+### Lỗi 1: Thêm Route mới trong A320 nhưng không hiển thị tại B530 khi chốt sản lượng
+*   **Triệu chứng:** OP không thấy công đoạn mới trong danh sách chọn Route để chốt sản lượng.
+*   **Nguyên nhân gốc:** Route mới chỉ được khai báo ở bảng `STB_RouteInfo` nhưng chưa được gán vào Production Order Routing (`STB_ProductionOrderRouting`) của PO hiện tại.
+*   **Cách khắc phục:** Vào A320 kiểm tra Route đã active (`IsUsed=1`), sau đó gán Route mới vào PO tại B310.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_10_KIEN_TRUC_VA_DATAFLOW.md § 2.1](KB_10_KIEN_TRUC_VA_DATAFLOW.md) và [KB_06_MASTER_DATA_TOOLS.md § 10](KB_06_MASTER_DATA_TOOLS.md).
+
+---
+
+## A410 — Model Basic Info (Thông tin cơ bản Model)
+
+> 🔗 **Xem thêm:** Mục [A230 / A410](#a230--a410--master-data-model) phía trên đã có chi tiết lỗi thiếu Vol/Farad khi thêm model mới.
+
+### Lỗi 1: Model mới không hiện Vol/Farad, C512 không tìm Lot, B597 lỗi sai chủng loại
+*   **Triệu chứng:** Các thông số Vol/Farad trống, QC không tìm thấy Lot ở C512, B597 chặn quét NVL.
+*   **Nguyên nhân gốc:** Chưa khai báo `STB_ModelBasicInfo` cho model mới.
+*   **Cách khắc phục:**
+    ```sql
+    INSERT INTO STB_ModelBasicInfo (ModelCode, ModelName, MaterialTypeCode, ProductGroupCode, MBISizeH, MBISizeW, CreateDateTime, MBIExtText04, MBIExtText05)
+    VALUES ('MÃ_MODEL', 'TÊN', 'MDL', 'HC-EDLC', 40, 18, GETDATE(), 'Vol', 'Farad');
+    ```
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_06_MASTER_DATA_TOOLS.md § 1.3](KB_06_MASTER_DATA_TOOLS.md).
+
+### Lỗi 2: Thiếu cấu hình OqcType/InspectionType dẫn đến lỗi QC OQC
+*   **Triệu chứng:** Khi tạo hồ sơ OQC tại C512, hệ thống không biết loại kiểm tra nào áp dụng.
+*   **Nguyên nhân gốc:** Cột `OqcType` và `InspectionType` trong `STB_ModelBasicInfo` bị NULL.
+*   **Cách khắc phục:** Cập nhật giá trị OqcType và InspectionType cho model tại A410.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_05_QC_ELECTRODE.md § 7.2](KB_05_QC_ELECTRODE.md).
+
+---
+
+## A418 — Packing Standard by Size (Tiêu chuẩn đóng gói theo kích thước)
+
+> 🔗 **Xem thêm:** Mục [B418](#b418--packing-quantity-standards) phía trên đã có chi tiết lỗi tiêu chuẩn đóng gói.
+
+### Lỗi 1: B523 báo "Chưa có tiêu chuẩn đóng gói" do Size mới chưa khai báo A418
+*   **Triệu chứng:** Gộp Box tại B523 bị chặn với thông báo lỗi.
+*   **Nguyên nhân gốc:** `STB_PackingStandard` chưa có dòng cho `MBISizeD` của Model mới.
+*   **Cách khắc phục:** Vào A418, đăng ký Size mới và thiết lập PackQty.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_06_MASTER_DATA_TOOLS.md § 11](KB_06_MASTER_DATA_TOOLS.md).
+
+---
+
+## A419 — Packing Standard Configuration (Cấu hình số lượng đóng gói)
+
+### Lỗi 1: Thêm model mới nhưng không đóng gói được tại B523
+*   **Triệu chứng:** B523 không cho gộp Box, báo lỗi chưa có tiêu chuẩn đóng gói.
+*   **Nguyên nhân gốc:** Chưa khai báo quy cách đóng gói (VinylBagQty, InnerBoxQty, OutBoxQty) cho model mới trong `STB_PackingStandard` tại A419.
+*   **Cách khắc phục:** Vào A419, chọn MaterialTypeCode = `FERT`, nhập Size và các thông số đóng gói, nhấn Lưu.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.1](KB_04_DONG_GOI_IN_TEM.md) và [KB_14_TRACE_BUG_METHODOLOGY.md](KB_14_TRACE_BUG_METHODOLOGY.md).
+
+---
+
+## A460 — Label Mapping (Mapping mẫu tem cho Model)
+
+> 🔗 **Xem thêm:** Mục [Z530 / A460](#z530--a460--label-layout--mapping) phía trên đã có chi tiết lỗi in tem.
+
+### Lỗi 1: In tem ra mẫu không đúng hoặc tem trống do chưa map mẫu tem cho Model
+*   **Triệu chứng:** In tem tại B523/B754/B757 hiện ra mẫu tem sai hoặc trống thông tin.
+*   **Nguyên nhân gốc:** Model chưa được map với mẫu tem tương ứng trong `STB_ModelLabelInfo` tại A460.
+*   **Cách khắc phục:**
+    ```sql
+    SELECT ModelCode, FormatName FROM STB_ModelLabelInfo WHERE ModelCode = 'MÃ_MODEL';
+    -- Nếu trống → Vào A460 chọn Model, chọn mẫu tem AssembleLabel (dòng 2) cho SX, PartLabel cho kho.
+    ```
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.16](KB_04_DONG_GOI_IN_TEM.md).
+
+---
+
+## B220 — Route Group Setup (Thiết lập nhóm Route)
+
+> 🔗 **Xem thêm:** Mục [B210 / B220 / B230 / B240](#b210--b220--b230--b240--production-routing-setup) phía trên đã có chi tiết lỗi thiết lập Line/Route.
+
+### Lỗi 1: Nhóm Route không hiển thị đúng công đoạn khi cấu hình sản xuất
+*   **Triệu chứng:** Khi lập PO tại B310, danh sách công đoạn bị thiếu hoặc sai thứ tự.
+*   **Nguyên nhân gốc:** Nhóm Route chưa được cấu hình đúng tại B220.
+*   **Cách khắc phục:** Vào B220 kiểm tra Route Group, đảm bảo các RouteCode được gán đúng thứ tự.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_06_MASTER_DATA_TOOLS.md § 10](KB_06_MASTER_DATA_TOOLS.md) và [KB_25_VINAENESSOL_HUNG_YEN.md](KB_25_VINAENESSOL_HUNG_YEN.md).
+
+---
+
+## B230 — Machine Route Mapping (Ánh xạ máy - Route)
+
+> 🔗 **Xem thêm:** Mục [B210 / B220 / B230 / B240](#b210--b220--b230--b240--production-routing-setup) phía trên.
+
+### Lỗi 1: Dùng B230 thay thế khi B270 bị lỗi popup
+*   **Triệu chứng:** B270 bị lỗi popup trống không hiển thị danh sách máy. Cần cách thay thế.
+*   **Nguyên nhân gốc:** SP `usp_Set_VVT_Info_get` bị hardcode Whitelist UserID tại B270.
+*   **Cách khắc phục:** Sử dụng B230 để gán máy vào Route khi B270 gặp sự cố. B230 có giao diện tương tự nhưng không qua SP bị whitelist.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_01_UI_PHAN_QUYEN.md § 1.3](KB_01_UI_PHAN_QUYEN.md) và [KB_25_VINAENESSOL_HUNG_YEN.md](KB_25_VINAENESSOL_HUNG_YEN.md).
+
+---
+
+## B240 — Machine Master Setup (Thiết lập máy theo công đoạn)
+
+> 🔗 **Xem thêm:** Mục [B210 / B220 / B230 / B240](#b210--b220--b230--b240--production-routing-setup) phía trên.
+
+### Lỗi 1: B530 không hiển thị máy trong dropdown khi chốt sản lượng
+*   **Triệu chứng:** OP quét chốt sản lượng tại B530 nhưng không thấy máy trong danh sách chọn.
+*   **Nguyên nhân gốc:** Máy chưa được gán vào Route đang chạy tại B240.
+*   **Cách khắc phục:** Vào B240, chọn máy và gán vào RouteCode tương ứng.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_06_MASTER_DATA_TOOLS.md § 10](KB_06_MASTER_DATA_TOOLS.md).
+
+---
+
+## B270 — Product Machine Mapping (Ánh xạ máy - sản phẩm)
+
+> 🔗 **Xem thêm:** Mục [B250 / B270](#b250--b270--cell--machine-mapping) phía trên đã có chi tiết lỗi popup trống và thêm Cell/Line mới.
+
+### Lỗi 1: Popup gán máy B270 trống không hiển thị danh sách thiết bị
+*   **Triệu chứng:** Danh sách máy trống khi mở popup tại B270.
+*   **Nguyên nhân gốc:** SP `usp_Set_VVT_Info_get` hardcode Whitelist UserID.
+*   **Cách khắc phục:** ALTER SP bổ sung UserID, hoặc dùng B230 thay thế.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_01_UI_PHAN_QUYEN.md § 1.3](KB_01_UI_PHAN_QUYEN.md).
+
+---
+
+## B301 — Production Order Info (Thông tin lệnh sản xuất chi tiết)
+
+### Lỗi 1: Dữ liệu PO bị lệch giữa B301 và B310
+*   **Triệu chứng:** Thông tin chi tiết PO tại B301 không khớp với tổng quan tại B310.
+*   **Nguyên nhân gốc:** Bảng `STB_ProductionOrderInfo` có dữ liệu không nhất quán do đồng bộ lỗi từ Groupware.
+*   **Cách khắc phục:** Kiểm tra dữ liệu trực tiếp trong DB và đồng bộ lại từ Groupware ESM Bridge.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_28_SYSTEM_OBJECTS_MAP.md](KB_28_SYSTEM_OBJECTS_MAP.md).
+
+---
+
+## B450 — Day Production Plan (Kế hoạch sản xuất ngày)
+
+> 🔗 **Xem thêm:** Mục [B310 / B450](#b310--b450--production-orders--day-plan) phía trên đã có chi tiết lỗi đồng bộ PO.
+
+### Lỗi 1: Không tạo được Lot do chưa tích cờ IsFixed
+*   **Triệu chứng:** OP lập kế hoạch ngày tại B450, bấm tạo Lot nhưng hệ thống không sinh được Lot.
+*   **Nguyên nhân gốc:** Cột `IsFixed` trong `STB_DayProdPlan` chưa được tích chọn (= 0).
+*   **Cách khắc phục:** Vào B450, tìm dòng kế hoạch ngày tương ứng, tick chọn cột `IsFixed` rồi nhấn Lưu. Sau đó bấm tạo Lot.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_03_SAN_XUAT.md § 2](KB_03_SAN_XUAT.md).
+
+### Lỗi 2: Xóa PO phải xóa đồng thời ở B310 và B450
+*   **Triệu chứng:** Xóa PO tại B310 nhưng dữ liệu kế hoạch ngày vẫn còn tại B450 gây lỗi trùng.
+*   **Nguyên nhân gốc:** Xóa PO cần xóa cả 3 bảng: `STB_ProductionOrderInfo`, `STB_ProductionOrderBom`, `STB_ProductionOrderRouting` (B310) VÀ `STB_DayProdPlan`, `STB_SetInfo` (B450).
+*   **Cách khắc phục:** Xóa PO theo quy trình đầy đủ 5 bảng.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_03_SAN_XUAT.md § 5.7](KB_03_SAN_XUAT.md).
+
+---
+
+## B453 — Production Schedule (Lịch trình sản xuất)
+
+### Lỗi 1: Lịch trình sản xuất không hiển thị dữ liệu sau khi tạo Lot
+*   **Triệu chứng:** Sau khi tạo Lot tại B450, mở B453 nhưng không thấy lịch trình sản xuất tương ứng.
+*   **Nguyên nhân gốc:** B453 hiển thị dựa trên dữ liệu `STB_SetInfo` kết hợp `STB_DayProdPlan`. Nếu `InputJobDate` bị NULL hoặc `IsFixed = 0` thì lịch trình không hiển thị.
+*   **Cách khắc phục:** Kiểm tra B450 đã tích `IsFixed` và Lot đã được tạo thành công.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_03_SAN_XUAT.md § 2](KB_03_SAN_XUAT.md) và [KB_04_DONG_GOI_IN_TEM.md](KB_04_DONG_GOI_IN_TEM.md).
+
+---
+
+## B460 — Production Line Status (Trạng thái Line sản xuất)
+
+### Lỗi 1: Trạng thái Line không cập nhật real-time
+*   **Triệu chứng:** Màn hình B460 hiển thị trạng thái Line sản xuất bị delay hoặc không chính xác.
+*   **Nguyên nhân gốc:** Dữ liệu lấy từ bảng `STB_SetInfo` kết hợp `STB_ProdRouteHist` có thể bị delay do cache hoặc lỗi refresh.
+*   **Cách khắc phục:** Nhấn nút Refresh/Tìm kiếm lại. Nếu vẫn sai, kiểm tra trực tiếp bảng `STB_ProdRouteHist` xem công đoạn đã được ghi nhận chưa.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_03_SAN_XUAT.md § 6](KB_03_SAN_XUAT.md) và [KB_25_VINAENESSOL_HUNG_YEN.md](KB_25_VINAENESSOL_HUNG_YEN.md).
+
+---
+
+## B470 — Electrode Line Status (Trạng thái Line điện cực)
+
+### Lỗi 1: Trạng thái Line điện cực không hiển thị hoặc không chính xác
+*   **Triệu chứng:** B470 không hiện dữ liệu Line điện cực hoặc hiện sai công đoạn đang chạy.
+*   **Nguyên nhân gốc:** Dữ liệu điện cực lưu ở bảng riêng (`STB_ElectrodeCoatingInfo`, `STB_ElectrodeSlittingResult`). Nếu Line điện cực chưa được cấu hình Route tương ứng thì B470 sẽ trống.
+*   **Cách khắc phục:** Kiểm tra cấu hình Route điện cực tại B220 và mapping máy tại B270.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_05_QC_ELECTRODE.md § 8](KB_05_QC_ELECTRODE.md) và [KB_25_VINAENESSOL_HUNG_YEN.md](KB_25_VINAENESSOL_HUNG_YEN.md).
+
+---
+
+## B525 — Warehouse Packing (Đóng gói kho)
+
+> 🔗 **Xem thêm:** Mục [B523 / B525](#b523--b525--packaging--box-matching) phía trên đã có chi tiết lỗi đóng gói.
+
+### Lỗi 1: Không gộp được Box tại kho (khác B523 dành cho sản xuất)
+*   **Triệu chứng:** Thủ kho thao tác đóng gói tại B525 bị chặn tương tự B523.
+*   **Nguyên nhân gốc:** B525 là phiên bản dành cho kho, cùng logic với B523 nhưng lọc theo WarehouseCode. Thiếu cờ `IsLotUse` hoặc `IsUseBarcode` tại F110.
+*   **Cách khắc phục:** Áp dụng cùng quy trình debug 4 bước như B523 (xem mục B523 phía trên).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.4](KB_04_DONG_GOI_IN_TEM.md).
+
+---
+
+## B528 — Barrel Barcode (In tem thùng phuy/Barrel)
+
+### Lỗi 1: Lỗi in tem Barrel hoặc không sinh được mã Barcode Barrel
+*   **Triệu chứng:** Bấm in tem thùng Barrel tại B528 bị lỗi hoặc barcode không hiển thị.
+*   **Nguyên nhân gốc:** Cấu hình Barrel chưa được khai báo trong bảng cấu hình sản phẩm, hoặc chưa có template tem Barrel tại Z530/A460.
+*   **Cách khắc phục:** Kiểm tra cấu hình template tem Barrel tại Z530, mapping tại A460, và đảm bảo Lot đã hoàn thành đóng gói tại B523.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_03_SAN_XUAT.md § 6.10](KB_03_SAN_XUAT.md).
+
+---
+
+## B540 — Process Input V22→V28 (Nhập NVL theo công đoạn)
+
+### Lỗi 1: Không nhập được NVL do thiếu 4 cột màu bắt buộc
+*   **Triệu chứng:** OP quét nhập NVL tại B540 nhưng hệ thống không cho lưu, báo thiếu thông tin bắt buộc.
+*   **Nguyên nhân gốc:** 4 cột màu đặc biệt trên lưới B540 phải được nhập đầy đủ trước khi in barcode. Đây là requirement cứng trong SP `usp_Vietnam_RawMaterialInputHist_uid`.
+*   **Cách khắc phục:** Hướng dẫn OP nhập đầy đủ 4 cột màu (hiển thị nền vàng/cam trên grid). Nếu vẫn lỗi, kiểm tra `STB_MaterialLotInfo` xem Lot NVL có tồn tại không.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_03_SAN_XUAT.md § 6.4](KB_03_SAN_XUAT.md) và [KB_14_TRACE_BUG_METHODOLOGY.md](KB_14_TRACE_BUG_METHODOLOGY.md).
+
+### Lỗi 2: Checkbox ProdQtyFinishYN không tích được
+*   **Triệu chứng:** OP muốn hoàn thành công đoạn nhưng không tích được checkbox `ProdQtyFinishYN`.
+*   **Nguyên nhân gốc:** Hệ thống tự động tích `ProdQtyFinishYN` khi chốt sản lượng ở B530, không cho tích trực tiếp.
+*   **Cách khắc phục:** OP cần chốt sản lượng tại B530 trước, hệ thống sẽ tự tích checkbox.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_03_SAN_XUAT.md § 2](KB_03_SAN_XUAT.md).
+
+---
+
+## B726 — Scrap After Production (Báo phế sau sản xuất)
+
+### Lỗi 1: Báo phế không thành công hoặc bản ghi phế không hiển thị
+*   **Triệu chứng:** OP thực hiện báo phế sản phẩm sau sản xuất tại B726 nhưng hệ thống không ghi nhận hoặc dữ liệu không hiển thị.
+*   **Nguyên nhân gốc:** SP `usp_vn_scrapafterproduction` thực hiện xóa mềm (`IsDeleted = 1`), nếu Lot đã bị đánh dấu xóa trước đó thì không tạo được bản ghi phế mới.
+*   **Cách khắc phục:** Kiểm tra bảng `STB_VN_SCRAP_AFTERPRODUCTIONS` xem Lot đã tồn tại chưa. Nếu cần xóa lại: `UPDATE STB_VN_SCRAP_AFTERPRODUCTIONS SET IsDeleted = 0 WHERE LotNo = 'MÃ_LOT'`.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_03_SAN_XUAT.md § 6](KB_03_SAN_XUAT.md).
+
+---
+
+## B733 — Box Matching Report (Báo cáo gộp Box)
+
+### Lỗi 1: Báo cáo B733 hiển thị trống không có dữ liệu
+*   **Triệu chứng:** Mở B733 tìm kiếm Lot nhưng không hiện kết quả gộp Box nào.
+*   **Nguyên nhân gốc:** Lot đó chưa được gộp Box tại B523 (chưa hoàn thành đóng gói).
+*   **Cách khắc phục:** Kiểm tra B523 xem Lot đã được gộp Box chưa. Nếu chưa, thực hiện gộp Box trước rồi quay lại B733.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_03_SAN_XUAT.md § 6.5](KB_03_SAN_XUAT.md).
+
+---
+
+## B755 — PAC Inner Label (In tem nhãn trong PAC)
+
+> 🔗 **Xem thêm:** Mục [B754 / B756](#b754--b756--pac-customer-labels) phía trên đã có chi tiết lỗi in tem PAC.
+
+### Lỗi 1: In tem Inner Label PAC bị thiếu Serial hoặc thông tin sai
+*   **Triệu chứng:** Tem trong (Inner Label) PAC in ra thiếu Serial hoặc trọng lượng không đúng.
+*   **Nguyên nhân gốc:** Nhầm lẫn giữa nhãn trong (Inner) và nhãn ngoài (Outer). Serial nhãn trong và ngoài chạy độc lập.
+*   **Cách khắc phục:** Đảm bảo chọn đúng loại tem (Inner). Không tick `IsOuter` khi in nhãn trong.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.9.1](KB_04_DONG_GOI_IN_TEM.md).
+
+---
+
+## B756 — PAC Outer Label (In tem nhãn ngoài PAC)
+
+> 🔗 **Xem thêm:** Mục [B754 / B756](#b754--b756--pac-customer-labels) phía trên đã có chi tiết lỗi in tem PAC Outer.
+
+### Lỗi 1: Tem thùng Outer Label PAC không hiển thị Serial hoặc cân nặng
+*   **Triệu chứng:** In tem thùng lớn B756 thiếu Serial nhãn hoặc không hiện trọng lượng.
+*   **Nguyên nhân gốc:** Chưa tick `IsOuter = 1` khi in nhãn ngoài, hoặc chưa bật `IsWeightLabel`.
+*   **Cách khắc phục:** Tick `IsOuter` cho nhãn ngoài. Tick `IsWeightLabel` cho tem cân nặng.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.9.1](KB_04_DONG_GOI_IN_TEM.md) và [KB_14_TRACE_BUG_METHODOLOGY.md](KB_14_TRACE_BUG_METHODOLOGY.md).
+
+---
+
+## B758 — Digi-Key Mixed Load Label (In tem hàng hỗn hợp Digi-Key)
+
+> 🔗 **Xem thêm:** Mục [B757 / B758](#b757--b758--digi-key-customer-labels) phía trên đã có chi tiết lỗi in tem Digi-Key.
+
+### Lỗi 1: Không in được tem Mixed Load tại B758
+*   **Triệu chứng:** In tem thùng hàng hỗn hợp (Mixed Load) Digi-Key bị lỗi.
+*   **Nguyên nhân gốc:** Thùng chứa nhiều model/size khác nhau, SP cần kiểm tra tất cả barcode trong thùng khớp.
+*   **Cách khắc phục:** Đảm bảo tất cả barcode trong thùng đã được gộp box tại B523 và thông tin PO đầy đủ.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.9.2](KB_04_DONG_GOI_IN_TEM.md).
+
+---
+
+## B767 — Customer Label Print (In tem nhãn khách hàng chung)
+
+### Lỗi 1: Không in được tem cho khách hàng mới
+*   **Triệu chứng:** Khi in tem cho khách hàng mới tại B767, hệ thống báo lỗi không tìm thấy mẫu tem.
+*   **Nguyên nhân gốc:** Chưa tạo mẫu tem tại Z530 và chưa mapping tại A460.
+*   **Cách khắc phục:** Tạo mẫu tem mới tại Z530, approve layout, sau đó mapping model vào mẫu tem tại A460.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.16](KB_04_DONG_GOI_IN_TEM.md).
+
+---
+
+## B781 — Packing Print Time Report (Tra sản lượng đóng gói nhập tay)
+
+> 🔗 **Xem thêm:** Mục [B682 / B781 / B786 / B789 / B791](#b682--b781--b786--b789--b791--stage-prices) phía trên đã có chi tiết lỗi đơn giá.
+
+### Lỗi 1: Sai ngày in tem đóng gói tại B781
+*   **Triệu chứng:** Báo cáo B781 hiển thị sai ngày in/đóng gói so với thực tế.
+*   **Nguyên nhân gốc:** Cột `PrintTime` trong `STB_SavePackingTime_VVT` bị ghi sai khi nhập tay tại B523.
+*   **Cách khắc phục:** Chạy SQL sửa trực tiếp: `UPDATE STB_SavePackingTime_VVT SET PrintTime = 'NGÀY_ĐÚNG' WHERE LotNo = 'MÃ_LOT'`.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_03_SAN_XUAT.md § 5.3](KB_03_SAN_XUAT.md).
+
+---
+
+## B782 — Lot Routing History (Lịch sử Routing theo Lot)
+
+### Lỗi 1: Sai ngày sản xuất (JobDate) trên báo cáo B782
+*   **Triệu chứng:** Barcode hiển thị sai ngày sản xuất trên lịch sử Routing.
+*   **Nguyên nhân gốc:** Cột `JobDate` trong `STB_ProdRouteHist` bị ghi nhận sai do OP chốt sản lượng không đúng ca.
+*   **Cách khắc phục:**
+    ```sql
+    UPDATE STB_ProdRouteHist SET JobDate = 'NGÀY_ĐÚNG'
+    WHERE ControlNo = (SELECT ControlNo FROM STB_SetInfo WHERE Barcode = 'MÃ_BARCODE')
+    AND RouteCode = 'MÃ_CÔNG_ĐOẠN';
+    ```
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_03_SAN_XUAT.md § 5.2](KB_03_SAN_XUAT.md).
+
+---
+
+## B786 — ESR History (Lịch sử ESR toàn nhà máy)
+
+> 🔗 **Xem thêm:** Mục [B682 / B781 / B786 / B789 / B791](#b682--b781--b786--b789--b791--stage-prices) phía trên.
+
+### Lỗi 1: Tab Online báo Status khác OK hoặc không lấy được data ESR
+*   **Triệu chứng:** Tab Online tại B786 hiển thị Status Error, dữ liệu ESR không cập nhật.
+*   **Nguyên nhân gốc:** Phần mềm đo ESR tại máy bị mất kết nối hoặc chưa upload kết quả vào bảng `Stb_ESRValueMonitor`.
+*   **Cách khắc phục:** Kiểm tra phần mềm đo ESR trên máy tính chuyền. Cột "Mã công ty" trên B786 = version phần mềm đo.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_03_SAN_XUAT.md § 6](KB_03_SAN_XUAT.md).
+
+---
+
+## B789 — Packing Qty Edit (Sửa số lượng đóng gói)
+
+> 🔗 **Xem thêm:** Mục [B682 / B781 / B786 / B789 / B791](#b682--b781--b786--b789--b791--stage-prices) phía trên.
+
+### Lỗi 1: Cần xóa hoặc sửa số lượng Packing đã lưu
+*   **Triệu chứng:** Số lượng đóng gói bị ghi nhận sai, cần sửa lại.
+*   **Nguyên nhân gốc:** OP nhập nhầm số lượng khi gộp Box tại B523. B789 sử dụng SP `usp_Vietnam_GetBoxIDForLotNo_VVT` để tra cứu.
+*   **Cách khắc phục:** Sửa trực tiếp trong bảng `STB_SavePackingTime_VVT` theo LotNo và ID giao dịch.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.6](KB_04_DONG_GOI_IN_TEM.md).
+
+---
+
+## B791 — NG Defect Repair (Sửa chữa lỗi NG)
+
+> 🔗 **Xem thêm:** Mục [B682 / B781 / B786 / B789 / B791](#b682--b781--b786--b789--b791--stage-prices) phía trên.
+
+### Lỗi 1: Lệch DefectQty và ProdQty khi sửa lỗi NG
+*   **Triệu chứng:** Sau khi sửa chữa lỗi NG, số lượng hàng lỗi và hàng tốt bị lệch tổng.
+*   **Nguyên nhân gốc:** SP `usp_ModuleLotTrackingInfo_VVT2_get` đọc từ cả `STB_DefectRepairInfo` và `STB_ProdRouteHist`. Khi sửa phải cập nhật đồng bộ cả 2 bảng.
+*   **Cách khắc phục:** Cập nhật đồng thời `DefectQty` trong `STB_DefectRepairInfo` và `ProdQty` trong `STB_ProdRouteHist`.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_03_SAN_XUAT.md § 5.8](KB_03_SAN_XUAT.md) và [KB_05_QC_ELECTRODE.md § 9.5](KB_05_QC_ELECTRODE.md).
+
+---
+
+## B882 — ANDON Display (Màn hình ANDON trên MES)
+
+### Lỗi 1: Dữ liệu ANDON không cập nhật hoặc hiển thị trống
+*   **Triệu chứng:** Dashboard ANDON tại B882 không hiển thị sản lượng real-time.
+*   **Nguyên nhân gốc:** SP `usp_Vietnam_AndonDetail_get` lấy dữ liệu từ `STB_ProdRouteHist` lọc theo `WorkCenterCode`. Nếu WorkCenterCode sai hoặc không khớp sẽ trống.
+*   **Cách khắc phục:** Kiểm tra tham số filter WorkCenterCode trên ANDON display khớp với mã nhà máy đang chạy.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_03_SAN_XUAT.md § 6](KB_03_SAN_XUAT.md) và [KB_28_SYSTEM_OBJECTS_MAP.md](KB_28_SYSTEM_OBJECTS_MAP.md).
+
+---
+
+## B934 — User Permission Config (Cấu hình quyền người dùng SX)
+
+### Lỗi 1: Người dùng không có quyền thao tác trên màn hình sản xuất
+*   **Triệu chứng:** OP đăng nhập MES nhưng các nút Save/Delete trên màn hình sản xuất bị disable.
+*   **Nguyên nhân gốc:** UserID chưa được cấp quyền Execute cho các Button trên ScreenObject.
+*   **Cách khắc phục:** Vào B934 hoặc Z220 gán quyền Execute cho Role tương ứng.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_01_UI_PHAN_QUYEN.md § 2](KB_01_UI_PHAN_QUYEN.md).
+
+---
+
+## B935 — Role Screen Mapping (Gán màn hình cho vai trò SX)
+
+### Lỗi 1: Nhóm vai trò sản xuất không thấy màn hình mới trên menu
+*   **Triệu chứng:** Sau khi tạo màn hình mới, nhóm SX không nhìn thấy trên menu MES.
+*   **Nguyên nhân gốc:** Màn hình mới chưa được gán vào Role của nhóm SX tại B935/Z220.
+*   **Cách khắc phục:** Vào B935 hoặc Z220, chọn Role Group tương ứng, tick chọn Screen ID mới, Lưu lại.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_01_UI_PHAN_QUYEN.md § 1.4](KB_01_UI_PHAN_QUYEN.md).
+
+---
+
+## C112 — AQL Basic Rules (Quy tắc AQL cơ bản)
+
+### Lỗi 1: Cấu hình mẫu kiểm tra AQL không áp dụng đúng cho OQC
+*   **Triệu chứng:** Khi tạo hồ sơ OQC tại C512, số lượng mẫu lấy kiểm tra không đúng với quy tắc AQL.
+*   **Nguyên nhân gốc:** Bảng quy tắc AQL chưa được cấu hình cho kích thước lô hàng tương ứng.
+*   **Cách khắc phục:** Vào C112, kiểm tra và bổ sung quy tắc AQL cho size lô hàng (Lot Size) phù hợp.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_28_SYSTEM_OBJECTS_MAP.md](KB_28_SYSTEM_OBJECTS_MAP.md).
+
+---
+
+## C122 — IQC Material Inspection Setup (Thiết lập hạng mục kiểm tra NVL)
+
+> 🔗 **Xem thêm:** Mục [C121 / C122](#c121--c122--qc-inspections) phía trên đã có chi tiết cấu hình QC đầu vào.
+
+### Lỗi 1: Lot NVL nhập kho không tự động hiện hạng mục kiểm tra
+*   **Triệu chứng:** Lot nguyên liệu hiển thị trên lưới QC nhưng không có hạng mục để nhập kết quả đo.
+*   **Nguyên nhân gốc:** Mã NVL chưa được gán nhóm hạng mục kiểm tra IQC tại C122.
+*   **Cách khắc phục:** Vào C122, chọn mã NVL, click chọn nhóm kiểm tra tương ứng để map dữ liệu.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_05_QC_ELECTRODE.md § 9.1](KB_05_QC_ELECTRODE.md).
+
+---
+
+## C131 — Inspection Item Master (Danh mục hạng mục kiểm tra)
+
+### Lỗi 1: Thêm hạng mục kiểm tra mới không hiển thị tại C143
+*   **Triệu chứng:** Hạng mục đo mới tạo tại C131 không xuất hiện khi cấu hình kiểm tra tại C143.
+*   **Nguyên nhân gốc:** Cờ `IsUsed = 0` hoặc loại dữ liệu nhập (`DataType`) chưa được thiết lập đúng (1=số, 2=checkbox).
+*   **Cách khắc phục:** Vào C131 kiểm tra cờ `IsUsed=1` và chọn DataType phù hợp.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_06_MASTER_DATA_TOOLS.md § 14](KB_06_MASTER_DATA_TOOLS.md).
+
+---
+
+## C132 — Inspection Group Setup (Thiết lập nhóm kiểm tra)
+
+### Lỗi 1: Nhóm kiểm tra QC không hiển thị khi gán cho NVL tại C122 hoặc sản phẩm tại C143
+*   **Triệu chứng:** Khi mở popup chọn nhóm kiểm tra, danh sách trống hoặc thiếu nhóm mới tạo.
+*   **Nguyên nhân gốc:** Nhóm kiểm tra chưa được kích hoạt (`IsUsed = 0`) hoặc chưa được gán MaterialTypeCode phù hợp.
+*   **Cách khắc phục:** Vào C132 kiểm tra nhóm mới, tick `IsUsed=1`, chọn đúng MaterialTypeCode.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_02_KHO_WMS.md](KB_02_KHO_WMS.md) và [KB_16_GIAI_THICH_DON_GIAN_LUONG_MES.md](KB_16_GIAI_THICH_DON_GIAN_LUONG_MES.md).
+
+---
+
+## C141 — Inspection Type Setup (Thiết lập loại hình kiểm tra chung)
+
+### Lỗi 1: Sai loại dữ liệu nhập liệu (số thay vì checkbox hoặc ngược lại)
+*   **Triệu chứng:** Grid nhập liệu kiểm tra QC hiển thị ô nhập số nhưng yêu cầu là checkbox, hoặc ngược lại.
+*   **Nguyên nhân gốc:** Cột "Loại dữ liệu nhập vào" tại C141 bị thiết lập sai (`1`=số, `2`=tích checkbox).
+*   **Cách khắc phục:** Vào C141, sửa lại cột DataType cho hạng mục tương ứng.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_05_QC_ELECTRODE.md § 9](KB_05_QC_ELECTRODE.md) và [KB_06_MASTER_DATA_TOOLS.md](KB_06_MASTER_DATA_TOOLS.md).
+
+---
+
+## C143 — Inspection Item Configuration (Thiết lập hạng mục kiểm tra chi tiết)
+
+### Lỗi 1: Mã NVL quét tại B597 không đi đến đúng hạng mục kiểm tra
+*   **Triệu chứng:** NVL quét tại B597 bị map sai nhóm kiểm tra, hiện ra các hạng mục đo không liên quan.
+*   **Nguyên nhân gốc:** Cấu hình tại C143 map sai mã NVL vào nhóm hạng mục không phù hợp.
+*   **Cách khắc phục:** Vào C143, tìm mã NVL, chỉnh lại nhóm hạng mục kiểm tra tương ứng.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_05_QC_ELECTRODE.md § 9](KB_05_QC_ELECTRODE.md) và [KB_06_MASTER_DATA_TOOLS.md](KB_06_MASTER_DATA_TOOLS.md).
+
+---
+
+## C151 — Material QC Detail Setup (Thiết lập chi tiết QC vật tư)
+
+### Lỗi 1: Sau khi set A410 xong phải tắt C151 rồi mở lại mới hiển thị đúng
+*   **Triệu chứng:** Cấu hình tại A410 đã lưu nhưng C151 vẫn hiện dữ liệu cũ.
+*   **Nguyên nhân gốc:** Cache dữ liệu trên client. C151 không tự refresh sau khi A410 thay đổi.
+*   **Cách khắc phục:** Đóng tab C151, mở lại từ menu. Dữ liệu sẽ load lại từ DB.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_05_QC_ELECTRODE.md § 9](KB_05_QC_ELECTRODE.md) và [KB_06_MASTER_DATA_TOOLS.md](KB_06_MASTER_DATA_TOOLS.md).
+
+---
+
+## C153 — QC Sample Config (Cấu hình mẫu kiểm tra QC)
+
+### Lỗi 1: Số lượng mẫu kiểm tra (SampleQty) không khớp với thực tế đo
+*   **Triệu chứng:** Máy đo trả về 50 mẫu nhưng C546 chỉ hiện 20 dòng.
+*   **Nguyên nhân gốc:** `SampleQty` cấu hình trong bảng `STB_MaterialQcDetail` bị thiết lập sai.
+*   **Cách khắc phục:** Vào C153 hoặc chỉnh trực tiếp `STB_MaterialQcDetail` để SampleQty khớp số lượng mẫu thực tế.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_03_SAN_XUAT.md](KB_03_SAN_XUAT.md).
+
+---
+
+## C243 — Electrode QC Measurement (Đo lường QC điện cực)
+
+> 🔗 **Xem thêm:** Mục [F743~F748 / C243](#f743f748--c243--electrode-slitting--qc) phía trên đã có chi tiết Slitting & QC điện cực.
+
+### Lỗi 1: Kết quả đo QC điện cực bị lệch hoặc không hiển thị
+*   **Triệu chứng:** Grid đo QC điện cực trống hoặc giá trị đo bị sai.
+*   **Nguyên nhân gốc:** Dữ liệu đo chưa được upload từ máy đo hoặc mapping giữa Lot điện cực và hạng mục đo bị sai.
+*   **Cách khắc phục:** Kiểm tra kết nối máy đo và trạng thái upload trong `Stb_ESRValueMonitor`.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_05_QC_ELECTRODE.md § 8](KB_05_QC_ELECTRODE.md).
+
+---
+
+## C430 — QC Receiving Inspection (Kiểm tra chất lượng nhận hàng)
+
+### Lỗi 1: Không tìm thấy Lot NVL để kiểm tra tại C430
+*   **Triệu chứng:** QC mở C430 nhưng không thấy Lot NVL mới nhập kho để kiểm tra.
+*   **Nguyên nhân gốc:** Lot NVL chưa được nhập kho tại F330 hoặc chưa được chuyển trạng thái từ `HOLDING_WH`.
+*   **Cách khắc phục:** Kiểm tra F330 đã hoàn thành nhập kho, kiểm tra `STB_MaterialLotInfo` xem WarehouseCode.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_02_KHO_WMS.md § 4.15](KB_02_KHO_WMS.md) và [KB_05_QC_ELECTRODE.md](KB_05_QC_ELECTRODE.md).
+
+---
+
+## C451 — OQC Schedule (Lịch kiểm tra OQC)
+
+### Lỗi 1: Lịch OQC không hiển thị Lot cần kiểm tra
+*   **Triệu chứng:** Mở C451 nhưng danh sách Lot chờ OQC trống.
+*   **Nguyên nhân gốc:** Lot chưa hoàn thành đóng gói tại B523 hoặc cờ `IsOutputRoute` chưa được bật.
+*   **Cách khắc phục:** Kiểm tra Lot đã gộp Box xong tại B523. Kiểm tra `IsOutputRoute = 1` trong `STB_ProductionOrderRouting`.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_06_MASTER_DATA_TOOLS.md § 14](KB_06_MASTER_DATA_TOOLS.md).
+
+---
+
+## C460 — Electrode QC Report (Báo cáo QC điện cực)
+
+### Lỗi 1: Báo cáo QC điện cực hiển thị trống hoặc thiếu dữ liệu
+*   **Triệu chứng:** Mở C460 không thấy kết quả QC điện cực.
+*   **Nguyên nhân gốc:** Chưa thực hiện QC điện cực hoặc dữ liệu QC chưa được đồng bộ.
+*   **Cách khắc phục:** Kiểm tra các bảng `STB_CommInspDocHistory`, `STB_CommInspDocItem` xem dữ liệu QC điện cực đã được ghi nhận chưa.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_05_QC_ELECTRODE.md § 3](KB_05_QC_ELECTRODE.md) và [KB_25_VINAENESSOL_HUNG_YEN.md](KB_25_VINAENESSOL_HUNG_YEN.md).
+
+---
+
+## C510 — OQC Lot Search (Tìm kiếm Lot OQC)
+
+> 🔗 **Xem thêm:** Mục [C512 / C530 / C546](#c512--c530--c546--oqc-lot-management) phía trên đã có chi tiết lỗi OQC.
+
+### Lỗi 1: Không tìm thấy Lot tại C510 để tạo hồ sơ OQC
+*   **Triệu chứng:** Tìm kiếm Lot tại C510 trả về kết quả trống.
+*   **Nguyên nhân gốc:** 3 nguyên nhân chính: (1) Lot chưa được tạo/gộp box, (2) Chưa set A410, (3) Nhà máy HN dùng Route VE02 riêng.
+*   **Cách khắc phục:** Áp dụng checklist 3 bước debug giống C512 (xem mục C512 phía trên).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_05_QC_ELECTRODE.md § 7.2](KB_05_QC_ELECTRODE.md).
+
+---
+
+## C522 — Aging ESR SD (Dữ liệu Aging & ESR)
+
+### Lỗi 1: Dữ liệu Aging/ESR không đồng bộ hoặc hiển thị sai
+*   **Triệu chứng:** Kết quả Aging/ESR tại C522 bị thiếu hoặc không khớp với máy đo.
+*   **Nguyên nhân gốc:** Phần mềm ESR chưa upload dữ liệu vào bảng `Stb_ESRValueMonitor` hoặc cờ `UploadToMes` chưa được set.
+*   **Cách khắc phục:** Kiểm tra phần mềm đo ESR trên máy, reset cờ upload nếu cần.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_28_SYSTEM_OBJECTS_MAP.md](KB_28_SYSTEM_OBJECTS_MAP.md).
+
+---
+
+## C530 — QC Audit (Kiểm tra chất lượng trước xuất hàng)
+
+> 🔗 **Xem thêm:** Mục [C512 / C530 / C546](#c512--c530--c546--oqc-lot-management) phía trên đã có chi tiết lỗi OQC.
+
+### Lỗi 1: Không đổi được trạng thái Reject sang Pass ở QC Audit
+*   **Triệu chứng:** Lot đã bị FAIL/Reject tại QC Audit C530 nhưng sau kiểm tra lại cần chuyển sang PASS.
+*   **Nguyên nhân gốc:** UI không cho phép đổi ngược trạng thái. Cần can thiệp DB.
+*   **Cách khắc phục:** Xóa kết quả QC cũ trong `STB_CommInspDocHistory` và `STB_CommInspDocItem`, sau đó QC kiểm tra lại từ đầu.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_26_LIEN_KET_HE_THONG_VA_BUG_LOGIC.md § 3.2](KB_26_LIEN_KET_HE_THONG_VA_BUG_LOGIC.md).
+
+---
+
+## C540 — QC Result Report (Báo cáo kết quả QC)
+
+### Lỗi 1: Báo cáo kết quả QC hiển thị thiếu hoặc sai thông tin
+*   **Triệu chứng:** Báo cáo C540 thiếu kết quả đo hoặc hiện sai trạng thái PASS/FAIL.
+*   **Nguyên nhân gốc:** Lệch dữ liệu giữa `STB_CommInspDocHistory` và `STB_MaterialQcSampleResult`.
+*   **Cách khắc phục:** Kiểm tra trực tiếp DB, đối chiếu kết quả QC trong 2 bảng và sửa lại nếu lệch.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_05_QC_ELECTRODE.md § 9](KB_05_QC_ELECTRODE.md) và [KB_06_MASTER_DATA_TOOLS.md](KB_06_MASTER_DATA_TOOLS.md).
+
+---
+
+## C541 — QC Detail Result (Chi tiết kết quả QC)
+
+### Lỗi 1: Chi tiết kết quả QC không load được dữ liệu
+*   **Triệu chứng:** Mở C541 nhưng grid chi tiết kết quả trống trơn.
+*   **Nguyên nhân gốc:** Chưa thực hiện QC hoặc `CommInspDocNo` bị NULL trong bảng `STB_CommInspDocItem`.
+*   **Cách khắc phục:** Kiểm tra Lot đã hoàn thành QC chưa. Nếu đã QC mà vẫn trống, kiểm tra liên kết giữa `STB_CommInspDocHistory` và `STB_CommInspDocItem`.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_05_QC_ELECTRODE.md § 9](KB_05_QC_ELECTRODE.md).
+
+---
+
+## C546 — FOQC OCV/ESR (Kiểm tra OCV & ESR đầu ra)
+
+> 🔗 **Xem thêm:** Mục [C512 / C530 / C546](#c512--c530--c546--oqc-lot-management) phía trên đã có chi tiết lỗi OCV/ESR hiển thị 20ea thay vì 50ea.
+
+### Lỗi 1: C546 chỉ hiển thị 20 dòng mẫu thay vì 50 dòng
+*   **Triệu chứng:** Máy đo trả về 50 mẫu nhưng C546 chỉ load 20 dòng.
+*   **Nguyên nhân gốc:** `SampleQty` trong `STB_MaterialQcDetail` bị lệch so với dữ liệu máy đo.
+*   **Cách khắc phục:** Xóa kết quả QC lỗi, reset cờ upload:
+    ```sql
+    DELETE FROM STB_MaterialQcSampleResult WHERE MaterialQcNo = 'F_MÃ_BARCODE';
+    UPDATE Stb_ESRValueMonitor SET UploadToMes = 0, UploadOCVToMess = 0 WHERE lotno = 'MÃ_BARCODE';
+    ```
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_05_QC_ELECTRODE.md § 9.6](KB_05_QC_ELECTRODE.md) và [KB_26_LIEN_KET_HE_THONG_VA_BUG_LOGIC.md](KB_26_LIEN_KET_HE_THONG_VA_BUG_LOGIC.md).
+
+---
+
+## C560 — Material Lot QC (Kiểm tra chất lượng Lot vật tư)
+
+### Lỗi 1: Lot vật tư không hiển thị để kiểm tra QC
+*   **Triệu chứng:** Mở C560 nhưng danh sách Lot vật tư cần QC bị trống.
+*   **Nguyên nhân gốc:** Lot vật tư chưa được nhập kho hoặc chưa chuyển trạng thái sang chờ QC.
+*   **Cách khắc phục:** Kiểm tra F330 đã nhập kho, kiểm tra bảng `STB_MaterialLotInfo` xem `WarehouseCode` và `QcStatus`.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_02_KHO_WMS.md](KB_02_KHO_WMS.md).
+
+---
+
+## C562 — Bending/Cutting Lot Creation (Tạo Lot kiểm định uốn/cắt)
+
+> 🔗 **Xem thêm:** Mục [C561 / C562 / C563 / C564](#c561--c562--c563--c564--bendingcutting-qc) phía trên đã có chi tiết quy trình QC Bending/Cutting.
+
+### Lỗi 1: Không tạo được Lot kiểm định tại C562
+*   **Triệu chứng:** Quét barcode sản phẩm tại C562 nhưng không sinh được Lot kiểm định.
+*   **Nguyên nhân gốc:** Model chưa được cấu hình nhóm kiểm tra tại C561.
+*   **Cách khắc phục:** Vào C561 trước, gán nhóm kiểm tra cho MaterialCode, sau đó quay lại C562.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_05_QC_ELECTRODE.md § 9.4](KB_05_QC_ELECTRODE.md).
+
+---
+
+## C563 — Bending/Cutting Measurement (Nhập dữ liệu đo uốn/cắt)
+
+> 🔗 **Xem thêm:** Mục [C561 / C562 / C563 / C564](#c561--c562--c563--c564--bendingcutting-qc) phía trên.
+
+### Lỗi 1: Lưới đo trống hoặc thiếu hạng mục đo
+*   **Triệu chứng:** Quét barcode mẫu tại C563, grid trống không có hạng mục.
+*   **Nguyên nhân gốc:** Chưa cấu hình C561 hoặc chưa tạo Lot kiểm định C562.
+*   **Cách khắc phục:** Cấu hình C561 → Tạo Lot C562 → Quay lại C563. Nếu vẫn trống, nhấn "Tổng hợp hạng mục".
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_05_QC_ELECTRODE.md § 9.4](KB_05_QC_ELECTRODE.md).
+
+---
+
+## C564 — Bending/Cutting Report (Báo cáo kết quả uốn/cắt)
+
+> 🔗 **Xem thêm:** Mục [C561 / C562 / C563 / C564](#c561--c562--c563--c564--bendingcutting-qc) phía trên.
+
+### Lỗi 1: Báo cáo kết quả C564 không hiện dữ liệu sau khi đo
+*   **Triệu chứng:** Đã nhập kết quả đo tại C563 nhưng C564 báo cáo trống.
+*   **Nguyên nhân gốc:** Kết quả đo chưa được submit/confirm tại C563 (chưa nhấn Save).
+*   **Cách khắc phục:** Quay lại C563, đảm bảo nhấn Save/Confirm để kết quả được ghi nhận vào DB.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_05_QC_ELECTRODE.md § 9.4](KB_05_QC_ELECTRODE.md).
+
+---
+
+## D000 — VinaEnesol Management Menu (Menu quản lý VinaEnesol)
+
+### Lỗi 1: Không truy cập được menu VinaEnesol D000
+*   **Triệu chứng:** Người dùng không thấy menu VinaEnesol trên giao diện MES.
+*   **Nguyên nhân gốc:** Menu D000 chưa được phân quyền cho Role của người dùng tại Z220/Z330.
+*   **Cách khắc phục:** Vào Z220 gán Screen D000 cho Role tương ứng, vào Z330 kiểm tra đã publish.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_25_VINAENESSOL_HUNG_YEN.md § 2](KB_25_VINAENESSOL_HUNG_YEN.md) và [KB_28_SYSTEM_OBJECTS_MAP.md](KB_28_SYSTEM_OBJECTS_MAP.md).
+
+---
+
+## D051 — Customer Part No Info (Mã vật tư khách hàng Enesol)
+
+### Lỗi 1: Mã sản phẩm khách hàng không mapping được với mã nội bộ
+*   **Triệu chứng:** Khi in tem Enesol, mã khách hàng (CustomerPartNo) hiện trống hoặc sai.
+*   **Nguyên nhân gốc:** Bảng `STB_MaterialCodeByCustomer` chưa có mapping giữa `MaterialCode` nội bộ và `MaterialCodeCustomer`.
+*   **Cách khắc phục:** Vào D051 thêm mapping mã vật tư nội bộ ↔ mã khách hàng Enesol.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_25_VINAENESSOL_HUNG_YEN.md § 2.2](KB_25_VINAENESSOL_HUNG_YEN.md).
+
+---
+
+## D100 — Enesol Box Label Print (In tem hộp Enesol)
+
+### Lỗi 1: Không in được tem hộp Enesol (Inner/Outer Box)
+*   **Triệu chứng:** Bấm in tem tại D100 nhưng máy in không chạy hoặc tem trống.
+*   **Nguyên nhân gốc:** Chưa thiết lập D051 (mapping mã khách hàng) hoặc chưa chọn đúng LabelClassCode (1=Inner, 2=Outer).
+*   **Cách khắc phục:** Kiểm tra D051 đã mapping, chọn đúng loại tem (Inner/Outer) và đảm bảo máy in kết nối.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_25_VINAENESSOL_HUNG_YEN.md § 4](KB_25_VINAENESSOL_HUNG_YEN.md).
+
+---
+
+## D110 — Enesol Box Label History (Lịch sử in tem Enesol)
+
+### Lỗi 1: Lịch sử in tem Enesol hiện thiếu hoặc trùng dữ liệu
+*   **Triệu chứng:** Bảng lịch sử D110 hiển thị thiếu bản ghi hoặc có bản ghi trùng lặp.
+*   **Nguyên nhân gốc:** Bảng `STB_VINAEnesolBoxLabelPrintHist` bị lỗi khi tạo SerialNo tự tăng hoặc trùng LotNo.
+*   **Cách khắc phục:** Kiểm tra trực tiếp DB, xóa bản ghi trùng nếu có.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_25_VINAENESSOL_HUNG_YEN.md § 4](KB_25_VINAENESSOL_HUNG_YEN.md).
+
+---
+
+## F140 — Vendor-Material Mapping (Ánh xạ NCC - Vật tư)
+
+> 🔗 **Xem thêm:** Mục [F130 / F140 / A210](#f130--f140--a210--supplier-mapping--material-sync) phía trên đã có chi tiết.
+
+### Lỗi 1: Popup chọn NCC trống khi tạo phiếu nhập kho F312/F330
+*   **Triệu chứng:** Thủ kho không tìm thấy NCC trong popup.
+*   **Nguyên nhân gốc:** Chưa mapping NCC với vật tư trong `STB_MaterialVendorMapping`.
+*   **Cách khắc phục:** Vào F140, chọn vật tư, tick chọn NCC được phép mua, nhấn Lưu.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_07_GROUPWARE_INTEGRATION.md § 6](KB_07_GROUPWARE_INTEGRATION.md).
+
+---
+
+## F312 — Material Doc Edit (Sửa số lượng tài liệu nhập kho NVL)
+
+### Lỗi 1: Cần sửa số lượng NVL đã nhập kho (MaterialDocNo)
+*   **Triệu chứng:** Thủ kho nhập sai số lượng vào phiếu nhập kho, cần sửa lại.
+*   **Nguyên nhân gốc:** Cột "Số tài liệu" = `MaterialDocNo` trong `STB_MaterialDocDetail`.
+*   **Cách khắc phục:** Vào F312, tìm phiếu nhập kho theo MaterialDocNo, sửa số lượng. Kho chị Xuân phụ trách.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_02_KHO_WMS.md § 4.5](KB_02_KHO_WMS.md) và [KB_07_GROUPWARE_INTEGRATION.md](KB_07_GROUPWARE_INTEGRATION.md).
+
+---
+
+## F320 — Material Transfer (Chuyển kho NVL)
+
+### Lỗi 1: Chuyển kho NVL bị lỗi hoặc không cập nhật tồn kho
+*   **Triệu chứng:** Thực hiện chuyển NVL giữa các kho tại F320 nhưng số lượng tồn kho không giảm/tăng tương ứng.
+*   **Nguyên nhân gốc:** Trigger `tgMaterialLotInfoForUpdate` trên `STB_MaterialLotInfo` tự động đồng bộ tồn kho. Nếu Trigger bị disable hoặc lỗi thì tồn kho không cập nhật.
+*   **Cách khắc phục:** Kiểm tra trạng thái Trigger, kiểm tra bảng `STB_MaterialStock` xem số lượng.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_03_SAN_XUAT.md](KB_03_SAN_XUAT.md).
+
+---
+
+## F610 — Delivery Order (Đơn giao hàng)
+
+### Lỗi 1: Không tạo được đơn giao hàng tại F610
+*   **Triệu chứng:** Tạo đơn giao hàng tại F610 bị lỗi hoặc không hiện sản phẩm.
+*   **Nguyên nhân gốc:** Sản phẩm chưa qua QC Audit (C530) hoặc chưa nhập kho thành phẩm.
+*   **Cách khắc phục:** Kiểm tra sản phẩm đã PASS QC Audit và đã nhập kho FG.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_02_KHO_WMS.md](KB_02_KHO_WMS.md).
+
+---
+
+## F620 — Delivery History (Lịch sử giao hàng)
+
+### Lỗi 1: Lịch sử giao hàng F620 hiển thị thiếu phiếu giao
+*   **Triệu chứng:** Phiếu giao đã tạo tại F610 nhưng không hiện tại F620.
+*   **Nguyên nhân gốc:** Phiếu chưa được confirm/approve hoặc bộ lọc ngày bị sai.
+*   **Cách khắc phục:** Kiểm tra lại bộ lọc ngày tìm kiếm, mở rộng khoảng thời gian.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_02_KHO_WMS.md](KB_02_KHO_WMS.md).
+
+---
+
+## F710 — Warehouse Inventory (Tồn kho tổng hợp)
+
+### Lỗi 1: Tồn kho F710 không khớp với thực tế
+*   **Triệu chứng:** Số lượng tồn kho hiển thị tại F710 bị lệch so với kiểm kê thực tế.
+*   **Nguyên nhân gốc:** Trigger `tgMaterialLotInfoForUpdate` bị lỗi hoặc tồn tại phiếu nhập/xuất chưa confirm.
+*   **Cách khắc phục:** Chạy kiểm kê bằng F750 để điều chỉnh, hoặc kiểm tra trực tiếp `STB_MaterialStock`.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_02_KHO_WMS.md](KB_02_KHO_WMS.md).
+
+---
+
+## F740 — Lot Splitting & Merge (Tách/Gộp Lot NVL)
+
+### Lỗi 1: Tách Lot NVL bị lỗi không tạo được Lot con
+*   **Triệu chứng:** Thực hiện tách Lot tại F740 nhưng hệ thống không sinh Lot con.
+*   **Nguyên nhân gốc:** Số lượng tách vượt quá `CurrentQty` còn lại của Lot gốc.
+*   **Cách khắc phục:** Kiểm tra `CurrentQty` trong `STB_MaterialLotInfo` của Lot gốc, đảm bảo số lượng tách hợp lệ.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_02_KHO_WMS.md](KB_02_KHO_WMS.md) và [KB_03_SAN_XUAT.md](KB_03_SAN_XUAT.md).
+
+---
+
+## F744 — Electrode Slitting Result (Kết quả chia cuộn điện cực)
+
+### Lỗi 1: Kết quả Slitting điện cực bị thiếu hoặc sai chiều rộng
+*   **Triệu chứng:** Kết quả chia cuộn tại F744 hiển thị sai chiều rộng hoặc thiếu cuộn.
+*   **Nguyên nhân gốc:** Cấu hình Slitting tại B552 (bảng `stb_slittinglocationconfig_vvt`) bị sai Width.
+*   **Cách khắc phục:** Kiểm tra cấu hình B552 và sửa lại Width cho PartNo tương ứng.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_05_QC_ELECTRODE.md § 8](KB_05_QC_ELECTRODE.md) và [KB_06_MASTER_DATA_TOOLS.md](KB_06_MASTER_DATA_TOOLS.md).
+
+---
+
+## F746 — Slitting Curling (Bo miệng điện cực)
+
+> 🔗 **Xem thêm:** Mục [F742 / F746](#f742--f746--slitting--curling) phía trên.
+
+### Lỗi 1: Hủy/Rollback Slitting F742 phải xóa F746 trước
+*   **Triệu chứng:** Cần rollback kết quả Slitting nhưng hệ thống báo lỗi ràng buộc dữ liệu.
+*   **Nguyên nhân gốc:** Bảng F746 (Curling) có FK reference đến F742 (Slitting). Phải xóa F746 trước.
+*   **Cách khắc phục:** Xóa kết quả Curling (F746) trước, sau đó mới xóa kết quả Slitting (F742).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_05_QC_ELECTRODE.md § 10.1](KB_05_QC_ELECTRODE.md).
+
+---
+
+## F747 — Electrode Coating (Tráng điện cực)
+
+### Lỗi 1: Kết quả tráng điện cực không được ghi nhận
+*   **Triệu chứng:** Công đoạn tráng điện cực tại F747 không lưu được kết quả.
+*   **Nguyên nhân gốc:** Lot điện cực chưa hoàn thành công đoạn trước (Mixing) hoặc cấu hình Route điện cực sai.
+*   **Cách khắc phục:** Kiểm tra Lot đã hoàn thành Mixing, kiểm tra Route điện cực tại B220.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_05_QC_ELECTRODE.md § 8](KB_05_QC_ELECTRODE.md).
+
+---
+
+## F748 — Electrode Process History (Lịch sử công đoạn điện cực)
+
+> 🔗 **Xem thêm:** Mục [F743~F748 / C243](#f743f748--c243--electrode-slitting--qc) phía trên.
+
+### Lỗi 1: Lịch sử công đoạn điện cực hiển thị thiếu
+*   **Triệu chứng:** F748 không hiện đầy đủ các công đoạn của cuộn điện cực.
+*   **Nguyên nhân gốc:** Một số công đoạn bị bỏ qua khi scan hoặc bảng `STB_ElectrodeProdRouteHist` thiếu dữ liệu.
+*   **Cách khắc phục:** Kiểm tra bảng `STB_ElectrodeProdRouteHist` xem có đủ công đoạn không, chèn bổ sung nếu thiếu.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_05_QC_ELECTRODE.md § 8](KB_05_QC_ELECTRODE.md).
+
+---
+
+## H302 — Machine Repair History (Lịch sử sửa chữa máy)
+
+> 🔗 **Xem thêm:** Mục [H301~H305](#h301h305--spare-parts-management) phía trên đã có tổng quan Spare Parts.
+
+### Lỗi 1: Không ghi nhận được lịch sử sửa chữa máy
+*   **Triệu chứng:** OP nhập thông tin sửa chữa tại H302 nhưng không lưu được.
+*   **Nguyên nhân gốc:** Thiếu thông tin bắt buộc (MachineCode, TroublePoint, RepairText) hoặc máy chưa đăng ký tại B250.
+*   **Cách khắc phục:** Đảm bảo máy đã đăng ký B250 và nhập đủ các trường bắt buộc.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_20_MAY_MOC_BAO_TRI.md § 3](KB_20_MAY_MOC_BAO_TRI.md).
+
+---
+
+## H303 — Machine Calibration (Hiệu chuẩn thiết bị đo)
+
+### Lỗi 1: Thiết bị đo hết hạn hiệu chuẩn nhưng hệ thống không cảnh báo
+*   **Triệu chứng:** Thiết bị đo vượt quá hạn hiệu chuẩn mà H303 không cảnh báo.
+*   **Nguyên nhân gốc:** Lịch hiệu chuẩn chưa được thiết lập hoặc ngày hiệu chuẩn tiếp theo bị NULL.
+*   **Cách khắc phục:** Vào H303, cập nhật lịch hiệu chuẩn (NextCalibrationDate) cho thiết bị.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_20_MAY_MOC_BAO_TRI.md § 4](KB_20_MAY_MOC_BAO_TRI.md).
+
+---
+
+## H304 — Spare Part Inventory (Tồn kho phụ tùng)
+
+### Lỗi 1: Tồn kho phụ tùng bị lệch so với thực tế
+*   **Triệu chứng:** H304 hiển thị số lượng phụ tùng tồn kho khác với kiểm kê thực tế.
+*   **Nguyên nhân gốc:** Phiếu xuất/nhập phụ tùng chưa được xác nhận hoặc dữ liệu bị trùng.
+*   **Cách khắc phục:** Kiểm tra lịch sử xuất/nhập phụ tùng tại H305, đối chiếu và điều chỉnh.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_20_MAY_MOC_BAO_TRI.md § 5](KB_20_MAY_MOC_BAO_TRI.md).
+
+---
+
+## H305 — Spare Part In/Out History (Lịch sử xuất nhập phụ tùng)
+
+> 🔗 **Xem thêm:** Mục [H301~H305](#h301h305--spare-parts-management) phía trên đã có tổng quan Spare Parts.
+
+### Lỗi 1: Lịch sử xuất nhập phụ tùng không đồng bộ
+*   **Triệu chứng:** Phiếu xuất/nhập ghi nhận tại H305 nhưng tồn kho H304 không cập nhật.
+*   **Nguyên nhân gốc:** Phiếu chưa được confirm hoặc SP đồng bộ tồn kho bị lỗi.
+*   **Cách khắc phục:** Kiểm tra trạng thái confirm của phiếu, chạy đồng bộ lại nếu cần.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_20_MAY_MOC_BAO_TRI.md § 5](KB_20_MAY_MOC_BAO_TRI.md) và [KB_03_SAN_XUAT.md § 6.15](KB_03_SAN_XUAT.md).
+
+---
+
+## K109 — BG2 Material Scanning (Quét NVL nhà máy BG2)
+
+> 🔗 **Xem thêm:** Mục [K101 / K109 / K110](#k101--k109--k110--bg2-production-plan--scan) phía trên đã có chi tiết BG2.
+
+### Lỗi 1: Quét NVL tại BG2 bị chặn sai chủng loại
+*   **Triệu chứng:** OP BG2 quét NVL bị lỗi tương tự B597 nhưng trên giao diện K109.
+*   **Nguyên nhân gốc:** Logic K109 tương đương B597, lọc riêng cho `WorkCenterCode = 'VVT_BG2'`. Cùng nguyên nhân HOLD/Hết hạn/Sai BOM.
+*   **Cách khắc phục:** Áp dụng cùng quy trình debug B597 (xem mục B597 phía trên).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_03_SAN_XUAT.md § 6.9](KB_03_SAN_XUAT.md).
+
+---
+
+## K110 — BG2 Warehouse Operations (Vận hành kho BG2)
+
+### Lỗi 1: Kho BG2 không hiển thị NVL đã nhập
+*   **Triệu chứng:** Thủ kho BG2 không tìm thấy NVL đã nhập kho tại K110.
+*   **Nguyên nhân gốc:** WarehouseCode của kho BG2 khác với kho chính. Dữ liệu lọc theo `WorkCenterCode = 'VVT_BG2'`.
+*   **Cách khắc phục:** Kiểm tra WarehouseCode của phiếu nhập kho F330 khớp với kho BG2.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_02_KHO_WMS.md](KB_02_KHO_WMS.md).
+
+---
+
+## P111 — Attendance Time (Chấm công nhân viên)
+
+### Lỗi 1: Dữ liệu chấm công không đồng bộ với thực tế
+*   **Triệu chứng:** Bảng chấm công P111 hiển thị thiếu hoặc sai giờ vào/ra.
+*   **Nguyên nhân gốc:** Thiết bị chấm công (máy quẹt thẻ) bị mất kết nối hoặc dữ liệu chưa được đồng bộ vào DB.
+*   **Cách khắc phục:** Kiểm tra kết nối thiết bị chấm công, chạy đồng bộ lại dữ liệu.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_28_SYSTEM_OBJECTS_MAP.md](KB_28_SYSTEM_OBJECTS_MAP.md).
+
+---
+
+## Z110 — Screen Configuration (Cấu hình màn hình hệ thống)
+
+### Lỗi 1: Màn hình mới tạo không hiển thị trên menu MES
+*   **Triệu chứng:** Đã đăng ký màn hình mới trong `STB_ScreenInfo` nhưng không thấy trên menu.
+*   **Nguyên nhân gốc:** Cờ `IsPublish` chưa được bật hoặc chưa gán ParentName (thư mục menu cha).
+*   **Cách khắc phục:** Vào Z110, tìm Screen mới, bật `IsPublish = 1`, đảm bảo ParentName đúng thư mục.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_28_SYSTEM_OBJECTS_MAP.md § 5](KB_28_SYSTEM_OBJECTS_MAP.md).
+
+---
+
+## Z210 — System Parameter (Tham số hệ thống)
+
+### Lỗi 1: Thay đổi tham số hệ thống không có hiệu lực
+*   **Triệu chứng:** Sau khi sửa tham số tại Z210, hệ thống vẫn chạy với cấu hình cũ.
+*   **Nguyên nhân gốc:** Một số tham số hệ thống được cache và cần restart ứng dụng client để áp dụng.
+*   **Cách khắc phục:** Yêu cầu người dùng đóng hoàn toàn ứng dụng MES và mở lại.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_25_VINAENESSOL_HUNG_YEN.md](KB_25_VINAENESSOL_HUNG_YEN.md).
+
+---
+
+## Z220 — Role Screen Mapping (Phân quyền màn hình theo vai trò)
+
+> 🔗 **Xem thêm:** Mục [Z410 / Z220 / Z330](#z410--z220--z330--user-accounts--role-permissions) phía trên đã có chi tiết phân quyền.
+
+### Lỗi 1: Người dùng không thấy màn hình trên menu MES
+*   **Triệu chứng:** User đăng nhập nhưng thiếu nhiều màn hình so với đồng nghiệp.
+*   **Nguyên nhân gốc:** Role của User chưa được gán quyền truy cập Screen ID tương ứng tại Z220.
+*   **Cách khắc phục:** Vào Z220, chọn Role Group, tick chọn Screen ID cần mở quyền.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_01_UI_PHAN_QUYEN.md § 1.4](KB_01_UI_PHAN_QUYEN.md).
+
+---
+
+## Z330 — Screen Publish (Kích hoạt/ẩn màn hình)
+
+> 🔗 **Xem thêm:** Mục [Z410 / Z220 / Z330](#z410--z220--z330--user-accounts--role-permissions) phía trên đã có chi tiết phân quyền.
+
+### Lỗi 1: Màn hình đã gán quyền Z220 nhưng vẫn không hiện trên menu
+*   **Triệu chứng:** Đã gán quyền tại Z220 nhưng user vẫn không thấy màn hình.
+*   **Nguyên nhân gốc:** Màn hình chưa được publish/kích hoạt tại Z330 (`IsPublish = 0`).
+*   **Cách khắc phục:** Vào Z330, tìm Screen ID, bật `IsPublish = 1`.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_01_UI_PHAN_QUYEN.md § 1.4](KB_01_UI_PHAN_QUYEN.md) và [KB_06_MASTER_DATA_TOOLS.md](KB_06_MASTER_DATA_TOOLS.md).
+
+---
+*Cập nhật: 2026-06-12 — Hoàn thiện cẩm nang tra cứu lỗi cho **125+ màn hình** theo Screen ID riêng biệt. Mỗi màn hình có header `## ScreenID` riêng, hỗ trợ tìm kiếm `Ctrl+Shift+F` trực tiếp.*
