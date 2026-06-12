@@ -28,11 +28,12 @@ Hệ thống được xây dựng trên **3 Trụ cột chính**:
     *   **Business logic** (tính toán, kiểm tra FIFO, kiểm tra hạn dùng).
     *   **Ghi dữ liệu** (INSERT/UPDATE vào DB).
 
-*   **Trụ cột 3 — Recursive Logic:** *"Tồn kho tự cập nhật, không cần triggers"*
-    > ⚠️ **Cảnh báo (Audit 2026-05-05):** Hệ thống hiện tại **KHÔNG sử dụng Triggers** để cập nhật tồn kho.
+*   **Trụ cột 3 — Recursive Logic (Tính toán trực tiếp):** *"Tồn kho sản xuất tự cập nhật qua SP, không dùng triggers"*
+    > ⚠️ **Lưu ý (Audit 2026-05-05):** Hệ thống **không sử dụng Triggers trên các bảng sản xuất chính** (như `STB_ProdRouteHist`, `STB_SetInfo`) để tự động trừ kho/cập nhật tồn kho sản phẩm.
     
-    Thay vào đó, logic cập nhật tồn kho được thực hiện **trực tiếp** thông qua chuỗi gọi Stored Procedure:
+    Thay vào đó, logic cập nhật tồn kho sản xuất được thực hiện **trực tiếp** thông qua chuỗi gọi Stored Procedure:
     `usp_DoProcessProdRouteHist` → `usp_DoProcessProdGIMaterialByBOM` → `usp_DoCreateMaterialDocLotInfoNotUsedBarcode`.
+    *(Lưu ý: Đối với phân hệ kho WMS vật tư, hệ thống vẫn sử dụng Trigger liên hoàn như `tgMaterialLotInfoForUpdate` trên bảng `STB_MaterialLotInfo` để đồng bộ số lượng tồn kho tổng sang `STB_MaterialStock`).*
 
 ### 1.2 Kiến Trúc Vận Hành NAIS (NAIS Framework Architecture)
 

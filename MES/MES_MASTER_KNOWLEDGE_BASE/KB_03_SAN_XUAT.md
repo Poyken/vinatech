@@ -1004,6 +1004,8 @@ INSERT vào bảng `STB_DefectInfo` các mã lỗi sau:
 
 *Chi tiết SQL tham khảo file script [fix_b530_add_defects_BG.sql](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/sql/scripts/fix_b530_add_defects_BG.sql)*
 
+👉 **Báo cáo phân tích đối soát & Gap analysis chi tiết:** Xem tại [KB_19_PHAN_TICH_LOT_SIZE_VÀ_MÃ_LỖI_B530.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_19_PHAN_TICH_LOT_SIZE_VÀ_MÃ_LỖI_B530.md) (bao gồm bối cảnh thay đổi quy mô Lot Size, số lượng mẫu test phá hủy và chi tiết ma trận 35 mã lỗi).
+
 ---
 
 ### 6.19 Hỗ trợ lưu nhiều mã vạch nguyên vật liệu (Multi-barcode Appending) cho Điện cực và Vỏ Case
