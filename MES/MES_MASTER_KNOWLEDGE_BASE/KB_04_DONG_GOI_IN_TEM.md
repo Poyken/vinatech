@@ -1,11 +1,57 @@
-# KB_04 — Đóng Gói & In Tem
+# KB_04 — Đóng Gói & In Tem (Packaging & Label Printing)
 
-> **Màn hình liên quan:** B523, B525, B453, B789, B781, B450, B351, A419, A460
+> **Màn hình liên quan:** B523, B525, B453, B789, B781, B450, B351, A419, A460, B754~B758, B767, B790, Z530
 > ← [Về INDEX](KB_INDEX.md)
 
 ---
 
-## 6. 📦 Đóng gói & In tem
+## 6. 📦 Đóng gói & In tem nhãn
+
+### 6.0 Tổng Quan Kiến Trúc In Tem Nhãn (Mô hình Giá sách ➔ Danh mục ➔ Người đọc)
+Để dễ hình dung luồng xử lý in tem trong hệ thống NAIS MES, hãy tưởng tượng:
+1. **Z530 (Label Info) — "Giá sách" (Thư viện mẫu):**
+   * Là nơi cất giữ thiết kế mẫu tem (Design layout) dưới dạng XML trong bảng `SmartFramework.dbo.STB_LabelInfo.XmlLayout`.
+   * Mẫu tem mới thiết kế xong chỉ nằm ở đây, chưa được chỉ định cho sản phẩm nào.
+2. **A460 (STB_ModelLabelInfo) — "Cuốn danh mục" (Bản đồ Mapping):**
+   * Chỉ định: *"Nếu sản xuất mã hàng (ModelCode) A, hãy dùng mẫu thiết kế B ở Z530"*.
+   * Giúp tái sử dụng: 10 sản phẩm cùng khách hàng chỉ cần map vào 1 mẫu tem duy nhất ở Z530, không cần vẽ lại tem 10 lần.
+3. **Màn hình in tem (B790, B523...) — "Người đọc":**
+   * Khi quét mã Lot, hệ thống hỏi: *"Lot này thuộc Model nào?"* (ví dụ: `ECVT30-197`).
+   * Hệ thống tra "Cuốn danh mục" (`STB_ModelLabelInfo`): *"Mã `ECVT30-197` dùng tem gì?"* ➔ Trả về `'Phoenix_Contact_V1'`.
+   * Hệ thống ra "Giá sách" (`Z530`) tải XML thiết kế và bắn lệnh ra máy in.
+
+---
+
+### 6.0.1 Phân loại tem trong hệ thống
+
+| Loại tem | Màn hình | Stored Procedure / Table | Ghi chú |
+|----------|----------|--------------------------|---------|
+| **AssembleLabel** (Tem Sản Xuất) | B450, B540 | Gọi qua A460 | Tem chính cho Cell/Module sau khi tạo Lot |
+| **PartLabel** (Tem Vật Tư Kho) | F330 | Gọi qua A460 | Tem dán trên NVL nhập kho |
+| **자재라벨** (Tem kho Hà Nam) | F721 | `STB_ModelLabelInfo` | Đặc biệt cho Hà Nam (chị Hoàng Xuân) |
+| **Phoenix Contact** | B790 | `usp_Vietnam_PhoenixContactLabelPrint_get` | Tem 5x8cm, Datecode YYMMDD |
+| **PAC Inner/Outer** | B754, B755, B756 | — | SN riêng biệt cho Inner và Outer |
+| **Digi-Key** | B757, B758 | — | Nhãn SP + Nhãn Logistic |
+
+---
+
+### 6.0.2 Tìm mẫu tem đang dùng cho 1 Barcode/LotNo
+```sql
+SELECT
+    SI.Barcode,
+    SI.MaterialCode,
+    LI.FormatName AS [Ten_Mau_Tem],
+    LI.IsApproval,
+    LI.ApplyDate
+FROM STB_SetInfo SI WITH(NOLOCK)
+JOIN STB_MaterialMaster MM WITH(NOLOCK) ON SI.MaterialCode = MM.MaterialCode
+LEFT JOIN SmartFramework.dbo.STB_LabelInfo LI WITH(NOLOCK)
+    ON LI.FormatName LIKE '%' + RIGHT(MM.MaterialCode, 5) + '%'
+    AND LI.IsApproval = 1
+WHERE SI.Barcode = 'VVQL033R07279S'
+```
+
+---
 
 ### 6.1 Lỗi "Chưa có tiêu chuẩn đóng gói" (B523)
 
@@ -15,7 +61,7 @@
 
 ```sql
 -- Kiểm tra tiêu chuẩn đóng gói hiện có
-SELECT * FROM STB_PackingStandard WHERE MaterialTypeCode = 'FERT'
+SELECT * FROM STB_PackingStandard WITH(NOLOCK) WHERE MaterialTypeCode = 'FERT'
 
 -- Thêm tiêu chuẩn mới (theo MaterialTypeCode + Size, không theo MaterialCode)
 INSERT INTO STB_PackingStandard
@@ -23,9 +69,9 @@ INSERT INTO STB_PackingStandard
 VALUES ('FERT', '0813', NULL, NULL, 500, 4000, 8000, GETDATE(), 'vinaadmin')
 ```
 
-> ⚠️ **Xác minh DB (2026-05-17):** Bảng `STB_PackingStandard` KHÔNG có cột `MaterialCode` hay `PackQty`. Tra theo `MaterialTypeCode` (FERT) + `Size` (0813=8x13mm). Quản lý số lượng đóng gói chủ yếu qua **màn A419**.
-
-**Tiêu chuẩn cân:** Vào SP `usp_Vvt_TieuChuanPacking_Vvt` → Thêm dòng cho Model mới.
+> ⚠️ **Xác minh DB:** Bảng `STB_PackingStandard` KHÔNG có cột `MaterialCode` hay `PackQty`. Tra theo `MaterialTypeCode` (FERT) + `Size` (0813=8x13mm). Quản lý số lượng đóng gói chủ yếu qua **màn A419**.
+>
+> **Tiêu chuẩn cân:** Vào SP `usp_Vvt_TieuChuanPacking_Vvt` → Thêm dòng cho Model mới.
 
 ---
 
@@ -49,22 +95,37 @@ SELECT Barcode FROM STB_SetInfo WHERE Barcode = @NewBC
 
 ---
 
-### 6.3 Sửa mã NVL in lại tem B523 (in sai MaterialCode)
+### 6.3 Sửa mã NVL in lại tem B523 (in sai MaterialCode - Lỗi tem in 5H1 nhưng hệ thống là 6D1)
 
-**Nguyên nhân:** Bảng `STB_MaterialLotInfo` đang lưu sai MaterialCode.
+**Nguyên nhân:** Có sự lệch mã sản phẩm giữa `STB_MaterialLotInfo.MaterialCode` và `STB_SetInfo.MaterialCode` dẫn đến việc in ra sai mẫu tem.
 
 ```sql
--- Tìm MaterialLotNo của Barcode cần sửa
-SELECT MLI.MaterialLotNo, MLI.LotNo, MLI.MaterialCode
-FROM STB_MaterialLotInfo MLI
-LEFT JOIN STB_SetInfo SI ON (SI.Barcode = MLI.LotID OR SI.Barcode = MLI.LotNo)
-WHERE SI.Barcode = 'VVOO053R825706'
+-- Debug: So sánh MaterialCode giữa 2 bảng để tìm điểm lệch
+SELECT
+    SI.Barcode,
+    SI.MaterialCode AS [MaterialCode_SetInfo],
+    MLI.MaterialCode AS [MaterialCode_LotInfo],
+    CASE WHEN SI.MaterialCode = MLI.MaterialCode THEN 'ĐỒNG NHẤT' ELSE 'KHÁC NHAU ← LỖI' END AS [Trang_Thai]
+FROM STB_SetInfo SI WITH(NOLOCK)
+LEFT JOIN STB_MaterialLotInfo MLI WITH(NOLOCK) ON SI.Barcode = MLI.LotNo OR SI.Barcode = MLI.LotID
+WHERE SI.Barcode = 'Mã_Barcode';
 
--- Sửa MaterialCode (dùng MaterialLotNo - PK cụ thể)
+-- Khắc phục Phương án 1 (Sửa nhanh theo Barcode):
 UPDATE STB_MaterialLotInfo
-SET MaterialCode = 'LIVT38-025'
-WHERE MaterialLotNo = 20240612000524
--- Sau đó in lại tem ở B523
+SET MaterialCode = (SELECT MaterialCode FROM STB_SetInfo WHERE Barcode = 'Mã_Barcode')
+WHERE LotNo = 'Mã_Barcode' OR LotID = 'Mã_Barcode';
+
+-- Khắc phục Phương án 2 (Sửa chi tiết theo MaterialLotNo - PK cụ thể):
+-- Bước 1: Tìm MaterialLotNo
+SELECT MLI.MaterialLotNo, MLI.LotNo, MLI.MaterialCode
+FROM STB_MaterialLotInfo MLI WITH(NOLOCK)
+LEFT JOIN STB_SetInfo SI WITH(NOLOCK) ON (SI.Barcode = MLI.LotID OR SI.Barcode = MLI.LotNo)
+WHERE SI.Barcode = 'Mã_Barcode';
+
+-- Bước 2: Update theo PK
+UPDATE STB_MaterialLotInfo
+SET MaterialCode = 'MÃ_MATERIAL_ĐÚNG'
+WHERE MaterialLotNo = 20240612000524; -- Thay thế bằng PK thực tế
 ```
 
 ---
@@ -76,25 +137,23 @@ WHERE MaterialLotNo = 20240612000524
 ```sql
 -- Bước 1: Kiểm tra F110 — Vật tư có được phép dùng Lot không?
 SELECT MaterialCode, IsUseBarcode, IsLotUse
-FROM STB_MaterialStockAttributeInfo WHERE MaterialCode = 'Mã_VLieu'
--- Nếu trống → Vào F110 nhập và Save
--- Nếu IsLotUse = 0 → Vào F110 tích và Save
--- Hoặc UPDATE trực tiếp:
+FROM STB_MaterialStockAttributeInfo WITH(NOLOCK) WHERE MaterialCode = 'Mã_VLieu'
+-- Nếu trống hoặc IsLotUse = 0 -> Vào F110 cấu hình lại trên UI hoặc UPDATE:
 UPDATE STB_MaterialStockAttributeInfo
 SET IsLotUse = 1, IsUseBarcode = 1 WHERE MaterialCode = 'Mã_VLieu'
 
 -- Bước 2: Kiểm tra QC đã Pass chưa?
 SELECT Barcode, LotDecisionResult, IsDefect, DefectQty, IsProdFinish
-FROM STB_SetInfo WHERE Barcode = 'Mã_Barcode'
+FROM STB_SetInfo WITH(NOLOCK) WHERE Barcode = 'Mã_Barcode'
 -- LotDecisionResult NULL hoặc 'FAIL' → Chưa QC → Yêu cầu QC đánh giá
 
 -- Bước 3: Kiểm tra đã gộp vào Box khác chưa?
 SELECT LotID, LotNo, PackingID, CurrentQty
-FROM STB_MaterialLotInfo WHERE LotNo = 'Mã_Barcode'
+FROM STB_MaterialLotInfo WITH(NOLOCK) WHERE LotNo = 'Mã_Barcode'
 -- PackingID khác NULL → Đã gộp vào box khác rồi
 
 -- Bước 4: Kiểm tra tiêu chuẩn đóng gói
-SELECT * FROM STB_PackingStandard WHERE MaterialTypeCode = 'FERT'
+SELECT * FROM STB_PackingStandard WITH(NOLOCK) WHERE MaterialTypeCode = 'FERT'
 -- Trống → Vào A419 thêm tiêu chuẩn (xem §6.1)
 ```
 
@@ -107,10 +166,9 @@ SELECT * FROM STB_PackingStandard WHERE MaterialTypeCode = 'FERT'
 ```sql
 -- Kiểm tra số lượng trong DB
 SELECT MaterialLotNo, LotNo, CurrentQty, InitialQty, PackingID
-FROM STB_MaterialLotInfo WHERE LotNo = 'SP260516-003'
+FROM STB_MaterialLotInfo WITH(NOLOCK) WHERE LotNo = 'SP260516-003'
 
--- Nếu CurrentQty = 0 nhưng hàng còn thực tế:
--- Dồn tổng vào 1 LotID duy nhất
+-- Nếu CurrentQty = 0 nhưng hàng còn thực tế -> Dồn tổng vào 1 LotID duy nhất
 UPDATE STB_MaterialLotInfo
 SET InitialQty = 20, CurrentQty = 20
 WHERE MaterialLotNo = 'Mã_LotNo_Cần_Giữ'
@@ -130,25 +188,22 @@ DELETE FROM STB_MaterialLotInfo WHERE MaterialLotNo IN ('LotID_Thừa_1', 'LotID
 **Trace:**
 ```sql
 -- Kiểm tra số lượng hiện tại
-SELECT CurrentQty, InitialQty FROM STB_MaterialLotInfo WHERE LotNo = 'Mã_Lot'
-SELECT PackQty FROM STB_SavePackingTime_VVT WHERE LotNo = 'Mã_Lot'
+SELECT CurrentQty, InitialQty FROM STB_MaterialLotInfo WITH(NOLOCK) WHERE LotNo = 'Mã_Lot'
+SELECT PackQty FROM STB_SavePackingTime_VVT WITH(NOLOCK) WHERE LotNo = 'Mã_Lot'
 
 -- Kiểm tra lịch sử gộp box
-SELECT * FROM STB_MaterialLotInfo WHERE PackingID = 'Mã_Packing'
+SELECT * FROM STB_MaterialLotInfo WITH(NOLOCK) WHERE PackingID = 'Mã_Packing'
 ```
 
 **Fix:**
 ```sql
 -- Nếu CurrentQty âm → Reset về số lượng đúng
-UPDATE STB_MaterialLotInfo
-SET CurrentQty = [Số_Lượng_Thực]
-WHERE LotNo = 'Mã_Lot'
+UPDATE STB_MaterialLotInfo SET CurrentQty = [Số_Lượng_Thực] WHERE LotNo = 'Mã_Lot'
 
 -- Nếu B789 hiển thị sai → Sửa bảng SavePackingTime
-SELECT * FROM STB_SavePackingTime_VVT WHERE LotNo = 'Mã_Lot'
--- Tìm id bị sai → UPDATE hoặc DELETE theo id cụ thể
-UPDATE STB_SavePackingTime_VVT SET PackQty = [Số_Đúng]
-WHERE LotNo = 'Mã_Lot' AND id = [ID_Cụ_Thể]
+SELECT * FROM STB_SavePackingTime_VVT WITH(NOLOCK) WHERE LotNo = 'Mã_Lot'
+-- Tìm id bị sai → UPDATE theo id cụ thể
+UPDATE STB_SavePackingTime_VVT SET PackQty = [Số_Đúng] WHERE LotNo = 'Mã_Lot' AND id = [ID_Cụ_Thể]
 ```
 
 ---
@@ -165,7 +220,7 @@ Case 3: Ngoại lệ không đổi → Fix cứng trong SP usp_Vietnam_GetBoxIDF
 
 ```sql
 -- Kiểm tra cấu hình in VJ của model
-SELECT * FROM STB_Vietnam_PackingPrinting WHERE MaterialCode = 'Mã_NVL'
+SELECT * FROM STB_Vietnam_PackingPrinting WITH(NOLOCK) WHERE MaterialCode = 'Mã_NVL'
 
 -- Tắt đổi VV→VJ
 UPDATE STB_Vietnam_PackingPrinting SET PrintVJ = 0 WHERE MaterialCode = 'Mã_NVL'
@@ -179,11 +234,7 @@ UPDATE STB_Vietnam_PackingPrinting SET PrintVJ = 0 WHERE MaterialCode = 'Mã_NVL
 
 **Luồng đóng gói Module Line:**
 ```
-Module Line (B528/B598/B717/B802)
-    → Nhập sản lượng → Tạo Lot
-    → QC Pass
-    → B525 — Gộp Box Module
-    → B453 — In tem INNER/OUTER (nếu cần)
+Module Line (B528/B598/B717/B802) → Nhập sản lượng → Tạo Lot → QC Pass → B525 — Gộp Box Module → B453 — In tem INNER/OUTER
 ```
 
 | SP | Chức năng |
@@ -194,17 +245,13 @@ Module Line (B528/B598/B717/B802)
 | `usp_SplitPackingBox` | Chia Box (tách 1 box lớn thành nhiều box nhỏ) |
 | `usp_savePackingLabelQty_VVT` | Lưu số lượng trên tem |
 
-**Lỗi NVL mới không gộp Box được:**
-👉 **Trường hợp do F110:** Xem tại [KB_06_MASTER_DATA_TOOLS.md § 2.1](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/MES_MASTER_KNOWLEDGE_BASE/KB_06_MASTER_DATA_TOOLS.md)
-
+```sql
 -- Thêm model mới vào ModelBasicInfo nếu thiếu Vol/Farad
-SELECT * FROM STB_ModelBasicInfo WHERE ModelCode = 'RDMD00-368'
+SELECT * FROM STB_ModelBasicInfo WITH(NOLOCK) WHERE ModelCode = 'RDMD00-368'
 INSERT INTO STB_ModelBasicInfo (ModelCode, ModelName, MaterialTypeCode, ProductGroupCode,
     MBISizeH, MBISizeW, IsClosed, OqcType, OqcInspectionRuleType, InspectionType, InspectionLevel,
     MBIExtText01, MBIExtText02, MBIExtText03, MBIExtText04, MBIExtText05, CreateDateTime)
-VALUES ('RDMD00-368', 'HY-CAP WEC9R0166QG-WC(130)', 'MDL', 'HC-EDLC',
-    40, 18, 0, 'MANUAL', 'BY_MODEL', 'SAMPLE', 'SAMPLE',
-    '9R0', '166', 'WEC', '9.0', '16.6', GETDATE())
+VALUES ('RDMD00-368', 'HY-CAP WEC9R0166QG-WC(130)', 'MDL', 'HC-EDLC', 40, 18, 0, 'MANUAL', 'BY_MODEL', 'SAMPLE', 'SAMPLE', '9R0', '166', 'WEC', '9.0', '16.6', GETDATE())
 ```
 
 ---
@@ -229,36 +276,67 @@ VALUES ('RDMD00-368', 'HY-CAP WEC9R0166QG-WC(130)', 'MDL', 'HC-EDLC',
 
 **Quy trình in tem PAC đầy đủ:**
 ```
-B525 — Gộp Box Module
-    ↓
-B453 — In tem INNER (không tick IsOuter)
-    ↓
-B453 — In tem OUTER (tick IsOuter)
-    ↓
-B754/B755/B756 — In tem thùng Carton + Cân nặng (nếu cần)
+B525 — Gộp Box Module ➔ B453 — In tem INNER (không tick IsOuter) ➔ B453 — In tem OUTER (tick IsOuter) ➔ B754/B755/B756 — In tem thùng Carton + Cân nặng
 ```
 
 ---
 
-### 6.10 Thiết kế tem Phoenix Contact (Yêu cầu đặc biệt)
+### 6.9.1 In Tem Khách Hàng PAC (B754 / B755 / B756)
 
-- **Kích thước:** Tem 5x8 cm
-- **Datecode:** Lấy từ công đoạn Winding (`InputJobDate` trong `STB_SetInfo`), format YYMMDD
-- **Màn hình in:** **B790** (có ô nhập `Number Label`)
-- **SP:** `usp_Vietnam_PhoenixContactLabelPrint_get`
+*   **B754 — In nhãn Inner/Outer:** Sử dụng để in nhãn sản phẩm theo thiết kế của khách hàng PAC. Inner và Outer có Serial Number độc lập (xem quy tắc in tại mục §6.9).
+*   **B755 — Xem lịch sử:** Tra cứu tất cả các nhãn PAC đã được in từ màn hình B754.
+*   **B756 — In nhãn thùng Carton + Cân nặng:**
+    *   *In nhãn thùng:* Nhập số lượng tem cần thiết $\rightarrow$ Ấn Tìm kiếm $\rightarrow$ Nhấn nút **"Tem thùng Carton"**.
+    *   *In nhãn cân nặng:* Tích chọn `IsWeightLabel` $\rightarrow$ Nhấn Tìm kiếm $\rightarrow$ Nhấn nút **"Tem Cân Nặng"** và nhập trọng lượng thực tế.
 
+---
+
+### 6.9.2 In Tem Khách Hàng Digi-Key (B757 / B758)
+
+*   **B757 — In nhãn sản phẩm và nhãn Logistic:**
+    *   *Nhãn sản phẩm:* Nhập/quét mã Lot hàng $\rightarrow$ Click **"IN NHÃN SP"**.
+    *   *Nhãn Logistic:* Cần điền đầy đủ các thông tin: Lot, Số PO, Số dòng PO (PO Line Number), Số danh sách đóng gói (Pack List Number), và Số lượng tem $\rightarrow$ Click **"IN NHÃN LOGISTIC"**.
+*   **B758 — In tem thùng MIXED LOAD:**
+    *   Dùng để dán cho các pallet/thùng chứa nhiều loại sản phẩm trộn lẫn. Cần khai báo: `Pack List Number` (Số Invoice), `Weight` (Trọng lượng tổng), và `PackageCount` (Số lượng kiện).
+
+---
+
+### 6.9.3 Tra cứu SP in tem khách hàng Sanmina (Ví dụ khi setup mới)
+Khi cần cấu hình hoặc debug mẫu in tem nhãn cho khách hàng mới như Sanmina, chạy các truy vấn sau để tìm Stored Procedure và metadata thiết kế:
 ```sql
--- Logic lấy Datecode
-CONVERT(VARCHAR(6), SI.InputJobDate, 12) AS [DateCode]
+-- 1. Tìm các SP in tem nhãn có chứa từ khóa 'Sanmina'
+SELECT OBJECT_NAME(id) AS SP_Name, text
+FROM syscomments WITH(NOLOCK)
+WHERE text LIKE '%Sanmina%' AND text LIKE '%Label%'
+ORDER BY SP_Name;
 
--- Test SP
-EXEC [dbo].[usp_Vietnam_PhoenixContactLabelPrint_get]
-     @pPackingID = 'MÃ_PACKING_THỰC_TẾ',
-     @pNumberLabel = 2
--- Kỳ vọng: Trả ra 2 dòng, cột DateCode có định dạng YYMMDD
+-- 2. Kiểm tra template thiết kế của tem Sanmina trong hệ thống Z530
+SELECT LabelType, FormatName, LabelRemark, DataSourceViewName, CreateUserID, ChangeDateTime
+FROM SmartFramework.dbo.STB_LabelInfo WITH(NOLOCK)
+WHERE LabelType LIKE '%Sanmina%' OR FormatName LIKE '%Sanmina%';
 ```
 
-**Mã hệ thống hỗ trợ:** `ECVT30-197` (Active), `ECVT30-098` (Old). Số lượng: 120 pcs/thùng.
+---
+
+### 6.10 Thiết kế tem Phoenix Contact (Yêu cầu đặc biệt tại B790)
+
+*   **Kích thước vật lý:** Tem kích thước 80mm x 50mm (5x8 cm).
+*   **Loại tem (Label Type):** `Phoenix_Label` | **Tên mẫu (Format Name):** `Phoenix_Contact_V1`.
+*   **Quy tắc Datecode:** Sử dụng định dạng `YYMMDD` lấy từ cột `InputJobDate` trong bảng `STB_SetInfo`.
+*   **Số thứ tự hiển thị:** Định dạng `@CurrentIndex / @TotalQty`. Mã vạch (barcode) in ra chứa mã `PackingID`.
+
+```sql
+-- Chạy thử nghiệm Stored Procedure in tem Phoenix Contact
+EXEC [dbo].[usp_Vietnam_PhoenixContactLabelPrint_get]
+     @pPackingID = 'PK202606040001', -- Thay thế bằng PackingID thực tế
+     @pNumberLabel = 2; -- Số lượng nhãn in test
+-- Kết quả trả về phải chứa cột DateCode có định dạng YYMMDD (Ví dụ: '260612')
+
+-- Logic trích xuất Datecode từ InputJobDate
+SELECT Barcode, InputJobDate, CONVERT(VARCHAR(6), InputJobDate, 12) AS [DateCode_YYMMDD]
+FROM STB_SetInfo WITH(NOLOCK)
+WHERE Barcode = 'VVPR292R710617';
+```
 
 ---
 
@@ -298,19 +376,17 @@ EXEC [dbo].[usp_Vietnam_PhoenixContactLabelPrint_get]
 1. **Kiểm tra Lịch sử quét của công nhân:**
    ```sql
    SELECT RouteCode, ProdQty, CreateDateTime 
-   FROM STB_ProdRouteHist 
-   WHERE ControlNo = (SELECT ControlNo FROM STB_SetInfo WHERE Barcode = 'Mã_Barcode')
+   FROM STB_ProdRouteHist WITH(NOLOCK)
+   WHERE ControlNo = (SELECT ControlNo FROM STB_SetInfo WITH(NOLOCK) WHERE Barcode = 'Mã_Barcode')
    ORDER BY CreateDateTime ASC;
    ```
-   *Mục tiêu:* Đảm bảo công nhân đã quét hoàn thành đầy đủ các bước (ví dụ: từ `VE01` đến `VE10`).
 2. **Kiểm tra cấu hình quy trình sản xuất (Routing):**
    ```sql
    SELECT RouteCode, RouteIndex, IsOutputRoute 
-   FROM STB_ProductionOrderRouting 
-   WHERE PONo = (SELECT PONo FROM STB_SetInfo WHERE Barcode = 'Mã_Barcode')
+   FROM STB_ProductionOrderRouting WITH(NOLOCK)
+   WHERE PONo = (SELECT PONo FROM STB_SetInfo WITH(NOLOCK) WHERE Barcode = 'Mã_Barcode')
    ORDER BY RouteIndex;
    ```
-   *Mục tiêu:* Kiểm tra xem đã có công đoạn nào được tích `IsOutputRoute = 1` (True) chưa.
 3. **Cách xử lý:**
    - **Vận hành:** Báo bộ phận Quản lý sản xuất cập nhật lại BOM/Routing trên Groupware và đồng bộ sang MES để tích chọn đúng công đoạn đầu ra.
    - **Sửa nhanh DB (Bypass tạm thời):** Update trực tiếp quy trình của PO hiện tại để đặt công đoạn cuối làm công đoạn đầu ra:
@@ -322,12 +398,14 @@ EXEC [dbo].[usp_Vietnam_PhoenixContactLabelPrint_get]
      COMMIT TRANSACTION;
      ```
 
+---
+
 ### 6.14 Lỗi cắt chuỗi danh sách tem nhỏ (B560 - Truncation in InBoxLabelList)
 
 **Triệu chứng:** Khi in tem thùng Hela trên màn hình B560, nếu số lượng tem hộp nhỏ (InBoxLabel) vượt quá khoảng 73 tem, hệ thống sẽ tự động cắt ngắn chuỗi `InBoxLabelList` khiến màn hình B560 chỉ hiển thị `InBoxLabelCount = 73` thay vì 80 tem như thực tế.
 
 **Nguyên nhân gốc:** 
-1. Stored Procedure `usp_DoCreateHelaInBoxBarcodeList` khai báo biến cục bộ `@InBoxLabelList VARCHAR(1000)` quá ngắn. Mỗi nhãn tem nhỏ có định dạng dạng `"S026060400XXX"` dài khoảng 14 ký tự (bao gồm cả dấu phẩy). Khi có 80 tem, độ dài chuỗi cần khoảng `80 * 14 = 1120` ký tự, vượt quá giới hạn 1000 ký tự.
+1. Stored Procedure `usp_DoCreateHelaInBoxBarcodeList` khai báo biến cục bộ `@InBoxLabelList VARCHAR(1000)` quá ngắn. Khi có 80 tem, độ dài chuỗi vượt quá giới hạn 1000 ký tự.
 2. Cột `InBoxLabelList` trong bảng `STB_HelaBarcodeOutBoxHist` chỉ được thiết lập là `VARCHAR(1000)` hoặc `VARCHAR(4000)` tùy phiên bản, dẫn đến việc cắt chuỗi khi lưu dữ liệu.
 
 **Cách khắc phục:**
@@ -337,12 +415,69 @@ EXEC [dbo].[usp_Vietnam_PhoenixContactLabelPrint_get]
 4. Chạy script khôi phục lại chuỗi dữ liệu đã bị cắt cho các Lot bị lỗi (ví dụ lô `VVQO032R750613` có 80 tem):
    ```sql
    UPDATE STB_HelaBarcodeOutBoxHist 
-   SET InBoxLabelList = 'S026060400161,S026060400162,S026060400163,S026060400164,S026060400165,S026060400166,S026060400167,S026060400168,S026060400169,S026060400170,S026060400171,S026060400172,S026060400173,S026060400174,S026060400175,S026060400176,S026060400177,S026060400178,S026060400179,S026060400180,S026060400181,S026060400182,S026060400183,S026060400184,S026060400185,S026060400186,S026060400187,S026060400188,S026060400189,S026060400190,S026060400191,S026060400192,S026060400193,S026060400194,S026060400195,S026060400196,S026060400197,S026060400198,S026060400199,S026060400200,S026060400201,S026060400202,S026060400203,S026060400204,S026060400205,S026060400206,S026060400207,S026060400208,S026060400209,S026060400210,S026060400211,S026060400212,S026060400213,S026060400214,S026060400215,S026060400216,S026060400217,S026060400218,S026060400219,S026060400220,S026060400221,S026060400222,S026060400223,S026060400224,S026060400225,S026060400226,S026060400227,S026060400228,S026060400229,S026060400230,S026060400231,S026060400232,S026060400233,S026060400234,S026060400235,S026060400236,S026060400237,S026060400238,S026060400239,S026060400240'
+   SET InBoxLabelList = 'S026060400161,S026060400162,...,S026060400240' -- Ghi đầy đủ chuỗi tem
    WHERE LotNo = 'VVQO032R750613';
    ```
 
-*Chi tiết thay đổi và các bước deploy cụ thể tham khảo file script [fix_b560_inboxlabellist_length.sql](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/sql/scripts/fix_b560_inboxlabellist_length.sql)*
+---
+
+### 6.15 Lỗi không in được tem vì không có Lot trên hệ thống (Bypass thủ công)
+
+**Khi nào dùng:** Tình huống khẩn cấp cần in tem nhãn đóng gói gấp cho lô hàng thực tế đã đóng xong nhưng trên hệ thống MES bị lỗi không sinh được Lot (ví dụ: do sự cố đồng bộ PO ở B450).
+
+**Quy trình 3 bước cứu hộ:**
+
+*   **Bước 1 — Khai báo Lot mới vào SetInfo:**
+    ```sql
+    INSERT INTO STB_SetInfo (Barcode, MaterialCode, PONo, DayPlanNo, ProdQty, InputLineCode, InputJobDate, CreateDateTime, CreateUserID)
+    VALUES ('VVXX123R000001', 'MÃ_MODEL', 'MÃ_PO', 'MÃ_KHOA_NGAY', 1000, 'MÃ_LINE', CONVERT(CHAR(8), GETDATE(), 112), GETDATE(), 'vinaadmin');
+    ```
+*   **Bước 2 — Cập nhật cờ chất lượng QC Pass:**
+    ```sql
+    UPDATE STB_SetInfo SET LotDecisionResult = 'PASS', IsDefect = 0 WHERE Barcode = 'VVXX123R000001';
+    ```
+*   **Bước 3 — Tạo tồn kho ảo liên kết Lot để in tem tại B523:**
+    ```sql
+    INSERT INTO STB_MaterialLotInfo (LotID, LotNo, MaterialCode, InitialQty, CurrentQty, CreateDateTime, CreateUserID)
+    VALUES ('VVXX123R000001', 'VVXX123R000001', 'MÃ_MODEL', 1000, 1000, GETDATE(), 'vinaadmin');
+    ```
 
 ---
 
-*Cập nhật: 2026-06-04*
+### 6.16 Màn hình & Cấu hình Thiết Kế Tem (Z530/A460)
+
+*   **Z530 (Label Layout Design):** Thiết kế mẫu in tem nhãn (phần mềm client dùng template dạng XML).
+*   **A460 (Label Format Mapping):** Mapping mã sản phẩm (ModelCode) với định dạng tem in cụ thể.
+*   **B756 / B767 / B790:** Các giao diện in tem nhãn theo khách hàng hoặc in hàng loạt.
+
+```sql
+-- Tra cứu thiết kế layout tem trong SmartFramework
+SELECT FormatName, LabelType, IsApproval, ApplyDate, Description
+FROM SmartFramework.dbo.STB_LabelInfo WITH(NOLOCK)
+WHERE FormatName LIKE '%Phoenix%' AND IsApproval = 1;
+
+-- Kiểm tra ánh xạ mã vật tư và tem in
+SELECT ModelCode, LabelType, FormatName
+FROM STB_ModelLabelInfo WITH(NOLOCK)
+WHERE ModelCode = 'ECVT30-197';
+```
+
+---
+
+### 6.17 Quy trình setup tem mới cho một mã vật tư
+Khi có sản phẩm/model mới cần triển khai in tem nhãn, thực hiện cấu hình theo 4 bước:
+```
+1. Thiết kế tem (Z530) ➔ Khai báo mẫu tem trong STB_LabelInfo (IsApproval = 1).
+2. Ánh xạ (A460)       ➔ Map ModelCode với tên mẫu tem vừa tạo trong STB_ModelLabelInfo.
+3. Thuộc tính (F110)   ➔ Tích chọn IsLotUse = 1 và IsUseBarcode = 1 cho mã vật liệu mới.
+4. Chạy in thử nghiệm  ➔ In thử tem mẫu tại B523/B790 để kiểm tra thực tế.
+```
+
+```sql
+-- Script chèn nhanh mapping A460 cho sản phẩm mới
+INSERT INTO STB_ModelLabelInfo (ModelCode, LabelType, FormatName, CreateDateTime, CreateUserID)
+VALUES ('NEW_MODEL_CODE', 'AssembleLabel', 'Phoenix_Contact_V1', GETDATE(), 'vinaadmin');
+```
+
+---
+*Cập nhật: 2026-06-12 — Hợp nhất hoàn chỉnh từ KB_04 và KB_09, loại bỏ trùng lặp*

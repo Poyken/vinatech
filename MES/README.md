@@ -64,7 +64,6 @@ MES/
 | [KB_06_MASTER_DATA_TOOLS.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_06_MASTER_DATA_TOOLS.md) | Model mới, Cell/Line, Bypass, MaterialMaster SQL | A410, B250, B270, A230 |
 | [KB_07_GROUPWARE_INTEGRATION.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_07_GROUPWARE_INTEGRATION.md) | Tích hợp Groupware: Mua hàng→F330, Kế hoạch→B310 | F330, B310, B450 |
 | [KB_08_KHO_THANH_PHAM_HN.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_08_KHO_THANH_PHAM_HN.md) | Kho TP Hà Nam, xuất/hủy/xóa, STB_ChangeMaterialCode_HN | HN551, HN866, HN15 |
-| [KB_09_IN_TEM_LABEL.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_09_IN_TEM_LABEL.md) | Tem đặc biệt, in khẩn, sai mẫu, kiến trúc Z530/A460 | B450, B756, B767, Z530 |
 | [KB_10_KIEN_TRUC_VA_DATAFLOW.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_10_KIEN_TRUC_VA_DATAFLOW.md) | Kiến trúc hệ thống, sơ đồ Data Flow, SPs | Toàn bộ |
 | [KB_12_DEEP_CORE_ANALYSIS_AND_AUDIT.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_12_DEEP_CORE_ANALYSIS_AND_AUDIT.md) | Phân tích sâu cốt lõi, DNA, Kết quả DB Audit | DB/Audit |
 | [KB_14_TRACE_BUG_METHODOLOGY.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_14_TRACE_BUG_METHODOLOGY.md) | Phương pháp trace bug 5 bước, Block Session DB | Toàn bộ |

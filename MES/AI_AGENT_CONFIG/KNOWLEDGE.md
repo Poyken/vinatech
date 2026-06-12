@@ -71,7 +71,7 @@ ORDER BY PRH.CreateDateTime ASC
 | Kho HN lỗi | KB_08 |
 | ESR/Aging | KB_05 §9.7 |
 
-## 6. KB FILES MAP (30 files)
+## 6. KB FILES MAP (29 files)
 
 | # | File | Phạm vi |
 |---|------|---------|
@@ -83,7 +83,6 @@ ORDER BY PRH.CreateDateTime ASC
 | 06 | KB_06_MASTER_DATA_TOOLS | Master data, màn hình A/B/F/C map |
 | 07 | KB_07_GROUPWARE_INTEGRATION | ESM bridge, BOM sync |
 | 08 | KB_08_KHO_THANH_PHAM_HN | Kho thành phẩm Hà Nam |
-| 09 | KB_09_IN_TEM_LABEL | In tem nâng cao |
 | 10 | KB_10_KIEN_TRUC_VA_DATAFLOW | Kiến trúc tổng quan MES & Data Flow |
 | 12 | KB_12_DEEP_CORE_ANALYSIS_AND_AUDIT | Phân tích sâu cốt lõi & Audit CSDL |
 | 14-19 | KB_14-19 | Phương pháp trace bug, case study, DB Mail, schema quickref... |

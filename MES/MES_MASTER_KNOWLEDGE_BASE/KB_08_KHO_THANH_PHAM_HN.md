@@ -194,56 +194,8 @@ VALUES (
 
 ## 4. Lỗi màn HNC321 (Qc nhập NG sản phẩm mang đi kiểm tra — Báo lỗi chữ Hàn Quốc)
 
-**Triệu chứng:** Nhập phế liệu (NG) ở màn hình **HNC321** cho Barcode `ve260509-001` tại công đoạn `VE08` báo lỗi đỏ **Failed to save** với nội dung tiếng Hàn:
-`이전 공정에 실적처리 이력이 없습니다.`
-*(Dịch nghĩa: Không có lịch sử xử lý sản lượng ở công đoạn trước).*
-
-#### 🔍 Nguyên nhân gốc rễ:
-Stored Procedure xử lý (`usp_Vietnam_ScrapInput_HN` — ⚠️ SP nội bộ chuyên dùng cho nhà máy Hà Nam, có thể là alias hoặc được gọi gián tiếp qua SP khác) chặn không cho phép nhập phế liệu tại công đoạn `VE08` nếu sản phẩm này chưa từng được scan ghi nhận sản lượng hoàn thành (Routing History) ở công đoạn ngay trước đó (Ví dụ: `VE07` hoặc trạm trước của `VE08` trong cấu hình Routing của PO).
-
-#### 🛠️ Giải pháp khắc phục:
-
-*   **Phương án 1 (Bypass nghiệp vụ trên giao diện):**
-    Yêu cầu công nhân quay lại công đoạn trước (Ví dụ: `VE07`), thực hiện scan chốt sản lượng cho Barcode `ve260509-001` trước để tạo "Visa stamp" lịch sử. Sau đó quay lại màn **HNC321** nhập phế sẽ lưu thành công.
-
-*   **Phương án 2 (Bypass khẩn cấp bằng SQL - Kỹ thuật chèn lịch sử giả lập):**
-    Nếu hàng đã bị phế thực tế và công đoạn trước không thể scan lại, IT chèn một dòng lịch sử sản lượng giả lập cho công đoạn trước vào bảng `STB_ProdRouteHist`:
-
-    ```sql
-    BEGIN TRANSACTION;
-    BEGIN TRY
-        -- 1. Tìm mã ControlNo của Barcode bị lỗi
-        DECLARE @ControlNo NVARCHAR(50);
-        SELECT @ControlNo = ControlNo FROM STB_SetInfo WHERE Barcode = 've260509-001';
-
-        -- 2. Tìm công đoạn ngay trước VE08 trong PO Routing (Ví dụ: VE07)
-        SELECT RouteCode, RouteIndex 
-        FROM STB_ProductionOrderRouting 
-        WHERE PONo = (SELECT PONo FROM STB_SetInfo WHERE Barcode = 've260509-001')
-        ORDER BY RouteIndex ASC;
-
-        -- 3. Chèn dòng lịch sử giả lập cho công đoạn trước (Ví dụ: VE07)
-        -- Sử dụng ProcSeq tiếp theo để tránh trùng PK
-        INSERT INTO STB_ProdRouteHist 
-            (ControlNo, ProcSeq, RouteCode, LineCode, MachineCode, InQty, OutQty, JobDate, ShiftCode, CreateUserID, CreateDateTime)
-        VALUES 
-            (@ControlNo, 
-             (SELECT ISNULL(MAX(ProcSeq), 0) + 1 FROM STB_ProdRouteHist WHERE ControlNo = @ControlNo), 
-             'VE07',            -- Thay thế bằng mã công đoạn trước VE08
-             'MCVC20220',       -- Mã Line/Máy
-             'MCVC20220',       -- Mã Máy
-             20, 20,            -- Số lượng
-             CAST(GETDATE() AS DATE), 'A', 
-             'vinaadmin', GETDATE());
-
-        COMMIT TRANSACTION;
-        PRINT 'Đã chèn lịch sử giả lập thành công. Hãy bảo công nhân bấm Save lại trên UI!';
-    END TRY
-    BEGIN CATCH
-        ROLLBACK TRANSACTION;
-        PRINT 'Lỗi chèn lịch sử: ' + ERROR_MESSAGE();
-    END CATCH;
-    ```
+Chi tiết về triệu chứng, nguyên nhân và các phương án bypass (bao gồm script SQL chèn lịch sử giả lập) đối với lỗi nhập phế màn HNC321, vui lòng tham khảo tại:
+👉 [KB_14_TRACE_BUG_METHODOLOGY.md § 4.6 — Lỗi nhập phế màn HNC321 báo lỗi tiếng Hàn](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_14_TRACE_BUG_METHODOLOGY.md#46-lỗi-nhập-phế-màn-hnc321-báo-lỗi-tiếng-hàn-이전-공정에-실적처리-이력이-없습니다)
 
 ---
 

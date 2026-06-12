@@ -18,7 +18,6 @@
 | [KB_06_MASTER_DATA_TOOLS.md](KB_06_MASTER_DATA_TOOLS.md) | Model mới, Vol/Farad, Thêm Cell/Line, SQL Utilities, Bypass, **Quick Start Checklist đầy đủ**, B210-B240 Line/Route, A418, B260, Địa chỉ hệ thống, Bảng tổng hợp màn hình MES (Mở rộng) | A410, B210-B240, B250, B260, B270, A418, A419, C131, C132, C430, C451, C560, F741 |
 | [KB_07_GROUPWARE_INTEGRATION.md](KB_07_GROUPWARE_INTEGRATION.md) | Tích hợp Groupware: Mua hàng, Kế hoạch SX, Master Data, **ESM Bridge Tables (18 bảng)**, **BOM Management**, **Danh sách 100+ kho active** | Groupware, F330, C220, B310, B450, F110, F130, F140 |
 | [KB_08_KHO_THANH_PHAM_HN.md](KB_08_KHO_THANH_PHAM_HN.md) | Kho TP Hà Nam: Xuất HN551, Tồn HN866, Hủy F330, Xóa sản lượng | HN551, HN866, HN544, FG00 |
-| [KB_09_IN_TEM_LABEL.md](KB_09_IN_TEM_LABEL.md) | Các loại tem đặc biệt, lỗi sai mẫu, in tem khẩn | B450, B756, B767, B790, A460 |
 | [KB_10_KIEN_TRUC_VA_DATAFLOW.md](KB_10_KIEN_TRUC_VA_DATAFLOW.md) | Kiến trúc tổng quan hệ thống NAIS, 3 Trụ cột, Sơ đồ End-to-End Data Flow, Phân tích SP, Ma trận nhà máy | System |
 | [KB_12_DEEP_CORE_ANALYSIS_AND_AUDIT.md](KB_12_DEEP_CORE_ANALYSIS_AND_AUDIT.md) | Phân tích sâu cốt lõi, 5 triết lý DNA, Bảng ẩn, Điểm nguy hiểm cho Dev, Kết quả DB Audit & Bugs | DB/Audit |
 | [KB_14_TRACE_BUG_METHODOLOGY.md](KB_14_TRACE_BUG_METHODOLOGY.md) | Phương pháp trace bug 5 bước, Log hệ thống, Bảng quan trọng | Toàn bộ |
@@ -71,9 +70,9 @@
 | B523 không gộp Box | KB_04 § 6.4 |
 | Packing Qty âm | KB_04 § 6.6 |
 | Gộp túi bóng Qty = 0 (HN544) | KB_04 § 6.5 |
-| In tem sai mẫu (5H1 → 6D1) | KB_09 § 3 |
-| Không có Lot, muốn in tem khẩn | KB_09 § 4 |
-| Tìm màn hình thiết kế/in tem | KB_09 § 5 |
+| In tem sai mẫu (5H1 → 6D1) | KB_04 § 6.3 |
+| Không có Lot, muốn in tem khẩn | KB_04 § 6.15 |
+| Tìm màn hình thiết kế/in tem | KB_04 § 6.16 |
 | B597 lỗi hạng mục kiểm tra cũ | KB_05 § 7.1 |
 | B597 lỗi hết hạn sử dụng | KB_02 § 4.10 |
 | B597 lỗi Vỏ Nhôm | KB_05 § 7.4 |
@@ -86,11 +85,11 @@
 | Lỗi chiều rộng Slitting B552 | KB_05 § 8.1 |
 | C546 FOQC OCV/ESR chỉ hiển thị 20ea thay vì 50ea | KB_05 § 9.6 |
 | Model mới không hiện Vol/Farad | KB_06 § 1.2 |
-| In tem khẩn không có Lot | KB_06 § 6, KB_09 § 4 |
+| In tem khẩn không có Lot | KB_06 § 6, KB_04 § 6.15 |
 | Thêm Cell/Line mới (B250/B270) | KB_06 § 7 |
 | Hàng xuất HN551 nhưng HN866 vẫn còn | KB_08 § 1 |
 | Lot bị đổi MaterialCode tự động | KB_08 § 2 |
-| Màn HNC321 nhập phế lỗi | KB_08 § 3 |
+| Màn HNC321 nhập phế lỗi | KB_14 § 4.6, KB_08 § 4 |
 | Không PO trên MES từ Groupware | KB_07 § 6 |
 | Không nhập được F330 (chưa duyệt) | KB_07 § 2 |
 | Trace lỗi không biết bắt đầu từ đâu | KB_14_TRACE_BUG_METHODOLOGY |
@@ -139,11 +138,11 @@
 | Gộp box tùy chỉnh HN523 Qty = 0 (thiếu IsOutputRoute) | KB_04 § 6.13 |
 | Đổi mã vật tư tự động (STB_ChangeMaterialCode_HN) | KB_08 § 3.1 |
 | Đăng ký mã vật tư mới (STB_MaterialMaster) | KB_06 § 1.3 |
-| Tra cứu SP in tem cho khách hàng mới (Sanmina) | KB_09 § 12 |
+| Tra cứu SP in tem cho khách hàng mới (Sanmina) | KB_04 § 6.9.3 |
 | Hệ thống chậm/treo do tranh chấp database (block session) | KB_14 § 5.D |
 | Hủy/Rollback Slitting F742 (xóa F746 trước) | KB_05 § 10.1 |
 | Giải mã quy tắc đặt tên Model Name (3562) | KB_06 § 1.4 |
-| Kiến trúc in tem nhãn (Z530/A460) | KB_09 § 5.1 |
+| Kiến trúc in tem nhãn (Z530/A460) | KB_04 § 6.0 |
 | Truy vết ký hiệu in phun (Marking Letter) | KB_03 § 5.19 |
 | Quy trình 3 bước hủy công đoạn / NG nhầm | KB_03 § 5.18 |
 | Lỗi cắt chuỗi danh sách tem nhỏ (B560 - 73/80 tem) | KB_04 § 6.14 |
