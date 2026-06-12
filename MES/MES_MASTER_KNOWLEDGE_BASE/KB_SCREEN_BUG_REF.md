@@ -206,6 +206,17 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
     ```
 *   **Chi tiết nghiệp vụ:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.6](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_04_DONG_GOI_IN_TEM.md#66-lỗi-packing-qty-âm-ở-b523--b789).
 
+### Lỗi 4: Lỗi "Chưa có tiêu chuẩn đóng gói" cho Model/Size 1840 khi quét gộp Box
+*   **Triệu chứng:** Khi công nhân quét gộp Box cho các Model có kích thước size `1840` tại màn hình B523, hệ thống báo lỗi đỏ chặn không cho thao tác.
+*   **Nguyên nhân gốc:** Thiếu cấu hình định mức đóng gói cho kích thước size `1840` trong bảng `STB_PackingStandard`.
+*   **Cách khắc phục:**
+    Chạy SQL chèn bổ sung cấu hình đóng gói chuẩn (InnerBoxQty = 500, OutBoxQty = 1000) vào bảng `STB_PackingStandard`:
+    ```sql
+    INSERT INTO STB_PackingStandard (MaterialTypeCode, Size, Voltage, Farad, VinylBagQty, InnerBoxQty, OutBoxQty, CreateDateTime, CreateUserID)
+    VALUES ('FERT', '1840', 0, 0, 0, 500, 1000, GETDATE(), 'vinaadmin');
+    ```
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_19_PHAN_TICH_LOT_SIZE_VÀ_MÃ_LỖI_B530.md § 2.1](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_19_PHAN_TICH_LOT_SIZE_VÀ_MÃ_LỖI_B530.md#21-file-thay-đổi-số-lượng-lot-noxlsx-sự-cố-chưa-được-cover-đầy-đủ).
+
 ---
 
 ## B530 — Route Input / Production Qty Output (Nhập sản lượng công đoạn)
@@ -598,6 +609,22 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
     Chạy script xóa ngược: bắt buộc phải tìm và xóa các bản ghi giao dịch của các Lot con trong bảng `STB_RawMaterialInputHist` (hoặc `STB_MaterialDocLotInfo` tùy trạm) trước, sau đó mới tiến hành xóa/revert Lot mẹ tại F742.
 *   **Chi tiết nghiệp vụ:** Xem tại [KB_05_QC_ELECTRODE.md § 10.1](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05_QC_ELECTRODE.md#101-hủyrollback-slitting-f742-và-f746).
 
+### Lỗi 2: Mismatch logic tính tuổi thọ dao Slitting và Hardcode địa lý Bắc Giang
+*   **Triệu chứng:** Máy chia cuộn điện cực tại nhà máy Hà Nam hoặc Hưng Yên bị bypass hoàn toàn việc kiểm tra dao cắt (không cảnh báo thay dao), hoặc báo lỗi không tìm thấy máy nếu cố cấu hình dao. Hoặc dao slitting bị khóa thay dao quá sớm do tính sai hao mòn.
+*   **Nguyên nhân gốc:** 
+    1. SP `usp_DoCreateSlittingResult` bị hardcode lọc cứng nhà máy Bắc Giang (`RouteCode = 'V-11_BG'`).
+    2. Hệ thống đếm số lần cắt (số cuộn con) thay vì tổng số mét cắt thực tế (`GoodQtyLength`) để so sánh với tuổi thọ thiết kế (`StandardQty`), dẫn đến dao bị khóa sớm.
+*   **Cách khắc phục:** 
+    Cập nhật SP `usp_DoCreateSlittingResult`: sửa điều kiện lọc `RouteCode LIKE 'V-11%'` để hỗ trợ toàn hệ thống và đổi cơ chế tính tuổi thọ sang dùng `SUM(GoodQtyLength)`:
+    ```sql
+    -- 1. Sửa RouteCode check hỗ trợ toàn hệ thống
+    IF @MachineCode IN (select MachineCode from STB_ProductMachine where RouteCode LIKE 'V-11%') and @KnifeCheck > 0
+    
+    -- 2. Đo tuổi thọ thực tế bằng tổng số mét cắt
+    SELECT @ProdQtyCheck = ISNULL(SUM(GoodQtyLength), 0) from STB_ElectrodeSlittingResult where SlittingKnifeLotID = @SlittingKnifeLotID
+    ```
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_30_THIET_BI_PHU_TRO_SAY_GA_DAO.md § 5](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_30_THIET_BI_PHU_TRO_SAY_GA_DAO.md#5-danh-sách-lỗi-logic-điểm-yếu--giải-pháp-bugs--troubleshooting).
+
 ---
 
 ## F743~F748 / C243 — Electrode Slitting & QC (Slitting & QC Điện cực Hà Nam)
@@ -731,6 +758,41 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
     DELETE FROM STB_ElectrodeMixStepInfo WHERE ElectrodeLotNumber = 'MÃ_LOT_BỊ_KẸT';
     ```
 *   **Chi tiết nghiệp vụ:** Xem tại [KB_14_TRACE_BUG_METHODOLOGY.md § 4.7](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_14_TRACE_BUG_METHODOLOGY.md#47-lỗi-nhảy-bước-cân-điện-cực-mixing-phần-mềm-electrodeweighing).
+
+---
+
+## Dry Oven — Lò sấy điện cực (Quy trình sấy V-22)
+
+### Lỗi 1: Lỗi toán tử SQL bypass kiểm tra công đoạn sấy V-22 bắt buộc
+*   **Triệu chứng:** Công nhân có thể quét đưa Lot nguyên vật liệu vào lò sấy tự do dù Lot chưa được nhập thông tin hoàn thành công đoạn `V-22` (hoặc `V-22_BG`), phá vỡ luồng tuần tự sản xuất.
+*   **Nguyên nhân gốc:** Lỗi độ ưu tiên của toán tử logic `AND` và `OR` trong SP `usp_VN_DryOver` khiến điều kiện kiểm tra luôn đúng với mọi Lot nếu có bất kỳ Lot nào khác đã từng chạy V-22 trong lịch sử.
+*   **Cách khắc phục:** 
+    Cập nhật SP `usp_VN_DryOver`, thêm dấu ngoặc đơn để gom cụm điều kiện `OR` chính xác:
+    ```sql
+    SELECT @Stg = routecode FROM STB_ProdRouteHist WITH(NOLOCK)
+    WHERE 1=1 
+      AND (routecode='V-22' OR routecode='V-22_BG') -- Thêm ngoặc đơn
+      AND controlno = (select controlno from stb_setinfo WITH(NOLOCK) where barcode in (@BarCode,@LotNonew1,@LotNonew2,@LotNonew3,@LotNonew4,@LotNonew5,@LotNonew6))
+    ```
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_30_THIET_BI_PHU_TRO_SAY_GA_DAO.md § 5](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_30_THIET_BI_PHU_TRO_SAY_GA_DAO.md#5-danh-sách-lỗi-logic-điểm-yếu--giải-pháp-bugs--troubleshooting).
+
+---
+
+## Doping JIG — Gá nạp Doping (Quy trình lão hóa)
+
+### Lỗi 1: Lỗi thời gian ghi nhận lịch sử JIG khiến mất dữ liệu log khi tự động ngắt
+*   **Triệu chứng:** Khi gá JIG chạy hết 6 giờ và tự động chuyển trạng thái thành `autoend`, thông tin lịch sử của lượt chạy biến mất hoàn toàn, không được lưu vào bảng lịch sử `Stb_VVT_DopingJIG_History`.
+*   **Nguyên nhân gốc:** Lỗi logic so sánh thời gian tương lai trong SP `usp_Vietnam_DopingJIG_uid`: điều kiện `ChangeDateTime > dateadd(second,5,getdate())` không bao giờ xảy ra vì `ChangeDateTime` vừa được gán bằng `getdate()`.
+*   **Cách khắc phục:** 
+    Sửa điều kiện thời gian thành `dateadd(second,-5,getdate())` để lấy các bản ghi vừa được cập nhật:
+    ```sql
+    insert into Stb_VVT_DopingJIG_History
+    select JigID, LotInUsed, Status, LastJig, BeginDateTime, EndDateTime, Comment1, Comment2, getdate()
+    from Stb_VVT_DopingJIG
+    where status like '%autoend%'
+      and ChangeDateTime > dateadd(second,-5,getdate()) -- Sửa dấu + thành -5 giây
+    ```
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_30_THIET_BI_PHU_TRO_SAY_GA_DAO.md § 5](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_30_THIET_BI_PHU_TRO_SAY_GA_DAO.md#5-danh-sách-lỗi-logic-điểm-yếu--giải-pháp-bugs--troubleshooting).
 
 ---
 
