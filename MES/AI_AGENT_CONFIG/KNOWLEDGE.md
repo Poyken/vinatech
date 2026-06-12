@@ -46,6 +46,9 @@
 
 ## 4. GOLDEN QUERY — Full Trace Barcode (Truy vết 360°)
 
+Để tối ưu và bao phủ 100% các trường hợp (không bị sót khi quét nguyên vật liệu hoặc cuộn điện cực vốn chạy ở các bảng khác nhau), hãy sử dụng đúng mẫu truy vấn phù hợp với loại Barcode cần kiểm tra:
+
+### Mẫu 1: Dành cho sản phẩm Cell & Module (Chiếm 80% trường hợp)
 ```sql
 SELECT 
     SI.Barcode AS [Physical Barcode],
@@ -69,10 +72,52 @@ LEFT JOIN STB_ProdRouteHist PRH WITH(NOLOCK) ON SI.ControlNo = PRH.ControlNo
 LEFT JOIN STB_RouteInfo RI WITH(NOLOCK) ON PRH.RouteCode = RI.RouteCode
 LEFT JOIN STB_MaterialLotInfo MLI WITH(NOLOCK) ON SI.Barcode = MLI.LotNo
 LEFT JOIN STB_DividePackaging DP WITH(NOLOCK) ON SI.Barcode = DP.LotNo
-WHERE SI.Barcode = 'MÃ_BARCODE_HOẶC_LOT_NO' 
-   OR SI.ControlNo = 'MÃ_BARCODE_HOẶC_LOT_NO'
+WHERE SI.Barcode = 'MÃ_BARCODE_CELL_MODULE' 
+   OR SI.ControlNo = 'MÃ_BARCODE_CELL_MODULE'
 ORDER BY PRH.CreateDateTime ASC;
 ```
+
+### Mẫu 2: Dành cho cuộn điện cực (Coating/Slitting/Curling - Electrode)
+*Lưu ý: Điện cực chạy ở bảng lịch sử riêng `STB_ElectrodeProdRouteHist` thay vì `STB_ProdRouteHist`.*
+```sql
+SELECT 
+    MLI.LotNo AS [Electrode Roll Lot],
+    MLI.MaterialCode AS [Electrode Model],
+    MLI.CurrentQty AS [Current Length (m)],
+    MLI.WarehouseCode AS [Warehouse],
+    MLI.LocationCode AS [Location],
+    EPRH.RouteCode AS [Electrode Step Code],
+    RI.RouteName AS [Electrode Step Name],
+    EPRH.ProdQty AS [Produced Qty],
+    EPRH.CreateDateTime AS [Scan Date Time]
+FROM STB_MaterialLotInfo MLI WITH(NOLOCK)
+LEFT JOIN STB_ElectrodeProdRouteHist EPRH WITH(NOLOCK) ON MLI.LotNo = EPRH.ElectrodeLotID
+LEFT JOIN STB_RouteInfo RI WITH(NOLOCK) ON EPRH.RouteCode = RI.RouteCode
+WHERE MLI.LotNo = 'MÃ_LOT_CUỘN_ĐIỆN_CỰC'
+ORDER BY EPRH.CreateDateTime ASC;
+```
+
+### Mẫu 3: Dành cho Nguyên Vật Liệu (Raw Materials - WMS & Line Input)
+*Lưu ý: NVL nhập mua không chạy qua Routing sản xuất mà chỉ đi qua các trạm quét đầu vào ở chuyền (`STB_RawMaterialInputHist`).*
+```sql
+SELECT 
+    MLI.LotNo AS [Material LotNo],
+    MLI.MaterialCode AS [Material Code],
+    MM.MaterialName AS [Material Name],
+    MLI.CurrentQty AS [Current Stock Qty],
+    MLI.WarehouseCode AS [Warehouse],
+    MLI.LocationCode AS [Location],
+    MLI.LotDecisionResult AS [IQC Status],
+    RMIH.LineCode AS [Scanned Line],
+    RMIH.RouteCode AS [Scanned Step],
+    RMIH.CreateDateTime AS [Scan Input Time]
+FROM STB_MaterialLotInfo MLI WITH(NOLOCK)
+LEFT JOIN STB_MaterialMaster MM WITH(NOLOCK) ON MLI.MaterialCode = MM.MaterialCode
+LEFT JOIN STB_RawMaterialInputHist RMIH WITH(NOLOCK) ON MLI.LotNo = RMIH.MaterialLotNo
+WHERE MLI.LotNo = 'MÃ_LOT_NGUYÊN_VẬT_LIỆU'
+ORDER BY RMIH.CreateDateTime DESC;
+```
+
 
 ## 5. TOP 10 LỖI THƯỜNG GẶP → KB FILE
 
