@@ -82,10 +82,13 @@
 
 ## 🧭 TRA CỨU NHANH — Lỗi → Đọc KB nào?
 
-| Triệu chứng | KB file |
-|-------------|---------|
+> 💡 **Khuyến nghị:** Luôn ưu tiên tra cứu lỗi theo mã màn hình tại **KB_SCREEN_BUG_REF** trước!
+
+| Triệu chứng / Yêu cầu | KB file |
+|-----------------------|---------|
+| **Mọi sự cố tra theo Mã Màn Hình** | **KB_SCREEN_BUG_REF (Đọc trước)** |
 | Không đăng nhập MES | KB_01 |
-| Không in được tem | KB_01, KB_04, KB_09 |
+| Không in được tem | KB_01, KB_04 |
 | Gộp box lỗi | KB_04 |
 | Lỗi QC/chưa pass | KB_05 |
 | NVL hết hạn | KB_02 |
@@ -137,7 +140,7 @@
 
 ```
 1. THU THẬP  → Màn hình? Barcode? Thao tác? Lỗi gì? Ai/Khi nào?
-2. TRA CỨU   → Bảng "Lỗi → KB" ở trên → đọc đúng 1 KB file
+2. TRA CỨU   → Mở KB_SCREEN_BUG_REF.md tìm "## Mã_Màn_Hình" để xem chẩn đoán nhanh. Chỉ load file KB chuyên sâu qua link khi cần phân tích sâu hơn.
 3. XÁC MINH  → .\run_query.ps1 -Query "SELECT ... WHERE Barcode='xxx'"
 4. FIX        → Viết hotfix SQL (bọc BEGIN TRAN) → validate_sql → deploy_tool
 5. GHI CHÉP  → Cập nhật hotfixes/README.md + commit Git
