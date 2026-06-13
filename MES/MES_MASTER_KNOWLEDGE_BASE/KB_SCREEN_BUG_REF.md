@@ -234,6 +234,30 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
 *   **Cách khắc phục:**
     IT kiểm tra lịch sử quét Routing của Barcode bằng Golden Query để phát hiện công đoạn bị bỏ qua. Cho OP quay lại scan trạm trước, hoặc chèn dòng Routing giả lập để thông luồng (Xem phương pháp trace tại [KB_14 § 4.4](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_14_TRACE_BUG_METHODOLOGY.md#44-lỗi-không-chốt-được-công-đoạn-màn-hình-b530)).
 
+### Lỗi 3: Thiếu hoặc dư thừa danh mục lỗi (Defect Code) hiển thị tại lưới nhập lỗi của xưởng BN & BG1
+*   **Triệu chứng:** Giao diện nhập lỗi của tổ sản xuất Bắc Ninh và Bắc Giang 1 hiển thị các danh mục lỗi cũ đã bãi bỏ (gây nhầm lẫn cho công nhân), hoặc thiếu các mã lỗi mới phát sinh cần theo dõi để quản lý chất lượng tốt hơn.
+*   **Nguyên nhân gốc:** Bảng master data danh mục lỗi `STB_DefectInfo` chưa được cập nhật kịp thời theo rà soát thực tế của tổ sản xuất.
+*   **Cách khắc phục:**
+    1. Vô hiệu hóa 28 lỗi dư thừa bằng cách chạy script update cờ sử dụng về `IsUsed = 0` trên bảng `STB_DefectInfo`:
+       ```sql
+       UPDATE STB_DefectInfo
+       SET IsUsed = 0,
+           ChangeDateTime = GETDATE(),
+           ChangeUserID = 'vanduc'
+       WHERE DefectCode IN ('MÃ_LỖI_1', 'MÃ_LỖI_2', ...);
+       ```
+    2. Khai báo bổ sung 7 mã lỗi mới bằng cách chạy script `INSERT` vào bảng `STB_DefectInfo` (cho các công đoạn Winding `V-22_BG`, Rubber/riveting `V-23_BG`, Curling `V-24_BG`):
+       - `V-22_BM_BG`: Winding_Xocha đen đầu đáy (Winding_Xocha black marks top bottom)
+       - `V-23_DV_BG`: Rubber/riveting_Dập vỡ Tancha pan (Rubber/riveting_ATL bent or broke when stamped)
+       - `V-23_RD_BG`: Rubber/riveting_Rách đáy xocha khi đưa vào vỏ nhôm (Rubber/riveting_Xocha bottom paper tear)
+       - `V-23_XZ3_BG`: Riveting_Thiếu thừa vòng đệm (Riveting_Insufficient or excessive gasket)
+       - `V-24_NE6_BG`: Curling_NG thừa thiếu cân nặng (Curling_Overweight or underweight)
+       - `V-24_NE7_BG`: Curling_Xước chân tancha (Curling_Lead terminal scrash)
+       - `V-24_NE8_BG`: Curling_Lỗi mẻ miệng curling (Curling_Deformation around mouth)
+*   **Chi tiết nghiệp vụ:** Xem tại [fix_b530_disable_defects_BG.sql](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/sql/scripts/fix_b530_disable_defects_BG.sql) và [fix_b530_add_defects_BG.sql](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/sql/scripts/fix_b530_add_defects_BG.sql).
+
+---
+
 ---
 
 ## B552 — Slitting Configurations (Thiết lập chia cuộn điện cực)
@@ -315,7 +339,7 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
 
 ---
 
-## B682 / B781 / B786 / B789 / B791 — Stage Prices (Quản lý giá công đoạn)
+## B682 / B781 / B786 / B789 / B791 — Stage Prices & Defect Reports (Giá công đoạn & Báo cáo lỗi)
 
 ### Lỗi 1: Đơn giá công đoạn sản xuất bị hiển thị trống (Null)
 *   **Triệu chứng:** Lưới dữ liệu sản lượng hiển thị đơn giá bằng 0 hoặc trống, không tính được lương/hiệu suất.
@@ -327,6 +351,19 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
     VALUES ('MÃ_MODEL', 'MÃ_NHÀ_MÁY', 'ROUTE_CODE', ĐƠN_GIÁ);
     ```
 *   **Chi tiết nghiệp vụ:** Xem tại [KB_06_MASTER_DATA_TOOLS.md § 3](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_06_MASTER_DATA_TOOLS.md#3-fix-giá-công-đoạn-stage-prices).
+
+### Lỗi 2: Báo cáo lỗi chi tiết Cell B682 bị lẫn lộn các lỗi không thuộc bộ phận sản xuất (VE%, VP%)
+*   **Triệu chứng:** Báo cáo chi tiết lỗi sản phẩm Cell Line Bắc Giang/Bắc Ninh hiển thị lẫn lộn cả các lỗi thuộc bộ phận Điện cực (Electrode - mã `VE%`) và bộ phận Module (mã `VP%`).
+*   **Nguyên nhân gốc:** Stored Procedure `usp_Get_VVT_Prod_Bad_Status` khi truy vấn lịch sử công đoạn và bảng lỗi `STB_DefectRepairInfo` chỉ lọc `RouteCode LIKE 'V%'`. Do công đoạn của Điện cực Hà Nam bắt đầu bằng `VE` (Ví dụ: `VE01`) và Module bắt đầu bằng `VP` (Ví dụ: `VP01`), chúng đều bị lọc nhầm vào kết quả Cell Line Bắc Giang/Bắc Ninh.
+*   **Cách khắc phục:** Sửa SP `usp_Get_VVT_Prod_Bad_Status` tại khối CTE `ViewBarcode` và `RawView` để thêm logic lọc loại trừ:
+    ```sql
+    -- Thêm logic lọc loại trừ VE và VP tại các xưởng khác Hà Nam
+    AND b.RouteCode LIKE 'V%'
+    AND (@WorkCenterCode = 'VVT_F3' OR (b.RouteCode NOT LIKE 'VE%' AND b.RouteCode NOT LIKE 'VP%'))
+    ```
+*   **Chi tiết nghiệp vụ:** Xem tại mã nguồn Stored Procedure [usp_Get_VVT_Prod_Bad_Status.sql](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/sql/procedures/usp_Get_VVT_Prod_Bad_Status.sql#L53).
+
+---
 
 ---
 
@@ -472,17 +509,36 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
 *   **Chi tiết nghiệp vụ:** Xem tại [KB_05_QC_ELECTRODE.md § 7.2](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05_QC_ELECTRODE.md#72-không-tìm-thấy-lot-ở-màn-c512).
 
 ### Lỗi 2: Đo OQC OCV/ESR tại C546 chỉ hiển thị 20 dòng thay vì 50 dòng
-*   **Triệu chứng:** Máy đo trả về kết quả cho 50 mẫu test nhưng trên giao diện C546 hệ thống chỉ load và hiển thị 20 dòng mẫu.
-*   **Nguyên nhân gốc:** Số lượng dòng mẫu (`SampleQty`) cấu hình trong bảng `STB_MaterialQcDetail` bị lệch so với dữ liệu đo thực tế được upload ngầm từ máy đo vào bảng Monitor `Stb_ESRValueMonitor`.
+*   **Triệu chứng:** Máy đo trả về kết quả cho 50 mẫu test nhưng trên giao diện C546 hệ thống chỉ load và hiển thị 20 dòng mẫu đo (lưới OCV/ESR hiển thị không đủ 50 dòng trống để nhập/hiển thị).
+*   **Nguyên nhân gốc:** 
+    1. SP get kết quả mẫu `usp_MaterialQcSampleResult_get` bị thiếu pattern `'FOQC_V01_07/08'`.
+    2. SP get chi tiết màn hình `usp_Vietnam_MaterialFOQcDetail_get` bị thiếu block khởi tạo dữ liệu cho hạng mục OCV (`DetailNo = 2`). Trong khi hạng mục ESR (`DetailNo = 3`) và các mục khác đều có block khởi tạo để tạo đủ 50 dòng trống, khiến lưới OCV chỉ hiển thị tối đa theo số dòng thực tế đo được từ máy đo (ví dụ: 20 dòng) thay vì 50 dòng chuẩn.
 *   **Cách khắc phục:**
-    Chạy script rollback kết quả QC bị lỗi, đồng thời reset lại cờ upload để máy đo đẩy lại đầy đủ dữ liệu:
-    ```sql
-    -- 1. Xóa chi tiết QC bị lệch
-    DELETE FROM STB_MaterialQcSampleResult WHERE MaterialQcNo = 'F_MÃ_BARCODE';
-    -- 2. Reset trạng thái upload trong Monitor để đẩy lại dữ liệu
-    UPDATE Stb_ESRValueMonitor SET UploadToMes = 0, UploadOCVToMess = 0 WHERE lotno = 'MÃ_BARCODE';
-    ```
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_05_QC_ELECTRODE.md § 9.6](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05_QC_ELECTRODE.md#96-c546-foqc-ocvsr-chỉ-hiển-thị-20ea-thay-vì-50ea-ocv-lệch-dữ-liệu).
+    1. Deploy SP `usp_Vietnam_MaterialFOQcDetail_get` và `usp_MaterialQcSampleResult_get` đã sửa đổi (bổ sung block khởi tạo cho OCV DetailNo = 2).
+    2. Chạy SQL Script để xóa kết quả lỗi cũ và reset trạng thái upload trong monitor để máy đo đẩy lại dữ liệu:
+       ```sql
+       BEGIN TRANSACTION;
+       -- B1: Xóa kết quả QC cũ bị lệch
+       DELETE FROM STB_MaterialQcSampleResult WHERE MaterialQcNo = 'F_MÃ_BARCODE' AND MaterialQcDetailNo IN (2, 3);
+       
+       -- B2: Reset trạng thái upload trong bảng Monitor (Set NULL để SP chạy nạp lại từ đầu)
+       UPDATE Stb_ESRValueMonitor SET UploadToMes = NULL, UploadOCVToMess = NULL WHERE lotno = 'MÃ_LOT';
+       
+       -- B3: Reset trạng thái đánh giá trong bảng Detail để QC load lại dữ liệu
+       UPDATE STB_MaterialQcDetail SET DecisionResult = NULL, PassedSampleQty = 0 WHERE MaterialQcNo = 'F_MÃ_BARCODE' AND MaterialQcDetailNo IN (2, 3);
+       COMMIT TRANSACTION;
+       ```
+    3. Yêu cầu QC tắt và mở lại màn hình C546, quét lại Barcode để hệ thống sinh đủ 50 dòng.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_05_QC_ELECTRODE.md § 9.6](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05_QC_ELECTRODE.md#96-c546-foqc-ocvsr-chỉ-hiển-thị-20ea-thay-vì-50ea-ocv-lệch-dữ-liệu) và file script vá lỗi [fix_c546_ocv_lots.sql](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/sql/scripts/fix_c546_ocv_lots.sql).
+
+### Lỗi 3: Đo kiểm ESR tại C530 chỉ hiển thị 10 dòng kết quả thay vì 20 dòng mẫu đo
+*   **Triệu chứng:** Khi mở màn hình [C530] để nhập kết quả đo cho hạng mục ESR với số lượng mẫu (Sample Qty) thiết lập là 20, lưới kết quả đo bên phải chỉ hiển thị đúng 10 dòng kết quả đo từ máy đo và không sinh ra thêm 10 dòng trống tiếp theo để điền cho đủ 20 dòng.
+*   **Nguyên nhân gốc:** 
+    1. **Nghiệp vụ:** Chưa bấm nút "Tạo danh sách mẫu" (hoặc "Tổng hợp hạng mục" / "Create IQC Item Sample List") sau khi nâng cấu hình số lượng mẫu của ESR lên 20, dẫn đến bảng `STB_MaterialQcSampleResult` vẫn giữ nguyên 10 dòng cũ.
+    2. **Logic Stored Procedure (`usp_MaterialQcSampleResult_get`):** Khi có dữ liệu mới từ máy đo (ví dụ: máy đo truyền về 10 giá trị chưa upload), SP xóa bớt các dòng trống cũ, đếm số dòng còn lại trong kết quả (`@cnt` = 10), sau đó chạy vòng lặp bù dòng từ `@cnt` đến `@SampleQty` (vòng lặp chạy từ 10 đến 19). Nhưng vì chỉ số lấy dữ liệu sử dụng `@cnt + 1 = 11`, trong khi bảng tạm `@TempESR` chỉ có 10 dòng, dẫn đến `@value = NULL` và SP chèn thêm các dòng trống vào bảng kết quả. Khi dữ liệu đã upload xong (`UploadToMes IS NOT NULL`), biến `@cntexit1` = 0 khiến SP bỏ qua toàn bộ block xử lý bù dòng này ở lần load tiếp theo, chỉ trả về đúng 10 dòng hiện tại trong `STB_MaterialQcSampleResult`.
+*   **Cách khắc phục:**
+    1. **QC thao tác nhanh:** QC click chọn hạng mục **ESR** ở lưới bên trái của màn hình [C530] và bấm nút **"Tạo danh sách mẫu"** (hoặc "Tổng hợp hạng mục") trên thanh công cụ để hệ thống tự động chèn thêm 10 dòng trống cho đủ 20 dòng (10 dòng cũ có giá trị, 10 dòng mới là dòng trống để nhập tay hoặc đo tiếp).
+    2. **Khắc phục logic trong SP:** Đồng bộ logic khởi tạo của SP `usp_MaterialQcSampleResult_get` để tránh lệch chỉ số khi số lượng mẫu đo từ máy truyền về ít hơn số lượng mẫu thiết lập trong tiêu chuẩn.
 
 ---
 
@@ -548,6 +604,34 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
     DELETE FROM STB_MaterialDocInfo WHERE MaterialDocNo = 'MÃ_PHIẾU';
     ```
 *   **Chi tiết nghiệp vụ:** Xem tại [KB_02_KHO_WMS.md § 4.16](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_02_KHO_WMS.md#416-hủy-phiếu-nhập-kho-f330-đã-confirmed).
+
+### Lỗi 3: Không đọc được ngày sản xuất cho nguyên vật liệu PCB/dây điện (không tự động nhảy hạn dùng, tự động vào kho HOLDING)
+*   **Triệu chứng:** Khi quét mã Lot nhà cung cấp cho các mã PCB (`BEPCBA-%`) và dây điện (`BEMC00-%`) tại F330, nếu mã Lot không bắt đầu bằng ký tự `'2'` (không theo format date-based lot thông thường), hệ thống không parse được ngày sản xuất, lưu `1900-01-01` vào DB, gây lỗi hạn sử dụng hoặc tự động đưa Lot vào kho `HOLDING`. Ngoài ra, khi người dùng sửa ngày sản xuất trên lưới F330 và nhấn nút "Lot 변경" (Lot Change), hệ thống không cập nhật ngày sản xuất thực tế (`LotAttr10`) trong bảng tồn kho `STB_MaterialLotInfo`.
+*   **Nguyên nhân gốc:** 
+    1. Hàm SQL `fn_VVT_getdatebyVendorLot_MergeCode` không có nhánh xử lý fallback cho mã PCB/dây điện khi Vendor Lot không bắt đầu bằng `'2'`.
+    2. SP `usp_DoChangeMaterialDocLotInfo` khi update tồn kho `STB_MaterialLotInfo` chỉ cập nhật cột `LotNo` mà bỏ quên cột `LotAttr10` (ngày sản xuất / MFG Date).
+*   **Cách khắc phục:**
+    1. Cập nhật SQL Function `fn_VVT_getdatebyVendorLot_MergeCode` (dòng 712) để tự động fallback về ngày hiện tại (`GETDATE()` / ngày về) cho các mã PCB (`BEPCBA-%`), dây điện (`BEMC00-%`) và phụ kiện liên quan nếu Vendor Lot không đúng định dạng:
+       ```sql
+       when (
+           @materialcode like 'BEPCBA-%'
+           or @materialcode like 'BEMC00-%'
+           -- ... các mã liên quan ...
+       ) then
+           case 
+               when LEFT(@vendorlot, 1) = '2' and len(@vendorlot) >= 8 and ISDATE(substring(@vendorlot,1,4)+'-'+ substring(@vendorlot,5,2)+'-'+ substring(@vendorlot,7,2)) = 1
+                   then substring(@vendorlot,1,4)+'-'+ substring(@vendorlot,5,2)+'-'+ substring(@vendorlot,7,2)
+               else CONVERT(VARCHAR(10), GETDATE(), 120)
+           end
+       ```
+    2. Cập nhật SP `usp_DoChangeMaterialDocLotInfo` (dòng 235) để đồng bộ ngày sản xuất thực tế sang bảng tồn kho chính khi người dùng click Lot Change sửa trên UI:
+       ```sql
+       UPDATE STB_MaterialLotInfo
+       SET LotNo = @LotNo,
+           LotAttr10 = @PackDate  -- Bổ sung cập nhật MFG Date
+       WHERE Lotid = @LotId;
+       ```
+*   **Chi tiết nghiệp vụ:** Xem tại [fn_VVT_getdatebyVendorLot_MergeCode.sql](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/sql/procedures/fn_VVT_getdatebyVendorLot_MergeCode.sql#L712) và [usp_DoChangeMaterialDocLotInfo.sql](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/sql/procedures/usp_DoChangeMaterialDocLotInfo.sql#L235).
 
 ---
 
@@ -1747,4 +1831,39 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
 *   **Chi tiết nghiệp vụ:** Xem tại [KB_01_UI_PHAN_QUYEN.md § 1.4](KB_01_UI_PHAN_QUYEN.md) và [KB_06_MASTER_DATA_TOOLS.md](KB_06_MASTER_DATA_TOOLS.md).
 
 ---
-*Cập nhật: 2026-06-12 — Hoàn thiện cẩm nang tra cứu lỗi cho **125+ màn hình** theo Screen ID riêng biệt. Mỗi màn hình có header `## ScreenID` riêng, hỗ trợ tìm kiếm `Ctrl+Shift+F` trực tiếp.*
+
+## Các Màn Hình Cô Lập Xưởng Hưng Yên (TCode kết thúc bằng `_HY`)
+
+> 🔗 **Xem thêm:** Chi tiết UAT và danh sách đối soát các màn hình cô lập Hưng Yên tại [hy_screens_audit.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/.gemini/antigravity-ide/brain/fdbffebe-1907-405f-80d2-5bc839ff4434/hy_screens_audit.md). Các màn hình gồm: `C121_HY`, `C122_HY`, `C220_HY`, `B310_HY`, `B442_HY`, `B470_HY`, `B552_HY`, `B802_HY`, `C460_HY`.
+
+### Lỗi 1: Lỗi nhân bản Stored Procedure bị hậu tố kép `_HY_HY` trong layout XML
+*   **Triệu chứng:** Màn hình Hưng Yên load lên báo lỗi Runtime do không tìm thấy Stored Procedure tương ứng (Ví dụ: `usp_ProductionOrderInfo_HY_HY_get`).
+*   **Nguyên nhân gốc:** Quá trình chạy script nhân bản layout XML (`clone_screen_layouts.sql`) thực hiện replace chuỗi `_get` và `_iud` thành Stored Procedure Hưng Yên bị lặp lại hoặc chạy chéo, dẫn đến Stored Procedure bị đổi tên sai thành `_HY_HY`.
+*   **Cách khắc phục:** Chạy script SQL cập nhật cột `XmlLayout` trong bảng `SmartFramework.dbo.STB_ScreenLayoutInfo` để sửa các chuỗi `_HY_HY` trở về `_HY`.
+
+### Lỗi 2: Màn hình C121_HY (QcInspectionGroup_HY) bị mở thành nhiều Tab (mở nhiều cửa sổ)
+*   **Triệu chứng:** Khi người dùng mở màn hình `C121_HY` trên client MES, mỗi lần click menu hệ thống lại mở thêm một tab mới thay vì chỉ mở và focus vào tab duy nhất đã mở (như màn hình gốc C121).
+*   **Nguyên nhân gốc:** Cột `IsDialog` của màn hình `QcInspectionGroup_HY` trong bảng `SmartFramework.dbo.STB_ScreenInfo` bị để giá trị **NULL** hoặc `True` thay vì `0` (False).
+*   **Cách khắc phục:** Chạy SQL cập nhật thuộc tính `IsDialog = 0` cho màn hình `QcInspectionGroup_HY`:
+    ```sql
+    UPDATE SmartFramework.dbo.STB_ScreenInfo 
+    SET IsDialog = 0
+    WHERE Name = 'QcInspectionGroup_HY';
+    ```
+
+### Lỗi 3: Màn hình C121_HY vẫn gọi Stored Procedure gốc không có hậu tố Hưng Yên
+*   **Triệu chứng:** Khi thực hiện thao tác Thêm/Sửa/Xóa hạng mục kiểm tra QC tại `C121_HY`, hệ thống vẫn gọi SP gốc `usp_QcInspectionItem_iud` thay vì bản cô lập Hưng Yên, làm thay đổi chéo dữ liệu của các xưởng khác.
+*   **Nguyên nhân gốc:** Quá trình clone Stored Procedure bị bỏ sót, chưa tạo SP `usp_QcInspectionItem_HY_iud` trên DB chính và chưa đăng ký/ánh xạ vào `STB_ScreenObjects` cho màn hình `C121_HY`.
+*   **Cách khắc phục:** 
+    1. Nhân bản SP `usp_QcInspectionItem_iud` thành `usp_QcInspectionItem_HY_iud` trên DB `SmartFactoryV2`.
+    2. Đăng ký hàm thực thi `usp_QcInspectionItem_HY_iud` (ExecuteFunction) vào bảng `STB_ScreenObjects` cho ScreenName `QcInspectionGroup_HY`.
+    3. Cập nhật `XmlLayout` của màn hình `QcInspectionGroup_HY` để thay thế `usp_QcInspectionItem_iud` bằng `usp_QcInspectionItem_HY_iud`.
+
+### Lỗi 4: Object Panel (F5) hoặc giao diện hiển thị Stored Procedure cũ không có hậu tố `_HY`
+*   **Triệu chứng:** DB đã cập nhật Stored Procedure `_HY` đầy đủ nhưng trên phần mềm MES (Object Panel hoặc lúc chạy thực tế) vẫn hiển thị và gọi SP cũ.
+*   **Nguyên nhân gốc:** Client MES NAIS đang lưu cache layout cũ trên máy tính local của người dùng, chưa cập nhật cấu hình mới từ DB.
+*   **Cách khắc phục:** Tắt hoàn toàn phần mềm MES NAIS (đóng chương trình) rồi mở lại để client xóa cache và tải lại layout mới từ database.
+
+---
+*Cập nhật: 2026-06-13 — Hoàn thiện cẩm nang tra cứu lỗi cho **125+ màn hình** theo Screen ID riêng biệt và bổ sung phần gỡ lỗi các màn hình cô lập Hưng Yên (_HY). Mỗi màn hình có header ## ScreenID riêng, hỗ trợ tìm kiếm Ctrl+Shift+F trực tiếp.*
+
