@@ -1,0 +1,88 @@
+File: Hướng dẫn Groupware_Yêu cầu mua.pptx
+
+--- slide1.xml ---
+  Hướng dẫn sử dụng chức năng SBC trên hệ thống Groupware
+  EA Team
+  Việt
+  Nam
+
+--- slide2.xml ---
+  1.Đăng nhập hệ thống Groupware
+  I
+  . Đăng nhập Groupware
+  Có hai cách để bạn đăng nhập vào hệ thống Groupware
+  + Bạn có thể truy cập bằng link sau đây:
+  https://gw.vinatech.com/login
+  .
+  + Bạn có thể chọn buổi tượng như hình dưới đây:
+  + Bạn mở trình duyệt lên và ỏ góc phải màn hình có biểu tượng=&gt; bạn chọn tới icon của công ty có chữ groupware click vào đó
+
+--- slide3.xml ---
+  2.Thông tin đăng nhập vào Groupware
+  2. Thông tin đăng nhập
+  -
+  Bước
+  1
+  : Thông tin tài khoản cũng như mật khẩu của bạn chính là mã nhân viên trên hệ thống ERP, mật khẩu mặc định từ 1 tới 4, trong trường hợp không được bạn liên hệ lại với EA
+  Bước
+  2
+  : Trước khi login, bạn cần chọn Vinatech vina Co.,Ltd.
+  Bước 3: khi đã chọn xong, bạn nhập mã nhân viên và mật khẩu nhấn nút login để vào hệ thống.
+
+--- slide4.xml ---
+  2.Form đăng ký mua
+  1. Bạn truy cập vào phần menu chọn mục Electronic Document =&gt; Tiếp theo bạn chọn mục Cost =&gt; bạn chọn chức năng “Expense Report Document”
+  Bước
+  1:
+  Chọn
+  đường line phê duyệt, ở đây bạn có thể chọn hai kiểu đường line phê duyệt.
+  + Một đã được cài đặt trong hệ thống, bạn chỉ cần chọn.
+  + Hai bạn có thể tự lựa chọn những ai có thể duyệt form cho bạn.
+  + Ngoài ra bạn cũng có thể upload một file hoặc nhiều file cùng một lúc
+
+--- slide5.xml ---
+  2.Form đăng ký mua
+  Tiêu đề
+  : Bạn cũng có thể đặt tiêu đề cho form đăng ký mua của mình như hình ở bên.
+  Ngoài ra trong trường hợp bạn làm hộ ai đó, bạn vẫn có thể đưa tên người đó vào như hình dưới bên cạnh
+
+--- slide6.xml ---
+  2.Form đăng ký mua
+  Ở đây có hai trường hợp:
+  Trường hợp 1: Mua hàng trong nước thì bạn cần nhập VAT, và không cần chọn phần đổi ngoại tệ
+  Trường hợp hai bạn mua hàng nước ngoài cần chuyển đổi ngoại tệ, thì sẽ không cần nhập VAT, lưu ý nó sẽ tính giá trị tiền tệ tại thời điểm bạn đang làm form.
+  Note: cả hai trường hợp trên đều phải nhập số tiền của nhà cung cấp.
+
+--- slide7.xml ---
+  2.Form đăng ký mua
+  Đây là phần bạn miêu tả nội dung. Trong phần này bạn có thể đưa các video vào, hình ảnh, cũng như, các loại font chữ, đồng, thời bạn cũng có thể tạo các bảng , bạn cũng có thể thêm các link vào trực tiếp nội dung.
+
+--- slide8.xml ---
+  Yêu cầu trả lời trong form mua bán
+  Nếu trong quá trình bạn làm form, người duyệt có câu hỏi yêu cầu bạn trả lời, thì nó sẽ hiển thị như hình trên đây:
+  Bạn sẽ click vào rồi trả lời cho người approval
+  Bước
+  2: Click “
+  Xác
+  nhận
+  ”
+
+--- slide9.xml ---
+  Phần II: NGƯỜI DUYỆT FORM MUA BÁN
+
+--- slide10.xml ---
+  3.Duyệt form mua bán
+  Khi bạn có một yêu cầu duyệt form mua bán hoặc một form cần thanh toán,
+  Bạn cần đăng nhập vào hệ thống rồi chọn tới menu “Electronic Document” =&gt; Approval Documents.
+  Khi người dùng yêu cầu bạn duyệt, lập tức một email sẽ được gửi tới bạn, bạn có thể click vào đó để vào hệ thống.
+  Ngoài hai cách trên khi vào hệ thống sẽ có một bảng hiển thị các form chờ bạn ký duyệt
+
+--- slide11.xml ---
+  Duyệt form mua bán
+  Khi bạn nhận được form yêu cầu duyệt bạn có 3 trường hợp:
+  Trường hợp 1: Bạn duyệt cho người dùng bán nhấn nút bên trái
+  Trường hợp 2: Bạn reject form, không đồng ý bạn nhấn nút đỏ ở giữa.
+  Trường hợp 3 bạn có câu hỏi với người làm form, bạn nhập câu hỏi vào rồi, nhấn nút ở bên phải gửi đi, bạn chọn người cần hỏi
+
+--- slide12.xml ---
+

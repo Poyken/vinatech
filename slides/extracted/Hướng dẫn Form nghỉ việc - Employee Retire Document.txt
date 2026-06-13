@@ -1,0 +1,429 @@
+File: Hướng dẫn Form nghỉ việc - Employee Retire Document.pptx
+
+--- slide1.xml ---
+  Hướng
+  dẫn
+  sử
+  dụng
+  chức
+  năng
+  Employee Retire Document
+  EA Team Việt Nam
+
+--- slide2.xml ---
+  1.Đăng
+  nhập
+  hệ
+  thống
+  Groupware
+  I.
+  Đăng
+  nhập
+  Groupware
+  Có
+  hai
+  cách
+  để
+  bạn
+  đăng
+  nhập
+  vào
+  hệ
+  thống
+  Groupware
+  +
+  Bạn
+  có
+  thể
+  truy
+  cập
+  bằng
+  link
+  sau
+  đây
+  :
+  https://gw.vinatech.com/login
+  .
+  +
+  Bạn
+  có
+  thể
+  chọn
+  buổi
+  tượng
+  như
+  hình
+  dưới
+  đây
+  :
+  +
+  Bạn
+  mở
+  trình
+  duyệt
+  lên
+  và
+  ỏ
+  góc
+  phải
+  màn
+  hình
+  có
+  biểu
+  tượng
+  =&gt;
+  bạn
+  chọn
+  tới
+  icon
+  của
+  công
+  ty
+  có
+  chữ
+  groupware click
+  vào
+  đó
+
+--- slide3.xml ---
+  2.Thông tin
+  đăng
+  nhập
+  vào
+  Groupware
+  2. Thông tin
+  đăng
+  nhập
+  -
+  Bước
+  1: Thông tin
+  tài
+  khoản
+  cũng
+  như
+  mật
+  khẩu
+  của
+  bạn
+  chính
+  là
+  mã
+  nhân
+  viên
+  trên
+  hệ
+  thống
+  ERP,
+  mật
+  khẩu
+  mặc
+  định
+  từ
+  1
+  tới
+  4,
+  trong
+  trường
+  hợp
+  không
+  được
+  bạn
+  liên
+  hệ
+  lại
+  với
+  EA
+  Bước
+  2:
+  Trước
+  khi
+  login,
+  bạn
+  cần
+  chọn
+  Vinatech
+  vina
+  Co.,Ltd
+  .
+  Bước
+  3:
+  khi
+  đã
+  chọn
+  xong
+  ,
+  bạn
+  nhập
+  mã
+  nhân
+  viên
+  và
+  mật
+  khẩu
+  nhấn
+  nút
+  login
+  để
+  vào
+  hệ
+  thống
+  .
+
+--- slide4.xml ---
+  Employee Retire Document
+  Mục
+  đích
+  :
+  Làm
+  phê
+  duyệt
+  nghỉ
+  việc
+  Vào
+  menu Electronic Document =&gt;
+  Chọn
+  mục
+  Human Sources =&gt;
+  Chọn
+  chức
+  năng
+  Employee Retire Document
+
+--- slide5.xml ---
+  Bước
+  1:
+  Chọn
+  người
+  phê
+  duyệt
+  Tại
+  giao
+  diện
+  ,
+  có
+  thể
+  chọn
+  dòng
+  phê
+  duyệt
+  mặc
+  định
+  là
+  Team Leader =&gt; Group Leader =&gt; Quản
+  lý
+  người
+  Hàn
+  =&gt;
+  Bác
+  Jang =&gt;
+  Bác
+  COO
+  Bạn
+  cũng
+  có
+  thể
+  thêm
+  người
+  phê
+  duyệt
+  vào
+  form,
+  hoặc
+  thêm
+  người
+  CC
+  vào
+  form
+  Cuối
+  cùng
+  chọn
+  Áp
+  dụng
+  dòng
+  phê
+  duyệt
+
+--- slide6.xml ---
+  Chú
+  ý:
+  Nếu
+  bạn
+  đăng
+  ký
+  hộ
+  ,
+  vui
+  lòng
+  chọn
+  Người
+  dùng
+  là
+  người
+  được
+  đăng
+  ký
+  hộ
+  Nếu
+  không
+  ,
+  mặc
+  định
+  hệ
+  thống
+  sẽ
+  là
+  đăng
+  ký
+  cho
+  người
+  làm
+  form
+
+--- slide7.xml ---
+  Bước
+  2:
+  Điền
+  tiêu
+  đề
+  và
+  các
+  trường
+  cần
+  thiết
+  1 –
+  Ngày
+  nghỉ
+  việc
+  2 –
+  Ngày
+  làm
+  việc
+  cuối
+  cùng
+  3 –
+  Người
+  đảm
+  nhiệm
+  công
+  việc
+  thay
+  thế
+  4 – Thông tin
+  liên
+  lạc
+  sau
+  khi
+  nghỉ
+  việc
+  5 –
+  Địa
+  chỉ
+  liên
+  hệ
+  sau
+  khi
+  nghỉ
+  6 – Lý do
+  xin
+  nghỉ
+
+--- slide8.xml ---
+  Bước
+  3: Hoàn
+  thiện
+  nội
+  dung chi
+  tiết
+  và
+  Gửi
+  đi
+  Hoàn
+  thiện
+  phần
+  Nội
+  dung chi
+  tiết
+  hoặc
+  yêu
+  cầu
+  thêm
+  nếu
+  có
+  Ấn
+  nút
+  Gửi
+  đi
+  để
+  hoàn
+  tất
+  yêu
+  cầu
+
+--- slide9.xml ---
+  Hủy
+  đơn
+  đăng
+  ký
+  Trường
+  hợp
+  bạn
+  muốn
+  rút
+  lại
+  đơn
+  để
+  chỉnh
+  sửa
+  /
+  hủy
+  đơn
+  :
+  Bấm
+  chọn
+  Hủy
+  đơn
+  đăng
+  ký
+  Lưu ý:
+  Chỉ
+  hủy
+  được
+  trong
+  trường
+  hợp
+  phê
+  duyệt
+  chưa
+  được
+  duyệt
+  xong
+  Sau
+  khi
+  hủy
+  ,
+  phê
+  duyệt
+  sẽ
+  chuyển
+  sang
+  mục
+  lưu
+  trữ
+  tạm
+  thời
+  Temporary Storage.
+  Bạn
+  có
+  thể
+  truy
+  cập
+  vào
+  đó
+  để
+  chỉnh
+  sửa
+  /
+  xóa
+
+--- slide10.xml ---
+

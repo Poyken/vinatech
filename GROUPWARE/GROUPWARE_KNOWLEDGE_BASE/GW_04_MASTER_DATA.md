@@ -53,6 +53,16 @@ Hệ thống hiển thị lưới thông tin kiểm kê chi tiết:
 7. Kiểu loại mặt hàng.
 8. Kiểu giao dịch (Trong nước hay nước ngoài).
 
+### ⚙️ Cơ chế đồng bộ dữ liệu tự động (Auto-Sync Flow):
+- **Cố định đường line phê duyệt:** Tuyến phê duyệt (Approval Line) được hệ thống tự động khóa/cố định sẵn dựa trên loại vật tư (zách hóa/자재유형) được đăng ký.
+- **Quy tắc điền thông tin tại bước Tiếp nhận (Receipt Stage):**
+  - **Với Nguyên vật liệu (Raw material):** Tại bước tiếp nhận phê duyệt, bắt buộc phải điền mã vật tư và các thông tin chi tiết của vật tư.
+  - **Với Thành phẩm / Bán thành phẩm (Product / Semi-finished):** Phải khai báo đầy đủ các thông số sản phẩm, quy cách kỹ thuật và thông tin phụ trợ.
+- **Tiến trình đồng bộ:** Sau khi phê duyệt hoàn tất:
+  1. Dữ liệu mã code mới sẽ tự động đăng ký vào hệ thống **ERP Việt Nam**.
+  2. Hệ thống đồng bộ mã vật tư đó sang **ERP Hàn Quốc (HQ)**.
+  3. Dữ liệu nạp tự động xuống màn hình thiết bị **MES A230** để sẵn sàng sử dụng.
+
 ---
 
 ## 2. ✏️ Cập Nhật Thông Tin Mã Code (Item Change)
@@ -160,5 +170,23 @@ Tiến trình đồng bộ BOM từ ERP/Groupware sang MES sẽ tự động ch�
 
 ---
 
-*Cập nhật: 2026-06-04 | Nguồn: Hướng dẫn đăng ký các loại code.pptx + Hướng dẫn sửa đổi BOM.pptx + Hướng dẫn Groupware_Form đăng ký nhà thầu_khách hàng.pptx + Comprehensive_Groupware_Report.md*
+## 5. 💰 Đăng Ký / Thay Đổi Đơn Giá (Item Price Addition & Change)
 
+**Vào:** Electronic Document → Item → Item Price Addition Document (hoặc Item Price Change Document)
+
+### 5.1 Tuyến phê duyệt quy định từ Excel:
+- **Tuyến phê duyệt (Approval):** **71908026-Đào Thị Phiên** → **21910034-Trần Quang Thỏa** (Final Approval).
+- **Tuyến tham chiếu (Reference):** Nhóm nhận Kế toán*.
+
+### 5.2 Nghiệp vụ & Ràng buộc:
+- **Phân loại đơn giá:**
+  - **Đơn giá [Bán] (Sales Price):** Quản lý giá bán chi tiết theo từng đối tượng khách hàng.
+  - **Đơn giá [Mua] (Purchase Price):** Quản lý giá mua chi tiết theo từng nhà cung cấp (vendor).
+- **Ràng buộc:** Bắt buộc mặt hàng phải được tạo mã code thành công trước khi đăng ký đơn giá (nếu chưa có mã code, phải làm đơn *Item Registration Document* trước).
+- **Đồng bộ ERP & Lưu lịch sử thay đổi:**
+  - Đơn giá sau khi hoàn tất phê duyệt trên Groupware sẽ tự động cập nhật xuống hệ thống **ERP**.
+  - Hệ thống tự động ghi nhận lịch sử thay đổi đơn giá (đơn giá cũ, đơn giá mới) và theo dõi hiệu lực theo mốc thời gian: **Ngày bắt đầu hiệu lực (Start Date)** và **Ngày kết thúc hiệu lực (End Date)**.
+
+---
+
+*Cập nhật: 2026-06-12 | Nguồn: Hướng dẫn đăng ký các loại code.pptx + Hướng dẫn sửa đổi BOM trên ERP và Groupware.pptx + Hướng dẫn Groupware_Form đăng ký nhà thầu_khách hàng.pptx + GROUPWARE PURCHASE, SALES FUNCTION MANUAL.pptx + Vietnam Corporation Approval Setting List.xlsx + Comprehensive_Groupware_Report.md*

@@ -77,4 +77,18 @@ Bất kể nghiệp vụ nào đều tuân thủ nguyên tắc chọn người k
 
 ---
 
-*Cập nhật: 2026-05-25*
+## 7. 🎛️ Quy Chuẩn Các Nút Thao Tác Chân Trang (Footer Actions)
+
+Hầu hết các biểu mẫu nghiệp vụ trên Groupware đều tích hợp hệ thống nút điều khiển chuẩn ở chân trang:
+
+- **Gửi đi (Submit / Draft):** Gửi tài liệu vào tuyến phê duyệt. Sau khi gửi, thông tin sẽ chuyển sang trạng thái chờ duyệt.
+- **Lưu trữ tạm thời (Temporary Storage / Save):** Lưu bản nháp vào mục *Temporary Storage*. Cho phép bạn quay lại chỉnh sửa hoặc xóa hẳn sau này mà không gửi đi duyệt ngay.
+- **Xóa (Delete):** Xóa hoàn toàn bản nháp hiện tại.
+- **Xem trước (Preview):** Xem giao diện hiển thị tổng thể của biểu mẫu trước khi quyết định gửi đi.
+- **Làm mới (Reset):** Xóa toàn bộ dữ liệu đang nhập trên màn hình để điền lại từ đầu.
+- **Lý do cập nhật/Ghi chú (Reason / Description):** Ô nhập nội dung giải thích lý do tạo hoặc thay đổi biểu mẫu. Đối với sếp nước ngoài hoặc ban quản lý, bắt buộc ghi rõ ràng, ngắn gọn lý do tại đây.
+
+---
+
+*Cập nhật: 2026-06-12*
+

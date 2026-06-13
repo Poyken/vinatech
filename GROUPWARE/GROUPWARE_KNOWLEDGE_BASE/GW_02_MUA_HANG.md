@@ -27,14 +27,53 @@
 [Phụ] PO Delete Document         ← Nếu PO sai cần xóa
 ```
 
+
+---
+
+## 1. 📝 Đề Xuất Chi Phí & Yêu Cầu Mua Hàng (Expense Report vs. Purchase Request)
+
+Tùy thuộc vào loại hình mua sắm, nhân sự sẽ sử dụng một trong hai biểu mẫu sau trên Groupware:
+
+### 1.1 Expense Report Document (Đơn Đề Xuất Chi Phí / Yêu Cầu Mua Sắm)
+**Vào:** Electronic Document → Cost → Expense Report Document
+
+- **Mục đích:** Đăng ký yêu cầu mua sắm hoặc đề xuất chi phí tự do từ các bộ phận trước khi tạo đơn mua hàng chính thức.
+- **Tuyến phê duyệt mặc định:** **22205010-Nguyễn Thị Thúy_V6** → **21910034-Trần Quang Thỏa** (Final Approval).
+- **Các bước thực hiện:**
+  1. **Bước 1: Chọn đường line phê duyệt:** Chọn line có sẵn hoặc tự chỉ định người duyệt. Cho phép upload một hoặc nhiều file đính kèm.
+  2. **Bước 2: Điền thông tin cơ bản:** Nhập tiêu đề form. Nếu làm form hộ người khác, gõ tên người đó vào trường **"Thay đổi người sử dụng"** (nếu không chọn, mặc định lấy người đăng nhập).
+  3. **Bước 3: Chọn loại hình thanh toán/mua hàng:**
+     - **Trường hợp 1 (Mua hàng trong nước - Local):** Bắt buộc nhập VAT, không cần chọn phần đổi ngoại tệ (tính theo VNĐ).
+     - **Trường hợp 2 (Mua hàng nước ngoài - Overseas):** Không cần nhập VAT, bắt buộc chọn chuyển đổi ngoại tệ. Hệ thống tự động tính tỷ giá hối đoái tại thời điểm làm form.
+     - *Lưu ý:* Cả hai trường hợp đều phải nhập số tiền chính xác của nhà cung cấp.
+  4. **Bước 4: Mô tả chi tiết:** Soạn thảo nội dung ở khung Rich-text. Cho phép chèn video, hình ảnh, link, tạo bảng và chỉnh font chữ.
+  5. **Bước 5: Gửi đi duyệt hoặc lưu tạm:** Sử dụng các nút dưới chân trang (Gửi đi, Lưu trữ tạm thời, Xóa nhớ tạm, Xem trước, Reset).
+
+### 1.2 Purchase Request Document (Đơn Yêu Cầu Mua Hàng - Phân Loại Vật Tư)
+**Vào:** Electronic Document → Purchase → Purchase Request Document
+
+- **Mục đích:** Đăng ký yêu cầu mua vật tư chính thức theo từng phân loại chuyên biệt (Nguyên vật liệu, Vật tư phụ, Thiết bị/Nhà xưởng, IT).
+- **Tuyến phê duyệt & Tiếp nhận (Receipt/Reference) quy định chi tiết từ Excel:**
+
+| Loại vật tư | Đường line phê duyệt (Approval) | Bộ phận tiếp nhận (Receipt) | Người tham chiếu (Reference) |
+|-------------|---------------------------------|-----------------------------|------------------------------|
+| **Nguyên vật liệu** (Raw materials) | 71908026-Đào Thị Phiên → 21910034-Trần Quang Thỏa | Nhân viên mua hàng → Trưởng phòng mua hàng (Final Receipt) | 21910034-Trần Quang Thỏa |
+| **Vật tư phụ** (Subsidiary materials) | 71908026-Đào Thị Phiên → 21910034-Trần Quang Thỏa | Nhân viên mua hàng → Trưởng phòng mua hàng (Final Receipt) | 21910034-Trần Quang Thỏa |
+| **Tài sản IT** (IT assets) | 92005006-Nguyễn Văn Nha → 11910035-Nguyễn Thành Phi | Nhóm kỹ thuật IT (92005006-Nguyễn Văn Nha, 92404003-Nguyễn Văn Thuần, 92209001-Trần Quang Duy, 92011009-Đỗ Xuân Đồng) → 92005006-Nguyễn Văn Nha (Final Receipt - CC: Nhóm nhận Kế toán*) | 92005006-Nguyễn Văn Nha |
+| **Thiết bị/Nhà xưởng** (Facility) | 71908026-Đào Thị Phiên → 21910034-Trần Quang Thỏa → CEO | Nhóm kỹ thuật (72112005-Nguyễn Thị Minh Hiền, 72311001-Nguyễn Thị Hậu) → 71908026-Đào Thị Phiên (CC: Nhóm nhận Kế toán*) | 21910034-Trần Quang Thỏa |
+
+*\*Nhóm nhận Kế toán (Receipt CC) bao gồm các nhân sự: 22205010-NGUYỄN THỊ THÚY_V6, 22205011-NGUYỄN THỊ PHƯƠNG LINH, 22308006-NGÔ PHƯƠNG ANH, 22312004-LÊ THỊ TRANG, 22404015-NGUYỄN THỊ HỒNG_V3.*
+
 ---
 
 ## 2. 📋 Purchase Order Registration (Tạo Đơn Mua Hàng)
 
 **Vào:** Electronic Document → Purchase → Purchase Order Registration Document
 
-### Bước 1: Chọn đường line phê duyệt
-- Chọn đường line đã cài đặt trong hệ thống (chỉ cần click chọn), hoặc tự chọn người duyệt thủ công.
+### Bước 1: Chọn đường line phê duyệt & Tiếp nhận (Receipt)
+- **Tuyến phê duyệt (Approval):** **71908026-Đào Thị Phiên** → **21910034-Trần Quang Thỏa** (hoặc chọn đường line đã cài sẵn trên hệ thống: *Team Leader -> Group Leader -> Lee Sang Hun -> Kim Kyeong Cheol (CEO)*).
+- **Tuyến tiếp nhận (Receipt):** Nhóm kỹ thuật thiết bị/nhà xưởng (*72112005-Nguyễn Thị Minh Hiền*, *72311001-Nguyễn Thị Hậu*), **71908026-Đào Thị Phiên** (Final Receipt: Nhóm nhận Kế toán*).
+- **Tuyến tham chiếu (Reference):** Nhóm nhận Kế toán*.
 - Có thể đính kèm một hoặc nhiều file cùng lúc.
 
 ### Bước 2: Điền thông tin đơn hàng (Các trường dữ liệu chính)
@@ -61,8 +100,10 @@
 
 **Vào:** Electronic Document → Purchase → Arrival Confirmation Document
 
-### Bước 1: Chọn đơn đặt hàng đã tạo trước đó
+### Bước 1: Chọn đơn đặt hàng đã tạo trước đó & Tuyến phê duyệt/Tiếp nhận
 - Nhấn tải danh sách PO đã approved để liên kết vào form.
+- **Tuyến tiếp nhận (Receipt):** Nhóm kỹ thuật thiết bị/nhà xưởng (*72112005-Nguyễn Thị Minh Hiền*, *72311001-Nguyễn Thị Hậu*, *71908026-Đào Thị Phiên*).
+- **Tuyến tham chiếu (Reference):** Nhóm nhận Kế toán*.
 
 ### Bước 2: Điền thông tin hàng về
 - **Ngày hàng về:** Nhập ngày hàng hóa thực tế về tới công ty.
@@ -115,7 +156,10 @@ Tại phần liên quan đến MES F330:
 
 > ⚠️ **ĐIỀU KIỆN:** Chỉ có thể làm sau khi **C220 (IQC) đã PASS**. Chỉ mặt hàng đã Pass IQC mới hiển thị để chọn.
 
-### Bước 1: Tải danh sách PO đã tạo
+### Bước 1: Tải danh sách PO đã tạo & Tuyến phê duyệt/Tiếp nhận
+- Nhấn tải danh sách PO đã duyệt để bắt đầu liên kết.
+- **Tuyến tiếp nhận (Receipt):** Nhóm kỹ thuật thiết bị/nhà xưởng (*72112005-Nguyễn Thị Minh Hiền*, *72311001-Nguyễn Thị Hậu*, *71908026-Đào Thị Phiên*).
+- **Tuyến tham chiếu (Reference):** Nhóm nhận Kế toán*.
 ### Bước 2: Thêm mặt hàng đã hoàn tất IQC
 - Số lượng đạt và số tiền **tự động tính và hiển thị**
 - Kho **tự động điền** theo kho đã nhập trong Arrival Confirmation
@@ -131,7 +175,8 @@ Tại phần liên quan đến MES F330:
 
 **Vào:** Electronic Document → Purchase → Return Product Document
 
-### Bước 1: Chọn tài liệu nhập kho đã tạo trước đó
+### Bước 1: Chọn tài liệu nhập kho đã tạo trước đó & Tuyến phê duyệt/Tiếp nhận
+- **Tuyến tiếp nhận (Receipt):** Nhóm kỹ thuật thiết bị/nhà xưởng (*72112005-Nguyễn Thị Minh Hiền*, *72311001-Nguyễn Thị Hậu*, *71908026-Đào Thị Phiên*).
 ### Bước 2: Phân loại trả hàng
 - Chọn phân biệt giữa: **Trả lại sản phẩm** (Product Return) hoặc **Trả lại nguyên vật liệu** (Raw Material Return).
 - Chọn hình thức trả: trả sau khi mua nguyên vật liệu hay trả sau khi mua gia công ngoài.
@@ -149,36 +194,51 @@ Tại phần liên quan đến MES F330:
 
 ---
 
-## 6. 🗑️ Purchase Order Delete Document (Xóa PO Sai)
+## 6. 🚫 Hủy / Đóng Đơn Đặt Hàng (Purchase Order Cancel & Closing)
 
-**Vào:** Electronic Document → Purchase → Purchase Order Data Delete Document
+Dùng khi thông tin đơn đặt hàng bị nhập sai hoặc khi giao dịch kết thúc giữa chừng cần hủy bỏ/kết thúc các dòng PO chưa nhập kho.
 
-### Điều kiện để xóa:
-- PO **chưa được xử lý nhập kho** → mới xóa được
-- Nếu đã nhập kho → **KHÔNG THỂ xóa**
+**Vào:** Electronic Document → Purchase → Purchase Order Cancel Document (hoặc Purchase Order Closing Document)
 
-### Cách làm:
-1. Chọn tài liệu đơn đặt hàng cần xóa
-2. Chọn mặt hàng muốn xóa
-3. Xác nhận xóa
+- **Tuyến phê duyệt (Approval):** **71908026-Đào Thị Phiên** → **21910034-Trần Quang Thỏa** (Final Approval).
+- **Tuyến tham chiếu (Reference):** Nhóm kỹ thuật thiết bị/nhà xưởng (*72112005-Nguyễn Thị Minh Hiền*, *72311001-Nguyễn Thị Hậu*, *71908026-Đào Thị Phiên*).
 
-> ⚠️ **Với đơn nhập khẩu:** Tất cả thông tin B/L và thông quan cũng bị xóa theo.
-> ⚠️ Tài liệu này **xóa dữ liệu vĩnh viễn** → Cần thẩm định kỹ trước khi xóa.
+> [!WARNING]
+> **ĐIỀU KIỆN:** Nếu đang tồn tại biểu mẫu *Receiving Confirmation* (Xác nhận nhập kho) ở trạng thái đang chờ duyệt liên quan đến PO này, hệ thống sẽ **khóa cứng**, cấm thực hiện thao tác Hủy hoặc Đóng PO.
+
+### 6.1 Hủy đơn đặt hàng (Purchase Order Cancel Document):
+- **Mục đích:** Xóa hoàn toàn dữ liệu PO.
+- **Tác động:** Sau khi được phê duyệt, hệ thống sẽ tự động xóa sạch dữ liệu đăng ký nhập hàng (Arrival/Receiving) tương ứng trên cả hệ thống ERP và MES. Cụ thể, PO đã hủy sẽ **không thể** được lựa chọn trong form *Arrival Confirmation* nữa.
+
+### 6.2 Đóng đơn đặt hàng (Purchase Order Closing Document):
+- **Mục đích:** Đóng/Kết thúc các hạng mục (items) còn lại trong PO mà không xóa dữ liệu lịch sử PO gốc.
+- **Tác động:** Giữ nguyên dữ liệu PO. Xóa dữ liệu kế hoạch nhập hàng liên quan của các item được chọn đóng trên ERP và MES. Các item đã đóng sẽ bị ẩn đi, không thể chọn trong màn hình *Arrival Confirmation*.
+- **Quy tắc đóng một phần:** Nếu chỉ đóng một số item trong PO, hệ thống sẽ tự động tính toán lại tổng giá trị còn lại của PO và thực hiện đăng ký cập nhật lại trên ERP và MES.
 
 ---
 
-## 7. 💰 Purchase Resolution (Đóng Sổ Thanh Toán)
+## 7. 🗑️ Xóa Dữ Liệu Đơn Đặt Hàng (Purchase Order Data Delete Document)
+
+**Vào:** Electronic Document → Purchase → Purchase Order Data Delete Document
+
+- **Mục đích:** Xóa vĩnh viễn dữ liệu PO bị nhập sai.
+- **Điều kiện:** PO **chưa từng được xử lý nhập kho**. Nếu đã nhập kho thực tế, nút xóa sẽ bị khóa (phải dùng *Return Product Document* để xuất trả).
+- **Tác động:** Đối với các đơn hàng nhập khẩu, toàn bộ thông tin B/L và tờ khai thông quan đã đăng ký đi kèm với PO này cũng sẽ bị xóa sạch khỏi cơ sở dữ liệu. Cần kiểm tra kỹ lưỡng trước khi phê duyệt vì đây là thao tác xóa dữ liệu vật lý vĩnh viễn.
+
+---
+
+## 8. 💰 Purchase Resolution (Đóng Sổ Thanh Toán)
 
 **Vào:** Electronic Document → Cost Management → Purchase Resolution Document
 
 Dùng để hoàn tất công việc đóng sổ và ghi nhận công nợ thanh toán cho các đơn mua hàng.
 
-### 7.1 Phân loại đóng sổ theo chứng từ gốc:
+### 8.1 Phân loại đóng sổ theo chứng từ gốc:
 - **Arrival Confirmation Document:** Dùng khi cần thanh toán trước cho đối tác trước khi hoàn tất kiểm tra nhập khẩu (trước khi xử lý nhập kho thực tế).
 - **Receiving Confirmation Document:** Dùng khi hàng đã nhập kho thực tế xong và tiến hành đóng sổ công nợ.
 - **Return Product Document:** Dùng khi tiến hành đóng sổ giảm trừ cho đơn hàng đã xuất trả lại.
 
-### 7.2 Các bước thao tác & Trường dữ liệu chi tiết:
+### 8.2 Các bước thao tác & Trường dữ liệu chi tiết:
 1. **Giá trị ghi nợ và ghi có:** Giá trị cố định do hệ thống tự tính, không được sửa.
 2. **Mô tả trên chứng từ:** Hệ thống tự động điền thông tin mô tả, người dùng không cần ghi riêng.
 3. **Ngày thanh toán:**
@@ -198,10 +258,32 @@ Dùng để hoàn tất công việc đóng sổ và ghi nhận công nợ thanh
 
 > ✅ Khi phòng Kế toán tiếp nhận và phê duyệt hoàn tất → Chứng từ kế toán ERP sẽ được **xử lý tự động**.
 
+---
+
+## 9. 🏢 Luồng Mua Hàng Giữa Các Pháp Nhân (Inter-company PO & Receiving)
+
+Quy trình áp dụng khi Vinatech Việt Nam mua hàng trực tiếp từ Công ty mẹ Vinatech Hàn Quốc (HQ):
+
+### Bước 1: Khởi tạo đơn đặt hàng HQ (Corporate PO)
+- Khi tạo PO mới, nếu người dùng chọn đối tác (Vendor) là Công ty mẹ HQ (Mã đối tác: **13000**).
+- Sau khi PO này được duyệt hoàn toàn trên hệ thống Groupware Việt Nam, hệ thống sẽ tự động tạo một biểu mẫu **Yêu cầu nhận đơn hàng (Suju / Sales Order Document)** tại Groupware của Công ty mẹ HQ.
+
+### Bước 2: Thực hiện xuất hàng phía Hàn Quốc
+- Bộ phận nghiệp vụ phía HQ sẽ thực hiện các bước xử lý Suju trên hệ thống của họ: `Suju (Nhận đơn) -> 출하요청 (Shipment Request) -> 출하확인 (Shipment Confirmation)`.
+- Khi phía HQ hoàn thành việc duyệt biểu mẫu *Shipment Request* (출하요청서 접수완료), thông tin lô hàng sẽ lập tức hiển thị trên hệ thống Groupware Việt Nam.
+
+### Bước 3: Xác nhận nhận hàng liên công ty (Corporate Receiving Confirmation)
+- **Vào:** Electronic Document → Purchase → Corporate Receiving Confirmation Document (Tài liệu nhập kho pháp nhân).
+- **Tuyến tiếp nhận (Receipt):** Nhóm kỹ thuật thiết bị/nhà xưởng (*72112005-Nguyễn Thị Minh Hiền*, *72311001-Nguyễn Thị Hậu*, *71908026-Đào Thị Phiên*).
+- **Thao tác:**
+  1. Nhấn bắt đầu xác nhận thông tin hàng nhập liên công ty.
+  2. Dùng máy quét quét mã vạch **Packing ID** trên các thùng hàng thực tế nhận được.
+  3. Hệ thống sẽ đối chiếu mã Packing ID và số lượng thực quét với thông tin phiếu xuất của HQ.
+  - *Lưu ý:* Khi quét mã vạch lần đầu tiên, lưới danh mục toàn bộ các mặt hàng được khai báo trong phiếu xuất của HQ sẽ tự động hiển thị để thủ kho Việt Nam đối chiếu.
 
 ---
 
-## 8. 📊 Xem Tổng Hợp Đơn Mua Hàng (Purchase Total List)
+## 10. 📊 Xem Tổng Hợp Đơn Mua Hàng (Purchase Total List)
 
 **Vào:** Home → Purchase Management → Purchase Total List
 
@@ -213,10 +295,9 @@ Dùng để hoàn tất công việc đóng sổ và ghi nhận công nợ thanh
 | **Tên tài liệu PO** | Click trực tiếp vào tên tài liệu PO để mở trực tiếp bản in chi tiết. |
 | **Theo dõi tiến độ** | Cột (7) hiển thị trực quan toàn bộ trạng thái tiến trình các tài liệu liên quan đến PO (đã duyệt, đang chờ duyệt, hay chưa tạo). |
 
-
 ---
 
-## 9. ❓ Các Lỗi Thường Gặp
+## 11. ❓ Các Lỗi Thường Gặp
 
 | Lỗi | Nguyên nhân | Xử lý |
 |-----|-------------|-------|
@@ -224,7 +305,8 @@ Dùng để hoàn tất công việc đóng sổ và ghi nhận công nợ thanh
 | Không làm được Receiving Confirmation | C220 (IQC) chưa Pass | Đội QC làm C220 Pass trước |
 | Không thấy mặt hàng trong Receiving | Mặt hàng chưa Pass IQC | Chỉ mặt hàng Pass IQC mới được chọn |
 | Không xóa được PO | PO đã được xử lý nhập kho | Không thể xóa, cần làm Return Document thay |
+| Không hủy/đóng được PO | Đang có form Receiving Confirmation chờ duyệt | Cần duyệt xong hoặc từ chối form Receiving Confirmation trước khi hủy/đóng PO |
 
 ---
 
-*Cập nhật: 2026-06-04 | Nguồn: [GROUPWARE] Purchase Manual.pptx + Comprehensive_Groupware_Report.md*
+*Cập nhật: 2026-06-12 | Nguồn: [GROUPWARE] Purchase Manual.pptx + GROUPWARE PURCHASE, SALES FUNCTION MANUAL.pptx + Comprehensive_Groupware_Report.md*

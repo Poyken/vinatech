@@ -1,0 +1,37 @@
+File: Hướng dẫn Finished Good warehouse.pptx
+
+--- slide1.xml ---
+  Hướng dẫn sử dụng chức năng tạo xuất hàng
+  EA Team
+  Việt
+  Nam
+
+--- slide2.xml ---
+  Đăng nhập hệ thống
+  1. Đăng nhập hệ thống với các thông tin tài khoản của bạn, như hình bên.
+
+--- slide3.xml ---
+  Xuất ra kho tạm.
+  1. Bạn cho và menu “Xuất ra kho tạm”
+  2. Bạn scan Packing ID của box
+  3. Sau khi đã scan xong, bạn nhập tên khách hàng vào.
+  4. Kiểm tra lại lần cuối rồi nhấn lưu “Lưu dữ liệu”.
+
+--- slide4.xml ---
+  In tem dán lên pallet.
+  Sau khi bạn xuất ra kho tạm từ FG01 , bạn sẽ tiếp tục vào màn hinh B750 in tem và dán lên pallet
+
+--- slide5.xml ---
+  Dán lên Pallet
+  Hình ảnh bên cạnh là đã dán tem lên pallet
+
+--- slide6.xml ---
+  Xuất lên xe
+  Sau khi xong bạn có thể sử dụng menu “Xuất lên công te lơ”,  bạn chỉ cần scan là xong.
+
+--- slide7.xml ---
+  Kiểm tra chi tiết.
+  Bạn sử dụng màn hình B752 để kiểm lại chi tiết các pallet, như hình bên trai.
+
+--- slide8.xml ---
+

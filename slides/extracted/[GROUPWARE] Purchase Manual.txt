@@ -1,0 +1,932 @@
+File: [GROUPWARE] Purchase Manual.pptx
+
+--- slide1.xml ---
+  Groupware Purchase Process
+  1. Overview of the Groupware Purchase Process
+  2. Process Flow for Groupware Document (Purchase)
+  3. Process Flow for Groupware Document (Purchase Closing)
+  4. Purchase Management for Groupware Document
+
+--- slide2.xml ---
+  Overview of the Groupware Purchase Process
+  [MES] - [C220]
+  IQC Inspection
+  * IQC Pass
+  Can proceed only after the inspection is passed.
+  Need Return
+  [GROUP WARE]
+  PURCHASE RESOLUTION
+  Domestic Purchase Closing
+  Overseas Purchase Closing
+  Extra Cost
+  [MES] - [F330]
+  Material Receipt And Print Label
+  Upon completion of Arrival Confirmation,
+  the receipt data will be registered in
+  MES.
+  [GROUP WARE]
+  Purchase Order Registration
+  [GROUP WARE]
+  Arrival Confirmation
+  [GROUP WARE]
+  Receiving Confirmation
+  [GROUP WARE]
+  Return Product
+  Write a Purchase Resolution
+  by retrieving Receiving and Return Documents.
+  [GROUP WARE]
+  Sales Order Document (headquarter)
+  * Direct Import via HQ
+  -
+  When the vendor is HQ,
+  a sales order is automatically created in HQ
+  - This process is applied
+  when HQ purchases items, equipment, etc.
+
+--- slide3.xml ---
+  1.
+  Lựa
+  chọn
+  đối
+  tác
+  đặt
+  hàng
+  1.
+  Chọn
+  định
+  dạng
+  tài
+  liệu
+  muốn
+  kết
+  nối
+  Kết nối tài liệu nhóm cần chứng từ khi đặt hàng (ví dụ: đơn yêu cầu mua hàng)
+  Process Flow for Groupware Document (Purchase)
+  Purchase Order Registration Document ( Electronic document - Purchase )
+  Đối
+  với
+  nhập
+  trực
+  tiếp
+  từ
+  HQ,
+  cần
+  chọn
+  mã
+  nhà
+  cung
+  cấp
+  HQ.
+
+--- slide4.xml ---
+  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  Purchase Order Registration Document ( Electronic document - Purchase )
+  2.
+  Nhập
+  thông
+  tin
+  đặt
+  hàng
+  1)
+  Ngày
+  đặt
+  hang :
+  Ngày
+  mua
+  hàng
+  từ
+  đối
+  tác
+  2)
+  Hình
+  thức
+  đặt
+  hang :
+  -
+  Chọn giao dịch trong nước, giao dịch quốc tế, bao gồm thuế GTGT, v.v.
+  -
+  Tùy theo giao dịch trong nước hay nhập khẩu, quá trình nhập kho, nhập hàng và hoàn tất sẽ được áp dụng khác nhau.
+  3)
+  Phân
+  loại
+  mua
+  hang :
+  Chọn
+  mua
+  nguyên
+  vật
+  liệu
+  hay
+  mua
+  gia
+  công
+  ngoài
+  4)
+  Loại
+  hình
+  thanh
+  toán
+  :
+  Chọn
+  hình
+  thức
+  thanh
+  toán
+  5)
+  Phân loại đơn giá
+  :
+  Chọn đơn giá của mặt hàng mua là giá bình thường hay giá giảm
+  6)
+  Thuế
+  giá
+  trị
+  gia
+  tăng
+  (VAT)
+  7)
+  Đơn vị tiền tệ, tỷ giá hối đoái
+  :
+  Tự
+  động
+  tra
+  cứu
+  tỷ
+  giá
+  hối
+  đoái
+  theo
+  ngày
+  đặt
+  hàng
+  Giao
+  dịch
+  phân
+  phối
+  -
+  Giao
+  dịch
+  mua
+  hàng
+  không
+  phải
+  để
+  nhập
+  kho
+  mà
+  để
+  phân
+  phối
+  -
+  Khi nhấn nút này, quá trình nhập kho và xử lý nhập kho liên quan đến MES sẽ không được thực hiện.
+  Khi phê duyệt tài liệu này xong, dữ liệu sẽ tự động được đăng ký vào hệ thống ERP.
+  Process Flow for Groupware Document (Purchase)
+
+--- slide5.xml ---
+  Purchase Order Registration Document (Electronic document - Purchase )
+  1.
+  Chọn
+  mặt
+  hàng
+  muốn
+  mua
+  2.
+  Nhập đơn giá, số lượng, giá trị,
+  VAT
+  , ngày giao hàng, kho, và trung tâm chi phí của từng mặt hang
+  -
+  Khi nhập số lượng và đơn giá, giá trị và
+  VAT
+  sẽ được tính toán tự động.
+  Process Flow for Groupware Document (Purchase)
+
+--- slide6.xml ---
+  Arrival Confirmation Document (Electronic document - Purchase )
+  Chọn đơn yêu cầu đặt hàng đã được tạo trước đó
+  Process Flow for Groupware Document (Purchase)
+
+--- slide7.xml ---
+  Arrival Confirmation Document (Electronic document - Purchase )
+  Thông tin đơn đặt hàng đã đăng ký trước đó
+  Trong trường hợp nhập khẩu, nhập thông tin B/L
+  -
+  Trong trường hợp giao dịch trong nước, mục này sẽ không hiển thị trên màn hình, nên không cần nhập
+  1)
+  Nhập
+  số
+  B/L
+  2)
+  Ngày
+  thanh
+  toán
+  số
+  tiền
+  cho
+  đối
+  tác
+  3)
+  Điều
+  kiện
+  thanh
+  toán
+  cho
+  đối
+  tác
+  (T/T, D/P, D/A, v.v.)
+  4)
+  Incoterms
+  5)
+  Tỷ giá được ghi trong B/L
+  1
+  2
+  3
+  4
+  5
+  Process Flow for Groupware Document (Purchase)
+
+--- slide8.xml ---
+  Arrival Confirmation Document (Electronic document - Purchase )
+  1)
+  Chọn
+  bộ
+  phận
+  mua
+  hang
+  2)
+  Ngày thanh toán do người dùng chọn, không phải ngày thanh toán tự động tính toán từ số tiền đã tính
+  3)
+  Ngày
+  thanh
+  toán
+  theo
+  quy
+  định
+  của
+  công
+  ty (
+  ví
+  dụ
+  :
+  ngày
+  15
+  của
+  tháng
+  sau
+  )
+  4)
+  Ngày
+  phát
+  hành
+  tài
+  liệu
+  B/L =
+  Ngày
+  ghi
+  sổ
+  5)
+  Tổng
+  số
+  tiền
+  Trong trường hợp nhập khẩu,
+  Chi phí phụ B/L
+  -
+  Trong trường hợp giao dịch trong nước, mục này sẽ không hiển thị trên màn hình, nên không cần nhập
+  Trong trường hợp nhập khẩu,
+  Đăng
+  ký
+  thông
+  tin
+  thông
+  quan
+  -
+  Trong trường hợp giao dịch trong nước, mục này sẽ không hiển thị trên màn hình, nên không cần nhập
+  1)
+  Đăng
+  ký
+  số
+  thông
+  quan
+  2)
+  Nhập số hóa đơn
+  3)
+  Ngày
+  khai
+  báo
+  trong
+  chứng
+  nhận
+  khai
+  báo
+  nhập
+  khẩu
+  4)
+  Tỷ
+  giá
+  trong
+  chứng
+  nhận
+  khai
+  báo
+  nhập
+  khẩu
+  1
+  2
+  4
+  5
+  3
+  1
+  2
+  3
+  4
+  Trong trường hợp nhập khẩu, dữ liệu sẽ tự động được đăng ký vào ERP B/L, chi phí phụ B/L và thông quan.
+  Process Flow for Groupware Document (Purchase)
+
+--- slide9.xml ---
+  Arrival Confirmation Document (Electronic document - Purchase )
+  Chọn
+  mặt
+  hàng
+  nhập
+  kho
+  và
+  nhập
+  thông
+  tin
+  1.
+  Chọn
+  mặt
+  hàng
+  muốn
+  mua
+  Nhập
+  ngày
+  hàng
+  hóa
+  thực
+  tế
+  mua
+  về
+  đến
+  công
+  ty
+  Số
+  tiền
+  áp
+  dụng
+  tỷ
+  giá
+  B/L
+  và
+  số
+  tiền
+  áp
+  dụng
+  tỷ
+  giá
+  trong
+  chứng
+  nhận
+  khai
+  báo
+  nhập
+  khẩu
+  Process Flow for Groupware Document (Purchase)
+
+--- slide10.xml ---
+  Arrival Confirmation Document (Electronic document - Purchase )
+  Nhân
+  viên
+  kho
+  nhập
+  thông
+  tin
+  liên
+  quan
+  đến
+  việc
+  phát
+  hành
+  nhãn
+  MES
+  trên
+  màn
+  hình
+  tiếp
+  nhận
+  [F330]
+  Số lượng lot mỗi bao bì
+  Số lượng nhãn
+  Tạo
+  nhãn
+  thủ
+  công
+  Khi nhập thông tin vào mục này, dữ liệu sẽ tự động được điền vào việc phát hành nhãn MES F330
+  Khi hoàn tất tiếp nhận mà không cần nhấn nút tạo nhãn thủ công, nhãn sẽ được tạo tự động
+  Nhân
+  viên
+  kho
+  chọn
+  mặt
+  hàng
+  xuất
+  kho
+  Process Flow for Groupware Document (Purchase)
+
+--- slide11.xml ---
+  Arrival Confirmation Document (Electronic document - Purchase )
+  Nhân
+  viên
+  kho
+  nhập
+  thông
+  tin
+  liên
+  quan
+  đến
+  việc
+  phát
+  hành
+  nhãn
+  MES
+  trên
+  màn
+  hình
+  tiếp
+  nhận
+  [F330]
+  Khi tiếp nhận hoàn tất, thông báo và email sẽ được gửi đến người nhận tài liệu (ví dụ: đội chất lượng).
+  Khi đội này hoàn tất kiểm tra nhập khẩu theo từng mẫu [C220], email và thông báo xác nhận hoàn tất sẽ được gửi đến tất cả người tiếp nhận.
+  Process Flow for Groupware Document (Purchase)
+
+--- slide12.xml ---
+  Receiving
+  Confirmation
+  Document (Electronic document - Purchase )
+  Tải danh sách đơn yêu cầu nhập hàng đã tạo
+  Process Flow for Groupware Document (Purchase)
+
+--- slide13.xml ---
+  Receiving
+  Confirmation
+  Document (Electronic document - Purchase )
+  Thông tin đơn đặt hàng đã đăng ký trước đó
+  Thêm
+  mặt
+  hàng
+  đã
+  hoàn
+  tất
+  kiểm
+  tra
+  nhập
+  khẩu
+  Chỉ các mục đã được kiểm tra nhập khẩu hiển thị trên màn hình, và chỉ những mặt hàng đạt kiểm tra mới có thể chọn.
+  Process Flow for Groupware Document (Purchase)
+
+--- slide14.xml ---
+  Receiving
+  Confirmation
+  Document (Electronic document - Purchase )
+  Số lượng đạt tiêu chuẩn và số tiền của mặt hàng đã chọn sẽ được tự động tính toán và hiển thị. Đối với kho, hệ thống sẽ tự động điền theo kho đã được nhập trong Arrival Confirmation Document.
+  Có
+  thể
+  kiểm
+  tra
+  chi
+  tiết
+  nội
+  dung
+  kiểm
+  tra
+  của
+  từng
+  mặt
+  hàng
+  Khi tiếp nhận hoàn tất, quá trình nhập kho sẽ được xử lý trong ERP và MES, đồng thời dữ liệu tồn kho sẽ được cập nhật.
+  Process Flow for Groupware Document (Purchase)
+
+--- slide15.xml ---
+  Return Product Document (Electronic document - Purchase )
+  Trường hợp trả lại các mặt hàng đã nhập kho
+  2.
+  Chọn phân biệt giữa trường hợp trả lại sản phẩm và trả lại nguyên vật liệu
+  1.
+  Chọn tài liệu nhập kho đã được tạo
+  Process Flow for Groupware Document (Purchase)
+
+--- slide16.xml ---
+  Return Product Document (Electronic document - Purchase )
+  Thông tin đơn đặt hàng đã đăng ký trước đó
+  Chọn
+  mặt
+  hàng
+  muốn
+  trả
+  lại
+  và
+  điền
+  thông
+  tin
+  Process Flow for Groupware Document (Purchase)
+
+--- slide17.xml ---
+  Return Product Document (Electronic document - Purchase )
+  Thông tin đơn đặt hàng đã đăng ký trước đó
+  Có
+  thể
+  chọn
+  LOT
+  của
+  mặt
+  hàng
+  muốn
+  trả
+  lại
+  Đối với LOT trả lại, sẽ được xử lý chuyển vào kho lỗi trong MES.
+  Xử lý liên quan đến việc trả lại trong ERP sẽ được tự động đăng ký.
+  Process Flow for Groupware Document (Purchase)
+
+--- slide18.xml ---
+  Return Product Document (Electronic document - Purchase )
+  Thông tin đơn đặt hàng đã đăng ký trước đó
+  1
+  2
+  3
+  4
+  5
+  1)
+  Ngày
+  trả
+  lại
+  2)
+  Chọn
+  loại
+  hình
+  trả
+  lại
+  3)
+  Chọn
+  xem
+  việc
+  trả
+  lại
+  là
+  sau
+  khi
+  mua
+  nguyên
+  vật
+  liệu
+  hay
+  sau
+  khi
+  mua
+  gia
+  công
+  ngoài
+  4)
+  Phân
+  loại
+  VAT
+  5)
+  Tỷ giá
+  - Đối với đơn vị tiền tệ, tỷ giá áp dụng là tỷ giá khi mua hàng.
+  Process Flow for Groupware Document (Purchase)
+
+--- slide19.xml ---
+  Purchase Order Data Delete Document (Electronic document - Purchase )
+  Viết
+  tài
+  liệu
+  yêu
+  cầu
+  xóa
+  khi
+  dữ
+  liệu
+  bị
+  nhập
+  sai
+  1.
+  Chọn tài liệu đơn đặt hàng
+  Nếu đơn đặt hàng đã được xử lý nhập kho, không thể xóa
+  Process Flow for Groupware Document (Purchase)
+
+--- slide20.xml ---
+  Purchase Order Data Delete Document (Electronic document -  Purchase )
+  Chọn
+  mặt
+  hàng
+  muốn
+  xóa
+  Đối với đơn nhập khẩu, tất cả thông tin đã được đăng ký về B/L và thông quan cũng sẽ bị xóa.
+  Tài
+  liệu
+  này
+  sẽ
+  xóa
+  dữ
+  liệu
+  ,
+  vì
+  vậy
+  cần
+  sử
+  dụng
+  cẩn
+  thận
+  .
+  Process Flow for Groupware Document (Purchase)
+
+--- slide21.xml ---
+  Purchase Resolution Document (Electronic document - Cost Management )
+  Đây là tài liệu dùng để hoàn tất công việc đóng sổ cho các đơn mua hàng đã hoàn tất nhập kho.
+  Lưu ý theo từng tài liệu
+  Arrival Confirmation Document :
+  -
+  Trường hợp số tiền cần phải được thanh toán trước khi hoàn tất kiểm tra nhập khẩu (trước khi xử lý nhập kho)
+  Receiving Confirmation Document :
+  - Khi
+  thực
+  tế
+  nhập
+  kho
+  xong
+  và
+  tiến
+  hành
+  công
+  việc
+  đóng
+  sổ
+  Return Product Document :
+  -
+  Khi tiến hành đóng sổ cho đơn mua hàng đã được xử lý trả lại
+  Process Flow for Groupware Document (Purchase Closing)
+
+--- slide22.xml ---
+  1)
+  Giá
+  trị
+  ghi
+  nợ
+  và
+  ghi
+  có
+  trên
+  chứng
+  từ
+  -
+  giá
+  trị
+  cố
+  định
+  2)
+  Mô tả trên chứng từ sẽ được tự động điền, nên không cần phải ghi riêng.
+  3)
+  Ngày thanh toán khi chứng từ được phát hành.
+  4)
+  Số thông quan, số B/L được nhập trong tài liệu trước đó
+  5)
+  Khi đăng ký các chi phí phụ (ví dụ: chi phí vận chuyển) và chi phí thông quan, số tiền sẽ được hiển thị.
+  6)
+  Số lượng và giá trị của các mặt hàng đã nhập kho, cùng với số tiền thanh toán dựa trên tỷ lệ thuế nhập khẩu.
+  Trong trường hợp nhập khẩu
+  1
+  2
+  3
+  5
+  4
+  6
+  Purchase Resolution Document (Electronic document - Cost Management )
+  Process Flow for Groupware Document (Purchase Closing)
+
+--- slide23.xml ---
+  Purchase Resolution Document ( Electronic document - Cost Management )
+  1.
+  Chọn
+  đối
+  tác
+  cần
+  thanh
+  toán
+  các
+  chi
+  phí
+  phụ
+  (chi
+  phí
+  vận
+  chuyển
+  , v.v.)
+  và
+  chi
+  phí
+  thông
+  quan
+  Process Flow for Groupware Document (Purchase Closing)
+
+--- slide24.xml ---
+  Purchase Resolution Document (Electronic document - Cost Management )
+  1
+  1)
+  Giá
+  trị
+  ghi
+  nợ
+  và
+  ghi
+  có
+  trên
+  chứng
+  từ
+  -
+  giá
+  trị
+  cố
+  định
+  2)
+  Dùng
+  khi
+  cần
+  thêm
+  các
+  mục
+  chi
+  phí
+  phụ
+  khác
+  cho
+  cùng
+  một
+  đối
+  tác
+  3) Danh
+  sách
+  chi
+  phí
+  phụ
+  4)
+  Mô tả trên chứng từ sẽ được tự động điền, nên không cần phải ghi riêng.
+  5)
+  Phòng
+  ban
+  phụ
+  trách
+  mục
+  chi
+  phí
+  phụ
+  này
+  (
+  Nhóm
+  mua
+  hang)
+  6)
+  Phát
+  hành
+  bảng
+  kê
+  giao
+  dịch
+  điện
+  tử
+  (
+  cố
+  định
+  )
+  7)
+  Số
+  tiền
+  phải
+  thanh
+  toán
+  cho
+  nhà
+  cung
+  cấp
+  (
+  Tổng
+  số
+  tiền
+  X)
+  8)
+  - 8-1 :
+  Ngày thanh toán do người dùng chọn, không phải ngày thanh toán tự động tính toán từ số tiền đã tính
+  - 8-2 :
+  Ngày
+  thanh
+  toán
+  theo
+  quy
+  định
+  của
+  công
+  ty (
+  ví
+  dụ
+  :
+  ngày
+  15
+  của
+  tháng
+  sau
+  )
+  - 8-3 :
+  Ngày
+  phát
+  hành
+  liên
+  quan
+  đến
+  số
+  tiền
+  chi
+  phí
+  phụ
+  9)
+  Chọn
+  loại
+  thuế
+  10) VAT
+  3
+  4
+  5
+  9
+  6
+  7
+  10
+  2
+  8
+  Khi tài liệu được phòng kế toán tiếp nhận hoàn tất, chứng từ ERP sẽ được xử lý tự động.
+  Process Flow for Groupware Document (Purchase Closing)
+
+--- slide25.xml ---
+  8
+  .
+  Purchase Total List (Home -  Purchase Management)
+  1
+  2
+  3
+  4
+  1)
+  Bộ
+  lọc
+  tìm
+  kiếm
+  và
+  tra
+  cứu
+  2)
+  Khi thông tin đơn đặt hàng cần được thay đổi, nhấn nút và sau đó chỉnh sửa thông tin.
+  3)
+  Khi cần in đơn đặt hàng, nhấn vào đây.
+  4)
+  Tên tài liệu đơn đặt hàng trong Groupware
+  - Khi
+  nhấn
+  vào
+  ,
+  sẽ
+  in
+  nội
+  dung
+  tài
+  liệu
+  .
+  5)
+  Thông tin đơn đặt hàng
+  6)
+  Số lượng đặt hàng, nhập kho, và nhập kho thực tế
+  7)
+  Tình trạng tiến trình toàn bộ tài liệu theo từng đơn đặt hàng
+  5
+  6
+  7
+  Purchase Management for Groupware Document
+
+--- slide26.xml ---
+  8
+  .
+  Purchase Total List (Home -  Purchase Management)
+  Sửa đổi thông tin đơn đặt hàng muốn thay đổi
+  -
+  Tuy nhiên, đối với các đơn đặt hàng đang trong quá trình nhập kho và nhập kho thực tế, không thể sửa đổi.
+  -
+  Khi nhấn nút thay đổi, đơn yêu cầu thay đổi đơn đặt hàng sẽ được tạo tự động.
+  Purchase Management for Groupware Document
+
+--- slide27.xml ---
+  8
+  .
+  Purchase Total List (Home -  Purchase Management)
+  In đơn đặt hàng
+  - Có thể chỉnh sửa nội dung cần in (trừ các mục liên quan đến mặt hàng).
+  Purchase Management for Groupware Document
+

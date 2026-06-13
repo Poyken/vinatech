@@ -1,0 +1,148 @@
+File: Vietnam Corporation Approval Setting List.xlsx
+
+=== Shared Strings ===
+  Leave Cancel Document
+  Business Trip Change Document
+  Attendance Modify Document
+  Purchase Request Document
+  Purchase Order Registration Document
+  Arrival Confirmation Document
+  Receiving Confirmation Document
+  Return Product Document
+  Receiving Physical Item Confirmation Document
+  Purchase Order Cancel Document
+  Purchase Order Closing Document
+  Item Price Addition Document
+  Item Price Change Document
+  Sales Order Document
+  Deliver Out Document
+  Sales Order Delete Document
+  Sales Order Cancel Document
+  Seal Request Document
+  Expense Report Document
+  Disbursement Document
+  Card Disbursement Document
+  Financial Expenditure Document
+  Emp Request Document
+  vina-oneQ (labor)
+  Culture Event Request Document
+  Culture Event Report Document
+  approval
+  document name
+  receipt
+  reference
+  reception
+  Vietnam Corporation Approval Setting List
+  Leave Document
+  ex)
+1. team leader - group leader
+2. kim Kyeong cheol - CEO
+  ex) 1. team leader - group leader
+  ex) 1. team leader - group leader
+  Corporate Receiving Confirmation Document
+  ex) quality team member,  quality team leader
+  Assets Dispose Sell Document
+  Industrial Accident Report Document
+  Certificate Request Document
+  Please fill in the
+  names
+  and
+  employee numbers
+  of the individuals in the respective columns for each document regarding approval, agreement, receipt, reference, and recipients.
+  For receipts, list all personnel responsible for the task.
+
+References can monitor the overall progress of the document.
+
+Recipients can check the document once the approval and receipt are completed.
+
+For inquiries, please contact the headquarters EA team.
+  ex)
+1. [raw materials] purchase team member, purchase team leader(Final Receipt)
+2. [subsidiary materials] purchase team member, purchase team leader(Final Receipt)
+3. [IT assets](92005006-Nguyễn Văn Nha, 92404003-Nguyễn Văn Thuần, 92209001- Trần Quang Duy, 92011009-Đỗ Xuân Đồng), 92005006-Nguyễn Văn Nha(22205010-NGUYỄN THỊ THÚY_V6,22205011-NGUYỄN THỊ PHƯƠNG LINH,22308006-NGÔ PHƯƠNG ANH,22312004-LÊ THỊ TRANG,22404015-NGUYỄN THỊ HỒNG_V3)
+4. [facility](72112005-Nguyễn Thị Minh Hiền,72311001-Nguyễn Thị Hậu), 71908026-Đào Thị Phiên(22205010-NGUYỄN THỊ THÚY_V6,22205011-NGUYỄN THỊ PHƯƠNG LINH,22308006-NGÔ PHƯƠNG ANH,22312004-LÊ THỊ TRANG,22404015-NGUYỄN THỊ HỒNG_V3)
+  (72112005-Nguyễn Thị Minh Hiền,72311001-Nguyễn Thị Hậu, 
+71908026-Đào Thị Phiên)
+  ex)(72112005-Nguyễn Thị Minh Hiền,72311001-Nguyễn Thị Hậu), 71908026-Đào Thị Phiên
+(Final Receipt: 22205010-NGUYỄN THỊ THÚY_V6,22205011-NGUYỄN THỊ PHƯƠNG LINH,22308006-NGÔ PHƯƠNG ANH,22312004-LÊ THỊ TRANG,22404015-NGUYỄN THỊ HỒNG_V3)
+  71908026-Đào Thị Phiên - 21910034-Trần Quang Thỏa
+  71903004-Nguyễn Thị Linh_V1 - 21910034-Trần Quang Thỏa
+  Deliver Out Confirmation Document
+  71903004-NGUYỄN THỊ LINH_V1,72310004-NGUYỄN THỊ THÚY_V7,72401002-VŨ THỊ MINH NGỌC
+  11804002-Lê Thị Vân Anh
+  22205010-NGUYỄN THỊ THÚY_V6,22205011-NGUYỄN THỊ PHƯƠNG LINH,22308006-NGÔ PHƯƠNG ANH,22312004-LÊ THỊ TRANG,22404015-NGUYỄN THỊ HỒNG_V3(Final Receipt)
+  ex)
+1. [basic] team leader - group leader
+2. [basic] lee sang hum - kim kyeong cheol
+3. [other(Paid)] team leader - group leader
+4. [basic] lee sang hum - kim kyeong cheol
+  11804002-Lê Thị Vân Anh - kim kyeong cheol
+  ex)
+1. [Domestic] 10220201- Nguyễn Trường Sa, 12310002- Nguyễn Trà Linh,12402002- Đào Thị Bích Ngọc, 12404029-Nguyễn Văn Hoàng,12404030-Nguyễn Thị Thảo,12406011-Ngô Hồng Nhung, 12407002-NGUYỄN THỊ THẢO_V3,12408006-ĐẶNG THANH LÂM
+2. [Overseas] 71903004-NGUYỄN THỊ LINH_V1,72310004-NGUYỄN THỊ THÚY_V7,72401002-VŨ THỊ MINH NGỌC
+  11903019-Nguyễn Thị Hoàn
+  12308007-ĐINH THỊ HUYỀN_V2
+  22205010-NGUYỄN THỊ THÚY_V6,22205011-NGUYỄN THỊ PHƯƠNG LINH,22308006-NGÔ PHƯƠNG ANH,22312004-LÊ THỊ TRANG,22404015-NGUYỄN THỊ HỒNG_V3 leader(Final Receipt)
+  22205010-NGUYỄN THỊ THÚY_V6,22205011-NGUYỄN THỊ PHƯƠNG LINH,22308006-NGÔ PHƯƠNG ANH,22312004-LÊ THỊ TRANG,22404015-NGUYỄN THỊ HỒNG_V3
+  22205010-NGUYỄN THỊ THÚY_V6,22205011-NGUYỄN THỊ PHƯƠNG LINH,22308006-NGÔ PHƯƠNG ANH,22312004-LÊ THỊ TRANG,22404015-NGUYỄN THỊ HỒNG_V3,12308007-ĐINH THỊ HUYỀN_V2
+  ex) 1. team leader - group leader - lee sang hun - kim kyeong cheol
+  11809029-Hoàng Văn Huy,12105017-Ngô Văn Đạo, 12407001-Đồng Thị Hòe
+  72112005-Nguyễn Thị Minh Hiền,72311001-Nguyễn Thị Hậu, 
+71908026-Đào Thị Phiên
+  Business Trip Report Document
+  ex) 1. lee sang hum - kim kyeong cheol
+  1. [raw materials] 71908026-Đào Thị Phiên - 21910034-Trần Quang Thỏa
+2. [subsidiary materials] 71908026-Đào Thị Phiên - 21910034-Trần Quang Thỏa
+3. [IT assets] 92005006-Nguyễn Văn Nha - 11910035-Nguyễn Thành Phi
+4. [facility] 71908026-Đào Thị Phiên - 21910034-Trần Quang Thỏa - CEO
+  1. [Docmestic] 12308007-ĐINH THỊ HUYỀN_V2, 11903019-Nguyễn Thị Hoàn
+2. [Overseas] 12308007-ĐINH THỊ HUYỀN_V2, 11903019-Nguyễn Thị Hoàn, 
+                  22205010-NGUYỄN THỊ THÚY_V6,22205011-NGUYỄN THỊ PHƯƠNG LINH,22308006-NGÔ PHƯƠNG ANH,22312004-LÊ THỊ TRANG,22404015-NGUYỄN THỊ HỒNG_V3
+  12308007-ĐINH THỊ HUYỀN_V2, 11903019-Nguyễn Thị Hoàn
+  12308007-ĐINH THỊ HUYỀN_V2, 11903019-Nguyễn Thị Hoàn(22205010-NGUYỄN THỊ THÚY_V6,22205011-NGUYỄN THỊ PHƯƠNG LINH,22308006-NGÔ PHƯƠNG ANH,22312004-LÊ THỊ TRANG,22404015-NGUYỄN THỊ HỒNG_V3)
+  1. [raw materials] 21910034-Trần Quang Thỏa
+2. [subsidiary materials] 21910034-Trần Quang Thỏa
+3. [IT assets] 92005006-Nguyễn Văn Nha
+4. [facility] 21910034-Trần Quang Thỏa
+  12308007-ĐINH THỊ HUYỀN_V2, 11903019-Nguyễn Thị Hoàn
+12308007-ĐINH THỊ HUYỀN_V2, 11903019-Nguyễn Thị Hoàn
+  12308007-ĐINH THỊ HUYỀN_V2, 11903019-Nguyễn Thị Hoàn - 11910035-Nguyễn Thành Phi
+  12308007-ĐINH THỊ HUYỀN_V2, 11903019-Nguyễn Thị Hoàn -11910035-Nguyễn Thành Phi
+  Already setup done
+  11804002-Lê Thị Vân Anh - kim kyeong cheol
+  * Contact the support team and set up the approval line.
+  22205010-NGUYỄN THỊ THÚY_V6- 21910034-Trần Quang Thỏa
+  National Policy Disbursement Document
+  National Policy Card Disbursement Document
+  Official Document
+  12407001-Đồng Thị Hòe - 11910035-Nguyễn Thành Phi
+  22205010-NGUY
+  Ễ
+  N TH
+  Ị
+  THÚY_V6- 21910034-Tr
+  ầ
+  n Quang Th
+  ỏ
+  a
+  22205010-NGUY
+  Ễ
+  N TH
+  Ị
+  THÚY_V6,22205011-NGUY
+  Ễ
+  N TH
+  Ị
+  PH
+  ƯƠ
+  NG LINH,22308006-NGÔ PH
+  ƯƠ
+  NG ANH,22312004-LÊ TH
+  Ị
+  TRANG,22404015-NGUY
+  Ễ
+  N TH
+  Ị
+  H
+  Ồ
+  NG_V3(Final Receipt)

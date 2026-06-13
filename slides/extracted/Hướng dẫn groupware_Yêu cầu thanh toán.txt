@@ -1,0 +1,80 @@
+File: Hướng dẫn groupware_Yêu cầu thanh toán.pptx
+
+--- slide1.xml ---
+  Hướng dẫn yêu cầu thanh toán trên Groupware.
+  Developer by EA Team
+  VietNam
+
+--- slide2.xml ---
+  Form yêu cầu thanh toán
+  I. Purpose
+  - Đăng nhập vào hệ thống bằng mã nhân viên và mật khẩu từ ERP với link dưới đây:
+  https://gw.vinatech.com/
+  Hoặc bạn có thể truy cập thống qua biểu tượng dưới đây:
+
+--- slide3.xml ---
+  Form yêu cầu thanh toán.
+  Sau khi bạn truy cập vào hệ thống Groupware, một giao diện như ở dưới hiện ra và bạn có thể dùng mã nhân viên và mật khẩu để đăng nhập vào
+
+--- slide4.xml ---
+  Form yêu cầu thanh toán
+  Khi bạn đăng nhập thành công trên menu chính bạn chọn “Electronic Document” =&gt; “Cost” =&gt; “Dusbursenment Document”
+  Vui lòng xem hình bên cạnh
+
+--- slide5.xml ---
+  Form yêu cầu thanh toán.
+  Trong form yêu cầu thanh toán, đầu tiên bạn cần chọn đường line phê duyệt cho form của bạn như hình đầu tiền bên phải
+  .
+
+--- slide6.xml ---
+  Form yêu cầu thanh toán
+  Sau khi bạn chọn xong đường line phê duyệt, bạn cần đặt tên cho form yêu cầu phê duyệt
+  Ngoài ra bạn cũng có thể đính kèm các file đính kèm liên quan
+  Trong trường hợp bạn đăng ký giúp người khác, bạn có thể chọn tên người yêu cầu bạn đăng ký hộ
+
+--- slide7.xml ---
+  Form yêu cầu thanh toán
+  - Với nút số 1 bạn có thể chọn form yêu cầu mua đã được duyệt.
+  Với nút số 2 bạn có thể chọn nữa thêm mới vendor cần thanh toán. Mà không nhất thiết phải có form yêu cầu mua.
+
+--- slide8.xml ---
+  Form yêu cầu thanh toán.
+  Nếu bạn chọn “Liên kế tài liệu”, sẽ có một màn hình mới hiện thị một màn hình như bên trái, bạn có thể lựa chọn form bạn đã duyệt, để atteached vào form yêu cầu mua.
+  - Hộp thoại mở lên bạn chọn trong combox sau đó rồi ấn kiểm tra, lập tức một màn hình mới tự hiện ra, các form yêu cầu mua đã được duyệt, bạn có thể chọn một, hoặc nhiều form
+
+--- slide9.xml ---
+  Form yêu cầu thanh toán.
+  Bạn cần phải click vào “Tín dụng” để chọn một tài khoản thanh toán, nếu bạn mua hàng ở Việt nam, thì bạn cần chọn tài khoản thanh toán ở Việt Nam, nếu bạn chọn mua hàng ở nước ngoài thì tài khoản thanh toán sẽ là đồng USD.
+  Các hình ảnh bên trái là tài khoản USD
+
+--- slide10.xml ---
+  Form yêu cầu thanh toán.
+  Ngoài ra bạn cũng phải chọn mã tài khoản cho loại hàng mà bạn muốn thanh toán như hình bên trái, bạn cần phải tìm.
+  Khi bạn click vào button “Bản ghi nợ” một cửa số mới hiện ra, ở đây có tất cả các mã tài khoản theo từng loại hàng mà bạn cần thanh toán.
+
+--- slide11.xml ---
+  Form yêu cầu thanh toán.
+  Ở hình ảnh bên trái số 1 là loại hóa đơn bạn cần chọn
+  Ở hình số là mục chi phí này sẽ được tính cho phòng ban nào.
+
+--- slide12.xml ---
+  Form yêu cầu thanh toán
+  Số 1 là các loại thanh toán, đã được fix sẵn ngày trong tháng để thanh toán.
+  Số 2 trong trường hợp bạn cần thanh toán vào ngày khác bạn có thể chọn
+  Note: ở mục số hai còn phục thuộc vào trường hợp kế toán có đồng ý ngày thanh toán của bạn không.
+
+--- slide13.xml ---
+  Form yêu cầu thanh toán
+  Số 1 là các loại thanh toán, đã được fix sẵn ngày trong tháng để thanh toán.
+  Số 2 trong trường hợp bạn cần thanh toán vào ngày khác bạn có thể chọn
+  Note: ở mục số hai còn phục thuộc vào trường hợp kế toán có đồng ý ngày thanh toán của bạn không.
+
+--- slide14.xml ---
+  List evaluate and form Evaluate
+  -Step 3: Click button “Submit” to save information.
+  - Step 4: Click confirm to confirm information and not change data.
+
+--- slide15.xml ---
+  Update Status Transfer of HR
+  Purpose: Only HR click Transfer in this page then Head Quarter Leader will see information to evaluate.
+

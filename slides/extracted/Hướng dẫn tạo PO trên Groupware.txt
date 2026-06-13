@@ -1,0 +1,86 @@
+File: Hướng dẫn tạo PO trên Groupware.pptx
+
+--- slide1.xml ---
+  Hướng dẫn sử dụng chức năng tạo PO và kế hoạch sản xuất trên hệ thống Groupware
+  EA Team
+  Việt
+  Nam
+
+--- slide2.xml ---
+  1.Đăng nhập hệ thống Groupware
+  I. Đăng nhập Groupware
+  Có hai cách để bạn đăng nhập vào hệ thống Groupware
+  + Bạn có thể truy cập bằng link sau đây:
+  https://gw.vinatech.com/login
+  .
+  + Bạn có thể chọn buổi tượng như hình dưới đây:
+  + Bạn mở trình duyệt lên và ỏ góc phải màn hình có biểu tượng=&gt; bạn chọn tới icon của công ty có chữ groupware click vào đó
+
+--- slide3.xml ---
+  2.Thông tin đăng nhập vào Groupware
+  2. Thông tin đăng nhập
+  - Bước 1: Thông tin tài khoản cũng như mật khẩu của bạn chính là mã nhân viên trên hệ thống ERP, mật khẩu mặc định từ 1 tới 4, trong trường hợp không được bạn liên hệ lại với EA
+  Bước 2: Trước khi login, bạn cần chọn Vinatech vina Co.,Ltd.
+  Bước 3: khi đã chọn xong, bạn nhập mã nhân viên và mật khẩu nhấn nút login để vào hệ thống.
+
+--- slide4.xml ---
+  Giao diện khi truy cập
+  Như bạn biết thì trên hệ thống MES, nếu bạn cần tạo PO và kế hoạch sản xuất bạn cần phải làm hai bước
+  Bước 1: Tạo PO ở màn hình B310, để tạo các thông tin cơ bản, như chọn nguyên vật liệu, chọn công đoạn, chọn công đoạn đầu vào và đầu ra
+  Bước 2: khi bước 1 đã được thiết lập thì bước 2 sẽ được link các dữ liệu từ bước 1 sang bước 2, với màn hình B450, xác nhận lại các thông tin và cập thông tin chi tiết, đồng thời bạn có thể in mã LOT.
+  - Màn hình PO là theo tháng, màn hình kế hoạch sản xuất là theo ngày, chúng link dữ liệu với nhau, từ màn hình tạo PO sang màn hình tạo kế hoạch sản xuất theo ngày.
+
+--- slide5.xml ---
+  Màn hình tạo PO và kế hoạch sản xuất trên Groupware.
+  1. Khi bạn đã truy cập vào hệ thống Groupware xong, hệ thống mặc định bạn đã ở menu “Home”=&gt; trong menu Home =&gt; bạn vào menu =&gt; “Month Production Plan”.
+
+--- slide6.xml ---
+  Trước khi tạo PO
+  1. Sau khi click vào link menu, bạn sẽ có một giao diện như hình bên tay trai của bạn.
+  Note: ở hình ảnh số hai có hai điểm bạn cần lưu ý
+  Có chữ MES là bạn đăng ký PO nó sẽ hiện ra
+  Có chữ “Đơn đặt hàng” thì đây là các đơn hàng do Sales của hàn quốc hoặc Sales Việt nam làm.
+
+--- slide7.xml ---
+  Màn hình tạo PO và kế hoạch sản xuất trên Groupware.
+  1. Nếu bạn muốn tạo mới PO thì bạn click vào “thêm kế hoạch”.
+  2. Nếu trường hợp bạn sửa đổi thông tin của PO đã có bạn sẽ dùng nút  “Lưu kế hoạch”.
+  3. Ở mục 3, bạn muốn xóa kế hoạch thì việc đầu tiên, là bạn lick vào “Xóa kế hoạch” =&gt; Sau đó bạn có thể lựa chọn các dòng dữ liệu để xóa (với điều kiện dữ liệu đó chưa được xác nhận). Rồi bạn ấn lại “Xóa kế hoạch” thêm một lần nữa là ok.
+  4. Ở mục số 4 bạn có rất nhiều điều kiện để lựa chọn tìm kiếm PO đã được tạo
+  5. Ngoài ra hệ thống còn hiển thị mặc định cho bạn 3 tháng gần nhất của PO
+
+--- slide8.xml ---
+  Các nút trong tạo PO
+  1. Sau khi bạn click vào “Thêm kế hoạch”, bạn kéo choột xuống dưới chân trang,một giao diện mới sẽ hiển thị ra cho bạn như hình bên trai.
+  2. Số 1 là bạn có thể copy dữ liệu của một tháng bất kỳ
+  3. Số 2 bạn sẽ click vào để chọn loại sản phẩm cần làm.
+  4. Số 3 bạn xác nhận mọi thông tin, kiểu như lưu lại dữ liệu
+  5. Số 4 là hủy bỏ đi
+
+--- slide9.xml ---
+  Sao chép PO theo tháng.
+  Khi bạn click vào “Sao chép kế hoạch sản xuất”, ngày lập tức một hộp thoại sẽ hiển thị ra, bạn chỉ cần chọn lựa tháng bạn cần, và hệ thống sẽ tự động sao chép toàn bộ dữ liệu cho bọn.
+  Ví dụ ở đây tôi chọn tháng tư bạn sẽ thấy nó copy hết toàn bộ các BOM (con hàng trong tháng tư cho bạn)
+
+--- slide10.xml ---
+  Các tác tạo PO
+  1.  Khi bạn click vào “Thêm kế hoạch” bạn kéo choột của mình xuống cuối, bạn sẽ thấy một phần giao diện hiện ra, tại đây bạn có thể click tiếp vào nút “Yêu cầu đặt hàng”, thực tế đây là các BOM.
+  2. Một hộp thoại mới như ảnh bên tay trai bạn sẽ hiển thị ra cho bạn, bạn có thể chọn nhiều BOM cùng một lúc cũng được, sau khi chọn xong bạn nhấn vào nút màu xanh “Áp dụng mục đã chọn”
+  3. Khi bạn chọn mã xong trên hội thoại bạn muốn hủy đi bạn có thể click trực tiếp vào mã, lúc tức nó sẽ bị mất đi cho bạn
+
+--- slide11.xml ---
+  Các tạo PO.
+  1. Số 1 bạn chọn tháng sẽ làm PO
+  2. Số 2 bạn chọn tổng số lượng PO trong tháng sẽ làm.
+  3. Chọn kiểu của PO, có hai dạng một là “Sản xuất” tức là sẽ đồng ý tạo , hai là “không làm” tức là sẽ không tạo PO.
+  4. Số 4 vui lòng chọn phiên bản của BOM ở đây bắt buộc phải chọn BOM phiên bản 2001, ngoài ra không được chọn bất kỳ loại phiên bản BOM nào cả
+  5. Số 5 bạn có thể xóa dòng dữ liệu của loại PO đó đi
+  6. Số bạn có thể hủy hết đi để làm lại
+
+--- slide12.xml ---
+  Các tác tạo PO
+  1.  Sau khi điền đầy đủ thông tin bạn sẽ thấy như hình ảnh đầu tiên ở bên trái.
+  2. Nếu tất cả đã xong bạn nhấn “Đăng ký gói” nó sẽ hiển thị ra một hộp thoại và bạn có hai nữa chọn, nhấn vào “Sự đăng ký” hoặc hủy bỏ form.
+
+--- slide13.xml ---
+

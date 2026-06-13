@@ -1,0 +1,70 @@
+File: Logistics fee - division.xlsx
+
+=== Shared Strings ===
+  2023년04월 물류비용 내역
+  번호/NO
+  분할/DIVISION
+  운송/TRANSPORT
+  03월 2023
+  운임비
+  FRIEGHT COST
+  항공/해상
+  대신 지불
+  Pay on behalf/
+  운송 트럭킹 비용
+  Trucking fee
+  국제 비용
+  EXW/DAP Charge
+  컨테이너 화물역 수수료
+  CFS (Container Freight Station)
+  해상
+  유류할증료
+  FSC (Fuel Surcharge)
+  항공
+  단말기 취급 수수료
+  THC (Terminal Handling Charge)
+  면장 신고 비용
+  Custom Declarations fee
+  컨테이너 불균형 요금
+  CIC (Container Imbalance Charge)
+  일반 요금 인상
+  GRI (General Rate Increase)
+  핸드링 비용
+  HDL FEE ( Handling fee)
+  낮은 유황 할증료
+  LSS(Low Sulphur Surcharge)
+  오래된 기계 검사
+  Inspection of old machinery
+  성수기 요금
+  PSS (General Rate Increase)
+  청소비용
+  Cleaning fee
+  자동 매니페스트 시스템 요금
+  AMS (Automated Manifest System fee)
+  배달 주문 수수료
+  D/O FEE
+  DOC
+  보안 추가 요금
+  SSC (Security Surcharge)
+  코로나19 테스트
+  TEST COVID-19 fee
+  기타 요금
+  Other charge
+  검사비용
+  Inspection fee
+  화학물질 선언
+  Chemical Declaration
+  면장 신고 수정
+  CD Amendment
+  로비 요금
+  Lobby fee
+  엑스레이 요금
+  X-ray fee
+  기타 요금 ( Seal)
+  Other charge 
+SEAL
+  노이바이 초과근무 감독
+  Overtime Supervision at NB
+  토요일 픽업
+  Pickup on Satuday
+  TOTAL

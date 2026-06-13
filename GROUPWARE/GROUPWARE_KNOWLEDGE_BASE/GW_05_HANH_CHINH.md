@@ -9,8 +9,11 @@
 
 **Vào:** Electronic Document → Holiday work request → Business Trip Document
 
-### Bước 1: Chọn đường line phê duyệt
+### Bước 1: Chọn đường line phê duyệt & Tiếp nhận (Receipt)
 - Chọn line đã cài sẵn trong hệ thống, hoặc tự chọn người duyệt thủ công.
+- **Tuyến tiếp nhận/CC quy định:**
+  - **Đi công tác trong nước (Domestic):** Nhóm tiếp nhận nhân sự: *12308007-ĐINH THỊ HUYỀN_V2, 11903019-Nguyễn Thị Hoàn* (Final).
+  - **Đi công tác nước ngoài (Overseas):** Nhóm tiếp nhận nhân sự & tài chính: *12308007-ĐINH THỊ HUYỀN_V2, 11903019-Nguyễn Thị Hoàn, 22205010-NGUYỄN THỊ THÚY_V6, 22205011-NGUYỄN THỊ PHƯƠNG LINH, 22308006-NGÔ PHƯƠNG ANH, 22312004-LÊ THỊ TRANG, 22404015-NGUYỄN THỊ HỒNG_V3*.
 
 ### Bước 2: Điền thông tin
 - **Loại công tác:** Trong nước / Nước ngoài — ⚠️ **PHẢI chọn đúng**. Nếu chọn loại là Nước ngoài nhưng địa điểm/quốc gia nhập là trong nước, form sẽ báo lỗi khi gửi.
@@ -59,8 +62,9 @@ Hệ thống định lượng tài chính dự trù rất chi tiết:
 
 **Vào:** Business Trip → Business Trip Report
 
-### Quy trình thực hiện báo cáo:
+### Quy trình thực hiện báo cáo & Tiếp nhận (Receipt):
 1. Chọn line phê duyệt, tiêu đề, tệp đính kèm (báo cáo word, excel, powerpoint, v.v.).
+   - **Tuyến tiếp nhận (Receipt):** CC đến nhóm tiếp nhận nhân sự: *12308007-ĐINH THỊ HUYỀN_V2, 11903019-Nguyễn Thị Hoàn* (Final).
 2. Click vào nút **"Liên kết tài liệu"** (1) → Hộp thoại mở ra.
 3. Chọn mục **"Tài liệu của tôi"** (2) → Nhấn **"Kiểm tra"** (3) để hiển thị danh sách các form đi công tác đã được duyệt.
 4. Lọc/Tìm kiếm và chọn đúng form đi công tác tương ứng cần làm báo cáo.
@@ -81,6 +85,8 @@ Hệ thống định lượng tài chính dự trù rất chi tiết:
 **Vào:** Electronic Document → Business Trip → Business Trip Change Document
 
 Dùng khi lịch trình công tác có biến động so với ban đầu (Đổi chuyến bay, đi trễ, gia hạn ngày công tác) sau khi form Pha 1 đã được duyệt.
+
+- **Tuyến tiếp nhận (Receipt):** CC đến nhóm: *12308007-ĐINH THỊ HUYỀN_V2, 11903019-Nguyễn Thị Hoàn* → *11910035-Nguyễn Thành Phi* (Final).
 
 ### Cách thực hiện:
 1. Click vào **"Liên kết tài liệu"** để gọi lại form đi công tác đã duyệt của chuyến đi đó.
@@ -126,6 +132,8 @@ Dùng khi lịch trình công tác có biến động so với ban đầu (Đổ
 
 **Vào:** Electronic Document → Human Sources → Emp Request
 
+- **Tuyến phê duyệt mặc định:** *Team Leader → Group Leader → Lee Sang Hun (Phó Giám đốc) → Kim Kyeong Cheol (CEO - duyệt cuối)*.
+
 ### Các trường bắt buộc cần điền:
 - **Phân loại tuyển dụng (Phân loại tuyển):** Tuyển mới / Thay thế / Bổ sung.
 - **Cơ cấu hợp đồng (Phân loại nhân viên):** Nhân viên chính thức / Thử việc / Công nhân thời vụ.
@@ -145,8 +153,9 @@ Hoàn thiện nội dung chi tiết → Gửi đi
 
 **Vào:** Electronic Document → Human Sources → Employee Retire Document
 
-### Đường line phê duyệt mặc định:
-Team Leader → Group Leader → Quản lý người Hàn → Bác Jang → Bác COO
+### Tuyến phê duyệt mặc định:
+- **Tuyến phê duyệt:** *Team Leader → Group Leader → Quản lý người Hàn → Bác Jang (Group Leader) → Bác COO (CEO - duyệt cuối)*.
+- **Tuyến tiếp nhận (Receipt):** *11804002-Lê Thị Vân Anh → Kim Kyeong Cheol (CEO)*.
 
 > ⚠️ **Đăng ký hộ:** Nếu quản lý làm hộ cho nhân sự/công nhân dưới quyền → Click chọn **"Người dùng"** (User được áp dụng) phù hợp. Nếu không, hệ thống mặc định lấy người đang đăng nhập gửi đơn.
 
@@ -171,7 +180,8 @@ Team Leader → Group Leader → Quản lý người Hàn → Bác Jang → Bác
 - Biểu mẫu gửi đi **có thể hủy** (chỉ thực hiện được nếu cấp trên chưa ký duyệt). Sau khi hủy, tài liệu tự động được đưa vào **Temporary Storage (Lưu trữ tạm thời)** để chỉnh sửa/xóa.
 
 ### Quy trình thực hiện:
-1. Chọn đường line phê duyệt → Thêm người duyệt/CC nếu cần → Áp dụng (Mặc định: Team Leader → Group Leader)
+1. Chọn đường line phê duyệt → Thêm người duyệt/CC nếu cần → Áp dụng.
+   - **Tuyến tiếp nhận (Receipt) mặc định:** *12407001-Đồng Thị Hòe → 11910035-Nguyễn Thành Phi* (Final).
 2. Thêm tiêu đề phê duyệt
 3. Đính kèm file (nếu có)
 4. Chọn người làm hộ (nếu cần) — sử dụng nút **"Thay đổi người sử dụng"**
@@ -191,5 +201,72 @@ Team Leader → Group Leader → Quản lý người Hàn → Bác Jang → Bác
 
 ---
 
-*Cập nhật: 2026-06-04 | Nguồn: Hướng dẫn Draft Document.pptx + Hướng dẫn Groupware_Form đi công tác.pptx + Hướng dẫn Form nghỉ việc - Employee Retire Document.pptx + Hướng dẫn Form Yêu cầu tuyển dụng - Emp Request.pptx + Hướng dẫn Groupware_Form đăng ký đi làm ngày lễ_ngày nghỉ.pptx + Comprehensive_Groupware_Report.md*
+## 9. 🏖️ Nghỉ Phép & Đóng Dấu Đơn (Leave, Attendance & Seal Request)
+
+Nhóm biểu mẫu liên quan đến chấm công và các yêu cầu hành chính cơ bản khác:
+
+### 9.1 Đơn xin nghỉ phép & Đơn hủy nghỉ phép (Leave & Leave Cancel Document):
+- **Vào:** Electronic Document → Basic → Leave Document (hoặc Leave Cancel Document)
+- **Tuyến phê duyệt & Tiếp nhận quy định từ Excel:**
+  - **Đơn xin nghỉ phép (Leave Document):**
+    - Tuyến phê duyệt:
+      1. [Cơ bản] Trưởng ca/Trưởng nhóm (Team Leader) → Trưởng phòng (Group Leader).
+      2. [Cơ bản] Lee Sang Hun → Kim Kyeong Cheol (CEO).
+      3. [Khác - Nghỉ hưởng lương] Team Leader → Group Leader.
+      4. [Cơ bản] Lee Sang Hun → Kim Kyeong Cheol (CEO).
+    - Bộ phận tiếp nhận (Receipt): *12308007-ĐINH THỊ HUYỀN_V2* (đối với dòng 1 & 3), *12308007-ĐINH THỊ HUYỀN_V2, 11903019-Nguyễn Thị Hoàn* (đối với dòng 2 & 4).
+  - **Đơn hủy nghỉ phép (Leave Cancel Document):**
+    - Tuyến phê duyệt: Team Leader → Group Leader → Kim Kyeong Cheol (CEO).
+    - Bộ phận tiếp nhận (Receipt): *12308007-ĐINH THỊ HUYỀN_V2, 11903019-Nguyễn Thị Hoàn*.
+
+### 9.2 Đơn sửa đổi ngày công (Attendance Modify Document):
+- **Vào:** Electronic Document → Attendance → Attendance Modify Document
+- **Tuyến phê duyệt & Tiếp nhận từ Excel:**
+  - Tuyến phê duyệt: Lee Sang Hun → Kim Kyeong Cheol (CEO).
+  - Bộ phận tiếp nhận (Receipt): *12308007-ĐINH THỊ HUYỀN_V2, 11903019-Nguyễn Thị Hoàn* (CC: Nhóm nhận Kế toán*).
+  - Tuyến tham chiếu (Reference): Nhóm nhận Kế toán*.
+
+### 9.3 Đơn yêu cầu đóng dấu (Seal Request Document):
+- **Vào:** Electronic Document → Basic → Seal Request Document
+- **Tuyến phê duyệt:** **11804002-Lê Thị Vân Anh** → **Kim Kyeong Cheol** (CEO). 
+- *Lưu ý:* Cần chủ động liên hệ bộ phận hỗ trợ kỹ thuật (support team) để cài đặt chính xác tuyến phê duyệt này trên hệ thống trước khi gửi đơn.
+
+---
+
+## 10. 📁 Các Biểu Mẫu Hành Chính & Nhân Sự Khác (Other HR & Admin Documents)
+
+Hệ thống Groupware tích hợp các biểu mẫu sau phục vụ công tác sự kiện, thủ tục nhân sự và báo cáo tai nạn:
+
+### 10.1 Đơn yêu cầu & Báo cáo sự kiện văn hóa (Culture Event Request & Report Document)
+- **Vào:** Electronic Document → Basic → Culture Event Request Document (hoặc Culture Event Report Document)
+- **Tuyến phê duyệt & Tiếp nhận:**
+  - Tuyến phê duyệt (Approval): **12308007-Đinh Thị Huyền_V2**, **11903019-Nguyễn Thị Hoàn** → **11910035-Nguyễn Thành Phi** (Final Approval).
+  - Bộ phận tiếp nhận (Receipt): *12308007-ĐINH THỊ HUYỀN_V2*.
+  - Tuyến tham chiếu (Reference): *11903019-Nguyễn Thị Hoàn*.
+
+### 10.2 Báo cáo tai nạn lao động (Industrial Accident Report Document)
+- **Vào:** Electronic Document → Basic → Industrial Accident Report Document
+- **Tuyến phê duyệt & Tiếp nhận:**
+  - Tuyến phê duyệt (Approval): **12407001-Đồng Thị Hòe** → **11910035-Nguyễn Thành Phi** (Final Approval).
+  - Bộ phận tiếp nhận (Receipt): *11809029-Hoàng Văn Huy, 12105017-Ngô Văn Đạo, 12407001-Đồng Thị Hòe*.
+
+### 10.3 Đơn yêu cầu cấp giấy chứng nhận (Certificate Request Document)
+- **Vào:** Electronic Document → Basic → Certificate Request Document
+- **Bộ phận tiếp nhận (Receipt):** Nhóm nhận Kế toán* và *12308007-ĐINH THỊ HUYỀN_V2*.
+
+### 10.4 Đơn thanh lý / bán tài sản (Assets Dispose Sell Document)
+- **Vào:** Electronic Document → Basic → Assets Dispose Sell Document
+- **Tuyến phê duyệt & Tiếp nhận:**
+  - Tuyến phê duyệt (Approval): Team Leader → Group Leader.
+  - Bộ phận tiếp nhận (Receipt): Nhóm nhận Kế toán* (Final Receipt).
+
+### 10.5 Đơn đăng ký lao động Vina-OneQ (vina-oneQ labor)
+- **Vào:** Electronic Document → Basic → vina-oneQ (labor)
+- **Tuyến phê duyệt (Approval):** **11903019-Nguyễn Thị Hoàn** (Final Approval).
+
+*\*Nhóm nhận Kế toán (Receipt CC) bao gồm các nhân sự: 22205010-NGUYỄN THỊ THÚY_V6, 22205011-NGUYỄN THỊ PHƯƠNG LINH, 22308006-NGÔ PHƯƠNG ANH, 22312004-LÊ THỊ TRANG, 22404015-NGUYỄN THỊ HỒNG_V3.*
+
+---
+
+*Cập nhật: 2026-06-12 | Nguồn: Hướng dẫn Draft Document.pptx + Hướng dẫn Groupware_Form đi công tác.pptx + Hướng dẫn Form nghỉ việc - Employee Retire Document.pptx + Hướng dẫn Form Yêu cầu tuyển dụng - Emp Request.pptx + Hướng dẫn Groupware_Form đăng ký đi làm ngày lễ_ngày nghỉ.pptx + Vietnam Corporation Approval Setting List.xlsx + Comprehensive_Groupware_Report.md*
 

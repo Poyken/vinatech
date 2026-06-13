@@ -91,7 +91,55 @@ Khi nhận được yêu cầu duyệt form:
 
 ---
 
-## 4. ❓ Lỗi Thường Gặp
+## 4. 🔀 Quy Trình Duyệt Mặc Định (Approval Line)
+
+Khi khởi tạo Yêu cầu thanh toán (Disbursement Document, bao gồm cả Card Disbursement, Financial Expenditure, National Policy Disbursement...), đường line duyệt và tiếp nhận được thiết lập cố định từ Excel:
+- **Tuyến phê duyệt (Approval):** **22205010-Nguyễn Thị Thúy_V6** → **21910034-Trần Quang Thỏa** (Final Approval).
+- **Tuyến tiếp nhận (Receipt):** Nhóm nhận Kế toán* (Final Receipt).
+
+*\*Nhóm nhận Kế toán bao gồm các nhân sự: 22205010-NGUYỄN THỊ THÚY_V6, 22205011-NGUYỄN THỊ PHƯƠNG LINH, 22308006-NGÔ PHƯƠNG ANH, 22312004-LÊ THỊ TRANG, 22404015-NGUYỄN THỊ HỒNG_V3.*
+
+---
+
+## 5. 🚢 Danh Mục Chi Tiết Phí Logistics (Logistics Fees Reference Dictionary)
+
+Khi làm yêu cầu thanh toán cho các hóa đơn vận chuyển, logistics (đường biển, đường hàng không, trucking nội địa), nhân sự bắt buộc phải đối chiếu chọn chính xác mã/ký hiệu phụ phí tương ứng từ bảng mã chuẩn của công ty:
+
+| Ký hiệu phí | Tên Tiếng Anh | Tên Tiếng Hàn | Ý nghĩa nghiệp vụ |
+|-------------|---------------|---------------|-------------------|
+| **FREIGHT COST** | Freight Cost | 운임비 | Cước vận chuyển đường biển/đường không |
+| **Pay on behalf** | Pay on behalf | 대신 지불 | Các khoản thanh toán hộ |
+| **Trucking fee** | Trucking fee | 운송 트럭킹 비용 | Phí vận tải nội địa bằng xe tải/container |
+| **EXW/DAP Charge** | EXW/DAP Charge | 국제 비용 | Chi phí quốc tế theo điều kiện EXW/DAP |
+| **CFS** | Container Freight Station fee | 컨테이너 화물역 수수료 | Phí khai thác kho hàng lẻ CFS (hàng LCL) |
+| **FSC** | Fuel Surcharge | 유류할증료 | Phụ phí xăng dầu (áp dụng cho hàng không) |
+| **THC** | Terminal Handling Charge | 단말기 취급 수수료 | Phí bốc dỡ tại cảng/terminal |
+| **Custom Declarations fee** | Custom Declarations fee | 면장 신고 비용 | Phí dịch vụ khai báo tờ khai hải quan |
+| **CIC** | Container Imbalance Charge | 컨테이너 불균형 요금 | Phí mất cân bằng vỏ container |
+| **GRI** | General Rate Increase | 일반 요금 인상 | Phụ phí tăng giá cước chung của hãng tàu |
+| **HDL FEE** | Handling fee | 핸드링 비용 | Phí làm hàng/handling |
+| **LSS** | Low Sulphur Surcharge | 낮은 유황 할증료 | Phụ phí giảm thải lưu huỳnh (đường biển) |
+| **Inspection of old machinery** | Inspection of old machinery | 오래된 기계 검사 | Phí kiểm định máy móc thiết bị cũ nhập khẩu |
+| **PSS** | Peak Season Surcharge | 성수기 요금 | Phụ phí mùa cao điểm |
+| **Cleaning fee** | Cleaning fee | 청소비용 | Phí vệ sinh container |
+| **AMS** | Automated Manifest System fee | 자동 매니페스트 시스템 요금 | Phí truyền dữ liệu manifest tự động (đi Mỹ/Á) |
+| **D/O FEE** | Delivery Order fee | 배달 주문 수수료 | Phí lệnh giao hàng |
+| **DOC** | Documentation fee | 서류 발급 비용 | Phí chứng từ/vận đơn |
+| **SSC** | Security Surcharge | 보안 추가 요금 | Phụ phí an ninh |
+| **TEST COVID-19 fee** | TEST COVID-19 fee | 코로나19 테스트 | Chi phí xét nghiệm Covid-19 liên quan |
+| **Other charge** | Other charge | 기타 요금 | Chi phí khác |
+| **Inspection fee** | Inspection fee | 검사비용 | Phí kiểm tra/kiểm định chất lượng hàng |
+| **Chemical Declaration** | Chemical Declaration | 화학물질 선언 | Khai báo hóa chất nhập khẩu |
+| **CD Amendment** | CD Amendment fee | 면장 신고 수정 | Phí sửa đổi tờ khai hải quan khi có sai sót |
+| **Lobby fee** | Lobby fee | 로비 요금 | Phí lobby/chi phí đối ngoại |
+| **X-ray fee** | X-ray fee | 엑스레이 요금 | Phí soi chiếu X-ray container |
+| **SEAL** | Other charge (Seal) | 기타 요금 (Seal) | Phí kẹp chì container |
+| **Overtime Supervision at NB** | Overtime Supervision at NB | 노이바이 초과근무 감독 | Phí giám sát bốc xếp ngoài giờ tại sân bay Nội Bài |
+| **Pickup on Saturday** | Pickup on Saturday | 토요일 픽업 | Phụ phí nhận hàng vào ngày thứ Bảy |
+
+---
+
+## 6. ❓ Lỗi Thường Gặp
 
 | Tình huống | Nguyên nhân | Xử lý |
 |-----------|-------------|-------|
@@ -101,4 +149,5 @@ Khi nhận được yêu cầu duyệt form:
 
 ---
 
-*Cập nhật: 2026-06-04 | Nguồn: Hướng dẫn groupware_Yêu cầu thanh toán.pptx + Hướng dẫn Groupware_Yêu cầu mua.pptx + Comprehensive_Groupware_Report.md*
+*Cập nhật: 2026-06-12 | Nguồn: Hướng dẫn groupware_Yêu cầu thanh toán.pptx + Vietnam Corporation Approval Setting List.xlsx + Logistics fee - division.xlsx + Comprehensive_Groupware_Report.md*
+

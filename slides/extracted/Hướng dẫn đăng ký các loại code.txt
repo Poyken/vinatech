@@ -1,0 +1,126 @@
+File: Hướng dẫn đăng ký các loại code.pptx
+
+--- slide1.xml ---
+  Hướng dẫn sử dụng chức năng tạo code và sửa BOM
+  trên Groupware
+  EA Team
+  Việt
+  Nam
+
+--- slide2.xml ---
+  1.Đăng nhập hệ thống Groupware
+  I
+  . Đăng nhập Groupware
+  Có hai cách để bạn đăng nhập vào hệ thống Groupware
+  + Bạn có thể truy cập bằng link sau đây:
+  https://gw.vinatech.com/login
+  .
+  + Bạn có thể chọn buổi tượng như hình dưới đây:
+  + Bạn mở trình duyệt lên và ỏ góc phải màn hình có biểu tượng=&gt; bạn chọn tới icon của công ty có chữ groupware click vào đó
+
+--- slide3.xml ---
+  2.Thông tin đăng nhập vào Groupware
+  2. Thông tin đăng nhập
+  -
+  Bước
+  1
+  : Thông tin tài khoản cũng như mật khẩu của bạn chính là mã nhân viên trên hệ thống ERP, mật khẩu mặc định từ 1 tới 4, trong trường hợp không được bạn liên hệ lại với EA
+  Bước
+  2
+  : Trước khi login, bạn cần chọn Vinatech vina Co.,Ltd.
+  Bước 3: khi đã chọn xong, bạn nhập mã nhân viên và mật khẩu nhấn nút login để vào hệ thống.
+
+--- slide4.xml ---
+  Thay thế MES bằng Groupware.
+  Như bạn biết trước đây người dùng có thể dùng màn hình A230, là màn hình cấu hình các loại nguyên vật liệu cho cell line, module, điện cực.
+  Theo yêu cầu của EA hàn quốc toàn bộ các dữ liệu các code của A230 trên hệ thống MES sẽ được đăng ký trên hệ thống Groupware.
+  Sau khi bạn đăng nhập vào hệ thống thành công, bạn vào menu sau =&gt; Electronic Document =&gt; Item =&gt; Item Registration Document.
+
+--- slide5.xml ---
+  Chọn thông tin phê duyệt, tiêu đề, người làm form, upload file.
+  1. Chọn người duyệt
+  2. Ghi tiêu đề form
+  3. Tải file đính kèm.
+  4. Làm form giúp ai đó không phải mình làm.
+
+--- slide6.xml ---
+  Chọn kiểu code của vật liệu.
+  Trong phần “Phân loại tài liệu” có ba loại code để bạn chọn
+  1. Module
+  2. Cell
+  3. Raw material
+  Khi bạn chọn đường line phê duyệt, vui lòng đúng phần loại như dưới đây
+  [Cell] = &gt; Single Cell
+  [Module] =&gt; Module
+  [Raw material] =&gt; Raw materials
+
+--- slide7.xml ---
+  Item Registration Document Classification.
+  1. Ở nút “
+  Add
+  ” bạn có thể them một tab nữa để thêm các mã code khác
+  2. Ở nút “
+  Copy
+  ” bạn có thể nguyên nội dung của tab trước và có thể sửa lại
+  3. Ở nút “
+  Delete
+  ”, trường hợp bạn không cần nữa bạn có thể xóa các tab đi.
+  4. Chọn kiểu của mã code (ở đây bạn có thể chọn kiểu bán thành phầm, nguyên vật liệu,
+  5. ở đây bạn có thể nhập thông số như Voltage (ví dụ: 12- 3.0 C035)
+  6. Ở đây bạn có thể nhập Farad (Ví dụ: 3.5 mm).
+
+--- slide8.xml ---
+  The request information
+  1. Chọn loại hàng, hàng để phát triển, hàng để sản xuất hàng loạt.
+  2. Tên của khách hàng.
+  3. Mặt hàng này thuộc bộ phận nào sản xuất
+  4. Người dùng loại code này là ai
+  5.Ngày đặt hàng dự kiến khi nào.
+
+--- slide9.xml ---
+  Kiểm tra chi tiết.
+  1. Chọn đơn vị
+  2. Chọn danh mục loại hàng
+  3. Chọn phân loại hàng
+  4. Chọn nhóm danh mục sản phẩm
+  5. Chọn kích cỡ con hàng.
+  6. Chọn kiểu mua sắm con hàng
+  7. Chọn kiểu loại mặt hàng
+  8. Chọn kiểu ở trong nước hay ở nước ngoài.
+
+--- slide10.xml ---
+  THAY ĐỔI THÔNG TIN CỦA CÁC LOẠI CODE
+
+--- slide11.xml ---
+  Cập nhật lại thông tin code.
+  Để thay đổi, hoặc cập nhật bất kỳ thông tin nào cho mã code, bạn cần vào menu như hình bên trai =&gt; Electronic =&gt; Item =&gt; Item Change Document.
+
+--- slide12.xml ---
+  Chọn loại mã code để cập nhật
+  1. ở nút “Tìm kiếm mặt hàng”, bạn cần click choột vào đó
+  2. Một cửa số mới sẽ hiện ra, bạn có thể tìm kiếm và chọn bất kỳ mã code hàng nào bạn cần cập nhật lại.
+  3 Sau khi đã chọn xong bạn có thể nhấn Áp dụng nữa chọn
+
+--- slide13.xml ---
+  Cập nhật lại thông tin code.
+  Sau khi bạn chọn một mã code bất kỳ chương trình sẽ tự động sinh ra cho bạn các mã code như hình bên cạnh, sau đó bạn thể cập nhật lại thông tin, theo ý muốn của bạn.
+
+--- slide14.xml ---
+  Cập nhật lại thông tin code.
+  1. Chọn kiểu loại mua hàng
+  2. Chọn kho đưa vào
+  3. Chọn kho đưa ra
+  4. Chọn bộ phận chịu cost
+
+--- slide15.xml ---
+  Cập nhật lại thông tin code.
+  1. Gửi tới người duyệt.
+  2. Lưu tạm vào hệ thống, để sửa sau, hoặc dùng sau.
+  3. Xóa form đi.
+  4. Xem tổng thể trước khi gửi đi.
+  5. Nhập lại mới các thông tin.
+  6. Giải thích tại sao cần cập nhật.
+
+--- slide16.xml ---
+  Người
+

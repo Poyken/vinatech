@@ -1,0 +1,106 @@
+File: Hướng dẫn Groupware_Form đăng ký đi làm ngày lễ_ngày nghỉ.pptx
+
+--- slide1.xml ---
+  Hướng dẫn sử dụng chức năng SBC trên hệ thống Groupware
+  EA Team
+  Việt
+  Nam
+
+--- slide2.xml ---
+  1.Đăng nhập hệ thống Groupware
+  I
+  . Đăng nhập Groupware
+  Có hai cách để bạn đăng nhập vào hệ thống Groupware
+  + Bạn có thể truy cập bằng link sau đây:
+  https://gw.vinatech.com/login
+  .
+  + Bạn có thể chọn buổi tượng như hình dưới đây:
+  + Bạn mở trình duyệt lên và ỏ góc phải màn hình có biểu tượng=&gt; bạn chọn tới icon của công ty có chữ groupware click vào đó
+
+--- slide3.xml ---
+  2.Thông tin đăng nhập vào Groupware
+  2. Thông tin đăng nhập
+  -
+  Bước
+  1
+  : Thông tin tài khoản cũng như mật khẩu của bạn chính là mã nhân viên trên hệ thống ERP, mật khẩu mặc định từ 1 tới 4, trong trường hợp không được bạn liên hệ lại với EA
+  Bước
+  2
+  : Trước khi login, bạn cần chọn Vinatech vina Co.,Ltd.
+  Bước 3: khi đã chọn xong, bạn nhập mã nhân viên và mật khẩu nhấn nút login để vào hệ thống.
+
+--- slide4.xml ---
+  Form đăng ký đi làm ngày lễ, ngày nghỉ
+  1. Bạn truy cập vào phần menu chọn mục Electronic Document =&gt; Holiday Work Reuqest”.
+  Bước
+  1:
+  Chọn
+  đường line phê duyệt, ở đây bạn có thể chọn hai kiểu đường line phê duyệt.
+  + Một đã được cài đặt trong hệ thống, bạn chỉ cần chọn.
+  + Hai bạn có thể tự lựa chọn những ai có thể duyệt form cho bạn.
+
+--- slide5.xml ---
+  Form đăng ký đi làm ngày lễ, ngày nghỉ.
+  Số 1: bạn cần viết tiêu đề form của bạn.
+  Số 2: bạn có thể đính kèm file ở đây.
+  Số 3: là thông tin người làm form, bạn có thể điền tên người làm form hộ bạn ở đây
+
+--- slide6.xml ---
+  Form đăng ký đi làm ngày lễ, ngày nghỉ
+  .
+  Số 1: Lựa chọn nhân viên để đi làm.
+  Số 2: Chọn thêm người đi làm nếu cần trong form.
+  Số 3: Chọn ngày đi làm.
+  Số 4:  Thời gian đi làm tính theo tiếng
+  Số 5: Số giờ hệ thống tự động tính.
+  Số 6: Thêm ngày giời, cho người đã có trong danh sách
+
+--- slide7.xml ---
+  Form đăng ký nhà thầu khách hàng.
+  Ghi chú chi tiết các nếu bạn cần thiết.
+  Sau khi các thông tin form đã chính xác, bạn có thể nhấn vào nút “Gửi đi”
+  Trường hợp bạn chưa muốn gửi đi ngày, bạn có thể nhấn vào nút “Lưu trữ tạm thời”
+  Trường hợp bạn cũng có thể xóa nhớ tạm thời”
+  Khi các thông tin đã nhập xong bạn có thể xem lại bằng cách nhấn vào nút “Xem trước”
+  Bạn cũng có thể làm mới lại form.
+
+--- slide8.xml ---
+  FORM VIẾT BÁO CÁO KHI ĐI LÀM NGÀY NGHỈ, NGÀY LỄ.
+
+--- slide9.xml ---
+  Form đăng ký báo cáo đi làm ngày nghỉ, ngày lễ.
+  Đầu tiên bạn vào menu Electronic =&gt; Sau đó bạn chọn chức năng =&gt; Attendance =&gt; Holiday Work Request.
+  Số 1: Bạn click vào nút “Liên kết tài liệu”.
+  Một hộp thoại mới mở ra, bạn sẽ nhìn thấy toàn bộ form xin đi làm ngày nghỉ, ngày lễ đã được duyệt sẽ hiện ra.
+  Số 2: Bạn có thể xem nhấn vào nút “Nhìn” bạn sẽ xem được chi tiết.
+  Số 3: Bạn có thể nhấn vào nút “lựa chọn”.
+
+--- slide10.xml ---
+  Form đăng ký báo cáo đi làm ngày nghỉ, ngày lễ.
+  Sau khi bạn chọn form đăng ký làm việc ngày nghỉ, ngày lễ, một giao diện mới sẽ được tạo ra ở đây
+  Gồm thông tin bạn đã đăng ký đi làm ngày lễ, ngày nghỉ.
+
+--- slide11.xml ---
+  Form đăng ký báo cáo đi làm ngày nghỉ, ngày lễ.
+  Trong form này bạn có thể chỉnh sửa lại thời gian thực tế bạn đã làm trong ngày nghỉ, ngày lễ.
+  Bạn có thể lại sửa thông tin tin về giờ ra bắt đầu, thời gian kết thúc, ngày làm việc thực tế.
+  Ngoài ra bạn cũng cần upload file báo cáo vào cùng bạn đã làm được việc gì trong ngày hôm đó (cái này không bắt buộc có hoặc không tùy bạn)
+
+--- slide12.xml ---
+  FORM TỔNG HỢP  KHI ĐI LÀM NGÀY NGHỈ, NGÀY LỄ.
+
+--- slide13.xml ---
+  Form xem đăng ký đi làm vào ngày nghỉ, lễ.
+  Để xem được thông tin tổng hợp đã đăng ký đi làm vào ngày nghỉ, lễ bạn vào menu sau đây: Management =&gt; Holiday Work Management =&gt; Holiday Work Ledger.
+  Ở đây bạn có thể xem được toàn bộ những người đã đăng ký đi làm, với điều kiện là form của họ đã được duyệt
+  Bạn cũng có thể xuất file excel ra.
+  Note: phần này là dành cho nhân sự kiểm tra dữ liệu
+
+--- slide14.xml ---
+  Form đăng ký báo cáo đi làm ngày nghỉ, ngày lễ.
+  Với hình ảnh bên góc trái là bạn có thể tìm kiếm được các form bạn đã đăng ký đi làm thêm vào ngày nghỉ, ngày lễ, với điều kiện là bạn đã làm báo cáo nó mới hiển thị ra.
+  Bạn cần vào menu sau: management =&gt; Holiday Work Management =&gt; Holiday Work Calculate Management.
+  Note: Phần này là dành cho kế toán để thanh toán
+
+--- slide15.xml ---
+

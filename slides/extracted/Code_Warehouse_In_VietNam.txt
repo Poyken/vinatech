@@ -1,0 +1,76 @@
+File: Code_Warehouse_In_VietNam.xlsx
+
+=== Shared Strings ===
+  HEADQUARTER_BG_WH
+  VVT
+  VVT_F2
+  Bg_본사(베트남)
+  HEADQUARTER_VN_WH
+  VVT_F1
+  본사(베트남)
+  HOLDING_BG_WH
+  Bg_Hold원자재창고(베트남)
+  HOLDING_VN_WH
+  Hold원자재창고(베트남)
+  MODULE_BG_WH
+  Bg_모듈(베트남)
+  MODULE_VN_WH
+  모듈(베트남)
+  NG_RAW_BG_WH
+  Bg_NG원자재창고(베트남)
+  NG_RAW_VN_WH
+  NG원자재창고(베트남)
+  NOI_DIA_BG
+  Bg_NOI_DIA_BG
+  NOI_DIA_VN
+  NUOC_NGOAI_BG
+  Bg_NUOC_NGOAI_BG
+  NUOC_NGOAI_VN
+  PROD_BG_WH
+  Bg_완제품창고(베트남)
+  PROD_STBY_BG_WH
+  Bg_제품입고대기창고(베트남)
+  PROD_STBY_VN_WH
+  제품입고대기창고(베트남)
+  PROD_VN_WH
+  완제품창고(베트남)
+  ROH_BG_WH
+  Bg_원자재창고(베트남)
+  ROH_VN_WH
+  원자재창고(베트남)
+  ROUTE_BG_WH
+  Bg_공정창고(베트남)
+  ROUTE_VN_WH
+  공정창고(베트남)
+  TOTAL_MATERIALS
+  W21_BG_WH
+  Bg_전극슬리팅창고
+  W21_VN_WH
+  전극슬리팅창고
+  W27
+  VVT_F3
+  창고(비나에너솔)
+  MaterialWarehouseCode
+  CompanyCode
+  WorkCenterCode
+  MaterialWarehouseNameKorea
+  MaterialWarehouseNameVietNam
+  Kho nguyên vật liệu Bắc Ninh
+  Kho nguyên vật liệu Bắc Giang
+  Kho nguyên vật liệu chờ xử lý Bắc Ninh
+  Kho nguyên liệu cho hàng module Bắc Giang
+  Kho nguyên liệu cho hàng module Bắc Ninh
+  Kho nguyên liệu bị NG nhà máy Bắc Ninh
+  Kho nguyên liệu bị NG nhà máy Bắc Giang
+  Sản xuất Bắc Giang
+  Sản xuất Bắc Ninh
+  Kho nguyên vật liệu chờ xử lý Bắc Giang
+  Xuất trả nhà cung cấp trong nước từ nhà máy Bắc Ninh
+  Xuất trả nhà cung cấp trong nước từ nhà máy Bắc Giang
+  Xuất trả nhà cung cấp nước ngoài từ nhà máy Bắc Ninh
+  Xuất trả nhà cung cấp nước ngoài từ nhà máy Bắc Giang
+  Kho thành phẩm Bắc Giang
+  Kho thành phẩm Bắc Ninh
+  Note
+  Không có dữ liệu
+  Không rõ ý nghĩa

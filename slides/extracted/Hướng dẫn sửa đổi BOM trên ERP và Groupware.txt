@@ -1,0 +1,53 @@
+File: Hướng dẫn sửa đổi BOM trên ERP và Groupware.pptx
+
+--- slide1.xml ---
+  Hướng dẫn sử dụng chức năng tạo Ebom trên hệ thống ERP và sửa Bom trên hệ thống Groupware
+  EA Team
+  Việt
+  Nam
+
+--- slide2.xml ---
+  1.Đăng nhập hệ thống ERP
+  I
+  . Đăng nhập hệ thống ERP.
+  - Để có thể them mới được mã code BOM, trước tiên bạn cần đăng nhập vào hệ thống ERP như dưới đây:
+  Thông tin tài khoản là mã nhân viên của bạn và mật khẩu
+
+--- slide3.xml ---
+  Tìm kiếm menu EBOM trên ERP
+  Sau khi bạn đăng nhập thành công ở bên góc phải màn hình có biểu tượng tìm kiếm bạn click vào đó và gõ chữ EBOM, sau đó chức năng sẽ hiển thị cho bạn, như các hình dưới đây.
+
+--- slide4.xml ---
+  Giao diện khi truy cập
+  Sau khi bạn tìm kiếm trên thanh công cụ, bạn nhấn enter thì một giao diện sẽ hiện ra như hình ở bên trái
+  1. Bạn cần nữa chọn một  mã code đã được đăng ký
+  2. Sau đó bạn nhấn vào tìm kiếm
+  3. Nhập phiên bản của BOM
+  4. Thêm các dòng dữ liệu
+  5. Chọn mã nguyên vật liệu
+  6. Chọn số lượng nguyên vật liệu
+  7. Lưu lại
+
+--- slide5.xml ---
+  Thay đổi cập nhật lại thông tin BOM.
+  1. Tìm kiếm mã code của thành phẩm bán thành phẩm, hoặc của nvl
+  2.Nhấn tìm kiếm để ra các thông tin cần thay đổi
+  3. bạn nhấn vào nút số 3 để thay đổi phiên bản
+  4. Sau khi xong hết thông tin bạn có thể cập nhật lại
+
+--- slide6.xml ---
+  2.Xác nhận các thông tin đã đăng ký BOM trên Groupware
+  Sau khi bạn đã đăng ký các loại nguyên vật liệu BOM xong bạn có thể xuống Groupware system, vào chức năng “Electronic Document =&gt; Production/Development =&gt; BOM Addition And update document”
+  1. Chọn line phê duyệt.
+  2. Đặt tên cho form của bạn.
+  3. đính kèm file nếu có.
+  4. Thêm mục hay tìm kiếm code, nếu có code sẽ tự sinh ra các mã đi kèm theo.
+  5. Tương tự như mục 4
+  6. Ghi chú hoặc giải thích
+
+--- slide7.xml ---
+  Kiểm tra lại BOM trên MES.
+  Sau khi hoàn tất các thao tác tạo code, tạo BOM, bạn có thể kiể tra nó trên MES, bằng màn hình A310, nếu bạn làm PO thì bạn có thể xem trên màn hình B310, bạn muốn xem lại code thì bạn có thể xem màn hình A230
+
+--- slide8.xml ---
+

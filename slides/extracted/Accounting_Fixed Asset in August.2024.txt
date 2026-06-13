@@ -1,0 +1,2301 @@
+File: Fixed Asset in August.2024.xlsx
+
+=== Shared Strings ===
+  (Currency : VND)
+  6274
+  6424
+  8118
+  hạch toán
+  sử dụng
+  2021- tháng ghi tăng
+  NOTE
+  FACTORY No
+  ITEM ACCOUNT
+  CODE
+  NAME OF ASSETS
+  QUANTITY
+  UNIT
+  SELLER
+(NHÀ CUNG CẤP)
+  DOCUMENT NO
+(SỐ HIỆU CHỨNG TỪ)
+  INVOICE/ CDS DATE
+  PURCHASE 
+(GIÁ MUA)
+USD
+  FX RATE
+  PURCHASE 
+(GIÁ MUA)
+VND TƯƠNG ĐƯƠNG
+  IMPORTATION TAX
+(THUẾ NHẬP KHẨU+TTĐB)
+  SETUP FEE
+  HANDLING FEE
+  HANDLING FEE INV. NO
+  AQUISITION VALUE (trước deduct)
+(Increase 211)
+  NOTE- Special
+  Formulas- DEP 
+(Giá trị dùng phân bổ)
+  AQUISITION VALUE
+(DEDUCT 211)
+  Q'TY
+(DEDUCT)
+  DEDUCT (DATE)
+  REASON of Deduct
+  Date of Using
+  Date of Finishing
+  DURABLE PERIOD
+(Year)
+  DURABLE PERIOD
+(Month)
+  MONTH DEPRE
+(VND)
+  Accumulated Depreciation until present
+  CLASSIFICATION 
+(LOẠI TSCĐ)
+  RATE EXPENSES
+  Vị trí sử dụng
+  FAST
+ (BPHT)
+  FAST
+(BPSD)
+  GTCL giảm do thanh lý
+(từ T9/2021)
+  .
+  Đ+CT
+  Đ
+  CT
+  Remark
+  Done
+  FI
+  VINA00001A2
+  Building (Admin and apart of Factory)/Nhà cửa vật kiến trúc (giá trị hợp đồng chuyển nhượng tài sản trên đất gắn liền với QSD đất;hóa đơn 0111 ngày 05/7/2017 - Cty Vinaco)
+  Cty CP ĐT&amp;XD VINACO
+  0000111;0000121
+  2018
+  Deduct để chuyển sang 24222
+  Building
+  Factory 1
+  CPC
+  FACTORY
+  VINA00000M
+  Building (Admin and apart of Factory)/Nhà cửa, vật kiến trúc
+  CÔNG TY CỔ PHẦN TƯ VẤN THIẾT KẾ VÀ XÂY DỰNG VINAINCON
+  0000427, 0000460,0000482;0000099;0000356 công nghệ Xanh 75tr
+  VINA00002M
+  Building (Admin and apart of Factory)/Giá trị phần thiết kế
+  0000281
+  2019
+  VINA00003M
+  Thiết kế và thi công toàn bộ nội thất văn phòng theo hợp đồng kinh tế số 2407/HĐKT/2018/VINA-ATH/Thiết kế và thi công toàn bộ nội thất văn phòng theo hợp đồng kinh tế số 2407/HĐKT/2018/VINA-ATH
+  Công ty cổ phần ATH
+  000718;0000731;0000766
+  VINA0004M
+  Supervisor and Management construciton service/Chi phí giám sát
+  Myungil co.,ltd
+  VINA00003
+  Washing Shower/Tủ rửa Rack DOOR dùng để chứa rửa sản phẩm,kt:700x 650x 1350cm,mới 100%
+  VINA TECH CO., LTD
+  102123180355
+  Tools
+  Manual line F1
+  CURLING
+  VINA00004
+  Vacuum Impregnation Device/Thiết bị dùng trong phòng khô:thiết bị tạo môi trường chân không,model:S_0813,nguồn điện 1 pha 220V,hãng sản xuất Mecha Solution,năm 2018,mới 100%
+  Dryroom F1
+  BEADING
+  VINA00005
+  VINA00006
+  Vacuum Impregnation Device/Thiết bị dùng trong phòng khô:thiết bị tạo môi trường chân không,model:S_1025, nguồn điện 1 pha 220V,hãng sản xuất Mecha Solution,mới 100%
+  Liquidate All
+  Đã Thanh lý hết
+  VINA00007
+  Vacuum Impregnation Device/Thiết bị dùng trong phòng khô:thiết bị tạo môi trường chân không,model:S_1025,nguồn điện 1 pha 220V,hãng sản xuất Mecha Solution,năm 2018,mới 100%
+  VINA00008
+  Cold Trap/Thiết bị dùng trong phòng khô:Thiết bị ngưng tụ hơi nước,model CTB-10,nguồn điện 1 pha 220V,công suất 2.8kw,hãng sản xuất JEIO TECH,năm 2018,hàng mới 100%
+  VINA00009
+  Sleeve Cutter M/C/Máy cắt ống,dùng cắt sản phẩm,model:MCS-2018,nguồn điện 220V,công suất motor 2200,hãng sản xuât Mecha Solution,năm 2018,mới 100%
+  Machinery and Equipment
+  SLEEVE
+  VINA00010
+  Slitting M/C DLSC-1023/Máy cắt cuộn,xẻ dọc hoạt động bằng điện,dùng cắt sản phẩm bằng cao su,model:DLSC-1023,nguồn điện 3 pha, 220V,công suất 7.6KW,hãng sản xuất Wize ENG,năm 2018,mới 100%
+  Electrode line F1
+  FII_ELECTRODE
+  VINA00011
+  Manual Beading M/C/Máy ép tạo biên dưới,dùng tạo hình cho sản phẩm,model: MSC-2018BD, nguồn điện 1 pha 220V,hãng sản xuất Mecha Solution,năm 2018,mới 100%
+  VINA00012
+  01/12/2020: TSCĐ không dùng chuyển kho dabaco 6274-&gt; 8118
+  DABACO-&gt; Kho cạnh cty
+  VINA00013
+  VINA00014
+  Manual Beading M/C/Máy ép tạo biên dưới,dùng tạo hình cho sản phẩm,model: MSC-2018BD,nguồn điện 1 pha 220V,hãng sản xuất Mecha Solution,năm 2018,mới 100%
+  VINA00015
+  Manual Curling M/C/Máy ép tạo biên dưới,dùng tạo hình cho sản phẩm,model: MSC-2018-CUR,nguồn điện 220V,hãng sản xuất Mecha Solution,năm 2018,mới 100%
+  VINA00016
+  VINA00017
+  VINA00018
+  Manual Shrink Tunnel/Máy ép vỏ sản phẩm,model:KP-T50D,nguồn điện 220V,công suất 50HP ,hãng sản xuất Gwanglin Power Pack,năm 2018,mới 100%
+  MODUL
+  VINA00019
+  VINA00020
+  Stripping M/C/Máy mài điện cực,nguồn điện 1 pha 220V,công suất 4KW ,model MCS-2012-ST,công suất 1kw,hãng sản xuất Mecha Solution,năm 2018,mới 100%
+  WINDING
+  VINA00021
+  Manual Rubber Inserting M/C/máy chèn cao su dùng để cho cao su vào sản phẩm,model:S_1025,công suất 1kw,hãng sản xuất Mecha Solution,năm 2018,hàng mới 100%
+  RUBBER
+  VINA00022
+  Manual Rubber Inserting Jig/máy chèn cao su dùng để cho cao su vào sản phẩm,model:SJ_0820 công suất 1kw,hãng sản xuất Mecha Solution,hàng mới 100%
+  VINA00023
+  Manual Rubber Inserting Jig/máy chèn cao su dùng để cho cao su vào sản phẩm,model:SJ_0820 công suất 1kw,hãng sản xuất Mecha Solution,năm 2018,hàng mới 100%
+  VINA00024
+  Vacuum Oven Set/Thiết bị dùng trong phòng khô:lò sấy chân không,model OV-12, nguồn điện 1220V,công suất 1.5kw,hãng sản xuất JEIO TECH,năm 2018,hàng mới 100%
+  Cell 3(1), Cell4(3), Cell 10 (3)+ Cell 16 (1)+Cell 18(2)
+  VINA00025
+  Impusle Sealer/Máy ép nhiệt,model:Gl 300-10,nguộn điện 220V,công suất 4.5kw,hãng sản xuất Common,năm 2018,mới 100%
+  000172; 000999
+  Warehouse F1
+  PACKING
+  VINA00026
+  Dehumidifier Device_1R Type/Thiết bị hút ẩm dùng trong nhà máy hãng sản xuất AT ENG Dehumidifier Device_1R Type,model:DHU-3583,nguồn điện 220V,công suất 13kw,hãng sản xuât AT ENG, năm 2011, Hàng đã qua sử dụng
+  102123194245
+  Utilily F1
+  VINA00027
+  Dehumidifier Device_1R Type/Thiết bị hút ẩm dùng trong nhà máy hãng sản xuất AT ENG Dehumidifier Device_2R Type,model:GDRT-3052,nguồn điện 220V,công suất 15kw,hãng sản xuất AT ENG, năm 2011, Hàng đã qua sử dụng
+  THANH LÝ
+  VINA00028
+  Short Test/Máy đo ngắn mạch,model 19073,,hãng sản xuât Chroma,năm 2018,mới 100%
+  VINA00029
+  Rubber Inserting Machines/Máy chèn cao su thủ công, năm sản xuất: 2015, điện trở: 220V,  hàng đã qua sử dụng, công suất: 3KW
+  102158913955
+  0046648; 0046649;0041642;0046706
+  VINA00030
+  Stiching &amp; Winding Machines/Máy tiếp nguyên liệu, model: SPM600, năm sản xuất: 2012, điện trở: 220V,  hàng đã qua sử dụng, công suất: 3KW
+  CD Co dien BN
+  VINA00031
+  Stiching &amp; Winding Machines/Máy dập và cuốn nguyên liệu,hoạt động bằng điện, Model: SPM-600W,220V, 60Hz, 3 pha, hàng đã qua sử dụng, sản xuất năm 2012.
+  102158952017
+  VINA00032
+  Small Type Charger / Discharger/Bộ nạp điện và phóng điện loại nhỏ, chức năng: Nạp điện và xả điện vào tụ điện, model: N8761A, năm sản xuất: 2012,điện áp: 220V,  hàng đã qua sử dụng
+  QC
+  VINA00033
+  Auto SolderM/C/Máy hàn tự động, chức năng: Hàn tụ điện, năm sản xuất: 2010, điện áp: 380V, 50/60Hz, 37KVA, model: SAS-680L, hàng đã qua sử dụng
+  6274-&gt; 8118 : Do chuyển kho dabaco do không sử dụng 
+ ngày 01/09/2020
+  VINA00034
+  Air Compressor/Cung cấp và lắp đặt hệ thống máy nén khí tại nhà máy Vinatech Vina theo hợp đồng số YJC/VTV-147
+  Chi nhánh công ty TNHH Yujin Compressor Việt Nam
+  0000499
+  VINA00035
+  Transformer/Biến áp 3K252M2YH5YT
+  Công ty TNHH sản xuất và thương mại Ổn áp Nhật Linh
+  1846
+  VINA00036
+  Auto Sleeving M/C/Máy bọc vỏ tự động, Model: VMS-200, Công dụng: Bọc vỏ sản phẩm, điện áp: 220V, Công suất: 920W, Năm sản xuất: 2017, Hàng đã qua sử dụng
+  102206739722
+  00005758; 0005759;0006440;0072040;0072048; 0017375; 0017398;0017448;0019469
+  VINA00037
+  Sleeving Cutting M/C/Máy cắt vỏ bọc tụ điện bằng nhựa, Model: VMS-500, công dụng: cắt vỏ sản phẩm, điện áp : 220V, Công suất: 470W, Năm sản xuất: 2013, Hàng đã qua sử dụng
+  VINA00038
+  AUTO-WINDING MACHINE/Máy cuốn tự động, Model: KS-500SA, điện áp: 220V, công suất: 1900W, năm sản xuất: 2017, Hàng đã qua sử dụng
+  VINA00039
+  DUST COLLECTOR/Máy hút bụi của máy cuốn, Model: MSR-429, điện áp: 220V, Công suất: 530W, Năm sản xuất: 2017. Hàng đã qua sử dụng
+  VINA00040
+  Charge &amp; Discharge Device/Thiết bị kiểm tra nạp và phóng điện, Model: VNBTS0606, điện áp: 220V, công suất: 1200W, năm sản xuất: 2016, Hàng đã qua sử dụng
+  Aging F1
+  VINA00042
+  Voltage titration device model MKC-710S /Thiết bị chuẩn độ điện thế model MKC-710S (bao gồm dung dịch Anolyte AGE, CGE)
+  CÔNG TY TNHH NI VINA
+  0000682
+  Dryroom F2
+  VINA00043
+  Hioki battery testing device, battery Model BT3526/Thiết bị kiểm tra ắc quy, pin Model BT3526 hãng Hioki
+  Cell 1
+  VINA00044
+  2D meter Model VMS-1510G voltage 100-240v 50 / 60Hz/Máy đo 2D Model VMS-1510G điện áp 100-240v 50/60Hz công suất: 50W
+  VINA00045
+  Multipurpose measuring device including Recorder device, to measure or check current voltage, resistance or capacity of Model LR 8400-20 Hioki /Thiết bị đo đa năng bao gồm thiết bị Ghi, để đo hoặc kiểm tra điện áp dòng điện, điện trở hoặc công suất Model LR 8400-20 hãng sản xuất Hioki (bao gồm card 2G)
+  VINA00046
+  USED AUTO.STITCHING &amp; WINDING MACHINE (SIZE 0813)/Máy cuốn dùng cuốn sản phẩm, USED AUTO STITCHING &amp; WINDING MACHINE (SIZE 0813), model: SPM-600N  ,nguồn điện 220V,60Hz,công suất: 1 KW, năm sản xuất: 2011, hàng đã qua sử dụng
+  SHYH HORNG MACHINERY INDUSTRIAL CO., LTD=&gt; VINATECH., LTD
+  102237861243
+  000208
+  VINA00047
+  USED AUTO.STITCHING &amp; WINDING MACHINE (SIZE 1030)/Máy cuốn dùng cuốn sản phẩm, USED AUTO STITCHING &amp; WINDING MACHINE (SIZE 1030), model: SPM-600W , nguồn điện 220V,60Hz,công suất: 1 KW, năm sản xuất: 2014, hàng đã qua sử dụng
+  VINA00048
+  CUTTING UNIT/Máy cắt chân điện cực, model: VEC 3R0 156 HG-B( Toshiba),  hoạt động bằng khí nén, Hàng mới 100%
+  102250026100
+  VINA00049
+  Clean&amp;Dry M/C/Máy làm sạch và sấy khô tụ điện Clean&amp;Dry M/C,Hoạt động bằng điện, Model: CD450, Công suất: 6 KW , điện áp: 220V, năm sản xuất: 09.2018, hàng mới 100%
+  102273204830
+  000272
+  VINA00050
+  Manual Curling M/C/Máy ép tạo biên dưới,dùng tạo hình cho sản phẩm, model: VMS-001, nguồn điện 1 pha 220V, 60Hz. năm sản xuất: 2016, hãng sản xuất: VinaTech, Hàng đã qua sử dụng
+  102303192723
+  0000391;0489944
+  VINA00051
+  Manual Beading M/C/Máy ép tạo biên dưới,dùng tạo hình cho sản phẩm, model: VMS-002, nguồn điện 1 pha 220V, 60Hz. năm sản xuất: 2016, hãng sản xuất: VinaTech, Hàng đã qua sử dụng
+  VINA00052
+  FOR CAPACITOR MACHINE REGISSTER METER/Thiết bị đo điện trở FOR CAPACITOR MACHINE REGISSTER METER, Model: RM3544-01, công suất: 15VA, điện áp: 220V, hàng mới 100%
+  LEADERS WORLD CO.,LTD
+  102319962140
+  000391
+  VINA00053
+  VINA00054
+  Stripping &amp; Attached Parts/Máy mài điện cực Stripping &amp; Attached Parts, model: MCS-2018-ST,công suất: 4KW, điện áp: 220V, 50/60 Hz, năm sản xuất: 10.2018, hàng mới 100%
+  102322604421
+  Liquisition- TK xuất 304706444400 ngày 27/04/2022
+  Cell7
+  VINA00055
+  Small type auto assembly M/C/Máy ngâm tẩm tụ điện và lắp ráp tự động Small type auto assembly M/C, công suất: 5KW, Model: VMS-600, 60Hz , điện áp: 220V, năm sản xuất: 10.2018, hàng mới 100%
+  Cell 1,2,3
+  VINA00056
+  SLEEVE MARKING MACHINE/Máy dập chìm ngày, tháng, năm lên sản phẩm, model: VMS-800, nguồn điện 1 pha 220V, 50/60Hz, năm sản xuất: 2017. Hàng đã qua sử dụng
+  102331909262
+  VINA00058
+  AUTOMATIC WINDING MACHINE/Máy cuốn tụ điện , AUTOMATIC WINDING MACHINE Model: XCJ-820, điện áp: 220V, công suất: 1.5KW, năm sản xuất: 2018,  hàng mới 100%
+  102334493221
+  Liquisition- TK xuất 304222575330- 1/4
+  Cell 1,2,3,4
+  VINA00060
+  SLEEVE HEATING M/C/Máy bọc vỏ, Model: VMS-1200, Công dụng: Bọc vỏ sản phẩm, điện áp : 220V, 50/60Hz, Công suất: 1.2KW, Năm sản xuất: 08.2015, hãng sản xuất: VinaTech, Hàng đã qua sử dụng
+  102342692061
+  0065593;0065874;000391
+  Manual line F2
+  VINA00061
+  SLEEVE HEATING M/C/Máy bọc vỏ, Model: VMS-1200, Công dụng: Bọc vỏ sản phẩm, điện áp : 220V, 50/60Hz, Công suất: 1.2KW, Năm sản xuất: 10.2015, hãng sản xuất: VinaTech, Hàng đã qua sử dụng
+  VINA00062
+  SLEEVE HEATING M/C/Máy bọc vỏ, Model: VMS-1200, Công dụng: Bọc vỏ sản phẩm, điện áp : 220V, 50/60Hz, Công suất: 1.2KW, Năm sản xuất: 11.2015, hãng sản xuất: VinaTech, Hàng đã qua sử dụng
+  VINA00063
+  Vacuum Pump/Thiết bị dùng trong phòng khô: bơm hút không khí Vacuum Pump, model W2V20 điện áp: 220V, công suất 0.4KW, năm sản xuất: 2018, hàng mới 100%
+  102358549640
+  0067999;0068182;000391
+  Liquidate 5/6
+  VINA00064
+  Vacuum Oven/Thiết bị dùng trong phòng khô: lò sấy chân không Vacuum Oven, model: OV-12, điện áp: 230V,công suất 6.1A, năm sản xuất: 2018, hàng mới 100%
+  VINA00065
+  Forced Convection Oven/Lò sấy tụ điện sau khi rửa Forced Convection Oven, model: OF-22GW, điện áp: 230V, 50Hz, công suất: 7.4A, năm sản xuất: 2018, hàng mới 100%
+  VINA00066
+  Charge &amp; Discharge Device/Thiết bị kiểm tra dung lượng tụ điện và điện áp nạp xả, model: 6V 6A _ 48CH, điện áp: 220V, công suất: 70A, năm sản xuất: 2017, hàng mới 100%
+  102360775531
+  000391;68380;68470
+  VINA00067
+  HITESTER ESR/Thiết bị đo điện trở HITESTER ESR, model: RS-232C, điện áp: 240V, 50/60Hz, công suất: 30VA, năm sản xuất: 2018, hàng mới 100%
+  102371673722
+  VINA00068
+  HITESTER ESR CHECK ZIG/Thiết bị kiểm tra điện trở bằng tay HITESTER ESR CHECK ZIG, hàng mới 100%
+  VINA00072
+  MODULE CUTTING M/C/Máy cắt chân tụ điện MODULE CUTTING M/C, Model: VMS-1700, Công dụng: Cắt chân tụ điện, điện áp : 220V, 60Hz, Công suất: 1 KW, Năm sản xuất: 04.2014, hãng sản xuất: VinaTech, Hàng đã qua sử dụng
+  102396959822
+  000499
+  VINA00073
+  Fork lift car/Xe nâng hàng
+  PCS
+  Công ty cổ phần đầu tư và thương mại quốc tế Vilegend
+  0000141
+  Replace by VINA00073R do thay đổi thời gian khấu hao tại ngày 31/03/2020. Đã có bút toán điều chỉnh liên quan năm 2020
+  Means of transport, conveyance
+  VINA00073R
+  VINA00074
+  CLEAN AND DRY M/C/Máy làm sạch và sấy khô tụ điện Clean&amp;Dry M/C,Hoạt động bằng điện, Model: CD450, Công suất: 6 KW , điện áp: 220V, năm sản xuất: 09.2018, hàng mới 100%
+  102465373030
+  0007348;0000628
+  Cell 2,3,4
+  VINA00075
+  RUBBER INSERT M/C/Máy đóng nắp cao su RUBBER INSERT M/C, Model: VMS-001, để đóng cao su vào tụ điện, điện áp: 220V, 60Hz, Công suất: 1KW, Năm sản xuất: 2014, Hàng đã qua sử dụng
+  102419529663
+  0045766;0055184;0000626
+  VINA00076
+  S/D CHECK M/C/Máy kiểm tra ngắn mạch S/D CHECK M/C, Model: VMS-003, điện áp: 220V 60Hz, công suất: 0.75KW, năm sản xuất: 2018. Hàng mới 100%
+  VINA00077
+  XCJ880T AUTO SLEEVE MACHINE/Máy bọc vỏ tự động, Model: XCJ880T, Công dụng: Bọc vỏ sản phẩm, điện áp: 220V, Công suất: 1.5KW, Năm sản xuất: 2018, Hàng mới 100%
+  102431979050
+  VINA00078
+  XCJ-F AUTO CAPPER MACHINE/Máy ép tạo biên dưới tự động, dùng tạo hình cho sản phẩm, model: XCJ-F,điện áp: 220V, Công suất: 1.5KW, Năm sản xuất: 2018, Hàng mới 100%
+  VINA00079
+  CHARGE &amp; DISCHARGE TESTER,/Thiết bị nạp điện vào tụ điện CHARGE &amp; DISCHARGE TESTER, Model: 6V 6A_48CH, điện áp: 220V, công suất: 1200W, năm sản xuất: 2016, hãng sản xuất EGpower, Hàng đã qua sử dụng
+  102514967334
+  0102803;0000889
+  VINA00080
+  ELECTRODE GRINDING MACHINE/Máy mài điện cực, model: MCS-2019-ST,công suất: 4KW, điện áp: 220V, 50/60 Hz, năm sản xuất: 2019, hàng mới 100%
+  102548984200
+  0129302;0126061;0000890
+  STRIPPING
+  VINA00081
+  Transformer/Biến áp 250 cách ly ngâm dầu - HĐ số 0000217 ngày 12/01/2019
+  CÔNG TY TNHH HÙNG LUẬN
+  0000217
+  VINA0007M
+  Volume completed/ Khối lượng hoàn thành đợt 5 dự án xây dựng Nhà Máy Siêu Tụ điện giải pháp năng lượng Việt Nam theo Hợp Đồng số 0912/2017/HĐKT - Hóa Đơn số 0000338 (Ngày 28/02/2019)
+  0000338
+  VINA00082
+  Small type auto assembly M/C/Máy ngâm tẩm tụ điện và lắp ráp tự động Small type auto assembly M/C, công suất: 5KW, Model: VMS-700, 50Hz, nha sx: VINATECH, điện áp: 380V, năm sản xuất: 2018, hàng mới 100%
+  102566955301
+  0004382;0048747;0011474;0028961;0000995
+  Cell 4, 5,6
+  VINA00083
+  Portable dewpoint hygrometer/Máy đo độ ẩm, Model: SN191102, điện áp: 220V, năm sản xuất: 2019, hãng sản xuất: KOMETS, hàng mới 100%
+  102577494021
+  0134670;0134098;0000985
+  VINA00084
+  VACUUM LINE/Thiết bị hút chân không VACUUM LINE, Model: HD-05A, công suất:  3.7KW, nha sx: CHILLER, điện áp: 380V, năm sản xuất: 2019, hàng mới 100%
+  102581797513
+  0029598;0189315;0032070;0049994
+  VINA00085
+  CONTRACTION MACHINE/Máy bọc vỏ bằng tay CONTRACTION MACHINE, Model: CM-100, Công dụng: Bọc vỏ sản phẩm, điện áp: 220V, 60Hz hãng VINATECH , Công suất:1.2KW,SN: VNEP0347003 (2013), SN:VNEP0347004(2016),Hàng đã qua sử dụng
+  VINA00086
+  LEAD CUTTING MACHINE/Máy cắt chân tụ điện LEAD CUTTING MACHINE, model: BT-08-50, công suất 100W, điện áp: 220V, 60Hz, hãng VINATECH, SN:VNEP0347004, năm 2016, hàng đã qua sử dụng
+  manual line F1
+  VINA00087
+  SLEEVE CUTTING MACHINE/Máy cắt vỏ bọc tụ điện bằng nhựa,  SLEEVE CUTTING MACHINE, model: VSM-101, SN: VNEP0347005 . công suất: 660W, điện áp: 220V, năm sản xuất: 2015, hãng: VINATECH , hàng đã qua sử dụng
+  VINA00089
+  Condencing Unit/Thiết bị dùng trong phòng khô: Thiết bị ngưng tụ hơi nước Condencing Unit, dùng để tách hơi nước từ không khí, Model: DCS-400, công suất: 0.75KW, điện áp: 380V, 50Hz, năm sx: 2019, mới 100%
+  102583071251
+  0029597;0189325;0032071;0050033;0050087;0050035;0050021;0049963;0050066;0050197;13950600
+  VINA00090
+  Dehumidifier Unit/Thiết bị dùng trong phòng khô: Bộ khử ẩm không khí, dùng để tách hơi ẩm từ không khí, Model: ST1903025, công suất: 7.5 KW, điện áp: 380V, năm sản xuất: 2019, hãng: Cksolution, hàng mới 100%
+  VINA00091
+  Vacuum Oven/Lò sấy chân không Vacuum Oven, model: SBVO-03HDAP điện áp: 380V,công suất 5.5 KW, hãng: WUJIANG năm sản xuất: 2019, hàng mới 100%
+  102584722660
+  0032253;0097603;0000995
+  Dry room 2 (3), Dry room 1 (1)
+  VINA00092
+  STRIPPING MACHINE/Máy mài điện cực STRIPPING MACHINE, model: MCS-2019-ST,công suất: 4KW, điện áp: 220V, 50/60 Hz, năm sản xuất: 2019, MAKER: MECHASOLUTION, hàng mới 100%
+  102592248250
+  0000944
+  Cell 2
+  VINA00093
+  Electrode slitting Machine Parts /Gá đỡ dao cắt Slitter Unit Parts, chất liệu: Thép, (bộ phận của máy rạch điện cực), hàng đã qua sử dụng/Bộ dao cắt 1 Slitter Knife UNit -01 (bộ phận của máy rạch điện cực), hàng đã qua sử dụng/Bộ dao cắt 2 Slitter Knife UNit -02 (bộ phận của máy rạch điện cực), hàng đã qua sử dụng
+  102607427162
+  0055728;0197782;0197783;0012676;0012755;0012677;0012756;0052220;0000944
+  ROLL_PRESSING
+  VINA00096
+  Roll Pressing Machine/Máy ép cuộn điện cực Roll Pressing Machine, Model:2RM-800DRR,Công dụng:Ép bột than lên tấm nhôm thành cuộn điện cực,hãng ONO JAPAN,Công suất: 350KVA,220V, SN:VNEP01206,năm: 2013, hàng đã qua sử dụng
+  VINA00097
+  Slitter Cleaner/Bộ phận của máy hút bụi sử dụng trong máy rạch điện cực Slitter Cleaner (ống dẫn bụi), hàng đã qua sử dụng
+  VINA00098
+  Electrode Slitting Machine Parts/Máy rạch cuộn điện cực Electrode Slitting Machine Parts điều khiển số, hoạt động bằng điện, model: DLSC-1023, công suất:100KVA,220V,hãng NISHIMURA, năm 2013, hàng đã qua sử dụng
+  102607453801
+  0075968;0052485;0037044;0000944
+  VINA00099
+  AUTOMATIC WINDING MACHINE/Máy cuốn tụ điện , AUTOMATIC WINDING MACHINE Model: XCJ-820, điện áp: 220V, công suất: 1.5KW, năm sản xuất: 2019,  hàng mới 100%
+  102610043101
+  Cell 5,6,7
+  VINA00100
+  Transformer/Máy biến áp 350 cách ly ngâm dầu
+  0000267
+  VINA00101
+  Monorail 10T/Cổng trục kéo tay 10 tấn
+  CÔNG TY CỔ PHẦN THIỆT BỊ NÂNG HẠ VÀ XÂY LẮP CÔNG NGHIỆP HÀ NỘI
+  0000035
+  VINA00102
+  CLEAN AND DRY M/C/Máy làm sạch và sấy khô tụ điện Clean&amp;Dry M/C, hoạt động bằng điện, Model: CD450, công suất: 6 KW, điện áp: 220V, nhà sản xuất: AZTEK, năm sản xuất: 2019,  hàng mới 100%
+  102616985220
+  0000098;0041849;0013601;0013327;0013467;0054447;0081228;
+  Cell 5,6,7,8,13
+  VINA00103
+  AC/DC/IR HIPOT TESTER/Máy đo ngắn mạch, model: 19073, công suất 300W, dòng điện: 100V/120V/220V/240V -50/60Hz, hãng sản xuât Chroma, năm 2019, mới 100%
+  102636335540
+  0000096;0032347
+  VINA00104
+  ESR TESTER/Thiết bị đo điện trở ESR TESTER, model: BT3562, phạm vi đo điện áp: 6V/60V, dòng điện:100-240V, công suất: 30VA-50/60HZ, năm sản xuất 2019, hàng mới 100%
+  VINA00105
+  Bead Machine/Máy uốn tạo biên dạng dưới Bead Machine ( dùng để tạo biên dưới cho tụ điện), Model: VMS-005, điện áp: 220V, công suất: 0.5 KW, nhà sản xuất: VINATECH, năm sản xuất :2015, hàng đã qua sử dụng
+  102653962942
+  0000098;0063570;0011305
+  VINA00106
+  Beading Machine/Máy uốn tạo biên dạng dưới Beading Machine ( dùng để tạo biên dưới cho tụ điện),Model: VMS-001, điện áp: 220, công suất: 0.5 KW, nhà sản xuất: VINATECH, năm sản xuất: 2016, hàng đã qua sử dụng
+  VINA00107
+  Curling Machine/Máy uốn tạo biên dạng trên Curling Machine( dùng để tạo biên trên cho tụ điện), Model: VMS-007, điện áp: 220V, công suất: 0.5 KW nhà sản xuất: VINATECH, năm sản xuất :2015, hàng đã qua sử dụng
+  VINA00108
+  Auto Curling Machine/Máy uốn tạo biên dạng trên tự động Auto Curling Machine ( dùng để tạo biên trên cho tụ điện), model:VMS-018,điện áp:220V, công suất:1,5KW,nhà sản xuất:Vinatech, năm sản xuất:2015, hàng đã qua sử dụng
+  VINA00109
+  AC/DC/IR HIPOT TESTER/Máy kiểm tra điện cao áp, chức năng chính: đo ngắn mạch cho tụ điện, model: 19073, công suất: 300W, dòng điện: 100V/120V/220V/240V, 50/60Hz, hãng sản xuât: Chroma, năm 2019, hàng mới 100%
+  102664194511
+  0000097;0026129
+  FI-&gt; FII NGÀY 01/06/2020
+  VINA00110
+  AUTO BENDING MACHINE/Máy uốn chân điện cực (của tụ điện) tự động AUTO BENDING MACHINE , model: VMS-200, điện áp: 220V, 60Hz, công suất: 0.5KW, năm sản xuất: 2018, nhà sản xuất: VINATECH, hàng đã qua sử dụng
+  102671804321
+  0000098
+  FII_SLEEVE
+  VINA00111
+  Washing machine/Máy rửa bát
+  CÔNG TY TNHH ĐẦU TƯ SẢN XUẤT VÀ THƯƠNG MẠI DỊCH VỤ ANH CƯỜNG
+  0000490
+  VINA00112
+  Wooden box frame shock level/Khung hộp gỗ giật cấp
+  0000836
+  VINA00113
+  AUTO SLEEVING MACHINE/Máy bọc vỏ tự động, công dụng: Bọc vỏ sản phẩm, model: VMSC-701, công suất: 5KW, điện áp: 220V, 60Hz, năm sản xuất: 2014, nhà sản xuất: VINATECH, hàng đã qua sử dụng
+  102725150731
+  0000210;0057413;0082209;0001495;0001503;0002884
+  Cell 8
+  VINA00114
+  AUTO CLEAN MACHINE/Máy làm sạch (tụ điện) tự động, model: VMSC-501, công suất: 10KW, điện áp: 220V, 60Hz, năm sản xuất: 2014, nhà sản xuất: VINATECH, hàng đã qua sử dụng
+  Cell 9
+  VINA00115
+  AUTO CURLING MACHINE/Máy uốn tạo biên dạng trên tự động ( dùng để tạo biên trên cho tụ điện), model: VMSC-601, công suất: 3KW, điện áp: 220V, 60Hz, năm sản xuất: 2015, nhà sản xuất: VINATECH, hàng đã qua sử dụng
+  VINA00116
+  AUTO STRIPPING MACHINE/Máy mài điện cực tự động (công dụng: mài chân điện cho tụ), model:VMSC-101, công suất: 3KW, điện áp: 220V, 60Hz, năm sản xuất: 2012, nhà sản xuất: VINATECH, hàng đã qua sử dụng
+  Liquisition- TK xuất 304222575330-All
+  Cell 3
+  VINA00117
+  AUTO RUBBER INSERT MACHINE VNEP0254/Máy chèn cao su tự động ( công dụng: chèn cao su cho tụ điện), model: VMSC-301, công suất: 5KW, điện áp: 220V, 60Hz, năm sản xuất: 2017, nhà sản xuất: VINATECH, hàng đã qua sử dụng
+  VINA00118
+  AUTO WINDING MACHINE/Máy cuốn tụ điện tự động, (dùng để cuốn tụ), model: VMSC-201, công suất: 5KW, điện áp: 220V, 60Hz, năm sản xuất: 2017, nhà sản xuất: VINATECH, hàng đã qua sử dụng
+  VINA00119
+  AUTO ASSEMBLY MACHINE/Máy lắp ráp tụ điện tự động (dùng để tự động), model: VMSC-401, công suất: 5KW, điện áp: 220V, 60Hz, năm sản xuất: 2014, nhà sản xuất: VINATECH, hàng đã qua sử dụng
+  Cell 7
+  VINA00120
+  VACCUM OVEN OV-12/Lò sấy chân không, ( dùng để sấy khô tụ điện), model: OV-12, điện áp: 220V, 60Hz, công suất: 1.3KW, hãng: JEIO TECH, năm sản xuất: 2014, hàng đã qua sử dụng
+  Cell 5 (2)+  Cell 18(2)
+  VINA00121
+  DUROMETER STAND (T-GS-612)/Thiết bị kiểm tra độ cứng cao su (T-GS-612), chạy bằng pin, hàng mới 100%
+  102721744420
+  0000209;0044078
+  VINA00122
+  AUTO RUBBER PLUG MACHINE/Máy đóng nắp cao su tự động AUTO RUBBER PLUG MACHINE ( đóng nắp cao su của tụ điện), model: XCJ2500R, công suất: 2 KW, điện áp: 220V, năm sản xuất: 2019, xuất xứ: China, hàng mới 100%
+  102696225661
+  VINA00123
+  AUTOMATIC WINDING MACHINE Model: XCJ-3800/Máy cuốn tụ điện , AUTOMATIC WINDING MACHINE Model: XCJ-3800, điện áp: 380V, 3 pha, công suất: 8KW, năm sản xuất: 2019,  hàng mới 100%
+  102683195310
+  0000304
+  VINA00124
+  Wire SD charger/Thiết bị kiểm tra tính năng tụ (nạp/ xả điện) Wire SD charger, năm sản xuất: 2018,  hàng đã qua sử dụng
+  102678335062
+  0000208;0038189
+  Aging F2
+  VINA00125
+  Dishwasher/Máy rửa bát
+  CÔNG TY CỔ PHẦN ĐẦU TU LIÊN HỢP VINALINK
+  0000279
+  Nhà bếp
+  VINA00126
+  Stone table/Tủ bàn đá chạy dài giữa nhà
+  VINA00127
+  the value of the balance sheet of the economic contract No. 1207/HDKT/GD5/2019/VINA-ATH/Thiết kế và thi công nội thất khu văn phòng và khu nhà máy giai đoạn V theo hợp đồng kinh tế số 1207/HDKT/GD5/2019/VINA-ATH
+  0000851
+  Văn phòng
+  VINA00128
+  S/D CHECK MACHINE/Máy kiểm tra ngắn mạch S/D CHECK M/C, Model: VMS-003, điện áp: 220V 60Hz, công suất: 0.75KW, nhà sản xuất: VINATECH, năm sản xuất: 2018. Hàng mới 100%
+  102739419750
+  0046566
+  VINA00129
+  AL CASE HYDRAURLICS TESTER/Máy kiểm tra áp lực dầu vỏ nhôm AL CASE HYDRAURLICS TESTER, Model: HE-1901, điện áp: 220V, 50/60Hz,  công suất: 250W, nhà SX: Hanam Electronics, năm sản xuất: 2019, hàng mới 100%
+  102782858950
+  0079509;0000304
+  IQC
+  VINA00130
+  AUTO SLEEVING MACHINE/Máy bọc vỏ tự động, công dụng: Bọc vỏ sản phẩm, model: VMSC-701, công suất: 5KW, điện áp: 220V, 60Hz, năm sản xuất: 2018, nhà sản xuất: VINATECH, hàng đã qua sử dụng
+  Sets
+  102790068403
+  0006417;0006390;0006391;0005095;0016212;0016083;0000447
+  VINA00131
+  AUTO CURLING MACHINE/Máy uốn tạo biên dạng trên tụ điện tự động, model: VMSC-601, công suất: 2.2KW, điện áp: 220V, 60Hz, năm sản xuất: 2015, nhà sản xuất: VINATECH, hàng đã qua sử dụng
+  Cell 7,8
+  VINA00132
+  AUTO STRIPPING MACHINE/Máy mài điện cực tự động (công dụng: mài chân điện cho tụ), model: VMSC-101, công suất: 4KW, điện áp: 220V, 60Hz, năm sản xuất: 2012, nhà sản xuất: VINATECH, hàng đã qua sử dụng
+  Cell 4
+  VINA00133
+  AUTO STRIPPING MACHINE/Máy mài điện cực tự động (công dụng: mài chân điện cho tụ), model:VMSC-101, công suất: 4KW, điện áp: 220V, 60Hz, năm sản xuất: 2013, nhà sản xuất: VINATECH, hàng đã qua sử dụng
+  Cell 5
+  VINA00134
+  Cell 9,10
+  VINA00135
+  AUTO CLEAN MACHINE/Máy làm sạch (tụ điện) tự động, model: VMSC-501, công suất: 11KW, điện áp: 220V, 60Hz, năm sản xuất: 2014, nhà sản xuất: VINATECH, hàng đã qua sử dụng
+  01/02/2021: TSCĐ không dùng chuyển kho dabaco 6274-&gt; 8118
+  VINA00136
+  AUTO ASSEMBLY MACHINE/Máy lắp ráp tụ điện tự động (dùng để tự động), model: VMSC-401, công suất: 5KW, điện áp: 220V, 60Hz, năm sản xuất: 2015, nhà sản xuất: VINATECH, hàng đã qua sử dụng
+  Replace by VINA00136A and VINA00136B
+  Đã có mã thay thế
+  VINA00136A
+  Cell 10
+  VINA00136B
+  102790068403, 0044819,0044843
+  VINA00137
+  VACCUM OVEN OV-12/Lò sấy chân không, ( dùng để sấy khô tụ điện), model: OV-12, Công suất: 1.3KW, điện áp: 220V, 60Hz,  hãng: JEIO TECH, năm sản xuất: 2014,  hàng đã qua sử dụng
+  VINA00138
+  VACCUM OVEN OV-12/Lò sấy chân không, ( dùng để sấy khô tụ điện), model: OV-12, Công suất: 1.3KW, điện áp: 220V, 60Hz, hãng: JEIO TECH, năm sản xuất: 2013, hàng đã qua sử dụng
+  Cell 6
+  VINA00139
+  VACCUM OVEN OV-12/Lò sấy chân không, (dùng để sấy khô tụ điện), model: OV-12, Công suất: 1.3KW, điện áp: 220V, 60Hz,  hãng: JEIO TECH, năm sản xuất: 2012, hàng đã qua sử dụng
+  VINA00140
+  VACCUM OVEN OV-12/Lò sấy chân không, (dùng để sấy khô tụ điện), model: OV-12, Công suất: 1.3KW, điện áp: 220V, 60Hz,  hãng: JEIO TECH, năm sản xuất: 2014,  hàng đã qua sử dụng
+  VINA00141
+  VACCUM OVEN OV-12/Lò sấy chân không, (dùng để sấy khô tụ điện), model: OV-12, Công suất: 1.3KW, điện áp: 220V, 60Hz,  hãng: JEIO TECH, năm sản xuất: 2014, hàng đã qua sử dụng
+  VINA00142
+  VACCUM OVEN OV-12/Lò sấy chân không, (dùng để sấy khô tụ điện), model: OV-12, Công suất: 1.3KW, điện áp: 220V, 60Hz, hãng: JEIO TECH, năm sản xuất: 2014, hàng đã qua sử dụng
+  VINA00143
+  AUTO SLEEVING MACHINE/Máy bọc vỏ tự động AUTO SLEEVING MACHINE, công dụng: Bọc vỏ sản phẩm, model: VMSC-701, công suất: 6.6 KW, điện áp: 220V, 60Hz, năm sản xuất: 2014, nhà sản xuất: VINATECH, hàng đã qua sử dụng
+  102813523851
+  0008323;0025557;0052507;0000447
+  VINA00144
+  LEAD CUTTING MACHINE/Máy cắt chân điện cực của tụ điện LEAD CUTTING MACHINE, model: VSM-201, điện áp 220V công suất 0.3KW, nằm sản xuất 2018, nhà sản xuất: VINATECH,  hàng đã qua sử dụng
+  VINA00145
+  AUTO STRIPPING MACHINE/Máy mài điện cực tự động (công dụng: mài chân điện cho tụ) AUTO STRIPPING MACHINE, model:VMSC-101, công suất: 4KW, điện áp: 220V, 60Hz, năm sản xuất: 2012, nhà sản xuất: VINATECH, hàng đã qua sử dụng
+  FII
+  VINA00146
+  AUTO CURLING MACHINE/Máy uốn tạo biên dạng trên tự động cho tụ điện AUTO CURLING MACHINE , model:VMS-070, công suất:2.2KW, điện áp: 220V,60Hz, năm sản xuất:2015, nhà sản xuất: VINATECH, hàng đã qua sử dụng
+  102847259762
+  0026320;0038175;0010199;0004079;0000559
+  FII_CURLING
+  FA190901
+  AUTO RUBBER INSERT MACHINE/Máy đóng nắp cao su tự động AUTO RUBBER INSERT MACHINE (đóng nắp cao su của tụ điện), model: VMS-325, công suất: 4KW,điện áp: 220V 60 Hz, năm sản xuất: 2015, nhà sản xuất:VINATECH, hàng đã qua sử dụng
+  FA190902
+  AUTOMATIC WINDING MACHINE/Máy cuốn tụ điện, AUTOMATIC WINDING MACHINE, Model: XCJ-5600, điện áp: 220V, công suất: 15 KW, nhà sx: SHEN ZHEN SHI XING CHENGJIE PRECISE EQUIPMENT CO., LTD, năm sản xuất: 2019,  hàng mới 100%
+  102849119810
+  0000559
+  FA190903
+  CLEANING MACHINE/Máy rửa tự động ( dùng để làm sạch tụ), model: XCJ2510QX, điện áp: 220V, công suất 5KW, năm sản xuất: 2019,  hàng mới 100%
+  102851799040
+  FA190904
+  AUTOMATIC WINDING MACHINE/Máy cuốn tụ điện , AUTOMATIC WINDING MACHINE, model: VMSC-201, Công suất: 5KW, dòng điện: 220V, năm sản xuất: 2017, nhà sản xuất: VINATECH, hàng đã qua sử dụng
+  102852556002
+  0112770;0000556
+  Cell 11
+  FA190906
+  AUTO WINDING MACHINE/Máy cuốn tụ điện tự động, AUTO WINDING MACHINE, Model: SPH-3500D,  điện áp: 220V, công suất: 3.7KW, năm sản xuất: 2015, nhà sản xuất: VINATECH, hàng đã qua sử dụng
+  102872963763
+  0046517;0011797;0056599;0000559
+  FA190905
+  AUTO CURLING &amp; SLEEVE MACHINE/Máy tự động uốn tạo biên dạng trên và bọc vỏ cho tụ điện, AUTO CURLING &amp; SLEEVE MACHINE, model: VMCS-001, công suất: 10 KW, điện áp: 220V, năm sx: 2019 nhà sản xuất: VINATECH, hàng mới 100%
+  Cell 4,5
+  FA191001
+  TUNNEL HEATER CONVEYER/Máy bọc vỏ, Model: CM-100, Công dụng: bọc sản phẩm, điện áp: 220V, 60Hz, công suất 5,2 KW, hãng SVKOREA , năm sản xuất: 2019, hàng đã qua sử dụng
+  102901318922
+  0098120;0014034;0089368;0000726
+  FA191002
+  AUTO WINDING MACHINE/Máy cuốn tụ điện tự động, AUTO WINDING MACHINE, Model: KS-500SA, điện áp: 220V, công suất: 1.9 KW, năm sản xuất: 2017, nhà sản xuất: VINATECH, hàng đã qua sử dụng
+  FA191003
+  AUTO BEAD &amp; CURLING MACHINE (USED)/Máy tự động uốn tạo biên dạng trên và bọc vỏ cho tụ điện, AUTO BEAD&amp;CURLING MACHINE, model: VMBC-001, công suất: 1 KW, điện áp: 220V, năm sx: 2019, nhà sản xuất: VINATECH, hàng đã qua sử dụng
+  FA191004A
+  Conveyor and Working table 1/Bộ băng tải và bàn thao tác W105*L1130*H200mm
+  CÔNG TY TNHH B-TEK
+  0000062
+  FA191004B
+  Conveyor and Working table 2/Bộ băng tải và bàn thao tác W105*L1130*H200mm
+  FA191005
+  Conveyor and Working table 3/Bộ băng tải và bàn thao tác W105*L1330*H200mm
+  FA191101
+  GENERATOR 825kVA/Máy phát điện 825kVA
+  cái
+  0000017
+  OUT FACTORY
+  FA191102
+  ATS panel/Tủ Át
+  FA191103
+  Cable (Cable from Genset to ATS (MDB))/Cáp
+  FA191104
+  Transformer/Máy biến áp 350 KVA
+  0000417
+  FA191105
+  Building (Admin and apart of Factory)-II STAGE/Construction of Fence, Generator room,waster house roof, Noise Panel/ Nhà cửa, vật kiến trúc- Giá trị hoàn thành phần thi công xây dựng hàng rào, phòng máy phát, mái nhà rác, tấm chống ẩm thoe HĐKT số 2905/2019/HĐKT ký ngày 29/05/2019
+  Lần
+  0000016
+  FA191106
+  Moisture Titrator (MKC-710)/Máy kiểm tra độ ẩm dung dịch ( dùng để phân tích nhiểm ẩm của dung dịch chất điện phân), model: MKC-710, dòng điện 220v - hàng mới 100%
+  103002960100
+  0183584;0000956
+  FA191107
+  X-Ray machine/Máy kiểm tra sản phẩm X-ray, model: XSCAN-A130H (công dụng kiểm tra thành phẩm tụ điện) công suất: 130kV, dòng điện 220v, 50-60 Hz, hàng mới 100%
+  XAVIS CO., LTD
+  102978274342
+  0045053;0000797;0005723;0000958
+  FA191108
+  Auto assembly machine (Used)/Máy lắp ráp tụ điện tự động (dùng để lắp tụ tự động), model: VMSC-401, công suất: 5KW, điện áp: 220V, 60Hz, năm sản xuất: 2015, nhà sản xuất: VINATECH, hàng đã qua sử dụng
+  102979638861
+  0045225;0047803;0000958
+  FA191201
+  TAPPING MACHINE/Máy sắp xếp và đóng gói tụ TAPPING MACHINE (dùng để sắp xếp tụ theo thứ tự, đưa vào đóng gói), model: 350, công suất 3KW, điện áp 220V, nhà sản  xuất YUXINCHENG, năm sản xuất:2015,
+  103028427131
+  0001211;0194499;0000099
+  FII_CPC
+  FA191202
+  Vaccum oven Ov-12 (Used)/Lò sấy chân không, ( dùng để sấy khô tụ điện), model: OV-12, điện áp: 220V, 60Hz, công suất: 1.3KW, hãng: JEIO TECH, năm sản xuất: 2012, hàng đã qua sử dụng
+  103040766732
+  0001211;0201064
+  FA191203
+  FA191204
+  FA191205
+  FA191206
+  Panel system Kiosk/Máy tính màn hình cảm ứng (công dụng: Sử dụng để lưu trữ, hiển thị dữ liệu sản xuất), model: NTP21KLF, màn hình :21 inch, Full HD 1920x1080; core: 13, ram 8G, bộ nhớ: 128G, năm sx :2019- hàng mới 100%
+  INEWTEK INC.
+  103045948500
+  0001201;0000970;0001120
+  FA191207
+  FA191208
+  FA191209
+  Room Display (8531.20-1000)/Màn hình hiển thị loại đơn sắc (bộ phận của cảm biến đo điểm sương, model DMT348, NSX: Vaisala Oyj, nhãn hiệu Vaisala) công dụng, hiển thị thông số của cảm biến đo điểm sương, hàng mới 100%
+  CK SOLUTION CO., LTD.
+  103066761012
+  0001207
+  FA191210
+  D.P Sensor (9024.90-1000)/Cảm biến đo điểm sương model DMT348, nhà sản xuất Vaisala Oyj, nhãn hiệu Vaisala, công dụng: đo độ ẩm, nhiệt độ điểm sương, dòng điện 220mA, DC 24A, năm sản xuất: 2019, hàng mới
+  FA200102
+  EVAPORATOR ADP-611/Máy kiểm tra đánh giá độ sạch tụ điện, model: ADP-661, công suất 150W, dòng điện 120-230 VAC, năm sản xuất :2019 , nhà sản xuất : KYOTO, xuất xứ: Nhật Bản - hàng mới 100%
+  103088064702
+  0224009;0223370;0001488
+  FA200103
+  EDLC AGING &amp; SORTING MACHINE FOR ELECTROLYTIC CAPACITOR (MODEL: ECAS-2500)/Máy kiểm tra và phân loại tụ điện dùng để già hóa và phân loại tụ điện, Model: ECAS-2500, công suất 34KW, điện áp 220V, năm Sx: 2016,Nhà sx:SAMHWA ENGINEERING CO.,LTD - hàng đã qua sử dụng
+  SETS
+  103098322462
+  0011405;0028157;0123363;0001491;0000113
+  Trước cửa VP
+  FII_AGING
+  AGING
+  FA200201
+  PANEL SYSTEM/Máy tính công nghiệp (lắp ráp vào dây chuyền, lưu trữ, hiển thị dữ liệu sản xuất, chỉ dùng trong nhà máy), model: NTP21KLF, màn hình:21 inch, core: 13, ram 8G, Nsx: INEWTEK, năm sx :2019, mới 100%
+  103128659541
+  0011444;0001191;0001687;0000140
+  FA200202
+  FA200203
+  FA200204
+  Cell 15
+  FA200205
+  FA200206
+  FA200207
+  FA200208
+  Air compressor and air dryer system/Hệ thống máy nén khí và máy sấy khí
+  CHI NHÁNH CÔNG TY TNHH YUJIN FLUID VIỆT NAM
+  0000305
+  FA200301
+  WASHING MACHINE/Máy rửa bằng sóng siêu âm SONIC505
+  CÔNG TY CỔ PHẦN GTT VIỆT NAM
+  0000456
+  FII_ELECTRODE
+  FA200302
+  I/O PCB BOARD LINK_IO_002 REV04/ Bản mạch đầu vào/ra dùng cho máy winding KS500, hàng mới 100%
+  103195236910
+  0273985;0002012
+  JAVIS-FI
+  FA200303
+  TUNNEL HEATER CONVEYER (CM-100)/Máy bọc vỏ sử dụng trong công đoạn bọc vỏ tụ điện, Model CM-100, công suất 5.2KW, điện áp 1pha, 220V, 50/60Hz, nhà sx HANKOOKPACK, năm sx 2019, hàng đã qua sử dụng
+  103211645132
+  0000170;0018297;0034761;0034747;0009774;0002020
+  FA200304
+  PUNCHING &amp; REVETING M/C (MSC-2011) SOLUTION/Máy dập dùng để dập và tán chân tụ điện, Model MCS-2011, công suất 1KW, điện áp 2pha, 220V, 50/60Hz, nhà sx MECHA, năm sx 2011, hàng đã qua sử dụng
+  FA200305
+  PUNCHING &amp; REVETING M/C (MSC-2011) SOLUTION/Máy bo cổ tụ sử dụng để bo cổ tụ điện, Model MCS-2011, công suất 1KW, điện áp 2pha, 220V, 50/60Hz, nhà sx MECHA,, năm sx 2011, hàng đã qua sử dụng
+  FA200306
+  MANUAL CURLING MACHINE (MSC-1021)/Máy bo cổ tụ sử dụng để bo cổ tụ điện, Model MSC-1021, công suất 1.5KW, điện áp  3pha, 220V, 50/60Hz, nhà sx MECHA SOLUTION, năm sx 2011, hàng đã qua sử dụng
+  FA200307
+  AUTO STRIPPING MACHINE (MLS-2012)/Máy mài sử dụng để mài liệu tụ điện, Model MLS-2012, công suất 4KW, điện áp 2pha, 220V, 50/60Hz, nhà sx MECHA
+  FII_WINDING
+  FA200308
+  AUTO WINDING MACHINE (KS-2260AH) KOEM ENGINEERING CO.,LTD,/Máy cuốn sử dụng trong công đoạn cuốn tụ điện, Model KS-2260AH, công suất 15KW, điện áp  3pha, 220V, 60Hz, nhà sx, năm sx 2013, hàng đã qua sử dụng
+  FA200309
+  AUTO WINDING MACHINE (PCWL-4500) NANTONG TIANHE MECHANICAL TECHNOLOGY CO.,LTD/Máy cuốn sử dụng trong công đoạn cuốn tụ điện, Model PCWL-4500, công suất 8KW, điện áp  3pha, 220V, 50Hz, nhà sx, năm sx 2011, hàng đã qua sử dụng
+  FA200310
+  VIDEO SYSTEM CAMERA (DKVSC-1001)/Máy đo sử dụng để kiểm tra kích thước sản phẩm, Model DKVSC-1001, công suất 0.3KW, điện áp 220V, 2pha, 50/60Hz, nhà sx DK AUTOMATION, năm sx 2017, hàng đã qua sử dụng
+  FA200311
+  VIDEO METER (VMS-1510G)/Máy kiểm tra kích thước sản phẩm, Model VMS-1510G, công suất 0.5KW, điện áp 220V, 2pha, 50/60Hz, nhà sx RATIONAL PRECISION INSTRUMENT CO.,LTD, năm sx 2016, hàng đã qua sử dụng
+  Manual line F2, Phòng KTSP
+  FA200312
+  AUTOMATIC WINDING MACHINE/Máy cuốn tụ điện , AUTOMATIC WINDING MACHINE Model: XCJ-3800, điện áp: 380V, 3 pha, công suất: 10KW, năm sản xuất: 2020,  hàng mới 100%
+  103213106030
+  0000170
+  FA200313
+  SLEEVE CUTTER/Máy cắt dùng để cắt vỏ bọc, Model  ANYCUT-110E, công suất  1.1KW, điện áp 1pha, 220V, 50/60Hz, NSX:ANYTECH, năm sx 2019, hàng đã qua sử dụng
+  103221052432
+  0000170;0020101;0010888;0006350;0002020
+  FA200314
+  AUTOMATIC CURLING MACHINE/Máy bo tụ tự động dùng để bo miệng tụ điện, Model  LCM-700, công suất  2KW, điện áp 3pha, 220V, 60Hz, NSX:SAMHWA ENGINEERING CO.,LTD, năm sx 2012, hàng đã qua sử dụng
+  FA200315
+  AUTOMATIC IVETING MACHINE/Máy tán chân tự động dùng để tán chân tụ điện, Model  LRM-700, công suất  2KW, điện áp 3pha, 220V, 60Hz, NSX:SAMHWA ENGINEERING CO.,LTD, năm sx 2012, hàng đã qua sử dụng
+  FA200316
+  VACUUM OVEN #2/Lò sấy chân không, (dùng để sấy khô tụ điện), Model  OV-12, công suất  1.3KW, điện áp 1pha, 220V, 60Hz, NSX:JEIO TECH, năm sx 2013, hàng đã qua sử dụng
+  FA200317
+  FA200318
+  FA200319
+  VACUUM OVEN #1/Lò sấy chân không, (dùng để sấy khô tụ điện), Model  OV-12, công suất  1.3KW, điện áp 1pha, 220V, 60Hz, NSX:JEIO TECH, năm sx 2014, hàng đã qua sử dụng
+  FA200320
+  FA200321
+  FA200322
+  FA200323
+  FA200324
+  Cell 19
+  FA200325
+  FA200326
+  FA200327
+  FA200328
+  FA200329
+  FA200331
+  CELL VOLTAGE MONITERING M/C/Máy kiểm tra tụ dùng để giám sát điện áp của tụ, Model  DHBTS-0510, công suất  10KW, điện áp 1pha, 220V, 60Hz, NSX:DAE HEUNG Precision Industry Co.,Ltd, năm sx 2012, hàng đã qua sử dụng
+  FA200332
+  HIGH TEMP AGING CHAMBER/Thiết bị kiểm tra chức năng của tụ điện, Model  DHETS-05128, công suất  14KW, điện áp 1pha, 220V, 50/60Hz, NSX:DAE HEUNG Precision Industry Co.,Ltd, năm sx 2013, hàng đã qua sử dụng
+  FA200333
+  HIGH TEMP AGING CHAMBER#1 /Thiết bị kiểm tra chức năng của tụ điện, Model  DYBTS-05128, công suất  25KW, điện áp 3pha, 220V, 60Hz, NSX:DAE HEUNG Precision Industry Co.,Ltd, năm sx 2013, hàng đã qua sử dụng
+  FA200334
+  HIGH TEMP AGING CHAMBER#2/Thiết bị kiểm tra chức năng của tụ điện, Model  DYBTS-05128, công suất 25KW, điện áp 3pha, 220V, 60Hz, NSX:DAE HEUNG Precision Industry Co.,Ltd,năm sx 2013, hàng đã qua sử dụng
+  FA200335
+  BALL MILL TABLE (BMT-0102) /Tủ chứa, dùng để chứa sản phẩm trong sản xuất tụ, Model BMT-0102, nhà sx DAE WHA Tech Co. , năm sx 2019, hàng mới 100%
+  103223396255
+  0000170;0020099;0143698;0007828;0007935;0002020
+  Electrode line F2
+  FA200336
+  VACUUM PUMP (V-VC 75)/Bơm chân không, dùng để tạo áp lực âm, Model V-VC 75, công suất 2.2KW, điện áp  3pha, 220V, 50/60Hz, nhà sx Gardner Denver, năm sx 2019, hàng đã qua sử dụng
+  FII_BEADING
+  FA200337
+  FA200338
+  CHILLER/Máy lạnh, dùng để làm lạnh, Model HD-03A, công suất 3.04KW, điện áp  3pha, 220V, 50Hz, nhà sx HYUNDAI ENG CO,.LTD, năm sx 2020, hàng mới 100%
+  Electrode line F2,Dùng có máy mix 125L
+  FA200339
+  Electrode line F2, Dùng có máy mix 125L
+  FA200340
+  BEADING M/C (TB255)/Máy bo cổ, dùng để bo cổ tụ điện, BEADING M/C, Model TB255, công suất 0.2KW, điện áp  1pha, 220V, 60Hz, nhà sx TECHLAND, năm sx 2016, hàng đã qua sử dụng
+  FI-&gt; FII NGÀY 01/09/2020
+  FA200341
+  RIVETING MACHINE (THM-808)/Máy tán chân, dùng để tán chân trong sản xuất tụ điện, Model THM-808, công suất 1KW, điện áp  2pha, 220V, 50Hz,  nhà sx NANTONG TIANHE MECHANICAL TECHNOLOGY CO.,LTD, năm sx 2011, hàng đã qua sử dụng
+  FA200342
+  PLANETARY DISPER MIXER (PDM 125-15)/Máy trộn, dùng để trộn nguyên vật liệu, Model PDM 125-15, công suất 25KW, điện áp  3pha, 380V, 60Hz, nhà sx SHIN-IL MIXER n MILLS Co. năm sx 2010, hàng đã qua sử dụng
+  FA200343
+  PLANETARY DISPER MIXER (PDM 125-15)/Máy trộn, dùng để trộn nguyên vật liệu, Model PDM 125-15, công suất 25KW, điện áp  3pha, 380V, 60Hz, nhà sx SHIN-IL MIXER n MILLS Co., năm sx 2011, hàng đã qua sử dụng
+  FA200344
+  AUTO WINDING MACHINE (KS2260A)/Máy cuốn tụ điện tự động, AUTO WINDING MACHINE, Model KS-2260A, điện áp  3pha, 220V, 60Hz, 30A, nhà sx KOEM ENGINEERING Co., năm sx 2016, hàng đã qua sử dụng
+  FA200345
+  VISCOMETER (X DV 2 TLV TJ00E00)/ Máy đo độ nhớt dùng để đo độ nhớt dung dịch, Model : DV 2TLV, điện áp 230VAC,  50/60 Hz, kích thước: 56cm(W) x 28cm(L) x 56cm (H), nhà sx DAERYUN INSTRUMENTS, năm sx 2019, hàng mới 100%
+  01/6/2021: Xuất sang Vinatech co.,ltd để sửa chưa theo TK 304047067500-&gt; 01/06/2021: KHTS chuyển từ 6274-&gt;8118. Đến 01/10/2021 nhận về sửa chữa và sử dụng chuyển từ 8118-&gt; 6274
+  Electrode line F2-MIXING
+  FA200346
+  EDLC TESTER CHARGER/ DISCHAGER (BW-BTS0610)/Máy kiểm tra, dùng để kiểm tra chất lượng của tụ điện, Model BW-BTS0610, điện áp  2pha, 220V, 50/60Hz, 20A,  nhà sx BIT&amp;WATT, năm sx 2019, hàng đã qua sử dụng
+  FA200447
+  LUG AUTO CURLING&amp;BEADING M/C (XCJ3500F)/Máy bo cổ và mài miệng tụ điện, Model: XCJ3500F, điện áp: 220V, Công suất: 1.5KW, Năm sản xuất: 2020, Hàng mới 100%
+  SHENZHEN XINGCHUANGJIA TECHNOLOGY COMPANY LIMITED
+  103235362200
+  0000187,0002292,0002304,0010169,0021405,0145298
+  FA200448
+  COATING MACHINE/Dây chuyền tời liệu phủ bột than lên foil điện cực, Model CM-20F485L(N), điện áp 3 pha, 380V, 50/60Hz, Nhà sx: CORN CO.,LTD, năm sx 2020, hàng mới 100%
+  103229012943
+  0002304,0000187,0003231,0003232,0010416,0027956,0036791,0036796,0147600,0147603
+  FA200450
+  AUTOMATIC SLEEVING MACHINE/Máy tự động bọc vỏ loại sản phẩm lớn dùng để bọc vỏ tụ điện loại to Model LSM-700 công suất 15KW, điện áp 3pha, 220V, 60Hz, nhà sx SAMHWA ENGINEERING CO.,LTD, năm sx 2012, hàng đã qua sử dụng
+  103249949611
+  0010417,0010418,0010466,0010467,0011207,0011208,0011305,0025021,0026856,0039214,0147445,0152716,0154093,0154094, 0000206, 0011323, 0195783, 0002535
+  FA200451
+  CONDENCER CLEAN/Máy rửa tự động dùng để làm sạch tụ điện Model DYM-C100 công suất 13KW, điện áp 1pha, 220V, 60Hz, nhà sx Dong Young Machinery Co.,ltd, năm sx 2013, hàng đã qua sử dụng
+  FII_CURLING
+  FA200452
+  EDLC PRODUCT TESTER/Máy kiểm tra chức năng nạp, xả dòng của tụ điện, cỡ lớn, Model HEPT-2235 công suất 80KW, điện áp 3pha, 380V, 60Hz, nhà sx Human instrument, năm sx 2011, hàng đã qua sử dụng
+  FA200453
+  VACUUM SYSTEM 30 USER/Bơm chân không, dùng cho việc sx tụ điện, hàng mới 100%
+  VACSCO CO.,LTD.
+  103267649662
+  0000187,0002292,0002304,0010811,0021277,0033811,0037535
+  FA200454
+  VACUUMS/Máy hút chân không ( máy mới)
+  NGUYỄN VĂN THẮNG
+  0038245
+  FA200455
+  PRODUCT SINK/Bồn rửa sản phẩm
+  CÔNG TY TNHH SX VÀ TM HANA VIỆT NAM
+  0000021
+  FA200456
+  Water filter system PRO-D1-125/Thiết bị hệ thống lọc nước PRO-D1-125
+  CÔNG TY TNHH DỊCH VỤ KỸ THUẬT ALV TECH
+  0009014
+  FA200557
+  VACUUM OVEN/Lò sấy chân không, ( dùng để sấy khô tụ điện), model: OV-JT-64S, điện áp: 380VAC, 60Hz, công suất: 3KW, hãng sx: JEIO TECH, năm sản xuất:2020, hàng mới 100%
+  103306510200
+  0002535, 0025151, 0046086,0000242
+  FA200558
+  FA200559
+  FA200560
+  FA200561
+  FA200562
+  FA200563
+  FA200564
+  CHARACTERISTIC MEASURING M/C/Máy đo dung lượng tụ điện, Model:DHETS-0510, công suất: 11KW, điện áp 220v 60Hz, nhà sx: DAE HEUNG, năm sx: 2013, hàng đã qua sử dụng
+  103324977930
+  0000206, 0002536, 0026983, 0051399
+  Aging
+  FA200565
+  Dew point meter AGK-AMT-SDC/Thiết bị đo điểm sướng AGK-AMT-SDC
+  0000399
+  FA200566
+  SOLIDWORKS PROFESSIONAL/Phần mềm 3D
+  CÔNG TY TNHH SOLID VÀ SOFT
+  0000051
+  FA200667
+  Agricultural dryer MSD-160V6/Máy sấy nông sản MSD500-160V6
+  CÔNG TY CỔ PHẦN CÔNG NGHỆ MACTECH VIỆT NAM
+  0000150
+  FA200668
+  Buy Vacuum packing machine/Mua máy đóng gói hút chân không
+  0045110
+  FA200669
+  CURLING &amp; SLEEVE MACHINE/Máy bo viền và bọc vỏ tự động tụ điện, model: PAL-CS-08, dùng để bo viền và bọc vỏ tự động của tụ điện, công suất 15 kw, điện áp 380v, 50Hz, nhà sx Palbok Industry, năm sx 2020, hàng mới 100%
+  103364398061
+  0002733,0016613,0053909,0062411,0000242
+  FA200670
+  FA200671
+  CURLING &amp; SLEEVE MACHINE/Máy bo viền và bọc vỏ tự động tụ điện, model: PAL-CS-13, dùng để bo viền và bọc vỏ tự động của tụ điện, công suất 15 kw, điện áp 380v 50Hz, nhà sx Palbok Industry, năm sx 2020, hàng mới 100%
+  FA200672
+  CLEAN&amp;DRY M/C/Máy rửa và sấy tụ điện tự động, Model: CD450, dùng để sấy và rửa tụ điện, công suất 8KW, điện áp 380V 50/60Hz, năm sản xuất:2020, nhà sản xuất:  AZTEK.CO.,LTD, hàng mới 100%
+  FA200673
+  FA200674
+  FA200675
+  WINDING MACHINE XCj-820 (USED)/Máy cuốn tụ điện, WINDING MACHINE Model XCJ-820 , công suất 1.5KW , điện áp: 220V, 50Hz, nhà sx Shenzhen Cheng Jie intelligent equipment co.,Ltd, năm sx 2018, hàng đã qua sử dụng
+  103381401801
+  0002733,0008608,0058269,0066355,0000242
+  Cell 16
+  FA200676
+  ASSEMBLY MACHINE PAL-AM-08 N(USED)/Máy lắp ráp tụ điện tự động Model PAL-AM-08, công suất 15KW , điện áp: 220V, 60Hz, nhà sx Palbok Industry, năm sx 2018, hàng đã qua sử dụng
+  FA200677
+  PANEL SYSTEM/Máy tính công nghiệp(lắp ráp vào dây chuyền, hiển thị dữ liệu sản xuất,chỉ dùng trong nhà máy),model:NTP21KLF,màn hình:21inch tích hợp gắn liền với cây,core13,ram 8G,Nsx: INEWTEK,năm sx :2020,mới 100%
+  103351175651
+  0001761,0002732,0019299,0019332,0000242
+  FA200678
+  FA200679
+  Cell 12
+  FA200680
+  Cell 13
+  FA200681
+  FA200782
+  PASS BOX/Thùng chuyển hàng ( có 2 cửa), chất liệu Sắt, kính,  không có bánh xe, kích thước: 805*600*680mm, dùng để vận chuyển hàng hóa trong phòng sấy khô, hàng mới 100%
+  CK CO., LTD.
+  103397470741
+  0000275;0000566;0003005;0003016;0028456;0028460;0028461;0028464;0038874;0055717;0058024;0072938
+  FA200783
+  A/T DOOR/Cửa kín khí, chất liệu: Bằng khung nhôm, 1,800*2,100 mm, để đóng mở phòng sấy khô, hàng mới 100%
+  Dryroom f2
+  FA200784
+  CONDENSER/Thiết bị ngưng tụ hơi nước và làm mát không khí, Model:JAC-PA-100HHD, Điện áp, 380V, Công suất: 68,6 kW , sử dụng gas R22, lượng nạp vào 4.0 kg, Hãng sx: JOONGWON, năm sx 2020, hàng mới 100%
+  FA200785
+  FA200786
+  CONDENSER/Thiết bị ngưng tụ hơi nước và làm mát không khí,Model:JAC-PA-075HHD,Điện áp 380V, Công suất 52kW, sử dụng gas R22, lượng nạp vào 4.0 kg,Hãng sx: JOONGWON, năm sx: 2020, hàng mới 100%
+  FA200787
+  FA200788
+  FA200789
+  FA200790
+  FA200791
+  DEHUMIDIFIER/Máy hút ẩm Model: CDHL 1200-2, Điện áp: 3pha, 380v, 50HZ; công suất: 5300 CMH, Năm sản xuất 2020, dùng để hút ẩm, sấy khô không khí, nhà sản xuất CK Solution, hàng mới 100%
+  Utility F2
+  FA200792
+  CONTROL PANEL/Tủ điện(dùng để phân phối điện cho máy hút ẩm) , điện áp : In AC380V, Out AC110V, dùng để: Điều khiển, cung cấp điện cho máy hút ẩm, Năm sản xuất: 2020, hàng mới 100%
+  FA200793
+  DP SENSOR/Hộp cảm biến, Model : PTU300, điện áp: 10- 35 VDC, 24 VAC+220% , dùng để đo áp suất, đo nhiệt độ, đo độ ẩm trong phòng làm việc, nhà sản xuất: Valsala, hàng mới 100%
+  FA200794
+  AUTOMATIC TAPING MACHINE/Máy sắp xếp và đóng gói tự động tụ AUTOMATIC TAPPING MACHINE (dùng để sắp xếp tụ theo thứ tự,đưa vào đóng gói),model YC-320A,công suất 1.6KW,điện áp 220V,nhà sx Yi Chuan Automatic,năm sx 2020,mới 100%
+  SHENZHEN LEBENYUN SCIENCE CO., LTD
+  103416069040
+  0000275;0000548;0000549;0003017;0038956
+  Trước kho TP
+  FA200795
+  X(S)N-7530(L/R.P.M)KNEADER/Máy nhào và trộn chất điện cực cho tụ điện (trộn cacbon hoạt tính và các chất phụ gia), model: X(S)N-7530(L/R.P.M)KNEADER, nsx DALIAN HUAHAN, điện áp: 380V, công suất 110kW,năm sx:2020, mới 100%
+  DALIAN HUAHAN RUBBER AND PLASTIC MACHINERY CO., LTD
+  103427306840
+  0000275;0000777;0003018;0041382;0059450;0059454;0078207
+  FA200796
+  Install  air compressor Micos 75   and 'Installation Pipe line in compressor room contract No. YJC/VTV-164 dated 06/05/2020/ Lắp đặt hệ thống máy nén khí hợp đồng số: YJC/VTV-163 ngày 06/05/2020 và Lắp đặt đường ống trong phòng máy nén khí hợp đồng YJC/VTV-164 ngày 06/05/2020
+  0000454, 0000455
+  x
+  Factory 2
+  FA200801
+  Minitab Single User Perpetual license/Phần mềm Minitab Single User Perpetual license
+  0000080
+  Factory 1 (KTSP)
+  FA200802
+  JEIO TECH CO.,LTD
+  103484253940
+  0000303;0092934;0012676;0097455;0005642;0003257;0003264
+  FA200803
+  FA200804
+  FA200805
+  FA200806
+  FA200807
+  FA200808
+  FA200809
+  FA200810
+  FA200811
+  FA200812
+  FA200813
+  FA200814
+  FA200815
+  FA200816
+  Cell 14
+  FA200817
+  FA200818
+  FA200819
+  FA200820
+  FA200821
+  FA200822
+  FA200823
+  FA200824
+  FA200825
+  FA200826
+  Cell 17
+  FA200827
+  FA200828
+  FA200829
+  FA200901
+  Chiller water HDW-5RT/HP/Máy làm mát nước 5RT/HP, KT: L1400*W800*H1100, Công suất làm lạnh: 14000 kcal/hr
+  CÔNG TY TNHH CƠ ĐIỆN LẠNH TÙNG NGA
+  0000157
+  Electrode line F2, Dùng có máy mix 200L
+  FA200902
+  Semi-automatic forklift/Xe nâng bán tự động S15J
+  0036076
+  FA200903
+  PD MIXER 200L MACHINE/Máy trộn nguyên liệu điện cực tụ điện, Model:PD Mixer 200 L,Điện áp:380 V (3 pha),công suất:380kW, tần số:60HZ, năm sx:2020,hãng sx:TSI,Hàng mới 100%
+  TSI CO.,LTD
+  103540127502
+  0053105;0000766;0106679;0003518;0003516;0003534;0000335
+  FA201001
+  WINDING MACHINE, Model: XCJ-820D/Máy cuốn tụ điện, WINDING MACHINE, Model: XCJ-820D, điện áp: 220V, công suất: 1.5 KW, nhà sx: SHENZHEN CHENG JIE INTELLIGENT EQUIPMENT STOCK CO.,LTD, năm sản xuất: 2020,  hàng mới 100%
+  SHENZHEN CHENG JIE INTELLIGENT EQUIPMENT STOCK CO., LTD
+  103605349411
+  0003810,0000039
+  FA201002
+  FA201003
+  FA201004
+  FA201005
+  FA201006
+  Cell 18
+  FA201007
+  CLEAN&amp;DRY M/C/Máy làm sạch và sấy khô tụ điện Clean&amp;Dry M/C,Hoạt động bằng điện, Model: CD450, Công suất: 8KW , điện áp: 380V, năm sản xuất:2020 , Nsx: AZTEK.CO.,LTD, mới 100%
+  AZTEK.CO.,LTD.
+  103613623410
+  0000039;0001517;0003802;0003810;0035785;0087755
+  FA201008
+  FA201009
+  FA201010
+  FA201011
+  FA201012
+  FA201013
+  RACKSIDE CONVEYOR/Băng tải con lăn Model CASE CONVEYOR,để vận chuyển trong kho,công suất 1050W,điện áp 220V,size 2400x1000x520 mm,năm sx 2020Nhãn hiệu Daifuku,nsx MAKITA,mới 100%,áp mã máy chính theo DM 09/DMMC-QV/2020
+  DAIFUKU KOREA CO.,LTD
+  103583337912
+  0000039;0001142;0003809;0030873;0110890;0116754;0130816
+  FA201014
+  SAFETY FENCE/Hàng rào bảo vệ kho tự động, chất liệu thép, kích thước bao: 1800 x 1100x 100 mm, năm sx 2020 Nhãn Daifuku, hàng mới 100%
+  103591470361
+  0000039;0003809;0028645;0032476;0042460;0147208
+  FA201015
+  WINDING MACHINE, Model: XCJ-3800/Máy cuốn tụ điện, WINDING MACHINE, Model: XCJ-3800, điện áp: 380V, công suất: 8KW, nhà sx: SHENZHEN CHENG JIE INTELLIGENT EQUIPMENT STOCK CO.,LTD, năm sản xuất: 2020,  hàng mới 100%
+  FA201016
+  RACK/Khung kệ bằng thép mạ kẽm, dùng để lưu trữ hàng hóa kích thước: 425x3505x220 mm, năm sx 2020, Nhãn hiệu: Daifuku, hàng mới 100%
+  FA201017
+  S/R MACHINE/Máy lưu kho và lấy hàng tự động Model R-P10 dùng để lấy/trả hàng tự động trên khung kệ, kích thước 1273x3455x700 mm,điện áp 220V,công suất 4 KW,năm sx 2020 Nhãn hiệu Daifuku, mới 100%,
+  FA201018
+  BCR/BCR/Đầu đọc mã vạch Model CLV650-6120, dùng để nhận dạng mã vạch, trao đổi tín hiệu, kích thước 100x60x42 mm, năm sx 2020 Nhà sản xuất: SICK, mới 100%, ,áp mã máy chính theo DM 09/DMMC-QV/2020
+  FA201019
+  FA201020
+  Chiller water HDW-5RT/HP/ Máy làm mát nước 5RT/HP  HD: 1809/HĐKT/TN-Vinatech vina/2020 ký ngày 21/09/2020 , KT: L1400*W800*H1100, Công suất làm lạnh: 14000 kcal/hr
+  0000160
+  Electrode line F2, Gần máy mixing  kneader
+  FA201021
+  computer/Máy tính Dell Precision 5820 Tower XCTO Base Xeon W-2223 3.6GHz /2x16GB Ram/1TB HDD/Nvidia Quadro P2200, 5GB/DVDRW/Win 10pro
+  CÔNG TY TNHH THƯƠNG MẠI VÀ ĐẦU TƯ TỔNG HỢP ANH PHÁT
+  0000191
+  FA201022
+  Computer/Máy tính xách tay Asus G512L-VAZ068T/17I7-10750H/512G PCIE G3 SSD/8G*2/RTX 2060-6GB/15.6''FHD/WIN10 màu đen
+  CÔNG TY TNHH ĐẦU TƯ VÀ PHÁT TRIỂN CÔNG NGHỆ PHÚC HƯNG
+  0000095
+  FA201101
+  Buy network equipment/ Mua thiết bị chuyển mạch Cisco Catalyst 2960-X48 Gig Em, 4x1G SFP, LAN Base_WS-C2960x-48TS-L hd: 0000776 ngày 19/10/2020
+  CÔNG TY TNHH TRUYỀN SỐ LIỆU LOTTE VIỆT NAM
+  0000776
+  EA
+  FA201102
+  CURLING &amp; SLEEVING M/C:   Máy uốn tạo biên dạng trên và bọc vỏ cho tụ điện, CURLING &amp; SLEEVING M/C, model: PAL-CS-08, công suất 15KW,điện áp 380V, năm sx: 2020 nhà sản xuất: Palbok Industry,mới 100%
+  PALBOK INDUSTRY CO.,LTD.
+  103629485300
+  0000060;0004169;0004180;0037505;0056884;0056889;0089756
+  FA201103
+  FA201104
+  FA201105
+  FA201106
+  CURLING &amp; SLEEVING M/C:   Máy uốn tạo biên dạng trên và bọc vỏ cho tụ điện, CURLING &amp; SLEEVING M/C, model: PAL-CS-10, công suất 15KW, điện áp 380V, năm sx 2020 nhà sản xuất: Palbok Industry,mới 100%
+  FA201107
+  FA201108
+  Automatic Assembly M/C  Máy ngâm tẩm tụ điện và lắp ráp tự động Automatic Assembly M/C, công suất: 15KW, Model: PAL-AM-10, nha sx: Palbok Industry, điện áp: 380V, năm sản xuất: 2020, mới 100%
+  FA201109
+  Cell 18 (cũ)
+  FA201110
+  Auto Assembly M/C (XCJ986) - Máy ngâm tẩm tụ điện và lắp ráp tự động Model XCJ986,công suất 6.0KW, điện áp 220V 50/60HZ, nhà sx Shenzhen Xingchuangjia Technology Co. LTD, năm sx 2020, mới 100%
+  103678163041
+  0000060;0004169;0004181;0050234;0050235;0109267;0162764;0162768
+  FA201111
+  Auto Assembly M/C (XCJ-981A)- Máy ngâm tẩm tụ điện và lắp ráp tự động Model XCJ-981A,công suất 6.0KW điện áp 220V 50/60HZ, nhà sx Shenzhen Xingchuangjia Technology Co. LTD, năm sx 2020, mới 100%
+  FA201112
+  FA201113
+  FA201114
+  FA201115
+  Assembly M/C/Máy ngâm tẩm tụ điện và lắp ráp tự động Assembly M/C, Model: PAL-AM-10, công suất: 15KW, điện áp: 380V, nhà sx: Palbok Industry, năm sx: 2018, hàng đã qua sử dụng
+  103682663562
+  0004181;0027713;0164209;0182101,0000060
+  FA201116
+  AUTO CURLING MACHINE/Máy bo cổ tụ điện tự động AUTO CURLING MACHINE dùng để bo cổ tụ điện, Model VMSC-601, công suất 2.2KW, điện áp 220V 1pha, 60Hz, nhà sx VINATECH, năm sx 2015, hàng đã qua sử dụng
+  FA201118
+  AUTO SLEEVING MACHINE/Máy bọc vỏ tự động, AUTO SLEEVING MACHINE, công dụng: bọc vỏ tụ điện, Model: XCJ880T,điện áp 220V, công suất: 1.5KW, nhà sx Shenzhen Xingchuangjia Technology Co.,Ltd, năm sx 2018, hàng đã qua sd
+  FA201119
+  103682838710
+  0000060;0002800;0004181;0010100
+  FA201120
+  FA201121
+  FA201122
+  FA201123
+  FA201124
+  FA201125
+  FA201126
+  FA201127
+  flooring /lắp dựng lát sàn inox304
+  CÔNG TY CỔ PHẦN TƯ VẤN VÀ XÂY DỰNG HƯNG HÀ
+  0001840
+  FA201128
+  FA201201
+  electrical cabinets/ Lắp đặt tủ điện cho máy nén khí
+  CÔNG TY TNHH CHANGSUNG VINA
+  0000311
+  FA201202
+  Power supply/cấp điện đến tủ điện sản xuất
+  0000249
+  FA201203
+  Expand and Set up the transformer room/Mở rộng và lắp đặt máy biến áp cho nhà máy mới
+  0000134
+  FA201204
+  Building (Admin and apart of Factory)-II STAGE/Xây dựng nhà xưởng 2
+  0000043;0000093;0000165;0000255
+  FA201205
+  Building (Admin and apart of Factory)-II STAGE- Additional appendix/mở rộng Xây dựng nhà xưởng 2
+  0000166;0000256
+  FA201206
+  Building system construction factory/Xây dựng hệ thống xử lý nước thải
+  0000199,0000254
+  FA201207
+  Expansion of factory warehouse 1/mở rộng nhà kho
+  0000198,0000253
+  FA201208
+  Chiller water HDW-3RT/HP/ Máy làm mát nước 3RT/HP, KT: L1000*W750*H800, Công suất làm lạnh: 7200 kcal/hr (chiller for roll press machine)
+  0000171
+  Electrode line F2,Dùng cho máy prees F1
+  FA201209
+  Kệ slective/ lặp kệ cho sản xuất
+  CÔNG TY TNHH THƯƠNG MẠI VÀ DỊCH VỤ MINH XUÂN PHÁT
+  0000102
+  FA201210
+  waste water treatment system/ hệ thống xử lý rác thải
+  CÔNG TY TNHH ELEPHANT TRADING VINA
+  0010035
+  FA210201
+  HIGH TEMP AGING CHAMBER/Máy sấy tụ điện, Model: DYBTS-05128, công suất 18KW, điện áp 220V, 60Hz,3pha, NSX: DAE HEUNG Precision Industry Co.,Ltd, Năm sx 2012. Hàng đã qua sử dụng
+  103823387402
+  0000107;0000160;0000739;0000790;0005162;0177441;0217844
+  FA210202
+  HIGH TEMP AGING CHAMBER/Máy cấp nguồn cho tụ điện, Model: DHBTS-05128, công suất 14KW, 220V, 60Hz, NSX: DAE HEUNG Precision Industry Co.,Ltd, Năm sx 2012.Hàng đã qua sử dụng
+  FA210203
+  HIGH TEMP AGING CHAMBER/Máy sấy tụ điện, Model: DYBTS-05128, công suất 18KW, 3pha, 220V, 60Hz, NSX: DAE HEUNG Precision Industry Co.,Ltd, Năm sx 2012. Hàng đã qua sử dụng
+  FA210204
+  FA210205
+  HIGH TEMP AGING CHAMBER/Máy cấp nguồn cho tụ điện, Model: DHBTS-05100, công suất 7KW, điện áp, 220V, 60Hz, NSX: DAE HEUNG Precision Industry Co.,Ltd, Năm sx 2012.Hàng đã qua sử dụng
+  FA210206
+  CAPACITY DCR MEASRING MACHINE/Thiết bị kiểm tra công suất của tụ điện, Model: DHETS-0503, công suất 11KW, điện áp 1pha, 220V, 60Hz, NSX: DAE HEUNG Precision Industry Co.,Ltd, Năm sx 2012. Hàng đã qua sử dụng
+  FA210207
+  FA210208
+  S/D MEASURING MACHINE/Thiết bị kiểm tra chức năng tự xả của tụ điện, Model: VMMA-001, công suất 7KW, điện áp 1pha, 220V, 60Hz, NSX: VINATECH, Năm sx 2016. Hàng đã qua sử dụng
+  FA210301
+  Face recognition terminal/Face recognition terminal/Thiết bị chấm công bằng nhận diện khuôn mặt , Model: GQ-1081D,12V,13.5W. Nhà SX: Dongguan Kingone Electronics Co.,Ltd, SX năm 2020.Hàng mới 100%
+  103877842940
+  0000452;0016569;0017283
+  Cổng Bảo vệ
+  CTY
+  FA210302
+  FA210303
+  FA210304
+  EDLC SD&amp;C TESTER/Thiết bị kiểm tra khả năng nạp và xả của tụ điện, Model: GT-5005V2, điện áp: 220V, 50/60Hz, công suất: 400W, Năm SX 2021, NSX: G-WELL Co.,Ltd, Hàng mới 100%
+  103914965340
+  0000463;0004896;0027474;0205109;0000125
+  SD check F1
+  FA210305
+  FA210306
+  SD check Cell 10,11
+  FA210307
+  SD check Cell 6,8
+  FA210308
+  SD check Cell 12,13
+  FA210309
+  SD check Cell 14,15
+  FA210310
+  SD check Cell 16,17,5
+  FA210311
+  SD check Cell 18,19
+  FA210312
+  SD check Manual line F1
+  FA210313
+  SD check Cell 1,3,4
+  FA210314
+  EDLC SD&amp;C TESTER/Thiết bị kiểm tra khả năng nạp và xả của tụ điện, Model: GT-5012V2, điện áp: 220V, 50/60Hz, công suất: 700W, Năm SX 2021, NSX: G-WELL Co.,Ltd, Hàng mới 100%
+  SD check
+  FA210315
+  CAPACITOR TESTER/Thiết bị kiểm tra khả năng nạp và xả của tụ điện, Model: DHBTS0505-48, điện áp: 220V, 60Hz, công suất: 7KW, Năm SX 2012, HSX: DAE HEUNG, Hàng đã qua sử dụng
+  103870277561
+  0000461;0093410;0192432;0000125
+  FA210316
+  CAPACITOR TESTER/Thiết bị kiểm tra khả năng nạp và xả của tụ điện, Model: DHBTS0606-48, điện áp: 220V, 60Hz, công suất: 7KW, Năm SX 2013, HSX: DAE HEUNG, Hàng đã qua sử dụng
+  FA210317
+  CAPACITOR TESTER/Thiết bị kiểm tra khả năng nạp và xả của tụ điện, Model: VNBTS0606-48, điện áp: 220V, 50/60Hz, công suất: 7KW, Năm SX 2016, Nhà SX: BIT&amp;WATT, Hàng đã qua sử dụng
+  FA210318
+  DIMENSION CHECKING MC/Thiết bị kiểm tra kích thước của tụ điện bằng cách chiếu tia sáng vào tụ điện, Model: DKVSC-1003, điện áp: 220V, 50/60Hz, công suất: 0.3KW, Năm SX 2020, Nhà SX: DK AUTOMATION, Hàng đã qua sử dụng
+  FA210319
+  AUTOMATIC TAPPING MACHINE/Máy sắp xếp và đóng gói tự động (dùng để sắp xếp tụ theo thứ tự,đưa vào đóng gói),model YC-320A,công suất 1.6KW,điện áp 220V,nhà sx Yi Chuan Automatic,năm sx 2020,mới 100%
+  103872782050
+  0000461;0001959;0001960;0013322;0092530;0000125
+  FA210320
+  Forklift/ Mua xe nâng tự hành chạy bằng mô tơ điện, nhãn hiệu CLARK, SX năm 2020 mới 100%, model WRX15P, Số khung WRX1500108310KF, Số động cơ 00221298 theo HD số: VINATECH-01,
+  CÔNG TY TNHH CLARK MATERIAL HANDLING VIỆT NAM
+  FA210321
+  Panel door at F.I/ Lắp đặt cửa tự động cửa trượt và vách panel tại xưởng 1 HĐ 0000001-27/03/2021
+  CÔNG TY TNHH THIẾT KẾ VÀ XÂY DỰNG HÀ BẮC
+  0000001
+  F1
+  FA210401
+  Electronic scales/Cân điện tử, model GH-200, Max 220 g, min 0.0001g, kích thước  (217 x 442 x316) mm, đĩa cân 90  mm,  11VA, mới 100%
+  103978334720
+  0000808;0056608;0059046
+  Dry room 1
+  FA210505
+  Chiller water HDW-5RT/HP/Máy làm mát nước 5RT/HP  HD 0000188 ngày 05/05/2021, HD: 2804/HĐKT/TN-Vinatech vina/2021 (chiller for Vaccuum Pump System Factory 1) KT: L1400*W800*H1100, Công suất làm lạnh: 14000 kcal/hr
+  0000188
+  Vacuum pump system F1
+  FA210506
+  Dry Oven contract no. 24/04/2021HĐKT/BESTWAY-VINATECH/ Mua tủ sấy đối lưu cưỡng bức Jeiotech model: OF-01E
+  CÔNG TY CỔ PHẦN BESTWAY TECHNOLOGY
+  0000050
+  FA210604
+  Viscometer Machine/Máy đo độ nhớt màn hình cảm ứng brookfied Model: DV2TLVTJ0
+  CÔNG TY CỔ PHẦN EMIN VIỆT NAM - CHI NHÁNH BẮC NINH
+  0001032
+  hsok
+  PKTTS0001/21- thêm T7 đã phôt ct
+  Done Increase T7
+  FA210701
+  Dust collect system (FI)/ Thi công lắp đặt hệ thống lọc bụi theo hợp Đồng kinh tế số 039.04/HĐKT/THVNS-VINATECH/2021
+  Hệ thống
+  CÔNG TY TNHH SẢN XUẤT QUẠT CÔNG NGHIỆP TH VINASUN
+  0000124
+  Sát trạm bình N2
+  PKT3570/20
+  Canteen- Module
+  FA210702
+  Air condition for canteen/ Lắp đặt hệ thống điều hòa cho Module tầng 2 nhà canteen theo hợp đồng số LGHIMHN/SO/2021/0716/VINATECH kí ngày 16/07/2021
+  CÔNG TY TNHH HI-M SOLUTEK VIỆT NAM
+  0000603
+  Tầng 2-Canteen
+  nk
+  TF-&gt; 241
+  Done Increase T7+TF T7
+  FA210601
+  INJECTION PUMP/Bơm định lượng Model D05- bộ phận của máy ngâm tẩm tụ điện và lắp ráp tự động, hoạt động theo kiểu piston, dùng để bơm dung dịch vào con tụ, Nsx 2021, nsx Shenzhen Xingchuangjia Technology, mới 100%
+  104071538650
+  0001517,0013702
+  FA210602
+  Vibrating tub/Bồn rung chia sản phẩm tụ điện- bộ phận của máy tự động uốn tạo biên và bọc vỏ cho tụ điện, chất liệu bằng thép, kích thước 500x500x400 mm, năm sx 2021, mới 100%
+  104109922820
+  0001518;0093470
+  Cell 16- dùng Curling và Sleeve
+  PKTTS001/21
+  Done Increase T8
+  FA210801
+  Odor extraction systems for Module production/ Lắp đặt hệ thống hút mùi Duct theo hợp đồng số 1607/2021/HĐTC/KNM-HS ký ngày 16 tháng 07 năm 2021
+  CÔNG TY TNHH XÂY LẮP VÀ THIẾT BỊ CÔNG NGHIỆP HANBELL SKY
+  0000265
+  PKTTS002/21
+  FI-Slitting
+  FA210802
+  Air condition/ Lắp đặt hệ thống điều hòa theo hợp đồng dịch vụ số 07082021/HĐ DV/VINATECH-SECOTAB ký ngày 07/08/2021
+  CÔNG TY TNHH GIẢI PHÁP KỸ THUẬT VÀ CÔNG NGHỆ SECOTAB
+  0000085
+  Chỗ Sliting xưởng 1
+  Đợi hs
+  PKT3690/20
+  FA210803
+  Washing machine/ Máy rửa 2 khoang KT: 1920x800x1420mm
+  Bộ
+  CÔNG TY TNHH CÔNG NGHỆ HT CNC
+  0000037
+  Factory 2-Mixing
+  hs ok
+  PKT3696/20
+  Canteen- Tầng 1
+  FA210804
+  Projector/ Máy chiếu sony VPL-CXZ10
+  0000002
+  Tấng 1-nhà Canteen để phục vụ họp đầu tháng
+  TF-&gt; 211
+  Done Increase T8+TF T8
+  FA200101
+  SENSOR HL-G125-A-C5/Cảm biến dịch chuyển Laser ( dùng để kiểm tra mực nước trong thiết bị, model: HL-G125-A-C5, xuất xứ: Hàn Quốc) - hàng mới 100%
+  Factory 1- Dryroom 1
+  FA200330
+  VIDEO SYSTEM CAMERA/Máy kiểm tra để kiểm tra kích thước tụ điện, Model  DKVSC-1002, công suất  0.3KW, điện áp 2pha, 220V, 50/60Hz, NSX:DK AUTOMATION, năm sx 2020, hàng mới 100%
+  Cateen- Tầng 2
+  FA210504
+  CAPACITOR TESTER/Máy kiểm tra tụ điện dùng để kiểm tra chức năng nạp xả của tụ điện, đo điện trở, model Capacitor module cycler, công suất 3.7kW, điện áp 1pha, 220V, 60Hz,Nsx AimQ Co.,Ltd.,năm sx 2020,hàng mới 100%
+  104019055933
+  0001183;0009913;0009917;0050007;0241009;0000151
+  Tầng 2 toàn phúc lợi- sx Module
+  hs xem lại
+  FA210603
+  Multi-Purpose machine model MP500/ Máy đa năng tiện-khoan-phay
+  CÔNG TY TNHH BÁC CỔ - M
+  Machine Room
+  KYTHUAT
+  PKT3853/20
+  Done ghi tăng
+  FA211001
+  Oven/ Tủ Sấy đối lưu cưỡng bức Jeiotech
+  Cái
+  0000081
+  OQC
+  PKTTS1002/21
+  Cateen- Tầng 1
+  FA211002
+  Massage chair/ Ghế massage tính tiền tự động CM-07 WASHIMA
+  Chiếc
+  CÔNG TY CỔ PHẨN ĐẦU TƯ XUẤT NHẬP KHẨU TÚ NAM
+  0000031
+  Canteen-tầng 1
+  FA211003
+  Máy cuốn tụ điện,AUTO WINDING MACHINE, dùng để cuốn tụ điện tự động, Model XCJ-5600D,công suất 8KW, điện áp: AC380V 50HZ, nsx SHENZHEN CHENG JIE INTELLIGENT EQUIPMENT STOCK CO., LTD,nsx 2021, mới 100%
+  104232034540
+  06/09/2021
+  0000203,0002430,0002438,0075757,0024472,0031022
+  FA211004
+  Máy cuốn tụ điện,AUTO WINDING MACHINE, dùng để cuốn tụ điện tự động, Model XCJ-5600D,công suất 8KW , điện áp: AC380V 50HZ, nsx SHENZHEN CHENG JIE INTELLIGENT EQUIPMENT STOCK CO., LTD,nsx 2021,mới 100%
+  FA211006
+  Máy ép cuộn điện cực Roll Press Machine,Model: JYR-680,dùng để ép bột than lên tấm nhôm thành cuộn điện cực,Nsx Jinyong Engineering,công suất 54.5KW, điện áp 380V,50/60Hz,nsx 2012, hàng đã qua sử dụng
+  104232011441
+  0000203,0002438,0082188,0037385,0102033,0000781
+  Electrode area
+  Press
+  HS ok
+  FA211007
+  Install fume extraction systems/ Lắp đặt hệ thống hút khói HĐ.0510/2021/HĐTC/VINATECH-HS 05/10/2021 HĐ 0000290 18/10/2021
+  0000290
+  Tầng 1-Canteen
+  ok
+  TF 211-241
+  VINA00041
+  Aging &amp; Inspection Device/Thiết bị kiểm tra và lưu hóa, Model: VMS-200, điện áp: 220V, Công suất: 1160W, Năm sản xuất: 2010, Hàng đã qua sử dụng
+  Từ 01/10/2021-13/10/2021- Khấu hao 6274 còn từ 13/10/2021 mang đi sửa chữa, khi nhận lại sửa chữa sẽ khấu hao ở 811
+  Pending
+  FA211008
+  DEW POINT MEASUREMENT MACHINE/Máy đo nhiệt độ điểm sương, Model SS2-IS-102, dùng để đo độ ẩm, nhiệt độ điểm sương, điện áp AC85 -265V, 45-65 HZ, năm sx 2021, mới 100%
+  Sense
+  104302884010
+  0002753
+  Cell line 13,14,15,16,19
+  FA211009
+  FA211010
+  FA211011
+  FA211012
+  FA211013
+  F2
+  FA211101
+  Chiller for Mixer/ Máy làm mát nước 5RT  -Tùng Nga;  INV 0000218 30/11/2021
+  Tùng Nga
+  0000218
+  FA211102
+  Buy dishwasher/ Mua máy rửa bát DW-616 số 0000246 ngày 29/11/2021
+  DIWA
+  0000246
+  FA211103
+  Buy dryer/ Mua máy sấy khay DWS-1400L-DIWA INV số 0000246 ngày 29/11/2021
+  warehouse
+  FA211104
+  Robot quấn màng tự động, Model R4, hoạt động bằng pin 24V,(2 pin kết nối nối tiếp 12V 75Ah), nguồn sạc điện áp 220V, 50Hz, tốc độ quấn 35m -80m/min, năm sx 2021, Nsx: SAMWONPACK, hàng mới 100%
+  SAMWONPACK CO., LTD.
+  104337649620
+  08/11/2021
+  0003033;0010753;0056528
+  T12
+  FA211105
+  Lò sấy chân không, ( dùng để sấy khô tụ điện), model: OV-JT-64S, điện áp: 380VAC, 50Hz, công suất: 3KW, hãng sx: JEIO TECH, năm sản xuất:2021, hàng mới 100%
+  PIECES
+  104380944400
+  12/11/2021
+  0003027;0003035;0376228;0139994;0055135;0000238
+  Assembly
+  FA211106
+  FA211107
+  FA211108
+  FA211109
+  FA211110
+  FA211111
+  FA211112
+  FA211113
+  FA211114
+  FA211115
+  Máy trộn nguyên liệu điện cực tụ điện PD Mixer 200 L, Model:PDM-200T ,Điện áp:380 V (3 pha),công suất:380kW, tần số:60HZ, năm sx:2021,hãng sx:TSI,Hàng mới 100%
+  104375748630
+  11/11/2021
+  0003027;0003035;0365813;0442954;0054383;0022926;000238
+  Mixing
+  FA211116
+  Lò sấy chân không Vacuum Oven, model: SBVO-03HDAP điện áp: 380V,công suất 5.5 KW, hãng: WUJIANG năm sản xuất: 2021, hàng mới 100%
+  WUJIANG JIANGLING INSTRUMENT CO.,LTD.
+  104368077660
+  26/10/2021
+  0003027;0003034;0348028;0438368;0018167;0000238
+  FA211201
+  Máy cắt điện cực slitting machine , model UZ500, dùng để cắt cuộn điện cực, công suất định mức 3.7KW, điện áp 380V, nsx Shenzhen Szulter Precision machinery manufacturing CO., Ltd, nsx 2021, mới 100%
+  104385288010
+  0000256
+  FA211208
+  Lò sấy chân không, ( dùng để sấy khô tụ điện), model: OV-JT-64S, điện áp: 220VAC, 60Hz, công suất: 3KW, hãng sx: JEIO TECH, nsx 2016, hàng đã qua sử dụng
+  104395632832
+  08/12/2021
+  408048-56872-56874-22197-0000256-00000278
+  FA211209
+  FA211210
+  FA211211
+  FA211212
+  FA211213
+  Lò sấy chân không, ( dùng để  sấy khô tụ điện), model: OV-JT-64S, điện áp: 220VAC, 60Hz, công suất: 3KW, hãng sx: JEIO TECH, nsx 2016, hàng đã qua sử dụng
+  FA211214
+  FA211215
+  Phòng Gym
+  FA211217
+  Giàn tập đa năng ES3000
+  5C
+  0000005
+  Phòng guym
+  FA211218
+  Máy chạy bộ PT300H sử dụng điện 220V
+  FA211219
+  FA211220
+  FA211221
+  FA211222
+  Xe đạp bước RE500
+  T01
+  FA211117
+  Máy làm sạch và sấy khô tụ điện Clean&amp;Dry M/C,Hoạt động bằng điện, Model: CD450, Công suất: 8KW , điện áp: 380V, năm sản xuất:2021 , Nsx: AZTEK.CO.,LTD, mới 100%
+  104348059210
+  30/09/2021
+  0003026;0003033;0311672;0004985;0132863
+  FA211118
+  Máy ngâm tẩm tụ điện và lắp ráp tự động Automatic Assembly M/C, Model: PAL-AM-18, công suất: 15KW, điện áp: 380V, nhà sx: Palbok Industry, Nsx: 2021, mới 100%
+  104348048011
+  28/10/2021
+  0003026;0003033;0000238
+  FA211119
+  Máy uốn tạo biên dạng trên và bọc vỏ cho tụ điện CURLING &amp; SLEEVE M/C ,model PAL-CS-18,công suất 15KW,điện áp 380V, Nhà sx: Palbok Industry, nsx:2021, mới 100%
+  FA211202
+  Máy cuốn tụ điện, WINDING MACHINE, Model: XCJ-3800, điện áp: 380V, công suất: 8KW, nhà sx: Shenzhen Cheng Jie Intelligent Equipment CO.,LTD, nsx 2018,  hàng đã qua sd
+  FA211203
+  FA211206
+  Máy làm sạch và sấy khô tụ điện Clean&amp;Dry M/C,Hoạt động bằng điện, Model: CD450, Công suất: 8KW , điện áp: 380V, nsx AZTEK.CO.,LTD, nsx 2020, hàng đã qua sd
+  Nhà đa năng
+  FA220106
+  Thi công dự án nhà đa năng xây mới thuộc nhà máy siêu tụ điện giải pháp năng lượng VN theo HD 2611XD/2020/HĐKT-01
+  0000281-0000303-3-4
+  2021+2022
+  FA220107
+  FA220111
+  FA220112
+  FA220113
+  Canteen building/ Lắp đặt trần thạch cao, nội thất cho các phòng họp, nhà ăn, phòng coffee theo hợp đồng 1105/2021/VINATECHVIA-VIKING ngày 15/5/2021, HD 0000309 ngày 30/06/2021
+  VIKING
+  0000309
+  FA220114
+  Mã rèm: WL 205 Sử dụng cho nhà ăn mới Chất liệu: 100% Polyester cao cấp, khả năng cản sáng: 90% hợp đồng 1105/2021/VINATECHVIA-VIKING ngày 15/5/2021, HD 0000309 ngày 30/06/2021
+  FA220115
+  Canteen building/ Thi công lắp đặt khung nhôm vách kính cường lực 12 ly theo hợp đồng số 06/08/2021/HĐKT/TP-Vinatech ký ngày 06 tháng 08 năm 2021
+  TÀI PHÁT
+  0032156
+  GC
+  FA220108
+  Khuôn đột dập model PBMD00-069-10P2S-H
+  TWO-K ENG
+  0000368
+  Nhà gia công
+  FA220109
+  Khuôn đột dập model PBMD00-186-10P2S-I
+  FA220110
+  Cung cấp và lắp đặt thang tải hàng trọng lượng 500kg, hai điểm dừng  INV số 000021 ngày 13/1/2022
+  ACG
+  21
+  VINA00088
+  LEAD SEPARATOR/Máy uốn chân tụ điện LEAD SEPARATOR, công dụng: làm cong chân tụ điện để cắm vào bản mạch, model: BT-08-60, công suất 100W, điện áp: 220V, 60Hz, hãng VINATECH, SN:VNEP0347001, năm 2018, máy cũ
+  Kho cạnh công ty
+  FA200449
+  AUTO SLEEVING MACHINE/Máy bọc vỏ cỡ chung dùng để bọc vỏ tụ điện loại trung bình Model SSB-1800 công suất 6KW, điện áp 3pha, 220V, 60Hz, nhà sx SHYH HORNG MACHINERY INDUSTRIAL CO.,LTD, năm sx 2012, hàng đã qua sử dụng
+  FA201117
+  AUTO SLEEVING MACHINE/Máy bọc vỏ tự động AUTO SLEEVING MACHINE, công dụng: Bọc vỏ tụ điện, model: SSB-1000V, công suất: 6KW, điện áp: 220V, 60Hz,nhà sx SHYH HORNG MACHINERY INDUSTRIAL CO.,LTD, năm sx 2016, hàng đã qua sd
+  FA210101
+  Micro-Profiler/Thiết bị kiểm tra nhiệt độ (Micro-Profiler), hãng SX:SEILIECO. Model: SMP-306 điện áp: DC5V. Sản xuất năm 2020. Hàng đã qua sử dụng
+  103786075300
+  0000013;0482648
+  FA210501
+  EDLC ASSEMBLY M/C/Máy ngâm tẩm tụ điện và lắp ráp tự động EDLC ASSEMBLY M/C, model EAM-10, công suất 14.5KW, điện áp 3pha, 220V, 60Hz, nhà sx SHINJIN ADDtec, năm sx 2019, hàng đã qua sd
+  FA210502
+  EDLC ASSEMBLY M/C/Máy ngâm tẩm tụ điện và lắp ráp tự động EDLC ASSEMBLY M/C, model EAM-16, công suất 14.5KW, điện áp 3pha, 220V, 60Hz, nhà sx SHINJIN ADDtec, năm sx 2019, hàng đã qua sd
+  FA210503
+  EDLC ASSEMBLY M/C/Máy ngâm tẩm tụ điện và lắp ráp tự động EDLC ASSEMBLY M/C, model EAM-18, công suất 14.5KW,  điện áp 3pha, 220V, 60Hz, nhà sx SHINJIN ADDtec, năm sx 2019, hàng đã qua sd
+  FA211005
+  Automatic Assembly M/C- Máy ngâm tẩm tụ điện và lắp ráp tự động Model SG-5800Z,công suất 7.5KW, điện áp 380V, 50/60Hz, dùng để lắp ráp tụ điện tự động, Nsx  VINATECH CO.,LTD, năm sx 2021 , mới 100%
+  DONGGUAN SHIGE ELECTRONICS GROUP CO.,LTD
+  104232055100
+  0000203,0002430,0002438,0075771,0100082,0055018
+  T02
+  FA211204
+  Máy ngâm tẩm tụ điện và lắp ráp tự động Automatic Assembly M/C, Model: PAL-AM-18, công suất: 15KW, điện áp: 380V, nhà sx: Palbok Industry, Nsx: 2021, hàng đã qua sd
+  FA211205
+  Máy ngâm tẩm tụ điện và lắp ráp tự động Automatic Assembly M/C, Model: PAL-AM-13, công suất: 15KW, điện áp: 380V, nhà sx: Palbok Industry, Nsx: 2021, hàng mới 100%
+  FA211207
+  Máy uốn tạo biên dạng trên và bọc vỏ cho tụ điện CURLING &amp; SLEEVE M/C ,model PAL-CS-18,công suất 15KW,điện áp 380V, Nhà sx: Palbok Industry, nsx:2021, hàng đã qua sd
+  Phòng tin cậy
+  FA211216
+  Máy sạc xả điện, Model:6V5A-60CH,  dùng để sạc điện vào tụ sau đó xả điện đi , dòng điện: 220VAC 50/60Hz, công suất: 4.5KW,  nhà sản xuất: WONIK  PNE, năm sản xuất: 2021, hàng mới 100%
+  1
+  WONIK PNE CO., LTD
+  104441214951
+  29/12/2021
+  489780-470309-970-00000279
+  FA220204
+  Phòng cân NVL điện cực
+  BM
+  0000044
+  R&amp;D
+  FA220205
+  installing power supply and electrical cabinets/ Thi công lắp đặt nguồn điện và lắp đặt tủ điện cho phòng R&amp;D HĐ 0000359 28/02/2022
+  Hanbell sky
+  0000359
+  FA220101
+  Máy tính công nghiệp(lắp ráp vào dây chuyền, hiển thị dữ liệu sản xuất,chỉ dùng trong nhà máy),model:NTP21KLF,màn hình:21inch tích hợp gắn liền với cây, core13, ram 8G,Nsx: INEWTEK, nsx:2021, mới 100%
+  104462728750
+  23/12/2021
+  00000074-320-00000079
+  FA220102
+  Cell 20
+  FA220103
+  Cell 21
+  T03
+  FA220104
+  Máy kiểm tra nhiệt độ và độ ẩm,Model: PL-2J, dùng để kiểm tra tụ điện trong môi trường giả định, dòng điện: 380v 3 pha,nhà sản xuất: ESPEC CORP, xuất xứ: Nhật Bản, năm  sản xuất:2021, mới 100%
+  ESPEC CORP.
+  104491374300
+  05/01/2022
+  00001115-00001580-00000281-0000266
+  FA220105
+  FA220201
+  Máy bọc vỏ tự động, Super Capacitor Auto Sleeving M/C , công dụng: bọc vỏ tụ điện, Model: SG-3500T,điện áp 220V, công suất: 5.5KW, nhà sx DONGGUAN SHIGE ELECTRONICS GROUP CO., LTD., nsx 2022, mới 100%
+  104537379000
+  10/02/2022
+  FA220202
+  Máy làm sạch và sấy khô tụ điện Clean and Dry M/C , hoạt động bằng điện, Model: SG-3500QZ, công suất: 15 KW, điện áp: 380V, nhà sản xuất: DONGGUAN SHIGE ELECTRONICS GROUP CO., LTD., nsx 2022, mới 100%
+  FA220203
+  Máy kiểm tra tụ điện-VENT TESTER (số máy:C18010113),dùng để kiểm tra áp lực đáy vỏ nhôm bằng dầu thủy lực,điện áp 220V,công suất 120KW,nsx Shenzhen Xingchuangjia Technology Co.,Ltd., nsx 2022, mới100%
+  104548739850
+  18/01/2022
+  000326-0000327--6089-5315-541
+  CPC
+  T04
+  FA220401
+  Mua  máy rửa và sấy tụ điện model VT2101 theo hóa đơn số 23 ngày 06/04/2022
+  Công ty cổ phần điện máy kỹ thuật
+  23
+  FA220402
+  FA220403
+  Mua Máy đếm tự động theo hóa đơn số 9 ngày 28/04/2022
+  CÔNG TY TNHH BM TECH VINA
+  9
+  FA220405
+  Máy uốn tạo biên dạng trên và bọc vỏ cho tụ điện CURLING &amp; SLEEVE M/C ,model PAL-CS-13,công suất 15KW,điện áp 380V, Nhà sx: Palbok Industry, nsx:2022, mới 100%
+  104642259630
+  17/03/2022
+  00001125-849729+00001120         0000303
+  FA220406
+  T05
+  FA220407
+  Máy cuốn tụ điện , AUTOMATIC WINDING MACHINE Model: XCJ-820-2, điện áp: 220V, công suất: 1.5KW, Nsx Shenzhen Cheng Jie Intelligent Equipment CO.,LTD, nsx: 2021, hàng đã qua sử dụng
+  104647028951
+  01/04/2022
+  11742+0853696+00001125+0000304
+  FA220506
+  Máy cuốn tụ điện, WINDING MACHINE, Model: XCJ-820D, điện áp: 220V, công suất: 1.5 KW, nhà sx: SHENZHEN CHENG JIE INTELLIGENT EQUIPMENT STOCK CO.,LTD, năm sản xuất: 2022,  hàng mới 100%
+  104686225710
+  08/04/2022
+  00015106,0936527,00001428,00001433,00000003
+  FA220507
+  FA220508
+  Auto Assembly M/C (XCJ-986) - Máy ngâm tẩm tụ điện và lắp ráp tự động Model XCJ-986,công suất 6.0KW, điện áp 220V 50/60HZ, nhà sx Shenzhen Xingchuangjia Technology Co. LTD, năm sx 2022, mới 100%
+  104695825030
+  20/04/2022
+  0943810,00010336, 82292,00001428,00001434,00000006
+  FA220509
+  Máy khuấy hóa chất- 001-2022LPC-VINATECH
+  CÔNG TY CỔ PHẦN CƠ KHÍ CHÍNH XÁC VÀ THƯƠNG MẠI LPC
+  00000130
+  MIXING
+  T06
+  FA220603
+  Máy khuấy hóa chất- 002-2022LPC-VINATECH
+  00000142
+  FA220604
+  FA220605
+  FA220606
+  FA220404
+  Cảm biến trọng lượng- Weigh cells, Model: MWC-523-E (integrated in sartorius WZA523-L), bộ phận của cân sử dụng để cân trọng lượng sản phẩm trong máy lắp ráp, Hàng mới 100%
+  104633974760
+  1123
+  FA220502
+  Thiết bị kiểm tra khả năng nạp và xả của tụ điện (công dụng: kiểm tra đặc tính tự xả), model GT-5005V2, ,điện áp 220V, công suất 0.4KW, Nsx G-WELL Co.,LTD, Năm sx 2021, hàng đã qua sử dụng
+  104686286460
+  15/04/2022
+  00014869,0936467,00001433,00000003
+  FA220505
+  T07
+  FA220501
+  Thiết bị kiểm tra khả năng nạp và xả của tụ điện (dùng để kiểm tra đặc tính tự xả, dung lượng), model BW-BTS0606, điện áp 220V, công suất 7KW, Nsx BIT&amp;WATT, Năm sx 2019, hàng đã qua sử dụng
+  FA220503
+  Thiết bị kiểm tra khả năng nạp và xả của tụ điện (dùng để kiểm tra đặc tính tự xả, dung lượng), model EP-BTS0606, điện áp 220V, công suất 7KW, Nsx ejy power, Năm sx 2016, hàng đã qua sử dụng
+  FA220504
+  FA220601
+  Máy ngâm tẩm tụ điện và lắp ráp tự động Automatic Assembly Machine, Model: PAL-AM-08, công suất: 15KW, điện áp: 380V, nhà sx: Palbok Industry, Năm sx: 2022, mới 100%
+  104798078820
+  24/06/2022
+  00000034,1138602,00010341,00001846
+  Line 8
+  FA220602
+  Máy uốn tạo biên dạng trên và bọc vỏ cho tụ điện CURLING &amp; SLEEVE MACHINE, model PAL-CS-08, công suất 15KW, điện áp 380V, nhà sx: Palbok Industry, năm sx:2022, mới 100%
+  FA220703
+  Máy cuốn tụ điện, AUTO WINDING MACHINE, Model: XCJ-820D, điện áp: 220V, công suất: 1.5 KW, nhà sx: SHENZHEN CHENG JIE INTELLIGENT EQUIPMENT STOCK CO.,LTD, năm sản xuất: 2022,  hàng mới 100%
+  104823274030
+  27/06/2022
+  1177805,00051819,00000044,114103, 00002200
+  FA220704
+  Máy uốn chân điện cực (của tụ điện)  tự động AUTO BENDING MACHINE , model: PAL-CF-08, điện áp: 220V, công suất: 5KW, năm sản xuất: 2022, nhà sản xuất: Palbok Industry, mới 100%
+  DOPING
+  Dopping line
+  T08
+  FA220701
+  104823812220
+  Line 6
+  FA220702
+  Máy uốn tạo biên dạng trên và bọc vỏ cho tụ điện CURLING &amp; SLEEVE MACHINE, model PAL-CS-08, công suất 15KW, điện áp 380V, nhà sx: Palbok Industry, năm sx: 2022, mới 100%
+  FA220705
+  Máy sắp xếp và đóng gói tự động tụ Automatic taping machine (dùng để sắp xếp tụ theo thứ tự,đưa vào đóng gói),model YC-320A,công suất 1.6KW,đ/áp 220V, nhà sx:Yi Chuan Automatic, năm sx 2022, mới 100%
+  tapping
+  FA220706
+  Máy sắp xếp và đóng gói tự động tụ Automatic taping machine (dùng để sắp xếp tụ theo thứ tự,đưa vào đóng gói),model YC-320L,công suất 1.6KW,đ/áp 220V, nhà sx:Yi Chuan Automatic, năm sx 2022, mới 100%
+  FA220707
+  Hệ thống hút ẩm không khí công nghiệp CDHL 1200-2 (máy thực hiện chức năng chính: máy hút ẩm không khí), điện áp: 380V, tần số: 50Hz, công suất: 252KW, nhà sx: CK Solution, năm sx: 2022, hàng mới 100%
+  Utility room
+  FA220708
+  Hệ thống hút ẩm không khí công nghiệp CDHL  1500-2 (máy thực hiện chức năng chính: máy hút ẩm không khí), điện áp: 380V, tần số: 50Hz, công suất: 147 KW, năm sx: 2022, nhà sx: CK Solution, mới 100%
+  FA220709
+  Bộ cấp nguyên liệu loại 10x30L, bộ phận của máy ngâm tẩm tụ điện và lắp ráp tự động, chất liệu bằng sắt, năm sx 2022, mới 100%
+  Auto Curling 15
+  FA220710
+  Bộ cấp nguyên liệu loại 10x30L, bộ phận của máy uốn tạo biên dạng trên và bọc vỏ cho tụ điện, chất liệu bằng sắt, năm sx 2022, mới 100%
+  Assembly 14
+  FA220711
+  Auto Curling 14
+  FA220712
+  Tủ chống ẩm Digi Cabi DHC 400l
+  winding
+  FA220801
+  Máy cuốn tụ điện, AUTO WINDING MACHINE, Model: XCJ-820D, điện áp: 220V, công suất: 1.5 KW, nhà sx: SHENZHEN CHENG JIE INTELLIGENT EQUIPMENT STOCK CO.,LTD, năm sản xuất: 2022, hàng mới 100%
+  104905102522
+  1331238 ngày 17/08/2022, 00013657 ngày 19/08/2022,  00034582 ngày 17/08/2022, 00003046 ngày 23/08/2022, 00002532 ngày 31/08/2022, 00000073 ngày 20/08/2022
+  FA220802
+  VPC line
+  FA220803
+  Máy mài điện cực STRIPPING MACHINE &amp; ATTACHED PARTS, dùng để mài cuộn điện cực cho tụ điện, model: MCS-2018-ST,công suất: 4KW, đ/áp: 220V, 50/60 Hz, nhà sx: MECHASOLUTION, năm sx: 2018, hàng đã qua sd
+  Line 17
+  phòng tin cậy
+  FA220804
+  Tủ sấy đối lưu cưỡng bức có cửa Jeiotech On-22GW 135L
+  FA220805
+  Air compressor inverter cabinet/ Tủ biến tần máy nén khí 100HP
+  CÔNG TY CỔ PHẦN ĐẦU TƯ VÀ PHÁT TRIỂN CÔNG NGHIỆP TIẾN ĐẠT
+  475 ngày 19/8/2022
+  FA220806
+  Air compressor inverter cabinet/ Tủ biến tần 2 máy nén khi 50HP
+  FA220807
+  Air compressor inverter cabinet/ Tủ biến tần 2 máy nén khí 30HP
+  T09
+  FA220903
+  Máy Chiller làm lạnh nước  Model : HD10A
+  CÔNG TY TNHH CƠ ĐIỆN LẠNH HOÀNG DƯƠNG
+  00000709
+  FA220904
+  EXHAUST SYSTEM/ Hệ thống quạt hút theo HĐ số 00000083 ngày 24/09/2022
+  00000083
+  FA220408
+  Bơm định lượng Model D05- bộ phận của máy ngâm tẩm tụ điện và lắp ráp tự động,hoạt động kiểu piston,dùng để bơm dung dịch vào con tụ,Nsx 2022, nsx Shenzhen Xingchuangjia Technology,mới 100%
+  104650446240
+  00001123
+  FA220808
+  Moisture analyzer/ Thiết bị phân tích độ ẩm
+  CÔNG TY TNHH VION TEC
+  00000189
+  FA220901
+  Máy cuốn tụ điện, AUTO WINDING MACHINE, Model: XCJ-820D, điện áp: 220V, công suất: 1.5 KW, nhà sx: SHENZHEN CHENG JIE INTELLIGENT EQUIPMENT STOCK CO.,LTD, năm sản xuất: 2022, hàng đã qua sử dụng
+  VINA TECH CO., LTD.
+  104954301062
+  00016490 12/09/2022, 1408745 10/09/2022,00002869 30/09/2022, 0000091 13/09/2022
+  FA220902
+  Bồn chứa nguyên vật liệu của máy trộn - 200L Mixing Tank, chất liệu thép không gỉ, kích thước: 1550x1450x1250 (mm), dùng để chứa vật liệu điện cực cho máy trộn nguyên vật liệu điện cực, hàng mới 100%.
+  TSI CO.,LTD.
+  104993369501
+  T10
+  T11
+  phòng R&amp;D
+  FA221103
+  FA221104
+  Versatile meter and data logger/Máy đo và ghi dữ liệu đa năng HiLOGGER
+  1839
+  Electrode resistance meter system/ Hệ thống máy đo điện trở điện cực RM2610
+  FA221101
+  Máy kiểm tra và phân loại tụ điện dùng để già hóa và phân loại tụ điện, Model: ECAS-2500, công suất 20KW, điện áp 220V, năm sx: 2016, nhà sx: SAMHWA ENGINEERING CO.,LTD, hàng đã qua sử dụng
+  105071215062
+  03/11/2022
+  1612069 ngày 08/11/2022, 235833 ngày 07/11/2022, 00017958 ngày 16/11/2022, 00003500 ngày 30/11/2022, 00000120 ngày 10/11/2022
+  FA221102
+  Bồn chứa nguyên vật liệu của máy trộn- Planetary Disper Mixer 125 L Tank, chất liệu thép không gỉ, kt: 810*830*635 (mm), dùng để chứa vật liệu điện cực cho máy trộn nguyên vật liệu điện cực, mới 100%
+  SHIN-IL MIXER N MILLS CO.,LTD
+  105126207540
+  28/11/2022
+  4461 ngày 29/11/2022, 00003493 ngày 30/11/2022, 00003503 ngày 05/02/2023
+  FA221202
+  Sludge press/ Mua máy ép bùn theo HĐ 21/HĐKT/MARS-VINATECH NGÀY 28/11/2022
+  CÔNG TY TNHH CÔNG NGHỆ MARS VNP
+  0000047
+  FA221203
+  Water chiller/ Mua máy làm lạnh nước giải nhiệt gió
+  CÔNG TY TNHH HVAC VINA
+  00000001
+  Điện cực Mixing
+  Phòng xử lý nước thải xưởng 2
+  Bên ngoài xưởng 2, gần khu vực Mixing
+  T12.2022
+  đã thanh lý
+  T01.2023
+  FA221201
+  Bơm tăng áp suất cho hệ thống hút chân không BOOSTER VACUUM PUMP, model: WSBP-300C, điện áp: 220/380V, 1000m3/hr, nhãn hiệu: VACSCO, năm sx: 2022, hàng mới 100%
+  105173349040
+  22/12/2022
+  5132 ngày 23/12/2022, 00003824 ngày 31/12/2022, 00003835 ngày 31/12/2022
+  Phòng Utility xưởng 2, dry room x2
+  01/12/2020: TSCĐ không dùng chuyển kho dabaco 6274-&gt; 8118. chuyển sang 6274 từ 01/01/2023
+  Dự kiến t3 chuyển về hàn cải tiến 2/3/2023
+  ktsp
+  ktsp tháng 3
+  tháng 1
+  tháng 3
+  Từ tháng 1 chuyển sang 642 vì là tài sản của bộ phận R&amp;D
+  Từ tháng 3 chuyển sang 642 vì là tài sản của bộ phận R&amp;D
+  f
+  Kết thúc
+  Bắt đầu
+  T03.2023
+  FA230201
+  Máy trộn điện cực - Lab. Planetary Disper Mixer 5 L  , model: PDM 005-02 , điện áp: 220V, công suất: 2.25kW, nsx: SHIN-IL MIXER n MILLs CO.,LTD, năm sx: 2022, hàng mới 100%
+  105276600330
+  21/02/2023
+  1153 ,00000346 ,00000348, 00000021
+  AQUISITION VALUE now (after Liquidation) (Increase 211)
+  FA230301
+  A.SYS TECHNOLOGY CO., LTD.
+  105310511460
+  FA230302
+  FA230303
+  00000058
+  Stt
+  Số c.từ
+  Ngày c.từ
+  Mã khách
+  Tên khách
+  Diễn giải
+  Tk đ.ứng
+  Ps nợ
+  Ps có
+  Mã dự án
+  Quyển c.từ
+  Mã c.từ
+  Mã ĐVCS
+  331111
+  T04.2023
+  Điện cực
+  1990161 ngày 07/03/2023, 11344 ngày 07/03/2023, 00003206 ngày 08/03/2023, 00000541 ngày 31/03/2023, 00000542 ngày 31/03/2023, 00000037 ngày 00/01/1900
+  Drying oven/Lò sấy gia nhiệt bằng điện trở, để sấy điện cực ở công đoạn sản xuất điện cực, model: DRY OVEN (3M) điện áp: 380V,công suất 32 KW, hãng: A.SYS TECHNOLOGY năm sản xuất: 2023, hàng mới 100%
+  Stirrer/Máy khuấy Vinatech Vina-VN22-001
+  Từ tháng 3.2023 chuyển sang 8118 do chuyển sang hàn để cải tạo
+Từ tháng 5.2023 chuyển lại 6274 do đã sửa xong và nhập máy lại Vinatech Vina
+  tháng 3.2023
+  Chuyển sang J-TECH ngày 12/05/2023
+  T05.2023
+  FA230410
+  Thiết bị đo lực kéo nén hiển thị điện tử hãng AND. Model: MCT-1150
+  FA230412
+  Máy tính xách tay LG Gram 17Z90Q-G.AH78A5  HĐ 00000306 date 26/04/2023
+  00000306
+  A Junki dùng
+  A Junki
+  VINATECH CO.,LTD
+  MECHA SOLUTION CO.,LTD
+  CÔNG TY CỔ PHẦN CHẾ TẠO MÁY AUTOTECH VIỆT NAM
+  Máy kiểm tra điện trở tụ điện (Sản phẩm áp dụng: 0813, 0820, 0825, 1020, 1025) Model: ATT-VVC RMM01 Số serial: VVC220001.01-NO.01 (RESISTOR MEASURING MACHINE) hđ 00000073 31/05/2023
+  PN1
+  FA230401
+  FA230402
+  FA230403
+  FA230404
+  FA230405
+  FA230406
+  FA230407
+  FA230408
+  FA230411
+  FA230503
+  Auto Assembly Machine/Máy ngâm tẩm tụ điện và lắp ráp tự động Auto Assembly M/C, model XCJ-981A,công suất 6.0KW, điện áp 220V, nhà sx Shenzhen Xingchuangjia Technology Co. LTD, năm sx 2020, hàng đã qua sử dụng
+  Auto Assembly Machine/Máy ngâm tẩm tụ điện và lắp ráp tự động Automatic Assembly Machine, Model: PAL-AM-08, công suất: 15KW, điện áp: 380V, nhà sx: Palbok Industry, Nsx: 2022, hàng đã qua sử dụng
+  CLEAN &amp; DRY MACHINE/Máy làm sạch và sấy khô tụ điện Clean&amp;Dry M/C,Hoạt động bằng điện, Model: CD450, Công suất: 8KW , điện áp: 380V, năm sản xuất:2020 , Nsx: AZTEK.CO.,LTD, hàng đã qua sử dụng
+  CLEAN &amp; DRY MACHINE/Máy làm sạch và sấy khô tụ điện Clean&amp;Dry M/C,Hoạt động bằng điện, Model: CD450, Công suất: 8KW , điện áp: 220V, năm sản xuất:2022 , Nsx: AZTEK.CO.,LTD, hàng đã qua sử dụng
+  CURLING &amp; SLEEVING MACHINE/Máy uốn tạo biên dạng trên và bọc vỏ cho tụ điện, CURLING &amp; SLEEVING MACHINE, model: PAL-CS-08, công suất 15KW,điện áp 380V, năm sx: 2020 nhà sản xuất: Palbok Industry, hàng đã qua sử dụng
+  LAB. COATING MACHINE/Máy phủ phụ gia dẫn điện lên điện cực của siêu tụ điện LAB. COATING MACHINE , model: MCS-2023-CT, điện áp: 220-380V, công suất tổng: 28kW, hãng sx: Mecha Solution Co., Ltd, năm sx: 2023, mới 100%
+  SET
+  105392615902
+  105435924200
+  00000073
+  T06.2023
+  2129410 ngày 17/04/2023;00015780 ngày 18/04/2023;229 ngày 20/04/2023;91081 ngày 21/04/2023;00000787 ngày 29/04/2023
+  16452 ngày 10/05/2023;0247829 ngày 09/05/2023;00000981 ngày 31/05/2023;00000986 ngày 31/05/2023;00000082 ngày 15/05/2023
+  Thiết bị đo điện trở, điện cảm, điện dung, mã IM3536. Hãng sản xuất: HIOKI HĐ số 1473 ngày 14/06/2023
+  Dụng cụ kiểm tra để cố định tế bào điện cực và máy đo, mã SA9002. Hãng sản xuất HIOKI. HĐ số 1473 ngày 14/06/2023
+  PALBOK INDUSTRY CO.,LTD
+  PL Tech Co.,Ltd
+  Máy hút chân không vòi ngoài DZT800 theo HĐ số 00000056 ngày 27/06/2023
+  FA230605
+  Máy hàn Laser kim loại, model F2000-RM-FT, điện áp 3phase 380V, công suất 7.1 kW (hoạt động theo nguyên lý sử dụng tia laser làm nóng chảy kim loại). SX năm 2023. NSX : PL Tech Co., Ltd. Hàng mới 100%
+  105524079510
+  22551 ngày 21/06/2023; 00001205 ngày 30/06/2023; 00001210 ngày 30/06/2023; 00000110 ngày 30/06/2023
+  T072023
+  CÔNG TY TNHH DUY ANH AVM VINA
+  FA230409
+  CURLING &amp; SLEEVING MACHINE/Máy uốn tạo biên dạng trên và bọc vỏ cho tụ điện, CURLING &amp; SLEEVE MACHINE, model: PAL-CS-08, công suất 15KW,điện áp 380V, năm sx: 2022 nhà sản xuất: Palbok Industry, hàng đã qua sử dụng
+  FA230501
+  Auto Vision Machine/Máy kiểm tra ngoại quan tụ điện để kiểm tra bề ngoài sản phẩm tụ điện, Model: VA-VI-13-01, điện áp, công suất: 3KW, AC220V , năm sx: 2023, nhà sx: VINATech Co., Ltd , hàng mới 100%
+  FA230502
+  Auto Vision Machine/Máy kiểm tra ngoại quan tụ điện Model: VA-VI-08-02 (kiểm tra bề ngoài của tụ điện về kích thước, màu sắc,dị vật...), điện áp AC220V công suất 3kW, năm sx: 2023, nhà sx: VINATECH CO., LTD, mới 100%
+  FA230601
+  FA230602
+  FA230603
+  Máy uốn tạo biên dạng trên và bọc vỏ cho tụ điện, CURLING AND SLEEVING MACHINE, model: PAL-CS-08, công suất 15KW,điện áp 380V, năm sx: 2023 nhà sản xuất: PALBOK INDUSTRY CO.,LTD., hàng mới 100%
+  FA230604
+  Máy uốn tạo biên dạng trên và bọc vỏ cho tụ điện, CURLING AND SLEEVING MACHINE, model: PAL-CS-10, công suất 15KW,điện áp 380V, năm sx: 2023 nhà sản xuất: PALBOK INDUSTRY CO.,LTD., hàng mới 100%
+  FA230606
+  105462692050
+  105473039560
+  105527021130
+  00000056
+  00000986 ngày 31/05/2023
+  00000088 ngày 25/05/2023; 4799 ngày 23/05/2023; 4810 ngày 23/05/2023; 0253829 ngày 19/05/2023; 00000986 ngày 31/05/2023
+  5036 ngày 26/05/2023; 00000986 ngày 31/05/2023
+  2359990 ngày 21/06/2023; 107391 ngày 21/06/2023; 7191 ngày 22/06/2023; 107830 ngày 22/06/2023;00001205 ngày 30/06/2023; 00001210 ngày 30/06/2023
+  R&amp;D room
+  Facrory 1
+  T082023
+  FA230701
+  Tủ sấy 150 lít cưỡng bức Model: LDO-150F
+Hãng sản xuất: Labtech/ Hàn Quốc
+  66
+  iNewtek Inc.
+  CÔNG TY CỔ PHẦN TƯ VẤN THIẾT KẾ VÀ XÂY DỰNG INDECONS VIỆT NAM
+  CK SOLUTION CO.,LTD
+  Đế gá đồng hồ đo độ cứng TECLOCK GS-612 Model: GS-612
+Hãng sản xuất: TECLOCK
+Xuất xứ: NhậtBản
+Bảo hành: 12 tháng HĐ số 00001265 ngày 26/09/2023
+  Cân phân tích semi-micro Balances A&amp;D GR-200 (210 x
+0.0001g) Model: GR-200
+Hãng sản xuất: AND HĐ số 00001265 ngày 26/09/2023
+  Cân phân tích ẩm A&amp;D MX-50 Model: MX-50
+Hãng sản xuất: AND
+Xuất xứ: NhậtBản HĐ số 00001265 ngày 26/09/2023
+  A. SYS TECHNOLOGY CO.,LTD
+  Máy tính công nghiệp(lắp ráp vào dây chuyền, hiển thị dữ liệu sản xuất,chỉ dùng trong nhà máy),model:NTP21KLF,màn hình:21inch tích hợp gắn liền với cây,core13,ram 8G,Nsx: INEWTEK,năm sx :2023,mới 100%
+  Máy làm sạch và sấy khô tụ điện Clean&amp;Dry Hoạt động bằng điện, Model: CD450, Công suất: 8KW , điện áp: 220V, năm sản xuất:2022 , Nsx: AZTEK.CO.,LTD, hàng đã qua sử dụng
+  Máy làm sạch và sấy khô tụ điện Clean&amp;Dry ,Hoạt động bằng điện, Model: CD450, Công suất: 8KW , điện áp: 220V, năm sản xuất:2022 , Nsx: AZTEK.CO.,LTD, hàng đã qua sử dụng
+  Máy làm sạch và sấy khô tụ điện Clean&amp;Dry,Hoạt động bằng điện, Model: CD450, Công suất: 8KW , điện áp: 220V, năm sản xuất:2022 , Nsx: AZTEK.CO.,LTD, hàng đã qua sử dụng
+  Máy uốn tạo biên dạng trên và bọc vỏ cho tụ điện CURLING &amp; SLEEVE MACHINE, model PAL-CS-08, công suất 15KW, điện áp 380V, nhà sx: Palbok Industry, năm sx:2022,  hàng đã qua sử dụng
+  Hệ thống hút ẩm không khí công nghiệp CDHL 1500-4, điện áp: 380V, tần số: 50Hz, công suất: 318KW, năm sản xuất: 2023, nhà sản xuất: CK Solution Co., LTD, hàng mới 100%
+  Máy ngâm tẩm tụ điện và lắp ráp tự động Automatic Assembly Machine, Model: PAL-AM-08, công suất: 15KW, điện áp: 380V, nhà sx: Palbok Industry, Nsx: 2021, hàng đã qua sử dụng
+  Máy ngâm tẩm tụ điện và lắp ráp tự động Model XCJ-981A,công suất 8.0KW điện áp 220V 50/60HZ, nhà sx Shenzhen Xingchuangjia Technology Co. LTD, năm sx 2018, hàng đã qua sử dụng
+  Máy phủ điện cực dùng để sản xuất điện cực EDLC DIE COATER , model: ACM-300S, điện áp: 380V, công suất tổng: 300kW, hãng sx:A.SYS TECHNOLOGY CO,, Ltd, năm sx: 2023, mới 100%
+  Sd cho loại hàng
+  Administration
+  Small size
+  Medium size
+  Electrode
+  #7
+  Overhead
+  Big size
+  #2
+  Module
+  #1
+  #4
+  #14
+  #5
+  #10
+  #19
+  #9
+  #6
+  #13
+  #8
+  #3
+  #11
+  #17
+  #16
+  #12
+  #15
+  #20
+  #18
+  #21
+  CÔNG TY TNHH THƯƠNG MẠI VÀ KỸ THUẬT ANTEK
+  CONG TY CO PHAN BESTWAY TECHNOLOGY
+  Tủ chống ẩm Digi Cabi DHC 450 HĐ 1140 ngày 18/10/2023
+  Tủ chống ẩm Digi Cabi DHC 400 HĐ 1140 ngày 18/10/2023
+  Máy đo 2D model VMS-21510G, điện áp 100-220V, nsx: RAtional HĐ 101 ngày 25/10/2023
+  Máy mài điện cực STRIPPING MACHINE, model: MCS-2022-ST,công suất: 4KW, điện áp: 220V, 50/60 Hz, năm sản xuất: 2022, MAKER: MECHASOLUTION, hàng đã qua sử dụng
+  Máy cuốn tụ điện,AUTO WINDING MACHINE, Model: XCJ-820D, điện áp: 220V, công suất: 1.5 KW, nhà sx: SHENZHEN CHENG JIE INTELLIGENT EQUIPMENT STOCK CO.,LTD, năm sản xuất: 2020,  hàng đã qua sử dụng
+  Máy cuốn tụ điện,AUTO WINDING MACHINE, Model: XCJ-820D, điện áp: 220V, công suất: 1.5 KW, nhà sx: SHENZHEN CHENG JIE INTELLIGENT EQUIPMENT STOCK CO.,LTD, năm sản xuất: 2021,  hàng đã qua sử dụng
+  Máy cuốn tụ điện,AUTO WINDING MACHINE, Model: XCJ-820D, điện áp: 220V, công suất: 1.5 KW, nhà sx: SHENZHEN CHENG JIE INTELLIGENT EQUIPMENT STOCK CO.,LTD, năm sản xuất: 2022,  hàng đã qua sử dụng
+  Máy cuốn tụ điện,AUTO WINDING MACHINE, Model: XCJ-820, điện áp: 220V, công suất: 1.5 KW, nhà sx: SHENZHEN CHENG JIE INTELLIGENT EQUIPMENT STOCK CO.,LTD, năm sản xuất: 2018, hàng đã qua sử dụng
+  Lò sấy chân không, ( dùng để sấy khô tụ điện), model: OV-JT-64S, điện áp: 380VAC, 60Hz, công suất: 3KW, hãng sx: JEIO TECH, năm sản xuất : 2022, hàng đã qua sử dụng
+  Lò sấy chân không, ( dùng để sấy khô tụ điện), model: OV-JT-64S, điện áp: 380VAC, 60Hz, công suất: 3KW, hãng sx: JEIO TECH, năm sản xuất : 2021, hàng đã qua sử dụng
+  Máy nạp tụ điện và phân loại tụ điện, Model: HVD-300, điện áp: 380V, 50/60hz, 3 pha, công suất 3KW, nhà sx: HIKO CO.,LTD, năm sản xuất: 2022,hàng đã qua sử dụng
+  Máy kiểm tra ngoại quan tự động ( tự động chụp ảnh và kiểm tra lỗi ngoại quan của tụ điện), model:VA-VI-08-05, điện áp 220v, nhà sx: VINATECH, năm sản xuất: 2023, hàng  mới 100%
+  31PACK
+  Robot quấn màng tự động, Model R4, hoạt động bằng pin 24V, nguồn sạc điện áp 220V, 50Hz, tốc độ quấn 35m -80m/min, năm sx 2023, Nsx: 31PACK, hàng mới 100%
+  XAVIS CO.,LTD
+  Ghi chú line
+  T11.2023
+  FA231101
+  FA231102
+  FA231103
+  FA231104
+  FA231105
+  FA231106
+  FA231107
+  FA231108
+  FA231109
+  FA231110
+  FA231111
+  FA231112
+  105780143712
+  1140
+  Hóa đơn số 2770369 ngày 11/10/2023, 112712 ngày 12/10/2023, 12444 ngày 16/10/2023, 12551 ngày 18/10/2023, 00002266 ngày 31/10/2023
+  Auto vision check/Máy kiểm tra ngoại quan tự đông
+  105750926150
+  FA231201
+  849
+  CÔNG TY TNHH KOVIFA VINA
+  865
+  Hóa đơn số 00073649 ngày 27/09/2023, 00001994 ngày 30/09/2023
+  FA231202
+  FA231203
+  FA231204
+  FA231205
+  T12.2023
+  CÔNG TY TNHH HANSHIN
+  Buy absorption air dryer/Bộ máy sấy khí hấp thụ HĐ 485 ngày 23/11/2023
+  Máy đánh dấu vỏ tụ điện model XML-093 dùng tia Laser để khắc theo hình dạng mong muốn vào vỏ của sản phẩm. công suất:2KW,điện áp:220V,năm sản xuất: 2022, hãng sx iMECHA. hàng đã qua sử dụng
+  FA231206
+  105711294731
+  Hóa đơn số 37 ngày 12/09/2023, 9466 ngày 14/09/2023, 00001994 ngày 30/09/2023
+  Cell 22, thay cho máy NG ở line #3
+  Máy kiểm tra sản phẩm X-ray, model: XSCAN-A130H (công dụng chụp xuyên thấu sản phảm để kiểm tra phần bên trong sản phẩm) công suất:130kV, sx 2023,nhà sx XAVIS CO., LTD hàng mới 100%
+  CÔNG TY TNHH DỊCH VỤ CÔNG NGHỆ VIETSTANDARD
+  Xe nâng hàng và di chuyển bằng điện Electric Reach Truck Model CQD15S, tải trọng 1500kg, hiệu IMOW, số khung 9321900065 số máy TDQ2309040071, hàng mới 100%, chưa qua sử dụng HĐ số 161 ngày 13/12/2023
+  THANH LÝ từ T4/2023
+  Thanh lý từ T5/2023
+  Liquidate 2/4 từ T10/2023
+  KTSP tầng 2 canteen
+  Module tầng 2
+  thanh lý tháng 01/2024
+  FIXED ASSETS 2024
+  Accumulated Depreciation until 31/12/2023
+  REMAINING IN 31/12/2023
+(AMOUNT)
+  TOTAL DEP
+IN 2024
+  REMAIN AMOUNT IN 2024
+(VND)
+  REMAIN Q'TY IN 2024
+(Q'TY)
+  T1.2024
+  BG
+  FA240101
+  Nhập khẩu hàng TKHQ số 105682819800A12 ngày 30/08/2023 Nk tủ điều hòa Invoice no 00000098 ngày 29/08/2023
+  Công ty TNHH Liantech
+  98
+  FA240102
+  FA240103
+  105724048364
+  FA240104
+  FA240105
+  FA240106
+  FA240107
+  FA240108
+  FA240109
+  FA2401010
+  FA2401011
+  FA2401012
+  FA2401013
+  FA2401014
+  105710423601
+  FA2401015
+  FA2401016
+  FA2401017
+  FA2401018
+  FA2401019
+  105728164952
+  FA240120
+  BN
+  FA240121
+  FA240122
+  FA240123
+  FA240124
+  1256
+  BG_CPC
+  BG_CURLING
+  FA240125
+  105744924941
+  Hóa đơn số 2740971 ngày 03/10/2023; 50790 ngày 04/10/2023; 41767 ngày 07/10/2023; 830 ngày 10/10/2023;  41768 ngày 07/10/2023; 00016026 ngày 05/10/2023; 00015896 ngày 03/10/2023; 00002266 ngày 31/10/2023
+  FA240126
+  FA240127
+  FA240128
+  FA240129
+  FA240130
+  FA240131
+  FA240132
+  FA240133
+  FA240134
+  FA240135
+  FA240136
+  FA240137
+  FA240138
+  FA240139
+  FA240140
+  FA240141
+  FA240142
+  FA240143
+  FA240144
+  FA240145
+  FA240146
+  FA240147
+  FA240148
+  FA240149
+  FA240150
+  FA240151
+  Hóa đơn số 2770369 ngày 11/10/2023; 112712 ngày 12/10/2023;
+  FA240152
+  105810764360
+  Hóa đơn số 00017059 ngày 26/10/2023; 7238 ngày 26/10/2023; 00002263 ngày 31/10/2023; 00002266 ngày 31/10/2023
+  FA240153
+  101
+  FA240154
+  Dust filtering system/Cung cấp và lắp đặt hệ thống lọc bụi  37 kw theo HĐ số 035.03/HĐKT/THVNS-ViNATECH/2023 ngày 21/04/2023, HĐ 311 ngày 26/10/2023
+  311
+  FA240155
+  Buy air compressor system and pressure tank/Hệ thống máy nén khí và Bình áp lực HĐ HC-3034-VINATECH-230329 ngày 29/03/2023, HĐ số 560, 562 ngày 10/11/2023
+  560; 562
+  FA240157
+  105891625232
+  HĐ số 2412 ngày 30/11/2023; 7790 ngày 27/11/2023; 18700 ngày 27/11/2023; 345988 ngày 24/11/2023; 209 ngày 28/11/2023
+  FA240158
+  485
+  FA240159
+  161
+  BG_WINDING
+  BG_BEADING
+  BG_DOPING
+  BG_SLEEVE
+  FA240160
+  105837396933
+  105746138961
+  FA240161
+  HĐ 14 ngày 15/09/2023; HĐ 17 ngày 28/10/2023; HĐ 01 ngày 20/01/2024
+  Vinatech Vina factory Nham Son, Yen Lu,Bac Giang/Công trình nhà máy Vinatech Nham Sơn, Yên Lư" HĐ số 01/2023/HĐTC/Vinatech-Indecons ngày 29/07/2023 biên bản nghiệm thu đợt 1 ngày 15/09/2023 HĐ 14 ngày 15/09/2023, biên bản nghiệm thu đợt 2 ngày 28/10/2023 HĐ 17 ngày 28/10/2023, biên bản nghiệm thu đưa vào sử dụng đợt 3 ngày 20/01/2024
+  BG_FACTORY
+  VINA00091A
+  VINA00091B
+  VINA00091C
+  VINA00091D
+  GIẢM ĐỂ TẠO 4 MÃ MỚI VINA00091A,VINA00091B,VINA00091C,VINA00091D NGÀY 01/02/2024
+  VINA00078C
+  VINA00078B
+  VINA00078A
+  GIẢM ĐỂ TẠO 3 MÃ MỚI VINA00078A,VINA00078B,VINA00078C NGÀY 01/02/2024
+  FA240201
+  hệ thống camera và âm thanh Vinatech vina Bắc Giang theo hợp đồng kinh tế số 1812/2023/VINATECH VINA-HTM, phụ lục số 01 số 1812/2023PL ký ngày 18/12/2023
+  bộ
+  CÔNG TY XÂY DỰNG VÀ DỊCH VỤ KỸ THUẬT HTM
+  FA240202
+  Hệ thống điều hòa nhà máy Vinatech Vina Bắc Giang theo Số hợp đồng: 18/12/2023/VINATECH VINA-THIÊN PHÚC
+  Gói
+  CÔNG TY CỔ PHẦN ĐẦU TƯ VÀ XÂY DỰNG CÔNG TRÌNH THIÊN PHÚC
+  FA240203
+  Thiết bị và hệ thống chân không trung tâm theo HĐ số 10042023 ngày 26/01/2024
+  CÔNG TY TNHH XUẤT NHẬP KHẨU VÀ THƯƠNG MẠI G PLUS
+  FA240204
+  Máy sắp xếp và đóng gói tự động tụ Automatic taping machine(dùng để sắp xếp tụ theo thứ tự,đưa vào đóng gói),modelYC-320A,côngsuất1.6KW,đ/áp220V,nsx:Shenzhen Lebenyun Science Co.,Ltd,nsx 2024,mới 100%
+  FA240205
+  Lắp đặt hệ thống đường ống hút bụi theo hợp đồng số 08.23/HĐKT-VĐ/VINATECH ngày 23.08.23 HĐ 4 ngày 20/01/2024
+  CÔNG TY CỔ PHẦN CƠ ĐIỆN VẠN ĐẠT
+  FA240206
+  Khung nhôm cho máy trong phòng sạch KT: 5400*1600*2200mm
+  Khung
+  CÔNG TY TNHH KL TECH VINA
+  FA240207
+  Lắp đặt nội thất (bàn, ghế..) theo hợp đồng 1812/2023/VINATECH VINA-VIKING ký ngày 18/12/2023 HĐ 34 ngày 30/01/2024
+  CÔNG TY CỔ PHẦN CƠ ĐIỆN VIKING
+  34
+  106057383352
+  Hóa đơn số 169 ngày 31/01/2024; 171 ngày 31/01/2024; 514 ngày 31/01/2024
+  T2.2024
+  VINA00036A
+  VINA00036B
+  VINA00065A
+  VINA00065B
+  VINA00066A
+  VINA00066B
+  VINA00077A
+  VINA00077B
+  VINA00077C
+  VINA00102A
+  VINA00102B
+  VINA00102C
+  VINA00102D
+  VINA00102E
+  VINA00102F
+  VINA00120A
+  VINA00120B
+  VINA00120C
+  VINA00120D
+  VINA00123A
+  VINA00123B
+  VINA00131A
+  VINA00131B
+  BG_RUBBER
+  PKT02
+  Máy ngâm tẩm tụ điện và lắp ráp tự động Automatic Assembly Machine, Model: PAL-AM-08, công suất: 15KW, điện áp: 380V, nhà sx: Palbok Industry, Nsx: 2022, hàng đã qua sử dụng
+  Máy uốn tạo biên dạng trên và bọc vỏ cho tụ điện CURLING &amp; SLEEVE MACHINE, model PAL-CS-08, công suất 15KW, điện áp 380V, nhà sx: Palbok Industry, năm sx:2021,  hàng đã qua sử dụng
+  Máy đo 2D model VMS-1510G, điện áp 100-220V, nsx: RAtional HĐ 101 ngày 25/10/2023
+  Máy kiểm tra độ ẩm dung dịch, model MKC-710, Điện áp 100-240V +/- 10%, dùng để phân tích nhiểm ẩm của dung dịch chất điện phân, nsx : KYOTO ELECTRONICS MANUFACTURING CO., LTD Hàng mới 100%
+  Máy cuốn tự động dùng để cuốn tụ điện AUTO WINDING MACHINE Model:XCJ-3900,công suất:8KW,điện áp:380V,50Hz,năm sx:2022, Nsx:SHENZHEN CHENG JIE INTELLIGENT EQUIPMENT STOCK CO.,LTD.hàng đã qua sử dụng
+  Máy cuốn tự động dùng để cuốn tụ điện AUTO WINDING MACHINE Model:XCJ-3900,công suất:8KW,điện áp: 380V,50Hz,năm sxt:2021,Nsx:SHENZHEN CHENG JIE INTELLIGENT EQUIPMENT STOCK CO.,LTD.hàng đã qua sử dụng
+  Máy lắp ráp tụ điện tự động AUTO ASSEMBLY MACHINE Model : CAM-AM-13, công suất 15Kw, điện áp : 220V, 60Hz. Năm sản xuất 2016, NSx :VINATECH.hàng đã qua sử dụng
+  Máy lắp ráp tụ điện tự động Automatic Assembly Machine Model : PAL-AM-10, công suất 15Kw, điện áp : 380V, 50Hz. Năm sản xuất 2020, Maker : Palbok Industry.hàng đã qua sử dụng
+  Máy rửa và sấy tụ điện tự động CLEAN &amp; DRY Model : CD450, công suất 8Kw, điện áp : 380V. Năm sản xuất 2020, Maker : AZTEK CO,.LTD.hàng đã qua sử dụng
+  Máy rửa và sấy tụ điện tự động CLEAN &amp; DRY Model : CD450, công suất 8Kw, điện áp : 220V. Năm sản xuất 2022, Maker : AZTEK CO,.LTD.hàng đã qua sử dụng
+  Máy bo cổ tụ điện CURLING &amp; SLEEVING MACHINE, Model : PAL-CS-10, công suất 15Kw, điện áp : 380V 50HZ. Năm sản xuất 2020, Maker: Palbok Industry.hàng đã qua sử dụng
+  Máy bo viền và bọc vỏ tự động tụ điện, CURLING AND SLEEVING MACHINE, model: PAL-CS-16, công suất 15KW,điện áp 380V, năm sx: 2023 nhà sản xuất: PALBOK INDUSTRY CO.,LTD., hàng mới 100%
+  Máy bo cổ tụ điện Curling&amp;Sleeving Machine Model: JD-CS-01, điện áp: 220V, 60hz, 3 pha, công suất 10KW, nhà sx: JungDo Technology, năm sản xuất: 2022,hàng đã qua sử dụng
+  Máy uốn chân điện cực tự động AUTO BENDING MACHINE Model:PAL-CF-08, điện áp:220V, công suất:5KW, năm sản xuất: 2021, nhà sản xuất:Palbok Industry, năm sản xuất:2021,hàng đã qua sử dụng
+  Máy nạp tụ điện và phân loại tụ điện VPC DOPING&amp;SELECTION M/C,Model: HVD-300,điệnáp:380V,50/60hz,3 pha,công suất3KW,nsx:HIKO CO.,LTD,sxn:2022,hàng đã qua sử dụng(máy gồm 9 phần được đóng trong 5 kiện)
+  T4.2024
+  cung cấp vật tư và thi công đường ống phụ trợ cho nhà máy VINATECH VINA BẮC GIANG hợp đồng số 14082023/VINATECH/CSV
+  17
+  16
+  Máy tính công nghiệp lắp vào dây truyền chỉ dùng trong nhà máy(bao gồm:thân máy tính, giá đỡ kiosk,Wifi,Antenna,bàn phím),model:NTP21KLF,màn hình:21 inch,core:13,ram8G,Nsx:INEWTEK,năm sx:2024,mới 100%
+  Máy khuấy nguyên vật liệu điện cực,Serinal No:SEORD000585-01 khuấyđềucác thành phần nguyenvậtliệu để sảnxuấtđiệncựcchotụđiện,380VAC,50Hz, 62KW,nsx 2024 NSX:DONGGUAN KERUI INTELLIGENT EQUIP CO.LTD
+  Máy nghiền nguyên vật liệu điện cực,Serinal No:SEORD000585-02,Điện áp 380VAC, 50Hz,cs 62KW, nămsx 2024,NSX:DONGGUAN KERUI INTELLIGENT EQUIPMENT CO., LTD,mới 100% ( bao gồm thân máy và tủ điện)
+  Thiết bị khuấy điện cực ( dạng thùng khuấy),Serinal No:SEORD000585-03,điện áp 380VAC, 50Hz,công suất 2.2KW,Năm sx 2024,NSX:DONGGUAN KERUI INTELLIGENT EQUIPMENT CO., LTD, hàng mới 100%
+  FA240401
+  FA240402
+  FA240403
+  FA240405
+  DONGGUAN KERUI INTELLIGENT EQUIPMENT CO., LTD
+  3404
+  T5.2024
+  Hóa đơn số 643 ngày 30/04/2024; 33 ngày 09/04/2024; 4171 ngày 09/04/2024
+  HĐ số 461,464 ngày 31/3/2024, HĐ 1066,396067 ngày 11/3/2024
+  HĐ 464 ngà 31/3/2024, HĐ 3344154,44227 ngày 18/3/2024, HĐ 6276 ngày 19/3/2024
+  HĐ 464 ngày 31/3/2024, HĐ 3305981,14414 ngày 7/3/2024, HĐ 4148,4147 ngày 11/3/2024
+  HĐ 644 ngày 30/4/2024
+  HĐ 464 ngày 31/3/2024
+  106221811951/106221824110
+  106192258540
+  V
+  FA240404
+  FA240406
+  FA240407
+  FA240408
+  FA240409
+  FA240410
+  FA240411
+  Buy Car/ Mua xe ô tô tải (thùng kín) 1,900 kg hiệu KIA FRONTIER K200 KF39B27R131-K11 HĐ 6697 ngày 30/03/2024
+  xe
+  CÔNG TY TNHH MỘT THÀNH VIÊN BẮC NINH TRƯỜNG HẢI
+  6697
+  FA240412
+  3104
+  FA240415
+  FA240413
+  FA240414
+  FA240416
+  FA240417
+  FA240418
+  FA240419
+  FA240420
+  FA240421
+  FA240422
+  FA240423
+  FA240424
+  FA240425
+  FA240426
+  TSCD VÔ HÌNH
+  Giá trị quyết toán của HĐ tư vấn thiết kế công trình và xin cấp phép dự án "Nhà máy Vinatech Nham Sơn, Yên Lư" HĐ số 01/2023/HĐTC/Vinatech-Indecons ngày 23/01/2024 HĐ 15 ngày 02/05/2024
+  P000778
+  PKT1189/24
+  PKT10012/20
+  P000874
+  CÔNG TY TRÁCH NHIỆM HỮU HẠN LIAN TECH YÊN DŨNG
+  30% giá trị hợp đồng chuyển nhượng tài sản gắn liền với đất thuê tại Lô CN07-Cụm công nghiệp Nham Sơn - Yên Lư, huyện Yên Dũng, tỉnh Bắc Giang, theo Hợp đồng chuyển nhượng số 0601/2023/HĐMBTSGLVD ngày 30/06/2023
+  PKT01
+  PKT550/24
+  20% giá trị hợp đồng chuyển nhượng tài sản gắn liền với đất thuê tại Lô CN07-Cụm công nghiệp Nham Sơn - Yên Lư, huyện Yên Dũng, tỉnh Bắc Giang, theo Hợp đồng chuyển nhượng số 0601/2023/HĐMBTSGLVD ngày 30/06/2023 HĐ số 2 ngày 30/03/2024
+  PKT952/24
+  Giá trị quyết toán của HĐ tư vấn thiết kế công trình và xin cấp phép dự án "Nhà máy Vinatech Nham Sơn, Yên Lư" HĐ số 01/2023/HĐTC/Vinatech-Indecons ngày 24/08/2022 HĐ 14 ngày 26/04/2024
+  PKT951/24
+  50% giá trị hợp đồng chuyển nhượng tài sản gắn liền với đất thuê tại Lô CN07-Cụm công nghiệp Nham Sơn - Yên Lư, huyện Yên Dũng, tỉnh Bắc Giang, theo Hợp đồng chuyển nhượng số 0601/2023/HĐMBTSGLVD ngày 30/06/2023 HĐ số 3 ngày 28/04/2024
+  FA240427
+  FA240428
+  gói
+  14
+  15
+  BG FACTORY
+  Giá trị nghiệm thu hoàn thành hạng mục công trình đợt 2 của công trình "Nhà máy Vinatech Nham Sơn, Yên Lư" HĐ số 01/2023/HĐTC/Vinatech-Indecons ngày 29/07/2023 biên bản nghiệm thu đợt 2 ngày 28/10/2023 HĐ 17 ngày 28/10/2023
+  Phải trả ngắn hạn người bán: HĐ SXKD (VND)
+  Giá trị nghiệm thu hoàn thành hạng mục công trình đợt 1 của công trình "Nhà máy Vinatech Nham Sơn, Yên Lư" HĐ số 01/2023/HĐTC/Vinatech-Indecons ngày 29/07/2023 biên bản nghiệm thu đợt 1 ngày 15/09/2023 HĐ 14 ngày 15/09/2023
+  PKT100152/20
+  Số dư đầu kỳ:
+  Số dư cuối kỳ:
+  Tổng phát sinh trong kỳ:
+  PK1
+  Nhà cửa, vật kiến trúc
+  2111
+  FA240428 Giá trị quyết toán của HĐ tư vấn thiết kế công trình và xin cấp phép dự án "Nhà máy Vinatech Nham Sơn, Yên Lư" HĐ số 01/2023/HĐTC/Vinatech-Indecons ngày 23/01/2024 HĐ 15 ngày 02/05/2024
+  PKT141TS/24
+  FA240427 Giá trị quyết toán của HĐ tư vấn thiết kế công trình và xin cấp phép dự án "Nhà máy Vinatech Nham Sơn, Yên Lư" HĐ số 01/2023/HĐTC/Vinatech-Indecons ngày 24/08/2022 HĐ 14 ngày 26/04/2024
+  PKT140TS/24
+  Chi phí trả trước dài hạn: công cụ, dụng cụ xuất dùng
+  24222
+  Giá trị hợp đồng chuyển nhượng tài sản gắn liền với đất thuê tại Lô CN07-Cụm công nghiệp Nham Sơn - Yên Lư, huyện Yên Dũng, tỉnh Bắc Giang, theo Hợp đồng chuyển nhượng số 0601/2023/HĐMBTSGLVD ngày 30/06/2023
+  CÔNG TY TNHH LIAN TECH
+  P000907
+  PKT1655/24
+  FA240161/Vinatech Vina factory Nham Son, Yen Lu,Bac Giang/Công trình nhà máy Vinatech Nham Sơn, Yên Lư" HĐ số 01/2023/HĐTC/Vinatech-Indecons ngày 29/07/2023
+  PKT106TS/24
+  Giá trị nghiệm thu hoàn thành hạng mục của công trình "Nhà máy Vinatech Nham Sơn, Yên Lư" HĐ số 01/2023/HĐTC/Vinatech-Indecons ngày 29/07/2023 biên bản nghiệm thu đưa vào sử dụng đợt 3 ngày 20/01/2024 HĐ 01
+  PKT34/24
+  PKT100322/20
+  Tên tk đối ứng
+  FA240501
+  Máy ngâm tẩm tụ điện và lắp ráp tự động AUTO ASSEMBLY MACHINE Model : PAL-AM-13, công suất 15Kw, điện áp : 380V, 50Hz. Năm sản xuất 2024, NSx :Palbok Industry-hàng đã qua sử dụng
+  Máy sắp xếp và đóng gói tự động tụ Automatic taping machine,dùng sắp xếp và đóng gói tụ điện ,model:YC-320A,côngsuất1.6KW,220V,nsx:Shenzhen Lebenyun Science Co.,Ltd,nsx 2024, hàng mới 100%
+  FA240502
+  FA240503
+  T06.2024
+  106245755823
+  106275021161
+  Xe ô tô con 7 chỗ CARNIVAL KA4 2.2 AT FL7 HĐ 9883 ngày 15/05/2024
+  FA240504
+  Xe
+  9883
+  HĐ 841 ngày 31/5/2024, 3535685 ngày 6/5/2024, 79985 ngày 7/5/2024, 11002 ngày 9/5/2024
+  HĐ 841,839 ngày 31/5/2024, HĐ 3568416 ngày 14/05/2024, 82783 ngày 16/5/2024
+  Tủ chống ấm  HĐ số 00000369 ngày 30/06/2024
+  Tủ chống ấm  HĐ số 00000366 ngày 30/06/2024
+  Máy in Laser Videojet 3140  HĐ số 1182 ngày 18/06/2024
+  CÔNG TY CỔ PHẦN ẤN HỒNG
+  Connect utility for machine Line Auto 3562, Aging Machine, Cell Line 17,18, 19,20,21,23, VPC line. HĐ số 48 ngày 14/06/2024
+  Connect utility for machine Line Auto 3562, Aging Machine, Cell Line 17,18, 19,20,21,23, VPC line. HĐ số 47 ngày 14/06/2024
+  Bộ máy tính công nghiệp IPC HĐ 102 ngày 14/06/2024
+  CÔNG TY CỔ PHẦN CÔNG NGHỆ HOÀNG KIM VKP
+  f1
+  SHENZHEN XINGCHUANGJIA TECHNOLOGY CO., LTD
+  Máy cuốn tụ điện phi 4-6,WINDING MACHINE, Model: XCJ600DJ, đ/áp: 220V, c/suất: 5.5 KW, nhà sx:SHENZHEN XINGCHUANGJIA TECHNOLOGY CO., LTD, năm sx:2024 (gồm: thân máy cuốn, bộ phận tời liệu 2 bên)
+  T07.2024
+  SHENZHEN JINGJIENENG ELECTRONICS CO., LTD
+  Máy kiểm tra dung lượng, điện áp của tụ điện,Model:JN-INV-V5C6D6 ,điện áp 3 pha 380v,c/suất 19kw,nhà sx:Shenzhen Jingjieneng,năm sx: 2024,(gồm:thân máy, bộ phận điều kiển và bộ phận hiệu chỉnh máy)
+  VINATECH CO., LTD
+  Máy khắc mã Barcode bằng tia lazer dùng để khắc barcode vào vỏ tụ điện. Model VN-MK-01, điện áp 220V, công suất : 3.5KW Năm sản xuất 2023, NSx :Vinatech CO., LTD hàng đã qua sử dụng
+  106333216140
+  106327997860
+  FA240601
+  FA240602
+  FA240603
+  NOTE-tháng ghi nhận tăng
+  FA240604A
+  BỘ
+  FA240604C
+  FA240604D
+  FA240604B
+  FA240604E
+  FA240604F
+  FA240604G
+  FA240604H
+  FA240604I
+  FA240604K
+  FA240604L
+  FA240605A
+  FA240605B
+  CÁI
+  FA240606
+  FA240607
+  FA240608
+  FA240609
+  FA240610
+  FA240611
+  FA240612
+  FA240613
+  FA240614
+  FA240615
+  FA240616
+  FA240617
+  FA240618
+  FA240619
+  FA240620
+  FA240621
+  FA240622
+  FA240623
+  FA240624
+  FA240625
+  FA240626
+  Cung cấp và lắp đặt máy điều hòa xưởng 1 và 2 HĐ 924 ngày 25/07/2024
+  T08.2024
+  Máy đo nhiệt độ điểm sương dùng để đo nhiệt độ và điểm sương lắp đặt bên trong máy Lắp ráp tụ điện, nhà sản xuất SSENES, điện áp 220V, sản xuất 2024 mới 100%
+  Máy quay tự động Auto Vision Machine kết nối với máy tính để hoạt động,không có bộ lưu trữ model acA2440-20gc, công suất 2,8-3,5W, điện áp 12-24 VDC, nhà sx : Basler, năm sx 2024, mới 100%
+  FA240703
+  FA240701A
+  FA240701B
+  FA240701C
+  FA240702A
+  FA240702B
+  FA240702C
+  FA240702D
+  FA240702E
+  FA240702F
+  FA240702G
+  FA240702H
+  FA240702I
+  FA240702K
+  FA240702L
+  HĐ 1224 NGÀY 31/7/2024, HĐ 61106 NGÀY 15/7/2024, HĐ 62108 NGÀY 17/7/2024
+  SETUP FEE( + FCT IF HAVE)
+  GÓI
+  Payment by
+  Payment date
+  VND
+  USD
+  10th of every month.
+  20th of every month.
+  30th of every month.
+  26th of every month.
+  a
+  Calculate asset depreciation by day.
