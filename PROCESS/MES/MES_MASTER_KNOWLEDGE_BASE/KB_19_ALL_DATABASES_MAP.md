@@ -534,5 +534,37 @@ Dưới đây là cẩm nang hướng dẫn xử lý các sự cố đồng bộ
 
 ---
 
+## 🔄 8. Cơ Chế Kỹ Thuật Đồng Bộ & Liên Thông (Under-The-Hood Sync Mechanisms)
+
+Sự tương tác thực tế giữa 13 cơ sở dữ liệu trên không diễn ra qua các tệp tin thủ công mà được tự động hóa qua 4 phương thức kỹ thuật chính:
+
+### 8.1. Liên kết trực tiếp cùng Instance (Same-Instance Direct Query)
+*   **Nguyên lý:** Tất cả 13 databases (bao gồm cả ERP `NEOE`) đều nằm chung trên một thực thể SQL Server (`dbserver.hycap.co.kr,5398`). Do đó, các Stored Procedure của MES hoặc Groupware có thể thực hiện truy vấn JOIN trực tiếp qua cú pháp ba phần: `[DatabaseName].[dbo].[TableName]`.
+*   **Ví dụ:** Khi quét IQC đạt `PASS` tại MES, màn hình Groupware chạy truy vấn đọc trực tiếp trạng thái từ `SmartFactoryV2.dbo.STB_CommInspDocHistory` mà không cần gọi qua Web API trung gian.
+
+### 8.2. ESM Collector & Daemon Service (Tiến trình đồng bộ ngầm)
+*   **Nguyên lý:** Đồng bộ khối lượng lớn (Batch synchronization) giữa MES `SmartFactoryV2` và ERP `NEOE` được đảm nhận bởi tiến trình dịch vụ chạy ngầm **ESM Collector** và Stored Procedure `usp_ERPInterface_daemon`.
+*   **Luồng hoạt động:**
+    1. MES ghi nhận sản lượng/tiêu hao vào các bảng cầu nối `ESM_ProdRouteHist`, `ESM_RawMaterialInputHist` với cờ `ErpUpdate = 'N'`.
+    2. ESM Collector quét định kỳ (chu kỳ 1000ms theo cấu hình `ESM_ProdCollectionSetting`) để pick-up các bản ghi chưa sync.
+    3. Gọi SP `usp_ERPInterface_daemon` để chèn dữ liệu vào bảng giao tiếp `STB_ERP_INTERFACE`, từ đó hạch toán trực tiếp vào các ledger sản phẩm/tiêu hao của ERP.
+
+### 8.3. RESTful API Gateway (Xác thực SSO và Gọi API)
+*   **Nguyên lý:** Đối với các ứng dụng Client như Web Groupware, Mobile App hay Kiosk POP, việc tương tác dữ liệu được thực hiện qua RESTful API Gateway kết nối với database `VINATECH_RESTFUL`.
+*   **Luồng hoạt động:**
+    1. Client gửi request kèm JWT token trong header.
+    2. API Gateway thực hiện so khớp token với bảng `VINA_SSO_TOKEN` để xác thực danh tính người dùng và kiểm tra dải IP trong `VINA_ALLOWED_IP`.
+    3. Nếu hợp lệ, Gateway thực thi gọi các stored procedure tương ứng trong `SmartFactoryV2` hoặc `VINATECH_GROUP` để trả dữ liệu cho Client.
+
+### 8.4. WebSocket Broadcast Loop (Đẩy sự kiện thời gian thực)
+*   **Nguyên lý:** Hệ thống WebSocket Server duy trì kết nối TCP liên tục với các trạm Kiosk POP và TV Andon. Dữ liệu trạng thái lỗi dừng máy trong `AndonDB.dbo.STB_LineSituation_VVT` được WebSocket Server theo dõi (sử dụng SqlDependency hoặc Trigger Event).
+*   **Luồng hoạt động:**
+    1. Khi có thay đổi trạng thái lỗi đầu line, record `STB_LineSituation_VVT` được cập nhật.
+    2. Một Event Trigger bắn tín hiệu đến WebSocket Server.
+    3. WebSocket Server broadcast gói tin JSON chứa trạng thái lỗi tới các client đang subscribe kênh `WS_ANDON` để lập tức đổi màu nền hiển thị trên Tivi Andon xưởng mà không cần tải lại trang.
+
+---
+
 *Tài liệu được biên soạn và chuẩn hóa dựa trên phân tích trực tiếp cấu trúc của toàn bộ 13 hệ thống cơ sở dữ liệu vật lý tại Vinatech Việt Nam.*
+
 
