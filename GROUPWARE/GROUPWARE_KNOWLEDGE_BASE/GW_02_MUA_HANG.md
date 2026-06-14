@@ -76,22 +76,68 @@ Tùy thuộc vào loại hình mua sắm, nhân sự sẽ sử dụng một tron
 - **Tuyến tham chiếu (Reference):** Nhóm nhận Kế toán*.
 - Có thể đính kèm một hoặc nhiều file cùng lúc.
 
-### Bước 2: Điền thông tin đơn hàng (Các trường dữ liệu chính)
-- **Đối tác (Vendor):** Chọn nhà cung cấp (trong trường hợp nhập trực tiếp từ HQ, chọn mã nhà cung cấp HQ để tự tạo sales order ở HQ).
-- **Kết nối tài liệu:** Nhấn chọn định dạng tài liệu muốn kết nối → Chọn biểu mẫu **Yêu Cầu Mua Hàng (Expense Report Document)** đã duyệt trước đó.
-- **Ngày đặt hàng:** Ngày thực tế mua hàng từ đối tác.
-- **Hình thức đặt hàng:** Chọn loại giao dịch (trong nước, quốc tế, bao gồm thuế GTGT, v.v.). Cơ chế nhập kho, nhận hàng và quyết toán sẽ tự động điều phối theo lựa chọn này.
-- **Phân loại mua hàng:** Chọn mua nguyên vật liệu hoặc mua gia công ngoài.
-- **Loại hình thanh toán:** Chọn hình thức thanh toán phù hợp.
-- **Phân loại đơn giá:** Chọn đơn giá mua bình thường hay giá giảm.
-- **Thuế giá trị gia tăng (VAT):** Nhập tỷ lệ VAT nếu có.
-- **Đơn vị tiền tệ, tỷ giá hối đoái:** Hệ thống tự động tra cứu tỷ giá hối đoái thực tế theo ngày đặt hàng.
-- **Giao dịch phân phối:** Nếu mua để phân phối trực tiếp (không nhập kho) → tích chọn **"Giao dịch phân phối"**. Hệ thống sẽ **bỏ qua** toàn bộ quá trình nhập kho liên quan đến MES. Dữ liệu sau khi duyệt chỉ đăng ký vào ERP.
-- **Mặt hàng:** Chọn từng item cần mua. Nhập đơn giá, số lượng, ngày giao hàng, kho nhận, trung tâm chi phí (Cost Center) cho từng mặt hàng. Giá trị và VAT sẽ tự động tính toán.
+### Bước 2: Điền thông tin đơn hàng (Các trường dữ liệu chính từ giao diện thực tế)
+- **Phân loại Tài liệu (documentSaveApprovalTarget):** Dropdown phân cấp luồng gồm:
+  - `Nguyên liệu thô` (`STATIC_DATA_000174`)
+  - `Hàng nhập của pháp nhân` (`STATIC_DATA_000460`)
+  - `Chất khử mùi` (`STATIC_DATA_000803`)
+  - `Hàng nguy hiểm` (`STATIC_DATA_000685`)
+  - `Phân phối` (`STATIC_DATA_000577`)
+- **Đối tác (Vendor / cdPartner):** Nhấn tìm kiếm để chọn nhà cung cấp.
+  * *Lưu ý nhập từ HQ:* Khi vendor là HQ (Mã đối tác: `13000`), đơn hàng sẽ tự động liên kết tạo sales order bên HQ.
+- **Kết nối tài liệu:** Nhấn chọn định dạng tài liệu muốn kết nối → Chọn biểu mẫu **Expense Report Document** đã duyệt trước đó.
+- **Ngày Đặt hàng (dtPo):** Trường chọn ngày thực tế mua hàng.
+- **Loại Đặt hàng (cdTppo):** Chọn loại hình giao dịch tương ứng:
+  - `Trong nướcMua hàng(Domestic Order (VAT 10))` (Mã `1100`)
+  - `Nhập khẩu-L/C(Import Order-Master L/C)` (Mã `1120`)
+  - `Nhập khẩu-T/T(Import Order-T/T)` (Mã `1130`)
+  - `Nội địaĐơn đặt hàng(5%)(Domestic Order (VAT 5))` (Mã `1160`)
+  - `Nội địaĐơn đặt hàng(영세)(Domestic Order (VAT 0))` (Mã `1170`)
+  - `Nội địaĐơn đặt hàng(8%)(Domestic Order (VAT 8))` (Mã `1180`)
+  - `Nước ngoàiĐơn đặt hàng-LOCAL(Import Order-Outsourcing)` (Mã `1200`)
+  - `3Thương mạiNhập kho(3-party Trade Receipt)` (Mã `1300`)
+- **Điều khoản giá (condPrice):** Chọn điều kiện Incoterms:
+  - `C&F` (`002`), `CIF` (`001`), `FOB` (`003`), `EXW` (`EXW`), `DDP` (`DDP`), `DAP` (`DAP`), `FAS` (`FAS`), `CIP` (`CIP`), `CPT` (`CPT`).
+- **Nhóm mua hàng (cdPurgrp):** Phân nhóm phòng ban mua:
+  - `Material Purchase Group` (`1000`)
+  - `Outsourcing Purchase Group` (`2000`)
+  - `Export Return Group` (`3000`)
+- **Loại Thanh Toán (fgPayment):** Chọn phương thức thanh toán:
+  - `Bill` (`000`), `Allotment` (`002`), `Within the cash 3 Months` (`001`), `Cash for Vietnam` (`004`), `T/T for Vietnam` (`003`).
+- **Loại Đơn Giá (fgUm):** Chọn `Normal price` (`001`) hoặc `Discount` (`002`).
+- **Loại thuế (fgTax):** Lựa chọn loại thuế áp dụng:
+  - `Taxation(VAT 5)` (Mã `22` hoặc `70`)
+  - `Taxation (VAT 10)` (Mã `21`)
+  - `Taxation(VAT 8)` (Mã `71`)
+  - `Tax exemption` (Mã `26`)
+  - `Zero tax` (Mã `23`)
+  - `Receipt` (Mã `99`)
+- **Loại tiền tệ (cdExch):** Lựa chọn đồng tiền thanh toán (UI hiển thị dạng `:: Loại tiền tệLoại ::`): `KRW`, `USD`, `JPY`, `EUR`, `CNY`, etc.
+- **Tỷ giá hối đoái (rtExch):** Nhập tỷ giá thực tế nếu dùng ngoại tệ.
+- **Giao dịch phân phối (tích chọn):** Nếu mua để phân phối trực tiếp (không qua kho MES) → Tích chọn giao dịch phân phối để bỏ qua bước nhập kho MES.
+- **문서 내용(비고) (documentSaveContent):** Nhập nội dung mô tả hoặc ghi chú của tài liệu.
+
+### Bước 3: Đăng ký danh sách mặt hàng (Grid Table chi tiết)
+Bảng nhập liệu chi tiết của mặt hàng bao gồm các cột sau:
+1. `No`
+2. `Có/Không mẫu ( Đăng ký hàng loạt )` (Check box chọn hàng mẫu)
+3. `Mục` (Mã và tên vật tư)
+4. `Revision` (Phiên bản BOM, bắt buộc chọn **2001** cho Việt Nam)
+5. `Đơn giá` (Unit Price)
+6. `Số lượng Đơn hàng` (Order Qty)
+7. `Số tiền(Ngoại tệ)` (Amount in Foreign Currency)
+8. `Số tiền` (Amount in Local Currency)
+9. `VAT`
+10. `Tổng số tiền`
+11. `Loại thuế`
+12. `Bao gồm VAT ( Đăng ký hàng loạt )`
+13. `Ngày Giao Hàng ( Đăng ký hàng loạt )`
+14. `Kho nhập ( Đăng ký hàng loạt )` (Chọn mã kho thực tế, xem bảng tra cứu ở GW_07)
+15. `Trung tâm Chi phí ( Đăng ký hàng loạt )` (Chọn Cost Center của bộ phận)
+16. `Xóa`
 
 > ⚠️ Sau khi duyệt xong → Dữ liệu **tự động đăng ký vào ERP**.
-
-> ⚠️ **Import trực tiếp từ HQ:** Khi vendor là HQ → chọn mã nhà cung cấp HQ. Đơn hàng tự tạo ở HQ (phục vụ khi HQ mua thiết bị, linh kiện, v.v.).
+> ⚠️ **Import trực tiếp từ HQ:** Khi vendor là HQ → chọn mã nhà cung cấp HQ (Mã `13000`). Đơn hàng tự tạo ở HQ.
 
 
 ---
@@ -105,13 +151,42 @@ Tùy thuộc vào loại hình mua sắm, nhân sự sẽ sử dụng một tron
 - **Tuyến tiếp nhận (Receipt):** Nhóm kỹ thuật thiết bị/nhà xưởng (*72112005-Nguyễn Thị Minh Hiền*, *72311001-Nguyễn Thị Hậu*, *71908026-Đào Thị Phiên*).
 - **Tuyến tham chiếu (Reference):** Nhóm nhận Kế toán*.
 
-### Bước 2: Điền thông tin hàng về
-- **Ngày hàng về:** Nhập ngày hàng hóa thực tế về tới công ty.
-- **Bộ phận mua hàng:** Chọn phòng ban thực hiện mua hàng.
-- **Ngày thanh toán:** 
-  - *Ngày tự chọn:* Ngày do người dùng tự chọn (khác ngày tự động tính toán).
-  - *Ngày quy định:* Ngày thanh toán định kỳ của công ty (Ví dụ: ngày 15 hàng tháng).
-- **Tổng số tiền:** Nhập tổng số tiền thực tế.
+### Bước 2: Điền thông tin hàng về (Các trường trên UI thực tế)
+- **Phân loại Tài liệu (documentSaveApprovalTarget):** Dropdown phân cấp:
+  - `Nguyên liệu thô` (`STATIC_DATA_000174`)
+  - `Trong nước` (`STATIC_DATA_000260`)
+  - `Quốc tế` (`STATIC_DATA_000261`)
+  - `Chất khử mùi` (`STATIC_DATA_000803`)
+  - `탈취Bộ lọc` (`STATIC_DATA_000723`)
+  - `Phân phối` (`STATIC_DATA_000577`)
+- **Ngày hàng về (dtArrival):** Chọn ngày thực tế hàng về.
+- **Loại hình mua hàng (paymentType):** Lựa chọn kiểu thanh toán:
+  - `Payment in VND` (`STATIC_DATA_000697`)
+  - `Advance Payment (VND)` (`STATIC_DATA_000699`)
+- **Số Phiếu Giao Nhận Nguyên Vật Liệu (materialDocNo):** Mã số phiếu nguyên vật liệu từ hệ thống MES (được nạp tự động).
+
+### Bước 3: Kiểm tra thông tin liên kết PO (Bảng thông tin PO)
+Bảng thông tin đơn hàng (Table 1 / Index 1) hiển thị các thông tin:
+- `Tên Đối tác` | `Số Đơn đặt hàng` | `Ngày Đặt hàng` | `Loại Đặt hàng` | `Nhóm mua hàng` | `Điều khoản thanh toán` | `Loại thuế` | `Loại tiền tệ` | `Tỷ giá hối đoái`
+
+### Bước 4: Danh mục hàng về thực tế (Grid Table chi tiết)
+Bảng nhập liệu chi tiết hàng về (Table 2 / Index 2) bao gồm các cột:
+1. `No`
+2. `Có/Không mẫu`
+3. `Số Đơn đặt hàng`
+4. `Mục` (Mã và tên vật tư)
+5. `Revision` (Phiên bản BOM)
+6. `Đơn giá`
+7. `Số lượng Đơn hàng` (Số lượng đặt mua gốc)
+8. `Số lượng Nhập kho` (Số lượng hàng về thực tế ở bước này)
+9. `Số tiền(Ngoại tệ)`
+10. `Số tiền`
+11. `VAT`
+12. `Tổng số tiền`
+13. `Trung tâm Chi phí`
+14. `Loại thuế`
+15. `Kho nhập ( Đăng ký hàng loạt )`
+16. `Xóa`
 
 ### Bước 3 (Nếu hàng nhập khẩu): Điền thông tin B/L & Thông Quan
 > 💡 Đối với **giao dịch trong nước**: Phần B/L, chi phí phụ và thông quan **không hiển thị** → không cần nhập.
@@ -154,15 +229,43 @@ Tại phần liên quan đến MES F330:
 
 **Vào:** Electronic Document → Purchase → Receiving Confirmation Document
 
+> ⚠️ **Lưu ý giao diện UI:** Trên thanh menu và tiêu đề biểu mẫu của hệ thống, từ này bị viết sai chính tả thành **"Receiving Confirmation Doucment"** (chữ *Document* viết sai thành *Doucment*).
+
 > ⚠️ **ĐIỀU KIỆN:** Chỉ có thể làm sau khi **C220 (IQC) đã PASS**. Chỉ mặt hàng đã Pass IQC mới hiển thị để chọn.
 
 ### Bước 1: Tải danh sách PO đã tạo & Tuyến phê duyệt/Tiếp nhận
 - Nhấn tải danh sách PO đã duyệt để bắt đầu liên kết.
 - **Tuyến tiếp nhận (Receipt):** Nhóm kỹ thuật thiết bị/nhà xưởng (*72112005-Nguyễn Thị Minh Hiền*, *72311001-Nguyễn Thị Hậu*, *71908026-Đào Thị Phiên*).
 - **Tuyến tham chiếu (Reference):** Nhóm nhận Kế toán*.
-### Bước 2: Thêm mặt hàng đã hoàn tất IQC
-- Số lượng đạt và số tiền **tự động tính và hiển thị**
-- Kho **tự động điền** theo kho đã nhập trong Arrival Confirmation
+
+### Bước 2: Điền thông tin cơ bản
+- **Phân loại Tài liệu (documentSaveApprovalTarget):**
+  - `Trong nước` (`STATIC_DATA_000260`)
+  - `Quốc tế` (`STATIC_DATA_000261`)
+  - `Chất khử mùi` (`STATIC_DATA_000803`)
+  - `탈취Bộ lọc` (`STATIC_DATA_000723`)
+  - `Phân phối` (`STATIC_DATA_000577`)
+- **Ngày nhập kho (dtIo):** Chọn ngày thực tế nhập kho chính thức.
+
+### Bước 3: Kiểm tra bảng thông tin và sổ kế toán phụ
+- **Bảng đối tác (Table 1 / Index 1):** Hiển thị `Tên Đối tác` | `Số Đơn đặt hàng` | `Ngày Đặt hàng` | `Loại Đặt hàng` | `Nhóm mua hàng` | `Điều khoản thanh toán` | `Loại thuế` | `Loại tiền tệ` | `Tỷ giá hối đoái`
+- **Bảng đối chiếu tạm ứng (Table 2 / Index 2):** Hiển thị sổ phụ đối chiếu: `Số Chứng từ` | `Diễn giải` | `Tỷ giá hối đoái` | `Tạm ứng` | `Số tiền đã xử lý` | `Số dư trước` | `Số tiền đã xử lý ở trên` | `Số dư cuối cùng` | `Chứng từ đã xử lý`
+
+### Bước 4: Danh mục nhập kho thực tế (Table 3 / Index 3)
+Bao gồm các cột thông tin:
+1. `No`
+2. `Có/Không mẫu`
+3. `Mục` (Mã và tên vật tư)
+4. `Đơn giá`
+5. `Số lượng Nhập kho` (Số lượng được QC Pass cho phép nhập)
+6. `Số lượng nhập kho` (Số lượng thực tế đưa vào kho)
+7. `Số tiền(Ngoại tệ)`
+8. `Số tiền`
+9. `VAT`
+10. `Tổng cộng`
+11. `Kho nhập` (Mã kho thực tế nhận hàng)
+12. `Loại thuế`
+13. `Xóa`
 
 ### Kết quả sau khi hoàn tất:
 - ✅ Xử lý nhập kho trong **ERP**
@@ -194,40 +297,31 @@ Tại phần liên quan đến MES F330:
 
 ---
 
-## 6. 🚫 Hủy / Đóng Đơn Đặt Hàng (Purchase Order Cancel & Closing)
+## 6. 🚫 Hủy (Xóa) / Đóng Đơn Đặt Hàng (Purchase Order Data Delete & Closing Document)
 
 Dùng khi thông tin đơn đặt hàng bị nhập sai hoặc khi giao dịch kết thúc giữa chừng cần hủy bỏ/kết thúc các dòng PO chưa nhập kho.
 
-**Vào:** Electronic Document → Purchase → Purchase Order Cancel Document (hoặc Purchase Order Closing Document)
+### 6.1 Hủy/Xóa đơn đặt hàng (Purchase Order Data Delete Document)
+**Vào:** Electronic Document → Purchase → Purchase Order Data Delete Document (Mã biểu mẫu: `purchaseOrderCancelDocument`)
+- **Mục đích:** Hủy hoặc xóa hoàn toàn dữ liệu PO.
+- **Điều kiện:** PO **chưa từng được xử lý nhập kho**. Nếu đã nhập kho thực tế, hệ thống sẽ khóa và cấm thực hiện (phải dùng *Return Product Document* để xuất trả).
+- **Tác động:** Sau khi được phê duyệt, hệ thống sẽ tự động xóa sạch dữ liệu đăng ký nhập hàng (Arrival/Receiving) tương ứng trên cả hệ thống ERP và MES. Cụ thể, PO đã hủy sẽ **không thể** được lựa chọn trong form *Arrival Confirmation* nữa. Đối với các đơn hàng nhập khẩu, toàn bộ thông tin B/L và tờ khai thông quan đã đăng ký đi kèm với PO này cũng sẽ bị xóa sạch khỏi cơ sở dữ liệu.
+
+### 6.2 Đóng đơn đặt hàng (Purchase Order Closing Document)
+**Vào:** Electronic Document → Purchase → Purchase Order Closing Document (Mã biểu mẫu: `purchaseOrderClosingDocument`)
+- **Mục đích:** Đóng/Kết thúc các hạng mục (items) còn lại trong PO mà không xóa dữ liệu lịch sử PO gốc.
+- **Tác động:** Giữ nguyên dữ liệu PO. Xóa dữ liệu kế hoạch nhập hàng liên quan của các item được chọn đóng trên ERP và MES. Các item đã đóng sẽ bị ẩn đi, không thể chọn trong màn hình *Arrival Confirmation*.
+- **Quy tắc đóng một phần:** Nếu chỉ đóng một số item trong PO, hệ thống sẽ tự động tính toán lại tổng giá trị còn lại của PO và thực hiện đăng ký cập nhật lại trên ERP và MES.
 
 - **Tuyến phê duyệt (Approval):** **71908026-Đào Thị Phiên** → **21910034-Trần Quang Thỏa** (Final Approval).
 - **Tuyến tham chiếu (Reference):** Nhóm kỹ thuật thiết bị/nhà xưởng (*72112005-Nguyễn Thị Minh Hiền*, *72311001-Nguyễn Thị Hậu*, *71908026-Đào Thị Phiên*).
 
 > [!WARNING]
-> **ĐIỀU KIỆN:** Nếu đang tồn tại biểu mẫu *Receiving Confirmation* (Xác nhận nhập kho) ở trạng thái đang chờ duyệt liên quan đến PO này, hệ thống sẽ **khóa cứng**, cấm thực hiện thao tác Hủy hoặc Đóng PO.
-
-### 6.1 Hủy đơn đặt hàng (Purchase Order Cancel Document):
-- **Mục đích:** Xóa hoàn toàn dữ liệu PO.
-- **Tác động:** Sau khi được phê duyệt, hệ thống sẽ tự động xóa sạch dữ liệu đăng ký nhập hàng (Arrival/Receiving) tương ứng trên cả hệ thống ERP và MES. Cụ thể, PO đã hủy sẽ **không thể** được lựa chọn trong form *Arrival Confirmation* nữa.
-
-### 6.2 Đóng đơn đặt hàng (Purchase Order Closing Document):
-- **Mục đích:** Đóng/Kết thúc các hạng mục (items) còn lại trong PO mà không xóa dữ liệu lịch sử PO gốc.
-- **Tác động:** Giữ nguyên dữ liệu PO. Xóa dữ liệu kế hoạch nhập hàng liên quan của các item được chọn đóng trên ERP và MES. Các item đã đóng sẽ bị ẩn đi, không thể chọn trong màn hình *Arrival Confirmation*.
-- **Quy tắc đóng một phần:** Nếu chỉ đóng một số item trong PO, hệ thống sẽ tự động tính toán lại tổng giá trị còn lại của PO và thực hiện đăng ký cập nhật lại trên ERP và MES.
+> **ĐIỀU KIỆN RÀN BUỘC:** Nếu đang tồn tại biểu mẫu *Receiving Confirmation* (Xác nhận nhập kho) ở trạng thái đang chờ duyệt liên quan đến PO này, hệ thống sẽ **khóa cứng**, cấm thực hiện thao tác Hủy hoặc Đóng PO.
 
 ---
 
-## 7. 🗑️ Xóa Dữ Liệu Đơn Đặt Hàng (Purchase Order Data Delete Document)
-
-**Vào:** Electronic Document → Purchase → Purchase Order Data Delete Document
-
-- **Mục đích:** Xóa vĩnh viễn dữ liệu PO bị nhập sai.
-- **Điều kiện:** PO **chưa từng được xử lý nhập kho**. Nếu đã nhập kho thực tế, nút xóa sẽ bị khóa (phải dùng *Return Product Document* để xuất trả).
-- **Tác động:** Đối với các đơn hàng nhập khẩu, toàn bộ thông tin B/L và tờ khai thông quan đã đăng ký đi kèm với PO này cũng sẽ bị xóa sạch khỏi cơ sở dữ liệu. Cần kiểm tra kỹ lưỡng trước khi phê duyệt vì đây là thao tác xóa dữ liệu vật lý vĩnh viễn.
-
----
-
-## 8. 💰 Purchase Resolution (Đóng Sổ Thanh Toán)
+## 7. 💰 Purchase Resolution (Đóng Sổ Thanh Toán)
 
 **Vào:** Electronic Document → Cost Management → Purchase Resolution Document
 
@@ -239,28 +333,41 @@ Dùng để hoàn tất công việc đóng sổ và ghi nhận công nợ thanh
 - **Return Product Document:** Dùng khi tiến hành đóng sổ giảm trừ cho đơn hàng đã xuất trả lại.
 
 ### 8.2 Các bước thao tác & Trường dữ liệu chi tiết:
-1. **Giá trị ghi nợ và ghi có:** Giá trị cố định do hệ thống tự tính, không được sửa.
-2. **Mô tả trên chứng từ:** Hệ thống tự động điền thông tin mô tả, người dùng không cần ghi riêng.
-3. **Ngày thanh toán:**
+- **Phân loại Tài liệu (documentSaveApprovalTarget):** Dropdown phân luồng kế toán:
+  - `Trong nước` (`STATIC_DATA_000260`)
+  - `Quốc tế` (`STATIC_DATA_000261`)
+  - `Phân phối` (`STATIC_DATA_000577`)
+- **Giá trị ghi nợ và ghi có:** Giá trị cố định do hệ thống tự tính, không được sửa.
+- **Mô tả trên chứng từ:** Hệ thống tự động điền thông tin mô tả, người dùng không cần ghi riêng.
+- **Ngày thanh toán:**
    - *Ngày tự chọn (8-1):* Ngày do người dùng tự ấn định, bắt buộc phải thỏa thuận trước với phòng Kế toán.
    - *Ngày quy định (8-2):* Theo lịch giải ngân cố định của công ty (Ví dụ: **ngày 15** và **ngày 30** của tháng tiếp theo).
    - *Ngày phát hành chi phí phụ (8-3):* Ngày phát hành hóa đơn chi phí phụ liên quan.
-4. **Thông tin liên thông (lấy từ form trước):** Số tờ khai thông quan, số B/L tự động hiển thị (nếu là hàng nhập khẩu).
-5. **Đăng ký Chi phí phụ & Chi phí thông quan (Hàng nhập khẩu):**
+- **Thông tin liên thông (lấy từ form trước):** Số tờ khai thông quan, số B/L tự động hiển thị (nếu là hàng nhập khẩu).
+- **Đăng ký Chi phí phụ & Chi phí thông quan (Hàng nhập khẩu):**
    - Click chọn đối tác (vendor) phụ trách vận chuyển, thông quan.
    - Nhập số tiền chi phí phụ (phí vận chuyển đường biển/đường không, cước tàu, v.v.).
    - Nếu có nhiều mục chi phí phụ cho cùng một đối tác → bấm nút thêm dòng chi phí phụ.
    - Chọn phòng ban phụ trách chịu cost chi phí phụ này (Mặc định: **Nhóm mua hàng**).
    - Hệ thống tự động phát hành bảng kê giao dịch điện tử (cố định).
-6. **Mặt hàng thanh toán:** Hiển thị số lượng, đơn giá đã nhập kho và số tiền thanh toán dựa trên tỷ lệ thuế nhập khẩu.
-7. **Bản ghi nợ:** Click chọn nút **"Bản ghi nợ"** để mở cửa sổ danh sách mã tài khoản kế toán, chọn đúng mã tài khoản tương ứng với chủng loại hàng cần thanh toán (Bút toán phân kỳ Cost).
-8. **Chọn loại thuế và VAT:** Nhập loại hình thuế và tiền thuế VAT tương ứng.
+- **Mặt hàng thanh toán:** Hiển thị số lượng, đơn giá đã nhập kho và số tiền thanh toán dựa trên tỷ lệ thuế nhập khẩu.
+- **Bản ghi nợ:** Click chọn nút **"Bản ghi nợ"** để mở cửa sổ danh sách mã tài khoản kế toán, chọn đúng mã tài khoản tương ứng với chủng loại hàng cần thanh toán (Bút toán phân kỳ Cost).
+- **Chọn loại thuế và VAT:** Nhập loại hình thuế và tiền thuế VAT tương ứng.
+
+### 8.3 Cơ chế kiểm tra chênh lệch (System Change Check Flags):
+Hệ thống tự động sử dụng các cờ kiểm tra (API check flags) để xác định xem thông tin đóng sổ thanh toán có sai lệch so với đơn đặt hàng gốc (PO) hay không:
+- `changeDistribuCheck`: Kiểm tra thay đổi về tỷ lệ phân phối chi phí.
+- `changeRequestDateCheck`: Kiểm tra thay đổi ngày yêu cầu thanh toán.
+- `changeCostCdCcCheck`: Kiểm tra thay đổi mã trung tâm chi phí (Cost Center).
+- `changeCondPriceCheck`: Kiểm tra thay đổi về điều kiện giá mua (Incoterms).
+- `changeInvoiceNoCheck`: Kiểm tra thay đổi về số hóa đơn (Invoice Number).
+- `purchaseResolutionExchChangeYn`: Cờ quy định xem có cho phép thay đổi tỷ giá hối đoái so với PO gốc hay không (`Y`/`N`).
 
 > ✅ Khi phòng Kế toán tiếp nhận và phê duyệt hoàn tất → Chứng từ kế toán ERP sẽ được **xử lý tự động**.
 
 ---
 
-## 9. 🏢 Luồng Mua Hàng Giữa Các Pháp Nhân (Inter-company PO & Receiving)
+## 8. 🏢 Luồng Mua Hàng Giữa Các Pháp Nhân (Inter-company PO & Receiving)
 
 Quy trình áp dụng khi Vinatech Việt Nam mua hàng trực tiếp từ Công ty mẹ Vinatech Hàn Quốc (HQ):
 
@@ -283,7 +390,7 @@ Quy trình áp dụng khi Vinatech Việt Nam mua hàng trực tiếp từ Công
 
 ---
 
-## 10. 📊 Xem Tổng Hợp Đơn Mua Hàng (Purchase Total List)
+## 9. 📊 Xem Tổng Hợp Đơn Mua Hàng (Purchase Total List)
 
 **Vào:** Home → Purchase Management → Purchase Total List
 
@@ -297,7 +404,7 @@ Quy trình áp dụng khi Vinatech Việt Nam mua hàng trực tiếp từ Công
 
 ---
 
-## 11. ❓ Các Lỗi Thường Gặp
+## 10. ❓ Các Lỗi Thường Gặp
 
 | Lỗi | Nguyên nhân | Xử lý |
 |-----|-------------|-------|

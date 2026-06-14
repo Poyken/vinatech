@@ -98,6 +98,18 @@ Dưới đây là bảng đối chiếu chi tiết 100% danh mục mã kho (Mate
 > ⚠️ **Chú ý về lỗi dịch thuật trong file Excel gốc:**
 > Trong file Excel gốc, tên tiếng Việt của **ROH_BG_WH** (thuộc nhà máy F2 - Bắc Giang) bị ghi nhầm thành "Bắc Ninh", và **ROH_VN_WH** (thuộc nhà máy F1 - Bắc Ninh) bị ghi nhầm thành "Bắc Giang". Trên thực tế vận hành và cài đặt hệ thống, thủ kho cần hiểu đúng theo phân cấp: **VN = Bắc Ninh (F1)** và **BG = Bắc Giang (F2)**.
 
+---
+
+## 6. 📦 Product Receiving Confirmation Document (Xác Nhận Nhập Kho Vật Lý Sản Phẩm)
+
+**Vào:** Electronic Document → Purchase → Product Receiving Confirmation Document (Mã biểu mẫu: `receivingPhysicalItemConfirmationDocument`)
+
+- **Mục đích:** Dùng để khai báo nhập hoặc xuất kho vật lý cho các Lot sản phẩm thành phẩm/bán thành phẩm nội bộ của công ty.
+- **Các trường thông tin cơ bản:**
+  - **Phân loại giao dịch (allWarehouseInOutCode):** Chọn `Nhập kho` (`I`) hoặc `Xuất hàng` (`O`).
+  - **문서 내용(비고) (documentSaveContent):** Nhập nội dung ghi chú/lý do nhập xuất.
+- **Bảng chi tiết Lot hàng (Table 1 / Index 1):**
+  - `No.` | `Mục` (Mã/Tên sản phẩm) | `* LotNo` (Mã số Lot sản xuất) | `* Kho (Đăng ký hàng loạt)` (Mã kho nhận/xuất) | `* Số lượng` (Số lượng sản phẩm trong Lot) | `Ghi Chú` | `Sản phẩm nhập kho của công ty` (Check box) | `Thêm/Xóa (Xóa tất cả)`
 
 ---
 

@@ -1,20 +1,20 @@
 # GW_06 — Yêu Cầu Thanh Toán (Disbursement Document)
 
-> **Màn hình:** Electronic Document → Cost → Disbursement Document
+> **Màn hình:** Electronic Document → Cost → Dusbursenment Document (Màn hình bị ghi sai chính tả trên menu hệ thống)
 > ← [Về INDEX](GW_INDEX.md)
 
 ---
 
 ## 1. 💳 Tạo Yêu Cầu Thanh Toán
 
-**Vào:** Electronic Document → Cost → Dusbursenment Document (Lưu ý: Màn hình này trên menu hệ thống bị viết sai chính tả thành **"Dusbursenment Document"** thay vì *Disbursement*)
+**Vào:** Electronic Document → Cost → Dusbursenment Document (Lưu ý: Chữ *Disbursement* bị viết sai chính tả thành **"Dusbursenment Document"** trên thanh thực đơn của hệ thống)
 
 ### Bước 1: Chọn đường line phê duyệt
-- Thiết lập đường line phê duyệt phù hợp.
+- Thiết lập đường line phê duyệt phù hợp. (Tuyến mặc định là **22205010-Nguyễn Thị Thúy_V6** → **21910034-Trần Quang Thỏa**).
 
 ### Bước 2: Điền thông tin form cơ bản
 - Đặt tên form (tiêu đề biểu mẫu).
-- **Đính kèm file liên quan:** Ở phần Attachment, người dùng tải lên phiếu hoá đơn hoặc vận đơn làm cơ sở xác thực số tiền cước phí cho Phòng Kế toán (Ví dụ: file PDF hóa đơn vận chuyển đường hàng không mang tên [Bee Logistics_Vina tech_By_Air_Inv-2925431946.pdf](attachments/Bee%20Logistics_Vina%20tech_By_Air_Inv-2925431946.pdf)). Kế toán sẽ nhìn trực tiếp vào **Lịch sử Liên Kết Tài Liệu kéo thả** trong tab Cost để kiểm tra Audit bất cứ lúc nào mà không cần đòi hỏi bản cứng.
+- **Đính kèm file liên quan:** Ở phần Attachment, người dùng tải lên phiếu hoá đơn hoặc vận đơn làm cơ sở xác thực số tiền cước phí cho Phòng Kế toán (Ví dụ: file PDF hóa đơn vận chuyển đường hàng không mang tên [Bee Logistics_Vina tech_By_Air_Inv-2925431946.pdf](Bee%20Logistics_Vina%20tech_By_Air_Inv-2925431946.pdf)). Kế toán sẽ nhìn trực tiếp vào **Lịch sử Liên Kết Tài Liệu kéo thả** trong tab Cost để kiểm tra Audit bất cứ lúc nào mà không cần đòi hỏi bản cứng.
 - Chọn người làm form hộ (nếu đăng ký giúp người khác).
 
 ### Bước 3: Chọn nguồn thanh toán & Cơ chế kéo chuỗi liên kết

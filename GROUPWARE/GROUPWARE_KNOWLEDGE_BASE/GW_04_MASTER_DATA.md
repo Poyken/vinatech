@@ -19,39 +19,58 @@
 4. Chọn người làm form hộ (nếu cần) - sử dụng khi làm thay cho người khác.
 
 ### Bước 2: Chọn kiểu code và phân loại tài liệu
-Chọn đường line phê duyệt tương thích chính xác với phân loại:
-- **[Cell]** → Chọn line **Single Cell**
-- **[Module]** → Chọn line **Module**
-- **[Raw material]** → Chọn line **Raw materials**
+Chọn đúng phân loại tài liệu (**documentSaveApprovalTarget**) tương thích chính xác với tuyến phê duyệt:
+- `Nguyên liệu thô` (`STATIC_DATA_000174`)
+- `Cell đơn` (`STATIC_DATA_000508`)
+- `Mô-đun` (`STATIC_DATA_000509`)
+- `F/C 탄소Công nghệ원` (`STATIC_DATA_000529`)
+- `F/C MEA` (`STATIC_DATA_000517`)
+- `S/C Điện cực` (`STATIC_DATA_000601`)
+- `상품` (`STATIC_DATA_000596`)
 
 ### Bước 3: Điền thông tin code (Các nút chức năng trên lưới tab)
 - **Add:** Thêm một tab mới để đăng ký đồng thời một mã code khác.
-- **Copy:** Sao chép nguyên vẹn nội dung của tab trước đó. Đây là tính năng **"Copy thông số cũ sửa lại"** giúp quản lý khai báo nhanh chóng mà không cần nhập lại từ đầu khi đăng ký các sản phẩm tương đương.
+- **Copy:** Sao chép nguyên vẹn nội dung của tab trước đó. Đây là tính năng **"Copy thông số cũ sửa lại"** giúp quản lý khai báo nhanh chóng.
 - **Delete:** Xóa tab hiện hành nếu không cần thiết.
 
-**Thông tin kỹ thuật bắt buộc nhập:**
-- **Kiểu của mã code:** Bán thành phẩm hoặc Nguyên vật liệu.
-- **Thông số kỹ thuật (Spec Values):**
-  - **Voltage (Điện áp cấu hình):** Ví dụ: `12- 3.0 C035`.
-  - **Farad (Tiêu chuẩn tiết diện/kích cỡ Điện dung Faraday):** Ví dụ: `3.5 mm`.
-
-### Bước 4: Thông tin yêu cầu (Request Information)
-- **Loại hàng:** Chọn hàng để phát triển (**Dev**) hoặc sản xuất hàng loạt (**Mass Production**).
-- **Tên khách hàng:** Nhập tên đối tác thụ hưởng.
-- **Bộ phận sản xuất:** Khai báo nhóm bộ phận chịu chi phí / thụ hưởng kinh phí khi sản xuất mặt hàng này (Cost Center).
-- **Người dùng code:** Khai báo người trực tiếp quản lý/sử dụng mã code này.
-- **Ngày đặt hàng dự kiến:** Khai báo thời hạn dự kiến đối tác đặt hàng.
-
-### Bước 5: Kiểm tra chi tiết (Detail Check)
-Hệ thống hiển thị lưới thông tin kiểm kê chi tiết:
-1. Đơn vị đo lường.
-2. Danh mục loại hàng.
-3. Phân loại hàng.
-4. Nhóm danh mục sản phẩm.
-5. Kích cỡ con hàng.
-6. Kiểu mua sắm con hàng.
-7. Kiểu loại mặt hàng.
-8. Kiểu giao dịch (Trong nước hay nước ngoài).
+### Bước 4: Khai báo chi tiết thuộc tính vật tư (Detail Technical Fields)
+Cần điền đầy đủ các thuộc tính kỹ thuật sau trên giao diện biểu mẫu:
+1. **Loại vật tư Chọn (clsItem - Item Class):**
+   - `raw materials` (Mã `001`) | `subsidiary materials` (Mã `002`) | `semi-finished products` (Mã `004`) | `goods` (Mã `005`) | `expendables` (Mã `006`) | `service` (Mã `007`) | `construction` (Mã `008`) | `stored goods` (Mã `009`) | `expenses` (Mã `010`)
+2. **Tên vật tư (nmItem):** Nhập tên sản phẩm (Tiếng Việt/Tiếng Hàn).
+3. **Tên tiếng Anh (enItem):** Nhập tên Tiếng Anh của vật tư.
+4. **Quy cách (stndItem):** Quy cách kỹ thuật sản phẩm.
+5. **Quy cách chi tiết (stndDetailItem):** Chi tiết bổ sung cho quy cách.
+6. **Phát triển/Loại sản xuất (itemType):** Chọn `Phát triển` (`STATIC_DATA_000510`) hoặc `Sản xuất hàng loạt` (`STATIC_DATA_000511`).
+7. **Tên đối tác kinh doanh chính (salesPartner):** Tên Vendor chính cung cấp/thụ hưởng.
+8. **Ứng dụng (application):** Ứng dụng thực tế của sản phẩm.
+9. **EAU (eau):** Lượng sử dụng ước tính hàng năm.
+10. **expectedDate (expectedDate):** Ngày mong muốn hoàn thành khai báo/đặt hàng.
+11. **Đơn vị Chọn (unitIm - UoM):** `EA`, `BOX`, `G`, `KG`, `L`, `M`, `M2 (SQM)`, `MET`, `KP`.
+12. **Phân loại Lớn (clsL - Large Class):**
+    - `[L01] SC-조립` | `[L02] FC-MEA` | `[L03] 환경Bộ lọc` | `[L04] 상품` | `[L05] 하이브리드커패시터` | `[L06] PS` | `[L07] SC-Điện cực` | `[L08] FC-Bộ phận hỗ trợ` | `[L09] ENS`
+13. **Phân loại Vừa (clsM - Medium Class):**
+    - `[M01] Lead Type` | `[M02] Snap Type` | `[M03] Lug Type` | `[M04] Hoạt động탄` | `[M05] 도전제` | `[M06] 집Tất cả` | `[M07] Vách ngăn` | `[M08] Chất điện phân` | `[M09] Vỏ`
+14. **Nhóm vật tư Chọn (grpItem - Small Class / Item Group):**
+    - `계면Hoạt động제` (`001`) | `Đầu nối cao su` (`002`) | `Khác` (`003`) | `Tấm đầu cực` (`004`) | `도전제` (`005`) | `Cho Module Vật liệu chip` (`006`) | `Cho Module HARNESS` (`007`) | `Cho Module PCB` (`008`) | `Cho Module WIRE` (`009`)
+15. **Nhà sản xuất (nmMaker):** Tên hãng sản xuất.
+16. **Hạn sử dụng (dyValid):** Số ngày hiệu lực sử dụng (Mặc định: `0` nếu không giới hạn).
+17. **SIZE Chọn (grpMfg - Size):** `0612` (`052`), `0813` (`001`), `0816` (`051`), `0816L` (`057`), `0820` (`002`), `0820C` (`003`), `0820L` (`058`), `0825` (`004`), `0830` (`005`), v.v.
+18. **Loại thu mua Chọn (tpProc - Procurement Type):** `purchased product` (`P`) | `Product` (`M`) | `outsourced product` (`S`).
+19. **Loại vật tư (tpItem - Item Type):** `General product` (`SIN`) | `The aging property item` (`VAL`) | `FAS item` (`FAS`) | `GENERIC ARTICLE` (`GEN`) | `SET bosom` (`SET`).
+20. **내Nước ngoài Loại (tpPart - Local/Foreign):** `Make` (`P` - Trong nước) | `Foreign language` (`V` - Nước ngoài).
+21. **화학물 여부 (chemicalYn - Chemical Y/N):** `Y` hoặc `N`.
+22. **casNo (CAS Number):** Nhập mã đăng ký CAS nếu là hóa chất.
+23. **Cell đơn/Mô-đun Loại (moduleCellDivision):** `CELL` (`C`) hoặc `MODULE` (`M`).
+24. **moduleCellQty:** Số lượng cell đơn bên trong module.
+25. **Chiều dài Chọn (length):** `12` (`021`), `13` (`001`), `16` (`020`), `20` (`002`), `25` (`003`), `30` (`004`), `107` (`023`), `138` (`026`), `159` (`019`), v.v.
+26. **Điện áp Chọn (volt):** `2.3` (`001`), `2.5` (`002`), `2.7` (`003`), `3` (`004`), `3.8` (`005`), `4.0` (`015`), `12` (`010`), `16` (`011`), `16.2` (`012`).
+27. **Đường kính Chọn (sizeW):** `10` (`002`), `13` (`003`), `16` (`004`), `18` (`005`), `22` (`006`), `25` (`007`), `27` (`008`), `29` (`013`), `30` (`009`), v.v.
+28. **Dung lượng / Thể tích (volume):** Giá trị điện dung Faraday (Ví dụ: `3.5`).
+29. **Nhóm sản phẩm Chọn (productionGrpItem):**
+    - `EDLC` (`100`) | `VPC` (`110`) | `VET` (`120`) | `Support` (`200`) | `Catalyst` (`210`) | `MEA` (`220`) | `LIC` (`300`)
+30. **Thông số QC đặc thù (nếu có):** `acEsr` (AC-ESR), `dcEsr` (DC-ESR), `maximumCurrent` (Dòng cực đại), `leakageCurrent` (Dòng rò).
+31. **Điện cực (electrod):** Chọn cực tính `+` hoặc `-`.
 
 ### ⚙️ Cơ chế đồng bộ dữ liệu tự động (Auto-Sync Flow):
 - **Cố định đường line phê duyệt:** Tuyến phê duyệt (Approval Line) được hệ thống tự động khóa/cố định sẵn dựa trên loại vật tư (zách hóa/자재유형) được đăng ký.
@@ -110,7 +129,7 @@ Hệ thống hiển thị lưới thông tin kiểm kê chi tiết:
 
 ### 3.2 Phê Duyệt BOM trên Groupware
 
-**Vào:** Electronic Document → Production/Development → BOM Addition And Update Document
+**Vào:** Electronic Document → Production/Development → BOM Addition And Update Document (Mã biểu mẫu: `bomAdditionDocument`)
 
 | Bước | Thao tác |
 |------|----------|

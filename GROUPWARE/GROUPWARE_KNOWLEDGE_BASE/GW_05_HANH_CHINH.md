@@ -268,5 +268,80 @@ Hệ thống Groupware tích hợp các biểu mẫu sau phục vụ công tác 
 
 ---
 
-*Cập nhật: 2026-06-12 | Nguồn: Hướng dẫn Draft Document.pptx + Hướng dẫn Groupware_Form đi công tác.pptx + Hướng dẫn Form nghỉ việc - Employee Retire Document.pptx + Hướng dẫn Form Yêu cầu tuyển dụng - Emp Request.pptx + Hướng dẫn Groupware_Form đăng ký đi làm ngày lễ_ngày nghỉ.pptx + Vietnam Corporation Approval Setting List.xlsx + Comprehensive_Groupware_Report.md*
+## 11. 📄 Chi Tiết Các Biểu Mẫu & Trường Thông Tin Đã Xác Thực
+
+Các biểu mẫu dưới đây đã được kiểm chứng chính xác 100% trên giao diện thực tế của Groupware:
+
+### 11.1. Đơn Đi Công Tác (Business Trip Document - `businessTripDocument`)
+- **Phân loại Tài liệu (`documentSaveApprovalTarget` - select):** `Trong nước` (Domestic), `Quốc tế` (Overseas), `Việt Nam`.
+- **Địa điểm (`businesstripDestination` - text):** Nơi đến công tác.
+- **Quốc gia (`cdSysdef` - select):** Danh sách quốc gia (Ví dụ: Hàn Quốc, UAE, Nhật Bản, v.v.).
+- **Thành phố (`cityCode` - select):** `tokyo`, `newYork`, `london`, `paris`, `moscow`, `losAngeles`, `sanFrancisco`, `washingtonDc`, `geneva`, `beijing`.
+- **Loại chỗ ở (`businesstripAccommodationGrade` - select):** `seoul`, `etc`, `Busan`, `Daegu`, `Incheon`, `Gwangju`, `Daejeon`, `Ulsan`.
+- **Tình trạng phái cử (`documentSaveBusinesstripDispatchYn` - select):** `Phái cử` / `Công tác`.
+- **Loại chi phí (`projectCostYnSelect` - select):** `Thông thường` / `Nhiệm vụ비` (Phí dự án).
+- **Trong nước/Quốc tế (`oversea` - select):** `Domestic` / `Oversea`.
+- **Thời gian đi (`businesstripStartDate` & `businesstripReturnDate` - date).
+- **Hạn Hộ chiếu & Visa (`businesstripPassportValidaty` & `businesstripVisaValidaty` - date).
+- **Số bữa ăn mỗi ngày (`businesstripEmpMealCount` - number).
+- **Bảng 1 (Lưới danh sách nhân sự đi công tác):** `Nhân viên`, `Chi phí`, `Tổng cộng`, `Trong nước/Quốc tế`, `Thời gian công tác`, `Hộ chiếu/Ngày hết hạn Visa`, `Số bữa ăn mỗi ngày`, `Xóa`.
+- **Bảng 2 (Lưới chi phí đi lại trong nước):** `shipFare` (tàu thủy), `trainFare` (tàu hỏa), `busFare` (xe bus), `fuelCost` (xăng dầu).
+- **Bảng 3 (Lưới chi phí đi lại quốc tế):** `airlineFare` (vé máy bay).
+
+### 11.2. Đơn Nghỉ Phép (Leave Document - `leaveDocument`)
+- **Phân loại Tài liệu (`documentSaveApprovalTarget` - select):** `Thông thường` / `Khác(유급)`.
+- **Loại nghỉ phép (`cdWcode` - select):** `Nghỉ phép năm (G05)`, `half a day (G14)` (Nửa ngày), `reward vacation (G15)` (Nghỉ bù/Thưởng), `family event (G16)` (Nghỉ việc gia đình), `Other(paid) (G17)` (Khác - Hưởng lương), `Other(unpaid) (G18)` (Khác - Không lương).
+- **Thời gian nghỉ phép (`dtStart` & `dtClose` - date).
+- **Số ngày đề xuất (`dyProposal` - text):** Số ngày nghỉ phép thực tế tính toán.
+- **Tìm kiếm nhân viên thay thế/ủy quyền (`noEmpNmAn` - text):** Người nhận bàn giao công việc tạm thời.
+- **Chỉ định người duyệt thay (`proxyApprovalYn` - select):** `Chưa chỉ định (N)` / `지정` (Chỉ định - Y).
+
+### 11.3. Đơn Hủy Nghỉ Phép (Leave Cancel Document - `leaveCancelDocument`)
+- Sử dụng để hủy các ngày nghỉ đã được phê duyệt. Form chứa trường nội dung lý do hủy phép (`documentSaveContent`).
+
+### 11.4. Đơn Nghỉ Việc (Employee Retire Document - `empRetireDocument`)
+- **Ngày nghỉ việc (`dtRetire` - date):** Ngày chính thức chấm dứt hợp đồng.
+- **Ngày làm việc cuối cùng (`dtLastWork` - date).
+- **Người thay thế/nhận bàn giao (`noEmpAnName` - text).
+- **Thông tin liên hệ sau nghỉ (`noTel` - text) & Email (`noEmail` - text).
+- **Địa chỉ liên hệ sau nghỉ (`dcAddressRes` - text).
+- **Lý do nghỉ việc (`dcReasonRt` - text).
+
+### 11.5. Đơn Yêu Cầu Cấp Giấy Chứng Nhận (Certificate Request Document - `certificateRequestDocument`)
+- **Số lượng yêu cầu cấp (`Issuance request quantity` - text).
+- **Ngày yêu cầu cấp (`Issuance request date` - date).
+- **Mục đích cấp (`Issuance request purpose` - text).
+- **Nơi nhận/Người nhận (`recipient` - text).
+- **Các loại giấy tờ (Checkboxes):** 
+  - `employment certificate` (Giấy xác nhận công tác).
+  - `withholding tax receipt` (Chứng từ khấu trừ thuế).
+  - `Tax Clearance for Class A earnings` (Xác nhận thuế thu nhập cá nhân).
+  - `Career certificate` (Giấy xác nhận kinh nghiệm làm việc).
+
+### 11.6. Đơn Đăng Ký Nhà Tắm / Ký Túc Xá (Dormitory Application Document - `dormitoryApplicationDocument`)
+- **Ngày bắt đầu ở (`start date` - date).
+- **Ngày kết thúc ở (`end date` - date).
+- **Tùy chọn đăng ký (`DOCUMENT_TYPE_ADD_FIELD_20240502092608356003` - radio):** `Y` / `N`.
+
+### 11.7. Đơn Tuyển Dụng Đặc Biệt (Special Recruitment Document - `specialRecruitmentDocument`)
+- **Phân loại hàng hóa/vật tư (`documentSaveAddFieldText` - select):** `Materials` / `In-Process Goods` / `Products` / `Others`.
+- **Tên mặt hàng đặc biệt (`Special Item Name` - text).
+- **Tên khách hàng nhận hàng (`Shipment Customer Name` - text).
+- **Số lượng tuyển dụng/Đặc thù (`Special Quantity` - text).
+- **Số Lot đặc biệt (`Special Lot No` - text).
+
+### 11.8. Đơn Yêu Cầu Đóng Dấu (Seal Request Management - `sealRequestDocument`)
+- **Phân loại tài liệu (`documentSaveApprovalTarget` - select):** `Chi nhánh인감(Thông thường)`, `Sử dụng인감`, `Chi nhánh인감(Quan trọng)`.
+- **Loại con dấu (`sealCode` - select):** Con dấu công ty đăng ký.
+- **Mục đích sử dụng con dấu (`documentSealRequestUsePurpose` - text).
+- **Người nhận bàn giao dấu (`documentSealRequestReciever` - text).
+- **Số lượng bản đóng dấu (`documentSealRequestUseCount` - text).
+- **Ngày sử dụng dấu (`documentSealRequestUseDate` - date).
+- **Nộp lại con dấu sử dụng (`documentSealRequestUsesignetSubmit` - select):** `제출 (Y)` / `미제출 (N)`.
+- **Nộp lại con dấu chi nhánh (`documentSealRequestCorporateSubmit` - select):** `제출 (Y)` / `미제출 (N)`.
+
+---
+
+*Cập nhật: 2026-06-14 | Nguồn: Hướng dẫn Draft Document.pptx + Hướng dẫn Groupware_Form đi công tác.pptx + Hướng dẫn Form nghỉ việc - Employee Retire Document.pptx + Hướng dẫn Form Yêu cầu tuyển dụng - Emp Request.pptx + Hướng dẫn Groupware_Form đăng ký đi làm ngày lễ_ngày nghỉ.pptx + Vietnam Corporation Approval Setting List.xlsx + Comprehensive_Groupware_Report.md*
+
 

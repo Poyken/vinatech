@@ -133,4 +133,59 @@ Sau khi đăng ký kế hoạch sản xuất tháng thành công:
 
 ---
 
-*Cập nhật: 2026-06-12 | Nguồn: Hướng dẫn tạo PO và Kế hoạch ngày trên Groupware.pptx + GROUPWARE PURCHASE, SALES FUNCTION MANUAL.pptx + Comprehensive_Groupware_Report.md*
+## 7. 📄 Chi Tiết Các Biểu Mẫu Kế Hoạch & Chỉ Thị Sản Xuất
+
+Dưới đây là chi tiết các biểu mẫu và trường thông tin đã được kiểm chứng trên giao diện thực tế của Groupware:
+
+### 7.1. Đơn Yêu Cầu Kế Hoạch Sản Xuất (Production Plan Request Document)
+- **Menu:** Electronic Document → Basic → Production Plan Request Document
+- **ID:** `productionPlanRequestDocument`
+- **Các trường thông tin đầu vào:**
+  - **Tiêu đề tài liệu (`documentSaveSubject`):** Tiêu đề của đơn yêu cầu.
+  - **Attached Files (`attachedFiles`):** Tải lên các file tài liệu đính kèm.
+  - **Người đăng ký / Người dùng (`noEmpUse`):** Tên và mã nhân viên tạo đơn.
+  - **Group (`documentSaveAddFieldText`):** Tổ sản xuất.
+  - **Team (`documentSaveAddFieldText`):** Đội sản xuất.
+  - **Production Start Date (`documentSaveAddFieldText` - Loại date):** Ngày bắt đầu chạy kế hoạch.
+  - **Production End Date (`documentSaveAddFieldText` - Loại date):** Ngày kết thúc chạy kế hoạch.
+  - **Ghi chú (`documentSaveContent`):** Nội dung hoặc mô tả thêm (문서 내용(비고)).
+
+### 7.2. Đơn Đóng Kế Hoạch Sản Xuất (Production Plan Close Document)
+- **Menu:** Electronic Document → Basic → Production Plan Close Document
+- **ID:** `productionPlanCloseDocument`
+- **Các trường thông tin đầu vào:** Tương tự như đơn yêu cầu kế hoạch sản xuất, dùng để chốt và kết thúc kế hoạch sản xuất tháng.
+
+### 7.3. Chỉ Thị Sản Xuất Ngày (Daily Production Order Document)
+- **Menu:** Electronic Document → Basic → Daily Production Order Document
+- **ID:** `dailyProductionOrderDocument`
+- **Các trường thông tin đầu vào:**
+  - **Phân loại Tài liệu (`documentSaveApprovalTarget` - Loại select):** Chọn phân loại như `F/C MEA`, `F/C 탄소Công nghệ원` (Carbon Tech), `S/C`, `P/S`, `S/C Điện cực`.
+  - **Loại xuất/trả hàng (`warehouseInOutCode` - Loại select):** `불출` (Xuất) / `반납` (Trả).
+  - **Line (`rawLineCode` - Loại select):** Chọn line làm việc, ví dụ: `Aging co nho (ACN)`, `Bắc Giang (BG)`, `Điện cực Bắc Ninh (ElectrodeBN)`, v.v.
+  - **Số lượng yêu cầu (`requestQty` - Loại text):** Số lượng vật tư cần xuất.
+- **Danh sách bảng hiển thị (Tables):**
+  - **Bảng 1 (Kế hoạch ngày):** `NO`, `Số Kế hoạch Tháng`, `Số lượng Kế hoạch Tháng`, `Mã vật tư`, `Tên vật tư`, `Ngày kế hoạch`, `Số lượng Kế hoạch Ngày`, `Line ( Đăng ký hàng loạt )`, `Ca ( Đăng ký hàng loạt )`, `LOT Đã tạo`, `Yêu cầu vật tư`, `Thêm/Xóa`.
+  - **Bảng 2 (Thông tin sản xuất chi tiết):** `NO`, `Số lượng sản xuất(Trọng lượng)`, `Độ dày`, `Số lượng Lô Trộn`, `EDLC`, `Thêm/Xóa`.
+  - **Bảng 3 (Chỉ thị nguyên vật liệu):** `Số Lệnh sản xuất`, `Số lượng Kế hoạch`, `Mã vật tư`, `Tên vật tư`, `Đơn vị`, `Số lượng Yêu cầu Dự kiến`, `Số lượng tồn kho (Kho NVL / Kho Quy trình)`, `Xuất/Trả hàng`, `Line`, `Số lượng yêu cầu`, `Xóa`.
+
+### 7.4. Báo Cáo Sản Xuất Ngày (Daily Production Report Document)
+- **Menu:** Electronic Document → Basic → Daily Production Report Document
+- **ID:** `dailyProductionReportDocument`
+- **Các trường thông tin đầu vào:**
+  - **Phân loại Tài liệu (`documentSaveApprovalTarget` - Loại select):** `F/C MEA`, `F/C 탄소Công nghệ원`, `S/C`, `P/S`, `S/C Điện cực`.
+  - **Ngày sản xuất (`prodDate` - Loại date):** Ngày chạy máy thực tế.
+  - **Số Kế hoạch Ngày (`dayPlanNo` - Loại text):** Liên kết số kế hoạch ngày.
+  - **Số Lot (`lotNo` - Loại text):** Mã số lô sản xuất.
+  - **Mã vật tư (`materialCode` - Loại text):** Mã sản phẩm/thành phẩm.
+  - **Line (`lineCode` - Loại select):** Chọn line sản xuất (ví dụ: `Aging co nho (ACN)`, `PACKING`, v.v.).
+  - **Công đoạn (`routeCode` - Loại select):** Chọn quy trình công nghệ (ví dụ: `EM-01`, `GM-01`, `M-01`, `ND01`, v.v.).
+  - **Số lượng nhập (`inputQty` - Loại text):** Lượng bán thành phẩm/nguyên liệu đưa vào.
+  - **Số lượng lỗi (`defectQty` - Loại text):** Số lượng phế phẩm phát sinh.
+  - **Thực tế sản xuất (`prodQty` - Loại text):** Số lượng thành phẩm đạt chất lượng đầu ra.
+- **Danh sách bảng hiển thị (Tables):**
+  - **Bảng 1 (Danh sách Lot báo cáo):** `Ngày sản xuất`, `Số Lệnh sản xuất`, `LotNo`, `Mã vật tư`, `Tên vật tư`, `Line`, `Công đoạn`, `Số lượng nhập`, `Số lượng lỗi`, `Số lượng sản xuất thực tế`, `Thêm/Xóa`.
+
+---
+
+*Cập nhật: 2026-06-14 | Nguồn: Hướng dẫn tạo PO và Kế hoạch ngày trên Groupware.pptx + GROUPWARE PURCHASE, SALES FUNCTION MANUAL.pptx + Comprehensive_Groupware_Report.md*
+

@@ -35,10 +35,10 @@
 | Làm Receiving Confirmation | GW_02 § 4 |
 | Không làm được Receiving | GW_02 § 4 (C220 đã PASS chưa?) |
 | Trả hàng về nhà cung cấp (Return Product) | GW_02 § 5 |
-| Hủy đơn mua hàng bị sai (PO Cancel) | GW_02 § 6 |
-| Đóng/Kết thúc đơn mua hàng (PO Closing) | GW_02 § 7 |
-| Đóng sổ thanh toán (Purchase Resolution) | GW_02 § 8 |
-| Nhận hàng mua từ công ty mẹ Hàn Quốc (Inter-company PO) | GW_02 § 9 |
+| Hủy đơn mua hàng bị sai (PO Cancel) | GW_02 § 6.1 |
+| Đóng/Kết thúc đơn mua hàng (PO Closing) | GW_02 § 6.2 |
+| Đóng sổ thanh toán (Purchase Resolution) | GW_02 § 7 |
+| Nhận hàng mua từ công ty mẹ Hàn Quốc (Inter-company PO) | GW_02 § 8 |
 | Tạo PO sản xuất theo tháng (Month Plan) | GW_03 § 1 |
 | Tự động tạo kế hoạch sản xuất từ Suju | GW_03 § 2 |
 | Tính toán nguyên vật liệu sản xuất từ BOM | GW_03 § 3 |
@@ -59,7 +59,7 @@
 | Phê duyệt văn bản nội bộ tự do (Draft) | GW_05 § 7 |
 | Làm yêu cầu thanh toán (Disbursement) | GW_06 § 1 |
 | Tra cứu phí logistics vận chuyển | GW_06 § 5 |
-| Xem tổng hợp đơn mua hàng (Purchase Total List) | GW_02 § 10 |
+| Xem tổng hợp đơn mua hàng (Purchase Total List) | GW_02 § 9 |
 | Tạo đơn bán hàng/suju (Sales Order) | GW_08 § 1 |
 | Bắn lệnh xuất hàng (Shipment Request) | GW_08 § 2 |
 | Xác nhận xuất hàng & thông quan (Shipment Confirm) | GW_08 § 3 |
@@ -125,7 +125,7 @@ Kế hoạch ngày (Groupware)
 | PO không hiện trên B310 | PO chưa được "Xác nhận lô hàng" hoặc BOM version sai | Kiểm tra trạng thái PO trên GW, đổi sang "Sản xuất", kiểm tra BOM version 2001 |
 | Không nhập được F330 | Arrival Confirmation chưa duyệt | Hỏi bộ phận Mua hàng duyệt trước |
 | Không làm Receiving Confirmation | C220 IQC chưa Pass | Đội QC làm C220 Pass trước |
-| Không đăng nhập được | Sai mật khẩu / sai company | Chọn đúng "Vinatech Vina Co.,Ltd." |
+| Không đăng nhập được | Sai mật khẩu / sai company | Chọn đúng "VINATech VINA Co.,Ltd" |
 | LOT hàng bị trả về kho lỗi | Đã làm Return Product Document | Kiểm tra trạng thái LOT trong MES và Return trên GW |
 | Không tạo được Lot sản xuất | Phiên bản BOM khác 2001 | Sửa lại BOM version thành 2001 |
 

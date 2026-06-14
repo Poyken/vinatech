@@ -22,16 +22,17 @@ URL: https://gw.vinatech.com/login
 
 | Trường | Giá trị |
 |--------|---------|
-| **Tên đăng nhập** | Mã nhân viên trên hệ thống ERP |
-| **Mật khẩu mặc định** | Từ 1 đến 4 (hoặc 1 đến 6 tùy phiên bản) |
-| **Company** | **Vinatech Vina Co.,Ltd.** ← **BẮT BUỘC chọn đúng** |
+| **Tên đăng nhập** | Mã nhân viên trên hệ thống ERP (Ví dụ: `32511007` - TRỊNH TẤN NHIỆM hoặc `92603003` - NGUYỄN VĂN ĐỨC_V3) |
+| **Mật khẩu mặc định** | `123456` (đã xác thực hoạt động cho các tài khoản trên) hoặc từ 1 đến 4 tùy tài khoản |
+| **Company** | **VINATech VINA Co.,Ltd** (Mã `2000`) ← **BẮT BUỘC chọn đúng** |
 
 ### Các bước đăng nhập:
-1. **Bước 1:** Nhập mã nhân viên và mật khẩu
-2. **Bước 2:** Chọn công ty → **Vinatech Vina Co.,Ltd.**
-3. **Bước 3:** Nhấn nút **Login**
+1. **Bước 1:** Nhập mã nhân viên và mật khẩu.
+2. **Bước 2:** Chọn đúng công ty trong danh sách thả xuống: **VINATech VINA Co.,Ltd** (Mã `2000`).
+   * *Lưu ý:* Mã `1000` là dành cho văn phòng chính tại Hàn Quốc (`비나텍(주)`).
+3. **Bước 3:** Nhấn nút **Login**.
 
-> ⚠️ **Lỗi phổ biến:** Quên chọn "Vinatech Vina Co.,Ltd." trước khi login → Hệ thống không tìm thấy tài khoản hoặc vào sai hệ thống.
+> ⚠️ **Lỗi phổ biến:** Quên chọn "VINATech VINA Co.,Ltd" trước khi login → Hệ thống báo sai tài khoản hoặc không tìm thấy thông tin đăng nhập.
 
 ---
 
@@ -40,7 +41,7 @@ URL: https://gw.vinatech.com/login
 | Triệu chứng | Nguyên nhân | Cách xử lý |
 |-------------|-------------|------------|
 | Sai mật khẩu | Đã đổi hoặc quên mật khẩu | Liên hệ **EA Team** để reset |
-| Không thấy tài khoản | Chưa chọn đúng company | Chọn lại "Vinatech Vina Co.,Ltd." |
+| Không thấy tài khoản | Chưa chọn đúng company | Chọn lại "VINATech VINA Co.,Ltd" |
 | Đăng nhập được nhưng không thấy menu | Chưa được phân quyền | Liên hệ EA Team bổ sung quyền |
 | Tài khoản bị khóa | Admin khóa tài khoản | Liên hệ EA Team mở lại |
 

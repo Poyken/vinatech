@@ -127,4 +127,52 @@ Màn hình quản trị cho phép theo dõi toàn bộ trạng thái đơn hàng
 
 ---
 
-*Cập nhật: 2026-06-12 | Nguồn: GROUPWARE PURCHASE, SALES FUNCTION MANUAL.pptx + Comprehensive_Groupware_Report.md*
+## 7. 📄 Chi Tiết Các Biểu Mẫu Bán Hàng & Xuất Khẩu
+
+Dưới đây là chi tiết các biểu mẫu và trường thông tin đã được kiểm chứng chính xác trên giao diện thực tế của Groupware:
+
+### 7.1. Đăng Ký Đơn Bán Hàng (Sales Order Registration Document - `salesOrderDocument`)
+- **Phân loại Tài liệu (`documentSaveApprovalTarget` - select):** `Thông thường`, `Hàng nhập của pháp nhân`, `Chi nhánh교차Đăng ký`, `3Thương mại`.
+- **Ngày đặt hàng (`dtSo` - date).
+- **Loại đơn hàng (`tpSo` - select):**
+  - `Trong nướcĐơn bán hàng-Bình thường` (Mã: `1100`)
+  - `Nước ngoàiĐơn bán hàng-L/C` (Mã: `1110`)
+  - `Nước ngoàiĐơn bán hàng-TT` (Mã: `1140`)
+  - `Việt Nam-Xuất khẩu` (Mã: `1150`)
+  - `Trong nướcĐơn bán hàng-Ngoại tệ` (Mã: `1160`)
+  - `Nước ngoàiĐơn bán hàng-외주` (Mã: `1200`)
+  - `Trong nướcĐơn bán hàng-외주` (Mã: `1210`)
+  - `Trong nướcĐơn bán hàng-PSMô-đun` (Mã: `1220`)
+  - `Quốc tếĐơn bán hàng-PSMô-đun` (Mã: `1230`)
+  - `3Thương mạiXuất hàng` (Mã: `1300`)
+  - `Trả hàng xuất khẩu` (Mã: `9600`)
+  - `Trong nướcTrả hàng` (Mã: `9700`)
+- **Trả hàng (`salesReturn` - checkbox).
+- **Điều kiện giao hàng (`condShipment` - select):** `[DDP]Thuế hải quan Thanh toán Ấn ĐộĐiều kiện`, `[DAP]도착Địa điểm Ấn ĐộĐiều kiện`, `[DPU]Địa điểm đến양하 Ấn ĐộĐiều kiện`, `[FOB]본선 Ấn ĐộĐiều kiện`, `[FAS]선측 Ấn ĐộĐiều kiện`, `[CPT]운송비 Thanh toán Ấn ĐộĐiều kiện`, `[FCA]운송인 Ấn ĐộĐiều kiện`, `[CIF]운임,보험료 Ấn ĐộĐiều kiện`, `[CIP]운임비, 보험료Thanh toán Ấn ĐộĐiều kiện`.
+- **Phương thức vận chuyển (`tpTrans` - select):** `[001]AIR` (Đường hàng không) / `[002]OCEAN` (Đường biển).
+- **Nhóm kinh doanh (`cdSaleGrp` - select):** `Trong nướcBán hàng-에너지`, `Quốc tếBán hàng-에너지`, `Châu MỹBán hàng-에너지`, `Châu ÂuBán hàng-에너지`, `Trung QuốcBán hàng-에너지`, `đại diệnBán hàng-에너지`, `đại lýBán hàng-에너지`, `đại họcBán hàng-에너지`, `đại giaBán hàng-에너지`.
+- **Nhân viên kinh doanh (`nmKor` - text):** Tên nhân viên kinh doanh chịu trách nhiệm.
+- **Loại tiền tệ (`cdExch` - select):** `KRW`, `USD`, `JPY`, `EUR`, `CNY`, `AED`, `ARS`, `AUD`, `BDT`.
+- **Tỷ giá (`rtExch` - text) & Tỷ giá trung bình (`rtAverageExch` - checkbox).
+- **Loại thuế (`tpVat` - select):** `과세(Hóa đơn Thuế)`, `Miễn thuế(Báo cáo)`, `영세(Hóa đơn Thuế)`, `영세(Xuất khẩu)`.
+- **Số L/C (`noLc` - text) & Ngân hàng phát hành/thông báo (`cdBankLc` / `cdBankNotice` - select):** `Chứng khoán Daishin(주)`, `Ngân hàng Doanh nghiệp`, `Kookmin Bank`, `외환Ngân hàng`, `Ngân hàng Woori`, `Shinhan Bank`, v.v.
+- **Thời hạn bốc xếp, giao hàng, mở/thông báo L/C (`dtLoading`, `dtDelivery`, `dtOpen`, `dtNotice` - date).
+- **Bảng 1 (Lưới chi tiết mặt hàng đặt hàng):** `Mã vật tư/Tên vật tư/Đơn vị`, `Ngày Yêu cầu Giao hàng`, `Ngày Dự kiến Xuất hàng`, `Kho`, `Số lượng`, `Đơn giá`, `Số tiền(Ngoại tệ)`, `Số tiền VND`, `VAT`, `Tổng cộng`, `Đối tác kinh doanhPOSố`, `Ghi Chú`, `Kế hoạch bán hàng`, `Xóa`.
+
+### 7.2. Yêu Cầu Xuất Hàng (Shipment Request - `deliverOutDocument`)
+- **Phân loại Tài liệu (`documentSaveApprovalTarget` - select):** `Nguyên liệu thô`, `Thông thường`, `F/C MEA`, `F/C 탄소Công nghệ원`, `S/C`, `P/S`, `Chi nhánh교차Đăng ký`, `S/C BN`, `S/C BG`.
+- **Bảng 1 (Thông tin đối tác & thanh toán):** `Đối tác kinh doanh`, `Loại tiền tệ`, `Tổng tạm ứng`, `Số tiền yêu cầu giao hàng`, `Tạm ứng còn lại`.
+
+### 7.3. Các Biểu Mẫu Luồng Bán Hàng Khác (No Custom Fields)
+Các đơn dưới đây không yêu cầu điền các trường tùy biến phức tạp, chủ yếu sử dụng để luân chuyển trạng thái hoặc xóa dữ liệu:
+- **Shipment Confirmation Document (`deliverOutConfirmationDocument`)**
+- **Sales Resolution Document (`salesResolutionDocument`)**
+- **Sales Resolution Overseas Document (`salesResolutionOverseasDocument`)**
+- **Sales Order Closing Document (`salesOrderCancelDocument`)**
+- **Sales Order Delete Document (`salesOrderDeleteDocument`)**
+- **Shipment Delete Document (`deliverOutDeleteDocument`)**
+
+---
+
+*Cập nhật: 2026-06-14 | Nguồn: GROUPWARE PURCHASE, SALES FUNCTION MANUAL.pptx + Comprehensive_Groupware_Report.md*
+
