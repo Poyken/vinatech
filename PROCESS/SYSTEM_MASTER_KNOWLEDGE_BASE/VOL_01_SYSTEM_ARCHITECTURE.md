@@ -106,17 +106,18 @@ flowchart TD
 
 ---
 
-## 🗃️ 3. Vai Trò & Cấu Trúc Chi Tiết Của 13 Hệ Thống Cơ Sở Dữ Liệu
+## 🗃️ 3. Vai Trò & Cấu Trúc Chi Tiết Của 15 Hệ Thống Cơ Sở Dữ Liệu
 
-Mạng lưới thông tin của Vinatech liên thông qua 13 cơ sở dữ liệu trên SQL Server. Dưới đây là phân tích cấu trúc vật lý của từng DB:
+Mạng lưới thông tin của Vinatech liên thông qua 15 cơ sở dữ liệu trên SQL Server. Dưới đây là phân tích cấu trúc vật lý của từng DB:
 
 ### 3.1 AndonDB — Giám Sát Cảnh Báo & Dừng Máy
 *   **Vai trò:** Nhận tín hiệu dừng máy từ các kiosk/POP trạm máy và kích hoạt còi/đèn Andon.
 *   **Các bảng chính:**
     *   `STB_LineSituation_VVT` (Lịch sử sự cố dòng máy):
-        *   `linecode` (`varchar(20)`, PK): Mã dây chuyền.
-        *   `routecode` (`varchar(20)`, PK): Mã công đoạn (ví dụ: `V-23`, `B540`).
-        *   `createdatetime` (`datetime`, PK): Thời điểm phát sinh sự cố.
+        *   `id` (`int`, PK): ID tự sinh.
+        *   `linecode` (`varchar(20)`): Mã dây chuyền (ví dụ: `VVBGC-10`).
+        *   `routecode` (`varchar(20)`): Mã công đoạn (ví dụ: `V-22_BG`).
+        *   `createdatetime` (`datetime`): Thời điểm phát sinh sự cố.
         *   `status` (`int`): `0` = Bình thường, `1` = Dừng máy (Alarms), `2` = Chờ (Idle).
         *   `statusApp` / `statusEmail` (`int`): Cờ gửi thông báo (`0` = Chưa gửi, `1` = Đã gửi).
         *   `errorcode` / `errorname` (`nvarchar(1000)`): Chi tiết mã lỗi và mô tả lỗi kỹ thuật.
@@ -124,8 +125,10 @@ Mạng lưới thông tin của Vinatech liên thông qua 13 cơ sở dữ liệ
         *   `LineCode` (`varchar(20)`, PK): Mã line.
         *   `MonitoringGroup` (`nvarchar(50)`): Gom nhóm hiển thị tivi đầu line.
     *   `STB_VVT_UserWarning` (Cấu hình người nhận tin nhắn Andon):
-        *   `UserID` (`varchar(20)`, PK)
-        *   `PhoneNo` (`varchar(20)`)
+        *   `id` (`int`, PK)
+        *   `username` (`varchar(50)`): Tài khoản người dùng nhận cảnh báo.
+        *   `groupid` (`varchar(50)`): Nhóm (ví dụ: `TQC-VVT-LINE`).
+        *   `typeid` (`varchar(50)`): Phân loại (ví dụ: `qc,vvc,line`).
 
 ### 3.2 DZICUBE — Douzone Bizbox Alpha Groupware & Accounting Core
 *   **Vai trò:** Quản lý quy trình chữ ký số hành chính, đối chiếu tài sản cố định và chi tiêu thẻ doanh nghiệp.
@@ -153,70 +156,98 @@ Mạng lưới thông tin của Vinatech liên thông qua 13 cơ sở dữ liệ
 
 ### 3.4 NEOE — ERP Douzone iU (Central General Ledger)
 *   **Vai trò:** Trụ sở quản trị tài chính, Master Data và xuất nhập kho hạch toán.
+*   **Sử dụng Schema:** `NEOE` (Không dùng `dbo`).
 *   **Các bảng chính:**
-    *   `MA_ITEM` (Danh mục vật tư chính thức):
-        *   `CD_ITEM` (`nvarchar(20)`, PK): Mã vật tư gốc.
-        *   `NM_ITEM` / `STND_ITEM` (`nvarchar(100)`): Tên và thông số quy cách.
+    *   `NEOE.MA_ITEM` (Danh mục vật tư chính thức):
+        *   `CD_ITEM` (`nvarchar(50)`, PK): Mã vật tư gốc.
+        *   `NM_ITEM` / `STND_ITEM` (`nvarchar(200)`): Tên và thông số quy cách.
         *   `UNIT_IM` (`nvarchar(3)`): Đơn vị tính.
-        *   `CLS_ITEM` (`nvarchar(3)`): Phân loại vật tư.
-    *   `MA_PARTNER` (Danh mục đối tác):
+        *   `CLS_ITEM` (`nvarchar(3)`): Phân loại vật tư (ví dụ: `001` = Raw, `004` = Semi-finished).
+    *   `NEOE.MA_PARTNER` (Danh mục đối tác):
         *   `CD_PARTNER` (`nvarchar(20)`, PK): Mã đối tác.
         *   `NO_BIZ` (`nvarchar(20)`): Mã số thuế đối tác.
-    *   `PU_POH` (Header đơn mua hàng) / `PU_POL` (Line đơn mua hàng):
+    *   `NEOE.MA_EMP` (Danh mục nhân sự ERP):
+        *   `NO_EMP` (`nvarchar(10)`, PK): Mã nhân viên.
+        *   `CD_DEPT` (`nvarchar(12)`): Mã phòng ban.
+    *   `NEOE.PU_POH` (Header đơn mua hàng) / `NEOE.PU_POL` (Line đơn mua hàng):
         *   `NO_PO` (`nvarchar(20)`, PK): Số PO mua hàng.
         *   `CD_PARTNER` (`nvarchar(20)`): Nhà cung cấp.
+        *   `CD_ITEM` (`nvarchar(20)`, PK): Mã vật tư.
         *   `QT_PO` (`numeric(17,4)`): Số lượng đặt mua.
         *   `UM` / `AM` (`numeric(17,4)`): Đơn giá và thành tiền VND.
-    *   `FI_DOCU` (Header bút toán sổ cái) / `FI_DOCU_D` (Line bút toán sổ cái).
-    *   `PR_BOM` (Cây định mức vật tư):
-        *   `CD_ITEM` (`nvarchar(20)`, PK): Thành phẩm.
-        *   `CD_ITEM_SUB` (`nvarchar(20)`, PK): Vật tư cấu thành.
-        *   `QT_BOM` (`numeric(17,7)`): Định mức tiêu hao.
+    *   `NEOE.FI_DOCU` (Chứng từ sổ cái - tích hợp cả Header và Line trong cùng một bảng):
+        *   `NO_DOCU` (`nvarchar(20)`, PK): Số chứng từ.
+        *   `NO_DOLINE` (`numeric()`, PK): Số thứ tự dòng của chứng từ.
+        *   `CD_ACCT` (`nvarchar(10)`): Tài khoản kế toán.
+        *   `AM_DR` / `AM_CR` (`numeric()`): Số tiền Nợ / Có.
+    *   `NEOE.PR_BOM` (Cây định mức vật tư):
+        *   `CD_ITEM` (`nvarchar(50)`, PK): Thành phẩm.
+        *   `CD_MATL` (`nvarchar(50)`, PK): Vật tư cấu thành (Child).
+        *   `QT_ITEM` (`numeric()`): Định mức tiêu hao.
+    *   `NEOE.MM_QTIO` (Line giao dịch xuất nhập kho ERP) / `NEOE.MM_QTIOH` (Header giao dịch xuất nhập kho):
+        *   `NO_IO` (`nvarchar(20)`, PK): Số phiếu xuất/nhập.
+        *   `NO_IOLINE` (`numeric()`, PK): Số thứ tự dòng.
+        *   `CD_SL` (`nvarchar(7)`): Mã kho (Storage Location).
+        *   `FG_IO` (`nchar(3)`): Phân loại xuất nhập (`022` = Nhập sản xuất, v.v.).
+        *   `CD_ITEM` (`nvarchar(50)`): Mã vật tư.
+        *   `QT_IO` (`numeric()`): Số lượng giao dịch.
+    *   `NEOE.MM_QTIOLOT` (Lot của giao dịch xuất nhập kho ERP):
+        *   `NO_IO` (`nvarchar(20)`), `NO_IOLINE` (`numeric()`): Khóa ngoại liên kết `MM_QTIO`.
+        *   `NO_LOT` (`nvarchar(50)`): Mã Lot.
+        *   `QT_IO` (`numeric()`): Số lượng theo Lot.
 
 ### 3.5 SmartFactoryIncubator — Sandbox Thử Nghiệm R&D
 *   **Vai trò:** Chứa dữ liệu đo kiểm tụ điện thử nghiệm của phòng R&D và lịch chuyển đổi.
 *   **Các bảng chính:**
     *   `STB_CellTestResult` (Kết quả đo kiểm Cell):
-        *   `ProdNo` (`varchar(50)`, PK): Mã vạch Cell.
-        *   `Voltage` / `Capacitance` / `ESR` / `LeakageCurrent` (`numeric(18,6)`): Các thông số điện thế, điện dung, nội trở và dòng rò rỉ.
+        *   `MachineCode` (`varchar(20)`), `LotNo` (`varchar(100)`), `ChannelName` (`varchar(20)`), `MeasureIndex` (`int`): Tổ hợp khóa.
+        *   `MeasureVoltage` / `MeasureResistance` (`numeric`): Điện thế và nội trở đo kiểm.
     *   `LUNAR_TO_SOLAR` (Bảng lịch Âm - Dương chuyển đổi):
-        *   `SolarDate` (`varchar(8)`, PK)
-        *   `LunarDate` (`varchar(8)`)
+        *   `LUNAR_DATE` (`varchar(8)`, PK)
+        *   `SOLAR_DATE` (`varchar(8)`)
 
 ### 3.6 streamdocs — PDF Document Web-Stream Server
 *   **Vai trò:** Quản lý metadata và an ninh hiển thị tệp PDF đính kèm của Groupware.
 *   **Các bảng chính:**
     *   `pdf_resource` (Định danh tệp PDF vật lý):
-        *   `file_uuid` (`varchar(50)`, PK)
-        *   `file_path` (`varchar(500)`)
+        *   `id` (`numeric()`, PK): ID tài nguyên.
+        *   `doc_name` (`varchar(255)`): Tên tài liệu gốc (ví dụ: `Htf_test01.hwp`).
+        *   `file_name` (`varchar(1024)`): Tên file PDF đã chuyển đổi (ví dụ: `72059268739027858_0.pdf`).
+        *   `parent_dir_path` (`varchar(4000)`): Thư mục vật lý lưu trữ file.
+        *   `uri` (`varchar(4000)`): Đường dẫn URI trỏ đến file.
     *   `pdf_resource_owner` (Liên kết chủ sở hữu):
-        *   `file_uuid` (`varchar(50)`, PK, FK)
-        *   `document_save_code` (`varchar(50)`): Mã văn bản phê duyệt trên Groupware.
-    *   `pdf_auth` (Quản lý token phiên hiển thị PDF trực tuyến):
-        *   `session_token` (`varchar(500)`, PK)
+        *   `user_id` (`numeric()`): ID người dùng sở hữu.
+        *   `streamdocs_id` (`numeric()`, PK, FK): ID tài nguyên trỏ đến `pdf_resource.id`.
+    *   `pdf_auth` (Quản lý quyền hiển thị PDF trực tuyến):
+        *   `id` (`numeric()`, PK)
+        *   `streamdocsId` (`numeric()`): Khóa ngoại.
+        *   `n_download` / `n_print` / `n_save` (`bit`): Các cờ phân quyền thao tác file.
 
 ### 3.7 VINATECH_DATA_KSOX — ICFR Compliance & Internal Control
 *   **Vai trò:** Lưu trữ ma trận kiểm soát tài chính nội bộ phục vụ tuân thủ luật K-SOX Hàn Quốc.
 *   **Các bảng chính:**
     *   `ICM_CTRLMATRIX_MT` (Master ma trận kiểm soát):
-        *   `CONTROL_UUID` (`varchar(50)`, PK): ID chốt kiểm soát.
-        *   `PROCESS_CODE` (`varchar(20)`): Quy trình nghiệp vụ chịu kiểm soát.
+        *   `CTRL_NO` (`nvarchar(50)`, PK): Mã kiểm soát (ví dụ: `RE.01.01.R1.C1`).
+        *   `PROCESS_ID` (`nvarchar(50)`): Mã quy trình (ví dụ: `RE.01;RE.01.01`).
+        *   `ACCOUNT_DESCRIPTION` (`nvarchar(4000)`): Mô tả tài khoản kế toán chịu ảnh hưởng.
+        *   `CTRL_ACTNAME` (`nvarchar(1000)`): Tên hoạt động kiểm soát.
+        *   `POINT_OF_FOCUS` (`nvarchar(max)`): Nội dung trọng tâm cần kiểm soát chi tiết.
 
 ### 3.8 VINATECH_GROUP — Groupware Core Portal & Electronic Approval
 *   **Vai trò:** Quản trị nhân sự, cây tổ chức và lưu trữ dữ liệu các tờ trình điện tử duyệt mua hàng, thanh toán, tuyển dụng và kế hoạch sản xuất.
 *   **Các bảng chính:**
     *   `VINA_DOCUMENT_SAVE` (Header lưu trữ tất cả biểu mẫu trình duyệt):
         *   `DOCUMENT_SAVE_CODE` (`varchar(50)`, PK): Mã tờ trình duy nhất (Khóa ngoại liên kết tất cả bảng Form).
-        *   `DOCUMENT_SAVE_STATE` (`varchar(50)`): Trạng thái phê duyệt (`DRAFT`, `APPROVING`, `APPROVED`, `REJECTED`).
+        *   `DOCUMENT_SAVE_STATE` (`varchar(50)`): Trạng thái phê duyệt (lưu dạng mã tĩnh, ví dụ: `STATIC_DATA_000060`, `STATIC_DATA_000043` tương ứng với các trạng thái Approved/Draft).
         *   `DOCUMENT_SAVE_CONTENT` (`ntext`): Nội dung HTML hiển thị của tờ trình.
     *   `VINA_DOCUMENT_POH` (Header biểu mẫu PO Groupware):
         *   `DOCUMENT_SAVE_CODE` (`varchar(50)`, PK, FK)
         *   `NO_PO` (`nvarchar(20)`): Số đơn đặt mua hàng (Sync sang ERP).
     *   `VINA_DOCUMENT_POL` (Line biểu mẫu PO Groupware):
         *   `DOCUMENT_SAVE_CODE` (`varchar(50)`, PK, FK)
-        *   `NO_PO_LINE` (`int`, PK): Số thứ tự dòng.
+        *   `NO_POLINE` (`numeric()`, PK): Số thứ tự dòng (1-indexed).
         *   `CD_ITEM` (`nvarchar(20)`): Mã vật tư.
-        *   `QT_PO` (`numeric(17,4)`): Số lượng.
+        *   `QT_PO` (`numeric(17,4)`): Số lượng đặt mua.
         *   `DOCUMENT_POL_REMAIN_QT_PO` (`numeric(17,4)`): Số lượng PO còn lại chưa nhận hàng.
     *   `VINA_EMP` (Danh mục nhân sự chính thức):
         *   `NO_EMP` (`nvarchar(10)`, PK): Mã nhân viên.
@@ -229,6 +260,7 @@ Mạng lưới thông tin của Vinatech liên thông qua 13 cơ sở dữ liệ
     *   `VINA_PC_MAC` (Map card mạng máy trạm):
         *   `PC_MAC_ADDRESS` (`varchar(50)`, PK): Địa chỉ MAC của PC trạm.
         *   `EQUIPMENT_SETTING_IDS` (`varchar(1000)`): Danh sách mã máy được PC này quản lý.
+        *   `EQUIPMENT_SETTING_JSON` (`varchar(max)`): Cấu hình chi tiết dạng JSON của máy trạm.
     *   `VINA_BOM_INPUT_ROUTE` (Ép quét nguyên vật liệu phụ theo công đoạn):
         *   `MATERIAL_CODE` (`nvarchar(50)`, PK): Mã thành phẩm chính.
         *   `SUB_MATERIAL_CODE` (`nvarchar(50)`, PK): Mã vật tư phụ cần quét.
@@ -238,15 +270,17 @@ Mạng lưới thông tin của Vinatech liên thông qua 13 cơ sở dữ liệ
 *   **Vai trò:** Cổng SSO tập trung xác thực một lần và quản lý IP Whitelist.
 *   **Các bảng chính:**
     *   `VINA_SSO_TOKEN` (Bảng quản lý Token phiên làm việc):
-        *   `ID_USER` (`varchar(20)`, PK): Mã nhân viên đăng nhập.
-        *   `SSO_TOKEN_CODE` (`varchar(400)`): Mã Token JWT.
-        *   `SSO_TOKEN_REG_DATE` (`datetime`): Thời điểm tạo phiên.
+        *   `SSO_TOKEN_CODE` (`varchar(400)`, PK): Token JWT mã hóa.
+        *   `ID_USER` (`nvarchar(50)`): Mã nhân viên đăng nhập.
+        *   `SSO_TOKEN_CLIENT_IP` (`nvarchar(50)`): Địa chỉ IP client.
+        *   `SSO_TOKEN_DIVICE` (`nvarchar(10)`): Thiết bị (ví dụ: `pc`, `pda`).
+        *   `SSO_TOKEN_REG_DATE` (`datetime`): Thời điểm đăng nhập.
 
 ### 3.11 VINATECH_SPREADSHEET — Web Collaborative Spreadsheet
 *   **Vai trò:** Lưu trữ dữ liệu các file Excel cộng tác trực tuyến đính kèm trong tờ trình Groupware.
 *   **Các bảng chính:**
     *   `VINA_SPREAD_SHEET_JSON` (Nội dung dữ liệu bảng tính):
-        *   `DOCUMENT_SAVE_CODE` (`varchar(50)`, PK): Liên kết tờ trình.
+        *   `SPREAD_SHEET_CHANNEL` (`varchar(500)`, PK): Kênh định danh (ví dụ liên kết với mã tờ trình Groupware).
         *   `SPREAD_SHEET_JSON` (`nvarchar(max)`): Cấu trúc, giá trị, công thức lưu dạng JSON khổng lồ.
 
 ### 3.12 VINATECH_WEBSOCKET — WebSocket Real-time Router
@@ -257,10 +291,96 @@ Mạng lưới thông tin của Vinatech liên thông qua 13 cơ sở dữ liệ
 *   **Các bảng chính:**
     *   `WCMS_ACCOUNT_TRNX_LOG` (Nhật ký sao kê ngân hàng):
         *   `ACCOUNT_TRNX_LOG_UUID` (`nvarchar(40)`, PK)
-        *   `IN_AMOUNT` / `OUT_AMOUNT` (`numeric(18,2)`): Số tiền vào / ra.
+        *   `ACCOUNT_NO` (`nvarchar(100)`): Số tài khoản ngân hàng (mã hóa).
+        *   `TRNX_DATE` (`nvarchar(8)`): Ngày giao dịch (`YYYYMMDD`).
+        *   `IN_AMOUNT` / `OUT_AMOUNT` (`numeric()`): Số tiền vào / ra.
         *   `ERP_FLAG` (`nchar(1)`): Trạng thái đồng bộ ERP (`Y` = Thành công, `N` = Chờ, `E` = Lỗi).
         *   `ERP_TX_MSG` (`nvarchar(200)`): Báo lỗi phản hồi từ ERP.
     *   `WCMS_BIZ_PARTNER_ACCOUNT` (Thông tin ngân hàng thụ hưởng của nhà cung cấp phục vụ thanh toán tự động).
+
+### 3.14 SmartFactoryV2 — Central MES Production Database
+*   **Vai trò:** Lưu trữ toàn bộ dữ liệu giao dịch sản xuất, lịch sử vận hành trạm máy, quản lý vòng đời Lot nguyên vật liệu/thành phẩm và kết quả kiểm định QC tại nhà xưởng.
+*   **Các bảng chính:**
+    *   `STB_MaterialLotInfo` (Tồn kho và trạng thái Lot nguyên vật liệu):
+        *   `MaterialLotNo` (`varchar(20)`, PK): Mã Lot duy nhất của MES (ML...).
+        *   `LotID` (`varchar(50)`): Định danh mã Lot nội bộ.
+        *   `MaterialWarehouseCode` (`varchar(20)`): Mã kho (ví dụ: `PROD_VN_WH`, `HOLDING_BG_WH`).
+        *   `MaterialLocationCode` (`varchar(20)`): Vị trí kệ kho.
+        *   `MaterialCode` (`varchar(50)`): Mã nguyên vật liệu gốc.
+        *   `CurrentQty` (`numeric()`): Số lượng tồn kho hiện tại.
+        *   `PickingQty` (`numeric()`): Số lượng đang chờ xuất (được block bởi trigger).
+        *   `LotNo` (`varchar(500)`): Số Lot sản xuất của nhà cung cấp.
+        *   `LotAttr10` (`nvarchar(100)`): Ngày sản xuất của nhà cung cấp (để tính toán hạn dùng).
+        *   `HoldError` (`nvarchar(150)`): Ghi nhận lý do block Lot (HOLD) nếu có.
+        *   `Holddate` (`datetime`): Ngày khóa Lot chất lượng.
+    *   `STB_MaterialDocInfo` / `STB_MaterialDocDetail` (Phiếu giao nhận và chi tiết giao nhận vật tư):
+        *   `MaterialDocNo` (`varchar(20)`, PK): Số chứng từ giao nhận.
+        *   `DocStatus` (`varchar(20)`): Trạng thái phiếu (ví dụ: `FIX`).
+        *   `PONo` (`varchar(20)`): Mã PO liên kết.
+        *   `RequestQty` / `PickingQty` (`numeric()`): Số lượng yêu cầu / Số lượng thực xuất.
+    *   `STB_MaterialDocLotInfo` (Liên kết Lot với chứng từ giao nhận - kích hoạt trigger cấn trừ tồn kho):
+        *   `MaterialDocDetailNo` (`varchar(20)`, PK), `MDLISeqNo` (`int`, PK)
+        *   `LotID` (`varchar(300)`): ID của Lot.
+        *   `StockQty` (`numeric()`): Số lượng xuất thực tế.
+    *   `STB_MaterialStock` (Bảng tổng hợp số dư tồn kho theo kho/vị trí):
+        *   `MaterialStockNo` (`bigint`, PK), `MaterialWarehouseCode`, `MaterialLocationCode`, `MaterialCode`, `StockQty` (`numeric()`).
+    *   `stb_vvt_OpenExpiredMaterial` (Bảng bypass hạn dùng/bypass FIFO):
+        *   `LotID` (`varchar(50)`), `CreateUserID` (`varchar(50)`), `CreateDateTime` (`datetime`).
+    *   `STB_DayProdPlan` (Kế hoạch sản xuất ngày đồng bộ từ Groupware):
+        *   `DayPlanNo` (`varchar(20)`, PK), `PONo` (`varchar(20)`), `MaterialCode` (`varchar(50)`), `LineCode` (`varchar(20)`), `PlanQty` (`numeric()`), `IsFixed` (`bit` - cờ chốt kế hoạch).
+    *   `STB_SetInfo` (Quản lý Barcode và trạng thái bán thành phẩm/thành phẩm chạy chuyền):
+        *   `ControlNo` (`varchar(20)`, PK): Số Control nạp máy.
+        *   `DayPlanNo` (`varchar(20)`): Liên kết kế hoạch ngày.
+        *   `Barcode` (`varchar(50)`): Mã vạch sản phẩm quét chạy chuyền.
+        *   `InputLineCode` (`varchar(20)`): Dây chuyền sản xuất quét nạp.
+        *   `InputJobDate` (`date`): Ngày làm việc thực tế.
+        *   `IsProdFinish` (`bit`): Cờ xác nhận đã hoàn thành công đoạn cuối cùng.
+        *   `SIExtText01-07` (`varchar(50)`), `SIExtInt01-05` (`bigint`), `SIExtReal01-05` (`numeric`): Các trường metadata tùy biến cho từng công đoạn đo kiểm (ESR, Vol, Capacitance).
+    *   `STB_ProdRouteHist` (Lịch sử quét chốt sản lượng qua từng công đoạn):
+        *   `ProdRouteHistNo` (`varchar(20)`, PK): Số phiếu lịch sử công đoạn.
+        *   `ControlNo` (`varchar(20)`): Liên kết `STB_SetInfo`.
+        *   `RouteCode` (`varchar(20)`): Mã công đoạn sản xuất (ví dụ: `E-24`).
+        *   `MachineCode` (`varchar(20)`): Mã máy vật lý.
+        *   `ProdQty` (`numeric()`): Sản lượng chốt thành công.
+        *   `ProdDateTime` (`datetime`): Thời điểm quét hoàn thành thực tế.
+    *   `STB_DefectRepairInfo` (Ghi nhận số lượng phế và lỗi công đoạn):
+        *   `DefectSummaryNo` (`varchar(20)`, PK), `ControlNo`, `FindRouteCode`, `DefectCode`, `DefectQty` (`numeric()`).
+    *   `STB_ElectrodeSlittingResult` (Kết quả chia cuộn điện cực):
+        *   `ElectrodeLotNumber` (`varchar(20)`, PK), `Seq` (`int`, PK), `SlittingWidth` (`numeric()`), `GoodQtyLength` (`numeric()`).
+    *   `STB_DividePackaging` (Gộp túi nilon vào Box nhỏ):
+        *   `DividePackagingID` (`varchar(50)`, PK), `PackingID` (`varchar(50)`), `Qty` (`numeric()`), `MaterialCode`, `ParentPackingID`.
+    *   `STB_PackingStandard` (Cấu hình tiêu chuẩn đóng gói mặc định theo size):
+        *   `MaterialTypeCode` (`varchar(20)`, PK), `Size` (`varchar(10)`, PK), `VinylBagQty` (`int`), `InnerBoxQty` (`int`), `OutBoxQty` (`int`).
+    *   `STB_MaterialQcInfo` (Header kết quả đo kiểm chất lượng IQC/OQC):
+        *   `MaterialQcNo` (`varchar(20)`, PK), `MaterialCode`, `InspectionDocType` (`OQC` / `IQC`), `DecisionResult` (`Pass` / `Fail`).
+    *   `STB_MaterialQcSampleResult` (Chi tiết kết quả đo rút mẫu):
+        *   `MaterialQcNo` (`varchar(20)`, PK), `MaterialQcDetailNo` (`int`, PK), `MaterialQcSampleNo` (`int`, PK), `TestValue` (`numeric()`).
+    *   `STB_VN_FINISHGOODS_forQCAudit` (Bảng lưu trữ pallet/carton thành phẩm chờ xuất xưởng):
+        *   `ID` (`int`, PK), `PackingID` (`nvarchar(50)`), `LotNo`, `MaterialCode`, `PackQty` (`int`), `SoPhieuNhapKho`, `SoPhieuXuatKho`, `StatusCheck` (`nvarchar(20)` - trạng thái duyệt xuất xưởng của OQC).
+
+### 3.15 SmartFramework — Central MES UI & Metadata Database
+*   **Vai trò:** Cấu hình động toàn bộ giao diện phần mềm MES GUI, quản lý phân quyền chức năng và mẫu tem nhãn mã vạch.
+*   **Các bảng chính:**
+    *   `STB_UserInfo` (Thông tin tài khoản đăng nhập MES):
+        *   `UserID` (`varchar(20)`, PK): Mã nhân viên.
+        *   `UserName` (`nvarchar(100)`): Tên người dùng.
+        *   `Password` (`varbinary(256)`): Mật khẩu băm (local cho tài khoản Việt Nam).
+        *   `AllowFlag` (`varchar(20)`): Cờ hoạt động (`Allow` / `Deny`).
+        *   `Appendix8` (`nvarchar(100)`): Đối ứng mã nhân viên để đồng bộ Groupware.
+    *   `STB_UserPermission` (Quyền thao tác chức năng cụ thể của người dùng):
+        *   `UserID` (`varchar(20)`, PK), `ScreenID` (`varchar(10)`, PK), `FuncID` (`varchar(50)`, PK), `Allow` (`bit`).
+    *   `STB_UserPermissionGroup` (Gắn người dùng vào nhóm quyền chức năng):
+        *   `UserID` (`varchar(20)`, PK), `UserType` (`varchar(20)`, PK - ví dụ: `HRDManagement`), `HasPermission` (`bit`).
+    *   `STB_UserTypeViewPermission` / `STB_UserTypeFunctionPermission` (Quyền mặc định theo nhóm người dùng):
+        *   `UserType` (`varchar(20)`, PK), `Name` (`varchar(50)`, PK), `ViewName` / `FunctionName` (`varchar(50)`, PK).
+    *   `STB_ScreenLayoutInfo` (Lưu cấu trúc XML của giao diện màn hình):
+        *   `Name` (`varchar(50)`, PK), `Version` (`int`, PK), `XmlLayout` (`nvarchar(max)` - định nghĩa các lưới dữ liệu động).
+    *   `STB_ScreenObjects` (Ánh xạ các control UI với stored procedure nghiệp vụ):
+        *   `Id` (`bigint`, PK), `ScreenName` (`varchar(50)`), `ObjectType` (`SearchFunction`, v.v.), `ObjectName` (`varchar(255)` - tên Stored Procedure thực thi trong DB `SmartFactoryV2`).
+    *   `STB_ScreenInfo` (Danh mục màn hình và Transaction Code tương ứng):
+        *   `Name` (`varchar(50)`, PK), `TCode` (`varchar(10)` - ví dụ: `B301`), `Caption` (`nvarchar(100)`).
+    *   `STB_LabelInfo` (Quản lý template in tem nhãn barcode):
+        *   `LabelType` (`nvarchar(30)`, PK), `FormatName` (`nvarchar(30)`, PK), `Format` (`nvarchar(max)` - cấu trúc XML template in tem nhãn).
 
 ---
 
@@ -270,23 +390,23 @@ Bảng dưới đây là tài liệu tham chiếu cốt lõi (Single Source of T
 
 | STT | Tên Biểu Mẫu Nghiệp Vụ | Form ID | Bảng Dữ Liệu Groupware (VINATECH_GROUP) | Database & Bảng Liên Kết Khác | Màn Hình MES (SmartFactoryV2) | Stored Procedure Cốt Lõi |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| 1 | **Đề xuất mua sắm (PR)** | `purchaseRequestDocument` | `VINA_DOCUMENT_SAVE`, `VINA_DOCUMENT_PURCHASE_REQUEST` | ERP: `PU_PRH`, `PU_PRL` | *(Không có)* | `usp_SyncPurchaseRequest` |
-| 2 | **Đơn đặt hàng (PO)** | `purchaseOrderDocument` | `VINA_DOCUMENT_POH`, `VINA_DOCUMENT_POL` | ERP: `PU_POH`, `PU_POL` | **B310** (PO Info) | `usp_GetPurchaseOrderList` |
+| 1 | **Đề xuất mua sắm (PR)** | `purchaseRequestDocument` | `VINA_DOCUMENT_SAVE`, `VINA_DOCUMENT_PURCHASE_REQUEST` | ERP: `NEOE.PU_PRH`, `NEOE.PU_PRL` | *(Không có)* | `usp_SyncPurchaseRequest` |
+| 2 | **Đơn đặt hàng (PO)** | `purchaseOrderDocument` | `VINA_DOCUMENT_POH`, `VINA_DOCUMENT_POL` | ERP: `NEOE.PU_POH`, `NEOE.PU_POL` | **B310** (PO Info) | `usp_GetPurchaseOrderList` |
 | 3 | **Xác nhận hàng về** | `arrivalConfirmationDocument` | `VINA_DOCUMENT_RECEIVING_PHYSICAL_ITEM_H`, `_L` | MES: `STB_MaterialDocInfo`, `STB_MaterialDocDetail` | **F330** (Goods Receipt) | `usp_WarehouseDelivery_get` |
-| 4 | **Nhập kho thực tế** | `receivingConfirmationDocument` | `VINA_DOCUMENT_PU_RCVH`, `VINA_DOCUMENT_PU_RCVL` | MES: `STB_MaterialLotInfo`<br>ERP: `PU_RCVH`, `PU_RCVL` | Kho vật lý MES | `usp_DoApplyIncomingQty` |
-| 5 | **Quyết toán mua hàng** | `purchaseResolutionDocument` | `VINA_DOCUMENT_PURCHAE_RESOLUTION`, `_LINE` | ERP: `FI_DOCU`, `FI_DOCU_D` | *(Không có)* | `usp_DoCreateAccountingSlip` |
-| 6 | **Đơn xin nghỉ việc** | `empRetireDocument` | `VINA_DOCUMENT_EMP_RETIRE`, `_CHECKLIST` | ERP: `MA_EMP`<br>MES Frame: `STB_UserInfo` | **Z410** (User Config) | `usp_DoGUILogin` |
+| 4 | **Nhập kho thực tế** | `receivingConfirmationDocument` | `VINA_DOCUMENT_PU_RCVH`, `VINA_DOCUMENT_PU_RCVL` | MES: `STB_MaterialLotInfo`<br>ERP: `NEOE.PU_RCVH`, `NEOE.PU_RCVL` | Kho vật lý MES | `usp_DoApplyIncomingQty` |
+| 5 | **Quyết toán mua hàng** | `purchaseResolutionDocument` | `VINA_DOCUMENT_PURCHAE_RESOLUTION`, `_LINE` | ERP: `NEOE.FI_DOCU` | *(Không có)* | `usp_DoCreateAccountingSlip` |
+| 6 | **Đơn xin nghỉ việc** | `empRetireDocument` | `VINA_DOCUMENT_EMP_RETIRE`, `_CHECKLIST` | ERP: `NEOE.MA_EMP`<br>MES Frame: `STB_UserInfo` | **Z410** (User Config) | `usp_DoGUILogin` |
 | 7 | **Tăng ca ngày nghỉ/lễ** | `holidayWorkRequest` | `VINA_DOCUMENT_HOLIDAY_WORK` | MES: `STB_VN_ATTENDANCE_TIME` | Máy quét vân tay | `usp_SyncFingerData` |
-| 8 | **Đơn bán hàng (Suju)** | `salesOrderDocument` | `VINA_DOCUMENT_SALES_ORDER`, `_LINE` | ERP: `SA_SOH`, `SA_SOL` | *(Không có)* | `usp_SyncSalesOrder` |
-| 9 | **Yêu cầu xuất kho** | `deliverOutDocument` | `VINA_DOCUMENT_DELIVER_OUT_CONFIRMATION_IV`, `_LINE` | ERP: `SA_GIRH`, `SA_GIRL` | **FG01** (PDA Out) | `usp_GetShipmentRequestList` |
-| 10 | **Xác nhận thực xuất** | `deliverOutConfirmationDocument` | `VINA_DOCUMENT_DELIVER_OUT_CONFIRMATION` | MES: `STB_SetInfo`<br>ERP: `MM_GI_LINE` | **B750** (Pallet), **B752** (Cont) | `usp_DoApplyRealShipment` |
+| 8 | **Đơn bán hàng (Suju)** | `salesOrderDocument` | `VINA_DOCUMENT_SALES_ORDER`, `_LINE` | ERP: `NEOE.SA_SOH`, `NEOE.SA_SOL` | *(Không có)* | `usp_SyncSalesOrder` |
+| 9 | **Yêu cầu xuất kho** | `deliverOutDocument` | `VINA_DOCUMENT_DELIVER_OUT_CONFIRMATION_IV`, `_LINE` | ERP: `NEOE.SA_GIRH`, `NEOE.SA_GIRL` | **FG01** (PDA Out) | `usp_GetShipmentRequestList` |
+| 10 | **Xác nhận thực xuất** | `deliverOutConfirmationDocument` | `VINA_DOCUMENT_DELIVER_OUT_CONFIRMATION` | MES: `STB_SetInfo`<br>ERP: `NEOE.MM_QTIO` | **B750** (Pallet), **B752** (Cont) | `usp_DoApplyRealShipment` |
 | 11 | **Kế hoạch sản xuất ngày** | `dailyProductionOrderDocument` | `VINA_DOCUMENT_DAILY_PRODUCTION_ORDER`, `_LOT` | MES: `STB_DayProdPlan`, `STB_SetInfo` | **B450** (Prod Plan) | `usp_SyncDailyProductionPlan` |
 | 12 | **Báo cáo sản lượng ngày** | `dailyProductionReportDocument` | `VINA_DOCUMENT_DAILY_PRODUCTION_ORDER_LOT` | MES: `STB_ProdRouteHist` | **B530** (Prod Input) | `usp_DoFinishRouteOperation` |
 | 13 | **Yêu cầu tuyển dụng** | `empRequestDocument` | `VINA_DOCUMENT_EMP_REQUEST` | MES Frame: `STB_UserInfo` | **Z410** (User Config) | `usp_DoGUILogin` |
 | 14 | **Đăng ký đi công tác** | `businessTripDocument` | `VINA_DOCUMENT_BUSINESS_TRIP` | ERP: Định khoản tạm ứng | *(Không có)* | Kế toán API |
-| 15 | **Đăng ký nhà thầu/đối tác** | `partnerRegistrationDocument` | `VINA_DOCUMENT_PARTNER_REG` | ERP: `MA_PARTNER`<br>CMS: `WCMS_BIZ_PARTNER_ACCOUNT`| *(Không có)* | CMS API |
-| 16 | **Yêu cầu sửa đổi BOM** | `bomRevisionDocument` | `VINA_DOCUMENT_BOM_REVISION` | ERP: `PR_BOM`<br>MES: `STB_MaterialBOM` | POP Kiosk | POP Route Config |
-| 17 | **Đăng ký các loại code** | `itemRegistrationDocument` | `VINA_DOCUMENT_ITEM_REGISTRATION_H`, `_L` | ERP: `MA_ITEM`<br>MES: `STB_MaterialMaster` | **F130 / F140** | `usp_SyncMaterialMaster` |
+| 15 | **Đăng ký nhà thầu/đối tác** | `partnerRegistrationDocument` | `VINA_DOCUMENT_PARTNER_REG` | ERP: `NEOE.MA_PARTNER`<br>CMS: `WCMS_BIZ_PARTNER_ACCOUNT`| *(Không có)* | CMS API |
+| 16 | **Yêu cầu sửa đổi BOM** | `bomRevisionDocument` | `VINA_DOCUMENT_BOM_REVISION` | ERP: `NEOE.PR_BOM`<br>MES: `STB_MaterialBOM` | POP Kiosk | POP Route Config |
+| 17 | **Đăng ký các loại code** | `itemRegistrationDocument` | `VINA_DOCUMENT_ITEM_REGISTRATION_H`, `_L` | ERP: `NEOE.MA_ITEM`<br>MES: `STB_MaterialMaster` | **F130 / F140** | `usp_SyncMaterialMaster` |
 
 ---
 
@@ -395,12 +515,14 @@ SELECT
     -- Đối chiếu số liệu nhập kho thực tế tại MES
     (SELECT SUM(ML.CurrentQty) 
      FROM SmartFactoryV2.dbo.STB_MaterialLotInfo ML WITH(NOLOCK) 
-     WHERE ML.PurchaseOrderNo = GW_H.NO_PO AND ML.MaterialCode = GW_L.CD_ITEM) AS [Actual Qty in MES WH]
+     INNER JOIN SmartFactoryV2.dbo.STB_MaterialDocLotInfo DLI WITH(NOLOCK) ON ML.LotID = DLI.LotID
+     INNER JOIN SmartFactoryV2.dbo.STB_MaterialDocInfo DI WITH(NOLOCK) ON DLI.MaterialDocNo = DI.MaterialDocNo
+     WHERE DI.PONo = GW_H.NO_PO AND ML.MaterialCode = GW_L.CD_ITEM) AS [Actual Qty in MES WH]
 FROM VINATECH_GROUP.dbo.VINA_DOCUMENT_POH GW_H WITH(NOLOCK)
 INNER JOIN VINATECH_GROUP.dbo.VINA_DOCUMENT_POL GW_L WITH(NOLOCK) 
     ON GW_H.DOCUMENT_SAVE_CODE = GW_L.DOCUMENT_SAVE_CODE
 -- Join sang ERP NEOE
-LEFT JOIN NEOE.dbo.PU_POL ERP_L WITH(NOLOCK) 
+LEFT JOIN NEOE.NEOE.PU_POL ERP_L WITH(NOLOCK) 
     ON GW_H.NO_PO = ERP_L.NO_PO AND GW_L.CD_ITEM = ERP_L.CD_ITEM
 WHERE GW_H.NO_PO = 'PO20260612001'; -- Thay bằng mã PO thực tế
 ```
@@ -469,9 +591,9 @@ SELECT
     (SELECT COUNT(DISTINCT Barcode) 
      FROM SmartFactoryV2.dbo.STB_SetInfo WITH(NOLOCK) 
      WHERE PONo = SR.DOCUMENT_SAVE_CODE) AS [Pallets Loaded in MES],
-     (SELECT SUM(QT_GI) 
-      FROM NEOE.dbo.MM_GI_LINE WITH(NOLOCK) 
-      WHERE NO_IS = SR.DOCUMENT_SAVE_CODE) AS [ERP Outbound Qty]
+     (SELECT SUM(QT_IO) 
+      FROM NEOE.NEOE.MM_QTIO WITH(NOLOCK) 
+      WHERE NO_ISURCV = SR.DOCUMENT_SAVE_CODE) AS [ERP Outbound Qty]
 FROM VINATECH_GROUP.dbo.VINA_DOCUMENT_SALES_ORDER SO WITH(NOLOCK)
 INNER JOIN VINATECH_GROUP.dbo.VINA_DOCUMENT_SALES_ORDER_LINE SOL WITH(NOLOCK)
     ON SO.DOCUMENT_SAVE_CODE = SOL.DOCUMENT_SAVE_CODE
@@ -485,15 +607,14 @@ WHERE SO.NO_SO = 'SO20260614001'; -- Mã Suju thực tế
 ### Mẫu 6.6: Đối soát Master Data & BOM - Kiểm tra tính nhất quán BOM 2001 ↔ POP Route Input Check
 ```sql
 SELECT 
-    BOM.ParentMaterialCode AS [Thành phẩm chính],
-    BOM.ChildMaterialCode AS [Vật tư phụ cấu thành],
-    BOM.UnitQty AS [Định mức tiêu hao],
+    BOM.wipcode AS [Thành phẩm chính],
+    BOM.materialcode AS [Vật tư phụ cấu thành],
+    BOM.usage AS [Định mức tiêu hao],
     POP.INPUT_ROUTE_CODE AS [Công đoạn ép quét POP]
-FROM SmartFactoryV2.dbo.STB_MaterialBOM BOM WITH(NOLOCK)
+FROM SmartFactoryV2.dbo.stb_vvt_materialbom BOM WITH(NOLOCK)
 LEFT JOIN VINATECH_POP.dbo.VINA_BOM_INPUT_ROUTE POP WITH(NOLOCK)
-    ON BOM.ParentMaterialCode = POP.MATERIAL_CODE AND BOM.ChildMaterialCode = POP.SUB_MATERIAL_CODE
-WHERE BOM.ParentMaterialCode = '3562-600F' -- Mã sản phẩm cần đối soát
-  AND BOM.IsUse = 1;
+    ON BOM.wipcode = POP.MATERIAL_CODE AND BOM.materialcode = POP.SUB_MATERIAL_CODE
+WHERE BOM.wipcode = '3562-600F'; -- Mã sản phẩm cần đối soát
 ```
 
 ---

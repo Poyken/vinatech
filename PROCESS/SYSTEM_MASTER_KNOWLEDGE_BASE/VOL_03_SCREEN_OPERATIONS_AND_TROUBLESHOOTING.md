@@ -56,11 +56,11 @@ Dưới đây là cẩm nang tra cứu và khắc phục lỗi thực tế phân
         ```
 
 #### ⚙️ Z220 / Z330 — Authority Config (Phân quyền chức năng & Menu)
-*   **Chức năng:** Phân quyền mở màn hình, quyền thêm/sửa/xóa (`Authority`) cho từng nhóm người dùng.
-*   **CSDL bị tác động:** `SmartFramework.dbo.STB_UserAuthority`, `STB_GroupMenu`.
+*   **Chức năng:** Phân quyền mở màn hình, quyền thêm/sửa/xóa cho từng nhóm người dùng.
+*   **CSDL bị tác động:** `SmartFramework.dbo.STB_UserPermission`, `STB_UserPermissionGroup`.
 *   **Sự cố: Nút "Save/Confirm" bị mờ (Grey out) hoặc không nhấn được**
-    *   *Nguyên nhân:* Người dùng có quyền xem màn hình nhưng không có quyền ghi dữ liệu (`SaveAuthority = 0`).
-    *   *Khắc phục:* Vào **Z330**, tìm nhóm quyền của nhân viên, tích chọn quyền **Save / Execute** cho Screen ID tương ứng và nhấn Lưu.
+    *   *Nguyên nhân:* Người dùng có quyền xem màn hình nhưng không có quyền ghi dữ liệu (`Allow = 0` hoặc `HasPermission = 0`).
+    *   *Khắc phục:* Vào **Z330**, tìm nhóm quyền của nhân viên, tích chọn quyền **Save / Execute** cho Screen ID tương ứng để hệ thống cập nhật vào `STB_UserPermission` và `STB_UserPermissionGroup`.
 
 ---
 
@@ -118,13 +118,13 @@ Dưới đây là cẩm nang tra cứu và khắc phục lỗi thực tế phân
 
 #### 🔌 B597 — Material Scanning (Quét nạp nguyên vật liệu)
 *   **Chức năng:** Công nhân tại đầu line dùng súng quét mã vạch Lot nguyên liệu (Cuộn cực, keo, vỏ case) nạp vào máy. MES thực hiện validation kiểm tra trạng thái HOLD, hạn sử dụng và BOM ngầm.
-*   **CSDL bị tác động:** `SmartFactoryV2.dbo.STB_RawMaterialInputHist`, `stb_vvt_materialbo`.
+*   **CSDL bị tác động:** `SmartFactoryV2.dbo.STB_RawMaterialInputHist`, `stb_vvt_materialbom`.
 *   **Sự cố 1: Báo lỗi "Sai chủng loại nguyên vật liệu so với BOM"**
-    *   *Nguyên nhân:* Model mới chưa được khai báo ánh xạ mã vật tư phụ trong bảng BOM ngầm `stb_vvt_materialbo` của Việt Nam.
-    *   *Khắc phục:* Khai báo bổ dung ánh xạ model size vào bảng BOM ngầm:
+    *   *Nguyên nhân:* Model mới chưa được khai báo ánh xạ mã vật tư phụ trong bảng BOM ngầm `stb_vvt_materialbom` của Việt Nam.
+    *   *Khắc phục:* Khai báo bổ sung ánh xạ model size vào bảng BOM ngầm:
         ```sql
-        INSERT INTO SmartFactoryV2.dbo.stb_vvt_materialbo (model, size, part_code, use_flag)
-        VALUES ('MÃ_MODEL_MỚI', 'SIZE_MODEL', 'MÃ_VẬT_TƯ_PHỤ', 1);
+        INSERT INTO SmartFactoryV2.dbo.stb_vvt_materialbom (wipcode, size, materialcode, usage)
+        VALUES ('MÃ_MODEL_MỚI', 'SIZE_MODEL', 'MÃ_VẬT_TƯ_PHỤ', 0.005);
         ```
 *   **Sự cố 2: Lọc ngược 6 cấp Barcode bị lag / Timeout màn hình**
     *   *Nguyên nhân:* SP `usp_Vietnam_RawMaterialInputHist_uid` thực hiện đệ quy truy vấn bảng lịch sử đổi tem `STB_LotChangeMaterialHistory` ngược lên 6 cấp để tìm mã vạch gốc của Lot gây chậm truy vấn.
@@ -148,8 +148,8 @@ Dưới đây là cẩm nang tra cứu và khắc phục lỗi thực tế phân
     *   *Nguyên nhân:* Thiếu cấu hình chiều rộng chia cực dương (`BY`) và cực âm (`YP`) của mã hàng trong bảng cấu hình chia cuộn.
     *   *Khắc phục:* Khai báo thông số cấu hình Slitting vào DB:
         ```sql
-        INSERT INTO SmartFactoryV2.dbo.stb_slittinglocationconfig_vvt (PartNo, SlittingCode, Width, IsUsed)
-        VALUES ('MÃ_PART_NO', 'BY', '39.34', 1), ('MÃ_PART_NO', 'YP', '39.34', 1);
+        INSERT INTO SmartFactoryV2.dbo.stb_slittinglocationconfig_vvt (PartNo, SlittingCode, Width)
+        VALUES ('MÃ_PART_NO', 'BY', 39.34), ('MÃ_PART_NO', 'YP', 39.34);
         ```
 
 ---
@@ -187,9 +187,11 @@ Dưới đây là cẩm nang tra cứu và khắc phục lỗi thực tế phân
 *   **CSDL bị tác động:** `SmartFactoryV2.dbo.STB_MaterialQcInfo`.
 *   **Sự cố: Không nạp được vật tư vào máy ở B597 vì Lot ở trạng thái HOLD**
     *   *Nguyên nhân:* Kết quả đo kiểm tại **C220** bị đánh giá FAIL hoặc chưa được nhấn chốt lưu kết quả.
-    *   *Khắc phục:* Yêu cầu QC chốt kết quả. Nếu cần bypass nhanh để sản xuất thử nghiệm, IT cập nhật trạng thái PASS trực tiếp:
+    *   *Khắc phục:* Yêu cầu QC chốt kết quả. Nếu cần bypass nhanh để sản xuất thử nghiệm, IT cập nhật trạng thái hoạt động trực tiếp (xóa lỗi HOLD và đưa Lot về kho nguyên liệu):
         ```sql
-        UPDATE SmartFactoryV2.dbo.STB_MaterialLotInfo SET LotState = 'U', MaterialWarehouseCode = 'ROH_BG_WH' WHERE LotNo = 'MÃ_LOT';
+        UPDATE SmartFactoryV2.dbo.STB_MaterialLotInfo 
+        SET HoldError = NULL, Holddate = NULL, MaterialWarehouseCode = 'ROH_BG_WH' 
+        WHERE MaterialLotNo = 'MÃ_LOT';
         ```
 
 #### 📊 C530 — OQC Audit (Kiểm định chất lượng xuất xưởng)
@@ -260,8 +262,8 @@ BEGIN TRANSACTION;
 
 -- Thực hiện sửa đổi dữ liệu
 UPDATE SmartFactoryV2.dbo.STB_MaterialLotInfo
-SET CurrentQty = 1000, LotState = 'U'
-WHERE LotNo = 'ML202606140089';
+SET CurrentQty = 1000, HoldError = NULL, Holddate = NULL
+WHERE MaterialLotNo = 'ML202606140089';
 
 -- Kiểm tra số lượng dòng bị ảnh hưởng
 IF @@ROWCOUNT = 1
