@@ -488,6 +488,113 @@ Dưới đây là bảng phân tích kịch bản từng bước cho **12 biểu
         ON GW_L.LOT_NO = SI.Barcode
     WHERE GW_L.LOT_NO = 'LOT-20260614-001';
     ```
+---
+
+### 3.13. Yêu Cầu Tuyển Dụng (Recruitment / Emp Request)
+*   **Mã Form ID:** `empRequestDocument`
+*   **Ý nghĩa thực tế:** Dành cho các trưởng phòng ban đề xuất tuyển dụng thêm nhân sự mới để bổ sung năng lực cho đội ngũ.
+*   **Kịch bản vận hành:**
+    1.  Trưởng bộ phận lập phiếu trên Groupware, điền các thông tin: Vị trí cần tuyển, số lượng, yêu cầu kỹ năng, mức lương đề xuất và lý do tuyển dụng.
+    2.  Sau khi được duyệt qua các cấp nhân sự và ban giám đốc, thông tin này làm căn cứ để phòng nhân sự đăng tuyển.
+*   **Liên thông hệ thống:** Phiếu này không có màn hình MES trực tiếp. Tuy nhiên, khi nhân sự mới được tuyển vào, thông tin sẽ được đăng ký trên ERP `NEOE` và sync tự động sang MES `SmartFramework.dbo.STB_UserInfo` qua màn hình **Z410** để cấp quyền chạy máy hiện trường.
+*   **SQL Đối soát cho người mới:**
+    ```sql
+    -- Tìm xem phiếu đề xuất tuyển dụng đã được duyệt trên GW chưa
+    SELECT 
+        DOCUMENT_SAVE_CODE AS [Mã phiếu GW],
+        DOCUMENT_SAVE_SUBJECT AS [Tiêu đề],
+        DOCUMENT_SAVE_STATE AS [Trạng thái duyệt]
+    FROM VINATECH_GROUP.dbo.VINA_DOCUMENT_SAVE WITH(NOLOCK)
+    WHERE DOCUMENT_TYPE_ID = 'empRequestDocument'
+      AND DOCUMENT_SAVE_CODE = 'MÃ_PHIẾU_CẦN_TÌM';
+    ```
+
+---
+
+### 3.14. Yêu Cầu Đi Công Tác (Business Trip Request)
+*   **Mã Form ID:** `businessTripDocument`
+*   **Ý nghĩa thực tế:** Nhân viên đăng ký lịch trình đi công tác trong hoặc ngoài nước để làm căn cứ tạm ứng chi phí và tính công công tác.
+*   **Kịch bản vận hành:**
+    1.  Nhân sự lập phiếu trên Groupware, điền: Nơi đi/nơi đến, mục đích, thời gian, và số tiền tạm ứng (nếu có).
+    2.  Sau khi sếp duyệt, phòng kế toán thực hiện chi tạm ứng và đồng bộ nghiệp vụ tạm ứng sang ERP.
+*   **SQL Đối soát cho người mới:**
+    ```sql
+    -- Kiểm tra trạng thái duyệt của phiếu đi công tác để kế toán hạch toán tạm ứng chi phí
+    SELECT 
+        DOCUMENT_SAVE_CODE AS [Mã tờ trình GW],
+        DOCUMENT_SAVE_STATE AS [Trạng thái duyệt],
+        DOCUMENT_SAVE_SUBJECT AS [Mục đích công tác]
+    FROM VINATECH_GROUP.dbo.VINA_DOCUMENT_SAVE WITH(NOLOCK)
+    WHERE DOCUMENT_TYPE_ID = 'businessTripDocument'
+      AND DOCUMENT_SAVE_CODE = 'MÃ_PHIẾU_GW';
+    ```
+
+---
+
+### 3.15. Đăng Ký Nhà Thầu / Khách Hàng (Partner / Contractor Registration)
+*   **Mã Form ID:** `partnerRegistrationDocument`
+*   **Ý nghĩa thực tế:** Khi muốn giao dịch với một nhà cung cấp mới hoặc mở bán cho khách hàng mới, mã đối tác phải được đăng ký và phê duyệt hợp lệ.
+*   **Kịch bản vận hành:**
+    1.  Nhân viên kinh doanh hoặc mua hàng lập phiếu đăng ký thông tin đối tác trên Groupware, điền: Tên doanh nghiệp, mã số thuế, địa chỉ, tài khoản ngân hàng thụ hưởng.
+    2.  Sau khi duyệt hoàn tất, hệ thống tự động đẩy dữ liệu sang ERP tạo mã đối tác chính thức trong bảng `NEOE.dbo.MA_PARTNER`.
+*   **Liên thông hệ thống:** Thông tin tài khoản ngân hàng được liên kết tự động với hệ thống Cash Management System (`WCMS_STANDARD_NEW.dbo.WCMS_BIZ_PARTNER_ACCOUNT`) phục vụ thanh toán Firm Banking tự động về sau.
+*   **SQL Đối soát cho người mới:**
+    ```sql
+    -- Kiểm tra xem đối tác đăng ký từ GW đã đồng bộ thành công sang Master Data của ERP chưa
+    SELECT 
+        GW.DOCUMENT_SAVE_CODE AS [Mã phiếu đăng ký GW],
+        GW.DOCUMENT_SAVE_STATE AS [Trạng thái duyệt],
+        ERP.CD_PARTNER AS [Mã đối tác ERP],
+        ERP.LN_PARTNER AS [Tên đối tác],
+        ERP.NO_BIZ AS [Mã số thuế]
+    FROM VINATECH_GROUP.dbo.VINA_DOCUMENT_SAVE GW WITH(NOLOCK)
+    LEFT JOIN NEOE.dbo.MA_PARTNER ERP WITH(NOLOCK)
+        ON ERP.NO_BIZ = 'MÃ_SỐ_THUẾ_CỦA_ĐỐI_TÁC' -- Tìm theo MST để đối chiếu mã ERP sinh ra
+    WHERE GW.DOCUMENT_SAVE_CODE = 'MÃ_PHIẾU_ĐĂNG_KÝ_GW';
+    ```
+
+---
+
+### 3.16. Yêu Cầu Thay Đổi Định Mức (BOM Revision Request)
+*   **Mã Form ID:** `bomRevisionDocument`
+*   **Ý nghĩa thực tế:** Khi phòng R&D thay đổi thiết kế sản phẩm (ví dụ: thay đổi loại băng keo, hoặc cuộn màng nhôm mới), định mức vật tư (BOM) cần được cập nhật có kiểm soát để tránh công nhân lắp ráp sai linh kiện.
+*   **Kịch bản vận hành:**
+    1.  Kỹ sư thiết kế lập phiếu yêu cầu thay đổi BOM trên Groupware, chỉ rõ mặt hàng thay thế, tỉ lệ hao hụt mới.
+    2.  Sau khi phê duyệt, hệ thống sync cấu trúc BOM mới sang ERP `NEOE.dbo.PR_BOM` và MES `SmartFactoryV2.dbo.STB_MaterialBOM`.
+*   **Liên thông MES:** Tác động trực tiếp đến danh mục vật tư phụ bắt buộc phải quét tại các kiosk POP hiện trường (`VINATECH_POP.dbo.VINA_BOM_INPUT_ROUTE`) để chặn lỗi công nhân nạp sai chủng loại vật tư phụ.
+*   **SQL Đối soát cho người mới:**
+    ```sql
+    -- Kiểm tra xem định mức BOM mới đã được đồng bộ xuống MES để áp dụng cho dây chuyền chưa
+    SELECT 
+        BOM.ParentMaterialCode AS [Mã thành phẩm chính],
+        BOM.ChildMaterialCode AS [Mã vật tư phụ cấu thành],
+        BOM.UnitQty AS [Định mức tiêu hao tiêu chuẩn],
+        BOM.IsUse AS [Trạng thái hoạt động ở xưởng] -- 1 = Có hiệu lực chạy máy
+    FROM SmartFactoryV2.dbo.STB_MaterialBOM BOM WITH(NOLOCK)
+    WHERE BOM.ParentMaterialCode = 'MÃ_SẢN_PHẨM_CHÍNH'
+      AND BOM.ChildMaterialCode = 'MÃ_VẬT_TƯ_PHỤ';
+    ```
+
+---
+
+### 3.17. Đăng Ký Các Loại Code (Item / Code Registration)
+*   **Mã Form ID:** `itemRegistrationDocument`
+*   **Ý nghĩa thực tế:** Đăng ký mã vật tư mới (nguyên vật liệu phụ, bán thành phẩm, thành phẩm) vào hệ thống trước khi có thể thực hiện bất kỳ giao dịch mua bán hay sản xuất nào.
+*   **Kịch bản vận hành:**
+    1.  Bộ phận kỹ thuật lập phiếu đăng ký mã vật tư mới trên Groupware, điền các thông tin: Tên vật tư, thông số kỹ thuật, quy cách đóng gói, đơn vị tính, loại vật tư.
+    2.  Sau khi duyệt hoàn tất, hệ thống sync sang ERP `NEOE.dbo.MA_ITEM` và MES `SmartFactoryV2.dbo.STB_MaterialMaster`.
+*   **Liên thông MES:** Cho phép thủ kho thực hiện nhận hàng và in tem nhãn tại **MES F330** và cấu hình NCC được mua tại **MES F130/F140**.
+*   **SQL Đối soát cho người mới:**
+    ```sql
+    -- Kiểm tra xem mã vật tư mới đăng ký trên GW đã sync thành công xuống Master Data của MES chưa
+    SELECT 
+        MES.MaterialCode AS [Mã vật tư MES],
+        MES.MaterialName AS [Tên vật tư],
+        MES.MaterialTypeCode AS [Loại vật tư], -- ví dụ: RAW = Nguyên vật liệu
+        MES.IsUse AS [Trạng thái hoạt động] -- 1 = Hoạt động tốt
+    FROM SmartFactoryV2.dbo.STB_MaterialMaster MES WITH(NOLOCK)
+    WHERE MES.MaterialCode = 'MÃ_VẬT_TƯ_MỚI';
+    ```
 
 ---
 
