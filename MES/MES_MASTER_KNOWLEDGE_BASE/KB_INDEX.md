@@ -12,32 +12,27 @@
 
 | File | Nội dung | Màn hình liên quan |
 |------|----------|-------------------|
+| [MES_DAILY_PLAYBOOK.md](MES_DAILY_PLAYBOOK.md) | **Cẩm nang giám sát sức khỏe hệ thống hằng ngày (Check block, lag ERP, jobs...)** | Giám sát / DBA / AI |
+| [MES_OPERATIONAL_LOG.md](MES_OPERATIONAL_LOG.md) | **Nhật ký tích hợp ghi nhận và xử lý sự cố tại xưởng của User và AI** | Sự cố phát sinh |
+| [MES_GLOSSARY.md](MES_GLOSSARY.md) | **Từ điển thuật ngữ nghiệp vụ và từ viết tắt cho hệ thống MES Vinatech** | Thuật ngữ / Nghiệp vụ |
+| [MES_SCRIPT_GUIDE.md](MES_SCRIPT_GUIDE.md) | **Hướng dẫn sử dụng chi tiết 4 script PowerShell bổ trợ trong dự án** | Script / Tool bổ trợ |
 | [KB_SCREEN_BUG_REF.md](KB_SCREEN_BUG_REF.md) | **Cẩm nang tra cứu lỗi tập trung phân loại theo Screen ID (Bắt đầu tra cứu lỗi từ đây)** | Toàn bộ các màn hình |
 | [KB_01_UI_PHAN_QUYEN.md](KB_01_UI_PHAN_QUYEN.md) | Login, cài đặt, phân quyền User, Stage Prices | Login, A460, Z410, Z220, Z330, B682, B781 |
 | [KB_02_KHO_WMS.md](KB_02_KHO_WMS.md) | Kho NVL: F330 sai kho, F312, F430, FIFO, Holding, Hạn dùng | F330, F312, F430, F110, F721, F741, C220 |
-| [KB_03_SAN_XUAT.md](KB_03_SAN_XUAT.md) | Sửa JobDate, Chuyển Line, VV→VJ, Xóa PO, NG, Andon, **Cell Line vận hành chi tiết B310→B882**, Module Line, B351/B528/B598/B717/B802, In tem PAC/Digi-Key, Spare Part H301-H305, K101/K109 | B782, B781, B598, B726, B791, B310, B450, B530, B540, B523, B525, B528, B717, B802, B351, B452, B754-B758, H301-H305, K101, K109 |
+| [KB_03_SAN_XUAT.md](KB_03_SAN_XUAT.md) | Sửa JobDate, Chuyển Line, VV→VJ, Xóa PO, NG, Andon, **Cell Line vận hành chi tiết B310→B882**, Module Line, B351/B528/B598/B717/B802, In tem PAC/Digi-Key, **Spare Part H301-H305 & K101/K109**, **Đối soát Lot Size & mã lỗi B530**, **Gộp tri thức Máy móc thiết bị, Nhân sự sản xuất, Dashboard & Andon** | B782, B781, B598, B726, B791, B310, B450, B530, B540, B523, B525, B528, B717, B802, B351, B452, B754-B758, H301-H305, K101, K109, B250, B270, B260, B882, MCM |
 | [KB_04_DONG_GOI_IN_TEM.md](KB_04_DONG_GOI_IN_TEM.md) | Tiêu chuẩn đóng gói, fix B523 không gộp, sửa mã Lot, Qty=0 | B523, B789, B781, B351, A419 |
-| [KB_05_QC_ELECTRODE.md](KB_05_QC_ELECTRODE.md) | QC B597/C443/C512/C486, Điện cực Slitting B552, Lỗi chuỗi độ dày, Rebuild bảng & Fix layout, **QC Flow đầy đủ IQC→PQC→OQC→Bending/Cutting**, Slitting Hà Nam F743-F748 | B597, C443, C512, C486, B552, C121-C564, F743-F748 |
+| [KB_05_QC_ELECTRODE.md](KB_05_QC_ELECTRODE.md) | QC B597/C443/C512/C486, Điện cực Slitting B552, Lỗi chuỗi độ dày, Rebuild bảng & Fix layout, **QC Flow đầy đủ IQC→PQC→OQC→Bending/Cutting**, Slitting Hà Nam F743-F748, **Gộp tri thức 4M Change, CAPA & Reliability Test** | B597, C443, C512, C486, B552, C121-C564, F743-F748, RTM, 4M Change, CAPA |
 | [KB_06_MASTER_DATA_TOOLS.md](KB_06_MASTER_DATA_TOOLS.md) | Model mới, Vol/Farad, Thêm Cell/Line, SQL Utilities, Bypass, **Quick Start Checklist đầy đủ**, B210-B240 Line/Route, A418, B260, Địa chỉ hệ thống, Bảng tổng hợp màn hình MES (Mở rộng) | A410, B210-B240, B250, B260, B270, A418, A419, C131, C132, C430, C451, C560, F741 |
 | [KB_07_GROUPWARE_INTEGRATION.md](KB_07_GROUPWARE_INTEGRATION.md) | Tích hợp Groupware: Mua hàng, Kế hoạch SX, Master Data, **ESM Bridge Tables (18 bảng)**, **BOM Management**, **Danh sách 100+ kho active** | Groupware, F330, C220, B310, B450, F110, F130, F140 |
 | [KB_08_KHO_THANH_PHAM_HN.md](KB_08_KHO_THANH_PHAM_HN.md) | Kho TP Hà Nam: Xuất HN551, Tồn HN866, Hủy F330, Xóa sản lượng | HN551, HN866, HN544, FG00 |
-| [KB_10_KIEN_TRUC_VA_DATAFLOW.md](KB_10_KIEN_TRUC_VA_DATAFLOW.md) | Kiến trúc tổng quan hệ thống NAIS, 3 Trụ cột, Sơ đồ End-to-End Data Flow, Phân tích SP, Ma trận nhà máy | System |
+| [KB_10_KIEN_TRUC_VA_DATAFLOW.md](KB_10_KIEN_TRUC_VA_DATAFLOW.md) | Kiến trúc tổng quan MES, 3 Trụ cột, Sơ đồ End-to-End, Phân tích SP, Ma trận nhà máy, **Dịch nghĩa bình dân luồng MES trong 5 phút** | System |
 | [KB_12_DEEP_CORE_ANALYSIS_AND_AUDIT.md](KB_12_DEEP_CORE_ANALYSIS_AND_AUDIT.md) | Phân tích sâu cốt lõi, 5 triết lý DNA, Bảng ẩn, Điểm nguy hiểm cho Dev, Kết quả DB Audit & Bugs | DB/Audit |
 | [KB_14_TRACE_BUG_METHODOLOGY.md](KB_14_TRACE_BUG_METHODOLOGY.md) | Phương pháp trace bug 5 bước, Log hệ thống, Bảng quan trọng | Toàn bộ |
 | [KB_15_EA_MES_CASE_STUDY_XUONG_MAY.md](KB_15_EA_MES_CASE_STUDY_XUONG_MAY.md) | Tổng hợp các Case Study thực tế dành cho kỹ sư EA/MES khi xuống xưởng | Vận hành/Hỗ trợ |
-| [KB_16_GIAI_THICH_DON_GIAN_LUONG_MES.md](KB_16_GIAI_THICH_DON_GIAN_LUONG_MES.md) | Bản dịch bình dân: Hiểu sơ đồ luồng dữ liệu MES trong 5 phút (Analogy Bánh Tráng Trộn) | Onboarding |
-| [KB_17_HUONG_DAN_CAU_HINH_DBMAIL.md](KB_17_HUONG_DAN_CAU_HINH_DBMAIL.md) | Hướng dẫn cấu hình Database Mail trong SQL Server | Vận hành/Hỗ trợ |
-| [KB_18_DATABASE_SCHEMA_QUICKREF.md](KB_18_DATABASE_SCHEMA_QUICKREF.md) | Bảng tra cứu nhanh các cột dữ liệu quan trọng trong database | DB/Schema |
-| [KB_19_PHAN_TICH_LOT_SIZE_VÀ_MÃ_LỖI_B530.md](KB_19_PHAN_TICH_LOT_SIZE_VÀ_MÃ_LỖI_B530.md) | Báo cáo phân tích đối soát dữ liệu Thay đổi số lượng Lot No và chuẩn hóa Defect Codes B530 | Cấu hình/Đối soát |
-| [KB_20_MAY_MOC_BAO_TRI.md](KB_20_MAY_MOC_BAO_TRI.md) | Máy móc, Bảo trì & Sửa chữa, Hiệu chuẩn thiết bị đo, **Spare Part Management đầy đủ** | B250, B270, MCM, H301-H305 |
-| [KB_21_NHAN_SU_WORKER.md](KB_21_NHAN_SU_WORKER.md) | Nhân sự SX, Nhóm ca/tổ, Giao ca (Takeover), Tracking công nhân theo Barcode, Chấm công | B260, K101, WorkGroup |
-| [KB_22_DASHBOARD_ANDON_MONITORING.md](KB_22_DASHBOARD_ANDON_MONITORING.md) | Dashboard sản lượng, Andon display, UPH Tracking | Dashboard, Andon |
-| [KB_23_4M_CHANGE_CAPA.md](KB_23_4M_CHANGE_CAPA.md) | 4M Change Management, CAPA process, Defect Repair, Phân loại lỗi | 4M Change, CAPA, QC |
-| [KB_24_RELIABILITY_TEST.md](KB_24_RELIABILITY_TEST.md) | Kiểm tra độ tin cậy (Reliability Test): Mẫu kiểm tra, kết quả đo chu kỳ | RTM, Sample, Measure |
-| [KB_25_VINAENESSOL_HUNG_YEN.md](KB_25_VINAENESSOL_HUNG_YEN.md) | Phân hệ VinaEnesol, đóng gói & in nhãn (Inner/Outer Box), khớp box (Box Matching), vận hành Hưng Yên | D000, D051, D100, D110, HungYenFactory |
-| [KB_26_LIEN_KET_HE_THONG_VA_BUG_LOGIC.md](KB_26_LIEN_KET_HE_THONG_VA_BUG_LOGIC.md) | Liên kết WMS-Sản xuất-QC-Xuất hàng, Cơ chế trừ kho Trigger, Phân tích 4 lỗi logic lớn | B597, B530, C443, C512, C530, C546, HN551, FG00 |
+| [KB_18_DATABASE_SCHEMA_QUICKREF.md](KB_18_DATABASE_SCHEMA_QUICKREF.md) | Bảng tra cứu nhanh các cột dữ liệu quan trọng, **Sơ đồ ERD cốt lõi**, **Bản đồ 976 bảng, SPs & 1442 màn hình** | DB/Schema |
+| [KB_25_VINAENESSOL_HUNG_YEN.md](KB_25_VINAENESSOL_HUNG_YEN.md) | Phân hệ VinaEnesol, đóng gói & in nhãn (Inner/Outer Box), khớp box (Box Matching), Vận hành Hưng Yên | D000, D051, D100, D110, HungYenFactory |
+| [KB_26_LIEN_KET_HE_THONG_VA_BUG_LOGIC.md](KB_26_LIEN_KET_HE_THONG_VA_BUG_LOGIC.md) | Liên kết WMS-Sản xuất-QC-Xuất hàng, Cơ chế trừ kho Trigger, Tác vụ ngầm & Agent Jobs, **Cấu hình DB Mail cho cảnh báo** | B597, B530, C443, C512, C530, C546, HN551, FG00 |
 | [KB_27_SCM_REWORK_TRA_HANG_KIEM_KE.md](KB_27_SCM_REWORK_TRA_HANG_KIEM_KE.md) | Phân hệ SCM (Sales Order/Delivery), Rework (Làm lại), Trả hàng (Returns & RMA), Kiểm kê (Stocktaking F750) | F750, B618, SCM01, FG00, HN551 |
-| [KB_28_SYSTEM_OBJECTS_MAP.md](KB_28_SYSTEM_OBJECTS_MAP.md) | Bản đồ đối tượng toàn hệ thống (976 bảng, 3,314 SPs & 1,442 màn hình) | SmartFramework |
 | [KB_29_SUPER_DEEP_SYSTEM_DISCOVERY_PROMPT.md](KB_29_SUPER_DEEP_SYSTEM_DISCOVERY_PROMPT.md) | Siêu Prompt (Meta-Prompt) tự học, đào sâu bản chất màn hình & liên kết nghiệp vụ | Hướng dẫn phân tích ngược |
 | [KB_30_THIET_BI_PHU_TRO_SAY_GA_DAO.md](KB_30_THIET_BI_PHU_TRO_SAY_GA_DAO.md) | Phân hệ thiết bị phụ trợ: Lò sấy (Dry Oven), Gá nạp Doping, Tuổi thọ dao Slitting | V-22, V-11_BG, Doping |
 
@@ -151,20 +146,20 @@
 | Lỗi cắt chuỗi danh sách tem nhỏ (B560 - 73/80 tem) | KB_04 § 6.14 |
 | Cấu hình/Đồng bộ mã lỗi B530 Bắc Giang (BG) | KB_03 § 6.18 |
 | Bắn nối nhiều cuộn nguyên liệu (Electrode & Case 3562/3582/35105) | KB_03 § 6.19, KB_05 § 8.7 |
-| **Máy hỏng / Lịch sử sửa chữa** | KB_20 § 3 |
-| **Hiệu chuẩn thiết bị đo** | KB_20 § 4 |
-| **Spare Part tồn kho / xuất nhập** | KB_20 § 5 |
-| **Giao ca (Takeover) giữa các ca** | KB_21 § 4 |
-| **Ai xử lý viên tụ nào (Worker tracking)** | KB_21 § 5 |
-| **Dashboard sản lượng / UPH** | KB_22 § 2, 4 |
-| **Andon hiển thị** | KB_22 § 3 |
-| **4M Change (Man/Machine/Material/Method)** | KB_23 § 2 |
-| **CAPA (hành động khắc phục)** | KB_23 § 3 |
-| **Phân loại mã lỗi / Defect Code** | KB_23 § 5 |
+| **Máy hỏng / Lịch sử sửa chữa** | KB_03 § 6.21.2 |
+| **Hiệu chuẩn thiết bị đo** | KB_03 § 6.21.3 |
+| **Spare Part tồn kho / xuất nhập** | KB_03 § 6.21.4 |
+| **Giao ca (Takeover) giữa các ca** | KB_03 § 6.22.3 |
+| **Ai xử lý viên tụ nào (Worker tracking)** | KB_03 § 6.22.4 |
+| **Dashboard sản lượng / UPH** | KB_03 § 6.20.1, 6.20.3 |
+| **Andon hiển thị** | KB_03 § 6.20.2 |
+| **4M Change (Man/Machine/Material/Method)** | KB_05 § 11.1 |
+| **CAPA (hành động khắc phục)** | KB_05 § 11.2 |
+| **Phân loại mã lỗi / Defect Code** | KB_05 § 11.4 |
 | **ESM sync MES ↔ ERP (Douzone)** | KB_07 § 8 |
 | **BOM Management chi tiết** | KB_07 § 9 |
 | **Danh sách kho đầy đủ (100+ kho)** | KB_07 § 10 |
-| **Kiểm tra độ tin cậy (Reliability Test)** | KB_24 |
+| **Kiểm tra độ tin cậy (Reliability Test)** | KB_05 § 12 |
 | **Đóng gói & In tem VinaEnesol** | KB_25 |
 | **Gộp/Khớp hộp lớn, hộp nhỏ (Box Matching) Enesol** | KB_25 § 4.3 |
 | **Quy tắc sinh Lot No Enesol** | KB_25 § 4.1 |
@@ -185,4 +180,4 @@
 > 📌 **Bảng DB & SP quan trọng:** Xem chi tiết tại [KNOWLEDGE.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/AI_AGENT_CONFIG/KNOWLEDGE.md) §1-2 và [KB_18_DATABASE_SCHEMA_QUICKREF.md](KB_18_DATABASE_SCHEMA_QUICKREF.md).
 > 🛡️ **Nguyên tắc sửa DB:** Xem tại [RULES.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/AI_AGENT_CONFIG/RULES.md).
 
-*Cập nhật: 2026-06-12 | Tái cấu trúc theo Phương án B — gộp file và dọn dẹp nội dung trùng lặp*
+*Cập nhật: 2026-06-14 | Tái cấu trúc tinh gọn tài liệu: Gộp toàn bộ 9 tệp tin trùng lặp nội dung*

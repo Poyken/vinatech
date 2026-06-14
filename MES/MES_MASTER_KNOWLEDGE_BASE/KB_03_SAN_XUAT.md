@@ -1004,7 +1004,64 @@ INSERT vào bảng `STB_DefectInfo` các mã lỗi sau:
 
 *Chi tiết SQL tham khảo file script [fix_b530_add_defects_BG.sql](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/sql/scripts/fix_b530_add_defects_BG.sql)*
 
-👉 **Báo cáo phân tích đối soát & Gap analysis chi tiết:** Xem tại [KB_19_PHAN_TICH_LOT_SIZE_VÀ_MÃ_LỖI_B530.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_19_PHAN_TICH_LOT_SIZE_VÀ_MÃ_LỖI_B530.md) (bao gồm bối cảnh thay đổi quy mô Lot Size, số lượng mẫu test phá hủy và chi tiết ma trận 35 mã lỗi).
+#### 6.18.1 Bối Cảnh Thay Đổi Quy Mô Lot Size & Mã Lỗi B530
+Trong quá trình vận hành hệ thống MES tại nhà máy Vinatech Bắc Giang (BG), bộ phận sản xuất và chất lượng đã phát hành hai yêu cầu thay đổi cấu hình dữ liệu quan trọng:
+1. **Thay đổi quy mô Lot No sản phẩm** (Lot Size) kết hợp thay đổi phương pháp sấy và số lượng mẫu test phá hủy.
+2. **Chuẩn hóa danh mục mã lỗi hiển thị trên màn hình B530** (disable 28 mã trùng lặp/dư thừa và thêm mới 7 mã lỗi thực tế).
+
+Tài liệu này ghi nhận kết quả đối soát thực tế giữa yêu cầu trong các file Excel và hiện trạng cấu hình trên cơ sở dữ liệu `SmartFactoryV2` (tính đến ngày 05/06/2026).
+
+#### 6.18.2 Chi Tiết Cấu Hình Quy Mô Lot No Sản Xuất & Test Phá Hủy (Bắc Giang 1)
+Dưới đây là bảng tổng hợp chi tiết cấu hình Lot Size, phương pháp sấy (Normal drying vs. Infrared drying), số lượng mẫu test phá hủy và thông số định mức cuộn nguyên liệu cho các model:
+
+| Model | Lot Size Trước | Sấy Trước | Lot Size Sau | Sấy Sau | Quy cách đóng gói | Số mẫu phá hủy trước | Số mẫu phá hủy sau | Đặc tính cuộn nguyên liệu (Foil/Roll Specs) |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **1320** | 1280 | Thường | 2000 / 4000 | Hồng ngoại | 2400 (1 máy 2 khay x 1k) | 21 / 63 | 13 / 39 (test 6) | 1 roll nhỏ = 400m / 167mm * 0.95 * 1000 = 2,275 pcs |
+| **1325** | 1280 | Thường | 1700 / 3400 | Hồng ngoại | 2400 (1 máy 2 khay x 850) | 21 / 63 | 15 / 45 (test 6) | 1 roll nhỏ = 400m / 179mm * 0.95 * 1000 = 2,122 pcs |
+| **1346** | 600 | Thường | 800 / 1600 | Hồng ngoại | 1200 (1 máy 2 khay x 400) | 17 / 51 | 12 / 36 (test 6) | 1 small roll = 400m / 185mm * 0.95 * 1000 = 2,054 pcs |
+| **1625** | 900 | Thường | 1400 / 2400 | Hồng ngoại | 1400 (1 máy 2 khay x 700) | 20 / 60 | 13 / 39 (test 6) | Giữ nguyên |
+| **1840** | 500 | Thường | 1000 / 2000 | Hồng ngoại | Thường: 500, Hela: 640 | 36 / 108 | 18 / 54 (test 6) | 1 small roll = 400m / 387mm * 0.95 * 1000 = 981 pcs |
+| **1859** | 300 | Thường | 900 | Thường | 1 máy sấy 3 ngăn | - | - (test 6) | 1 small roll = 400m / 338mm * 0.95 * 1000 = 1,124 pcs |
+| **VPC 0820** | 3000 | Thường | 3000 | Thường | 1 máy sấy 3 ngăn | - | - (test 6) | - |
+| **VPC 0825** | 3000 | Thường | 3000 | Thường | 1 máy sấy 3 ngăn | - | - (test 6) | - |
+| **VPC 1030** | 2000 | Thường | 2000 / 3000 | Thường | 1 máy sấy 3 ngăn | - | - (test 6) | 1 small roll = 400m / 165mm * 0.95 * 1000 = 2,303 pcs |
+| **VPC 1040** | 2000 | Thường | 2000 / 3000 | Thường | 1 máy sấy 3 ngăn | - | - (test 6) | 1 small roll = 400m / 205mm * 0.95 * 1000 = 1,853 pcs |
+| **VPC 1325** | 1000 | Thường | 3000 | Thường | 1 máy sấy 3 ngăn | - | - (test 6) | 1 small roll = 400m / 295mm * 0.95 * 1000 = 1,288 pcs |
+| **VPC 1335** | 1000 | Thường | 3000 | Thường | 1 máy sấy 3 ngăn | - | - (test 6) | 1 small roll = 400m / 295mm * 0.95 * 1000 = 1,288 pcs |
+| **2245** | 430 | Thường | 1290 | Thường | - | 10.46 | 3.48 (test 2) | 1 small roll = 400m / 575mm * 0.95 * 1000 = 660 pcs |
+| **2570** | 300 | Thường | 900 | Thường | - | 8.33 | 2.77 (test 2) | 1 small roll = 400m / 575mm * 0.95 * 1000 = 660 pcs |
+| **3562** | 179 | Thường | 537 / 1074 | Thường | 600 (1 ngăn 6 khay, 2 lot) | 50 | 17 (test 2) | 1 small roll = 400m / 1520mm * 0.95 * 1000 = 250 pcs |
+| **3582** | 179 | Thường | 358 / 716 / 1074 | Thường | 600 (1 ngăn 4 khay, 2 lot) | 16 | 8 (test 2) | 1 small roll = 400m / 1520mm * 0.95 * 1000 = 250 pcs |
+| **35105**| 179 | Thường | 358 / 716 / 1074 | Thường | 600 (1 ngăn 4 khay, 2 lot) | 16 | 8 (test 2) | 1 small roll = 400m / 1520mm * 0.95 * 1000 = 250 pcs |
+
+#### 6.18.3 Script SQL Kiểm Chứng Đối Soát
+Dưới đây là các câu lệnh SQL đã dùng để truy vấn và kiểm tra chéo dữ liệu trên Server:
+```sql
+-- 1. Kiểm tra cấu hình đóng gói của các Model/Size trong STB_PackingStandard
+SELECT MaterialTypeCode, Size, Voltage, Farad, VinylBagQty, InnerBoxQty, OutBoxQty 
+FROM STB_PackingStandard 
+WHERE Size IN ('1320', '1325', '1346', '1625', '1840')
+ORDER BY Size;
+
+-- 2. Kiểm tra trạng thái của các mã lỗi đã disable và thêm mới
+SELECT DefectCode, BasicDefectName, DefectGroupCode, IsUsed, ChangeUserID, ChangeDateTime
+FROM STB_DefectInfo
+WHERE DefectCode IN (
+    'V-22_BM_BG', 'V-23_DV_BG', 'V-23_RD_BG', 'V-23_XZ3_BG', 'V-24_NE6_BG', 'V-24_NE7_BG', 'V-24_NE8_BG',
+    'V-22_CC_BG', 'V-23_02_BG', 'V-24_2CT_BG', 'V-25_01_BG', 'V-27_ZC_BG'
+)
+ORDER BY IsUsed DESC, DefectCode;
+```
+
+#### 6.18.4 Đề Xuất Khắc Phục Gaps (Next Action Plan)
+*   **Khai báo tiêu chuẩn đóng gói cho size `1840`:**
+    Cần chạy câu lệnh chèn dữ liệu cấu hình đóng gói cho Model `1840` (hỏi ý kiến bộ phận sản xuất/kế hoạch trước khi chạy trên Production):
+    ```sql
+    INSERT INTO STB_PackingStandard (MaterialTypeCode, Size, Voltage, Farad, VinylBagQty, InnerBoxQty, OutBoxQty, CreateDateTime, CreateUserID)
+    VALUES ('FERT', '1840', 0, 0, 0, 500, 1000, GETDATE(), 'vinaadmin');
+    ```
+*   **Tự động hóa quy trình QC cho Lot Size tăng:**
+    Nếu QC muốn số lượng mẫu kiểm tra tự động giới hạn ở mức `6` mẫu test hủy thay vì `20` hay `50` như hiện tại, cần chỉnh sửa stored procedure `usp_Vietnam_MaterialFOQcDetail_get` để bổ sung logic phân nhánh `SampleQty` động theo `MaterialCode` và `LotSize`.
 
 ---
 
@@ -1030,4 +1087,175 @@ Khi load danh sách nguyên vật liệu đã bắn của Lot, hệ thống sử
 
 ---
 
-*Cập nhật: 2026-06-04*
+### 6.20 📊 Dashboard, Andon & Monitoring (Gộp từ KB_22)
+
+Hệ thống giám sát và hiển thị sản lượng, năng suất hiện trường của MES Vinatech bao gồm 3 lớp:
+1. **Dashboard:** Tổng quan sản lượng theo công đoạn dành cho cấp quản lý.
+2. **Andon:** Bảng hiển thị thông số và trạng thái lỗi tại xưởng dành cho công nhân và leader.
+3. **UPH Tracking:** Theo dõi năng suất theo thời gian thực (Units Per Hour).
+
+#### 6.20.1 Dashboard Configuration
+Cấu hình các công đoạn hiển thị trên Dashboard được lưu tại bảng `STB_DashboardRouteInfo`:
+```sql
+-- Xem cấu hình hiển thị Dashboard
+SELECT DashboardRouteCode, DashboardRouteName, ProdRouteTypeCode, WorkCenterCode
+FROM STB_DashboardRouteInfo
+ORDER BY WorkCenterCode, DashboardRouteCode;
+```
+
+#### 6.20.2 Andon Display
+Các cấu hình hiển thị và dữ liệu Andon được lưu trong các bảng:
+*   `CellLineANDON`: Cấu hình Line hiển thị trên màn hình Andon.
+*   `DefectReportsAnDon`: Ghi nhận dữ liệu phế/lỗi hiển thị trên Andon (nhà máy Việt Nam).
+*   `DefectReportsAndon_BG`: Ghi nhận dữ liệu phế/lỗi hiển thị trên Andon (nhà máy Bắc Giang).
+*   `ProcessStepsANDON`: Các bước công đoạn hiển thị trên Andon.
+
+```sql
+-- Xem cấu hình Line hiển thị Andon
+SELECT CellLineAndon, CellLineName FROM CellLineANDON;
+
+-- Xem danh sách phế/NG hiển thị trên Andon trong ngày
+SELECT * FROM DefectReportsAnDon WHERE CreateDateTime >= CAST(GETDATE() AS DATE);
+```
+
+#### 6.20.3 UPH (Units Per Hour) Tracking
+UPH được tính dựa trên số lượng sản phẩm hoàn thành chia cho thời gian sản xuất thực tế. Nguồn dữ liệu lấy từ `STB_ProdRouteHist` (lịch sử quét mã vạch công đoạn).
+Bảng liên quan: `VNT_UPHStatusInfo` (màn hình xem UPH), `VNT_UPHTimeSetupInfo` (cấu hình thời gian tính).
+
+```sql
+-- Tính UPH thô cho 1 Line trong 1 ca
+SELECT LineCode, RouteCode,
+       COUNT(*) AS TotalUnits,
+       DATEDIFF(HOUR, MIN(CreateDateTime), MAX(CreateDateTime)) AS TotalHours,
+       CASE WHEN DATEDIFF(HOUR, MIN(CreateDateTime), MAX(CreateDateTime)) > 0
+            THEN CAST(COUNT(*) AS FLOAT) / DATEDIFF(HOUR, MIN(CreateDateTime), MAX(CreateDateTime))
+            ELSE 0 END AS UPH
+FROM STB_ProdRouteHist
+WHERE LineCode = 'VELINE-01'
+  AND RouteCode = 'V-22' -- Công đoạn Aging
+  AND CreateDateTime >= CAST(GETDATE() AS DATE)
+GROUP BY LineCode, RouteCode;
+```
+
+---
+
+### 6.21 🔧 Máy Móc, Bảo Trì & Spare Parts Management (Gộp từ KB_20)
+
+Hệ thống quản lý máy móc thiết bị hiện trường, lịch trình bảo trì và kho phụ tùng thay thế.
+
+#### 6.21.1 Master Data Máy Móc
+Các bảng cốt lõi:
+*   `STB_MachineMaster`: Lưu thông tin master máy móc thiết bị.
+*   `STB_ProductMachine`: Cấu hình mapping máy móc với công đoạn (`RouteCode`).
+
+```sql
+-- Xem tất cả máy active theo Line
+SELECT MachineCode, MachineName, LineCode, WorkCenterCode
+FROM STB_MachineMaster
+WHERE IsUsed = 1
+ORDER BY LineCode, MachineCode;
+
+-- Xem cấu hình máy ↔ Route cho model cụ thể
+SELECT PM.MachineCode, PM.RouteCode, MM.MachineName, MM.LineCode
+FROM STB_ProductMachine PM
+JOIN STB_MachineMaster MM ON PM.MachineCode = MM.MachineCode
+WHERE PM.MaterialCode = 'ECVT30-367' -- Model cần kiểm tra
+ORDER BY PM.RouteCode;
+```
+
+#### 6.21.2 Bảo Trì & Sửa Chữa Thiết Bị
+Khi máy móc hỏng, thông tin sự cố được ghi nhận vào `STB_MachineRepairHistory`. Chi tiết kỹ thuật viên sửa và linh kiện thay thế được lưu tương ứng trong `STB_MachineRepairWorker` và `STB_MachineRepairMaterialHist`.
+```sql
+-- Xem lịch sử sửa chữa máy trong 30 ngày gần nhất
+SELECT MachineRepairHistoryNo, MachineCode, JobDate,
+       TroublePoint, TroubleText, RepairText, TotalRepairCost,
+       DATEDIFF(MINUTE, JobStartDateTime, JobEndDateTime) AS RepairMinutes
+FROM STB_MachineRepairHistory
+WHERE JobDate >= DATEADD(DAY, -30, GETDATE())
+ORDER BY JobDate DESC;
+```
+
+#### 6.21.3 Hiệu Chuẩn Thiết Bị Đo
+Lịch sử hiệu chuẩn các thiết bị đo kiểm tại xưởng được lưu tại `STB_MeasurementControlCalibrateHistory_VVT` (tương ứng màn hình `VVT_MeasurementControlList`).
+```sql
+-- Xem lịch sử hiệu chuẩn của một thiết bị đo
+SELECT ManagementNo, SerialNo, DayOfCalibration, Remark, Note
+FROM STB_MeasurementControlCalibrateHistory_VVT
+WHERE ManagementNo = 'MÃ_QUẢN_LÝ'
+ORDER BY DayOfCalibration DESC;
+```
+
+#### 6.21.4 Spare Part (Phụ Tùng) H301 ~ H305
+Kho phụ tùng thay thế cho máy móc tại xưởng được theo dõi qua các bảng:
+*   `STB_VNSparePartInfo`: Master danh sách phụ tùng (spec, đơn giá, tồn an toàn).
+*   `STB_VNSparePartStockInfo`: Tồn kho phụ tùng.
+*   `STB_VNSparePartIOHistory`: Nhật ký xuất/nhập phụ tùng.
+*   `STB_VN_SparePartLineUsage`: Nhật ký xuất phụ tùng cho Line máy.
+
+```sql
+-- Kiểm tra tồn kho phụ tùng dưới mức an toàn tối thiểu (SafeQty)
+SELECT SparePartCode, SparePartName, CurrentStock, SafeQty,
+       CASE WHEN CurrentStock < SafeQty THEN 'CẦN ĐẶT HÀNG' ELSE 'OK' END AS Status
+FROM STB_VNSparePartInfo
+WHERE IsUsed = 1 AND CurrentStock < SafeQty
+ORDER BY CurrentStock ASC;
+```
+
+---
+
+### 6.22 👤 Nhân Sự, Worker & Quản Lý Ca Kíp (Gộp từ KB_21)
+
+Hệ thống quản lý thông tin công nhân hiện trường, ca kíp sản xuất và nhật ký bàn giao ca.
+
+#### 6.22.1 Master Data Công Nhân (`STB_ProdWorkerInfo`)
+Quản lý hồ sơ công nhân sản xuất hoạt động tại các Line.
+```sql
+-- Xem danh sách công nhân đang hoạt động (active) theo Line
+SELECT WorkerCode, OrgWorkerName, WorkerGroupCode, LineCode, DATEJOIN
+FROM STB_ProdWorkerInfo
+WHERE IsUsed = 1 AND IsProdWorker = 1
+ORDER BY LineCode, WorkerCode;
+```
+
+#### 6.22.2 Nhóm Công Nhân & Mapping Chi Phí
+Công nhân được gán vào các tổ/nhóm chi phí để phục vụ tính toán giá thành công đoạn:
+*   `STB_WorkerGroupInfo`: Danh mục nhóm công nhân (tổ/ca).
+*   `STB_CostGroupWorkerMapping`: Gán công nhân vào nhóm chi phí tương ứng.
+
+```sql
+-- Xem phân công công nhân vào nhóm chi phí
+SELECT CGM.CostGroupCode, WGI.CostGroupName, CGM.WorkerCode, PW.OrgWorkerName
+FROM STB_CostGroupWorkerMapping CGM
+JOIN STB_WorkerGroupInfo WGI ON CGM.CostGroupCode = WGI.CostGroupCode
+JOIN STB_ProdWorkerInfo PW ON CGM.WorkerCode = PW.WorkerCode
+ORDER BY CGM.CostGroupCode;
+```
+
+#### 6.22.3 Bàn Giao Ca (Worker Takeover)
+Quy trình bàn giao tình trạng máy, sản lượng dở dang và lưu ý ca trước được nhập tại màn hình `VNT_WorkerTakeoverInfo` và lưu vào bảng `STB_WorkerTakeoverInfo`.
+```sql
+-- Xem nội dung bàn giao ca trong tuần
+SELECT WorkerTakeoverNo, JobDate, TimeShiftCode, TakeoverLineCode,
+       TakeoverContent, WriteWorkerCode, IsConfirm, ConfirmWorkerCode
+FROM STB_WorkerTakeoverInfo
+WHERE JobDate >= DATEADD(DAY, -7, GETDATE())
+ORDER BY JobDate DESC, WriteDateTime DESC;
+```
+
+#### 6.22.4 Truy Vết Lịch Sử Quét Của Công Nhân
+Khi công nhân scan barcode tại các công đoạn, thông tin được lưu tại bảng `STB_ProdRouteWorkerHist` để đối soát trách nhiệm:
+```sql
+-- Tra cứu công nhân xử lý barcode cụ thể
+SELECT PRWH.WorkerCode, PW.OrgWorkerName,
+       PRH.ControlNo, PRH.RouteCode, PRH.CreateDateTime
+FROM STB_ProdRouteWorkerHist PRWH
+JOIN STB_ProdRouteHist PRH ON PRWH.ProdRouteHistNo = PRH.ProdRouteHistNo
+JOIN STB_ProdWorkerInfo PW ON PRWH.WorkerCode = PW.WorkerCode
+WHERE PRH.ControlNo = 'MÃ_BARCODE'
+ORDER BY PRH.CreateDateTime ASC;
+```
+
+---
+
+*Cập nhật: 2026-06-14 | Gộp nội dung từ KB_19, KB_20, KB_21, và KB_22 để đồng bộ hoá tri thức nghiệp vụ Sản Xuất*
+

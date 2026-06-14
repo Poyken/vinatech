@@ -10,6 +10,18 @@
 
 Khi tiếp nhận báo lỗi từ hiện trường, tuyệt đối không vội vàng đưa ra kết luận dựa trên mô tả cảm tính. Mọi lỗi hệ thống đều để lại dấu vết trong cơ sở dữ liệu. Bắt buộc phải thực hiện truy vấn `SELECT` để xác minh trạng thái thực của dữ liệu trước khi đưa ra phương án xử lý.
 
+> [!IMPORTANT]
+> **Quy tắc an toàn giao dịch (Transaction Handling)**
+> Mọi lệnh UPDATE hoặc DELETE sửa đổi dữ liệu do sự cố đều bắt buộc phải thực hiện trong một **Explicit Transaction (`BEGIN TRAN ... ROLLBACK / COMMIT`)**. Tuyệt đối không chạy lệnh update trực tiếp mà không kiểm tra `@ROWCOUNT` để tránh cập nhật sai hàng loạt bản ghi.
+
+> [!WARNING]
+> **Rủi ro sập luồng do hàm đổi kiểu (TRY_CONVERT vs CONVERT)**
+> Hàm `fn_VVT_getdatebyVendorLot` phân tích ngày sản xuất từ mã Lot bằng các hàm cắt chuỗi tĩnh (`substring`) và convert ngày. Khi nhà cung cấp thay đổi format mã Lot (không theo cấu trúc `dd/mm/yyyy`), hàm sẽ crash do lỗi convert kiểu dữ liệu. Hãy luôn sử dụng `TRY_CONVERT` thay vì `CONVERT` để bảo vệ SP khỏi lỗi sập luồng.
+
+> [!CAUTION]
+> **Tránh tranh chấp khóa bảng (Table-Lock Deadlocks)**
+> Trong giờ cao điểm chốt ca (07:30 - 08:30 và 19:30 - 20:30), lượng bản ghi quét công đoạn gửi lên `STB_ProdRouteHist` đạt mức hàng chục ngàn dòng. Việc cập nhật hàng loạt hoặc chạy trigger đồng bộ tồn kho liên hoàn không tối ưu hóa chỉ mục (Indexes) sẽ dẫn đến lock leo thang (Lock Escalation) thành Table-Lock, gây treo toàn bộ ứng dụng MES hiện trường.
+
 ---
 
 ## 2. 📋 QUY TRÌNH TRUY VẾT LỖI 5 BƯỚC CHUẨN Y KHOA
@@ -70,6 +82,37 @@ SELECT
     InputLineCode       -- Line sản xuất đăng ký
 FROM STB_SetInfo
 WHERE Barcode = 'Mã_Barcode_Cần_Check'; -- Ví dụ: 'SP20260525-001'
+```
+
+#### 2.1 Cây Chẩn Đoán Lỗi Quét Barcode (Barcode Blockage Decision Tree)
+
+Dưới đây là sơ đồ cây quyết định giúp lập trình viên/AI khoanh vùng nhanh nguyên nhân gây lỗi chặn scan barcode:
+
+```mermaid
+graph TD
+    Start["Scan Barcode gặp lỗi chặn"] --> CheckExist{"1. Barcode có tồn tại trong STB_SetInfo?"}
+    
+    CheckExist -->|Không| ErrorPO["Lỗi: Barcode chưa được khởi tạo ở B450 / Lệnh PO chưa active"]
+    CheckExist -->|Có| CheckHold{"2. Barcode/Lot có bị HOLD?<br/>(MaterialWarehouseCode == 'HOLDING_*_WH')"}
+    
+    CheckHold -->|Có| ErrorHold["Lỗi: Lô hàng đang bị QC tạm khóa.<br/>Sử dụng stb_vvt_OpenExpiredMaterial để bypass nếu cần."]
+    CheckHold -->|Không| CheckExpire{"3. Barcode/Lot có quá hạn dùng?<br/>(Dựa trên LotAttr10 + MMExtInt01)"}
+    
+    CheckExpire -->|Có| ErrorExpire["Lỗi: Lô hàng quá hạn dùng (Expired).<br/>Yêu cầu QC đánh giá lại hoặc bypass."]
+    CheckExpire -->|Không| CheckBOM{"4. Barcode có khớp với BOM?<br/>(Check stb_vvt_materialbo & STB_ProductionOrderRouting)"}
+    
+    CheckBOM -->|Không| ErrorBOM["Lỗi: Sai chủng loại NVL so với BOM.<br/>Kiểm tra lại cấu hình BOM ngầm."]
+    CheckBOM -->|Có| CheckQC{"5. Đã nhập kết quả PQC ở công đoạn trước?<br/>(Kiểm tra STB_DefectRepairInfo)"}
+    
+    CheckQC -->|Không| ErrorQC["Lỗi: Chưa nhập kết quả đo/phế lỗi ở công đoạn trước.<br/>Yêu cầu QC/OP hoàn tất PQC."]
+    CheckQC -->|Có| Success["Cho phép qua cổng thành công"]
+    
+    style Success fill:#d4edda,stroke:#28a745,stroke-width:2px;
+    style ErrorPO fill:#f8d7da,stroke:#dc3545,stroke-width:1px;
+    style ErrorHold fill:#f8d7da,stroke:#dc3545,stroke-width:1px;
+    style ErrorExpire fill:#f8d7da,stroke:#dc3545,stroke-width:1px;
+    style ErrorBOM fill:#f8d7da,stroke:#dc3545,stroke-width:1px;
+    style ErrorQC fill:#f8d7da,stroke:#dc3545,stroke-width:1px;
 ```
 
 ---

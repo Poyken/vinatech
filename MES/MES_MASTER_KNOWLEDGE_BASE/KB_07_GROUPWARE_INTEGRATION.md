@@ -217,13 +217,50 @@ FROM ESM_DayProdPlanBatchLog ORDER BY CreateDateTime DESC
 
 | CdCompany | CollectionType | Batch Size (Ngày/Đêm) | Sleep (ms) | Dawn Time |
 |-----------|---------------|----------------------|-----------|-----------|
-| `1000` (HQ) | `erp` | 50/50 records | 1000ms | 01:00-07:00 |
-| `1000` (HQ) | `mes` | 200/200 records | 1000ms | 01:00-06:00 |
-| `2000` (VN) | `erp` | 0/0 (disabled) | 1000ms | 01:00-07:00 |
+| `1000` (HQ - Hàn Quốc) | `erp` | 50/50 records | 1000ms | 01:00-07:00 |
+| `1000` (HQ - Hàn Quốc) | `mes` | 200/200 records | 1000ms | 01:00-06:00 |
+| `2000` (VVT - Bắc Giang/Bắc Ninh) | `erp` | 0/0 (disabled) | 1000ms | 01:00-07:00 |
+| `2000` (VVT - Bắc Giang/Bắc Ninh) | `mes` | 200/200 records | 1000ms | 01:00-06:00 |
+| `3000` (VVT_F3 - Hà Nam) | `mes` | 200/200 records | 1000ms | 01:00-06:00 |
 
-> ⚠️ **Lưu ý:** CdCompany `2000` (Việt Nam) có `erp` collection type với batch size = 0, nghĩa là **sync ERP bị tắt** cho công ty VN. Chỉ có `mes` collection hoạt động.
+> ⚠️ **Lưu ý & Phát hiện mới (2026-06-14):**
+> - **CdCompany `3000`**: Được ánh xạ chính xác cho nhà máy **Hà Nam (VVT_F3)** trong dữ liệu thực tế của `ESM_DayProdPlan`.
+> - **Chặn đồng bộ ERP**: Cả Việt Nam (`2000`) và Hà Nam (`3000`) đều không có tiến trình đồng bộ `erp` collection hoạt động (hồ sơ `2000` set Batch Size = 0, hồ sơ `3000` hoàn toàn không được cấu hình trong bảng). Chỉ có tiến trình thu thập `mes` hoạt động để đẩy ngược sản lượng lên ERP.
+
+### 8.4 Sơ Đồ Tuần Tự Đồng Bộ Dữ Liệu (ESM Sync Sequence)
+
+Dưới đây là sơ đồ tuần tự thể hiện cơ chế đồng bộ dữ liệu hai chiều (Download và Upload) giữa ERP/Groupware và MES Core thông qua trung gian các bảng ESM Bridge Tables:
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant GW as Groupware / ERP (Douzone)
+    participant Bridge as ESM Bridge Tables (SmartFactoryV2)
+    participant ESMSvc as ESM Collector (Windows Service)
+    participant MES as MES Core Tables (SmartFactoryV2)
+    
+    Note over GW, MES: LUỒNG ĐỒNG BỘ XUỐNG (DOWNWARD SYNC - Kế hoạch / Master Data)
+    GW->>Bridge: 1. Ghi kế hoạch sản xuất / BOM mới (ErpUpdate = 'N')
+    Note right of Bridge: Bảng: ESM_DayProdPlan,<br/>ESM_DirectDayProdPlan
+    ESMSvc->>Bridge: 2. Quét định kỳ dữ liệu chưa đồng bộ
+    Bridge-->>ESMSvc: Trả về các bản ghi (ErpUpdate = 'N')
+    ESMSvc->>MES: 3. Chèn / Cập nhật dữ liệu vào bảng Master tương ứng
+    Note right of MES: Bảng: STB_DayProdPlan,<br/>STB_BomHeader, STB_BomDetail
+    MES-->>ESMSvc: Xác nhận cập nhật Master thành công
+    ESMSvc->>Bridge: 4. Cập nhật trạng thái đồng bộ (ErpUpdate = 'Y')
+    
+    Note over GW, MES: LUỒNG ĐỒNG BỘ LÊN (UPWARD SYNC - Sản lượng thực tế / Phế liệu)
+    MES->>Bridge: 5. Ghi nhận lịch sử sản lượng, phế, xuất kho (ErpUpdate = 'N')
+    Note right of Bridge: Bảng: ESM_ProdRouteHist,<br/>ESM_DefectInfo, ESM_WarehouseInOutHist
+    ESMSvc->>Bridge: 6. Quét định kỳ thu thập dữ liệu sản xuất thực tế
+    Bridge-->>ESMSvc: Trả về các bản ghi (ErpUpdate = 'N')
+    ESMSvc->>GW: 7. Đẩy thông tin sản lượng và hao phí vật tư lên ERP
+    GW-->>ESMSvc: ERP xác nhận ghi sổ kế toán thành công
+    ESMSvc->>Bridge: 8. Cập nhật trạng thái đồng bộ (ErpUpdate = 'Y')
+```
 
 ---
+
 
 ## 9. 📊 BOM Management Chi Tiết
 

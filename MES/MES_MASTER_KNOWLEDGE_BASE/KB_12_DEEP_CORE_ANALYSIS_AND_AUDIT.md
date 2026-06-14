@@ -54,22 +54,27 @@ Quá trình rà soát đối chiếu tài liệu với Production DB đạt tỷ
 
 *(Ghi chú: Lỗi thiếu bảng như `STB_BaseCode` là do chúng nằm ở DB `SmartFramework` thay vì `SmartFactoryV2`, View bị sai là do đổi tên/deprecated).*
 
-### 2.2 🐛 3 Lỗi Bug Thực Sự Đã Được Phát Hiện
+### 2.2 🐛 3 Lỗi Bug Thực Sự Đã Được Phát Hiện & Xác Minh
 
-Đọc code SP phức tạp `usp_DoProcessProdRouteHistForCalc_SmartApp_VNT` phát hiện 3 bug tiềm ẩn:
+Rà soát mã nguồn thực tế của Stored Procedure `usp_DoProcessProdRouteHistForCalc_SmartApp_VNT` và cấu hình hệ thống đã xác minh 3 lỗi sau:
 
 #### Bug #1: Gate 20 phút KHÔNG BAO GIỜ HOẠT ĐỘNG
-*   **File:** `usp_DoProcessProdRouteHistForCalc_SmartApp_VNT.sql` (Dòng 218)
-*   **Lỗi:** Code ghi `IF @SIExtInt01 = Null` (Trong SQL phải dùng `IS NULL`). Do so sánh bằng Null luôn ra False, Logic cấm Scan nhanh dưới 20 phút bị Tắt ngấm, không bao giờ chặn được OP.
-*   **Fix:** Phải sửa `= Null` thành `IS NULL`.
+*   **File:** `usp_DoProcessProdRouteHistForCalc_SmartApp_VNT` (Dòng 264)
+*   **Chi tiết mã lỗi:** 
+    ```sql
+    IF @CompanyCode = 'VNT' AND @SIExtInt01 = Null AND @RouteIndex > 1 AND @RouteCode <> 'E-25' AND @RouteCode <> 'E-23'
+    ```
+*   **Nguyên nhân:** Biến `@SIExtInt01` được so sánh bằng toán tử `= Null`. Trong SQL Server, mọi phép so sánh với `Null` bằng toán tử `=` luôn trả về `UNKNOWN` (False trong điều kiện `IF`). Do đó, khối lệnh chặn scan nhanh dưới 20 phút không bao giờ được thực thi, làm vô hiệu hóa hoàn toàn cổng chặn.
+*   **Giải pháp:** Phải sửa `@SIExtInt01 = Null` thành `@SIExtInt01 IS NULL`.
 
 #### Bug #2: `STB_MaterialHoldInfo` KHÔNG TỒN TẠI
-*   Tài liệu cũ nói Hold hàng dùng bảng này.
-*   **Thực tế:** Logic Hold dùng việc đổi `MaterialWarehouseCode = 'HOLDING_VN_WH'` (hoặc `HOLDING_BG_WH`) trong `STB_MaterialLotInfo`. Bảng `STB_MaterialHoldInfo` không tồn tại trong DB.
+*   Tài liệu vận hành cũ mô tả việc giữ hàng (Hold) sử dụng bảng này.
+*   **Xác minh thực tế:** Bảng `STB_MaterialHoldInfo` hoàn toàn không tồn tại trong CSDL `SmartFactoryV2` hay `SmartFramework`, và không được tham chiếu bởi bất kỳ Stored Procedure nào (0 kết quả trả về khi quét `sys.sql_modules`).
+*   **Cơ chế thực tế:** Nghiệp vụ Hold hàng được cài đặt bằng cách cập nhật cột `MaterialWarehouseCode` thành `'HOLDING_VN_WH'` hoặc `'HOLDING_BG_WH'` trong bảng `STB_MaterialLotInfo`.
 
-#### Bug #3: `CompleteRoute` Bị Mô Tả Sai Nghĩa
-*   Tài liệu báo cờ `CompleteRoute='1'` chỉ dành cho công đoạn cuối.
-*   **Thực tế:** Ở dòng 524, MỌI Route sau khi quét xong đều Set cờ này = 1. Database check 7 ngày cho thấy 80% bản ghi đều có `1`.
+#### Bug #3: Cờ `CompleteRoute` Ghi Nhận Cho MỌI Công Đoạn
+*   Tài liệu cũ ghi nhận cờ `CompleteRoute='1'` chỉ được bật cho công đoạn cuối của PO.
+*   **Xác minh thực tế:** Ở cuối SP `usp_DoProcessProdRouteHistForCalc_SmartApp_VNT` (dòng 573), lệnh `UPDATE STB_ProdRouteHist` thực hiện cập nhật `CompleteRoute = '1'` cho **mọi công đoạn** sau khi xử lý thành công.
 
 ### 2.3 📋 7 Sai Lệch Logic Giữa Document & Thực Tế
 
@@ -81,13 +86,23 @@ Quá trình rà soát đối chiếu tài liệu với Production DB đạt tỷ
 6.  Luồng tính Toán (Calc) ở B530 thường là cha gọi Sub-SP (`_VNT`), Sub-SP mới là nơi thực sự lệnh INSERT.
 7.  Các công đoạn chữ VE (Hà Nam) ép buộc QC phải quét và nhập lỗi PQC trước khi đi tiếp. (Code dòng 95-116).
 
-### 2.4 🆕 5 Khám Phá Mới (Undocumented Discoveries)
+### 2.4 🆕 Các Khám Phá Mới (Undocumented Discoveries - Cập nhật 2026-06-14)
 
 1.  **`fn_VVT_QCPARTCODE()`**: Function cực kỳ ẩn, dùng để Lọc mã lỗi QC lúc chạy Count NG để làm điều kiện Pass/Fail cho Gate PQC.
 2.  **Route `E-33` Bypass**: Nếu sản phẩm chui vào Route `E-33`, thì bước chặn "Check số lượng công đoạn trước (AftProdQty)" bị Skip thẳng ở dòng 491.
 3.  **Check khoảng cách thời gian (Aging)**: Công đoạn `EM-02` đo đếm thời gian cách `EM-01` đủ `>=12 tiếng` chưa.
-4.  **Volume rác `STB_ProcedureLog`**: Audit bảng này cho thấy bị SP `usp_DoProcessProdGRMaterialByOne` gọi spam tới 4,300+ lần mỗi ngày.
-5.  **Dòng chảy Output Data**: Trung bình mỗi tuần hệ thống sinh ra ~424 ControlNo mới/ngày và tạo ~15,000 dòng Routing History/tuần.
+4.  **Nhật ký SP thực tế `STB_ProcedureLog`**: Không phải là bảng log lỗi như tài liệu cũ mô tả, mà là bảng camera giám sát ghi nhận tham số chạy của SP (lưu cột `Idx`, `ProcedureName`, `VariableName` và `VariableValue`).
+5.  **Cơ chế Stage Prices nhà máy Hưng Yên (`_HY` - VVT_F4)**:
+    *   Hưng Yên sử dụng các mã công đoạn có tiền tố `P-` (ví dụ: `P-01` -> `P-06`).
+    *   Khi tính đơn giá công đoạn, do bảng `STB_VVT_StagePrices` không có các cột mang tên Hưng Yên, hệ thống tự động ánh xạ các công đoạn `P-` này vào các cột `RouteVP01` -> `RouteVP08` và `PriceVP01` -> `PriceVP08`.
+6.  **Logic tự ngắt cascade của Route `V-33` & `P-01`**:
+    *   Tại SP `ForCalc`, khi gặp `V-33` hoặc `P-01`, truy vấn tìm công đoạn kế tiếp dùng toán tử `>=` (`APOR.RouteIndex >= POR.RouteIndex`), làm cho `@AftRouteCode` trỏ ngược lại chính nó.
+    *   Điều này cố ý phá vỡ chuỗi tự động tạo Lot Input cho công đoạn tiếp theo, buộc trạm sau phải quét thủ công, đồng thời để lại cờ `CompleteRoute` ở dạng rỗng/NULL (thực tế xác minh 2,582 bản ghi `V-33` đều có `CompleteRoute` rỗng).
+7.  **Rủi ro sập luồng của hàm `fn_VVT_getdatebyVendorLot`**:
+    *   Hàm phân tích ngày sản xuất từ mã Lot của nhà cung cấp sử dụng các hàm cắt chuỗi tĩnh (`substring`). Khi gặp mã hàng `WRHI00-002`, hàm thực hiện lệnh `convert(date, @vendorlot, 103)`. Nếu mã `@vendorlot` không tuân thủ định dạng ngày `dd/mm/yyyy`, toàn bộ giao dịch sản xuất hoặc SELECT tồn kho F721 sẽ bị crash (lỗi chuyển đổi kiểu dữ liệu).
+8.  **Phân hệ chấm công và điểm danh nhân sự kỹ thuật (`P111`)**:
+    *   Sử dụng bảng `STB_TechnicalPersonnelAttendanceInfo` kết hợp các SP `usp_TechnicalPersonnelAttendanceInfo_get`, `_iud`, `_interface` và `_confirm`.
+    *   Hỗ trợ theo dõi giờ đến (`AttendanceDateTime`), giờ về (`LeavingDateTime`), trạng thái xác nhận duyệt công (`IsConfirm`), và đồng bộ dữ liệu vân tay qua màn hình `Z711` (`FingerAttendance`).
 
 ---
 
