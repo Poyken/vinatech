@@ -5,63 +5,70 @@
 
 ---
 
-## 1. 💳 Tạo Yêu Cầu Thanh Toán
+## 1. 💳 Quy Trình Tạo Yêu Cầu Thanh Toán (Disbursement Document)
 
 **Vào:** Electronic Document → Cost → Dusbursenment Document (Lưu ý: Chữ *Disbursement* bị viết sai chính tả thành **"Dusbursenment Document"** trên thanh thực đơn của hệ thống)
 
-### Bước 1: Chọn đường line phê duyệt
-- Thiết lập đường line phê duyệt phù hợp. (Tuyến mặc định là **22205010-Nguyễn Thị Thúy_V6** → **21910034-Trần Quang Thỏa**).
+### Bước 1: Thiết lập tuyến phê duyệt
+* Click nút **"Chọn dòng phê duyệt +"** (nút số 4 bên góc phải) để thiết lập tuyến duyệt.
+* *Tuyến phê duyệt mặc định:* **22205010-Nguyễn Thị Thúy_V6** ➔ **21910034-Trần Quang Thỏa** (CEO duyệt cuối). CC nhóm Kế toán.
 
-### Bước 2: Điền thông tin form cơ bản
-- Đặt tên form (tiêu đề biểu mẫu).
-- **Đính kèm file liên quan:** Ở phần Attachment, người dùng tải lên phiếu hoá đơn hoặc vận đơn làm cơ sở xác thực số tiền cước phí cho Phòng Kế toán (Ví dụ: file PDF hóa đơn vận chuyển đường hàng không mang tên [Bee Logistics_Vina tech_By_Air_Inv-2925431946.pdf](Bee%20Logistics_Vina%20tech_By_Air_Inv-2925431946.pdf)). Kế toán sẽ nhìn trực tiếp vào **Lịch sử Liên Kết Tài Liệu kéo thả** trong tab Cost để kiểm tra Audit bất cứ lúc nào mà không cần đòi hỏi bản cứng.
-- Chọn người làm form hộ (nếu đăng ký giúp người khác).
+### Bước 2: Điền thông tin cơ bản & Đính kèm
+* **Tiêu đề (Mục 5):** Điền tiêu đề tài liệu.
+* **Đính kèm tài liệu (Mục 6):** Tải lên các file hóa đơn, vận đơn, phiếu giao nhận để làm căn cứ đối chiếu.
+* **Người dùng:** Hệ thống mặc định điền tên người đăng nhập.
 
-### Bước 3: Chọn nguồn thanh toán & Cơ chế kéo chuỗi liên kết
-Để thực hiện gom và xác nhận chi tiền:
-- **Cách 1 — Liên kết từ các Đơn mua hàng (Expense Report / PO) đã duyệt:**
-  - Nhấn nút **"Liên kết tài liệu"** (1).
-  - Hộp thoại popup hiện ra, ở combo box chọn loại tài liệu liên kết → Nhấn **"Kiểm tra"** để tải danh sách các form Expense Report đã approved.
-  - Tích chọn một hoặc nhiều Đơn Mua Sắm đã được phê duyệt ở bước trước để ghim lên form. **Cơ chế kéo chuỗi** này cho phép gom nhiều form mua hàng thành một lệnh thanh toán duy nhất.
-- **Cách 2 — Thêm trực tiếp đối tác (Vendor):**
-  - Nhấn nút thêm trực tiếp vendor (2) cần thanh toán nếu không cần liên kết form PO trước đó.
+### Bước 3: Liên kết tài liệu đã duyệt ở thượng nguồn
+* Click nút **"Liên kết Tài liệu"** (Mục 7) để tìm kiếm và ghim các tờ trình xin mua/đề xuất chi phí (`Expense Report` hoặc `PO`) đã được duyệt trước đó.
 
-### Bước 4: Chọn tài khoản thanh toán và Tín dụng (Credit Account)
-- Bắt buộc click chọn nút **"Tín dụng"** để chọn tài khoản thanh toán tiền, loại hóa đơn.
-- **Chọn đúng loại tài khoản thanh toán theo đồng tiền giao dịch:**
+### Bước 4: Kiểm tra thông tin Đối tác & Ngân hàng
+* Sau khi liên kết, thông tin đối tác (Mã đối tác, mã số ĐKKD) và ngân hàng thụ hưởng sẽ tự động hiển thị.
+* Nếu đối tác thay đổi số tài khoản nhận tiền, nhấp vào nút **"Thay đổi tài khoản"** để cập nhật.
 
-| Trường hợp mua hàng | Tài khoản thanh toán bắt buộc chọn |
-|----------------------|-----------------------------------|
-| Mua hàng **trong nước** (VNĐ) | Tài khoản ngân hàng **VNĐ Việt Nam** |
-| Mua hàng **nước ngoài** (Ngoại tệ) | Tài khoản ngân hàng **USD** |
+### Bước 5: Cấu hình Tài khoản Nợ (Debit Account - Mục 8)
+* Nhấp nút **"Chọn Tài khoản"** bên cột **Nợ** để mở popup tìm kiếm.
+* **Quy tắc định tuyến tài khoản Nợ (Chi phí):**
+  * **Bộ phận sản xuất (Kho NVL, Kho thành phẩm, Chuyền SX):** Tìm kiếm và chọn mã tài khoản bắt đầu bằng **`627`** (Ví dụ: `627..` chi phí sản xuất chung).
+  * **Bộ phận hỗ trợ (Support, EA, EHS, Finance, LOG, PUR, RnD):** Tìm kiếm và chọn mã tài khoản bắt đầu bằng **`642`** (Ví dụ: `64231` - Chi phí văn phòng phẩm/Office supplies, `64216` - Welfare, `64287` - Thuế phí...).
+  * **Tài sản / Hàng hóa trị giá từ 30 triệu VND trở lên:** Chọn mã tài khoản đầu **`241`** (Xây dựng dở dang/Mua sắm TSCĐ). Nếu phân vân, bắt buộc liên hệ team Kế toán để làm rõ trước khi chọn.
+  * *Lưu ý:* Chi phí tiền lương sẽ được hướng dẫn theo quy trình riêng.
+* **Chọn tài khoản thuế GTGT tương ứng:** Sau khi chọn tài khoản chi phí, chọn tài khoản thuế GTGT đầu vào bắt đầu bằng **`133`** (thông thường chọn **`13311`** cho hàng hóa trong nước; đối với hàng mua ở nước ngoài thì không cần chọn tài khoản thuế).
 
-### Bước 5: Chọn mã tài khoản (Bản ghi nợ)
-- Click vào nút **"Bản ghi nợ"** → Cửa sổ mới hiển thị danh mục hệ thống tất cả mã tài khoản theo từng loại hàng.
-- Tìm kiếm và chọn mã tài khoản phù hợp với loại hàng cần thanh toán (Bút toán Phân kỳ Cost).
+### Bước 6: Cấu hình Tài khoản Có (Credit Account - Mục 9)
+* Nhấp nút **"Chọn Tài khoản"** bên cột **Có** để mở popup tìm kiếm.
+* **Quy tắc chọn tài khoản Có:**
+  * **Thanh toán nhà cung cấp trong nước bằng VND:** Chọn mã tài khoản **`33111`** (Short term trade account payable - VND).
+  * **Thanh toán nhà cung cấp nước ngoài bằng ngoại tệ (USD):** Chọn mã tài khoản **`33112`** (Short term trade account payable - USD).
 
-### Bước 6: Điền thông tin hóa đơn và chi phí
-| Trường | Mô tả |
-|--------|-------|
-| **Loại hóa đơn (1)** | Chọn kiểu hóa đơn tương ứng (Hóa đơn GTGT, v.v.) |
-| **Phòng ban chịu chi phí (2)** | Chọn phòng ban gánh chịu chi phí của mặt hàng này |
+### Bước 7: Cấu hình Ngày thanh toán & Ngày dự kiến cấp vốn
+* **Ngày dự kiến cấp vốn Yêu cầu (Mục 10):** *Không điền* trừ khi có lý do đặc biệt cần thanh toán vào ngày khác ngày hệ thống đã thiết lập sẵn.
+* **Ngày dự kiến cấp vốn (Mục 11):** Chọn loại ngày dự kiến thu/chi từ dropdown tương ứng với loại chi phí: *Lương, Hóa đơn điện, Trả nợ trụ sở chính, Hóa đơn nước / Chi phí Viễn thông, Vật tư (Trả trước), Kết thúc vật tư, Vật tư, Thuế thu nhập cá nhân, Chi phí & Chi phí linh tinh, Thuế hải quan*.
+* **Ngày phát hành (Mục 12):** Điền ngày hóa đơn hoặc ngày của tháng ghi nhận chi phí đó.
 
-### Bước 7: Chọn ngày thanh toán
-Phòng Kế toán sẽ có lịch giải ngân cố định trước:
-- **Ngày thanh toán cố định:** Ngày đã fix sẵn theo quy định giải ngân hàng tháng của công ty (Ví dụ: **ngày 15** và **ngày 30** hàng tháng).
-- **Ngày user tự chọn:** Chọn ngày khác theo nhu cầu thực tế của User. Tuy nhiên, để được phê duyệt, User **bắt buộc phải thỏa thuận trước** với phòng Kế toán, nếu không kế toán có quyền từ chối ngày thanh toán.
+### Bước 8: Chọn loại chứng từ & Trung tâm Chi phí (Cost Center)
+* **Loại Chứng từ (Mục 13):**
+  * Chọn **`Tax bill`** nếu thanh toán dựa trên hóa đơn GTGT/hóa đơn bán hàng chính thức.
+  * Chọn **`bill`** nếu thanh toán cho các khoản chi phí không có hóa đơn GTGT.
+* **Trung tâm Chi phí (Mục 14):** Chọn đúng bộ phận/phòng ban phát sinh chi phí này.
+* **Trường hợp hóa đơn cho nhiều bộ phận:** Nhấp nút **"+ Thêm"** (Add) bên dưới lưới chi tiết để tách nhỏ giá trị hóa đơn và chọn trung tâm chi phí tương ứng cho từng phần.
 
-### Bước 8: Trường hợp mua hàng có VAT / Ngoại tệ
+### Bước 9: Thiết lập Loại Thuế (Mục 15)
+* Chọn loại thuế suất GTGT tương ứng từ dropdown:
+  * Chọn **`[21] Taxation (purchase tax invoice)`** nếu thuế suất hóa đơn là **10%**.
+  * Chọn **`[71] Taxation (VAT 8)`** nếu thuế suất hóa đơn là **8%**.
+  * Chọn **`[22] Non-Deduction (tax invoice)`** nếu không có thuế.
 
-| Trường hợp | VAT | Ngoại tệ & Tỷ giá |
-|-----------|-----|----------|
-| Mua hàng **trong nước** | Phải nhập VAT | Không cần nhập tỷ giá |
-| Mua hàng **nước ngoài** | Không cần VAT | Cần chọn tỷ giá (tự động nội suy tại thời điểm làm form) |
+### Bước 10: Khai báo ngoại tệ bổ sung (nếu có - Mục 16 & 17)
+* Phần này tự động xuất hiện khi chọn tài khoản Có là **`33112`** (Thanh toán USD).
+* **Loại tiền tệ (Mục 16):** Nhập **`USD`**.
+* **Số tiền ngoại tệ (Mục 17):** Nhập số tiền cần thanh toán bằng ngoại tệ. Hệ thống tự động nhân tỷ giá hối đoái thực tế để quy đổi ra Tổng giá cung ứng & Thuế GTGT bằng VND.
 
-> ⚠️ Cả 2 trường hợp **đều phải nhập số tiền của nhà cung cấp**.
-
-### Bước 9: Gửi đi duyệt
-- Nhấn nút **"Submit"** (Gửi đi) (Step 3) để lưu lại toàn bộ thông tin.
-- Nhấn **"Confirm"** (Xác nhận) (Step 4) để chốt dữ liệu, sau bước này thông tin form sẽ bị khóa không thể chỉnh sửa.
+### Bước 11: Nhập nội dung và Gửi duyệt (Mục 18 & 19)
+* **Nội dung (Mục 18):** Ghi rõ nội dung và lý do thanh toán chi tiết.
+* **Hành động (Mục 19):**
+  * Nhấn **"Trình duyệt"** để gửi form đi phê duyệt.
+  * Nhấn **"Lưu nháp"** nếu muốn lưu lại để tiếp tục chỉnh sửa sau.
+  * Nhấn **"Xem trước"** để xem trước layout biểu mẫu.
 
 ---
 

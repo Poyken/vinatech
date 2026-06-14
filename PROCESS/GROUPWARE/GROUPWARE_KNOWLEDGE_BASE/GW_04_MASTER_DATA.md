@@ -154,29 +154,44 @@ Tiến trình đồng bộ BOM từ ERP/Groupware sang MES sẽ tự động ch�
 **Vào:** Electronic Document → Basic → Partner Management
 
 ### 4.1 Quy trình đăng ký mới:
-1. **Chọn line phê duyệt:** Chọn line có sẵn hoặc thiết lập người duyệt.
-2. **Điền thông tin cơ bản:** Tiêu đề, đính kèm tài liệu doanh nghiệp, điền người làm hộ (nếu đăng ký giúp người khác - hệ thống mặc định lấy tên người đăng nhập).
-3. **Các trường thông tin bắt buộc:**
-   - **Quốc gia:** Nước đặt trụ sở đối tác.
-   - **Tên công ty:** Tên đăng ký doanh nghiệp (DKKD) đầy đủ.
-   - **Người đại diện:** Tên Giám đốc đại diện pháp lý.
-   - **Email:** Email liên hệ giao dịch chính.
-   - **Mã số thuế:** ⚠️ **Bắt buộc nhập chính xác tuyệt đối**.
-   - **Danh mục thuế:** Thường chọn **"Người nộp thuế chung"** (do doanh nghiệp thường có cả hoạt động mua và bán).
-   - **Công ty chính/con:** Thường chọn **N** (Không phải công ty con).
-   - **Định dạng hóa đơn:** Chọn định dạng hóa đơn phát hành của đối tác.
-   - **Mục đích:** Phân loại định tuyến ngầm (Khách hàng bán hàng/Khách Bán, Khách hàng mua hàng/Khách Mua, Công ty thẻ tín dụng, Đối tác ngân hàng).
-   - **Phân loại:** Mua, Bán, hoặc Khác.
-   - **Loại hình & Lĩnh vực kinh doanh:** Điền ngành nghề, lĩnh vực đối tác hoạt động.
-   - **Địa chỉ chi tiết:** Nhập địa chỉ chi tiết (thường nhập cả địa chỉ tiếng Anh/Hàn và tiếng Việt vào 2 trường địa chỉ tương ứng).
-   - **Trạng thái:** Còn hoạt động hay không.
-   - **Sử dụng:** Chọn **Use** để kích hoạt sử dụng ngay trên toàn hệ thống cho mọi người dùng, **không chọn** *For mass use* (trạng thái nháp, thụ động chưa sử dụng).
-4. **Thông tin ngân hàng giao dịch:**
-   - Chọn ngân hàng giao dịch của đối tác.
-   - Nhập chính xác số tài khoản và tên tài khoản/số thẻ thụ hưởng của đối tác.
-5. **Thực hiện gửi duyệt:**
-   - Viết ghi chú chi tiết về đối tác (ở khung nội dung).
-   - Nhấn **"Gửi đi"** (1) để trình duyệt, hoặc **"Lưu trữ tạm thời"** (2) để nháp, hoặc **"Xem trước"** (4) để review lại form, hoặc **"Reset"** (5) để làm lại mới hoàn toàn.
+
+#### Bước 1: Thiết lập phê duyệt & Thông tin chung
+1. **Chọn line phê duyệt:** Click chọn nút **"Chọn dòng phê duyệt +"** (nút số 4 bên góc phải) để thiết lập tuyến duyệt.
+2. **Tiêu đề:** Đặt tiêu đề biểu mẫu (mặc định hiển thị `Partner Document`).
+3. **Đính kèm tài liệu bắt buộc:** 
+   * Bắt buộc tải lên **Giấy chứng nhận đăng ký doanh nghiệp (DKKD)**. *(Ngoại trừ: Các nhà cung cấp dịch vụ ăn uống, tiếp khách phát sinh nhỏ lẻ không thường xuyên thì không cần đính kèm).*
+   * Bắt buộc tải lên **Thông báo về thông tin ngân hàng thụ hưởng** (văn bản chính thức xác nhận thông tin chuyển khoản có ký đóng dấu của đối tác).
+4. **Người dùng:** Hệ thống mặc định điền tên người tạo. Điền người sử dụng thực tế nếu làm hộ người khác.
+
+#### Bước 2: Khai báo Thông tin Cơ bản Đối tác (Thông tin bắt buộc)
+1. **Pháp nhân (Company Selection):** Phía Việt Nam bắt buộc chọn pháp nhân **`VINATech VINA Co., Ltd (2000)`** (nằm bên cạnh mã HQ `1000`).
+2. **Quốc gia:** Chọn quốc gia đặt trụ sở chính của đối tác.
+3. **Tên Đối tác:** Nhập đầy đủ tên công ty theo đăng ký kinh doanh.
+4. **Tên đại diện:** Nhập tên người đại diện pháp luật (Giám đốc/Tổng giám đốc).
+5. **Địa chỉ Email:** Email giao dịch và nhận hóa đơn chính thức.
+6. **Mã số thuế:** ⚠️ **Bắt buộc nhập chính xác tuyệt đối**.
+7. **Loại Thuế (Tax Type):** Chọn **"thông thường"** (Normal).
+8. **Mục đích:** Phân loại định tuyến giao dịch (Khách Bán - Vendor, Khách Mua - Customer, Công ty thẻ tín dụng, Đối tác ngân hàng).
+9. **Địa chỉ & Địa chỉ chi tiết:** Nhập địa chỉ trụ sở chính (thường điền cả địa chỉ tiếng Anh/Hàn và tiếng Việt vào hai ô địa chỉ).
+10. **Tình trạng Kinh doanh:** Trạng thái hoạt động (mặc định là `N` - Chưa khóa).
+11. **Sử dụng:** Bắt buộc chọn **Use** để kích hoạt sử dụng ngay trên toàn hệ thống cho mọi người dùng, **không chọn** *For mass use* (trạng thái nháp).
+
+#### Bước 3: Khai báo Thông tin Ngân hàng giao dịch
+* Chọn loại Ngân hàng thụ hưởng.
+* Nhập chính xác số tài khoản và tên chủ tài khoản thụ hưởng.
+* *Lưu ý:* Trường hợp thanh toán bằng tiền mặt (các khoản chi phí tiếp khách nhỏ lẻ, không cần chuyển khoản ngân hàng) thì không cần điền thông tin này.
+
+#### Bước 4: Khai báo Thông tin Tín dụng (Credit Information)
+* **Quản lý Tín dụng (Credit Management):**
+  * Nếu đối tác là **Nhà cung cấp (Vendor/Supplier):** Bắt buộc chọn **`N`**.
+  * Nếu đối tác là **Khách hàng (Customer):** Bắt buộc chọn **`Y`**.
+* **Nhóm Tín dụng (Credit Group):** Nếu đối tác là Khách hàng (`Y`), bắt buộc chọn **"Thông thường"**.
+* **Hạn mức tín dụng & Ngày hạn mức:** Điền nếu có thỏa thuận hạn mức công nợ với khách hàng.
+
+#### Bước 5: Điền thông tin bổ sung và gửi duyệt
+* **Thông tin bổ sung:** Nhập số điện thoại trụ sở chính và người liên hệ trực tiếp của đối tác (nếu có).
+* **Nội dung (Ghi chú):** Nhập chi tiết lý do đề xuất lựa chọn nhà cung cấp/đối tác này vào khung soạn thảo.
+* **Gửi duyệt:** Nhấn **"Gửi đi"** (1) để trình ký, hoặc **"Lưu trữ tạm thời"** (2) để lưu nháp vào Temporary Storage để chỉnh sửa sau.
 
 ### 4.2 Cập nhật thông tin đối tác:
 **Vào:** Electronic Document → Basic → Modify Partner Management
