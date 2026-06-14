@@ -1,7 +1,7 @@
-# 📝 Daily Operational Playbook — Vận Hành & Giám Sát MES Vinatech Hằng Ngày
+# 📝 Daily Operational Playbook — Vận Hành & Giám Sát Hệ Thống Vinatech Hằng Ngày
 
-> **Cập nhật:** 2026-06-14 | **Dành cho:** Kỹ sư hệ thống MES Vinatech & AI Agent (Antigravity)
-> ← [Về INDEX](KB_INDEX.md) | [Nhật ký Sự cố & Vận hành](MES_OPERATIONAL_LOG.md)
+> **Cập nhật:** 2026-06-14 | **Dành cho:** Kỹ sư hệ thống Vinatech & AI Agent (Antigravity)
+> ← [Về INDEX](README.md) | [Nhật ký Sự cố & Vận hành](MES_OPERATIONAL_LOG.md)
 
 Tài liệu này chứa quy trình kiểm tra sức khỏe hệ thống (Health Check) hàng ngày, giúp phát hiện sớm các sự cố về nghẽn cơ sở dữ liệu, lỗi đồng bộ ERP, hoặc lỗi dữ liệu hiện trường. Kỹ sư vận hành hoặc AI Agent có thể chạy các câu lệnh SQL dưới đây thông qua SSMS hoặc `run_query.ps1` để giám sát hệ thống.
 
@@ -10,7 +10,7 @@ Tài liệu này chứa quy trình kiểm tra sức khỏe hệ thống (Health 
 ## 🧭 Lịch Trình Giám Sát Hằng Ngày (Daily Checklist)
 
 | Thời gian | Tác vụ kiểm tra | Mục tiêu | Lệnh SQL tham chiếu |
-|:---|:---|:---|:---|
+| :--- | :--- | :--- | :--- |
 | **08:00 (Đầu ca sáng)** | Kiểm tra Block Sessions (Khóa bảng) | Phát hiện nghẽn database gây treo Client | [Mục 1.1](#11-kiểm-tra-tranh-chấp-tài-nguyên-block-sessions) |
 | **08:15** | Kiểm tra trạng thái SQL Agent Jobs | Xác nhận các Job đồng bộ ERP/Groupware chạy thành công | [Mục 1.2](#12-kiểm-tra-trạng-thái-sql-agent-jobs) |
 | **08:30** | Kiểm tra Log lỗi Stored Procedure | Tìm các lỗi nghiệp vụ phát sinh từ tối hôm trước | [Mục 1.3](#13-quét-log-lỗi-stored-procedures-gần-đây) |
@@ -152,4 +152,4 @@ ORDER BY [Số_ngày_quá_hạn] ASC;
 2. **Khi phát hiện bất thường:** 
    - Sao chép log lỗi hoặc truy vấn SQL bị fail và dán vào bảng sự cố trong [MES_OPERATIONAL_LOG.md](MES_OPERATIONAL_LOG.md).
    - Tag AI `@Antigravity` và yêu cầu: *"Check sự cố ID [XX] trong log vận hành"*.
-   - AI sẽ tự động phân tích cấu trúc Stored Procedure liên quan bằng `db_sync_tool.ps1` và đưa ra giải pháp khắc phục.
+   - AI sẽ tự động phân tích cấu trúc Stored Procedure liên quan và đưa ra giải pháp khắc phục dựa trên các Volumes tương ứng.

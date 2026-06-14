@@ -1,22 +1,22 @@
-# 📓 Operational & Troubleshooting Log — Nhật Ký Sự Cố Vận Hành MES Vinatech
+# 📓 Operational & Troubleshooting Log — Nhật Ký Sự Cố Vận Hành Hệ Thống Vinatech
 
 > **Mục tiêu:** Nơi ghi nhận, theo dõi và giải quyết các sự cố phát sinh tại hiện trường sản xuất xưởng Vinatech.
 > **Nguyên tắc phối hợp:** 
 > 1. **User** ghi nhận triệu chứng, mã lỗi, và mã Lot/Barcode bị lỗi vào phần **[Sự Cố Mới Phát Sinh]**.
 > 2. **AI Agent** đọc log, chạy truy vấn DB kiểm tra, đề xuất SQL fix script an toàn (bọc transaction) hoặc giải pháp cấu hình, cập nhật trạng thái sự cố.
-> ← [Về INDEX](KB_INDEX.md) | [Cẩm nang giám sát hàng ngày](MES_DAILY_PLAYBOOK.md)
+> ← [Về INDEX](README.md) | [Cẩm nang giám sát hàng ngày](MES_DAILY_PLAYBOOK.md)
 
 ---
 
 ## 📊 Bảng Theo Dõi Sự Cố Hệ Thống (Incident Tracking Board)
 
 | ID | Ngày | Màn hình | Đối tượng bị lỗi | Triệu chứng & Log thô | Trạng thái | Giải pháp & Script khắc phục | Người xử lý |
-|:---|:---|:---|:---|:---|:---|:---|:---|
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | **#001** | 2026-06-10 | **V-22** (Dry Oven) | Lot `ML260609001` | Lò sấy Dry Oven bị bypass kiểm tra công đoạn do sai thứ tự ưu tiên logic `AND/OR` trong SP `usp_VN_DryOver`. | **RESOLVED** | Đã triển khai Hotfix `01_FIX_DRY_OVEN_OPERATOR_PRIORITY.sql` để sửa mức ưu tiên toán tử trong SP. | AI & DBA |
-| **#002** | 2026-06-11 | **B523** (Đóng gói) | Box `PKHN023117` | Lỗi gộp box đúp dẫn đến số lượng túi con bị dồn về `0` hoặc âm tại Hà Nam (Lỗi HN544). | **RESOLVED** | Chạy script rã box và cập nhật lại số lượng thực tế cho Lot gốc. Chi tiết tại [KB_14 § 4.3](KB_14_TRACE_BUG_METHODOLOGY.md#43-lỗi-gộp-box-2-lần-bị-nhầm-hủy-gộp-box--rã-box). | AI |
-| **#003** | 2026-06-12 | **HNC321** (Phế phẩm) | Barcode `ve260509-001` | Nhập phế công đoạn `VE08` báo lỗi tiếng Hàn: "Không có lịch sử xử lý sản lượng ở công đoạn trước". | **RESOLVED** | Chèn bản ghi lịch sử quét ảo cho trạm trước (`VE07`) để thông luồng validation. Chi tiết tại [KB_14 § 4.6](KB_14_TRACE_BUG_METHODOLOGY.md#46-lỗi-nhập-phế-màn-hnc321-báo-lỗi-tiếng-hàn-이전-공정에-실적처리-이력이-없습니다). | AI |
-| **#004** | 2026-06-13 | **Mixing** (Cân điện cực) | Lot `HCE-202` | Màn hình cân nhảy bước Binder trước bột Than làm kẹt mẻ trộn Mixing. | **RESOLVED** | Công nhân bỏ tích checkbox "CA ĐÊM CHUẨN BỊ TRƯỚC" trên UI. IT chạy script reset dữ liệu cân tạm của Lot. [KB_14 § 4.7](KB_14_TRACE_BUG_METHODOLOGY.md#47-lỗi-nhảy-bước-cân-điện-cực-mixing-phần-mềm-electrodeprocess). | AI & IT |
-| **#005** | 2026-06-14 | **B552** (Slitting) | Model `3582-600F CY` | Model mới không tạo được tem điện cực do thiếu cấu hình quy cách Slitting. | **RESOLVED** | Thêm cấu hình quy cách vào bảng `stb_slittinglocationconfig_vvt`. Chi tiết tại [KB_14 § 4.8](KB_14_TRACE_BUG_METHODOLOGY.md#48-điện-cực-mã-liệu-3582-600f-cy-không-tạo-được-tem). | AI |
+| **#002** | 2026-06-11 | **B523** (Đóng gói) | Box `PKHN023117` | Lỗi gộp box đúp dẫn đến số lượng túi con bị dồn về `0` hoặc âm tại Hà Nam (Lỗi HN544). | **RESOLVED** | Chạy script rã box và cập nhật lại số lượng thực tế cho Lot gốc. Chi tiết tại [Tập 3 (B523)](VOL_03_SCREEN_OPERATIONS_AND_TROUBLESHOOTING.md#b523--divide-packaging-gộp-box-nhỏ). | AI |
+| **#003** | 2026-06-12 | **HNC321** (Phế phẩm) | Barcode `ve260509-001` | Nhập phế công đoạn `VE08` báo lỗi tiếng Hàn: "Không có lịch sử xử lý sản lượng ở công đoạn trước". | **RESOLVED** | Chèn bản ghi lịch sử quét ảo cho trạm trước (`VE07`) để thông luồng validation. Chi tiết tại [Tập 3 (B530)](VOL_03_SCREEN_OPERATIONS_AND_TROUBLESHOOTING.md#b530--production-route-input-chốt-sản-lượng-công-đoạn). | AI |
+| **#004** | 2026-06-13 | **Mixing** (Cân điện cực) | Lot `HCE-202` | Màn hình cân nhảy bước Binder trước bột Than làm kẹt mẻ trộn Mixing. | **RESOLVED** | Công nhân bỏ tích checkbox "CA ĐÊM CHUẨN BỊ TRƯỚC" trên UI. IT chạy script reset dữ liệu cân tạm của Lot. [Tập 3 (B597)](VOL_03_SCREEN_OPERATIONS_AND_TROUBLESHOOTING.md#b597--material-scanning-quét-nạp-nguyên-vật-liệu). | AI & IT |
+| **#005** | 2026-06-14 | **B552** (Slitting) | Model `3582-600F CY` | Model mới không tạo được tem điện cực do thiếu cấu hình quy cách Slitting. | **RESOLVED** | Thêm cấu hình quy cách vào bảng `stb_slittinglocationconfig_vvt`. Chi tiết tại [Tập 3 (B552)](VOL_03_SCREEN_OPERATIONS_AND_TROUBLESHOOTING.md#b552--slitting-result-chia-cuộn-điện-cực). | AI |
 
 ---
 
