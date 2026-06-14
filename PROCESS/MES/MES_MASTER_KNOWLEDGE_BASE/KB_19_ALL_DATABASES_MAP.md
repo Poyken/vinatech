@@ -2,6 +2,8 @@
 
 > **Mục đích:** Hướng dẫn toàn diện về kiến trúc và cấu trúc dữ liệu của 13 hệ thống cơ sở dữ liệu vận hành tại Vinatech Việt Nam. Tài liệu này đóng vai trò là cẩm nang kỹ thuật giúp kỹ sư hệ thống, lập trình viên và AI hiểu rõ vai trò, cấu trúc bảng cốt lõi, cơ chế liên thông nghiệp vụ liên hệ thống (Data Pipelines) và cách viết các truy vấn đối soát dữ liệu (Golden Audit Queries).
 >
+> 📖 **Dành cho người mới:** Nếu bạn mới tiếp cận hệ thống lần đầu, hãy đọc **[Cẩm nang nhập môn hệ thống liên thông (KB_20)](KB_20_BEGINNER_SYSTEM_FLOW_HANDBOOK.md)** trước để hiểu toàn cảnh và luồng vận hành của các phân hệ.
+>
 > *Quy tắc vận hành tối thượng: Chỉ thực hiện truy vấn đọc dữ liệu (`SELECT` kết hợp `WITH(NOLOCK)`). Tuyệt đối KHÔNG chạy các câu lệnh thay đổi dữ liệu (`INSERT`, `UPDATE`, `DELETE`, `DROP`) trên các database production.*
 
 ---

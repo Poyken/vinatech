@@ -31,6 +31,7 @@
 | [KB_15_EA_MES_CASE_STUDY_XUONG_MAY.md](KB_15_EA_MES_CASE_STUDY_XUONG_MAY.md) | Tổng hợp các Case Study thực tế dành cho kỹ sư EA/MES khi xuống xưởng | Vận hành/Hỗ trợ |
 | [KB_18_DATABASE_SCHEMA_QUICKREF.md](KB_18_DATABASE_SCHEMA_QUICKREF.md) | Bảng tra cứu nhanh các cột dữ liệu quan trọng, **Sơ đồ ERD cốt lõi**, **Bản đồ 976 bảng, SPs & 1442 màn hình** | DB/Schema |
 | [KB_19_ALL_DATABASES_MAP.md](KB_19_ALL_DATABASES_MAP.md) | **Bản đồ chi tiết 13 cơ sở dữ liệu hệ thống (Andon, NEOE, Groupware, POP, WCMS, v.v.), cơ chế liên thông & truy vấn mẫu** | DB/Integration |
+| [KB_20_BEGINNER_SYSTEM_FLOW_HANDBOOK.md](KB_20_BEGINNER_SYSTEM_FLOW_HANDBOOK.md) | **Cẩm nang nhập môn hệ thống liên thông dành cho người mới hoàn toàn (GW ↔ CSDL ↔ MES)** | Onboarding/Flows |
 | [KB_25_VINAENESSOL_HUNG_YEN.md](KB_25_VINAENESSOL_HUNG_YEN.md) | Phân hệ VinaEnesol, đóng gói & in nhãn (Inner/Outer Box), khớp box (Box Matching), Vận hành Hưng Yên | D000, D051, D100, D110, HungYenFactory |
 | [KB_26_LIEN_KET_HE_THONG_VA_BUG_LOGIC.md](KB_26_LIEN_KET_HE_THONG_VA_BUG_LOGIC.md) | Liên kết WMS-Sản xuất-QC-Xuất hàng, Cơ chế trừ kho Trigger, Tác vụ ngầm & Agent Jobs, **Cấu hình DB Mail cho cảnh báo** | B597, B530, C443, C512, C530, C546, HN551, FG00 |
 | [KB_27_SCM_REWORK_TRA_HANG_KIEM_KE.md](KB_27_SCM_REWORK_TRA_HANG_KIEM_KE.md) | Phân hệ SCM (Sales Order/Delivery), Rework (Làm lại), Trả hàng (Returns & RMA), Kiểm kê (Stocktaking F750) | F750, B618, SCM01, FG00, HN551 |
