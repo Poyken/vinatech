@@ -451,4 +451,88 @@ ORDER BY PRH.ProdDateTime ASC;
 
 ---
 
+## 🧬 5. Tư Duy Hệ Thống & Phân Tầng Kiến Trúc (System Thinking & Architectural Layering)
+
+Để vận hành hệ thống Vinatech ở mức tốt nhất, chúng ta cần tư duy về 13 cơ sở dữ liệu này dưới dạng các phân tầng kiến trúc logic thay vì các DB độc lập. Sự liên kết này được chia làm 5 tầng chức năng:
+
+| Phân Tầng | Các Cơ Sở Dữ Liệu | Vai Trò Trong Chuỗi Giá Trị Vận Hành |
+| :--- | :--- | :--- |
+| **1. Lớp Giao Dịch Cốt Lõi (Core Transaction Layer)** | `NEOE` (ERP), `SmartFactoryV2` (MES), `VINATECH_GROUP` (Groupware) | Lưu dữ liệu gốc (Master Data), kế hoạch sản xuất chính, lệnh sản xuất và hạch toán kế toán tổng hợp. Đây là "xương sống" của Vinatech. |
+| **2. Lớp Tích Hợp Văn Phòng & Cộng Tác (Office Collaboration Layer)** | `DZICUBE` (Bizbox Alpha), `streamdocs` (PDF Viewer), `VINATECH_SPREADSHEET` (Excel Online) | Hỗ trợ phê duyệt hành chính từ xa, đính kèm bảng tính cộng tác động và bảo mật hiển thị tài liệu thiết kế sản phẩm. |
+| **3. Lớp IoT Nhà Xưởng & Thời Gian Thực (Shop Floor IoT Layer)** | `VINATECH_POP` (POP Kiosk), `AndonDB` (Alerts), `VINATECH_WEBSOCKET` (WS Server) | Kết nối máy móc vật lý (PLC), bắt sự kiện dừng máy đầu line và chuyển tiếp tín hiệu thời gian thực lên bảng giám sát. |
+| **4. Lớp An Ninh & Tuân Thủ (Security & Compliance Layer)** | `WCMS_STANDARD_NEW` (CMS), `VINATECH_RESTFUL` (SSO), `VINATECH_DATA_KSOX` (K-SOX) | Bảo mật xác thực một lần, whitelist IP API Gateway, quản lý dòng tiền tự động với ngân hàng và kiểm toán chốt kiểm soát nội bộ. |
+| **5. Lớp Thử Nghiệm & Lưu Trữ Lịch Sử (Dev & Archive Layer)** | `SmartFactoryIncubator` (R&D), `erpdb` (Legacy ERP) | Môi trường Sandbox thử nghiệm sản phẩm mới (R&D) và kho dữ liệu ERP cũ trước khi chuyển đổi hệ thống. |
+
+---
+
+## 🛠️ 6. Các Kịch Bản Lỗi Vận Hành Thực Tế & Cách Khắc Phục (Troubleshooting Scenarios)
+
+Dưới đây là cẩm nang hướng dẫn xử lý các sự cố đồng bộ dữ liệu chéo giữa các cơ sở dữ liệu thường gặp trong thực tế vận hành:
+
+### Kịch Bản 6.1: Cờ đồng bộ `ERP_FLAG` của sao kê ngân hàng bị kẹt trong `WCMS_STANDARD_NEW`
+*   **Triệu chứng:** Sao kê ngân hàng đã cào về CMS thành công nhưng không đẩy được bút toán kế toán sang ERP `NEOE`. Cột `ERP_FLAG` trong bảng `WCMS_ACCOUNT_TRNX_LOG` ở trạng thái `'E'` (Error) hoặc giữ nguyên `'N'` (Pending) không chuyển sang `'Y'`.
+*   **Nguyên nhân:** Lỗi kết nối API Gateway giữa CMS và ERP, hoặc mã đối tác/tài khoản kế toán định khoản bị trống/lỗi cấu trúc trên ERP.
+*   **Phương án xử lý (SELECT-only & Hướng dẫn phục hồi):**
+    1. *Tìm kiếm các giao dịch bị kẹt:*
+       ```sql
+       SELECT ACCOUNT_TRNX_LOG_UUID, ACCOUNT_NO, TRNX_DATE, IN_AMOUNT, OUT_AMOUNT, ERP_TX_MSG 
+       FROM WCMS_STANDARD_NEW.dbo.WCMS_ACCOUNT_TRNX_LOG WITH(NOLOCK)
+       WHERE ERP_FLAG IN ('N', 'E');
+       ```
+    2. *Hướng dẫn khắc phục:* Nếu lỗi do mã đối tác sai, cập nhật thông tin tài khoản đối tác trong `WCMS_BIZ_PARTNER_ACCOUNT` khớp với mã vendor ERP. Sau đó, DBA cần cập nhật cờ `ERP_FLAG = 'N'` và xóa log lỗi `ERP_TX_MSG = NULL` để Agent Job quét và đẩy lại chứng từ trong chu kỳ tiếp theo.
+
+### Kịch Bản 6.2: Khóa Concurrency trong `VINATECH_SPREADSHEET` bị treo
+*   **Triệu chứng:** Người dùng mở bảng tính cộng tác trên Groupware báo lỗi: *"Tài liệu đang được chỉnh sửa bởi người dùng khác"* mặc dù người dùng kia đã tắt trình duyệt từ lâu.
+*   **Nguyên nhân:** Khi người dùng đóng tab trình duyệt đột ngột hoặc mất mạng, sự kiện ngắt kết nối WebSocket không kích hoạt được lệnh xóa bản ghi khóa phiên trong bảng `VINA_SPREAD_SHEET_OPEN`.
+*   **Phương án xử lý (SELECT-only & Hướng dẫn phục hồi):**
+    1. *Tra cứu phiên khóa đang bị treo:*
+       ```sql
+       SELECT SPREAD_SHEET_CHANNEL, NO_EMP, CD_COMPANY, SPREAD_SHEET_OPEN_REG_DATE 
+       FROM VINATECH_SPREADSHEET.dbo.VINA_SPREAD_SHEET_OPEN WITH(NOLOCK)
+       WHERE SPREAD_SHEET_CHANNEL = 'ID_BANG_TINH_BI_KHOA';
+       ```
+    2. *Hướng dẫn khắc phục:* Xác nhận với nhân viên có `NO_EMP` tương ứng xem họ có đang mở file thực tế không. Nếu không, DBA thực hiện lệnh `DELETE FROM VINATECH_SPREADSHEET.dbo.VINA_SPREAD_SHEET_OPEN WHERE SPREAD_SHEET_CHANNEL = 'ID_BANG_TINH_BI_KHOA' AND NO_EMP = 'MA_NHAN_VIEN'` để giải phóng khóa ghi lập tức.
+
+### Kịch Bản 6.3: Lỗi Collation Conflict khi đối chiếu dữ liệu lịch sử từ `erpdb`
+*   **Triệu chứng:** Khi chạy câu lệnh SQL JOIN đối chiếu danh mục vật tư cũ từ `erpdb` với danh mục vật tư hiện tại của MES `SmartFactoryV2` hoặc ERP `NEOE` báo lỗi:
+    `"Cannot resolve the collation conflict between 'Korean_Wansung_Unicode' and 'SQL_Latin1_General_CP1_CI_AS' in the JOIN operation."`
+*   **Nguyên nhân:** Database `erpdb` sử dụng collation Hàn Quốc (`Korean_Wansung_Unicode`) trong khi các database mới sử dụng collation chuẩn quốc tế/Việt Nam.
+*   **Phương án xử lý (SELECT-only):**
+    *   *Câu truy vấn đối chiếu chuẩn hóa Collation:*
+        ```sql
+        SELECT 
+            MES.MaterialCode AS [MES Code], 
+            MES.MaterialName AS [MES Name],
+            OLD.품목명 AS [Legacy Name]
+        FROM SmartFactoryV2.dbo.STB_MaterialMaster MES WITH(NOLOCK)
+        INNER JOIN erpdb.dbo.품목마스타 OLD WITH(NOLOCK) 
+            -- Ép kiểu collation về DATABASE_DEFAULT ở mệnh đề JOIN
+            ON MES.MaterialCode COLLATE DATABASE_DEFAULT = OLD.품목코드 COLLATE DATABASE_DEFAULT;
+        ```
+
+### Kịch Bản 6.4: Máy trạm POP không load được cấu hình thiết bị từ `VINATECH_POP`
+*   **Triệu chứng:** Màn hình Kiosk đầu chuyền hiển thị thông báo lỗi thiết bị hoặc không hiển thị thông số lò sấy/nhiệt độ hơi nước.
+*   **Nguyên nhân:** Địa chỉ MAC của PC trạm bị thay đổi (thay card mạng mới) dẫn đến bảng `VINA_PC_MAC` không ánh xạ được thiết bị, hoặc chuỗi JSON cấu hình `EQUIPMENT_SETTING_JSON` bị lỗi cú pháp.
+*   **Phương án xử lý (SELECT-only & Hướng dẫn phục hồi):**
+    1. *Kiểm tra địa chỉ IP và MAC hiện tại của trạm:*
+       ```sql
+       SELECT PC_MAC_ADDRESS, PC_IPV4_ADDRESS, EQUIPMENT_SETTING_IDS, SYSTEM_VERSION 
+       FROM VINATECH_POP.dbo.VINA_PC_MAC WITH(NOLOCK)
+       WHERE PC_IPV4_ADDRESS = 'IP_MAY_TRAM_DANG_LOI';
+       ```
+    2. *Hướng dẫn khắc phục:* Nếu địa chỉ MAC thực tế của máy trạm không trùng khớp với `PC_MAC_ADDRESS` trong DB, DBA cần cập nhật lại địa chỉ MAC mới vào bảng. Nếu do JSON lỗi, copy chuỗi `EQUIPMENT_SETTING_JSON` ra công cụ Lint để chuẩn hóa lại cú pháp JSON trước khi lưu lại.
+
+---
+
+## 🛡️ 7. Tiêu Chuẩn Bảo Mật & Phân Quyền Giữa Các Cơ Sở Dữ Liệu (Security & Authentication Matrix)
+
+Để đảm bảo an toàn thông tin, các cơ sở dữ liệu của Vinatech áp dụng 3 cơ chế xác thực chéo chặt chẽ:
+
+1.  **Xác thực thiết bị vật lý (Kiosk):** `VINATECH_POP` dùng `VINA_PC_MAC` để khóa chặt quyền điều khiển PLC của máy trạm theo đúng địa chỉ MAC mạng. Ngăn chặn việc cắm nhầm máy tính từ line này sang line khác điều khiển sai thông số.
+2.  **Bảo mật tài liệu PDF:** `streamdocs` dùng `pdf_auth` cấp khóa token thời gian thực (`session_token`) giới hạn IP và số lần mở tài liệu. Tuyệt đối không lưu link tĩnh của file bản vẽ thiết kế sản phẩm.
+3.  **Thu hồi quyền lập tức (Resignation Revoke):** `VINATECH_RESTFUL` chạy job liên tục đối chiếu tài khoản SSO `VINA_SSO_TOKEN` với danh sách nhân viên đã nghỉ việc (`EMP_STOP = 'Y'`) tại `VINATECH_GROUP.dbo.VINA_EMP`. Nếu phát hiện có Token hoạt động của nhân viên đã thôi việc, hệ thống tự động xóa Token đó để logout tài khoản trên tất cả các nền tảng (MES, Groupware, Portal, App) ngay lập tức.
+
+---
+
 *Tài liệu được biên soạn và chuẩn hóa dựa trên phân tích trực tiếp cấu trúc của toàn bộ 13 hệ thống cơ sở dữ liệu vật lý tại Vinatech Việt Nam.*
+
