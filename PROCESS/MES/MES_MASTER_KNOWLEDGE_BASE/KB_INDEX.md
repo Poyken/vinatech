@@ -4,7 +4,7 @@
 > **Cách dùng:** 
 > 1. Đọc file INDEX này trước để có cái nhìn tổng quan.
 > 2. **Tìm kiếm siêu tốc theo màn hình:** Nhấn `Ctrl + Shift + F` nhập `## Mã_Màn_Hình` (Ví dụ: `## C512`, `## B597`) để chuyển trực tiếp đến cẩm nang sửa lỗi theo Screen ID.
-> **Groupware KB:** Xem → [`../GROUPWARE_KNOWLEDGE_BASE/GW_INDEX.md`](../GROUPWARE_KNOWLEDGE_BASE/GW_INDEX.md)
+> **Groupware KB:** Xem → [GW_INDEX.md](../../GROUPWARE/GROUPWARE_KNOWLEDGE_BASE/GW_INDEX.md)
 
 ---
 
@@ -180,7 +180,7 @@
 
 ---
 
-> 📌 **Bảng DB & SP quan trọng:** Xem chi tiết tại [KNOWLEDGE.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/AI_AGENT_CONFIG/KNOWLEDGE.md) §1-2, [KB_18_DATABASE_SCHEMA_QUICKREF.md](KB_18_DATABASE_SCHEMA_QUICKREF.md) và [KB_19_ALL_DATABASES_MAP.md](KB_19_ALL_DATABASES_MAP.md).
-> 🛡️ **Nguyên tắc sửa DB:** Xem tại [RULES.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/AI_AGENT_CONFIG/RULES.md).
+> 📌 **Bảng DB & SP quan trọng:** Xem chi tiết tại [KNOWLEDGE.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/AI_AGENT_CONFIG/KNOWLEDGE.md) §1-2, [KB_18_DATABASE_SCHEMA_QUICKREF.md](KB_18_DATABASE_SCHEMA_QUICKREF.md) và [KB_19_ALL_DATABASES_MAP.md](KB_19_ALL_DATABASES_MAP.md).
+> 🛡️ **Nguyên tắc sửa DB:** Xem tại [RULES.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/AI_AGENT_CONFIG/RULES.md).
 
 *Cập nhật: 2026-06-14 | Tái cấu trúc tinh gọn tài liệu: Gộp toàn bộ 9 tệp tin trùng lặp nội dung*
