@@ -57,10 +57,14 @@ FROM STB_SetInfo WHERE Barcode = 'Mã_Barcode'
 SELECT ModelCode, OqcType, InspectionType, OqcInspectionRuleType
 FROM STB_ModelBasicInfo
 WHERE ModelCode = 'Mã_Model'
--- Nếu OqcType NULL hoặc InspectionType NULL → Chưa setup → Liên hệ anh Huy
--- Sau khi anh Huy setup xong → tắt C151, vào lại C512
+-- Nếu OqcType NULL hoặc InspectionType NULL → Chưa setup → Mở màn hình A410 để cấu hình OQC (hoặc chạy SQL set MANUAL / SAMPLE / BY_MODEL)
+-- Sau khi setup xong → Tắt và mở lại C151, vào lại C512
 
--- Bước 3 (Hà Nam): Kiểm tra Route bắt đầu
+-- Bước 3: Kiểm tra đã đăng ký hạng mục kiểm tra cho model chưa (Tránh lỗi tiếng Hàn "검사항목이 등록되어있지 않습니다")
+SELECT * FROM STB_MaterialQcInspectionItem WHERE MaterialCode = 'Mã_Model'
+-- Nếu không có dòng nào → Chưa đăng ký hạng mục kiểm tra → Cần sao chép từ model chị em trong DB hoặc cấu hình trên màn hình C151
+
+-- Bước 4 (Hà Nam): Kiểm tra Route bắt đầu
 SELECT CurrentRouteCode FROM STB_SetInfo WHERE Barcode = 'Mã_Barcode'
 -- Nếu bắt đầu từ VE02 → Không hiện ở C512 → Đây là thiết kế của hệ thống
 ```
@@ -181,6 +185,20 @@ WHERE LotID = 'ML...'
 ```
 
 > Các giá trị HOLDING thực tế: `HOLDING_VN_WH` (Bắc Ninh), `HOLDING_BG_WH` (Bắc Giang), `HOLDING_HN_WH` (Hà Nam)
+
+---
+
+### 7.9 B597 báo lỗi "String or binary data would be truncated" khi quét gộp nhiều mã điện cực (Model 3510 / 35105)
+
+**Nguyên nhân:** Khi quét gộp từ 5 mã barcode điện cực trở lên cho 1 Lot tại trạm B597, chuỗi ghép các barcode vượt quá giới hạn độ dài của cột `RawMaterialBarcode` trong bảng `STB_InputMaterialHistory` (được set là `NVARCHAR(100)`), dẫn đến lỗi truncation khi lưu. Đồng thời các biến tham số trong SP `usp_Vietnam_RawMaterialInputHist_uid` cũng bị giới hạn độ dài.
+
+**Cách khắc phục:**
+1. Tăng độ dài cột dữ liệu lên `NVARCHAR(1000)`:
+   ```sql
+   ALTER TABLE STB_InputMaterialHistory
+   ALTER COLUMN RawMaterialBarcode NVARCHAR(1000) NULL;
+   ```
+2. Cập nhật stored procedure `usp_Vietnam_RawMaterialInputHist_uid` để đổi kiểu dữ liệu của tham số `@pRawMaterialBarcode` và các biến nội bộ (như `@RawMaterialBarcode`, `@LotMaterialBarcode`) thành `NVARCHAR(1000)`.
 
 ---
 

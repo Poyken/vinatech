@@ -213,10 +213,31 @@ UPDATE STB_SavePackingTime_VVT SET PackQty = [Số_Đúng] WHERE LotNo = 'Mã_Lo
 ```
 Case 1: In label thẳng (không đổi) → PrintVJ = 0 trong STB_Vietnam_PackingPrinting
 Case 2: Đổi VV→VJ theo PartNo → PrintVJ = 1 trong STB_Vietnam_PackingPrinting
-Case 3: Ngoại lệ không đổi → Fix cứng trong SP usp_Vietnam_GetBoxIDForLotNo_VVT
+Case 3: Ngoại lệ không đổi hoặc lệch khớp mã vạch khi quét BoxID → Fix cứng (Hardcode) trong SP [usp_Vietnam_GetBoxIDForLotNo_VVT](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/sql/procedures/usp_Vietnam_GetBoxIDForLotNo_VVT.sql)
 ```
 
 > ⚠️ Sau khi đổi → kiểm tra tên model không trùng với bên Hàn Quốc → Nếu trùng thì không đổi được.
+
+#### 💡 Chi tiết Case 3: Tiền lệ Hardcode map barcode trong SP `usp_Vietnam_GetBoxIDForLotNo_VVT`
+Khi quét đóng gói tại màn hình **B523** hoặc kiểm tra xuất hàng, nếu Lot đã gộp/đóng gói dưới đầu mã gốc `VVQN...` nhưng tem nhãn hoặc thao tác quét PDA sử dụng mã Lot chuyển đổi dạng `VJPL...` (hoặc ngược lại), hệ thống sẽ không tìm thấy `BoxID` / `PackingID` do lệch khớp mã vạch.
+
+* **Tiền lệ khắc phục (Cập nhật 28/05/2026 bởi `ducnv` theo yêu cầu của chị Trần Lan):**
+  Thêm các câu lệnh điều kiện `WHEN ... THEN ...` vào khối `CASE` của biến `@LotNo` trong SP `usp_Vietnam_GetBoxIDForLotNo_VVT` để ép hệ thống hiểu mã `VJ` tương ứng với mã `VV`:
+  ```sql
+  -- ducnv edited by Mrs.Tran Lan 20260528
+  -- start
+  WHEN @LotNo = 'VJPL073R025604' THEN 'VVQN073R025604'
+  WHEN @LotNo = 'VJPL153R025601' THEN 'VVQN153R025601'
+  WHEN @LotNo = 'VJPK253R025605' THEN 'VVQN253R025605'
+  WHEN @LotNo = 'VJPK203R025602' THEN 'VVQN203R025602'
+  WHEN @LotNo = 'VJPK263R025603' THEN 'VVQN263R025603'
+  WHEN @LotNo = 'VJPK253R025601' THEN 'VVQN253R025601'
+  WHEN @LotNo = 'VJPL053R025606' THEN 'VVQN053R025606'
+  WHEN @LotNo = 'VJPK063R025603' THEN 'VVQN063R025603'
+  WHEN @LotNo = 'VJPK213R025604' THEN 'VVQN213R025604'
+  WHEN @LotNo = 'VJPK273R025602' THEN 'VVQN273R025602'
+  -- end
+  ```
 
 ```sql
 -- Kiểm tra cấu hình in VJ của model
@@ -225,6 +246,7 @@ SELECT * FROM STB_Vietnam_PackingPrinting WITH(NOLOCK) WHERE MaterialCode = 'Mã
 -- Tắt đổi VV→VJ
 UPDATE STB_Vietnam_PackingPrinting SET PrintVJ = 0 WHERE MaterialCode = 'Mã_NVL'
 ```
+
 
 ---
 

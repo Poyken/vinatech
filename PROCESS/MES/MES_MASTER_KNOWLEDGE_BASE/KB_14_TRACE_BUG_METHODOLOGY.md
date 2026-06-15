@@ -402,6 +402,55 @@ Công nhân đóng gói scan gộp nhầm 5 Lot con vào một Box ID (`PackingI
     END CATCH;
     ```
 
+#### 🛠️ KỊCH BẢN C: Hủy gộp box khi Lot/Packing đã được nhập kho thành phẩm (Finish Goods)/Hủy Packing B523
+*   **Triệu chứng:** Khi cần hủy/rã box để đóng gói lại nhưng hệ thống chặn không cho hủy trên giao diện UI (báo lỗi: *"Lot này đã được nhập kho, không thể huỷ gộp box..."*).
+*   **Nguyên nhân gốc:** Lô thành phẩm đã chạy qua bước Nhập kho thành phẩm và có bản ghi trong bảng `STB_VN_FINISHGOODS_HN_New` (hoặc bảng thành phẩm tương ứng của từng nhà máy) cùng với Material Documents (`STB_MaterialDocInfo` có `IsCancel = 0`).
+*   **Quy trình xử lý bằng Transaction:**
+    ```sql
+    BEGIN TRANSACTION;
+    BEGIN TRY
+        -- 1. Xóa bản ghi trong kho thành phẩm để bypass điều kiện chặn
+        DELETE FROM STB_VN_FINISHGOODS_HN_New 
+        WHERE PackingID IN ('MÃ_PACKING_1', 'MÃ_PACKING_2') AND LotNo = 'MÃ_LOT_GỐC';
+
+        -- 2. Gọi procedure hệ thống hủy tài liệu nhập kho vật tư (giải phóng STB_MaterialLotInfo)
+        -- Chạy lần lượt cho từng mã chứng từ MaterialDocNo tương ứng của từng box
+        EXEC usp_DoCancelMaterialDoc 
+            @pProcessLanguage = 'vn',
+            @pProcessUserID = 'TÀI_KHOẢN_USER',
+            @pMaterialDocNo = 'MÃ_CHỨNG_TỪ_1';
+
+        EXEC usp_DoCancelMaterialDoc 
+            @pProcessLanguage = 'vn',
+            @pProcessUserID = 'TÀI_KHOẢN_USER',
+            @pMaterialDocNo = 'MÃ_CHỨNG_TỪ_2';
+
+        -- 3. Cập nhật giảm sản lượng chốt công đoạn cuối (ví dụ: VE10) trong STB_ProdRouteHist
+        -- Giảm đi tổng số lượng của các box vừa hủy
+        UPDATE STB_ProdRouteHist
+        SET ProdQty = ProdQty - [TỔNG_SỐ_LƯỢNG_HỦY]
+        WHERE ControlNo = 'MÃ_CONTROL_NO' AND RouteCode = 'MÃ_ROUTE_CUỐI';
+
+        -- 4. Cập nhật giảm sản lượng trong bảng tổng hợp công đoạn STB_ProdRouteSummary
+        UPDATE STB_ProdRouteSummary
+        SET OutputQty = OutputQty - [TỔNG_SỐ_LƯỢNG_HỦY]
+        WHERE ProductSummaryID = 'MÃ_PRODUCT_SUMMARY_ID';
+
+        -- 5. Cập nhật giảm sản lượng hoàn thành của PO (STB_ProductionOrderInfo)
+        UPDATE STB_ProductionOrderInfo
+        SET ProdFinishQty = ProdFinishQty - [TỔNG_SỐ_LƯỢNG_HỦY]
+        WHERE PONo = 'MÃ_PO_NO';
+
+        COMMIT TRANSACTION;
+        PRINT 'Hủy gộp box thành phẩm thành công!';
+    END TRY
+    BEGIN CATCH
+        IF @@TRANCOUNT > 0 ROLLBACK TRANSACTION;
+        PRINT 'Lỗi: ' + ERROR_MESSAGE();
+        THROW;
+    END CATCH;
+    ```
+
 ---
 
 ### 4.4 LỖI KHÔNG CHỐT ĐƯỢC CÔNG ĐOẠN (MÀN HÌNH B530)

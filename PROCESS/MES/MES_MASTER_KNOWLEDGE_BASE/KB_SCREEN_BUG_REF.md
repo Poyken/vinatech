@@ -305,6 +305,17 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
     ALTER SP `usp_Vietnam_RawMaterialInputHist_uid` để bổ sung mã vỏ nhôm mới vào khối điều kiện `IF / NOT IN`.
 *   **Chi tiết nghiệp vụ:** Xem tại [KB_05_QC_ELECTRODE.md § 7.4](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05_QC_ELECTRODE.md#74-lỗi-vỏ-nhôm-alucase).
 
+### Lỗi 3: Lỗi "String or binary data would be truncated" khi quét gộp 5 mã điện cực 1 Lot (Model 3510 / 35105)
+*   **Triệu chứng:** Khi quét gộp 5 mã barcode điện cực cho 1 Lot tại B597, hệ thống báo lỗi đỏ `"String or binary data would be truncated"` và không cho lưu.
+*   **Nguyên nhân gốc:** Cột `RawMaterialBarcode` của bảng `STB_InputMaterialHistory` có giới hạn độ dài `NVARCHAR(100)`, trong khi chuỗi ghép từ 5 mã điện cực vượt quá giới hạn này (thường dài khoảng 102+ ký tự). Các tham số và biến nội bộ trong SP `usp_Vietnam_RawMaterialInputHist_uid` cũng bị giới hạn độ dài (`NVARCHAR(200)` hoặc `NVARCHAR(100)`).
+*   **Cách khắc phục:**
+    1. Cập nhật độ dài cột lên `NVARCHAR(1000)`:
+       ```sql
+       ALTER TABLE STB_InputMaterialHistory ALTER COLUMN RawMaterialBarcode NVARCHAR(1000) NULL;
+       ```
+    2. Sửa tham số `@pRawMaterialBarcode` và các biến nội bộ chứa chuỗi ghép barcode (ví dụ: `@RawMaterialBarcode`, `@LotMaterialBarcode`) trong stored procedure `usp_Vietnam_RawMaterialInputHist_uid` thành `NVARCHAR(1000)`.
+*   **Chi tiết nghiệp vụ:** Xem file script [fix_multibarcode_3510.sql](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/sql/scripts/fix_multibarcode_3510.sql).
+
 ---
 
 ## B598 — Material Scrap Report (Báo phế nguyên vật liệu trên chuyền)
@@ -539,6 +550,21 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
 *   **Cách khắc phục:**
     1. **QC thao tác nhanh:** QC click chọn hạng mục **ESR** ở lưới bên trái của màn hình [C530] và bấm nút **"Tạo danh sách mẫu"** (hoặc "Tổng hợp hạng mục") trên thanh công cụ để hệ thống tự động chèn thêm 10 dòng trống cho đủ 20 dòng (10 dòng cũ có giá trị, 10 dòng mới là dòng trống để nhập tay hoặc đo tiếp).
     2. **Khắc phục logic trong SP:** Đồng bộ logic khởi tạo của SP `usp_MaterialQcSampleResult_get` để tránh lệch chỉ số khi số lượng mẫu đo từ máy truyền về ít hơn số lượng mẫu thiết lập trong tiêu chuẩn.
+
+### Lỗi 4: Lỗi "검사항목이 등록되어있지 않습니다" (Chưa đăng ký hạng mục kiểm tra) khi tạo Lot OQC tại C512
+*   **Triệu chứng:** Khi bấm tạo Lot OQC tại màn hình **C512**, hệ thống báo lỗi tiếng Hàn `"검사항목이 등록되어있지 않습니다"` và chặn không cho tiến hành.
+*   **Nguyên nhân gốc:** Model sản phẩm mới (ví dụ: `LIVT38-037`) chưa được cấu hình thuộc tính OQC trong bảng `STB_ModelBasicInfo` (bị trống các cột `OqcType`, `InspectionType`, `OqcInspectionRuleType`) và không có bản ghi hạng mục đo kiểm tiêu chuẩn nào trong bảng `STB_MaterialQcInspectionItem`.
+*   **Cách khắc phục:**
+    *   **Bằng SQL:**
+        1. Cập nhật thuộc tính kiểm định trong `STB_ModelBasicInfo`:
+           ```sql
+           UPDATE STB_ModelBasicInfo SET OqcType = 'MANUAL', OqcInspectionRuleType = 'BY_MODEL' WHERE ModelCode = 'LIVT38-037';
+           ```
+        2. Copy các hạng mục kiểm tra chuẩn (ví dụ từ model cùng loại `LIVT38-010`) sang cho model mới trong bảng `STB_MaterialQcInspectionItem`.
+    *   **Bằng UI (Dành cho User):**
+        1. Mở màn hình **A410**, tìm model `LIVT38-037` và cập nhật: `OqcType` = `MANUAL`, `OqcInspectionRuleType` = `BY_MODEL`, `InspectionType` = `SAMPLE`. Nhấn **Lưu**.
+        2. Tắt và mở lại màn hình **C151**, chọn model `LIVT38-037` rồi gán và Lưu spec cho 5 hạng mục QC chính (`IQC_GPD_22`, `PQC_V01_06`, `PQC_V01_07`, `PQC_V01_08`, `PQC_V01_09`) tương tự `LIVT38-010`.
+*   **Chi tiết nghiệp vụ:** Xem file script [fix_qc_items_LIVT38-037.sql](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/sql/scripts/fix_qc_items_LIVT38-037.sql).
 
 ---
 
