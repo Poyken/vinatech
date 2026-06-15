@@ -191,7 +191,7 @@ WHERE LotID = 'ML...'
 ### 7.9 B597 báo lỗi "String or binary data would be truncated" khi quét gộp nhiều mã điện cực (Model 3510 / 35105)
 
 *   **Triệu chứng:** Khi quét gộp từ 5 mã barcode điện cực trở lên cho 1 Lot tại trạm B597, hệ thống báo lỗi đỏ `"String or binary data would be truncated"` và không cho lưu.
-*   **Chi tiết & Giải pháp:** Xem chi tiết nguyên nhân gốc và SQL script khắc phục tại [KB_03_SAN_XUAT.md#lỗi-3-lỗi-string-or-binary-data-would-be-truncated-khi-quét-gộp-5-mã-điện-cực-1-lot-model-3510--35105](KB_03_SAN_XUAT.md#lỗi-3-lỗi-string-or-binary-data-would-be-truncated-khi-quét-gộp-5-mã-điện-cực-1-lot-model-3510--35105).
+*   **Chi tiết & Giải pháp:** Xem chi tiết nguyên nhân gốc và SQL script khắc phục tại [Mục Lỗi 3](#lỗi-3-lỗi-string-or-binary-data-would-be-truncated-khi-quét-gộp-5-mã-điện-cực-1-lot-model-3510--35105) bên dưới.
 
 ---
 
@@ -386,7 +386,7 @@ Kiểm tra tồn kho điện cực → **Stb_SlittingStock_VVT**
 
 ##### 2. Điện cực mã liệu `3582-600F CY` không tạo/in được tem
 *   **Triệu chứng:** Khi sản xuất điện cực mã liệu `3582-600F CY`, hệ thống không cho in tem điện cực.
-*   **Chi tiết & Giải pháp:** Đây là model mới thiếu cấu hình Slitting. Xem hướng dẫn chi tiết từng bước xử lý và SQL script thêm cấu hình tại [KB_14_TRACE_BUG_METHODOLOGY.md#48-điện-cực-mã-liệu-3582-600f-cy-không-tạo-được-tem](KB_14_TRACE_BUG_METHODOLOGY.md#48-điện-cực-mã-liệu-3582-600f-cy-không-tạo-được-tem).
+*   **Chi tiết & Giải pháp:** Đây là model mới thiếu cấu hình Slitting. Xem hướng dẫn chi tiết từng bước xử lý và SQL script thêm cấu hình tại [Kịch bản 5](#kịch-bản-sự-cố-khẩn-cấp-5-điện-cực-3582-600f-cy-không-tạo-được-tem).
 
 ---
 
@@ -945,7 +945,7 @@ ORDER BY MeasureCycle, SampleSeqNo;
          'MÃ_LINE_HIỆN_TẠI', 'MÃ_MÁY_HIỆN_TẠI', 20, 20, CAST(GETDATE() AS DATE), 'A', 'vinaadmin', GETDATE());
     COMMIT TRANSACTION;
     ```
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_02_KHO_WMS.md § 4](KB_02_KHO_WMS.md#4-lỗi-màn-hnc321-qc-nhập-ng-sản-phẩm-mang-đi-kiểm-tra--báo-lỗi-chữ-hàn-quốc) và [KB_14_TRACE_BUG_METHODOLOGY.md § 4.6](KB_14_TRACE_BUG_METHODOLOGY.md#46-lỗi-nhập-phế-màn-hnc321-báo-lỗi-tiếng-hàn-이전-공정에-실적처리-이력이-없습니다).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_02_KHO_WMS.md § 4](KB_02_KHO_WMS.md#4-lỗi-màn-hnc321-qc-nhập-ng-sản-phẩm-mang-đi-kiểm-tra--báo-lỗi-chữ-hàn-quốc) và [Kịch bản 3](#kịch-bản-sự-cố-khẩn-cấp-3-lỗi-nhập-phế-hnc321-báo-lỗi-tiếng-hàn).
 
 ### Lỗi 2: Nhập phế/sửa chữa tại C321 báo lỗi hoặc không cập nhật được thông số sửa chữa
 *   **Triệu chứng:** OP không lưu được thông tin sửa chữa/vật tư thay thế, hoặc bị sai lệch số lượng NG (`DefectQty`) ở các trạm tiếp theo.
@@ -969,7 +969,7 @@ ORDER BY MeasureCycle, SampleSeqNo;
     DELETE FROM STB_CommInspDocHistory WHERE CommInspDocNo = @DocNo;
     COMMIT TRANSACTION;
     ```
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_14_TRACE_BUG_METHODOLOGY.md § 4.2 (Kịch bản B)](KB_14_TRACE_BUG_METHODOLOGY.md#42-kịch-bản-b-hủy-kết-quả-kiểm-tra-chất-lượng-qc-b597--c443).
+*   **Chi tiết nghiệp vụ:** Xem tại [Kịch bản 1](#kịch-bản-sự-cố-khẩn-cấp-1-hủy-kết-quả-kiểm-tra-chất-lượng-qc-b597c443).
 
 ---
 
@@ -1089,7 +1089,7 @@ ORDER BY MeasureCycle, SampleSeqNo;
 *   **Triệu chứng:** Khi tạo hồ sơ OQC tại C512, số lượng mẫu lấy kiểm tra không đúng với quy tắc AQL.
 *   **Nguyên nhân gốc:** Bảng quy tắc AQL chưa được cấu hình cho kích thước lô hàng tương ứng.
 *   **Cách khắc phục:** Vào C112, kiểm tra và bổ sung quy tắc AQL cho size lô hàng (Lot Size) phù hợp.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_28_SYSTEM_OBJECTS_MAP.md](KB_28_SYSTEM_OBJECTS_MAP.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_19_ALL_DATABASES_MAP.md](KB_19_ALL_DATABASES_MAP.md).
 
 ---
 
@@ -1124,7 +1124,7 @@ ORDER BY MeasureCycle, SampleSeqNo;
 *   **Triệu chứng:** Khi mở popup chọn nhóm kiểm tra, danh sách trống hoặc thiếu nhóm mới tạo.
 *   **Nguyên nhân gốc:** Nhóm kiểm tra chưa được kích hoạt (`IsUsed = 0`) hoặc chưa được gán MaterialTypeCode phù hợp.
 *   **Cách khắc phục:** Vào C132 kiểm tra nhóm mới, tick `IsUsed=1`, chọn đúng MaterialTypeCode.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_02_KHO_WMS.md](KB_02_KHO_WMS.md) và [KB_16_GIAI_THICH_DON_GIAN_LUONG_MES.md](KB_16_GIAI_THICH_DON_GIAN_LUONG_MES.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_02_KHO_WMS.md](KB_02_KHO_WMS.md) và [KB_10_KIEN_TRUC_VA_DATAFLOW.md § 0](KB_10_KIEN_TRUC_VA_DATAFLOW.md#0-bản-dịch-bình-dân-hiểu-sơ-đồ-luồng-dữ-liệu-mes-trong-5-phút).
 
 ---
 
@@ -1238,7 +1238,7 @@ ORDER BY MeasureCycle, SampleSeqNo;
 *   **Triệu chứng:** Kết quả Aging/ESR tại C522 bị thiếu hoặc không khớp với máy đo.
 *   **Nguyên nhân gốc:** Phần mềm ESR chưa upload dữ liệu vào bảng `Stb_ESRValueMonitor` hoặc cờ `UploadToMes` chưa được set.
 *   **Cách khắc phục:** Kiểm tra phần mềm đo ESR trên máy, reset cờ upload nếu cần.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_28_SYSTEM_OBJECTS_MAP.md](KB_28_SYSTEM_OBJECTS_MAP.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_19_ALL_DATABASES_MAP.md](KB_19_ALL_DATABASES_MAP.md).
 
 ---
 
@@ -1428,3 +1428,192 @@ ORDER BY MeasureCycle, SampleSeqNo;
 ---
 *Cập nhật: 2026-06-13 — Hoàn thiện cẩm nang tra cứu lỗi cho **125+ màn hình** theo Screen ID riêng biệt và bổ sung phần gỡ lỗi các màn hình cô lập Hưng Yên (_HY). Mỗi màn hình có header ## ScreenID riêng, hỗ trợ tìm kiếm Ctrl+Shift+F trực tiếp.*
 
+
+
+---
+
+### Kịch bản sự cố khẩn cấp 1: Hủy kết quả kiểm tra chất lượng QC (B597/C443)
+
+#### 🔬 KỊCH BẢN B: Hủy kết quả kiểm tra chất lượng QC (B597 / C443)
+*   **Triệu chứng:** QC đánh giá nhầm Lot hàng sang FAIL hoặc load nhầm hạng mục kiểm tra cũ, muốn hủy kết quả để đo lại từ đầu.
+*   **Ví dụ Demo:** Hủy tài liệu QC bị sai cho Barcode `VVPP163R072732`.
+*   **Quy trình xử lý bằng Transaction:**
+    ```sql
+    BEGIN TRANSACTION;
+    BEGIN TRY
+        -- 1. Tìm CommInspDocNo (Mã tài liệu QC) đang liên kết với Barcode
+        DECLARE @DocNo NVARCHAR(50);
+        SELECT @DocNo = CIDH.CommInspDocNo
+        FROM STB_CommInspDocHistory CIDH
+        JOIN STB_SetInfo SI ON CIDH.ProdNo = SI.ControlNo
+        WHERE SI.Barcode = 'VVPP163R072732';
+
+        IF @DocNo IS NOT NULL
+        BEGIN
+            PRINT 'Tìm thấy tài liệu QC: ' + @DocNo;
+
+            -- 2. Xóa các hạng mục kiểm tra chi tiết trước (STB_CommInspDocItem)
+            DELETE FROM STB_CommInspDocItem WHERE CommInspDocNo = @DocNo;
+
+            -- 3. Xóa lịch sử tài liệu QC (STB_CommInspDocHistory)
+            DELETE FROM STB_CommInspDocHistory WHERE CommInspDocNo = @DocNo;
+            
+            PRINT 'Đã xóa hoàn toàn kết quả QC cũ.';
+        END
+        ELSE
+        BEGIN
+            PRINT 'Không tìm thấy kết quả QC nào cho Barcode này.';
+        END
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        PRINT 'Lỗi xảy ra: ' + ERROR_MESSAGE();
+    END CATCH;
+    ```
+    > ⚠️ **Lưu ý:** Sau khi chạy script, yêu cầu QC **tắt hoàn toàn màn hình B597/C443 và mở lại** để hệ thống xóa bộ nhớ đệm (cache) và tải lại spec mới từ đầu.
+
+
+---
+
+### Kịch bản sự cố khẩn cấp 2: Hủy/Sửa kết quả OQC thành phẩm (C512/C530)
+
+#### 📦 KỊCH BẢN C: Hủy/Sửa kết quả OQC Thành phẩm (C512 / C530)
+*   **Triệu chứng:** Lô thành phẩm bị đánh giá nhầm trạng thái FAIL khiến thủ kho không thể nhập kho ở F110.
+*   **Quy trình xử lý nhanh (Bypass sang PASS):**
+    ```sql
+    -- Cập nhật trực tiếp kết quả OQC sang PASS để thông luồng nhập kho
+    UPDATE STB_CommInspDocHistory
+    SET CommInspResult = 'PASS',
+        FinishDateTime = GETDATE(),
+        ChangeUserID = 'admin_fix'
+    WHERE CommInspDocNo = (
+        SELECT TOP 1 CIDH.CommInspDocNo 
+        FROM STB_CommInspDocHistory CIDH
+        JOIN STB_SetInfo SI ON CIDH.ProdNo = SI.ControlNo
+        WHERE SI.Barcode = 'Mã_Barcode_Thành_Phẩm'
+        ORDER BY CIDH.CreateDateTime DESC
+    );
+    ```
+
+
+---
+
+### Kịch bản sự cố khẩn cấp 3: Lỗi nhập phế HNC321 báo lỗi tiếng Hàn
+
+### 4.6 LỖI NHẬP PHẾ MÀN HNC321 BÁO LỖI TIẾNG HÀN (이전 공정에 실적처리 이력이 없습니다)
+
+#### 🔴 Triệu chứng hiện trường:
+Tại màn hình **HNC321** *(Qc nhập NG sản phẩm mang đi kiểm tra)*, khi nhập số lượng phế cho Barcode `ve260509-001` tại công đoạn `VE08` (Mã lỗi `VE08_34` - Taping khác...), hệ thống báo lỗi đỏ:
+`Failed to save: 이전 공정에 실적처리 이력이 없습니다.`
+*(Dịch nghĩa: Không có lịch sử xử lý sản lượng ở công đoạn trước).*
+
+#### 🔍 Nguyên nhân gốc rễ:
+Stored Procedure xử lý nghiệp vụ nhập phế (`usp_Vietnam_ScrapInput_HN` — ⚠️ SP nội bộ Hà Nam, có thể là alias hoặc được gọi gián tiếp) chặn không cho phép nhập phế liệu tại công đoạn `VE08` nếu sản phẩm này chưa từng có dữ liệu chốt sản lượng (Routing History) ở công đoạn ngay trước đó (Ví dụ: `VE07` hoặc trạm trước của `VE08` trong cấu hình Routing của PO).
+
+#### 🛠️ Kịch bản xử lý từng bước (Bypass bằng SQL):
+Khi công đoạn trước bị bỏ qua không quét chốt và hàng thực tế đã phế, IT tiến hành chèn một dòng lịch sử sản lượng giả lập cho trạm trước để thông luồng:
+
+*   **Step 1:** Truy vấn mã `ControlNo` của Barcode bị lỗi:
+    ```sql
+    SELECT ControlNo, Barcode, PONo, MaterialCode FROM STB_SetInfo WHERE Barcode = 've260509-001';
+    ```
+*   **Step 2:** Truy vấn xem công đoạn ngay trước `VE08` trong cấu hình Route của PO đó là gì:
+    ```sql
+    SELECT RouteCode, RouteIndex 
+    FROM STB_ProductionOrderRouting 
+    WHERE PONo = (SELECT PONo FROM STB_SetInfo WHERE Barcode = 've260509-001')
+    ORDER BY RouteIndex ASC;
+    -- Kết quả xác định được công đoạn trước là 'VE07'
+    ```
+*   **Step 3:** Thực hiện chèn bản ghi lịch sử Routing giả lập cho trạm `VE07` bằng Transaction an toàn:
+    ```sql
+    BEGIN TRANSACTION;
+    BEGIN TRY
+        DECLARE @CtrlNo NVARCHAR(50) = (SELECT ControlNo FROM STB_SetInfo WHERE Barcode = 've260509-001');
+
+        INSERT INTO STB_ProdRouteHist 
+            (ControlNo, ProcSeq, RouteCode, LineCode, MachineCode, InQty, OutQty, JobDate, ShiftCode, CreateUserID, CreateDateTime)
+        VALUES 
+            (@CtrlNo, 
+             (SELECT ISNULL(MAX(ProcSeq), 0) + 1 FROM STB_ProdRouteHist WHERE ControlNo = @CtrlNo), 
+             'VE07',            -- Mã công đoạn trước VE08
+             'MCVC20220',       -- Mã Line phát sinh
+             'MCVC20220',       -- Mã máy
+             20, 20,            -- Số lượng phế
+             CAST(GETDATE() AS DATE), 'A', 
+             'vinaadmin', GETDATE());
+
+        COMMIT TRANSACTION;
+        PRINT 'Đã chèn lịch sử giả lập thành công! Hãy bảo công nhân bấm Lưu (Save) lại trên giao diện HNC321.';
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        PRINT 'Lỗi: ' + ERROR_MESSAGE();
+    END CATCH;
+    ```
+---
+
+---
+
+### Kịch bản sự cố khẩn cấp 4: Lỗi nhảy bước cân điện cực Mixing
+
+### 4.7 LỖI NHẢY BƯỚC CÂN ĐIỆN CỰC MIXING (PHẦN MỀM electrode.weighing)
+
+#### 🔴 Triệu chứng hiện trường:
+"Các bước cân cứ nhảy không đúng thứ tự process nên không cân được", "Mã điện cực HCE đang lỗi chưa thao tác được, sản xuất ra mà không được ghi nhận trên hệ thống".
+
+#### 🔍 Nguyên nhân gốc rễ:
+*   Phần mềm có checkbox **"CA ĐÊM CHUẨN BỊ TRƯỚC"** (`isnight` trên UI). Khi tích vào ô này, phần mềm gọi SP `usp_GetElectroMixPresentStep_vietnam` và `usp_ElectrodeStep_get` (⚠️ tên thực tế trong DB) với tham số `@pOrder = 'kdem'` để đẩy Binder lên cân trước (vì cần thời gian khuấy sấy lâu).
+*   Nếu ca ngày làm việc hoặc ca bình thường **quên bỏ tích checkbox này**, thứ tự process sẽ bị xáo trộn, bắt cân Binder trước rồi mới đến bột Than. Công nhân không thể cân lần lượt từ trên xuống theo quy trình chuẩn và bị báo lỗi nhảy bước.
+*   Khi bước cân bị treo/chặn, mẻ trộn Mixing không thể chốt hoàn thành trên MES, dẫn đến bán thành phẩm (Slurry) sản xuất ra **không được ghi nhận trên hệ thống** (thiếu bản ghi trong `STB_ElectrodeMixInfo`). Khi sang công đoạn tiếp theo (Coating), quét mã Lot điện cực sẽ bị báo lỗi.
+
+#### 🛠️ Kịch bản xử lý từng bước:
+
+*   **Step 1 (Bypass vận hành):**
+    Yêu cầu công nhân ca ngày **bỏ tích checkbox "CA ĐÊM CHUẨN BỊ TRƯỚC"** trên giao diện chính của phần mềm, sau đó bấm nút **"Làm mới màn hình"** để hệ thống sắp xếp lại thứ tự cân than trước.
+*   **Step 2 (IT reset Lot bị kẹt):**
+    Nếu Lot điện cực (Ví dụ: Lot của mã `HCE-202`) đã bị ghi nhận sai thứ tự và kẹt nửa chừng, IT chạy lệnh xóa dữ liệu cân tạm của Lot đó trong bảng `STB_ElectrodeMixStepInfo` để công nhân cân lại đúng thứ tự từ đầu:
+    ```sql
+    BEGIN TRANSACTION;
+    DELETE FROM STB_ElectrodeMixStepInfo 
+    WHERE ElectrodeLotNumber = 'Mã_Lot_Điện_Cực_HCE_Bị_Kẹt';
+    COMMIT TRANSACTION;
+    ```
+    Sau đó chốt mẻ trộn bình thường để hệ thống tự động ghi nhận sản lượng Slurry, thông luồng cho Coating/Slitting tiếp theo.
+
+---
+
+---
+
+### Kịch bản sự cố khẩn cấp 5: Điện cực 3582-600F CY không tạo được tem
+
+### 4.8 ĐIỆN CỰC MÃ LIỆU 3582-600F CY KHÔNG TẠO ĐƯỢC TEM
+
+#### 🔴 Triệu chứng hiện trường:
+Khi sản xuất điện cực mã liệu `3582-600F CY`, hệ thống không cho tạo hoặc in tem điện cực.
+
+#### 🔍 Nguyên nhân gốc rễ:
+*   Mã điện cực `3582-600F CY` là mã model/sản phẩm mới chưa được khai báo đầy đủ cấu hình trong Master Data.
+*   Đặc biệt, trạm cắt điện cực Slitting (B552) yêu cầu phải có cấu hình quy cách Slitting trong bảng **`stb_slittinglocationconfig_vvt`** mới cho phép in tem.
+
+#### 🛠️ Kịch bản xử lý từng bước:
+
+*   **Step 1:** Thêm cấu hình quy cách Slitting cho model `3582` (cả cực dương `BY` và cực âm `YP`):
+    ```sql
+    BEGIN TRANSACTION;
+    INSERT INTO stb_slittinglocationconfig_vvt
+        (PartNo, SlittingCode, SlittingSize, Farad, Width, WarehouseLocation, LocationWarehouse, RollQty, PositiveLocation, NegativeLocation)
+    VALUES
+        ('3582', 'BY', '200', '600', '39.34', 'VVT_F2', 'kho2', 20, 'A6-T3', 'B6-T3'),
+        ('3582', 'YP', '180', '600', '39.34', 'VVT_F2', 'kho2', 20, 'A6-T3', 'B6-T3');
+    COMMIT TRANSACTION;
+    ```
+*   **Step 2:** Kiểm tra và đảm bảo đã khai báo model `3582-600F CY` vào bảng `STB_ModelBasicInfo` (A410) đầy đủ thông số Vol/Farad (Vol = '3R0', Farad = '600.0') để các trạm QC và kho nhận diện được đúng:
+    ```sql
+    SELECT * FROM STB_ModelBasicInfo WHERE ModelCode = '3582-600F CY';
+    -- Nếu thiếu, thực hiện chèn dữ liệu (Xem chi tiết tại KB_06 § 1.1)
+    ```
+
+---

@@ -575,7 +575,7 @@ VALUES ('NEW_MODEL_CODE', 'AssembleLabel', 'Phoenix_Contact_V1', GETDATE(), 'vin
     INSERT INTO STB_PackingStandard (MaterialTypeCode, Size, Voltage, Farad, VinylBagQty, InnerBoxQty, OutBoxQty, CreateDateTime, CreateUserID)
     VALUES ('FERT', '1840', 0, 0, 0, 500, 1000, GETDATE(), 'vinaadmin');
     ```
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_19_PHAN_TICH_LOT_SIZE_VÀ_MÃ_LỖI_B530.md § 2.1](KB_19_PHAN_TICH_LOT_SIZE_VÀ_MÃ_LỖI_B530.md#21-file-thay-đổi-số-lượng-lot-noxlsx-sự-cố-chưa-được-cover-đầy-đủ).
+*   **Chi tiết nghiệp vụ:** Xem tại [Lỗi 1](#lỗi-1-báo-lỗi-chưa-có-tiêu-chuẩn-đóng-gói-khi-gộp-box) ở trên.
 
 ---
 
@@ -628,4 +628,222 @@ VALUES ('NEW_MODEL_CODE', 'AssembleLabel', 'Phoenix_Contact_V1', GETDATE(), 'vin
 *   **Chi tiết nghiệp vụ:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.6](KB_04_DONG_GOI_IN_TEM.md).
 
 ---
-
+
+
+---
+
+### Kịch bản sự cố khẩn cấp 1: Lỗi không gộp được Box (B523)
+
+### 4.1 LỖI KHÔNG GỘP ĐƯỢC BOX (MÀN HÌNH B523)
+
+#### 🔴 Triệu chứng hiện trường:
+Công nhân scan Lot/Barcode sản phẩm tại màn hình đóng gói **B523**, nhưng hệ thống báo lỗi đỏ: *"Chưa có tiêu chuẩn đóng gói"* hoặc *"Barcode không đủ điều kiện gộp box"*.
+
+#### 🔍 Quy trình truy vết & xử lý (4 bước chuẩn):
+
+*   **Bước 1: Kiểm tra cấu hình FIFO & Barcode trong Master (F110)**
+    Hệ thống chỉ cho phép gộp box đối với các vật tư được khai báo sử dụng Barcode và quản lý Lot.
+    ```sql
+    -- Query kiểm tra master thuộc tính vật tư
+    SELECT MaterialCode, IsUseBarcode, IsLotUse 
+    FROM STB_MaterialStockAttributeInfo 
+    WHERE MaterialCode = 'Mã_Vật_Tư'; -- Ví dụ: 'LIVT38-025'
+    ```
+    *   *Cách xử lý:* Nếu bảng trả về không có dữ liệu hoặc `IsLotUse = 0`, yêu cầu Master Data vào màn hình **F110** tìm mã vật tư và tích chọn **Use Barcode** + **Lot Use**, sau đó bấm **Save**.
+    *   *Bypass nhanh bằng SQL:*
+        ```sql
+        UPDATE STB_MaterialStockAttributeInfo 
+        SET IsLotUse = 1, IsUseBarcode = 1 
+        WHERE MaterialCode = 'Mã_Vật_Tư';
+        ```
+
+*   **Bước 2: Kiểm tra trạng thái đánh giá chất lượng (QC Pass)**
+    Hệ thống NAIS MES chặn cứng không cho đóng gói sản phẩm nếu lô hàng chưa qua kiểm tra QC hoặc bị QC đánh giá FAIL.
+    ```sql
+    -- Query kiểm tra kết quả đánh giá QC
+    SELECT Barcode, LotDecisionResult, IsDefect, DefectQty 
+    FROM STB_SetInfo 
+    WHERE Barcode = 'Mã_Barcode_Sản_Phẩm'; -- Ví dụ: 'VVPO093R010707'
+    ```
+    *   *Cách xử lý:* Nếu `LotDecisionResult` is `NULL` hoặc `'FAIL'`, yêu cầu tổ QC vào màn hình **B597** đánh giá chất lượng lô hàng sang **PASS**. (Xem thêm mục 4.2 nếu cần hủy kết quả QC cũ để đánh giá lại).
+
+*   **Bước 3: Kiểm tra xem Lot đã bị gộp vào Box khác chưa**
+    ```sql
+    -- Query kiểm tra xem Lot đã có PackingID (Box ID) gắn vào chưa
+    SELECT LotID, LotNo, PackingID, CurrentQty 
+    FROM STB_MaterialLotInfo 
+    WHERE LotNo = 'Mã_Barcode_Sản_Phẩm';
+    ```
+    *   *Cách xử lý:* Nếu cột `PackingID` hiển thị một mã khác (Ví dụ: `'PKHN023117'`), nghĩa là Lot này đã được gộp vào Box đó rồi. Công nhân không thể gộp tiếp. Cần rã Box cũ ra trước (Xem mục 4.3).
+
+*   **Bước 4: Kiểm tra tiêu chuẩn đóng gói (Packing Standard)**
+    Mỗi Model khi đóng gói cần có cấu hình số lượng mỗi túi (`VinylBagQty`), hộp nhỏ (`InnerBoxQty`), thùng to (`OutBoxQty`).
+    ```sql
+    -- Query kiểm tra tiêu chuẩn đóng gói theo loại vật tư và kích thước (Size)
+    SELECT * FROM STB_PackingStandard 
+    WHERE MaterialTypeCode = 'FERT' 
+      AND Size = 'Kích_Thước_Model'; -- Ví dụ: '0813' (đại diện size 8x13mm)
+    ```
+    *   *Cách xử lý:* Nếu bảng trống, yêu cầu Master Data vào màn hình **A419** thêm tiêu chuẩn đóng gói tương ứng với Size của Model đó.
+
+---
+
+---
+
+### Kịch bản sự cố khẩn cấp 2: Hủy gộp box / Rã box (B523)
+
+#### 🛠️ KỊCH BẢN A: Hủy gộp box / Rã box để đóng gói lại
+*   **Ví dụ Demo:** Hủy gộp box (rã box) mã `PKHN023117` để giải phóng các Lot con bên trong.
+*   **Quy trình xử lý bằng Transaction:**
+    ```sql
+    BEGIN TRANSACTION;
+    BEGIN TRY
+        -- 1. Xem danh sách các Lot con đang nằm trong Box bị gộp nhầm
+        SELECT MaterialLotNo, LotNo, PackingID, CurrentQty, InitialQty 
+        FROM STB_MaterialLotInfo 
+        WHERE PackingID = 'PKHN023117';
+
+        -- 2. Hủy liên kết Box: Set PackingID = NULL để giải phóng các Lot con ra ngoài
+        UPDATE STB_MaterialLotInfo 
+        SET PackingID = NULL 
+        WHERE PackingID = 'PKHN023117';
+
+        -- 3. Xóa thông tin Box lịch sử đóng gói trong bảng Divide (hàng Cell)
+        DELETE FROM STB_DividePackaging WHERE PackingID = 'PKHN023117';
+
+        -- 4. Xóa thông tin Box lịch sử đóng gói trong bảng SavePackingTime (nếu là hàng Module)
+        DELETE FROM STB_SavePackingTime_VVT WHERE PackingID = 'PKHN023117';
+
+        COMMIT TRANSACTION;
+        PRINT 'Rã Box và giải phóng Lot thành công!';
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        PRINT 'Lỗi rã Box: ' + ERROR_MESSAGE();
+    END CATCH;
+    ```
+
+
+#### 🛠️ KỊCH BẢN B: Lỗi gộp box bị mất số lượng (Qty = 0 hoặc Qty âm)
+*   **Triệu chứng:** Sau khi gộp box, do lỗi xung đột SP `usp_savePackingLabelQty_VVT` hoặc scan đúp, số lượng Lot hiện tại bị dồn về `0` hoặc âm.
+*   **Ví dụ Demo:** Khôi phục số lượng thực tế là `20` cho Lot `SP260516-003` và xóa các Lot trùng lặp phát sinh.
+*   **Quy trình xử lý:**
+    ```sql
+    BEGIN TRANSACTION;
+    BEGIN TRY
+        -- 1. Cập nhật số lượng thực tế cho Lot chuẩn cần giữ lại
+        UPDATE STB_MaterialLotInfo
+        SET InitialQty = 20, 
+            CurrentQty = 20
+        WHERE LotNo = 'SP260516-003';
+
+        -- 2. Xóa bỏ các Lot ID con thừa/trùng lặp do hệ thống tự sinh sai khi scan đúp
+        -- Dùng danh sách cụ thể thu thập được khi SELECT ở bước trước
+        DELETE FROM STB_MaterialLotInfo 
+        WHERE MaterialLotNo IN ('LotID_Thừa_1', 'LotID_Thừa_2');
+
+        COMMIT TRANSACTION;
+        PRINT 'Khôi phục số lượng gộp box thành công!';
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        PRINT 'Lỗi: ' + ERROR_MESSAGE();
+    END CATCH;
+    ```
+
+
+#### 🛠️ KỊCH BẢN C: Hủy gộp box khi Lot/Packing đã được nhập kho thành phẩm (Finish Goods)/Hủy Packing B523
+*   **Triệu chứng:** Khi cần hủy/rã box để đóng gói lại nhưng hệ thống chặn không cho hủy trên giao diện UI (báo lỗi: *"Lot này đã được nhập kho, không thể huỷ gộp box..."*).
+*   **Nguyên nhân gốc:** Lô thành phẩm đã chạy qua bước Nhập kho thành phẩm và có bản ghi trong bảng `STB_VN_FINISHGOODS_HN_New` (hoặc bảng thành phẩm tương ứng của từng nhà máy) cùng với Material Documents (`STB_MaterialDocInfo` có `IsCancel = 0`).
+*   **Quy trình xử lý bằng Transaction:**
+    ```sql
+    BEGIN TRANSACTION;
+    BEGIN TRY
+        -- 1. Xóa bản ghi trong kho thành phẩm để bypass điều kiện chặn
+        DELETE FROM STB_VN_FINISHGOODS_HN_New 
+        WHERE PackingID IN ('MÃ_PACKING_1', 'MÃ_PACKING_2') AND LotNo = 'MÃ_LOT_GỐC';
+
+        -- 2. Gọi procedure hệ thống hủy tài liệu nhập kho vật tư (giải phóng STB_MaterialLotInfo)
+        -- Chạy lần lượt cho từng mã chứng từ MaterialDocNo tương ứng của từng box
+        EXEC usp_DoCancelMaterialDoc 
+            @pProcessLanguage = 'vn',
+            @pProcessUserID = 'TÀI_KHOẢN_USER',
+            @pMaterialDocNo = 'MÃ_CHỨNG_TỪ_1';
+
+        EXEC usp_DoCancelMaterialDoc 
+            @pProcessLanguage = 'vn',
+            @pProcessUserID = 'TÀI_KHOẢN_USER',
+            @pMaterialDocNo = 'MÃ_CHỨNG_TỪ_2';
+
+        -- 3. Cập nhật giảm sản lượng chốt công đoạn cuối (ví dụ: VE10) trong STB_ProdRouteHist
+        -- Giảm đi tổng số lượng của các box vừa hủy
+        UPDATE STB_ProdRouteHist
+        SET ProdQty = ProdQty - [TỔNG_SỐ_LƯỢNG_HỦY]
+        WHERE ControlNo = 'MÃ_CONTROL_NO' AND RouteCode = 'MÃ_ROUTE_CUỐI';
+
+        -- 4. Cập nhật giảm sản lượng trong bảng tổng hợp công đoạn STB_ProdRouteSummary
+        UPDATE STB_ProdRouteSummary
+        SET OutputQty = OutputQty - [TỔNG_SỐ_LƯỢNG_HỦY]
+        WHERE ProductSummaryID = 'MÃ_PRODUCT_SUMMARY_ID';
+
+        -- 5. Cập nhật giảm sản lượng hoàn thành của PO (STB_ProductionOrderInfo)
+        UPDATE STB_ProductionOrderInfo
+        SET ProdFinishQty = ProdFinishQty - [TỔNG_SỐ_LƯỢNG_HỦY]
+        WHERE PONo = 'MÃ_PO_NO';
+
+        COMMIT TRANSACTION;
+        PRINT 'Hủy gộp box thành phẩm thành công!';
+    END TRY
+    BEGIN CATCH
+        IF @@TRANCOUNT > 0 ROLLBACK TRANSACTION;
+        PRINT 'Lỗi: ' + ERROR_MESSAGE();
+        THROW;
+    END CATCH;
+    ```
+
+---
+
+---
+
+### Kịch bản sự cố khẩn cấp 3: Không in được tem (B450/B523/B756/A460)
+
+### 4.5 LỖI KHÔNG IN ĐƯỢC TEM (B450 / B523 / B756 / A460)
+
+#### 🔴 Triệu chứng hiện trường:
+Người dùng thao tác tạo Lot sản xuất hoặc in tem đóng gói nhưng máy in không phản hồi hoặc giao diện báo lỗi: *"Không tìm thấy định dạng nhãn"* hoặc tem in ra bị thiếu các thông số bắt buộc (Vol, Farad, Datecode...).
+
+#### 🔍 Quy trình truy vết & xử lý (5 bước kiểm tra):
+
+*   **Bước 1: Kiểm tra cấu hình nhãn in trong SmartFramework (Màn hình A460)**
+    Lỗi `"Không tìm thấy định dạng nhãn"` xảy ra khi template nhãn chưa được thiết lập hoặc chưa được phê duyệt.
+    ```sql
+    -- Kiểm tra sự tồn tại và trạng thái active của mẫu tem
+    SELECT FormatName, IsApproval, ApplyDate, FormatType
+    FROM SmartFramework.dbo.STB_LabelInfo 
+    WHERE FormatName LIKE '%HN%' -- Lọc theo tên nhà máy/mẫu
+      AND IsApproval = 1;
+    ```
+    *   *Cách xử lý:* Nếu trống, vào màn hình **A460** chọn cấu hình: **`AssembleLabel`** (Dòng 2) dùng cho sản xuất, **`PartLabel`** dùng cho tem kho nguyên vật liệu, tích chọn **IsApproval = 1** và bấm **Save**.
+
+*   **Bước 2: Kiểm tra cấu hình Vol/Farad của Model (Màn hình A410)**
+    Khi in tem đóng gói, nếu Model thiếu cấu hình giá trị Điện áp (Voltage) và Điện dung (Farad), hệ thống sẽ chặn không cho in hoặc in ra tem trống thông số.
+    ```sql
+    -- Kiểm tra thông số Model cơ bản
+    SELECT ModelCode, ModelName, MBIExtText04 AS Voltage, MBIExtText05 AS Farad 
+    FROM STB_ModelBasicInfo 
+    WHERE ModelCode = 'Mã_Model'; -- Ví dụ: 'RDMD00-368'
+    ```
+    *   *Cách xử lý:* Nếu các cột Vol/Farad bị rỗng (`NULL`), yêu cầu Master Data vào màn hình **A410** nhập đầy đủ thông số cho Model đó và bấm **Lưu**.
+
+*   **Bước 3: Kiểm tra trạng thái QC Pass của Lot (Xem mục 4.1)**
+    Lot chưa QC Pass (`LotDecisionResult IS NULL`) sẽ chặn in tem đóng gói.
+
+*   **Bước 4: Kiểm tra cấu hình in tem VJ của mã sản phẩm**
+    Nếu in tem không ra đúng đầu mã VJ mà ra mã VV:
+    ```sql
+    -- Kiểm tra thiết lập chuyển đổi mã VV -> VJ
+    SELECT * FROM STB_Vietnam_PackingPrinting WHERE MaterialCode = 'Mã_Vật_Tư';
+    ```
+    *   *Cách xử lý:* Đảm bảo cờ `PrintVJ = 1` để hệ thống tự động đổi đầu mã khi in.
+
+---

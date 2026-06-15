@@ -361,10 +361,10 @@ Nhằm đảm bảo tính độc lập vận hành cho xưởng Hưng Yên (`VVT
     1.  Thực hiện `INSERT INTO ... SELECT` để clone nguyên trạng bản ghi của màn hình gốc sang màn hình `_HY` (giữ nguyên cột nhị phân `Layout` và `Snapshot` mà không cần truyền tải qua mạng).
     2.  Dùng hàm `REPLACE` trong SQL để cập nhật lại toàn bộ các thẻ tham chiếu SP gốc thành SP `_HY` bên trong cột văn bản `XmlLayout` (Ví dụ: thay thế `usp_ProductionOrderInfo_get` thành `usp_ProductionOrderInfo_HY_get`).
 
-*Các script hỗ trợ đã được tạo sẵn trong thư mục [sql/scripts/](../sql/scripts):*
-*   [generated_hy_sps.sql](../sql/scripts/generated_hy_sps.sql) — Script tạo 78 SPs Hưng Yên mới.
-*   [register_hy_screens.sql](../sql/scripts/register_hy_screens.sql) — Script đăng ký ScreenInfo & ScreenObjects trên DB `SmartFramework`.
-*   [clone_screen_layouts.sql](../sql/scripts/clone_screen_layouts.sql) — Script T-SQL chạy trực tiếp trên `SmartFramework` để nhân bản giao diện và cập nhật mapping.
+*Các script hỗ trợ đã được tạo sẵn trong thư mục `sql/scripts/`:*
+*   `generated_hy_sps.sql` — Script tạo 78 SPs Hưng Yên mới.
+*   `register_hy_screens.sql` — Script đăng ký ScreenInfo & ScreenObjects trên DB `SmartFramework`.
+*   `clone_screen_layouts.sql` — Script T-SQL chạy trực tiếp trên `SmartFramework` để nhân bản giao diện và cập nhật mapping.
 
 ### 7.5 Tổng Hợp Bài Học Kinh Nghiệm & Khắc Phục Sự Cố
 
@@ -438,7 +438,7 @@ Nhằm đảm bảo tính độc lập vận hành cho xưởng Hưng Yên (`VVT
 *   **Triệu chứng:** Người dùng không thấy menu VinaEnesol trên giao diện MES.
 *   **Nguyên nhân gốc:** Menu D000 chưa được phân quyền cho Role của người dùng tại Z220/Z330.
 *   **Cách khắc phục:** Vào Z220 gán Screen D000 cho Role tương ứng, vào Z330 kiểm tra đã publish.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_25_VINAENESSOL_HUNG_YEN.md § 2](KB_25_VINAENESSOL_HUNG_YEN.md) và [KB_28_SYSTEM_OBJECTS_MAP.md](KB_28_SYSTEM_OBJECTS_MAP.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_25_VINAENESSOL_HUNG_YEN.md § 2](KB_25_VINAENESSOL_HUNG_YEN.md) và [KB_19_ALL_DATABASES_MAP.md § 4](KB_19_ALL_DATABASES_MAP.md#4-kiến-trúc-màn-hình-động-dynamic-ui-registry-của-smartframework).
 
 ---
 

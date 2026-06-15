@@ -14,7 +14,6 @@
 |------|----------|-------------------|
 | [MES_DAILY_PLAYBOOK.md](MES_DAILY_PLAYBOOK.md) | **Cẩm nang giám sát sức khỏe hệ thống hằng ngày (Check block, lag ERP, jobs...)** | Giám sát / DBA / AI |
 | [MES_OPERATIONAL_LOG.md](MES_OPERATIONAL_LOG.md) | **Nhật ký tích hợp ghi nhận và xử lý sự cố tại xưởng của User và AI** | Sự cố phát sinh |
-| [MES_GLOSSARY.md](MES_GLOSSARY.md) | **Từ điển thuật ngữ nghiệp vụ và từ viết tắt cho hệ thống MES Vinatech** | Thuật ngữ / Nghiệp vụ |
 | [MES_SCRIPT_GUIDE.md](MES_SCRIPT_GUIDE.md) | **Hướng dẫn sử dụng chi tiết 4 script PowerShell bổ trợ trong dự án** | Script / Tool bổ trợ |
 | [KB_01_UI_PHAN_QUYEN.md](KB_01_UI_PHAN_QUYEN.md) | Login, cài đặt, phân quyền User, Stage Prices, và cẩm nang sửa lỗi Screen ID tương ứng | Login, A460, Z410, Z220, Z330, B682, B781 |
 | [KB_02_KHO_WMS.md](KB_02_KHO_WMS.md) | Kho NVL và Kho Thành phẩm Hà Nam/Bắc Giang, FIFO, Holding, Hạn dùng, lỗi gộp túi bóng HN544, và cẩm nang lỗi Screen ID tương ứng | F330, F312, F430, F110, F721, F741, C220, HN551, HN866, HN544, FG00 |

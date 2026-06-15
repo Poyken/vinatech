@@ -702,7 +702,7 @@ Dưới đây là 10 màn hình cốt lõi nhất thường gặp sự cố ho�
 *   **Triệu chứng:** Bảng chấm công P111 hiển thị thiếu hoặc sai giờ vào/ra.
 *   **Nguyên nhân gốc:** Thiết bị chấm công (máy quẹt thẻ) bị mất kết nối hoặc dữ liệu chưa được đồng bộ vào DB.
 *   **Cách khắc phục:** Kiểm tra kết nối thiết bị chấm công, chạy đồng bộ lại dữ liệu.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_28_SYSTEM_OBJECTS_MAP.md](KB_28_SYSTEM_OBJECTS_MAP.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_19_ALL_DATABASES_MAP.md](KB_19_ALL_DATABASES_MAP.md).
 
 ---
 

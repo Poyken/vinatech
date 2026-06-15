@@ -869,7 +869,7 @@ WHERE DP.PackingID = @pPackingID
   AND ISNULL(DP.PackingParentID, '') <> ''  -- ← DÒNG MỚI
 ```
 
-> **SP đầy đủ:** Xem tệp [hn544_error_analysis.md](c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop.worktrees/agents-sql-command-line-execution/database/docs/hn544_error_analysis.md) để copy toàn bộ ALTER PROCEDURE
+> **SP đầy đủ:** Xem chi tiết Stored Procedure tương ứng trong database để áp dụng thay đổi trên.
 
 ---
 
@@ -924,7 +924,7 @@ VALUES (
 ### 4. Lỗi màn HNC321 (Qc nhập NG sản phẩm mang đi kiểm tra — Báo lỗi chữ Hàn Quốc)
 
 Chi tiết về triệu chứng, nguyên nhân và các phương án bypass (bao gồm script SQL chèn lịch sử giả lập) đối với lỗi nhập phế màn HNC321, vui lòng tham khảo tại:
-👉 [KB_14_TRACE_BUG_METHODOLOGY.md § 4.6 — Lỗi nhập phế màn HNC321 báo lỗi tiếng Hàn](KB_14_TRACE_BUG_METHODOLOGY.md#46-lỗi-nhập-phế-màn-hnc321-báo-lỗi-tiếng-hàn-이전-공정에-실적처리-이력이-없습니다)
+👉 [KB_05_QC_ELECTRODE.md § Kịch bản 3 — Lỗi nhập phế màn HNC321 báo lỗi tiếng Hàn](KB_05_QC_ELECTRODE.md#kịch-bản-sự-cố-khẩn-cấp-3-lỗi-nhập-phế-hnc321-báo-lỗi-tiếng-hàn)
 
 ---
 

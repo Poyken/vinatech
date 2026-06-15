@@ -68,7 +68,7 @@ flowchart TD
 ```
 
 ### Bước 1: Khởi tạo chứng từ xuất kho sản xuất (Goods Issue)
-Khi sản xuất tiêu hao nguyên vật liệu, hệ thống gọi SP [usp_DoProcessProdGIMaterialForBarcode](../sql/procedures/usp_DoProcessProdGIMaterialForBarcode.sql) để tạo một chứng từ xuất kho trong `STB_MaterialDocInfo` và chèn chi tiết lô vật tư vào `STB_MaterialDocLotInfo`.
+Khi sản xuất tiêu hao nguyên vật liệu, hệ thống gọi SP `usp_DoProcessProdGIMaterialForBarcode` để tạo một chứng từ xuất kho trong `STB_MaterialDocInfo` và chèn chi tiết lô vật tư vào `STB_MaterialDocLotInfo`.
 
 ### Bước 2: Kích hoạt Trigger chứng từ `tgMaterialDocLotInfoIUD`
 Khi một dòng được chèn, sửa hoặc xóa trong `STB_MaterialDocLotInfo`, Trigger `tgMaterialDocLotInfoIUD` được kích hoạt tự động để cập nhật trạng thái lấy hàng (`PickingQty`) của Lot tương ứng trong `STB_MaterialLotInfo`.
@@ -106,7 +106,7 @@ Khi `CurrentQty` trong `STB_MaterialLotInfo` thay đổi, trigger `tgMaterialLot
 Dưới đây là 4 lỗi logic lập trình được phát hiện trực tiếp từ việc kiểm tra mã nguồn Stored Procedures trong database:
 
 ### Bug 1: Logic chặn PQC Gate 3 bắt buộc phải có lỗi mới cho đi tiếp
-*   **Vị trí:** SP [usp_CheckPQCInputForProductHistForBarcode](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/.gemini/antigravity-ide/brain/5ce6dcd8-26c3-4e84-9104-5749611d9fa4/scratch/usp_CheckPQCInputForProductHistForBarcode.sql)
+*   **Vị trí:** SP `usp_CheckPQCInputForProductHistForBarcode`
 *   **Triệu chứng:** Khi công nhân confirm sản lượng ở màn hình B530, hệ thống báo lỗi `"Bên PQC chưa nhập số lượng NG. Vui lòng bảo bên PQC nhập số lượng NG."` dù lô hàng hoàn toàn đạt chuẩn và QC đã nhập mã không lỗi (các mã đuôi `_00` như `V-22_00` đại diện cho Đạt chất lượng).
 *   **Nguyên nhân gốc:** SP đếm số lượng bản ghi phế lỗi (`DRI.DefectSummaryNo`) trong `STB_DefectRepairInfo` nhưng loại trừ các mã lỗi Đạt (`flag = 'QC'`) trong hàm `fn_VVT_QCPARTCODE()`. 
     Do đó, nếu lô hàng không có lỗi thực tế (hoặc chỉ có mã đạt `_00`), biến `@NG_Count` bằng `0`. Khối lệnh kiểm tra `IF (ISNULL(@NG_Count, 0) <= 0)` kích hoạt và ném ra ngoại lệ chặn đứng sản xuất.
@@ -129,7 +129,7 @@ Dưới đây là 4 lỗi logic lập trình được phát hiện trực tiếp
 ---
 
 ### Bug 2: Sự bất đối xứng (Khóa cứng) trong QC Audit Pass/Reject
-*   **Vị trí:** SP [usp_VN_WaitingCheckBeforeExport_forQCAudit_Pass](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/.gemini/antigravity-ide/brain/5ce6dcd8-26c3-4e84-9104-5749611d9fa4/scratch/usp_VN_WaitingCheckBeforeExport_forQCAudit_Pass.sql)
+*   **Vị trí:** SP `usp_VN_WaitingCheckBeforeExport_forQCAudit_Pass`
 *   **Triệu chứng:** Tại màn hình duyệt QC Audit xuất kho, nếu người dùng lỡ tay bấm **Reject** một lô hàng, sau đó muốn bấm duyệt lại thành **Pass** thì hệ thống không cho phép cập nhật và nút Pass bị vô hiệu hóa. Ngược lại, nếu đang ở trạng thái **Pass**, nút **Reject** vẫn cho phép bấm tự do.
 *   **Nguyên nhân gốc:** Trong SP Pass, điều kiện cập nhật chỉ chấp nhận khi trạng thái kiểm tra đang là `NULL`:
     ```sql
@@ -157,7 +157,7 @@ Dưới đây là 4 lỗi logic lập trình được phát hiện trực tiếp
 ---
 
 ### Bug 3: Hardcode địa điểm Bắc Giang gây ẩn dữ liệu ở các kho khác
-*   **Vị trí:** SP [usp_VN_WaitingCheckBeforeExport_forQCAudit_get](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/.gemini/antigravity-ide/brain/5ce6dcd8-26c3-4e84-9104-5749611d9fa4/scratch/usp_VN_WaitingCheckBeforeExport_forQCAudit_get.sql) và [usp_VN_WaitingCheckBeforeExport_forQCAudit_pass_get](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/.gemini/antigravity-ide/brain/5ce6dcd8-26c3-4e84-9104-5749611d9fa4/scratch/usp_VN_WaitingCheckBeforeExport_forQCAudit_pass_get.sql)
+*   **Vị trí:** SP `usp_VN_WaitingCheckBeforeExport_forQCAudit_get` và `usp_VN_WaitingCheckBeforeExport_forQCAudit_pass_get`
 *   **Triệu chứng:** Khi mở màn hình kiểm định xuất xưởng tại nhà máy Hà Nam hoặc Hưng Yên, danh sách hàng chờ QC Audit bị trống rỗng, không hiển thị bất cứ dữ liệu nào.
 *   **Nguyên nhân gốc:** Cả hai Stored Procedure tải dữ liệu chờ duyệt đều bị hardcode bộ lọc địa điểm:
     ```sql
@@ -361,7 +361,7 @@ Hệ thống NAIS MES quản lý luồng bán hàng và xuất hàng thông qua 
 3. **`STB_ShipmentOrderInfo` (Thông tin xuất hàng):** Liên kết giữa Số lệnh xuất hàng (`ShipmentOrderNo`), Lô đóng gói (`PackingID`), Mã vật tư (`MaterialCode`) và Số lượng lấy hàng (`PickingQty`).
 4. **`OUT_ASN` (Shipment Attempt Table) & `OUT_RSLT` (Shipment Result Table):** Hai bảng trung gian lưu thông tin xuất kho thành phẩm thực tế đi Cargo, liên kết qua `PACK_ID` (PackingID).
 
-#### Stored Procedure Cốt Lõi: [usp_WarehouseDelivery_get](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/.gemini/antigravity-ide/brain/5ce6dcd8-26c3-4e84-9104-5749611d9fa4/scratch/usp_WarehouseDelivery_get.sql)
+#### Stored Procedure Cốt Lõi: `usp_WarehouseDelivery_get`
 Khi bộ phận vận hành hoặc PowerBI cần xem báo cáo xuất kho thành phẩm thực tế:
 ```sql
 SELECT Substring(Convert(Varchar(10), RR.CRT_DT, 121), 0 ,12) AS WorkDate
@@ -405,11 +405,11 @@ Khi phát hiện lô hàng bán thành phẩm hoặc thành phẩm không đạt
 * `ReworkQty`: Số lượng làm lại.
 * `CreateUserID` / `CreateDateTime`: Người thực hiện và thời gian khai báo.
 
-#### SP Quản lý Rework: [usp_GetInforLotReworkHaNamFactory_uid](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/.gemini/antigravity-ide/brain/5ce6dcd8-26c3-4e84-9104-5749611d9fa4/scratch/usp_GetInforLotReworkHaNamFactory_uid.sql)
+#### SP Quản lý Rework: `usp_GetInforLotReworkHaNamFactory_uid`
 Stored Procedure này xử lý thêm/sửa/xóa thông tin Lot Rework từ giao diện XML truyền vào.
 
 #### 🐛 Bug Logic 1: Khóa cứng tài khoản người dùng thao tác Rework
-* **Vị trí:** SP [usp_GetInforLotReworkHaNamFactory_uid](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/.gemini/antigravity-ide/brain/5ce6dcd8-26c3-4e84-9104-5749611d9fa4/scratch/usp_GetInforLotReworkHaNamFactory_uid.sql) (Dòng 41-45)
+* **Vị trí:** SP `usp_GetInforLotReworkHaNamFactory_uid` (Dòng 41-45)
 * **Triệu chứng:** Khi quản lý sản xuất mới hoặc tài khoản vận hành khác (`vinaadmin`, v.v.) thực hiện khai báo Rework, hệ thống ném lỗi: `Bạn không có quyền vui lòng liên hệ EA !` và chặn đứng giao dịch.
 * **Nguyên nhân gốc:** Lập trình viên hardcode danh sách tài khoản có quyền thao tác trực tiếp trong code SQL:
   ```sql
@@ -420,7 +420,7 @@ Stored Procedure này xử lý thêm/sửa/xóa thông tin Lot Rework từ giao 
   END
   ```
 * **Giải pháp khắc phục:** Đã tạo bản vá SQL an toàn kết hợp cơ chế kiểm tra quyền hạn động qua `SmartFramework.dbo.STB_UserPermission` (cho ScreenID `'B618'`) và cơ chế Fallback danh sách user cũ để tránh làm gián đoạn sản xuất.
-  * **Hotfix Script:** [04_FIX_REWORK_HARDCODED_PERMISSION.sql](../sql/hotfixes/04_FIX_REWORK_HARDCODED_PERMISSION.sql)
+  * **Hotfix Script:** `04_FIX_REWORK_HARDCODED_PERMISSION.sql`
   * **Mã SQL thay thế:**
     ```sql
     -- Kiểm tra phân quyền động kết hợp Fallback an toàn
@@ -467,7 +467,7 @@ Phân hệ Trả hàng giải quyết các trường hợp: (1) Trả lại nguy
 2. **`STB_MaterialLotSnapshot`:** Lưu ảnh chụp trạng thái tồn kho của Lô tại thời điểm trả hàng để đối soát.
 
 #### 🐛 Bug Logic 2: Khóa cứng luồng trả hàng do bắt buộc kiểm định IQC
-* **Vị trí:** SP [usp_DoValidateMaterialDocBarcodeForReturn](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/.gemini/antigravity-ide/brain/5ce6dcd8-26c3-4e84-9104-5749611d9fa4/scratch/usp_DoValidateMaterialDocBarcodeForReturn.sql) (Dòng 60-86)
+* **Vị trí:** SP `usp_DoValidateMaterialDocBarcodeForReturn` (Dòng 60-86)
 * **Triệu chứng:** Khi thực hiện quét barcode để nhận hàng trả lại từ Khách hàng (Customer Return), hệ thống báo lỗi `"수입검사 합격처리가 되지 않았습니다."` (Chưa hoàn thành kiểm tra IQC đạt chất lượng).
 * **Nguyên nhân gốc:** SP kiểm tra nếu loại tài liệu là Nhập kho (`@MaterialDocType = 'GR'`) và yêu cầu QC kiểm định (`@IsRequireQC = 1`), nó sẽ bắt buộc tìm thông tin 수입검사 (IQC - kiểm định mua hàng đầu vào) trong bảng `STB_MaterialQcInfo` với quyết định kiểm tra phải là `'P'` (Pass):
   ```sql
@@ -487,7 +487,7 @@ Phân hệ Trả hàng giải quyết các trường hợp: (1) Trả lại nguy
   ```
   Tuy nhiên, hàng trả về từ khách hàng (Customer Return) là **Thành phẩm** do nhà máy sản xuất ra, không phải là Nguyên vật liệu mua ngoài nên hoàn toàn không đi qua quy trình IQC mua hàng đầu vào (IQC chỉ dành cho NVL nhà cung cấp). Điều này chặn đứng không cho phép nhận hàng khách trả lại.
 * **Giải pháp khắc phục:** Đã tạo bản vá SQL an toàn để bỏ qua kiểm tra IQC đối với thành phẩm (FERT) hoặc bán thành phẩm (HALB) sản xuất nội bộ khi khách trả hàng, chỉ bắt buộc check IQC đối với NVL nhập mua ngoài (ROH).
-  * **Hotfix Script:** [05_FIX_RETURNS_FG_IQC_VALIDATION.sql](../sql/hotfixes/05_FIX_RETURNS_FG_IQC_VALIDATION.sql)
+  * **Hotfix Script:** `05_FIX_RETURNS_FG_IQC_VALIDATION.sql`
   * **Mã SQL thay thế:**
     ```sql
     -- Lấy loại vật tư từ STB_MaterialMaster để phân biệt
@@ -510,10 +510,10 @@ Màn hình **[F750] Kiểm kê kho vật tư** dùng để đối soát số lư
 
 #### Quy trình tự động cân bằng kho (Auto-reconciliation)
 Khi người dùng bấm nút **Cập nhật kết quả kiểm kê (Apply Stocktaking)**:
-1. **Đối soát số lượng:** SP [usp_DoApplyStocktakingToStock](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/.gemini/antigravity-ide/brain/5ce6dcd8-26c3-4e84-9104-5749611d9fa4/scratch/usp_DoApplyStocktakingToStock.sql) so sánh `BasicQty` (Tồn sổ sách lúc tạo phiếu kiểm kê) với `StocktakingQty` (Tồn thực tế kiểm đếm được).
+1. **Đối soát số lượng:** SP `usp_DoApplyStocktakingToStock` so sánh `BasicQty` (Tồn sổ sách lúc tạo phiếu kiểm kê) với `StocktakingQty` (Tồn thực tế kiểm đếm được).
 2. **Xử lý Hao hụt kho (BasicQty > StocktakingQty):**
    * Tự động sinh một chứng từ xuất kho ảo (`GIMaterialDocNo`) có loại là `GI_STOCKTAKING` và trạng thái `FINISH`.
-   * Gọi SP [usp_DoMakeMaterialDocDetailLotForStocktaking](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/.gemini/antigravity-ide/brain/5ce6dcd8-26c3-4e84-9104-5749611d9fa4/scratch/usp_DoMakeMaterialDocDetailLotForStocktaking.sql) để tạo bản ghi giảm số lượng trong `STB_MaterialDocLotInfo`.
+   * Gọi SP `usp_DoMakeMaterialDocDetailLotForStocktaking` để tạo bản ghi giảm số lượng trong `STB_MaterialDocLotInfo`.
 3. **Xử lý Thặng dư kho (BasicQty < StocktakingQty):**
    * Tự động sinh một chứng từ nhập kho ảo (`GRMaterialDocNo`) có loại là `GR_STOCKTAKING` và trạng thái `FINISH`.
    * Gọi SP `usp_DoMakeMaterialDocDetailLotForStocktaking` để tạo bản ghi tăng số lượng trong `STB_MaterialDocLotInfo`.
@@ -549,7 +549,7 @@ Khi người dùng bấm nút **Cập nhật kết quả kiểm kê (Apply Stock
 
 Hệ thống NAIS MES có một thiết kế nghiệp vụ cực kỳ đặc thù cho việc tách lô vật liệu **Giá đỡ / Chất mang (Substrate - 지지체)**. Việc tách lô này không sử dụng màn hình chia Lot thông thường, mà **mượn cơ chế tự động kiểm kê (Stocktaking)** để thực hiện nhằm tránh việc tạo các chứng từ xuất/nhập phức tạp trên WMS.
 
-#### SP Thực thi: [usp_DoMakeStocktakingPlanResultForSupport](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/.gemini/antigravity-ide/brain/5ce6dcd8-26c3-4e84-9104-5749611d9fa4/scratch/usp_DoMakeStocktakingPlanResultForSupport.sql)
+#### SP Thực thi: `usp_DoMakeStocktakingPlanResultForSupport`
 Quy trình diễn ra như sau:
 1. **Kiểm tra trạng thái:** Đảm bảo lô gộp (`MergeLotID`) chưa được xác nhận hoàn thành (`IsFixed = 0`).
 2. **Xác thực vị trí kho:** Kiểm tra xem lô nguyên liệu gốc có nằm trong cùng một kho công đoạn (`IsRouteWarehouse = 1`) hay không. Nếu nằm phân tán, chặn giao dịch:

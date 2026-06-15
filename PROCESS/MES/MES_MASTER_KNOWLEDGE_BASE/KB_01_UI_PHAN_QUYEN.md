@@ -230,7 +230,7 @@ WHERE ScreenName = 'Tên_Màn_Hình_Kỹ_Thuật'
 *   **Triệu chứng:** Đã đăng ký màn hình mới trong `STB_ScreenInfo` nhưng không thấy trên menu.
 *   **Nguyên nhân gốc:** Cờ `IsPublish` chưa được bật hoặc chưa gán ParentName (thư mục menu cha).
 *   **Cách khắc phục:** Vào Z110, tìm Screen mới, bật `IsPublish = 1`, đảm bảo ParentName đúng thư mục.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_28_SYSTEM_OBJECTS_MAP.md § 5](KB_28_SYSTEM_OBJECTS_MAP.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_19_ALL_DATABASES_MAP.md § 4](KB_19_ALL_DATABASES_MAP.md#4-kiến-trúc-màn-hình-động-dynamic-ui-registry-của-smartframework).
 
 ---
 
