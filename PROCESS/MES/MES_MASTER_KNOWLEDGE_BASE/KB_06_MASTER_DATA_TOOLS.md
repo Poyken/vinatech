@@ -477,6 +477,33 @@ BƯỚC 7 - Test
 - **B530 không cho chọn Máy:** B240 chưa phân bổ Máy đó thuộc Route hiện tại
 - **In tem lỗi không ra Tên Line (B525):** `STB_LineInfo.LineName` bị sai ở B210
 
+### 10.1 Hướng dẫn Thay đổi/Loại bỏ công đoạn trong Quy trình (Routing Bypass/Change)
+
+Khi có yêu cầu điều chỉnh quy trình sản xuất (ví dụ: **bỏ công đoạn Ngoại quan V-27/VE-xx** và **thêm công đoạn Kiểm tra lại V-34**), IT cần thực hiện cập nhật đồng bộ các bảng CSDL sau để tránh chặn đứng hoạt động chốt sản lượng hoặc gộp box ở hiện trường:
+
+#### 1. Định cấu hình Định tuyến gốc (Basic Routing Master - Phase 0)
+*   **`STB_BasicRoutingInfo`**: Nếu cần tạo luồng định tuyến mới (ví dụ: `MainRoutingRubAging_New`) để tránh ảnh hưởng đến các model khác đang chạy luồng cũ.
+*   **`STB_BasicRoutingDetail`**:
+    1. `DELETE` dòng chứa công đoạn cũ (ví dụ: `V-27` / `V-27_BG`).
+    2. `INSERT` công đoạn mới (ví dụ: `V-34` / `V-34_BG`) nếu cần.
+    3. `UPDATE` lại chỉ số `RouteIndex` của các công đoạn đứng sau để đảm bảo chỉ mục tăng dần liên tục không có khoảng trống.
+    4. Thiết lập cờ `IsInputRoute = 1` ở công đoạn đầu và `IsOutputRoute = 1` ở công đoạn cuối mới.
+*   **`STB_MaterialMaster`**: Cập nhật gán `BasicRoutingCode` mới cho Model sản phẩm.
+
+#### 2. Cấu hình Lệnh sản xuất PO đang chạy (Phase 3 WIP)
+Để thay đổi có hiệu lực ngay lập tức đối với các PO đang sản xuất dở dang:
+*   **`STB_ProductionOrderInfo`**: Cập nhật `BasicRoutingCode` mới cho các PO chưa cancel (`IsCancel = 0`) và chưa kết thúc (`IsFinish = 0`).
+*   **`STB_ProductionOrderRouting`**:
+    1. Xóa công đoạn cũ và chèn công đoạn mới tương thích với cấu hình `BasicRoutingDetail`.
+    2. **QUAN TRỌNG:** Sắp xếp lại chỉ số `RouteIndex` tuần tự cho PO.
+    3. **QUAN TRỌNG:** Phải đảm bảo công đoạn cuối cùng mới của PO có cờ `IsOutputRoute = 1` (ví dụ công đoạn `V-34`). Nếu thiếu cờ này, SP chốt sản lượng cuối (`usp_DoProcessProdGRMaterialByOne`) sẽ trả về sản lượng bằng 0, làm chặn đứng chức năng gộp box của công nhân tại trạm đóng gói B523.
+
+#### 3. Cấu hình Đơn giá Công đoạn (Stage Prices - Phase 5 / Finance Integration)
+*   **`STB_VVT_StagePrices`**: Cập nhật lại ánh xạ công đoạn để phục vụ báo cáo lương/giá thành (B682, B781, B789):
+    1. Cập nhật cột công đoạn cũ (ví dụ `RouteV27`) thành `NULL`.
+    2. Thiết lập đơn giá của công đoạn cũ (ví dụ `PriceV27`) về `0`.
+    3. Cập nhật hoặc khai báo bổ sung đơn giá công đoạn mới (ví dụ `PriceV34`).
+
 ---
 
 ## 11. 📐 A418 - Số Lượng Đóng Gói Theo Size
