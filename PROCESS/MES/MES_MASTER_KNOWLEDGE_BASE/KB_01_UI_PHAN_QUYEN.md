@@ -197,7 +197,77 @@ WHERE ScreenName = 'Tên_Màn_Hình_Kỹ_Thuật'
 -- Bắc Giang: usp_VN_Update_ExportExcel_BG
 -- Bắc Ninh: usp_VN_Update_ExportExcel
 
--- 👉 Sửa ngày nhập/xuất kho thành phẩm BG: Xem tại [KB_08_KHO_THANH_PHAM_HN.md § 8](KB_08_KHO_THANH_PHAM_HN.md)
+-- 👉 Sửa ngày nhập/xuất kho thành phẩm BG: Xem tại [KB_02_KHO_WMS.md § 8](KB_02_KHO_WMS.md)
 ```
 
 *Cập nhật: 2026-05-22*
+
+
+---
+
+## 🔴 Cẩm nang khắc phục lỗi theo Screen ID (Gộp từ KB_SCREEN_BUG_REF)
+
+## A460 — Label Mapping (Mapping mẫu tem cho Model)
+
+> 🔗 **Xem thêm:** Mục [Z530 / A460](#z530--a460--label-layout--mapping) phía trên đã có chi tiết lỗi in tem.
+
+### Lỗi 1: In tem ra mẫu không đúng hoặc tem trống do chưa map mẫu tem cho Model
+*   **Triệu chứng:** In tem tại B523/B754/B757 hiện ra mẫu tem sai hoặc trống thông tin.
+*   **Nguyên nhân gốc:** Model chưa được map với mẫu tem tương ứng trong `STB_ModelLabelInfo` tại A460.
+*   **Cách khắc phục:**
+    ```sql
+    SELECT ModelCode, FormatName FROM STB_ModelLabelInfo WHERE ModelCode = 'MÃ_MODEL';
+    -- Nếu trống → Vào A460 chọn Model, chọn mẫu tem AssembleLabel (dòng 2) cho SX, PartLabel cho kho.
+    ```
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.16](KB_04_DONG_GOI_IN_TEM.md).
+
+---
+
+
+## Z110 — Screen Configuration (Cấu hình màn hình hệ thống)
+
+### Lỗi 1: Màn hình mới tạo không hiển thị trên menu MES
+*   **Triệu chứng:** Đã đăng ký màn hình mới trong `STB_ScreenInfo` nhưng không thấy trên menu.
+*   **Nguyên nhân gốc:** Cờ `IsPublish` chưa được bật hoặc chưa gán ParentName (thư mục menu cha).
+*   **Cách khắc phục:** Vào Z110, tìm Screen mới, bật `IsPublish = 1`, đảm bảo ParentName đúng thư mục.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_28_SYSTEM_OBJECTS_MAP.md § 5](KB_28_SYSTEM_OBJECTS_MAP.md).
+
+---
+
+
+## Z210 — System Parameter (Tham số hệ thống)
+
+### Lỗi 1: Thay đổi tham số hệ thống không có hiệu lực
+*   **Triệu chứng:** Sau khi sửa tham số tại Z210, hệ thống vẫn chạy với cấu hình cũ.
+*   **Nguyên nhân gốc:** Một số tham số hệ thống được cache và cần restart ứng dụng client để áp dụng.
+*   **Cách khắc phục:** Yêu cầu người dùng đóng hoàn toàn ứng dụng MES và mở lại.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_25_VINAENESSOL_HUNG_YEN.md](KB_25_VINAENESSOL_HUNG_YEN.md).
+
+---
+
+
+## Z220 — Role Screen Mapping (Phân quyền màn hình theo vai trò)
+
+> 🔗 **Xem thêm:** Mục [Z410 / Z220 / Z330](#z410--z220--z330--user-accounts--role-permissions) phía trên đã có chi tiết phân quyền.
+
+### Lỗi 1: Người dùng không thấy màn hình trên menu MES
+*   **Triệu chứng:** User đăng nhập nhưng thiếu nhiều màn hình so với đồng nghiệp.
+*   **Nguyên nhân gốc:** Role của User chưa được gán quyền truy cập Screen ID tương ứng tại Z220.
+*   **Cách khắc phục:** Vào Z220, chọn Role Group, tick chọn Screen ID cần mở quyền.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_01_UI_PHAN_QUYEN.md § 1.4](KB_01_UI_PHAN_QUYEN.md).
+
+---
+
+
+## Z330 — Screen Publish (Kích hoạt/ẩn màn hình)
+
+> 🔗 **Xem thêm:** Mục [Z410 / Z220 / Z330](#z410--z220--z330--user-accounts--role-permissions) phía trên đã có chi tiết phân quyền.
+
+### Lỗi 1: Màn hình đã gán quyền Z220 nhưng vẫn không hiện trên menu
+*   **Triệu chứng:** Đã gán quyền tại Z220 nhưng user vẫn không thấy màn hình.
+*   **Nguyên nhân gốc:** Màn hình chưa được publish/kích hoạt tại Z330 (`IsPublish = 0`).
+*   **Cách khắc phục:** Vào Z330, tìm Screen ID, bật `IsPublish = 1`.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_01_UI_PHAN_QUYEN.md § 1.4](KB_01_UI_PHAN_QUYEN.md) và [KB_06_MASTER_DATA_TOOLS.md](KB_06_MASTER_DATA_TOOLS.md).
+
+---
+

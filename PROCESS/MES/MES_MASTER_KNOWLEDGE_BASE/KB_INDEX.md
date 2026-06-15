@@ -16,27 +16,21 @@
 | [MES_OPERATIONAL_LOG.md](MES_OPERATIONAL_LOG.md) | **Nhật ký tích hợp ghi nhận và xử lý sự cố tại xưởng của User và AI** | Sự cố phát sinh |
 | [MES_GLOSSARY.md](MES_GLOSSARY.md) | **Từ điển thuật ngữ nghiệp vụ và từ viết tắt cho hệ thống MES Vinatech** | Thuật ngữ / Nghiệp vụ |
 | [MES_SCRIPT_GUIDE.md](MES_SCRIPT_GUIDE.md) | **Hướng dẫn sử dụng chi tiết 4 script PowerShell bổ trợ trong dự án** | Script / Tool bổ trợ |
-| [KB_SCREEN_BUG_REF.md](KB_SCREEN_BUG_REF.md) | **Cẩm nang tra cứu lỗi tập trung phân loại theo Screen ID (Bắt đầu tra cứu lỗi từ đây)** | Toàn bộ các màn hình |
-| [KB_01_UI_PHAN_QUYEN.md](KB_01_UI_PHAN_QUYEN.md) | Login, cài đặt, phân quyền User, Stage Prices | Login, A460, Z410, Z220, Z330, B682, B781 |
-| [KB_02_KHO_WMS.md](KB_02_KHO_WMS.md) | Kho NVL: F330 sai kho, F312, F430, FIFO, Holding, Hạn dùng | F330, F312, F430, F110, F721, F741, C220 |
-| [KB_03_SAN_XUAT.md](KB_03_SAN_XUAT.md) | Sửa JobDate, Chuyển Line, VV→VJ, Xóa PO, NG, Andon, **Cell Line vận hành chi tiết B310→B882**, Module Line, B351/B528/B598/B717/B802, In tem PAC/Digi-Key, **Spare Part H301-H305 & K101/K109**, **Đối soát Lot Size & mã lỗi B530**, **Gộp tri thức Máy móc thiết bị, Nhân sự sản xuất, Dashboard & Andon** | B782, B781, B598, B726, B791, B310, B450, B530, B540, B523, B525, B528, B717, B802, B351, B452, B754-B758, H301-H305, K101, K109, B250, B270, B260, B882, MCM |
-| [KB_04_DONG_GOI_IN_TEM.md](KB_04_DONG_GOI_IN_TEM.md) | Tiêu chuẩn đóng gói, fix B523 không gộp, sửa mã Lot, Qty=0 | B523, B789, B781, B351, A419 |
-| [KB_05_QC_ELECTRODE.md](KB_05_QC_ELECTRODE.md) | QC B597/C443/C512/C486, Điện cực Slitting B552, Lỗi chuỗi độ dày, Rebuild bảng & Fix layout, **QC Flow đầy đủ IQC→PQC→OQC→Bending/Cutting**, Slitting Hà Nam F743-F748, **Gộp tri thức 4M Change, CAPA & Reliability Test** | B597, C443, C512, C486, B552, C121-C564, F743-F748, RTM, 4M Change, CAPA |
-| [KB_06_MASTER_DATA_TOOLS.md](KB_06_MASTER_DATA_TOOLS.md) | Model mới, Vol/Farad, Thêm Cell/Line, SQL Utilities, Bypass, **Quick Start Checklist đầy đủ**, B210-B240 Line/Route, A418, B260, Địa chỉ hệ thống, Bảng tổng hợp màn hình MES (Mở rộng) | A410, B210-B240, B250, B260, B270, A418, A419, C131, C132, C430, C451, C560, F741 |
-| [KB_07_GROUPWARE_INTEGRATION.md](KB_07_GROUPWARE_INTEGRATION.md) | Tích hợp Groupware: Mua hàng, Kế hoạch SX, Master Data, **ESM Bridge Tables (18 bảng)**, **BOM Management**, **Danh sách 100+ kho active** | Groupware, F330, C220, B310, B450, F110, F130, F140 |
-| [KB_08_KHO_THANH_PHAM_HN.md](KB_08_KHO_THANH_PHAM_HN.md) | Kho TP Hà Nam: Xuất HN551, Tồn HN866, Hủy F330, Xóa sản lượng | HN551, HN866, HN544, FG00 |
-| [KB_10_KIEN_TRUC_VA_DATAFLOW.md](KB_10_KIEN_TRUC_VA_DATAFLOW.md) | Kiến trúc tổng quan MES, 3 Trụ cột, Sơ đồ End-to-End, Phân tích SP, Ma trận nhà máy, **Dịch nghĩa bình dân luồng MES trong 5 phút** | System |
+| [KB_01_UI_PHAN_QUYEN.md](KB_01_UI_PHAN_QUYEN.md) | Login, cài đặt, phân quyền User, Stage Prices, và cẩm nang sửa lỗi Screen ID tương ứng | Login, A460, Z410, Z220, Z330, B682, B781 |
+| [KB_02_KHO_WMS.md](KB_02_KHO_WMS.md) | Kho NVL và Kho Thành phẩm Hà Nam/Bắc Giang, FIFO, Holding, Hạn dùng, lỗi gộp túi bóng HN544, và cẩm nang lỗi Screen ID tương ứng | F330, F312, F430, F110, F721, F741, C220, HN551, HN866, HN544, FG00 |
+| [KB_03_SAN_XUAT.md](KB_03_SAN_XUAT.md) | Sửa JobDate, Chuyển Line, VV→VJ, Xóa PO, NG, Andon, Cell Line vận hành chi tiết B310→B882, Module Line, thiết bị phụ trợ (Lò sấy, Gá Doping, Slitting), Spare Parts H301-H305 & K101/K109, đối soát Lot Size, và cẩm nang lỗi Screen ID tương ứng | B782, B781, B598, B726, B791, B310, B450, B530, B540, B523, B525, B528, B717, B802, B351, B452, H301-H305, K101, K109, B250, B270, B260, B882, V-22, Doping |
+| [KB_04_DONG_GOI_IN_TEM.md](KB_04_DONG_GOI_IN_TEM.md) | Tiêu chuẩn đóng gói, fix B523 không gộp, sửa mã Lot, Qty=0, in tem nhãn và cẩm nang lỗi Screen ID tương ứng | B523, B789, B781, B351, A419 |
+| [KB_05_QC_ELECTRODE.md](KB_05_QC_ELECTRODE.md) | QC B597/C443/C512/C486, Điện cực Slitting B552, QC Flow đầy đủ IQC→PQC→OQC→Bending/Cutting, Slitting Hà Nam F743-F748, 4M Change, CAPA, Reliability Test, và cẩm nang lỗi Screen ID tương ứng | B597, C443, C512, C486, B552, C121-C564, F743-F748, RTM, 4M Change, CAPA |
+| [KB_06_MASTER_DATA_TOOLS.md](KB_06_MASTER_DATA_TOOLS.md) | Model mới, Vol/Farad, Thêm Cell/Line, SQL Utilities, Bypass, Quick Start Checklist đầy đủ, Line/Route B210-B240, A418, B260, và cẩm nang lỗi Screen ID tương ứng | A410, B210-B240, B250, B260, B270, A418, A419, C131, C132, C430, C451, C560, F741 |
+| [KB_07_GROUPWARE_INTEGRATION.md](KB_07_GROUPWARE_INTEGRATION.md) | Tích hợp Groupware: Mua hàng, Kế hoạch SX, Master Data, ESM Bridge Tables (18 bảng), BOM Management, Danh sách 100+ kho active | Groupware, F330, C220, B310, B450, F110, F130, F140 |
+| [KB_10_KIEN_TRUC_VA_DATAFLOW.md](KB_10_KIEN_TRUC_VA_DATAFLOW.md) | Kiến trúc tổng quan MES, 3 Trụ cột, Sơ đồ End-to-End, Phân tích SP, Ma trận nhà máy, Dịch nghĩa bình dân luồng MES, và Cẩm nang nhập môn liên thông hệ thống dành cho người mới (GW ↔ CSDL ↔ MES) | System |
 | [KB_12_DEEP_CORE_ANALYSIS_AND_AUDIT.md](KB_12_DEEP_CORE_ANALYSIS_AND_AUDIT.md) | Phân tích sâu cốt lõi, 5 triết lý DNA, Bảng ẩn, Điểm nguy hiểm cho Dev, Kết quả DB Audit & Bugs | DB/Audit |
 | [KB_14_TRACE_BUG_METHODOLOGY.md](KB_14_TRACE_BUG_METHODOLOGY.md) | Phương pháp trace bug 5 bước, Log hệ thống, Bảng quan trọng | Toàn bộ |
 | [KB_15_EA_MES_CASE_STUDY_XUONG_MAY.md](KB_15_EA_MES_CASE_STUDY_XUONG_MAY.md) | Tổng hợp các Case Study thực tế dành cho kỹ sư EA/MES khi xuống xưởng | Vận hành/Hỗ trợ |
-| [KB_18_DATABASE_SCHEMA_QUICKREF.md](KB_18_DATABASE_SCHEMA_QUICKREF.md) | Bảng tra cứu nhanh các cột dữ liệu quan trọng, **Sơ đồ ERD cốt lõi**, **Bản đồ 976 bảng, SPs & 1442 màn hình** | DB/Schema |
-| [KB_19_ALL_DATABASES_MAP.md](KB_19_ALL_DATABASES_MAP.md) | **Bản đồ chi tiết 13 cơ sở dữ liệu hệ thống (Andon, NEOE, Groupware, POP, WCMS, v.v.), cơ chế liên thông & truy vấn mẫu** | DB/Integration |
-| [KB_20_BEGINNER_SYSTEM_FLOW_HANDBOOK.md](KB_20_BEGINNER_SYSTEM_FLOW_HANDBOOK.md) | **Cẩm nang nhập môn hệ thống liên thông dành cho người mới hoàn toàn (GW ↔ CSDL ↔ MES)** | Onboarding/Flows |
-| [KB_25_VINAENESSOL_HUNG_YEN.md](KB_25_VINAENESSOL_HUNG_YEN.md) | Phân hệ VinaEnesol, đóng gói & in nhãn (Inner/Outer Box), khớp box (Box Matching), Vận hành Hưng Yên | D000, D051, D100, D110, HungYenFactory |
-| [KB_26_LIEN_KET_HE_THONG_VA_BUG_LOGIC.md](KB_26_LIEN_KET_HE_THONG_VA_BUG_LOGIC.md) | Liên kết WMS-Sản xuất-QC-Xuất hàng, Cơ chế trừ kho Trigger, Tác vụ ngầm & Agent Jobs, **Cấu hình DB Mail cho cảnh báo** | B597, B530, C443, C512, C530, C546, HN551, FG00 |
-| [KB_27_SCM_REWORK_TRA_HANG_KIEM_KE.md](KB_27_SCM_REWORK_TRA_HANG_KIEM_KE.md) | Phân hệ SCM (Sales Order/Delivery), Rework (Làm lại), Trả hàng (Returns & RMA), Kiểm kê (Stocktaking F750) | F750, B618, SCM01, FG00, HN551 |
+| [KB_19_ALL_DATABASES_MAP.md](KB_19_ALL_DATABASES_MAP.md) | Bản đồ chi tiết 13 cơ sở dữ liệu hệ thống, cơ chế liên thông, truy vấn mẫu, và Bảng tra cứu cột quan trọng + Sơ đồ ERD cốt lõi | DB/Integration |
+| [KB_25_VINAENESSOL_HUNG_YEN.md](KB_25_VINAENESSOL_HUNG_YEN.md) | Phân hệ VinaEnesol, đóng gói & in nhãn (Inner/Outer Box), khớp box (Box Matching), Vận hành Hưng Yên, và cẩm nang lỗi Screen ID tương ứng | D000, D051, D100, D110, HungYenFactory |
+| [KB_26_LIEN_KET_HE_THONG_VA_BUG_LOGIC.md](KB_26_LIEN_KET_HE_THONG_VA_BUG_LOGIC.md) | Liên kết WMS-Sản xuất-QC-Xuất hàng, Cơ chế trừ kho Trigger, Tác vụ ngầm & Agent Jobs, cấu hình DB Mail, phân hệ SCM, Rework, Trả hàng, Kiểm kê F750, và tự động tách lô chất mang | B597, B530, C443, C512, C530, C546, HN551, FG00, F750, B618 |
 | [KB_29_SUPER_DEEP_SYSTEM_DISCOVERY_PROMPT.md](KB_29_SUPER_DEEP_SYSTEM_DISCOVERY_PROMPT.md) | Siêu Prompt (Meta-Prompt) tự học, đào sâu bản chất màn hình & liên kết nghiệp vụ | Hướng dẫn phân tích ngược |
-| [KB_30_THIET_BI_PHU_TRO_SAY_GA_DAO.md](KB_30_THIET_BI_PHU_TRO_SAY_GA_DAO.md) | Phân hệ thiết bị phụ trợ: Lò sấy (Dry Oven), Gá nạp Doping, Tuổi thọ dao Slitting | V-22, V-11_BG, Doping |
 
 ---
 
@@ -54,14 +48,14 @@
 | Hàng hết hạn sử dụng | KB_02 § 4.10 |
 | Chuyển từ kho Holding sang kho chính | KB_02 § 4.7 |
 | Không tìm thấy Lot ở C512 | KB_02 § 4.2, KB_05 § 7.2 |
-| Xóa phiếu nhập kho F330 đã Confirm | KB_08 § 5 |
+| Xóa phiếu nhập kho F330 đã Confirm | KB_02 § 5 |
 | Sửa ngày JobDate B782 | KB_03 § 5.2 |
 | Sửa ngày PrintTime B781 | KB_03 § 5.3 |
 | Chuyển Line sản xuất | KB_03 § 5.9 |
 | Xóa PO (B310/B450) | KB_03 § 5.7 |
 | Sửa số lượng NG DefectQty | KB_03 § 5.8 |
 | Đổi Barcode VV→VJ | KB_03 § 5.10 |
-| Xóa nhập sản lượng 1 công đoạn | KB_08 § 4 |
+| Xóa nhập sản lượng 1 công đoạn | KB_02 § 4 |
 | Lot không in tem được | KB_04 § 6.10 (checklist) |
 | B523 không gộp Box | KB_04 § 6.4 |
 | Packing Qty âm | KB_04 § 6.6 |
@@ -83,14 +77,14 @@
 | Model mới không hiện Vol/Farad | KB_06 § 1.2 |
 | In tem khẩn không có Lot | KB_06 § 6, KB_04 § 6.15 |
 | Thêm Cell/Line mới (B250/B270) | KB_06 § 7 |
-| Hàng xuất HN551 nhưng HN866 vẫn còn | KB_08 § 1 |
-| Lot bị đổi MaterialCode tự động | KB_08 § 2 |
-| Màn HNC321 nhập phế lỗi | KB_14 § 4.6, KB_08 § 4 |
+| Hàng xuất HN551 nhưng HN866 vẫn còn | KB_02 § 1 |
+| Lot bị đổi MaterialCode tự động | KB_02 § 2 |
+| Màn HNC321 nhập phế lỗi | KB_14 § 4.6, KB_02 § 4 |
 | Không PO trên MES từ Groupware | KB_07 § 6 |
 | Không nhập được F330 (chưa duyệt) | KB_07 § 2 |
 | Trace lỗi không biết bắt đầu từ đâu | KB_14_TRACE_BUG_METHODOLOGY |
 | **Không in được tem (nhiều mã)** | KB_14 § 4.5, KB_04 § 6.12 |
-| **HNC321 nhập phế báo lỗi tiếng Hàn** | KB_14 § 4.6, KB_08 § 4 |
+| **HNC321 nhập phế báo lỗi tiếng Hàn** | KB_14 § 4.6, KB_02 § 4 |
 | **Nhảy bước cân điện cực Mixing (electrode.weighing)** | KB_14 § 4.7 |
 | **Mã HCE lỗi không thao tác được** | KB_14 § 4.7 |
 | **Sản xuất ra không ghi nhận trên hệ thống** | KB_14 § 4.7 |
@@ -132,7 +126,7 @@
 | Địa chỉ URL truy cập hệ thống | KB_06 § 13 |
 | Bảng tổng hợp màn hình MES (Mở rộng) | KB_06 § 14 |
 | Gộp box tùy chỉnh HN523 Qty = 0 (thiếu IsOutputRoute) | KB_04 § 6.13 |
-| Đổi mã vật tư tự động (STB_ChangeMaterialCode_HN) | KB_08 § 3.1 |
+| Đổi mã vật tư tự động (STB_ChangeMaterialCode_HN) | KB_02 § 3.1 |
 | Đăng ký mã vật tư mới (STB_MaterialMaster) | KB_06 § 1.3 |
 | Tra cứu SP in tem cho khách hàng mới (Sanmina) | KB_04 § 6.9.3 |
 | Hệ thống chậm/treo do tranh chấp database (block session) | KB_14 § 5.D |
@@ -165,17 +159,17 @@
 | **Không đổi được trạng thái Reject sang Pass ở QC Audit** | KB_26 § 3.2 |
 | **Trống hàng QC Audit ở kho Hà Nam/Hưng Yên** | KB_26 § 3.3 |
 | **Cơ chế trừ kho tự động (WMS ↔ Sản xuất Triggers)** | KB_26 § 2 |
-| **Lỗi phân quyền màn hình Rework (B618)** | KB_27 § 2 |
-| **Lỗi quét barcode trả hàng không thành công (Customer Return)** | KB_27 § 3 |
-| **Quy trình tự động cân bằng kho (Kiểm kê F750)** | KB_27 § 4 |
-| **Quy trình chia lô tự động chất mang/substrate** | KB_27 § 5 |
+| **Lỗi phân quyền màn hình Rework (B618)** | KB_26 § 2 |
+| **Lỗi quét barcode trả hàng không thành công (Customer Return)** | KB_26 § 3 |
+| **Quy trình tự động cân bằng kho (Kiểm kê F750)** | KB_26 § 4 |
+| **Quy trình chia lô tự động chất mang/substrate** | KB_26 § 5 |
 
 
 ---
 
 ---
 
-> 📌 **Bảng DB & SP quan trọng:** Xem chi tiết tại [KNOWLEDGE.md](../AI_AGENT_CONFIG/KNOWLEDGE.md) §1-2, [KB_18_DATABASE_SCHEMA_QUICKREF.md](KB_18_DATABASE_SCHEMA_QUICKREF.md) và [KB_19_ALL_DATABASES_MAP.md](KB_19_ALL_DATABASES_MAP.md).
+> 📌 **Bảng DB & SP quan trọng:** Xem chi tiết tại [KNOWLEDGE.md](../AI_AGENT_CONFIG/KNOWLEDGE.md) §1-2 và [KB_19_ALL_DATABASES_MAP.md](KB_19_ALL_DATABASES_MAP.md).
 > 🛡️ **Nguyên tắc sửa DB:** Xem tại [RULES.md](../AI_AGENT_CONFIG/RULES.md).
 
 *Cập nhật: 2026-06-14 | Tái cấu trúc tinh gọn tài liệu: Gộp toàn bộ 9 tệp tin trùng lặp nội dung*
