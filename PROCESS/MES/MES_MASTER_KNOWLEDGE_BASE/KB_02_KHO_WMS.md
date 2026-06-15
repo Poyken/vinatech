@@ -84,7 +84,7 @@ SELECT OBJECT_DEFINITION(OBJECT_ID('usp_vvt_MaterialLotInfo_get'))
 
 ### 4.2 Không tìm thấy mã lot ở màn C512
 
-👉 **Chi tiết Nguyên nhân & Cách xử lý:** Xem tại [KB_05_QC_ELECTRODE.md § 7.2](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05_QC_ELECTRODE.md)
+👉 **Chi tiết Nguyên nhân & Cách xử lý:** Xem tại [KB_05_QC_ELECTRODE.md § 7.2](KB_05_QC_ELECTRODE.md)
 
 ---
 
@@ -317,9 +317,9 @@ Có **3 cách xử lý/thiết lập** tùy thuộc vào tình huống:
 Khi nhà cung cấp thay đổi định dạng mã Lot Vendor, hệ thống sẽ không đọc được ngày sản xuất, gây lỗi `Exception occurred` hoặc tính sai hạn dùng. Bạn cần sửa đổi các SQL Function tương ứng.
 
 ##### 1. Phân biệt 2 Function của hệ thống:
-* **Hàm [fn_VVT_getdatebyVendorLot](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_10_KIEN_TRUC_VA_DATAFLOW.md) (2 tham số: `@materialcode`, `@vendorlot`):**
+* **Hàm [fn_VVT_getdatebyVendorLot](KB_10_KIEN_TRUC_VA_DATAFLOW.md) (2 tham số: `@materialcode`, `@vendorlot`):**
   * Dùng cho các vật tư chỉ có một định dạng Vendor Lot duy nhất từ một nhà cung cấp, không phân biệt nhà cung cấp khác nhau.
-* **Hàm [fn_VVT_getdatebyVendorLot_MergeCode](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_10_KIEN_TRUC_VA_DATAFLOW.md) (3 tham số: `@materialcode`, `@vendorlot`, `@sourceCustomerCode`):**
+* **Hàm [fn_VVT_getdatebyVendorLot_MergeCode](KB_10_KIEN_TRUC_VA_DATAFLOW.md) (3 tham số: `@materialcode`, `@vendorlot`, `@sourceCustomerCode`):**
   * Dùng khi **cùng một mã vật tư** nhưng được cung cấp bởi **nhiều nhà cung cấp khác nhau** (`@sourceCustomerCode` ví dụ: `VV033`, `VV040`, `VV034`...) có định dạng mã Lot khác nhau (đặc biệt là nhóm Vỏ nhôm `GBAKAC-%`, Sleeve `GCMDPT-%`, Băng keo `GBRLAC-%`).
 
 ##### 2. Sửa ở đâu và sửa thế nào?
@@ -421,25 +421,9 @@ WHERE LotID = 'lot_id_cần_sửa';
 
 ### 4.12 Lỗi "Không tồn tại thiết lập Vỏ Nhôm" (B597)
 
-**Triệu chứng:** `"Không tồn tại thiết lập Vỏ Nhôm của LotNo... với mã Vỏ Nhôm: GBDYAC-004 <> ECVT30-367"`
-
-> ⚠️ **Đã xác minh (2026-05-17):** Bảng `STB_AluCaseMapping_VVT` **KHÔNG TỒN TẠI**. Logic kiểm tra vỏ nhôm được **hardcode hoàn toàn** bên trong SP `usp_Vietnam_RawMaterialInputHist_uid` bằng IF/NOT IN.
-
-**Trace:**
-```sql
--- Đọc SP để tìm khối IF kiểm tra vỏ nhôm
-SELECT OBJECT_DEFINITION(OBJECT_ID('usp_Vietnam_RawMaterialInputHist_uid'))
--- Ctrl+F tìm: 'Vỏ Nhôm' hoặc 'AluCase' hoặc 'GBDYAC'
--- Tìm đến đoạn:
--- IF (@MaterialCode = 'ECVT30-367' AND @pRawMaterialBarcode NOT IN ('GBRLAC-004', 'GBDYAC-004'))
-```
-
-**Fix - chỉ có 1 cách:**
-> 👉 Chi tiết hướng dẫn và SQL script để thêm mã vỏ nhôm, vui lòng xem tại [KB_05_QC_ELECTRODE.md § 7.4](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05_QC_ELECTRODE.md).
-
-
-**Checklist đầy đủ khi gặp lỗi B597:**
-👉 Xem tại [KB_05_QC_ELECTRODE.md § 8.3](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05_QC_ELECTRODE.md)
+*   **Triệu chứng:** `"Không tồn tại thiết lập Vỏ Nhôm của LotNo... với mã Vỏ Nhôm: GBDYAC-004 <> ECVT30-367"`
+*   **Chi tiết & Giải pháp:** Xem chi tiết nguyên nhân gốc, cách trace và SQL script khắc phục tại [KB_05_QC_ELECTRODE.md#74-b597-báo-lỗi-không-tồn-tại-thiết-lập-vỏ-nhôm](KB_05_QC_ELECTRODE.md#74-b597-báo-lỗi-không-tồn-tại-thiết-lập-vỏ-nhôm).
+*   **Checklist lỗi B597 đầy đủ:** Xem tại [KB_05_QC_ELECTRODE.md#83-checklist-khi-b597-báo-lỗi-khi-lưu-nvl](KB_05_QC_ELECTRODE.md#83-checklist-khi-b597-báo-lỗi-khi-lưu-nvl).
 
 ---
 
@@ -633,7 +617,7 @@ Với mỗi mã nguyên vật liệu (`MaterialCode`), hệ thống cấu hình 
 *   `IsUseBarcode`: Có bắt buộc quản lý và quét bằng tem nhãn barcode hay không.
 *   `IsFIFO`: Có kích hoạt tính năng kiểm tra Nhập trước - Xuất trước (FIFO) đối với mã này hay không.
 *   `IsLotUse`: Có bắt buộc tách hàng thành các mã Lot riêng biệt để theo dõi vòng đời hay không.
-*   *Lưu ý lỗi:* Nếu nguyên vật liệu mới không gộp box được (lỗi tại B523), thủ kho cần kiểm tra xem mã vật tư đó đã được tích đầy đủ các cờ cấu hình trên hay chưa (Xem hướng dẫn thiết lập Master Data tại [KB_06 § 2.1](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_06_MASTER_DATA_TOOLS.md)).
+*   *Lưu ý lỗi:* Nếu nguyên vật liệu mới không gộp box được (lỗi tại B523), thủ kho cần kiểm tra xem mã vật tư đó đã được tích đầy đủ các cờ cấu hình trên hay chưa (Xem hướng dẫn thiết lập Master Data tại [KB_06 § 2.1](KB_06_MASTER_DATA_TOOLS.md)).
 
 ---
 

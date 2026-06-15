@@ -68,7 +68,7 @@ flowchart TD
 ```
 
 ### Bước 1: Khởi tạo chứng từ xuất kho sản xuất (Goods Issue)
-Khi sản xuất tiêu hao nguyên vật liệu, hệ thống gọi SP [usp_DoProcessProdGIMaterialForBarcode](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/sql/procedures/usp_DoProcessProdGIMaterialForBarcode.sql) để tạo một chứng từ xuất kho trong `STB_MaterialDocInfo` và chèn chi tiết lô vật tư vào `STB_MaterialDocLotInfo`.
+Khi sản xuất tiêu hao nguyên vật liệu, hệ thống gọi SP [usp_DoProcessProdGIMaterialForBarcode](../sql/procedures/usp_DoProcessProdGIMaterialForBarcode.sql) để tạo một chứng từ xuất kho trong `STB_MaterialDocInfo` và chèn chi tiết lô vật tư vào `STB_MaterialDocLotInfo`.
 
 ### Bước 2: Kích hoạt Trigger chứng từ `tgMaterialDocLotInfoIUD`
 Khi một dòng được chèn, sửa hoặc xóa trong `STB_MaterialDocLotInfo`, Trigger `tgMaterialDocLotInfoIUD` được kích hoạt tự động để cập nhật trạng thái lấy hàng (`PickingQty`) của Lot tương ứng trong `STB_MaterialLotInfo`.

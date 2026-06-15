@@ -13,7 +13,7 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
 *   **Triệu chứng:** Khi thực hiện nhập kho tại **F330** hoặc điều chuyển kho, người dùng không thấy vị trí kho (Location) trong danh sách để chọn, hoặc hệ thống báo lỗi không tồn tại vị trí.
 *   **Nguyên nhân gốc:** Chưa khai báo Location hoặc cờ sử dụng bị tắt (`IsUsed = 0`) trong bảng danh mục kho `STB_WarehouseLocation`.
 *   **Cách khắc phục:** Vào màn hình **A130** (hoặc check trực tiếp bảng `STB_WarehouseLocation`), cấu hình thêm vị trí kho tương ứng cho mã kho và bật cờ hoạt động.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_25_VINAENESSOL_HUNG_YEN.md § 8](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_25_VINAENESSOL_HUNG_YEN.md#8-a130-kholocation--đối-tác).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_25_VINAENESSOL_HUNG_YEN.md § 8](KB_25_VINAENESSOL_HUNG_YEN.md#8-a130-kholocation--đối-tác).
 
 ---
 
@@ -28,7 +28,7 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
     INSERT INTO STB_ModelBasicInfo (ModelCode, ModelName, MaterialTypeCode, ProductGroupCode, MBISizeH, MBISizeW, CreateDateTime, MBIExtText04, MBIExtText05)
     VALUES ('MÃ_MODEL_MỚI', 'TÊN_MODEL', 'MDL', 'HC-EDLC', 40, 18, GETDATE(), 'Vol_Ví_Dụ_9R0', 'Farad_Ví_Dụ_166');
     ```
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_06_MASTER_DATA_TOOLS.md § 1.3](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_06_MASTER_DATA_TOOLS.md#13-sửa-mã-vật-tư-mới-chưa-khai-báo-volfarad-stb_modelbasicinfo).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_06_MASTER_DATA_TOOLS.md § 1.3](KB_06_MASTER_DATA_TOOLS.md#13-sửa-mã-vật-tư-mới-chưa-khai-báo-volfarad-stb_modelbasicinfo).
 
 ---
 
@@ -38,7 +38,7 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
 *   **Triệu chứng:** Khi OP quét mã vạch NVL tại chuyền ở trạm **B597**, hệ thống báo lỗi đỏ chặn không cho lưu vì NVL không nằm trong BOM.
 *   **Nguyên nhân gốc:** Cấu trúc định mức vật tư (BOM) của sản phẩm/model chưa được đăng ký hoặc đồng bộ thiếu trong các bảng `STB_BomHeader` và `STB_BomDetail` tại màn hình **A310**.
 *   **Cách khắc phục:** Vào màn hình **A310**, kiểm tra cấu hình BOM của Model, gán bổ sung mã NVL bị thiếu hoặc yêu cầu bộ phận quản lý đồng bộ lại BOM từ Groupware.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_25_VINAENESSOL_HUNG_YEN.md § 4](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_25_VINAENESSOL_HUNG_YEN.md#4-màn-hình-a310-thông-tin-bom).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_25_VINAENESSOL_HUNG_YEN.md § 4](KB_25_VINAENESSOL_HUNG_YEN.md#4-màn-hình-a310-thông-tin-bom).
 
 ---
 
@@ -48,13 +48,13 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
 *   **Triệu chứng:** Khi lập kế hoạch ngày tại **B450** để sinh mã Lot cho PO, người dùng không thể chọn được Line sản xuất mong muốn trong dropdown.
 *   **Nguyên nhân gốc:** Line sản xuất chưa được kích hoạt (`IsUsed = 0`) tại màn hình đăng ký Line **B210** (`STB_LineInfo`), hoặc cấu hình sai mã nhà máy (`WorkCenterCode`).
 *   **Cách khắc phục:** Vào màn hình **B210**, tìm Line tương ứng, kiểm tra và tick chọn cờ `IsUsed`, đảm bảo `WorkCenterCode` khớp với khu vực sản xuất rồi Lưu lại.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_06_MASTER_DATA_TOOLS.md § 10](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_06_MASTER_DATA_TOOLS.md#10-thiết-lập-line--route-b210b220b230b240).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_06_MASTER_DATA_TOOLS.md § 10](KB_06_MASTER_DATA_TOOLS.md#10-thiết-lập-line--route-b210b220b230b240).
 
 ### Lỗi 2: Giao diện B530 không hiển thị Máy khi OP scan chốt công đoạn
 *   **Triệu chứng:** OP thực hiện quét chốt sản lượng tại **B530** nhưng không hiển thị danh sách thiết bị/máy chạy trong dropdown chọn máy.
 *   **Nguyên nhân gốc:** Máy móc chưa được cấu hình phân bổ thuộc công đoạn (RouteCode) đang chạy trong bảng `STB_MachineMaster` (Màn hình **B240**).
 *   **Cách khắc phục:** Vào màn hình **B240**, kiểm tra và gán máy móc đang chạy vào đúng công đoạn (RouteCode) tương ứng.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_06_MASTER_DATA_TOOLS.md § 10](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_06_MASTER_DATA_TOOLS.md#10-thiết-lập-line--route-b210b220b230b240).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_06_MASTER_DATA_TOOLS.md § 10](KB_06_MASTER_DATA_TOOLS.md#10-thiết-lập-line--route-b210b220b230b240).
 
 ---
 
@@ -69,7 +69,7 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
     -- Thêm điều kiện Whitelist User trong SP
     SELECT OBJECT_DEFINITION(OBJECT_ID('usp_Set_VVT_Info_get'));
     ```
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_01_UI_PHAN_QUYEN.md § 1.3](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_01_UI_PHAN_QUYEN.md#13-lỗi-popup-b270-trống-không-hiện-danh-sách-máy).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_01_UI_PHAN_QUYEN.md § 1.3](KB_01_UI_PHAN_QUYEN.md#13-lỗi-popup-b270-trống-không-hiện-danh-sách-máy).
 
 ### Lỗi 2: Cell hoặc Line sản xuất mới thêm không hiển thị hoặc không quét được trên hệ thống
 *   **Triệu chứng:** Khi có yêu cầu thêm Cell/Line mới (Ví dụ: `VVBNTC-05`), OP không thể thực hiện các thao tác gán máy hay quét sản lượng ở các công đoạn.
@@ -93,7 +93,7 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
     ) r;
     COMMIT;
     ```
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_06_MASTER_DATA_TOOLS.md § 7](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_06_MASTER_DATA_TOOLS.md#7-thêm-cellline-mới-b250-b270).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_06_MASTER_DATA_TOOLS.md § 7](KB_06_MASTER_DATA_TOOLS.md#7-thêm-cellline-mới-b250-b270).
 
 ---
 
@@ -103,7 +103,7 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
 *   **Triệu chứng:** Nhân viên đã đăng ký thành công trên MES nhưng OP không tìm thấy tên khi chốt sản lượng.
 *   **Nguyên nhân gốc:** Khi khai báo nhân viên, cột mã nhóm nhân viên (`WorkerGroupCode`) bị điền sai (không phải nhóm `VE-01` của nhà máy).
 *   **Cách khắc phục:** Vào màn hình **B260**, tìm mã nhân viên, cập nhật lại cột `WorkerGroupCode` chính xác thành `VE-01` rồi nhấn Lưu.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_06_MASTER_DATA_TOOLS.md § 12](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_06_MASTER_DATA_TOOLS.md#12-b260---thông-tin-nhân-viên-sản-xuất).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_06_MASTER_DATA_TOOLS.md § 12](KB_06_MASTER_DATA_TOOLS.md#12-b260---thông-tin-nhân-viên-sản-xuất).
 
 ---
 
@@ -115,7 +115,7 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
 *   **Cách khắc phục:**
     1. Yêu cầu quản lý duyệt PO trên Groupware.
     2. Nếu đã duyệt nhưng vẫn lệch, IT kiểm tra trạng thái Windows Service ESM, hoặc chạy query cưỡng bức đồng bộ thủ công qua ESM Bridge Tables.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_07_GROUPWARE_INTEGRATION.md § 6](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_07_GROUPWARE_INTEGRATION.md#6-lỗi-không-đồng-bộ-được-po-từ-groupware-sang-mes).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_07_GROUPWARE_INTEGRATION.md § 6](KB_07_GROUPWARE_INTEGRATION.md#6-lỗi-không-đồng-bộ-được-po-từ-groupware-sang-mes).
 
 ---
 
@@ -134,7 +134,7 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
     UPDATE STB_SetInfo SET Barcode = @NewBC WHERE Barcode = @OldBC;
     UPDATE STB_LotChangeMaterialHistory SET NewBarcode = @NewBC WHERE NewBarcode = @OldBC;
     ```
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.2](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_04_DONG_GOI_IN_TEM.md#62-sửa-tên-lot-sau-b351-chuyển-đổi-lot--barcode-có-dấu-chấm).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.2](KB_04_DONG_GOI_IN_TEM.md#62-sửa-tên-lot-sau-b351-chuyển-đổi-lot--barcode-có-dấu-chấm).
 
 ---
 
@@ -144,7 +144,7 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
 *   **Triệu chứng:** Khi công nhân quét gộp Box tại B523, hệ thống báo lỗi chặn đứng quy trình: `"Chưa có tiêu chuẩn đóng gói"`.
 *   **Nguyên nhân gốc:** Kích thước Size của Model (`MBISizeD` lấy từ **A410**) chưa được khai báo số lượng đóng gói định mức (`PackQty`) tương ứng trong bảng `STB_PackingStandard`.
 *   **Cách khắc phục:** Vào màn hình **A418**, đăng ký Size mới và thiết lập số lượng đóng gói định mức tương ứng (`PackQty`) rồi nhấn Lưu.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_06_MASTER_DATA_TOOLS.md § 11](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_06_MASTER_DATA_TOOLS.md#11-a418---số-lượng-đóng-gói-theo-size).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_06_MASTER_DATA_TOOLS.md § 11](KB_06_MASTER_DATA_TOOLS.md#11-a418---số-lượng-đóng-gói-theo-size).
 
 ---
 
@@ -154,7 +154,7 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
 *   **Triệu chứng:** Khi lập kế hoạch và in tem điện cực tại **B442**, Model mới không hiển thị hoặc không cho phép in.
 *   **Nguyên nhân gốc:** Model chưa được khai báo ở bảng thông tin Model master (**A230**) hoặc thiếu cấu hình công đoạn tương ứng.
 *   **Cách khắc phục:** Đăng ký đầy đủ mã Model ở màn hình **A230** trước khi thao tác trên **B442**.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_05_QC_ELECTRODE.md § 1 (Phần 1)](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05_QC_ELECTRODE.md#1-lập-kế-hoạch--in-tem-điện-cực-b310-b442-a230).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_05_QC_ELECTRODE.md § 1 (Phần 1)](KB_05_QC_ELECTRODE.md#1-lập-kế-hoạch--in-tem-điện-cực-b310-b442-a230).
 
 ---
 
@@ -165,7 +165,7 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
 *   **Nguyên nhân gốc:** Stored Procedure `usp_Vietnam_ChangeProductionOrderRoutingLine_VNT` kiểm soát tính năng này chứa một danh sách Whitelist UserID được hardcode cứng.
 *   **Cách khắc phục:**
     ALTER SP `usp_Vietnam_ChangeProductionOrderRoutingLine_VNT` để bổ sung UserID của nhân viên vận hành hiện tại vào danh sách được phép.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_03_SAN_XUAT.md § 6.7](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03_SAN_XUAT.md#67-b452-không-đổi-được-line).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_03_SAN_XUAT.md § 6.7](KB_03_SAN_XUAT.md#67-b452-không-đổi-được-line).
 
 ---
 
@@ -180,7 +180,7 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
     INSERT INTO STB_PackingStandard (MaterialTypeCode, Size, Voltage, Farad, VinylBagQty, InnerBoxQty, OutBoxQty, CreateDateTime, CreateUserID)
     VALUES ('FERT', 'KÍCH_THƯỚC_SIZE_4_CHỮ_SỐ', NULL, NULL, 500, 4000, 8000, GETDATE(), 'vinaadmin');
     ```
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.1](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_04_DONG_GOI_IN_TEM.md#61-lỗi-chưa-có-tiêu-chuẩn-đóng-gói-b523).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.1](KB_04_DONG_GOI_IN_TEM.md#61-lỗi-chưa-có-tiêu-chuẩn-đóng-gói-b523).
 
 ### Lỗi 2: Không gộp được Box Cell/Module do chưa có Lot, thiếu QC hoặc cờ F110
 *   **Triệu chứng:** Hệ thống từ chối gộp box cho Lot tại **B523** hoặc **B525**.
@@ -193,7 +193,7 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
     -- Bước 2: Cập nhật kết quả QC Pass tạm thời nếu khẩn cấp
     UPDATE STB_SetInfo SET LotDecisionResult = 'PASS', IsDefect = 0 WHERE Barcode = 'MÃ_BARCODE';
     ```
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.4](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_04_DONG_GOI_IN_TEM.md#64-lỗi-không-gộp-box-được-b523--quy-trình-debug-chuẩn).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.4](KB_04_DONG_GOI_IN_TEM.md#64-lỗi-không-gộp-box-được-b523--quy-trình-debug-chuẩn).
 
 ### Lỗi 3: Lỗi Packing Qty hiển thị số âm hoặc sai lệch số lượng thực tế
 *   **Triệu chứng:** Màn hình hiển thị số lượng đóng gói bị âm hoặc sai lệch nghiêm trọng.
@@ -204,7 +204,7 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
     UPDATE STB_MaterialLotInfo SET CurrentQty = [SỐ_LƯỢNG_ĐÚNG] WHERE LotNo = 'MÃ_LOT';
     UPDATE STB_SavePackingTime_VVT SET PackQty = [SỐ_LƯỢNG_ĐÚNG] WHERE LotNo = 'MÃ_LOT' AND id = [ID_GIAO_DỊCH];
     ```
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.6](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_04_DONG_GOI_IN_TEM.md#66-lỗi-packing-qty-âm-ở-b523--b789).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.6](KB_04_DONG_GOI_IN_TEM.md#66-lỗi-packing-qty-âm-ở-b523--b789).
 
 ### Lỗi 4: Lỗi "Chưa có tiêu chuẩn đóng gói" cho Model/Size 1840 khi quét gộp Box
 *   **Triệu chứng:** Khi công nhân quét gộp Box cho các Model có kích thước size `1840` tại màn hình B523, hệ thống báo lỗi đỏ chặn không cho thao tác.
@@ -215,7 +215,7 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
     INSERT INTO STB_PackingStandard (MaterialTypeCode, Size, Voltage, Farad, VinylBagQty, InnerBoxQty, OutBoxQty, CreateDateTime, CreateUserID)
     VALUES ('FERT', '1840', 0, 0, 0, 500, 1000, GETDATE(), 'vinaadmin');
     ```
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_19_PHAN_TICH_LOT_SIZE_VÀ_MÃ_LỖI_B530.md § 2.1](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_19_PHAN_TICH_LOT_SIZE_VÀ_MÃ_LỖI_B530.md#21-file-thay-đổi-số-lượng-lot-noxlsx-sự-cố-chưa-được-cover-đầy-đủ).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_19_PHAN_TICH_LOT_SIZE_VÀ_MÃ_LỖI_B530.md § 2.1](KB_19_PHAN_TICH_LOT_SIZE_VÀ_MÃ_LỖI_B530.md#21-file-thay-đổi-số-lượng-lot-noxlsx-sự-cố-chưa-được-cover-đầy-đủ).
 
 ---
 
@@ -226,13 +226,13 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
 *   **Nguyên nhân gốc:** Lỗi logic so sánh Null trong SP `usp_DoProcessProdRouteHistForCalc_SmartApp_VNT` dòng 218: `IF @SIExtInt01 = Null` (Trong SQL phải dùng `IS NULL`).
 *   **Cách khắc phục:**
     ALTER SP sửa lại cú pháp so sánh Null chuẩn: `IF @SIExtInt01 IS NULL`.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_12_DEEP_CORE_ANALYSIS_AND_AUDIT.md § 2.2](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_12_DEEP_CORE_ANALYSIS_AND_AUDIT.md#bug-1-gate-20-phút-không-bao-giờ-hoạt-động).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_12_DEEP_CORE_ANALYSIS_AND_AUDIT.md § 2.2](KB_12_DEEP_CORE_ANALYSIS_AND_AUDIT.md#bug-1-gate-20-phút-không-bao-giờ-hoạt-động).
 
 ### Lỗi 2: OP báo lỗi không chốt được công đoạn, báo "Routing không có trong PO" hoặc "Đã hoàn thành thực tế rồi"
 *   **Triệu chứng:** OP scan chốt sản lượng tại **B530** hệ thống báo lỗi không chốt được.
 *   **Nguyên nhân gốc:** Do bỏ qua công đoạn trước đó chưa scan chốt, hoặc PO cấu hình sai thứ tự RoutingIndex.
 *   **Cách khắc phục:**
-    IT kiểm tra lịch sử quét Routing của Barcode bằng Golden Query để phát hiện công đoạn bị bỏ qua. Cho OP quay lại scan trạm trước, hoặc chèn dòng Routing giả lập để thông luồng (Xem phương pháp trace tại [KB_14 § 4.4](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_14_TRACE_BUG_METHODOLOGY.md#44-lỗi-không-chốt-được-công-đoạn-màn-hình-b530)).
+    IT kiểm tra lịch sử quét Routing của Barcode bằng Golden Query để phát hiện công đoạn bị bỏ qua. Cho OP quay lại scan trạm trước, hoặc chèn dòng Routing giả lập để thông luồng (Xem phương pháp trace tại [KB_14 § 4.4](KB_14_TRACE_BUG_METHODOLOGY.md#44-lỗi-không-chốt-được-công-đoạn-màn-hình-b530)).
 
 ### Lỗi 3: Thiếu hoặc dư thừa danh mục lỗi (Defect Code) hiển thị tại lưới nhập lỗi của xưởng BN & BG1
 *   **Triệu chứng:** Giao diện nhập lỗi của tổ sản xuất Bắc Ninh và Bắc Giang 1 hiển thị các danh mục lỗi cũ đã bãi bỏ (gây nhầm lẫn cho công nhân), hoặc thiếu các mã lỗi mới phát sinh cần theo dõi để quản lý chất lượng tốt hơn.
@@ -254,7 +254,7 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
        - `V-24_NE6_BG`: Curling_NG thừa thiếu cân nặng (Curling_Overweight or underweight)
        - `V-24_NE7_BG`: Curling_Xước chân tancha (Curling_Lead terminal scrash)
        - `V-24_NE8_BG`: Curling_Lỗi mẻ miệng curling (Curling_Deformation around mouth)
-*   **Chi tiết nghiệp vụ:** Xem tại [fix_b530_disable_defects_BG.sql](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/sql/scripts/fix_b530_disable_defects_BG.sql) và [fix_b530_add_defects_BG.sql](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/sql/scripts/fix_b530_add_defects_BG.sql).
+*   **Chi tiết nghiệp vụ:** Xem tại [fix_b530_disable_defects_BG.sql](../sql/scripts/fix_b530_disable_defects_BG.sql) và [fix_b530_add_defects_BG.sql](../sql/scripts/fix_b530_add_defects_BG.sql).
 
 ---
 
@@ -271,7 +271,7 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
     VALUES ('MÃ_PART_NO', 'BY', '200', '10', '17.7', 'VVT_F2', 'kho2'),
            ('MÃ_PART_NO', 'YP', '180', '10', '17.7', 'VVT_F2', 'kho2');
     ```
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_05_QC_ELECTRODE.md § 8.2](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05_QC_ELECTRODE.md#82-lỗi-chưa-config-trong-stb_slittinglocationconfig_vvt).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_05_QC_ELECTRODE.md § 8.2](KB_05_QC_ELECTRODE.md#82-lỗi-chưa-config-trong-stb_slittinglocationconfig_vvt).
 
 ---
 
@@ -284,7 +284,7 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
     1. Chạy ALTER TABLE đổi cột `InBoxLabelList` thành `VARCHAR(MAX)`.
     2. ALTER Stored Procedure `usp_DoCreateHelaInBoxBarcodeList` đổi biến `@InBoxLabelList` thành `VARCHAR(MAX)`.
     3. Update khôi phục lại chuỗi tem đầy đủ cho các Lot bị lỗi.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.14](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_04_DONG_GOI_IN_TEM.md#614-lỗi-cắt-chuỗi-danh-sách-tem-nhỏ-b560---truncation-in-inboxlabellist).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.14](KB_04_DONG_GOI_IN_TEM.md#614-lỗi-cắt-chuỗi-danh-sách-tem-nhỏ-b560---truncation-in-inboxlabellist).
 
 ---
 
@@ -296,14 +296,14 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
 *   **Cách khắc phục:**
     1. Check QC: Yêu cầu QC PASS hoặc chuyển kho Lot về kho chính `ROH_WH` bằng SQL.
     2. Bypass gia hạn dùng tạm thời (Ghi nhận biên bản audit): UPDATE ngày tạo `CreateDateTime` lùi lại hoặc chạy lệnh bỏ qua FIFO.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_05_QC_ELECTRODE.md § 7](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05_QC_ELECTRODE.md#7-lỗi-quét-nguyên-vật-liệu-b597--pqc-check).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_05_QC_ELECTRODE.md § 7](KB_05_QC_ELECTRODE.md#7-lỗi-quét-nguyên-vật-liệu-b597--pqc-check).
 
 ### Lỗi 2: Lỗi quét vỏ nhôm (AluCase) mới báo sai chủng loại tại B597
 *   **Triệu chứng:** Quét mã vỏ nhôm mới hệ thống báo lỗi chặn đứng sản xuất.
 *   **Nguyên nhân gốc:** Logic kiểm tra vỏ nhôm không nằm trong DB cấu hình mà bị hardcode trực tiếp trong SP `usp_Vietnam_RawMaterialInputHist_uid`.
 *   **Cách khắc phục:**
     ALTER SP `usp_Vietnam_RawMaterialInputHist_uid` để bổ sung mã vỏ nhôm mới vào khối điều kiện `IF / NOT IN`.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_05_QC_ELECTRODE.md § 7.4](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05_QC_ELECTRODE.md#74-lỗi-vỏ-nhôm-alucase).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_05_QC_ELECTRODE.md § 7.4](KB_05_QC_ELECTRODE.md#74-lỗi-vỏ-nhôm-alucase).
 
 ### Lỗi 3: Lỗi "String or binary data would be truncated" khi quét gộp 5 mã điện cực 1 Lot (Model 3510 / 35105)
 *   **Triệu chứng:** Khi quét gộp 5 mã barcode điện cực cho 1 Lot tại B597, hệ thống báo lỗi đỏ `"String or binary data would be truncated"` và không cho lưu.
@@ -314,7 +314,7 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
        ALTER TABLE STB_InputMaterialHistory ALTER COLUMN RawMaterialBarcode NVARCHAR(1000) NULL;
        ```
     2. Sửa tham số `@pRawMaterialBarcode` và các biến nội bộ chứa chuỗi ghép barcode (ví dụ: `@RawMaterialBarcode`, `@LotMaterialBarcode`) trong stored procedure `usp_Vietnam_RawMaterialInputHist_uid` thành `NVARCHAR(1000)`.
-*   **Chi tiết nghiệp vụ:** Xem file script [fix_multibarcode_3510.sql](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/sql/scripts/fix_multibarcode_3510.sql).
+*   **Chi tiết nghiệp vụ:** Xem file script [fix_multibarcode_3510.sql](../sql/scripts/fix_multibarcode_3510.sql).
 
 ---
 
@@ -325,7 +325,7 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
 *   **Nguyên nhân gốc:** Lệch ngày `JobDate` giữa ca sản xuất thực tế và ngày khai báo kế hoạch trên MES.
 *   **Cách khắc phục:**
     Chạy query cập nhật điều chỉnh `JobDate` của Lot kế hoạch ngày khớp với thực tế để mở luồng ghi nhận phế.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_03_SAN_XUAT.md § 6.12](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03_SAN_XUAT.md#612-b598-báo-phế-nvl-sửa-jobdate-đặc-biệt).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_03_SAN_XUAT.md § 6.12](KB_03_SAN_XUAT.md#612-b598-báo-phế-nvl-sửa-jobdate-đặc-biệt).
 
 ---
 
@@ -336,7 +336,7 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
 *   **Nguyên nhân gốc:** SP `usp_Vietnam_GetLotInfoForRework_VNT` bị hardcode kiểm tra Whitelist UserID.
 *   **Cách khắc phục:**
     Sửa SP để bổ sung thêm UserID của OP hiện hành vào danh sách Whitelist cho phép thao tác Rework.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_27_SCM_REWORK_TRA_HANG_KIEM_KE.md § 2](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_27_SCM_REWORK_TRA_HANG_KIEM_KE.md#2-lỗi-phân-quyền-màn-hình-rework-b618).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_27_SCM_REWORK_TRA_HANG_KIEM_KE.md § 2](KB_27_SCM_REWORK_TRA_HANG_KIEM_KE.md#2-lỗi-phân-quyền-màn-hình-rework-b618).
 
 ---
 
@@ -346,7 +346,7 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
 *   **Triệu chứng:** OP nhập nhầm số lượng, sai kích thước hoặc thông số uốn dán tại **B717**, không thấy nút Edit hay Delete trên UI để chỉnh sửa lại.
 *   **Nguyên nhân gốc:** Hệ thống chỉ được thiết kế để ghi nhận 1 lần (Insert hoặc Override) và không hỗ trợ tính năng sửa/xóa giao dịch trên client app.
 *   **Cách khắc phục:** IT kiểm tra và chạy script SQL update trực tiếp sản lượng hoặc xóa bản ghi giao dịch sai trong bảng tương ứng để OP quét lại.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_12_DEEP_CORE_ANALYSIS_AND_AUDIT.md § 5 (Mục 3)](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_12_DEEP_CORE_ANALYSIS_AND_AUDIT.md#5-⚠️-5-điểm-nguy-hiểm-ẩn--developer-phải-biết).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_12_DEEP_CORE_ANALYSIS_AND_AUDIT.md § 5 (Mục 3)](KB_12_DEEP_CORE_ANALYSIS_AND_AUDIT.md#5-⚠️-5-điểm-nguy-hiểm-ẩn--developer-phải-biết).
 
 ---
 
@@ -361,7 +361,7 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
     INSERT INTO STB_VVT_StagePrices (model, WorkCenterCode, RouteV22, PriceV22...)
     VALUES ('MÃ_MODEL', 'MÃ_NHÀ_MÁY', 'ROUTE_CODE', ĐƠN_GIÁ);
     ```
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_06_MASTER_DATA_TOOLS.md § 3](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_06_MASTER_DATA_TOOLS.md#3-fix-giá-công-đoạn-stage-prices).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_06_MASTER_DATA_TOOLS.md § 3](KB_06_MASTER_DATA_TOOLS.md#3-fix-giá-công-đoạn-stage-prices).
 
 ### Lỗi 2: Báo cáo lỗi chi tiết Cell B682 bị lẫn lộn các lỗi không thuộc bộ phận sản xuất (VE%, VP%)
 *   **Triệu chứng:** Báo cáo chi tiết lỗi sản phẩm Cell Line Bắc Giang/Bắc Ninh hiển thị lẫn lộn cả các lỗi thuộc bộ phận Điện cực (Electrode - mã `VE%`) và bộ phận Module (mã `VP%`).
@@ -372,7 +372,7 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
     AND b.RouteCode LIKE 'V%'
     AND (@WorkCenterCode = 'VVT_F3' OR (b.RouteCode NOT LIKE 'VE%' AND b.RouteCode NOT LIKE 'VP%'))
     ```
-*   **Chi tiết nghiệp vụ:** Xem tại mã nguồn Stored Procedure [usp_Get_VVT_Prod_Bad_Status.sql](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/sql/procedures/usp_Get_VVT_Prod_Bad_Status.sql#L53).
+*   **Chi tiết nghiệp vụ:** Xem tại mã nguồn Stored Procedure [usp_Get_VVT_Prod_Bad_Status.sql](../sql/procedures/usp_Get_VVT_Prod_Bad_Status.sql#L53).
 
 ---
 
@@ -386,7 +386,7 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
 *   **Cách khắc phục:**
     1. Nhắc nhở công nhân tick chọn `IsOuter` khi in nhãn ngoài thùng (Outer) vì nhãn trong và nhãn ngoài chạy Serial độc lập.
     2. Khi in tem cân nặng, tick chọn `IsWeightLabel` trước khi nhấn nút.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.9.1](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_04_DONG_GOI_IN_TEM.md#691-in-tem-khách-hàng-pac-b754--b755--b756).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.9.1](KB_04_DONG_GOI_IN_TEM.md#691-in-tem-khách-hàng-pac-b754--b755--b756).
 
 ---
 
@@ -398,7 +398,7 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
 *   **Cách khắc phục:**
     1. Yêu cầu nhập đầy đủ thông số PO và số dòng PO tương ứng trước khi in.
     2. Nếu in cho thùng hàng hỗn hợp (Mixed Load), chuyển sang sử dụng màn hình **B758**.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.9.2](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_04_DONG_GOI_IN_TEM.md#692-in-tem-khách-hàng-digi-key-b757--b758).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.9.2](KB_04_DONG_GOI_IN_TEM.md#692-in-tem-khách-hàng-digi-key-b757--b758).
 
 ---
 
@@ -413,7 +413,7 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
     -- Sửa ngày bắt đầu sản xuất cho Lot
     UPDATE STB_SetInfo SET InputJobDate = '2026-06-12' WHERE Barcode = 'MÃ_BARCODE';
     ```
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.10](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_04_DONG_GOI_IN_TEM.md#610-thiết-kế-tem-phoenix-contact-yêu-cầu-đặc-biệt-tại-b790).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.10](KB_04_DONG_GOI_IN_TEM.md#610-thiết-kế-tem-phoenix-contact-yêu-cầu-đặc-biệt-tại-b790).
 
 ---
 
@@ -423,7 +423,7 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
 *   **Triệu chứng:** Khi mở báo cáo lịch sử sản xuất điện cực trên **B802**, số lượng cuộn hoặc tổng số mét sản xuất thực tế bị lệch so với dữ liệu chốt công đoạn.
 *   **Nguyên nhân gốc:** Bỏ qua việc quét/chốt các công đoạn bán thành phẩm điện cực (Coating/Slitting) hoặc do sai lệch giá trị `ProdQty` trong bảng `STB_ProdRouteHist` của điện cực.
 *   **Cách khắc phục:** IT tiến hành đối soát thông tin qua bảng lịch sử điện cực `STB_ElectrodeProdRouteHist` và điều chỉnh lại sản lượng thực tế khớp với số mét cuộn.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_03_SAN_XUAT.md § 6.11](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03_SAN_XUAT.md#611-b802---vietnam-electrode-prod-route-hist-lịch-sử-sx-điện-cực) và [KB_05_QC_ELECTRODE.md § 3](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05_QC_ELECTRODE.md#3-báo-cáo--đối-soát-điện-cực-b802).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_03_SAN_XUAT.md § 6.11](KB_03_SAN_XUAT.md#611-b802---vietnam-electrode-prod-route-hist-lịch-sử-sx-điện-cực) và [KB_05_QC_ELECTRODE.md § 3](KB_05_QC_ELECTRODE.md#3-báo-cáo--đối-soát-điện-cực-b802).
 
 ---
 
@@ -435,7 +435,7 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
 *   **Cách khắc phục:**
     1. Vào **C121** thêm nhóm kiểm tra và các hạng mục chi tiết.
     2. Vào **C122**, chọn mã nguyên vật liệu và click chọn nhóm kiểm tra tương ứng để map dữ liệu.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_05_QC_ELECTRODE.md § 9.1](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05_QC_ELECTRODE.md#91-iqc-incoming-quality-control--kiểm-tra-nvl-đầu-vào).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_05_QC_ELECTRODE.md § 9.1](KB_05_QC_ELECTRODE.md#91-iqc-incoming-quality-control--kiểm-tra-nvl-đầu-vào).
 
 ---
 
@@ -446,7 +446,7 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
 *   **Nguyên nhân gốc:** Kết quả kiểm tra mẫu IQC của Lot hàng tại màn hình **C220** vẫn ở trạng thái chờ đánh giá hoặc đã bị đánh giá FAIL.
 *   **Cách khắc phục:**
     Yêu cầu bộ phận QC hoàn thành nhập kết quả đo và xác nhận cờ chất lượng PASS cho Lot hàng trên màn hình **C220**.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_02_KHO_WMS.md § 4.15](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_02_KHO_WMS.md#415-luồng-nhập-kho-đầy-đủ-f330).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_02_KHO_WMS.md § 4.15](KB_02_KHO_WMS.md#415-luồng-nhập-kho-đầy-đủ-f330).
 
 ---
 
@@ -468,13 +468,13 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
          'MÃ_LINE_HIỆN_TẠI', 'MÃ_MÁY_HIỆN_TẠI', 20, 20, CAST(GETDATE() AS DATE), 'A', 'vinaadmin', GETDATE());
     COMMIT TRANSACTION;
     ```
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_08_KHO_THANH_PHAM_HN.md § 4](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_08_KHO_THANH_PHAM_HN.md#4-lỗi-màn-hnc321-qc-nhập-ng-sản-phẩm-mang-đi-kiểm-tra--báo-lỗi-chữ-hàn-quốc) và [KB_14_TRACE_BUG_METHODOLOGY.md § 4.6](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_14_TRACE_BUG_METHODOLOGY.md#46-lỗi-nhập-phế-màn-hnc321-báo-lỗi-tiếng-hàn-이전-공정에-실적처리-이력이-없습니다).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_08_KHO_THANH_PHAM_HN.md § 4](KB_08_KHO_THANH_PHAM_HN.md#4-lỗi-màn-hnc321-qc-nhập-ng-sản-phẩm-mang-đi-kiểm-tra--báo-lỗi-chữ-hàn-quốc) và [KB_14_TRACE_BUG_METHODOLOGY.md § 4.6](KB_14_TRACE_BUG_METHODOLOGY.md#46-lỗi-nhập-phế-màn-hnc321-báo-lỗi-tiếng-hàn-이전-공정에-실적처리-이력이-없습니다).
 
 ### Lỗi 2: Nhập phế/sửa chữa tại C321 báo lỗi hoặc không cập nhật được thông số sửa chữa
 *   **Triệu chứng:** OP không lưu được thông tin sửa chữa/vật tư thay thế, hoặc bị sai lệch số lượng NG (`DefectQty`) ở các trạm tiếp theo.
 *   **Nguyên nhân gốc:** Lỗi khi đồng bộ dữ liệu giữa bảng thông tin lỗi `STB_DefectRepairInfo` và số lượng chốt sản lượng của công đoạn.
 *   **Cách khắc phục:** IT kiểm tra thông số và cập nhật đồng bộ lại cột `DefectQty` hoặc `ProdQty` bằng cách chỉnh sửa trực tiếp DB.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_05_QC_ELECTRODE.md § 9.5](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05_QC_ELECTRODE.md#95-c321---pqc-reliability-assy-sửa-chữa-lỗi-cell-line).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_05_QC_ELECTRODE.md § 9.5](KB_05_QC_ELECTRODE.md#95-c321---pqc-reliability-assy-sửa-chữa-lỗi-cell-line).
 
 ---
 
@@ -491,7 +491,7 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
     DELETE FROM STB_CommInspDocHistory WHERE CommInspDocNo = @DocNo;
     COMMIT TRANSACTION;
     ```
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_14_TRACE_BUG_METHODOLOGY.md § 4.2 (Kịch bản B)](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_14_TRACE_BUG_METHODOLOGY.md#42-kịch-bản-b-hủy-kết-quả-kiểm-tra-chất-lượng-qc-b597--c443).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_14_TRACE_BUG_METHODOLOGY.md § 4.2 (Kịch bản B)](KB_14_TRACE_BUG_METHODOLOGY.md#42-kịch-bản-b-hủy-kết-quả-kiểm-tra-chất-lượng-qc-b597--c443).
 
 ---
 
@@ -505,7 +505,7 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
     ```sql
     -- Script reset metadata layout cho grid C486
     ```
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_05_QC_ELECTRODE.md § 7.8](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05_QC_ELECTRODE.md#78-cột-note1-thừa-trên-grid-c486-và-logic-rebuild-bảng).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_05_QC_ELECTRODE.md § 7.8](KB_05_QC_ELECTRODE.md#78-cột-note1-thừa-trên-grid-c486-và-logic-rebuild-bảng).
 
 ---
 
@@ -517,7 +517,7 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
 *   **Cách khắc phục:**
     1. Kiểm tra Lot đã được quét gộp box tại B523 chưa.
     2. Sửa cờ `IsOutputRoute = 1` cho công đoạn cuối của PO trong `STB_ProductionOrderRouting` nếu cấu hình BOM/Routing bị thiếu.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_05_QC_ELECTRODE.md § 7.2](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05_QC_ELECTRODE.md#72-không-tìm-thấy-lot-ở-màn-c512).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_05_QC_ELECTRODE.md § 7.2](KB_05_QC_ELECTRODE.md#72-không-tìm-thấy-lot-ở-màn-c512).
 
 ### Lỗi 2: Đo OQC OCV/ESR tại C546 chỉ hiển thị 20 dòng thay vì 50 dòng
 *   **Triệu chứng:** Máy đo trả về kết quả cho 50 mẫu test nhưng trên giao diện C546 hệ thống chỉ load và hiển thị 20 dòng mẫu đo (lưới OCV/ESR hiển thị không đủ 50 dòng trống để nhập/hiển thị).
@@ -540,16 +540,36 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
        COMMIT TRANSACTION;
        ```
     3. Yêu cầu QC tắt và mở lại màn hình C546, quét lại Barcode để hệ thống sinh đủ 50 dòng.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_05_QC_ELECTRODE.md § 9.6](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05_QC_ELECTRODE.md#96-c546-foqc-ocvsr-chỉ-hiển-thị-20ea-thay-vì-50ea-ocv-lệch-dữ-liệu) và file script vá lỗi [fix_c546_ocv_lots.sql](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/sql/scripts/fix_c546_ocv_lots.sql).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_05_QC_ELECTRODE.md § 9.6](KB_05_QC_ELECTRODE.md#96-c546-foqc-ocvsr-chỉ-hiển-thị-20ea-thay-vì-50ea-ocv-lệch-dữ-liệu) và file script vá lỗi [fix_c546_ocv_lots.sql](../sql/scripts/fix_c546_ocv_lots.sql).
 
 ### Lỗi 3: Đo kiểm ESR tại C530 chỉ hiển thị 10 dòng kết quả thay vì 20 dòng mẫu đo
 *   **Triệu chứng:** Khi mở màn hình [C530] để nhập kết quả đo cho hạng mục ESR với số lượng mẫu (Sample Qty) thiết lập là 20, lưới kết quả đo bên phải chỉ hiển thị đúng 10 dòng kết quả đo từ máy đo và không sinh ra thêm 10 dòng trống tiếp theo để điền cho đủ 20 dòng.
 *   **Nguyên nhân gốc:** 
-    1. **Nghiệp vụ:** Chưa bấm nút "Tạo danh sách mẫu" (hoặc "Tổng hợp hạng mục" / "Create IQC Item Sample List") sau khi nâng cấu hình số lượng mẫu của ESR lên 20, dẫn đến bảng `STB_MaterialQcSampleResult` vẫn giữ nguyên 10 dòng cũ.
-    2. **Logic Stored Procedure (`usp_MaterialQcSampleResult_get`):** Khi có dữ liệu mới từ máy đo (ví dụ: máy đo truyền về 10 giá trị chưa upload), SP xóa bớt các dòng trống cũ, đếm số dòng còn lại trong kết quả (`@cnt` = 10), sau đó chạy vòng lặp bù dòng từ `@cnt` đến `@SampleQty` (vòng lặp chạy từ 10 đến 19). Nhưng vì chỉ số lấy dữ liệu sử dụng `@cnt + 1 = 11`, trong khi bảng tạm `@TempESR` chỉ có 10 dòng, dẫn đến `@value = NULL` và SP chèn thêm các dòng trống vào bảng kết quả. Khi dữ liệu đã upload xong (`UploadToMes IS NOT NULL`), biến `@cntexit1` = 0 khiến SP bỏ qua toàn bộ block xử lý bù dòng này ở lần load tiếp theo, chỉ trả về đúng 10 dòng hiện tại trong `STB_MaterialQcSampleResult`.
+    1. **Nghiệp vụ:** Số lượng mẫu đo từ máy bị thiếu (Máy đo ESR chỉ thực hiện đo và đẩy về 10 giá trị vào bảng `Stb_ESRValueMonitor` với trạng thái `UploadToMes IS NULL`). Hoặc Lot QC này chưa được nhấn nút "Tạo danh sách mẫu" (Create Sample List) sau khi cấu hình số lượng mẫu ESR tăng lên 20, nên danh sách mẫu trống chưa được sinh ra đầy đủ trước khi đồng bộ.
+    2. **Logic Stored Procedure (`usp_MaterialQcSampleResult_get`):** Khi màn hình load kết quả đo, logic xử lý đồng bộ từ máy đo gặp vấn đề như sau:
+        *   **Bước A (Xóa dòng trống cũ để chuẩn bị ghi đè):** tại dòng L155-L161:
+            ```sql
+            select @value7=count(*) from Stb_ESRValueMonitor where lotno=@value3 and UploadToMes is null
+            if(@value7 > 0)
+            begin
+                  delete top(@value7) from STB_MaterialQcSampleResult where MaterialQcNo=@pMaterialQcNo and MaterialQcDetailNo = @pMaterialQcDetailNo and TestValue is null
+            end
+            ```
+            Nếu máy đo đẩy về 10 giá trị (`@value7 = 10`), SP sẽ xóa đi 10 dòng trống (`TestValue IS NULL`) đang có trong bảng kết quả mẫu `STB_MaterialQcSampleResult`.
+        *   **Bước B (Vòng lặp bù dòng bị lệch chỉ số / Index Offset Bug):** tại dòng L225, SP đếm số dòng còn lại sau khi xóa:
+            ```sql
+            select @cnt= count(*) from STB_MaterialQcSampleResult where MaterialQcNo=@pMaterialQcNo and MaterialQcDetailNo = @pMaterialQcDetailNo
+            ```
+            Giả sử ban đầu hệ thống có sẵn 20 dòng trống, sau khi xóa 10 dòng ở Bước A, `@cnt` còn lại là 10. SP chạy vòng lặp từ `@cnt` đến `@SampleQty` (từ 10 đến 19) để chèn kết quả đo hoặc bù dòng trống tại dòng L300:
+            ```sql
+            select top(1) @value = Val, @value1 = MonitorID from @TempESR where RowID = (@cnt + 1)
+            ```
+            Khi `@cnt` bắt đầu từ 10, chỉ số lấy dữ liệu sẽ là `RowID = 11`. Tuy nhiên, bảng tạm `@TempESR` (chứa dữ liệu từ máy đo) chỉ có 10 dòng (RowID từ 1 đến 10). Do đó, lượt truy vấn `RowID = 11` đến 20 sẽ trả về giá trị `@value = NULL`, nhảy vào nhánh `else` và chèn thêm 10 dòng trống.
+            **Hậu quả:** 10 giá trị đo thực tế trong `@TempESR` bị bỏ qua không được lưu, thay vào đó hệ thống chỉ tạo thêm 10 dòng trống (NULL).
+        *   **Bước C (Khi dữ liệu đã upload xong):** Ở lần load tiếp theo (hoặc trạng thái upload trong `Stb_ESRValueMonitor` đã là `'OK'`), biến `@cntexit1` = 0 khiến SP bỏ qua toàn bộ block xử lý đồng bộ và chỉ `SELECT` trực tiếp các bản ghi đang có sẵn trong `STB_MaterialQcSampleResult`. Nếu trước đó bảng này chỉ lưu đúng 10 dòng có giá trị, lưới bên phải sẽ chỉ hiển thị đúng 10 dòng đó mà không tự động sinh thêm 10 dòng trống cho đủ 20 dòng mẫu tiêu chuẩn.
 *   **Cách khắc phục:**
-    1. **QC thao tác nhanh:** QC click chọn hạng mục **ESR** ở lưới bên trái của màn hình [C530] và bấm nút **"Tạo danh sách mẫu"** (hoặc "Tổng hợp hạng mục") trên thanh công cụ để hệ thống tự động chèn thêm 10 dòng trống cho đủ 20 dòng (10 dòng cũ có giá trị, 10 dòng mới là dòng trống để nhập tay hoặc đo tiếp).
-    2. **Khắc phục logic trong SP:** Đồng bộ logic khởi tạo của SP `usp_MaterialQcSampleResult_get` để tránh lệch chỉ số khi số lượng mẫu đo từ máy truyền về ít hơn số lượng mẫu thiết lập trong tiêu chuẩn.
+    1. **QC thao tác nhanh:** Chọn hạng mục **ESR** ở lưới bên trái của màn hình [C530] và bấm nút **"Tạo danh sách mẫu"** (Nút màu xanh có icon danh sách và dấu tích ở góc trái phía trên của lưới bên trái - Create IQC Item Sample List) để kích hoạt SP `usp_DoMakeMaterialQcSampleResult.sql` quét lại thiết lập `SampleQty = 20` và tự động sinh thêm 10 dòng trống tiếp theo (từ dòng 11 đến 20) vào bảng kết quả đo.
+    2. **Khắc phục logic trong SP:** Đồng bộ/sửa đổi logic khởi tạo của SP `usp_MaterialQcSampleResult_get` để tránh lệch chỉ số khi số lượng mẫu đo từ máy truyền về ít hơn số lượng mẫu thiết lập trong tiêu chuẩn.
 
 ### Lỗi 4: Lỗi "검사항목이 등록되어있지 않습니다" (Chưa đăng ký hạng mục kiểm tra) khi tạo Lot OQC tại C512
 *   **Triệu chứng:** Khi bấm tạo Lot OQC tại màn hình **C512**, hệ thống báo lỗi tiếng Hàn `"검사항목이 등록되어있지 않습니다"` và chặn không cho tiến hành.
@@ -564,7 +584,7 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
     *   **Bằng UI (Dành cho User):**
         1. Mở màn hình **A410**, tìm model `LIVT38-037` và cập nhật: `OqcType` = `MANUAL`, `OqcInspectionRuleType` = `BY_MODEL`, `InspectionType` = `SAMPLE`. Nhấn **Lưu**.
         2. Tắt và mở lại màn hình **C151**, chọn model `LIVT38-037` rồi gán và Lưu spec cho 5 hạng mục QC chính (`IQC_GPD_22`, `PQC_V01_06`, `PQC_V01_07`, `PQC_V01_08`, `PQC_V01_09`) tương tự `LIVT38-010`.
-*   **Chi tiết nghiệp vụ:** Xem file script [fix_qc_items_LIVT38-037.sql](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/sql/scripts/fix_qc_items_LIVT38-037.sql).
+*   **Chi tiết nghiệp vụ:** Xem file script [fix_qc_items_LIVT38-037.sql](../sql/scripts/fix_qc_items_LIVT38-037.sql).
 
 ---
 
@@ -577,7 +597,7 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
     1. Vào màn hình **C561**, tìm đúng `MaterialCode`, chọn nhóm kiểm tra và Lưu lại.
     2. Vào màn hình **C562**, quét barcode sản phẩm để sinh Lot kiểm định.
     3. Quay lại màn hình **C563** thực hiện nhập dữ liệu. Nếu đã cấu hình mà vẫn trống, nhấn nút `"Tổng hợp hạng mục"` để đồng bộ và làm mới danh sách đo.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_05_QC_ELECTRODE.md § 9.4](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05_QC_ELECTRODE.md#94-bendingcutting-qc-c561c564).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_05_QC_ELECTRODE.md § 9.4](KB_05_QC_ELECTRODE.md#94-bendingcutting-qc-c561c564).
 
 ---
 
@@ -590,7 +610,7 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
     ```sql
     UPDATE STB_MaterialStockAttributeInfo SET IsLotUse = 1, IsUseBarcode = 1 WHERE MaterialCode = 'MÃ_VẬT_TƯ';
     ```
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_06_MASTER_DATA_TOOLS.md § 2](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_06_MASTER_DATA_TOOLS.md#2-cấu-hình-vận-hành-f110).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_06_MASTER_DATA_TOOLS.md § 2](KB_06_MASTER_DATA_TOOLS.md#2-cấu-hình-vận-hành-f110).
 
 ---
 
@@ -604,7 +624,7 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
     INSERT INTO STB_MaterialVendorMapping (MaterialCode, VendorCode, IsUsed, CreateDateTime, CreateUserID)
     VALUES ('MÃ_VẬT_TƯ', 'MÃ_NCC', 1, GETDATE(), 'vinaadmin');
     ```
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_07_GROUPWARE_INTEGRATION.md § 6](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_07_GROUPWARE_INTEGRATION.md#6-chỉ-định-ncc--nvl-f130--f140).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_07_GROUPWARE_INTEGRATION.md § 6](KB_07_GROUPWARE_INTEGRATION.md#6-chỉ-định-ncc--nvl-f130--f140).
 
 ---
 
@@ -615,7 +635,7 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
 *   **Nguyên nhân gốc:** Trường `LotAttr10` (Đặc tính 10 / Ngày sản xuất Vendor) bị Null hoặc do định dạng quét mã Lot nhà cung cấp in quá dài vượt quá giới hạn thiết lập của trường.
 *   **Cách khắc phục:**
     1. Cấu hình lại chiều dài quét cắt chuỗi mã Lot Vendor trên tab 3 giao diện F330.
-    2. Sửa SQL Function parse ngày SX `fn_VVT_getdatebyVendorLot_MergeCode` nếu NCC thay đổi định dạng in Lot trên tem (Xem chi tiết tại [KB_02 § 4.11](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_02_KHO_WMS.md#411-lỗi-không-lưu-được-f330---cấu-hình-và-sửa-lỗi-đọc-đặc-tính-10-vendor-lot-no)).
+    2. Sửa SQL Function parse ngày SX `fn_VVT_getdatebyVendorLot_MergeCode` nếu NCC thay đổi định dạng in Lot trên tem (Xem chi tiết tại [KB_02 § 4.11](KB_02_KHO_WMS.md#411-lỗi-không-lưu-được-f330---cấu-hình-và-sửa-lỗi-đọc-đặc-tính-10-vendor-lot-no)).
 
 ### Lỗi 2: Cần hủy/xóa phiếu nhập kho F330 đã được Xác nhận (Confirmed)
 *   **Triệu chứng:** Thủ kho click xác nhận nhập nhầm số lượng/mã hàng và cần hủy phiếu nhập kho.
@@ -629,7 +649,7 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
     DELETE FROM STB_MaterialDocDetail WHERE MaterialDocNo = 'MÃ_PHIẾU';
     DELETE FROM STB_MaterialDocInfo WHERE MaterialDocNo = 'MÃ_PHIẾU';
     ```
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_02_KHO_WMS.md § 4.16](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_02_KHO_WMS.md#416-hủy-phiếu-nhập-kho-f330-đã-confirmed).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_02_KHO_WMS.md § 4.16](KB_02_KHO_WMS.md#416-hủy-phiếu-nhập-kho-f330-đã-confirmed).
 
 ### Lỗi 3: Không đọc được ngày sản xuất cho nguyên vật liệu PCB/dây điện (không tự động nhảy hạn dùng, tự động vào kho HOLDING)
 *   **Triệu chứng:** Khi quét mã Lot nhà cung cấp cho các mã PCB (`BEPCBA-%`) và dây điện (`BEMC00-%`) tại F330, nếu mã Lot không bắt đầu bằng ký tự `'2'` (không theo format date-based lot thông thường), hệ thống không parse được ngày sản xuất, lưu `1900-01-01` vào DB, gây lỗi hạn sử dụng hoặc tự động đưa Lot vào kho `HOLDING`. Ngoài ra, khi người dùng sửa ngày sản xuất trên lưới F330 và nhấn nút "Lot 변경" (Lot Change), hệ thống không cập nhật ngày sản xuất thực tế (`LotAttr10`) trong bảng tồn kho `STB_MaterialLotInfo`.
@@ -657,7 +677,7 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
            LotAttr10 = @PackDate  -- Bổ sung cập nhật MFG Date
        WHERE Lotid = @LotId;
        ```
-*   **Chi tiết nghiệp vụ:** Xem tại [fn_VVT_getdatebyVendorLot_MergeCode.sql](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/sql/procedures/fn_VVT_getdatebyVendorLot_MergeCode.sql#L712) và [usp_DoChangeMaterialDocLotInfo.sql](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/sql/procedures/usp_DoChangeMaterialDocLotInfo.sql#L235).
+*   **Chi tiết nghiệp vụ:** Xem tại [fn_VVT_getdatebyVendorLot_MergeCode.sql](../sql/procedures/fn_VVT_getdatebyVendorLot_MergeCode.sql#L712) và [usp_DoChangeMaterialDocLotInfo.sql](../sql/procedures/usp_DoChangeMaterialDocLotInfo.sql#L235).
 
 ---
 
@@ -669,7 +689,7 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
 *   **Cách khắc phục:**
     1. Yêu cầu thủ kho tìm đúng Lot cũ nhất trong kho để xuất trước.
     2. Trường hợp khẩn cấp (hàng cũ bị hỏng hoặc thất lạc chưa kiểm kê), IT có thể bypass bằng cách lùi ngày tạo `CreateDateTime` của Lot hiện tại trên DB, hoặc tạm thời tắt check FIFO của mã vật tư đó bằng cách update cờ `IsFIFO = 0` tại bảng `STB_MaterialStockAttributeInfo`.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_02_KHO_WMS.md § 4.9](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_02_KHO_WMS.md#49-fifo--validation-nvl-tắtbật-chặn).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_02_KHO_WMS.md § 4.9](KB_02_KHO_WMS.md#49-fifo--validation-nvl-tắtbật-chặn).
 
 ### Lỗi 2: Cần thu hồi Lot nguyên liệu đã xuất nhầm lên chuyền (Revert xuất kho)
 *   **Triệu chứng:** Lot hàng đã bấm xuất ra chuyền tại F430 nhưng công nhân không chạy và cần trả lại kho gốc ROH.
@@ -682,7 +702,7 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
     UPDATE STB_MaterialLotInfo SET MaterialWarehouseCode = 'ROH_HN_WH', MaterialLocationCode = 'ROH_HN_WH_01' WHERE LotID = 'MÃ_LOT';
     COMMIT TRAN;
     ```
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_02_KHO_WMS.md § 4.17](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_02_KHO_WMS.md#417-thu-hồi-lot-từ-f430-về-kho-revert-xuất-kho).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_02_KHO_WMS.md § 4.17](KB_02_KHO_WMS.md#417-thu-hồi-lot-từ-f430-về-kho-revert-xuất-kho).
 
 ---
 
@@ -696,7 +716,7 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
     ```sql
     UPDATE STB_MaterialLotInfo SET MaterialWarehouseCode = 'ROH_HN_WH', MaterialLocationCode = 'ROH_HN_WH_01' WHERE LotID = 'MÃ_LOT';
     ```
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_02_KHO_WMS.md § 4.7](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_02_KHO_WMS.md#47-chuyển-từ-kho-holding-sang-kho-chính).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_02_KHO_WMS.md § 4.7](KB_02_KHO_WMS.md#47-chuyển-từ-kho-holding-sang-kho-chính).
 
 ---
 
@@ -706,7 +726,7 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
 *   **Triệu chứng:** OP thao tác chia nhỏ Lot NVL tại **F741** báo lỗi không in được tem hoặc sai số lượng chia.
 *   **Nguyên nhân gốc:** Thiết lập quy cách đóng gói và cờ thuộc tính Lot tại F110 bị thiếu.
 *   **Cách khắc phục:**
-    Kiểm tra và thực hiện cấu hình đúng quy trình tách Lot trên UI, đảm bảo số lượng của các Lot con tổng cộng bằng Lot mẹ (Xem chi tiết tại [KB_02_KHO_WMS.md § 4.20](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_02_KHO_WMS.md#420-f741--quy-trình-tách-lot-nguyên-vật-liệu-lot-splitting)).
+    Kiểm tra và thực hiện cấu hình đúng quy trình tách Lot trên UI, đảm bảo số lượng của các Lot con tổng cộng bằng Lot mẹ (Xem chi tiết tại [KB_02_KHO_WMS.md § 4.20](KB_02_KHO_WMS.md#420-f741--quy-trình-tách-lot-nguyên-vật-liệu-lot-splitting)).
 
 ---
 
@@ -717,7 +737,7 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
 *   **Nguyên nhân gốc:** Giao dịch đã sinh các Lot con liên kết khóa ngoại với Lot mẹ.
 *   **Cách khắc phục:**
     Chạy script xóa ngược: bắt buộc phải tìm và xóa các bản ghi giao dịch của các Lot con trong bảng `STB_RawMaterialInputHist` (hoặc `STB_MaterialDocLotInfo` tùy trạm) trước, sau đó mới tiến hành xóa/revert Lot mẹ tại F742.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_05_QC_ELECTRODE.md § 10.1](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05_QC_ELECTRODE.md#101-hủyrollback-slitting-f742-và-f746).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_05_QC_ELECTRODE.md § 10.1](KB_05_QC_ELECTRODE.md#101-hủyrollback-slitting-f742-và-f746).
 
 ### Lỗi 2: Mismatch logic tính tuổi thọ dao Slitting và Hardcode địa lý Bắc Giang
 *   **Triệu chứng:** Máy chia cuộn điện cực tại nhà máy Hà Nam hoặc Hưng Yên bị bypass hoàn toàn việc kiểm tra dao cắt (không cảnh báo thay dao), hoặc báo lỗi không tìm thấy máy nếu cố cấu hình dao. Hoặc dao slitting bị khóa thay dao quá sớm do tính sai hao mòn.
@@ -733,7 +753,7 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
     -- 2. Đo tuổi thọ thực tế bằng tổng số mét cắt
     SELECT @ProdQtyCheck = ISNULL(SUM(GoodQtyLength), 0) from STB_ElectrodeSlittingResult where SlittingKnifeLotID = @SlittingKnifeLotID
     ```
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_30_THIET_BI_PHU_TRO_SAY_GA_DAO.md § 5](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_30_THIET_BI_PHU_TRO_SAY_GA_DAO.md#5-danh-sách-lỗi-logic-điểm-yếu--giải-pháp-bugs--troubleshooting).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_30_THIET_BI_PHU_TRO_SAY_GA_DAO.md § 5](KB_30_THIET_BI_PHU_TRO_SAY_GA_DAO.md#5-danh-sách-lỗi-logic-điểm-yếu--giải-pháp-bugs--troubleshooting).
 
 ---
 
@@ -753,7 +773,7 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
 *   **Triệu chứng:** OP nhập sai thông số chiều dài/số lượng cuộn con khi chia cuộn và cần rollback để thực hiện lại từ đầu.
 *   **Nguyên nhân gốc:** Giao dịch chốt Slitting đã ghi nhận các Lot con vào bảng lịch sử.
 *   **Cách khắc phục:** OP truy cập màn hình lịch sử slitting **F746**, tìm và xóa bỏ các dòng lịch sử của Lot con tương ứng trước, sau đó mới có thể thực hiện rollback/xóa Lot mẹ tại màn hình rollback **F742**.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_05_QC_ELECTRODE.md § 10.1](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05_QC_ELECTRODE.md#101-flow-slitting-hà-nam).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_05_QC_ELECTRODE.md § 10.1](KB_05_QC_ELECTRODE.md#101-flow-slitting-hà-nam).
 
 ---
 
@@ -763,7 +783,7 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
 *   **Triệu chứng:** Khi chạy tác vụ chia/tách lô vật liệu giá đỡ substrate, hệ thống hiển thị thông báo lỗi chặn giao dịch (bằng tiếng Hàn hoặc tiếng Việt).
 *   **Nguyên nhân gốc:** Lô vật liệu gốc chưa được thực hiện xuất kho lên chuyền sản xuất (chưa nằm ở kho công đoạn có cờ `IsRouteWarehouse = 1` mà vẫn đang tồn ở kho chính ROH), vi phạm điều kiện kiểm tra của Stored Procedure `usp_DoMakeStocktakingPlanResultForSupport`.
 *   **Cách khắc phục:** Thủ kho thực hiện xuất kho Lot vật liệu gốc lên chuyền sản xuất trước (qua màn hình **F430**), sau đó mới thực hiện thao tác chia tách lô trên giao diện UI.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_27_SCM_REWORK_TRA_HANG_KIEM_KE.md § 5](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_27_SCM_REWORK_TRA_HANG_KIEM_KE.md#5-nghiên-cứu-điển-hình-tự-động-tách-lô-giá-đỡ-substrate-splitting-case-study).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_27_SCM_REWORK_TRA_HANG_KIEM_KE.md § 5](KB_27_SCM_REWORK_TRA_HANG_KIEM_KE.md#5-nghiên-cứu-điển-hình-tự-động-tách-lô-giá-đỡ-substrate-splitting-case-study).
 
 ---
 
@@ -773,7 +793,7 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
 *   **Triệu chứng:** Khi đối soát số liệu xuất nhập kho tại **F761**, kế toán phát hiện các dòng giao dịch có cột `DocTypeName` chứa ký tự chữ Hàn Quốc gây sai lệch số liệu nhập mới.
 *   **Nguyên nhân gốc:** Ký tự tiếng Hàn đại diện cho loại giao dịch "hoàn trả vật tư thừa từ sản xuất về kho ROH" (Revert từ F430) chứ không phải nhập mới từ nhà cung cấp.
 *   **Cách khắc phục:** Hướng dẫn bộ phận kế toán phân biệt loại giao dịch: Giao dịch có tên tiếng Hàn là giao dịch trả hàng ảo/revert từ sản xuất về, còn giao dịch nhập mới thực tế được sinh ra từ phiếu nhập **F312**.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_02_KHO_WMS.md § 5](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_02_KHO_WMS.md#5-báo-cáo-tồn-kho--lịch-sử-kho-f721-f761-f740).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_02_KHO_WMS.md § 5](KB_02_KHO_WMS.md#5-báo-cáo-tồn-kho--lịch-sử-kho-f721-f761-f740).
 
 ---
 
@@ -786,7 +806,7 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
     1. Kiểm tra tồn kho phụ tùng tại màn hình **H304** / **H302**.
     2. Truy cập màn hình **H301**, cấu hình đầy đủ `CycleReplace` và `LifeLotQty` cho mã phụ tùng tương ứng.
     3. Thực hiện xuất phụ tùng lên chuyền tại **H303** và theo dõi lịch sử thay thế tại **H305**.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_03_SAN_XUAT.md § 6.15](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03_SAN_XUAT.md#615-spare-part--h301h302h303h305) và [KB_20_MAY_MOC_BAO_TRI.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_20_MAY_MOC_BAO_TRI.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_03_SAN_XUAT.md § 6.15](KB_03_SAN_XUAT.md#615-spare-part--h301h302h303h305) và [KB_20_MAY_MOC_BAO_TRI.md](KB_20_MAY_MOC_BAO_TRI.md).
 
 ---
 
@@ -801,7 +821,7 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
     INSERT INTO STB_HN_AccountingPrice (MaterialCode, AccountingCode, Price, CreateDateTime, CreateUserID)
     VALUES ('MÃ_MODEL_MỚI', 'MÃ_KẾ_TOÁN', ĐƠN_GIÁ_USD, GETDATE(), 'vinaadmin');
     ```
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_08_KHO_THANH_PHAM_HN.md § 7](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_08_KHO_THANH_PHAM_HN.md#7-hn101--thiết-lập-đơn-giá-theo-mã-kế-toán).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_08_KHO_THANH_PHAM_HN.md § 7](KB_08_KHO_THANH_PHAM_HN.md#7-hn101--thiết-lập-đơn-giá-theo-mã-kế-toán).
 
 ---
 
@@ -816,7 +836,7 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
     WHERE DP.PackingID = @pPackingID  
       AND ISNULL(DP.PackingParentID, '') <> '' -- Dòng sửa lỗi
     ```
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_08_KHO_THANH_PHAM_HN.md § 2.1](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_08_KHO_THANH_PHAM_HN.md#21-lỗi-unique-constraint-khi-gộp-túi-bóng-hn544--pkqn2100175).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_08_KHO_THANH_PHAM_HN.md § 2.1](KB_08_KHO_THANH_PHAM_HN.md#21-lỗi-unique-constraint-khi-gộp-túi-bóng-hn544--pkqn2100175).
 
 ### Lỗi 2: Gộp túi bóng thành hộp nhỏ ở HN544 bị mất số lượng (CurrentQty = 0)
 *   **Triệu chứng:** Sau khi thực hiện gộp nilon thành hộp nhỏ, số lượng tồn hiển thị bằng 0 và không in được tem nhãn.
@@ -827,7 +847,7 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
     UPDATE STB_MaterialLotInfo SET InitialQty = 20, CurrentQty = 20 WHERE MaterialLotNo = 'MÃ_LOT_CẦN_GIỮ';
     DELETE FROM STB_MaterialLotInfo WHERE MaterialLotNo IN ('MÃ_LOT_RÁC_1', 'MÃ_LOT_RÁC_2');
     ```
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.5](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_04_DONG_GOI_IN_TEM.md#65-lỗi-gộp-túi-bóng-bị-mất-số-lượng-qty--0--hn544).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.5](KB_04_DONG_GOI_IN_TEM.md#65-lỗi-gộp-túi-bóng-bị-mất-số-lượng-qty--0--hn544).
 
 ### Lỗi 3: Báo lỗi tiếng Hàn "Bạn chưa nhập kết quả..." hoặc sản lượng hiển thị bằng 0 ở HN523
 *   **Triệu chứng:** Nhập mã Lot để gộp box ở màn hình gộp tùy chỉnh **HN523**, hệ thống báo lỗi tiếng Hàn hoặc hiển thị sản lượng đầu ra (OutputQty) bằng 0.
@@ -836,7 +856,7 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
     ```sql
     UPDATE STB_ProductionOrderRouting SET IsOutputRoute = 1 WHERE PONo = 'MÃ_PO' AND RouteCode = 'MÃ_CÔNG_ĐOẠN_CUỐI';
     ```
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.13](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_04_DONG_GOI_IN_TEM.md#613-phân-tích-nguyên-nhân-lỗi-gộp-box-tùy-chỉnh-trên-màn-hình-hn523-sản-lượng-hiển-thị--0--cảnh-báo-tiếng-hàn).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.13](KB_04_DONG_GOI_IN_TEM.md#613-phân-tích-nguyên-nhân-lỗi-gộp-box-tùy-chỉnh-trên-màn-hình-hn523-sản-lượng-hiển-thị--0--cảnh-báo-tiếng-hàn).
 
 ---
 
@@ -852,7 +872,7 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
     UPDATE FinishGoodMESInstock_HN SET QtyOutput = Quantity WHERE PackingID = 'MÃ_PACKING_LỖI';
     UPDATE STB_VN_FINISHGOODS_HN_Export SET StatusExport = 1 WHERE PackingID = 'MÃ_PACKING_LỖI';
     ```
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_08_KHO_THANH_PHAM_HN.md § 1](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_08_KHO_THANH_PHAM_HN.md#1-lỗi-hàng-xuất-ở-hn551-nhưng-tồn-kho-hn866-vẫn-còn).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_08_KHO_THANH_PHAM_HN.md § 1](KB_08_KHO_THANH_PHAM_HN.md#1-lỗi-hàng-xuất-ở-hn551-nhưng-tồn-kho-hn866-vẫn-còn).
 
 ---
 
@@ -867,7 +887,7 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
     ```sql
     DELETE FROM STB_ElectrodeMixStepInfo WHERE ElectrodeLotNumber = 'MÃ_LOT_BỊ_KẸT';
     ```
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_14_TRACE_BUG_METHODOLOGY.md § 4.7](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_14_TRACE_BUG_METHODOLOGY.md#47-lỗi-nhảy-bước-cân-điện-cực-mixing-phần-mềm-electrodeweighing).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_14_TRACE_BUG_METHODOLOGY.md § 4.7](KB_14_TRACE_BUG_METHODOLOGY.md#47-lỗi-nhảy-bước-cân-điện-cực-mixing-phần-mềm-electrodeweighing).
 
 ---
 
@@ -884,7 +904,7 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
       AND (routecode='V-22' OR routecode='V-22_BG') -- Thêm ngoặc đơn
       AND controlno = (select controlno from stb_setinfo WITH(NOLOCK) where barcode in (@BarCode,@LotNonew1,@LotNonew2,@LotNonew3,@LotNonew4,@LotNonew5,@LotNonew6))
     ```
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_30_THIET_BI_PHU_TRO_SAY_GA_DAO.md § 5](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_30_THIET_BI_PHU_TRO_SAY_GA_DAO.md#5-danh-sách-lỗi-logic-điểm-yếu--giải-pháp-bugs--troubleshooting).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_30_THIET_BI_PHU_TRO_SAY_GA_DAO.md § 5](KB_30_THIET_BI_PHU_TRO_SAY_GA_DAO.md#5-danh-sách-lỗi-logic-điểm-yếu--giải-pháp-bugs--troubleshooting).
 
 ---
 
@@ -902,7 +922,7 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
     where status like '%autoend%'
       and ChangeDateTime > dateadd(second,-5,getdate()) -- Sửa dấu + thành -5 giây
     ```
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_30_THIET_BI_PHU_TRO_SAY_GA_DAO.md § 5](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_30_THIET_BI_PHU_TRO_SAY_GA_DAO.md#5-danh-sách-lỗi-logic-điểm-yếu--giải-pháp-bugs--troubleshooting).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_30_THIET_BI_PHU_TRO_SAY_GA_DAO.md § 5](KB_30_THIET_BI_PHU_TRO_SAY_GA_DAO.md#5-danh-sách-lỗi-logic-điểm-yếu--giải-pháp-bugs--troubleshooting).
 
 ---
 
@@ -914,7 +934,7 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
 *   **Cách khắc phục:** Hướng dẫn công nhân mở đúng màn hình của BG2:
     1. Lập kế hoạch ngày tại **K101** thay vì B450.
     2. Để quét NVL, OP mở màn hình **B540** -> nhấn nút **"Việt Nam_Kiểm tra thường xuyên_BG2"** để kích hoạt giao diện **K109** (tích hợp logic chặn quét sai NVL theo BOM).
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_03_SAN_XUAT.md § 6.9](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03_SAN_XUAT.md#69-sự-khác-biệt-vận-hành-bg2).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_03_SAN_XUAT.md § 6.9](KB_03_SAN_XUAT.md#69-sự-khác-biệt-vận-hành-bg2).
 
 ---
 
@@ -933,7 +953,7 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
        SELECT ModelCode, FormatName FROM STB_ModelLabelInfo WHERE ModelCode = 'MÃ_MODEL';
        ```
     3. Thực hiện map lại hoặc Approve layout tem trên giao diện UI cấu hình tem.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.16](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_04_DONG_GOI_IN_TEM.md#616-màn-hình--cấu-hình-thiết-kế-tem-z530a460).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.16](KB_04_DONG_GOI_IN_TEM.md#616-màn-hình--cấu-hình-thiết-kế-tem-z530a460).
 
 ---
 
@@ -953,7 +973,7 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
 *   **Cách khắc phục:**
     1. Truy cập **Z220**, kiểm tra và gán quyền truy cập Screen ID cho Nhóm Role của người dùng.
     2. Truy cập **Z330**, kiểm tra xem Screen ID đã được publish hoạt động trên Production chưa.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_01_UI_PHAN_QUYEN.md § 1.1 và § 1.4](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_01_UI_PHAN_QUYEN.md#11-lỗi-không-đăng-nhập-được-mes-allowflag).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_01_UI_PHAN_QUYEN.md § 1.1 và § 1.4](KB_01_UI_PHAN_QUYEN.md#11-lỗi-không-đăng-nhập-được-mes-allowflag).
 
 ---
 
@@ -1791,6 +1811,30 @@ Tài liệu này tập hợp tất cả các sự cố, lỗi vận hành và c�
 *   **Nguyên nhân gốc:** Logic K109 tương đương B597, lọc riêng cho `WorkCenterCode = 'VVT_BG2'`. Cùng nguyên nhân HOLD/Hết hạn/Sai BOM.
 *   **Cách khắc phục:** Áp dụng cùng quy trình debug B597 (xem mục B597 phía trên).
 *   **Chi tiết nghiệp vụ:** Xem tại [KB_03_SAN_XUAT.md § 6.9](KB_03_SAN_XUAT.md).
+
+### Lỗi 2: Quét mã vạch nhà cung cấp (Vendor Lot) báo lỗi "Vật liệu [KđV] chưa thiết lập trong BOM, khác với mã QRCODE nhập vào"
+*   **Triệu chứng:** Khi quét mã barcode nguyên vật liệu nhà cung cấp (LotNo của Vendor, ví dụ: `K164181062623000609`), hệ thống báo lỗi không tìm thấy vật liệu trong BOM, đồng thời hiển thị tên vật liệu là `[KđV]` (Không định vị/Chưa xác định).
+*   **Nguyên nhân gốc:** 
+    1. Trong stored procedure `usp_RawMaterialInputHist_CheckLabelBOM`, logic so khớp `@MaterialCurrent` từ `STB_MaterialLotInfo` chỉ sử dụng điều kiện `LotID = @pRawMaterialBarcode`. Do mã vạch quét là Vendor Lot (`LotNo`), lookup trả về `NULL`, dẫn đến tên vật liệu bị gán mặc định là `[KđV]`.
+    2. Nhóm mã vật tư `164181` bị comment (`--,'164181'`) trong SP, không được áp dụng thiết lập hoặc kiểm tra đúng BOM.
+*   **Cách khắc phục:** 
+    Sửa lại logic stored procedure `usp_RawMaterialInputHist_CheckLabelBOM` để fallback tìm theo `LotNo` nếu `LotID` không tìm thấy:
+    ```sql
+    -- Tìm kiếm theo LotID trước
+    SELECT @MaterialCurrent = MaterialCode 
+    FROM STB_MaterialLotInfo WITH(NOLOCK) 
+    WHERE LotID = @pRawMaterialBarcode;
+
+    -- Nếu không thấy, tìm kiếm fallback theo LotNo (Vendor Lot)
+    IF @MaterialCurrent IS NULL
+    BEGIN
+        SELECT @MaterialCurrent = MaterialCode 
+        FROM STB_MaterialLotInfo WITH(NOLOCK) 
+        WHERE LotNo = @pRawMaterialBarcode;
+    END
+    ```
+    Đồng thời, bỏ comment cho nhóm mã vật tư `164181` trong SP nếu cần kiểm tra BOM cho nhóm này.
+*   **Chi tiết nghiệp vụ:** Xem log debug ngày 2026-06-15.
 
 ---
 

@@ -283,31 +283,8 @@ ORDER BY CreateDateTime DESC
 
 ## 6. 🆘 Manual Lot Bypass (In tem khẩn khi không có Lot trên hệ thống)
 
-**Khi nào dùng:** Tình huống khẩn cấp cần in tem nhưng hệ thống chưa có Lot (VD: sự cố B450 không tạo được Lot nhưng hàng đã đóng gói xong).
-
-**Quy trình 3 bước:**
-
-**Bước 1 - Khởi tạo Lot thủ công:**
-```sql
--- Tạo bản ghi trong SetInfo
-INSERT INTO STB_SetInfo (Barcode, MaterialCode, PONo, DayPlanNo, ProdQty, InputLineCode, InputJobDate, CreateDateTime, CreateUserID)
-VALUES ('VVXX123R000001', 'Mã_Model', 'PONo', 'DayPlanNo', 1000, 'LineCode', CONVERT(CHAR(8), GETDATE(), 112), GETDATE(), 'vinaadmin')
-```
-
-**Bước 2 - QC Pass:**
-```sql
-UPDATE STB_SetInfo
-SET LotDecisionResult = 'PASS', IsDefect = 0
-WHERE Barcode = 'VVXX123R000001'
-```
-
-**Bước 3 - Link Packing:**
-```sql
-INSERT INTO STB_MaterialLotInfo (LotID, LotNo, MaterialCode, InitialQty, CurrentQty, CreateDateTime, CreateUserID)
-VALUES ('VVXX123R000001', 'VVXX123R000001', 'Mã_Model', 1000, 1000, GETDATE(), 'vinaadmin')
-```
-
-> ⚠️ Chỉ làm khi có sự phê duyệt của quản lý. Ghi lại tất cả thao tác này để audit sau.
+*   **Khi nào dùng:** Tình huống khẩn cấp cần in tem đóng gói gấp cho lô hàng thực tế đã đóng xong nhưng trên hệ thống MES bị lỗi không sinh được Lot (ví dụ: do sự cố đồng bộ PO ở B450).
+*   **Chi tiết & Giải pháp:** Xem quy trình cứu hộ 3 bước (INSERT/UPDATE SQL) chi tiết tại [KB_04_DONG_GOI_IN_TEM.md#615-lỗi-không-in-được-tem-vì-không-có-lot-trên-hệ-thống-bypass-thủ-công](KB_04_DONG_GOI_IN_TEM.md#615-lỗi-không-in-được-tem-vì-không-có-lot-trên-hệ-thống-bypass-thủ-công).
 
 ---
 

@@ -108,35 +108,9 @@ SELECT OBJECT_DEFINITION(OBJECT_ID('usp_Set_VVT_Info_get'))
 
 ---
 
-## 3. 💰 Giá & Stage Prices
+## 3. 🔧 Debug Nâng Cao
 
-### 3.1 & 3.2 Sửa giá công đoạn Stage Prices (B682, B781, B789, B791)
-
-👉 **Chi tiết Script Fix:** Xem tại [KB_06_MASTER_DATA_TOOLS.md § 3](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_06_MASTER_DATA_TOOLS.md)
-
----
-
-### 3.3 Sửa số lượng Packing ở B789
-
-👉 **Chi tiết Script Fix:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.6](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_04_DONG_GOI_IN_TEM.md)
-
----
-
-### 3.4 Tắt in VV → VJ cho model
-
-👉 **Chi tiết Script Fix:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.7](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_04_DONG_GOI_IN_TEM.md)
-
----
-
-### 3.5 Lỗi Packing Qty âm ở B523
-
-👉 **Chi tiết Script Fix:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.6](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_04_DONG_GOI_IN_TEM.md)
-
----
-
-## 4. 🔧 Debug Nâng Cao
-
-### 4.1 Tìm màn hình theo TCode
+### 3.1 Tìm màn hình theo TCode
 
 ```sql
 SELECT Name AS ScreenID, Caption AS ScreenName, TCode
@@ -144,7 +118,7 @@ FROM SmartFramework.dbo.STB_ScreenInfo
 WHERE Name LIKE '%B597%' OR TCode LIKE '%597%'
 ```
 
-### 4.2 Tìm Action Button trên màn hình
+### 3.2 Tìm Action Button trên màn hình
 
 ```sql
 SELECT ObjectName, Caption, ObjectType
@@ -152,7 +126,7 @@ FROM SmartFramework.dbo.STB_ScreenObjects
 WHERE ScreenName LIKE '%[Tên màn hình]%' AND ObjectType = 'Action'
 ```
 
-### 4.3 Tìm SP đằng sau 1 nút bấm
+### 3.3 Tìm SP đằng sau 1 nút bấm
 
 ```sql
 -- Bước 1: Tìm tên màn hình kỹ thuật
@@ -170,9 +144,9 @@ WHERE ScreenName = 'Tên_Màn_Hình_Kỹ_Thuật'
 
 ---
 
-## 5. 📊 Màn Hình Báo Cáo & Monitoring
+## 4. 📊 Màn Hình Báo Cáo & Monitoring
 
-### 5.1 B786 — ESR Monitoring Online
+### 4.1 B786 — ESR Monitoring Online
 
 **Tab Online Monitoring:**
 - Cột **Status Online**: `OK` = đang lấy dữ liệu, `OFF` = ngừng lấy
@@ -184,7 +158,7 @@ WHERE ScreenName = 'Tên_Màn_Hình_Kỹ_Thuật'
 
 ---
 
-### 5.2 B934 / B935 — Import Dữ Liệu Máy Phân Cấp Bigsize (ESR AgingSD)
+### 4.2 B934 / B935 — Import Dữ Liệu Máy Phân Cấp Bigsize (ESR AgingSD)
 
 **B934 — Import Data:**
 
@@ -206,7 +180,7 @@ WHERE ScreenName = 'Tên_Màn_Hình_Kỹ_Thuật'
 
 ---
 
-### 5.3 FG02 — Tổng Hợp Kho Thành Phẩm (BN + BG)
+### 4.3 FG02 — Tổng Hợp Kho Thành Phẩm (BN + BG)
 
 **Chức năng:** Báo cáo tổng hợp tồn kho thành phẩm cả 2 nhà máy: Bắc Ninh (BN) + Bắc Giang (BG).
 
@@ -223,7 +197,7 @@ WHERE ScreenName = 'Tên_Màn_Hình_Kỹ_Thuật'
 -- Bắc Giang: usp_VN_Update_ExportExcel_BG
 -- Bắc Ninh: usp_VN_Update_ExportExcel
 
--- 👉 Sửa ngày nhập/xuất kho thành phẩm BG: Xem tại [KB_08_KHO_THANH_PHAM_HN.md § 8](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_08_KHO_THANH_PHAM_HN.md)
+-- 👉 Sửa ngày nhập/xuất kho thành phẩm BG: Xem tại [KB_08_KHO_THANH_PHAM_HN.md § 8](KB_08_KHO_THANH_PHAM_HN.md)
 ```
 
 *Cập nhật: 2026-05-22*

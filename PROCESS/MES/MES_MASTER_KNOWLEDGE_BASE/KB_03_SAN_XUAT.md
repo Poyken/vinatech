@@ -117,7 +117,7 @@ WHERE ID IN (6030, 6032, 6027, 6025, 6026, 6031)
 
 ### 5.6 Sửa ngày màn FG00 (Kho Thành Phẩm BG)
 
-👉 **Chi tiết Script Fix:** Xem tại [KB_08_KHO_THANH_PHAM_HN.md § 8](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_08_KHO_THANH_PHAM_HN.md)
+👉 **Chi tiết Script Fix:** Xem tại [KB_08_KHO_THANH_PHAM_HN.md § 8](KB_08_KHO_THANH_PHAM_HN.md)
 
 ---
 
@@ -242,28 +242,14 @@ ORDER BY DayPlanNo ASC
 - **Chưa có sản lượng:** Hủy kế hoạch sai tại B450 → Tạo lại đúng Line
 - **Đã có sản lượng:** Dùng script "Chuyển Line sản xuất" (Mục 5.9 trên)
 
----
-
-### 5.12 Sửa giá công đoạn Stage Prices (B682, B781)
-
-> Xem chi tiết tại [KB_06 Mục 3](KB_06_MASTER_DATA_TOOLS.md#3-fix-giá-công-đoạn-stage-prices)
-
----
-
-### 5.13 Sửa/Xóa số lượng đóng gói (B789)
-
-👉 **Chi tiết Script Fix:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.6](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_04_DONG_GOI_IN_TEM.md)
-
----
-
-### 5.14 Mở dữ liệu Andon theo tháng (B882)
+### 5.12 Mở dữ liệu Andon theo tháng (B882)
 
 **SP:** `usp_Vietnam_AndonDetail_get`
 → Vào SP → Tìm điều kiện lọc theo tháng → Chỉnh lại khoảng thời gian user yêu cầu.
 
 ---
 
-### 5.15 Truy vết lịch sử 1 Barcode từ A→Z
+### 5.13 Truy vết lịch sử 1 Barcode từ A→Z
 
 ```sql
 -- 1. Query tổng hợp toàn bộ hành trình của 1 Barcode (Trực quan nhất)
@@ -304,7 +290,7 @@ ORDER BY RouteIndex ASC;
 
 ---
 
-### 5.16 Logic bóc tách Part No từ Model Name
+### 5.14 Logic bóc tách Part No từ Model Name
 
 **Mục đích:** Khi cần lấy mã Part No rút gọn (VD: `VEC3R0606QG`) từ chuỗi Model Name đầy đủ (VD: `HY-CAP VEC3R0606QG (1840)`).
 
@@ -318,7 +304,7 @@ SELECT (RTRIM(LTRIM(SUBSTRING('HY-CAP VEC3R0606QG (1840)', CHARINDEX(' ', 'HY-CA
 
 ---
 
-### 5.17 Tra cứu Model Code và Size tại màn B597
+### 5.15 Tra cứu Model Code và Size tại màn B597
 
 **Mục đích:** Khi cần kiểm tra nhanh Size của Barcode tại công đoạn QC inline.
 
@@ -341,7 +327,7 @@ PRINT (@ModelName + ' ' + @ModelSize)
 
 ---
 
-### 5.18 Quy trình 3 bước "Thám tử" truy vết và Hủy công đoạn / NG nhầm (Ví dụ: Lot VE260506-001)
+### 5.16 Quy trình 3 bước "Thám tử" truy vết và Hủy công đoạn / NG nhầm (Ví dụ: Lot VE260506-001)
 
 Khi cần thực hiện rollback một Lot sản phẩm (ví dụ: `VE260506-001`) quay lại công đoạn trước (ví dụ: từ `VE09` về `VE07`) do công nhân nhập nhầm số lượng phế (NG) hoặc scan sai công đoạn, thực hiện theo 3 bước điều tra dữ liệu để đưa ra script xử lý chuẩn xác:
 
@@ -403,7 +389,7 @@ ORDER BY CreateDateTime ASC;
 
 ---
 
-### 5.19 Kiểm tra và truy vết nguồn gốc thay đổi Ký hiệu in phun (Marking Letter / MarkingCode)
+### 5.17 Kiểm tra và truy vết nguồn gốc thay đổi Ký hiệu in phun (Marking Letter / MarkingCode)
 
 Khi cần kiểm tra ký hiệu in phun dán nhãn của Lot sản phẩm (ví dụ: `VE251120-002`) và truy tìm ai đã thiết lập hoặc thay đổi ký hiệu này:
 
@@ -641,35 +627,35 @@ B310 (POType=MODULE) → B450 (Module Line Code) → B540 (Không check điện 
 #### 6.8.1 Các Bảng Cơ Sở Dữ Liệu Module & Cấu Trúc Schema
 Hệ thống quản lý Module sử dụng một tập hợp các bảng cơ sở dữ liệu chuyên biệt để liên kết, theo dõi chất lượng, và lưu trữ lịch sử cấu hình lắp ráp:
 
-1. **[STB_SingleCellModuleMappingHist](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03_SAN_XUAT.md) (Lịch sử mapping Single Cell ↔ Module Lot):**
+1. **[STB_SingleCellModuleMappingHist](KB_03_SAN_XUAT.md) (Lịch sử mapping Single Cell ↔ Module Lot):**
    * Lưu thông tin mapping giữa Single Cell và Module Lot.
    * *Schema:* `ModuleLotNo` (varchar(20)), `Seq` (int), `SingleCellLotNo` (varchar(20)), `CreateDateTime` (datetime), `CreateUserID` (varchar(20)).
 
-2. **[STB_ModuleProductionInfo](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03_SAN_XUAT.md) & [STB_ModuleProductionHist](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03_SAN_XUAT.md) (Thông tin & Lịch sử sản xuất module):**
+2. **[STB_ModuleProductionInfo](KB_03_SAN_XUAT.md) & [STB_ModuleProductionHist](KB_03_SAN_XUAT.md) (Thông tin & Lịch sử sản xuất module):**
    * Theo dõi tiến độ sản xuất, lượng pinhole, thay cell lỗi, thông số kiểm đo ESR/Farad của module.
    * *Schema chính:* `ModuleProductionNo` (varchar(20)), `JobStartDate` (date), `SemiProdLotNo1` (varchar(20)), `SemiProdLotNo2` (varchar(20)), `PinHoleQty` (numeric), `ChangeCellQty` (numeric), `Farad` (numeric), `ESR` (numeric), `FinishedProdLotNo` (varchar(20)), `ShipmentDate` (date), `ShipmentQty` (numeric).
 
-3. **[STB_ModuleSemiProductionInfo](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03_SAN_XUAT.md) (Thông tin bán thành phẩm Module):**
+3. **[STB_ModuleSemiProductionInfo](KB_03_SAN_XUAT.md) (Thông tin bán thành phẩm Module):**
    * Liên kết bản mạch PCB và các Single Cell cấu thành bán thành phẩm.
    * *Schema:* `ModuleSemiProductionNo` (varchar(20)), `ProdDate` (date), `Grade` (varchar(10)), `PCBLotNo` (varchar(20)), `SemiProdLotNo` (varchar(20)), `SingleCellLotNo1` (varchar(20)), `SingleCellLotNo2` (varchar(20)), `SingleCellLotNo3` (varchar(20)).
 
-4. **[STB_SubAssemblyInfoForBE](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03_SAN_XUAT.md) (Mapping bán thành phẩm BE):**
+4. **[STB_SubAssemblyInfoForBE](KB_03_SAN_XUAT.md) (Mapping bán thành phẩm BE):**
    * Bản ghi liên kết thùng và mạch PCB cho công đoạn lắp ráp BE.
    * *Schema:* `SubAssemblyNo` (varchar(20)), `BoxBarcode` (varchar(20)), `PcbBarcode` (varchar(20)).
 
-5. **[STB_ModuleLabelInfo](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03_SAN_XUAT.md) (Thông tin Serial Label Module):**
+5. **[STB_ModuleLabelInfo](KB_03_SAN_XUAT.md) (Thông tin Serial Label Module):**
    * Liên kết mã serial nhãn in với Single Cell tương ứng.
    * *Schema:* `ModuleSerialNo` (varchar(20)), `ProductNo` (varchar(20)), `RevisionNo` (varchar(20)), `SingleLotNo` (varchar(20)).
 
-6. **[STB_ModuleAssemblyLabelInfo](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03_SAN_XUAT.md) (Lịch sử tách/phát hành Lot con cho ráp Module):**
+6. **[STB_ModuleAssemblyLabelInfo](KB_03_SAN_XUAT.md) (Lịch sử tách/phát hành Lot con cho ráp Module):**
    * Lưu thông tin quan hệ giữa Lot ráp con (Assembly Lot) và Lot mẹ (Parent Lot).
    * *Schema:* `ModuleAssemblyLotNo` (varchar(20)), `ModuleParentLotNo` (varchar(20)), `IsPacking` (bit), `IsShipment` (bit).
 
-7. **[STB_AssemblyCellWeightInfo](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03_SAN_XUAT.md) (Cân nặng Cell lắp ráp):**
+7. **[STB_AssemblyCellWeightInfo](KB_03_SAN_XUAT.md) (Cân nặng Cell lắp ráp):**
    * Lưu dữ liệu cân nặng ghi nhận tại công đoạn lắp ráp.
    * *Schema:* `LineCode` (varchar(20)), `CellWeight` (numeric), `CreateDateTime` (datetime).
 
-8. **[STB_VN_MASTERMODULES](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03_SAN_XUAT.md) & [STB_VN_DETAILMODULES](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03_SAN_XUAT.md) (Đóng gói gộp box module Việt Nam):**
+8. **[STB_VN_MASTERMODULES](KB_03_SAN_XUAT.md) & [STB_VN_DETAILMODULES](KB_03_SAN_XUAT.md) (Đóng gói gộp box module Việt Nam):**
    * *Master:* Lưu thông tin thùng (`GROUPID`, `LOTNO`, `QTY`, `TOTALQTY`, `VOL`, `FWAR`, `PARTNO`, `SIZE`, `PackingID` dạng `MVKQ[Month]...`).
    * *Detail:* Lưu chi tiết của từng Lot trong thùng (`GROUPID`, `LOTNO`, `QTYACT`, `LineCode`, `RouteCode`, `ProdQty`).
 
@@ -990,7 +976,7 @@ Set `IsUsed = 0` trong bảng `STB_DefectInfo` cho các mã lỗi sau:
 - **Sleeving (V-25_BG):** `V-25_01_BG`, `V-25_2CT_BG`, `V-25_X03_BG`, `V-25_X12_BG`
 - **Ngoại quan (V-27_BG):** `V-27_ZC_BG`, `V-27_ZD_BG`, `V-27_4GV_BG`, `V-27_5VI_BG`, `V-27_XP1_BG`, `V-27_RELY_BG`
 
-*Chi tiết SQL tham khảo file script [fix_b530_disable_defects_BG.sql](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/sql/scripts/fix_b530_disable_defects_BG.sql)*
+*Chi tiết SQL tham khảo file script [fix_b530_disable_defects_BG.sql](../sql/scripts/fix_b530_disable_defects_BG.sql)*
 
 **2. Thêm mới 7 mã lỗi thực tế vận hành:**
 INSERT vào bảng `STB_DefectInfo` các mã lỗi sau:
@@ -1002,7 +988,7 @@ INSERT vào bảng `STB_DefectInfo` các mã lỗi sau:
 - **Curling:** `V-24_NE7_BG` (Curling_Xước chân tancha)
 - **Curling:** `V-24_NE8_BG` (Curling_Lỗi mẻ miệng curling)
 
-*Chi tiết SQL tham khảo file script [fix_b530_add_defects_BG.sql](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/sql/scripts/fix_b530_add_defects_BG.sql)*
+*Chi tiết SQL tham khảo file script [fix_b530_add_defects_BG.sql](../sql/scripts/fix_b530_add_defects_BG.sql)*
 
 #### 6.18.1 Bối Cảnh Thay Đổi Quy Mô Lot Size & Mã Lỗi B530
 Trong quá trình vận hành hệ thống MES tại nhà máy Vinatech Bắc Giang (BG), bộ phận sản xuất và chất lượng đã phát hành hai yêu cầu thay đổi cấu hình dữ liệu quan trọng:
@@ -1078,12 +1064,12 @@ ORDER BY IsUsed DESC, DefectCode;
   - Cấu trúc nối chuỗi: `RawMaterialBarcode = existingRawBarcode + ' ; ' + newRawBarcode`.
   - Hệ thống ghi nhận lịch sử vào bảng lịch sử phụ đối với Điện cực và Case (3562/3582/35105).
 
-*Chi tiết mã nguồn tham khảo file [usp_Vietnam_RawMaterialInputHist_uid.sql](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/sql/procedures/usp_Vietnam_RawMaterialInputHist_uid.sql)*
+*Chi tiết mã nguồn tham khảo file [usp_Vietnam_RawMaterialInputHist_uid.sql](../sql/procedures/usp_Vietnam_RawMaterialInputHist_uid.sql)*
 
 **2. Gộp hiển thị trên lưới trong `usp_RawMaterialInputHist_get`:**
 Khi load danh sách nguyên vật liệu đã bắn của Lot, hệ thống sử dụng `FOR XML PATH('')` gộp các dòng barcode có cùng `ProductGroupCode` và `Barcode` lại thành một chuỗi ngăn cách bởi `; ` hiển thị trong cột `RawBacodeList` đối với `ELECTRODEP`, `ELECTRODEM`, và `Case`.
 
-*Chi tiết mã nguồn tham khảo file [usp_RawMaterialInputHist_get.sql](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/sql/procedures/usp_RawMaterialInputHist_get.sql)*
+*Chi tiết mã nguồn tham khảo file [usp_RawMaterialInputHist_get.sql](../sql/procedures/usp_RawMaterialInputHist_get.sql)*
 
 ---
 

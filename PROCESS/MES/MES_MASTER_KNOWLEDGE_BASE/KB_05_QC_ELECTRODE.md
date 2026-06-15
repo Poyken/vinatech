@@ -190,15 +190,8 @@ WHERE LotID = 'ML...'
 
 ### 7.9 B597 báo lỗi "String or binary data would be truncated" khi quét gộp nhiều mã điện cực (Model 3510 / 35105)
 
-**Nguyên nhân:** Khi quét gộp từ 5 mã barcode điện cực trở lên cho 1 Lot tại trạm B597, chuỗi ghép các barcode vượt quá giới hạn độ dài của cột `RawMaterialBarcode` trong bảng `STB_InputMaterialHistory` (được set là `NVARCHAR(100)`), dẫn đến lỗi truncation khi lưu. Đồng thời các biến tham số trong SP `usp_Vietnam_RawMaterialInputHist_uid` cũng bị giới hạn độ dài.
-
-**Cách khắc phục:**
-1. Tăng độ dài cột dữ liệu lên `NVARCHAR(1000)`:
-   ```sql
-   ALTER TABLE STB_InputMaterialHistory
-   ALTER COLUMN RawMaterialBarcode NVARCHAR(1000) NULL;
-   ```
-2. Cập nhật stored procedure `usp_Vietnam_RawMaterialInputHist_uid` để đổi kiểu dữ liệu của tham số `@pRawMaterialBarcode` và các biến nội bộ (như `@RawMaterialBarcode`, `@LotMaterialBarcode`) thành `NVARCHAR(1000)`.
+*   **Triệu chứng:** Khi quét gộp từ 5 mã barcode điện cực trở lên cho 1 Lot tại trạm B597, hệ thống báo lỗi đỏ `"String or binary data would be truncated"` và không cho lưu.
+*   **Chi tiết & Giải pháp:** Xem chi tiết nguyên nhân gốc và SQL script khắc phục tại [KB_SCREEN_BUG_REF.md#lỗi-3-lỗi-string-or-binary-data-would-be-truncated-khi-quét-gộp-5-mã-điện-cực-1-lot-model-3510--35105](KB_SCREEN_BUG_REF.md#lỗi-3-lỗi-string-or-binary-data-would-be-truncated-khi-quét-gộp-5-mã-điện-cực-1-lot-model-3510--35105).
 
 ---
 
@@ -355,7 +348,7 @@ Kiểm tra tồn kho điện cực → **Stb_SlittingStock_VVT**
 
 ### 8.5 Lỗi popup không hiện dữ liệu ở B270
 
-👉 **Chi tiết Trace & Fix:** Xem tại [KB_01_UI_PHAN_QUYEN.md § 1.3](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_01_UI_PHAN_QUYEN.md)
+👉 **Chi tiết Trace & Fix:** Xem tại [KB_01_UI_PHAN_QUYEN.md § 1.3](KB_01_UI_PHAN_QUYEN.md)
 
 ---
 
@@ -393,19 +386,7 @@ Kiểm tra tồn kho điện cực → **Stb_SlittingStock_VVT**
 
 ##### 2. Điện cực mã liệu `3582-600F CY` không tạo/in được tem
 *   **Triệu chứng:** Khi sản xuất điện cực mã liệu `3582-600F CY`, hệ thống không cho in tem điện cực.
-*   **Nguyên nhân:** Đây là model mới hoặc chưa được cấu hình Slitting trong Master Data. Hệ thống yêu cầu phải có cấu hình quy cách Slitting trong bảng `stb_slittinglocationconfig_vvt` (Màn hình B552) thì mới cho in tem.
-*   **Cách khắc phục:**
-    *   *Bước 1:* Thêm cấu hình Slitting cho model `3582` (cả cực dương `BY` và cực âm `YP`):
-        ```sql
-        BEGIN TRANSACTION;
-        INSERT INTO stb_slittinglocationconfig_vvt
-            (PartNo, SlittingCode, SlittingSize, Farad, Width, WarehouseLocation, LocationWarehouse, RollQty, PositiveLocation, NegativeLocation)
-        VALUES
-            ('3582', 'BY', '200', '600', '39.34', 'VVT_F2', 'kho2', 20, 'A6-T3', 'B6-T3'),
-            ('3582', 'YP', '180', '600', '39.34', 'VVT_F2', 'kho2', 20, 'A6-T3', 'B6-T3');
-        COMMIT TRANSACTION;
-        ```
-    *   *Bước 2:* Đảm bảo đã khai báo model `3582-600F CY` vào bảng `STB_ModelBasicInfo` (A410) đầy đủ thông số Vol/Farad (Vol = '3R0', Farad = '600.0').
+*   **Chi tiết & Giải pháp:** Đây là model mới thiếu cấu hình Slitting. Xem hướng dẫn chi tiết từng bước xử lý và SQL script thêm cấu hình tại [KB_14_TRACE_BUG_METHODOLOGY.md#48-điện-cực-mã-liệu-3582-600f-cy-không-tạo-được-tem](KB_14_TRACE_BUG_METHODOLOGY.md#48-điện-cực-mã-liệu-3582-600f-cy-không-tạo-được-tem).
 
 ---
 
@@ -448,19 +429,8 @@ Quy trình sản xuất điện cực gồm 4 công đoạn chính và mỗi cô
 
 ### 8.8 Hỗ trợ lưu nhiều mã vạch nguyên vật liệu (Multi-barcode Appending) cho Điện cực và Vỏ Case
 
-**Triệu chứng:** Khi sản xuất, một số Lot nguyên liệu (đặc biệt là điện cực hoặc vỏ Case) bị hết giữa chừng và cần bắn nối tiếp cuộn mới. Trước đây, hệ thống chỉ hỗ trợ tính năng này cho Điện cực, dẫn đến vỏ Case bị chặn hoặc ghi đè dữ liệu.
-
-**Cách khắc phục:**
-1. Cập nhật `usp_Vietnam_RawMaterialInputHist_uid` để:
-   - Tách chuỗi barcode chứa dấu `;` khi kiểm tra trạng thái HOLD bằng hàm `usp_VVT_checkHOLD_Material`.
-   - Tính toán `@count` hợp lệ bằng cách đếm và cộng dồn tất cả các barcode con trong danh sách.
-   - Bật tính năng tự động nối chuỗi (`RawMaterialBarcode = existingRawBarcode + ' ; ' + newRawBarcode`) cho nhóm vật liệu `Case` thuộc các dòng máy size `3562`, `3582`, `35105` (bên cạnh nhóm `ELECTRODEP` và `ELECTRODEM` dùng cho mọi size).
-   - Ghi nhận lịch sử cho cả hai nhóm này.
-2. Cập nhật `usp_RawMaterialInputHist_get` sử dụng `FOR XML PATH('')` để gộp các barcode đã bắn thành chuỗi `; ` hiển thị lên lưới của màn hình.
-
-*Chi tiết mã nguồn tham khảo các file:*
-- SP UID: [usp_Vietnam_RawMaterialInputHist_uid.sql](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/sql/procedures/usp_Vietnam_RawMaterialInputHist_uid.sql)
-- SP GET: [usp_RawMaterialInputHist_get.sql](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/sql/procedures/usp_RawMaterialInputHist_get.sql)
+*   **Mô tả:** Hệ thống hỗ trợ bắn nối tiếp nhiều cuộn nguyên vật liệu khác nhau (ngăn cách bởi dấu `;`) trên cùng một Lot sản phẩm để tránh trường hợp cuộn cũ hết giữa chừng nhưng Lot chưa chạy xong.
+*   **Chi tiết & Giải pháp:** Xem chi tiết về logic kiểm tra và lưu trong SP `usp_Vietnam_RawMaterialInputHist_uid`, cũng như cách gộp hiển thị trên lưới tại [KB_03_SAN_XUAT.md#619-hỗ-trợ-lưu-nhiều-mã-vạch-nguyên-vật-liệu-multi-barcode-appending-cho-điện-cực-và-vỏ-case](KB_03_SAN_XUAT.md#619-hỗ-trợ-lưu-nhiều-mã-vạch-nguyên-vật-liệu-multi-barcode-appending-cho-điện-cực-và-vỏ-case).
 
 ---
 
@@ -672,7 +642,7 @@ FROM Stb_ESRValueMonitor WHERE lotno = 'Mã_Barcode' ORDER BY ID
 ```
 
 **Fix data khi bị lệch số dòng:**
-*Xem chi tiết các bước chạy rollback và reset dữ liệu tại file script [fix_c546_ocv_lots.sql](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/sql/scripts/fix_c546_ocv_lots.sql)*
+*Xem chi tiết các bước chạy rollback và reset dữ liệu tại file script [fix_c546_ocv_lots.sql](../sql/scripts/fix_c546_ocv_lots.sql)*
 
 **Các Stored Procedure liên quan (C546):**
 

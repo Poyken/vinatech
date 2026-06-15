@@ -360,17 +360,7 @@ LotID (Chứng minh thư nguyên liệu kho: ML...)
 
 #### Case 5: Truy vết kế hoạch sai Line (Lỗi B450)
 *   **Vấn đề:** 2 Model khác nhau nhảy chung vào 1 Line báo cáo.
-*   **Giải pháp:** Dùng Time Window Query để quét 10 giây xung quanh CreateDateTime của bản ghi lỗi:
-    ```sql
-    SELECT DayPlanNo, PlanDate, LineCode, MaterialCode, CreateDateTime
-    FROM STB_DayProdPlan
-    WHERE CreateUserID = 'ID_Người_Lập'
-      AND CreateDateTime BETWEEN '2026-05-16 08:00:00' AND '2026-05-16 08:00:10'
-    ORDER BY DayPlanNo ASC
-    ```
-    **Fix:**
-    *   Chưa có sản lượng → Hủy kế hoạch sai tại B450 → Tạo lại đúng Line
-    *   Đã có sản lượng → Dùng script Chuyển Line (xem [KB_03_SAN_XUAT.md § 5.9](KB_03_SAN_XUAT.md))
+*   **Giải pháp:** Xem chi tiết cách sử dụng Time Window Query để quét đối soát và hướng dẫn sửa lỗi chuyển Line/hủy kế hoạch ngày tại [KB_03_SAN_XUAT.md#511-lỗi-kế-hoạch-ngày-chọn-nhầm-line-b450](KB_03_SAN_XUAT.md#511-lỗi-kế-hoạch-ngày-chọn-nhầm-line-b450).
 
 ---
 *Cập nhật: 2026-06-12 | Gộp KB_10 và KB_11*

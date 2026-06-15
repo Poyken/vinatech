@@ -213,7 +213,7 @@ UPDATE STB_SavePackingTime_VVT SET PackQty = [Số_Đúng] WHERE LotNo = 'Mã_Lo
 ```
 Case 1: In label thẳng (không đổi) → PrintVJ = 0 trong STB_Vietnam_PackingPrinting
 Case 2: Đổi VV→VJ theo PartNo → PrintVJ = 1 trong STB_Vietnam_PackingPrinting
-Case 3: Ngoại lệ không đổi hoặc lệch khớp mã vạch khi quét BoxID → Fix cứng (Hardcode) trong SP [usp_Vietnam_GetBoxIDForLotNo_VVT](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/sql/procedures/usp_Vietnam_GetBoxIDForLotNo_VVT.sql)
+Case 3: Ngoại lệ không đổi hoặc lệch khớp mã vạch khi quét BoxID → Fix cứng (Hardcode) trong SP [usp_Vietnam_GetBoxIDForLotNo_VVT](../sql/procedures/usp_Vietnam_GetBoxIDForLotNo_VVT.sql)
 ```
 
 > ⚠️ Sau khi đổi → kiểm tra tên model không trùng với bên Hàn Quốc → Nếu trùng thì không đổi được.

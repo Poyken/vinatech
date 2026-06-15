@@ -195,7 +195,7 @@ VALUES (
 ## 4. Lỗi màn HNC321 (Qc nhập NG sản phẩm mang đi kiểm tra — Báo lỗi chữ Hàn Quốc)
 
 Chi tiết về triệu chứng, nguyên nhân và các phương án bypass (bao gồm script SQL chèn lịch sử giả lập) đối với lỗi nhập phế màn HNC321, vui lòng tham khảo tại:
-👉 [KB_14_TRACE_BUG_METHODOLOGY.md § 4.6 — Lỗi nhập phế màn HNC321 báo lỗi tiếng Hàn](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_14_TRACE_BUG_METHODOLOGY.md#46-lỗi-nhập-phế-màn-hnc321-báo-lỗi-tiếng-hàn-이전-공정에-실적처리-이력이-없습니다)
+👉 [KB_14_TRACE_BUG_METHODOLOGY.md § 4.6 — Lỗi nhập phế màn HNC321 báo lỗi tiếng Hàn](KB_14_TRACE_BUG_METHODOLOGY.md#46-lỗi-nhập-phế-màn-hnc321-báo-lỗi-tiếng-hàn-이전-공정에-실적처리-이력이-없습니다)
 
 ---
 
@@ -225,7 +225,7 @@ WHERE Barcode = 'VE260509-004'
 ```
 
 **Xóa phiếu nhập kho F330 (có IQC):**
-👉 **Chi tiết Script Fix:** Xem tại [KB_02_KHO_WMS.md § 4.16](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES/MES_MASTER_KNOWLEDGE_BASE/KB_02_KHO_WMS.md)
+👉 **Chi tiết Script Fix:** Xem tại [KB_02_KHO_WMS.md § 4.16](KB_02_KHO_WMS.md)
 
 ---
 

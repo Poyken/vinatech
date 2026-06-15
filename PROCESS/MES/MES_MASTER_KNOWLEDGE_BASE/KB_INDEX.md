@@ -37,12 +37,6 @@
 | [KB_27_SCM_REWORK_TRA_HANG_KIEM_KE.md](KB_27_SCM_REWORK_TRA_HANG_KIEM_KE.md) | Phân hệ SCM (Sales Order/Delivery), Rework (Làm lại), Trả hàng (Returns & RMA), Kiểm kê (Stocktaking F750) | F750, B618, SCM01, FG00, HN551 |
 | [KB_29_SUPER_DEEP_SYSTEM_DISCOVERY_PROMPT.md](KB_29_SUPER_DEEP_SYSTEM_DISCOVERY_PROMPT.md) | Siêu Prompt (Meta-Prompt) tự học, đào sâu bản chất màn hình & liên kết nghiệp vụ | Hướng dẫn phân tích ngược |
 | [KB_30_THIET_BI_PHU_TRO_SAY_GA_DAO.md](KB_30_THIET_BI_PHU_TRO_SAY_GA_DAO.md) | Phân hệ thiết bị phụ trợ: Lò sấy (Dry Oven), Gá nạp Doping, Tuổi thọ dao Slitting | V-22, V-11_BG, Doping |
-| [C530.md](C530.md) | Phân tích lỗi lệch chỉ số đồng bộ ESR và cách khắc phục trên giao diện | C530, STB_MaterialQcSampleResult |
-
-
-
-
-
 
 ---
 
@@ -181,7 +175,7 @@
 
 ---
 
-> 📌 **Bảng DB & SP quan trọng:** Xem chi tiết tại [KNOWLEDGE.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/AI_AGENT_CONFIG/KNOWLEDGE.md) §1-2, [KB_18_DATABASE_SCHEMA_QUICKREF.md](KB_18_DATABASE_SCHEMA_QUICKREF.md) và [KB_19_ALL_DATABASES_MAP.md](KB_19_ALL_DATABASES_MAP.md).
-> 🛡️ **Nguyên tắc sửa DB:** Xem tại [RULES.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/AI_AGENT_CONFIG/RULES.md).
+> 📌 **Bảng DB & SP quan trọng:** Xem chi tiết tại [KNOWLEDGE.md](../AI_AGENT_CONFIG/KNOWLEDGE.md) §1-2, [KB_18_DATABASE_SCHEMA_QUICKREF.md](KB_18_DATABASE_SCHEMA_QUICKREF.md) và [KB_19_ALL_DATABASES_MAP.md](KB_19_ALL_DATABASES_MAP.md).
+> 🛡️ **Nguyên tắc sửa DB:** Xem tại [RULES.md](../AI_AGENT_CONFIG/RULES.md).
 
 *Cập nhật: 2026-06-14 | Tái cấu trúc tinh gọn tài liệu: Gộp toàn bộ 9 tệp tin trùng lặp nội dung*
