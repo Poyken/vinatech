@@ -1744,6 +1744,52 @@ $$\text{CurrentQty} = \text{LengthSlitting} \times \left(\frac{\text{WidthSlitti
     2. Để quét NVL, OP mở màn hình **B540** -> nhấn nút **"Việt Nam_Kiểm tra thường xuyên_BG2"** để kích hoạt giao diện **K109** (tích hợp logic chặn quét sai NVL theo BOM).
 *   **Chi tiết nghiệp vụ:** Xem tại [KB_03_SAN_XUAT.md § 6.9](KB_03_SAN_XUAT.md#69-sự-khác-biệt-vận-hành-bg2).
 
+### Lỗi 2: Bấm "Tạo Lot" báo lỗi duplicate key trên index `XS_Barcode` của `STB_SetInfo`
+
+> 🐛 **Phát hiện:** 2026-06-16 | Màn hình: **K101** (VVT_F4) | SP: `usp_DoCreateSetInfoForProdQty_VNT` → `usp_DoCreateSetInfo`
+
+*   **Triệu chứng:** Khi bấm nút **"Tạo Lot"** trên màn hình K101, hệ thống báo lỗi SQL:
+    ```
+    위반한 중복 키 값은 (0)입니다.
+    Cannot insert duplicate key row in object 'dbo.STB_SetInfo' with unique index 'XS_Barcode'.
+    ```
+    (Bản dịch: "Không thể chèn hàng trùng khóa vào bảng `dbo.STB_SetInfo` do unique index `XS_Barcode`. Giá trị khóa trùng là (0).")
+
+*   **Nguyên nhân gốc (3 tầng):**
+    1.  **Thiếu mapping trong `STB_BomRevision_Map`:** SP `usp_DoCreateSetInfo` truy vấn bảng `STB_BomRevision_Map` để lấy `BloomEnergyBOMRevision` (ví dụ: `'26'`) dùng khi tạo Barcode cho Lot. Nếu `MaterialCode` của sản phẩm chưa có trong bảng này → biến `@BloomEnergyBOMRevision = NULL`.
+    2.  **`CONCAT_NULL_YIELDS_NULL = ON` (mặc định SQL Server — chuẩn ISO):** Đây là hành vi **mặc định** của SQL Server. Khi ghép chuỗi có bất kỳ thành phần `NULL` nào, **toàn bộ kết quả trả về `NULL`**. Ví dụ: `'K164181' + NULL + '26'` → `NULL`. Không cần `SET` thủ công, SQL Server đã bật sẵn.
+    3.  **`ISNULL(NULL, '')` → chuỗi rỗng `''`:** SP dùng `ISNULL(@Barcode, '')` như một fallback, nhưng kết quả là Barcode trở thành `''` (rỗng). Khi tạo nhiều Lot, tất cả đều có Barcode = `''` → vi phạm unique index `XS_Barcode`.
+
+*   **Cách kiểm tra nhanh:**
+    ```sql
+    -- Bước 1: Xác nhận MaterialCode bị thiếu mapping
+    SELECT MaterialCode FROM STB_BomRevision_Map
+    WHERE MaterialCode = '[Mã Model bị lỗi]'
+    -- Nếu 0 rows → đây là nguyên nhân
+
+    -- Bước 2: Xem các bản ghi mẫu để biết format cần insert
+    SELECT TOP 5 * FROM STB_BomRevision_Map ORDER BY CreateDateTime DESC
+    ```
+
+*   **Cách khắc phục:** Thêm bản ghi cho sản phẩm bị thiếu vào `STB_BomRevision_Map`:
+    ```sql
+    -- Lấy BOMRevision hiện tại của sản phẩm từ BOM master
+    SELECT TOP 1 BomVersion FROM STB_BomInfo
+    WHERE MaterialCode = '[Mã Model]' AND IsDeleted = 0
+    ORDER BY CreateDateTime DESC
+
+    -- Insert vào mapping table
+    INSERT INTO STB_BomRevision_Map (MaterialCode, BloomEnergyBOMRevision, CreateDateTime)
+    VALUES ('[Mã Model]', '[BomVersion lấy được]', GETDATE())
+    ```
+
+*   **⚠️ Lưu ý quan trọng về `CONCAT_NULL_YIELDS_NULL`:**
+    -   Giá trị `ON` là **mặc định của SQL Server** (ISO standard), **không phải lỗi cấu hình**.
+    -   Không nên tắt (`SET CONCAT_NULL_YIELDS_NULL OFF`) vì sẽ gây ra hành vi không chuẩn và có thể tạo ra barcode sai thay vì lỗi — khó debug hơn.
+    -   **Bước xử lý đúng:** Luôn đảm bảo `STB_BomRevision_Map` có đầy đủ dữ liệu khi thêm model mới (xem Checklist thêm model mới).
+
+*   **Phòng ngừa:** Thêm bước kiểm tra `STB_BomRevision_Map` vào quy trình thêm model mới (xem `new_model_checklist.md` Bước 3b).
+
 ---
 
 
