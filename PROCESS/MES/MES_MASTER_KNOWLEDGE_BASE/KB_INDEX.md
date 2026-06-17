@@ -125,6 +125,7 @@
 | Địa chỉ URL truy cập hệ thống | KB_06 § 13 |
 | Bảng tổng hợp màn hình MES (Mở rộng) | KB_06 § 14 |
 | Gộp box tùy chỉnh HN523 Qty = 0 (thiếu IsOutputRoute) | KB_04 § 6.13 |
+| Gộp box lỗi do PO có công đoạn hậu đóng gói B523 (thiếu lịch sử V-28_BG) | KB_04 § 6.13.2 |
 | Đổi mã vật tư tự động (STB_ChangeMaterialCode_HN) | KB_02 § 3.1 |
 | Đăng ký mã vật tư mới (STB_MaterialMaster) | KB_06 § 1.3 |
 | Tra cứu SP in tem cho khách hàng mới (Sanmina) | KB_04 § 6.9.3 |

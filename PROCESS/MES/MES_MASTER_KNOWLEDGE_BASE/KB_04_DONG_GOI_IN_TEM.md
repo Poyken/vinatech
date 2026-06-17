@@ -420,6 +420,49 @@ WHERE Barcode = 'VVPR292R710617';
      COMMIT TRANSACTION;
      ```
 
+### 6.13.2 Lỗi "포장 (Dong goi) 공정에서 실적을 입력하지 않았습니다" khi gộp box (B523)
+
+**Triệu chứng:** Khi công nhân nhấn nút "Box합치기" (Gộp box) tại màn hình **B523** (đối với các dòng sản phẩm có bước hậu đóng gói như `V-34_BG` - Re-inspection), hệ thống báo lỗi tiếng Hàn: `"포장 (Dong goi) 공정에서 실적을 입력하지 않았습니다"` mặc dù Lot đã chốt đầy đủ các công đoạn sản xuất trước đó.
+
+**Nguyên nhân gốc:** 
+- PO được cấu hình công đoạn hậu đóng gói (ví dụ: `V-34_BG` - SX Kiểm tra lại, `V-29_BG` - Doping) làm công đoạn cuối cùng và có cờ `IsOutputRoute = 1`.
+- Do đó, SP `usp_Vietnam_GetProdPackingForBarcode_VVT` trả về `@RouteCode = 'V-34_BG'` cho B523.
+- Khi gộp box, SP `usp_DoProcessProdPackingByOne_VNT` kiểm tra công đoạn đứng trước `V-34_BG` trong quy trình của PO hiện tại (là công đoạn `V-28_BG` - Đóng gói) xem đã có lịch sử quét sản xuất trong bảng `STB_ProdRouteHist` chưa.
+- Do công nhân chưa quét chốt sản lượng cho công đoạn đóng gói `V-28_BG` (trên PDA/màn hình B530), nên bảng `STB_ProdRouteHist` của barcode chưa có bản ghi này $\rightarrow$ Hệ thống báo lỗi chặn gộp.
+
+**Cách khắc phục:**
+- **Cách 1 (Vận hành chuẩn):** Công nhân sử dụng PDA/Terminal hoặc màn hình **B530** quét chốt sản lượng công đoạn `V-28_BG` trước, sau đó mới quay lại B523 thực hiện gộp box (B523 sẽ đóng vai trò chốt công đoạn cuối `V-34_BG` và sinh BoxID).
+- **Cách 2 (Sửa DB bypass tạm thời):** Chuyển cờ `IsOutputRoute = 1` từ `V-34_BG` về công đoạn đóng gói `V-28_BG` trên quy trình PO để B523 tự chốt sản lượng:
+  ```sql
+  BEGIN TRANSACTION;
+  UPDATE STB_ProductionOrderRouting SET IsOutputRoute = 0 WHERE PONo = 'MÃ_PO' AND RouteCode = 'V-34_BG';
+  UPDATE STB_ProductionOrderRouting SET IsOutputRoute = 1 WHERE PONo = 'MÃ_PO' AND RouteCode = 'V-28_BG';
+  COMMIT TRANSACTION;
+  ```
+- **Cách 3 (Chèn lịch sử quét ảo):** Chạy script chèn thủ công bản ghi lịch sử quét ảo cho công đoạn đóng gói `V-28_BG` vào bảng `STB_ProdRouteHist`:
+  ```sql
+  BEGIN TRANSACTION;
+  BEGIN TRY
+      INSERT INTO STB_ProdRouteHist (
+          CompanyCode, WorkCenterCode, PONo, DayPlanNo, ControlNo, 
+          MaterialCode, BomVersion, JobDate, ShiftCode, TimeCode, 
+          LineCode, RouteCode, WorkerCode, MachineCode, ProdQty, 
+          ProdDateTime, CreateDateTime, CreateUserID
+      )
+      VALUES (
+          'VVT', 'VVT_F2', 'MÃ_PO', 'MÃ_DAYPLANNO', 'MÃ_CONTROLNO', 
+          'MÃ_MODEL', '1', 'NGÀY_JOBDATE', 'A', '*', 
+          'MÃ_LINE', 'V-28_BG', 'vinaadmin', 'MÃ_LINE', SỐ_LƯỢNG_LOT, 
+          GETDATE(), GETDATE(), 'vinaadmin'
+      );
+      COMMIT TRANSACTION;
+  END TRY
+  BEGIN CATCH
+      ROLLBACK TRANSACTION;
+      PRINT ERROR_MESSAGE();
+  END CATCH;
+  ```
+
 ---
 
 ### 6.14 Lỗi cắt chuỗi danh sách tem nhỏ (B560 - Truncation in InBoxLabelList)
@@ -755,6 +798,103 @@ Công nhân scan Lot/Barcode sản phẩm tại màn hình đóng gói **B523**,
 #### 🛠️ KỊCH BẢN C: Hủy gộp box khi Lot/Packing đã được nhập kho thành phẩm (Finish Goods)/Hủy Packing B523
 *   **Triệu chứng:** Khi cần hủy/rã box để đóng gói lại nhưng hệ thống chặn không cho hủy trên giao diện UI (báo lỗi: *"Lot này đã được nhập kho, không thể huỷ gộp box..."*).
 *   **Nguyên nhân gốc:** Lô thành phẩm đã chạy qua bước Nhập kho thành phẩm và có bản ghi trong bảng `STB_VN_FINISHGOODS_HN_New` (hoặc bảng thành phẩm tương ứng của từng nhà máy) cùng với Material Documents (`STB_MaterialDocInfo` có `IsCancel = 0`).
+Để tìm và xác định các thông tin còn lại từ các mã đầu vào: PKQO1600231, PKQO1600242 và Lot ve260518-011 phục vụ cho kịch bản hủy gộp box thành phẩm tại KB_04_DONG_GOI_IN_TEM.md
+, bạn có thể chạy các câu truy vấn SELECT kiểm tra dưới đây:
+
+1. Hướng dẫn các câu lệnh SQL để truy vấn thông tin
+Bước 1: Tìm Mã chứng từ nhập kho (MaterialDocNo) & User tạo
+Mã chứng từ nhập kho vật tư liên kết trực tiếp với các Packing ID thông qua bảng STB_MaterialDocLotInfo:
+
+sql
+SELECT MaterialDocNo, PackingID, LotNo, CreateUserID, CreateDateTime 
+FROM STB_MaterialDocLotInfo WITH(NOLOCK) 
+WHERE PackingID IN ('PKQO1600231', 'PKQO1600242');
+Bước 2: Tìm Số lượng của từng Box (CurrentQty)
+Để tính tổng số lượng cần giảm trừ (TỔNG_SỐ_LƯỢNG_HỦY), tra cứu trong bảng STB_MaterialLotInfo:
+
+sql
+SELECT PackingID, LotNo, CurrentQty 
+FROM STB_MaterialLotInfo WITH(NOLOCK) 
+WHERE PackingID IN ('PKQO1600231', 'PKQO1600242');
+Bước 3: Tìm Mã điều khiển (ControlNo) & Mã PO (PONo)
+Tra cứu từ bảng quản lý Lot/Barcode sản phẩm STB_SetInfo:
+
+sql
+SELECT Barcode, ControlNo, PONo, MaterialCode 
+FROM STB_SetInfo WITH(NOLOCK) 
+WHERE Barcode = 'VE260518-011';
+Bước 4: Xác định công đoạn cuối (RouteCode)
+Tra cứu lịch sử công đoạn chốt của Lot trong bảng STB_ProdRouteHist:
+
+sql
+SELECT RouteCode, ProdQty, CreateDateTime 
+FROM STB_ProdRouteHist WITH(NOLOCK) 
+WHERE ControlNo = 'MÃ_CONTROL_NO_TÌM_ĐƯỢC_Ở_BƯỚC_3' 
+ORDER BY CreateDateTime DESC;
+Bước 5: Tìm Mã tổng hợp công đoạn (ProductSummaryID)
+Tra cứu trong bảng tổng hợp STB_ProdRouteSummary bằng cách lọc theo PONo, RouteCode (công đoạn cuối) và ngày ghi nhận tương ứng:
+
+sql
+SELECT ProductSummaryID, OutputQty, JobDate 
+FROM STB_ProdRouteSummary WITH(NOLOCK) 
+WHERE PONo = 'MÃ_PO_NO_TÌM_ĐƯỢC_Ở_BƯỚC_3' 
+  AND RouteCode = 'MÃ_ROUTE_CUỐI_TÌM_ĐƯỢC_Ở_BƯỚC_4';
+2. Các thông tin thực tế đã tìm thấy trong Database
+Tôi đã chạy các lệnh SELECT kiểm tra trên Database của bạn và ghi nhận các thông tin cụ thể như sau:
+
+Mã chứng từ nhập kho (MaterialDocNo):
+PKQO1600231 tương ứng với mã chứng từ: 260616000243
+PKQO1600242 tương ứng với mã chứng từ: 260616000254
+Tài khoản tạo: doanthao
+Số lượng hủy:
+PKQO1600231 có số lượng: 505
+PKQO1600242 có số lượng: 295
+Tổng số lượng hủy: 505 + 295 = 800
+Thông tin Lot & PO:
+ControlNo của Lot VE260518-011 là: 20260515000379
+PONo là: 260515000004
+Công đoạn chốt cuối cùng: VE10
+Mã tổng hợp công đoạn (ProductSummaryID): 20260616000895 (cho ngày scan cuối là ngày 16/06/2026).
+3. Script SQL hoàn chỉnh (sẵn sàng chạy trên SSMS)
+Dưới đây là Script hoàn chỉnh đã được điền sẵn các thông số thực tế của bạn. Script được cấu hình mặc định là ROLLBACK TRANSACTION để bạn chạy thử nghiệm an toàn trên SSMS trước:
+
+sql
+BEGIN TRANSACTION;
+BEGIN TRY
+    -- 1. Xóa bản ghi trong kho thành phẩm để bypass điều kiện chặn (nếu đã có dữ liệu)
+    DELETE FROM STB_VN_FINISHGOODS_HN_New 
+    WHERE PackingID IN ('PKQO1600231', 'PKQO1600242') AND LotNo = 'VE260518-011';
+    -- 2. Gọi procedure hệ thống hủy tài liệu nhập kho vật tư (giải phóng STB_MaterialLotInfo)
+    EXEC usp_DoCancelMaterialDoc 
+        @pProcessLanguage = 'vn',
+        @pProcessUserID = 'doanthao',
+        @pMaterialDocNo = '260616000243';
+    EXEC usp_DoCancelMaterialDoc 
+        @pProcessLanguage = 'vn',
+        @pProcessUserID = 'doanthao',
+        @pMaterialDocNo = '260616000254';
+    -- 3. Cập nhật giảm sản lượng chốt công đoạn cuối (VE10) trong STB_ProdRouteHist
+    UPDATE STB_ProdRouteHist
+    SET ProdQty = ProdQty - 800
+    WHERE ControlNo = '20260515000379' AND RouteCode = 'VE10';
+    -- 4. Cập nhật giảm sản lượng trong bảng tổng hợp công đoạn STB_ProdRouteSummary
+    UPDATE STB_ProdRouteSummary
+    SET OutputQty = OutputQty - 800
+    WHERE ProductSummaryID = '20260616000895';
+    -- 5. Cập nhật giảm sản lượng hoàn thành của PO (STB_ProductionOrderInfo)
+    UPDATE STB_ProductionOrderInfo
+    SET ProdFinishQty = ProdFinishQty - 800
+    WHERE PONo = '260515000004';
+    -- THỬ NGHIỆM AN TOÀN: Mặc định Rollback. Hãy đổi thành COMMIT TRANSACTION khi muốn lưu thay đổi.
+    ROLLBACK TRANSACTION;
+    PRINT 'Kiểm tra thành công! (Dữ liệu đã rollback an toàn)';
+END TRY
+BEGIN CATCH
+    IF @@TRANCOUNT > 0 ROLLBACK TRANSACTION;
+    PRINT 'Lỗi: ' + ERROR_MESSAGE();
+    THROW;
+END CATCH;
+
 *   **Quy trình xử lý bằng Transaction:**
     ```sql
     BEGIN TRANSACTION;

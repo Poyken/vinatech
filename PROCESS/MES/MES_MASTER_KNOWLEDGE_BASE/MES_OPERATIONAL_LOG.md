@@ -17,6 +17,7 @@
 | **#003** | 2026-06-12 | **HNC321** (Phế phẩm) | Barcode `ve260509-001` | Nhập phế công đoạn `VE08` báo lỗi tiếng Hàn: "Không có lịch sử xử lý sản lượng ở công đoạn trước". | **RESOLVED** | Chèn bản ghi lịch sử quét ảo cho trạm trước (`VE07`) để thông luồng validation. Chi tiết tại [KB_05 § Kịch bản 3](KB_05_QC_ELECTRODE.md#kịch-bản-sự-cố-khẩn-cấp-3-lỗi-nhập-phế-hnc321-báo-lỗi-tiếng-hàn). | AI |
 | **#004** | 2026-06-13 | **Mixing** (Cân điện cực) | Lot `HCE-202` | Màn hình cân nhảy bước Binder trước bột Than làm kẹt mẻ trộn Mixing. | **RESOLVED** | Công nhân bỏ tích checkbox "CA ĐÊM CHUẨN BỊ TRƯỚC" trên UI. IT chạy script reset dữ liệu cân tạm của Lot. [KB_05 § Kịch bản 4](KB_05_QC_ELECTRODE.md#kịch-bản-sự-cố-khẩn-cấp-4-lỗi-nhảy-bước-cân-điện-cực-mixing). | AI & IT |
 | **#005** | 2026-06-14 | **B552** (Slitting) | Model `3582-600F CY` | Model mới không tạo được tem điện cực do thiếu cấu hình quy cách Slitting. | **RESOLVED** | Thêm cấu hình quy cách vào bảng `stb_slittinglocationconfig_vvt`. Chi tiết tại [KB_05 § Kịch bản 5](KB_05_QC_ELECTRODE.md#kịch-bản-sự-cố-khẩn-cấp-5-điện-cực-3582-600f-cy-không-tạo-được-tem). | AI |
+| **#006** | 2026-06-16 | **B523** (Đóng gói) | Barcode `VVQO133R072717` | Lỗi "포장 (Dong goi) 공정에서 실적을 입력하지 않았습니다" khi bấm Box합치기. | **OPEN** | Đề xuất quét chốt V-28_BG trên PDA/màn hình hoặc chạy script chèn lịch sử chốt ảo. | AI |
 
 ---
 
