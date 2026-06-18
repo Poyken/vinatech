@@ -327,6 +327,147 @@ VALUES ('Vietnamese', 'Addon', '^이미 Lot를 생성하였습니다^', N'Lot đ
 > - Trigger #2 (`tgMaterialLotInfoForUpdate`) là **"bóng ma"** đồng bộ tồn kho. Khi UPDATE `STB_MaterialLotInfo` trực tiếp bằng SQL → trigger tự chạy → `STB_MaterialStock` tự cập nhật.
 > - Trigger #33 (`utr_ProcedureChangesLog`) ghi lại **mọi lần ALTER/DROP SP** vào bảng `DDLChangeLog`. Dùng để truy vết ai sửa SP gì, lúc nào.
 
+### 1.7 Hệ Sinh Thái 20 Database (Full Ecosystem Map)
+
+> Toàn bộ hệ thống Vinatech chạy trên **20 databases** trên cùng SQL Server, chia thành 4 nhóm:
+
+| Nhóm | Database | Chức năng |
+|---|---|---|
+| **Core MES** | `SmartFactoryV2` (994 tables, 3,395 SPs) | Dữ liệu nghiệp vụ chính |
+| | `SmartFramework` (Screen, User, Label, String) | Metadata framework |
+| | `SmartFramework_File` | File attachments, tem XML |
+| | `SmartFramework_Temp` | Data tạm |
+| **ERP & Kế toán** | `NEOE` | ERP Douzone (Master Data, PO, Invoice) |
+| | `erpdb` | ERP legacy |
+| | `DZICUBE` | OLAP Cube cho BI/báo cáo |
+| **Groupware & HR** | `VINATECH_GROUP` | Văn phòng duyệt, HR, tờ trình |
+| | `VINATECH_DATA_KSOX` | Dữ liệu ký số xác thực |
+| | `VINATECH_SPREADSHEET` | Spreadsheet nội bộ |
+| | `streamdocs` | Xem PDF an toàn |
+| **Hệ thống phụ trợ** | `VINATECH_POP` (43 tables) | POP Kiosk xưởng (VINA_PC_MAC, BOM_INPUT_ROUTE) |
+| | `VINATECH_RESTFUL` | SSO & API authentication |
+| | `VINATECH_WEBSOCKET` | Real-time notification |
+| | `AndonDB` (3 tables) | Hệ thống cảnh báo lỗi Line |
+| | `WCMS_Standard` / `WCMS_STANDARD_NEW` | Chuyển tiền ngân hàng (Cash Management) |
+| **Backup & Incubator** | `SmartFactoryV2_261807` | Backup snapshot |
+| | `SmartFactoryIncubator` | Môi trường thử nghiệm |
+| | `VINATECH_POP_240625` | POP backup |
+
+#### Linked Servers (Kết nối ERP Korea)
+
+| Linked Server | IP | Mục đích |
+|---|---|---|
+| `ERPSVR` | 110.11.27.7:2433 | ERP Korea (đọc Master Data gốc) |
+| `OLDNAISSVR` | 110.11.27.5 | NAIS server cũ (legacy) |
+| `CMS_VINA_LINK` | 110.11.27.5\MESTESTDB:8080 | CMS ngân hàng |
+
+### 1.8 SQL Agent Jobs — Tự Động Hóa Nền (Background Automation)
+
+> Hệ thống có **~40 Agent Jobs** chạy tự động mỗi ngày. Đây là "người lao công vô hình" xử lý đồng bộ dữ liệu, snapshot, và backup.
+
+| Nhóm | Job | Lịch | Chức năng |
+|---|---|---|---|
+| **Đồng bộ liên nhà máy** | `Tranfer_BacGiang_To_BacNinh` (20+ steps) | Daily | Sync dữ liệu BG → BN |
+| | `Tranfer_BN_BG` (19 steps) | Daily | Sync dữ liệu BN → BG |
+| **Thành phẩm** | `Transfer_FG00_To_C560` | Daily | Chuyển data FG00 → C560 (OQC) |
+| | `VN_FINISHEDGOODS_TO_KR_FINISHEDGOODS` | Daily | Sync tồn kho TP → HQ Korea |
+| | `VVT_GETDATA_FINISHEDGOOD` | Daily | Lấy data thành phẩm tổng hợp |
+| | `vvt_finishgoodCapture` | Daily | Snapshot tồn kho TP |
+| **Snapshot & Capture** | `vvt_materialSnapshot` | Daily | Snapshot tồn kho NVL |
+| | `vvt_semiInventoryCapture` | Daily | Snapshot bán thành phẩm |
+| | `vvt_productreceipt560` | Daily | Auto-insert sản lượng C560 |
+| **HR & Chấm công** | `SyncFingerData` | Daily | Đồng bộ dữ liệu vân tay |
+| | `VCM_thoigian_08PM` | Daily 8PM | Cập nhật giờ công |
+| | `NameShift` | Daily | Phân ca tự động |
+| **Email Alert** | `MakeMaterialExpirationEmailAlert` | Daily | Cảnh báo NVL sắp hết hạn |
+| | `MakeEmailEquipmentCalibrationCheck` | Daily | Cảnh báo hiệu chuẩn thiết bị |
+| **ERP I/F** | `ERP ?????? ??(IU)` (12 jobs) | Monthly | Đồng bộ ERP hàng tháng |
+| | `ERP ???? I/F` | Daily | Interface ERP hàng ngày |
+| **Backup** | `DB???(4??).?? ??_1` | Daily | Full backup DB (4TB) |
+| | `ERPU_DB_full-backup-daily` | Daily | Backup ERP |
+
+> ⚠️ **Quan trọng:** Job `Tranfer_BacGiang_To_BacNinh` có 20+ steps — nếu 1 step fail, dữ liệu giữa 2 nhà máy sẽ bị lệch. Kiểm tra Job History khi phát hiện data BG/BN không khớp.
+
+### 1.9 SP Naming Convention & Phân Lớp Code (Code Archaeology)
+
+#### Quy tắc đặt tên SP (3,395 SPs)
+
+| Pattern | Số lượng | Ý nghĩa | Ví dụ |
+|---|---|---|---|
+| `*_get` | **594** | Đọc dữ liệu (SELECT) — dùng cho SearchFunction | `usp_ProdRouteHist_get` |
+| `*_iud` | **347** | Insert/Update/Delete — dùng cho ExecuteFunction | `usp_SetInfo_iud` |
+| `usp_Do*` | **380** | Hành động xử lý (Process) — core engine | `usp_DoProcessProdRouteHist` |
+| `usp_VN_*` | **377** | Vinatech custom (VN = Vietnam) | `usp_VN_Update_GoodFinish_HY_New` |
+| `usp_Vietnam_*` | **159** | Vinatech custom (tên dài hơn) | `usp_Vietnam_DoProcessProdPacking_VVT` |
+| `usp_vvt*` | **105** | VVT-specific logic | `usp_vvt_MaterialLotInfo_get` |
+| `*_uid` | **32** | Variant: Update/Insert/Delete | `usp_VN_FinishGood_BG_StockIn_uid` |
+| `pop_*` | **5** | POP Kiosk chuyên dụng | `pop_Electrode_Coating_iud` |
+| Other | 1,416 | NAIS gốc (Korea) | `usp_BomHeader_iud` |
+
+#### Phân lớp: NAIS gốc vs Vinatech custom
+
+```
+SmartFactoryV2 (994 tables)
+├── NAIS gốc (Korea): ~793 tables (STB_* prefix)
+│   └── SP gốc: usp_*, pop_*
+└── Vinatech custom: 201 tables (VVT_*, VN_*, Vietnam_*, FinishGood*, stb_vvt_*)
+    └── SP custom: usp_VN_*, usp_Vietnam_*, usp_vvt*
+```
+
+> 💡 **Cách phân biệt nhanh:** SP có `VN`, `Vietnam`, `VVT`, `HN`, `BG`, `HY`, `Enesol` trong tên = **Vinatech tự viết**. SP không có = **NAIS gốc** (Korea dev viết).
+
+#### Serial Rules (Cách sinh mã tự động)
+
+| Bảng | Prefix | SerialLen | Ví dụ mã sinh ra |
+|---|---|---|---|
+| STB_SetInfo | YYYYMMDD | 6 | `20260618000001` |
+| STB_ProdRouteHist | YYYYMMDD | 6 | `20260618000001` |
+| STB_MaterialLotInfo | YYYYMMDD | 6 | `ML20260618000001` |
+| STB_MaterialDocInfo | YYMMDD | 6 | `260618000001` |
+| STB_DayProdPlan | YYYYMMDD | 5 | `2026061800001` |
+| STB_DividePackaging | HNDPK | 10 | `HNDPK0000000001` |
+
+#### Hệ thống phân quyền (80 UserTypes)
+
+| Nhóm | UserType | Số users | Quyền |
+|---|---|---|---|
+| **Sản xuất** | ProductionManagement | 191 | Quản lý SX toàn bộ |
+| | vi_productionCell | 127 | Operator Cell Line |
+| | VVT_WorkerManagement | 106 | Quản lý công nhân VVT |
+| | vi_productionTech | 56 | Kỹ thuật SX |
+| **QC** | QualityManagement | 130 | Quản lý QC |
+| | vi_QC | 100 | Nhân viên QC |
+| | VVT_QC_Team | 46 | QC Team VVT |
+| **Kho** | MaterialManagement | 97 | Quản lý NVL |
+| | vi_warehouse | 74 | Thủ kho |
+| | ROHWarehouseUser | 56 | User kho nguyên liệu |
+| **IT** | Admin | 69 | Full quyền |
+| | Developer | 14 | Dev (debug) |
+| | FunctionExtentsion | 38 | Mở rộng function |
+
+> Quyền được gán qua `STB_UserPermissionGroup` (UserID → UserType) + `STB_UserTypeBasicPermission` (UserType → ScreenID + FuncID + Allow).
+
+#### VW_WipResult — View tính WIP lớn nhất (17,684 chars, 9 tables)
+
+View này join: `STB_ProdRouteHist` + `STB_SetInfo` + `STB_RouteInfo` + `STB_LineInfo` + `STB_MaterialMaster` + `STB_MaterialQcInfo` + `STB_DefectRepairInfo` + `STB_BasicRoutingInfo` + `STB_BasicRoutingDetail` → Tính toán WIP (Work In Progress) toàn nhà máy.
+
+#### DDLChangeLog — Audit Trail cho IT Admin
+
+```sql
+-- Xem 10 thay đổi SP gần nhất
+SELECT TOP 10 PostTime, LoginName, EventType, ObjectName, LEFT(CommandText, 100) AS Preview
+FROM SmartFactoryV2.dbo.DDLChangeLog WITH(NOLOCK)
+ORDER BY PostTime DESC
+
+-- Xem ai sửa 1 SP cụ thể
+SELECT PostTime, LoginName, EventType
+FROM SmartFactoryV2.dbo.DDLChangeLog WITH(NOLOCK)
+WHERE ObjectName = 'usp_Vietnam_DoProcessProdPacking_VVT'
+ORDER BY PostTime DESC
+```
+
+> **Columns:** LogID, EventType, PostTime, LoginName, UserName, DatabaseName, ObjectName, CommandText (full SQL), EventXML, IpAddr
+
 ---
 
 ## 2. 🗺️ Luồng Dữ Liệu Tổng Quan (End-to-End Data Flow)
