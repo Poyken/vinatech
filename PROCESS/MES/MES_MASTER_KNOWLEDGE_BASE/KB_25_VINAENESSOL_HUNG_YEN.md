@@ -395,6 +395,87 @@ Nhằm đảm bảo tính độc lập vận hành cho xưởng Hưng Yên (`VVT
 
 ---
 
+## Appendix — HY Isolated SPs & VPC Tables (DB Verified 2026-06-18)
+
+> **Tổng: 93 SPs** có hậu tố `_HY` — tách biệt hoàn toàn khỏi logic BN/BG/HN
+
+### A.1 HY SP theo nhóm chức năng
+
+#### Electrode (24 SPs):
+| SP | Chức năng |
+|---|---|
+| `usp_ElectrodeMixInfo_HY_get/_iud` | Trộn nguyên liệu HY |
+| `usp_ElectrodeMixStepInfo_HY_get/_iud` | Bước trộn chi tiết |
+| `usp_ElectrodeCoatingInfo_HY_get/_iud` | Phủ Coating |
+| `usp_ElectrodeCoatingVisualInspectionInfo_HY_*` | Kiểm tra Coating |
+| `usp_ElectrodeOven_HY_get/_iud` | Sấy lò |
+| `usp_ElectrodeRollPressingInfo_HY_*` | Ép cuộn |
+| `usp_ElectrodeRollPressingVisualInspectionInfo_HY_*` | Kiểm tra ép cuộn |
+| `usp_ElectrodeSlittingInfo_HY_*` / `Result_HY_*` | Cắt cuộn |
+| `usp_ElectrodeStep_HY_get/_iud` | Quản lý công đoạn |
+| `usp_ElectrodeCommon_HY_get/_iud` | Common |
+| `usp_ElectrodeWasteInfoNew_HY_iud` | Phế liệu electrode |
+| `usp_ElectrodCoatingInfo_Viscosity_VVT_HY_iud` | Viscosity |
+
+#### QC / IQC (18 SPs):
+| SP | Chức năng |
+|---|---|
+| `usp_MaterialQcInfo_HY_get/_iud` | Thông tin QC NVL |
+| `usp_MaterialQcDetail_HY_get/_iud` | Chi tiết QC |
+| `usp_MaterialQcSampleResult_HY_get/_iud` | Kết quả mẫu |
+| `usp_DoMakeMaterialIQCDetailList_HY` | Tạo danh sách IQC |
+| `usp_DoMakeMaterialQcSampleResult_HY` | Tạo kết quả mẫu |
+| `usp_DoChangeMaterialQcToPass_HY` | Đổi QC → Pass |
+| `usp_DoUpdateMaterialQcInfo_Fail/Success_HY` | Cập nhật Fail/Pass |
+| `usp_IQcDefectReport_HY_iud` | Báo lỗi IQC |
+| `usp_DoSendEmailForDefectReportIQC_HY` | Email báo lỗi IQC |
+| `usp_QcInspectionGroup/Item_HY_*` | Nhóm/Hạng mục QC |
+
+#### Production (13 SPs):
+| SP | Chức năng |
+|---|---|
+| `usp_DayProdPlan_HY_get/_iud` | Kế hoạch SX ngày |
+| `usp_DoCancelDayProdPlan_HY` | Hủy kế hoạch |
+| `usp_DoFixDayProdPlan_HY` | Sửa kế hoạch |
+| `usp_ProductionOrderInfo_HY_get` | Lệnh SX |
+| `usp_ProductionOrderBom_HY_get` | BOM theo PO |
+| `usp_ProductionOrderRouting_HY_get/_iud` | Routing |
+| `usp_DoCancelPO_HY` | Hủy PO |
+| `usp_DoFixProductionOrder_HY` | Sửa PO |
+| `usp_SetInfo_HY_get/_iud_VNT` | Set Info |
+
+#### Finished Goods (10 SPs):
+| SP | Chức năng |
+|---|---|
+| `ups_Add_Fg_HY` | Thêm TP (⚠️ typo: `ups_` không phải `usp_`) |
+| `usp_VN_ShowAllFinishGoodMES_HY` | Hiển thị tất cả TP |
+| `usp_VN_ShowGoodFinisedExport_HY` | Export TP |
+| `usp_VN_Add_FinishGood_HY_New` | Thêm TP mới |
+| `usp_VN_IMPORTFINISHEDGOOD_HY_New` | Import TP |
+| `usp_VN_Update_GoodFinish_HY_New` | Cập nhật TP |
+
+#### Misc:
+`usp_DoAddCommInspMeasureHistForBarcode_HY`, `usp_DoFinishCommInspDoc_HY/_VNT_HY`, `usp_HYStagePrices_iud`, `usp_LocationElectric_HY`, `usp_NCR_Report_HY_iud`, `usp_MainAssemblePartWeight_HY_get`, `usp_GetMaterialGIForPO_HY`, `usp_ModifyRevisionsVerFromC220_VVTF4_HY`
+
+### A.2 HY FG Tables
+
+| Table | Mô tả |
+|---|---|
+| `STB_VN_FINISHGOODS_HY` | **★ Finished Goods** Hưng Yên (chính) |
+| `STB_VN_FINISHGOODS_HY_NEW` | Version mới |
+
+### A.3 VPC Tables (VinaEnesol PCBA — 3 tables)
+
+| Table | Mô tả |
+|---|---|
+| `STB_VPCLinePlan` | Kế hoạch Line VPC |
+| `STB_VPCLinePlan_two` | Version 2 |
+| `VPC_Performance` | Hiệu suất PCBA |
+
+---
+
+*Cập nhật: 2026-06-18 — Bổ sung Appendix: 93 HY-isolated SPs (phân loại theo chức năng) + HY FG Tables + VPC Tables. DB verified.*
+
 ## 🔴 Cẩm nang khắc phục lỗi theo Screen ID (Gộp từ KB_SCREEN_BUG_REF)
 
 ## Dry Oven — Lò sấy điện cực (Quy trình sấy V-22)

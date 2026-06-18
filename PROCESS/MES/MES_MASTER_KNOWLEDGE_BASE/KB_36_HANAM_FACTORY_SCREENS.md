@@ -379,3 +379,93 @@
 
 *Cập nhật: 2026-06-18 — Deep discovery Phases 8-11 (HN 83 screens, H 82 screens, HY 17 screens, QC/Vision/IoT/BOM/Sales subsystems)*
 
+---
+
+## Appendix — HN Isolated SPs & Tables (DB Verified 2026-06-18)
+
+> **Tổng: 63 SPs** có hậu tố `_HN` hoặc `_HNam` — tách biệt hoàn toàn khỏi logic BN/BG/HY
+
+### A.1 HN SP theo nhóm chức năng
+
+#### Slitting / Aging (18 SPs):
+| SP | Chức năng |
+|---|---|
+| `usp_CreateLotSlitting_HN_uid` | Tạo Lot Slitting |
+| `usp_CreateLotSlitting_NG_HN_uid` | Tạo Lot Slitting NG |
+| `usp_SlittingLotInfo_HN_get` | Thông tin Lot Slitting |
+| `usp_ListInputNeedSlitting_HN` | DS chờ Slitting |
+| `usp_ListInputSuccessSlitting_HN` | DS đã Slitting |
+| `usp_CheckedSlittingHN_get` | Đã kiểm tra |
+| `usp_ErrorSlittingHN_get` | Lỗi Slitting |
+| `usp_PassedSlittingHN_get` | Đã đạt |
+| `usp_AllQuantityStatisticsSlittingHN_get` | Thống kê SL |
+| `usp_DoSplitLotAgingHN` | Tách Lot Aging |
+| `usp_GetMasterAgingHN_get` | Master Aging |
+| `usp_GetDetailAgingHN_get` | Chi tiết Aging |
+| `usp_GetMidlleAgingHN_get` | Aging trung gian |
+| `usp_GetAllDataStatisticsAgingHN` | Thống kê toàn bộ Aging |
+| `usp_GetAllDetailsAgingHN` | Chi tiết toàn bộ Aging |
+| `usp_GetAllDataDetailsAgingHN_BI` | BI detail |
+| `usp_GetDataStatisticAgingHN_BI` | BI statistics |
+| `usp_GetDataDetailsAgingHN_BI` | BI detail view |
+
+#### Packing / FG (18 SPs):
+| SP | Chức năng |
+|---|---|
+| `usp_GetMaterialLotInfo_PackingHN710_HaNam` | Lot packing HN |
+| `usp_getMergePackingBoxSmall_HN` | Gộp hộp nhỏ HN |
+| `usp_MergePackingHN710_HN` | Gộp packing HN710 |
+| `usp_getPackingOutPutFinishGoods_HN` | Output FG packing |
+| `usp_getPackingOutPutFinishGoodsInventory_HN` | Tồn kho FG packing |
+| `usp_VN_ShowAllFinishGoodMES_HN` / `_Export` | Hiển thị / Export FG |
+| `usp_VN_ShowAllFinishGoodMES_RD_HN` / `_Export` | FG R&D HN |
+| `usp_Add_Fg_HN` / `usp_HN_FinishGood_ImportExcel_uid` | Thêm / Import FG |
+| `usp_VN_Add_ImportExcel_HN` / `usp_VN_Update_ExportExcel_HN` | Import/Export Excel |
+| `usp_GetFinishGood_HNByLocation` | FG theo vị trí |
+| `usp_getFinishGood_ImportExcel_HN` | Import Excel FG |
+| `usp_VN_UpdateIDCode_HN` | Cập nhật ID Code |
+
+#### Warehouse / Material (10 SPs):
+| SP | Chức năng |
+|---|---|
+| `usp_InventoryWareHouse_HN` / `_New` | Tồn kho HN |
+| `usp_Vietnam_LocateOfRawMaterials_HN` | Vị trí NVL |
+| `usp_Vietnam_LocationMapFinishGoodHN` / `AfterMES` | Bản đồ vị trí TP |
+| `usp_Vietnam_GetBoxIDForLotInventory_HN` | Box ID tra cứu |
+| `usp_ChangeMaterialCode_HN` / `_uid` | Đổi mã NVL |
+| `usp_ChangeMaterialNVL_HN_popup` | Popup đổi NVL |
+| `usp_extension_warhouse_HN` | Gia hạn kho |
+| `usp_CodeNVL_HN598` | Mã NVL 598 |
+
+#### Misc:
+| SP | Chức năng |
+|---|---|
+| `usp_LotTrackingInfo_VVT2_get_HNam` | Lot Tracking HN |
+| `usp_MaterialReportTK_new_HN` | Báo cáo NVL |
+| `usp_Vietnam_PackPrintTime_get_HN` | Thời gian in tem |
+| `usp_Type_inpuT_HN` | Loại nhập |
+| `usp_GetRouteInfoHN_popup` | Route info popup |
+| `get_MaterialCodePrintTemFor_HN` | Mã NVL in tem |
+
+#### R&D HN (6 SPs):
+| SP | Chức năng |
+|---|---|
+| `ExportWarehouseFinshGood_RD_HN_uid` | Xuất kho R&D |
+| `ImportWarehouseFinshGood_RD_HN_uid` | Nhập kho R&D |
+| `sp_Export_WithHistory_STB_RndRawMaterial_HN` | Export R&D NVL |
+| `sp_SearchRnDRawMaterial_HN_get` / `_Export_HN_get` | Tìm NVL R&D |
+| `sp_Upsert_Accumulate_STB_RndRawMaterial_HN` | Tích lũy R&D |
+
+### A.2 HN-Specific Tables
+
+| Table | Mô tả |
+|---|---|
+| `STB_VN_FINISHGOODS_HN_New` | **★ Finished Goods** Hà Nam (chính) |
+| `STB_VN_FINISHGOODS_HN_Export` | Export view HN |
+| `STB_VN_RND_FINISHGOODS_HN` / `_Export` | FG R&D Hà Nam |
+| `STB_MachineByRoute_HN` | Machine↔Route mapping HN |
+| `stb_vn_AgingBG` | Aging data (shared BG→HN) |
+
+---
+
+*Cập nhật: 2026-06-18 — Bổ sung Appendix: 63 HN-isolated SPs (phân loại theo chức năng) + 5 HN-specific Tables. DB verified.*
