@@ -1,4 +1,4 @@
-﻿# 📘 KB_14_TRACE_BUG_METHODOLOGY — Cẩm Nang Truy Vết Lỗi & Dữ Liệu NAIS MES
+# 📘 KB_14_TRACE_BUG_METHODOLOGY — Cẩm Nang Truy Vết Lỗi & Dữ Liệu NAIS MES
 
 > **Cập nhật:** 2026-05-25 | **Tác giả:** Antigravity (Google DeepMind Team)
 > **Mục tiêu:** Hướng dẫn từng bước (Step-by-step) đầy đủ, chính xác, trực quan để kỹ sư vận hành/lập trình viên có thể tự mình truy tìm và sửa lỗi dữ liệu trên hệ thống MES Vinatech mà không cần đoán mò.
@@ -462,70 +462,6 @@ Khi nhận yêu cầu bổ sung một cổng chặn mới (ví dụ: "Chặn n�
 ---
 
 *Cập nhật: 2026-06-18 | Thêm §5.E (B353→B523 bug trace) + Tổng hợp 12 nhóm Validation Gates từ toàn bộ SP hệ thống MES Vinatech bởi Antigravity AI.*
-�i được ra lò" | CASE WHEN `@MaterialCodes IN (...)` THEN 3/9/12/15/20/30 giờ | `SELECT * FROM STB_VN_DRYOVER WHERE Barcode = '...'` rồi so sánh `OvenInputDate + Confighours` với `GETDATE()` | Thêm MaterialCode mới vào CASE WHEN (hoặc tạo bảng config riêng) |
-
-**📌 Chi tiết:** Xem [KB_03 §6.23](KB_03_SAN_XUAT.md#623-thiết-bị-phụ-trợ-mes-lò-sấy-gá-doping--dao-cắt-slitting)
-
----
-
-#### Nhóm 10: Slitting Knife — Chặn Tuổi Thọ Dao (SP `usp_DoCreateSlittingResult`)
-
-> **Pattern:** A (Data State Check)
-
-| Yêu Cầu Giả Định KH | Logic Trong SP | SQL Debug | Cách Mở Rộng |
-|---------------------|----------------|-----------|-------------|
-| "Dao cắt phải được kiểm tra/thay thế khi đạt mốc 20k/40k/60k/70k mét" | Check `totalkm >= StandardQty` trong `STB_VN_SlittingKnifeInUse` | `SELECT KnifeID, totalkm, StandardQty FROM STB_VN_SlittingKnifeInUse WHERE MachineCode = '...'` | Thay dao mới → reset `totalkm = 0` |
-
-**📌 Chi tiết:** Xem [KB_03 §6.23](KB_03_SAN_XUAT.md#623-thiết-bị-phụ-trợ-mes-lò-sấy-gá-doping--dao-cắt-slitting)
-
----
-
-#### Nhóm 11: F330/C220 — Chặn Nhập Kho IQC (Validation liên phòng ban)
-
-> **Pattern:** A (Data State Check — liên hệ thống)
-
-| Yêu Cầu Giả Định KH | Logic Trong SP | SQL Debug | Cách Mở Rộng |
-|---------------------|----------------|-----------|-------------|
-| "NVL nhập kho phải qua IQC trước khi xác nhận" | Check `DecisionResult = 'P'` trong `STB_MaterialQcInfo` | `SELECT MaterialQcNo, DecisionResult FROM STB_MaterialQcInfo WHERE MaterialLotNo = 'ML...'` | QC hoàn thành nhập kết quả tại C220 → set PASS |
-
-**📌 Chi tiết:** Xem [KB_02 §4.15](KB_02_KHO_WMS.md#415-luồng-nhập-kho-đầy-đủ-f330)
-
----
-
-#### Nhóm 12: Electrode Mixing — Chặn Bước Cân (SP `usp_GetElectroMixPresentStep_vietnam`)
-
-> **Pattern:** D (Configuration Hardcode — logic ca đêm/ngày)
-
-| Yêu Cầu Giả Định KH | Logic Trong SP | SQL Debug | Cách Mở Rộng |
-|---------------------|----------------|-----------|-------------|
-| "Phải cân lần lượt theo thứ tự (Seq). Ca đêm cho phép đảo thứ tự Binder trước" | SP nhận `@pOrder = 'kdem'` để đảo thứ tự. Ca ngày quên bỏ tích checkbox → bị nhảy thứ tự | `EXEC usp_GetElectroMixPresentStep_vietnam 'VVQN...', ''` | Bỏ tích checkbox "CA ĐÊM CHUẨN BỊ TRƯỚC" → Bấm "Làm mới màn hình". Nếu kẹt: DELETE `STB_ElectrodeMixStepInfo` WHERE Lot bị kẹt |
-
-**📌 Chi tiết:** Xem [KB_05 §8.6](KB_05_QC_ELECTRODE.md#86-quy-trình-cân-điện-cực-mixing--phần-mềm-cân-điện-cực-electrodeweighing)
-
----
-
-### 6.4 Hướng Dẫn Khi Khách Hàng Yêu Cầu "Thêm Gate Chặn Mới"
-
-Khi nhận yêu cầu bổ sung một cổng chặn mới (ví dụ: "Chặn nếu nhiệt độ phòng ngoài spec"), thực hiện theo checklist:
-
-```
-□ 1. XÁC ĐỊNH PATTERN: Yêu cầu thuộc Pattern nào? (A/B/C/D)
-□ 2. XÁC ĐỊNH SP: Tìm SP nào đang xử lý tại màn hình đó
-     → SmartFramework.dbo.STB_ScreenObjects WHERE ScreenName = '...'
-□ 3. TÌM VỊ TRÍ: Đọc SP source → tìm các RAISERROR/IF block hiện có
-     → SELECT OBJECT_DEFINITION(OBJECT_ID('usp_...'))
-□ 4. THÊM LOGIC: Chèn IF block mới VÀO SAU gate cuối hiện tại
-     (Giữ nguyên thứ tự gate cũ để tránh regression)
-□ 5. TEST: Chạy SP với dữ liệu test → Verify RAISERROR khi sai
-□ 6. DEPLOY: ALTER PROCEDURE trên Production
-□ 7. GHI CHÉP: Cập nhật KB file tương ứng + KB_INDEX.md
-```
-
----
-
-
----
-
 ## 7. 📋 CASE STUDY THỰC TẾ — Phương Pháp Truy Vết Từ Đầu Đến Cuối
 
 ### 7.1 Case Study: B353 chuyển đổi Lot nhưng B523 vẫn in tem Lot cũ (VJ/VV Prefix Mismatch)
@@ -579,81 +515,31 @@ WHERE MaterialCode = 'ECVT30-255'
 
 **Root Cause:** B353 lưu `oldLotID` với **VJ prefix** nhưng SP tra cứu bằng `@LotNo` có **VV prefix** → lookup miss.
 
-#### Bước 5: Fix SP (phiên bản an toàn — có guard chống collision)
+#### Bước 5: Fix SP — Tóm tắt giải pháp
 
-**Chỗ 1 (sau dòng ~548):** Thêm IF fallback block
-```sql
--- [FIX-20260618] Fallback VJ lookup — CHỈ khi chưa match VV VÀ @LotNo bắt đầu 'VV'
-IF @oldLotid IS NULL AND @LotNo LIKE 'VV%'
-BEGIN
-    SELECT @oldLotid=oldLotid, @newLotid=newLotid 
-    FROM [STB_ChangePartNoAndLotNo] 
-    WHERE oldLotid = STUFF(@LotNo,1,2,'VJ') AND isLotID = 1
-END
-```
+**Giải pháp:** Thêm 2 sửa đổi vào `usp_Vietnam_GetBoxIDForLotNo_VVT`:
+1. **IF fallback block** (sau dòng ~548): Nếu lookup VV miss → thử STUFF thành VJ để tìm
+2. **CASE condition mở rộng** (dòng ~644): Thêm guard `@newLotid IS NOT NULL`
 
-**Chỗ 2 (dòng ~644):** Mở rộng CASE condition
-```diff
-- when (@LotNoFirst = @oldLotid or @oldLotid =@Lotno) then @newLotid
-+ when (@LotNoFirst = @oldLotid or @oldLotid =@Lotno or (@newLotid IS NOT NULL AND @oldLotid = STUFF(@LotNo,1,2,'VJ'))) then @newLotid
-```
+**3 lớp guard an toàn:** `IF @oldLotid IS NULL` (chặn collision) + `LIKE 'VV%'` (chặn module lot) + `@newLotid IS NOT NULL` (chặn lot bình thường)
 
-**⚠️ Guard an toàn:** `IF @oldLotid IS NULL AND @LotNo LIKE 'VV%'` đảm bảo:
-- Lot đã có record VV riêng → KHÔNG chạy fallback → không bị collision
-- Lot Module (MVV%) → KHÔNG match `LIKE 'VV%'` → bỏ qua
-- Lot bình thường không B353 → fallback chạy nhưng STUFF không match gì → NULL → skip
+> 🔗 **SQL code fix chi tiết + diff:** Xem [KB_04 §6.18](KB_04_DONG_GOI_IN_TEM.md)
 
-#### Bước 6: Kiểm chứng an toàn trên DB Production (bắt buộc trước khi deploy)
-
-**Quy trình kiểm chứng fix SP:**
-
-```sql
--- 1. Đếm record collision (cả VV+VJ đều tồn tại) → fix phải skip nhóm này
-SELECT COUNT(*) AS CollisionPairs
-FROM STB_ChangePartNoAndLotNo a WITH(NOLOCK)
-JOIN STB_ChangePartNoAndLotNo b WITH(NOLOCK) ON STUFF(a.oldLotID,1,2,'VJ') = b.oldLotID
-WHERE a.isLotID = 1 AND b.isLotID = 1 AND a.oldLotID LIKE 'VV%' AND b.oldLotID LIKE 'VJ%'
-
--- 2. Đếm lot bị affected = VJ-only (không có bản VV)
-SELECT COUNT(*) AS AffectedLots
-FROM STB_ChangePartNoAndLotNo WITH(NOLOCK)
-WHERE isLotID = 1 AND oldLotID LIKE 'VJ%'
-  AND NOT EXISTS (SELECT 1 FROM STB_ChangePartNoAndLotNo b WITH(NOLOCK) 
-                  WHERE b.oldLotID = STUFF(STB_ChangePartNoAndLotNo.oldLotID,1,2,'VV') AND b.isLotID = 1)
-
--- 3. Kiểm tra false positive: suffix ký tự 3+ phải giống nhau
-SELECT COUNT(*) AS TotalMatches,
-    SUM(CASE WHEN SUBSTRING(MLI.LotNo,3,50) = SUBSTRING(c.oldLotID,3,50) THEN 1 ELSE 0 END) AS Valid,
-    SUM(CASE WHEN SUBSTRING(MLI.LotNo,3,50) <> SUBSTRING(c.oldLotID,3,50) THEN 1 ELSE 0 END) AS FalsePositive
-FROM STB_MaterialLotInfo MLI WITH(NOLOCK)
-JOIN STB_ChangePartNoAndLotNo c WITH(NOLOCK) ON c.oldLotID = STUFF(MLI.LotNo,1,2,'VJ') AND c.isLotID = 1
-WHERE MLI.CompanyCode = 'VVT' AND MLI.LotNo LIKE 'VV%'
-  AND NOT EXISTS (SELECT 1 FROM STB_ChangePartNoAndLotNo d WITH(NOLOCK) WHERE d.oldLotID = MLI.LotNo AND d.isLotID = 1)
-
--- 4. Verify SP chỉ SELECT, không ghi DB (INSERT ở dòng 476, fix ở dòng 557+654 = SAU insert)
-```
-
-**Kết quả kiểm chứng thực tế (2026-06-18):**
+#### Bước 6: Kiểm chứng — Kết quả thực tế (2026-06-18)
 
 | Chỉ số | Giá trị | Đánh giá |
 |--------|---------|----------|
-| Tổng record B353 (isLotID=1) | 1,457 (126 VJ + 1,325 VV) | — |
-| Collision pairs (VV+VJ cùng tồn tại) | 4 cặp | ✅ Guard `IF @oldLotid IS NULL` chặn |
-| Lot VJ-only bị bug | 122 | Fix sẽ tác động đúng nhóm này |
-| Lot affected qua MaterialLotInfo | 58 | 58/58 valid suffix, 0 false positive |
-| Module lots (MVV prefix) | 20,368 | ✅ Guard `LIKE 'VV%'` chặn 100% |
-| SP write impact | INSERT dòng 476 dùng @LotNo trực tiếp | ✅ Fix ở dòng 557+654 = SAU insert, không ảnh hưởng |
+| Collision pairs (VV+VJ cùng tồn tại) | 4 cặp | ✅ Guard chặn |
+| Lot VJ-only bị bug | 122 | Fix tác động đúng |
+| Lot affected qua MaterialLotInfo | 58/58 valid, 0 false positive | ✅ An toàn |
+| Module lots (MVV prefix) | 20,368 | ✅ Guard chặn 100% |
 
-> [!IMPORTANT]
-> **3 lớp guard an toàn:**
-> 1. `IF @oldLotid IS NULL` → Lot đã có record VV riêng → SKIP fallback → không collision
-> 2. `@LotNo LIKE 'VV%'` → Module lot (MVV%) → SKIP → không bị STUFF tạo chuỗi rác
-> 3. `@newLotid IS NOT NULL` → Không tìm thấy gì → SKIP → lot bình thường không bị ảnh hưởng
+> 🔗 **Query kiểm chứng collision + false positive:** Xem [KB_04 §6.18](KB_04_DONG_GOI_IN_TEM.md)
 
 #### Bài học rút ra
 1. **VJ/VV prefix mismatch** là nguồn lỗi phổ biến — luôn kiểm tra cả 2 biến thể
 2. **`NULL = NULL` → FALSE** trong SQL — tránh dùng `=` so sánh giá trị có thể NULL
-3. **Có 4 cặp lot VV/VJ đều tồn tại** trong STB_ChangePartNoAndLotNo — fix mù quáng sẽ collision
+3. **Có 4 cặp lot VV/VJ đều tồn tại** — fix mù quáng sẽ collision
 4. **Khi debug lot conversion**: check đồng thời STB_LotChangeMaterialHistory (B351) + STB_ChangePartNoAndLotNo (B353) + STB_Vietnam_PackingPrinting (auto VJ)
 5. **Trước khi sửa SP production**: chạy query kiểm chứng collision + false positive + write impact
 

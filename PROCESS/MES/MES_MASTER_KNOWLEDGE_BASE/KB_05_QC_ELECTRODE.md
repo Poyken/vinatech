@@ -409,15 +409,8 @@ Quy trình quản lý sản xuất và kiểm định chất lượng đối v�
 *   **Cấu hình in tem Electrode (A460 → STB_ModelLabelInfo):** Để in tem từ B442, model Electrode phải có record trong bảng `STB_ModelLabelInfo`. Nếu thiếu → lỗi **"Not found label type"** khi bấm LabelPrint.
 
     ```sql
-    -- Kiểm tra model có label config chưa
-    SELECT ModelCode, LabelType, FormatName FROM STB_ModelLabelInfo WITH(NOLOCK) 
-    WHERE ModelCode = 'MÃ_MODEL_ELECTRODE';
-    -- Phải có ít nhất: ElectLabel (bắt buộc), AssembleLabel, PartLabel (tùy dây chuyền)
-
-    -- Nếu thiếu → copy từ model cũ cùng loại
-    INSERT INTO STB_ModelLabelInfo (ModelCode, LabelType, FormatName, CreateDateTime, CreateUserID)
-    SELECT 'MODEL_MỚI', LabelType, FormatName, GETDATE(), 'admin'
-    FROM STB_ModelLabelInfo WHERE ModelCode = 'MODEL_CŨ';
+    -- Kiểm tra: SELECT ModelCode, LabelType FROM STB_ModelLabelInfo WHERE ModelCode = 'MÃ_MODEL';
+    -- Nếu thiếu → copy từ model cũ cùng loại. Xem KB_04 §6.20 cho SQL chi tiết.
     ```
 
     > **LabelType phổ biến cho Electrode:** `ElectLabel` (tem điện cực B442), `AssembleLabel` (tem SX B450/B540), `PartLabel` (tem vật tư F330), `BoxLabel2` (tem box đặc biệt).
