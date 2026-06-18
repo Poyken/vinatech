@@ -144,3 +144,64 @@ IF @WorkCenterCode = 'VVT_F4' AND @RouteCode NOT IN ('VP01')
 ---
 
 *Cập nhật: 2026-06-18 | Verified against STB_ProductionOrderInfo (22,553 POs)*
+
+---
+
+## 4. 📊 Line Distribution per WorkCenter (DB Verified 2026-06-18)
+
+> Nguồn: `STB_LineInfo` — Tổng **295 Lines**, **264 Active**
+
+| WorkCenter | Total Lines | Active Lines | Ghi chú |
+|---|---|---|---|
+| **VVT_F1** | 126 | 126 | **★ Lớn nhất** — BN Cell/Module (100% active) |
+| **VNT_F1** | 71 | 45 | BN legacy — 26 line đã ngừng |
+| **VVT_F2** | 39 | 39 | BG1 — 100% active |
+| **VVT_F5** | 15 | 15 | Reserved |
+| **VVT_F3** | 14 | 14 | Hà Nam — 100% active |
+| **VNT_F2** | 10 | 10 | MEA/Electrode |
+| **VNT_F4** | 7 | 7 | BG2 legacy |
+| **VNT_F5** | 7 | 2 | Hưng Yên — chỉ 2 line hoạt động |
+| **VVT_F4** | 3 | 3 | BG2 mới |
+| **VNT_F3** | 2 | 2 | HN legacy |
+| (blank) | 1 | 1 | System |
+
+### `STB_LineInfo` Schema (19 columns)
+
+| Cột chính | Kiểu | Mô tả |
+|---|---|---|
+| `LineCode` | `varchar(20)` | **PK** — Mã Line |
+| `CompanyCode` | `varchar(20)` | Mã công ty (VNT/VVT) |
+| `WorkCenterCode` | `varchar(20)` | FK → WorkCenter |
+| `LineName` | `nvarchar(100)` | Tên Line |
+| `LineType` | `varchar(10)` | Loại Line |
+| `ErpCode` | `varchar(20)` | Mã ERP tương ứng |
+| `MonitoringGroup` / `MonitoringName` | `nvarchar(100)` | Nhóm/Tên monitoring |
+| `IsUsed` | `bit` | Đang hoạt động? |
+| `IsCheckScheduleMonitoring` | `bit` | Theo dõi lịch trình? |
+| `MaterialWarehouseCode` | `varchar(50)` | Kho NVL gắn với Line |
+| `ChildLines` | `varchar(255)` | Danh sách Line con |
+| `TotalLossTime` | `numeric(9)` | Tổng thời gian hao phí |
+
+### `STB_MachineMaster` Key Columns
+
+| Cột | Kiểu | Mô tả |
+|---|---|---|
+| `MachineCode` | `varchar(20)` | **PK** — Mã máy |
+| `CompanyCode` | `varchar(20)` | Mã công ty |
+| `WorkCenterCode` | `varchar(20)` | FK → WorkCenter |
+| `MachineName` | `nvarchar(200)` | Tên máy |
+| `IsProdMachine` | `bit` | Máy sản xuất? |
+
+### Machine-related Tables (31 tables total)
+
+| Nhóm | Tables | Mô tả |
+|---|---|---|
+| **Master** | `STB_MachineMaster`, `STB_MachineBasicInfo`, `STB_MachineCapacity` | Thông tin cơ bản + Năng lực |
+| **Maintenance** | `STB_MachinePmHistory`, `STB_MachinePmItem`, `STB_MachineRepairHistory` | Bảo trì + Sửa chữa |
+| **IoT/VN** | `STB_VN_DEVICEMACHINES`, `STB_VN_STAGEMACHINES_*`, `STB_VN_STATUSMACHINE(S)` | Kết nối thiết bị VN |
+| **Condition** | `STB_MachineConditionAlarm`, `STB_MachineConditionHist`, `STB_MachineConditionName` | Giám sát trạng thái |
+| **Routing** | `STB_ProductMachine`, `STB_MachineByRoute_HN` | Machine↔Route mapping |
+
+---
+
+*Cập nhật: 2026-06-18 — Bổ sung Line distribution + STB_LineInfo schema (19 cols) + Machine tables (31 tables). DB verified.*

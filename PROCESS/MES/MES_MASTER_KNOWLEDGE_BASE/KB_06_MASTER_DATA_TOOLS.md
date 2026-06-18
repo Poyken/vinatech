@@ -555,6 +555,86 @@ Dưới đây là 10 màn hình cốt lõi nhất thường gặp sự cố ho�
 
 ---
 
+## Appendix A — Column-Level Schema (DB Verified 2026-06-18)
+
+### A.1 `STB_ModelBasicInfo` — 61 columns (A410)
+
+> **PK:** `ModelCode` (varchar 50)
+
+| Cột | Kiểu | Mô tả |
+|---|---|---|
+| `ModelCode` | `varchar(50)` | **PK** — Mã model (= MaterialCode cho sản phẩm) |
+| `ModelName` / `ModelNameL` | `nvarchar(200)` | Tên model (EN / Local) |
+| `MaterialTypeCode` | `varchar(20)` | Loại: `CEL`=Cell, `MDL`=Module, `FERT`=Finished |
+| `ProductGroupCode` | `varchar(20)` | Nhóm SP: `HC-EDLC`, `HC-LIC`, etc. |
+| `ModelPrintName` | `nvarchar(200)` | Tên in trên tem |
+| `BasicModel` | `nvarchar(200)` | Model gốc |
+| `MBIWeight` | `numeric(13)` | Trọng lượng (g) |
+| `MBISizeD` / `MBISizeH` / `MBISizeW` | `numeric(13)` | Kích thước (D/H/W mm) |
+| `OqcType` | `varchar(20)` | Loại OQC: `MANUAL`, `AUTO` |
+| `OqcInspectionRuleType` | `varchar(20)` | Quy tắc OQC: `BY_MODEL`, `BY_LOT` |
+| `InspectionType` / `InspectionLevel` | `varchar(20)` | Loại/Cấp kiểm tra |
+| `AQL` | `numeric(9)` | Mức AQL |
+| `AcEsr` / `DcEsr` | `numeric(9)` | **★ Giá trị ESR tiêu chuẩn** (AC/DC) |
+| `MaximumCurrent` | `numeric(9)` | Dòng điện tối đa |
+| `LeakageCurrent` | `numeric(9)` | Dòng rò |
+| `IsClosed` | `bit` | Đã đóng model? |
+| `MBIExtText01~10` | `nvarchar(400)` | 10 trường mở rộng text |
+| `MBIExtInt01~05` | `bigint` | 5 trường mở rộng số nguyên |
+| `MBIExtReal01~05` | `numeric(13)` | 5 trường mở rộng số thực |
+| `MBIExtLongText01~05` | `nvarchar(MAX)` | 5 trường văn bản dài |
+| `MBIExtImage01~05` | `varbinary(MAX)` | 5 trường hình ảnh |
+| `MBIExtBit01` | `bit` | Trường cờ mở rộng |
+
+### A.2 `STB_MaterialMaster` — 82 columns (A230)
+
+> **PK:** `MaterialCode` (varchar 50)
+
+| Cột chính | Kiểu | Mô tả |
+|---|---|---|
+| `MaterialCode` | `varchar(50)` | **PK** — Mã vật tư |
+| `MaterialName` / `MaterialNameL` | `nvarchar(200)` | Tên vật tư (EN / Local) |
+| `AltMaterialCode` | `varchar(50)` | Mã vật tư thay thế |
+| `MaterialTypeCode` | `varchar(20)` | Loại: `ROH`=NVL, `FERT`=TP, `HALB`=BTP |
+| `ProductGroupCode` | `varchar(20)` | Nhóm sản phẩm |
+| `MaterialUnit` | `varchar(10)` | Đơn vị: `EA`, `KG`, `M` |
+| `BasicGrQty` | `numeric(13)` | Số lượng nhập chuẩn |
+| `MaterialSpec` / `MaterialSpecL` | `nvarchar(400)` | Spec kỹ thuật |
+| `BasicRoutingCode` | `varchar(20)` | Mã routing mặc định |
+| `BasicPackingQty` | `numeric(13)` | SL đóng gói chuẩn |
+| `BasicCostPrice` / `BasicCostPriceVVT` | `numeric(13)` | Giá thành chuẩn / VVT |
+| `IsDelegate` / `DelegateMaterialCode` | `bit` / `varchar(50)` | Uỷ quyền vật tư |
+| `IsInternalProd` | `bit` | Sản xuất nội bộ? |
+| `IsPurchase` | `bit` | Mua ngoài? |
+| `IsClosed` | `bit` | Đã đóng? |
+| `IsRequireOqc` | `bit` | Yêu cầu OQC? |
+| `VNcode` | `nvarchar(100)` | Mã Việt Nam |
+| `MaterialThickness` / `MaterialWidth` | `varchar(20)` | Dày / Rộng |
+| `DangerMaterialYn` | `nchar(2)` | Vật liệu nguy hiểm? |
+| `ChemicalName` / `CasNo` / `Concentration` | `nvarchar(400)` | Hóa chất |
+| `MMExtText01~10` | `nvarchar(400)` | 10 trường mở rộng text |
+| `MMExtInt01~05` / `MMExtReal01~05` | | 10 trường mở rộng số |
+
+### A.3 `STB_PackingStandard` — 11 columns (A419)
+
+> **PK Composite:** `MaterialTypeCode` + `Size` + `Voltage` + `Farad`
+
+| Cột | Kiểu | Mô tả |
+|---|---|---|
+| `MaterialTypeCode` | `varchar(20)` | Loại: `FERT` |
+| `Size` | `varchar(10)` | Kích thước: `0813`, `1020`, etc. |
+| `Voltage` | `numeric(13)` | Điện áp (V) |
+| `Farad` | `numeric(13)` | Dung lượng (F) |
+| `VinylBagQty` | `int` | SL/túi nilon |
+| `InnerBoxQty` | `int` | SL/hộp nhỏ |
+| `OutBoxQty` | `int` | SL/thùng carton |
+
+> ⚠️ **Lưu ý DB verified:** Bảng `STB_PackingStandard` KHÔNG có cột `MaterialCode` hay `PackQty`. Tra theo `MaterialTypeCode` + `Size` + `Voltage` + `Farad`.
+
+---
+
+*Cập nhật: 2026-06-18 — Bổ sung Appendix A: Schema chi tiết 3 bảng core Master Data (STB_ModelBasicInfo 61 cols, STB_MaterialMaster 82 cols, STB_PackingStandard 11 cols). Tất cả verified từ sys.columns.*
+
 ## 🔴 Cẩm nang khắc phục lỗi theo Screen ID (Gộp từ KB_SCREEN_BUG_REF)
 
 ## A230 / A410 — Master Data Model (Đăng ký vật tư & Thông tin cơ bản)

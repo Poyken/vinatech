@@ -1,4 +1,4 @@
-﻿# KB_01 — UI / Đăng nhập / Phân quyền / Stage Prices
+# KB_01 — UI / Đăng nhập / Phân quyền / Stage Prices
 
 > **Màn hình liên quan:** Login, A460, A419, B260, Z410, Z220, Z330, B682, B781, B789, B791, B786, B934, B935, FG02
 > ← [Về INDEX](KB_INDEX.md)
@@ -215,6 +215,78 @@ WHERE ScreenName = 'Tên_Màn_Hình_Kỹ_Thuật'
 
 
 ---
+
+## Appendix — Permission System Schema (DB Verified 2026-06-18)
+
+> **Database:** `SmartFramework` — 13 bảng liên quan phân quyền
+
+### Bảng phân quyền cốt lõi:
+
+#### `STB_UserInfo` — Tài khoản user (Z410)
+| Cột | Kiểu | Mô tả |
+|---|---|---|
+| `UserID` | `varchar(20)` | **PK** |
+| `Password` | `varbinary(256)` | Mật khẩu hash |
+| `AllowFlag` | `varchar(20)` | `Allow` / `Deny` — ⚠️ KHÔNG PHẢI `IsLocked` |
+| `IsDeveloper` | `bit` | Cho phép đăng nhập debug |
+| `CompanyCode` | `varchar(20)` | `1000`=HQ, `2000`=VN |
+| `Appendix8` | `varchar(20)` | **★ ERPUserID** — liên kết sang NEOE |
+
+#### `STB_UserPermission` — Phân quyền chi tiết theo màn hình
+| Cột | Kiểu | Mô tả |
+|---|---|---|
+| `UserID` | `varchar(20)` | FK → STB_UserInfo |
+| `ScreenID` | `varchar(10)` | Mã màn hình (B450, C512...) |
+| `FuncID` | `varchar(50)` | Chức năng cụ thể (Save, Delete, Print...) |
+| `Allow` | `bit` | 1=Cho phép, 0=Chặn |
+
+#### `STB_UserPermissionGroup` — Gán user vào nhóm quyền
+| Cột | Kiểu | Mô tả |
+|---|---|---|
+| `UserID` | `varchar(20)` | FK → STB_UserInfo |
+| `UserType` | `varchar(20)` | Mã nhóm quyền |
+| `HasPermission` | `bit` | 1=Được gán, 0=Bỏ gán |
+
+#### `STB_ScreenObjects` — Đăng ký SP cho màn hình
+| Cột | Kiểu | Mô tả |
+|---|---|---|
+| `Id` | `bigint` | PK auto |
+| `ScreenName` | `varchar(50)` | Tên màn hình (ProductionOrderInfo) |
+| `ObjectType` | `varchar(50)` | `ExecuteFunction`, `SearchFunction`, etc. |
+| `ObjectName` | `varchar(255)` | **★ Tên SP** (usp_ProductionOrderInfo_get) |
+| `Caption` / `Description` | `nvarchar(MAX)` | Mô tả |
+
+### Hệ thống kế thừa quyền (Permission Inheritance):
+
+```
+STB_UserType (Nhóm quyền: Admin, Operator, QC...)
+    ↓
+STB_UserTypeBasicPermission (Quyền mặc định của nhóm)
+STB_UserTypeViewPermission  (Quyền xem của nhóm)
+STB_UserTypeFunctionPermission (Quyền chức năng của nhóm)
+    ↓
+STB_UserPermissionGroup (Gán User vào nhóm)
+    ↓
+STB_UserPermission (Override quyền riêng cho từng User/Screen)
+    ↓
+STB_UserBasicPermission (Quyền cơ bản của user)
+```
+
+### Các bảng phụ trợ:
+| Bảng | Mô tả |
+|---|---|
+| `STB_UserType` | Định nghĩa nhóm quyền |
+| `STB_UserTypeBasicPermission` | Quyền mặc định theo nhóm |
+| `STB_UserTypeViewPermission` | Quyền xem layout theo nhóm |
+| `STB_UserTypeFunctionPermission` | Quyền chức năng theo nhóm |
+| `STB_UserBasicPermission` | Quyền cơ bản riêng user |
+| `STB_UserFlagUpdateHist` | Lịch sử thay đổi cờ user |
+| `STB_UserPermissionGroupChangeHist` | Lịch sử thay đổi nhóm quyền |
+| `STB_UserViewLayout` | Layout tuỳ chỉnh theo user |
+
+---
+
+*Cập nhật: 2026-06-18 — Bổ sung Appendix: Permission System Schema 13 bảng + Permission Inheritance chain. DB verified.*
 
 ## 🔴 Cẩm nang khắc phục lỗi theo Screen ID (Gộp từ KB_SCREEN_BUG_REF)
 

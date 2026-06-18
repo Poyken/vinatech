@@ -532,3 +532,67 @@ SELECT Year, YearCode FROM STB_YearInfo WHERE Year >= 2024
 *Cập nhật: 2026-06-18 — Live frequency data + ProcedureLog schema*
 *Nguồn: Phân tích trực tiếp từ code SQL Server + STB_ProcedureLog live data*
 
+---
+
+## 13. 📋 Tham Số Chi Tiết — Top SP (DB Verified 2026-06-18)
+
+### 13.1 `usp_DoProcessProdGRMaterialByOne` — 16 params (★ #1 most called: 2,421/day)
+
+| # | Param | Kiểu | Ý nghĩa |
+|---|---|---|---|
+| 1 | `@pProcessUserID` | `varchar(20)` | User thao tác |
+| 2 | `@pProcessLanguage` | `varchar(20)` | Ngôn ngữ (`ko`, `vi`) |
+| 3 | `@pCompanyCode` | `varchar(20)` | Mã công ty |
+| 4 | `@pWorkCenterCode` | `varchar(20)` | Mã xưởng (VVT_F1, VNT_F1...) |
+| 5 | `@pPONo` | `varchar(20)` | Mã lệnh SX |
+| 6 | `@pLineCode` | `varchar(20)` | Mã dây chuyền |
+| 7 | `@pRouteCode` | `varchar(20)` | Mã công đoạn |
+| 8 | `@pLotID` | `varchar(50)` | Lot ID |
+| 9 | `@pLotNo` | `varchar(50)` | Lot Number |
+| 10 | `@pPackingID` | `varchar(50)` | Packing ID |
+| 11 | `@pMarkingCode` | `varchar(20)` | Mã marking |
+| 12 | `@pProdQty` | `numeric(13)` | Số lượng nhập |
+| 13 | `@pStockAttrib1~3` | `varchar(20)` | 3 thuộc tính tồn kho |
+| 14 | `@pMaterialDocNo` | `varchar(20)` | Mã phiếu NVL (OUTPUT) |
+
+### 13.2 `usp_DoProcessProdRouteHist` — 20 params (★ Core routing)
+
+> Đã có chi tiết tại mục 2.1 ở trên. Tóm tắt:
+
+| Param chính | Ý nghĩa |
+|---|---|
+| `@pPONo` + `@pLineCode` + `@pRouteCode` | Xác định vị trí SX |
+| `@pControlNo` | Mã sản phẩm (PK liên kết `STB_SetInfo`) |
+| `@pProdQty` | Số lượng chốt sản lượng |
+| `@pMachineCode` + `@pWorkerCode` | Máy + Công nhân |
+| `@pIsCheckBefRouteProdQty` | Có check sản lượng công đoạn trước? |
+
+### 13.3 Execution Flow — Top SPs Interaction
+
+```
+[OP quét barcode tại trạm sản xuất]
+         │
+         ▼
+usp_DoProcessProdRouteHist (1,580/day)
+         │
+    ┌────┴────┐
+    ▼         ▼
+  Barcode1  Barcode2  (Log names, 1,616 each)
+    │         │
+    └────┬────┘
+         │
+    ┌────┴──────────────────┐
+    ▼                       ▼
+usp_DoProcessProdGI      usp_DoProcessProdGR
+MaterialByBOM             MaterialByOne (2,421/day)
+(Trừ NVL theo BOM)       (Nhập TP/BTP từng cái)
+    │                       │
+    ▼                       ▼
+STB_MaterialDocInfo      STB_MaterialDocInfo
+STB_MaterialDocDetail    STB_MaterialDocDetail
+(GI records)             (GR records)
+         │
+         ▼
+usp_DoFixMaterialDoc (576/day)
+(Sửa chữa/điều chỉnh phiếu NVL)
+```
