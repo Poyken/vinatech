@@ -579,6 +579,45 @@ Groupware VINA_DOCUMENT_*
 └── VINA_WORKFLOW → Luồng duyệt (VINA_WORKFLOW_STEP → từng bước duyệt)
 ```
 
+### 1.15 IoT & Sensor System (S-series)
+
+> S120 = IoT Measure History dashboard. Dữ liệu sensor nhiệt độ/độ ẩm từ các máy trên Line.
+
+| Bảng/SP | Size | Chức năng |
+|---|---|---|
+| `STB_IoTMeasureHist` | **28.7 triệu rows** | Lưu giá trị đo (DeviceID, MeasureItemCode, MeasureValue) |
+| `usp_VN_Temperature_Humidity` | 19,392 chars | Xử lý dữ liệu nhiệt độ/độ ẩm — SP lớn nhất IoT |
+| `usp_IoTDeviceDataSpecOverAlram` | 5,505 chars | Cảnh báo khi sensor vượt ngưỡng |
+| `usp_VN_Temperature_TVshow` | 808 chars | Hiển thị lên TV dashboard |
+| `usp_DoCreateIoTMeasureHist` | 635 chars | INSERT dữ liệu IoT vào bảng |
+
+> 💡 **Luồng IoT:** Sensor gửi data → `usp_DoCreateIoTMeasureHist` INSERT → `usp_IoTDeviceDataSpecOverAlram` kiểm tra ngưỡng → Alert nếu vượt → `usp_VN_Temperature_TVshow` hiển thị TV.
+
+### 1.16 Cost Management (T-series / StagePrices)
+
+> Giá công đoạn = tiền trả cho công nhân theo từng bước sản xuất.
+
+**Bảng `STB_VVT_StagePrices`** — 83 columns:
+- `model` = mã sản phẩm
+- `RouteV22` → `RouteV34` = 13 công đoạn BN/BG1 (V-series)
+- `PriceV22` → `PriceV34` = Giá tương ứng
+- `RouteVE01` → `RouteVE10` = 10 công đoạn Hà Nam (VE-series)
+- `PriceVE01` → `PriceVE10` = Giá HN
+- `RouteVP01` → `RouteVP08` = 8 công đoạn Hưng Yên (P-series)
+- `PriceVP01` → `PriceVP08` = Giá HY
+- `MaterialCodeVN_V22` → `_V34` = Mã vật tư VN tương ứng
+
+> ⚠️ **Hardcode columns:** Mỗi nhà máy có cột riêng (V, VE, VP). Nếu thêm nhà máy mới → phải ALTER TABLE thêm cột.
+
+### 1.17 Ca Làm Việc (Shift System)
+
+| CodeShift | Tên | Giờ bắt đầu | Giờ kết thúc |
+|---|---|---|---|
+| CS01 | Ca ngày | 10:29 | 22:30 |
+| CS02 | Ca đêm | 22:31 | 10:30 |
+
+**Tính ca tự động:** Function `fnGetJobDateShiftTime(DateTime, CompanyCode, WorkCenter, Line, Route, NULL)` → trả về `YYYYMMDD` + `ShiftCode` + `TimeCode`. SP `usp_DoProcessProdRouteHist` gọi function này mỗi lần quét barcode → **OP không chọn ca, hệ thống tự tính.**
+
 ---
 ### 1.14 Bản Đồ TCode Prefix (Phân Loại 1,166 Màn Hình)
 
