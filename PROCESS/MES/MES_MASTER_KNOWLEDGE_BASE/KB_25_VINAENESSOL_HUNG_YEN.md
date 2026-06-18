@@ -330,6 +330,8 @@ Dưới đây là bảng đối soát tiến độ triển khai cấu hình các
 
 Nhằm đảm bảo tính độc lập vận hành cho xưởng Hưng Yên (`VVT_F5`) mà không làm ảnh hưởng tới logic của các nhà máy Bắc Ninh, Bắc Giang, và Hà Nam, hệ thống thực hiện nhân bản khép kín **78 Stored Procedures** và **9 màn hình chức năng** tương ứng.
 
+> VERIFIED 2026-06-18: 8/9 HY TCodes below (HY122, HY220, HY310, HY442, HY470, HY552, HY802, HY460) DO NOT EXIST in STB_ScreenInfo. Actual HY screens: HY141, HY143, HY151, HY311, HY312, HY330, HY430, HY431, HY443, HY530, HY540, HY541, HY620, HY740, HYFG01, HY103 (17 functional screens).
+
 ### 7.1 Danh Sách 9 Màn Hình Được Nhân Bản (HY TCodes)
 
 | STT | ScreenName | TCode | Phân hệ | Màn hình gốc | SP Chính Liên Quan |
