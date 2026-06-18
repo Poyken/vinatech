@@ -101,7 +101,7 @@ Rà soát mã nguồn thực tế của Stored Procedure `usp_DoProcessProdRoute
 7.  **Rủi ro sập luồng của hàm `fn_VVT_getdatebyVendorLot`**:
     *   Hàm phân tích ngày sản xuất từ mã Lot của nhà cung cấp sử dụng các hàm cắt chuỗi tĩnh (`substring`). Khi gặp mã hàng `WRHI00-002`, hàm thực hiện lệnh `convert(date, @vendorlot, 103)`. Nếu mã `@vendorlot` không tuân thủ định dạng ngày `dd/mm/yyyy`, toàn bộ giao dịch sản xuất hoặc SELECT tồn kho F721 sẽ bị crash (lỗi chuyển đổi kiểu dữ liệu).
 8.  **Phân hệ chấm công và điểm danh nhân sự kỹ thuật (`P111`)**:
-    *   Sử dụng bảng `STB_TechnicalPersonnelAttendanceInfo` kết hợp các SP `usp_TechnicalPersonnelAttendanceInfo_get`, `_iud`, `_interface` và `_confirm`.
+    *   Sử dụng bảng `STB_TechnicalPersonnelAttendanceInfo` kết hợp các SP `usp_TechnicalPersonnelAttendanceInfo_get`, `_iud`, `_interface` và `usp_TechnicalPersonnelAttendance_confirm`.
     *   Hỗ trợ theo dõi giờ đến (`AttendanceDateTime`), giờ về (`LeavingDateTime`), trạng thái xác nhận duyệt công (`IsConfirm`), và đồng bộ dữ liệu vân tay qua màn hình `Z711` (`FingerAttendance`).
 
 ---
