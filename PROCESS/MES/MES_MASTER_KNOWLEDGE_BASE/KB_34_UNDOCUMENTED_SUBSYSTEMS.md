@@ -227,8 +227,54 @@ Cấu trúc menu PDA cho công nhân Việt Nam:
 | P-05 | Packing/Final | |
 | P-06 | Output | |
 
-### Electrode Routes (E-series):
-Managed by B442/B470/B552 screens.
+### Electrode Routes (E-series — 16 routes):
+| Route | Ghi chú |
+|---|---|
+| E-01 to E-03 | Mixing/Coating/RollPress |
+| E-11 | (Unknown) |
+| E-22 to E-29 | Cell Electrode parallel routes |
+| E-30 | VPC (VinaEnesol) |
+| E-33 | **VPC cascade** (logic đặc biệt) |
+| E-34 | (Extended) |
+| E-99 | (Special/Final) |
+
+### VinaEnesol PCBA Routes (VP-series — 18 routes × 2 variants):
+| Route | Tên | Ghi chú |
+|---|---|---|
+| VP01 / VP01_HY | PCBA Wave Soldering, Label | Công đoạn đầu |
+| VP02 / VP02_HY | AOI Inspection | Automated Optical Inspection |
+| VP03 / VP03_HY | RTV Silicone | Phủ keo silicon |
+| VP04 / VP04_HY | PCBA FCT | Functional Circuit Test |
+| VP05 / VP05_HY | Conformal Coating (Top) | Phủ bảo vệ mặt trên |
+| VP06-VP07 / _HY | Conformal Coating (Bottom) | Phủ mặt dưới (2 lớp) |
+| VP08 / VP08_HY | SCM Assembly | Lắp ráp SCM |
+| VP09 / VP09_HY | SCM Top Cover Assembly | Lắp nắp SCM |
+| VP10-VP11 / _HY | SCM Ground Bond + Hi-Pot | Kiểm tra an toàn điện |
+| VP12 / VP12_HY | SCM FCT | Test chức năng SCM |
+| VP13-VP16 / _HY | Enclosure Assembly + Tests | Lắp vỏ + kiểm tra |
+| VP17 / VP17_HY | **Burn-in Test** | Test lão hóa |
+| VP18 / VP18_HY | Enclosure Packing | Đóng gói cuối |
+
+### Electrode Module (EM-series — 3 routes):
+| Route | Ghi chú |
+|---|---|
+| EM-01 | Stage 1 (→ EM-02 có gate Aging 12h) |
+| EM-02 | Stage 2 (kiểm tra Aging ≥12h so với EM-01) |
+| EM-03 | Stage 3 |
+
+### Route Prefix Summary:
+| Prefix | Count | Phân hệ |
+|---|---|---|
+| V | 53 | Cell Line (BN/BG1/BG2/HN) |
+| E | 16 | Electrode |
+| MV | 10 | Module (BN/BG) |
+| S | 8 | Special/Support |
+| P | 6 | Hưng Yên Cell |
+| M | 6 | (Misc) |
+| ME | 5 | Module Electrode |
+| VP | 36 | **VinaEnesol PCBA** (18 × 2) |
+| EM | 3 | Electrode Module |
+| **TỔNG** | **~120** | **All routes** |
 
 ---
 
@@ -419,4 +465,77 @@ Managed by B442/B470/B552 screens.
 
 ---
 
-*Cập nhật: 2026-06-18 — Deep discovery từ production DB (Phases 1-3)*
+## 21. 🧩 SmartFramework — UI Engine Architecture (61 tables)
+
+> SmartFramework = Bộ não UI. Chứa cấu hình layout, binding nút→SP, serial generation, phân quyền, label format.
+
+### Core Architecture Tables:
+| Table | Mô tả |
+|---|---|
+| `STB_ScreenInfo` | **Master** — Danh mục 1,467 screens (TCode, Caption, MenuPath) |
+| `STB_ScreenObjects` | **★ UI→SP Binding Engine** — 7,605 bindings (ObjectType: Action/SearchFunction/ExecuteFunction/View) |
+| `STB_ScreenLayoutInfo` | Cấu hình layout varbinary cho từng screen |
+| `STB_SerialRule` | **★ Barcode/Serial Generation Engine** — Tạo mã tự động cho mọi bảng (PrefixData, SerialLen, LastSerialNo) |
+| `STB_BaseCode` | Bảng mã cơ sở (Code tables) — phân loại, lookup values |
+| `STB_LabelInfo` | Cấu hình tem nhãn |
+| `STB_LabelTypeInfo` | Loại tem nhãn |
+| `STB_LabelSpecInfo` | Spec tem nhãn |
+| `STB_PDAMenu` | Menu PDA mobile |
+| `STB_PDAStringResources` | Ngôn ngữ PDA |
+| `STB_ScreenStringResources` | Ngôn ngữ screen |
+| `STB_GlobalProcessRule` | Quy tắc xử lý global |
+| `STB_DDLHistory` | **Audit trail** — Lịch sử thay đổi cấu trúc DB |
+| `STB_VendorScreenInfo` | Màn hình dành cho nhà cung cấp bên ngoài |
+
+### SerialRule Engine — Cách tạo mã tự động:
+```
+TableName = 'STB_CommInspDocHistory'
+PrefixData = 'YYYYMMDD'     → LastPrefixData = '20260618'
+SerialLen = 6                → LastSerialNo = 430
+→ Mã tiếp theo = '20260618000431'
+```
+
+### ScreenObjects Binding — Cơ chế UI→SP:
+| ObjectType | Count | Mô tả |
+|---|---|---|
+| Action | 2,362 | Nút bấm trên toolbar (Save, Delete, Print...) |
+| SearchFunction | 1,856 | SP load data lên grid (usp_xxx_get) |
+| ExecuteFunction | 1,573 | SP xử lý nghiệp vụ (usp_xxx_iud) |
+| View | 1,814 | SP load detail/sub-grid |
+| **TỔNG** | **7,605** | **Toàn bộ UI→SP bindings** |
+
+---
+
+## 22. 📊 Grand Totals — System-Wide Object Count
+
+### SmartFactoryV2:
+| Object Type | Count |
+|---|---|
+| Stored Procedures | **3,396** |
+| User Tables | **994** |
+| Scalar Functions | 76 |
+| Views | 61 |
+| Triggers | 32 |
+| Table-Valued Functions | 30 |
+| **TỔNG** | **4,589** |
+
+### SmartFramework:
+| Object Type | Count |
+|---|---|
+| Base Tables | **61** |
+| Screen Bindings | **7,605** |
+| Registered Screens | **1,467** |
+
+### Across All 13 Databases:
+| Database | Status |
+|---|---|
+| SmartFactoryV2 | **PRIMARY** — 994 tables, 3,396 SPs |
+| SmartFramework | **UI ENGINE** — 61 tables, 7,605 bindings |
+| NEOE | **ERP** — 10+ verified tables |
+| MES_Vinatech | **Groupware bridge** — 3 verified tables |
+| 10 other DBs | Various supporting roles |
+
+---
+
+*Cập nhật: 2026-06-18 — Deep discovery từ production DB (Phases 1-3) + SmartFramework architecture*
+
