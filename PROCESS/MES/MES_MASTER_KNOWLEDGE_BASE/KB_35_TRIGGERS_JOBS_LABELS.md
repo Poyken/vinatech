@@ -339,6 +339,86 @@
 ### ESR Data Views (7 snapshot views):
 `STB_VVT_ESRDATA_20210716` ... `STB_VVT_ESRDATA_20230814` — Frozen ESR snapshots by date.
 
+### Lookup/Enum Views (VW_ series — 35+ views):
+
+> Các View dạng `VW_*` là lookup views dùng để hiển thị dropdown/combobox trên UI. Chúng SELECT từ `SmartFramework.dbo.STB_BaseCode` hoặc bảng master.
+
+| View | Mô tả |
+|---|---|
+| `VW_ModelBasicInfo` / `VW_ModelBasicInfoTotal` | **★ Model info (Voltage/Farad)** — dùng nhiều màn hình |
+| `VW_UserInfo` | Thông tin user |
+| `VW_BasicMaterialType` | Loại vật liệu cơ bản |
+| `VW_BomDetailWithHeaderBomUnit` | BOM detail with unit |
+| `VW_DocStatus` / `VW_DocType` | Trạng thái / loại phiếu |
+| `VW_ShiftCode` | Ca kíp |
+| `VW_MaterialSize` | Kích thước NVL |
+| `VW_OqcType` / `VW_InspectionType` | Loại OQC / kiểm tra |
+| `VW_DecisionResult` / `VW_TestResult` / `VW_WipResult` | Kết quả QC |
+| `VW_DefectCauseType` / `VW_RepairType` | Phân loại nguyên nhân/sửa chữa |
+| `VW_SalaryCommon/Deduction/Payment` | Lương (3 views) |
+| `VW_STB_FINISHGOODS_INVOICE` | Hóa đơn TP |
+
+### Misc Views:
+| View | Mô tả |
+|---|---|
+| `CURLING_PLAN_CAPA_VIEW` | Capacity plan cho Curling |
+| `STB_ProductStockInfoUpload_View` | Upload tồn kho |
+| `view_vietnam_invoiceEcus` | Hải quan Việt Nam |
+
 ---
 
-*Cập nhật: 2026-06-18 — Deep discovery Phase 5-11 (Triggers + Jobs + Labels + ERP + DDL + POP + CLR + Views)*
+## 11. 🔧 106 Functions in SmartFactoryV2
+
+> **Verified 2026-06-18:** 76 Scalar + 22 Inline TVF + 8 Multi-statement TVF = 106 total
+
+### Core Business Functions:
+
+| Function | Type | Mô tả |
+|---|---|---|
+| `fn_VVT_getdatebyVendorLot_MergeCode` | Scalar | **★ Parse ngày SX từ Vendor Lot** — dùng trong F721, F330 |
+| `fn_split_string` | Inline TVF | **★ Cắt chuỗi** — dùng khắp nơi (Box Matching, etc.) |
+| `fnGetNextRouteCode` | Scalar | Tìm Route tiếp theo từ RouteIndex |
+| `fnGetBom` / `fnGetBomWithTop` | TVF | Lấy BOM tree đệ quy |
+| `parseJSON` | TVF | **Parse JSON** từ SQL — tích hợp dữ liệu ngoài |
+| `fnGetMaterialBOM` | Scalar | Check NVL trong BOM |
+| `fnGetOriginalLotID` | Scalar | Truy ngược Lot gốc |
+
+### Electrode-specific:
+| Function | Type | Mô tả |
+|---|---|---|
+| `fnGetElectrodeDensity/Avg/New` | Scalar (3) | Mật độ điện cực |
+| `fnGetElectrodeThickness/01/02/03` | Scalar (4) | Độ dày điện cực |
+| `fn_VVT_ElecErrorPriceMeter2KG` | Inline TVF | Quy đổi m→kg cho NG electrode |
+| `fn_VVT_ElecMixingKg2Met` | Inline TVF | Quy đổi kg→m cho mixing |
+| `fn_VVT_ElectrodeCodeStagePrice` | Inline TVF | Giá electrode theo công đoạn |
+
+### ERP Integration:
+| Function | Type | Mô tả |
+|---|---|---|
+| `fnGetERPConvertPrice` | Scalar | Chuyển đổi giá ERP |
+| `fnGetERPCurrencyType` | Scalar | Loại tiền tệ |
+| `fnGetERPExchangeRate` | Scalar | Tỷ giá |
+| `fnGetERPUnitPrice` | Scalar | Đơn giá ERP |
+
+### Stage Pricing (6 variants):
+| Function | Mô tả |
+|---|---|
+| `fn_VVT_StagePrices` | Giá theo công đoạn (base) |
+| `fn_VVT_StagePricesINCREMENTAL` | Incremental pricing |
+| `fn_VVT_StagePricesMODULE` | Module pricing |
+| `fn_VVT_StagePricesNEW` | Phiên bản mới |
+| `fn_VVT_Stage2Weight` | Công đoạn → trọng lượng |
+| `fn_VVT_WeightUnit598_723/new` | Weight unit cho B598/F723 |
+
+### Date/Shift Utilities (15 functions):
+`fnGetShiftDate`, `fnGetShiftDateTime`, `fnGetJobDateShiftTime/V3`, `fnGetCalendarCode/Name`, `fnGetDayWorkCalendarNo`, `fnGetStartWorkingTime`, `fnGetEndWorkingTime`, `fnGetFirstDayOfMonth/Week`, `fnGetLastDayOfMonth`, `fnGetWeekNumber/ISO`, `fnGetMondayByWeekNo`, `fnGetMonthNo`
+
+### QC/Inspection:
+`fnGetCpk`, `fnGetQcStandardMaxDefectQty`, `fnGetQcStandardSampleQty`, `fnIsCheckCommInspItem`, `fnGetProcessRule`
+
+### String/Format Utilities:
+`fnAppendTextLine`, `fnBase64ToBinary`, `fnBinaryToBase64`, `fnConvertDateTimeToVarchar/VarcharToDateTime`, `fnJoinToString`, `fnMakeZeroNumber`, `fnPharseLotNo`, `fnMultipleDelemiterSplit`, `fnSplitToTable`, `ufn_RemoveDuplicateText`, `VVT_INSTR`, `isReallyNumeric_check`
+
+---
+
+*Cập nhật: 2026-06-18 — Deep discovery Phase 5-14 (Triggers + Jobs + Labels + ERP + DDL + POP + CLR + Views + Functions 106 total)*
