@@ -41,6 +41,7 @@
 | **[KB_32_SCREEN_SP_TABLE_MAP.md](KB_32_SCREEN_SP_TABLE_MAP.md)** | **★ Bản đồ ánh xạ Screen → SP → Table cho 15 màn hình chính. BG2 validation logic. Sơ đồ luồng data** | B523, B530, B597, F330, G100, C512, C530, C546, C560, K101, K109, K110 |
 | **[KB_33_FACTORY_WORKCENTER_MATRIX.md](KB_33_FACTORY_WORKCENTER_MATRIX.md)** | **★ Bản đồ 9 WorkCenter verified (PO counts), Route codes, Barcode format, Warehouse mapping, VNT vs VVT history** | System/Infrastructure |
 | **[KB_34_UNDOCUMENTED_SUBSYSTEMS.md](KB_34_UNDOCUMENTED_SUBSYSTEMS.md)** | **★ 20 phân hệ chưa document: Spare Parts (26 bảng), Machine Mgmt (35 bảng), Mold (20 bảng), Scrap (27 bảng), ANDON, ESR, Daifuku ASRS, IoT, P/V/L/G/R/W/FG/S-series screens, Route map, 112 custom VN tables** | Toàn bộ subsystems |
+| **[KB_35_TRIGGERS_JOBS_LABELS.md](KB_35_TRIGGERS_JOBS_LABELS.md)** | **★ 33 Triggers (WMS trừ kho, DayPlanNo auto-fill, ModelSpec audit), 36 Agent Jobs (cross-factory sync, email alerts, FG capture), 32 Customer Label tables, DDL Change Tracking, VINATECH_POP (42 tables), Bending/Tapping/DryOver** | Triggers/Jobs/Labels |
 
 ---
 
