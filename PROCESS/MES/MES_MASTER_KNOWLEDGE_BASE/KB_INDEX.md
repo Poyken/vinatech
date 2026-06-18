@@ -1,4 +1,4 @@
-﻿# 🗂️ NAIS MES — Knowledge Base Index
+# 🗂️ NAIS MES — Knowledge Base Index
 
 > **Cập nhật:** 2026-06-12 | **Tổng hợp từ:** Lỗi thực tế + Docx gốc (đã extract toàn bộ) + Xác minh DB trực tiếp + Phân tích 41 SP + Deep Core Analysis (2026-04-18) + DB Audit (2026-05-05) + Electrode Weighing (2026-05-26) + Consolidation (2026-06-04) + **System Discovery & Gap Analysis (2026-06-10)**
 > **Cách dùng:** 
@@ -123,6 +123,11 @@
 | DB Audit Trail 2026-05-05 | KB_12_DEEP_CORE_ANALYSIS_AND_AUDIT.md § 2 |
 | End-to-End Data Flow | KB_10_KIEN_TRUC_VA_DATAFLOW.md § 2.1 |
 | Kiến trúc tổng quan (3 Trụ cột) | KB_10_KIEN_TRUC_VA_DATAFLOW.md § 1.1 |
+| **Database-Driven Architecture (Screen→SP→Table mapping)** | KB_10 § 1.3 |
+| **Cơ chế Error/Notification (DB→UI Popup pipeline)** | KB_10 § 1.4 |
+| **Cross-Database Links (869 SPs liên DB)** | KB_10 § 1.5 |
+| **33 Triggers — Logic ẩn tự chạy** | KB_10 § 1.6 |
+| **Bước 0: Tra Screen→SP mapping (trước khi debug)** | KB_14 § 2 |
 | Quick Start checklist model mới (đầy đủ 7 bước) | KB_06 § 9.1 |
 | Checklist onboard user mới | KB_06 § 9.2 |
 | Thiết lập Line/Route B210-B240 | KB_06 § 10 |

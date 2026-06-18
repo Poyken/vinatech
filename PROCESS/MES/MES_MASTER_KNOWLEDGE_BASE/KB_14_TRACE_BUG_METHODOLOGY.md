@@ -24,16 +24,34 @@ Khi tiếp nhận báo lỗi từ hiện trường, tuyệt đối không vội 
 
 ---
 
-## 2. 📋 QUY TRÌNH TRUY VẾT LỖI 5 BƯỚC CHUẨN Y KHOA
+## 2. 📋 QUY TRÌNH TRUY VẾT LỖI 6 BƯỚC CHUẨN Y KHOA
 
 ```mermaid
 graph TD
-    A[Bước 1: Thu thập triệu chứng] --> B[Bước 2: Xác định Điểm vào - SP]
-    B --> C[Bước 3: Kiểm tra sức khỏe dữ liệu]
-    C --> D[Bước 4: Kiểm tra cấu hình Master]
-    D --> E[Bước 5: Phân tích Log gói tin thô]
-    E --> F[Đề xuất Script Fix & Chạy An Toàn]
+    A0["Bước 0: Tra Screen→SP mapping"] --> A[Bước 1: Thu thập triệu chứng]
+    A --> B["Bước 2: Xác định Điểm vào - SP"]
+    B --> C["Bước 3: Kiểm tra sức khỏe dữ liệu"]
+    C --> D["Bước 4: Kiểm tra cấu hình Master"]
+    D --> E["Bước 5: Phân tích Log gói tin thô"]
+    E --> F["Đề xuất Script Fix & Chạy An Toàn"]
 ```
+
+### BƯỚC 0: Tra Screen → SP Mapping (Xác định SP đứng sau màn hình)
+
+> **Mọi thao tác trên UI đều gọi SP.** Trước khi debug, phải biết SP nào đứng đằng sau nút bấm gây lỗi.
+
+```sql
+-- Bước 0.1: Tìm ScreenName từ TCode
+SELECT Name, Caption FROM SmartFramework.dbo.STB_ScreenInfo WHERE TCode = 'B523'
+
+-- Bước 0.2: Liệt kê tất cả SP/Action của màn hình đó
+SELECT ObjectName, ObjectType, Caption
+FROM SmartFramework.dbo.STB_ScreenObjects
+WHERE ScreenName = 'Vietnam_Donggoi'  -- Thay bằng Name từ bước 0.1
+ORDER BY ObjectType, ObjectName
+```
+
+> 📖 **Tham chiếu:** Xem chi tiết kiến trúc Database-Driven tại [KB_10 §1.3](KB_10_KIEN_TRUC_VA_DATAFLOW.md#13-bảng-ánh-xạ-screen--sp--table-database-driven-architecture)
 
 ### BƯỚC 1: Thu Thập Triệu Chứng Hiện Trường (Symptoms)
 Trước khi mở SQL Server Management Studio (SSMS), hãy thu thập đủ **5 thông tin vàng**:

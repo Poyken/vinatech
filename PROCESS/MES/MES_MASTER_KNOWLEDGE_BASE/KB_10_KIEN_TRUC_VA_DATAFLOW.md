@@ -123,6 +123,210 @@ WHERE ScreenName = 'VVT_MaterialStockList' -- Thay bằng tên màn hình
 *   `SearchFunction`: SP dùng để nạp dữ liệu vào Grid (lưới).
 *   `ExecuteFunction`: SP dùng khi nhấn nút Save/Delete/Process.
 
+### 1.3 Bảng Ánh Xạ Screen → SP → Table (Database-Driven Architecture)
+
+> **Nguyên tắc vàng:** Mọi thứ trên UI — button, grid, thông báo lỗi, thông báo chặn — đều **khởi nguồn từ database**. Hệ thống MES được thiết kế hoàn toàn **Database-Driven**: IT Admin tạo SP/Function dưới DB → kéo lên UI qua bảng `STB_ScreenObjects` → tạo ra CRUD, UX, validation.
+
+#### Quy mô hệ thống (thống kê thực tế)
+
+| Thành phần | Số lượng | Nằm ở đâu |
+|---|---|---|
+| Stored Procedures | **3,395** | SmartFactoryV2 |
+| Functions (Scalar + Table) | **106** | SmartFactoryV2 |
+| Triggers | **33** | SmartFactoryV2 |
+| RAISERROR points (trong SP) | **960** | Trong code SP |
+| Lệnh `usp_RaiseLocalizedError` | **134** | Đa ngôn ngữ KR/VN/EN |
+| String Resources (label/error) | **17,751** | SmartFramework |
+| Screen definitions | **1,166+** | SmartFramework |
+| Screen Objects (Action/Search/Execute/View) | **7,604** | SmartFramework |
+
+#### Mô hình 3 tầng: UI → SP → Table
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                      BỀ MẶT (SmartFramework UI)                     │
+│                                                                     │
+│  STB_ScreenInfo (1,166 screens) → Name, TCode, Caption             │
+│       │                                                             │
+│       └── STB_ScreenObjects (7,604 objects)                        │
+│               ├── SearchFunction (1,856) → SP _get → nạp Grid      │
+│               ├── ExecuteFunction (1,572) → SP _iud → ghi dữ liệu │
+│               ├── Action (2,362) → Nút bấm → gọi ExecuteFunction   │
+│               └── View (1,814) → Định nghĩa Grid/Tab hiển thị     │
+└─────────────────────────────┬───────────────────────────────────────┘
+                              │ gọi SP
+┌─────────────────────────────▼───────────────────────────────────────┐
+│                   BẢN CHẤT (SmartFactoryV2 DB)                      │
+│                                                                     │
+│  3,395 SPs chứa: Validation → Business Logic → CRUD → RAISERROR   │
+│  106 Functions: fn_VVT_getdatebyVendorLot, fn_GetWeekIndex...      │
+│  33 Triggers: Auto-log, auto-sync, chặn sửa, đồng bộ DayPlanNo   │
+└─────────────────────────────┬───────────────────────────────────────┘
+                              │ đọc/ghi
+┌─────────────────────────────▼───────────────────────────────────────┐
+│                       DỮ LIỆU (Tables)                              │
+│                                                                     │
+│  STB_SetInfo, STB_ProdRouteHist, STB_MaterialLotInfo...            │
+│  + Cross-DB: SmartFramework.dbo.STB_StringResources (error msgs)   │
+│  + Cross-DB: SmartFramework.dbo.STB_LabelInfo (tem XML layout)     │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+#### Ví dụ cụ thể: B523 (Đóng gói) — 46 objects
+
+| ObjectType | ObjectName | Chức năng |
+|---|---|---|
+| **SearchFunction** | `usp_Vietnam_GetProdPackingForBarcode_VVT` | Load danh sách Lot theo Barcode |
+| **SearchFunction** | `usp_Vietnam_GetBoxIDForLotNo_VVT` | Load box đã gộp |
+| **ExecuteFunction** | `usp_Vietnam_DoProcessProdPacking_VVT` | **Core:** Gộp box → validation → ghi DB |
+| **ExecuteFunction** | `usp_DoCreatePackingLabelInfo` | Tạo dữ liệu in tem |
+| **ExecuteFunction** | `usp_SplitPackingBox` | Chia box |
+| **Action** | `MergeBox` | Nút "Box합포" (Gộp box) → gọi ExecuteFunction ở trên |
+| **Action** | `SplitBoxQty` | Nút "Chia box" |
+| **Action** | `LabelPrint` | Nút "In tem" |
+| **View** | `ProdPackingForBarcode` | Grid hiển thị kết quả Search |
+
+> 💡 **Query tra cứu nhanh:** Khi nhận lỗi từ bất kỳ màn hình nào, chạy query sau để biết SP nào đứng đằng sau:
+> ```sql
+> -- Bước 1: Tìm ScreenName từ TCode
+> SELECT Name FROM SmartFramework.dbo.STB_ScreenInfo WHERE TCode = 'B523'
+> -- Kết quả: 'Vietnam_Donggoi'
+>
+> -- Bước 2: Liệt kê tất cả SP/Action
+> SELECT ObjectName, ObjectType, Caption
+> FROM SmartFramework.dbo.STB_ScreenObjects
+> WHERE ScreenName = 'Vietnam_Donggoi'
+> ORDER BY ObjectType, ObjectName
+> ```
+
+### 1.4 Cơ Chế Error / Notification (Từ DB → UI Popup)
+
+> **Mọi thông báo lỗi, thông báo chặn trên UI đều xuất phát từ SP trong database.**
+
+#### Pipeline xử lý Error Message
+
+```
+Bước 1: SP viết message (thường tiếng Hàn)
+        SET @ErrorMsg = '이미 Lot를 생성하였습니다'
+                        ↓
+Bước 2: Gọi usp_RaiseLocalizedError(@pProcessLanguage, @ErrorMsg)
+                        ↓
+Bước 3: SP này wrap message = '^' + @pMessage + '^'
+                        ↓
+Bước 4: Gọi SmartFramework.dbo.usp_GetAddonStringResource
+        → Lookup trong STB_StringResources theo Language + Name
+                        ↓
+Bước 5: Tìm thấy bản dịch Vietnamese/English → trả về @ErrorMessage
+                        ↓
+Bước 6: RAISERROR(@ErrorMessage, 16, 1) → Client nhận → Popup UI
+```
+
+#### Bảng `STB_StringResources` (17,751 bản ghi)
+
+| Language | Số lượng | Ghi chú |
+|---|---|---|
+| Default (Korean) | 17,751 | Bản gốc — mọi message viết tiếng Hàn trước |
+| Vietnamese | 15,548 | Bản dịch cho operator VN |
+| English | 7,377 | Bản dịch EN (chưa đầy đủ) |
+
+> ⚠️ **Tại sao popup hiện tiếng Hàn?** Vì message đó chưa có bản dịch Vietnamese trong `STB_StringResources`. Fix: INSERT thêm bản ghi Language='Vietnamese' với Value tiếng Việt.
+
+#### 2 Pattern Error trong SP
+
+| Pattern | Cách dùng | Số lượng | Khi nào dùng |
+|---|---|---|---|
+| `RAISERROR(@msg, 16, 1)` | Trực tiếp, hardcode message | 960 | Logic đơn giản, không cần đa ngôn ngữ |
+| `EXEC usp_RaiseLocalizedError` | Qua pipeline đa ngôn ngữ | 134 | Cần hiển thị đúng ngôn ngữ user |
+
+#### Query debug error message
+
+```sql
+-- Tìm bản dịch của 1 error message
+SELECT Language, Name, Value
+FROM SmartFramework.dbo.STB_StringResources
+WHERE Name LIKE '%이미 Lot%'  -- Tìm theo tiếng Hàn gốc
+ORDER BY Language
+
+-- Thêm bản dịch Vietnamese cho message chưa có
+INSERT INTO SmartFramework.dbo.STB_StringResources (Language, Type, Name, Value, ChangeDateTime)
+VALUES ('Vietnamese', 'Addon', '^이미 Lot를 생성하였습니다^', N'Lot đã được tạo rồi', GETDATE())
+```
+
+### 1.5 Cross-Database Links (Liên kết giữa các DB)
+
+> **"Link dữ liệu giữa các màn hình thực chất là link dữ liệu giữa các table giữa các database."**
+
+#### 3 Database chính + liên kết
+
+```
+┌──────────────────────┐     ┌──────────────────────┐     ┌──────────────────────┐
+│   SmartFactoryV2     │     │   SmartFramework      │     │  SmartFramework_File │
+│                      │     │                       │     │                      │
+│ 3,395 SPs            │────▶│ STB_ScreenObjects     │     │ File attachments     │
+│ Dữ liệu nghiệp vụ   │     │ STB_StringResources   │     │ Label XML layout     │
+│ STB_SetInfo          │     │ STB_LabelInfo         │     │                      │
+│ STB_ProdRouteHist    │◀────│ STB_ScreenInfo        │     │                      │
+│ STB_MaterialLotInfo  │     │ STB_UserInfo          │     │                      │
+└──────────────────────┘     └──────────────────────┘     └──────────────────────┘
+         │                            │
+         │ 869 SPs gọi cross-DB       │
+         └────────────────────────────┘
+```
+
+| Hướng link | Mục đích | Ví dụ SP |
+|---|---|---|
+| SmartFactoryV2 → SmartFramework | Serial generation | `SmartFramework.dbo.usp_DoCreateSerial` |
+| SmartFactoryV2 → SmartFramework | Error message lookup | `SmartFramework.dbo.usp_GetAddonStringResource` |
+| SmartFactoryV2 → SmartFramework | User info | `SmartFramework.dbo.STB_UserInfo` |
+| SmartFactoryV2 → SmartFramework | Label template | `SmartFramework.dbo.STB_LabelInfo` |
+| SmartFactoryV2 → SmartFramework | Serial rule config | `SmartFramework.dbo.usp_GetSerialRule` |
+
+> **Số lượng:** 869 SPs trong SmartFactoryV2 có cross-DB reference tới SmartFramework.
+
+### 1.6 Triggers — Logic Ẩn Tự Chạy (33 Triggers)
+
+> **Triggers = hành động tự động chạy khi data thay đổi.** Operator không biết, không thấy trên UI, nhưng ảnh hưởng trực tiếp đến dữ liệu.
+
+#### Inventory đầy đủ 33 Triggers
+
+| # | Trigger | Bảng | Loại | Tác động |
+|---|---|---|---|---|
+| 1 | `tgMaterialLotInfoForInsert` | STB_MaterialLotInfo | INSERT | Auto-log khi tạo Lot NVL mới |
+| 2 | `tgMaterialLotInfoForUpdate` | STB_MaterialLotInfo | UPDATE | **Đồng bộ tồn kho → STB_MaterialStock** |
+| 3 | `tgMaterialLotInfoForDelete` | STB_MaterialLotInfo | DELETE | Auto-log khi xóa Lot |
+| 4 | `tgMaterialDocDetailForInsert` | STB_MaterialDocDetail | INSERT | Auto-log phiếu nhập chi tiết |
+| 5 | `tgMaterialDocDetailForUpdate` | STB_MaterialDocDetail | UPDATE | Auto-log sửa phiếu |
+| 6 | `tgMaterialDocDetailForDelete` | STB_MaterialDocDetail | DELETE | Auto-log xóa phiếu |
+| 7 | `tgMaterialDocInfoDelete` | STB_MaterialDocInfo | DELETE | Auto-log xóa header phiếu |
+| 8 | `tgMaterialDocLotInfoIUD` | STB_MaterialDocLotInfo | IUD | Auto-log mọi thay đổi Lot phiếu |
+| 9 | `tgMaterialDocPickingPlanIUD` | STB_MaterialDocPickingPlan | IUD | Auto-log picking plan |
+| 10 | `TR_DayProdPlan_Close` | STB_DayProdPlan | UPDATE | **Chặn sửa kế hoạch đã Close** |
+| 11 | `utr_STB_SetInfo_DayPlanNo_iu` | STB_SetInfo | I/U | Đồng bộ DayPlanNo vào SetInfo |
+| 12 | `utr_SetInfoRemoveHist` | STB_SetInfo | DELETE | **Log khi xóa Lot** (truy vết) |
+| 13 | `utr_ProdRouteHist_DayPlanNo_iu` | STB_ProdRouteHist | I/U | Đồng bộ DayPlanNo vào routing |
+| 14 | `utr_MaterialCodeByLine_i` | STB_ProdRouteHist | INSERT | Track vật tư đang chạy trên Line |
+| 15 | `utr_DefectRepairInfo_DayPlanNo_iu` | STB_DefectRepairInfo | I/U | Đồng bộ DayPlanNo vào sửa lỗi |
+| 16 | `trg_syncSTB_DefectRepairInfo` | STB_DefectRepairInfo | I/U | Sync thông tin sửa lỗi |
+| 17 | `utr_ElectrodeCoatingInfo_DayPlanNo_iu` | STB_ElectrodeCoatingInfo | I/U | Đồng bộ DayPlanNo vào Coating |
+| 18 | `utr_ElectrodeRollPressingInfo_DayPlanNo_iu` | STB_ElectrodeRollPressingInfo | I/U | Đồng bộ DayPlanNo vào Rolling |
+| 19 | `utr_ElectrodeSlittingResult_DayPlanNo_iu` | STB_ElectrodeSlittingResult | I/U | Đồng bộ DayPlanNo vào Slitting |
+| 20 | `utr_ElectrodeWasteInfo_DayPlanNo_iu` | STB_ElectrodeWasteInfoNew | I/U | Đồng bộ DayPlanNo vào phế điện cực |
+| 21 | `TRG_FinalProductInfo` | STB_FinalProductInfo | I/U | Auto xử lý thành phẩm |
+| 22 | `utr_DeleteCheckScheduleExceptionHist` | STB_LineInfo | DELETE | Xóa lịch ngoại lệ khi xóa Line |
+| 23 | `utr_MachineInfoChangeHist` | STB_MachineMaster | UPDATE | **Log mọi thay đổi thông tin máy** |
+| 24 | `utr_ModelSpecHist_insert` | STB_ModelSpec | INSERT | Log thêm spec model |
+| 25 | `utr_ModelSpecHist_update` | STB_ModelSpec | UPDATE | Log sửa spec model |
+| 26 | `utr_ModelSpecHist_delete` | STB_ModelSpec | DELETE | Log xóa spec model |
+| 27-29 | `utr_ProductStockInfoUpload_i/u/d` | STB_ProductStockInfoUpload | IUD | Auto sync tồn kho TP |
+| 30 | `TR_RawMaterialInputHist_DelegateLog_Insert` | STB_RawMaterialInputHist | INSERT | **Log ủy quyền quét NVL** |
+| 31 | `TR_RawMaterialInputHist_DelegateLog_update` | STB_RawMaterialInputHist | UPDATE | Log sửa ủy quyền NVL |
+| 32 | `utr_UpdateDeleteRollbackForLogTable` | DDLChangeLog | DELETE | Chặn xóa log DDL |
+| 33 | `utr_ProcedureChangesLog` | (DDL Trigger) | ALTER/DROP | **Track mọi thay đổi SP/Function** |
+
+> ⚠️ **Quan trọng cho IT Admin:**
+> - Trigger #2 (`tgMaterialLotInfoForUpdate`) là **"bóng ma"** đồng bộ tồn kho. Khi UPDATE `STB_MaterialLotInfo` trực tiếp bằng SQL → trigger tự chạy → `STB_MaterialStock` tự cập nhật.
+> - Trigger #33 (`utr_ProcedureChangesLog`) ghi lại **mọi lần ALTER/DROP SP** vào bảng `DDLChangeLog`. Dùng để truy vết ai sửa SP gì, lúc nào.
+
 ---
 
 ## 2. 🗺️ Luồng Dữ Liệu Tổng Quan (End-to-End Data Flow)
