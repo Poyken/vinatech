@@ -137,7 +137,7 @@ WHERE ScreenName = 'VVT_MaterialStockList' -- Thay bằng tên màn hình
 | RAISERROR points (trong SP) | **960** | Trong code SP |
 | Lệnh `usp_RaiseLocalizedError` | **134** | Đa ngôn ngữ KR/VN/EN |
 | String Resources (label/error) | **17,751** | SmartFramework |
-| Screen definitions | **1,166+** | SmartFramework |
+| Screen definitions | **1,467 (1,026 unique TCodes)** | SmartFramework |
 | Screen Objects (Action/Search/Execute/View) | **7,604** | SmartFramework |
 
 #### Mô hình 3 tầng: UI → SP → Table
@@ -146,7 +146,7 @@ WHERE ScreenName = 'VVT_MaterialStockList' -- Thay bằng tên màn hình
 ┌─────────────────────────────────────────────────────────────────────┐
 │                      BỀ MẶT (SmartFramework UI)                     │
 │                                                                     │
-│  STB_ScreenInfo (1,166 screens) → Name, TCode, Caption             │
+│  STB_ScreenInfo (1,467 screens / 1,026 TCodes) → Name, TCode, Caption             │
 │       │                                                             │
 │       └── STB_ScreenObjects (7,604 objects)                        │
 │               ├── SearchFunction (1,856) → SP _get → nạp Grid      │
@@ -662,7 +662,7 @@ R110 (Yêu cầu test)    →    R210 (Quản lý test)    →    R220 (Nhập k
 > 💡 **Daifuku** = hệ thống kho tự động robot Nhật Bản. MES gửi lệnh nhập/xuất → Daifuku robot tự lấy hàng. `usp_WarehouseGrid_iud` = quản lý vị trí (slot) trong kho robot.
 
 ---
-### 1.14 Bản Đồ TCode Prefix (Phân Loại 1,166 Màn Hình)
+### 1.14 Bản Đồ TCode Prefix (Phân Loại 1,026 Màn Hình Unique)
 
 > Mỗi prefix = 1 module chức năng. Biết prefix = biết ngay chức năng thuộc nhóm nào.
 
