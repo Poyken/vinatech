@@ -59,6 +59,7 @@
 | [KB_34](KB_34_UNDOCUMENTED_SUBSYSTEMS.md) | 38 KB | 20 subsystems: Spare Parts, Machine, Mold, Scrap, ANDON, 119 VN tables |
 | [KB_35](KB_35_TRIGGERS_JOBS_LABELS.md) | 19 KB | 33 Triggers, 36 Agent Jobs, 32 Customer Labels |
 | [KB_36](KB_36_HANAM_FACTORY_SCREENS.md) | 20 KB | Hà Nam 83 screens, 63 HN SPs, QC subsystems |
+| [KB_37](KB_37_SP_ARCHAEOLOGY_BUGS_AND_PATTERNS.md) | 25 KB | **SP Archaeology** — 12 bugs, 6 patterns, TOP 20 SPs, comment dictionary |
 
 ### Meta & Tools
 
