@@ -767,3 +767,49 @@ Bảng đối chiếu 100% mã kho sử dụng trên ERP và MES tại các nhà
         WHERE MaterialDocNo = 'Số_Chứng_Từ_Hàng_Về'
         ```
         Nếu `QcResult` khác `'PASS'`, hệ thống sẽ chặn không cho phép lập form nhập kho chính thức.
+
+---
+
+## Appendix — VINATECH_GROUP Database Structure (DB Verified 2026-06-18)
+
+> **Tổng: 382 tables** (VINA_* prefix) — Database cho Groupware (gw.vinatech.com)
+
+### Top 10 Tables by Row Count
+
+| # | Table | Rows | Mô tả |
+|---|---|---|---|
+| 1 | `VINA_DOCUMENT_APPROVAL_SAVE` | **816K** | **★ Lịch sử phê duyệt tờ trình** |
+| 2 | `VINA_DOCUMENT_APPROVAL_SAVE_LIST_VIEW` | 815K | View tổng hợp phê duyệt |
+| 3 | `VINA_RELIABILITY_DATA` | 327K | Dữ liệu độ tin cậy sản phẩm |
+| 4 | `VINA_RECORD_INCREASE` | 305K | Tracking tăng trưởng record |
+| 5 | `VINA_GOOGLE_ECM_SYNC_ERROR_LOG` | 196K | Log đồng bộ ECM ↔ Google |
+| 6 | `VINA_ATTACHED_FILE` | 136K | Tệp đính kèm |
+| 7 | `VINA_DOCUMENT_SAVE` | 135K | **Bản lưu tờ trình** |
+| 8 | `VINA_DOCUMENT_COST_DETAIL` | 96K | Chi phí chi tiết |
+| 9 | `VINA_DAILY_ATTENDANCE` | 82K | Chấm công hàng ngày |
+| 10 | `VINA_DOCUMENT_ECM_EXPORT` | 78K | Export ECM |
+
+### Document Categories (VINA_DOCUMENT_*)
+
+| Nhóm | Tables | Mô tả |
+|---|---|---|
+| **Approval Flow** | `_APPROVAL_SAVE`, `_APPROVAL_SETTING`, `_APPROVAL_SHEET` | Quy trình phê duyệt |
+| **Purchase** | `_PURCHASE_REQUEST`, `_PURCHASE_ORDER_CHANGE/CANCEL` | Mua hàng + thay đổi |
+| **Cost** | `_COST`, `_COST_DETAIL`, `_COST_DOCU`, `_COST_CARD_BAN` | Quản lý chi phí |
+| **Production** | `_DAILY_PRODUCTION_ORDER`, `_DAILY_PRODUCTION_REPORT` | **★ Lệnh SX & Báo cáo** |
+| **Material** | `_ARRIVAL_CONFIRMATION`, `_ARRIVAL_CONFIRMATION_LOT` | Xác nhận hàng về |
+| **BOM** | `_BOM` | BOM từ Groupware |
+| **Quality** | `_QUALITY_RELIABILITY` | Dữ liệu chất lượng |
+| **HR** | `_ATTENDANCE_MODIFY`, `_BUSINESSTRIP` | Chấm công, Công tác |
+
+### Verified ERP Integration Tables (Liên kết KB_07)
+
+| MES Table/SP | → | Groupware Table | Luồng |
+|---|---|---|---|
+| `NEOE.MA_USER` / `MA_EMP` | ← | `VINA_DOCUMENT_APPROVAL_SAVE` | User auth → approve |
+| `SmartFactoryV2.STB_ProductionOrderInfo` | ← | `VINA_DOCUMENT_DAILY_PRODUCTION_ORDER` | Lệnh SX từ GW → MES |
+| `ERPSVR.ERPDB.DBO.*` | ← | `VINA_DOCUMENT_COST` | Chi phí MES → ERP |
+
+---
+
+*Cập nhật: 2026-06-18 — Bổ sung Appendix: VINATECH_GROUP DB Structure (382 tables) + Top 10 by rows + Document categories + ERP Integration. DB verified.*
