@@ -1,4 +1,4 @@
-﻿# KB_03 — Sản Xuất & Lịch Sử Routing
+# KB_03 — Sản Xuất & Lịch Sử Routing
 
 > **Màn hình liên quan:** B310, B450, B530, B540, B597, B598, B682, B726, B781, B782, B791
 > ← [Về INDEX](KB_INDEX.md)
@@ -22,6 +22,8 @@ B530 → Nhập số lượng sản xuất (bắt buộc nhập "Making")
     ↓
 B523 → Đóng gói & In label thùng hàng
 ```
+
+> 🏭 **Cơ sở:** Luồng trên là chuẩn **VVT_F1 (Bắc Ninh)**. Hà Nam dùng HN523 thay B523. BG2 dùng K101 thay B450, K109 thay B597. Xem [KB_INDEX § Mapping](KB_INDEX.md#bản-đồ-cơ-sở--màn-hình-factory--screen-mapping).
 
 > ⚠️ **Cột IsFixed ở B450 phải được tích** mới tạo được Lot.
 > ⚠️ **B530 bắt buộc nhập chữ "Making"** (chọn ở cột Status) nếu không công đoạn V25 sẽ bị chặn không cho lưu. Đây là điều kiện tiên quyết để hệ thống ghi nhận đang sản xuất.
@@ -436,6 +438,8 @@ WHERE MarkingCode = 'MK00000974';
 
 ### 6.2 B450 — Kế Hoạch Sản Xuất Theo Ngày
 
+> 🏭 **Cơ sở gốc:** VVT_F1 (Bắc Ninh) | 🔀 **Biến thể:** **K101** (BG2 — Module, barcode `K164...`) → [§6.14](#614-nhà-máy-bg2--cấu-hình-triển-khai-hệ-thống-mes)
+
 **Vận hành:**
 1. Chọn ngày, Line, nhập PO → Điền `LineCode`, `PlanDate`, `PlanQty`, `RouteCode`, `BomVersion`
 2. **Tích `IsFixed=1`** → Tab bên dưới mới xuất hiện nút **Tạo Lot**
@@ -462,6 +466,8 @@ WHERE MarkingCode = 'MK00000974';
 ---
 
 ### 6.3 B530 — Nhập Số Lượng Sản Xuất (Chi Tiết SP)
+
+> 🏭 **Cơ sở gốc:** VVT_F1 | 🔀 **Biến thể:** BG2 dùng chung B530 (cùng SP). HN cấu hình mã lỗi riêng → [§6.18](#618-cấu-hình-danh-mục-mã-lỗi-b530-nhà-máy-bắc-giang-bg)
 
 **SP đầy đủ từ màn hình:**
 
@@ -542,6 +548,8 @@ WHERE MaterialCode = 'mã_hàng'
 ---
 
 ### 6.5 B523 — Đóng Gói (Gộp Box) — Quy Trình Mới
+
+> 🏭 **Cơ sở gốc:** VVT_F1 | 🔀 **Biến thể:** **HN523** (Hà Nam), **HN544** (gộp túi bóng) → [KB_04 §6.5, §6.13](KB_04_DONG_GOI_IN_TEM.md)
 
 **Quy trình mới (thay đổi so với cũ):**
 
@@ -825,6 +833,8 @@ B802 (Electrode Prod Route Hist) — XEM TỔNG HỢP:
 ---
 
 ### 6.12 B598 — Báo Phế Sản Xuất (Production Error/Scrap)
+
+> 🏭 **Cơ sở gốc:** VVT_F1 | 🔀 **Biến thể:** **HN598** (Hà Nam — cùng logic, filter riêng)
 
 > **Phân biệt:** B598 = phế **nguyên vật liệu** (kg/g). B530 DefectQty = phế **sản phẩm** (pcs).
 > → Xem SQL sửa JobDate và hủy phế tại [Mục 5.4](#54-sửa-jobdate-màn-b598-production-error) (cùng file này).

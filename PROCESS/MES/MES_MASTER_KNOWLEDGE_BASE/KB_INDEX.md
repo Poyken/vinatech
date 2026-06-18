@@ -182,6 +182,87 @@
 | **Case Study: B353/B523 VJ/VV prefix mismatch (truy vết 6 bước)** | KB_14 § 7.1 |
 
 
+
+## u{1F3ED} Bu1EA3
+ u0110`u1ED3 Cu01A1 Su1EDF u2014 Mu00E0
+ Hu00EC
+h (Factory u2192 Screen Mapping)
+
+> **Nguyu00EA
+ tu1EAFc:** VVT_F1 (Bu1EAFc Ninh) = **Chuu1EA9
+ gu1ED1c**. Cu00E1c cu01A1 su1EDF khu00E1c clone/fork tu1EEB u0111`u00E2y vu00E0 customize.
+
+### Tu1ED5
+g quan hu1EC7 thu1ED1
+g mu00E0
+ hu00EC
+h
+
+| Prefix | Su1ED1 lu01B0`u1EE3
+g | Cu01A1 su1EDF | Vai tru00F2 |
+|---|---|---|---|
+| **B** | 373 | VVT_F1 (BN) | u{1F7E2} Chuu1EA9
+ gu1ED1c u2014 tu1EA5	 cu1EA3 chu1EE9c nu0103
+g |
+| **A** | 33 | Chung | Master config (Model, Label, Packing) |
+| **C** | 155 | Chung | QC: IQC, PQC, OQC, Reliability |
+| **F** | 124 | Chung | WMS: Kho NVL, Kho TP |
+| **Z** | 52 | Chung | System, Label template |
+| **H** | 88 | Chung | Spare Part bu1EA3o tru00EC |
+| **HN** | 92 | VVT_F3 (Hu00E0 Nam) | u{1F534} Fork riu00EA
+g, nhiu1EC1u tu00F9y chu1EC9
+h |
+| **K** | 28 | VVT_F4 (BG2) | u{1F535} Module production (Bloom Energy, Nordex, Pliops) |
+| **V** | 26 | Chung | Menu tiu1EBF
+g Viu1EC7	 |
+
+### Mapping Gu1ED1c (B) u2192 Biu1EBF
+ thu1EC3 (HN/K)
+
+| Chu1EE9c nu0103
+g | B-Gu1ED1c (F1) | HN (F3) | K (F4/BG2) | KB |
+|---|---|---|---|---|
+| Ku1EBF hou1EA1ch SX ngu00E0y | **B450** | u2014 | **K101** | KB_03 |
+| Quu00E9	 NVL | **B597** | u2014 | **K109**, **K150** | KB_03, KB_05 |
+| Chu1ED1	 su1EA3
+ lu01B0`u1EE3
+g | **B530** | u2014 | u2014 (du00F9
+g chung) | KB_03 |
+| u0110`u00F3
+g gu00F3i box | **B523** | **HN523** | u2014 | KB_04 |
+| Gu1ED9p box tu00FAi bu00F3
+g | **B523** | **HN544** | u2014 | KB_04, KB_02 |
+| Chia tem u0111`u00F3
+g gu00F3i | u2014 | **HN542/HN543** | u2014 | KB_04 |
+| In tem Module | u2014 | u2014 | **K130** | KB_03 u00A76.14 |
+| Tem Bloom Energy SL-7 | u2014 | u2014 | **K198** | KB_03 u00A76.14 |
+| Tem Nordex | u2014 | u2014 | **K199** | KB_03 u00A76.14 |
+| Bu00E1o phu1EBF NVL | **B598** | **HN598** | u2014 | KB_03 |
+| Tu1ED3
+ kho TP | u2014 | **HN866/HN867** | u2014 | KB_02 |
+| Xuu1EA5	 kho TP | u2014 | **HN551** | u2014 | KB_02 |
+| Lu1ECBch su1EED SX | **B782** | **HN782** | **K107** | KB_03 |
+| Su1EA3
+ lu01B0`u1EE3
+g hou00E0
+ thu00E0
+h | **B781** | **HN781** | u2014 | KB_03 |
+| ANDON | **B882** | **HN561** | u2014 | KB_03 |
+| Kho NVL R&D | u2014 | **HN20-HN23** | u2014 | KB_02 |
+| In tem khu00E1ch hu00E0
+g (Solum) | u2014 | **HN553/HN711** | u2014 | KB_04 |
+| In tem PAC / Digi-Key | **B754-B758** | u2014 | u2014 | KB_03 u00A76.16 |
+| Module SX info | u2014 | u2014 | **K110/K120** | KB_03 u00A76.14 |
+| Truy xuu1EA5	 NVL ngu01B0`u1EE3c | u2014 | u2014 | **K180** | KB_03 u00A76.14 |
+| QC nhập phế | **B598** | **HNC321** | u2014 | KB_05, KB_14 |
+
+> u{1F4A1} **Cu00E1ch u0111`u1ECDc:** Nu1EBFu cu1EA7
+ hiu1EC3u mu00E0
+ **HN523**, u0111`u1ECDc **B523** (gu1ED1c) tru01B0`u1EDBc ru1ED3i u0111`u1ECDc HN523 u0111`u1EC3 hiu1EC3u khu00E1c biu1EC7	.
+> Nu1EBFu cu1EA7
+ hiu1EC3u mu00E0
+ **K101**, u0111`u1ECDc **B450** (gu1ED1c) tru01B0`u1EDBc.
+
 ---
 
 ---
