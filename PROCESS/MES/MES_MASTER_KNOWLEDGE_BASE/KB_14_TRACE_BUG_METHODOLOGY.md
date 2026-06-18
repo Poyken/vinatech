@@ -667,13 +667,29 @@ WHERE MLI.CompanyCode = 'VVT' AND MLI.LotNo LIKE 'VV%'
 > **Báo lỗi 2:** Bấm in tem → popup `"Not found label type"`
 
 #### Bước 1: Xác định Entry Point
+
+**UI Trace (F5 → F4):**
 ```
-Ảnh 1 (Object F5): B442 → ElectrodePlan_Vietnam
-├── SearchFunction: usp_DayProdPlan_get, usp_SetInfo_get, usp_MainAssemblePartWeight_get
-├── ExecuteFunction: usp_SetInfo_iud_VNT
-└── Action: LabelPrint (in tem)
+F5 (Object) → [B442] ElectrodePlan_Vietnam
+├── Search Function: usp_DayProdPlan_get, usp_SetInfo_get, usp_MainAssemblePartWeight_get
+├── Execute Function: usp_SetInfo_iud_VNT
+└── Action: LabelPrint → ActionType = PrintLabel
+    └── Print Label options (라벨인쇄):
+        • 라벨유형 필드 = LabelType          ← cột nào chứa loại tem
+        • 참조뷰 이름 = SetInfo              ← data lấy từ grid SetInfo
+        • 포맷형 필드 = FormatName           ← cột chứa tên template
 ```
 
+**SQL Trace (SP JOIN chain):**
+```sql
+-- Trong usp_SetInfo_get: 3 bảng JOIN quyết định in tem
+LEFT JOIN STB_MaterialMaster MM       ON MM.MaterialCode = SI.MaterialCode     -- → MaterialName (nội dung tem)
+LEFT JOIN STB_ModelLabelInfo MLI      ON MLI.ModelCode = SI.MaterialCode        -- → FormatName (template nào)
+                                     AND MLI.LabelType = @LabelType            -- ❌ Thiếu = "Not found label type"
+LEFT JOIN LabelInfo LBI (Z530)       ON LBI.FormatName = MLI.FormatName        -- → XML layout
+```
+
+> 🔗 **Hướng dẫn trace đầy đủ:** Xem KB_04 §6.0.3
 #### Bước 2: Debug "Độ dày = 0" (SIExtReal03)
 ```sql
 -- Kiểm tra SetInfo

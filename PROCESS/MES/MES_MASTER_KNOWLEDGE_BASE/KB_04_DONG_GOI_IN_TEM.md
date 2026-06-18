@@ -55,6 +55,122 @@ WHERE SI.Barcode = 'VVQL033R07279S'
 
 ---
 
+### 6.0.3 Hướng dẫn Trace Debug In Tem (UI + SQL)
+
+Khi gặp lỗi in tem ở **bất kỳ màn hình nào** (B442, B450, B523, B790...), trace theo 2 hướng song song:
+
+#### A. Trace trên UI (NAIS client)
+
+```
+Bước 1: Mở Object Explorer
+   → Bấm F5 (hoặc Menu → Object(F5))
+   → Thấy cây đối tượng: Search Function, Execute Function, Layout, View, Popup, Action...
+
+Bước 2: Tìm action in tem
+   → Mở nhánh "Action" → tìm action có Caption = "LabelPrint" hoặc "^LabelPrint^"
+
+Bước 3: Xem Property
+   → Chọn action LabelPrint → bấm F4 (Property)
+   → Đọc:
+      • ActionType = "PrintLabel"      ← xác nhận đây là action in tem
+      • Name = "LabelPrint"
+
+Bước 4: Mở Print Label options (quan trọng nhất!)
+   → Cuộn xuống phần Options → tìm "라벨인쇄" (Print Label options) → bấm mở
+   → Đọc các config:
+      • 라벨유형 필드 (Label Type Field)    = tên CỘT chứa LabelType (VD: "LabelType")
+      • 참조뷰 이름 (Reference View Name)   = grid/view nào cung cấp data (VD: "SetInfo")
+      • 포맷형 필드 (Format Name Field)     = cột chứa FormatName (VD: "FormatName")
+      • 참조본 범위 (Reference Scope)       = "SelectedRows" (in dòng đang chọn)
+      • 프린터명 (Printer Name)             = tên máy in
+```
+
+> **Từ bước 4** ta biết:
+> - Data in tem lấy từ grid nào (VD: `SetInfo`)
+> - Cột nào quyết định loại tem (VD: `LabelType`)
+> - Cột nào quyết định template (VD: `FormatName`)
+
+#### B. Trace trong SQL (SP chain)
+
+Khi biết grid `SetInfo` cung cấp data → tìm SP Search Function tương ứng (VD: `usp_SetInfo_get`).
+
+**Chuỗi JOIN 3 bảng quyết định in tem** (đã xác nhận trong `usp_SetInfo_get`):
+
+```sql
+-- Bảng 1: STB_MaterialMaster → NỘI DUNG trên tem (MaterialName)
+LEFT JOIN STB_MaterialMaster MM WITH(NOLOCK)
+    ON MM.MaterialCode = SI.MaterialCode
+-- → MM.MaterialName = text hiển thị trên tem (VD: "Coating-Roll Forming-YP 85 120 (A301)...")
+-- → Sửa MaterialName tại A230 = sửa nội dung trên tem
+
+-- Bảng 2: STB_ModelLabelInfo → MAPPING model dùng template nào (A460)
+LEFT JOIN STB_ModelLabelInfo MLI WITH(NOLOCK)
+    ON MLI.ModelCode = SI.MaterialCode
+    AND MLI.LabelType = @LabelType
+-- → MLI.FormatName = tên template (VD: "전극라벨")
+-- → NẾU THIẾU RECORD → lỗi "Not found label type" ❌
+
+-- Bảng 3: STB_LabelInfo → TEMPLATE thiết kế tem (Z530)
+LEFT JOIN LabelInfo LBI    -- CTE từ SmartFramework.dbo.STB_LabelInfo
+    ON LBI.LabelType = @LabelType
+    AND LBI.FormatName = MLI.FormatName    -- Nối với kết quả bảng 2
+    AND LBI.RankIndex = 1                  -- Lấy version mới nhất
+-- → LBI.Format = XML layout (thiết kế tem)
+```
+
+#### C. Sơ đồ flow tổng thể
+
+```
+┌─────────────────────── UI TRACE ───────────────────────┐
+│                                                         │
+│  F5 (Object) → Action → LabelPrint                     │
+│       ↓                                                 │
+│  F4 (Property) → ActionType = PrintLabel                │
+│       ↓                                                 │
+│  Options → Print Label options                          │
+│       ├── 참조뷰 이름 = SetInfo       ← grid nào?       │
+│       ├── 라벨유형 필드 = LabelType   ← cột nào?        │
+│       └── 포맷형 필드 = FormatName   ← template nào?    │
+│                                                         │
+└──────────────────────────┬──────────────────────────────┘
+                           ↓
+┌─────────────────────── SQL TRACE ──────────────────────┐
+│                                                         │
+│  usp_SetInfo_get (@pLabelType = 'ElectLabel')           │
+│       │                                                 │
+│  ┌────┼── STB_MaterialMaster MM                         │
+│  │    │      ON MM.MaterialCode = SI.MaterialCode       │
+│  │    │      → MM.MaterialName = NỘI DUNG trên tem     │
+│  │    │                                                 │
+│  │  ┌─┼── STB_ModelLabelInfo MLI (A460)                 │
+│  │  │ │      ON MLI.ModelCode = SI.MaterialCode         │
+│  │  │ │      AND MLI.LabelType = @LabelType             │
+│  │  │ │      → Thiếu record = "Not found label type" ❌ │
+│  │  │ │                                                 │
+│  │  │ └── STB_LabelInfo LBI (Z530)                      │
+│  │  │        ON LBI.FormatName = MLI.FormatName         │
+│  │  │        → XML template = THIẾT KẾ mẫu tem         │
+│  │  │                                                   │
+│  └──┴───────────────────────────────────────────────────│
+│                                                         │
+└─────────────────────────────────────────────────────────┘
+```
+
+#### D. Checklist debug nhanh khi lỗi in tem
+
+| # | Kiểm tra | Query | Lỗi nếu thiếu |
+|---|----------|-------|----------------|
+| 1 | Model có mapping label? | `SELECT * FROM STB_ModelLabelInfo WITH(NOLOCK) WHERE ModelCode = 'MÃ'` | "Not found label type" |
+| 2 | Label template tồn tại? | `SELECT * FROM SmartFramework.dbo.STB_LabelInfo WITH(NOLOCK) WHERE LabelType = 'ElectLabel' AND IsApproval = 1` | In trắng / không ra tem |
+| 3 | MaterialName đúng chưa? | `SELECT MaterialCode, MaterialName FROM STB_MaterialMaster WITH(NOLOCK) WHERE MaterialCode = 'MÃ'` | Tem in sai nội dung |
+| 4 | Hardcode exception? | Kiểm tra CASE WHEN trong SP (VD: `usp_SetInfo_get` override MaterialName cho ControlNo cụ thể) | Tem in tên khác master |
+
+> [!TIP]
+> **Stack trace chứa `Awoo.SmartFramework.WinForm.Controls.ScreenControl.PrintLabel`** → 100% lỗi ở bước 1 (thiếu `STB_ModelLabelInfo`).
+> **Tem in ra nhưng sai nội dung** → lỗi ở bước 3 (MaterialName sai) hoặc bước 4 (hardcode override).
+
+---
+
 ### 6.1 Lỗi "Chưa có tiêu chuẩn đóng gói" (B523)
 
 **Triệu chứng:** B523 báo lỗi "Chưa có tiêu chuẩn đóng gói" khi thử gộp box.
@@ -1150,6 +1266,35 @@ ROLLBACK
 |--------|--------------|----------------|
 | `SIExtReal01` | Độ dài | Client input |
 | `SIExtReal02` | Khổ | Client input |
+
+**Tem thiếu tên binder (VD: `(A301)`) để phân biệt giữa các molder:**
+
+Tem Electrode in `[MaterialName]` trực tiếp từ `STB_MaterialMaster`. Nếu `MaterialName` không chứa tên binder → tem không hiển thị.
+
+```sql
+-- Kiểm tra MaterialName hiện tại
+SELECT MaterialCode, MaterialName FROM STB_MaterialMaster WITH(NOLOCK)
+WHERE MaterialCode IN ('CRFYL85','CRFYL85-01');
+-- CRFYL85    : "...YP 85 120 (A301) 1 batch (-)"    ← CÓ binder ✅
+-- CRFYL85-01 : "...YP 85 120 1.5 batch (-)"          ← THIẾU binder ❌
+
+-- Fix: Thêm binder name vào MaterialName (tại A230 hoặc SQL)
+BEGIN TRAN
+UPDATE STB_MaterialMaster SET MaterialName = 'Coating-Roll Forming-YP 85 120 (A301) 1.5 batch (-)'
+WHERE MaterialCode = 'CRFYL85-01';
+SELECT MaterialCode, MaterialName FROM STB_MaterialMaster WHERE MaterialCode = 'CRFYL85-01';
+ROLLBACK
+```
+
+> [!IMPORTANT]
+> **Tại sao sửa `MaterialName` là an toàn?** Vì `STB_SetInfo` và `STB_DayProdPlan` chỉ lưu `MaterialCode`, `MaterialName` luôn được JOIN từ `STB_MaterialMaster` khi hiển thị. Sửa master = tất cả lot (quá khứ + tương lai) tự động cập nhật.
+>
+> **Chứng minh:** Trong `usp_SetInfo_get`:
+> ```sql
+> LEFT JOIN STB_MaterialMaster MM ON MM.MaterialCode = SI.MaterialCode
+> SELECT ... MM.MaterialName AS MaterialName ...  -- JOIN từ Master, không lưu riêng
+> ```
+> Ngoại lệ: 3 ControlNo bị hardcode override bằng CASE WHEN (theo yêu cầu đặc biệt).
 | `SIExtReal03` | Độ dày | Auto-fill từ `STB_MaterialMaster.MaterialThickness` |
 
 **SP liên quan B442:**
