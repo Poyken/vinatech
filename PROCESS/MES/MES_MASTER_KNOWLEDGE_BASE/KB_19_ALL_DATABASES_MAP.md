@@ -136,7 +136,7 @@ graph TD
         *   `NO_RCV` (`nvarchar(20)`): Số phiếu nhập kho mua hàng (kết quả của Receiving trên GW).
     *   `SA_SOH` (SO Header) / `SA_SOL` (SO Line):
         *   `NO_SO` (`nvarchar(20)`): Số đơn bán hàng từ khách hàng (Suju).
-    *   `FI_DOCU` (Header bút toán) / `FI_DOCU_D` (Line bút toán):
+    *   `FI_DOCU` (Header bút toán) / `FI_DOCU_F` (Line bút toán — ⚠️ KB gốc ghi `FI_DOCU_D` nhưng bảng thực tế là `FI_DOCU_F`):
         *   `NO_DOCU` (`nvarchar(20)`): Mã chứng từ kế toán chính thức ghi sổ.
     *   `PR_BOM`: Định mức nguyên vật liệu sản xuất.
         *   `CD_BOM` / `CD_ITEM` / `CD_MATL` / `QT_BOM`: Liên kết cấu trúc lắp ráp.
