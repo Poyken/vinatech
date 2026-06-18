@@ -594,14 +594,14 @@ Groupware VINA_DOCUMENT_*
 | **A** | 33 | **Master Data & Kế hoạch** | A210 (BOM), A310 (Route), A418 (Model), A510 (PO) |
 | **P** | 30 | **Nhân sự & Tài liệu** (HR/Document) | P111 (Chấm công), P170 (NV Info), P210 (Document) |
 | **K** | 28 | **Đặc biệt / Khách hàng** | K101 (LotTracking), K198 (Bloom), K199 (Nordex) |
-| **V** | 26 | **Monitoring & Dashboard** | V-series (monitoring TV) |
-| **L** | 25 | **Planning** | L-series (kế hoạch sản xuất) |
+| **V** | 26 | **Vietnam TOP Menu** (Kế toán, HR, SX, QC, Kho, Máy) | V100(Accounting), V300(Cell), V500(QC), V700(WH) |
+| **L** | 25 | **SPT Support** (Sản phẩm phụ trợ) | L120(NVL SPT), L140(Đóng gói SPT), L310(Tồn kho SPT) |
 | **E** | 24 | **Bán hàng** (Sales) | E310 (Sales Order), E410 (GI Request), E610 (Complaints) |
-| **G** | 23 | **Groupware** | G-series (tờ trình, duyệt) |
-| **M** | 22 | **Thiết bị** (Machine/Equipment) | M-series (bảo trì, hiệu chuẩn) |
-| **T** | 16 | **Công cụ** (Tools) | T-series (tiện ích) |
+| **G** | 23 | **Thành phẩm** (FG Stock/Sales GI) | G100(Xuất KH), G610(Tồn kho TP), G680(Upload), G710(Shipment) |
+| **M** | 22 | **MEA** (Đo lường & bản vẽ sản phẩm) | M130(NVL MEA), M220(OQC MEA), M910(ClassInfo) |
+| **T** | 16 | **Chi phí SX** (Cost Management) | T110(Chi phí Route), T120(Apply), T888(Thông tin phế) |
 | **D** | 6 | **Enesol/Hưng Yên** | D051, D100, D110 |
-| **Khác** | 49 | S, W, R, I, Y, ZSRT... | Niche screens |
+| **Khác** | 49 | **S**(SmartFactory/IoT), **W**(WorkTime/Ca), **R**(Reliability Test), **I**(IT Inventory) | S120(IoT), W210(DailyWork), R110(Request), IT01(Devices) |
 
 ---
 

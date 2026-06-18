@@ -1791,8 +1791,51 @@ Bước 11: Nhập kho tự động khi hoàn thành
 
 > ⚠️ **Rủi ro:** SP này KHÔNG có `BEGIN TRANSACTION`. Nếu crash giữa chừng (ví dụ sau Bước 8 nhưng trước Bước 10), NVL đã bị trừ nhưng thành phẩm chưa được ghi nhận → data lệch.
 
----
+### 🔬 Backflush Engine: `usp_DoProcessProdGIMaterialByBOM` (268 dòng)
 
+> **Backflush = Trừ kho NVL tự động theo BOM khi chốt sản lượng.** Đây là cơ chế cốt lõi liên kết SX ↔ Kho.
+
+#### Luồng xử lý 7 bước
+
+```
+Bước 1: Đọc BOM → lọc NVL cần trừ
+         FROM STB_ProductionOrderBom WHERE PONo + MaterialCode + RouteCode
+         FILTER: IsUseProduction=1 AND IsUseFlush=1 AND IsBackFlush=0
+         Chuyển đổi đơn vị: fnConvertUnit(BomUnit → MaterialUnit) * ProdQty
+                    ↓
+Bước 2: Kiểm tra đủ tồn kho
+         JOIN @Items ← STB_MaterialStock
+         IF UseQty > StockQty → ERROR "부족한 자재" (NVL không đủ)
+                    ↓
+Bước 3: Lấy WarehouseCode từ LineRouteMapping
+         STB_LineRouteMapping → @GIWarehouseCode, @GILocationCode
+                    ↓
+Bước 4: Tạo phiếu xuất kho (MaterialDoc type = GI_PRODUCTION)
+         INSERT STB_MaterialDocInfo (DocStatus='CREATE', Type='GI')
+                    ↓
+Bước 5: WHILE loop — INSERT từng dòng NVL vào MaterialDocDetail
+         INSERT STB_MaterialDocDetail (RequestQty = AllowQty = PickingQty = UsedQty)
+         → EXEC usp_DoCreateMaterialDocLotInfoNotUsedBarcode (chọn Lot tự động)
+                    ↓
+Bước 6: Đóng phiếu → EXEC usp_DoFinishMaterialDoc
+                    ↓
+Bước 7: Xác nhận phiếu → EXEC usp_DoFixMaterialDoc
+```
+
+#### Bảng liên quan
+
+| Bảng | Vai trò |
+|---|---|
+| `STB_ProductionOrderBom` | BOM nguồn — NVL nào cần trừ |
+| `STB_MaterialMaster` | Master NVL — đơn vị, cờ IsUseFlush |
+| `STB_MaterialStock` | Tồn kho hiện tại |
+| `STB_LineRouteMapping` | Map Line→Warehouse (biết trừ kho nào) |
+| `STB_MaterialDocInfo` | Phiếu xuất kho (Header) |
+| `STB_MaterialDocDetail` | Chi tiết phiếu (từng NVL) |
+
+> 💡 **Tại sao `IsUseFlush=1 AND IsBackFlush=0`?** Flush = trừ ngay khi SX. BackFlush = trừ sau. SP này xử lý Flush (trừ ngay). BackFlush có SP riêng.
+
+---
 
 ## B552 — Slitting Configurations (Thiết lập chia cuộn điện cực)
 
