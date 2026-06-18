@@ -718,5 +718,133 @@ SerialLen = 6                → LastSerialNo = 430
 
 ---
 
-*Cập nhật: 2026-06-18 — Deep discovery Phases 1-11 (29 sections, 700+ lines)*
+## 30. 🔗 Linked Servers & ERP Integration Infrastructure
 
+> **Verified 2026-06-18:** `sys.servers WHERE is_linked = 1`
+
+| Linked Server | IP/Data Source | Provider | Mô tả |
+|---|---|---|---|
+| `ERPSVR` | `110.11.27.7:2433` | SQLNCLI | **★ ERP Server chính (Duzon)** — Target cho 91 SPs |
+| `OLDNAISSVR` | `110.11.27.5` | SQLNCLI11 | Server NAIS cũ / Legacy |
+| `CMS_VINA_LINK` | `110.11.27.5\MESTESTDB:8080` | SQLNCLI | Test DB connection |
+| `110.11.27.5` | `110.11.27.5` | SQLNCLI | Direct IP link |
+| `110.11.27.5\MESTESTDB,8080` | Same | SQLNCLI | Alternate naming |
+
+### Key ERP Interface SPs (91 SPs reference `ERPSVR`)
+
+| SP | Chức năng |
+|---|---|
+| `usp_ERPInterface_daemon` | ★ Main ERP sync daemon |
+| `usp_Material_interface` | Đồng bộ master NVL |
+| `usp_CustomerInfo_interface` | Đồng bộ khách hàng |
+| `usp_ExchangeInfo_interface` | Đồng bộ tỷ giá |
+| `usp_VenderUnitPriceInfo_interface` | Đồng bộ giá NCC |
+| `usp_ProdSummaryList_IF` | Tóm tắt sản xuất → ERP |
+| `usp_DoSyncDefectReportData` | Đồng bộ báo cáo NG |
+| `VN_PERFORMANCE_PRODUCTION` | Dashboard hiệu suất |
+| `VN_PERFORMANCE_PRODUCTION_CELLLINE` | Hiệu suất Cell Line |
+
+---
+
+## 31. ⚖️ Weight Logging Subsystem (Chưa documented trước đó)
+
+> **Phát hiện 2026-06-18:** 2 bảng cân nặng lớn (6M+ rows tổng cộng) chưa có trong bất kỳ KB nào.
+
+### `Stb_LogWeight` (3.5M rows) — Log cân nặng thô
+
+| Cột | Kiểu | Mô tả |
+|---|---|---|
+| `Id` | `int` | PK auto-increment |
+| `LineCode` | `nvarchar(100)` | Mã dây chuyền |
+| `Value` | `real` | Giá trị cân (grams) |
+| `CreatedAt` | `datetime` | Thời gian cân |
+| `Ip` | `varchar(50)` | IP máy cân |
+| `LineNum` | `nvarchar(100)` | Số dòng/vị trí |
+| `Barcode` | `nvarchar(200)` | Mã barcode sản phẩm |
+
+### `STB_VN_Weigh` (2.6M rows) — Cấu hình & kết quả cân theo Model
+
+| Cột | Kiểu | Mô tả |
+|---|---|---|
+| `ID` | `int` | PK |
+| `LINECODE` | `nvarchar(100)` | Mã Line |
+| `LINENAME` | `nvarchar(100)` | Tên Line |
+| `MODEL` | `nvarchar(100)` | Mã model |
+| `WEIGH` | `float` | Trọng lượng |
+| `IDSCREEN` | `nvarchar(200)` | Screen ID liên quan |
+| `NAME_SCREEN` | `nvarchar(100)` | Tên màn hình |
+| `TRANSFERNAME` | `nvarchar(100)` | User chuyển dữ liệu |
+| `TRANSFERDATE` | `datetime` | Ngày chuyển |
+
+---
+
+## 32. 🔄 Re-Dropping / Re-Inspection (STB_ReDropping — 2.8M rows)
+
+> **Phát hiện 2026-06-18:** Bảng theo dõi sản phẩm bị lỗi phải xử lý lại. Chưa referenced trong bất kỳ KB nào trước đó.
+
+| Cột chính | Mô tả |
+|---|---|
+| `DefectSummaryNo` | PK — Mã báo cáo lỗi |
+| `ControlNo` / `PONo` | Liên kết sản phẩm / PO |
+| `FindJobdate` / `FindShiftCode` / `FindLineCode` / `FindRouteCode` | **Nơi phát hiện** lỗi |
+| `CauseJobDate` / `CauseLineCode` / `CauseFacilityRouteCode` | **Nguyên nhân** lỗi (trạm nào gây ra) |
+| `DefectCode` / `DefectCauseCode` / `DefectCauseDetailCode` | **Phân loại** lỗi 3 cấp |
+| `DefectCauseType` | Loại nguyên nhân (1 ký tự) |
+| `RepairType` / `RepairUserID` / `RepairDateTime` | **Thông tin sửa chữa** |
+| `DefectQty` / `RepairQty` / `LossQty` | SL lỗi / đã sửa / mất |
+| `MarKingCode` | Mã marking (dấu hiệu đặc biệt trên sản phẩm) |
+| `isStatus` | Trạng thái xử lý (bit) |
+
+---
+
+## 33. 🌐 Satellite Database Schemas
+
+### 33.1 `VINATECH_RESTFUL` — REST API Authentication (3 tables)
+
+| Table | Mô tả |
+|---|---|
+| `VINA_SSO_TOKEN` | JWT token management (Access + Refresh token, IP, Device) |
+| `VINA_SSO_LOGIN` | SSO login records |
+| `VINA_ALLOWED_IP` | IP whitelist cho API access |
+
+### 33.2 `VINATECH_WEBSOCKET` — Web/Mobile Menu System (7 tables)
+
+| Table | Mô tả |
+|---|---|
+| `VINA_MENU` | Menu items cho web/mobile app |
+| `VINA_MENU_PERMISSIONS` | Phân quyền menu theo role |
+| `VINA_MENU_PERMISSIONS_HISTORY` | Lịch sử thay đổi quyền |
+| `VINA_MODULE` | Danh sách module |
+| `VINA_MODULE_COMPANY` | Module theo công ty |
+| `VINA_MODULE_SEARCH` | Cấu hình tìm kiếm theo module |
+| `VINA_STATIC_DATA` | Dữ liệu tĩnh (dropdown, enum) |
+
+### 33.3 `VINATECH_DATA_KSOX` — K-SOX Internal Control (190+ tables)
+
+> **Hệ thống tuân thủ K-SOX** (tương đương Sarbanes-Oxley Hàn Quốc) quản lý kiểm soát nội bộ tài chính.
+
+| Nhóm bảng | Mô tả | Số bảng |
+|---|---|---|
+| `ICM_*` | Internal Control Matrix (Ma trận kiểm soát) | ~150 |
+| `COM_*` | Common — Approval, Mail, WBS | ~15 |
+| `ADM_*` | Admin — Employee, Position | 4 |
+| `MP_*` | MicroPolis — Auth, Menus, i18n | ~30 |
+
+### 33.4 NEOE — Duzon ERP (4,876 tables)
+
+> **Top tables theo row count:**
+
+| Table | Rows | Mô tả |
+|---|---|---|
+| `PR_BOM_LOG` | 3.9M | BOM change audit log |
+| `MA_PITEM_LOG` | 2.2M | Master item change log |
+| `MM_QTIO_LOG` | 1.1M | Material transaction log |
+| `PR_REQH` | 875K | Purchase requisition headers |
+| `HR_WTMCALC` | 844K | HR working time calculation |
+| `MM_QTIO` | 675K | Material transaction (active) |
+| `PR_QTIO` | 547K | Production transaction |
+| `FI_DOCU` | 409K | Finance documents |
+
+---
+
+*Cập nhật: 2026-06-18 — Deep discovery Phases 1-14 (33 sections, 800+ lines). Added Linked Servers, Weight Logging, Re-Dropping, Satellite DB schemas.*
