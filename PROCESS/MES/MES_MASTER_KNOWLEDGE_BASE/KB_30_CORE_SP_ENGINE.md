@@ -429,5 +429,66 @@ Kết quả: 1 dòng mới trong STB_ProdRouteHist, NVL bị trừ, tổng hợp
 
 ---
 
+## 8. SP #5: `usp_DoCreateSetInfoForProdQty_VNT` (477 dòng)
+
+> **Tạo Barcode / Lot cho sản phẩm** — gọi khi xác nhận kế hoạch ngày (B450, K101).
+> File SQL: [usp_DoCreateSetInfoForProdQty_VNT.sql](../sql/procedures/usp_DoCreateSetInfoForProdQty_VNT.sql)
+
+### 8.1 Format Barcode
+
+```
+[Prefix][ModelHeader][YearCode][MonthCode][DayCode][Serial]
+   VV      PP         1        6          3       R072701
+```
+
+**Quy tắc Prefix:**
+
+| Điều kiện | Prefix | Ví dụ |
+|---|---|---|
+| CompanyCode = 'VNT' (Bắc Ninh) | `VJ` | VJPP163R072701 |
+| CompanyCode khác (BG/HN) | `VV` | VVPP163R072701 |
+| MaterialTypeCode = 'MDL' (Module) | `M` + VJ/VV | MVJPP163R072701 |
+| WorkCenter = VNT_F2 (MEA soát) | `MEA` | MEA2606180001 |
+
+**Quy tắc Month Code:**
+```
+MonthCode = CHAR(Month + 73)
+→ Jan=J(74), Feb=K(75), Mar=L(76), Apr=M(77), May=N(78), Jun=O(79)
+   Jul=P(80), Aug=Q(81), Sep=R(82), Oct=S(83), Nov=T(84), Dec=U(85)
+```
+
+**Quy tắc Year Code:**
+```sql
+SELECT YearCode FROM STB_YearInfo WHERE Year = 2026
+-- Ví dụ: 2026 → '6', 2025 → '5'
+```
+
+### 8.2 Gate Logic
+
+| # | Check | Lỗi nếu vi phạm |
+|---|---|---|
+| 1 | DayPlan đã tạo Lot chưa | "이미 Lot를 생성하였습니다" (Lot đã tạo rồi) |
+| 2 | Volt có giá trị không (trừ F2/F3/F4/F5) | "전압 기준정보가 입력되지 않았습니다" (Chưa nhập Vol) |
+| 3 | Capacity có giá trị không (trừ F2/F3/F4/F5) | "용량 기준정보가 입력되지 않았습니다" (Chưa nhập Farad) |
+
+### 8.3 Logic Đặc Biệt
+
+- **Bloom Energy:** Model `EDVTSY-001` → lấy `CustomerRevision` từ `STB_BomRevision_Map`
+- **Nordex (EDVTMD-246):** Hardcode `@BloomEnergyPartNumber = '35335'`
+- **Remainder:** Nếu PlanQty / LotCount dư → Lot cuối nhỏ hơn (`@LotCount = @RemainQty`)
+
+### 8.4 Bảng DB Liên Quan
+
+| Bảng | Vai trò |
+|---|---|
+| `STB_SetInfo` | **INSERT barcode mới** (ControlNo, Barcode, PONo, DayPlanNo, ProdQty) |
+| `STB_DayProdPlan` | Đọc PlanQty, MaterialCode, PlanDate |
+| `STB_ModelBasicInfo` | Đọc Vol (MBIExtText01), Farad (MBIExtText02) |
+| `STB_YearInfo` | Map Year → YearCode |
+| `STB_MaterialMaster` | MaterialTypeCode (MDL/FPM/...) |
+| `STB_BomRevision_Map` | Bloom Energy BOM Revision |
+
+---
+
 *Cập nhật: 2026-06-18*
 *Nguồn: Phân tích trực tiếp từ code SQL Server*
