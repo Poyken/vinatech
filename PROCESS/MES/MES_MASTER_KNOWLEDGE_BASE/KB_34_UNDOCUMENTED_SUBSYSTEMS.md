@@ -848,3 +848,58 @@ SerialLen = 6                → LastSerialNo = 430
 ---
 
 *Cập nhật: 2026-06-18 — Deep discovery Phases 1-14 (33 sections, 800+ lines). Added Linked Servers, Weight Logging, Re-Dropping, Satellite DB schemas.*
+
+---
+
+## 34. 📦 STB_VN_ Table Classification (119 tables — DB Verified 2026-06-18)
+
+> **Tổng: 119 tables** có prefix `STB_VN_` trong SmartFactoryV2 — đây là các bảng **custom Vietnam** riêng Vinatech
+
+### 34.1 Phân loại theo chức năng
+
+| Nhóm | Count | Tables chính | Mô tả |
+|---|---|---|---|
+| **Finished Goods** | **15** | `STB_VN_FINISHGOODS`, `_BG`, `_BG2`, `_HN_New`, `_HY`, `_HY_NEW`, `_Position`, `_WAITING`, `_CAPTURE`, `_OUT_TEMPORARY` | ★ Thành phẩm theo từng nhà máy |
+| **Packing/Label** | **11** | `STB_VN_BloomBoxLabelPrintHist`, `STB_VN_STAMP_FOXCONN/HONGKONG/THAILO/MODULE`, `STB_VN_CUSTOMER_LABLE`, `STB_VN_LABLE_CUSTOMER` | Tem nhãn khách hàng |
+| **Machine/IoT** | **10** | `STB_VN_DEVICEMACHINES`, `STAGEMACHINES_DETAIL/MATERS`, `STATUSMACHINE(S)`, `LOCATIONMACHINES`, `STOREMACHINES`, `KPIMACHINES` | Quản lý thiết bị |
+| **HR/Attendance** | **8** | `STB_VN_ATTENDANCE_TIME`, `Employees`, `EMPLOYEESTRANSFER(LINE)`, `EMPLOYEEATTENDANCETRANSTER`, `Shift` | Chấm công + Phân bổ |
+| **Scrap/Waste** | **5** | `STB_VN_SCRAP_AFTERPRODUCTIONS`, `SCRAP_WEIGHSCALE_PRODUCTIONS`, `SCRAPLOT`, `DIVIDEMATERIALSMAL` | Phế liệu |
+| **Warehouse** | **5** | `STB_VN_LOCATION`, `LOCATIONMATERIALS`, `IssueReceipt`, `RECEIPTVOUCHER_ISSUEVOUCHER`, `InventoryFirst` | Kho / Tồn kho |
+| **Production** | **5** | `STB_VN_STAGE_PRODUCTION`, `STAGES_TRANSFER`, `PRODUCTION_ERROR(_HISTORY)`, `STASTUS_PROCDUCTION_ERROR` | SX + Lỗi |
+| **Module** | **5** | `STB_VN_MASTERMODULES`, `DETAILMODULES`, `Module`, `MODULE_EXPORT_IMPORT`, `QCModule` | Module EDLC |
+| **Spare Parts** | **5** | `STB_VNSparePartInfo`, `StockInfo`, `BasicLocation`, `ChangeHistory`, `IOHistory` | Phụ tùng |
+| **Electrode** | **3** | `STB_VN_ELECTRODE_REQUESTFORM`, `DRYOVER`, `SlittingKnifeInfo/InUse/IOHist/LotInfo` | Điện cực |
+| **Config/Master** | **8** | `STB_VN_CATEGORIES`, `CLASSIFY`, `COUNTRY`, `ECUS`, `ITEM(_CHECK)`, `LINE(S)`, `MODEL`, `UNIT` | Danh mục |
+| **Misc** | **6** | `STB_VN_MainMenu`, `SubMenu`, `NEW_PRINTER`, `NG`, `B598`, `BOM_LOGITIC` | Khác |
+| **Bending/Tapping** | **5** | `STB_VN_BENDING_TAPPING` + 4 backup variants | Bending/Tapping |
+| **DaiFuku/Weigh** | **3** | `STB_VN_DaiFuku_Temp`, `Weigh`, `ERRORNAME_WEIGHT` | Cân/AGV |
+
+### 34.2 Factory-Specific FG Tables
+
+| Factory | Main Table | Backup/Export |
+|---|---|---|
+| **Bắc Ninh** | `STB_VN_FINISHGOODS` | `_HISTORY`, `_forQCAudit` |
+| **Bắc Giang 1** | `STB_VN_FINISHGOODS_BG` | `_BG_Test_*` |
+| **Bắc Giang 2** | `STB_VN_FINISHGOODS_BG2` | — |
+| **Hà Nam** | `STB_VN_FINISHGOODS_HN_New` | `_HN_Export` |
+| **Hưng Yên** | `STB_VN_FINISHGOODS_HY` | `_HY_NEW` |
+
+## 35. 🔧 Spare Parts Subsystem (STB_VNSparePart* — 7 tables + 4 Special)
+
+| Table | Mô tả |
+|---|---|
+| `STB_VNSparePartInfo` | **Master** — Thông tin phụ tùng |
+| `STB_VNSparePartStockInfo` | **Tồn kho** phụ tùng |
+| `STB_VNSparePartBasicLocation` | Vị trí lưu trữ chuẩn |
+| `STB_VNSparePartIOHistory` | Lịch sử nhập/xuất |
+| `STB_VNSparePartChangeHistory` | Lịch sử thay đổi |
+| `STB_VN_SpecialSparePartInfo` | Master phụ tùng đặc biệt |
+| `STB_VN_SpecialSparePartCurrent` | Tồn kho hiện tại |
+| `STB_VN_SpecialSparePartIOHist` | IO History đặc biệt |
+| `STB_VN_SpecialSparePartLotInfo` | Lot phụ tùng đặc biệt |
+| `STB_VN_SparePartLineUsage` | Sử dụng theo Line |
+| `STB_VN_SlittingKnifeInfo` + `InUse` + `IOHist` + `LotInfo` | **★ Dao cắt Slitting** — Track riêng |
+
+---
+
+*Cập nhật: 2026-06-18 — Bổ sung §34-35: STB_VN_ 119 tables classified + Factory-specific FG tables + Spare Parts subsystem. DB verified.*
