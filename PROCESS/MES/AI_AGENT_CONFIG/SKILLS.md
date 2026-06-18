@@ -153,3 +153,36 @@ FROM sys.sql_expression_dependencies
 WHERE referencing_id = OBJECT_ID('TÊN_SP')
 ORDER BY referenced_entity_name
 ```
+
+---
+
+## 10. 📦 ĐỌC KB CHUNKED (Tiết kiệm token)
+
+7 KB files lớn đã tách thành chunks: KB_02, KB_03, KB_04, KB_05, KB_07, KB_10, KB_19.
+
+**Quy trình đọc KB chunked:**
+```
+1. Đọc INDEX.md trước:
+   → MES_MASTER_KNOWLEDGE_BASE/KB_03/INDEX.md  (1.5KB)
+
+2. Chọn chunk phù hợp từ Quick Routing table trong INDEX
+
+3. Đọc chunk cụ thể:
+   → MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_02_CELL_LINE.md  (64KB)
+
+4. KHÔNG đọc file gốc KB_03_SAN_XUAT.md (150KB) → lãng phí token
+```
+
+**Map nhanh:**
+| Cần | KB | Chunk |
+|-----|-----|-------|
+| Debug B530/B523/B597 | KB_03/ | 02_CELL_LINE |
+| Bugs SX theo screen | KB_03/ | 03_SCREEN_BUGS_B |
+| Đóng gói core | KB_04/ | 01_CORE_PACKAGING |
+| QC overview | KB_05/ | 01_QC_OVERVIEW |
+| IQC→OQC flow | KB_05/ | 03_QC_FLOW |
+| Kho NVL | KB_02/ | 01_NVL_WMS |
+| Kho TP Hà Nam | KB_02/ | 02_FG_WMS |
+| Kiến trúc MES | KB_10/ | 01_ARCHITECTURE |
+| DB Map | KB_19/ | 01_ARCHITECTURE |
+| ESM/Groupware | KB_07/ | 02_ESM_FORMS |

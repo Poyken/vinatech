@@ -121,7 +121,8 @@ ORDER BY RMIH.CreateDateTime DESC;
 ## 5. TOP 10 LỖI THƯỜNG GẶP → KB FILE
 
 | Triệu chứng | KB |
-|--------------|----|
+|--------------|----| 
+| **Mọi lỗi → tra mã màn hình** | **KB_31 (Bug Fixbook, đọc trước)** |
 | Không đăng nhập MES | KB_01 §1.1 |
 | Không in được tem | KB_01 §1.2, KB_04 §6.12 |
 | Gộp box lỗi | KB_04 §6.4, §6.13 |
@@ -130,7 +131,7 @@ ORDER BY RMIH.CreateDateTime DESC;
 | Chốt công đoạn lỗi | KB_14 §4.4 |
 | Model mới chưa cấu hình | KB_06 §1 |
 | Phế NVL B598 | KB_03 §6.12 |
-| Kho HN lỗi | KB_08 |
+| Kho HN lỗi | KB_02/ → 02_FG_WMS |
 | ESR/Aging | KB_05 §9.7 |
 
 ## 6. KNOWLEDGE ITEMS (KI) — Tra trước KB
@@ -144,38 +145,36 @@ ORDER BY RMIH.CreateDateTime DESC;
 | `new_model_checklist` | Thêm model mới (8 bước) |
 | `system_environment` | Connection info, IP, URL |
 
-## 7. KB FILES MAP (37 files)
+## 7. KB FILES MAP (23 files, 10 chunked)
 
-| # | File | Phạm vi |
-|---|------|---------|
-| 00 | KB_SCREEN_BUG_REF | Cẩm nang tra cứu lỗi theo Screen ID |
-| 01 | KB_01_UI_PHAN_QUYEN | Login, phân quyền, stage prices |
-| 02 | KB_02_KHO_WMS | Kho NVL, FIFO, hạn dùng, tách lot |
-| 03 | KB_03_SAN_XUAT | Sản xuất Cell/Module, B530/B597 |
-| 04 | KB_04_DONG_GOI_IN_TEM | Đóng gói B523/B525, in tem |
-| 05 | KB_05_QC_ELECTRODE | QC IQC/PQC/OQC, điện cực, ESR |
-| 06 | KB_06_MASTER_DATA_TOOLS | Master data, màn hình A/B/F/C map |
-| 07 | KB_07_GROUPWARE_INTEGRATION | ESM bridge, BOM sync |
-| 08 | KB_08_KHO_THANH_PHAM_HN | Kho thành phẩm Hà Nam |
-| 10 | KB_10_KIEN_TRUC_VA_DATAFLOW | Kiến trúc tổng quan MES & Data Flow |
-| 12 | KB_12_DEEP_CORE_ANALYSIS_AND_AUDIT | Phân tích sâu cốt lõi & Audit CSDL |
-| 14 | KB_14_TRACE_BUG_METHODOLOGY | Phương pháp trace bug (5 bước + case study) |
-| 19 | KB_19_ALL_DATABASES_MAP | Schema DB, cross-DB links |
-| 20 | KB_20_MAY_MOC_BAO_TRI | Máy móc bảo trì |
-| 21 | KB_21_NHAN_SU_WORKER | Nhân sự, worker assignment |
-| 22 | KB_22_DASHBOARD_ANDON | Dashboard, monitoring |
-| 23 | KB_23_4M_CHANGE_CAPA | 4M change, CAPA |
-| 24 | KB_24_RELIABILITY_TEST | Reliability test |
-| 25 | KB_25_VINAENESSOL | Hưng Yên factory |
-| 26 | KB_26_LIEN_KET | Liên kết hệ thống & bug logic |
-| 27 | KB_27_SCM_REWORK | SCM, rework, trả hàng, kiểm kê |
-| 28 | KB_28_SYSTEM_OBJECTS | 976 bảng, 3314 SPs, 1442 screens map |
-| 30 | KB_30_CORE_SP_ENGINE | Core SP analysis (B530/B523/F330) |
-| **31** | **KB_31_SCREEN_BUG_FIXBOOK** | **★ Bug fix tra cứu theo TCode (70+ bugs, SQL verified)** |
-| **32** | **KB_32_SCREEN_SP_TABLE_MAP** | **Screen→SP→Table mapping (DB verified)** |
-| **33** | **KB_33_FACTORY_WORKCENTER_MATRIX** | **Ma trận nhà máy/WorkCenter/Route** |
-| 36 | KB_36_HANAM_FACTORY_SCREENS | Màn hình riêng Hà Nam |
-| 37 | KB_37_SP_ARCHAEOLOGY_BUGS_AND_PATTERNS | SP patterns & anti-patterns |
+> ⚡ **CHUNKED files:** Đọc `KB_XX/INDEX.md` trước, chỉ load chunk cần. KHÔNG đọc file gốc.
+
+| # | File | Phạm vi | Size |
+|---|------|---------|------|
+| 01 | KB_01_UI_PHAN_QUYEN | Login, phân quyền, stage prices | 14KB |
+| **02** | **KB_02/ ⚡CHUNKED** | Kho WMS: NVL, TP, FIFO, Holding | 79KB→4c |
+| **03** | **KB_03/ ⚡CHUNKED** | Sản xuất Cell/Module, B530/B597 | 150KB→5c |
+| **04** | **KB_04/ ⚡CHUNKED** | Đóng gói B523/B525, in tem | 76KB→3c |
+| **05** | **KB_05/ ⚡CHUNKED** | QC IQC/PQC/OQC, Electrode, ESR | 105KB→6c |
+| 06 | KB_06_MASTER_DATA_TOOLS | Master data, model mới | 38KB |
+| **07** | **KB_07/ ⚡CHUNKED** | Groupware, ESM, BOM sync | 77KB→3c |
+| **10** | **KB_10/ ⚡CHUNKED** | Kiến trúc MES & Data Flow | 92KB→4c |
+| 12 | KB_12_DEEP_CORE_ANALYSIS | Deep Core & DB Audit | 23KB |
+| **14** | **KB_14/ ⚡CHUNKED** | Trace bug, 12 Gates | 40KB→3c |
+| 15 | KB_15_EA_MES_CASE_STUDY | Case Study thực tế | 32KB |
+| **19** | **KB_19/ ⚡CHUNKED** | 19 DBs Map, 6648 tables | 86KB→4c |
+| **25** | **KB_25/ ⚡CHUNKED** | Hưng Yên, D-series | 42KB→3c |
+| **26** | **KB_26/ ⚡CHUNKED** | Liên kết hệ thống, bug logic | 42KB→3c |
+| 29 | KB_29_DEEP_DISCOVERY_PROMPT | Meta-prompt phân tích ngược | 11KB |
+| 30 | KB_30_CORE_SP_ENGINE | Core SP (B530/B523/F330) | 24KB |
+| **31** | **KB_31_SCREEN_BUG_FIXBOOK** | **★ Bug fix 70+ bugs** | **27KB** |
+| **32** | **KB_32_SCREEN_SP_TABLE_MAP** | Screen→SP→Table | 20KB |
+| 33 | KB_33_FACTORY_WORKCENTER | Ma trận nhà máy/WorkCenter | 9KB |
+| 34 | KB_34_UNDOCUMENTED_SUBSYSTEMS | 20 subsystems ẩn | 38KB |
+| 35 | KB_35_TRIGGERS_JOBS_LABELS | Triggers, Jobs, Labels | 19KB |
+| 36 | KB_36_HANAM_FACTORY_SCREENS | Hà Nam 83 screens | 20KB |
+| 37 | KB_37_SP_ARCHAEOLOGY | SP patterns, TOP 20 SPs | 25KB |
+
 
 ## 8. ⚠️ COLUMN NAME TRAPS (Hay bị sai)
 

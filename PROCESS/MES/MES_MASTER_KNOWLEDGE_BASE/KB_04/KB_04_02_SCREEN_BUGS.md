@@ -1,0 +1,718 @@
+﻿## 🔴 Cẩm nang khắc phục lỗi theo Screen ID (Gộp từ KB_SCREEN_BUG_REF)
+
+## B351 — Lot Transition (Chuyển đổi Lot)
+
+### Lỗi 1: Barcode sinh ra bị chèn ký tự dấu chấm (`.`) sai định dạng
+*   **Triệu chứng:** Sau khi thực hiện chuyển đổi Lot/vật tư tại màn hình **B351**, Barcode sản phẩm mới sinh ra xuất hiện dấu chấm (Ví dụ: `VVPR152.740601`) thay vì ký tự chữ `R` tiêu chuẩn (`VVPR152R740601`). Lỗi này chặn quét công đoạn tiếp theo.
+*   **Nguyên nhân gốc:** Sai lệch logic cắt ghép chuỗi sinh barcode tự động trong SP xử lý transition.
+*   **Cách khắc phục:**
+    Chạy script SQL để sửa đồng loạt Barcode bị lỗi trong các bảng giao dịch:
+    ```sql
+    DECLARE @OldBC NVARCHAR(50) = 'VVPR152.740601';
+    DECLARE @NewBC NVARCHAR(50) = 'VVPR152R740601';
+
+    UPDATE STB_RawMaterialInputHist SET Barcode = @NewBC WHERE Barcode = @OldBC;
+    UPDATE STB_SetInfo SET Barcode = @NewBC WHERE Barcode = @OldBC;
+    UPDATE STB_LotChangeMaterialHistory SET NewBarcode = @NewBC WHERE NewBarcode = @OldBC;
+    ```
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.2](KB_04_DONG_GOI_IN_TEM.md#62-sửa-tên-lot-sau-b351-chuyển-đổi-lot--barcode-có-dấu-chấm).
+
+---
+
+
+## B523 / B525 — Packaging & Box Matching (Đóng gói Cell & Module)
+
+### Lỗi 1: Báo lỗi "Chưa có tiêu chuẩn đóng gói" khi gộp Box
+*   **Triệu chứng:** Công nhân quét gộp Box tại màn hình **B523** hệ thống báo lỗi đỏ chặn đứng quy trình: `"Chưa có tiêu chuẩn đóng gói"`.
+*   **Nguyên nhân gốc:** Model/Size mới chưa được khai báo số lượng đóng gói định mức trong bảng `STB_PackingStandard`.
+*   **Cách khắc phục:**
+    Khai báo tiêu chuẩn đóng gói (dựa trên loại vật tư `FERT` và size model, không gán theo `MaterialCode`):
+    ```sql
+    INSERT INTO STB_PackingStandard (MaterialTypeCode, Size, Voltage, Farad, VinylBagQty, InnerBoxQty, OutBoxQty, CreateDateTime, CreateUserID)
+    VALUES ('FERT', 'KÍCH_THƯỚC_SIZE_4_CHỮ_SỐ', NULL, NULL, 500, 4000, 8000, GETDATE(), 'vinaadmin');
+    ```
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.1](KB_04_DONG_GOI_IN_TEM.md#61-lỗi-chưa-có-tiêu-chuẩn-đóng-gói-b523).
+
+### Lỗi 2: Không gộp được Box Cell/Module do chưa có Lot, thiếu QC hoặc cờ F110
+*   **Triệu chứng:** Hệ thống từ chối gộp box cho Lot tại **B523** hoặc **B525**.
+*   **Nguyên nhân gốc:** Lot chưa được đánh giá QC Pass (`LotDecisionResult` rỗng/FAIL), hoặc mã vật tư chưa được bật các cờ quản lý Lot (`IsLotUse=1`, `IsUseBarcode=1`) tại F110.
+*   **Cách khắc phục:**
+    Chạy query kiểm tra 4 bước và sửa cờ thuộc tính hoặc cập nhật kết quả QC:
+    ```sql
+    -- Bước 1: Kéo cờ thuộc tính nếu thiếu
+    UPDATE STB_MaterialStockAttributeInfo SET IsLotUse = 1, IsUseBarcode = 1 WHERE MaterialCode = 'MÃ_VẬT_TƯ';
+    -- Bước 2: Cập nhật kết quả QC Pass tạm thời nếu khẩn cấp
+    UPDATE STB_SetInfo SET LotDecisionResult = 'PASS', IsDefect = 0 WHERE Barcode = 'MÃ_BARCODE';
+    ```
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.4](KB_04_DONG_GOI_IN_TEM.md#64-lỗi-không-gộp-box-được-b523--quy-trình-debug-chuẩn).
+
+### Lỗi 3: Lỗi Packing Qty hiển thị số âm hoặc sai lệch số lượng thực tế
+*   **Triệu chứng:** Màn hình hiển thị số lượng đóng gói bị âm hoặc sai lệch nghiêm trọng.
+*   **Nguyên nhân gốc:** Sai lệch lượng trừ kho ảo `CurrentQty` trong bảng `STB_MaterialLotInfo` hoặc sai bản ghi `STB_SavePackingTime_VVT`.
+*   **Cách khắc phục:**
+    Chạy script reset số lượng thực tế của Lot về giá trị đúng:
+    ```sql
+    UPDATE STB_MaterialLotInfo SET CurrentQty = [SỐ_LƯỢNG_ĐÚNG] WHERE LotNo = 'MÃ_LOT';
+    UPDATE STB_SavePackingTime_VVT SET PackQty = [SỐ_LƯỢNG_ĐÚNG] WHERE LotNo = 'MÃ_LOT' AND id = [ID_GIAO_DỊCH];
+    ```
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.6](KB_04_DONG_GOI_IN_TEM.md#66-lỗi-packing-qty-âm-ở-b523--b789).
+
+### Lỗi 4: Lỗi "Chưa có tiêu chuẩn đóng gói" cho Model/Size 1840 khi quét gộp Box
+*   **Triệu chứng:** Khi công nhân quét gộp Box cho các Model có kích thước size `1840` tại màn hình B523, hệ thống báo lỗi đỏ chặn không cho thao tác.
+*   **Nguyên nhân gốc:** Thiếu cấu hình định mức đóng gói cho kích thước size `1840` trong bảng `STB_PackingStandard`.
+*   **Cách khắc phục:**
+    Chạy SQL chèn bổ sung cấu hình đóng gói chuẩn (InnerBoxQty = 500, OutBoxQty = 1000) vào bảng `STB_PackingStandard`:
+    ```sql
+    INSERT INTO STB_PackingStandard (MaterialTypeCode, Size, Voltage, Farad, VinylBagQty, InnerBoxQty, OutBoxQty, CreateDateTime, CreateUserID)
+    VALUES ('FERT', '1840', 0, 0, 0, 500, 1000, GETDATE(), 'vinaadmin');
+    ```
+*   **Chi tiết nghiệp vụ:** Xem tại [Lỗi 1](#lỗi-1-báo-lỗi-chưa-có-tiêu-chuẩn-đóng-gói-khi-gộp-box) ở trên.
+
+---
+
+
+## B717 — Bending & Tapping (Uốn chân & Dán băng keo Cell)
+
+### Lỗi 1: Nhập sai thông số uốn/dán tại B717 không thể sửa hoặc xóa trực tiếp trên giao diện
+*   **Triệu chứng:** OP nhập nhầm số lượng, sai kích thước hoặc thông số uốn dán tại **B717**, không thấy nút Edit hay Delete trên UI để chỉnh sửa lại.
+*   **Nguyên nhân gốc:** Hệ thống chỉ được thiết kế để ghi nhận 1 lần (Insert hoặc Override) và không hỗ trợ tính năng sửa/xóa giao dịch trên client app.
+*   **Cách khắc phục:** IT kiểm tra và chạy script SQL update trực tiếp sản lượng hoặc xóa bản ghi giao dịch sai trong bảng tương ứng để OP quét lại.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_12_DEEP_CORE_ANALYSIS_AND_AUDIT.md § 5 (Mục 3)](KB_12_DEEP_CORE_ANALYSIS_AND_AUDIT.md#5-⚠️-5-điểm-nguy-hiểm-ẩn--developer-phải-biết).
+
+---
+
+
+## B525 — Warehouse Packing (Đóng gói kho)
+
+> 🔗 **Xem thêm:** Mục [B523 / B525](#b523--b525--packaging--box-matching) phía trên đã có chi tiết lỗi đóng gói.
+
+### Lỗi 1: Không gộp được Box tại kho (khác B523 dành cho sản xuất)
+*   **Triệu chứng:** Thủ kho thao tác đóng gói tại B525 bị chặn tương tự B523.
+*   **Nguyên nhân gốc:** B525 là phiên bản dành cho kho, cùng logic với B523 nhưng lọc theo WarehouseCode. Thiếu cờ `IsLotUse` hoặc `IsUseBarcode` tại F110.
+*   **Cách khắc phục:** Áp dụng cùng quy trình debug 4 bước như B523 (xem mục B523 phía trên).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.4](KB_04_DONG_GOI_IN_TEM.md).
+
+---
+
+
+## B781 — Packing Print Time Report (Tra sản lượng đóng gói nhập tay)
+
+> 🔗 **Xem thêm:** Mục [B682 / B781 / B786 / B789 / B791](#b682--b781--b786--b789--b791--stage-prices) phía trên đã có chi tiết lỗi đơn giá.
+
+### Lỗi 1: Sai ngày in tem đóng gói tại B781
+*   **Triệu chứng:** Báo cáo B781 hiển thị sai ngày in/đóng gói so với thực tế.
+*   **Nguyên nhân gốc:** Cột `PrintTime` trong `STB_SavePackingTime_VVT` bị ghi sai khi nhập tay tại B523.
+*   **Cách khắc phục:** Chạy SQL sửa trực tiếp: `UPDATE STB_SavePackingTime_VVT SET PrintTime = 'NGÀY_ĐÚNG' WHERE LotNo = 'MÃ_LOT'`.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_03_SAN_XUAT.md § 5.3](KB_03_SAN_XUAT.md).
+
+---
+
+
+## B789 — Packing Qty Edit (Sửa số lượng đóng gói)
+
+> 🔗 **Xem thêm:** Mục [B682 / B781 / B786 / B789 / B791](#b682--b781--b786--b789--b791--stage-prices) phía trên.
+
+### Lỗi 1: Cần xóa hoặc sửa số lượng Packing đã lưu
+*   **Triệu chứng:** Số lượng đóng gói bị ghi nhận sai, cần sửa lại.
+*   **Nguyên nhân gốc:** OP nhập nhầm số lượng khi gộp Box tại B523. B789 sử dụng SP `usp_Vietnam_GetBoxIDForLotNo_VVT` để tra cứu.
+*   **Cách khắc phục:** Sửa trực tiếp trong bảng `STB_SavePackingTime_VVT` theo LotNo và ID giao dịch.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.6](KB_04_DONG_GOI_IN_TEM.md).
+
+---
+
+
+---
+
+### Kịch bản sự cố khẩn cấp 1: Lỗi không gộp được Box (B523)
+
+### 4.1 LỖI KHÔNG GỘP ĐƯỢC BOX (MÀN HÌNH B523)
+
+#### 🔴 Triệu chứng hiện trường:
+Công nhân scan Lot/Barcode sản phẩm tại màn hình đóng gói **B523**, nhưng hệ thống báo lỗi đỏ: *"Chưa có tiêu chuẩn đóng gói"* hoặc *"Barcode không đủ điều kiện gộp box"*.
+
+#### 🔍 Quy trình truy vết & xử lý (4 bước chuẩn):
+
+*   **Bước 1: Kiểm tra cấu hình FIFO & Barcode trong Master (F110)**
+    Hệ thống chỉ cho phép gộp box đối với các vật tư được khai báo sử dụng Barcode và quản lý Lot.
+    ```sql
+    -- Query kiểm tra master thuộc tính vật tư
+    SELECT MaterialCode, IsUseBarcode, IsLotUse 
+    FROM STB_MaterialStockAttributeInfo 
+    WHERE MaterialCode = 'Mã_Vật_Tư'; -- Ví dụ: 'LIVT38-025'
+    ```
+    *   *Cách xử lý:* Nếu bảng trả về không có dữ liệu hoặc `IsLotUse = 0`, yêu cầu Master Data vào màn hình **F110** tìm mã vật tư và tích chọn **Use Barcode** + **Lot Use**, sau đó bấm **Save**.
+    *   *Bypass nhanh bằng SQL:*
+        ```sql
+        UPDATE STB_MaterialStockAttributeInfo 
+        SET IsLotUse = 1, IsUseBarcode = 1 
+        WHERE MaterialCode = 'Mã_Vật_Tư';
+        ```
+
+*   **Bước 2: Kiểm tra trạng thái đánh giá chất lượng (QC Pass)**
+    Hệ thống NAIS MES chặn cứng không cho đóng gói sản phẩm nếu lô hàng chưa qua kiểm tra QC hoặc bị QC đánh giá FAIL.
+    ```sql
+    -- Query kiểm tra kết quả đánh giá QC
+    SELECT Barcode, LotDecisionResult, IsDefect, DefectQty 
+    FROM STB_SetInfo 
+    WHERE Barcode = 'Mã_Barcode_Sản_Phẩm'; -- Ví dụ: 'VVPO093R010707'
+    ```
+    *   *Cách xử lý:* Nếu `LotDecisionResult` is `NULL` hoặc `'FAIL'`, yêu cầu tổ QC vào màn hình **B597** đánh giá chất lượng lô hàng sang **PASS**. (Xem thêm mục 4.2 nếu cần hủy kết quả QC cũ để đánh giá lại).
+
+*   **Bước 3: Kiểm tra xem Lot đã bị gộp vào Box khác chưa**
+    ```sql
+    -- Query kiểm tra xem Lot đã có PackingID (Box ID) gắn vào chưa
+    SELECT LotID, LotNo, PackingID, CurrentQty 
+    FROM STB_MaterialLotInfo 
+    WHERE LotNo = 'Mã_Barcode_Sản_Phẩm';
+    ```
+    *   *Cách xử lý:* Nếu cột `PackingID` hiển thị một mã khác (Ví dụ: `'PKHN023117'`), nghĩa là Lot này đã được gộp vào Box đó rồi. Công nhân không thể gộp tiếp. Cần rã Box cũ ra trước (Xem mục 4.3).
+
+*   **Bước 4: Kiểm tra tiêu chuẩn đóng gói (Packing Standard)**
+    Mỗi Model khi đóng gói cần có cấu hình số lượng mỗi túi (`VinylBagQty`), hộp nhỏ (`InnerBoxQty`), thùng to (`OutBoxQty`).
+    ```sql
+    -- Query kiểm tra tiêu chuẩn đóng gói theo loại vật tư và kích thước (Size)
+    SELECT * FROM STB_PackingStandard 
+    WHERE MaterialTypeCode = 'FERT' 
+      AND Size = 'Kích_Thước_Model'; -- Ví dụ: '0813' (đại diện size 8x13mm)
+    ```
+    *   *Cách xử lý:* Nếu bảng trống, yêu cầu Master Data vào màn hình **A419** thêm tiêu chuẩn đóng gói tương ứng với Size của Model đó.
+
+---
+
+---
+
+### Kịch bản sự cố khẩn cấp 2: Hủy gộp box / Rã box (B523)
+
+#### 🛠️ KỊCH BẢN A: Hủy gộp box / Rã box để đóng gói lại
+*   **Ví dụ Demo:** Hủy gộp box (rã box) mã `PKHN023117` để giải phóng các Lot con bên trong.
+*   **Quy trình xử lý bằng Transaction:**
+    ```sql
+    BEGIN TRANSACTION;
+    BEGIN TRY
+        -- 1. Xem danh sách các Lot con đang nằm trong Box bị gộp nhầm
+        SELECT MaterialLotNo, LotNo, PackingID, CurrentQty, InitialQty 
+        FROM STB_MaterialLotInfo 
+        WHERE PackingID = 'PKHN023117';
+
+        -- 2. Hủy liên kết Box: Set PackingID = NULL để giải phóng các Lot con ra ngoài
+        UPDATE STB_MaterialLotInfo 
+        SET PackingID = NULL 
+        WHERE PackingID = 'PKHN023117';
+
+        -- 3. Xóa thông tin Box lịch sử đóng gói trong bảng Divide (hàng Cell)
+        DELETE FROM STB_DividePackaging WHERE PackingID = 'PKHN023117';
+
+        -- 4. Xóa thông tin Box lịch sử đóng gói trong bảng SavePackingTime (nếu là hàng Module)
+        DELETE FROM STB_SavePackingTime_VVT WHERE PackingID = 'PKHN023117';
+
+        COMMIT TRANSACTION;
+        PRINT 'Rã Box và giải phóng Lot thành công!';
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        PRINT 'Lỗi rã Box: ' + ERROR_MESSAGE();
+    END CATCH;
+    ```
+
+
+#### 🛠️ KỊCH BẢN B: Lỗi gộp box bị mất số lượng (Qty = 0 hoặc Qty âm)
+*   **Triệu chứng:** Sau khi gộp box, do lỗi xung đột SP `usp_savePackingLabelQty_VVT` hoặc scan đúp, số lượng Lot hiện tại bị dồn về `0` hoặc âm.
+*   **Ví dụ Demo:** Khôi phục số lượng thực tế là `20` cho Lot `SP260516-003` và xóa các Lot trùng lặp phát sinh.
+*   **Quy trình xử lý:**
+    ```sql
+    BEGIN TRANSACTION;
+    BEGIN TRY
+        -- 1. Cập nhật số lượng thực tế cho Lot chuẩn cần giữ lại
+        UPDATE STB_MaterialLotInfo
+        SET InitialQty = 20, 
+            CurrentQty = 20
+        WHERE LotNo = 'SP260516-003';
+
+        -- 2. Xóa bỏ các Lot ID con thừa/trùng lặp do hệ thống tự sinh sai khi scan đúp
+        -- Dùng danh sách cụ thể thu thập được khi SELECT ở bước trước
+        DELETE FROM STB_MaterialLotInfo 
+        WHERE MaterialLotNo IN ('LotID_Thừa_1', 'LotID_Thừa_2');
+
+        COMMIT TRANSACTION;
+        PRINT 'Khôi phục số lượng gộp box thành công!';
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        PRINT 'Lỗi: ' + ERROR_MESSAGE();
+    END CATCH;
+    ```
+
+
+#### 🛠️ KỊCH BẢN C: Hủy gộp box khi Lot/Packing đã được nhập kho thành phẩm (Finish Goods)/Hủy Packing B523
+*   **Triệu chứng:** Khi cần hủy/rã box để đóng gói lại nhưng hệ thống chặn không cho hủy trên giao diện UI (báo lỗi: *"Lot này đã được nhập kho, không thể huỷ gộp box..."*).
+*   **Nguyên nhân gốc:** Lô thành phẩm đã chạy qua bước Nhập kho thành phẩm và có bản ghi trong bảng `STB_VN_FINISHGOODS_HN_New` (hoặc bảng thành phẩm tương ứng của từng nhà máy) cùng với Material Documents (`STB_MaterialDocInfo` có `IsCancel = 0`).
+Để tìm và xác định các thông tin còn lại từ các mã đầu vào: PKQO1600231, PKQO1600242 và Lot ve260518-011 phục vụ cho kịch bản hủy gộp box thành phẩm tại KB_04_DONG_GOI_IN_TEM.md
+, bạn có thể chạy các câu truy vấn SELECT kiểm tra dưới đây:
+
+1. Hướng dẫn các câu lệnh SQL để truy vấn thông tin
+Bước 1: Tìm Mã chứng từ nhập kho (MaterialDocNo) & User tạo
+Mã chứng từ nhập kho vật tư liên kết trực tiếp với các Packing ID thông qua bảng STB_MaterialDocLotInfo:
+
+sql
+SELECT MaterialDocNo, PackingID, LotNo, CreateUserID, CreateDateTime 
+FROM STB_MaterialDocLotInfo WITH(NOLOCK) 
+WHERE PackingID IN ('PKQO1600231', 'PKQO1600242');
+Bước 2: Tìm Số lượng của từng Box (CurrentQty)
+Để tính tổng số lượng cần giảm trừ (TỔNG_SỐ_LƯỢNG_HỦY), tra cứu trong bảng STB_MaterialLotInfo:
+
+sql
+SELECT PackingID, LotNo, CurrentQty 
+FROM STB_MaterialLotInfo WITH(NOLOCK) 
+WHERE PackingID IN ('PKQO1600231', 'PKQO1600242');
+Bước 3: Tìm Mã điều khiển (ControlNo) & Mã PO (PONo)
+Tra cứu từ bảng quản lý Lot/Barcode sản phẩm STB_SetInfo:
+
+sql
+SELECT Barcode, ControlNo, PONo, MaterialCode 
+FROM STB_SetInfo WITH(NOLOCK) 
+WHERE Barcode = 'VE260518-011';
+Bước 4: Xác định công đoạn cuối (RouteCode)
+Tra cứu lịch sử công đoạn chốt của Lot trong bảng STB_ProdRouteHist:
+
+sql
+SELECT RouteCode, ProdQty, CreateDateTime 
+FROM STB_ProdRouteHist WITH(NOLOCK) 
+WHERE ControlNo = 'MÃ_CONTROL_NO_TÌM_ĐƯỢC_Ở_BƯỚC_3' 
+ORDER BY CreateDateTime DESC;
+Bước 5: Tìm Mã tổng hợp công đoạn (ProductSummaryID)
+Tra cứu trong bảng tổng hợp STB_ProdRouteSummary bằng cách lọc theo PONo, RouteCode (công đoạn cuối) và ngày ghi nhận tương ứng:
+
+sql
+SELECT ProductSummaryID, OutputQty, JobDate 
+FROM STB_ProdRouteSummary WITH(NOLOCK) 
+WHERE PONo = 'MÃ_PO_NO_TÌM_ĐƯỢC_Ở_BƯỚC_3' 
+  AND RouteCode = 'MÃ_ROUTE_CUỐI_TÌM_ĐƯỢC_Ở_BƯỚC_4';
+2. Các thông tin thực tế đã tìm thấy trong Database
+Tôi đã chạy các lệnh SELECT kiểm tra trên Database của bạn và ghi nhận các thông tin cụ thể như sau:
+
+Mã chứng từ nhập kho (MaterialDocNo):
+PKQO1600231 tương ứng với mã chứng từ: 260616000243
+PKQO1600242 tương ứng với mã chứng từ: 260616000254
+Tài khoản tạo: doanthao
+Số lượng hủy:
+PKQO1600231 có số lượng: 505
+PKQO1600242 có số lượng: 295
+Tổng số lượng hủy: 505 + 295 = 800
+Thông tin Lot & PO:
+ControlNo của Lot VE260518-011 là: 20260515000379
+PONo là: 260515000004
+Công đoạn chốt cuối cùng: VE10
+Mã tổng hợp công đoạn (ProductSummaryID): 20260616000895 (cho ngày scan cuối là ngày 16/06/2026).
+3. Script SQL hoàn chỉnh (sẵn sàng chạy trên SSMS)
+Dưới đây là Script hoàn chỉnh đã được điền sẵn các thông số thực tế của bạn. Script được cấu hình mặc định là ROLLBACK TRANSACTION để bạn chạy thử nghiệm an toàn trên SSMS trước:
+
+sql
+BEGIN TRANSACTION;
+BEGIN TRY
+    -- 1. Xóa bản ghi trong kho thành phẩm để bypass điều kiện chặn (nếu đã có dữ liệu)
+    DELETE FROM STB_VN_FINISHGOODS_HN_New 
+    WHERE PackingID IN ('PKQO1600231', 'PKQO1600242') AND LotNo = 'VE260518-011';
+    -- 2. Gọi procedure hệ thống hủy tài liệu nhập kho vật tư (giải phóng STB_MaterialLotInfo)
+    EXEC usp_DoCancelMaterialDoc 
+        @pProcessLanguage = 'vn',
+        @pProcessUserID = 'doanthao',
+        @pMaterialDocNo = '260616000243';
+    EXEC usp_DoCancelMaterialDoc 
+        @pProcessLanguage = 'vn',
+        @pProcessUserID = 'doanthao',
+        @pMaterialDocNo = '260616000254';
+    -- 3. Cập nhật giảm sản lượng chốt công đoạn cuối (VE10) trong STB_ProdRouteHist
+    UPDATE STB_ProdRouteHist
+    SET ProdQty = ProdQty - 800
+    WHERE ControlNo = '20260515000379' AND RouteCode = 'VE10';
+    -- 4. Cập nhật giảm sản lượng trong bảng tổng hợp công đoạn STB_ProdRouteSummary
+    UPDATE STB_ProdRouteSummary
+    SET OutputQty = OutputQty - 800
+    WHERE ProductSummaryID = '20260616000895';
+    -- 5. Cập nhật giảm sản lượng hoàn thành của PO (STB_ProductionOrderInfo)
+    UPDATE STB_ProductionOrderInfo
+    SET ProdFinishQty = ProdFinishQty - 800
+    WHERE PONo = '260515000004';
+    -- THỬ NGHIỆM AN TOÀN: Mặc định Rollback. Hãy đổi thành COMMIT TRANSACTION khi muốn lưu thay đổi.
+    ROLLBACK TRANSACTION;
+    PRINT 'Kiểm tra thành công! (Dữ liệu đã rollback an toàn)';
+END TRY
+BEGIN CATCH
+    IF @@TRANCOUNT > 0 ROLLBACK TRANSACTION;
+    PRINT 'Lỗi: ' + ERROR_MESSAGE();
+    THROW;
+END CATCH;
+
+*   **Quy trình xử lý bằng Transaction:**
+    ```sql
+    BEGIN TRANSACTION;
+    BEGIN TRY
+        -- 1. Xóa bản ghi trong kho thành phẩm để bypass điều kiện chặn
+        DELETE FROM STB_VN_FINISHGOODS_HN_New 
+        WHERE PackingID IN ('MÃ_PACKING_1', 'MÃ_PACKING_2') AND LotNo = 'MÃ_LOT_GỐC';
+
+        -- 2. Gọi procedure hệ thống hủy tài liệu nhập kho vật tư (giải phóng STB_MaterialLotInfo)
+        -- Chạy lần lượt cho từng mã chứng từ MaterialDocNo tương ứng của từng box
+        EXEC usp_DoCancelMaterialDoc 
+            @pProcessLanguage = 'vn',
+            @pProcessUserID = 'TÀI_KHOẢN_USER',
+            @pMaterialDocNo = 'MÃ_CHỨNG_TỪ_1';
+
+        EXEC usp_DoCancelMaterialDoc 
+            @pProcessLanguage = 'vn',
+            @pProcessUserID = 'TÀI_KHOẢN_USER',
+            @pMaterialDocNo = 'MÃ_CHỨNG_TỪ_2';
+
+        -- 3. Cập nhật giảm sản lượng chốt công đoạn cuối (ví dụ: VE10) trong STB_ProdRouteHist
+        -- Giảm đi tổng số lượng của các box vừa hủy
+        UPDATE STB_ProdRouteHist
+        SET ProdQty = ProdQty - [TỔNG_SỐ_LƯỢNG_HỦY]
+        WHERE ControlNo = 'MÃ_CONTROL_NO' AND RouteCode = 'MÃ_ROUTE_CUỐI';
+
+        -- 4. Cập nhật giảm sản lượng trong bảng tổng hợp công đoạn STB_ProdRouteSummary
+        UPDATE STB_ProdRouteSummary
+        SET OutputQty = OutputQty - [TỔNG_SỐ_LƯỢNG_HỦY]
+        WHERE ProductSummaryID = 'MÃ_PRODUCT_SUMMARY_ID';
+
+        -- 5. Cập nhật giảm sản lượng hoàn thành của PO (STB_ProductionOrderInfo)
+        UPDATE STB_ProductionOrderInfo
+        SET ProdFinishQty = ProdFinishQty - [TỔNG_SỐ_LƯỢNG_HỦY]
+        WHERE PONo = 'MÃ_PO_NO';
+
+        COMMIT TRANSACTION;
+        PRINT 'Hủy gộp box thành phẩm thành công!';
+    END TRY
+    BEGIN CATCH
+        IF @@TRANCOUNT > 0 ROLLBACK TRANSACTION;
+        PRINT 'Lỗi: ' + ERROR_MESSAGE();
+        THROW;
+    END CATCH;
+    ```
+
+---
+
+---
+
+### Kịch bản sự cố khẩn cấp 3: Không in được tem (B450/B523/B756/A460)
+
+### 4.5 LỖI KHÔNG IN ĐƯỢC TEM (B450 / B523 / B756 / A460)
+
+#### 🔴 Triệu chứng hiện trường:
+Người dùng thao tác tạo Lot sản xuất hoặc in tem đóng gói nhưng máy in không phản hồi hoặc giao diện báo lỗi: *"Không tìm thấy định dạng nhãn"* hoặc tem in ra bị thiếu các thông số bắt buộc (Vol, Farad, Datecode...).
+
+#### 🔍 Quy trình truy vết & xử lý (5 bước kiểm tra):
+
+*   **Bước 1: Kiểm tra cấu hình nhãn in trong SmartFramework (Màn hình A460)**
+    Lỗi `"Không tìm thấy định dạng nhãn"` xảy ra khi template nhãn chưa được thiết lập hoặc chưa được phê duyệt.
+    ```sql
+    -- Kiểm tra sự tồn tại và trạng thái active của mẫu tem
+    SELECT FormatName, IsApproval, ApplyDate, FormatType
+    FROM SmartFramework.dbo.STB_LabelInfo 
+    WHERE FormatName LIKE '%HN%' -- Lọc theo tên nhà máy/mẫu
+      AND IsApproval = 1;
+    ```
+    *   *Cách xử lý:* Nếu trống, vào màn hình **A460** chọn cấu hình: **`AssembleLabel`** (Dòng 2) dùng cho sản xuất, **`PartLabel`** dùng cho tem kho nguyên vật liệu, tích chọn **IsApproval = 1** và bấm **Save**.
+
+*   **Bước 2: Kiểm tra cấu hình Vol/Farad của Model (Màn hình A410)**
+    Khi in tem đóng gói, nếu Model thiếu cấu hình giá trị Điện áp (Voltage) và Điện dung (Farad), hệ thống sẽ chặn không cho in hoặc in ra tem trống thông số.
+    ```sql
+    -- Kiểm tra thông số Model cơ bản
+    SELECT ModelCode, ModelName, MBIExtText04 AS Voltage, MBIExtText05 AS Farad 
+    FROM STB_ModelBasicInfo 
+    WHERE ModelCode = 'Mã_Model'; -- Ví dụ: 'RDMD00-368'
+    ```
+    *   *Cách xử lý:* Nếu các cột Vol/Farad bị rỗng (`NULL`), yêu cầu Master Data vào màn hình **A410** nhập đầy đủ thông số cho Model đó và bấm **Lưu**.
+
+*   **Bước 3: Kiểm tra trạng thái QC Pass của Lot (Xem mục 4.1)**
+    Lot chưa QC Pass (`LotDecisionResult IS NULL`) sẽ chặn in tem đóng gói.
+
+*   **Bước 4: Kiểm tra cấu hình in tem VJ của mã sản phẩm**
+    Nếu in tem không ra đúng đầu mã VJ mà ra mã VV:
+    ```sql
+    -- Kiểm tra thiết lập chuyển đổi mã VV -> VJ
+    SELECT * FROM STB_Vietnam_PackingPrinting WHERE MaterialCode = 'Mã_Vật_Tư';
+    ```
+    *   *Cách xử lý:* Đảm bảo cờ `PrintVJ = 1` để hệ thống tự động đổi đầu mã khi in.
+
+---
+
+### 6.18 Bug: B353 chuyển đổi Lot nhưng B523 vẫn in tem theo Lot cũ (STB_ChangePartNoAndLotNo bị bỏ qua)
+
+> **Ngày phát hiện:** 2026-06-18 | **Lot mẫu:** `VJQM153R025606` → `VVQM153R025606` | **Model:** `ECVT30-255` (`WEC3R0256QG`)
+
+**Triệu chứng:** User dùng màn hình **B353** (Thay đổi tên lot hàng) để chuyển đổi tên lot từ `VJQM153R025606` sang `VVQM153R025606`. Bản ghi đã lưu thành công vào bảng `STB_ChangePartNoAndLotNo` (ID=1572, isLotID=1). Tuy nhiên, khi ra màn hình **B523** in tem, hệ thống vẫn hiển thị LotNo trên tem là `VJQM153R025606` (lot cũ) thay vì `VVQM153R025606` (lot mới đã chuyển đổi).
+
+**Phân tích Root Cause:**
+
+SP `usp_Vietnam_GetBoxIDForLotNo_VVT` có logic chuyển đổi LotNo tại dòng ~543-555:
+
+```sql
+/* Tự thay đổi lotno */
+DECLARE @LotNoFirst VARCHAR(100)
+SELECT @LotNoFirst = OldBarcode 
+FROM STB_LotChangeMaterialHistory 
+WHERE (newbarcode = @LotNo OR OldBarcode = @LotNo)
+
+DECLARE @oldLotid VARCHAR(50), @newLotid VARCHAR(50)
+SELECT @oldLotid = oldLotid, @newLotid = newLotid 
+FROM [STB_ChangePartNoAndLotNo] 
+WHERE (oldLotid = @LotNoFirst OR oldLotid = @LotNo) AND isLotID = 1
+```
+
+**Chuỗi lỗi logic:**
+
+| Bước | Biến | Giá trị | Giải thích |
+|------|-------|---------|------------|
+| 1 | `@LotNo` (input) | `VVQM153R025606` | Barcode gốc từ `STB_MaterialLotInfo.LotNo` |
+| 2 | `@LotNoFirst` | `NULL` | Không có bản ghi trong `STB_LotChangeMaterialHistory` |
+| 3 | Lookup `STB_ChangePartNoAndLotNo` | `WHERE oldLotid = NULL OR oldLotid = 'VVQM153R025606'` | ❌ **KHÔNG MATCH** vì `oldLotID = 'VJQM153R025606'` (đầu VJ) |
+| 4 | `@oldLotid`, `@newLotid` | Cả hai `NULL` | Không tìm thấy bản ghi chuyển đổi |
+| 5 | CASE LotNo (dòng ~644) | `(@LotNoFirst = @oldLotid OR @oldLotid = @Lotno)` | `NULL = NULL` → **FALSE** trong SQL! |
+| 6 | Fall-through → dòng ~754 | `@allowVJ = 1` → `STUFF(LotNo, 1, 2, 'VJ')` | Hệ thống auto chuyển VV→VJ, **phủ định** hành động B353 |
+
+**Điểm mấu chốt:** B353 lưu `oldLotID = 'VJQM153R025606'` (tên in trên tem, đầu VJ). Nhưng SP tra cứu bằng `@LotNo = 'VVQM153R025606'` (barcode gốc từ DB, đầu VV). Do prefix khác nhau (`VJ` vs `VV`), lookup không match → conversion bị bỏ qua.
+
+**Fix SP `usp_Vietnam_GetBoxIDForLotNo_VVT`:** (Sửa 2 chỗ — phiên bản AN TOÀN có guard chống collision)
+
+> [!WARNING]
+> **Không dùng STUFF mù quáng!** Có 4 cặp lot mà cả VV lẫn VJ đều tồn tại trong `STB_ChangePartNoAndLotNo` nhưng trỏ tới `NewLotID` khác nhau. Fix phải dùng IF fallback chỉ khi chưa match VV.
+
+**Chỗ 1 — Sau dòng ~548** (thêm IF fallback block):
+```sql
+-- Giữ nguyên dòng 548 gốc:
+select @oldLotid=oldLotid,@newLotid=newLotid from [STB_ChangePartNoAndLotNo] where (oldLotid=@LotNoFirst or oldLotid=@LotNo) and isLotID = 1
+
+-- [FIX-20260618] THÊM SAU dòng 548: Fallback VJ lookup
+-- Guard: CHỈ chạy khi chưa tìm thấy record VV VÀ @LotNo bắt đầu 'VV'
+IF @oldLotid IS NULL AND @LotNo LIKE 'VV%'
+BEGIN
+    SELECT @oldLotid=oldLotid, @newLotid=newLotid 
+    FROM [STB_ChangePartNoAndLotNo] 
+    WHERE oldLotid = STUFF(@LotNo,1,2,'VJ') AND isLotID = 1
+END
+```
+
+**Chỗ 2 — Dòng ~644** (mở rộng CASE condition):
+```diff
+- when (@LotNoFirst = @oldLotid or @oldLotid =@Lotno) then @newLotid
++ when (@LotNoFirst = @oldLotid or @oldLotid =@Lotno or (@newLotid IS NOT NULL AND @oldLotid = STUFF(@LotNo,1,2,'VJ'))) then @newLotid
+```
+
+**Verification 4 scenarios đã kiểm chứng:**
+| Scenario | Input | Kết quả | Status |
+|----------|-------|---------|--------|
+| A. Lot bình thường (không B353) | `VVXX...` | IF chạy nhưng STUFF không match → auto VJ bình thường | ✅ Safe |
+| B. Lot bug (VJ record, không VV) | `VVQM153R025606` | IF match VJ → `@newLotid` = lot mới | ✅ Fixed |
+| C. Lot collision (cả VV+VJ có record) | `VVPK133R025603` | Dòng 548 gốc match VV → IF **SKIP** → dùng đúng record VV | ✅ Safe |
+| D. Module lot (MVV prefix) | `MVVPO...` | `LIKE 'VV%'` = FALSE → IF **SKIP** | ✅ Safe |
+
+**Query debug nhanh:**
+```sql
+-- Kiểm tra bản ghi B353 cho 1 lot
+SELECT * FROM STB_ChangePartNoAndLotNo WITH(NOLOCK) 
+WHERE oldLotID LIKE '%QM153R025606%' OR NewLotID LIKE '%QM153R025606%'
+
+-- Kiểm tra cấu hình PrintVJ
+SELECT PrintVJ, MaterialCode, PartNo FROM STB_Vietnam_PackingPrinting WITH(NOLOCK) 
+WHERE MaterialCode = 'ECVT30-255'
+
+-- Kiểm tra barcode gốc trong SetInfo
+SELECT Barcode, MaterialCode FROM STB_SetInfo WITH(NOLOCK) 
+WHERE Barcode = 'VVQM153R025606'
+```
+
+**Kết quả kiểm chứng an toàn trên DB Production (2026-06-18):**
+
+| # | Test | Kết quả | Ý nghĩa |
+|---|------|---------|---------|
+| 1 | Tổng record `STB_ChangePartNoAndLotNo` (isLotID=1) | **1,457** | 126 VJ + 1,325 VV |
+| 2 | VJ-only (không có bản VV) = nhóm lot bị bug | **122** | Fix sẽ tác động nhóm này |
+| 3 | Collision pairs (cả VV+VJ đều có record riêng) | **4 cặp** | Fix KHÔNG tác động nhờ guard `IF @oldLotid IS NULL` |
+| 4 | Lot VV có record riêng | **1,325** | Fix KHÔNG tác động (query gốc đã match) |
+| 5 | Lot VV trong MaterialLotInfo tìm thấy VJ match | **58** | 58/58 valid, 0 false positive |
+| 6 | Suffix verification (ký tự 3+ giống nhau VV↔VJ) | **58/58** | 100% match đúng cặp lot |
+| 7 | Lot đã gộp box xong trong nhóm affected | **58/58** | SP chỉ SELECT output → không ghi DB → lot cũ KHÔNG bị ảnh hưởng |
+| 8 | Module lots (MVV prefix) | **20,368** | 100% safe — guard `LIKE 'VV%'` chặn |
+| 9 | SP write operations | INSERT dòng 476 dùng `@LotNo` trực tiếp | Fix ở dòng 557+654 → **SAU** INSERT → không ảnh hưởng |
+
+> [!IMPORTANT]
+> **Kết luận an toàn:** Fix chỉ thay đổi **output SELECT** (LotNo hiển thị trên tem). Không INSERT/UPDATE/DELETE dữ liệu. Guard 3 lớp: (1) `IF @oldLotid IS NULL` chặn lot đã có record VV, (2) `LIKE 'VV%'` chặn module lot, (3) `@newLotid IS NOT NULL` chặn match rỗng.
+
+> [!WARNING]
+> **Pattern chung:** Bug này sẽ xảy ra với **MỌI** lot thuộc model có `PrintVJ = 1` khi dùng B353 để chuyển tên lot từ VJ→VV. Cho đến khi SP được fix, phải workaround bằng cách **hardcode** thêm WHEN clause cho từng lot cụ thể trong SP, giống cách `ducnv` đã làm ở dòng ~621-751.
+
+---
+### 6.19 Sửa cấp OQC chọn nhầm tại C531 (VVT_OQC_REFER)
+
+> **Ngày:** 2026-06-18 | **Màn hình:** C531 (VVT_CAPA input division / Tạo phân cấp dung lượng OQC)
+
+**Triệu chứng:** Operator chọn nhầm cấp OQC cho lot tại màn C531 (ví dụ: chọn cấp C thay vì cấp B). Sau khi bấm lưu, không thể sửa lại trên giao diện vì `finished = '1'`.
+
+**Bảng liên quan:** `VVT_OQC_REFER` — lưu thông tin phân cấp OQC
+
+| Cột | Ý nghĩa |
+|---
+
+### 6.20 Bug: B442 không hiển thị "Độ dày" (Thickness) cho model Electrode mới (SIExtReal03 = 0)
+
+> **Ngày:** 2026-06-18 | **Màn hình:** B442 (Kế hoạch Điện cực - ElectrodePlan) | **Nhà máy:** VVT_F1 (Bắc Ninh) + VVT_F2 (Bắc Giang)
+
+**Triệu chứng:** Khi tạo Lot sản xuất Electrode tại B442, cột "Độ dày" trên grid SetInfo hiển thị `0.00`, dẫn đến tem in ra không có thông số độ dày. Trong khi các model cũ cùng loại (`CRFYL85`, `CRFYN85L`) hiển thị đúng (120, 180).
+
+**Root Cause:** Model mới (`CRFYL85-01`, `CRFYN85L-01`) chưa được cấu hình cột `MaterialThickness` trong bảng `STB_MaterialMaster`.
+
+**Cơ chế:** SP `usp_DayProdPlan_get` load dữ liệu B442 có logic auto-fill thickness:
+```sql
+-- Logic auto fill thickness (by Mr.Tung 2022-04-07)
+CASE WHEN SI.SIExtReal03 IS NOT NULL THEN SI.SIExtReal03 
+     ELSE CONVERT(NUMERIC(20,5), ISNULL(MM.MaterialThickness, '0.0')) 
+END AS SIExtReal03   -- SIExtReal03 = cột "Độ dày" trên grid
+```
+Khi `MaterialThickness` rỗng → auto-fill = `0.0` → tem không hiển thị.
+
+**Fix 2 bước:**
+
+```sql
+-- Bước 1: Cấu hình MaterialThickness cho model mới
+BEGIN TRAN
+UPDATE STB_MaterialMaster SET MaterialThickness = '120' WHERE MaterialCode = 'CRFYL85-01' AND (MaterialThickness IS NULL OR MaterialThickness = '');
+UPDATE STB_MaterialMaster SET MaterialThickness = '180' WHERE MaterialCode = 'CRFYN85L-01' AND (MaterialThickness IS NULL OR MaterialThickness = '');
+SELECT MaterialCode, MaterialThickness FROM STB_MaterialMaster WHERE MaterialCode IN ('CRFYL85-01','CRFYN85L-01'); -- Verify
+-- ROLLBACK hoặc COMMIT
+ROLLBACK
+
+-- Bước 2: Fix lot đã tạo (SIExtReal03 đang = 0)
+BEGIN TRAN
+UPDATE STB_SetInfo SET SIExtReal03 = 120 WHERE MaterialCode = 'CRFYL85-01' AND SIExtReal03 = 0;
+UPDATE STB_SetInfo SET SIExtReal03 = 180 WHERE MaterialCode = 'CRFYN85L-01' AND SIExtReal03 = 0;
+SELECT Barcode, MaterialCode, SIExtReal03 FROM STB_SetInfo WHERE MaterialCode IN ('CRFYL85-01','CRFYN85L-01'); -- Verify
+-- ROLLBACK hoặc COMMIT
+ROLLBACK
+```
+
+**Mapping cột SetInfo ↔ tên hiển thị trên grid B442:**
+
+| Cột DB | Tên trên grid | Nguồn dữ liệu |
+|--------|--------------|----------------|
+| `SIExtReal01` | Độ dài | Client input |
+| `SIExtReal02` | Khổ | Client input |
+
+**Tem thiếu tên binder (VD: `(A301)`) để phân biệt giữa các molder:**
+
+Tem Electrode in `[MaterialName]` trực tiếp từ `STB_MaterialMaster`. Nếu `MaterialName` không chứa tên binder → tem không hiển thị.
+
+```sql
+-- Kiểm tra MaterialName hiện tại
+SELECT MaterialCode, MaterialName FROM STB_MaterialMaster WITH(NOLOCK)
+WHERE MaterialCode IN ('CRFYL85','CRFYL85-01');
+-- CRFYL85    : "...YP 85 120 (A301) 1 batch (-)"    ← CÓ binder ✅
+-- CRFYL85-01 : "...YP 85 120 1.5 batch (-)"          ← THIẾU binder ❌
+
+-- Fix: Thêm binder name vào MaterialName (tại A230 hoặc SQL)
+BEGIN TRAN
+UPDATE STB_MaterialMaster SET MaterialName = 'Coating-Roll Forming-YP 85 120 (A301) 1.5 batch (-)'
+WHERE MaterialCode = 'CRFYL85-01';
+SELECT MaterialCode, MaterialName FROM STB_MaterialMaster WHERE MaterialCode = 'CRFYL85-01';
+ROLLBACK
+```
+
+> [!IMPORTANT]
+> **Tại sao sửa `MaterialName` là an toàn?** Vì `STB_SetInfo` và `STB_DayProdPlan` chỉ lưu `MaterialCode`, `MaterialName` luôn được JOIN từ `STB_MaterialMaster` khi hiển thị. Sửa master = tất cả lot (quá khứ + tương lai) tự động cập nhật.
+>
+> **Chứng minh:** Trong `usp_SetInfo_get`:
+> ```sql
+> LEFT JOIN STB_MaterialMaster MM ON MM.MaterialCode = SI.MaterialCode
+> SELECT ... MM.MaterialName AS MaterialName ...  -- JOIN từ Master, không lưu riêng
+> ```
+> Ngoại lệ: 3 ControlNo bị hardcode override bằng CASE WHEN (theo yêu cầu đặc biệt).
+| `SIExtReal03` | Độ dày | Auto-fill từ `STB_MaterialMaster.MaterialThickness` |
+
+**SP liên quan B442:**
+
+| SP | Chức năng |
+|----|-----------|
+| `usp_DayProdPlan_get` | Load DayProdPlan + auto-fill thickness |
+| `usp_SetInfo_iud_VNT` | Lưu SetInfo (truyền `@pThickness = @SIExtReal03`) |
+| `usp_SetInfo_get` | Load SetInfo grid |
+| `usp_MainAssemblePartWeight_get` | Load thông tin vật tư |
+
+> [!WARNING]
+> **Pattern chung:** Khi thêm model Electrode mới (CRF%), phải làm 2 việc:
+> 1. **A230** (MaterialMaster): Cấu hình `MaterialThickness` (VD: 120, 180, 200)
+> 2. **A460** (LabelInfo): Thêm record vào `STB_ModelLabelInfo` (mapping ModelCode → LabelType)
+> Thiếu bước 1 → tem không hiển thị độ dày. Thiếu bước 2 → lỗi **"Not found label type"** khi in tem.
+
+**Lỗi in tem "Not found label type" (A460 chưa config):**
+
+Nếu bấm in tem trên B442 mà popup lỗi `"Not found label type"` → model chưa có record trong `STB_ModelLabelInfo`.
+
+```sql
+-- Kiểm tra model có label config chưa
+SELECT ModelCode, LabelType, FormatName FROM STB_ModelLabelInfo WITH(NOLOCK) WHERE ModelCode = 'MÃ_MODEL';
+
+-- Nếu không có → copy từ model cũ cùng loại
+-- VD: Copy CRFYN85L → CRFYN85L-01
+BEGIN TRAN
+INSERT INTO STB_ModelLabelInfo (ModelCode, LabelType, FormatName, CreateDateTime, CreateUserID)
+SELECT 'MODEL_MỚI', LabelType, FormatName, GETDATE(), 'admin'
+FROM STB_ModelLabelInfo WHERE ModelCode = 'MODEL_CŨ';
+SELECT @@ROWCOUNT; -- Phải > 0
+ROLLBACK
+```
+
+**Bảng mapping `STB_ModelLabelInfo`:**
+
+| Cột | Ý nghĩa |
+|-----|---------|
+| `ModelCode` | MaterialCode (mã sản phẩm) |
+| `LabelType` | Loại tem: `ElectLabel`, `AssembleLabel`, `PartLabel`, `BoxLabel2`... |
+| `FormatName` | Tên format tem (unicode) |
+
+**LabelType phổ biến cho Electrode (CRF%):**
+
+| LabelType | Chức năng | Bắt buộc? |
+|-----------|-----------|-----------|
+| `ElectLabel` | Tem điện cực (in từ B442) | ✅ Bắt buộc |
+| `AssembleLabel` | Tem sản xuất (B450/B540) | Tùy dây chuyền |
+| `PartLabel` | Tem vật tư (F330) | Tùy quy trình |
+-----|---------|
+| `lotid` | Mã lot (= Barcode) |
+| `mergeid` | Mã gộp (thường = lotid) |
+| `levelB` | Cấp phân loại (B, C, D...) |
+| `finished` | Trạng thái gộp (`'1'` = đã gộp xong, `NULL` = chưa) |
+| `CreateUserID` | User thực hiện |
+
+**SP đằng sau C531:**
+
+| SP | Chức năng |
+|----|-----------|
+| `usp_GetProdOQCgForBarcode_VVT` | Load data barcode lên grid |
+| `usp_DoProcessOQCrefer_VVT` | Lưu phân cấp OQC vào `VVT_OQC_REFER` |
+
+**Quy trình sửa cấp OQC:**
+
+`sql
+-- 1. Kiểm tra trạng thái hiện tại
+SELECT lotid, mergeid, levelB, finished, CreateUserID 
+FROM VVT_OQC_REFER WITH(NOLOCK) 
+WHERE lotid = 'MÃ_LOT';
+
+-- 2. Sửa cấp + reset finished để gộp lại
+BEGIN TRAN
+UPDATE VVT_OQC_REFER
+SET levelB = 'CẤP_ĐÚNG',    -- Ví dụ: 'B'
+    finished = NULL
+WHERE lotid = 'MÃ_LOT'
+  AND levelB = 'CẤP_SAI';   -- Guard: chỉ sửa đúng bản ghi sai
+SELECT @@ROWCOUNT AS [Rows]; -- Phải = 1
+-- Xác nhận xong → đổi ROLLBACK thành COMMIT
+ROLLBACK
+
+-- 3. Sau khi COMMIT: Vào lại C531 → quét barcode → chọn đúng cấp → gộp lại
+`
+
+> [!IMPORTANT]
+> Nếu lot đã được gộp box (`STB_MaterialLotInfo.PackingID IS NOT NULL`), cần kiểm tra xem box đó có cần điều chỉnh cấp không.
+
+---
+

@@ -25,28 +25,63 @@
 | File | Size | Nội dung chính |
 |------|------|---------------|
 | [KB_01](KB_01_UI_PHAN_QUYEN.md) | 14 KB | Login, phân quyền User, Stage Prices |
-| [KB_02](KB_02_KHO_WMS.md) | 79 KB | **Kho WMS** — NVL, TP, FIFO, Holding, 118 warehouses, MaterialDocInfo 82 cols |
-| [KB_03](KB_03_SAN_XUAT.md) | 150 KB | **Sản xuất** — SetInfo 76 cols, ProdRouteHist 23 cols, Cell/Module Line, Routing |
-| [KB_04](KB_04_DONG_GOI_IN_TEM.md) | 76 KB | **Đóng gói & In tem** — 49 Packing tables, B523 flow, Label config |
-| [KB_05](KB_05_QC_ELECTRODE.md) | 105 KB | **QC & Electrode** — 20 QC tables, USL/LSL spec, IQC→PQC→OQC, Slitting |
+| [KB_02](KB_02_KHO_WMS.md) | 79 KB | **Kho WMS** — ⚡ **CHUNKED** → Đọc [INDEX](KB_02/INDEX.md) trước |
+| → [01_NVL_WMS](KB_02/KB_02_01_NVL_WMS.md) | 40 KB | §4 NVL: FIFO, hạn dùng, MaterialDocInfo |
+| → [02_FG_WMS](KB_02/KB_02_02_FG_WMS.md) | 12 KB | §5 Kho TP, Hà Nam (gộp KB_08) |
+| → [03_SCREEN_BUGS](KB_02/KB_02_03_SCREEN_BUGS.md) | 24 KB | Bugs F110-F750, HN, A130 |
+| → [04_APPENDIX](KB_02/KB_02_04_APPENDIX.md) | 4 KB | Warehouse infrastructure |
+| [KB_03](KB_03_SAN_XUAT.md) | 150 KB | **Sản xuất** — ⚡ **CHUNKED** → Đọc [INDEX](KB_03/INDEX.md) trước |
+| → [01_OVERVIEW](KB_03/KB_03_01_OVERVIEW.md) | 16 KB | §5 Tổng quan, SetInfo/ProdRouteHist schema |
+| → [02_CELL_LINE](KB_03/KB_03_02_CELL_LINE.md) | 64 KB | §6 B530/B523/B597/Rework vận hành |
+| → [03_SCREEN_BUGS_B](KB_03/KB_03_03_SCREEN_BUGS_B.md) | 38 KB | Bugs B210-B802, HN, K screens |
+| → [04_SCREEN_BUGS_BK](KB_03/KB_03_04_SCREEN_BUGS_BK.md) | 28 KB | Bugs B220-B935 chi tiết |
+| → [05_APPENDIX](KB_03/KB_03_05_APPENDIX.md) | 4 KB | Table schemas |
+| [KB_04](KB_04_DONG_GOI_IN_TEM.md) | 76 KB | **Đóng gói & In tem** — ⚡ **CHUNKED** → Đọc [INDEX](KB_04/INDEX.md) trước |
+| → [01_CORE_PACKAGING](KB_04/KB_04_01_CORE_PACKAGING.md) | 35 KB | §6 B523/B525 flow, PackingStandard, in tem |
+| → [02_SCREEN_BUGS](KB_04/KB_04_02_SCREEN_BUGS.md) | 39 KB | Bugs B351, B523, B717, A418, HN523 |
+| → [03_APPENDIX](KB_04/KB_04_03_APPENDIX.md) | 3 KB | Packing table schemas |
+| [KB_05](KB_05_QC_ELECTRODE.md) | 105 KB | **QC & Electrode** — ⚡ **CHUNKED** → Đọc [INDEX](KB_05/INDEX.md) trước |
+| → [01_QC_OVERVIEW](KB_05/KB_05_01_QC_OVERVIEW.md) | 13 KB | §7 QC gates, validation flow |
+| → [02_ELECTRODE](KB_05/KB_05_02_ELECTRODE.md) | 15 KB | §8 Coating, Slitting, Pressing |
+| → [03_QC_FLOW](KB_05/KB_05_03_QC_FLOW.md) | 16 KB | §9 IQC→PQC→OQC, ESR/Aging |
+| → [04_SLITTING_4M](KB_05/KB_05_04_SLITTING_4M_RELIABILITY.md) | 7 KB | §10-12 Slitting HN, 4M, Reliability |
+| → [05_SCREEN_BUGS](KB_05/KB_05_05_SCREEN_BUGS_QC.md) | 52 KB | Bugs C-series, B597/B598, HY |
+| → [06_APPENDIX](KB_05/KB_05_06_APPENDIX.md) | 4 KB | QC table schemas |
 | [KB_06](KB_06_MASTER_DATA_TOOLS.md) | 38 KB | **Master Data** — Model, Material, Checklist thêm mới |
-| [KB_07](KB_07_GROUPWARE_INTEGRATION.md) | 77 KB | **Groupware** — 382 tables, Mua hàng, BOM, ESM sync |
+| [KB_07](KB_07_GROUPWARE_INTEGRATION.md) | 77 KB | **Groupware** — ⚡ **CHUNKED** → Đọc [INDEX](KB_07/INDEX.md) trước |
+| → [01_OVERVIEW](KB_07/KB_07_01_OVERVIEW_FLOWS.md) | 14 KB | §1-8 Auth, Mua hàng, Bán hàng, PO, HR |
+| → [02_ESM_FORMS](KB_07/KB_07_02_ESM_FORMS.md) | 56 KB | §9-11 ESM engine, 25+ forms, step-by-step |
+| → [03_BOM_TROUBLESHOOT](KB_07/KB_07_03_BOM_TROUBLESHOOT.md) | 8 KB | §12-14 BOM, Kho, Troubleshoot + Appendix |
 
 ### Architecture & Analysis
 
 | File | Size | Nội dung chính |
 |------|------|---------------|
-| [KB_10](KB_10_KIEN_TRUC_VA_DATAFLOW.md) | 92 KB | **Kiến trúc** — 3 Trụ cột, E2E flow, 33 Triggers, Row counts, IoT, Cost |
+| [KB_10](KB_10_KIEN_TRUC_VA_DATAFLOW.md) | 92 KB | **Kiến trúc** — ⚡ **CHUNKED** → Đọc [INDEX](KB_10/INDEX.md) trước |
+| → [01_ARCHITECTURE](KB_10/KB_10_01_ARCHITECTURE.md) | 49 KB | §0-1 Architecture, SmartFramework, Triggers |
+| → [02_DATAFLOW_SP](KB_10/KB_10_02_DATAFLOW_SP.md) | 16 KB | §2-6 E2E flow, SP analysis, Debug |
+| → [03_LIEN_THONG](KB_10/KB_10_03_LIEN_THONG.md) | 24 KB | §7 Máy móc, phụ tùng, ANDON |
+| → [04_APPENDIX](KB_10/KB_10_04_APPENDIX.md) | 3 KB | Table volumes |
 | [KB_12](KB_12_DEEP_CORE_ANALYSIS_AND_AUDIT.md) | 23 KB | Deep Core — 5 DNA, SP patterns, DB Audit |
-| [KB_14](KB_14_TRACE_BUG_METHODOLOGY.md) | 40 KB | **Methodology** — Trace bug 5 bước, 12 Validation Gates |
+| [KB_14](KB_14_TRACE_BUG_METHODOLOGY.md) | 40 KB | **Methodology** — ⚡ **CHUNKED** → Đọc [INDEX](KB_14/INDEX.md) trước |
+| → [01_METHODOLOGY](KB_14/KB_14_01_METHODOLOGY.md) | 11 KB | §1-3 Triết lý, 6 bước trace, Data Log |
+| → [02_SQL_VALIDATION](KB_14/KB_14_02_SQL_VALIDATION.md) | 20 KB | §4-6 SQL utilities, 12 Validation Gates |
+| → [03_CASE_STUDY](KB_14/KB_14_03_CASE_STUDY.md) | 9 KB | §7 Case Study end-to-end |
 | [KB_15](KB_15_EA_MES_CASE_STUDY_XUONG_MAY.md) | 32 KB | Case Study thực tế cho EA/MES |
 
 ### Infrastructure & Mapping
 
 | File | Size | Nội dung chính |
 |------|------|---------------|
-| [KB_19](KB_19_ALL_DATABASES_MAP.md) | 86 KB | **19 DBs Map** — 6,648 tables inventory |
-| [KB_26](KB_26_LIEN_KET_HE_THONG_VA_BUG_LOGIC.md) | 42 KB | Liên kết WMS↔SX↔QC, Trigger cascade, SCM, Rework, 19 ESM tables |
+| [KB_19](KB_19_ALL_DATABASES_MAP.md) | 86 KB | **19 DBs Map** — ⚡ **CHUNKED** → Đọc [INDEX](KB_19/INDEX.md) trước |
+| → [01_ARCHITECTURE](KB_19/KB_19_01_ARCHITECTURE.md) | 23 KB | §1-2 Kiến trúc DB, 13 DB Details |
+| → [02_WORKFLOWS](KB_19/KB_19_02_WORKFLOWS_QUERIES.md) | 25 KB | §3-8 Workflows, Audit, Troubleshoot |
+| → [03_GROUPWARE](KB_19/KB_19_03_GROUPWARE_MAPPING.md) | 21 KB | §9 Form→DB→MES Mapping |
+| → [04_ERD](KB_19/KB_19_04_ERD_APPENDIX.md) | 17 KB | §11 ERD + Appendix |
+| [KB_26](KB_26_LIEN_KET_HE_THONG_VA_BUG_LOGIC.md) | 42 KB | **Liên kết** — ⚡ **CHUNKED** → Đọc [INDEX](KB_26/INDEX.md) trước |
+| → [01_LINKS_BUGS](KB_26/KB_26_01_LINKS_BUGS.md) | 23 KB | §1-4 WMS↔SX↔QC, 4 Bugs, HY routes |
+| → [02_TRIGGERS_SCM](KB_26/KB_26_02_TRIGGERS_SCM.md) | 17 KB | §5-6 Triggers, SCM/Rework |
+| → [03_APPENDIX](KB_26/KB_26_03_APPENDIX.md) | 2 KB | ESM tables |
 | [KB_30](KB_30_CORE_SP_ENGINE.md) | 24 KB | **4 SP cốt lõi** line-by-line: DoProcess, Backflush, ForCalc, Packing |
 | [KB_31](KB_31_SCREEN_BUG_FIXBOOK.md) | 27 KB | **Sổ tay Bug** — 60+ bug × 30+ màn hình |
 | [KB_32](KB_32_SCREEN_SP_TABLE_MAP.md) | 20 KB | Screen→SP→Table map cho 15 màn hình |
@@ -55,7 +90,10 @@
 
 | File | Size | Nội dung chính |
 |------|------|---------------|
-| [KB_25](KB_25_VINAENESSOL_HUNG_YEN.md) | 42 KB | VinaEnesol Hưng Yên — D-series, 93 HY SPs |
+| [KB_25](KB_25_VINAENESSOL_HUNG_YEN.md) | 42 KB | **VinaEnesol HY** — ⚡ **CHUNKED** → Đọc [INDEX](KB_25/INDEX.md) trước |
+| → [01_OVERVIEW](KB_25/KB_25_01_OVERVIEW.md) | 24 KB | §1-5 Tổng quan, DB, SP, SQL |
+| → [02_DEPLOY_HY](KB_25/KB_25_02_DEPLOY_HY.md) | 12 KB | §6-7 Cấu hình điểm HY |
+| → [03_SCREEN_BUGS](KB_25/KB_25_03_SCREEN_BUGS.md) | 5 KB | Bugs Enesol/HY screens |
 | [KB_33](KB_33_FACTORY_WORKCENTER_MATRIX.md) | 9 KB | 9 WorkCenters, 295 Lines, Barcode format |
 | [KB_34](KB_34_UNDOCUMENTED_SUBSYSTEMS.md) | 38 KB | 20 subsystems: Spare Parts, Machine, Mold, Scrap, ANDON, 119 VN tables |
 | [KB_35](KB_35_TRIGGERS_JOBS_LABELS.md) | 19 KB | 33 Triggers, 36 Agent Jobs, 32 Customer Labels |
