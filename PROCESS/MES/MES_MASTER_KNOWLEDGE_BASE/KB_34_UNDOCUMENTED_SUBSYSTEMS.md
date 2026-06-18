@@ -1,0 +1,422 @@
+# KB_34 — Các Phân Hệ Phụ Trợ Chưa Document (Undocumented Subsystems)
+
+> **Verified against DB:** 2026-06-18
+> ← [Về INDEX](KB_INDEX.md)
+
+---
+
+## 1. 📊 Screen Prefix Distribution (Phân bố màn hình theo tiền tố)
+
+> Tổng: **1,467 screens** / **1,026 unique TCodes**
+
+| Prefix | Count | Phân hệ | Document tại |
+|---|---|---|---|
+| B | 354 | Production / Sản xuất | KB_03, KB_04 |
+| (blank) | 300 | Menus / Folders | — |
+| H | 174 | HN (89) + HY (22) + misc | KB_02, KB_25 |
+| C | 150 | Quality Control (QC) | KB_05 |
+| F | 124 | WMS / Kho vật tư | KB_02 |
+| Z | 52 | System Admin / Phân quyền | KB_01 |
+| A | 33 | Master Data | KB_06 |
+| **P** | **29** | **Nhân sự + Sự kiện + Điện nước** | **→ §2** |
+| K | 28 | Korea-style screens | KB_03 |
+| **V** | **26** | **Vietnam Mobile/PDA Menu** | **→ §3** |
+| **L** | **25** | **Label / Location** | **→ §4** |
+| **G** | **23** | **Groupware bridge** | **→ §5** |
+| **E** | **23** | **Electrode** | KB_05 |
+| **M** | **22** | **Machine / Module** | **→ §6** |
+| **T** | **13** | **Test / Template** | **→ §7** |
+| **S** | **12** | **SmartFactory IoT** | **→ §8** |
+| **W** | **10** | **Web / Warehouse** | **→ §9** |
+| **R** | **9** | **Return / Report** | **→ §10** |
+| D | 6 | VinaEnesol | KB_25 |
+| I/Y | 8 | Misc | — |
+
+---
+
+## 2. 👥 P-Series: Nhân Sự, Sự Kiện & Tiện Ích (29 screens)
+
+| TCode | Caption | Chức năng |
+|---|---|---|
+| `P110` | VNT_EventBasicInfo | Thông tin sự kiện cơ bản |
+| `P111` | Attendance Time | **Chấm công nhân viên** (→ `STB_VN_ATTENDANCE_TIME`) |
+| `P112` | EmployeeMoveLines | Di chuyển nhân viên giữa Lines |
+| `P120` | VNT_EventProgressInfo | Tiến độ sự kiện |
+| `P130` | VNT_EventAttendInfo | Điểm danh sự kiện |
+| `P140` | VNT_EventAttendListForEmployee | DS điểm danh theo nhân viên |
+| `P150` | VNT_EventScoreRanking | Xếp hạng điểm sự kiện |
+| `P160` | EmployeeScoreSummary | Tổng hợp điểm nhân viên |
+| `P170` | VNT_EmployeeInfo | **Thông tin nhân viên chi tiết** |
+| `P171` | Danh sách nhân viên | Tra cứu nhân viên |
+| `P210-P250` | DocManagement (5 screens) | **Quản lý tài liệu nội bộ** |
+| `P410` | FacilityPowerInquiry | **Tra cứu điện năng** |
+| `P411` | MonthlyElectricity | Điện hàng tháng |
+| `P420` | WastewaterMeterReadingLog | **Log đồng hồ nước thải** |
+| `P430-P450` | Electricity (3 screens) | Quản lý đồng hồ điện |
+| `PM/PM01` | PriceAndMaterialCode | Giá & mã hàng VN |
+
+---
+
+## 3. 📱 V-Series: Vietnam Mobile/PDA Menu (26 screens)
+
+Cấu trúc menu PDA cho công nhân Việt Nam:
+
+| TCode | Caption | Nhóm |
+|---|---|---|
+| `V000` | Vietnam_Menu | Root menu |
+| `V100` | Accounting | Kế toán |
+| `V200` | HR | Nhân sự |
+| `V300` | Production Cell | Sản xuất Cell |
+| `V310` | Production Qty | Nhập sản lượng |
+| `V320` | NG Qty | Nhập phế |
+| `V330` | MaterialUpLine | Cấp NVL lên chuyền |
+| `V400` | Production Module | Sản xuất Module |
+| `V410` | Module Qty | Sản lượng Module |
+| `V420` | NG Qty | Phế Module |
+| `V500` | QC | Menu QC |
+| `V510-V530` | IQC/PQC/OQC | Kiểm tra chất lượng |
+| `V600` | Electrode Area | Khu vực điện cực |
+| `V700` | Warehouse | Kho |
+| `V710/V720` | Raw/Finish Goods | NVL/Thành phẩm |
+| `V800` | Machine Manage | Quản lý thiết bị |
+| `V900` | Stationery | Văn phòng phẩm |
+
+---
+
+## 4. 🏭 Phân Hệ Phụ Tùng (Spare Parts — 26 tables)
+
+> **Chưa document trong bất kỳ KB nào.** HN-series (HN131, HN161, HN163, HN180, HN241, HN251, HN260, HN270) là UI chính.
+
+### Tables chính:
+| Table | Mô tả |
+|---|---|
+| `STB_SparePartInfo` | Master danh mục phụ tùng |
+| `STB_SparePartStockInfo` | Tồn kho phụ tùng |
+| `STB_SparePartIOHistory` | Lịch sử xuất/nhập phụ tùng |
+| `STB_SparePartBasicLocation` | Vị trí lưu trữ |
+| `STB_SparePartChangeHistory` | Lịch sử thay đổi |
+| `STB_MachineSparePartInfo` | Mapping phụ tùng ↔ máy |
+| `STB_TYPESPAREPART` | Phân loại phụ tùng |
+| `STB_VNSparePartInfo` | Version Vietnam |
+| `STB_VNSparePartStockInfo` | Tồn kho VN |
+| `STB_VN_SpecialSparePartInfo` | Phụ tùng đặc biệt |
+
+---
+
+## 5. 🤖 Daifuku ASRS Interface (5 SPs + 1 table)
+
+> Hệ thống kho tự động Daifuku tại BG2. Tham chiếu: KB_31 Bug §FG_WH.
+
+| Object | Loại | Chức năng |
+|---|---|---|
+| `usp_DaifukuWarehouse_get` | SP | Lấy thông tin vị trí kho |
+| `usp_DaifukuWarehouse_iud` | SP | Thêm/sửa/xóa vị trí |
+| `usp_DaifukuWarehouse_Del` | SP | Xóa vị trí |
+| `usp_DaifukuManualLabelPrintHist_get` | SP | Lịch sử in tem thủ công |
+| `usp_VN_DaiFuku_Temp` | SP | Dữ liệu tạm Daifuku |
+| `STB_VN_DaiFuku_Temp` | Table | Bảng tạm interface |
+
+---
+
+## 6. 📡 ANDON System (4 tables)
+
+> Hệ thống hiển thị sản lượng real-time trên TV/Monitor tại xưởng. URLs: BG1 `:8006/andon`, BN `:8000/andon`
+
+| Table | Mô tả |
+|---|---|
+| `CellLineANDON` | Dữ liệu ANDON Cell Line |
+| `ProcessStepsANDON` | Các bước quy trình ANDON |
+| `DefectReportsAnDon` | Báo cáo lỗi ANDON (BN) |
+| `DefectReportsAndon_BG` | Báo cáo lỗi ANDON (BG) |
+
+---
+
+## 7. 📈 ESR System (14 tables)
+
+> ESR = Equivalent Series Resistance. Dữ liệu đo ESR trực tiếp từ máy đo → lưu DB → C530/C546 tra cứu.
+
+| Table | Mô tả |
+|---|---|
+| `Stb_ESRValueMonitor` | **Bảng chính** — Lưu giá trị ESR realtime |
+| `STB_ESRInspectionData` | Dữ liệu kiểm tra ESR thô |
+| `STB_ESRInspectionHist` | Lịch sử kiểm tra ESR |
+| `STB_ESRSpecOverInfo` | Thông tin vượt Spec ESR |
+| `STB_VVT_ESR_MONITOR` | Monitor ESR VVT |
+| `STB_VVT_ESRDATA` | Dữ liệu ESR VVT (active) |
+| `STB_VVT_ESRDATA_2021-2023*` | 6 backup tables theo thời gian |
+| `STB_ESRDataBackup6Line` | Backup ESR 6 Line |
+| `STB_Vietnam_ESRgrowup_dayByday` | Phân tích ESR tăng trưởng theo ngày |
+
+---
+
+## 8. 🔧 Machine Management (35 tables)
+
+> Quản lý toàn bộ vòng đời thiết bị: PM (Preventive Maintenance), Sửa chữa, KPI, Phụ tùng.
+
+### Core tables:
+| Table | Mô tả |
+|---|---|
+| `STB_MachineMaster` | **Master** — Danh mục máy |
+| `STB_MachineBasicInfo` | Thông tin cơ bản |
+| `STB_MachineCapacity` | Năng lực máy |
+| `STB_MachineSpecInfo` | Thông số kỹ thuật |
+| `STB_MachinePmItem` | Hạng mục bảo trì định kỳ |
+| `STB_MachinePmHistory` | Lịch sử PM |
+| `STB_MachineRepairHistory` | Lịch sử sửa chữa |
+| `STB_MachineRepairWorker` | Thợ sửa chữa |
+| `STB_MachineConditionHist` | Lịch sử trạng thái máy |
+| `STB_MachineConditionAlarm` | Cảnh báo trạng thái |
+
+### Vietnam-specific:
+| Table | Mô tả |
+|---|---|
+| `STB_VN_DEVICEMACHINES` | Thiết bị VN |
+| `STB_VN_STATUSMACHINES` | Trạng thái máy VN |
+| `STB_VN_LOCATIONMACHINES` | Vị trí máy VN |
+| `STB_VN_KPIMACHINES` | KPI máy VN |
+| `STB_VN_STAGEMACHINES_MATERS` | Master công đoạn máy |
+| `STB_VN_STOREMACHINES` | Kho máy VN |
+| `STB_VN_Form_Request_Machines` | Yêu cầu sửa chữa máy |
+
+---
+
+## 9. 🔌 S-Series: SmartFactory IoT (12 screens)
+
+| TCode | Caption | Chức năng |
+|---|---|---|
+| `S110` | VNT_ImpregnationLevel | **Mức ngâm tẩm** (Impregnation) |
+| `S120` | VNT_IoTMeasureHist | **Lịch sử đo IoT** |
+| `S211` | VNT_DirectCoaterStatusInfo | Trạng thái máy Coater trực tiếp |
+| `S212` | VisionGroupInspInfo | **Thông tin kiểm tra Vision** (camera AI) |
+| `S213` | VNT_VisionInspectionResult | Kết quả Vision AI |
+| `S215` | VNT_XRFInspInfo | **XRF** (X-Ray Fluorescence) inspection |
+
+---
+
+## 10. 🏭 Route System — Bản đồ đầy đủ mã công đoạn
+
+### Cell Line Routes (V-series):
+| Route | Tên | Ghi chú |
+|---|---|---|
+| V-22 / V-22_BG | Cuốn (Winding) | Công đoạn đầu |
+| V-23 / V-23_BG | Cắt chân (Tab Welding) | |
+| V-24 / V-24_BG | Nhúng hóa chất | |
+| V-25 / V-25_BG | Sấy (Dry Oven) | |
+| V-26 / V-26_BG | Đo ESR (Aging Check) | |
+| V-27 / V-27_BG | Ngoại quan (Visual Insp.) | |
+| V-28 / V-28_BG | Bao bì (Sleeving) | |
+| V-29 → V-34 | Mở rộng | VE routes cho Hà Nam |
+| V-33 | **Cascade breaker** | Logic đặc biệt |
+
+### Module Line Routes (MV-series):
+| Route | Tên |
+|---|---|
+| MV-01 / MV-01_BG | Lắp ráp (Assembly) |
+| MV-02 / MV-02_BG | Kiểm tra trung gian |
+| MV-03 / MV-03_BG | Kiểm tra giữa |
+| MV-04 / MV-04_BG | Ngoại quan |
+| MV-05 / MV-05_BG | Đóng gói |
+
+### Hưng Yên Routes (P-series):
+| Route | Tên | Ghi chú |
+|---|---|---|
+| P-01 | Assembly | **Cascade breaker** (logic đặc biệt như V-33) |
+| P-02 | Testing | |
+| P-03 | Mid-check | |
+| P-04 | Visual | |
+| P-05 | Packing/Final | |
+| P-06 | Output | |
+
+### Electrode Routes (E-series):
+Managed by B442/B470/B552 screens.
+
+---
+
+## 11. 🏗️ Doping JIG System (2 tables)
+
+| Table | Mô tả |
+|---|---|
+| `Stb_VVT_DopingJIG` | Trạng thái JIG hiện tại (JigID, LotInUsed, Status, BeginDateTime, EndDateTime) |
+| `Stb_VVT_DopingJIG_History` | Lịch sử chạy JIG (auto-archive khi JIG kết thúc) |
+
+> ⚠️ **Bug đã phát hiện (KB_25):** SP `usp_Vietnam_DopingJIG_uid` có lỗi logic `dateadd(second,5,getdate())` khiến autoend không lưu History.
+
+---
+
+## 12. 📋 L-Series: Support Management (25 screens)
+
+> Hệ thống Support = Mirror read-only của Production/QC/WMS dành cho role quản lý/ban lãnh đạo.
+
+| TCode | Caption | Chức năng |
+|---|---|---|
+| `L120` | VNT_SPTRawMaterialInput | Tra cứu NVL cấp vào SX |
+| `L130` | SPTRouteInspectionHistory | Lịch sử kiểm tra công đoạn |
+| `L135` | SPTProdRouteByBarcode | Route theo barcode |
+| `L137` | GetProdRouteHistForBarcode_SPT | Chi tiết route history |
+| `L140` | SPTProdRouteForPacking | Route cho đóng gói |
+| `L150` | ProductionOrderBatchInfo | Thông tin batch PO |
+| `L160` | DayProdPlanOrderBatchInfo | Kế hoạch ngày batch |
+| `L170` | SPTProdProcess | Quy trình sản xuất |
+| `L180` | ProdRouteHistSPT | Lịch sử route SX |
+| `L210` | SetListForOqcLotManagement | Quản lý Lot OQC |
+| `L220` | MaterialOqcInfoSampleManagement | Quản lý mẫu OQC |
+| `L230` | RotaryKilnItemSpecInfo | Spec Rotary Kiln |
+| `L310` | SPTProductStock | **Tồn kho thành phẩm (SPT)** |
+| `L410` | SPTRawMaterialStockLotInfo | Tồn kho NVL theo Lot |
+| `L420` | SPTMaterialWarehouseInOutHist | Lịch sử XNK |
+| `L430` | SPTRawMaterialMergeSplitHist | Lịch sử gộp/tách |
+| `L440` | SPTRawMaterialStock | Tồn kho NVL tổng |
+
+---
+
+## 13. 📦 G-Series: Product Stock & Shipment (23 screens)
+
+| TCode | Caption | Chức năng |
+|---|---|---|
+| `G612` | Vietnam_ProductStock | **Tồn kho thành phẩm VN** |
+| `G660` | Daifuku_Warehouse | **Kho tự động Daifuku** |
+| `G661` | WarehouseReceipt | Phiếu nhập kho |
+| `G662` | WarehouseDelivery | **Phiếu xuất kho** (→ `usp_WarehouseDelivery_get`) |
+| `G670` | Single_Shipment | Xuất hàng đơn lẻ |
+| `G680` | VNT_ProductStockInfo | Thông tin tồn kho |
+| `G690` | ProductStockInfoUpload | Upload tồn kho |
+| `G691` | ProductStockInfoLookup | Tra cứu tồn kho |
+| `G692` | ProductStockInfoUploadHist | Lịch sử upload |
+| `G695` | PackingRemainingQtyInfo | SL đóng gói còn lại |
+| `G710` | ShipmentHist | **Lịch sử xuất hàng** |
+
+---
+
+## 14. 🧪 R-Series: Reliability Test Management (9 screens)
+
+> RTM = Quản lý kiểm tra độ tin cậy sản phẩm. Dùng cho bộ phận QC/R&D để theo dõi các bài test tuổi thọ, nhiệt độ, rung lắc...
+
+| TCode | Caption | Chức năng |
+|---|---|---|
+| `R110` | ReliabilityTestRequestInfo | **Tạo yêu cầu kiểm tra** |
+| `R210` | ReliabilityTestManagementInfo | **Quản lý bài test** |
+| `R220` | ReliabilityTestMeasureInfo | **Kết quả đo** |
+| `R230` | RTInfo | Thông tin RT chi tiết |
+
+---
+
+## 15. ⏰ W-Series: WorkTime Management (10 screens)
+
+| TCode | Caption | Chức năng |
+|---|---|---|
+| `W110` | WorkGroupManagement | **Quản lý nhóm làm việc** |
+| `W210` | DailyWorkTimeInfo | Thời gian làm việc ngày |
+| `W220` | NormalWorkTimeInfo | Giờ làm việc tiêu chuẩn |
+| `W230` | MonthWorkTimeInfo | Thời gian làm việc tháng |
+| `W786` | VVT_Log_Weight | **Log cân nặng** (cân điện tử) |
+| `W787` | VVT_Tracking_Weight | **Theo dõi cân nặng** |
+| `W788` | GetDataSortingProgram | Chương trình phân loại |
+
+---
+
+## 16. 📦 FG-Series: Finished Goods (26 screens)
+
+> Quản lý kho thành phẩm chi tiết, bao gồm BN, BG1, BG2, và HN.
+
+| TCode | Caption | Chức năng |
+|---|---|---|
+| `FG00` | Thành Phẩm Bắc Giang | **Main FG BG1** |
+| `FG01` | Tồn kho thành phẩm | **Tra cứu tồn kho FG** |
+| `FG02` | Tổng hợp kho thành phẩm | Báo cáo tổng hợp |
+| `FG04` | Lịch sử kho thành phẩm | Lịch sử XNK |
+| `FG05` | **Kho tự động Daifuku** | Giao diện ASRS |
+| `FG06` | Import and Export | Xuất nhập hàng |
+| `FG07` | Phiếu xuất kho | Chứng từ xuất |
+| `FG08` | Phiếu xuất NVL | Chứng từ xuất NVL |
+| `FG09` | Phiếu nhập kho NVL | Chứng từ nhập NVL |
+| `FG10` | **BN & BG combined** | Tổng hợp 2 nhà máy |
+| `FG11` | Tồn TP vượt trên 3 tháng | Cảnh báo hàng tồn lâu |
+| `FG13` | Nhập vị trí mã Lot TP | Quản lý vị trí |
+| `FG16` | FinishGood_StockIn_BG | Nhập kho BG |
+| `FG17` | FinishGoodStockOutBG | Xuất kho BG |
+| `FG19` | Invoice_FinishGood_BG | Invoice BG |
+| `FG20` | **Tổng hợp kho TP BN&BG** | Báo cáo tổng hợp |
+| `FG21` | Tồn hàng TP trên CellLine | Hàng chưa nhập kho |
+| `FG22` | Tồn kho NVL | Tra cứu NVL |
+| `FGBG2` | Thành Phẩm BG2 | **FG BG2** |
+
+---
+
+## 17. 🔩 Mold Management (20 tables)
+
+> Quản lý khuôn đúc/ép: vòng đời, vị trí, sản lượng, bảo trì, sửa chữa.
+
+| Table | Mô tả |
+|---|---|
+| `STB_MoldBasicInfo` | **Master** — Thông tin khuôn |
+| `STB_MoldTypeInfo` | Phân loại khuôn |
+| `STB_MoldLocation` | Vị trí khuôn |
+| `STB_MoldProdHist` | Lịch sử sản xuất |
+| `STB_MoldProdPlanDetail` | Kế hoạch SX khuôn |
+| `STB_MoldRepairHistory` | Lịch sử sửa chữa |
+| `STB_MoldMoveHist` | Lịch sử di chuyển |
+| `STB_MoldCheckSheetMaster` | Master check sheet |
+| `STB_MoldCheckSheetItem` | Hạng mục kiểm tra |
+| `STB_MoldMonthlySummary` | Báo cáo tháng |
+| `STB_MoldProductMapping` | Mapping khuôn ↔ sản phẩm |
+| `STB_MoldImprovementSheet` | Phiếu cải tiến |
+
+---
+
+## 18. ♻️ Scrap & Waste Management (27 tables)
+
+> Quản lý phế liệu, cân nặng, đơn giá phế từ sản xuất Cell/Module/Electrode.
+
+| Table | Mô tả |
+|---|---|
+| `STB_ElectrodeWasteInfoNew` | Phế điện cực (active) |
+| `STB_ElectrodeWastePriceNew` | **Đơn giá phế** điện cực |
+| `STB_WasteUnitPrice` | Đơn giá phế chung |
+| `STB_WasteWeight` | Cân nặng phế |
+| `STB_TypeWaste` | Phân loại phế |
+| `STB_SCRAPHISTORY` | Lịch sử phế Cell |
+| `STB_ScrapsByLot` | Phế theo Lot |
+| `STB_VN_SCRAPLOT` | Phế VN theo Lot |
+| `STB_VN_SCRAP_AFTERPRODUCTIONS` | Phế sau sản xuất |
+| `STB_VN_SCRAP_WEIGHSCALE_PRODUCTIONS` | Cân phế sản xuất |
+| `STB_AssemblyCellWeightInfo` | Cân nặng Cell |
+| `STB_MainAssemblePartWeight` | Cân linh kiện chính |
+| `Stb_vietnam_barcodeWeight` | Cân theo barcode |
+| `stb_moudleWeightNG` | Cân Module NG |
+
+---
+
+## 19. 📅 Calendar, Shift & Salary (8 tables)
+
+| Table | Mô tả |
+|---|---|
+| `STB_CalendarMaster` | Lịch nhà máy Master |
+| `STB_CalendarDetail` | Chi tiết lịch |
+| `STB_DayWorkCalendar` | Lịch làm việc ngày |
+| `STB_DayWorkCalendarDetail` | Chi tiết ca ngày |
+| `STB_VN_Shift` | Cấu hình ca VN |
+| `HN_ShiftPeriods` | Khoảng ca Hà Nam |
+| `STB_SalaryInfo` | Thông tin lương |
+
+---
+
+## 20. 🇻🇳 STB_VN_ Custom Vietnam Tables Summary
+
+> **112 bảng** prefix `STB_VN_` — Toàn bộ do team Vietnam tự phát triển thêm, KHÔNG nằm trong framework gốc HQ.
+
+### Phân nhóm chính:
+| Nhóm | Số bảng | Ví dụ |
+|---|---|---|
+| **FINISHGOODS** | 15+ | `STB_VN_FINISHGOODS`, `_BG`, `_BG2`, `_HN`, `_HY` |
+| **Machine/Equipment** | 8 | `STATUSMACHINES`, `LOCATIONMACHINES`, `KPIMACHINES` |
+| **Spare Parts** | 6 | `VN_SpecialSparePartInfo`, `VN_SparePartLineUsage` |
+| **HR/Employee** | 5 | `ATTENDANCE_TIME`, `Employees`, `EMPLOYEESTRANSFER` |
+| **Label/Stamp** | 6 | `STAMP_FOXCONN`, `STAMP_HONGKONG`, `STAMP_MODULE` |
+| **Scrap/Waste** | 4 | `SCRAPLOT`, `SCRAP_AFTERPRODUCTIONS` |
+| **Inventory** | 3 | `InventoryFirst`, `MODEL_INVENTORY` |
+| **Production** | 5 | `STAGE_PRODUCTION`, `PRODUCTION_ERROR` |
+| **Misc** | 60+ | `CATEGORIES`, `CLASSIFY`, `COUNTRY`, `ECUS`... |
+
+---
+
+*Cập nhật: 2026-06-18 — Deep discovery từ production DB (Phases 1-3)*
