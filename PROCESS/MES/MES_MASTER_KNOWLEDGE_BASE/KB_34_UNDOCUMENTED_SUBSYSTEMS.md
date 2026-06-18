@@ -634,4 +634,89 @@ SerialLen = 6                → LastSerialNo = 430
 
 ---
 
-*Cập nhật: 2026-06-18 — Deep discovery từ production DB (Phases 1-4) + SmartFramework architecture + M/T-series*
+## 25. 🌐 Web API / Mobile API Tables
+
+> Hệ thống MES Mobile và Web API sử dụng ASP.NET Identity framework.
+
+### ASP.NET Identity (MES Web):
+`AspNetUsers`, `AspNetRoles`, `AspNetUserRoles`, `AspNetUserClaims`, `AspNetRoleClaims`, `AspNetUserLogins`, `AspNetUserTokens`, `__EFMigrationsHistory`, `RefreshTokens`
+
+### VNTVN_ — MES Mobile API:
+| Table | Mô tả |
+|---|---|
+| `VNTVN_Users` | User mobile app |
+| `VNTVN_Roles` | Roles mobile |
+| `VNTVN_UserRoles/Claims/Logins/Tokens` | Auth mobile |
+| `VNTVN_CategoryMenus` | **Menu categories** |
+| `VNTVN_CategoryErrorRoutes` | **Phân loại lỗi theo route** |
+| `VNTVN_ChildCategoryErrorRoutes` | Child categories |
+| `VNTVN_ChildCategoryInCategoryErrors` | Category → Error mapping |
+| `VNTVN_AppConfigs` | App config |
+
+---
+
+## 26. 🌡️ Hà Nam Environment Monitoring
+
+| Table | Mô tả |
+|---|---|
+| `HN_EnvironmentLogs` | **★ Log nhiệt ẩm kế** |
+| `HN_Locations` | Vị trí đo |
+| `HN_ShiftPeriods` | Ca kíp HN |
+| `HN_EnvMonitorRoles` | Phân quyền giám sát |
+| `HN_AbnormalReports` | **Báo cáo bất thường** |
+
+---
+
+## 27. 📦 ASN (Advanced Shipment Notice)
+
+| Table | Mô tả |
+|---|---|
+| `OUT_ASN` | **★ Phiếu giao hàng đi** (SerialRule: 20/ngày verified) |
+| `OUT_RSLT` | Kết quả giao hàng |
+| `RCV_ASN` | **★ Phiếu nhận hàng** (SerialRule: 264/ngày verified) |
+| `RCV_RSLT` | Kết quả nhận hàng |
+
+---
+
+## 28. 📊 Production Planning (20 tables)
+
+### ESM Bridge (Groupware→MES):
+| Table | Mô tả |
+|---|---|
+| `ESM_DayProdPlan` | **★ Kế hoạch SX ngày từ GW** |
+| `ESM_DayProdPlanClose` | Đóng kế hoạch |
+| `ESM_DayProdPlanError` | Lỗi đẩy kế hoạch |
+| `ESM_DayProdPlanBatchLog` | Log batch |
+| `ESM_DirectDayProdPlan/Head` | Kế hoạch trực tiếp |
+
+### MES Core Planning:
+| Table | Mô tả |
+|---|---|
+| `STB_DayProdPlan` | **★ DPP master** (trigger TR_DayProdPlan_Close) |
+| `STB_MonthProdPlan` | Kế hoạch tháng |
+| `STB_ProductionOrderInfo` | **★ PO master** |
+| `STB_ProductionOrderRouting` | PO routing |
+| `STB_ProductionOrderBatchInfo` | PO batch |
+| `STB_ProductionOrderBom` | PO BOM |
+| `STB_ProductionOrderSalesInfo` | PO sales link |
+| `MEDIUM_PLAN/MEDIUM_PROD` | Kế hoạch trung hạn |
+
+---
+
+## 29. 🔌 MongoDB Integration & Special Systems
+
+| Table | Mô tả |
+|---|---|
+| `MongoToMesDefect` | **MongoDB → MES defect sync** |
+| `MongoToMesPerformance` | MongoDB → MES performance |
+| `VPC_Performance` | VinaEnesol PCBA performance |
+| `PopToDryProcess` | POP → Dry Process |
+| `LUNAR_TO_SOLAR` | Chuyển đổi lịch âm→dương |
+| `SortingDataImportExcel` | Import data từ Excel sorting |
+| `PublicCodeAndPartNo` | Mapping PublicCode↔PartNo |
+| `Tbl_User_MESMobile` | User MES Mobile |
+
+---
+
+*Cập nhật: 2026-06-18 — Deep discovery Phases 1-11 (29 sections, 700+ lines)*
+
