@@ -219,7 +219,7 @@
 | # | Triệu chứng | Nguyên nhân | Fix |
 |---|---|---|---|
 | 1 | In tem PAC/DigiKey/Phoenix trống | Label spec chưa config hoặc LabelType sai | Kiểm tra `STB_ModelLabelInfo` + `STB_PackingLabelSpec` |
-| 2 | Tem Phoenix Contact sai mã khách hàng | Bảng `STB_PhoenixContactLabelInfo` thiếu mapping | INSERT mapping customer code |
+| 2 | Tem Phoenix Contact sai mã khách hàng | Config customer mapping thiếu | Kiểm tra `STB_PackingLabelSpec` (⚠️ `STB_PhoenixContactLabelInfo` KHÔNG tồn tại trong DB — data lưu trong PackingLabelSpec hoặc hardcode SP) |
 
 > 🔗 Chi tiết: [KB_04 §6.16-6.19](KB_04_DONG_GOI_IN_TEM.md)
 
@@ -472,7 +472,7 @@ COMMIT TRANSACTION;
 
 | # | Triệu chứng | Nguyên nhân | Fix |
 |---|---|---|---|
-| 1 | Tem Bloom/Nordex in sai format | Label template không match model mới | Kiểm tra `usp_VVT_PrintLabel_Bloom_iud` / `usp_VVT_NordexPackingLabel_iud` |
+| 1 | Tem Bloom/Nordex in sai format | Label template không match model mới | Kiểm tra `usp_VN_BloomBoxLabelPrintHist_iud` / `usp_NordexPackingLabelPrintingHist_get` |
 
 ---
 
@@ -494,7 +494,7 @@ COMMIT TRANSACTION;
 
 | # | Triệu chứng | Nguyên nhân | Fix |
 |---|---|---|---|
-| 1 | Tài khoản bị khóa | Nhập sai mật khẩu quá số lần cho phép | Reset tại Z410 hoặc SQL: `UPDATE SmartFramework.dbo.STB_UserInfo SET IsLocked=0 WHERE UserID='mã'` |
+| 1 | Tài khoản bị khóa | Nhập sai mật khẩu quá số lần cho phép | Reset tại Z410 hoặc SQL: `UPDATE SmartFramework.dbo.STB_UserInfo SET AllowFlag=1 WHERE UserID='mã'` (⚠️ Cột là `AllowFlag`, KHÔNG có `IsLocked`) |
 | 2 | User không thấy menu | Chưa gán quyền tại Z220 (UserTypePermission) | Vào Z220 → tick quyền cho UserType |
 
 > 🔗 Chi tiết: [KB_06 §9.3](KB_06_MASTER_DATA_TOOLS.md)
