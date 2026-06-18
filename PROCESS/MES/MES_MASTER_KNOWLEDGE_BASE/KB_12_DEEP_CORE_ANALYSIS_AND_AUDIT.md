@@ -25,7 +25,7 @@ Hệ thống tự động tìm công đoạn `N+1` từ `RouteIndex` chứ khôn
 Ví dụ B597 có 3 cổng chặn cứng từ SP `usp_Vietnam_RawMaterialInputHist_uid`:
 1.  Check HOLD.
 2.  Check Expiry Date (tính bằng `MMExtInt01`).
-3.  Check BOM ngầm trong `stb_vvt_materialbo`.
+3.  Check BOM ngầm trong `stb_vvt_materialbom`.
 
 ### Triết lý 4: "Tồn kho được tính trong lúc chạy, không phải lưu sẵn"
 SP `usp_vvt_MaterialLotInfo_get` (Màn F721) tính hạn sử dụng real-time mỗi lần load, thay vì lưu vào field `ExpiredDate` cố định. Cảnh báo Warning sẽ tự bật (15 ngày cho cuộn, 30 ngày cho vật tư thường).
