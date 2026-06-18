@@ -21,14 +21,15 @@
 | **P** | **29** | **Nhân sự + Sự kiện + Điện nước** | **→ §2** |
 | K | 28 | Korea-style screens | KB_03 |
 | **V** | **26** | **Vietnam Mobile/PDA Menu** | **→ §3** |
-| **L** | **25** | **Label / Location** | **→ §4** |
-| **G** | **23** | **Groupware bridge** | **→ §5** |
+| **L** | **25** | **Support Management (SPT)** | **→ §12** |
+| **G** | **23** | **Product Stock & Shipment** | **→ §13** |
 | **E** | **23** | **Electrode** | KB_05 |
-| **M** | **22** | **Machine / Module** | **→ §6** |
-| **T** | **13** | **Test / Template** | **→ §7** |
-| **S** | **12** | **SmartFactory IoT** | **→ §8** |
-| **W** | **10** | **Web / Warehouse** | **→ §9** |
-| **R** | **9** | **Return / Report** | **→ §10** |
+| **M** | **22** | **MEA (Electrode Analysis)** | **→ §23** |
+| **T** | **13** | **Cost Management** | **→ §24** |
+| **S** | **12** | **SmartFactory IoT** | **→ §9** |
+| **W** | **10** | **WorkTime Management** | **→ §15** |
+| **R** | **9** | **Reliability Testing (RTM)** | **→ §14** |
+| **FG** | **26** | **Finished Goods** | **→ §16** |
 | D | 6 | VinaEnesol | KB_25 |
 | I/Y | 8 | Misc | — |
 
@@ -537,5 +538,42 @@ SerialLen = 6                → LastSerialNo = 430
 
 ---
 
-*Cập nhật: 2026-06-18 — Deep discovery từ production DB (Phases 1-3) + SmartFramework architecture*
+## 23. 🔬 M-Series: MEA — Electrode Analysis & Measurement (22 screens)
 
+> MEA = Measurement of Electrode Assembly. Bộ phân tích và đo lường điện cực chuyên sâu.
+
+| TCode | Caption | Chức năng |
+|---|---|---|
+| `M130` | RawMaterialInput | NVL cấp vào MEA |
+| `M150` | MEARouteInspectionHistory | Lịch sử kiểm tra route |
+| `M160` | MEAElectrodeMeasureHist | **Lịch sử đo điện cực** |
+| `M170` | MEAProdRouteInspectionHistory | Lịch sử kiểm tra route SX |
+| `M180` | MEARawMaterialInputHistForSample | NVL sample input |
+| `M190` | MEARawMaterialInputFullHist | Full NVL history |
+| `M195` | MEAElectrodeMixingHist | **Lịch sử mixing điện cực** |
+| `M210` | MEA_SetListForOqcLotManagement | OQC Lot MEA |
+| `M220` | MEA_MaterialOqcInfoSampleManagement | OQC Sample MEA |
+| `M310` | MEAProductStock | **Tồn kho MEA** |
+| `M410` | MEARawMaterialStock | Tồn NVL MEA |
+| `M910` | MEAClassInfo | Phân loại MEA |
+| `M920` | MEARawMaterialInfo | Thông tin NVL MEA |
+| `M930` | MEABlueprintInfo | **Bản vẽ MEA** |
+
+---
+
+## 24. 💰 T-Series: Cost Management (13 screens)
+
+> Quản lý giá thành sản xuất theo công đoạn (Manufacturing Cost by Route).
+
+| TCode | Caption | Chức năng |
+|---|---|---|
+| `T110` | ManufacturingCostByRouteInfo | **Giá thành theo route** |
+| `T120` | ManufacturingCostApplyInfo | Áp dụng giá thành |
+| `T130` | ManufacturingCostExtend | Giá thành mở rộng |
+| `T742` | SlittingLotMaterial | NVL Slitting (cross-ref KB_05) |
+| `T888` | Thông Tin Phế | **Quản lý phế liệu** |
+| `T990` | PageUrl | URL cấu hình page |
+
+---
+
+*Cập nhật: 2026-06-18 — Deep discovery từ production DB (Phases 1-4) + SmartFramework architecture + M/T-series*
