@@ -497,5 +497,35 @@ SELECT Year, YearCode FROM STB_YearInfo WHERE Year >= 2024
 
 ---
 
-*Cập nhật: 2026-06-18*
-*Nguồn: Phân tích trực tiếp từ code SQL Server*
+## 12. 🔥 Live SP Call Frequency (Verified 2026-06-18)
+
+> Dữ liệu từ `STB_ProcedureLog` — log mọi SP execution. Đây là **bản đồ nhiệt thực tế** của hệ thống.
+
+### Top 7 SP — 24h qua:
+| # | SP | Calls/24h | Mô tả |
+|---|---|---|---|
+| 1 | `usp_DoProcessProdGRMaterialByOne` | **2,421** | **★ GR material** — Nhập kho NVL từng cái |
+| 2 | `usp_DoProcessProdRouteHistForBarcode2` | **1,616** | **★ Scan barcode route 2** (BE+ gates) |
+| 3 | `usp_DoProcessProdRouteHistForBarcode1` | **1,616** | **★ Scan barcode route 1** (standard gates) |
+| 4 | `usp_DoProcessProdRouteHist` | **1,580** | **★ Core route** (SP #1 in this doc) |
+| 5 | `usp_DoProcessProdPackingByOne_VNT` | **1,345** | **★ Packing** per unit |
+| 6 | `usp_DoFixMaterialDoc` | 576 | Fix material document |
+| 7 | `usp_DoProcessTerminalData` | 269 | Terminal (POP) data |
+
+> [!IMPORTANT]
+> **Barcode scanning chiếm 4,812 calls/ngày** (route1 + route2 + routeHist). Bất kỳ thay đổi nào trên 3 SP này sẽ ảnh hưởng tức thì đến toàn bộ xưởng.
+
+### ProcedureLog Schema:
+| Column | Type | Mô tả |
+|---|---|---|
+| `Idx` | bigint | Auto-increment (19M+ records total) |
+| `ProcedureName` | nvarchar | SP name executed |
+| `VariableName` | nvarchar | Parameter name logged |
+| `VariableValue` | nvarchar | Parameter value logged |
+| `CreateDateTime` | datetime | Timestamp |
+
+---
+
+*Cập nhật: 2026-06-18 — Live frequency data + ProcedureLog schema*
+*Nguồn: Phân tích trực tiếp từ code SQL Server + STB_ProcedureLog live data*
+
