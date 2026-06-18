@@ -618,6 +618,49 @@ Groupware VINA_DOCUMENT_*
 
 **Tính ca tự động:** Function `fnGetJobDateShiftTime(DateTime, CompanyCode, WorkCenter, Line, Route, NULL)` → trả về `YYYYMMDD` + `ShiftCode` + `TimeCode`. SP `usp_DoProcessProdRouteHist` gọi function này mỗi lần quét barcode → **OP không chọn ca, hệ thống tự tính.**
 
+### 1.18 Vision & XRF Inspection (S-series Deep)
+
+| TCode | Tên | SP chính | Chức năng |
+|---|---|---|---|
+| S212 | Vision Group Inspection | `usp_VisionGroupInspectionInfo_get` | Kết quả kiểm tra thị giác (camera AI) — report only |
+| S213 | Vision Inspection Result | `usp_VisionInspectionResult_get` | Chi tiết kết quả Vision theo lô |
+| S215 | XRF Inspection | `usp_XRFInspectionInfo_get` | Kết quả kiểm tra XRF (X-Ray Fluorescence) — thành phần hóa học |
+
+> 💡 Vision + XRF = thiết bị kiểm tra tự động (không cần OP nhập tay). Data ghi trực tiếp từ máy vào DB.
+
+### 1.19 Reliability Test (R-series)
+
+> Kiểm tra độ tin cậy sản phẩm — chạy test dài hạn (nhiệt độ, độ ẩm, tuổi thọ).
+
+```
+R110 (Yêu cầu test)    →    R210 (Quản lý test)    →    R220 (Nhập kết quả đo)
+┌───────────────┐           ┌───────────────┐           ┌───────────────┐
+│ Tạo yêu cầu   │           │ Confirm/Cancel │           │ Nhập giá trị  │
+│ + Chọn mẫu    │──────────▶│ quản lý tiến độ│──────────▶│ đo theo time  │
+│ _iud + Sample  │           │ DoConfirmRT    │           │ MeasureInfo   │
+│ Info_iud       │           │ DoCancelRT     │           │ _iud          │
+└───────────────┘           └───────────────┘           └───────────────┘
+                                                              │
+                                                        R230 (RT Master)
+                                                        usp_RTInfo_iud
+                                                        usp_DoMakeNewRTSeq
+```
+
+### 1.20 FG Product Management (G-series) & Daifuku Warehouse
+
+| TCode | Tên | SP chính | Chức năng |
+|---|---|---|---|
+| G100/G102 | Sales GI | `usp_SalesGI_*` | Xuất kho bán hàng |
+| G610 | Product Stock | `usp_ProductStock_get` | Tồn kho thành phẩm |
+| G630 | Transform Model | `usp_TransformModel_*` | Chuyển đổi model sản phẩm |
+| **G660** | **Daifuku Warehouse** | `usp_DaifukuWarehouse_iud/get/Del` | **Robot kho tự động Daifuku** |
+| G661 | Warehouse Receipt | `usp_WarehouseReceipt_get` | Nhập kho robot |
+| G662 | Warehouse Delivery | `usp_WarehouseDelivery_get` | Xuất kho robot |
+| G680 | Product Stock Upload | `usp_ProductStockInfo_*` | Upload tồn kho (Agent Job snapshot) |
+| G710 | Shipment History | `usp_ShipmentHist_*` | Lịch sử xuất hàng |
+
+> 💡 **Daifuku** = hệ thống kho tự động robot Nhật Bản. MES gửi lệnh nhập/xuất → Daifuku robot tự lấy hàng. `usp_WarehouseGrid_iud` = quản lý vị trí (slot) trong kho robot.
+
 ---
 ### 1.14 Bản Đồ TCode Prefix (Phân Loại 1,166 Màn Hình)
 
