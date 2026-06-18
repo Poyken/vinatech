@@ -1713,7 +1713,83 @@ $$\text{CurrentQty} = \text{LengthSlitting} \times \left(\frac{\text{WidthSlitti
        - `V-24_NE8_BG`: Curling_Lỗi mẻ miệng curling (Curling_Deformation around mouth)
 *   **Chi tiết nghiệp vụ:** Xem tại [fix_b530_disable_defects_BG.sql](../sql/scripts/fix_b530_disable_defects_BG.sql) và [fix_b530_add_defects_BG.sql](../sql/scripts/fix_b530_add_defects_BG.sql).
 
----
+### 🔬 Phân Tích Core Engine: `usp_DoProcessProdRouteHist` (406 dòng)
+
+> **Đây là SP "tim đập" của toàn bộ hệ thống MES.** Mỗi lần OP quét barcode tại bất kỳ công đoạn nào → SP này được gọi.
+
+#### Tham số đầu vào (20 params)
+
+| Param | Kiểu | Ý nghĩa |
+|---|---|---|
+| `@pPONo` | VARCHAR(20) | Mã lệnh sản xuất |
+| `@pLineCode` | VARCHAR(20) | Mã Line (Cell-01, Module-03...) |
+| `@pRouteCode` | VARCHAR(20) | Mã công đoạn (V-22, V-28...) |
+| `@pControlNo` | VARCHAR(20) | Mã kiểm soát (= Barcode mapping) |
+| `@pProdQty` | NUMERIC(20,5) | Số lượng (default = 1) |
+| `@pProcessDateTime` | DATETIME | Thời điểm quét |
+| `@pWorkerCode` | VARCHAR(20) | Mã nhân viên |
+| `@pMachineCode` | VARCHAR(20) | Mã máy |
+| `@pIsCheckBefRouteProdQty` | BIT | Có check SL công đoạn trước không |
+| `@pProdRouteHistNo` | VARCHAR(20) **OUTPUT** | Mã lịch sử routing (trả về) |
+
+#### Luồng xử lý 11 bước
+
+```
+Bước 1: Đọc PO info (CompanyCode, WorkCenterCode, MaterialCode, RouteIndex)
+         FROM STB_ProductionOrderRouting + STB_ProductionOrderInfo
+                    ↓
+Bước 2: Tính Ca/Ngày tự động
+         fnGetJobDateShiftTime(@ProcessDateTime) → @JobDate, @ShiftCode, @TimeCode
+                    ↓
+Bước 3: GATE — Check Barcode đã nhập chưa (IsLineInput)
+         IF IsInputRoute=0 AND IsLineInput=0 → ERROR "Barcode chưa được đưa vào"
+                    ↓
+Bước 4: GATE — Check SL công đoạn trước (nếu IsCheckBefRouteProdQty=1)
+         CurrentRouteQty + ProdQty > BefRouteQty → ERROR "Vượt SL công đoạn trước"
+         ⚠️ BYPASS: Route E-28, V-28, V-28_BG, VE10, E-33, E-34, E-29, EM-03, M-06
+                    ↓
+Bước 5: Kiểm tra trùng lặp (ProdRouteHistNo đã tồn tại?)
+         Tìm theo: PONo + LineCode + RouteCode + ControlNo + JobDate + ShiftCode + TimeCode
+                    ↓
+Bước 6A (INSERT mới): Tạo Serial → Log → Update LineRouteMapping → INSERT ProdRouteHist
+         EXEC SmartFramework.dbo.usp_DoCreateSerial → @ProdRouteHistNo
+         INSERT INTO STB_ProcedureLog (ghi camera giám sát)
+         UPDATE STB_LineRouteMapping (cập nhật Line đang chạy Route nào)
+         INSERT INTO STB_ProdRouteHist (18 columns)
+                    ↓
+Bước 6B (UPDATE cộng dồn): ProdQty = ProdQty + @ProdQty
+                    ↓
+Bước 7: Tổng hợp sản lượng → EXEC usp_DoProcessProdRouteSummary
+                    ↓
+Bước 8: ★ BACKFLUSH — Trừ kho NVL theo BOM
+         EXEC usp_DoProcessProdGIMaterialByBOM (truyền PONo, MaterialCode, ProdQty)
+                    ↓
+Bước 9: Nếu IsInputRoute=1 (công đoạn đầu):
+         UPDATE STB_SetInfo SET IsLineInput=1, InputDateTime, InputLineCode
+         + EXEC usp_VN_UpdateSpecialSparePartLot (DinhManh 2025-06-12)
+                    ↓
+Bước 10: Nếu IsOutputRoute=1 (công đoạn cuối):
+         UPDATE STB_ProductionOrderInfo SET ProdFinishQty += @ProdQty
+         UPDATE STB_SetInfo SET IsProdFinish=1, ProdFinishDateTime
+                    ↓
+Bước 11: Nhập kho tự động khi hoàn thành
+         EXEC usp_DoProcessProdGRMaterialByOne (tạo Lot nhập kho)
+         EXEC usp_DoFinishMaterialDoc (đóng phiếu nhập)
+         EXEC usp_DoFixMaterialDoc (xác nhận phiếu)
+```
+
+#### Call Chain — 6 Sub-SPs được gọi
+
+| Sub-SP | Khi nào gọi | Tác động |
+|---|---|---|
+| `usp_DoAddProdRouteHistByWorkerList` | WorkerCode ≠ '' | Ghi nhân viên vào lịch sử |
+| `usp_DoProcessProdRouteSummary` | Luôn gọi | Tổng hợp SL theo Line/Route/Ca/Ngày |
+| `usp_DoProcessProdGIMaterialByBOM` | Luôn gọi | **BACKFLUSH** — trừ kho NVL tự động theo BOM |
+| `usp_VN_UpdateSpecialSparePartLot` | IsInputRoute + chưa nhập | Cập nhật Lot phụ tùng đặc biệt |
+| `usp_DoProcessProdGRMaterialByOne` | IsOutputRoute=1 (cuối) | Tạo phiếu nhập kho thành phẩm |
+| `usp_DoFinishMaterialDoc` + `usp_DoFixMaterialDoc` | IsOutputRoute=1 (cuối) | Đóng + xác nhận phiếu nhập |
+
+> ⚠️ **Rủi ro:** SP này KHÔNG có `BEGIN TRANSACTION`. Nếu crash giữa chừng (ví dụ sau Bước 8 nhưng trước Bước 10), NVL đã bị trừ nhưng thành phẩm chưa được ghi nhận → data lệch.
 
 ---
 
