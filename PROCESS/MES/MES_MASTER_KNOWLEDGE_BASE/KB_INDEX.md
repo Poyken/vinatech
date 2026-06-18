@@ -1,6 +1,6 @@
 # 🗂️ NAIS MES — Knowledge Base Index
 
-> **Cập nhật:** 2026-06-12 | **Tổng hợp từ:** Lỗi thực tế + Docx gốc (đã extract toàn bộ) + Xác minh DB trực tiếp + Phân tích 41 SP + Deep Core Analysis (2026-04-18) + DB Audit (2026-05-05) + Electrode Weighing (2026-05-26) + Consolidation (2026-06-04) + **System Discovery & Gap Analysis (2026-06-10)**
+> **Cập nhật:** 2026-06-18 | **Tổng hợp từ:** Lỗi thực tế + Docx gốc + Xác minh DB trực tiếp + Deep Core Analysis + DB Audit + Consolidation + **Deep Dive Phase 1-7 (2026-06-18): 19 DBs verified, 6,648 tables, 3,639 SPs mapped**
 > **Cách dùng:** 
 > 1. Đọc file INDEX này trước để có cái nhìn tổng quan.
 > 2. **Tìm kiếm siêu tốc theo màn hình:** Nhấn `Ctrl + Shift + F` nhập `## Mã_Màn_Hình` (Ví dụ: `## C512`, `## B597`) để chuyển trực tiếp đến cẩm nang sửa lỗi theo Screen ID.
@@ -292,4 +292,4 @@ g (Solum) | u2014 | **HN553/HN711** | u2014 | KB_04 |
 > 📌 **Bảng DB & SP quan trọng:** Xem chi tiết tại [KNOWLEDGE.md](../AI_AGENT_CONFIG/KNOWLEDGE.md) §1-2 và [KB_19_ALL_DATABASES_MAP.md](KB_19_ALL_DATABASES_MAP.md).
 > 🛡️ **Nguyên tắc sửa DB:** Xem tại [RULES.md](../AI_AGENT_CONFIG/RULES.md).
 
-*Cập nhật: 2026-06-14 | Tái cấu trúc tinh gọn tài liệu: Gộp toàn bộ 9 tệp tin trùng lặp nội dung*
+*Cập nhật: 2026-06-18 | Deep Dive Phase 1-7: 23 files, 1,066 KB total. Verified 19 DBs (6,648 tables), 3,639 SPs, 106 Functions, 33 Triggers across SmartFactoryV2 + SmartFramework + 17 satellite DBs.*
