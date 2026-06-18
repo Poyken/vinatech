@@ -186,7 +186,7 @@ ORDER BY SO.ObjectType
 | `usp_DoCancelFinishMaterialDoc` | Hủy đóng phiếu |
 | `usp_PDADoPicking` | Picking bằng PDA |
 | `usp_PDADoPickingCancel` | Hủy picking |
-| `usp_DoUploadMaterialDocToERP_DL` | **★ Đẩy lên ERP** (Duzon Link) |
+| `usp_DoUploadMaterialDocToERP_DL` | **★ Đẩy lên ERP** (Duzon Link) — ⚠️ SP registered in ScreenObjects nhưng KHÔNG tồn tại trong SmartFactoryV2 (có thể linked server/external) |
 
 ---
 
