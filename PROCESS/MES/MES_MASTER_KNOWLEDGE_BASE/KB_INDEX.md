@@ -128,6 +128,16 @@
 | **Cross-Database Links (869 SPs liên DB)** | KB_10 § 1.5 |
 | **33 Triggers — Logic ẩn tự chạy** | KB_10 § 1.6 |
 | **Bước 0: Tra Screen→SP mapping (trước khi debug)** | KB_14 § 2 |
+| **OQC Pipeline (C451→C530→C531→C560)** | KB_10 § 1.10 |
+| **Electrode Manufacturing (B802→F743→F744→F745→F748)** | KB_10 § 1.11 |
+| **Customer Label (Bloom/Nordex/PAC/DigiKey/Phoenix)** | KB_10 § 1.12 |
+| **Subsystem Map (Groupware 383t, POP 43t, SSO 3t, Andon 3t)** | KB_10 § 1.13 |
+| **20 DB Ecosystem Map** | KB_10 § 1.7 |
+| **Agent Jobs (~40 daily, BG↔BN sync)** | KB_10 § 1.8 |
+| **SP Naming Convention (594 _get, 347 _iud, 380 Do*, 641 VN custom)** | KB_10 § 1.9 |
+| **Top 15 bảng lớn nhất (398M ESR, 64M Stock, 60M QC)** | KB_12 § 8.1 |
+| **SP Coding Patterns (1.5% TRAN, 550 CURSOR, 520 OPENXML)** | KB_12 § 8.2 |
+| **27 FK trên 994 tables — "Trust the SP" architecture** | KB_12 § 8.3 |
 | Quick Start checklist model mới (đầy đủ 7 bước) | KB_06 § 9.1 |
 | Checklist onboard user mới | KB_06 § 9.2 |
 | Thiết lập Line/Route B210-B240 | KB_06 § 10 |

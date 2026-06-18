@@ -468,6 +468,117 @@ ORDER BY PostTime DESC
 
 > **Columns:** LogID, EventType, PostTime, LoginName, UserName, DatabaseName, ObjectName, CommandText (full SQL), EventXML, IpAddr
 
+### 1.10 OQC Pipeline (Luồng Kiểm Tra Chất Lượng Thành Phẩm)
+
+> OQC = Outgoing Quality Control — kiểm tra SP trước khi xuất kho cho khách hàng.
+
+```
+C451 (PQC InProcess)     C560 (FG Receipt)      C530 (OQC Sample)        C531 (OQC Packing)
+┌─────────────────┐     ┌──────────────────┐    ┌──────────────────┐     ┌──────────────────┐
+│ Quét barcode SP  │     │ Nhập sản lượng   │    │ Đo 20 params     │     │ Gộp box OQC      │
+│                  │────▶│ vào kho FG       │───▶│ Pass/Fail/Hold   │────▶│ In tem OQC       │
+│ usp_DoFinish     │     │ usp_Products     │    │ usp_DoUpdateMat  │     │ usp_DoProcess    │
+│ CommInspDoc_VNT  │     │ ReceiptHist_iud  │    │ QcInfo_Success   │     │ OQCrefer_VVT     │
+└─────────────────┘     └──────────────────┘    └──────────────────┘     └──────────────────┘
+                                                         │
+                                                   C540 (OQC History)
+                                                ┌──────────────────┐
+                                                │ Lịch sử kết quả  │
+                                                │ usp_ProdInspec   │
+                                                │ tionHist_get     │
+                                                └──────────────────┘
+```
+
+| TCode | Tên | SPs chính | Chức năng |
+|---|---|---|---|
+| C451 | PQC In-Process | `usp_DoFinishCommInspDoc_VNT`, `usp_DoAddCommInspMeasureHistForBarcode` | Nhập kết quả kiểm tra công đoạn |
+| C530 | OQC Sample Management | `usp_DoUpdateMaterialQcInfo_Success/Fail/Hold/Complete`, `usp_DoMakeMaterialQcSampleResult` | **Core OQC:** Đo mẫu, nhập 20 params, quyết định Pass/Fail |
+| C531 | OQC Packing | `usp_DoProcessOQCrefer_VVT`, `usp_DoProcessProdPackingByOne_VNT` | Gộp box OQC + in tem OQC |
+| C540 | OQC History | `usp_ProdInspectionHist_get` | Xem lịch sử kết quả OQC |
+| C560 | FG Receipt | `usp_ProductsReceiptHist_iud` | Nhập sản lượng thành phẩm vào kho FG |
+
+> 💡 **Kết quả OQC ảnh hưởng trực tiếp:** Pass → FG Stock-In cho phép xuất kho. Fail → Hold. Rescreening = kiểm tra lại lần 2.
+
+### 1.11 Electrode Manufacturing Flow (Sản Xuất Điện Cực)
+
+> Điện cực = vật liệu quan trọng nhất trong sản xuất tụ điện. Lỗi điện cực = lỗi toàn bộ sản phẩm.
+
+```
+B802 (Nhập SX)         F743 (Slitting)       F744 (Width)        F745 (Merge Lot)       F748 (Transfer WH)
+┌──────────────┐      ┌───────────────┐     ┌──────────────┐    ┌───────────────┐      ┌───────────────┐
+│ Quét barcode  │      │ Chia cuộn     │     │ Kiểm tra     │    │ Gộp các cuộn  │      │ Chuyển kho    │
+│ cuộn điện cực │─────▶│ (Split Lot)   │────▶│ chiều rộng   │───▶│ nhỏ thành     │─────▶│ sau QC Pass   │
+│               │      │ usp_DoSplit   │     │ Width Test   │    │ cuộn lớn      │      │               │
+│ usp_Vietnam_  │      │ LotSlitting   │     │ usp_Width    │    │ usp_Vietnam_  │      │ usp_Update_   │
+│ Electrode     │      │               │     │ Slitting_uid │    │ DoProcessMat  │      │ POIL_Lot_     │
+│ ProdRouteHist │      │               │     │              │    │ PackingVVT    │      │ Transfer_WH   │
+│ _get          │      │               │     │              │    │               │      │               │
+└──────────────┘      └───────────────┘     └──────────────┘    └───────────────┘      └───────────────┘
+                              │
+                        F746 (History)
+                      ┌───────────────┐
+                      │ Xem lịch sử   │
+                      │ Parent→Child   │
+                      │ chia cuộn      │
+                      └───────────────┘
+```
+
+| TCode | SPs chính | Mục đích |
+|---|---|---|
+| B802 | `usp_Vietnam_ElectrodeProdRouteHist_get` | Nhập SX Electrode vào routing |
+| F743 | `usp_DoSlittingLot`, `usp_DoSplitLot`, `usp_ChotSlittingLot` | **Core:** Chia cuộn lớn → nhiều cuộn nhỏ |
+| F744 | `usp_WidthSlitting_uid` | Kiểm tra chiều rộng sau slitting |
+| F745 | `usp_Vietnam_DoProcessMaterialPacking_VVT` | Gộp các cuộn nhỏ thành batch lớn |
+| F746 | `usp_GetParentSplitedMaterialLotInfo`, `usp_GetChildSplitedMaterialLotInfo` | Truy vết Parent→Child cuộn |
+| F748 | `usp_Update_POIL_Lot_Transfer_WarehouseCode` | Chuyển kho sau QC |
+
+> ⚠️ **Bảng key Electrode:** `STB_ElectrodeCoatingInfo`, `STB_ElectrodeSlittingResult`, `STB_ElectrodeRollPressingInfo`, `STB_ElectrodeWasteInfoNew`.
+
+### 1.12 Customer Label Pipeline (In Tem Khách Hàng Chuyên Biệt)
+
+> Mỗi khách hàng lớn có luồng in tem riêng, với template XML riêng và SP riêng.
+
+| TCode | Khách hàng | SP chính | Đặc biệt |
+|---|---|---|---|
+| **K198** | Bloom Energy | `usp_DoPrintBloomEnergySL7Label` | Barcode SL-7 format riêng |
+| **K199** | Nordex | `usp_NordexPackingLabelPrintingHist_get` | Packing label chuyên dụng |
+| **B754** | PAC | `usp_VN_PACBoxLabelPrintHist_iud`, `usp_PACBoxLabalInfo_get_Vietnam` | Tem thùng KH PAC |
+| **B755** | PAC (History) | `usp_PACBoxLabelPrintHist_get` | Lịch sử in tem PAC |
+| **B756** | PAC (Carton) | `usp_PACLabelCartonWeight_get_Vietnam` | Tem carton + cân nặng |
+| **B757** | DigiKey | `usp_VN_DigiKeyLabelInnerPrintHist_iud`, `usp_DigiKeyLabelInner_get_Vietnam` | Tem inner DigiKey |
+| **B758** | DigiKey (Package) | `usp_VN_DigiKeySingleLevelPackagePrintHist_iud` | Single-level package DigiKey |
+| **B790** | Phoenix Contact | `usp_Vietnam_PhoenixContactLabelPrint_get` | Tem Phoenix Contact |
+
+> 💡 Template XML lưu trong `SmartFramework.dbo.STB_LabelInfo`, mỗi khách có layout riêng. Khi thêm khách hàng mới → phải: (1) Tạo template XML, (2) Tạo SP in tem, (3) Cấu hình ScreenObjects.
+
+### 1.13 Subsystem Map (Hệ Thống Phụ Trợ)
+
+| Subsystem | DB | Tables | Chức năng | Liên kết MES |
+|---|---|---|---|---|
+| **Groupware** | VINATECH_GROUP | **383** | Document workflow, HR, tuyển dụng, đánh giá, bán hàng | `VINA_DOCUMENT_*` → tờ trình, duyệt, kế hoạch SX |
+| **POP Kiosk** | VINATECH_POP | 43 | Kiosk xưởng: quét NVL, in tem, hiển thị sản lượng | `VINA_PC_MAC` map IP→Line, gọi SP SmartFactoryV2 |
+| **RESTful/SSO** | VINATECH_RESTFUL | 3 | SSO: `VINA_SSO_TOKEN`, `VINA_SSO_LOGIN`, `VINA_ALLOWED_IP` | Xác thực user login cho tất cả hệ thống |
+| **WebSocket** | VINATECH_WEBSOCKET | 7 | Push notification real-time | Alert sản xuất, cảnh báo lỗi |
+| **Andon** | AndonDB | 3 | Cảnh báo lỗi Line: `STB_LineSituation_VVT` (error/status) | Hiển thị trên TV/dashboard sản xuất |
+| **CMS** | WCMS_Standard | ? | Cash Management — chuyển tiền ngân hàng | Linked Server `CMS_VINA_LINK` |
+| **Enesol/HY** | SmartFactoryV2 (shared) | 3 riêng + shared | Sản phẩm pin Enesol, screens D-series (D000→D110) | Dùng chung DB nhưng có UserType `EnesolProd*` riêng |
+| **ERP** | NEOE, erpdb | ? | Douzone ERP: Master Data, PO, Invoice, GL | Linked Server `ERPSVR` (110.11.27.7:2433) |
+| **BI/Cube** | DZICUBE | ? | OLAP Cube cho báo cáo, dashboard BI | Aggregation từ SmartFactoryV2 |
+| **Spreadsheet** | VINATECH_SPREADSHEET | ? | Spreadsheet nội bộ (kiểu Google Sheets) | Import/Export data MES |
+
+#### Groupware Document Types (Ví dụ luồng phiếu)
+
+```
+Groupware VINA_DOCUMENT_*
+├── VINA_DOCUMENT_APPROVAL → Duyệt tờ trình/đề xuất
+├── VINA_DOCUMENT_PURCHASE_REQUEST → Yêu cầu mua hàng → ERP PO
+├── VINA_DOCUMENT_SALES_ORDER → Đơn hàng → Production Plan
+├── VINA_DOCUMENT_SAMPLE_REQUEST → Yêu cầu mẫu QC
+├── VINA_DOCUMENT_SERVICE_REQUEST → Yêu cầu dịch vụ
+├── VINA_DOCUMENT_SEAL_REQUEST → Yêu cầu đóng dấu
+└── VINA_WORKFLOW → Luồng duyệt (VINA_WORKFLOW_STEP → từng bước duyệt)
+```
+
 ---
 
 ## 2. 🗺️ Luồng Dữ Liệu Tổng Quan (End-to-End Data Flow)

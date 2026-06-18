@@ -1,0 +1,136 @@
+﻿--SELECT * FROM STB_VN_FINISHGOODS_WAITING
+--EXEC usp_VN_Finshed_Waiting
+-- EXEC usp_VN_Finshed_Waiting_BG
+
+CREATE PROC [dbo].[usp_VN_Finshed_Waiting_BG]
+AS
+BEGIN
+
+	DECLARE @IDCODE NVARCHAR(100)
+	DECLARE @PackingID NVARCHAR(50)
+	DECLARE @LotNo NVARCHAR(50)
+	DECLARE @MaterialCode NVARCHAR(50)
+	DECLARE @MaterialName NVARCHAR(50)
+	DECLARE @PackQty INT
+	DECLARE @EmpNo NVARCHAR(50)
+	DECLARE @CreatDatePacked NVARCHAR(50)
+	DECLARE @PartNo  NVARCHAR(50)
+	DECLARE @PublicCode NVARCHAR(50)
+	DECLARE @ProductionSize NVARCHAR(50)
+	DECLARE @TypeProduction NVARCHAR(50)
+	DECLARE @StatusSystem NVARCHAR(50)
+	DECLARE @Statusout NVARCHAR(50)
+	DECLARE @Country NVARCHAR(50)
+	DECLARE @CreateDate NVARCHAR(50)
+	DECLARE @USERID NVARCHAR(50)
+	DECLARE @CreateDateChange NVARCHAR(50)
+	DECLARE @USERIDChange NVARCHAR(50)
+	DECLARE @PersonExport NVARCHAR(50)
+	DECLARE @DateExport NVARCHAR(50)
+	DECLARE @MethodActions NVARCHAR(50)
+	DECLARE @MethodActions1 NVARCHAR(50)
+	DECLARE @Flag BIT
+	DECLARE @Descrption NVARCHAR(50)
+	DECLARE @SoPhieuNhapKho NVARCHAR(50)
+	DECLARE @SoPhieuXuatKho NVARCHAR(50)
+	DECLARE @SoInVoice NVARCHAR(50)
+	DECLARE @SoToKhaiHaiQuan NVARCHAR(50)
+	DECLARE @ISUSED_IMPORTS NVARCHAR(50)
+	DECLARE @ISUSED_EXPORT NVARCHAR(50)
+	DECLARE @Levels NVARCHAR(50)
+	DECLARE @LevelsOut NVARCHAR(50)
+	DECLARE @INPUTFROM NVARCHAR(50)
+	DECLARE @TYPEEXPORT NVARCHAR(50)
+	DECLARE @LOCATIONS NVARCHAR(50)
+	DECLARE @LoaiHinhToKhai NVARCHAR(50)
+	DECLARE @TRANSPORT NVARCHAR(50)
+	DECLARE @CODELOCATION NVARCHAR(50)
+	DECLARE @CNT INT
+
+	DECLARE Cusproduction CURSOR FOR
+
+	SELECT
+
+	 STB_VN_FINISHGOODS_BG.IDCODE,
+	 STB_VN_FINISHGOODS_BG.PackingID,
+	 STB_VN_FINISHGOODS_BG.LotNo,
+	 STB_VN_FINISHGOODS_BG.MaterialCode,
+	 STB_VN_FINISHGOODS_BG.MaterialName,
+	 STB_VN_FINISHGOODS_BG.PackQty,
+	 STB_VN_FINISHGOODS_BG.EmpNo,
+	 STB_VN_FINISHGOODS_BG.CreatDatePacked,
+	 STB_VN_FINISHGOODS_BG.PartNo,
+	 STB_VN_FINISHGOODS_BG.PublicCode,
+	 STB_VN_FINISHGOODS_BG.ProductionSize,
+	 STB_VN_FINISHGOODS_BG.TypeProduction,
+	 STB_VN_FINISHGOODS_BG.StatusSystem,
+	 STB_VN_FINISHGOODS_BG.Statusout,
+	 STB_VN_FINISHGOODS_BG.Country,
+	 STB_VN_FINISHGOODS_BG.CreateDate,
+	 STB_VN_FINISHGOODS_BG.USERID,
+	 STB_VN_FINISHGOODS_BG.CreateDateChange,
+	 STB_VN_FINISHGOODS_BG.USERIDChange,
+	 STB_VN_FINISHGOODS_BG.PersonExport,
+	 STB_VN_FINISHGOODS_BG.DateExport,
+	 STB_VN_FINISHGOODS_BG.MethodActions,
+	 STB_VN_FINISHGOODS_BG.MethodActions1,
+	 STB_VN_FINISHGOODS_BG.Flag,
+	 STB_VN_FINISHGOODS_BG.Descrption,
+	 STB_VN_FINISHGOODS_BG.SoPhieuNhapKho,
+	 STB_VN_FINISHGOODS_BG.SoPhieuXuatKho,
+	 STB_VN_FINISHGOODS_BG.SoInVoice,
+	 STB_VN_FINISHGOODS_BG.SoToKhaiHaiQuan,
+	 STB_VN_FINISHGOODS_BG.ISUSED_IMPORTS,
+	 STB_VN_FINISHGOODS_BG.ISUSED_EXPORT,
+	 STB_VN_FINISHGOODS_BG.Levels,
+	 STB_VN_FINISHGOODS_BG.LevelsOut,
+	 STB_VN_FINISHGOODS_BG.INPUTFROM,
+	 STB_VN_FINISHGOODS_BG.TYPEEXPORT,
+	 STB_VN_FINISHGOODS_BG.LOCATIONS,
+	 STB_VN_FINISHGOODS_BG.LoaiHinhToKhai,
+	 STB_VN_FINISHGOODS_BG.TRANSPORT,
+	 STB_VN_FINISHGOODS_BG.CODELOCATION
+
+	FROM STB_VN_FINISHGOODS_BG
+
+	LEFT JOIN STB_VN_FINISHGOODS_WAITING
+
+	ON STB_VN_FINISHGOODS_WAITING.IDCODE = STB_VN_FINISHGOODS_BG.IDCODE
+
+	WHERE
+			STB_VN_FINISHGOODS_BG.Statusout = N'Xuất' AND STB_VN_FINISHGOODS_WAITING.STATUSISSUE IS NULL AND STB_VN_FINISHGOODS_BG.Country =N'Bắc Ninh'
+
+		OPEN Cusproduction
+
+		FETCH NEXT FROM Cusproduction
+
+		INTO @IDCODE, @PackingID,@LotNo,@MaterialCode,@MaterialName, @PackQty,@EmpNo,@CreatDatePacked,@PartNo,@PublicCode,@ProductionSize,@TypeProduction,@StatusSystem,@Statusout,@Country,@CreateDate,@USERID,@CreateDateChange,@USERIDChange,@PersonExport,@DateExport,@MethodActions,@MethodActions1,@Flag,@Descrption,@SoPhieuNhapKho,@SoPhieuXuatKho,@SoInVoice,@SoToKhaiHaiQuan,@ISUSED_IMPORTS,@ISUSED_EXPORT,@Levels,@LevelsOut,@INPUTFROM,@TYPEEXPORT,@LOCATIONS,@LoaiHinhToKhai,@TRANSPORT,@CODELOCATION
+
+		WHILE @@FETCH_STATUS = 0
+
+BEGIN
+
+		SELECT @CNT = COUNT(*) FROM STB_VN_FINISHGOODS_WAITING WHERE IDCODE = @IDCODE
+
+		IF @CNT = 0
+			
+			BEGIN
+					INSERT INTO STB_VN_FINISHGOODS_WAITING (IDCODE,PackingID,LotNo,MaterialCode,MaterialName,PackQty,EmpNo,CreatDatePacked,PartNo,PublicCode,ProductionSize,TypeProduction,StatusSystem,Statusout,Country,CreateDate,USERID,CreateDateChange,USERIDChange,PersonExport,DateExport,MethodActions,MethodActions1,Flag,Descrption,SoPhieuNhapKho,SoPhieuXuatKho,SoInVoice,SoToKhaiHaiQuan,ISUSED_IMPORTS,ISUSED_EXPORT,Levels,LevelsOut,INPUTFROM,TYPEEXPORT,LOCATIONS,LoaiHinhToKhai,TRANSPORT,CODELOCATION) VALUES (@IDCODE, @PackingID,@LotNo,@MaterialCode,@MaterialName, @PackQty,@EmpNo,@CreatDatePacked,@PartNo,@PublicCode,@ProductionSize,@TypeProduction,@StatusSystem,@Statusout,@Country,@CreateDate,@USERID,@CreateDateChange,@USERIDChange,@PersonExport,@DateExport,@MethodActions,@MethodActions1,@Flag,@Descrption,@SoPhieuNhapKho,@SoPhieuXuatKho,@SoInVoice,@SoToKhaiHaiQuan,@ISUSED_IMPORTS,@ISUSED_EXPORT,@Levels,@LevelsOut,@INPUTFROM,@TYPEEXPORT,@LOCATIONS,@LoaiHinhToKhai,@TRANSPORT,@CODELOCATION)
+			END
+
+			ELSE
+			
+			BEGIN
+					PRINT 'Nothing to do else'
+			END
+
+			FETCH NEXT FROM Cusproduction
+			INTO @IDCODE, @PackingID,@LotNo,@MaterialCode,@MaterialName, @PackQty,@EmpNo,@CreatDatePacked,@PartNo,@PublicCode,@ProductionSize,@TypeProduction,@StatusSystem,@Statusout,@Country,@CreateDate,@USERID,@CreateDateChange,@USERIDChange,@PersonExport,@DateExport,@MethodActions,@MethodActions1,@Flag,@Descrption,@SoPhieuNhapKho,@SoPhieuXuatKho,@SoInVoice,@SoToKhaiHaiQuan,@ISUSED_IMPORTS,@ISUSED_EXPORT,@Levels,@LevelsOut,@INPUTFROM,@TYPEEXPORT,@LOCATIONS,@LoaiHinhToKhai,@TRANSPORT,@CODELOCATION
+
+END
+	    CLOSE Cusproduction              
+		DEALLOCATE Cusproduction   
+END
+
+
+-- SELECT TOP(1000) * FROM STB_VN_FINISHGOODS ORDER BY ID desc
