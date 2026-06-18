@@ -36,6 +36,9 @@
 | [KB_25_VINAENESSOL_HUNG_YEN.md](KB_25_VINAENESSOL_HUNG_YEN.md) | Phân hệ VinaEnesol, đóng gói & in nhãn (Inner/Outer Box), khớp box (Box Matching), Vận hành Hưng Yên, và cẩm nang lỗi Screen ID tương ứng | D000, D051, D100, D110, HungYenFactory |
 | [KB_26_LIEN_KET_HE_THONG_VA_BUG_LOGIC.md](KB_26_LIEN_KET_HE_THONG_VA_BUG_LOGIC.md) | Liên kết WMS-Sản xuất-QC-Xuất hàng, Cơ chế trừ kho Trigger, Tác vụ ngầm & Agent Jobs, cấu hình DB Mail, phân hệ SCM, Rework, Trả hàng, Kiểm kê F750, và tự động tách lô chất mang | B597, B530, C443, C512, C530, C546, HN551, FG00, F750, B618 |
 | [KB_29_SUPER_DEEP_SYSTEM_DISCOVERY_PROMPT.md](KB_29_SUPER_DEEP_SYSTEM_DISCOVERY_PROMPT.md) | Siêu Prompt (Meta-Prompt) tự học, đào sâu bản chất màn hình & liên kết nghiệp vụ | Hướng dẫn phân tích ngược |
+| **[KB_30_CORE_SP_ENGINE.md](KB_30_CORE_SP_ENGINE.md)** | **★ Phân tích chi tiết 4 SP cốt lõi: DoProcessProdRouteHist (11 bước), Backflush (7 bước), ForCalc SmartApp (22K), Packing OPENXML. Line-by-line analysis + Sơ đồ + Risk** | B530, B523, Backflush, SmartApp |
+| **[KB_31_SCREEN_BUG_FIXBOOK.md](KB_31_SCREEN_BUG_FIXBOOK.md)** | **★★ SỔ TAY TRA CỨU BUG theo TCode. 60+ bug × 30+ màn hình. Triệu chứng → Nguyên nhân → Fix SQL. Cross-ref tất cả KB** | TẤT CẢ màn hình |
+| **[KB_32_SCREEN_SP_TABLE_MAP.md](KB_32_SCREEN_SP_TABLE_MAP.md)** | **★ Bản đồ ánh xạ Screen → SP → Table cho 15 màn hình chính. BG2 validation logic. Sơ đồ luồng data** | B523, B530, B597, F330, G100, C512, C530, C546, C560, K101, K109, K110 |
 
 ---
 
