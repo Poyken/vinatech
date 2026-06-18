@@ -1,7 +1,7 @@
 # 🛡️ RULES — Vinatech MES Agent (Bắt buộc đọc mỗi phiên)
 
 > **Mục đích:** File này chứa TẤT CẢ quy tắc bắt buộc, nén gọn nhất.
-> **Cập nhật:** 2026-06-10
+> **Cập nhật:** 2026-06-19
 
 ---
 
@@ -25,10 +25,11 @@
 
 ```
 Bước 1: Thu thập — Màn hình? Barcode? Thao tác? Lỗi gì? Ai/Khi nào?
-Bước 2: Tra KB — KB_INDEX.md → tìm theo triệu chứng/màn hình
+Bước 2: Tra KI → KB — KI:screen_id_reference (TCode→KB routing) → KB_31 (bug fix) → KB chuyên đề
 Bước 3: Xác minh — SELECT trạng thái Barcode/Lot bằng tool .\run_query.ps1
-Bước 4: Script Fix — Viết SQL template bọc trong TRANSACTION, kiểm tra an toàn bằng .\validate_sql.ps1
-Bước 5: Xác nhận & Dọn dẹp — Kiểm tra kết quả, chạy .\db_sync_tool.ps1 -Clean để giữ Git sạch
+Bước 4: Impact check — KI:deep_system_map (SP callers, table sizes) trước khi sửa
+Bước 5: Script Fix — Viết SQL template bọc trong TRANSACTION, kiểm tra an toàn bằng .\validate_sql.ps1
+Bước 6: Xác nhận & Dọn dẹp — Kiểm tra kết quả, chạy .\db_sync_tool.ps1 -Clean để giữ Git sạch
 ```
 
 ## 4. CẤM & HẠN CHẾ
@@ -48,4 +49,4 @@ Bước 5: Xác nhận & Dọn dẹp — Kiểm tra kết quả, chạy .\db_syn
 | DB framework | `SmartFramework` |
 | DB file storage | `SmartFramework_File` |
 | User | `vinaadmin` |
-| Nhà máy | VVT_F1=Bắc Ninh, VVT_F2=Bắc Giang, VVT_F3=Hà Nam |
+| Nhà máy | VVT_F1=Bắc Ninh, VVT_F2=Bắc Giang, VVT_F3=Hà Nam, VVT_BG2=Bắc Giang 2 |

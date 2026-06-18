@@ -181,7 +181,7 @@
 
 | # | Triệu chứng | Nguyên nhân | Fix |
 |---|---|---|---|
-| 1 | Cảnh báo đỏ HOLD — "Lot chưa QC" | Lot nằm kho `HOLDING_WH` | QC hoàn thành IQC hoặc chuyển kho: `UPDATE STB_MaterialLotInfo SET WarehouseCode='ROH_WH' WHERE LotID='mã'` |
+| 1 | Cảnh báo đỏ HOLD — "Lot chưa QC" | Lot nằm kho `HOLDING_WH` | QC hoàn thành IQC hoặc chuyển kho: `UPDATE STB_MaterialLotInfo SET MaterialWarehouseCode='ROH_WH' WHERE LotID='mã'` (⚠️ Cột là `MaterialWarehouseCode`, KHÔNG phải `WarehouseCode`) |
 | 2 | Cảnh báo "Hết hạn sử dụng" | Lot vi phạm FIFO/Expiry | Gia hạn: `UPDATE STB_MaterialLotInfo SET CreateDateTime = DATEADD(DAY,-30,GETDATE()) WHERE LotID='mã'` |
 | 3 | "Sai chủng loại" — NVL không trong BOM | NVL scan không match BOM config PO | Kiểm tra BOM tại B310 hoặc SQL |
 | 4 | Vỏ nhôm (AluCase) mới báo sai chủng loại | Mã vỏ nhôm bị **hardcode** trong SP `usp_Vietnam_RawMaterialInputHist_uid` | ALTER SP bổ sung mã mới vào `IF / NOT IN` — xem [KB_05 §7.4](KB_05_QC_ELECTRODE.md) |
@@ -323,7 +323,7 @@ COMMIT TRANSACTION;
 | # | Triệu chứng | Nguyên nhân | Fix |
 |---|---|---|---|
 | 1 | Sửa hạng mục ở C151 nhưng C530 không hiện | Chưa ấn "Tổng hợp hạng mục" | Vào C530 → ấn nút "Tổng hợp hạng mục" để reset |
-| 2 | OQC bị lỗi khi bấm Reject nhưng muốn Pass lại | Nút Pass bị disable sau Reject | IT chạy SQL: `UPDATE STB_CommInspDocHistory SET CommInspResult='PASS', FinishDateTime=GETDATE() WHERE CommInspDocNo='...'` — xem [KB_26 §4.2](KB_26_LIEN_KET_HE_THONG_VA_BUG_LOGIC.md) |
+| 2 | OQC bị lỗi khi bấm Reject nhưng muốn Pass lại | Nút Pass bị disable sau Reject | ⚠️ `CommInspResult` KHÔNG phải cột trong DB — OQC Pass/Fail được xử lý qua SP `usp_DoUpdateMaterialQcInfo_Success/Fail`. Cách fix: (1) Xóa MaterialQcInfo cũ bằng `usp_DoDeleteMaterialQcInfo`, (2) Tạo lại OQC mới tại C512, (3) Nhập lại kết quả QC. Xem [KB_26 §4.2](KB_26_LIEN_KET_HE_THONG_VA_BUG_LOGIC.md) |
 
 ### C546
 **Tên:** FOQC — OCV/ESR Measurement

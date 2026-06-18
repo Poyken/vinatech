@@ -1,6 +1,6 @@
 # 🗂️ NAIS MES — Knowledge Base Index
 
-> **Cập nhật:** 2026-06-18 | **Tổng:** 23 files, 1,085 KB | **DB Verified:** 19 DBs, 6,648 tables, 3,639 SPs
+> **Cập nhật:** 2026-06-19 | **Tổng:** 24 files, 1,085+ KB | **DB Verified:** 19 DBs, 6,648 tables, 3,416 SPs (SmartFactoryV2)
 > **Groupware KB:** → [GW_INDEX.md](../../GROUPWARE/GROUPWARE_KNOWLEDGE_BASE/GW_INDEX.md)
 
 ---
@@ -10,9 +10,10 @@
 | Bạn biết gì? | Tra ở đâu |
 |---|---|
 | **Tên bảng** (VD: STB_SetInfo) | → [Bảng tra TABLE](#-tra-cứu-theo-table-name) |
-| **Mã màn hình** (VD: B523) | → [Bảng tra SCREEN](#-tra-cứu-theo-screen-id-tcode) |
-| **Triệu chứng lỗi** | → [Bảng tra TRIỆU CHỨNG](#-tra-cứu-theo-triệu-chứng) |
+| **Mã màn hình** (VD: B523) | → **KI: screen_id_reference** (106 screens) hoặc [Bảng tra SCREEN](#-tra-cứu-theo-screen-id-tcode) |
+| **Triệu chứng lỗi** | → **KB_31** (70+ bugs) hoặc [Bảng tra TRIỆU CHỨNG](#-tra-cứu-theo-triệu-chứng) |
 | **Phân hệ** (Kho/QC/SX) | → [Danh sách file KB](#-danh-sách-file-kb) |
+| **SP dependency/impact** | → **KI: deep_system_map** (SP callers, table sizes) |
 | **Tìm kiếm nhanh** | `Ctrl + Shift + F` gõ keyword trong VS Code |
 
 ---
@@ -312,12 +313,15 @@
 | Screen Objects | **7,604** | KB_10 |
 | Warehouses (active) | **118** | KB_02 |
 | Lines (active) | **295** | KB_33 |
-| Top table: ProcedureLog | **19.3M rows** | KB_10 |
-| Top table: ProdRouteHist | **3.3M rows** | KB_10 |
-| Top table: SetInfo | **760K rows** | KB_10 |
+| Top table: STB_VVT_ESRDATA | **398M rows / 61 GB** | KI:deep_system_map |
+| Top table: STB_ProductStockInfo | **64.5M rows / 12 GB** | KI:deep_system_map |
+| Top table: ProdRouteHist | **3.3M rows / 805 MB** | KB_10, KI:deep_system_map |
+| Hub table: STB_MaterialMaster | **874 SPs đọc** | KI:deep_system_map |
+| Hub table: STB_SetInfo | **711 SPs đọc** | KI:deep_system_map |
+| Core SP: usp_DoCreateSerial | **470 callers** | KI:deep_system_map |
 
 ---
 
 > 📌 **DB & SP reference:** [KB_19](KB_19_ALL_DATABASES_MAP.md) | **Rules:** [RULES.md](../AI_AGENT_CONFIG/RULES.md)
 
-*Cập nhật: 2026-06-18 | Optimized for lookup: TABLE→KB, SCREEN→KB, Symptom→KB. Fixed encoding. 23 files, 1,085 KB.*
+*Cập nhật: 2026-06-19 | Optimized for lookup: TABLE→KB, SCREEN→KB, Symptom→KB. Added KI references + DB-verified stats. 24 files, 1,085+ KB.*

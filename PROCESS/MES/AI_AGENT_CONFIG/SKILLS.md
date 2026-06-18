@@ -1,7 +1,7 @@
 # ⚡ SKILLS — Vinatech MES Agent (PowerShell & SQL Templates)
 
 > **Mục đích:** Các script template sẵn sàng dùng, chỉ cần thay params
-> **Cập nhật:** 2026-06-10
+> **Cập nhật:** 2026-06-19
 
 ---
 
@@ -130,3 +130,26 @@ FROM sys.dm_exec_requests WHERE blocking_session_id <> 0
 6. **Git root là Desktop** — Luôn scope git commands vào `MES/`
 7. **Electrode SP naming** — `usp_ElectrodeStep_get` (không phải `usp_ElectrodeStep_Vietnam`)
 8. **Packing SP** — `usp_Vietnam_DoProcessProdPacking_VVT` (không phải `usp_DeProcessProdPacking_VVT`)
+9. **WarehouseCode ≠ MaterialWarehouseCode** — Cột đúng là `MaterialWarehouseCode` trong `STB_MaterialLotInfo`
+10. **usp_DoCreateSerial = 470 callers** — KHÔNG sửa SP này trừ khi hiểu rõ impact
+11. **STB_VVT_ESRDATA = 398M rows / 61GB** — Luôn WHERE cụ thể + WITH(NOLOCK)
+12. **STB_MaterialMaster = 874 SPs đọc** — Sửa cột = impact rất rộng
+13. **CRLF warning** — Không mass-edit KB .md files bằng replace_file_content (risk corruption). Chỉ sửa 1 dòng tại 1 thời điểm.
+
+---
+
+## 9. 📊 SP IMPACT CHECK (Trước khi sửa)
+
+```sql
+-- Bao nhiêu SP khác gọi SP này?
+SELECT COUNT(DISTINCT referencing_id) AS CallerCount
+FROM sys.sql_expression_dependencies 
+WHERE referenced_entity_name = 'TÊN_SP'
+  AND referencing_id IN (SELECT object_id FROM sys.procedures)
+
+-- SP này đọc/ghi những bảng nào?
+SELECT referenced_entity_name, referenced_class_desc
+FROM sys.sql_expression_dependencies 
+WHERE referencing_id = OBJECT_ID('TÊN_SP')
+ORDER BY referenced_entity_name
+```

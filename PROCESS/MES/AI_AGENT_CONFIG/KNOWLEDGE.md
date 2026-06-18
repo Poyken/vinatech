@@ -1,7 +1,7 @@
 # 📚 KNOWLEDGE — Vinatech MES Quick Reference (Load khi cần)
 
 > **Mục đích:** Cheat sheet nén gọn để AI trả lời nhanh mà không phải đọc 30 KB files
-> **Cập nhật:** 2026-06-10
+> **Cập nhật:** 2026-06-19
 
 ---
 
@@ -133,7 +133,18 @@ ORDER BY RMIH.CreateDateTime DESC;
 | Kho HN lỗi | KB_08 |
 | ESR/Aging | KB_05 §9.7 |
 
-## 6. KB FILES MAP (30 files)
+## 6. KNOWLEDGE ITEMS (KI) — Tra trước KB
+
+| KI | Khi nào dùng |
+|---|---|
+| `screen_id_reference` | Nhận TCode → biết ngay SP + Table + KB nào (106 screens) |
+| `deep_system_map` | Cần trace SP chain, xem impact, table sizes |
+| `kb_verification` | Check tên SP/table đúng chưa (known typos + SmartFramework list) |
+| `cellline_operations` | Nghiệp vụ thực tế CellLine (logic Module vs Cell, bypass) |
+| `new_model_checklist` | Thêm model mới (8 bước) |
+| `system_environment` | Connection info, IP, URL |
+
+## 7. KB FILES MAP (37 files)
 
 | # | File | Phạm vi |
 |---|------|---------|
@@ -148,7 +159,8 @@ ORDER BY RMIH.CreateDateTime DESC;
 | 08 | KB_08_KHO_THANH_PHAM_HN | Kho thành phẩm Hà Nam |
 | 10 | KB_10_KIEN_TRUC_VA_DATAFLOW | Kiến trúc tổng quan MES & Data Flow |
 | 12 | KB_12_DEEP_CORE_ANALYSIS_AND_AUDIT | Phân tích sâu cốt lõi & Audit CSDL |
-| 14-19 | KB_14-19 | Phương pháp trace bug, case study, DB Mail, schema quickref... |
+| 14 | KB_14_TRACE_BUG_METHODOLOGY | Phương pháp trace bug (5 bước + case study) |
+| 19 | KB_19_ALL_DATABASES_MAP | Schema DB, cross-DB links |
 | 20 | KB_20_MAY_MOC_BAO_TRI | Máy móc bảo trì |
 | 21 | KB_21_NHAN_SU_WORKER | Nhân sự, worker assignment |
 | 22 | KB_22_DASHBOARD_ANDON | Dashboard, monitoring |
@@ -158,4 +170,24 @@ ORDER BY RMIH.CreateDateTime DESC;
 | 26 | KB_26_LIEN_KET | Liên kết hệ thống & bug logic |
 | 27 | KB_27_SCM_REWORK | SCM, rework, trả hàng, kiểm kê |
 | 28 | KB_28_SYSTEM_OBJECTS | 976 bảng, 3314 SPs, 1442 screens map |
-| 29-30 | KB_29-30 | Discovery prompt, thiết bị phụ trợ |
+| 30 | KB_30_CORE_SP_ENGINE | Core SP analysis (B530/B523/F330) |
+| **31** | **KB_31_SCREEN_BUG_FIXBOOK** | **★ Bug fix tra cứu theo TCode (70+ bugs, SQL verified)** |
+| **32** | **KB_32_SCREEN_SP_TABLE_MAP** | **Screen→SP→Table mapping (DB verified)** |
+| **33** | **KB_33_FACTORY_WORKCENTER_MATRIX** | **Ma trận nhà máy/WorkCenter/Route** |
+| 36 | KB_36_HANAM_FACTORY_SCREENS | Màn hình riêng Hà Nam |
+| 37 | KB_37_SP_ARCHAEOLOGY_BUGS_AND_PATTERNS | SP patterns & anti-patterns |
+
+## 8. ⚠️ COLUMN NAME TRAPS (Hay bị sai)
+
+| Hay viết sai | Đúng | Bảng |
+|---|---|---|
+| `WarehouseCode` | `MaterialWarehouseCode` | STB_MaterialLotInfo |
+| `CommInspResult` | **KHÔNG TỒN TẠI** | OQC result qua SP, không phải cột |
+| `WasteWeight` | `Weights` | STB_VN_PRODUCTION_ERROR |
+| `Status` | `StatusError` | STB_VN_PRODUCTION_ERROR |
+| `CoatingDate` | `JobDate` | STB_ElectrodeWasteInfoNew |
+| `STB_CellTestResult` | `STB_CellTesterResult` | SmartFactoryIncubator |
+| `FinishGoodStockOutBG` | `InvoiceFinishGoodStockOutBG` | SmartFactoryV2 |
+| `STB_MaterialHoldInfo` | KHÔNG TỒN TẠI | Dùng MaterialWarehouseCode='HOLDING_*' |
+| `STB_BarrelBarcodeInfo` | KHÔNG TỒN TẠI | Dùng STB_VietNam_CheckBarcode_2624 |
+| `STB_HN_AccountingPrice` | KHÔNG TỒN TẠI | Table legacy đã bị xóa |
