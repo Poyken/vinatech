@@ -277,6 +277,9 @@ ORDER BY SO.ObjectType
 |---|---|
 | `usp_Vietnam_GetMaterialFOQCInfo` | Lấy info FOQC (thay cho OQC) |
 | `usp_Vietnam_MaterialFOQcDetail_get` | **★ Khởi tạo dòng trống + BUG OCV 20ea** |
+| `usp_GetMaterialQcInfo_ForReport` | Report QC |
+| `usp_MaterialQcSampleResult_get` | Lấy giá trị đo |
+| `usp_GetProdRouteBarcodeForDefect_E27` | Lấy info lỗi (E-27) |
 
 ### Bảng DB chính (C530 + C546)
 | Bảng | Vai trò |
@@ -402,5 +405,45 @@ B597 (Scan NVL) → B530 (SL) → B523 (Gộp Box) ←──┘
 
 ---
 
-*Cập nhật: 2026-06-18 | Dữ liệu từ STB_ScreenObjects + phân tích SP code*
+---
+
+## C220 — IQC Incoming Quality Check (17 SPs — verified)
+
+### Execute SPs (12)
+
+| SP | Chức năng |
+|---|---|
+| `usp_MaterialQcInfo_iud` | IUD Lot QC header |
+| `usp_MaterialQcDetail_iud` | IUD hạng mục kiểm tra |
+| `usp_MaterialQcSampleResult_iud` | IUD kết quả đo |
+| `usp_DoMakeMaterialIQCDetailList` | Tạo danh sách IQC |
+| `usp_DoMakeMaterialQcSampleResult` | Tạo sample result |
+| `usp_DoUpdateMaterialQcInfo_Success` | Đánh giá PASS ✅ |
+| `usp_DoUpdateMaterialQcInfo_Fail` | Đánh giá FAIL ❌ |
+| `usp_DoCancelIQC` | Hủy IQC |
+| `usp_DoConfirmIQC` | Xác nhận IQC |
+| `usp_DoChangeMaterialQcToPass` | Đổi từ Fail → Pass |
+| `usp_DoSendEmailForDefectReportIQC` | Gửi email báo lỗi IQC |
+| `usp_IQcDefectReport_iud` | IUD báo cáo lỗi IQC |
+| `usp_MaterialQcInfoChangeLotNo_iud` | Đổi LotNo trong QC |
+| `usp_NCR_Report_iud` | IUD báo cáo NCR |
+| `usp_DefectReportNoChange_iud` | Đổi số báo cáo lỗi |
+| `usp_UpdateDefectDetailIQC_VVT` | Cập nhật chi tiết lỗi VVT |
+| `usp_ModifyRevisionsVerFromC220_VVTF4` | Sửa revision version (BG2 specific) |
+
+### Search SPs (5)
+
+| SP | Chức năng |
+|---|---|
+| `usp_MaterialQcInfo_get` | Lấy info Lot QC |
+| `usp_MaterialQcDetail_get` | Lấy hạng mục kiểm tra |
+| `usp_MaterialQcSampleResult_get` | Lấy kết quả đo |
+| `usp_GetMaterialQcInfo_ForReport` | Report QC |
+| `usp_QcDefectIQCReport_get` | Lấy báo cáo lỗi IQC |
+
+> ⚠️ C220 là **cổng QC đầu vào** — kết quả PASS/FAIL ảnh hưởng trực tiếp đến khả năng sử dụng NVL tại F430 và B597.
+
+---
+
+*Cập nhật: 2026-06-18 | Dữ liệu từ STB_ScreenObjects + phân tích SP code — VERIFIED against live DB*
 

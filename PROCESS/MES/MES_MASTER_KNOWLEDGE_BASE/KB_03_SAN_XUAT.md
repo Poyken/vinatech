@@ -451,8 +451,11 @@ WHERE MarkingCode = 'MK00000974';
 | `usp_DayProdPlan_get` | Lấy danh sách kế hoạch ngày |
 | `usp_SetInfo_get` | Lấy danh sách barcode/Lot đã tạo |
 | `usp_DayProdPlan_iud` | Lưu/Sửa/Xóa kế hoạch ngày |
-| `usp_DoFixDayProdPlan` | Đánh dấu kế hoạch đã Fixed |
+| `usp_DoFixDayProdPlan` | Đánh dấu kế hoạch đã Fixed (IsFixed=1) |
 | `usp_DoCancelDayProdPlan` | Hủy kế hoạch |
+| `usp_DoFinishDayProdPlan` | Đóng kế hoạch ngày |
+| `usp_DoCreateSetInfoForProdQty_VNT` | **★ CORE — Tạo barcode (YearCode+MonthCode+Serial)** → [KB_30](KB_30_CORE_SP_ENGINE.md) |
+| `usp_SetInfo_iud` | IUD thông tin SetInfo (barcode metadata) |
 
 **Lỗi thường gặp:**
 
@@ -552,6 +555,33 @@ UPDATE STB_ProductionOrderInfo
 SET POType = 'MODULE'
 WHERE MaterialCode = 'mã_hàng'
 ```
+
+---
+
+### 6.4b B597 — Kiểm Tra Thường Xuyên / Tự Kiểm NVL (SelfInspection)
+
+> 🏭 **Cơ sở gốc:** VVT_F1 | 🔀 **Biến thể:** **K109** (BG2), **HN597** (Hà Nam)
+
+**Chức năng:** Kiểm tra NVL đầu vào tại chuyền — công nhân scan mã barcode NVL (ML...) để hệ thống validate: HOLD / Hết hạn / Sai chủng loại.
+
+**SP đầy đủ (8 SPs, verified):**
+
+| SP | Loại | Chức năng |
+|----|------|-----------|
+| `usp_GetCommInspectionHistoryForBarcode` | Search | Lấy lịch sử QC inspection theo barcode |
+| `usp_RawMaterialInputHist_get` | Search | Lấy lịch sử nhập NVL |
+| `usp_DoAddCommInspMeasureHistForBarcode` | Execute | Nhập kết quả đo QC (base) |
+| `usp_DoAddCommInspMeasureHistForBarcodeSelfInsp_iud` | Execute | Nhập kết quả tự kiểm (variant SelfInsp) |
+| `usp_DoFinishCommInspDoc` | Execute | Hoàn thành tài liệu QC (base) |
+| `usp_DoFinishCommInspDoc_VNT` | Execute | Hoàn thành tài liệu QC (variant VNT) |
+| `usp_RawMaterialInputHist_iud` | Execute | IUD lịch sử nhập NVL |
+| `usp_Vietnam_RawMaterialInputHist_uid` | Execute | IUD lịch sử nhập NVL (variant VN) |
+
+**Cổng chặn chính:**
+- NVL **HOLD** (`STB_MaterialLotInfo.QcResultCode = 'H'`) → BLOCK
+- NVL **hết hạn** (`ExpirationDate < GETDATE()`) → BLOCK  
+- NVL **sai chủng loại** (MaterialCode không match BOM) → BLOCK
+- Tra cứu nhanh: [§5.15](#515-tra-cứu-model-code-và-size-tại-màn-b597)
 
 ---
 
@@ -851,8 +881,8 @@ B802 (Electrode Prod Route Hist) — XEM TỔNG HỢP:
 |----|-----------|
 | `usp_vn_showproductionerror` | Lấy danh sách phế đã báo cáo |
 | `usp_Add_ProductionError` | Thêm mới bản ghi phế NVL |
-| `usp_VN_update_ProductionError` | Sửa bản ghi phế đã có (⚠️ SP nội bộ, có thể đã đổi tên hoặc tích hợp vào SP khác) |
-| `usp_VN_update_CancelScrap` | Hủy/Cancel bản ghi phế (⚠️ SP nội bộ, có thể đã đổi tên hoặc tích hợp vào SP khác) |
+| `usp_VN_update_ProdutionError` | Sửa bản ghi phế đã có (⚠️ Tên SP có typo: "Prodution" không phải "Production") |
+| `usp_VN_update_CanceScrap` | Hủy/Cancel bản ghi phế (⚠️ Tên SP có typo: "Cance" không phải "Cancel") |
 
 ```sql
 -- Xem tất cả phế theo Line và ngày
