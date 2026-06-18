@@ -10,7 +10,7 @@
 
 ## 🗺️ 1. Sơ Đồ Kiến Trúc Liên Thông Cơ Sở Dữ Liệu (Database Integration Map)
 
-Hệ thống vận hành của Vinatech được cấu thành từ 13 cơ sở dữ liệu chuyên biệt, liên kết chặt chẽ với nhau để tạo thành một hệ thống thông tin nhất quán từ văn phòng (Groupware) đến nhà xưởng (MES) và tài chính kế toán (ERP):
+Hệ thống vận hành của Vinatech được cấu thành từ 13 cơ sở dữ liệu nghiệp vụ chuyên biệt (tổng cộng 20 user DB trên instance, gồm thêm SmartFramework UI×3, backup×2, và WCMS legacy×1), liên kết chặt chẽ với nhau để tạo thành một hệ thống thông tin nhất quán từ văn phòng (Groupware) đến nhà xưởng (MES) và tài chính kế toán (ERP):
 
 ```mermaid
 graph TD
