@@ -1,4 +1,4 @@
-# KB_05 — Kiểm tra Chất lượng (QC) & Điện cực
+﻿# KB_05 — Kiểm tra Chất lượng (QC) & Điện cực
 
 > **Màn hình liên quan:** B597, C443, C512, C530, C546, B270, B540, B552
 > ← [Về INDEX](KB_INDEX.md)
@@ -404,6 +404,30 @@ Quy trình quản lý sản xuất và kiểm định chất lượng đối v�
 *   **Tạo PO (B310):** Bộ phận kế hoạch khởi tạo đơn đặt hàng sản xuất PO làm căn cứ chạy chuyền.
 *   **Tạo Kế hoạch ngày (B442):** Dựa trên PO tháng đã duyệt, kế hoạch ngày được lập trên B442. Khi kế hoạch được xác nhận lưu, hệ thống sẽ tự động sinh mã Lot điện cực và bắt đầu cho phép in tem nhãn.
 *   **Liên kết độ dày vật liệu (A230):** Màn hình B442 liên kết trực tiếp với dữ liệu độ dày khai báo tại màn hình **A230 (Thông tin vật liệu)**. Tại tab "Mã nguyên liệu", nếu mã vạch barcode tương ứng đã được cài đặt thông số độ dày hoặc người dùng điền độ dày bên A230, hệ thống sẽ tự động liên kết và điền thông số này vào cột độ dày của B442. Nếu chưa được cấu hình, OP buộc phải nhập thủ công bằng tay (thao tác này dễ gây sai sót và chậm trễ).
+
+
+*   **Cấu hình in tem Electrode (A460 → STB_ModelLabelInfo):** Để in tem từ B442, model Electrode phải có record trong bảng `STB_ModelLabelInfo`. Nếu thiếu → lỗi **"Not found label type"** khi bấm LabelPrint.
+
+    ```sql
+    -- Kiểm tra model có label config chưa
+    SELECT ModelCode, LabelType, FormatName FROM STB_ModelLabelInfo WITH(NOLOCK) 
+    WHERE ModelCode = 'MÃ_MODEL_ELECTRODE';
+    -- Phải có ít nhất: ElectLabel (bắt buộc), AssembleLabel, PartLabel (tùy dây chuyền)
+
+    -- Nếu thiếu → copy từ model cũ cùng loại
+    INSERT INTO STB_ModelLabelInfo (ModelCode, LabelType, FormatName, CreateDateTime, CreateUserID)
+    SELECT 'MODEL_MỚI', LabelType, FormatName, GETDATE(), 'admin'
+    FROM STB_ModelLabelInfo WHERE ModelCode = 'MODEL_CŨ';
+    ```
+
+    > **LabelType phổ biến cho Electrode:** `ElectLabel` (tem điện cực B442), `AssembleLabel` (tem SX B450/B540), `PartLabel` (tem vật tư F330), `BoxLabel2` (tem box đặc biệt).
+
+*   **Checklist thêm model Electrode mới (CRF%):**
+    1. A230 → `MaterialThickness` (VD: 120, 180, 200)
+    2. A460 → `STB_ModelLabelInfo` (ElectLabel + các label type cần thiết)
+    3. B442 → Tạo lot test → kiểm tra cột "Độ dày" + in tem
+
+    > 🔗 Xem thêm: KB_04 §6.20, KB_14 §7.2
 
 #### 2. Vận Hành 4 Công Đoạn Điện Cực & Nhập Liệu trên B552
 Quy trình sản xuất điện cực gồm 4 công đoạn chính và mỗi công đoạn tương ứng với một tab dữ liệu trên màn hình **B552**:

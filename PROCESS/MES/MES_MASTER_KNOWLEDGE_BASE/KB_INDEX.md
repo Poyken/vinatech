@@ -21,6 +21,8 @@
 | **B353 chuyển đổi lot nhưng B523 vẫn in lot cũ (VJ/VV mismatch)** | KB_04 § 6.18, KB_14 § 7.1 |
 | **C531 sửa cấp OQC chọn nhầm (VVT_OQC_REFER)** | KB_04 § 6.19 |
 | **B442 không hiển thị độ dày Electrode (MaterialThickness rỗng)** | KB_04 § 6.20 |
+| **B442 in tem lỗi "Not found label type" (STB_ModelLabelInfo thiếu)** | KB_04 § 6.20, KB_14 § 7.2, KB_01 § 1.2 |
+| **Checklist thêm model Electrode mới (CRF%)** | KB_05 (Electrode), KB_04 § 6.20 |
 | [KB_04_DONG_GOI_IN_TEM.md](KB_04_DONG_GOI_IN_TEM.md) | Tiêu chuẩn đóng gói, fix B523 không gộp, sửa mã Lot, Qty=0, in tem nhãn và cẩm nang lỗi Screen ID tương ứng | B523, B789, B781, B351, A419 |
 | [KB_05_QC_ELECTRODE.md](KB_05_QC_ELECTRODE.md) | QC B597/C443/C512/C486, Điện cực Slitting B552, QC Flow đầy đủ IQC→PQC→OQC→Bending/Cutting, Slitting Hà Nam F743-F748, 4M Change, CAPA, Reliability Test, và cẩm nang lỗi Screen ID tương ứng | B597, C443, C512, C486, B552, C121-C564, F743-F748, RTM, 4M Change, CAPA |
 | [KB_06_MASTER_DATA_TOOLS.md](KB_06_MASTER_DATA_TOOLS.md) | Model mới, Vol/Farad, Thêm Cell/Line, SQL Utilities, Bypass, Quick Start Checklist đầy đủ, Line/Route B210-B240, A418, B260, và cẩm nang lỗi Screen ID tương ứng | A410, B210-B240, B250, B260, B270, A418, A419, C131, C132, C430, C451, C560, F741 |

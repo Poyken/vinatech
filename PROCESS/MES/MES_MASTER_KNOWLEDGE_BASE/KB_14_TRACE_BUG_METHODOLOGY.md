@@ -660,5 +660,82 @@ WHERE MLI.CompanyCode = 'VVT' AND MLI.LotNo LIKE 'VV%'
 > 🔗 **Chi tiết đầy đủ:** Xem KB_04 §6.18
 ---
 
-*Cập nhật: 2026-06-18 | Tổng hợp 12 nhóm Validation Gates + Case Study B353/B523 bởi Antigravity AI.*
+### 7.2 Case Study: B442 in tem Electrode lỗi "Not found label type" + Độ dày = 0
+
+> **Ngày:** 2026-06-18 | **Màn hình:** B442 (Kế hoạch Điện cực) | **Model:** `CRFYL85-01` (120µ), `CRFYN85L-01` (180µ)
+> **Báo lỗi 1:** Cột "Độ dày" hiển thị `0.00` trên grid SetInfo
+> **Báo lỗi 2:** Bấm in tem → popup `"Not found label type"`
+
+#### Bước 1: Xác định Entry Point
+```
+Ảnh 1 (Object F5): B442 → ElectrodePlan_Vietnam
+├── SearchFunction: usp_DayProdPlan_get, usp_SetInfo_get, usp_MainAssemblePartWeight_get
+├── ExecuteFunction: usp_SetInfo_iud_VNT
+└── Action: LabelPrint (in tem)
+```
+
+#### Bước 2: Debug "Độ dày = 0" (SIExtReal03)
+```sql
+-- Kiểm tra SetInfo
+SELECT Barcode, MaterialCode, SIExtReal03 AS Thickness FROM STB_SetInfo WITH(NOLOCK) 
+WHERE MaterialCode IN ('CRFYL85-01','CRFYN85L-01')
+-- → SIExtReal03 = 0.00 ❌
+
+-- Kiểm tra logic auto-fill trong usp_DayProdPlan_get:
+-- CASE WHEN SI.SIExtReal03 IS NOT NULL THEN SI.SIExtReal03
+--      ELSE CONVERT(NUMERIC(20,5), ISNULL(MM.MaterialThickness, '0.0'))
+-- END AS SIExtReal03
+-- → Lấy từ STB_MaterialMaster.MaterialThickness
+
+-- Kiểm tra MaterialThickness
+SELECT MaterialCode, MaterialThickness FROM STB_MaterialMaster WITH(NOLOCK)
+WHERE MaterialCode IN ('CRFYL85','CRFYL85-01','CRFYN85L','CRFYN85L-01')
+-- → Model cũ: 120/180 ✅ | Model mới: '' (rỗng) ❌
+```
+
+**Root Cause 1:** Model mới chưa được cấu hình `MaterialThickness` tại A230 (MaterialMaster).
+
+**Fix 1:** Vào A230 hoặc chạy SQL set `MaterialThickness`.
+
+#### Bước 3: Debug "Not found label type" (LabelPrint)
+```sql
+-- Kiểm tra STB_ModelLabelInfo (bảng mapping Model → LabelType)
+SELECT ModelCode, LabelType, FormatName FROM STB_ModelLabelInfo WITH(NOLOCK) 
+WHERE ModelCode IN ('CRFYL85','CRFYL85-01','CRFYN85L','CRFYN85L-01')
+-- → Model cũ: có ElectLabel, AssembleLabel, PartLabel ✅
+-- → Model mới: 0 rows ❌
+```
+
+**Root Cause 2:** Model mới chưa có record trong `STB_ModelLabelInfo` → client B442 tìm LabelType → không tìm thấy → exception.
+
+**Fix 2:** Vào A460 thêm hoặc chạy SQL copy từ model cũ.
+
+#### Bước 4: Data Flow tổng thể
+```
+A230 (MaterialMaster) ─── MaterialThickness ───→ STB_MaterialMaster
+         ↓                                              ↓
+A460 (LabelInfo) ── LabelType/FormatName ──→ STB_ModelLabelInfo    usp_DayProdPlan_get
+         ↓                                              ↓               ↓ (auto-fill)
+B442 (ElectrodePlan) ─── LabelPrint ───→ Tìm LabelType      STB_SetInfo.SIExtReal03
+         ↓                                 ↓                       ↓
+    Exception nếu thiếu              "Not found label type"     Tem hiển thị "Độ dày"
+```
+
+#### Bước 5: Checklist thêm model Electrode mới (CRF%)
+1. ☐ **A230** → `STB_MaterialMaster.MaterialThickness` = giá trị đúng (120/180/200...)
+2. ☐ **A460** → `STB_ModelLabelInfo`: thêm `ElectLabel` (bắt buộc) + `AssembleLabel`, `PartLabel` (tùy dây chuyền)
+3. ☐ **Verify:** Tạo lot test tại B442 → kiểm tra cột "Độ dày" → bấm in tem
+
+#### Bài học rút ra
+1. Lỗi in tem Electrode thường do **2 nguyên nhân đồng thời**: thiếu MaterialThickness + thiếu LabelType
+2. **`STB_ModelLabelInfo`** là bảng ẩn quan trọng — không thấy rõ trên UI nhưng quyết định in tem có thành công không
+3. **Luôn copy config từ model cũ cùng loại** khi thêm model mới — tránh bỏ sót
+4. **Stack trace `Awoo.SmartFramework...PrintLabel`** → 100% là thiếu LabelType trong `STB_ModelLabelInfo`
+
+> 🔗 **Chi tiết fix:** Xem KB_04 §6.20, KB_05 (Electrode), KB_01 §1.2
+
+
+---
+
+*Cập nhật: 2026-06-18 | Tổng hợp 12 nhóm Validation Gates + Case Study B353/B523 + B442 Electrode bởi Antigravity AI.*
 

@@ -1,4 +1,4 @@
-# KB_01 — UI / Đăng nhập / Phân quyền / Stage Prices
+﻿# KB_01 — UI / Đăng nhập / Phân quyền / Stage Prices
 
 > **Màn hình liên quan:** Login, A460, A419, B260, Z410, Z220, Z330, B682, B781, B789, B791, B786, B934, B935, FG02
 > ← [Về INDEX](KB_INDEX.md)
@@ -40,6 +40,17 @@ WHERE FormatName LIKE '%[Tên Model]%' AND IsApproval = 1
 ```
 3. Nếu chưa có format → liên hệ anh Huy thêm cấu hình tem
 
+
+4. **Nếu lỗi "Not found label type"** (đặc biệt ở B442 Electrode):
+   - Kiểm tra `STB_ModelLabelInfo`:
+`sql
+SELECT ModelCode, LabelType, FormatName FROM STB_ModelLabelInfo WITH(NOLOCK) WHERE ModelCode = 'MÃ_MODEL';
+`
+   - Nếu trả về 0 rows → model chưa config tại A460 → copy từ model cũ cùng loại
+   - LabelType cần thiết: `ElectLabel` (B442), `AssembleLabel` (B450/B540), `PartLabel` (F330)
+
+> [!TIP]
+> **Stack trace chứa `Awoo.SmartFramework...PrintLabel`** → 100% thiếu record trong `STB_ModelLabelInfo`. Xem KB_04 §6.20 và KB_14 §7.2 để debug chi tiết.
 ---
 
 ### 1.3 Lỗi popup trống trên B270
