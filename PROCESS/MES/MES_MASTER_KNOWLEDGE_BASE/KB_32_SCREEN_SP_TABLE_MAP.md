@@ -26,6 +26,9 @@ ORDER BY SO.ObjectType
 | SP | Chức năng |
 |---|---|
 | `usp_Vietnam_DoProcessProdPacking_VVT` | **CORE** — Gộp box: OPENXML→CURSOR→PackingByOne |
+| `usp_DoProcessProdPackingByOne_VNT` | Sub-SP: xử lý đóng gói từng barcode |
+| `usp_DoCancelProdPacking_LotNo` | Hủy đóng gói theo LotNo |
+| `usp_DoCreatePackingLabelInfo` | Tạo thông tin label đóng gói |
 | `usp_savePackingLabelQty_VVT` | Lưu SL in tem đóng gói |
 | `usp_BoxCheckSetupValue` | Kiểm tra cấu hình box (SL/box, Size) |
 | `usp_BoxCheckSetupValueTwo` | Kiểm tra cấu hình box (variant 2) |
@@ -78,6 +81,8 @@ ORDER BY SO.ObjectType
 |---|---|
 | `usp_GetProdRouteHistForBarcode_VNT` | **12K** — Lấy lịch sử routing theo barcode |
 | `usp_GetProdRouteBarcodeForDefect_VNT` | Lấy info lỗi theo barcode |
+| `usp_DoProcessProdRouteHist_VNT` | Variant VNT — search dữ liệu routing |
+| `usp_ProdRouteHist_get` | Lấy lịch sử routing chung |
 | `usp_WasteWeight_get` | Lấy trọng lượng phế |
 
 ### Bảng DB chính
@@ -131,7 +136,7 @@ ORDER BY SO.ObjectType
 
 ## F330 — Nhập Kho NVL (MaterialReceiptAndPrintLabel)
 
-### Execute SPs (17 SPs — nhiều nhất!)
+### Execute SPs (18 SPs — nhiều nhất!)
 
 | SP | Chức năng |
 |---|---|
@@ -139,6 +144,7 @@ ORDER BY SO.ObjectType
 | `usp_MaterialDocDetail_iud` | IUD chi tiết phiếu (từng NVL) |
 | `usp_MaterialDocLotInfo_iud` | IUD thông tin Lot |
 | `usp_DoArriveMaterialDelivery` | Xác nhận hàng đến |
+| `usp_DoMaterialDocMasterDetail_iud` | IUD master detail phiếu |
 | `usp_DoFinishMaterialDoc` | Đóng phiếu nhập |
 | `usp_DoFixMaterialDoc` | Xác nhận phiếu |
 | `usp_DoCancelMaterialDoc` | Hủy phiếu |
@@ -188,8 +194,10 @@ ORDER BY SO.ObjectType
 
 | SP | Type | Chức năng |
 |---|---|---|
-| `usp_DoAddCommInspMeasureHistForBarcode_Vietnam` | Execute | Thêm kết quả đo PQC |
-| `usp_DoFinishCommInspDoc_VNT` | Execute | Hoàn thành tài liệu QC |
+| `usp_DoAddCommInspMeasureHistForBarcode` | Execute | Nhập giá trị đo (base) |
+| `usp_DoAddCommInspMeasureHistForBarcode_Vietnam` | Execute | Thêm kết quả đo PQC (variant VN) |
+| `usp_DoFinishCommInspDoc` | Execute | Hoàn thành QC doc (base) |
+| `usp_DoFinishCommInspDoc_VNT` | Execute | Hoàn thành tài liệu QC (VNT) |
 | `usp_GetCommInspection_HistoryForBarcode_Vietnam` | Search | Lấy lịch sử QC VN |
 
 ---
@@ -199,12 +207,15 @@ ORDER BY SO.ObjectType
 | SP | Type | Chức năng |
 |---|---|---|
 | `usp_DoAddCommInspMeasureHistForBarcode` | Execute | Nhập giá trị đo |
+| `usp_DoAddCommInspMeasureHistForBarcode_TEST` | Execute | Nhập giá trị đo (test mode) |
 | `usp_DoFinishCommInspDoc` | Execute | Hoàn thành QC doc |
 | `usp_DoFinishCommInspDoc_VNT` | Execute | Hoàn thành VNT |
 | `usp_ElectrodeDivision_popup` | Execute | Popup phân loại electrode |
 | `usp_DoLossElectrodeProcess_iud` | Execute | Ghi nhận Loss electrode |
+| `usp_CustomerComplaintsManagementInfo_iud` | Execute | IUD khiếu nại khách hàng |
 | `usp_GetElectrodeInspectionHistoryForBarcode` | Search | Lịch sử QC electrode |
 | `usp_ElectrodeCoatingInfo_get` | Search | Thông tin coating |
+| `usp_CustomerComplaintsManagementInfo_get` | Search | Lấy info khiếu nại KH |
 
 ---
 
@@ -254,6 +265,7 @@ ORDER BY SO.ObjectType
 | `usp_MaterialQcDetail_get` | Lấy hạng mục kiểm tra |
 | `usp_MaterialQcSampleResult_get` | **★ Lấy giá trị đo từ Stb_ESRValueMonitor** |
 | `usp_GetMaterialQcInfo_ForReport` | Report QC |
+| `usp_GetProdRouteBarcodeForDefect_E27` | Lấy info lỗi theo barcode (E-27) |
 
 ---
 
@@ -351,7 +363,7 @@ SELECT * FROM STB_PassOrFailRouteStatus
 WHERE Barcode = 'mã' ORDER BY CreatedDate DESC
 ```
 
-> ⚠️ **BG2 dùng route VP01→VP08** (khác BN/BG1 dùng V-22→V-34)
+> ⚠️ **BG2 dùng route VP01→VP18 (Cell) + ND01→ND10 (Nordex)** (khác BN/BG1 dùng V-22→V-34)
 
 ---
 

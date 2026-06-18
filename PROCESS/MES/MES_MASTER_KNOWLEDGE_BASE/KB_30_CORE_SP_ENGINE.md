@@ -437,8 +437,14 @@ Kết quả: 1 dòng mới trong STB_ProdRouteHist, NVL bị trừ, tổng hợp
 ### 8.1 Format Barcode
 
 ```
-[Prefix][ModelHeader][YearCode][MonthCode][DayCode][Serial]
-   VV      PP         1        6          3       R072701
+[Prefix][YearCode][MonthCode][DayCode][Serial]
+
+Ví dụ thực (2026-06-18): VVQO1812001E23
+  VV = BG/HN factory
+  Q  = Year 2026
+  O  = Month June (tháng 6)
+  18 = Day 18
+  12001E23 = Serial (model-dependent format)
 ```
 
 **Quy tắc Prefix:**
@@ -459,8 +465,9 @@ MonthCode = CHAR(Month + 73)
 
 **Quy tắc Year Code:**
 ```sql
-SELECT YearCode FROM STB_YearInfo WHERE Year = 2026
--- Ví dụ: 2026 → '6', 2025 → '5'
+SELECT Year, YearCode FROM STB_YearInfo WHERE Year >= 2024
+-- Kết quả thực tế: 2024→'O', 2025→'P', 2026→'Q', 2027→'R', 2028→'S'
+-- KHÔNG phải số đơn giản! Dùng mã chữ cái alphabet.
 ```
 
 ### 8.2 Gate Logic
