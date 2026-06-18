@@ -925,6 +925,166 @@ Dưới đây là ma trận trạng thái các hạng mục công việc đã tr
 *   **Kho thành phẩm:**
     *   *Đạt 90%:* In tem nhãn đóng gói, nhập kho bằng phần mềm, kiểm tra dữ liệu nhập/xuất kho trên hệ thống MES, xuất kho thành phẩm. Cần tích hợp nốt phần in ấn và đồng bộ dữ liệu xuất hàng.
 
+
+#### 3. Kiu1EBF
+ Tru00FAc Hu1EC7 Thu1ED1
+g BG2 — Deep Dive
+
+##### 3.1 Phu00E2
+ Biu1EC7	 WorkCenterCode
+BG2 du00F9
+g **chung database SmartFactoryV2** (khu00F4
+g tu00E1ch DB riu00EA
+g). Phu00E2
+ biu1EC7	 bu1EB1
+g WorkCenterCode:
+
+| WorkCenterCode | Nhu00E0 mu00E1y | Ghi chu00FA |
+|---|---|---|
+| `VVT_F4` | Bu1EAFc Giang 2 (Cell Line) | Du00F9
+g trong STB_DayProdPlan, STB_SetInfo |
+| `VNT_F4` | Bu1EAFc Giang 2 (Module/BE) | Du00F9
+g trong WorkCenterInfo |
+
+> u26A0`uFE0F **Lu01B0u u00FD:** SP `usp_DoCreateSetInfoForProdQty_VNT` du00F9
+g `VVT_F4` u0111`u1EC3 phu00E2
+ nhu00E1
+h logic tu1EA1o Barcode. Khi query du1EEF liu1EC7u BG2, cu1EA7
+ check Cu1EA2 HAI code.
+
+##### 3.2 Su1EA3
+ Phu1EA9m BG2 (Module / PCBA / SL7)
+
+BG2 **KHu00D4NG su1EA3
+ xuu1EA5	 tu1EE5 u0111iu1EC7
+ thu00F4
+g thu01B0`u1EDD
+g** (Cell). BG2 su1EA3
+ xuu1EA5	 **Module lu1EAFp ru00E1p** cho khu00E1ch hu00E0
+g OEM:
+
+| MaterialCode | MaterialName | MaterialType | Khu00E1ch hu00E0
+g | Barcode Prefix |
+|---|---|---|---|---|
+| `BEPCBA-001` | 164181 | FERT | **Bloom Energy** (PCBA) | `K164...` |
+| `EDVTMD-248` | 100099 | FERT | **Pliops** (SCM) | `K100...` |
+| `EDVTSY-001` | 711711 | FERT | **Bloom Energy** (SL-7) | `VH-711711...` |
+| `EDVTMD-246` | VEM540R0335QG | MDL | **Nordex** | Theo VNT_F3 format |
+
+##### 3.3 Logic Tu1EA1o Barcode BG2 — Phu00E2
+ Tu00EDch SP `usp_DoCreateSetInfoForProdQty_VNT`
+
+**Nhu00E1
+h VVT_F4 (du00F2
+g 383-430 trong SP):**
+
+```
+CASE 1: PCBA/SCM (BEPCBA, EDVTMD-248)
+  Header = 'K' + BloomEnergyPartNumber        -- Vu00ED du1EE5: 'K164181'
+  Barcode = Header + BOMRevision + Year + Week + Serial(5 digits)
+  Ku1EBF	 quu1EA3: K16418106262500741
+
+CASE 2: SL-7 (EDVTSY-001)
+  Header = 'VH-' + BloomEnergyPartNumber      -- Vu00ED du1EE5: 'VH-711711'
+  Barcode = Header + '-' + Serial(6) + '-' + Week + Year + '-' + RevisionChar
+  Ku1EBF	 quu1EA3: VH-711711-000001-2626-A
+
+Ngou1EA1i lu1EC7 Nordex (EDVTMD-246): u0111i vu00E0o nhu00E1
+h VNT_F3 (du00F2
+g 311 SP)
+```
+
+##### 3.4 Tou00E0
+ Bu1ED9 18 Mu00E0
+ Hu00EC
+h K1xx
+
+| TCode | ScreenName | Chu1EE9c nu0103
+g | SP chu00ED
+h |
+|---|---|---|---|
+| **K100** | VNT_ModuleProdManagement_MENU | Menu chu00ED
+h Module BG2 | u2014 |
+| **K101** | DayProdPlanForMainLotMDL | Ku1EBF hou1EA1ch SX ngu00E0y (u2248B450) | `usp_DoCreateSetInfoForProdQty_VNT` |
+| **K105** | VNT_ModuleAssemblyLabelInfo | In tem lu1EAFp ru00E1p Module | `usp_ModuleAssemblyLabelInfo_get` |
+| **K107** | VNT_GetProdRouteHistForBarcode_PS | Lu1ECBch su1EED routing barcode | `usp_GetProdRouteHistForBarcode_PS_get` |
+| **K109** | VNT_SelfInspectionRawMaterialBE | Quu00E9	 NVL BloomEnergy (u2248B597) | `usp_RawMaterialInputHist_iud` |
+| **K110** | VNT_ModuleProductionInfo | Quu1EA3
+ lu00FD SX Module | `usp_ModuleProductionInfo_iud/get` |
+| **K120** | VNT_ModuleSemiProductionInfo | Bu00E1
+ thu00E0
+h phu1EA9m Module | `usp_ModuleSemiProductionInfo_iud/get` |
+| **K130** | VNT_ModuleLabelInfo | In tem Module (SerialNo) | `usp_DoCreateModuleLabelInfo` |
+| **K140** | VNT_ModuleProductionHistForPliops | Lu1ECBch su1EED SX Pliops | `usp_ModuleProductionHist_iud/get` |
+| **K150** | VNT_ModuleSelfInspectionRawMaterial | Tu1EF1 kiu1EC3m NVL Module | `usp_RawMaterialInputHist_iud` |
+| **K160** | VNT_PackingLabelHistForPS | Lu1ECBch su1EED tem u0111`u00F3
+g gu00F3i | `usp_PackingLabelHistForPS_iud/get` |
+| **K170** | VNT_GetBomInfoByLotOrItem | BOM theo Lot/Item | u2014 |
+| **K180** | VNT_RawMaterialReverseTraceability | Truy xuu1EA5	 NVL ngu01B0`u1EE3c | `usp_GetReverseModelBomByBarcode` |
+| **K181** | VNT_DelegateMaterialInputLog | Log u1EE7y quyu1EC1
+ NVL | u2014 |
+| **K190** | VNT_ProductTrackingByChangeNoticeInfo | Tracking Change Notice | `usp_ProductTrackingByChangeNoticeInfo` |
+| **K195** | VNT_SubAssemblyInfoForBE | Sub-Assembly BloomEnergy | `usp_SubAssemblyInfoForBE_get` |
+| **K198** | VNT_PrintBloomEnergySL7Label | Tem Bloom Energy SL-7 | `usp_DoPrintBloomEnergySL7Label` |
+| **K199** | VNT_NordexPackingLabelPrintingHist_get | Lu1ECBch su1EED tem Nordex | `usp_NordexPackingLabelPrintingHist_get` |
+
+##### 3.5 Database Tables Riu00EA
+g Module (16 bu1EA3
+g)
+
+| Bu1EA3
+g | Rows | Vai tru00F2 |
+|---|---|---|
+| `STB_QC_LOTNO_MODULE_VALUES` | 113,948 | Giu00E1 tru1ECB u0111o kiu1EC3m QC Module |
+| `STB_ModuleAssemblyLabelInfo` | 16,507 | Tem lu1EAFp ru00E1p Module |
+| `STB_ModuleSemiProductionInfo` | 2,425 | Bu00E1
+ TP Module (K120) |
+| `STB_ModuleLabelInfo` | 1,665 | Tem Module (K130) |
+| `STB_ModuleProductionInfo` | 1,183 | SX Module (K110) |
+| `STB_ModuleProductionHist` | 250 | Lu1ECBch su1EED SX (K140) |
+| `STB_VN_MASTERMODULES` | 1,592 | Master Module config |
+| `STB_VN_DETAILMODULES` | 2,027 | Chi tiu1EBF	 Module |
+
+##### 3.6 K130 u2014 Logic Tu1EA1o Serial Tem Module
+
+Format: `PLS` + RevisionChar + Year(2) + WeekIndex(2) + `V` + Serial(4)
+Vu00ED du1EE5: `PLS1262600V0001`
+Bu1EA3
+g lu01B0u: `STB_ModuleLabelInfo` u2014 Key: `ModuleSerialNo`
+
+##### 3.7 K110 u2014 Module Production (usp_ModuleProductionInfo_iud)
+
+Bu1EA3
+g `STB_ModuleProductionInfo`:
+- `SemiProdLotNo1`, `SemiProdLotNo2`: Lot bu00E1
+ TP u0111`u1EA7u vu00E0o
+- `PinHoleQty`: Su1ED1 lu1ED7 kim (kiu1EC3m tra chu1EA5	 lu01B0`u1EE3
+g)
+- `Farad`, `ESR`: Thu00F4
+g su1ED1 u0111iu1EC7
+
+- `FinishedProdLotNo`: Lot thu00E0
+h phu1EA9m u0111`u1EA7u ra
+
+> **Khu00E1c biu1EC7	 vu1EDBi Cell Line:** Module KHONG du00F9
+g `STB_ProdRouteHist`. Du00F9
+g bu1EA3
+g riu00EA
+g `STB_ModuleProductionInfo` + `STB_ModuleSemiProductionInfo`.
+
+##### 3.8 K109 vs K150 u2014 Hai Mu00E0
+ Hu00EC
+h Quu00E9	 NVL
+
+| | K109 | K150 |
+|---|---|---|
+| **Mu1EE5c u0111`u00EDch** | Quu00E9	 NVL Bloom Energy | Quu00E9	 NVL Module chung |
+| **SP back-end** | Giu1ED1
+g nhau | Giu1ED1
+g nhau |
+| **Khu00E1c biu1EC7	** | Client UI filter riu00EA
+g BE | Client UI filter Module |
+
 ---
 
 ### 6.15 Spare Part — H301/H302/H303/H305
