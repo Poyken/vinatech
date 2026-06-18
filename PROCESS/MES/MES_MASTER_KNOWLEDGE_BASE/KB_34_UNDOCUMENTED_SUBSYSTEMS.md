@@ -509,6 +509,28 @@ SerialLen = 6                → LastSerialNo = 430
 
 ## 22. 📊 Grand Totals — System-Wide Object Count
 
+### Top 15 Largest Tables (by row count — Verified 2026-06-18):
+| # | Table | Rows | Subsystem |
+|---|---|---|---|
+| 1 | `STB_VVT_ESRDATA` | **398,099,747** | ESR measurement (400M!) |
+| 2 | `STB_ProductStockInfo` | 64,556,565 | Product stock snapshots |
+| 3 | `STB_CommInspMeasureHist` | 60,073,965 | QC measurement |
+| 4 | `STB_ESRInspectionData` | 39,668,717 | ESR inspection |
+| 5 | `STB_CommInspDocItem` | 33,141,530 | QC doc items |
+| 6 | `STB_IoTMeasureHist` | 28,786,142 | **IoT measurement** |
+| 7 | `STB_Vvt_SdProds` | 22,868,733 | SD products |
+| 8 | `STB_MaterialQcSampleResult` | 19,943,443 | QC sample results |
+| 9 | `STB_ProcedureLog` | 19,318,631 | **SP execution log** |
+| 10 | `STB_VN_FINISHGOODS_CAPTURE` | 13,555,570 | FG snapshot |
+| 11 | `stb_DetailAgaingHN` | 11,113,742 | **Aging data Hà Nam** |
+| 12 | `STB_MaterialLotSnapshot` | 9,912,516 | Material lot snapshot |
+| 13 | `stb_SDValueTest` | 9,885,729 | SD test values |
+| 14 | `STB_ProductStockInfoUpload` | 9,241,518 | Stock upload |
+| 15 | `STB_VietnamSemiInventory` | 8,212,627 | Semi-FG inventory |
+
+> [!IMPORTANT]
+> **STB_VVT_ESRDATA** chiếm **398 triệu rows** — bảng lớn nhất hệ thống, lưu toàn bộ giá trị ESR từng cell. Đây là lý do SmartFactoryV2 = 572GB.
+
 ### SmartFactoryV2:
 | Object Type | Count |
 |---|---|
