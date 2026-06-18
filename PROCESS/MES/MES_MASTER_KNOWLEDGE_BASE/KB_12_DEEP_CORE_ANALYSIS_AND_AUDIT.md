@@ -283,3 +283,54 @@ ORDER BY CreateDateTime DESC
 > - Truy vết: "Ai quét barcode này lúc mấy giờ?"
 > - Debug: "SP nhận tham số gì khi bị lỗi?"
 > - Audit: "Có bao nhiêu sản phẩm qua công đoạn hôm nay?"
+
+---
+
+## 8. 🏷️ SP Naming Convention DNA (DB Verified 2026-06-18)
+
+> **Tổng: 3,416 SPs** trong SmartFactoryV2 + 223 SPs trong SmartFramework
+
+### 8.1 Naming Pattern Distribution (SmartFactoryV2)
+
+| Pattern | Count | Ý nghĩa | Ví dụ |
+|---|---|---|---|
+| `usp_*_get` | **716** (21%) | **Search/Read** — Lấy dữ liệu hiển thị | `usp_MaterialLotInfo_get` |
+| `usp_*_iud` | **382** (11%) | **CRUD** — Thêm/Sửa/Xóa | `usp_BaseCode_iud` |
+| `usp_Do*` | **380** (11%) | **Action/Execute** — Hành động nghiệp vụ | `usp_DoProcessProdRouteHist` |
+| `usp_VN_*` | **307** (9%) | **VN shorthand** — SP riêng Việt Nam | `usp_VN_Add_FinishGood` |
+| `usp_*_popup` | **269** (8%) | **Popup dialog** — Hiển thị popup | `usp_GetSizeCode_popup` |
+| `usp_Vietnam_*` | **85** (2.5%) | **VN custom** — SP custom VN (dài) | `usp_Vietnam_DoProcessProdPacking_VVT` |
+| `usp_VVT_*` | **43** (1.3%) | **VVT company** — SP riêng VVT | `usp_VVT_PrintLabel_Bloom` |
+| Other | **1,234** (36%) | Legacy + Korean + mixed | `usp_CurlingLine`, `usp_DayYield_dept` |
+
+### 8.2 Factory-Specific Naming Isolation
+
+| Suffix | Count | Factory | Tách biệt |
+|---|---|---|---|
+| `*_HY` | **93** | Hưng Yên | ✅ Hoàn toàn tách biệt |
+| `*_HN` / `*_HNam` | **63** | Hà Nam | ✅ Hoàn toàn tách biệt |
+| `*_VNT` | ~50 | Bắc Ninh (VNT) | ⚠️ Partial — chia sẻ với VVT |
+| `*_VVT` | ~43 | Bắc Ninh (VVT) | ⚠️ Partial — chia sẻ với VNT |
+
+### 8.3 SmartFramework Infra SPs (223 total)
+
+| Nhóm | Ví dụ | Mô tả |
+|---|---|---|
+| Login/Auth | `usp_DoGUILogin`, `usp_DoMobileLogin`, `usp_DoRfcLogin` | Xác thực |
+| User Mgmt | `usp_DoRegistUser`, `usp_DoUpdateUserInfo`, `usp_DoValidateUserId` | Quản lý user |
+| Screen Mgmt | `usp_DoSaveScreen`, `usp_DoDeleteScreen`, `usp_DoCheckDuplicateScreenName` | Quản lý màn hình |
+| Permission | `usp_DoGrantAll`, `usp_DoRevokeAll`, `usp_DoSaveUserTypePermissionAll` | Phân quyền |
+| Label | `usp_DoApproveLabelInfo`, `usp_DoUpdateLabelInfo` | Quản lý tem |
+| Versioning | `usp_DoCheckIn`, `usp_DoCheckOut`, `usp_DoCheckNewVersion` | Version control |
+
+### 8.4 Tổng Quan Object Count (2 databases chính)
+
+| Database | SPs | Tables | Views | Triggers | Functions |
+|---|---|---|---|---|---|
+| **SmartFactoryV2** | 3,416 | 994 | 61 | 33 | 106 |
+| **SmartFramework** | 223 | 61 | — | — | — |
+| **TỔNG** | **3,639** | **1,055** | **61** | **33** | **106** |
+
+---
+
+*Cập nhật: 2026-06-18 — Bổ sung §8: SP Naming Convention DNA + Factory Isolation + SmartFramework Infra + Object Counts. DB verified.*
