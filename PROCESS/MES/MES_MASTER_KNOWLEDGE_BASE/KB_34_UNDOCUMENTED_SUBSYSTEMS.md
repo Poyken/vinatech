@@ -527,28 +527,26 @@ SerialLen = 6                → LastSerialNo = 430
 | Screen Bindings | **7,605** |
 | Registered Screens | **1,467** |
 
-### Across All 19 Databases:
-| Database | Status |
-|---|---|
-| SmartFactoryV2 | **PRIMARY** — 994 tables, 3,396 SPs |
-| SmartFramework | **UI ENGINE** — 61 tables, 7,605 bindings |
-| VINATECH_POP | **POP/Kiosk** — 42 tables |
-| NEOE | **ERP** — 10+ verified tables |
-| AndonDB | **ANDON** — 3 tables |
-| VINATECH_GROUP | **Groupware** |
-| DZICUBE | **Bizbox Alpha** |
-| VINATECH_RESTFUL | **SSO/Identity** |
-| VINATECH_WEBSOCKET | **WebSocket** |
-| VINATECH_SPREADSHEET | **Excel Online** |
-| streamdocs | **PDF Viewer** |
-| VINATECH_DATA_KSOX | **Compliance** |
-| SmartFactoryIncubator | **R&D Sandbox** |
-| WCMS_STANDARD_NEW | **Cash Management** |
-| erpdb | **ERP utility** |
-| SmartFramework_File | **File storage** |
-| SmartFramework_Temp | **Temp storage** |
-| SmartFactoryV2_261807 | Backup snapshot |
-| VINATECH_POP_240625 | POP backup |
+### Across All 19 Databases (Total ~2 TB):
+| Database | Size | Tables | Status |
+|---|---|---|---|
+| SmartFactoryV2 | **572 GB** | **994** | **PRIMARY** — 3,396 SPs |
+| SmartFramework_File | **365 GB** | — | File storage (binary) |
+| SmartFramework_Temp | **127 GB** | — | Temp storage |
+| VINATECH_RESTFUL | **127 GB** | — | SSO/Identity |
+| VINATECH_GROUP | **121 GB** | — | Groupware |
+| NEOE | **70 GB** | **4,876** | ERP Douzone |
+| AndonDB | **13 GB** | 3 | ANDON alerts |
+| SmartFramework | **12 GB** | **61** | UI Engine (7,605 bindings) |
+| SmartFactoryIncubator | **7 GB** | 50 | R&D Sandbox |
+| erpdb | **6 GB** | 884 | ERP utility (Korean) |
+| VINATECH_POP | **2 GB** | **42** | POP/Kiosk terminal |
+| VINATECH_SPREADSHEET | 1.6 GB | — | Excel Online |
+| DZICUBE | 1.4 GB | — | Bizbox Alpha |
+| WCMS_STANDARD_NEW | 0.6 GB | — | Cash Management |
+| streamdocs | 0.3 GB | — | PDF Viewer |
+| VINATECH_DATA_KSOX | 34 MB | — | Compliance |
+| VINATECH_WEBSOCKET | 12 MB | — | WebSocket |
 
 ### 21 Custom VVT Functions:
 | Function | Type | Mô tả |
