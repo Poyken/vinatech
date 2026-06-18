@@ -214,3 +214,72 @@ Số liệu từ môi trường Production Vinatech MES:
 
 ---
 *Cập nhật: 2026-06-12 | Gộp KB_12 và KB_13*
+
+---
+
+## 8. 🔬 Deep Structural X-Ray (Phân Tích Cấu Trúc Sâu — 2026-06-18)
+
+### 8.1 Top 15 Bảng Lớn Nhất (by Row Count)
+
+| # | Bảng | Rows | Ghi chú |
+|---|---|---|---|
+| 1 | **STB_VVT_ESRDATA** | **398,078,765** | Dữ liệu đo ESR — bảng lớn nhất hệ thống |
+| 2 | STB_ProductStockInfo | 64,556,565 | Tồn kho thành phẩm |
+| 3 | STB_CommInspMeasureHist | 60,071,432 | Lịch sử đo kiểm PQC |
+| 4 | STB_ESRInspectionData | 39,668,717 | Dữ liệu kiểm tra ESR |
+| 5 | STB_CommInspDocItem | 33,138,367 | Chi tiết phiếu kiểm tra |
+| 6 | STB_IoTMeasureHist | 28,786,078 | Dữ liệu IoT sensor |
+| 7 | STB_Vvt_SdProds | 22,868,733 | SD Products tổng hợp |
+| 8 | STB_MaterialQcSampleResult | 19,943,218 | Kết quả mẫu QC |
+| 9 | **STB_ProcedureLog** | **19,317,963** | Camera giám sát SP (log mọi SP chạy) |
+| 10 | STB_VN_FINISHGOODS_CAPTURE | 13,555,570 | Snapshot thành phẩm (Agent Job) |
+| 11 | stb_DetailAgaingHN | 11,113,742 | Chi tiết Aging Hà Nam |
+| 12 | STB_MaterialLotSnapshot | 9,912,516 | Snapshot tồn kho NVL |
+| 13 | stb_SDValueTest | 9,885,729 | Dữ liệu test SD |
+| 14 | STB_ProductStockInfoUpload | 9,241,518 | Upload tồn kho TP |
+| 15 | STB_VietnamSemiInventory | 8,212,627 | Bán thành phẩm VN |
+
+> ⚠️ **398 triệu dòng ESR** = rủi ro performance lớn nhất. Query trên bảng này không có WHERE clause chính xác sẽ timeout.
+
+### 8.2 SP Coding Patterns (Phong cách viết code)
+
+| Pattern | Số SPs | Tỉ lệ | Ghi chú |
+|---|---|---|---|
+| **TRY/CATCH** | 564 | 16.6% | Error handling chuẩn |
+| **CURSOR** | 550 | 16.2% | Duyệt từng dòng (đặc trưng NAIS) |
+| **OPENXML** | 520 | 15.3% | UI gửi data qua XML → SP parse |
+| **BEGIN TRAN** | 50 | 1.5% | Transaction rõ ràng (rất ít!) |
+| **DYNAMIC SQL** | 9 | 0.3% | sp_executesql |
+
+> ⚠️ **Chỉ 50/3,395 SPs (1.5%) dùng Transaction tường minh.** Phần lớn SP không wrap trong BEGIN TRAN → nếu crash giữa chừng, data có thể bị partial write.
+>
+> ⚠️ **550 SPs dùng CURSOR** = pattern đặc trưng của NAIS Korea. CURSOR tốn memory và chậm hơn set-based operations, nhưng logic phức tạp (chạy từng dòng, gọi sub-SP) buộc phải dùng.
+
+### 8.3 Structural Constraints (Ràng buộc cấu trúc)
+
+| Metric | Giá trị | Ý nghĩa |
+|---|---|---|
+| **Foreign Keys** | **27** (trên 994 tables) | Rất ít FK → data integrity phụ thuộc vào SP logic, không phải DB engine |
+| **Indexes** | 1,021 | Đủ cho performance cơ bản |
+| **SQL Views** | 62 | VW_WipResult (lớn nhất, 17K chars, join 9 tables) |
+| **Vinatech custom tables** | 201 / 994 | 20.2% tables do Vinatech tự tạo |
+
+> 💡 **27 FK trên 994 tables = hệ thống "tin tưởng SP"**: NAIS thiết kế để SP đảm bảo data integrity thay vì dựa vào FK constraints. Khi IT Admin UPDATE trực tiếp bằng SQL, **không có FK nào chặn** → phải tự kiểm tra tính toàn vẹn.
+
+### 8.4 STB_ProcedureLog — Camera Giám Sát Real-Time
+
+```sql
+-- Xem SP nào đang chạy ngay bây giờ
+SELECT TOP 10 ProcedureName, VariableName, VariableValue, CreateDateTime
+FROM STB_ProcedureLog WITH(NOLOCK)
+ORDER BY CreateDateTime DESC
+
+-- Kết quả mẫu (2026-06-18 21:00:09):
+-- usp_DoProcessProdRouteHistForBarcode2 | @ProdRouteHistNo | 20260618001462
+-- usp_DoProcessProdRouteHist            | @ProdRouteHistNo | 20260618001462
+```
+
+> **19.3 triệu dòng** log = ~5+ năm dữ liệu. Mỗi lần worker quét barcode → SP ghi 1 dòng vào bảng này. Dùng để:
+> - Truy vết: "Ai quét barcode này lúc mấy giờ?"
+> - Debug: "SP nhận tham số gì khi bị lỗi?"
+> - Audit: "Có bao nhiêu sản phẩm qua công đoạn hôm nay?"
