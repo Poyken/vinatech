@@ -253,5 +253,92 @@
 
 ---
 
-*Cập nhật: 2026-06-18 — Deep discovery Phase 5-7 (Triggers + Jobs + Labels + ERP + DDL + POP)*
+## 9. 🔧 CLR Integration — 16 Assemblies, 32 Functions
 
+> SQL Server CLR (Common Language Runtime) cho phép chạy C# code trực tiếp trong DB. Đây là **cầu nối** giữa MES DB và thế giới bên ngoài.
+
+### 9.1 Custom Assemblies:
+| Assembly | Chức năng |
+|---|---|
+| `Awoo.SmartFramework.Database.CLR` | **Core CLR** — Hạ tầng chính |
+| `Awoo.SAP.RFCGateway.Client/Core` | **★ SAP RFC** — Kết nối SAP |
+| `Awoo.Slack.Client` | **★ Slack** — Gửi tin nhắn |
+| `Awoo.IO` | File I/O |
+| `Awoo.Net.Tcp` | TCP Socket |
+| `Newtonsoft.Json` | JSON processing |
+
+### 9.2 PLC Communication (6 functions):
+| Function | Mô tả |
+|---|---|
+| `fnCLRReadTextFromPLCMonitoringServer` | **★ Đọc text từ PLC** |
+| `fnCLRWriteTextToPLCMonitoringServer` | **★ Ghi text tới PLC** |
+| `fnCLRReadValueFromPLCMonitoringServer` | Đọc giá trị PLC |
+| `fnCLRWriteValueToPLCMonitoringServer` | Ghi giá trị PLC |
+| `fnCLRSendSocket` | TCP send |
+| `fnCLRSendReceiveSocket` | TCP send/receive |
+
+### 9.3 SAP RFC (2 procedures):
+| SP | Mô tả |
+|---|---|
+| `usp_CLRCallSAPRfc` | **★ Gọi SAP RFC function** |
+| `usp_CLRGetSAPRfcInfo` | Lấy thông tin SAP RFC |
+
+### 9.4 Slack Integration (8 procedures):
+| SP | Mô tả |
+|---|---|
+| `usp_CLRSlackSendMessage` | **Gửi message tới channel** |
+| `usp_CLRSlackSendDM` | Gửi direct message |
+| `usp_CLRSlackSendWebHook` | Webhook |
+| `usp_CLRSlackSendMessageAll` | Broadcast all |
+| `usp_CLRSlackInviteUser` | Invite user |
+| `usp_CLRSlackInviteToChannel` | Invite to channel |
+| `usp_CLRSlackKickFromChannel` | Kick from channel |
+| `usp_CLRSlackGetChannelList/UserList` | Get channels/users |
+
+### 9.5 File & Data Operations:
+| Function | Mô tả |
+|---|---|
+| `fnCLRReadBinaryFromFile` | Đọc file binary |
+| `fnCLRReadStringFromFile` | Đọc file text |
+| `usp_CLRWriteBinaryToFile` | Ghi file binary |
+| `usp_CLRWriteStringToFile` | Ghi file text |
+| `usp_CLRSendMail/V2` | Gửi email (CLR-based) |
+| `usp_CLRConvertToPivotData` | Pivot data |
+| `usp_CLRExecuteSPWithXml` | Execute SP via XML |
+| `fnCLRGetMaxSerial/fnCLRMakeMaxSerial` | Serial number gen |
+| `JoinString` | Aggregate join |
+| `Median` | Aggregate median |
+
+---
+
+## 10. 📋 61 Views in SmartFactoryV2
+
+### Analytics Views (V_SFA):
+| View | Mô tả |
+|---|---|
+| `V_SFA_FINISHGOODS_VN` | **★ FG stock VN** (MaterialCode, LotNo, BarcodeStockQty) |
+| `V_SFA_FINISHGOODS_BG` | FG stock BG |
+| `V_SFA_MATERIAL_LOT_STOCK` | Material lot stock |
+| `V_SFA_PRODUCT_STOCK_DETAIL` | Product stock detail |
+| `V_SFA_PRODUCT_STOCK_SUM` | Product stock summary |
+
+### ESM Bridge Views:
+| View | Mô tả |
+|---|---|
+| `VIEW_ESM_PONoMaxRoute` | Max route by PO |
+| `VIEW_ESM_ProdDayPlan` | Day plan from GW |
+| `VIEW_ESM_RouteJobDate` | Route job dates |
+
+### VPC Views (VinaEnesol PCBA):
+| View | Mô tả |
+|---|---|
+| `VW_VPC_DailyProdData` | Daily production data |
+| `VW_VPC_ProdBasic` | Basic production |
+| `VW_VPC_ProdWindingBasic/Half/Total` | Winding production (3 views) |
+
+### ESR Data Views (7 snapshot views):
+`STB_VVT_ESRDATA_20210716` ... `STB_VVT_ESRDATA_20230814` — Frozen ESR snapshots by date.
+
+---
+
+*Cập nhật: 2026-06-18 — Deep discovery Phase 5-11 (Triggers + Jobs + Labels + ERP + DDL + POP + CLR + Views)*
