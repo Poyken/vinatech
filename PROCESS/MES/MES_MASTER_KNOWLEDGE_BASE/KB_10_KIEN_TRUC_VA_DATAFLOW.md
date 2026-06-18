@@ -580,6 +580,30 @@ Groupware VINA_DOCUMENT_*
 ```
 
 ---
+### 1.14 Bản Đồ TCode Prefix (Phân Loại 1,166 Màn Hình)
+
+> Mỗi prefix = 1 module chức năng. Biết prefix = biết ngay chức năng thuộc nhóm nào.
+
+| Prefix | Screens | Module | Ví dụ |
+|---|---|---|---|
+| **B** | 373 | **Sản xuất** (Production) — màn hình lớn nhất | B523 (Đóng gói), B530 (Nhập SL), B597 (Scan NVL) |
+| **H** | 180 | **Hà Nam** (VVT_F3) — variant của B-series | HN523, HN530, HN597 |
+| **C** | 155 | **QC & Chất lượng** (Quality Control) | C451 (PQC), C530 (OQC), C560 (FG Receipt) |
+| **F** | 124 | **Kho & Vật tư** (Material/Warehouse) | F330 (Phiếu NVL), F721 (Tồn kho), F743 (Slitting) |
+| **Z** | 52 | **System Admin** (Quản trị hệ thống) | Z410 (User), Z530 (Label Design), Z320 (StringResource) |
+| **A** | 33 | **Master Data & Kế hoạch** | A210 (BOM), A310 (Route), A418 (Model), A510 (PO) |
+| **P** | 30 | **Nhân sự & Tài liệu** (HR/Document) | P111 (Chấm công), P170 (NV Info), P210 (Document) |
+| **K** | 28 | **Đặc biệt / Khách hàng** | K101 (LotTracking), K198 (Bloom), K199 (Nordex) |
+| **V** | 26 | **Monitoring & Dashboard** | V-series (monitoring TV) |
+| **L** | 25 | **Planning** | L-series (kế hoạch sản xuất) |
+| **E** | 24 | **Bán hàng** (Sales) | E310 (Sales Order), E410 (GI Request), E610 (Complaints) |
+| **G** | 23 | **Groupware** | G-series (tờ trình, duyệt) |
+| **M** | 22 | **Thiết bị** (Machine/Equipment) | M-series (bảo trì, hiệu chuẩn) |
+| **T** | 16 | **Công cụ** (Tools) | T-series (tiện ích) |
+| **D** | 6 | **Enesol/Hưng Yên** | D051, D100, D110 |
+| **Khác** | 49 | S, W, R, I, Y, ZSRT... | Niche screens |
+
+---
 
 ## 2. 🗺️ Luồng Dữ Liệu Tổng Quan (End-to-End Data Flow)
 
