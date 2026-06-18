@@ -599,6 +599,8 @@ WHERE MaterialCode IN ('CRFYL85','CRFYL85-01','CRFYN85L','CRFYN85L-01')
 
 **Fix 1:** Vào A230 hoặc chạy SQL set `MaterialThickness`.
 
+> 🔗 **SQL fix chi tiết:** Xem [KB_04 §6.20](KB_04_DONG_GOI_IN_TEM.md) — checklist + query UPDATE MaterialThickness
+
 #### Bước 3: Debug "Not found label type" (LabelPrint)
 ```sql
 -- Kiểm tra STB_ModelLabelInfo (bảng mapping Model → LabelType)
@@ -611,6 +613,8 @@ WHERE ModelCode IN ('CRFYL85','CRFYL85-01','CRFYN85L','CRFYN85L-01')
 **Root Cause 2:** Model mới chưa có record trong `STB_ModelLabelInfo` → client B442 tìm LabelType → không tìm thấy → exception.
 
 **Fix 2:** Vào A460 thêm hoặc chạy SQL copy từ model cũ.
+
+> 🔗 **SQL fix chi tiết:** Xem [KB_04 §6.20](KB_04_DONG_GOI_IN_TEM.md) — INSERT INTO STB_ModelLabelInfo template
 
 #### Bước 4: Data Flow tổng thể
 ```

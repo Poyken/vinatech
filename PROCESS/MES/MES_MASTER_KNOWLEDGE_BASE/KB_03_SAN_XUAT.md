@@ -1,4 +1,4 @@
-# KB_03 — Sản Xuất & Lịch Sử Routing
+﻿# KB_03 — Sản Xuất & Lịch Sử Routing
 
 > **Màn hình liên quan:** B310, B450, B530, B540, B597, B598, B682, B726, B781, B782, B791
 > ← [Về INDEX](KB_INDEX.md)
@@ -1841,13 +1841,6 @@ $$\text{CurrentQty} = \text{LengthSlitting} \times \left(\frac{\text{WidthSlitti
 
 > 🔗 **Xem thêm:** Mục [B250 / B270](#b250--b270--cell--machine-mapping) phía trên đã có chi tiết lỗi popup trống và thêm Cell/Line mới.
 
-### Lỗi 1: Popup gán máy B270 trống không hiển thị danh sách thiết bị
-*   **Triệu chứng:** Danh sách máy trống khi mở popup tại B270.
-*   **Nguyên nhân gốc:** SP `usp_Set_VVT_Info_get` hardcode Whitelist UserID.
-*   **Cách khắc phục:** ALTER SP bổ sung UserID, hoặc dùng B230 thay thế.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_01_UI_PHAN_QUYEN.md § 1.3](KB_01_UI_PHAN_QUYEN.md).
-
----
 
 
 ## B301 — Production Order Info (Thông tin lệnh sản xuất chi tiết)
