@@ -59,7 +59,7 @@ WHERE MaterialCode = 'ECVT30-255'
 
 **3 lớp guard an toàn:** `IF @oldLotid IS NULL` (chặn collision) + `LIKE 'VV%'` (chặn module lot) + `@newLotid IS NOT NULL` (chặn lot bình thường)
 
-> 🔗 **SQL code fix chi tiết + diff:** Xem [KB_04 §6.18](KB_04_DONG_GOI_IN_TEM.md)
+> 🔗 **SQL code fix chi tiết + diff:** Xem [KB_04 §6.18](../KB_04/KB_04_01_CORE_PACKAGING.md)
 
 #### Bước 6: Kiểm chứng — Kết quả thực tế (2026-06-18)
 
@@ -70,7 +70,7 @@ WHERE MaterialCode = 'ECVT30-255'
 | Lot affected qua MaterialLotInfo | 58/58 valid, 0 false positive | ✅ An toàn |
 | Module lots (MVV prefix) | 20,368 | ✅ Guard chặn 100% |
 
-> 🔗 **Query kiểm chứng collision + false positive:** Xem [KB_04 §6.18](KB_04_DONG_GOI_IN_TEM.md)
+> 🔗 **Query kiểm chứng collision + false positive:** Xem [KB_04 §6.18](../KB_04/KB_04_01_CORE_PACKAGING.md)
 
 #### Bài học rút ra
 1. **VJ/VV prefix mismatch** là nguồn lỗi phổ biến — luôn kiểm tra cả 2 biến thể
@@ -135,7 +135,7 @@ WHERE MaterialCode IN ('CRFYL85','CRFYL85-01','CRFYN85L','CRFYN85L-01')
 
 **Fix 1:** Vào A230 hoặc chạy SQL set `MaterialThickness`.
 
-> 🔗 **SQL fix chi tiết:** Xem [KB_04 §6.20](KB_04_DONG_GOI_IN_TEM.md) — checklist + query UPDATE MaterialThickness
+> 🔗 **SQL fix chi tiết:** Xem [KB_04 §6.20](../KB_04/KB_04_01_CORE_PACKAGING.md) — checklist + query UPDATE MaterialThickness
 
 #### Bước 3: Debug "Not found label type" (LabelPrint)
 ```sql
@@ -150,7 +150,7 @@ WHERE ModelCode IN ('CRFYL85','CRFYL85-01','CRFYN85L','CRFYN85L-01')
 
 **Fix 2:** Vào A460 thêm hoặc chạy SQL copy từ model cũ.
 
-> 🔗 **SQL fix chi tiết:** Xem [KB_04 §6.20](KB_04_DONG_GOI_IN_TEM.md) — INSERT INTO STB_ModelLabelInfo template
+> 🔗 **SQL fix chi tiết:** Xem [KB_04 §6.20](../KB_04/KB_04_01_CORE_PACKAGING.md) — INSERT INTO STB_ModelLabelInfo template
 
 #### Bước 4: Data Flow tổng thể
 ```

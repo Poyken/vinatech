@@ -1,4 +1,4 @@
-
+﻿
 # KB_01 — UI / Đăng nhập / Phân quyền / Stage Prices
 
 > **Màn hình:** Login, A460, A419, B260, Z410, Z220, Z330, B682, B781, B789, B791, B786, B934, B935, FG02
@@ -211,7 +211,7 @@ WHERE ScreenName = 'Tên_Màn_Hình_Kỹ_Thuật'
 -- Bắc Giang: usp_VN_Update_ExportExcel_BG
 -- Bắc Ninh: usp_VN_Update_ExportExcel
 
--- 👉 Sửa ngày nhập/xuất kho thành phẩm BG: Xem tại [KB_02_KHO_WMS.md § 8](KB_02_KHO_WMS.md)
+-- 👉 Sửa ngày nhập/xuất kho thành phẩm BG: Xem tại [KB_02/KB_02_01_NVL_WMS.md § 8](KB_02/KB_02_01_NVL_WMS.md)
 ```
 
 *Cập nhật: 2026-05-22*
@@ -305,7 +305,7 @@ STB_UserBasicPermission (Quyền cơ bản của user)
     SELECT ModelCode, FormatName FROM STB_ModelLabelInfo WHERE ModelCode = 'MÃ_MODEL';
     -- Nếu trống → Vào A460 chọn Model, chọn mẫu tem AssembleLabel (dòng 2) cho SX, PartLabel cho kho.
     ```
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.16](KB_04_DONG_GOI_IN_TEM.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_04/KB_04_01_CORE_PACKAGING.md § 6.16](KB_04/KB_04_01_CORE_PACKAGING.md).
 
 ---
 
@@ -316,7 +316,7 @@ STB_UserBasicPermission (Quyền cơ bản của user)
 *   **Triệu chứng:** Đã đăng ký màn hình mới trong `STB_ScreenInfo` nhưng không thấy trên menu.
 *   **Nguyên nhân gốc:** Cờ `IsPublish` chưa được bật hoặc chưa gán ParentName (thư mục menu cha).
 *   **Cách khắc phục:** Vào Z110, tìm Screen mới, bật `IsPublish = 1`, đảm bảo ParentName đúng thư mục.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_19_ALL_DATABASES_MAP.md § 4](KB_19_ALL_DATABASES_MAP.md#4-kiến-trúc-màn-hình-động-dynamic-ui-registry-của-smartframework).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_19/KB_19_01_ARCHITECTURE.md § 4](KB_19/KB_19_01_ARCHITECTURE.md#4-kiến-trúc-màn-hình-động-dynamic-ui-registry-của-smartframework).
 
 ---
 
@@ -327,7 +327,7 @@ STB_UserBasicPermission (Quyền cơ bản của user)
 *   **Triệu chứng:** Sau khi sửa tham số tại Z210, hệ thống vẫn chạy với cấu hình cũ.
 *   **Nguyên nhân gốc:** Một số tham số hệ thống được cache và cần restart ứng dụng client để áp dụng.
 *   **Cách khắc phục:** Yêu cầu người dùng đóng hoàn toàn ứng dụng MES và mở lại.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_25_VINAENESSOL_HUNG_YEN.md](KB_25_VINAENESSOL_HUNG_YEN.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_25/KB_25_01_OVERVIEW.md](KB_25/KB_25_01_OVERVIEW.md).
 
 ---
 

@@ -76,7 +76,7 @@
 *   **Cách khắc phục:**
     1. Yêu cầu quản lý duyệt PO trên Groupware.
     2. Nếu đã duyệt nhưng vẫn lệch, IT kiểm tra trạng thái Windows Service ESM, hoặc chạy query cưỡng bức đồng bộ thủ công qua ESM Bridge Tables.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_07_GROUPWARE_INTEGRATION.md § 6](KB_07_GROUPWARE_INTEGRATION.md#6-lỗi-không-đồng-bộ-được-po-từ-groupware-sang-mes).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_07/KB_07_01_OVERVIEW_FLOWS.md § 6](../KB_07/KB_07_01_OVERVIEW_FLOWS.md#6-lỗi-không-đồng-bộ-được-po-từ-groupware-sang-mes).
 
 ---
 
@@ -98,7 +98,7 @@
 *   **Triệu chứng:** Khi lập kế hoạch và in tem điện cực tại **B442**, Model mới không hiển thị hoặc không cho phép in.
 *   **Nguyên nhân gốc:** Model chưa được khai báo ở bảng thông tin Model master (**A230**) hoặc thiếu cấu hình công đoạn tương ứng.
 *   **Cách khắc phục:** Đăng ký đầy đủ mã Model ở màn hình **A230** trước khi thao tác trên **B442**.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_05_QC_ELECTRODE.md § 1 (Phần 1)](KB_05_QC_ELECTRODE.md#1-lập-kế-hoạch--in-tem-điện-cực-b310-b442-a230).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_OVERVIEW.md § 1 (Phần 1)](../KB_05/KB_05_01_QC_OVERVIEW.md#1-lập-kế-hoạch--in-tem-điện-cực-b310-b442-a230).
 
 ---
 
@@ -110,7 +110,7 @@
 *   **Nguyên nhân gốc:** Stored Procedure `usp_Vietnam_ChangeProductionOrderRoutingLine_VNT` kiểm soát tính năng này chứa một danh sách Whitelist UserID được hardcode cứng.
 *   **Cách khắc phục:**
     ALTER SP `usp_Vietnam_ChangeProductionOrderRoutingLine_VNT` để bổ sung UserID của nhân viên vận hành hiện tại vào danh sách được phép.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_03_SAN_XUAT.md § 6.7](KB_03_SAN_XUAT.md#67-b452-không-đổi-được-line).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_03/KB_03_02_CELL_LINE.md § 6.7](../KB_03/KB_03_02_CELL_LINE.md#67-b452-không-đổi-được-line).
 
 ---
 
@@ -287,7 +287,7 @@ Bước 7: Xác nhận phiếu → EXEC usp_DoFixMaterialDoc
     VALUES ('MÃ_PART_NO', 'BY', '200', '10', '17.7', 'VVT_F2', 'kho2'),
            ('MÃ_PART_NO', 'YP', '180', '10', '17.7', 'VVT_F2', 'kho2');
     ```
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_05_QC_ELECTRODE.md § 8.2](KB_05_QC_ELECTRODE.md#82-lỗi-chưa-config-trong-stb_slittinglocationconfig_vvt).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_OVERVIEW.md § 8.2](../KB_05/KB_05_01_QC_OVERVIEW.md#82-lỗi-chưa-config-trong-stb_slittinglocationconfig_vvt).
 
 ---
 
@@ -301,7 +301,7 @@ Bước 7: Xác nhận phiếu → EXEC usp_DoFixMaterialDoc
     1. Chạy ALTER TABLE đổi cột `InBoxLabelList` thành `VARCHAR(MAX)`.
     2. ALTER Stored Procedure `usp_DoCreateHelaInBoxBarcodeList` đổi biến `@InBoxLabelList` thành `VARCHAR(MAX)`.
     3. Update khôi phục lại chuỗi tem đầy đủ cho các Lot bị lỗi.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.14](KB_04_DONG_GOI_IN_TEM.md#614-lỗi-cắt-chuỗi-danh-sách-tem-nhỏ-b560---truncation-in-inboxlabellist).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_04/KB_04_01_CORE_PACKAGING.md § 6.14](../KB_04/KB_04_01_CORE_PACKAGING.md#614-lỗi-cắt-chuỗi-danh-sách-tem-nhỏ-b560---truncation-in-inboxlabellist).
 
 ---
 
@@ -313,7 +313,7 @@ Bước 7: Xác nhận phiếu → EXEC usp_DoFixMaterialDoc
 *   **Nguyên nhân gốc:** SP `usp_Vietnam_GetLotInfoForRework_VNT` bị hardcode kiểm tra Whitelist UserID.
 *   **Cách khắc phục:**
     Sửa SP để bổ sung thêm UserID của OP hiện hành vào danh sách Whitelist cho phép thao tác Rework.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_26_LIEN_KET_HE_THONG_VA_BUG_LOGIC.md § 2](KB_26_LIEN_KET_HE_THONG_VA_BUG_LOGIC.md#2-lỗi-phân-quyền-màn-hình-rework-b618).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_26/KB_26_01_LINKS_BUGS.md § 2](../KB_26/KB_26_01_LINKS_BUGS.md#2-lỗi-phân-quyền-màn-hình-rework-b618).
 
 ---
 
@@ -355,7 +355,7 @@ Bước 7: Xác nhận phiếu → EXEC usp_DoFixMaterialDoc
 *   **Cách khắc phục:**
     1. Nhắc nhở công nhân tick chọn `IsOuter` khi in nhãn ngoài thùng (Outer) vì nhãn trong và nhãn ngoài chạy Serial độc lập.
     2. Khi in tem cân nặng, tick chọn `IsWeightLabel` trước khi nhấn nút.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.9.1](KB_04_DONG_GOI_IN_TEM.md#691-in-tem-khách-hàng-pac-b754--b755--b756).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_04/KB_04_01_CORE_PACKAGING.md § 6.9.1](../KB_04/KB_04_01_CORE_PACKAGING.md#691-in-tem-khách-hàng-pac-b754--b755--b756).
 
 ---
 
@@ -368,7 +368,7 @@ Bước 7: Xác nhận phiếu → EXEC usp_DoFixMaterialDoc
 *   **Cách khắc phục:**
     1. Yêu cầu nhập đầy đủ thông số PO và số dòng PO tương ứng trước khi in.
     2. Nếu in cho thùng hàng hỗn hợp (Mixed Load), chuyển sang sử dụng màn hình **B758**.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.9.2](KB_04_DONG_GOI_IN_TEM.md#692-in-tem-khách-hàng-digi-key-b757--b758).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_04/KB_04_01_CORE_PACKAGING.md § 6.9.2](../KB_04/KB_04_01_CORE_PACKAGING.md#692-in-tem-khách-hàng-digi-key-b757--b758).
 
 ---
 
@@ -384,7 +384,7 @@ Bước 7: Xác nhận phiếu → EXEC usp_DoFixMaterialDoc
     -- Sửa ngày bắt đầu sản xuất cho Lot
     UPDATE STB_SetInfo SET InputJobDate = '2026-06-12' WHERE Barcode = 'MÃ_BARCODE';
     ```
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.10](KB_04_DONG_GOI_IN_TEM.md#610-thiết-kế-tem-phoenix-contact-yêu-cầu-đặc-biệt-tại-b790).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_04/KB_04_01_CORE_PACKAGING.md § 6.10](../KB_04/KB_04_01_CORE_PACKAGING.md#610-thiết-kế-tem-phoenix-contact-yêu-cầu-đặc-biệt-tại-b790).
 
 ---
 
@@ -395,7 +395,7 @@ Bước 7: Xác nhận phiếu → EXEC usp_DoFixMaterialDoc
 *   **Triệu chứng:** Khi mở báo cáo lịch sử sản xuất điện cực trên **B802**, số lượng cuộn hoặc tổng số mét sản xuất thực tế bị lệch so với dữ liệu chốt công đoạn.
 *   **Nguyên nhân gốc:** Bỏ qua việc quét/chốt các công đoạn bán thành phẩm điện cực (Coating/Slitting) hoặc do sai lệch giá trị `ProdQty` trong bảng `STB_ProdRouteHist` của điện cực.
 *   **Cách khắc phục:** IT tiến hành đối soát thông tin qua bảng lịch sử điện cực `STB_ElectrodeProdRouteHist` và điều chỉnh lại sản lượng thực tế khớp với số mét cuộn.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_03_SAN_XUAT.md § 6.11](KB_03_SAN_XUAT.md#611-b802---vietnam-electrode-prod-route-hist-lịch-sử-sx-điện-cực) và [KB_05_QC_ELECTRODE.md § 3](KB_05_QC_ELECTRODE.md#3-báo-cáo--đối-soát-điện-cực-b802).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_03/KB_03_02_CELL_LINE.md § 6.11](../KB_03/KB_03_02_CELL_LINE.md#611-b802---vietnam-electrode-prod-route-hist-lịch-sử-sx-điện-cực) và [../KB_05/KB_05_01_QC_OVERVIEW.md § 3](../KB_05/KB_05_01_QC_OVERVIEW.md#3-báo-cáo--đối-soát-điện-cực-b802).
 
 ---
 
@@ -409,7 +409,7 @@ Bước 7: Xác nhận phiếu → EXEC usp_DoFixMaterialDoc
     1. Kiểm tra tồn kho phụ tùng tại màn hình **H304** / **H302**.
     2. Truy cập màn hình **H301**, cấu hình đầy đủ `CycleReplace` và `LifeLotQty` cho mã phụ tùng tương ứng.
     3. Thực hiện xuất phụ tùng lên chuyền tại **H303** và theo dõi lịch sử thay thế tại **H305**.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_03_SAN_XUAT.md § 6.15](KB_03_SAN_XUAT.md#615-spare-part--h301h302h303h305) và [KB_03_SAN_XUAT.md](KB_03_SAN_XUAT.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_03/KB_03_02_CELL_LINE.md § 6.15](../KB_03/KB_03_02_CELL_LINE.md#615-spare-part--h301h302h303h305) và [../KB_03/KB_03_02_CELL_LINE.md](../KB_03/KB_03_02_CELL_LINE.md).
 
 ---
 
@@ -425,7 +425,7 @@ Bước 7: Xác nhận phiếu → EXEC usp_DoFixMaterialDoc
     WHERE DP.PackingID = @pPackingID  
       AND ISNULL(DP.PackingParentID, '') <> '' -- Dòng sửa lỗi
     ```
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_02_KHO_WMS.md § 2.1](KB_02_KHO_WMS.md#21-lỗi-unique-constraint-khi-gộp-túi-bóng-hn544--pkqn2100175).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_02/KB_02_01_NVL_WMS.md § 2.1](../KB_02/KB_02_01_NVL_WMS.md#21-lỗi-unique-constraint-khi-gộp-túi-bóng-hn544--pkqn2100175).
 
 ### Lỗi 2: Gộp túi bóng thành hộp nhỏ ở HN544 bị mất số lượng (CurrentQty = 0)
 *   **Triệu chứng:** Sau khi thực hiện gộp nilon thành hộp nhỏ, số lượng tồn hiển thị bằng 0 và không in được tem nhãn.
@@ -436,7 +436,7 @@ Bước 7: Xác nhận phiếu → EXEC usp_DoFixMaterialDoc
     UPDATE STB_MaterialLotInfo SET InitialQty = 20, CurrentQty = 20 WHERE MaterialLotNo = 'MÃ_LOT_CẦN_GIỮ';
     DELETE FROM STB_MaterialLotInfo WHERE MaterialLotNo IN ('MÃ_LOT_RÁC_1', 'MÃ_LOT_RÁC_2');
     ```
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.5](KB_04_DONG_GOI_IN_TEM.md#65-lỗi-gộp-túi-bóng-bị-mất-số-lượng-qty--0--hn544).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_04/KB_04_01_CORE_PACKAGING.md § 6.5](../KB_04/KB_04_01_CORE_PACKAGING.md#65-lỗi-gộp-túi-bóng-bị-mất-số-lượng-qty--0--hn544).
 
 ### Lỗi 3: Báo lỗi tiếng Hàn "Bạn chưa nhập kết quả..." hoặc sản lượng hiển thị bằng 0 ở HN523
 *   **Triệu chứng:** Nhập mã Lot để gộp box ở màn hình gộp tùy chỉnh **HN523**, hệ thống báo lỗi tiếng Hàn hoặc hiển thị sản lượng đầu ra (OutputQty) bằng 0.
@@ -445,7 +445,7 @@ Bước 7: Xác nhận phiếu → EXEC usp_DoFixMaterialDoc
     ```sql
     UPDATE STB_ProductionOrderRouting SET IsOutputRoute = 1 WHERE PONo = 'MÃ_PO' AND RouteCode = 'MÃ_CÔNG_ĐOẠN_CUỐI';
     ```
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.13](KB_04_DONG_GOI_IN_TEM.md#613-phân-tích-nguyên-nhân-lỗi-gộp-box-tùy-chỉnh-trên-màn-hình-hn523-sản-lượng-hiển-thị--0--cảnh-báo-tiếng-hàn).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_04/KB_04_01_CORE_PACKAGING.md § 6.13](../KB_04/KB_04_01_CORE_PACKAGING.md#613-phân-tích-nguyên-nhân-lỗi-gộp-box-tùy-chỉnh-trên-màn-hình-hn523-sản-lượng-hiển-thị--0--cảnh-báo-tiếng-hàn).
 
 ---
 
@@ -462,7 +462,7 @@ Bước 7: Xác nhận phiếu → EXEC usp_DoFixMaterialDoc
     UPDATE FinishGoodMESInstock_HN SET QtyOutput = Quantity WHERE PackingID = 'MÃ_PACKING_LỖI';
     UPDATE STB_VN_FINISHGOODS_HN_Export SET StatusExport = 1 WHERE PackingID = 'MÃ_PACKING_LỖI';
     ```
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_02_KHO_WMS.md § 1](KB_02_KHO_WMS.md#1-lỗi-hàng-xuất-ở-hn551-nhưng-tồn-kho-hn866-vẫn-còn).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_02/KB_02_01_NVL_WMS.md § 1](../KB_02/KB_02_01_NVL_WMS.md#1-lỗi-hàng-xuất-ở-hn551-nhưng-tồn-kho-hn866-vẫn-còn).
 
 ---
 
@@ -475,7 +475,7 @@ Bước 7: Xác nhận phiếu → EXEC usp_DoFixMaterialDoc
 *   **Cách khắc phục:** Hướng dẫn công nhân mở đúng màn hình của BG2:
     1. Lập kế hoạch ngày tại **K101** thay vì B450.
     2. Để quét NVL, OP mở màn hình **B540** -> nhấn nút **"Việt Nam_Kiểm tra thường xuyên_BG2"** để kích hoạt giao diện **K109** (tích hợp logic chặn quét sai NVL theo BOM).
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_03_SAN_XUAT.md § 6.9](KB_03_SAN_XUAT.md#69-sự-khác-biệt-vận-hành-bg2).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_03/KB_03_02_CELL_LINE.md § 6.9](../KB_03/KB_03_02_CELL_LINE.md#69-sự-khác-biệt-vận-hành-bg2).
 
 ### Lỗi 2: Bấm "Tạo Lot" báo lỗi duplicate key trên index `XS_Barcode` của `STB_SetInfo`
 

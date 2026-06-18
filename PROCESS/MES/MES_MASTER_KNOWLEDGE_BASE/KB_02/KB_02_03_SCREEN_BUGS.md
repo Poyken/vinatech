@@ -5,7 +5,7 @@
 *   **Triệu chứng:** Khi thực hiện nhập kho tại **F330** hoặc điều chuyển kho, người dùng không thấy vị trí kho (Location) trong danh sách để chọn, hoặc hệ thống báo lỗi không tồn tại vị trí.
 *   **Nguyên nhân gốc:** Chưa khai báo Location hoặc cờ sử dụng bị tắt (`IsUsed = 0`) trong bảng danh mục kho `STB_WarehouseLocation`.
 *   **Cách khắc phục:** Vào màn hình **A130** (hoặc check trực tiếp bảng `STB_WarehouseLocation`), cấu hình thêm vị trí kho tương ứng cho mã kho và bật cờ hoạt động.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_25_VINAENESSOL_HUNG_YEN.md § 8](KB_25_VINAENESSOL_HUNG_YEN.md#8-a130-kholocation--đối-tác).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_25/KB_25_01_OVERVIEW.md § 8](../KB_25/KB_25_01_OVERVIEW.md#8-a130-kholocation--đối-tác).
 
 ---
 
@@ -34,7 +34,7 @@
     INSERT INTO STB_MaterialVendorMapping (MaterialCode, VendorCode, IsUsed, CreateDateTime, CreateUserID)
     VALUES ('MÃ_VẬT_TƯ', 'MÃ_NCC', 1, GETDATE(), 'vinaadmin');
     ```
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_07_GROUPWARE_INTEGRATION.md § 6](KB_07_GROUPWARE_INTEGRATION.md#6-chỉ-định-ncc--nvl-f130--f140).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_07/KB_07_01_OVERVIEW_FLOWS.md § 6](../KB_07/KB_07_01_OVERVIEW_FLOWS.md#6-chỉ-định-ncc--nvl-f130--f140).
 
 ---
 
@@ -46,7 +46,7 @@
 *   **Nguyên nhân gốc:** Trường `LotAttr10` (Đặc tính 10 / Ngày sản xuất Vendor) bị Null hoặc do định dạng quét mã Lot nhà cung cấp in quá dài vượt quá giới hạn thiết lập của trường.
 *   **Cách khắc phục:**
     1. Cấu hình lại chiều dài quét cắt chuỗi mã Lot Vendor trên tab 3 giao diện F330.
-    2. Sửa SQL Function parse ngày SX `fn_VVT_getdatebyVendorLot_MergeCode` nếu NCC thay đổi định dạng in Lot trên tem (Xem chi tiết tại [KB_02 § 4.11](KB_02_KHO_WMS.md#411-lỗi-không-lưu-được-f330---cấu-hình-và-sửa-lỗi-đọc-đặc-tính-10-vendor-lot-no)).
+    2. Sửa SQL Function parse ngày SX `fn_VVT_getdatebyVendorLot_MergeCode` nếu NCC thay đổi định dạng in Lot trên tem (Xem chi tiết tại [KB_02 § 4.11](../KB_02/KB_02_01_NVL_WMS.md#411-lỗi-không-lưu-được-f330---cấu-hình-và-sửa-lỗi-đọc-đặc-tính-10-vendor-lot-no)).
 
 ### Lỗi 2: Cần hủy/xóa phiếu nhập kho F330 đã được Xác nhận (Confirmed)
 *   **Triệu chứng:** Thủ kho click xác nhận nhập nhầm số lượng/mã hàng và cần hủy phiếu nhập kho.
@@ -60,7 +60,7 @@
     DELETE FROM STB_MaterialDocDetail WHERE MaterialDocNo = 'MÃ_PHIẾU';
     DELETE FROM STB_MaterialDocInfo WHERE MaterialDocNo = 'MÃ_PHIẾU';
     ```
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_02_KHO_WMS.md § 4.16](KB_02_KHO_WMS.md#416-hủy-phiếu-nhập-kho-f330-đã-confirmed).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_02/KB_02_01_NVL_WMS.md § 4.16](../KB_02/KB_02_01_NVL_WMS.md#416-hủy-phiếu-nhập-kho-f330-đã-confirmed).
 
 ### Lỗi 3: Không đọc được ngày sản xuất cho nguyên vật liệu PCB/dây điện (không tự động nhảy hạn dùng, tự động vào kho HOLDING)
 *   **Triệu chứng:** Khi quét mã Lot nhà cung cấp cho các mã PCB (`BEPCBA-%`) và dây điện (`BEMC00-%`) tại F330, nếu mã Lot không bắt đầu bằng ký tự `'2'` (không theo format date-based lot thông thường), hệ thống không parse được ngày sản xuất, lưu `1900-01-01` vào DB, gây lỗi hạn sử dụng hoặc tự động đưa Lot vào kho `HOLDING`. Ngoài ra, khi người dùng sửa ngày sản xuất trên lưới F330 và nhấn nút "Lot 변경" (Lot Change), hệ thống không cập nhật ngày sản xuất thực tế (`LotAttr10`) trong bảng tồn kho `STB_MaterialLotInfo`.
@@ -101,7 +101,7 @@
 *   **Cách khắc phục:**
     1. Yêu cầu thủ kho tìm đúng Lot cũ nhất trong kho để xuất trước.
     2. Trường hợp khẩn cấp (hàng cũ bị hỏng hoặc thất lạc chưa kiểm kê), IT có thể bypass bằng cách lùi ngày tạo `CreateDateTime` của Lot hiện tại trên DB, hoặc tạm thời tắt check FIFO của mã vật tư đó bằng cách update cờ `IsFIFO = 0` tại bảng `STB_MaterialStockAttributeInfo`.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_02_KHO_WMS.md § 4.9](KB_02_KHO_WMS.md#49-fifo--validation-nvl-tắtbật-chặn).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_02/KB_02_01_NVL_WMS.md § 4.9](../KB_02/KB_02_01_NVL_WMS.md#49-fifo--validation-nvl-tắtbật-chặn).
 
 ### Lỗi 2: Cần thu hồi Lot nguyên liệu đã xuất nhầm lên chuyền (Revert xuất kho)
 *   **Triệu chứng:** Lot hàng đã bấm xuất ra chuyền tại F430 nhưng công nhân không chạy và cần trả lại kho gốc ROH.
@@ -114,7 +114,7 @@
     UPDATE STB_MaterialLotInfo SET MaterialWarehouseCode = 'ROH_HN_WH', MaterialLocationCode = 'ROH_HN_WH_01' WHERE LotID = 'MÃ_LOT';
     COMMIT TRAN;
     ```
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_02_KHO_WMS.md § 4.17](KB_02_KHO_WMS.md#417-thu-hồi-lot-từ-f430-về-kho-revert-xuất-kho).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_02/KB_02_01_NVL_WMS.md § 4.17](../KB_02/KB_02_01_NVL_WMS.md#417-thu-hồi-lot-từ-f430-về-kho-revert-xuất-kho).
 
 ---
 
@@ -129,7 +129,7 @@
     ```sql
     UPDATE STB_MaterialLotInfo SET MaterialWarehouseCode = 'ROH_HN_WH', MaterialLocationCode = 'ROH_HN_WH_01' WHERE LotID = 'MÃ_LOT';
     ```
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_02_KHO_WMS.md § 4.7](KB_02_KHO_WMS.md#47-chuyển-từ-kho-holding-sang-kho-chính).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_02/KB_02_01_NVL_WMS.md § 4.7](../KB_02/KB_02_01_NVL_WMS.md#47-chuyển-từ-kho-holding-sang-kho-chính).
 
 ---
 
@@ -140,7 +140,7 @@
 *   **Triệu chứng:** OP thao tác chia nhỏ Lot NVL tại **F741** báo lỗi không in được tem hoặc sai số lượng chia.
 *   **Nguyên nhân gốc:** Thiết lập quy cách đóng gói và cờ thuộc tính Lot tại F110 bị thiếu.
 *   **Cách khắc phục:**
-    Kiểm tra và thực hiện cấu hình đúng quy trình tách Lot trên UI, đảm bảo số lượng của các Lot con tổng cộng bằng Lot mẹ (Xem chi tiết tại [KB_02_KHO_WMS.md § 4.20](KB_02_KHO_WMS.md#420-f741--quy-trình-tách-lot-nguyên-vật-liệu-lot-splitting)).
+    Kiểm tra và thực hiện cấu hình đúng quy trình tách Lot trên UI, đảm bảo số lượng của các Lot con tổng cộng bằng Lot mẹ (Xem chi tiết tại [../KB_02/KB_02_01_NVL_WMS.md § 4.20](../KB_02/KB_02_01_NVL_WMS.md#420-f741--quy-trình-tách-lot-nguyên-vật-liệu-lot-splitting)).
 
 ---
 
@@ -152,7 +152,7 @@
 *   **Nguyên nhân gốc:** Giao dịch đã sinh các Lot con liên kết khóa ngoại với Lot mẹ.
 *   **Cách khắc phục:**
     Chạy script xóa ngược: bắt buộc phải tìm và xóa các bản ghi giao dịch của các Lot con trong bảng `STB_RawMaterialInputHist` (hoặc `STB_MaterialDocLotInfo` tùy trạm) trước, sau đó mới tiến hành xóa/revert Lot mẹ tại F742.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_05_QC_ELECTRODE.md § 10.1](KB_05_QC_ELECTRODE.md#101-hủyrollback-slitting-f742-và-f746).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_OVERVIEW.md § 10.1](../KB_05/KB_05_01_QC_OVERVIEW.md#101-hủyrollback-slitting-f742-và-f746).
 
 ### Lỗi 2: Mismatch logic tính tuổi thọ dao Slitting và Hardcode địa lý Bắc Giang
 *   **Triệu chứng:** Máy chia cuộn điện cực tại nhà máy Hà Nam hoặc Hưng Yên bị bypass hoàn toàn việc kiểm tra dao cắt (không cảnh báo thay dao), hoặc báo lỗi không tìm thấy máy nếu cố cấu hình dao. Hoặc dao slitting bị khóa thay dao quá sớm do tính sai hao mòn.
@@ -168,7 +168,7 @@
     -- 2. Đo tuổi thọ thực tế bằng tổng số mét cắt
     SELECT @ProdQtyCheck = ISNULL(SUM(GoodQtyLength), 0) from STB_ElectrodeSlittingResult where SlittingKnifeLotID = @SlittingKnifeLotID
     ```
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_03_SAN_XUAT.md § 5](KB_03_SAN_XUAT.md#5-danh-sách-lỗi-logic-điểm-yếu--giải-pháp-bugs--troubleshooting).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_03/KB_03_02_CELL_LINE.md § 5](../KB_03/KB_03_02_CELL_LINE.md#5-danh-sách-lỗi-logic-điểm-yếu--giải-pháp-bugs--troubleshooting).
 
 ---
 
@@ -189,7 +189,7 @@
 *   **Triệu chứng:** OP nhập sai thông số chiều dài/số lượng cuộn con khi chia cuộn và cần rollback để thực hiện lại từ đầu.
 *   **Nguyên nhân gốc:** Giao dịch chốt Slitting đã ghi nhận các Lot con vào bảng lịch sử.
 *   **Cách khắc phục:** OP truy cập màn hình lịch sử slitting **F746**, tìm và xóa bỏ các dòng lịch sử của Lot con tương ứng trước, sau đó mới có thể thực hiện rollback/xóa Lot mẹ tại màn hình rollback **F742**.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_05_QC_ELECTRODE.md § 10.1](KB_05_QC_ELECTRODE.md#101-flow-slitting-hà-nam).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_OVERVIEW.md § 10.1](../KB_05/KB_05_01_QC_OVERVIEW.md#101-flow-slitting-hà-nam).
 
 ---
 
@@ -200,7 +200,7 @@
 *   **Triệu chứng:** Khi chạy tác vụ chia/tách lô vật liệu giá đỡ substrate, hệ thống hiển thị thông báo lỗi chặn giao dịch (bằng tiếng Hàn hoặc tiếng Việt).
 *   **Nguyên nhân gốc:** Lô vật liệu gốc chưa được thực hiện xuất kho lên chuyền sản xuất (chưa nằm ở kho công đoạn có cờ `IsRouteWarehouse = 1` mà vẫn đang tồn ở kho chính ROH), vi phạm điều kiện kiểm tra của Stored Procedure `usp_DoMakeStocktakingPlanResultForSupport`.
 *   **Cách khắc phục:** Thủ kho thực hiện xuất kho Lot vật liệu gốc lên chuyền sản xuất trước (qua màn hình **F430**), sau đó mới thực hiện thao tác chia tách lô trên giao diện UI.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_26_LIEN_KET_HE_THONG_VA_BUG_LOGIC.md § 5](KB_26_LIEN_KET_HE_THONG_VA_BUG_LOGIC.md#5-nghiên-cứu-điển-hình-tự-động-tách-lô-giá-đỡ-substrate-splitting-case-study).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_26/KB_26_01_LINKS_BUGS.md § 5](../KB_26/KB_26_01_LINKS_BUGS.md#5-nghiên-cứu-điển-hình-tự-động-tách-lô-giá-đỡ-substrate-splitting-case-study).
 
 ---
 
@@ -211,7 +211,7 @@
 *   **Triệu chứng:** Khi đối soát số liệu xuất nhập kho tại **F761**, kế toán phát hiện các dòng giao dịch có cột `DocTypeName` chứa ký tự chữ Hàn Quốc gây sai lệch số liệu nhập mới.
 *   **Nguyên nhân gốc:** Ký tự tiếng Hàn đại diện cho loại giao dịch "hoàn trả vật tư thừa từ sản xuất về kho ROH" (Revert từ F430) chứ không phải nhập mới từ nhà cung cấp.
 *   **Cách khắc phục:** Hướng dẫn bộ phận kế toán phân biệt loại giao dịch: Giao dịch có tên tiếng Hàn là giao dịch trả hàng ảo/revert từ sản xuất về, còn giao dịch nhập mới thực tế được sinh ra từ phiếu nhập **F312**.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_02_KHO_WMS.md § 5](KB_02_KHO_WMS.md#5-báo-cáo-tồn-kho--lịch-sử-kho-f721-f761-f740).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_02/KB_02_01_NVL_WMS.md § 5](../KB_02/KB_02_01_NVL_WMS.md#5-báo-cáo-tồn-kho--lịch-sử-kho-f721-f761-f740).
 
 ---
 
@@ -227,7 +227,7 @@
     INSERT INTO STB_HN_AccountingPrice (MaterialCode, AccountingCode, Price, CreateDateTime, CreateUserID)
     VALUES ('MÃ_MODEL_MỚI', 'MÃ_KẾ_TOÁN', ĐƠN_GIÁ_USD, GETDATE(), 'vinaadmin');
     ```
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_02_KHO_WMS.md § 7](KB_02_KHO_WMS.md#7-hn101--thiết-lập-đơn-giá-theo-mã-kế-toán).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_02/KB_02_01_NVL_WMS.md § 7](../KB_02/KB_02_01_NVL_WMS.md#7-hn101--thiết-lập-đơn-giá-theo-mã-kế-toán).
 
 ---
 
@@ -240,7 +240,7 @@
 *   **Triệu chứng:** Thủ kho không tìm thấy NCC trong popup.
 *   **Nguyên nhân gốc:** Chưa mapping NCC với vật tư trong `STB_MaterialVendorMapping`.
 *   **Cách khắc phục:** Vào F140, chọn vật tư, tick chọn NCC được phép mua, nhấn Lưu.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_07_GROUPWARE_INTEGRATION.md § 6](KB_07_GROUPWARE_INTEGRATION.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_07/KB_07_01_OVERVIEW_FLOWS.md § 6](../KB_07/KB_07_01_OVERVIEW_FLOWS.md).
 
 ---
 
@@ -251,7 +251,7 @@
 *   **Triệu chứng:** Thủ kho nhập sai số lượng vào phiếu nhập kho, cần sửa lại.
 *   **Nguyên nhân gốc:** Cột "Số tài liệu" = `MaterialDocNo` trong `STB_MaterialDocDetail`.
 *   **Cách khắc phục:** Vào F312, tìm phiếu nhập kho theo MaterialDocNo, sửa số lượng. Kho chị Xuân phụ trách.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_02_KHO_WMS.md § 4.5](KB_02_KHO_WMS.md) và [KB_07_GROUPWARE_INTEGRATION.md](KB_07_GROUPWARE_INTEGRATION.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_02/KB_02_01_NVL_WMS.md § 4.5](../KB_02/KB_02_01_NVL_WMS.md) và [../KB_07/KB_07_01_OVERVIEW_FLOWS.md](../KB_07/KB_07_01_OVERVIEW_FLOWS.md).
 
 ---
 
@@ -262,7 +262,7 @@
 *   **Triệu chứng:** Thực hiện chuyển NVL giữa các kho tại F320 nhưng số lượng tồn kho không giảm/tăng tương ứng.
 *   **Nguyên nhân gốc:** Trigger `tgMaterialLotInfoForUpdate` trên `STB_MaterialLotInfo` tự động đồng bộ tồn kho. Nếu Trigger bị disable hoặc lỗi thì tồn kho không cập nhật.
 *   **Cách khắc phục:** Kiểm tra trạng thái Trigger, kiểm tra bảng `STB_MaterialStock` xem số lượng.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_03_SAN_XUAT.md](KB_03_SAN_XUAT.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_03/KB_03_02_CELL_LINE.md](../KB_03/KB_03_02_CELL_LINE.md).
 
 ---
 
@@ -273,7 +273,7 @@
 *   **Triệu chứng:** Tạo đơn giao hàng tại F610 bị lỗi hoặc không hiện sản phẩm.
 *   **Nguyên nhân gốc:** Sản phẩm chưa qua QC Audit (C530) hoặc chưa nhập kho thành phẩm.
 *   **Cách khắc phục:** Kiểm tra sản phẩm đã PASS QC Audit và đã nhập kho FG.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_02_KHO_WMS.md](KB_02_KHO_WMS.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_02/KB_02_01_NVL_WMS.md](../KB_02/KB_02_01_NVL_WMS.md).
 
 ---
 
@@ -284,7 +284,7 @@
 *   **Triệu chứng:** Phiếu giao đã tạo tại F610 nhưng không hiện tại F620.
 *   **Nguyên nhân gốc:** Phiếu chưa được confirm/approve hoặc bộ lọc ngày bị sai.
 *   **Cách khắc phục:** Kiểm tra lại bộ lọc ngày tìm kiếm, mở rộng khoảng thời gian.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_02_KHO_WMS.md](KB_02_KHO_WMS.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_02/KB_02_01_NVL_WMS.md](../KB_02/KB_02_01_NVL_WMS.md).
 
 ---
 
@@ -295,7 +295,7 @@
 *   **Triệu chứng:** Số lượng tồn kho hiển thị tại F710 bị lệch so với kiểm kê thực tế.
 *   **Nguyên nhân gốc:** Trigger `tgMaterialLotInfoForUpdate` bị lỗi hoặc tồn tại phiếu nhập/xuất chưa confirm.
 *   **Cách khắc phục:** Chạy kiểm kê bằng F750 để điều chỉnh, hoặc kiểm tra trực tiếp `STB_MaterialStock`.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_02_KHO_WMS.md](KB_02_KHO_WMS.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_02/KB_02_01_NVL_WMS.md](../KB_02/KB_02_01_NVL_WMS.md).
 
 ---
 
@@ -306,7 +306,7 @@
 *   **Triệu chứng:** Thực hiện tách Lot tại F740 nhưng hệ thống không sinh Lot con.
 *   **Nguyên nhân gốc:** Số lượng tách vượt quá `CurrentQty` còn lại của Lot gốc.
 *   **Cách khắc phục:** Kiểm tra `CurrentQty` trong `STB_MaterialLotInfo` của Lot gốc, đảm bảo số lượng tách hợp lệ.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_02_KHO_WMS.md](KB_02_KHO_WMS.md) và [KB_03_SAN_XUAT.md](KB_03_SAN_XUAT.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_02/KB_02_01_NVL_WMS.md](../KB_02/KB_02_01_NVL_WMS.md) và [../KB_03/KB_03_02_CELL_LINE.md](../KB_03/KB_03_02_CELL_LINE.md).
 
 ---
 

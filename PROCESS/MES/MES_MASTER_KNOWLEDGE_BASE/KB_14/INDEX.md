@@ -1,6 +1,6 @@
-# KB_14 — Trace Bug Methodology (INDEX)
+﻿# KB_14 — Trace Bug Methodology (INDEX)
 
-> **File gốc:** `KB_14_TRACE_BUG_METHODOLOGY.md` (40KB) → 3 chunks.
+> **File gốc:** `../KB_14/KB_14_01_METHODOLOGY.md` (40KB) → 3 chunks.
 
 ## Chunk Map
 

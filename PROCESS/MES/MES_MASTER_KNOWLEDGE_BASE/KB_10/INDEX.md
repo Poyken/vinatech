@@ -1,6 +1,6 @@
-# KB_10 — Kiến Trúc & Luồng Dữ Liệu (INDEX)
+﻿# KB_10 — Kiến Trúc & Luồng Dữ Liệu (INDEX)
 
-> **File gốc:** `KB_10_KIEN_TRUC_VA_DATAFLOW.md` (92KB) đã được tách thành 4 chunks.
+> **File gốc:** `../KB_10/KB_10_01_ARCHITECTURE.md` (92KB) đã được tách thành 4 chunks.
 > **Đọc chunk phù hợp** thay vì load toàn bộ 92KB.
 
 ---

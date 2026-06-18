@@ -121,7 +121,7 @@ WHERE ID IN (6030, 6032, 6027, 6025, 6026, 6031)
 
 ### 5.6 Sửa ngày màn FG00 (Kho Thành Phẩm BG)
 
-👉 **Chi tiết Script Fix:** Xem tại [KB_02_KHO_WMS.md § 8](KB_02_KHO_WMS.md)
+👉 **Chi tiết Script Fix:** Xem tại [../KB_02/KB_02_01_NVL_WMS.md § 8](../KB_02/KB_02_01_NVL_WMS.md)
 
 ---
 

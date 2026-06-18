@@ -75,7 +75,7 @@ SELECT CurrentRouteCode FROM STB_SetInfo WHERE Barcode = 'Mã_Barcode'
 
 ### 7.3 B597 báo lỗi "Hết hạn sử dụng"
 
-→ Xem [KB_02 Mục 4.10](KB_02_KHO_WMS.md#410-kiểm-tra-hạn-sử-dụng-nvl-expiry-date) để tra cứu công thức tính.
+→ Xem [KB_02 Mục 4.10](../KB_02/KB_02_01_NVL_WMS.md#410-kiểm-tra-hạn-sử-dụng-nvl-expiry-date) để tra cứu công thức tính.
 
 ---
 

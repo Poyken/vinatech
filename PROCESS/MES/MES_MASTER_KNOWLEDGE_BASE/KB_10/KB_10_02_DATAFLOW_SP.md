@@ -233,7 +233,7 @@ LotID (Chứng minh thư nguyên liệu kho: ML...)
 
 #### Case 5: Truy vết kế hoạch sai Line (Lỗi B450)
 *   **Vấn đề:** 2 Model khác nhau nhảy chung vào 1 Line báo cáo.
-*   **Giải pháp:** Xem chi tiết cách sử dụng Time Window Query để quét đối soát và hướng dẫn sửa lỗi chuyển Line/hủy kế hoạch ngày tại [KB_03_SAN_XUAT.md#511-lỗi-kế-hoạch-ngày-chọn-nhầm-line-b450](KB_03_SAN_XUAT.md#511-lỗi-kế-hoạch-ngày-chọn-nhầm-line-b450).
+*   **Giải pháp:** Xem chi tiết cách sử dụng Time Window Query để quét đối soát và hướng dẫn sửa lỗi chuyển Line/hủy kế hoạch ngày tại [../KB_03/KB_03_02_CELL_LINE.md#511-lỗi-kế-hoạch-ngày-chọn-nhầm-line-b450](../KB_03/KB_03_02_CELL_LINE.md#511-lỗi-kế-hoạch-ngày-chọn-nhầm-line-b450).
 
 ---
 *Cập nhật: 2026-06-12 | Gộp KB_10 và KB_11*

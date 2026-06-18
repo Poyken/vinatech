@@ -25,7 +25,7 @@ WHERE MaterialCode = (SELECT MaterialCode FROM STB_SetInfo WITH(NOLOCK) WHERE Ba
 SELECT Barcode, MaterialCode FROM STB_SetInfo WITH(NOLOCK) WHERE Barcode = 'MÃ_BARCODE'
 ```
 
-> ⚠️ **Bug đã biết (2026-06-18):** SP `usp_Vietnam_GetBoxIDForLotNo_VVT` tra cứu `STB_ChangePartNoAndLotNo` bằng `@LotNo` (VV prefix) nhưng bảng lưu `oldLotID` với VJ prefix → lookup không match → bị auto VJ ghi đè. Xem chi tiết tại [KB_04 §6.18](KB_04_DONG_GOI_IN_TEM.md#618-bug-b353-chuyển-đổi-lot-nhưng-b523-vẫn-in-tem-theo-lot-cũ-stb_changepartnoandlotno-bị-bỏ-qua).
+> ⚠️ **Bug đã biết (2026-06-18):** SP `usp_Vietnam_GetBoxIDForLotNo_VVT` tra cứu `STB_ChangePartNoAndLotNo` bằng `@LotNo` (VV prefix) nhưng bảng lưu `oldLotID` với VJ prefix → lookup không match → bị auto VJ ghi đè. Xem chi tiết tại [KB_04 §6.18](../KB_04/KB_04_01_CORE_PACKAGING.md#618-bug-b353-chuyển-đổi-lot-nhưng-b523-vẫn-in-tem-theo-lot-cũ-stb_changepartnoandlotno-bị-bỏ-qua).
 
 ---
 
@@ -113,7 +113,7 @@ SET @Confighours = CASE WHEN @MaterialCode IN ('mã1','mã2',...) THEN 3
 | 1.6 | "Điện cực phải đúng độ dày (Thickness)" | Check `MaterialThickness` trong `STB_MaterialMaster` | `SELECT MaterialCode, MaterialThickness FROM STB_MaterialMaster WHERE MaterialCode = 'Mã_Điện_Cực'` | UPDATE `MaterialThickness` sang số nguyên (tránh .000000) |
 | 1.7 | "Điện cực Slitting phải có cấu hình trong bảng config" | Check tồn tại trong `stb_slittinglocationconfig_vvt` theo PartNo | `SELECT * FROM stb_slittinglocationconfig_vvt WHERE PartNo = '1025'` | INSERT cấu hình mới (BY + YP cho cả 2 cực) |
 
-**📌 Chi tiết:** Xem [KB_05 §7](KB_05_QC_ELECTRODE.md#7-kiểm-tra-chất-lượng-qc) và [KB_05 §8.3](KB_05_QC_ELECTRODE.md#83-checklist-khi-b597-báo-lỗi-khi-lưu-nvl)
+**📌 Chi tiết:** Xem [KB_05 §7](../KB_05/KB_05_01_QC_OVERVIEW.md#7-kiểm-tra-chất-lượng-qc) và [KB_05 §8.3](../KB_05/KB_05_01_QC_OVERVIEW.md#83-checklist-khi-b597-báo-lỗi-khi-lưu-nvl)
 
 ---
 
@@ -131,7 +131,7 @@ SET @Confighours = CASE WHEN @MaterialCode IN ('mã1','mã2',...) THEN 3
 | 2.6 | "Bắt buộc chọn mã máy khi chốt" | GATE 6: `IsRequireMachine=1 AND MachineCode=''` | `SELECT IsRequireMachine FROM STB_ProductionOrderRouting WHERE PONo = '...' AND RouteCode = '...'` | Set `IsRequireMachine = 0` nếu line thủ công |
 | 2.7 | "Routing phải có trong PO" | GATE 7: `PONo IS NULL` → RAISERROR 'Routing không có trong PO' | `SELECT RouteCode FROM STB_ProductionOrderRouting WHERE PONo = '...'` | Thêm RouteCode vào PO tại B310 |
 
-**📌 Chi tiết:** Xem [KB_03 §6.3](KB_03_SAN_XUAT.md#63-b530--nhập-số-lượng-sản-xuất-chi-tiết-sp)
+**📌 Chi tiết:** Xem [KB_03 §6.3](../KB_03/KB_03_02_CELL_LINE.md#63-b530--nhập-số-lượng-sản-xuất-chi-tiết-sp)
 
 ---
 
@@ -145,7 +145,7 @@ SET @Confighours = CASE WHEN @MaterialCode IN ('mã1','mã2',...) THEN 3
 | 3.2 | "Phải có tiêu chuẩn đóng gói (PackingStandard)" | Check `STB_PackingStandard` theo Size/MaterialTypeCode | `SELECT * FROM STB_PackingStandard WHERE Size = '1840'` |
 | 3.3 | "Chỉ in tem 1 lần, in lần 2 phải liên hệ EA" | Logic check trong SP + flag `PrintCount` | Liên hệ EA để reset |
 
-**📌 Chi tiết:** Xem [KB_03 §6.5](KB_03_SAN_XUAT.md#65-b523--đóng-gói-gộp-box--quy-trình-mới) và [KB_04 §6](KB_04_DONG_GOI_IN_TEM.md)
+**📌 Chi tiết:** Xem [KB_03 §6.5](../KB_03/KB_03_02_CELL_LINE.md#65-b523--đóng-gói-gộp-box--quy-trình-mới) và [KB_04 §6](../KB_04/KB_04_01_CORE_PACKAGING.md)
 
 ---
 
@@ -157,7 +157,7 @@ SET @Confighours = CASE WHEN @MaterialCode IN ('mã1','mã2',...) THEN 3
 |---------------------|----------------|-------------|
 | "Chỉ quản lý SX được phép đổi Line/PO" | `IF @pProcessUserID NOT IN ('user1','user2',...) → RAISERROR` | Thêm UserID vào whitelist trong SP |
 
-**📌 Chi tiết:** Xem [KB_03 §6.7](KB_03_SAN_XUAT.md#67-b452--đổi-line-sai-vietnam-print-lot-changed)
+**📌 Chi tiết:** Xem [KB_03 §6.7](../KB_03/KB_03_02_CELL_LINE.md#67-b452--đổi-line-sai-vietnam-print-lot-changed)
 
 ---
 
@@ -169,7 +169,7 @@ SET @Confighours = CASE WHEN @MaterialCode IN ('mã1','mã2',...) THEN 3
 |---------------------|---------------------------|--------------| 
 | "Chỉ quản lý QC/SX được khai báo Rework" | Hardcode: `IF NOT IN ('HaiTrieu','hoangxuan','ngocanh','doanthao')` | Check `STB_UserPermission` WHERE `ScreenID='B618'` + Fallback whitelist cũ |
 
-**📌 Chi tiết:** Xem [KB_26 §6.2](KB_26_LIEN_KET_HE_THONG_VA_BUG_LOGIC.md#2-quy-trình-làm-lại-sản-phẩm-rework-flow)
+**📌 Chi tiết:** Xem [KB_26 §6.2](../KB_26/KB_26_01_LINKS_BUGS.md#2-quy-trình-làm-lại-sản-phẩm-rework-flow)
 
 ---
 
@@ -181,7 +181,7 @@ SET @Confighours = CASE WHEN @MaterialCode IN ('mã1','mã2',...) THEN 3
 |---------------------|----------------|-----------|-------------|
 | "Phải có lịch sử công đoạn trước mới được nhập phế" | Check `STB_ProdRouteHist` cho RouteCode trước đó. Nếu không có → RAISERROR tiếng Hàn | `SELECT * FROM STB_ProdRouteHist WHERE ControlNo = '...' ORDER BY CreateDateTime` | Chèn dòng Routing giả lập cho công đoạn trước |
 
-**📌 Chi tiết:** Xem [KB_05 cẩm nang C321](KB_05_QC_ELECTRODE.md#c321--hnc321--defect-repair--scrap-management)
+**📌 Chi tiết:** Xem [KB_05 cẩm nang C321](../KB_05/KB_05_01_QC_OVERVIEW.md#c321--hnc321--defect-repair--scrap-management)
 
 ---
 
@@ -193,7 +193,7 @@ SET @Confighours = CASE WHEN @MaterialCode IN ('mã1','mã2',...) THEN 3
 |---------------------|---------------------|-------------|
 | "Không cho đổi ngược Pass→Reject nhưng CHO PHÉP đổi Reject→Pass" | `ELSE IF (@getStatusCheck IS NULL)` → chỉ cho update khi NULL, KHÔNG cho khi Reject | Đổi thành `ELSE IF (@getStatusCheck IS NULL OR @getStatusCheck = 'Reject')` |
 
-**📌 Chi tiết:** Xem [KB_26 §3 Bug 2](KB_26_LIEN_KET_HE_THONG_VA_BUG_LOGIC.md#bug-2-sự-bất-đối-xứng-khóa-cứng-trong-qc-audit-passreject)
+**📌 Chi tiết:** Xem [KB_26 §3 Bug 2](../KB_26/KB_26_01_LINKS_BUGS.md#bug-2-sự-bất-đối-xứng-khóa-cứng-trong-qc-audit-passreject)
 
 ---
 
@@ -205,7 +205,7 @@ SET @Confighours = CASE WHEN @MaterialCode IN ('mã1','mã2',...) THEN 3
 |---------------------|---------------------|-------------|
 | "Hàng trả lại từ khách phải qua IQC" | Bắt buộc IQC Pass cho MỌI loại hàng kể cả Thành phẩm (FERT) — sai vì FG không có IQC | Thêm check `MaterialTypeCode`: chỉ yêu cầu IQC cho NVL (`ROH`) |
 
-**📌 Chi tiết:** Xem [KB_26 §6.3](KB_26_LIEN_KET_HE_THONG_VA_BUG_LOGIC.md#3-phân-hệ-trả-hàng-returns--rma-flow)
+**📌 Chi tiết:** Xem [KB_26 §6.3](../KB_26/KB_26_01_LINKS_BUGS.md#3-phân-hệ-trả-hàng-returns--rma-flow)
 
 ---
 
@@ -217,7 +217,7 @@ SET @Confighours = CASE WHEN @MaterialCode IN ('mã1','mã2',...) THEN 3
 |---------------------|----------------|-----------|-------------|
 | "Phải sấy đủ X giờ theo từng loại model mới được ra lò" | CASE WHEN `@MaterialCodes IN (...)` THEN 3/9/12/15/20/30 giờ | `SELECT * FROM STB_VN_DRYOVER WHERE Barcode = '...'` rồi so sánh `OvenInputDate + Confighours` với `GETDATE()` | Thêm MaterialCode mới vào CASE WHEN (hoặc tạo bảng config riêng) |
 
-**📌 Chi tiết:** Xem [KB_03 §6.23](KB_03_SAN_XUAT.md#623-thiết-bị-phụ-trợ-mes-lò-sấy-gá-doping--dao-cắt-slitting)
+**📌 Chi tiết:** Xem [KB_03 §6.23](../KB_03/KB_03_02_CELL_LINE.md#623-thiết-bị-phụ-trợ-mes-lò-sấy-gá-doping--dao-cắt-slitting)
 
 ---
 
@@ -229,7 +229,7 @@ SET @Confighours = CASE WHEN @MaterialCode IN ('mã1','mã2',...) THEN 3
 |---------------------|----------------|-----------|-------------|
 | "Dao cắt phải được kiểm tra/thay thế khi đạt mốc 20k/40k/60k/70k mét" | Check `totalkm >= StandardQty` trong `STB_VN_SlittingKnifeInUse` | `SELECT KnifeID, totalkm, StandardQty FROM STB_VN_SlittingKnifeInUse WHERE MachineCode = '...'` | Thay dao mới → reset `totalkm = 0` |
 
-**📌 Chi tiết:** Xem [KB_03 §6.23](KB_03_SAN_XUAT.md#623-thiết-bị-phụ-trợ-mes-lò-sấy-gá-doping--dao-cắt-slitting)
+**📌 Chi tiết:** Xem [KB_03 §6.23](../KB_03/KB_03_02_CELL_LINE.md#623-thiết-bị-phụ-trợ-mes-lò-sấy-gá-doping--dao-cắt-slitting)
 
 ---
 
@@ -241,7 +241,7 @@ SET @Confighours = CASE WHEN @MaterialCode IN ('mã1','mã2',...) THEN 3
 |---------------------|----------------|-----------|-------------|
 | "NVL nhập kho phải qua IQC trước khi xác nhận" | Check `DecisionResult = 'P'` trong `STB_MaterialQcInfo` | `SELECT MaterialQcNo, DecisionResult FROM STB_MaterialQcInfo WHERE MaterialLotNo = 'ML...'` | QC hoàn thành nhập kết quả tại C220 → set PASS |
 
-**📌 Chi tiết:** Xem [KB_02 §4.15](KB_02_KHO_WMS.md#415-luồng-nhập-kho-đầy-đủ-f330)
+**📌 Chi tiết:** Xem [KB_02 §4.15](../KB_02/KB_02_01_NVL_WMS.md#415-luồng-nhập-kho-đầy-đủ-f330)
 
 ---
 
@@ -253,7 +253,7 @@ SET @Confighours = CASE WHEN @MaterialCode IN ('mã1','mã2',...) THEN 3
 |---------------------|----------------|-----------|-------------|
 | "Phải cân lần lượt theo thứ tự (Seq). Ca đêm cho phép đảo thứ tự Binder trước" | SP nhận `@pOrder = 'kdem'` để đảo thứ tự. Ca ngày quên bỏ tích checkbox → bị nhảy thứ tự | `EXEC usp_GetElectroMixPresentStep_vietnam 'VVQN...', ''` | Bỏ tích checkbox "CA ĐÊM CHUẨN BỊ TRƯỚC" → Bấm "Làm mới màn hình". Nếu kẹt: DELETE `STB_ElectrodeMixStepInfo` WHERE Lot bị kẹt |
 
-**📌 Chi tiết:** Xem [KB_05 §8.6](KB_05_QC_ELECTRODE.md#86-quy-trình-cân-điện-cực-mixing--phần-mềm-cân-điện-cực-electrodeweighing)
+**📌 Chi tiết:** Xem [KB_05 §8.6](../KB_05/KB_05_01_QC_OVERVIEW.md#86-quy-trình-cân-điện-cực-mixing--phần-mềm-cân-điện-cực-electrodeweighing)
 
 ---
 

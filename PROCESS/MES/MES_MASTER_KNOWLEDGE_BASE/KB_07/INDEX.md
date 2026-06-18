@@ -1,6 +1,6 @@
-# KB_07 — Groupware & MES Integration (INDEX)
+﻿# KB_07 — Groupware & MES Integration (INDEX)
 
-> **File gốc:** `KB_07_GROUPWARE_INTEGRATION.md` (77KB) đã được tách thành 3 chunks.
+> **File gốc:** `../KB_07/KB_07_01_OVERVIEW_FLOWS.md` (77KB) đã được tách thành 3 chunks.
 
 ---
 

@@ -1,6 +1,6 @@
-# KB_05 — Kiểm tra Chất lượng (QC) & Điện cực (INDEX)
+﻿# KB_05 — Kiểm tra Chất lượng (QC) & Điện cực (INDEX)
 
-> **File gốc:** `KB_05_QC_ELECTRODE.md` (105KB) đã được tách thành 6 chunks.
+> **File gốc:** `../KB_05/KB_05_01_QC_OVERVIEW.md` (105KB) đã được tách thành 6 chunks.
 > **Đọc chunk phù hợp** thay vì load toàn bộ 105KB.
 
 ---

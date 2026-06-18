@@ -195,7 +195,7 @@ VALUES (
 ### 4. Lỗi màn HNC321 (Qc nhập NG sản phẩm mang đi kiểm tra — Báo lỗi chữ Hàn Quốc)
 
 Chi tiết về triệu chứng, nguyên nhân và các phương án bypass (bao gồm script SQL chèn lịch sử giả lập) đối với lỗi nhập phế màn HNC321, vui lòng tham khảo tại:
-👉 [KB_05_QC_ELECTRODE.md § Kịch bản 3 — Lỗi nhập phế màn HNC321 báo lỗi tiếng Hàn](KB_05_QC_ELECTRODE.md#kịch-bản-sự-cố-khẩn-cấp-3-lỗi-nhập-phế-hnc321-báo-lỗi-tiếng-hàn)
+👉 [../KB_05/KB_05_01_QC_OVERVIEW.md § Kịch bản 3 — Lỗi nhập phế màn HNC321 báo lỗi tiếng Hàn](../KB_05/KB_05_01_QC_OVERVIEW.md#kịch-bản-sự-cố-khẩn-cấp-3-lỗi-nhập-phế-hnc321-báo-lỗi-tiếng-hàn)
 
 ---
 
@@ -225,7 +225,7 @@ WHERE Barcode = 'VE260509-004'
 ```
 
 **Xóa phiếu nhập kho F330 (có IQC):**
-👉 **Chi tiết Script Fix:** Xem tại [KB_02_KHO_WMS.md § 4.16](KB_02_KHO_WMS.md)
+👉 **Chi tiết Script Fix:** Xem tại [../KB_02/KB_02_01_NVL_WMS.md § 4.16](../KB_02/KB_02_01_NVL_WMS.md)
 
 ---
 

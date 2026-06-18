@@ -1,6 +1,6 @@
-# KB_02 — Kho Nguyên Vật Liệu & Thành Phẩm (INDEX)
+﻿# KB_02 — Kho Nguyên Vật Liệu & Thành Phẩm (INDEX)
 
-> **File gốc:** `KB_02_KHO_WMS.md` (79KB) đã được tách thành 4 chunks.
+> **File gốc:** `../KB_02/KB_02_01_NVL_WMS.md` (79KB) đã được tách thành 4 chunks.
 
 ---
 

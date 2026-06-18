@@ -1,6 +1,6 @@
-# KB_26 — Liên Kết Hệ Thống & Bug Logic (INDEX)
+﻿# KB_26 — Liên Kết Hệ Thống & Bug Logic (INDEX)
 
-> **File gốc:** `KB_26_LIEN_KET_HE_THONG_VA_BUG_LOGIC.md` (42KB) → 3 chunks.
+> **File gốc:** `../KB_26/KB_26_01_LINKS_BUGS.md` (42KB) → 3 chunks.
 
 ## Chunk Map
 

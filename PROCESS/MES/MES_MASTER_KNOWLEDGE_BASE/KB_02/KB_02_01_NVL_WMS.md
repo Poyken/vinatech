@@ -10,7 +10,7 @@
 ## 4. 📦 Kho Nguyên Vật Liệu (WMS)
 
 > 🏭 **Cơ sở gốc:** VVT_F1 (Bắc Ninh) — F-series chuẩn dùng chung tất cả cơ sở
-> 🔀 **Biến thể:** HN (Hà Nam): HN551/HN866 (kho TP), HN20-HN23 (kho R&D), HN544 (gộp túi bóng) | BG2: K181 (log ủy quyền NVL) → [KB_03 §6.14](KB_03_SAN_XUAT.md#614-nhà-máy-bg2--cấu-hình-triển-khai-hệ-thống-mes)
+> 🔀 **Biến thể:** HN (Hà Nam): HN551/HN866 (kho TP), HN20-HN23 (kho R&D), HN544 (gộp túi bóng) | BG2: K181 (log ủy quyền NVL) → [KB_03 §6.14](../KB_03/KB_03_02_CELL_LINE.md#614-nhà-máy-bg2--cấu-hình-triển-khai-hệ-thống-mes)
 
 ### 4.0 Sơ Đồ Quy Trình Tổng Quan (KHO & IQC -> SẢN XUẤT -> PQC & OQC)
 
@@ -89,7 +89,7 @@ SELECT OBJECT_DEFINITION(OBJECT_ID('usp_vvt_MaterialLotInfo_get'))
 
 ### 4.2 Không tìm thấy mã lot ở màn C512
 
-👉 **Chi tiết Nguyên nhân & Cách xử lý:** Xem tại [KB_05_QC_ELECTRODE.md § 7.2](KB_05_QC_ELECTRODE.md)
+👉 **Chi tiết Nguyên nhân & Cách xử lý:** Xem tại [../KB_05/KB_05_01_QC_OVERVIEW.md § 7.2](../KB_05/KB_05_01_QC_OVERVIEW.md)
 
 ---
 
@@ -322,9 +322,9 @@ Có **3 cách xử lý/thiết lập** tùy thuộc vào tình huống:
 Khi nhà cung cấp thay đổi định dạng mã Lot Vendor, hệ thống sẽ không đọc được ngày sản xuất, gây lỗi `Exception occurred` hoặc tính sai hạn dùng. Bạn cần sửa đổi các SQL Function tương ứng.
 
 ##### 1. Phân biệt 2 Function của hệ thống:
-* **Hàm [fn_VVT_getdatebyVendorLot](KB_10_KIEN_TRUC_VA_DATAFLOW.md) (2 tham số: `@materialcode`, `@vendorlot`):**
+* **Hàm [fn_VVT_getdatebyVendorLot](../KB_10/KB_10_01_ARCHITECTURE.md) (2 tham số: `@materialcode`, `@vendorlot`):**
   * Dùng cho các vật tư chỉ có một định dạng Vendor Lot duy nhất từ một nhà cung cấp, không phân biệt nhà cung cấp khác nhau.
-* **Hàm [fn_VVT_getdatebyVendorLot_MergeCode](KB_10_KIEN_TRUC_VA_DATAFLOW.md) (3 tham số: `@materialcode`, `@vendorlot`, `@sourceCustomerCode`):**
+* **Hàm [fn_VVT_getdatebyVendorLot_MergeCode](../KB_10/KB_10_01_ARCHITECTURE.md) (3 tham số: `@materialcode`, `@vendorlot`, `@sourceCustomerCode`):**
   * Dùng khi **cùng một mã vật tư** nhưng được cung cấp bởi **nhiều nhà cung cấp khác nhau** (`@sourceCustomerCode` ví dụ: `VV033`, `VV040`, `VV034`...) có định dạng mã Lot khác nhau (đặc biệt là nhóm Vỏ nhôm `GBAKAC-%`, Sleeve `GCMDPT-%`, Băng keo `GBRLAC-%`).
 
 ##### 2. Sửa ở đâu và sửa thế nào?
@@ -427,8 +427,8 @@ WHERE LotID = 'lot_id_cần_sửa';
 ### 4.12 Lỗi "Không tồn tại thiết lập Vỏ Nhôm" (B597)
 
 *   **Triệu chứng:** `"Không tồn tại thiết lập Vỏ Nhôm của LotNo... với mã Vỏ Nhôm: GBDYAC-004 <> ECVT30-367"`
-*   **Chi tiết & Giải pháp:** Xem chi tiết nguyên nhân gốc, cách trace và SQL script khắc phục tại [KB_05_QC_ELECTRODE.md#74-b597-báo-lỗi-không-tồn-tại-thiết-lập-vỏ-nhôm](KB_05_QC_ELECTRODE.md#74-b597-báo-lỗi-không-tồn-tại-thiết-lập-vỏ-nhôm).
-*   **Checklist lỗi B597 đầy đủ:** Xem tại [KB_05_QC_ELECTRODE.md#83-checklist-khi-b597-báo-lỗi-khi-lưu-nvl](KB_05_QC_ELECTRODE.md#83-checklist-khi-b597-báo-lỗi-khi-lưu-nvl).
+*   **Chi tiết & Giải pháp:** Xem chi tiết nguyên nhân gốc, cách trace và SQL script khắc phục tại [../KB_05/KB_05_01_QC_OVERVIEW.md#74-b597-báo-lỗi-không-tồn-tại-thiết-lập-vỏ-nhôm](../KB_05/KB_05_01_QC_OVERVIEW.md#74-b597-báo-lỗi-không-tồn-tại-thiết-lập-vỏ-nhôm).
+*   **Checklist lỗi B597 đầy đủ:** Xem tại [../KB_05/KB_05_01_QC_OVERVIEW.md#83-checklist-khi-b597-báo-lỗi-khi-lưu-nvl](../KB_05/KB_05_01_QC_OVERVIEW.md#83-checklist-khi-b597-báo-lỗi-khi-lưu-nvl).
 
 ---
 
@@ -712,7 +712,7 @@ Dưới đây là cẩm nang vận hành chi tiết các màn hình thuộc phâ
     *   **⚠️ Cực kỳ quan trọng:** Sau khi sinh Lot, thủ kho bắt buộc phải nhập giá trị **"Số Lot No của nhà cung cấp"** vào cột **"Đặc tính 10"** (`LotAttr10` / `LotExtText10`) để hệ thống chạy hàm parse tự động tính ra ngày sản xuất và thời hạn hết hạn. Nếu cột này bị bỏ trống hoặc không nhảy ngày hết hạn, Lot sẽ tự động bị hệ thống đưa vào kho ảo **`HOLDING`** khi xuất kho và không thể cấp phát cho sản xuất. Nếu gặp sự cố điền Lot No đúng nhưng không nhảy đặc tính ngày, hãy báo ngay cho EA Team.
 *   **Bước 3 (Xác nhận nhập kho):** Chỉ khi kết quả kiểm tra IQC tại màn hình **C220** của Lot hàng đó đã chuyển trạng thái **"PASS"** thì thủ kho mới có thể thực hiện nhấn 2 nút **"Kết thúc nhập kho"** và **"Xác nhận nhập kho"** tại F330. Việc nhấn đủ 2 nút này là bắt buộc để kết thúc quy trình nhập.
 
-    > 🚦 **Tham chiếu mở rộng:** Chi tiết logic, mã SQL debug, và cách mở rộng cho cổng chặn IQC nhập kho (F330/C220) được tổng hợp tại **[KB_14 §6.3 Nhóm 11 — F330/C220 IQC](KB_14_TRACE_BUG_METHODOLOGY.md#nhóm-11-f330c220--chặn-nhập-kho-iqc-validation-liên-phòng-ban)**.
+    > 🚦 **Tham chiếu mở rộng:** Chi tiết logic, mã SQL debug, và cách mở rộng cho cổng chặn IQC nhập kho (F330/C220) được tổng hợp tại **[KB_14 §6.3 Nhóm 11 — F330/C220 IQC](../KB_14/KB_14_01_METHODOLOGY.md#nhóm-11-f330c220--chặn-nhập-kho-iqc-validation-liên-phòng-ban)**.
 
 #### 4. Cấp phát sản xuất & Quy trình hoàn trả NVL (F430, F610, F620)
 *   **Xuất kho ra chuyền (F430):** Sử dụng nút "Nguyên liệu đầu ra" để xuất NVL ra CellLine theo nguyên tắc FIFO. Nếu Lot nào thiếu ngày sản xuất ở đặc tính 10, hệ thống sẽ tự động chuyển Lot đó vào kho HOLDING.

@@ -91,7 +91,7 @@
 [GATE 7] PO không có Route: PONo IS NULL → RAISERROR 'Routing này không có trong PO'
 ```
 
-> 🚦 **Tham chiếu mở rộng:** Chi tiết logic, mã SQL debug, và cách mở rộng cho 7 cổng chặn B530 trên (cùng 11 nhóm chặn tương tự như B597, B523, B452, B618, QC Audit...) được tổng hợp đầy đủ tại **[KB_14 §6 — Tổng Hợp Pattern Validation Gates](KB_14_TRACE_BUG_METHODOLOGY.md#6-tổng-hợp-pattern-validation-gates)**.
+> 🚦 **Tham chiếu mở rộng:** Chi tiết logic, mã SQL debug, và cách mở rộng cho 7 cổng chặn B530 trên (cùng 11 nhóm chặn tương tự như B597, B523, B452, B618, QC Audit...) được tổng hợp đầy đủ tại **[KB_14 §6 — Tổng Hợp Pattern Validation Gates](../KB_14/KB_14_01_METHODOLOGY.md#6-tổng-hợp-pattern-validation-gates)**.
 
 
 **Cột IsRawMaterialInputFinish — Gate quan trọng nhất:**
@@ -173,7 +173,7 @@ WHERE MaterialCode = 'mã_hàng'
 
 ### 6.5 B523 — Đóng Gói (Gộp Box) — Quy Trình Mới
 
-> 🏭 **Cơ sở gốc:** VVT_F1 | 🔀 **Biến thể:** **HN523** (Hà Nam), **HN544** (gộp túi bóng) → [KB_04 §6.5, §6.13](KB_04_DONG_GOI_IN_TEM.md)
+> 🏭 **Cơ sở gốc:** VVT_F1 | 🔀 **Biến thể:** **HN523** (Hà Nam), **HN544** (gộp túi bóng) → [KB_04 §6.5, §6.13](../KB_04/KB_04_01_CORE_PACKAGING.md)
 
 **Quy trình mới (thay đổi so với cũ):**
 
@@ -207,7 +207,7 @@ IF @pProcessUserID NOT IN ('vvt_worker','vvtworker',...)
     RAISERROR('Chưa cân — không được in label')
 ```
 
-> 🚦 **Tham chiếu mở rộng:** Chi tiết các cổng chặn đóng gói (cân hàng, tiêu chuẩn đóng gói, in tem giới hạn) được tổng hợp tại **[KB_14 §6.3 Nhóm 3 — Đóng Gói](KB_14_TRACE_BUG_METHODOLOGY.md#nhóm-3-b523--chặn-đóng-gói-sp-usp_vietnam_doprocessprodpacking_vvt)**.
+> 🚦 **Tham chiếu mở rộng:** Chi tiết các cổng chặn đóng gói (cân hàng, tiêu chuẩn đóng gói, in tem giới hạn) được tổng hợp tại **[KB_14 §6.3 Nhóm 3 — Đóng Gói](../KB_14/KB_14_01_METHODOLOGY.md#nhóm-3-b523--chặn-đóng-gói-sp-usp_vietnam_doprocessprodpacking_vvt)**.
 
 ---
 
@@ -264,35 +264,35 @@ B310 (POType=MODULE) → B450 (Module Line Code) → B540 (Không check điện 
 #### 6.8.1 Các Bảng Cơ Sở Dữ Liệu Module & Cấu Trúc Schema
 Hệ thống quản lý Module sử dụng một tập hợp các bảng cơ sở dữ liệu chuyên biệt để liên kết, theo dõi chất lượng, và lưu trữ lịch sử cấu hình lắp ráp:
 
-1. **[STB_SingleCellModuleMappingHist](KB_03_SAN_XUAT.md) (Lịch sử mapping Single Cell ↔ Module Lot):**
+1. **[STB_SingleCellModuleMappingHist](../KB_03/KB_03_02_CELL_LINE.md) (Lịch sử mapping Single Cell ↔ Module Lot):**
    * Lưu thông tin mapping giữa Single Cell và Module Lot.
    * *Schema:* `ModuleLotNo` (varchar(20)), `Seq` (int), `SingleCellLotNo` (varchar(20)), `CreateDateTime` (datetime), `CreateUserID` (varchar(20)).
 
-2. **[STB_ModuleProductionInfo](KB_03_SAN_XUAT.md) & [STB_ModuleProductionHist](KB_03_SAN_XUAT.md) (Thông tin & Lịch sử sản xuất module):**
+2. **[STB_ModuleProductionInfo](../KB_03/KB_03_02_CELL_LINE.md) & [STB_ModuleProductionHist](../KB_03/KB_03_02_CELL_LINE.md) (Thông tin & Lịch sử sản xuất module):**
    * Theo dõi tiến độ sản xuất, lượng pinhole, thay cell lỗi, thông số kiểm đo ESR/Farad của module.
    * *Schema chính:* `ModuleProductionNo` (varchar(20)), `JobStartDate` (date), `SemiProdLotNo1` (varchar(20)), `SemiProdLotNo2` (varchar(20)), `PinHoleQty` (numeric), `ChangeCellQty` (numeric), `Farad` (numeric), `ESR` (numeric), `FinishedProdLotNo` (varchar(20)), `ShipmentDate` (date), `ShipmentQty` (numeric).
 
-3. **[STB_ModuleSemiProductionInfo](KB_03_SAN_XUAT.md) (Thông tin bán thành phẩm Module):**
+3. **[STB_ModuleSemiProductionInfo](../KB_03/KB_03_02_CELL_LINE.md) (Thông tin bán thành phẩm Module):**
    * Liên kết bản mạch PCB và các Single Cell cấu thành bán thành phẩm.
    * *Schema:* `ModuleSemiProductionNo` (varchar(20)), `ProdDate` (date), `Grade` (varchar(10)), `PCBLotNo` (varchar(20)), `SemiProdLotNo` (varchar(20)), `SingleCellLotNo1` (varchar(20)), `SingleCellLotNo2` (varchar(20)), `SingleCellLotNo3` (varchar(20)).
 
-4. **[STB_SubAssemblyInfoForBE](KB_03_SAN_XUAT.md) (Mapping bán thành phẩm BE):**
+4. **[STB_SubAssemblyInfoForBE](../KB_03/KB_03_02_CELL_LINE.md) (Mapping bán thành phẩm BE):**
    * Bản ghi liên kết thùng và mạch PCB cho công đoạn lắp ráp BE.
    * *Schema:* `SubAssemblyNo` (varchar(20)), `BoxBarcode` (varchar(20)), `PcbBarcode` (varchar(20)).
 
-5. **[STB_ModuleLabelInfo](KB_03_SAN_XUAT.md) (Thông tin Serial Label Module):**
+5. **[STB_ModuleLabelInfo](../KB_03/KB_03_02_CELL_LINE.md) (Thông tin Serial Label Module):**
    * Liên kết mã serial nhãn in với Single Cell tương ứng.
    * *Schema:* `ModuleSerialNo` (varchar(20)), `ProductNo` (varchar(20)), `RevisionNo` (varchar(20)), `SingleLotNo` (varchar(20)).
 
-6. **[STB_ModuleAssemblyLabelInfo](KB_03_SAN_XUAT.md) (Lịch sử tách/phát hành Lot con cho ráp Module):**
+6. **[STB_ModuleAssemblyLabelInfo](../KB_03/KB_03_02_CELL_LINE.md) (Lịch sử tách/phát hành Lot con cho ráp Module):**
    * Lưu thông tin quan hệ giữa Lot ráp con (Assembly Lot) và Lot mẹ (Parent Lot).
    * *Schema:* `ModuleAssemblyLotNo` (varchar(20)), `ModuleParentLotNo` (varchar(20)), `IsPacking` (bit), `IsShipment` (bit).
 
-7. **[STB_AssemblyCellWeightInfo](KB_03_SAN_XUAT.md) (Cân nặng Cell lắp ráp):**
+7. **[STB_AssemblyCellWeightInfo](../KB_03/KB_03_02_CELL_LINE.md) (Cân nặng Cell lắp ráp):**
    * Lưu dữ liệu cân nặng ghi nhận tại công đoạn lắp ráp.
    * *Schema:* `LineCode` (varchar(20)), `CellWeight` (numeric), `CreateDateTime` (datetime).
 
-8. **[STB_VN_MASTERMODULES](KB_03_SAN_XUAT.md) & [STB_VN_DETAILMODULES](KB_03_SAN_XUAT.md) (Đóng gói gộp box module Việt Nam):**
+8. **[STB_VN_MASTERMODULES](../KB_03/KB_03_02_CELL_LINE.md) & [STB_VN_DETAILMODULES](../KB_03/KB_03_02_CELL_LINE.md) (Đóng gói gộp box module Việt Nam):**
    * *Master:* Lưu thông tin thùng (`GROUPID`, `LOTNO`, `QTY`, `TOTALQTY`, `VOL`, `FWAR`, `PARTNO`, `SIZE`, `PackingID` dạng `MVKQ[Month]...`).
    * *Detail:* Lưu chi tiết của từng Lot trong thùng (`GROUPID`, `LOTNO`, `QTYACT`, `LineCode`, `RouteCode`, `ProdQty`).
 
@@ -1172,13 +1172,13 @@ $$\text{CurrentQty} = \text{LengthSlitting} \times \left(\frac{\text{WidthSlitti
 #### 5. Danh Sách Lỗi Logic, Điểm Yếu & Giải Pháp (Bugs & Troubleshooting)
 
 ##### 🔴 Bug #1: Lỗi toán tử SQL bypass kiểm tra công đoạn V-22 bắt buộc (`usp_VN_DryOver`)
-*   **Chi tiết & Giải pháp:** Xem chi tiết tại [KB_03_SAN_XUAT.md#lỗi-1-lỗi-toán-tử-sql-bypass-kiểm-tra-công-đoạn-sấy-v-22-bắt-buộc](KB_03_SAN_XUAT.md#lỗi-1-lỗi-toán-tử-sql-bypass-kiểm-tra-công-đoạn-sấy-v-22-bắt-buộc).
+*   **Chi tiết & Giải pháp:** Xem chi tiết tại [../KB_03/KB_03_02_CELL_LINE.md#lỗi-1-lỗi-toán-tử-sql-bypass-kiểm-tra-công-đoạn-sấy-v-22-bắt-buộc](../KB_03/KB_03_02_CELL_LINE.md#lỗi-1-lỗi-toán-tử-sql-bypass-kiểm-tra-công-đoạn-sấy-v-22-bắt-buộc).
 
 ##### 🔴 Bug #2: Bug thời gian ghi nhận lịch sử Doping JIG khiến mất dữ liệu log (`usp_Vietnam_DopingJIG_uid`)
-*   **Chi tiết & Giải pháp:** Xem chi tiết tại [KB_03_SAN_XUAT.md#lỗi-1-lỗi-thời-gian-ghi-nhận-lịch-sử-jig-khiến-mất-dữ-liệu-log-khi-tự-động-ngắt](KB_03_SAN_XUAT.md#lỗi-1-lỗi-thời-gian-ghi-nhận-lịch-sử-jig-khiến-mất-dữ-liệu-log-khi-tự-động-ngắt).
+*   **Chi tiết & Giải pháp:** Xem chi tiết tại [../KB_03/KB_03_02_CELL_LINE.md#lỗi-1-lỗi-thời-gian-ghi-nhận-lịch-sử-jig-khiến-mất-dữ-liệu-log-khi-tự-động-ngắt](../KB_03/KB_03_02_CELL_LINE.md#lỗi-1-lỗi-thời-gian-ghi-nhận-lịch-sử-jig-khiến-mất-dữ-liệu-log-khi-tự-động-ngắt).
 
 ##### 🔴 Bug #3: Mismatch logic tuổi thọ dao và Hardcode địa lý Bắc Giang (`usp_DoCreateSlittingResult`)
-*   **Chi tiết & Giải pháp:** Xem chi tiết tại [KB_03_SAN_XUAT.md#lỗi-2-mismatch-logic-tính-tuổi-thọ-dao-slitting-và-hardcode-địa-lý-bắc-giang](KB_03_SAN_XUAT.md#lỗi-2-mismatch-logic-tính-tuổi-thọ-dao-slitting-và-hardcode-địa-lý-bắc-giang).
+*   **Chi tiết & Giải pháp:** Xem chi tiết tại [../KB_03/KB_03_02_CELL_LINE.md#lỗi-2-mismatch-logic-tính-tuổi-thọ-dao-slitting-và-hardcode-địa-lý-bắc-giang](../KB_03/KB_03_02_CELL_LINE.md#lỗi-2-mismatch-logic-tính-tuổi-thọ-dao-slitting-và-hardcode-địa-lý-bắc-giang).
 
 
 ---

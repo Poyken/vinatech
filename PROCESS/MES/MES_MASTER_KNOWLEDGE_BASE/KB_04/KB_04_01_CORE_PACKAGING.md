@@ -10,12 +10,12 @@
 
 ## 6. 📦 Đóng gói & In tem nhãn
 
-> 🚦 **Tham chiếu mở rộng:** Toàn bộ cơ chế cổng chặn (Validation Gates) liên quan đến đóng gói B523, in tem nhãn, phân quyền người dùng, và checklist thêm gate mới được tổng hợp tại **[KB_14 §6.3 Nhóm 3 — Đóng Gói](KB_14_TRACE_BUG_METHODOLOGY.md#nhóm-3-b523--chặn-đóng-gói-sp-usp_vietnam_doprocessprodpacking_vvt)**.
+> 🚦 **Tham chiếu mở rộng:** Toàn bộ cơ chế cổng chặn (Validation Gates) liên quan đến đóng gói B523, in tem nhãn, phân quyền người dùng, và checklist thêm gate mới được tổng hợp tại **[KB_14 §6.3 Nhóm 3 — Đóng Gói](../KB_14/KB_14_01_METHODOLOGY.md#nhóm-3-b523--chặn-đóng-gói-sp-usp_vietnam_doprocessprodpacking_vvt)**.
 >
 > 🏭 **Cơ sở gốc:** VVT_F1 (Bắc Ninh) | **Biến thể theo cơ sở:**
 > - **Hà Nam (VVT_F3):** HN523 (đóng gói), HN542/HN543 (chia tem), HN544 (gộp túi bóng), HN553/HN711 (tem Solum)
-> - **BG2 (VVT_F4):** K130 (tem Module), K160 (lịch sử tem), K198 (tem Bloom Energy SL-7), K199 (tem Nordex) → [KB_03 §6.14](KB_03_SAN_XUAT.md#614-nhà-máy-bg2--cấu-hình-triển-khai-hệ-thống-mes)
-> - **Hưng Yên (VVT_F5):** D051, D100, D110 → [KB_25](KB_25_VINAENESSOL_HUNG_YEN.md)
+> - **BG2 (VVT_F4):** K130 (tem Module), K160 (lịch sử tem), K198 (tem Bloom Energy SL-7), K199 (tem Nordex) → [KB_03 §6.14](../KB_03/KB_03_02_CELL_LINE.md#614-nhà-máy-bg2--cấu-hình-triển-khai-hệ-thống-mes)
+> - **Hưng Yên (VVT_F5):** D051, D100, D110 → [KB_25](../KB_25/KB_25_01_OVERVIEW.md)
 
 ### 6.0 Tổng Quan Kiến Trúc In Tem Nhãn (Mô hình Giá sách ➔ Danh mục ➔ Người đọc)
 Để dễ hình dung luồng xử lý in tem trong hệ thống NAIS MES, hãy tưởng tượng:

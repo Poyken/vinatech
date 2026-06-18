@@ -1,4 +1,4 @@
-# KB_06 - Master Data, SQL Tools & Manual Bypass
+﻿# KB_06 - Master Data, SQL Tools & Manual Bypass
 
 > **Màn hình:** A230, A310, A410, A418, A419, B210-B240, B250, B260, B270, C131, C430, F110, F741
 > **Bảng chính:** `STB_ModelBasicInfo` (61 cols), `STB_MaterialMaster` (82 cols), `STB_PackingStandard` (11 cols)
@@ -174,7 +174,7 @@ SELECT OBJECT_DEFINITION(OBJECT_ID('fn_VVT_StagePricesMODULE'))
 
 ## 4. 🛢️ Lỗi Vỏ Nhôm (Aluminum Case Mapping)
 
--> Xem [KB_05 Mục 7.4](KB_05_QC_ELECTRODE.md#74-b597-báo-lỗi-không-tồn-tại-thiết-lập-vỏ-nhôm) để debug và fix.
+-> Xem [KB_05 Mục 7.4](KB_05/KB_05_01_QC_OVERVIEW.md#74-b597-báo-lỗi-không-tồn-tại-thiết-lập-vỏ-nhôm) để debug và fix.
 
 ---
 
@@ -286,7 +286,7 @@ ORDER BY CreateDateTime DESC
 ## 6. 🆘 Manual Lot Bypass (In tem khẩn khi không có Lot trên hệ thống)
 
 *   **Khi nào dùng:** Tình huống khẩn cấp cần in tem đóng gói gấp cho lô hàng thực tế đã đóng xong nhưng trên hệ thống MES bị lỗi không sinh được Lot (ví dụ: do sự cố đồng bộ PO ở B450).
-*   **Chi tiết & Giải pháp:** Xem quy trình cứu hộ 3 bước (INSERT/UPDATE SQL) chi tiết tại [KB_04_DONG_GOI_IN_TEM.md#615-lỗi-không-in-được-tem-vì-không-có-lot-trên-hệ-thống-bypass-thủ-công](KB_04_DONG_GOI_IN_TEM.md#615-lỗi-không-in-được-tem-vì-không-có-lot-trên-hệ-thống-bypass-thủ-công).
+*   **Chi tiết & Giải pháp:** Xem quy trình cứu hộ 3 bước (INSERT/UPDATE SQL) chi tiết tại [KB_04/KB_04_01_CORE_PACKAGING.md#615-lỗi-không-in-được-tem-vì-không-có-lot-trên-hệ-thống-bypass-thủ-công](KB_04/KB_04_01_CORE_PACKAGING.md#615-lỗi-không-in-được-tem-vì-không-có-lot-trên-hệ-thống-bypass-thủ-công).
 
 ---
 
@@ -661,7 +661,7 @@ Dưới đây là 10 màn hình cốt lõi nhất thường gặp sự cố ho�
 *   **Triệu chứng:** Khi OP quét mã vạch NVL tại chuyền ở trạm **B597**, hệ thống báo lỗi đỏ chặn không cho lưu vì NVL không nằm trong BOM.
 *   **Nguyên nhân gốc:** Cấu trúc định mức vật tư (BOM) của sản phẩm/model chưa được đăng ký hoặc đồng bộ thiếu trong các bảng `STB_BomHeader` và `STB_BomDetail` tại màn hình **A310**.
 *   **Cách khắc phục:** Vào màn hình **A310**, kiểm tra cấu hình BOM của Model, gán bổ sung mã NVL bị thiếu hoặc yêu cầu bộ phận quản lý đồng bộ lại BOM từ Groupware.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_25_VINAENESSOL_HUNG_YEN.md § 4](KB_25_VINAENESSOL_HUNG_YEN.md#4-màn-hình-a310-thông-tin-bom).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_25/KB_25_01_OVERVIEW.md § 4](KB_25/KB_25_01_OVERVIEW.md#4-màn-hình-a310-thông-tin-bom).
 
 ---
 
@@ -681,7 +681,7 @@ Dưới đây là 10 màn hình cốt lõi nhất thường gặp sự cố ho�
        SELECT ModelCode, FormatName FROM STB_ModelLabelInfo WHERE ModelCode = 'MÃ_MODEL';
        ```
     3. Thực hiện map lại hoặc Approve layout tem trên giao diện UI cấu hình tem.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.16](KB_04_DONG_GOI_IN_TEM.md#616-màn-hình--cấu-hình-thiết-kế-tem-z530a460).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_04/KB_04_01_CORE_PACKAGING.md § 6.16](KB_04/KB_04_01_CORE_PACKAGING.md#616-màn-hình--cấu-hình-thiết-kế-tem-z530a460).
 
 ---
 
@@ -715,7 +715,7 @@ Dưới đây là 10 màn hình cốt lõi nhất thường gặp sự cố ho�
 *   **Triệu chứng:** Thủ kho tạo phiếu nhập kho mới, nhập mã vật tư mà không tìm thấy trong popup chọn MaterialCode.
 *   **Nguyên nhân gốc:** Mã vật tư được tạo trong `STB_MaterialMaster` nhưng chưa được mapping nhà cung cấp trong `STB_MaterialVendorMapping` (F130/F140) và chưa khai báo thuộc tính kho `STB_MaterialStockAttributeInfo` (F110).
 *   **Cách khắc phục:** Chạy checklist 3 bước: (1) Đăng ký A210, (2) Map NCC tại F130/F140, (3) Bật cờ F110.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_07_GROUPWARE_INTEGRATION.md § 6](KB_07_GROUPWARE_INTEGRATION.md) và [KB_06_MASTER_DATA_TOOLS.md § 1.3](KB_06_MASTER_DATA_TOOLS.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_07/KB_07_01_OVERVIEW_FLOWS.md § 6](KB_07/KB_07_01_OVERVIEW_FLOWS.md) và [KB_06_MASTER_DATA_TOOLS.md § 1.3](KB_06_MASTER_DATA_TOOLS.md).
 
 ---
 
@@ -726,7 +726,7 @@ Dưới đây là 10 màn hình cốt lõi nhất thường gặp sự cố ho�
 *   **Triệu chứng:** OP không thấy công đoạn mới trong danh sách chọn Route để chốt sản lượng.
 *   **Nguyên nhân gốc:** Route mới chỉ được khai báo ở bảng `STB_RouteInfo` nhưng chưa được gán vào Production Order Routing (`STB_ProductionOrderRouting`) của PO hiện tại.
 *   **Cách khắc phục:** Vào A320 kiểm tra Route đã active (`IsUsed=1`), sau đó gán Route mới vào PO tại B310.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_10_KIEN_TRUC_VA_DATAFLOW.md § 2.1](KB_10_KIEN_TRUC_VA_DATAFLOW.md) và [KB_06_MASTER_DATA_TOOLS.md § 10](KB_06_MASTER_DATA_TOOLS.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_10/KB_10_01_ARCHITECTURE.md § 2.1](KB_10/KB_10_01_ARCHITECTURE.md) và [KB_06_MASTER_DATA_TOOLS.md § 10](KB_06_MASTER_DATA_TOOLS.md).
 
 ---
 
@@ -749,7 +749,7 @@ Dưới đây là 10 màn hình cốt lõi nhất thường gặp sự cố ho�
 *   **Triệu chứng:** Khi tạo hồ sơ OQC tại C512, hệ thống không biết loại kiểm tra nào áp dụng.
 *   **Nguyên nhân gốc:** Cột `OqcType` và `InspectionType` trong `STB_ModelBasicInfo` bị NULL.
 *   **Cách khắc phục:** Cập nhật giá trị OqcType và InspectionType cho model tại A410.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_05_QC_ELECTRODE.md § 7.2](KB_05_QC_ELECTRODE.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_05/KB_05_01_QC_OVERVIEW.md § 7.2](KB_05/KB_05_01_QC_OVERVIEW.md).
 
 ---
 
@@ -773,7 +773,7 @@ Dưới đây là 10 màn hình cốt lõi nhất thường gặp sự cố ho�
 *   **Triệu chứng:** B523 không cho gộp Box, báo lỗi chưa có tiêu chuẩn đóng gói.
 *   **Nguyên nhân gốc:** Chưa khai báo quy cách đóng gói (VinylBagQty, InnerBoxQty, OutBoxQty) cho model mới trong `STB_PackingStandard` tại A419.
 *   **Cách khắc phục:** Vào A419, chọn MaterialTypeCode = `FERT`, nhập Size và các thông số đóng gói, nhấn Lưu.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.1](KB_04_DONG_GOI_IN_TEM.md) và [KB_14_TRACE_BUG_METHODOLOGY.md](KB_14_TRACE_BUG_METHODOLOGY.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_04/KB_04_01_CORE_PACKAGING.md § 6.1](KB_04/KB_04_01_CORE_PACKAGING.md) và [KB_14/KB_14_01_METHODOLOGY.md](KB_14/KB_14_01_METHODOLOGY.md).
 
 ---
 
@@ -784,7 +784,7 @@ Dưới đây là 10 màn hình cốt lõi nhất thường gặp sự cố ho�
 *   **Triệu chứng:** Bảng chấm công P111 hiển thị thiếu hoặc sai giờ vào/ra.
 *   **Nguyên nhân gốc:** Thiết bị chấm công (máy quẹt thẻ) bị mất kết nối hoặc dữ liệu chưa được đồng bộ vào DB.
 *   **Cách khắc phục:** Kiểm tra kết nối thiết bị chấm công, chạy đồng bộ lại dữ liệu.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_19_ALL_DATABASES_MAP.md](KB_19_ALL_DATABASES_MAP.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_19/KB_19_01_ARCHITECTURE.md](KB_19/KB_19_01_ARCHITECTURE.md).
 
 ---
 

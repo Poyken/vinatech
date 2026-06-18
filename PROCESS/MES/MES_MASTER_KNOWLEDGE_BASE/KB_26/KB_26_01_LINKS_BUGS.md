@@ -156,7 +156,7 @@ Dưới đây là 4 lỗi logic lập trình được phát hiện trực tiếp
         END
     ```
 
-> 🚦 **Tham chiếu mở rộng:** Chi tiết yêu cầu giả định của khách hàng, phân loại Pattern C (One-Way State Lock) và checklist mở rộng cho QC Audit được tổng hợp tại **[KB_14 §6.3 Nhóm 7 — QC Audit](KB_14_TRACE_BUG_METHODOLOGY.md#nhóm-7-qc-audit--chặn-passreject-sp-usp_vn_waitingcheckbeforeexport_forqcaudit_pass)**.
+> 🚦 **Tham chiếu mở rộng:** Chi tiết yêu cầu giả định của khách hàng, phân loại Pattern C (One-Way State Lock) và checklist mở rộng cho QC Audit được tổng hợp tại **[KB_14 §6.3 Nhóm 7 — QC Audit](../KB_14/KB_14_01_METHODOLOGY.md#nhóm-7-qc-audit--chặn-passreject-sp-usp_vn_waitingcheckbeforeexport_forqcaudit_pass)**.
 
 ---
 

@@ -153,7 +153,7 @@ SELECT * FROM STB_DefectRepairInfo WHERE ControlNo IN (
 )
 ```
 
-> ⚠️ SQL sửa DefectQty và ProdQty công đoạn sau → xem [KB_03 Mục 5.8](KB_03_SAN_XUAT.md#58-sửa-số-lượng-ng-defectqty-màn-b791) để tránh trùng lặp.
+> ⚠️ SQL sửa DefectQty và ProdQty công đoạn sau → xem [KB_03 Mục 5.8](../KB_03/KB_03_02_CELL_LINE.md#58-sửa-số-lượng-ng-defectqty-màn-b791) để tránh trùng lặp.
 
 ---
 

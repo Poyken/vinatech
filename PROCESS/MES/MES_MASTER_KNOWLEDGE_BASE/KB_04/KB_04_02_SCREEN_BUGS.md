@@ -15,7 +15,7 @@
     UPDATE STB_SetInfo SET Barcode = @NewBC WHERE Barcode = @OldBC;
     UPDATE STB_LotChangeMaterialHistory SET NewBarcode = @NewBC WHERE NewBarcode = @OldBC;
     ```
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.2](KB_04_DONG_GOI_IN_TEM.md#62-sửa-tên-lot-sau-b351-chuyển-đổi-lot--barcode-có-dấu-chấm).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_04/KB_04_01_CORE_PACKAGING.md § 6.2](../KB_04/KB_04_01_CORE_PACKAGING.md#62-sửa-tên-lot-sau-b351-chuyển-đổi-lot--barcode-có-dấu-chấm).
 
 ---
 
@@ -31,7 +31,7 @@
     INSERT INTO STB_PackingStandard (MaterialTypeCode, Size, Voltage, Farad, VinylBagQty, InnerBoxQty, OutBoxQty, CreateDateTime, CreateUserID)
     VALUES ('FERT', 'KÍCH_THƯỚC_SIZE_4_CHỮ_SỐ', NULL, NULL, 500, 4000, 8000, GETDATE(), 'vinaadmin');
     ```
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.1](KB_04_DONG_GOI_IN_TEM.md#61-lỗi-chưa-có-tiêu-chuẩn-đóng-gói-b523).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_04/KB_04_01_CORE_PACKAGING.md § 6.1](../KB_04/KB_04_01_CORE_PACKAGING.md#61-lỗi-chưa-có-tiêu-chuẩn-đóng-gói-b523).
 
 ### Lỗi 2: Không gộp được Box Cell/Module do chưa có Lot, thiếu QC hoặc cờ F110
 *   **Triệu chứng:** Hệ thống từ chối gộp box cho Lot tại **B523** hoặc **B525**.
@@ -44,7 +44,7 @@
     -- Bước 2: Cập nhật kết quả QC Pass tạm thời nếu khẩn cấp
     UPDATE STB_SetInfo SET LotDecisionResult = 'PASS', IsDefect = 0 WHERE Barcode = 'MÃ_BARCODE';
     ```
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.4](KB_04_DONG_GOI_IN_TEM.md#64-lỗi-không-gộp-box-được-b523--quy-trình-debug-chuẩn).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_04/KB_04_01_CORE_PACKAGING.md § 6.4](../KB_04/KB_04_01_CORE_PACKAGING.md#64-lỗi-không-gộp-box-được-b523--quy-trình-debug-chuẩn).
 
 ### Lỗi 3: Lỗi Packing Qty hiển thị số âm hoặc sai lệch số lượng thực tế
 *   **Triệu chứng:** Màn hình hiển thị số lượng đóng gói bị âm hoặc sai lệch nghiêm trọng.
@@ -55,7 +55,7 @@
     UPDATE STB_MaterialLotInfo SET CurrentQty = [SỐ_LƯỢNG_ĐÚNG] WHERE LotNo = 'MÃ_LOT';
     UPDATE STB_SavePackingTime_VVT SET PackQty = [SỐ_LƯỢNG_ĐÚNG] WHERE LotNo = 'MÃ_LOT' AND id = [ID_GIAO_DỊCH];
     ```
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.6](KB_04_DONG_GOI_IN_TEM.md#66-lỗi-packing-qty-âm-ở-b523--b789).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_04/KB_04_01_CORE_PACKAGING.md § 6.6](../KB_04/KB_04_01_CORE_PACKAGING.md#66-lỗi-packing-qty-âm-ở-b523--b789).
 
 ### Lỗi 4: Lỗi "Chưa có tiêu chuẩn đóng gói" cho Model/Size 1840 khi quét gộp Box
 *   **Triệu chứng:** Khi công nhân quét gộp Box cho các Model có kích thước size `1840` tại màn hình B523, hệ thống báo lỗi đỏ chặn không cho thao tác.
@@ -90,7 +90,7 @@
 *   **Triệu chứng:** Thủ kho thao tác đóng gói tại B525 bị chặn tương tự B523.
 *   **Nguyên nhân gốc:** B525 là phiên bản dành cho kho, cùng logic với B523 nhưng lọc theo WarehouseCode. Thiếu cờ `IsLotUse` hoặc `IsUseBarcode` tại F110.
 *   **Cách khắc phục:** Áp dụng cùng quy trình debug 4 bước như B523 (xem mục B523 phía trên).
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.4](KB_04_DONG_GOI_IN_TEM.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_04/KB_04_01_CORE_PACKAGING.md § 6.4](../KB_04/KB_04_01_CORE_PACKAGING.md).
 
 ---
 
@@ -103,7 +103,7 @@
 *   **Triệu chứng:** Báo cáo B781 hiển thị sai ngày in/đóng gói so với thực tế.
 *   **Nguyên nhân gốc:** Cột `PrintTime` trong `STB_SavePackingTime_VVT` bị ghi sai khi nhập tay tại B523.
 *   **Cách khắc phục:** Chạy SQL sửa trực tiếp: `UPDATE STB_SavePackingTime_VVT SET PrintTime = 'NGÀY_ĐÚNG' WHERE LotNo = 'MÃ_LOT'`.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_03_SAN_XUAT.md § 5.3](KB_03_SAN_XUAT.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_03/KB_03_02_CELL_LINE.md § 5.3](../KB_03/KB_03_02_CELL_LINE.md).
 
 ---
 
@@ -116,7 +116,7 @@
 *   **Triệu chứng:** Số lượng đóng gói bị ghi nhận sai, cần sửa lại.
 *   **Nguyên nhân gốc:** OP nhập nhầm số lượng khi gộp Box tại B523. B789 sử dụng SP `usp_Vietnam_GetBoxIDForLotNo_VVT` để tra cứu.
 *   **Cách khắc phục:** Sửa trực tiếp trong bảng `STB_SavePackingTime_VVT` theo LotNo và ID giao dịch.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.6](KB_04_DONG_GOI_IN_TEM.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_04/KB_04_01_CORE_PACKAGING.md § 6.6](../KB_04/KB_04_01_CORE_PACKAGING.md).
 
 ---
 
@@ -246,7 +246,7 @@ Công nhân scan Lot/Barcode sản phẩm tại màn hình đóng gói **B523**,
 #### 🛠️ KỊCH BẢN C: Hủy gộp box khi Lot/Packing đã được nhập kho thành phẩm (Finish Goods)/Hủy Packing B523
 *   **Triệu chứng:** Khi cần hủy/rã box để đóng gói lại nhưng hệ thống chặn không cho hủy trên giao diện UI (báo lỗi: *"Lot này đã được nhập kho, không thể huỷ gộp box..."*).
 *   **Nguyên nhân gốc:** Lô thành phẩm đã chạy qua bước Nhập kho thành phẩm và có bản ghi trong bảng `STB_VN_FINISHGOODS_HN_New` (hoặc bảng thành phẩm tương ứng của từng nhà máy) cùng với Material Documents (`STB_MaterialDocInfo` có `IsCancel = 0`).
-Để tìm và xác định các thông tin còn lại từ các mã đầu vào: PKQO1600231, PKQO1600242 và Lot ve260518-011 phục vụ cho kịch bản hủy gộp box thành phẩm tại KB_04_DONG_GOI_IN_TEM.md
+Để tìm và xác định các thông tin còn lại từ các mã đầu vào: PKQO1600231, PKQO1600242 và Lot ve260518-011 phục vụ cho kịch bản hủy gộp box thành phẩm tại ../KB_04/KB_04_01_CORE_PACKAGING.md
 , bạn có thể chạy các câu truy vấn SELECT kiểm tra dưới đây:
 
 1. Hướng dẫn các câu lệnh SQL để truy vấn thông tin

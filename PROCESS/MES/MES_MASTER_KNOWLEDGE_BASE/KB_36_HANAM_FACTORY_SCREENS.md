@@ -1,8 +1,8 @@
-# KB_36 — Hà Nam Factory Screen Map & Deep System Discovery
+﻿# KB_36 — Hà Nam Factory Screen Map & Deep System Discovery
 
 > **Verified against DB:** 2026-06-18
 > **🔑 Keywords:** Hà Nam, VVT_F3, HN screen, HNC, VE route, QC subsystem, vision, IoT, XRF, BOM, sales, H screen
-> ← [Về INDEX](KB_INDEX.md) | Cross-ref: [KB_02 §HN](KB_02_KHO_WMS.md), [KB_34 §Route](KB_34_UNDOCUMENTED_SUBSYSTEMS.md)
+> ← [Về INDEX](KB_INDEX.md) | Cross-ref: [KB_02 §HN](KB_02/KB_02_01_NVL_WMS.md), [KB_34 §Route](KB_34_UNDOCUMENTED_SUBSYSTEMS.md)
 
 ---
 

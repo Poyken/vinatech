@@ -3,7 +3,7 @@
 > **Mục đích:** Bản đồ 19 databases, 6,648 tables.
 > **🔑 Keywords:** database, DB, bảng, table, ERD, SmartFactoryV2, SmartFramework, NEOE, VINATECH_GROUP, schema, linked server
 >
-> 📖 **Dành cho người mới:** Nếu bạn mới tiếp cận hệ thống lần đầu, hãy đọc **[Cẩm nang nhập môn hệ thống liên thông (KB_20)](KB_10_KIEN_TRUC_VA_DATAFLOW.md)** trước để hiểu toàn cảnh và luồng vận hành của các phân hệ.
+> 📖 **Dành cho người mới:** Nếu bạn mới tiếp cận hệ thống lần đầu, hãy đọc **[Cẩm nang nhập môn hệ thống liên thông (KB_20)](../KB_10/KB_10_01_ARCHITECTURE.md)** trước để hiểu toàn cảnh và luồng vận hành của các phân hệ.
 >
 > *Quy tắc vận hành tối thượng: Chỉ thực hiện truy vấn đọc dữ liệu (`SELECT` kết hợp `WITH(NOLOCK)`). Tuyệt đối KHÔNG chạy các câu lệnh thay đổi dữ liệu (`INSERT`, `UPDATE`, `DELETE`, `DROP`) trên các database production.*
 

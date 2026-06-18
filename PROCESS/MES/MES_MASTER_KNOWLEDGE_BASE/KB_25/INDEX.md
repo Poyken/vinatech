@@ -1,6 +1,6 @@
-# KB_25 — VinaEnesol & Hưng Yên Factory (INDEX)
+﻿# KB_25 — VinaEnesol & Hưng Yên Factory (INDEX)
 
-> **File gốc:** `KB_25_VINAENESSOL_HUNG_YEN.md` (42KB) → 3 chunks.
+> **File gốc:** `../KB_25/KB_25_01_OVERVIEW.md` (42KB) → 3 chunks.
 
 ## Chunk Map
 

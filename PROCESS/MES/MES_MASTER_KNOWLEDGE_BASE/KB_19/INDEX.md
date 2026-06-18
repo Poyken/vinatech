@@ -1,6 +1,6 @@
-# KB_19 — Bản Đồ Cơ Sở Dữ Liệu Toàn Hệ Thống (INDEX)
+﻿# KB_19 — Bản Đồ Cơ Sở Dữ Liệu Toàn Hệ Thống (INDEX)
 
-> **File gốc:** `KB_19_ALL_DATABASES_MAP.md` (86KB) đã được tách thành 4 chunks.
+> **File gốc:** `../KB_19/KB_19_01_ARCHITECTURE.md` (86KB) đã được tách thành 4 chunks.
 
 ---
 

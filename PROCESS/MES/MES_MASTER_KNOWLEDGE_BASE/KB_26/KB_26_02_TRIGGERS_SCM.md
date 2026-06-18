@@ -115,7 +115,7 @@ Stored Procedure này xử lý thêm/sửa/xóa thông tin Lot Rework từ giao 
     END
     ```
 
-> 🚦 **Tham chiếu mở rộng:** Chi tiết logic, mã SQL debug, và cách mở rộng cho phân quyền Rework được tổng hợp tại **[KB_14 §6.3 Nhóm 5 — Rework](KB_14_TRACE_BUG_METHODOLOGY.md#nhóm-5-b618--chặn-rework-sp-usp_getinforlotreworkhanamfactory_uid)**.
+> 🚦 **Tham chiếu mở rộng:** Chi tiết logic, mã SQL debug, và cách mở rộng cho phân quyền Rework được tổng hợp tại **[KB_14 §6.3 Nhóm 5 — Rework](../KB_14/KB_14_01_METHODOLOGY.md#nhóm-5-b618--chặn-rework-sp-usp_getinforlotreworkhanamfactory_uid)**.
 
 ---
 
@@ -180,7 +180,7 @@ Phân hệ Trả hàng giải quyết các trường hợp: (1) Trả lại nguy
     END
     ```
 
-> 🚦 **Tham chiếu mở rộng:** Chi tiết kịch bản lỗi trả hàng và giải thích luồng RMA được tổng hợp tại **[KB_14 §6.3 Nhóm 8 — Returns](KB_14_TRACE_BUG_METHODOLOGY.md#nhóm-8-returns--chặn-trả-hàng-sp-usp_dovalidatematerialdocbarcodeforreturn)**.
+> 🚦 **Tham chiếu mở rộng:** Chi tiết kịch bản lỗi trả hàng và giải thích luồng RMA được tổng hợp tại **[KB_14 §6.3 Nhóm 8 — Returns](../KB_14/KB_14_01_METHODOLOGY.md#nhóm-8-returns--chặn-trả-hàng-sp-usp_dovalidatematerialdocbarcodeforreturn)**.
 
 ---
 

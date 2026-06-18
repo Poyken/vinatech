@@ -1,6 +1,6 @@
-# KB_04 — Đóng Gói & In Tem (INDEX)
+﻿# KB_04 — Đóng Gói & In Tem (INDEX)
 
-> **File gốc:** `KB_04_DONG_GOI_IN_TEM.md` (76KB) đã được tách thành 3 chunks.
+> **File gốc:** `../KB_04/KB_04_01_CORE_PACKAGING.md` (76KB) đã được tách thành 3 chunks.
 
 ---
 

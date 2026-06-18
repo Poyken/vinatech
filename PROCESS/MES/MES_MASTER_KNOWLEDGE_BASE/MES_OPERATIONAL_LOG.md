@@ -1,4 +1,4 @@
-# 📓 Operational & Troubleshooting Log — Nhật Ký Sự Cố Vận Hành MES Vinatech
+﻿# 📓 Operational & Troubleshooting Log — Nhật Ký Sự Cố Vận Hành MES Vinatech
 
 > **Mục tiêu:** Nơi ghi nhận, theo dõi và giải quyết các sự cố phát sinh tại hiện trường sản xuất xưởng Vinatech.
 > **Nguyên tắc phối hợp:** 
@@ -13,10 +13,10 @@
 | ID | Ngày | Màn hình | Đối tượng bị lỗi | Triệu chứng & Log thô | Trạng thái | Giải pháp & Script khắc phục | Người xử lý |
 |:---|:---|:---|:---|:---|:---|:---|:---|
 | **#001** | 2026-06-10 | **V-22** (Dry Oven) | Lot `ML260609001` | Lò sấy Dry Oven bị bypass kiểm tra công đoạn do sai thứ tự ưu tiên logic `AND/OR` trong SP `usp_VN_DryOver`. | **RESOLVED** | Đã triển khai Hotfix `01_FIX_DRY_OVEN_OPERATOR_PRIORITY.sql` để sửa mức ưu tiên toán tử trong SP. | AI & DBA |
-| **#002** | 2026-06-11 | **B523** (Đóng gói) | Box `PKHN023117` | Lỗi gộp box đúp dẫn đến số lượng túi con bị dồn về `0` hoặc âm tại Hà Nam (Lỗi HN544). | **RESOLVED** | Chạy script rã box và cập nhật lại số lượng thực tế cho Lot gốc. Chi tiết tại [KB_04 § Kịch bản 2](KB_04_DONG_GOI_IN_TEM.md#kịch-bản-sự-cố-khẩn-cấp-2-hủy-gộp-box--rã-box-b523). | AI |
-| **#003** | 2026-06-12 | **HNC321** (Phế phẩm) | Barcode `ve260509-001` | Nhập phế công đoạn `VE08` báo lỗi tiếng Hàn: "Không có lịch sử xử lý sản lượng ở công đoạn trước". | **RESOLVED** | Chèn bản ghi lịch sử quét ảo cho trạm trước (`VE07`) để thông luồng validation. Chi tiết tại [KB_05 § Kịch bản 3](KB_05_QC_ELECTRODE.md#kịch-bản-sự-cố-khẩn-cấp-3-lỗi-nhập-phế-hnc321-báo-lỗi-tiếng-hàn). | AI |
-| **#004** | 2026-06-13 | **Mixing** (Cân điện cực) | Lot `HCE-202` | Màn hình cân nhảy bước Binder trước bột Than làm kẹt mẻ trộn Mixing. | **RESOLVED** | Công nhân bỏ tích checkbox "CA ĐÊM CHUẨN BỊ TRƯỚC" trên UI. IT chạy script reset dữ liệu cân tạm của Lot. [KB_05 § Kịch bản 4](KB_05_QC_ELECTRODE.md#kịch-bản-sự-cố-khẩn-cấp-4-lỗi-nhảy-bước-cân-điện-cực-mixing). | AI & IT |
-| **#005** | 2026-06-14 | **B552** (Slitting) | Model `3582-600F CY` | Model mới không tạo được tem điện cực do thiếu cấu hình quy cách Slitting. | **RESOLVED** | Thêm cấu hình quy cách vào bảng `stb_slittinglocationconfig_vvt`. Chi tiết tại [KB_05 § Kịch bản 5](KB_05_QC_ELECTRODE.md#kịch-bản-sự-cố-khẩn-cấp-5-điện-cực-3582-600f-cy-không-tạo-được-tem). | AI |
+| **#002** | 2026-06-11 | **B523** (Đóng gói) | Box `PKHN023117` | Lỗi gộp box đúp dẫn đến số lượng túi con bị dồn về `0` hoặc âm tại Hà Nam (Lỗi HN544). | **RESOLVED** | Chạy script rã box và cập nhật lại số lượng thực tế cho Lot gốc. Chi tiết tại [KB_04 § Kịch bản 2](KB_04/KB_04_01_CORE_PACKAGING.md#kịch-bản-sự-cố-khẩn-cấp-2-hủy-gộp-box--rã-box-b523). | AI |
+| **#003** | 2026-06-12 | **HNC321** (Phế phẩm) | Barcode `ve260509-001` | Nhập phế công đoạn `VE08` báo lỗi tiếng Hàn: "Không có lịch sử xử lý sản lượng ở công đoạn trước". | **RESOLVED** | Chèn bản ghi lịch sử quét ảo cho trạm trước (`VE07`) để thông luồng validation. Chi tiết tại [KB_05 § Kịch bản 3](KB_05/KB_05_01_QC_OVERVIEW.md#kịch-bản-sự-cố-khẩn-cấp-3-lỗi-nhập-phế-hnc321-báo-lỗi-tiếng-hàn). | AI |
+| **#004** | 2026-06-13 | **Mixing** (Cân điện cực) | Lot `HCE-202` | Màn hình cân nhảy bước Binder trước bột Than làm kẹt mẻ trộn Mixing. | **RESOLVED** | Công nhân bỏ tích checkbox "CA ĐÊM CHUẨN BỊ TRƯỚC" trên UI. IT chạy script reset dữ liệu cân tạm của Lot. [KB_05 § Kịch bản 4](KB_05/KB_05_01_QC_OVERVIEW.md#kịch-bản-sự-cố-khẩn-cấp-4-lỗi-nhảy-bước-cân-điện-cực-mixing). | AI & IT |
+| **#005** | 2026-06-14 | **B552** (Slitting) | Model `3582-600F CY` | Model mới không tạo được tem điện cực do thiếu cấu hình quy cách Slitting. | **RESOLVED** | Thêm cấu hình quy cách vào bảng `stb_slittinglocationconfig_vvt`. Chi tiết tại [KB_05 § Kịch bản 5](KB_05/KB_05_01_QC_OVERVIEW.md#kịch-bản-sự-cố-khẩn-cấp-5-điện-cực-3582-600f-cy-không-tạo-được-tem). | AI |
 | **#006** | 2026-06-16 | **B523** (Đóng gói) | Barcode `VVQO133R072717` | Lỗi "포장 (Dong goi) 공정에서 실적을 입력하지 않았습니다" khi bấm Box합치기. | **OPEN** | Đề xuất quét chốt V-28_BG trên PDA/màn hình hoặc chạy script chèn lịch sử chốt ảo. | AI |
 
 ---

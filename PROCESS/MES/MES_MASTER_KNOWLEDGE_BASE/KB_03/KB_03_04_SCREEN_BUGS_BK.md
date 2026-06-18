@@ -6,7 +6,7 @@
 *   **Triệu chứng:** Khi lập PO tại B310, danh sách công đoạn bị thiếu hoặc sai thứ tự.
 *   **Nguyên nhân gốc:** Nhóm Route chưa được cấu hình đúng tại B220.
 *   **Cách khắc phục:** Vào B220 kiểm tra Route Group, đảm bảo các RouteCode được gán đúng thứ tự.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_06_MASTER_DATA_TOOLS.md § 10](KB_06_MASTER_DATA_TOOLS.md) và [KB_25_VINAENESSOL_HUNG_YEN.md](KB_25_VINAENESSOL_HUNG_YEN.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_06_MASTER_DATA_TOOLS.md § 10](KB_06_MASTER_DATA_TOOLS.md) và [../KB_25/KB_25_01_OVERVIEW.md](../KB_25/KB_25_01_OVERVIEW.md).
 
 ---
 
@@ -19,7 +19,7 @@
 *   **Triệu chứng:** B270 bị lỗi popup trống không hiển thị danh sách máy. Cần cách thay thế.
 *   **Nguyên nhân gốc:** SP `usp_Set_VVT_Info_get` bị hardcode Whitelist UserID tại B270.
 *   **Cách khắc phục:** Sử dụng B230 để gán máy vào Route khi B270 gặp sự cố. B230 có giao diện tương tự nhưng không qua SP bị whitelist.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_01_UI_PHAN_QUYEN.md § 1.3](KB_01_UI_PHAN_QUYEN.md) và [KB_25_VINAENESSOL_HUNG_YEN.md](KB_25_VINAENESSOL_HUNG_YEN.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_01_UI_PHAN_QUYEN.md § 1.3](KB_01_UI_PHAN_QUYEN.md) và [../KB_25/KB_25_01_OVERVIEW.md](../KB_25/KB_25_01_OVERVIEW.md).
 
 ---
 
@@ -49,7 +49,7 @@
 *   **Triệu chứng:** Thông tin chi tiết PO tại B301 không khớp với tổng quan tại B310.
 *   **Nguyên nhân gốc:** Bảng `STB_ProductionOrderInfo` có dữ liệu không nhất quán do đồng bộ lỗi từ Groupware.
 *   **Cách khắc phục:** Kiểm tra dữ liệu trực tiếp trong DB và đồng bộ lại từ Groupware ESM Bridge.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_19_ALL_DATABASES_MAP.md](KB_19_ALL_DATABASES_MAP.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_19/KB_19_01_ARCHITECTURE.md](../KB_19/KB_19_01_ARCHITECTURE.md).
 
 ---
 
@@ -62,13 +62,13 @@
 *   **Triệu chứng:** OP lập kế hoạch ngày tại B450, bấm tạo Lot nhưng hệ thống không sinh được Lot.
 *   **Nguyên nhân gốc:** Cột `IsFixed` trong `STB_DayProdPlan` chưa được tích chọn (= 0).
 *   **Cách khắc phục:** Vào B450, tìm dòng kế hoạch ngày tương ứng, tick chọn cột `IsFixed` rồi nhấn Lưu. Sau đó bấm tạo Lot.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_03_SAN_XUAT.md § 2](KB_03_SAN_XUAT.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_03/KB_03_02_CELL_LINE.md § 2](../KB_03/KB_03_02_CELL_LINE.md).
 
 ### Lỗi 2: Xóa PO phải xóa đồng thời ở B310 và B450
 *   **Triệu chứng:** Xóa PO tại B310 nhưng dữ liệu kế hoạch ngày vẫn còn tại B450 gây lỗi trùng.
 *   **Nguyên nhân gốc:** Xóa PO cần xóa cả 3 bảng: `STB_ProductionOrderInfo`, `STB_ProductionOrderBom`, `STB_ProductionOrderRouting` (B310) VÀ `STB_DayProdPlan`, `STB_SetInfo` (B450).
 *   **Cách khắc phục:** Xóa PO theo quy trình đầy đủ 5 bảng.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_03_SAN_XUAT.md § 5.7](KB_03_SAN_XUAT.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_03/KB_03_02_CELL_LINE.md § 5.7](../KB_03/KB_03_02_CELL_LINE.md).
 
 ---
 
@@ -79,7 +79,7 @@
 *   **Triệu chứng:** Sau khi tạo Lot tại B450, mở B453 nhưng không thấy lịch trình sản xuất tương ứng.
 *   **Nguyên nhân gốc:** B453 hiển thị dựa trên dữ liệu `STB_SetInfo` kết hợp `STB_DayProdPlan`. Nếu `InputJobDate` bị NULL hoặc `IsFixed = 0` thì lịch trình không hiển thị.
 *   **Cách khắc phục:** Kiểm tra B450 đã tích `IsFixed` và Lot đã được tạo thành công.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_03_SAN_XUAT.md § 2](KB_03_SAN_XUAT.md) và [KB_04_DONG_GOI_IN_TEM.md](KB_04_DONG_GOI_IN_TEM.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_03/KB_03_02_CELL_LINE.md § 2](../KB_03/KB_03_02_CELL_LINE.md) và [../KB_04/KB_04_01_CORE_PACKAGING.md](../KB_04/KB_04_01_CORE_PACKAGING.md).
 
 ---
 
@@ -90,7 +90,7 @@
 *   **Triệu chứng:** Màn hình B460 hiển thị trạng thái Line sản xuất bị delay hoặc không chính xác.
 *   **Nguyên nhân gốc:** Dữ liệu lấy từ bảng `STB_SetInfo` kết hợp `STB_ProdRouteHist` có thể bị delay do cache hoặc lỗi refresh.
 *   **Cách khắc phục:** Nhấn nút Refresh/Tìm kiếm lại. Nếu vẫn sai, kiểm tra trực tiếp bảng `STB_ProdRouteHist` xem công đoạn đã được ghi nhận chưa.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_03_SAN_XUAT.md § 6](KB_03_SAN_XUAT.md) và [KB_25_VINAENESSOL_HUNG_YEN.md](KB_25_VINAENESSOL_HUNG_YEN.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_03/KB_03_02_CELL_LINE.md § 6](../KB_03/KB_03_02_CELL_LINE.md) và [../KB_25/KB_25_01_OVERVIEW.md](../KB_25/KB_25_01_OVERVIEW.md).
 
 ---
 
@@ -101,7 +101,7 @@
 *   **Triệu chứng:** B470 không hiện dữ liệu Line điện cực hoặc hiện sai công đoạn đang chạy.
 *   **Nguyên nhân gốc:** Dữ liệu điện cực lưu ở bảng riêng (`STB_ElectrodeCoatingInfo`, `STB_ElectrodeSlittingResult`). Nếu Line điện cực chưa được cấu hình Route tương ứng thì B470 sẽ trống.
 *   **Cách khắc phục:** Kiểm tra cấu hình Route điện cực tại B220 và mapping máy tại B270.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_05_QC_ELECTRODE.md § 8](KB_05_QC_ELECTRODE.md) và [KB_25_VINAENESSOL_HUNG_YEN.md](KB_25_VINAENESSOL_HUNG_YEN.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_OVERVIEW.md § 8](../KB_05/KB_05_01_QC_OVERVIEW.md) và [../KB_25/KB_25_01_OVERVIEW.md](../KB_25/KB_25_01_OVERVIEW.md).
 
 ---
 
@@ -112,7 +112,7 @@
 *   **Triệu chứng:** Bấm in tem thùng Barrel tại B528 bị lỗi hoặc barcode không hiển thị.
 *   **Nguyên nhân gốc:** Cấu hình Barrel chưa được khai báo trong bảng cấu hình sản phẩm, hoặc chưa có template tem Barrel tại Z530/A460.
 *   **Cách khắc phục:** Kiểm tra cấu hình template tem Barrel tại Z530, mapping tại A460, và đảm bảo Lot đã hoàn thành đóng gói tại B523.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_03_SAN_XUAT.md § 6.10](KB_03_SAN_XUAT.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_03/KB_03_02_CELL_LINE.md § 6.10](../KB_03/KB_03_02_CELL_LINE.md).
 
 ---
 
@@ -123,13 +123,13 @@
 *   **Triệu chứng:** OP quét nhập NVL tại B540 nhưng hệ thống không cho lưu, báo thiếu thông tin bắt buộc.
 *   **Nguyên nhân gốc:** 4 cột màu đặc biệt trên lưới B540 phải được nhập đầy đủ trước khi in barcode. Đây là requirement cứng trong SP `usp_Vietnam_RawMaterialInputHist_uid`.
 *   **Cách khắc phục:** Hướng dẫn OP nhập đầy đủ 4 cột màu (hiển thị nền vàng/cam trên grid). Nếu vẫn lỗi, kiểm tra `STB_MaterialLotInfo` xem Lot NVL có tồn tại không.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_03_SAN_XUAT.md § 6.4](KB_03_SAN_XUAT.md) và [KB_14_TRACE_BUG_METHODOLOGY.md](KB_14_TRACE_BUG_METHODOLOGY.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_03/KB_03_02_CELL_LINE.md § 6.4](../KB_03/KB_03_02_CELL_LINE.md) và [../KB_14/KB_14_01_METHODOLOGY.md](../KB_14/KB_14_01_METHODOLOGY.md).
 
 ### Lỗi 2: Checkbox ProdQtyFinishYN không tích được
 *   **Triệu chứng:** OP muốn hoàn thành công đoạn nhưng không tích được checkbox `ProdQtyFinishYN`.
 *   **Nguyên nhân gốc:** Hệ thống tự động tích `ProdQtyFinishYN` khi chốt sản lượng ở B530, không cho tích trực tiếp.
 *   **Cách khắc phục:** OP cần chốt sản lượng tại B530 trước, hệ thống sẽ tự tích checkbox.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_03_SAN_XUAT.md § 2](KB_03_SAN_XUAT.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_03/KB_03_02_CELL_LINE.md § 2](../KB_03/KB_03_02_CELL_LINE.md).
 
 ---
 
@@ -140,7 +140,7 @@
 *   **Triệu chứng:** OP thực hiện báo phế sản phẩm sau sản xuất tại B726 nhưng hệ thống không ghi nhận hoặc dữ liệu không hiển thị.
 *   **Nguyên nhân gốc:** SP `usp_vn_scrapafterproduction` thực hiện xóa mềm (`IsDeleted = 1`), nếu Lot đã bị đánh dấu xóa trước đó thì không tạo được bản ghi phế mới.
 *   **Cách khắc phục:** Kiểm tra bảng `STB_VN_SCRAP_AFTERPRODUCTIONS` xem Lot đã tồn tại chưa. Nếu cần xóa lại: `UPDATE STB_VN_SCRAP_AFTERPRODUCTIONS SET IsDeleted = 0 WHERE LotNo = 'MÃ_LOT'`.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_03_SAN_XUAT.md § 6](KB_03_SAN_XUAT.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_03/KB_03_02_CELL_LINE.md § 6](../KB_03/KB_03_02_CELL_LINE.md).
 
 ---
 
@@ -151,7 +151,7 @@
 *   **Triệu chứng:** Mở B733 tìm kiếm Lot nhưng không hiện kết quả gộp Box nào.
 *   **Nguyên nhân gốc:** Lot đó chưa được gộp Box tại B523 (chưa hoàn thành đóng gói).
 *   **Cách khắc phục:** Kiểm tra B523 xem Lot đã được gộp Box chưa. Nếu chưa, thực hiện gộp Box trước rồi quay lại B733.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_03_SAN_XUAT.md § 6.5](KB_03_SAN_XUAT.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_03/KB_03_02_CELL_LINE.md § 6.5](../KB_03/KB_03_02_CELL_LINE.md).
 
 ---
 
@@ -164,7 +164,7 @@
 *   **Triệu chứng:** Tem trong (Inner Label) PAC in ra thiếu Serial hoặc trọng lượng không đúng.
 *   **Nguyên nhân gốc:** Nhầm lẫn giữa nhãn trong (Inner) và nhãn ngoài (Outer). Serial nhãn trong và ngoài chạy độc lập.
 *   **Cách khắc phục:** Đảm bảo chọn đúng loại tem (Inner). Không tick `IsOuter` khi in nhãn trong.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.9.1](KB_04_DONG_GOI_IN_TEM.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_04/KB_04_01_CORE_PACKAGING.md § 6.9.1](../KB_04/KB_04_01_CORE_PACKAGING.md).
 
 ---
 
@@ -177,7 +177,7 @@
 *   **Triệu chứng:** In tem thùng lớn B756 thiếu Serial nhãn hoặc không hiện trọng lượng.
 *   **Nguyên nhân gốc:** Chưa tick `IsOuter = 1` khi in nhãn ngoài, hoặc chưa bật `IsWeightLabel`.
 *   **Cách khắc phục:** Tick `IsOuter` cho nhãn ngoài. Tick `IsWeightLabel` cho tem cân nặng.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.9.1](KB_04_DONG_GOI_IN_TEM.md) và [KB_14_TRACE_BUG_METHODOLOGY.md](KB_14_TRACE_BUG_METHODOLOGY.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_04/KB_04_01_CORE_PACKAGING.md § 6.9.1](../KB_04/KB_04_01_CORE_PACKAGING.md) và [../KB_14/KB_14_01_METHODOLOGY.md](../KB_14/KB_14_01_METHODOLOGY.md).
 
 ---
 
@@ -190,7 +190,7 @@
 *   **Triệu chứng:** In tem thùng hàng hỗn hợp (Mixed Load) Digi-Key bị lỗi.
 *   **Nguyên nhân gốc:** Thùng chứa nhiều model/size khác nhau, SP cần kiểm tra tất cả barcode trong thùng khớp.
 *   **Cách khắc phục:** Đảm bảo tất cả barcode trong thùng đã được gộp box tại B523 và thông tin PO đầy đủ.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.9.2](KB_04_DONG_GOI_IN_TEM.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_04/KB_04_01_CORE_PACKAGING.md § 6.9.2](../KB_04/KB_04_01_CORE_PACKAGING.md).
 
 ---
 
@@ -201,7 +201,7 @@
 *   **Triệu chứng:** Khi in tem cho khách hàng mới tại B767, hệ thống báo lỗi không tìm thấy mẫu tem.
 *   **Nguyên nhân gốc:** Chưa tạo mẫu tem tại Z530 và chưa mapping tại A460.
 *   **Cách khắc phục:** Tạo mẫu tem mới tại Z530, approve layout, sau đó mapping model vào mẫu tem tại A460.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_04_DONG_GOI_IN_TEM.md § 6.16](KB_04_DONG_GOI_IN_TEM.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_04/KB_04_01_CORE_PACKAGING.md § 6.16](../KB_04/KB_04_01_CORE_PACKAGING.md).
 
 ---
 
@@ -217,7 +217,7 @@
     WHERE ControlNo = (SELECT ControlNo FROM STB_SetInfo WHERE Barcode = 'MÃ_BARCODE')
     AND RouteCode = 'MÃ_CÔNG_ĐOẠN';
     ```
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_03_SAN_XUAT.md § 5.2](KB_03_SAN_XUAT.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_03/KB_03_02_CELL_LINE.md § 5.2](../KB_03/KB_03_02_CELL_LINE.md).
 
 ---
 
@@ -230,7 +230,7 @@
 *   **Triệu chứng:** Tab Online tại B786 hiển thị Status Error, dữ liệu ESR không cập nhật.
 *   **Nguyên nhân gốc:** Phần mềm đo ESR tại máy bị mất kết nối hoặc chưa upload kết quả vào bảng `Stb_ESRValueMonitor`.
 *   **Cách khắc phục:** Kiểm tra phần mềm đo ESR trên máy tính chuyền. Cột "Mã công ty" trên B786 = version phần mềm đo.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_03_SAN_XUAT.md § 6](KB_03_SAN_XUAT.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_03/KB_03_02_CELL_LINE.md § 6](../KB_03/KB_03_02_CELL_LINE.md).
 
 ---
 
@@ -243,7 +243,7 @@
 *   **Triệu chứng:** Sau khi sửa chữa lỗi NG, số lượng hàng lỗi và hàng tốt bị lệch tổng.
 *   **Nguyên nhân gốc:** SP `usp_ModuleLotTrackingInfo_VVT2_get` đọc từ cả `STB_DefectRepairInfo` và `STB_ProdRouteHist`. Khi sửa phải cập nhật đồng bộ cả 2 bảng.
 *   **Cách khắc phục:** Cập nhật đồng thời `DefectQty` trong `STB_DefectRepairInfo` và `ProdQty` trong `STB_ProdRouteHist`.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_03_SAN_XUAT.md § 5.8](KB_03_SAN_XUAT.md) và [KB_05_QC_ELECTRODE.md § 9.5](KB_05_QC_ELECTRODE.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_03/KB_03_02_CELL_LINE.md § 5.8](../KB_03/KB_03_02_CELL_LINE.md) và [../KB_05/KB_05_01_QC_OVERVIEW.md § 9.5](../KB_05/KB_05_01_QC_OVERVIEW.md).
 
 ---
 
@@ -254,7 +254,7 @@
 *   **Triệu chứng:** Dashboard ANDON tại B882 không hiển thị sản lượng real-time.
 *   **Nguyên nhân gốc:** SP `usp_Vietnam_AndonDetail_get` lấy dữ liệu từ `STB_ProdRouteHist` lọc theo `WorkCenterCode`. Nếu WorkCenterCode sai hoặc không khớp sẽ trống.
 *   **Cách khắc phục:** Kiểm tra tham số filter WorkCenterCode trên ANDON display khớp với mã nhà máy đang chạy.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_03_SAN_XUAT.md § 6](KB_03_SAN_XUAT.md) và [KB_19_ALL_DATABASES_MAP.md](KB_19_ALL_DATABASES_MAP.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_03/KB_03_02_CELL_LINE.md § 6](../KB_03/KB_03_02_CELL_LINE.md) và [../KB_19/KB_19_01_ARCHITECTURE.md](../KB_19/KB_19_01_ARCHITECTURE.md).
 
 ---
 
@@ -289,7 +289,7 @@
 *   **Triệu chứng:** OP nhập thông tin sửa chữa tại H302 nhưng không lưu được.
 *   **Nguyên nhân gốc:** Thiếu thông tin bắt buộc (MachineCode, TroublePoint, RepairText) hoặc máy chưa đăng ký tại B250.
 *   **Cách khắc phục:** Đảm bảo máy đã đăng ký B250 và nhập đủ các trường bắt buộc.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_03_SAN_XUAT.md § 3](KB_03_SAN_XUAT.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_03/KB_03_02_CELL_LINE.md § 3](../KB_03/KB_03_02_CELL_LINE.md).
 
 ---
 
@@ -300,7 +300,7 @@
 *   **Triệu chứng:** Thiết bị đo vượt quá hạn hiệu chuẩn mà H303 không cảnh báo.
 *   **Nguyên nhân gốc:** Lịch hiệu chuẩn chưa được thiết lập hoặc ngày hiệu chuẩn tiếp theo bị NULL.
 *   **Cách khắc phục:** Vào H303, cập nhật lịch hiệu chuẩn (NextCalibrationDate) cho thiết bị.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_03_SAN_XUAT.md § 4](KB_03_SAN_XUAT.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_03/KB_03_02_CELL_LINE.md § 4](../KB_03/KB_03_02_CELL_LINE.md).
 
 ---
 
@@ -311,7 +311,7 @@
 *   **Triệu chứng:** H304 hiển thị số lượng phụ tùng tồn kho khác với kiểm kê thực tế.
 *   **Nguyên nhân gốc:** Phiếu xuất/nhập phụ tùng chưa được xác nhận hoặc dữ liệu bị trùng.
 *   **Cách khắc phục:** Kiểm tra lịch sử xuất/nhập phụ tùng tại H305, đối chiếu và điều chỉnh.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_03_SAN_XUAT.md § 5](KB_03_SAN_XUAT.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_03/KB_03_02_CELL_LINE.md § 5](../KB_03/KB_03_02_CELL_LINE.md).
 
 ---
 
@@ -324,7 +324,7 @@
 *   **Triệu chứng:** Phiếu xuất/nhập ghi nhận tại H305 nhưng tồn kho H304 không cập nhật.
 *   **Nguyên nhân gốc:** Phiếu chưa được confirm hoặc SP đồng bộ tồn kho bị lỗi.
 *   **Cách khắc phục:** Kiểm tra trạng thái confirm của phiếu, chạy đồng bộ lại nếu cần.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_03_SAN_XUAT.md § 5](KB_03_SAN_XUAT.md) và [KB_03_SAN_XUAT.md § 6.15](KB_03_SAN_XUAT.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_03/KB_03_02_CELL_LINE.md § 5](../KB_03/KB_03_02_CELL_LINE.md) và [../KB_03/KB_03_02_CELL_LINE.md § 6.15](../KB_03/KB_03_02_CELL_LINE.md).
 
 ---
 
@@ -337,7 +337,7 @@
 *   **Triệu chứng:** OP BG2 quét NVL bị lỗi tương tự B597 nhưng trên giao diện K109.
 *   **Nguyên nhân gốc:** Logic K109 tương đương B597, lọc riêng cho `WorkCenterCode = 'VVT_BG2'`. Cùng nguyên nhân HOLD/Hết hạn/Sai BOM.
 *   **Cách khắc phục:** Áp dụng cùng quy trình debug B597 (xem mục B597 phía trên).
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_03_SAN_XUAT.md § 6.9](KB_03_SAN_XUAT.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_03/KB_03_02_CELL_LINE.md § 6.9](../KB_03/KB_03_02_CELL_LINE.md).
 
 ### Lỗi 2: Quét mã vạch nhà cung cấp (Vendor Lot) báo lỗi "Vật liệu [KđV] chưa thiết lập trong BOM, khác với mã QRCODE nhập vào"
 *   **Triệu chứng:** Khi quét mã barcode nguyên vật liệu nhà cung cấp (LotNo của Vendor, ví dụ: `K164181062623000609`), hệ thống báo lỗi không tìm thấy vật liệu trong BOM, đồng thời hiển thị tên vật liệu là `[KđV]` (Không định vị/Chưa xác định).
@@ -372,7 +372,7 @@
 *   **Triệu chứng:** Thủ kho BG2 không tìm thấy NVL đã nhập kho tại K110.
 *   **Nguyên nhân gốc:** WarehouseCode của kho BG2 khác với kho chính. Dữ liệu lọc theo `WorkCenterCode = 'VVT_BG2'`.
 *   **Cách khắc phục:** Kiểm tra WarehouseCode của phiếu nhập kho F330 khớp với kho BG2.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_02_KHO_WMS.md](KB_02_KHO_WMS.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_02/KB_02_01_NVL_WMS.md](../KB_02/KB_02_01_NVL_WMS.md).
 
 ---
 

@@ -52,7 +52,7 @@ WHERE ScreenName = 'Vietnam_Donggoi'  -- Thay bằng Name từ bước 0.1
 ORDER BY ObjectType, ObjectName
 ```
 
-> 📖 **Tham chiếu:** Xem chi tiết kiến trúc Database-Driven tại [KB_10 §1.3](KB_10_KIEN_TRUC_VA_DATAFLOW.md#13-bảng-ánh-xạ-screen--sp--table-database-driven-architecture)
+> 📖 **Tham chiếu:** Xem chi tiết kiến trúc Database-Driven tại [KB_10 §1.3](../KB_10/KB_10_01_ARCHITECTURE.md#13-bảng-ánh-xạ-screen--sp--table-database-driven-architecture)
 
 ### BƯỚC 1: Thu Thập Triệu Chứng Hiện Trường (Symptoms)
 Trước khi mở SQL Server Management Studio (SSMS), hãy thu thập đủ **5 thông tin vàng**:
