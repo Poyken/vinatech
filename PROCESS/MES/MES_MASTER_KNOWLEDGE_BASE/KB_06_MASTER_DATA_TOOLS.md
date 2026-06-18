@@ -1,6 +1,8 @@
 # KB_06 - Master Data, SQL Tools & Manual Bypass
 
-> **Màn hình liên quan:** A230, A310, A410, B250, B270, SQL Server, STB_ModelBasicInfo
+> **Màn hình:** A230, A310, A410, A418, A419, B210-B240, B250, B260, B270, C131, C430, F110, F741
+> **Bảng chính:** `STB_ModelBasicInfo` (61 cols), `STB_MaterialMaster` (82 cols), `STB_PackingStandard` (11 cols)
+> **🔑 Keywords:** master data, model, vật tư, material, Vol, Farad, thêm mới, checklist, line, route, cell, F110, bypass
 > ← [Về INDEX](KB_INDEX.md)
 
 ---

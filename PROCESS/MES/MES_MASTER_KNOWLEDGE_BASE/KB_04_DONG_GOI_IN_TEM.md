@@ -1,6 +1,8 @@
-# KB_04 — Đóng Gói & In Tem (Packaging & Label Printing)
+# KB_04 — Đóng Gói & In Tem (Packaging & Label Printing)
 
-> **Màn hình liên quan:** B523, B525, B453, B789, B781, B450, B351, A419, A460, B754~B758, B767, B790, Z530
+> **Màn hình:** B523, B525, B453, B560, B789, B781, B353, B442, A419, A460, B754~B758, B790, Z530, C531
+> **Bảng chính:** `STB_PackingStandard`, `STB_DividePackaging`, `STB_ModelLabelInfo`, `STB_SavePackingTime_VVT`
+> **🔑 Keywords:** đóng gói, packing, in tem, label, gộp box, rã box, tiêu chuẩn, PackingID, BoxID, VJ, VV, Hela, PAC, DigiKey
 > ← [Về INDEX](KB_INDEX.md)
 
 ---

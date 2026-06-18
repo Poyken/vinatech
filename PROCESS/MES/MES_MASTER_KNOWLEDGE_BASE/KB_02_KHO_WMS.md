@@ -1,6 +1,8 @@
 # KB_02 - Kho Nguyên Vật Liệu (WMS)
 
-> **Màn hình liên quan:** F330, F312, F430, F110, F721, F741, C220
+> **Màn hình:** F330, F312, F430, F110, F710, F721, F741, C220, HN551, HN866, HN544, FG00
+> **Bảng chính:** `STB_MaterialLotInfo`, `STB_MaterialDocInfo`, `STB_MaterialStock`, `STB_MaterialWarehouse`
+> **🔑 Keywords:** kho, warehouse, tồn kho, nhập kho, xuất kho, FIFO, holding, hết hạn, lot, NVL, nguyên vật liệu, phiếu nhập, phiếu xuất, chuyển kho
 > ← [Về INDEX](KB_INDEX.md)
 
 ---

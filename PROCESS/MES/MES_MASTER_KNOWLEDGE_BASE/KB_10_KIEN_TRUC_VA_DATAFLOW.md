@@ -1,6 +1,8 @@
 # KB_10 — Kiến Trúc & Luồng Dữ Liệu (Architecture & Data Flow)
 
-> **Mục đích:** Hiểu bản chất thiết kế của hệ thống MES NAIS (Hàn Quốc) đang được sử dụng tại Vinatech, bao gồm sơ đồ luồng dữ liệu qua các Phase, các Stored Procedures chính và cách thức hoạt động của metadata framework.
+> **Mục đích:** Hiểu bản chất thiết kế của hệ thống MES NAIS
+> **Bảng chính:** `STB_ScreenObjects`, `STB_StringResources`, `STB_ProcedureLog` (19.3M rows)
+> **🔑 Keywords:** kiến trúc, architecture, dataflow, trigger, agent job, metadata, framework, screen, SP, naming, OQC, electrode, IoT, cost, shift, serial
 > ← [Về INDEX](KB_INDEX.md)
 
 ---

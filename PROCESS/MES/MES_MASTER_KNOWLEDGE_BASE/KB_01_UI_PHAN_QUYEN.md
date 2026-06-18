@@ -1,6 +1,9 @@
+
 # KB_01 — UI / Đăng nhập / Phân quyền / Stage Prices
 
-> **Màn hình liên quan:** Login, A460, A419, B260, Z410, Z220, Z330, B682, B781, B789, B791, B786, B934, B935, FG02
+> **Màn hình:** Login, A460, A419, B260, Z410, Z220, Z330, B682, B781, B789, B791, B786, B934, B935, FG02
+> **Bảng chính:** `STB_UserInfo`, `STB_UserPermissionGroup`, `STB_VVT_StagePrices`
+> **🔑 Keywords:** login, đăng nhập, phân quyền, user, permission, stage prices, đơn giá, mật khẩu
 > ← [Về INDEX](KB_INDEX.md)
 
 ---

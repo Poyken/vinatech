@@ -1,6 +1,8 @@
 # KB_05 — Kiểm tra Chất lượng (QC) & Điện cực
 
-> **Màn hình liên quan:** B597, C443, C512, C530, C546, B270, B540, B552
+> **Màn hình:** B597, C443, C512, C486, C530, C546, B552, B270, B540, C121-C564, F743-F748
+> **Bảng chính:** `STB_MaterialQcInfo` (35 cols), `STB_MaterialQcInspectionItem` (USL/LSL), `STB_CommInspDocHistory`
+> **🔑 Keywords:** QC, chất lượng, kiểm tra, IQC, PQC, OQC, FOQC, electrode, điện cực, slitting, aging, hạng mục, spec, USL, LSL, Pass, Fail, Hold, mẫu, sample
 > ← [Về INDEX](KB_INDEX.md)
 
 ---
