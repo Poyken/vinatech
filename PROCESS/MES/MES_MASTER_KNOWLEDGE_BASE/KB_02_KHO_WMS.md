@@ -707,6 +707,8 @@ Dưới đây là cẩm nang vận hành chi tiết các màn hình thuộc phâ
     *   **⚠️ Cực kỳ quan trọng:** Sau khi sinh Lot, thủ kho bắt buộc phải nhập giá trị **"Số Lot No của nhà cung cấp"** vào cột **"Đặc tính 10"** (`LotAttr10` / `LotExtText10`) để hệ thống chạy hàm parse tự động tính ra ngày sản xuất và thời hạn hết hạn. Nếu cột này bị bỏ trống hoặc không nhảy ngày hết hạn, Lot sẽ tự động bị hệ thống đưa vào kho ảo **`HOLDING`** khi xuất kho và không thể cấp phát cho sản xuất. Nếu gặp sự cố điền Lot No đúng nhưng không nhảy đặc tính ngày, hãy báo ngay cho EA Team.
 *   **Bước 3 (Xác nhận nhập kho):** Chỉ khi kết quả kiểm tra IQC tại màn hình **C220** của Lot hàng đó đã chuyển trạng thái **"PASS"** thì thủ kho mới có thể thực hiện nhấn 2 nút **"Kết thúc nhập kho"** và **"Xác nhận nhập kho"** tại F330. Việc nhấn đủ 2 nút này là bắt buộc để kết thúc quy trình nhập.
 
+    > 🚦 **Tham chiếu mở rộng:** Chi tiết logic, mã SQL debug, và cách mở rộng cho cổng chặn IQC nhập kho (F330/C220) được tổng hợp tại **[KB_14 §6.3 Nhóm 11 — F330/C220 IQC](KB_14_TRACE_BUG_METHODOLOGY.md#nhóm-11-f330c220--chặn-nhập-kho-iqc-validation-liên-phòng-ban)**.
+
 #### 4. Cấp phát sản xuất & Quy trình hoàn trả NVL (F430, F610, F620)
 *   **Xuất kho ra chuyền (F430):** Sử dụng nút "Nguyên liệu đầu ra" để xuất NVL ra CellLine theo nguyên tắc FIFO. Nếu Lot nào thiếu ngày sản xuất ở đặc tính 10, hệ thống sẽ tự động chuyển Lot đó vào kho HOLDING.
 *   **Quy trình hoàn trả NVL (Returns):**

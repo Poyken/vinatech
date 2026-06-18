@@ -322,13 +322,15 @@ WHERE PartNo IN ('1025', '1325', '1030')
 ```
 Theo thứ tự SP usp_Vietnam_RawMaterialInputHist_uid kiểm tra:
 □ 1. HOLDING? → SELECT MaterialWarehouseCode FROM STB_MaterialLotInfo (Check 'HOLDING_%')
-□ 2. Hết hạn? → Kiểm tra LotAttr10 + MMExtInt01 (xem KB_02 Mục 4.10)
+□ 2. Hết hạn? → Truy vấn LotAttr10 từ STB_MaterialDocLotInfo (nếu rỗng và là Lot tách %SP%/%SL%/%SM% thì check trong STB_MaterialLotInfo) + MMExtInt01 (xem KB_02 Mục 4.10)
 □ 3. Sai chủng loại? → Kiểm tra BOM có mã NVL đó không (STB_BomDetail)
 □ 4. Sai độ dày điện cực? → Kiểm tra MaterialThickness (phải là số nguyên)
 □ 5. Sai mã Electrolyte? → Kiểm tra CTE eleclyte1 trong SP
 □ 6. Thiếu cấu hình Vỏ Nhôm? → Sửa hardcode trong SP (Bảng AluCaseMapping không tồn tại)
 □ 7. Thiếu cấu hình Slitting? → Kiểm tra STB_SLITTINGLOCATIONCONFIG_VVT
 ```
+
+> 🚦 **Tham chiếu mở rộng:** Toàn bộ 7 gates trên đã được tổng hợp cùng 11 nhóm chặn tương tự (B530, B523, B452, B618, QC Audit, Returns, Lò Sấy, Slitting Knife...) tại **[KB_14 §6 — Tổng Hợp Pattern Validation Gates](KB_14_TRACE_BUG_METHODOLOGY.md#6-tổng-hợp-pattern-validation-gates)**. Xem đó để biết cách mở rộng/thêm gate mới theo 4 Pattern thiết kế (A/B/C/D).
 
 ---
 

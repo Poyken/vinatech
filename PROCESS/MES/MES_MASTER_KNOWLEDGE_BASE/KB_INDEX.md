@@ -1,4 +1,4 @@
-# 🗂️ NAIS MES — Knowledge Base Index
+﻿# 🗂️ NAIS MES — Knowledge Base Index
 
 > **Cập nhật:** 2026-06-12 | **Tổng hợp từ:** Lỗi thực tế + Docx gốc (đã extract toàn bộ) + Xác minh DB trực tiếp + Phân tích 41 SP + Deep Core Analysis (2026-04-18) + DB Audit (2026-05-05) + Electrode Weighing (2026-05-26) + Consolidation (2026-06-04) + **System Discovery & Gap Analysis (2026-06-10)**
 > **Cách dùng:** 
@@ -18,6 +18,8 @@
 | [KB_01_UI_PHAN_QUYEN.md](KB_01_UI_PHAN_QUYEN.md) | Login, cài đặt, phân quyền User, Stage Prices, và cẩm nang sửa lỗi Screen ID tương ứng | Login, A460, Z410, Z220, Z330, B682, B781 |
 | [KB_02_KHO_WMS.md](KB_02_KHO_WMS.md) | Kho NVL và Kho Thành phẩm Hà Nam/Bắc Giang, FIFO, Holding, Hạn dùng, lỗi gộp túi bóng HN544, và cẩm nang lỗi Screen ID tương ứng | F330, F312, F430, F110, F721, F741, C220, HN551, HN866, HN544, FG00 |
 | [KB_03_SAN_XUAT.md](KB_03_SAN_XUAT.md) | Sửa JobDate, Chuyển Line, VV→VJ, Xóa PO, NG, Andon, Cell Line vận hành chi tiết B310→B882, Module Line, thiết bị phụ trợ (Lò sấy, Gá Doping, Slitting), Spare Parts H301-H305 & K101/K109, đối soát Lot Size, và cẩm nang lỗi Screen ID tương ứng | B782, B781, B598, B726, B791, B310, B450, B530, B540, B523, B525, B528, B717, B802, B351, B452, H301-H305, K101, K109, B250, B270, B260, B882, V-22, Doping |
+| **B353 chuyển đổi lot nhưng B523 vẫn in lot cũ (VJ/VV mismatch)** | KB_04 § 6.18, KB_14 § 7.1 |
+| **C531 sửa cấp OQC chọn nhầm (VVT_OQC_REFER)** | KB_04 § 6.19 |
 | [KB_04_DONG_GOI_IN_TEM.md](KB_04_DONG_GOI_IN_TEM.md) | Tiêu chuẩn đóng gói, fix B523 không gộp, sửa mã Lot, Qty=0, in tem nhãn và cẩm nang lỗi Screen ID tương ứng | B523, B789, B781, B351, A419 |
 | [KB_05_QC_ELECTRODE.md](KB_05_QC_ELECTRODE.md) | QC B597/C443/C512/C486, Điện cực Slitting B552, QC Flow đầy đủ IQC→PQC→OQC→Bending/Cutting, Slitting Hà Nam F743-F748, 4M Change, CAPA, Reliability Test, và cẩm nang lỗi Screen ID tương ứng | B597, C443, C512, C486, B552, C121-C564, F743-F748, RTM, 4M Change, CAPA |
 | [KB_06_MASTER_DATA_TOOLS.md](KB_06_MASTER_DATA_TOOLS.md) | Model mới, Vol/Farad, Thêm Cell/Line, SQL Utilities, Bypass, Quick Start Checklist đầy đủ, Line/Route B210-B240, A418, B260, và cẩm nang lỗi Screen ID tương ứng | A410, B210-B240, B250, B260, B270, A418, A419, C131, C132, C430, C451, C560, F741 |
@@ -163,6 +165,17 @@
 | **Lỗi quét barcode trả hàng không thành công (Customer Return)** | KB_26 § 3 |
 | **Quy trình tự động cân bằng kho (Kiểm kê F750)** | KB_26 § 4 |
 | **Quy trình chia lô tự động chất mang/substrate** | KB_26 § 5 |
+| **🚦 Tổng hợp 12 nhóm Validation Gates (Cổng chặn)** | KB_14 § 6 |
+| **Yêu cầu giả định KH: Chặn NVL B597 (7 gates)** | KB_14 § 6.3 Nhóm 1 |
+| **Yêu cầu giả định KH: Chặn chốt B530 (7 gates)** | KB_14 § 6.3 Nhóm 2 |
+| **Yêu cầu giả định KH: Chặn đóng gói B523** | KB_14 § 6.3 Nhóm 3 |
+| **Yêu cầu giả định KH: Chặn phân quyền B452/B618** | KB_14 § 6.3 Nhóm 4-5 |
+| **Yêu cầu giả định KH: Chặn QC Audit/Returns** | KB_14 § 6.3 Nhóm 7-8 |
+| **Yêu cầu giả định KH: Chặn Lò Sấy/Dao Slitting** | KB_14 § 6.3 Nhóm 9-10 |
+| **Yêu cầu giả định KH: Chặn IQC nhập kho/Electrode** | KB_14 § 6.3 Nhóm 11-12 |
+| **4 Pattern thiết kế Validation Gate (A/B/C/D)** | KB_14 § 6.2 |
+| **Checklist thêm Gate chặn mới** | KB_14 § 6.4 |
+| **Case Study: B353/B523 VJ/VV prefix mismatch (truy vết 6 bước)** | KB_14 § 7.1 |
 
 
 ---

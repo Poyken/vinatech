@@ -1,4 +1,4 @@
-# KB_04 — Đóng Gói & In Tem (Packaging & Label Printing)
+﻿# KB_04 — Đóng Gói & In Tem (Packaging & Label Printing)
 
 > **Màn hình liên quan:** B523, B525, B453, B789, B781, B450, B351, A419, A460, B754~B758, B767, B790, Z530
 > ← [Về INDEX](KB_INDEX.md)
@@ -6,6 +6,8 @@
 ---
 
 ## 6. 📦 Đóng gói & In tem nhãn
+
+> 🚦 **Tham chiếu mở rộng:** Toàn bộ cơ chế cổng chặn (Validation Gates) liên quan đến đóng gói B523, in tem nhãn, phân quyền người dùng, và checklist thêm gate mới được tổng hợp tại **[KB_14 §6.3 Nhóm 3 — Đóng Gói](KB_14_TRACE_BUG_METHODOLOGY.md#nhóm-3-b523--chặn-đóng-gói-sp-usp_vietnam_doprocessprodpacking_vvt)**.
 
 ### 6.0 Tổng Quan Kiến Trúc In Tem Nhãn (Mô hình Giá sách ➔ Danh mục ➔ Người đọc)
 Để dễ hình dung luồng xử lý in tem trong hệ thống NAIS MES, hãy tưởng tượng:
@@ -985,5 +987,161 @@ Người dùng thao tác tạo Lot sản xuất hoặc in tem đóng gói nhưng
     SELECT * FROM STB_Vietnam_PackingPrinting WHERE MaterialCode = 'Mã_Vật_Tư';
     ```
     *   *Cách xử lý:* Đảm bảo cờ `PrintVJ = 1` để hệ thống tự động đổi đầu mã khi in.
+
+---
+
+### 6.18 Bug: B353 chuyển đổi Lot nhưng B523 vẫn in tem theo Lot cũ (STB_ChangePartNoAndLotNo bị bỏ qua)
+
+> **Ngày phát hiện:** 2026-06-18 | **Lot mẫu:** `VJQM153R025606` → `VVQM153R025606` | **Model:** `ECVT30-255` (`WEC3R0256QG`)
+
+**Triệu chứng:** User dùng màn hình **B353** (Thay đổi tên lot hàng) để chuyển đổi tên lot từ `VJQM153R025606` sang `VVQM153R025606`. Bản ghi đã lưu thành công vào bảng `STB_ChangePartNoAndLotNo` (ID=1572, isLotID=1). Tuy nhiên, khi ra màn hình **B523** in tem, hệ thống vẫn hiển thị LotNo trên tem là `VJQM153R025606` (lot cũ) thay vì `VVQM153R025606` (lot mới đã chuyển đổi).
+
+**Phân tích Root Cause:**
+
+SP `usp_Vietnam_GetBoxIDForLotNo_VVT` có logic chuyển đổi LotNo tại dòng ~543-555:
+
+```sql
+/* Tự thay đổi lotno */
+DECLARE @LotNoFirst VARCHAR(100)
+SELECT @LotNoFirst = OldBarcode 
+FROM STB_LotChangeMaterialHistory 
+WHERE (newbarcode = @LotNo OR OldBarcode = @LotNo)
+
+DECLARE @oldLotid VARCHAR(50), @newLotid VARCHAR(50)
+SELECT @oldLotid = oldLotid, @newLotid = newLotid 
+FROM [STB_ChangePartNoAndLotNo] 
+WHERE (oldLotid = @LotNoFirst OR oldLotid = @LotNo) AND isLotID = 1
+```
+
+**Chuỗi lỗi logic:**
+
+| Bước | Biến | Giá trị | Giải thích |
+|------|-------|---------|------------|
+| 1 | `@LotNo` (input) | `VVQM153R025606` | Barcode gốc từ `STB_MaterialLotInfo.LotNo` |
+| 2 | `@LotNoFirst` | `NULL` | Không có bản ghi trong `STB_LotChangeMaterialHistory` |
+| 3 | Lookup `STB_ChangePartNoAndLotNo` | `WHERE oldLotid = NULL OR oldLotid = 'VVQM153R025606'` | ❌ **KHÔNG MATCH** vì `oldLotID = 'VJQM153R025606'` (đầu VJ) |
+| 4 | `@oldLotid`, `@newLotid` | Cả hai `NULL` | Không tìm thấy bản ghi chuyển đổi |
+| 5 | CASE LotNo (dòng ~644) | `(@LotNoFirst = @oldLotid OR @oldLotid = @Lotno)` | `NULL = NULL` → **FALSE** trong SQL! |
+| 6 | Fall-through → dòng ~754 | `@allowVJ = 1` → `STUFF(LotNo, 1, 2, 'VJ')` | Hệ thống auto chuyển VV→VJ, **phủ định** hành động B353 |
+
+**Điểm mấu chốt:** B353 lưu `oldLotID = 'VJQM153R025606'` (tên in trên tem, đầu VJ). Nhưng SP tra cứu bằng `@LotNo = 'VVQM153R025606'` (barcode gốc từ DB, đầu VV). Do prefix khác nhau (`VJ` vs `VV`), lookup không match → conversion bị bỏ qua.
+
+**Fix SP `usp_Vietnam_GetBoxIDForLotNo_VVT`:** (Sửa 2 chỗ — phiên bản AN TOÀN có guard chống collision)
+
+> [!WARNING]
+> **Không dùng STUFF mù quáng!** Có 4 cặp lot mà cả VV lẫn VJ đều tồn tại trong `STB_ChangePartNoAndLotNo` nhưng trỏ tới `NewLotID` khác nhau. Fix phải dùng IF fallback chỉ khi chưa match VV.
+
+**Chỗ 1 — Sau dòng ~548** (thêm IF fallback block):
+```sql
+-- Giữ nguyên dòng 548 gốc:
+select @oldLotid=oldLotid,@newLotid=newLotid from [STB_ChangePartNoAndLotNo] where (oldLotid=@LotNoFirst or oldLotid=@LotNo) and isLotID = 1
+
+-- [FIX-20260618] THÊM SAU dòng 548: Fallback VJ lookup
+-- Guard: CHỈ chạy khi chưa tìm thấy record VV VÀ @LotNo bắt đầu 'VV'
+IF @oldLotid IS NULL AND @LotNo LIKE 'VV%'
+BEGIN
+    SELECT @oldLotid=oldLotid, @newLotid=newLotid 
+    FROM [STB_ChangePartNoAndLotNo] 
+    WHERE oldLotid = STUFF(@LotNo,1,2,'VJ') AND isLotID = 1
+END
+```
+
+**Chỗ 2 — Dòng ~644** (mở rộng CASE condition):
+```diff
+- when (@LotNoFirst = @oldLotid or @oldLotid =@Lotno) then @newLotid
++ when (@LotNoFirst = @oldLotid or @oldLotid =@Lotno or (@newLotid IS NOT NULL AND @oldLotid = STUFF(@LotNo,1,2,'VJ'))) then @newLotid
+```
+
+**Verification 4 scenarios đã kiểm chứng:**
+| Scenario | Input | Kết quả | Status |
+|----------|-------|---------|--------|
+| A. Lot bình thường (không B353) | `VVXX...` | IF chạy nhưng STUFF không match → auto VJ bình thường | ✅ Safe |
+| B. Lot bug (VJ record, không VV) | `VVQM153R025606` | IF match VJ → `@newLotid` = lot mới | ✅ Fixed |
+| C. Lot collision (cả VV+VJ có record) | `VVPK133R025603` | Dòng 548 gốc match VV → IF **SKIP** → dùng đúng record VV | ✅ Safe |
+| D. Module lot (MVV prefix) | `MVVPO...` | `LIKE 'VV%'` = FALSE → IF **SKIP** | ✅ Safe |
+
+**Query debug nhanh:**
+```sql
+-- Kiểm tra bản ghi B353 cho 1 lot
+SELECT * FROM STB_ChangePartNoAndLotNo WITH(NOLOCK) 
+WHERE oldLotID LIKE '%QM153R025606%' OR NewLotID LIKE '%QM153R025606%'
+
+-- Kiểm tra cấu hình PrintVJ
+SELECT PrintVJ, MaterialCode, PartNo FROM STB_Vietnam_PackingPrinting WITH(NOLOCK) 
+WHERE MaterialCode = 'ECVT30-255'
+
+-- Kiểm tra barcode gốc trong SetInfo
+SELECT Barcode, MaterialCode FROM STB_SetInfo WITH(NOLOCK) 
+WHERE Barcode = 'VVQM153R025606'
+```
+
+**Kết quả kiểm chứng an toàn trên DB Production (2026-06-18):**
+
+| # | Test | Kết quả | Ý nghĩa |
+|---|------|---------|---------|
+| 1 | Tổng record `STB_ChangePartNoAndLotNo` (isLotID=1) | **1,457** | 126 VJ + 1,325 VV |
+| 2 | VJ-only (không có bản VV) = nhóm lot bị bug | **122** | Fix sẽ tác động nhóm này |
+| 3 | Collision pairs (cả VV+VJ đều có record riêng) | **4 cặp** | Fix KHÔNG tác động nhờ guard `IF @oldLotid IS NULL` |
+| 4 | Lot VV có record riêng | **1,325** | Fix KHÔNG tác động (query gốc đã match) |
+| 5 | Lot VV trong MaterialLotInfo tìm thấy VJ match | **58** | 58/58 valid, 0 false positive |
+| 6 | Suffix verification (ký tự 3+ giống nhau VV↔VJ) | **58/58** | 100% match đúng cặp lot |
+| 7 | Lot đã gộp box xong trong nhóm affected | **58/58** | SP chỉ SELECT output → không ghi DB → lot cũ KHÔNG bị ảnh hưởng |
+| 8 | Module lots (MVV prefix) | **20,368** | 100% safe — guard `LIKE 'VV%'` chặn |
+| 9 | SP write operations | INSERT dòng 476 dùng `@LotNo` trực tiếp | Fix ở dòng 557+654 → **SAU** INSERT → không ảnh hưởng |
+
+> [!IMPORTANT]
+> **Kết luận an toàn:** Fix chỉ thay đổi **output SELECT** (LotNo hiển thị trên tem). Không INSERT/UPDATE/DELETE dữ liệu. Guard 3 lớp: (1) `IF @oldLotid IS NULL` chặn lot đã có record VV, (2) `LIKE 'VV%'` chặn module lot, (3) `@newLotid IS NOT NULL` chặn match rỗng.
+
+> [!WARNING]
+> **Pattern chung:** Bug này sẽ xảy ra với **MỌI** lot thuộc model có `PrintVJ = 1` khi dùng B353 để chuyển tên lot từ VJ→VV. Cho đến khi SP được fix, phải workaround bằng cách **hardcode** thêm WHEN clause cho từng lot cụ thể trong SP, giống cách `ducnv` đã làm ở dòng ~621-751.
+
+---
+### 6.19 Sửa cấp OQC chọn nhầm tại C531 (VVT_OQC_REFER)
+
+> **Ngày:** 2026-06-18 | **Màn hình:** C531 (VVT_CAPA input division / Tạo phân cấp dung lượng OQC)
+
+**Triệu chứng:** Operator chọn nhầm cấp OQC cho lot tại màn C531 (ví dụ: chọn cấp C thay vì cấp B). Sau khi bấm lưu, không thể sửa lại trên giao diện vì `finished = '1'`.
+
+**Bảng liên quan:** `VVT_OQC_REFER` — lưu thông tin phân cấp OQC
+
+| Cột | Ý nghĩa |
+|-----|---------|
+| `lotid` | Mã lot (= Barcode) |
+| `mergeid` | Mã gộp (thường = lotid) |
+| `levelB` | Cấp phân loại (B, C, D...) |
+| `finished` | Trạng thái gộp (`'1'` = đã gộp xong, `NULL` = chưa) |
+| `CreateUserID` | User thực hiện |
+
+**SP đằng sau C531:**
+
+| SP | Chức năng |
+|----|-----------|
+| `usp_GetProdOQCgForBarcode_VVT` | Load data barcode lên grid |
+| `usp_DoProcessOQCrefer_VVT` | Lưu phân cấp OQC vào `VVT_OQC_REFER` |
+
+**Quy trình sửa cấp OQC:**
+
+`sql
+-- 1. Kiểm tra trạng thái hiện tại
+SELECT lotid, mergeid, levelB, finished, CreateUserID 
+FROM VVT_OQC_REFER WITH(NOLOCK) 
+WHERE lotid = 'MÃ_LOT';
+
+-- 2. Sửa cấp + reset finished để gộp lại
+BEGIN TRAN
+UPDATE VVT_OQC_REFER
+SET levelB = 'CẤP_ĐÚNG',    -- Ví dụ: 'B'
+    finished = NULL
+WHERE lotid = 'MÃ_LOT'
+  AND levelB = 'CẤP_SAI';   -- Guard: chỉ sửa đúng bản ghi sai
+SELECT @@ROWCOUNT AS [Rows]; -- Phải = 1
+-- Xác nhận xong → đổi ROLLBACK thành COMMIT
+ROLLBACK
+
+-- 3. Sau khi COMMIT: Vào lại C531 → quét barcode → chọn đúng cấp → gộp lại
+`
+
+> [!IMPORTANT]
+> Nếu lot đã được gộp box (`STB_MaterialLotInfo.PackingID IS NOT NULL`), cần kiểm tra xem box đó có cần điều chỉnh cấp không.
 
 ---

@@ -154,6 +154,8 @@ Dưới đây là 4 lỗi logic lập trình được phát hiện trực tiếp
         END
     ```
 
+> 🚦 **Tham chiếu mở rộng:** Chi tiết yêu cầu giả định của khách hàng, phân loại Pattern C (One-Way State Lock) và checklist mở rộng cho QC Audit được tổng hợp tại **[KB_14 §6.3 Nhóm 7 — QC Audit](KB_14_TRACE_BUG_METHODOLOGY.md#nhóm-7-qc-audit--chặn-passreject-sp-usp_vn_waitingcheckbeforeexport_forqcaudit_pass)**.
+
 ---
 
 ### Bug 3: Hardcode địa điểm Bắc Giang gây ẩn dữ liệu ở các kho khác
@@ -439,6 +441,8 @@ Stored Procedure này xử lý thêm/sửa/xóa thông tin Lot Rework từ giao 
     END
     ```
 
+> 🚦 **Tham chiếu mở rộng:** Chi tiết logic, mã SQL debug, và cách mở rộng cho phân quyền Rework được tổng hợp tại **[KB_14 §6.3 Nhóm 5 — Rework](KB_14_TRACE_BUG_METHODOLOGY.md#nhóm-5-b618--chặn-rework-sp-usp_getinforlotreworkhanamfactory_uid)**.
+
 ---
 
 ### 3. 📦 Phân Hệ Trả Hàng (Returns & RMA Flow)
@@ -501,6 +505,8 @@ Phân hệ Trả hàng giải quyết các trường hợp: (1) Trả lại nguy
         END
     END
     ```
+
+> 🚦 **Tham chiếu mở rộng:** Chi tiết kịch bản lỗi trả hàng và giải thích luồng RMA được tổng hợp tại **[KB_14 §6.3 Nhóm 8 — Returns](KB_14_TRACE_BUG_METHODOLOGY.md#nhóm-8-returns--chặn-trả-hàng-sp-usp_dovalidatematerialdocbarcodeforreturn)**.
 
 ---
 

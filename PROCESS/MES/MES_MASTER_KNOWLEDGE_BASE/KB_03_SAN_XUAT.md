@@ -488,6 +488,9 @@ WHERE MarkingCode = 'MK00000974';
 [GATE 7] PO không có Route: PONo IS NULL → RAISERROR 'Routing này không có trong PO'
 ```
 
+> 🚦 **Tham chiếu mở rộng:** Chi tiết logic, mã SQL debug, và cách mở rộng cho 7 cổng chặn B530 trên (cùng 11 nhóm chặn tương tự như B597, B523, B452, B618, QC Audit...) được tổng hợp đầy đủ tại **[KB_14 §6 — Tổng Hợp Pattern Validation Gates](KB_14_TRACE_BUG_METHODOLOGY.md#6-tổng-hợp-pattern-validation-gates)**.
+
+
 **Cột IsRawMaterialInputFinish — Gate quan trọng nhất:**
 ```sql
 -- Kiểm tra trạng thái scan NVL
@@ -571,6 +574,8 @@ THEN substring(MM.MaterialName, CHARINDEX('-', MM.MaterialName, 12), ...)
 IF @pProcessUserID NOT IN ('vvt_worker','vvtworker',...)
     RAISERROR('Chưa cân — không được in label')
 ```
+
+> 🚦 **Tham chiếu mở rộng:** Chi tiết các cổng chặn đóng gói (cân hàng, tiêu chuẩn đóng gói, in tem giới hạn) được tổng hợp tại **[KB_14 §6.3 Nhóm 3 — Đóng Gói](KB_14_TRACE_BUG_METHODOLOGY.md#nhóm-3-b523--chặn-đóng-gói-sp-usp_vietnam_doprocessprodpacking_vvt)**.
 
 ---
 
