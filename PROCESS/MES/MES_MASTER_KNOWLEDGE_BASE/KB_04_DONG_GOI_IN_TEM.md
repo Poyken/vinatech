@@ -1162,7 +1162,44 @@ ROLLBACK
 | `usp_MainAssemblePartWeight_get` | Load thông tin vật tư |
 
 > [!WARNING]
-> **Pattern chung:** Khi thêm model Electrode mới (CRF%), phải cấu hình `MaterialThickness` trong `STB_MaterialMaster`. Nếu thiếu → tem không hiển thị độ dày → công nhân không biết thông số.
+> **Pattern chung:** Khi thêm model Electrode mới (CRF%), phải làm 2 việc:
+> 1. **A230** (MaterialMaster): Cấu hình `MaterialThickness` (VD: 120, 180, 200)
+> 2. **A460** (LabelInfo): Thêm record vào `STB_ModelLabelInfo` (mapping ModelCode → LabelType)
+> Thiếu bước 1 → tem không hiển thị độ dày. Thiếu bước 2 → lỗi **"Not found label type"** khi in tem.
+
+**Lỗi in tem "Not found label type" (A460 chưa config):**
+
+Nếu bấm in tem trên B442 mà popup lỗi `"Not found label type"` → model chưa có record trong `STB_ModelLabelInfo`.
+
+```sql
+-- Kiểm tra model có label config chưa
+SELECT ModelCode, LabelType, FormatName FROM STB_ModelLabelInfo WITH(NOLOCK) WHERE ModelCode = 'MÃ_MODEL';
+
+-- Nếu không có → copy từ model cũ cùng loại
+-- VD: Copy CRFYN85L → CRFYN85L-01
+BEGIN TRAN
+INSERT INTO STB_ModelLabelInfo (ModelCode, LabelType, FormatName, CreateDateTime, CreateUserID)
+SELECT 'MODEL_MỚI', LabelType, FormatName, GETDATE(), 'admin'
+FROM STB_ModelLabelInfo WHERE ModelCode = 'MODEL_CŨ';
+SELECT @@ROWCOUNT; -- Phải > 0
+ROLLBACK
+```
+
+**Bảng mapping `STB_ModelLabelInfo`:**
+
+| Cột | Ý nghĩa |
+|-----|---------|
+| `ModelCode` | MaterialCode (mã sản phẩm) |
+| `LabelType` | Loại tem: `ElectLabel`, `AssembleLabel`, `PartLabel`, `BoxLabel2`... |
+| `FormatName` | Tên format tem (unicode) |
+
+**LabelType phổ biến cho Electrode (CRF%):**
+
+| LabelType | Chức năng | Bắt buộc? |
+|-----------|-----------|-----------|
+| `ElectLabel` | Tem điện cực (in từ B442) | ✅ Bắt buộc |
+| `AssembleLabel` | Tem sản xuất (B450/B540) | Tùy dây chuyền |
+| `PartLabel` | Tem vật tư (F330) | Tùy quy trình |
 -----|---------|
 | `lotid` | Mã lot (= Barcode) |
 | `mergeid` | Mã gộp (thường = lotid) |
