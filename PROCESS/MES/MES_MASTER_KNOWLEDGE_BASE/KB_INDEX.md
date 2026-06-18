@@ -39,6 +39,7 @@
 | **[KB_30_CORE_SP_ENGINE.md](KB_30_CORE_SP_ENGINE.md)** | **★ Phân tích chi tiết 4 SP cốt lõi: DoProcessProdRouteHist (11 bước), Backflush (7 bước), ForCalc SmartApp (22K), Packing OPENXML. Line-by-line analysis + Sơ đồ + Risk** | B530, B523, Backflush, SmartApp |
 | **[KB_31_SCREEN_BUG_FIXBOOK.md](KB_31_SCREEN_BUG_FIXBOOK.md)** | **★★ SỔ TAY TRA CỨU BUG theo TCode. 60+ bug × 30+ màn hình. Triệu chứng → Nguyên nhân → Fix SQL. Cross-ref tất cả KB** | TẤT CẢ màn hình |
 | **[KB_32_SCREEN_SP_TABLE_MAP.md](KB_32_SCREEN_SP_TABLE_MAP.md)** | **★ Bản đồ ánh xạ Screen → SP → Table cho 15 màn hình chính. BG2 validation logic. Sơ đồ luồng data** | B523, B530, B597, F330, G100, C512, C530, C546, C560, K101, K109, K110 |
+| **[KB_33_FACTORY_WORKCENTER_MATRIX.md](KB_33_FACTORY_WORKCENTER_MATRIX.md)** | **★ Bản đồ 9 WorkCenter verified (PO counts), Route codes, Barcode format, Warehouse mapping, VNT vs VVT history** | System/Infrastructure |
 
 ---
 
