@@ -516,9 +516,9 @@ SerialLen = 6                → LastSerialNo = 430
 | User Tables | **994** |
 | Scalar Functions | 76 |
 | Views | 61 |
-| Triggers | 32 |
+| Triggers | **33** |
 | Table-Valued Functions | 30 |
-| **TỔNG** | **4,589** |
+| **TỔNG** | **4,590** |
 
 ### SmartFramework:
 | Object Type | Count |
@@ -527,14 +527,52 @@ SerialLen = 6                → LastSerialNo = 430
 | Screen Bindings | **7,605** |
 | Registered Screens | **1,467** |
 
-### Across All 13 Databases:
+### Across All 19 Databases:
 | Database | Status |
 |---|---|
 | SmartFactoryV2 | **PRIMARY** — 994 tables, 3,396 SPs |
 | SmartFramework | **UI ENGINE** — 61 tables, 7,605 bindings |
+| VINATECH_POP | **POP/Kiosk** — 42 tables |
 | NEOE | **ERP** — 10+ verified tables |
-| MES_Vinatech | **Groupware bridge** — 3 verified tables |
-| 10 other DBs | Various supporting roles |
+| AndonDB | **ANDON** — 3 tables |
+| VINATECH_GROUP | **Groupware** |
+| DZICUBE | **Bizbox Alpha** |
+| VINATECH_RESTFUL | **SSO/Identity** |
+| VINATECH_WEBSOCKET | **WebSocket** |
+| VINATECH_SPREADSHEET | **Excel Online** |
+| streamdocs | **PDF Viewer** |
+| VINATECH_DATA_KSOX | **Compliance** |
+| SmartFactoryIncubator | **R&D Sandbox** |
+| WCMS_STANDARD_NEW | **Cash Management** |
+| erpdb | **ERP utility** |
+| SmartFramework_File | **File storage** |
+| SmartFramework_Temp | **Temp storage** |
+| SmartFactoryV2_261807 | Backup snapshot |
+| VINATECH_POP_240625 | POP backup |
+
+### 21 Custom VVT Functions:
+| Function | Type | Mô tả |
+|---|---|---|
+| `fn_VVT_StagePrices` | ITVF | **★ Tính giá công đoạn** |
+| `fn_VVT_StagePricesINCREMENTAL` | ITVF | Giá lũy tiến |
+| `fn_VVT_StagePricesMODULE` | ITVF | Giá Module |
+| `fn_VVT_StagePricesNEW` | ITVF | Giá mới |
+| `fn_VVT_getdatebyVendorLot` | Scalar | **★ Parse date từ vendor lot** (⚠️ risk crash!) |
+| `fn_VVT_getdatebyVendorLot_MergeCode` | Scalar | Variant cho merged codes |
+| `fn_VVT_getLastestBarCode` | Scalar | **Lấy barcode mới nhất** |
+| `fn_VVT_QCPARTCODE` | ITVF | **Lọc mã lỗi QC** cho PQC gate |
+| `fn_VVT_ElectrodeCodeStagePrice` | ITVF | Giá electrode theo code |
+| `fn_VVT_ElectrodeTYPEweight` | ITVF | Cân nặng electrode theo type |
+| `fn_VVT_ElecErrorPriceMeter2KG` | ITVF | Chuyển đổi mét→kg electrode |
+| `fn_VVT_ElecMixingKg2Met` | ITVF | Chuyển đổi kg→mét mixing |
+| `fn_VVT_PartnoModel` | ITVF | Mapping PartNo→Model |
+| `fn_VVT_Stage2Weight` | ITVF | Cân nặng theo stage |
+| `fn_VVT_WeightUnit598_723` | ITVF | Đơn vị cân B598/F723 |
+| `fn_VVT_AccountTypeWarehouseType` | ITVF | Loại kho kế toán |
+| `fn_VVTF4_GetMarkingDC` | Scalar | Lấy Marking DC (Hưng Yên) |
+| `fnVVT_BasicRoutingCode` | Scalar | Mã routing cơ bản |
+| `fnVVT_Machine2LineCode` | Scalar | **Mapping máy→line** |
+| `VVT_INSTR` | Scalar | Custom INSTR function |
 
 ---
 
