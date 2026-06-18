@@ -199,4 +199,59 @@
 
 ---
 
-*Cập nhật: 2026-06-18 — Deep discovery Phase 5-6*
+## 7. 🔗 ERP Integration Layer — 32 SPs Reference NEOE (4,876 tables)
+
+> NEOE = Douzone ERP Core. **4,876 tables** (MA_=Master, TR_=Transaction). MES truy vấn trực tiếp qua Linked Server `ERPSVR`.
+
+### Key Interface SPs (MES→ERP):
+| SP | Chức năng |
+|---|---|
+| `usp_DoProcessProdRouteHist_itf` | **★ Route history → ERP** |
+| `usp_DoProcessWarehouseInOut_itf` | **★ Warehouse In/Out → ERP** |
+| `usp_DoProcessSalesInOut_itf` | **★ Sales In/Out → ERP** |
+| `usp_ProdRouteHist_itf` | Production route → ERP |
+| `usp_ProdRouteRawMaterialHist_itf` | NVL route history → ERP |
+| `usp_VietnamStockInfo_itf` | Stock info → ERP |
+| `usp_MontylyProdPlan_itf` | Monthly plan → ERP |
+| `usp_SalesInOutRequest_itf` | Sales request → ERP |
+| `usp_DoCreateExchangeData` | Exchange data creation |
+| `usp_DoCheckExchangeData` | Verify exchange data |
+
+### Lookup SPs (MES←ERP):
+| SP | Chức năng |
+|---|---|
+| `usp_CustomerInfoIU_popup` | Lấy thông tin khách hàng |
+| `usp_NationInfo_popup` | Lấy thông tin quốc gia |
+| `usp_ShipmentHist_get` | Lịch sử giao hàng |
+| `usp_DoCheckPartnerOrProduct` | Kiểm tra đối tác/sản phẩm |
+| `fnGetChildMaterialCode` | Lấy mã NVL con |
+| `fnGetMaterialBOM` | Lấy BOM |
+
+### Key NEOE Tables Referenced:
+| Table | Mô tả |
+|---|---|
+| `MA_USER` | User master ERP |
+| `MA_PITEM` | **Product Item master** |
+| `MA_PARTNER` | Đối tác/Khách hàng |
+| `MA_ITEM` | Vật tư master |
+| `MA_WH` | Kho ERP |
+| `TR_TO_IMH/IML` | Transfer Order Header/Lines |
+| `TR_INVH/INVL` | Invoice Header/Lines |
+
+---
+
+## 8. 📧 DB Mail System
+
+> 2 Mail Profiles cấu hình trên SQL Server:
+
+| Profile | Mô tả |
+|---|---|
+| `NAIS_MAIL` | **Mail chính** — Gửi alert NVL hết hạn, Equipment calibration |
+| `SystemMail` | Mail hệ thống (backup alerts, job failures) |
+
+> Agent Jobs sử dụng `NAIS_MAIL` profile qua `msdb.dbo.sp_send_dbmail`.
+
+---
+
+*Cập nhật: 2026-06-18 — Deep discovery Phase 5-7 (Triggers + Jobs + Labels + ERP + DDL + POP)*
+
