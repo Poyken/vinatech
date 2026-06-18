@@ -446,3 +446,68 @@ B597 (Scan NVL) → B530 (SL) → B523 (Gộp Box) ←──┘
 
 *Cập nhật: 2026-06-18 | Dữ liệu từ STB_ScreenObjects + phân tích SP code — VERIFIED against live DB*
 
+---
+
+## Appendix — STB_ScreenObjects Statistics (DB Verified 2026-06-18)
+
+> **Tổng: 1,231 screens → 3,429 SP mappings** (ExecuteFunction + SearchFunction)
+
+### Top 30 Most Complex Screens (by SP count)
+
+| # | Screen (ClassName) | SPs | Phân hệ |
+|---|---|---|---|
+| 1 | `Vietnam_ElectrodeMeasureResult` | **25** | QC Electrode |
+| 2 | `ElectrodeMeasureResult` | 23 | QC Electrode (KR) |
+| 3 | `MaterialIqcInfoSampleManagement` | 22 | IQC Sample |
+| 4 | `HY_MaterialReceiptAndPrintLabel` | 21 | Kho HY |
+| 5 | `MEA_ElectrodeMeasureResult` | 21 | MEA Electrode |
+| 6 | `MaterialReceiptAndPrintLabel` | 21 | Kho NVL (F330) |
+| 7 | `TestC220ForNewStandard` | 20 | QC C220 test |
+| 8 | `VNT_SPT_MaterialOqcInfoSampleManagement` | 19 | OQC SPT |
+| 9 | `HY_MaterialOqcInfoSampleManagement` | 19 | OQC HY |
+| 10 | `MaterialOqcInfoSampleManagement` | 19 | OQC Sample |
+| 11 | `MaterialReturnAndPrintLabel` | 18 | Trả NVL |
+| 12 | `Aging_ESR_SD` | 17 | QC Aging ESR |
+| 13 | `Vietnam_CheckOQCsample` | 17 | OQC VN |
+| 14 | `ProductReturnAndPrintLabel` | 15 | Trả TP |
+| 15 | `Vietnam_Donggoi_Hnam` | 13 | Đóng gói HN |
+| 16 | `SalesGI` | 13 | Xuất bán hàng |
+| 17 | `MaterialProductionGI` | 13 | Xuất NVL SX |
+| 18 | `Vietnam_SalesGI` | 13 | Xuất bán VN |
+| 19 | `VNT_ProdRouteByBarcode` | 13 | Scan Route VNT |
+| 20 | `Kho_Donggoi2` | 12 | Đóng gói 2 |
+| 21 | `Vietnam_Donggoi` | 12 | **★ B523** |
+| 22 | `VVT_QC_BendingCutting` | 11 | QC Bending |
+| 23 | `ProdRouteForPacking` | 11 | Route → Pack |
+| 24 | `VNT_DefectStatus` | 11 | Trạng thái lỗi |
+| 25 | `MRPManagement` | 9 | Kế hoạch NVL |
+| 26 | `FinishGoodReport` | 9 | Báo cáo TP |
+| 27 | `ScrapCEOVN` | 9 | Phế liệu VN |
+| 28 | `ProductionOrderInfo` | 7 | **★ B310** |
+| 29 | `VvtProductionOrderInfo` | 7 | B310 VVT |
+| 30 | `BomInfo` | 8 | BOM (A310) |
+
+> [!NOTE]
+> Electrode Measure Result (25 SPs) là **màn hình phức tạp nhất** trong toàn hệ thống. Đây là nơi QC đo Viscosity, Thickness, Density cho điện cực — ảnh hưởng trực tiếp đến chất lượng sản phẩm cuối.
+
+### Quick SQL Tra Cứu
+
+```sql
+-- Xem tất cả SPs của 1 screen (by ClassName)
+SELECT ObjectType, ObjectName 
+FROM SmartFramework.dbo.STB_ScreenObjects WITH(NOLOCK) 
+WHERE ScreenName = 'TÊN_CLASSNAME' 
+AND ObjectType IN ('ExecuteFunction','SearchFunction')
+ORDER BY ObjectType, ObjectName
+
+-- Xem tất cả SPs của 1 screen (by TCode)  
+SELECT SO.ObjectType, SO.ObjectName 
+FROM SmartFramework.dbo.STB_ScreenInfo SI WITH(NOLOCK)
+JOIN SmartFramework.dbo.STB_ScreenObjects SO WITH(NOLOCK) ON SI.Name = SO.ScreenName
+WHERE SI.TCode = 'B523'
+AND SO.ObjectType IN ('ExecuteFunction','SearchFunction')
+```
+
+---
+
+*Cập nhật: 2026-06-18 — Bổ sung Appendix: STB_ScreenObjects Statistics (1,231 screens → 3,429 mappings) + Top 30 Most Complex Screens. DB verified.*
