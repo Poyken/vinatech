@@ -512,6 +512,9 @@ SELECT Year, YearCode FROM STB_YearInfo WHERE Year >= 2024
 | 6 | `usp_DoFixMaterialDoc` | 576 | Fix material document |
 | 7 | `usp_DoProcessTerminalData` | 269 | Terminal (POP) data |
 
+> [!NOTE]
+> `Barcode1`/`Barcode2` là **tên được log** trong STB_ProcedureLog, KHÔNG phải tên SP thực tế. SP thật là `usp_DoProcessProdRouteHistForBarcode` (không có số). SP tự ghi log tên khác nhau theo parameter `@pRouteHistType`.
+
 > [!IMPORTANT]
 > **Barcode scanning chiếm 4,812 calls/ngày** (route1 + route2 + routeHist). Bất kỳ thay đổi nào trên 3 SP này sẽ ảnh hưởng tức thì đến toàn bộ xưởng.
 

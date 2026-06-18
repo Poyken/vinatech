@@ -71,7 +71,7 @@ Lưu trữ toàn bộ thông tin nhãn hộp nhỏ và hộp lớn đã in.
 | `PackingQty` | `int` | Số lượng đóng gói trong box |
 | `LabelQty` | `int` | Số lượng nhãn |
 | `CustomerPartNo` | `varchar(50)` | Mã sản phẩm phía khách hàng |
-| `LotNo` | `varchar(20)` | Lot number của box |
+| `LotNo` | `varchar(10)` | Lot number của box |
 | `LabelClassCode` | `varchar(20)` | Phân loại nhãn (1: Inner Box, 2: Outer Box) |
 | `ModelSpec` | `varchar(50)` | Quy cách sản phẩm (ví dụ: `30V 330 Ø10.0*12.6L`) |
 | `SerialNo` | `varchar(3)` | Số serial tự tăng trong ngày |

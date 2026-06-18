@@ -28,7 +28,6 @@ ORDER BY SO.ObjectType
 | `usp_Vietnam_DoProcessProdPacking_VVT` | **CORE** — Gộp box: OPENXML→CURSOR→PackingByOne |
 | `usp_DoProcessProdPackingByOne_VNT` | Sub-SP: xử lý đóng gói từng barcode |
 | `usp_DoCancelProdPacking_LotNo` | Hủy đóng gói theo LotNo |
-| `usp_DoCreatePackingLabelInfo` | Tạo thông tin label đóng gói |
 | `usp_savePackingLabelQty_VVT` | Lưu SL in tem đóng gói |
 | `usp_BoxCheckSetupValue` | Kiểm tra cấu hình box (SL/box, Size) |
 | `usp_BoxCheckSetupValueTwo` | Kiểm tra cấu hình box (variant 2) |
@@ -142,7 +141,7 @@ ORDER BY SO.ObjectType
 |---|---|
 | `usp_MaterialDocInfo_iud` | IUD phiếu nhập kho (header) |
 | `usp_MaterialDocDetail_iud` | IUD chi tiết phiếu (từng NVL) |
-| `usp_MaterialDocLotInfo_iud` | IUD thông tin Lot |
+| `usp_DoCreateMaterialDocLot` | Tạo Lot trên phiếu nhập (⚠️ DB verified: không có `usp_MaterialDocLotInfo_iud`) |
 | `usp_DoArriveMaterialDelivery` | Xác nhận hàng đến |
 | `usp_DoMaterialDocMasterDetail_iud` | IUD master detail phiếu |
 | `usp_DoFinishMaterialDoc` | Đóng phiếu nhập |
@@ -179,7 +178,7 @@ ORDER BY SO.ObjectType
 |---|---|
 | `usp_MaterialDocInfo_iud` | IUD phiếu xuất kho |
 | `usp_MaterialDocDetail_iud` | IUD chi tiết xuất |
-| `usp_MaterialDocLotInfo_iud` | IUD Lot xuất |
+| `usp_DoCreateMaterialDocLot` | Tạo Lot trên phiếu xuất (⚠️ DB verified) |
 | `usp_DoFinishMaterialDoc` | Đóng phiếu |
 | `usp_DoFixMaterialDoc` | Xác nhận phiếu |
 | `usp_DoCancelMaterialDoc` | Hủy phiếu |
