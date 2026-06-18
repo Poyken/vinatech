@@ -1,6 +1,7 @@
 # KB_12 — Phân Tích Sâu Cốt Lõi & Audit Database (Deep Analysis & Audit)
 
-> **Mục đích:** Giải thích bản chất thiết kế của hệ thống MES NAIS phía dưới database (dành cho IT/Developer) kết hợp với kết quả kiểm tra (Audit) thực tế trên database SmartFactoryV2 và SmartFramework.
+> **Mục đích:** Giải thích bản chất thiết kế của hệ thống MES NAIS phía dưới database (dành cho IT/Developer)
+> **🔑 Keywords:** deep analysis, audit, DNA, SP pattern, FK, index, CURSOR, OPENXML, TRAN, convention, coding
 > ← [Về INDEX](KB_INDEX.md)
 
 ---

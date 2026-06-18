@@ -1,5 +1,8 @@
 # TỔNG HỢP CÁC CASE STUDY THỰC TẾ DÀNH CHO KỸ SƯ EA/MES KHI XUỐNG XƯỞNG
 
+> **🔑 Keywords:** case study, EA, xưởng, vận hành, onboard, training, xuống xưởng, thực tế, hướng dẫn
+> ← [Về INDEX](KB_INDEX.md)
+
 Tài liệu này tổng hợp các tình huống (Case Studies) thường gặp nhất mà một Kỹ sư Hỗ trợ Ứng dụng Doanh nghiệp (EA) / Kỹ sư MES phải đối mặt khi trực tiếp "xuống line". Hiểu rõ các nguyên nhân gốc rễ và cách xử lý nhanh sẽ giúp EA làm chủ hệ thống và hỗ trợ sản xuất không bị gián đoạn.
 
 ---

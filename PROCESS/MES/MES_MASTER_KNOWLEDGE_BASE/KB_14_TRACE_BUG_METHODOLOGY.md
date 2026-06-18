@@ -1,6 +1,7 @@
 # 📘 KB_14_TRACE_BUG_METHODOLOGY — Cẩm Nang Truy Vết Lỗi & Dữ Liệu NAIS MES
 
-> **Cập nhật:** 2026-05-25 | **Tác giả:** Antigravity (Google DeepMind Team)
+> **Cập nhật:** 2026-06-18 | **Tác giả:** Antigravity (Google DeepMind Team)
+> **🔑 Keywords:** trace, debug, lỗi, bug, truy vết, methodology, validation gate, cổng chặn, log, ProcedureLog, TerminalDataLog, barcode, block, chặn
 > **Mục tiêu:** Hướng dẫn từng bước (Step-by-step) đầy đủ, chính xác, trực quan để kỹ sư vận hành/lập trình viên có thể tự mình truy tìm và sửa lỗi dữ liệu trên hệ thống MES Vinatech mà không cần đoán mò.
 
 ---

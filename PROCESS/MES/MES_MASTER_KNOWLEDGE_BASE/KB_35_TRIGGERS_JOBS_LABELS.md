@@ -1,6 +1,7 @@
 # KB_35 — Triggers, Agent Jobs, Label System & Database Audit Trail
 
 > **Verified against DB:** 2026-06-18
+> **🔑 Keywords:** trigger, agent job, label, DDL, audit trail, tgMaterial, DayPlanNo, customer label, Hela, Bloom, sync
 > ← [Về INDEX](KB_INDEX.md)
 
 ---

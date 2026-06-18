@@ -1,6 +1,7 @@
 # KB_25 — VinaEnesol & Hưng Yên Factory Specifics
 
-> **Màn hình liên quan:** HungYenFactory (HY00000), VinaEnesol_Management_MENU (D000)
+> **Màn hình:** D000, D051, D100, D110, HY screens
+> **🔑 Keywords:** Enesol, Hưng Yên, VVT_F4, pin, battery, D-series, box matching, inner box, outer box, 93 SPs
 > **Verified against DB:** 2026-06-10
 > ← [Về INDEX](KB_INDEX.md)
 

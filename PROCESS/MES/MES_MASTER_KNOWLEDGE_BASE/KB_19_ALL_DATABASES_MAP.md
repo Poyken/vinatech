@@ -1,6 +1,7 @@
 # 🗄️ BẢN ĐỒ CƠ SỞ DỮ LIỆU TOÀN HỆ THỐNG (VINATECH MASTER DATABASE ARCHITECTURE)
 
-> **Mục đích:** Hướng dẫn toàn diện về kiến trúc và cấu trúc dữ liệu của 13 hệ thống cơ sở dữ liệu vận hành tại Vinatech Việt Nam. Tài liệu này đóng vai trò là cẩm nang kỹ thuật giúp kỹ sư hệ thống, lập trình viên và AI hiểu rõ vai trò, cấu trúc bảng cốt lõi, cơ chế liên thông nghiệp vụ liên hệ thống (Data Pipelines) và cách viết các truy vấn đối soát dữ liệu (Golden Audit Queries).
+> **Mục đích:** Bản đồ 19 databases, 6,648 tables.
+> **🔑 Keywords:** database, DB, bảng, table, ERD, SmartFactoryV2, SmartFramework, NEOE, VINATECH_GROUP, schema, linked server
 >
 > 📖 **Dành cho người mới:** Nếu bạn mới tiếp cận hệ thống lần đầu, hãy đọc **[Cẩm nang nhập môn hệ thống liên thông (KB_20)](KB_10_KIEN_TRUC_VA_DATAFLOW.md)** trước để hiểu toàn cảnh và luồng vận hành của các phân hệ.
 >

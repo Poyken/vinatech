@@ -1,6 +1,7 @@
 # KB_30: Core SP Engine — Trái Tim Hệ Thống MES
 
 > **File này chứa phân tích chi tiết các Stored Procedure cốt lõi nhất của hệ thống MES.**
+> **🔑 Keywords:** SP engine, DoProcess, Backflush, ForCalc, Packing, OPENXML, stored procedure, core logic
 > Hiểu được các SP này = hiểu được 80% logic vận hành toàn bộ nhà máy.
 
 ---

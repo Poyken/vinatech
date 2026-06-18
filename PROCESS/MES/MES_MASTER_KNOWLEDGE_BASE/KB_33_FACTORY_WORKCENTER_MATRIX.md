@@ -1,6 +1,7 @@
 # KB_33: Factory WorkCenter Matrix — Bản Đồ Nhà Máy (Verified)
 
 > **📌 Mục đích:** Tra cứu nhanh WorkCenterCode → Nhà máy → Route → Barcode format.
+> **🔑 Keywords:** factory, nhà máy, WorkCenter, VVT_F1, VVT_F3, VVT_F4, line, route, barcode format, BG, HN, HY
 > **Nguồn dữ liệu:** `STB_ProductionOrderInfo` (verified 2026-06-18, 22,553 POs tổng).
 
 ---

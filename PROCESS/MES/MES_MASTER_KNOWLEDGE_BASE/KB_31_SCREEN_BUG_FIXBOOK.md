@@ -1,6 +1,7 @@
 # KB_31: Sổ Tay Tra Cứu Bug & Fix Theo Màn Hình
 
 > **📌 Mục đích:** Khi nhận được báo lỗi từ user → tra TCode tại đây → tìm ngay bug + cách fix.
+> **🔑 Keywords:** bug, fix, sổ tay, TCode, màn hình, triệu chứng, nguyên nhân, SQL fix, sửa lỗi, khắc phục
 > File này tổng hợp TẤT CẢ bug đã documented, sắp xếp theo TCode (Mã màn hình).
 > Mỗi entry gồm: Triệu chứng | Nguyên nhân | Fix | Tham chiếu KB gốc.
 

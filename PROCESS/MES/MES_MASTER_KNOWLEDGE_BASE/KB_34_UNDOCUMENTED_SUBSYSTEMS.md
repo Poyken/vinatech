@@ -1,6 +1,7 @@
 # KB_34 — Các Phân Hệ Phụ Trợ Chưa Document (Undocumented Subsystems)
 
 > **Verified against DB:** 2026-06-18
+> **🔑 Keywords:** subsystem, spare part, machine, mold, scrap, ANDON, ESR, Daifuku, ASRS, IoT, POP, STB_VN_, phụ trợ
 > ← [Về INDEX](KB_INDEX.md)
 
 ---

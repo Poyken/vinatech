@@ -1,6 +1,7 @@
 # KB_32: Bản Đồ Ánh Xạ Screen → SP → Table
 
 > **📌 Mục đích:** Khi debug bất kỳ màn hình nào → tra đây → biết ngay SP nào chạy, bảng nào bị ảnh hưởng.
+> **🔑 Keywords:** screen, SP, table, map, ánh xạ, mapping, ScreenObjects, Action, SearchFunction, ExecuteFunction
 > Dữ liệu từ `SmartFramework.dbo.STB_ScreenObjects` + phân tích code SP.
 
 ---

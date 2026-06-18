@@ -1,6 +1,8 @@
 # KB_07 — Groupware & MES Integration (Quy trình vận hành & Xác thực liên kết)
 
-> **Màn hình liên quan:** Groupware (gw.vinatech.com), F330, C220, B310, B450, FG01, B750, B752, Z410
+> **Màn hình:** Groupware (gw.vinatech.com), F330, C220, B310, B450, FG01, B750, B752, Z410
+> **Bảng chính:** `VINATECH_GROUP` (382 tables), `VINA_DOCUMENT_*`, `ESM_*` (19 bridge tables)
+> **🔑 Keywords:** groupware, mua hàng, purchase, BOM, duyệt, approval, tờ trình, ESM, sync, ERP, Douzone, kho active
 > ← [Về INDEX](KB_INDEX.md)
 
 ---

@@ -1,6 +1,8 @@
 # KB_26 — Liên Kết Hệ Thống & Phân Tích Lỗi Logic
 
-> **Màn hình liên quan:** B597, B530, C443, C512, C530, C546, HN551, FG00
+> **Màn hình:** B597, B530, B618, C443, C530, C546, HN551, FG00, F750
+> **Bảng chính:** `STB_MaterialDocLotInfo`, `STB_LotReworkInfo_HN`, `ESM_*` (19 bridge)
+> **🔑 Keywords:** liên kết, trigger, cascade, trừ kho, WMS, SCM, rework, trả hàng, return, kiểm kê, stocktaking, ESM, bridge, ERP sync
 > ← [Về INDEX](KB_INDEX.md)
 
 ---
