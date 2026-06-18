@@ -67,6 +67,22 @@ graph TD
     style Andon fill:#b71c1c,stroke:#333,stroke-width:1px,color:#fff
 ```
 
+## 🔗 1.5 SQL Linked Servers — Cầu nối liên máy chủ (Verified 2026-06-18)
+
+> Hệ thống sử dụng **6 Linked Servers** để giao tiếp chéo giữa các máy chủ SQL khác nhau:
+
+| Linked Server | Data Source | Vai trò |
+|---|---|---|
+| `ERPSVR` | `110.11.27.7:2433` | **★ ERP Douzone Server** — Truy vấn trực tiếp `ERPSVR.NEOE.dbo.xxx` từ MES |
+| `OLDNAISSVR` | `110.11.27.5` | Old NAIS MES server — Dữ liệu legacy |
+| `110.11.27.5` | `110.11.27.5` | Direct link to OLD MES (SQLNCLI) |
+| `110.11.27.5\MESTESTDB,8080` | Test DB instance | Test/Staging environment |
+| `CMS_VINA_LINK` | `110.11.27.5\MESTESTDB,8080` | CMS Vietnam link (OLE DB) |
+| `SVR-VINAT2` | `SVR-VINAT2` | VinaT2 server — Cross-factory sync |
+
+> [!IMPORTANT]
+> **Cách dùng trong SP:** `SELECT * FROM ERPSVR.NEOE.dbo.MA_USER` — Truy vấn ERP trực tiếp từ MES SP mà không cần ETL.
+
 ---
 
 ## 🗂️ 2. Vai Trò & Cấu Trúc Chi Tiết Của 13 Hệ Thống Cơ Sở Dữ Liệu
