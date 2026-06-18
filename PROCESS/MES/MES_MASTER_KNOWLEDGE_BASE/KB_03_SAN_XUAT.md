@@ -473,13 +473,21 @@ WHERE MarkingCode = 'MK00000974';
 
 | SP | Loại | Chức năng |
 |----|------|-----------|
-| `usp_GetProdRouteHistForBarcode_VNT` | Search | Thông tin Route History theo Barcode |
+| `usp_GetProdRouteHistForBarcode_VNT` | Search | Thông tin Route History theo Barcode (12K chars) |
 | `usp_GetProdRouteBarcodeForDefect_VNT` | Search | Danh sách lỗi theo Barcode |
+| `usp_DoProcessProdRouteHist_VNT` | Search | Variant VNT — search routing data |
+| `usp_ProdRouteHist_get` | Search | Lấy lịch sử routing chung |
 | `usp_WasteWeight_get` | Search | Thông tin cân phế |
-| `usp_DoProcessProdRouteHistForBarcode` | Execute | Submit sản lượng |
-| `usp_DoProcessProdRouteHistForCalc_SmartApp_VNT` | Execute | Tính toán & validate (cổng chính) |
-| `usp_DoUpdateProdRouteHistMarkingLetter` | Execute | Cập nhật ký hiệu đánh dấu |
+| `usp_DoProcessProdRouteHistForCalc_SmartApp_VNT` | Execute | **★ Tính toán & validate (cổng chính, 22K chars)** |
+| `usp_DoProcessDefectRepairInfoByBarcode_SmartApp` | Execute | Ghi nhận lỗi theo barcode |
+| `usp_DoUpdateProdRouteHistMarkingLetter` | Execute | Cập nhật ký hiệu đánh dấu (Hà Nam) |
+| `usp_DoUpdateDRIExtText02_iud` | Execute | Cập nhật text mở rộng lỗi |
+| `usp_InterimProdQtyInfo_iud` | Execute | Nhập SL tạm thời |
+| `usp_DoCreateTaktTimeForRoute` | Execute | Tạo Takt Time cho Route |
 | `usp_DoSplitLotAgingHN` | Execute | Tách Lot trước Aging (Hà Nam) |
+| `usp_AddRepairInfor_BG2` | Execute | Thêm info sửa chữa (BG2) |
+| `usp_PassBarcodeForRoute` | Execute | Đánh dấu PASS barcode (BG2) |
+| `usp_FailBarcodeForRoute` | Execute | Đánh dấu FAIL barcode (BG2) |
 
 **7 cổng chặn trong `usp_DoProcessProdRouteHistForCalc_SmartApp_VNT`:**
 
