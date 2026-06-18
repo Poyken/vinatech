@@ -203,7 +203,7 @@
 
 | # | Triệu chứng | Nguyên nhân | Fix |
 |---|---|---|---|
-| 1 | "Bạn không có quyền vui lòng liên hệ EA !" | SP `usp_VVT_ReworkDirect_iud` hardcode check UserID | Thêm UserID vào whitelist trong SP hoặc tạo record permission — xem [KB_26 §4.5](KB_26_LIEN_KET_HE_THONG_VA_BUG_LOGIC.md) |
+| 1 | "Bạn không có quyền vui lòng liên hệ EA !" | SP `usp_GetInforLotReworkHaNamFactory_uid` hardcode check UserID | Thêm UserID vào whitelist trong SP hoặc tạo record permission — xem [KB_26 §4.5](KB_26_LIEN_KET_HE_THONG_VA_BUG_LOGIC.md) |
 
 ### B682-B791
 **Tên:** Stage Prices & Defect Reports
