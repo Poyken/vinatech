@@ -1183,3 +1183,54 @@ Mỗi khi một màn hình được mở:
 3. **Binding Đối Tượng (`STB_ScreenObjects`):** Ánh xạ các trường dữ liệu trên màn hình với các cột của bảng CSDL hoặc tham số của Stored Procedure tương ứng.
 4. **Hiển thị & Thực thi:** Client tự động sinh (render) giao diện người dùng dựa trên metadata tải về, giải thích lý do tại sao thay đổi cấu trúc lưới hay thêm cột kiểm tra chỉ cần cập nhật ở database (ví dụ qua bảng `STB_ScreenLayoutInfo`) mà không cần compile/redeploy lại app Client.
 
+---
+
+## Appendix — Verified DB Inventory (DB Verified 2026-06-18)
+
+> **Tổng: 19 user databases** trên SQL Server instance — **6,648 tables**
+
+### Complete DB Table Count
+
+| # | Database | Tables | Mô tả | Trạng thái |
+|---|---|---|---|---|
+| 1 | **SmartFactoryV2** | **994** | **★ Production MES** — Core SX | 🟢 Active |
+| 2 | **NEOE** | 4,876 | ERP Douzone — Master Data | 🟢 Active |
+| 3 | **DZICUBE** | **3,383** | **★ Bizbox Alpha** — Groupware accounting | 🟢 Active |
+| 4 | **erpdb** | 884 | ERP Legacy — Read-only archive | 🟡 Frozen |
+| 5 | **VINATECH_GROUP** | **382** | Groupware — Doc approvals | 🟢 Active |
+| 6 | **WCMS_STANDARD_NEW** | 360 | Cash Management | 🟢 Active |
+| 7 | **VINATECH_DATA_KSOX** | 190+ | K-SOX Compliance | 🟢 Active |
+| 8 | **SmartFramework** | 61 | UI Framework — Screens/Perms | 🟢 Active |
+| 9 | **SmartFactoryIncubator** | 50 | R&D Sandbox | 🟡 Dev |
+| 10 | **VINATECH_POP** | 42 | Shop Floor Terminal (POP) | 🟢 Active |
+| 11 | **streamdocs** | 16 | PDF Viewer | 🟢 Active |
+| 12 | **VINATECH_SPREADSHEET** | 15 | Excel Online | 🟢 Active |
+| 13 | **VINATECH_RESTFUL** | ~10 | SSO/Token Auth | 🟢 Active |
+| 14 | **VINATECH_WEBSOCKET** | ~5 | WebSocket/Menu push | 🟢 Active |
+| 15 | **AndonDB** | 3 | Andon Alerts | 🟢 Active |
+| 16 | **SmartFramework_File** | — | File storage | 🟢 Active |
+| 17 | **SmartFramework_Temp** | — | Temp workspace | 🟢 Active |
+| 18 | **SmartFactoryV2_261807** | — | Backup snapshot | 🔵 Backup |
+| 19 | **VINATECH_POP_240625** | — | POP backup | 🔵 Backup |
+
+### AndonDB (3 tables — smallest operational DB)
+
+| Table | Mô tả |
+|---|---|
+| `STB_LineInfo` | Config Line cho Andon display |
+| `STB_LineSituation_VVT` | Trạng thái line real-time |
+| `STB_VVT_UserWarning` | Cảnh báo user |
+
+### VINATECH_SPREADSHEET (15 tables)
+
+| Table chính | Mô tả |
+|---|---|
+| `VINA_SPREAD_SHEET` | Bảng tính chính |
+| `VINA_SPREAD_SHEET_HISTORY` | Lịch sử sửa |
+| `VINA_SPREAD_SHEET_JSON` | Dữ liệu JSON |
+| `VINA_MENU` / `VINA_MODULE` | Menu + Module config |
+| `VINA_MENU_PERMISSIONS` | Phân quyền menu |
+
+---
+
+*Cập nhật: 2026-06-18 — Bổ sung Appendix: Verified DB Inventory (19 DBs, 6,648 tables total) + AndonDB + Spreadsheet detail. DB verified.*
