@@ -1105,7 +1105,65 @@ WHERE Barcode = 'VVQM153R025606'
 **Bảng liên quan:** `VVT_OQC_REFER` — lưu thông tin phân cấp OQC
 
 | Cột | Ý nghĩa |
-|-----|---------|
+|---
+
+### 6.20 Bug: B442 không hiển thị "Độ dày" (Thickness) cho model Electrode mới (SIExtReal03 = 0)
+
+> **Ngày:** 2026-06-18 | **Màn hình:** B442 (Kế hoạch Điện cực - ElectrodePlan) | **Nhà máy:** VVT_F1 (Bắc Ninh) + VVT_F2 (Bắc Giang)
+
+**Triệu chứng:** Khi tạo Lot sản xuất Electrode tại B442, cột "Độ dày" trên grid SetInfo hiển thị `0.00`, dẫn đến tem in ra không có thông số độ dày. Trong khi các model cũ cùng loại (`CRFYL85`, `CRFYN85L`) hiển thị đúng (120, 180).
+
+**Root Cause:** Model mới (`CRFYL85-01`, `CRFYN85L-01`) chưa được cấu hình cột `MaterialThickness` trong bảng `STB_MaterialMaster`.
+
+**Cơ chế:** SP `usp_DayProdPlan_get` load dữ liệu B442 có logic auto-fill thickness:
+```sql
+-- Logic auto fill thickness (by Mr.Tung 2022-04-07)
+CASE WHEN SI.SIExtReal03 IS NOT NULL THEN SI.SIExtReal03 
+     ELSE CONVERT(NUMERIC(20,5), ISNULL(MM.MaterialThickness, '0.0')) 
+END AS SIExtReal03   -- SIExtReal03 = cột "Độ dày" trên grid
+```
+Khi `MaterialThickness` rỗng → auto-fill = `0.0` → tem không hiển thị.
+
+**Fix 2 bước:**
+
+```sql
+-- Bước 1: Cấu hình MaterialThickness cho model mới
+BEGIN TRAN
+UPDATE STB_MaterialMaster SET MaterialThickness = '120' WHERE MaterialCode = 'CRFYL85-01' AND (MaterialThickness IS NULL OR MaterialThickness = '');
+UPDATE STB_MaterialMaster SET MaterialThickness = '180' WHERE MaterialCode = 'CRFYN85L-01' AND (MaterialThickness IS NULL OR MaterialThickness = '');
+SELECT MaterialCode, MaterialThickness FROM STB_MaterialMaster WHERE MaterialCode IN ('CRFYL85-01','CRFYN85L-01'); -- Verify
+-- ROLLBACK hoặc COMMIT
+ROLLBACK
+
+-- Bước 2: Fix lot đã tạo (SIExtReal03 đang = 0)
+BEGIN TRAN
+UPDATE STB_SetInfo SET SIExtReal03 = 120 WHERE MaterialCode = 'CRFYL85-01' AND SIExtReal03 = 0;
+UPDATE STB_SetInfo SET SIExtReal03 = 180 WHERE MaterialCode = 'CRFYN85L-01' AND SIExtReal03 = 0;
+SELECT Barcode, MaterialCode, SIExtReal03 FROM STB_SetInfo WHERE MaterialCode IN ('CRFYL85-01','CRFYN85L-01'); -- Verify
+-- ROLLBACK hoặc COMMIT
+ROLLBACK
+```
+
+**Mapping cột SetInfo ↔ tên hiển thị trên grid B442:**
+
+| Cột DB | Tên trên grid | Nguồn dữ liệu |
+|--------|--------------|----------------|
+| `SIExtReal01` | Độ dài | Client input |
+| `SIExtReal02` | Khổ | Client input |
+| `SIExtReal03` | Độ dày | Auto-fill từ `STB_MaterialMaster.MaterialThickness` |
+
+**SP liên quan B442:**
+
+| SP | Chức năng |
+|----|-----------|
+| `usp_DayProdPlan_get` | Load DayProdPlan + auto-fill thickness |
+| `usp_SetInfo_iud_VNT` | Lưu SetInfo (truyền `@pThickness = @SIExtReal03`) |
+| `usp_SetInfo_get` | Load SetInfo grid |
+| `usp_MainAssemblePartWeight_get` | Load thông tin vật tư |
+
+> [!WARNING]
+> **Pattern chung:** Khi thêm model Electrode mới (CRF%), phải cấu hình `MaterialThickness` trong `STB_MaterialMaster`. Nếu thiếu → tem không hiển thị độ dày → công nhân không biết thông số.
+-----|---------|
 | `lotid` | Mã lot (= Barcode) |
 | `mergeid` | Mã gộp (thường = lotid) |
 | `levelB` | Cấp phân loại (B, C, D...) |
