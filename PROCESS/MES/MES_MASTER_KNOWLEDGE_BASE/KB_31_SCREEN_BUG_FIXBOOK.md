@@ -150,6 +150,7 @@
 | 4 | Thiếu/dư danh mục lỗi (Defect Code) trên lưới nhập lỗi | `STB_DefectInfo` chưa cập nhật | `UPDATE STB_DefectInfo SET IsUsed=0 WHERE DefectCode IN ('cũ')` + `INSERT INTO STB_DefectInfo (...) VALUES (...)` — xem [KB_03 §B530 Lỗi 3](KB_03/KB_03_02_CELL_LINE.md) |
 | 5 | "Barcode chưa được đưa vào tuyến" (투입처리 되지 않은 바코드) | Barcode chưa qua công đoạn đầu (IsLineInput=0) | Scan lại từ công đoạn đầu (IsInputRoute=1), hoặc IT chạy: `UPDATE STB_SetInfo SET IsLineInput=1 WHERE ControlNo='mã'` |
 | 6 | "PQC chưa nhập số lượng NG" | SP check DefectQty ở công đoạn trước phải > 0 khi có mã lỗi `_00` (Đạt) | Logic bug — mã `_00` = OK nhưng SP đọc COUNT lỗi = 0 → nhầm là chưa nhập. Fix: ALTER SP hoặc IT nhập 1 dòng DefectQty=0 cho mã `_00` — xem [KB_26 §4.1](KB_26/KB_26_01_LINKS_BUGS.md) |
+| 7 | Grid `ProdRouteBarcodeForDefect_VNT` hiển thị lỗi sai/thừa cần xóa | OP nhập nhầm defect hoặc defect tạo tự động không đúng | Xóa mềm: `UPDATE STB_DefectRepairInfo SET IsDelete='1', ChangeDateTime=GETDATE(), ChangeUserID='ducnv_fix' WHERE ControlNo=(SELECT ControlNo FROM STB_SetInfo WHERE Barcode='MÃ_BARCODE') AND IsDelete='0'`. VD: Barcode `K16418106262500772` → ControlNo `20260618000445`, DefectSummaryNo `20260619000834/835` (VP02_005, ND02_006). ducnv 2026-06-19 |
 
 > 🔗 Chi tiết: [KB_03 §B530](KB_03/KB_03_02_CELL_LINE.md), [KB_30 §2](KB_30_CORE_SP_ENGINE.md), [KB_12 §2](KB_12_DEEP_CORE_ANALYSIS_AND_AUDIT.md)
 
