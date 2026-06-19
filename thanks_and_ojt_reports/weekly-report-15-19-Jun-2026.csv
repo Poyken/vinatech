@@ -1,0 +1,23 @@
+NAME,DEPARTMENT,DATE GET ISSUE,NAME ISSUE,THE SOLVE,TYPE ISSUE,DATE SOLVE ISSUE,SOLVE ISSUE BY,STATUS,REMARK
+Nguyen Van Duc,EA Team,12/6/2026,FortiClient Installation,Cài đặt phần mềm FortiClient VPN cho user theo yêu cầu.,Support,12/6/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,12/6/2026,Network & Windows Key Check BG1,Kiểm tra hệ thống mạng và key bản quyền Windows tại nhà máy Bắc Giang 1.,Support,12/6/2026,Nguyen Van Duc,Done,HW/SW
+Nguyen Van Duc,EA Team,15/6/2026,Equipment Provisioning BG2,Cấp phát và bàn giao máy tính cho Manager bộ phận Production tại nhà máy Bắc Giang 2.,Support,15/6/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,15/6/2026,MES User Support,Hỗ trợ user sử dụng hệ thống MES: chị Minh Thảo; chị Hoàng Xuân; chị Thoa Thoa; anh Dương Phạm.,Support,15/6/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,15/6/2026,ECM Support,Hỗ trợ sử dụng hệ thống ECM cho em Công Hiếu.,Support,15/6/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,15/6/2026,BG2 Audit Support,Phối hợp hỗ trợ công tác audit tại nhà máy Bắc Giang 2.,Support,15/6/2026,Nguyen Van Duc,Done,HW/SW
+Nguyen Van Duc,EA Team,15/6/2026,Equipment Handover,Bàn giao thiết bị công nghệ thông tin mới cho user.,Support,15/6/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,15/6/2026,MES Support,Hỗ trợ sửa lỗi và nghiệp vụ trên hệ thống MES cho chị Hoàng Hà; anh Lê Luân.,Support,15/6/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,16/6/2026,MES Bug Fix,Sửa lỗi phát sinh trên hệ thống MES cho user.,Support,16/6/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,16/6/2026,Network Troubleshooting BG2,Khắc phục sự cố mạng tại nhà máy Bắc Giang 2.,Support,16/6/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,16/6/2026,MES Pack Deletion,Xóa pack trên hệ thống MES cho chị Thảo tại Hà Nam.,Support,16/6/2026,Nguyen Van Duc,Done,SW,Remark
+Nguyen Van Duc,EA Team,16/6/2026,Assembly Network Setup Line 17,Phối hợp Auto Team và kĩ sư Trung Quốc setup hệ thống mạng cho máy Assembly tại Line 17.,Support,16/6/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,16/6/2026,MES Screen C121 Development,Phát triển màn hình C121 trên hệ thống MES cho nhà máy Hưng Yên.,Support,16/6/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,17/6/2026,MES User Support,Hỗ trợ user sử dụng và xử lý lỗi trên hệ thống MES.,Support,17/6/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,17/6/2026,ECM Account & Support,Hỗ trợ hệ thống ECM cho anh Trị bộ phận Production; tạo tài khoản ECM cho anh Nguyễn Công Huân và anh Nguyễn Văn Trị.,Support,17/6/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,17/6/2026,Software Support,Hỗ trợ cài đặt và khắc phục sự cố phần mềm cho em Công Hiếu bộ phận Production.,Support,17/6/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,17/6/2026,Network Cable Deployment,Kéo dây mạng kết nối cho anh Woo.,Support,17/6/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,17/6/2026,MES Support BG2,Hỗ trợ vận hành và xử lý lỗi hệ thống MES tại nhà máy Bắc Giang 2.,Support,17/6/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,17/6/2026,Groupware Account Creation,Tạo tài khoản Groupware cho anh Nguyễn Công Huân tại BG2.,Support,17/6/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,18/6/2026,Windows Installation BG2,Cài đặt hệ điều hành Windows cho 2 máy tính cấu hình cao tại nhà máy Bắc Giang 2.,Support,18/6/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,18/6/2026,Office Reinstallation,Cài đặt lại bộ phần mềm Microsoft Office cho chị Chính.,Support,18/6/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,19/6/2026,MES User Support,Hỗ trợ sửa lỗi và nghiệp vụ trên hệ thống MES cho chị Vân Ốc và chị Trần Thơm.,Support,19/6/2026,Nguyen Van Duc,Done,SW,Remark
