@@ -1,4 +1,4 @@
-﻿## 8. ⚡ Điện cực (Electrode)
+## 8. ⚡ Điện cực (Electrode)
 
 ### 8.1 Chỉnh chiều rộng Slitting (B552)
 
@@ -192,6 +192,51 @@ Quy trình sản xuất điện cực gồm 4 công đoạn chính và mỗi cô
 
 *   **Mô tả:** Hệ thống hỗ trợ bắn nối tiếp nhiều cuộn nguyên vật liệu khác nhau (ngăn cách bởi dấu `;`) trên cùng một Lot sản phẩm để tránh trường hợp cuộn cũ hết giữa chừng nhưng Lot chưa chạy xong.
 *   **Chi tiết & Giải pháp:** Xem chi tiết về logic kiểm tra và lưu trong SP `usp_Vietnam_RawMaterialInputHist_uid`, cũng như cách gộp hiển thị trên lưới tại [../KB_03/KB_03_02_CELL_LINE.md#619-hỗ-trợ-lưu-nhiều-mã-vạch-nguyên-vật-liệu-multi-barcode-appending-cho-điện-cực-và-vỏ-case](../KB_03/KB_03_02_CELL_LINE.md#619-hỗ-trợ-lưu-nhiều-mã-vạch-nguyên-vật-liệu-multi-barcode-appending-cho-điện-cực-và-vỏ-case).
+
+---
+
+### 8.9 🔴 Lỗi Mất Sản Lượng Đầu Vào (Mixing Input = 0) — BY/YP 120/180 A301 1.5B
+
+> **Phát hiện:** 2026-06-19 | **Ảnh hưởng:** ~1 tháng sản xuất (từ ~26/05/2026)
+
+#### Triệu chứng:
+*   Sản xuất gần 1 tháng nhưng trên MES **không có sản lượng đầu vào** (cột "Trọng lượng vật liệu 1/2" = 0).
+*   **Có sản lượng đầu ra** (Coating output) → gây sai lệch kiểm kê.
+*   Bảng `STB_ElectrodeMixStepInfo` có **0 records** cho các lot prefix `VVQO1812xxx`.
+*   Bảng `STB_ElectrodeCoatingInfo` **CÓ records** (VD: E22=270kg, E25=420kg).
+
+#### Models bị ảnh hưởng:
+
+| Model | MaterialCode | Mức độ |
+|-------|-------------|--------|
+| BY 120 A301 1.5B (+) | `CREBL85L` | 🔴 100% thiếu |
+| YP 120 A301 1.5B (-) | `CRFYL85-01` | 🔴 100% thiếu |
+| YP 180 A301 1.5B (-) | `CRFYN85L-01` | 🔴 100% thiếu |
+| YP 200 1.5B (+) | `CREYO85-03` | ⚠️ Gián đoạn |
+
+#### Nguyên nhân đã loại trừ (DB + SP đều OK):
+*   ✅ `STB_ElectrodeStep` — cấu hình bước cân **ĐẦY ĐỦ** (9 bước D/G/K/S) cho cả `CREBL85L` và `CRFYL85-01`.
+*   ✅ `usp_DoCreateElectrodeMixStepInfo_electron` — SP ghi data không có validation chặn.
+*   ✅ `usp_GetElectroMixPresentStep_vietnam` — trả về đúng bước hiện tại.
+*   ✅ `usp_Vietnam_ElectrodeMixingConfig_get` — trả về 5 config giống model hoạt động bình thường.
+
+#### Nguyên nhân gốc — Phần mềm cân NVL Mixing (electrode.weighing):
+*   Ứng dụng Electron cài trên **máy CMC nhà máy Bắc Ninh** (KHÔNG phải app `4.8.Warehouse Weight` — đó là cân thành phẩm B523).
+*   App cân mixing không gọi hoặc gọi thất bại SP `usp_DoCreateElectrodeMixStepInfo_electron`.
+
+#### Query kiểm tra:
+```sql
+-- Kiểm tra Lot có mixing data không
+SELECT SI.Barcode, SI.MaterialCode,
+    CASE WHEN EXISTS (SELECT 1 FROM STB_ElectrodeMixStepInfo M WITH(NOLOCK)
+        WHERE M.ElectrodeLotNumber = SI.Barcode) THEN 'YES' ELSE 'NO' END AS HasMixing,
+    CASE WHEN EXISTS (SELECT 1 FROM STB_ElectrodeCoatingInfo C WITH(NOLOCK)
+        WHERE C.ElectrodeLotNumber = SI.Barcode) THEN 'YES' ELSE 'NO' END AS HasCoating
+FROM STB_SetInfo SI WITH(NOLOCK)
+WHERE SI.MaterialCode IN ('CREBL85L', 'CRFYL85-01', 'CRFYN85L-01')
+    AND SI.CreateDateTime >= '2026-05-20'
+ORDER BY SI.CreateDateTime DESC
+```
 
 ---
 

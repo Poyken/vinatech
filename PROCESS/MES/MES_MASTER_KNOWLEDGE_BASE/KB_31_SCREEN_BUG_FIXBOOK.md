@@ -1,4 +1,4 @@
-﻿# KB_31: Sổ Tay Tra Cứu Bug & Fix Theo Màn Hình
+# KB_31: Sổ Tay Tra Cứu Bug & Fix Theo Màn Hình
 
 > **📌 Mục đích:** Khi nhận được báo lỗi từ user → tra TCode tại đây → tìm ngay bug + cách fix.
 > **🔑 Keywords:** bug, fix, sổ tay, TCode, màn hình, triệu chứng, nguyên nhân, SQL fix, sửa lỗi, khắc phục
@@ -13,7 +13,7 @@
 |---|---|---|
 | **A** | [A230](#a230), [A310](#a310), [A410](#a410), [A418](#a418), [A460](#a460), [A510](#a510) | 6 |
 | **B** | [B210-B270](#b210-b270), [B310](#b310), [B442](#b442), [B452](#b452), [B523](#b523), [B528](#b528), [B530](#b530), [B540](#b540), [B552](#b552), [B560](#b560), [B597](#b597), [B598](#b598), [B618](#b618), [B682-B791](#b682-b791), [B754-B790](#b754-b790), [B802](#b802), [B882](#b882) | 25+ |
-| **C** | [C121-C122](#c121-c122), [C220](#c220), [C243](#c243), [C321](#c321), [C443](#c443), [C451](#c451), [C486](#c486), [C512](#c512), [C530](#c530-oqc), [C546](#c546), [C560](#c560) | 15+ |
+| **C** | [C121-C122](#c121-c122), [C220](#c220), [C243](#c243), [C321](#c321), [C443](#c443), [C451](#c451), [C486](#c486), [C512](#c512), [C530](#c530-oqc), [C546](#c546), [C560](#c560), [C585](#c585) | 16+ |
 | **D** | [D100-D110](#d100-d110) | 3 |
 | **F** | [F330](#f330), [F430](#f430), [F721](#f721), [F743-F748](#f743-f748) | 6+ |
 | **G** | [G660](#g660) | 1 |
@@ -230,6 +230,7 @@
 | # | Triệu chứng | Nguyên nhân | Fix |
 |---|---|---|---|
 | 1 | Thiếu công đoạn trên báo cáo | OP chưa nhập đủ 4 công đoạn (Mixing/Coating/Rollpress/Slitting) tại B552 | Yêu cầu OP bổ sung nhập liệu tại B552 |
+| 2 | 🔴 BY/YP 120/180 A301 1.5B: Mixing Input = 0, có Coating Output | App cân NVL Mixing trên máy CMC không gọi SP `usp_DoCreateElectrodeMixStepInfo_electron`. DB + SP + config `STB_ElectrodeStep` đều OK. Ảnh hưởng: `CREBL85L`, `CRFYL85-01`, `CRFYN85L-01`. Phát hiện 2026-06-19. | Kiểm tra phần mềm cân trên máy CMC (log, phiên bản, kết nối DB). Xem [KB_05 §8.9](KB_05/KB_05_02_ELECTRODE.md) |
 
 ### B882
 **Tên:** ANDON Display
@@ -339,6 +340,15 @@ COMMIT TRANSACTION;
 |---|---|---|---|
 | 1 | Không hiện dữ liệu hàng chờ QC Audit | SP filter theo `WorkCenterCode` không match nhà máy HN/HY | ALTER SP thêm WorkCenterCode mới — xem [KB_26 §4.3](KB_26/KB_26_01_LINKS_BUGS.md) |
 | 2 | Báo "chưa kiểm tra QC" dù carton mới đã Pass | Bug logic `AND @Statusout IS NULL` trong SP | Sửa logic AND → OR hoặc check đúng carton mới |
+
+### C585
+**Tên:** VVT Thêm chi tiết lỗi theo Lot
+
+| # | Triệu chứng | Nguyên nhân | Fix |
+|---|---|---|---|
+| 1 | Dropdown "Tên phân loại lỗi" có mã 05, 06 trùng với 03, 07 | `SmartFramework.STB_BaseCode` (CodeGroup='DefectDivisionCode') chứa entries trùng: 05=제품검사(베트남) trùng 03=제품검사, 06=출하검사(베트남) trùng 07=FOQC | Cập nhật bản ghi giao dịch: `UPDATE STB_QCDefectDetailsRecord SET DefectDivisionCode='03' WHERE DefectDivisionCode='05'`, tương tự 06→07. Sau đó xóa: `DELETE FROM SmartFramework.dbo.STB_BaseCode WHERE CodeGroup='DefectDivisionCode' AND ItemCode IN ('05','06')`. Script: `SQL_Scripts/C585_delete_defect_division_05_06.sql` |
+
+> 🔗 Popup: `GetBaseCode2` → `SmartFramework.STB_BaseCode`. SP: `usp_QCDefectDetailsRecordDummy_get` / `usp_DoCreateQCDefectDetailsRecord_iud`
 
 ---
 
@@ -554,4 +564,4 @@ COMMIT TRANSACTION;
 
 ---
 
-*Cập nhật: 2026-06-18 | Tổng hợp từ KB_02, KB_03, KB_04, KB_05, KB_06, KB_12, KB_14, KB_25, KB_26*
+*Cập nhật: 2026-06-19 | Tổng hợp từ KB_02, KB_03, KB_04, KB_05, KB_06, KB_12, KB_14, KB_25, KB_26*
