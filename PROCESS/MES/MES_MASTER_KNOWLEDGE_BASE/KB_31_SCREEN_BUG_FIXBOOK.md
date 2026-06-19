@@ -187,6 +187,7 @@
 | 4 | Vỏ nhôm (AluCase) mới báo sai chủng loại | Mã vỏ nhôm bị **hardcode** trong SP `usp_Vietnam_RawMaterialInputHist_uid` | ALTER SP bổ sung mã mới vào `IF / NOT IN` — xem [KB_05 §7.4](KB_05/KB_05_01_QC_OVERVIEW.md) |
 | 5 | "String or binary data truncated" khi quét gộp 5 mã điện cực | Cột `RawMaterialBarcode NVARCHAR(100)` quá ngắn | `ALTER TABLE STB_InputMaterialHistory ALTER COLUMN RawMaterialBarcode NVARCHAR(1000)` + sửa SP tương ứng — xem [KB_05 §7.5](KB_05/KB_05_01_QC_OVERVIEW.md) |
 | 6 | "Mã Electrolyte/DUNG DỊCH được thiết lập, khác với mã QRCODE nhập vào" | Quét mã dung dịch sai chủng loại → SP check bảng config | Kiểm tra đúng mã NVL dung dịch, hoặc thêm vào config |
+| 7 | OP nhập NVL module (Wire/PCB/Chip) bằng gõ tay thay vì scan barcode lot cho model 1840-WC(40) | SP `usp_Vietnam_RawMaterialInputHist_uid` dòng 318 exclude `MODULE%` khỏi validation → OP gõ tự do `40`, `dm`, `0` | Thêm block chặn sau `END -- end chặn chemical`: check `@mmmaterialcode` (lookup sẵn từ `stb_materialdoclotinfo` line 264). ModuleWire→WRHI00-007, ModuleChip→VRE-009, ModulePCB→PBDM00-004. Nếu `@mmmaterialcode=''` (gõ tay) → RAISERROR. ducnv 2026-06-19 |
 
 > 🔗 Chi tiết: [KB_05 §7](KB_05/KB_05_01_QC_OVERVIEW.md), [KB_03 §B597](KB_03/KB_03_02_CELL_LINE.md)
 
