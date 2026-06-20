@@ -1,4 +1,4 @@
--- =============================================
+﻿-- =============================================
 -- Author : Mr.Tung
 -- Date: 06-15-2021
 
@@ -904,7 +904,7 @@ declare @cterminal1			nVARCHAR(300)='',
 			select 'GCMDPT-265' as Sleeving , 'VEC2R5106QG' as model,'1030' as size  union all
 			select 'GCMDPT-399' as Sleeving , 'WEC2R7106QG' as model,'1030' as size  union all
 			select 'GCMDPT-399' as Sleeving , 'WEC2R7106QG%L'as model,'1030' as size  union all
-			--ducnv edited by Mr.Tran Tuyen 20260613 START
+			--vanduc edited by Mr.Tran Tuyen 20260613 START
 			select 'GCMDPT-399' as Sleeving , 'WEC3R0106QG' as model,'1030' as size  union all
 			select 'GCMDPT-399' as Sleeving , 'WEC3R0106QG%L'as model,'1030' as size  union all
 			--END
@@ -2517,7 +2517,7 @@ if( UPPER(isnull(@pProductGroupCode,'')) in ( 'Case' )  /*or lower(@pProductGrou
 							  select 'GBRLAC-012' as casecode, 'VET18402R7506G' as models, '1840' as size  union all
 							  -- VET18402R7506G (1840)
 							--VEL10303R8107G (1030)
-							  select 'GBDYAC-004' as casecode, 'VEC3R0367QG' as models, '3562' as size union all --ducnv 20260516
+							  select 'GBDYAC-004' as casecode, 'VEC3R0367QG' as models, '3562' as size union all --vanduc 20260516
 
 
 
@@ -2911,12 +2911,11 @@ if( UPPER(isnull(@pProductGroupCode,'')) in ( 'Case' )  /*or lower(@pProductGrou
 	END -- end chặn chemical
 
 	-- =============================================
-	-- ducnv 2026-06-19: Chặn NVL Module cho model 1840-WC(40) (RDMD00-266)
-	-- OP phải scan barcode lot NVL bằng súng, không được gõ tay
+	-- vanduc 2026-06-19: Chặn NVL Module cho model 1840-WC(40) (RDMD00-266)
 	-- @mmmaterialcode đã được lookup từ stb_materialdoclotinfo (line 264)
 	-- ModuleWire -> WRHI00-007, ModuleChip -> VRE-009, ModulePCB -> PBDM00-004
 	-- =============================================
-	IF @MaterialCode = 'RDMD00-266' AND ISNULL(@pProductGroupCode, '') IN ('ModuleWire', 'ModuleChip', 'ModulePCB')
+	IF @MaterialCode = 'RDMD00-266' AND ISNULL(@pProductGroupCode, '') IN ('ModuleWire', 'ModuleChip','ModulePCB_Model')
 	BEGIN
 		IF ISNULL(LTRIM(RTRIM(@LotMaterialBarcode)), '') NOT IN ('', '0')
 		BEGIN
@@ -2941,7 +2940,7 @@ if( UPPER(isnull(@pProductGroupCode,'')) in ( 'Case' )  /*or lower(@pProductGrou
 				RETURN
 			END
 
-			IF @pProductGroupCode = 'ModulePCB' AND @mmmaterialcode <> 'PBDM00-004'
+			IF @pProductGroupCode = 'ModulePCB_Model' AND @mmmaterialcode <> 'PBDM00-004'
 			BEGIN
 				SET @err = N'Mã PCB không đúng của LotNo: ' + @pBarcode + N' với mã nguyên vật liệu: ' + @mmmaterialcode + N'. Cần: PBDM00-004'
 				RAISERROR(@err, 16, 1)
@@ -2949,7 +2948,7 @@ if( UPPER(isnull(@pProductGroupCode,'')) in ( 'Case' )  /*or lower(@pProductGrou
 			END
 		END
 	END
-
+	--END
    		set @RawMaterialBarcode  = substring(case when @pLotID_Warehouse_Created <>'' and @pLotID_Warehouse_Created is not null
 											then isnull(@pLotID_Warehouse_Created,'') +'~'+isnull(@pRawMaterialBarcode,'')
 											else @RawMaterialBarcode
