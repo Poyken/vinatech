@@ -9,8 +9,8 @@
 
 | # | Gốc | TCode HY | Tên Screen HY | Trạng thái |
 |---|---|---|---|---|
-| 1 | C121 | `C121_HY` | `QcInspectionGroupItem_HY` | ✅ Đã có |
-| 2 | C122 | `C122_HY` | `MaterialInspectionCriteria_HY` | ✅ Đã có |
+| 1 | C121 | `HY121` | `QcInspectionGroupItem_HY` | ❌ Cần tạo |
+| 2 | C122 | `HY122` | `MaterialInspectionCriteria_HY` | ❌ Cần tạo |
 | 3 | C220 | `HY220` | `MaterialIqcInfoSampleManagement_HY` | ❌ Cần tạo |
 | 4 | B310 | `HY310` | `ProductionOrderInfo_HY` | ❌ Cần tạo |
 | 5 | B442 | `HY442` | `ElectrodePlan_HY` | ❌ Cần tạo |
@@ -21,9 +21,9 @@
 
 ---
 
-## 1. C121 → `C121_HY` — Quản lý nhóm & hạng mục kiểm tra ✅ ĐÃ CÓ
+## 1. C121 → `HY121` — Quản lý nhóm & hạng mục kiểm tra ❌ CẦN TẠO
 
-**Parent:** `QC_HY`
+**Clone từ:** `QcInspectionGroupItem` (C121) | **Parent:** `QC_HY`
 
 ### Nghiệp vụ
 
@@ -61,9 +61,9 @@ Màn hình cấu hình **nền tảng QC** — thiết lập các nhóm kiểm t
 
 ---
 
-## 2. C122 → `C122_HY` — Tiêu chuẩn kiểm tra nguyên liệu ✅ ĐÃ CÓ
+## 2. C122 → `HY122` — Tiêu chuẩn kiểm tra nguyên liệu ❌ CẦN TẠO
 
-**Parent:** `QC_HY`
+**Clone từ:** `MaterialInspectionCriteria` (C122) | **Parent:** `QC_HY`
 
 ### Nghiệp vụ
 
