@@ -1,341 +1,359 @@
-# Danh Sách 9 Màn Hình HY — Phân Loại: Dùng Riêng vs Dùng Chung
+# Danh Sách 9 Màn Hình HY — Plan & Hiện Trạng Toàn Diện
 
-> **Ngày tạo:** 2026-06-23 (Updated: phân loại chi tiết dựa trên so sánh SP content)  
+> **Ngày cập nhật:** 2026-06-23 21:00  
 > **Nhà máy:** Hưng Yên (VVT_F5)  
-> **Phương pháp:** So sánh `LEN(definition)` giữa SP gốc và SP `_HY` + kiểm tra hardcode factory code
+> **DB verified:** SmartFactoryV2 + SmartFramework
 
 ---
 
-## Quy ước phân loại
+## Tổng quan hiện trạng
 
-| Phân loại | Ý nghĩa | Tiêu chí |
+### Menu Structure (đã có)
+
+```
+Vietnam_TOP_MENU
+└── HungYenFactory (HY00000)
+    ├── QC_HY (HY000001)             ← 9 screens con đã có
+    ├── Production_HY (HY000002)     ← 2 screens con đã có
+    ├── MaterialWarehouseHY (HY000003) ← 6 screens con đã có
+    ├── ElectrodeHY (HY000004)       ← 0 screens con ⚠️
+    └── PriceAndMateralCode (HY000005) ← 1 screen con đã có
+```
+
+### Tổng quan 9 màn hình
+
+| # | Yêu cầu | Gốc | Hiện trạng | Hành động |
+|---|---|---|---|---|
+| 1 | C121 - Manage inspection groups | C121 | ✅ `C121_HY` đầy đủ (Screen+Layout+Objects+Perm) | **DÙNG LẠI** |
+| 2 | C122 - Material inspection criteria | C122 | ✅ `C122_HY` đầy đủ (Screen+Layout+Objects+Perm) | **DÙNG LẠI** |
+| 3 | C220 - IQC Confirmation | C220 | ❌ Chưa có screen, SPs _HY đầy đủ | **TẠO MỚI** → `HY220` |
+| 4 | B310 - Create PO | B310 | ❌ Chưa có. (HY311 = PO Electrode, khác B310) | **TẠO MỚI** → `HY310` |
+| 5 | B442 - Daily Plan Electrode | B442 | ❌ Chưa có screen, SPs _HY đầy đủ | **TẠO MỚI** → `HY442` |
+| 6 | B470 - Mixing Process Steps | B470 | ❌ Chưa có screen, SPs _HY đầy đủ | **TẠO MỚI** → `HY470` |
+| 7 | B552 - Electrode Measure Results | B552 | ❌ Chưa có screen, SPs _HY đầy đủ | **TẠO MỚI** → `HY552` |
+| 8 | B802 - Electrode Report | B802 | ❌ Chưa có screen, SPs _HY đầy đủ | **TẠO MỚI** → `HY802` |
+| 9 | C460 - Electrode QC Inspection | C460 | ❌ Chưa có. (HY443 = CommInsp general, khác C460) | **TẠO MỚI** → `HY460` |
+
+### Prerequisite: Electrode Lines ⚠️
+
+HY hiện có **15 lines** (10 Cell + 5 Module), **CHƯA CÓ Electrode lines**.  
+Cần tạo (vd: `VVHYEL-01`) trong `STB_LineInfo` trước khi dùng B442/B470/B552/B802/C460.  
+Tham khảo Bắc Ninh: `ElectrodeBN`, `VVC-ELECTRODE-LINE`.
+
+---
+
+## Screens đã có sẵn (DÙNG LẠI - Không cần làm gì)
+
+### 1. C121 → `C121_HY` (TCode: `C121_HY`) ✅
+
+**Chức năng:** Quản lý nhóm kiểm tra & hạng mục kiểm tra  
+**Parent:** `QC_HY` | **Layout:** 287,535 chars | **SP Objects:** 4 | **Permission:** Admin ✅
+
+| SP trong layout | Loại | So với gốc |
 |---|---|---|
-| 🟢 **DÙNG CHUNG** | Dùng SP gốc, không cần `_HY` | Size diff < 50 chars (chỉ đổi tên SP) |
-| 🟡 **MINOR DIFF** | Có chỉnh sửa nhỏ, nhưng logic cốt lõi giống | Size diff 50-500 chars |
-| 🔴 **PHẢI TÁCH RIÊNG** | Logic khác biệt đáng kể | Size diff > 500 chars |
-| 🔵 **HY-ONLY** | SP chỉ tồn tại cho HY, không có bản gốc | Không tìm thấy original |
-| ⚪ **POPUP/SHARED** | SP dùng chung (popup, utility) | Không có `_HY` version |
+| `usp_QcInspectionGroup_HY_get` | Riêng HY | 🟡 Minor diff (231 chars) |
+| `usp_QcInspectionGroup_HY_iud` | Riêng HY | 🟡 Minor diff (196 chars) |
+| `usp_QcInspectionGroup_HY_popup` | Riêng HY | 🟢 Giống gốc (3 chars) |
+| `usp_QcInspectionItem_HY_get` | Riêng HY | 🟡 Minor diff (234 chars) |
+| `usp_QcInspectionItem_HY_iud` | Riêng HY | 🟡 Minor diff (196 chars) |
+| `usp_GetAql_popup` | Dùng chung | ⚪ Shared |
+| `usp_GetInspectionLevel_popup` | Dùng chung | ⚪ Shared |
+| `usp_GetInspectionType_popup` | Dùng chung | ⚪ Shared |
+
+**Tables:** `STB_QcInspectionGroup`, `STB_QcInspectionItem`, `STB_CommInspSelectGroup`, `STB_CommInspSelectItem` — dùng chung
 
 ---
 
-## Tóm tắt tổng hợp
+### 2. C122 → `C122_HY` (TCode: `C122_HY`) ✅
 
-| Phân loại | Số lượng SPs | Ghi chú |
+**Chức năng:** Thiết lập tiêu chuẩn kiểm tra nguyên liệu  
+**Parent:** `QC_HY` | **Layout:** 680,498 chars | **SP Objects:** 2 | **Permission:** Admin ✅
+
+| SP trong layout | Loại | So với gốc |
 |---|---|---|
-| 🟢 DÙNG CHUNG (CAN_SHARE) | **30 SPs** | Nội dung gần giống gốc — có thể dùng SP gốc |
-| 🟡 MINOR DIFF | **20 SPs** | Cần review: có thể merge hoặc giữ riêng |
-| 🔴 PHẢI TÁCH RIÊNG (MUST_SEPARATE) | **12 SPs** | Logic khác biệt lớn — BẮT BUỘC dùng `_HY` |
-| 🔵 HY-ONLY | **5 SPs** | Chỉ HY mới có |
-| ⚪ POPUP/SHARED | **36+ SPs** | Popup/utility dùng chung tất cả nhà máy |
-| **Tables** | **39 bảng** | **100% dùng chung** (filter WorkCenterCode) |
-| **Functions** | **10 functions** | **100% dùng chung** |
+| `usp_MaterialQcInspectionItem_ByMaterial_HY_get` | Riêng HY | 🔴 Khác lớn (1478 chars) — PHẢI riêng |
+| `usp_MaterialQcInspectionItem_HY_iud` | Riêng HY | 🟡 Minor diff (322 chars) |
+| `usp_MaterialMaster_popup` | Dùng chung | ⚪ Shared |
+
+**Tables:** `STB_MaterialQcInspectionItem`, `STB_MaterialMaster`, `STB_QcInspectionItem` — dùng chung
 
 ---
 
-## 1. C121 → `C121_HY` — Quản lý nhóm kiểm tra & hạng mục kiểm tra ✅
+## Screens cần TẠO MỚI (7 screens)
 
-**Trạng thái:** ĐÃ CÓ screen
+### 3. C220 → `HY220` — IQC Confirmation
 
-| SP HY | SP Gốc | Size Diff | Phân loại |
+**Clone từ:** `MaterialIqcInfoSampleManagement` (C220)  
+**Layout gốc:** 2,371,987 chars | **Parent HY:** `QC_HY`
+
+#### Cần tạo:
+- [x] SPs _HY: 20 SPs — **ĐÃ ĐỦ** trong DB
+- [ ] Screen registration: `STB_ScreenInfo` → TCode `HY220`, Name `MaterialIqcInfoSampleManagement_HY`
+- [ ] Layout clone: `STB_ScreenLayoutInfo` → clone + replace SP names
+- [ ] Screen objects: `STB_ScreenObjects` → ~51 objects
+- [ ] Permission: `STB_UserTypeBasicPermission` → Admin
+
+#### SPs — Phân loại chi tiết:
+
+| SP HY | So với gốc | Hành động |
+|---|---|---|
+| `usp_MaterialQcInfo_HY_get` | 🟢 Giống gốc (2 chars) | Dùng chung được nhưng _HY đã có |
+| `usp_MaterialQcInfo_HY_iud` | 🟢 Giống gốc (3 chars) | Dùng chung được nhưng _HY đã có |
+| `usp_MaterialQcDetail_HY_get` | 🔴 Khác lớn (626 chars) | **PHẢI dùng _HY** |
+| `usp_MaterialQcDetail_HY_iud` | 🟢 Giống gốc (1 char) | Dùng chung được nhưng _HY đã có |
+| `usp_MaterialQcSampleResult_HY_get` | 🔴 Khác lớn (2213 chars) | **PHẢI dùng _HY** |
+| `usp_MaterialQcSampleResult_HY_iud` | 🟢 Giống gốc (1 char) | Dùng chung được nhưng _HY đã có |
+| `usp_DoChangeMaterialQcToPass_HY` | 🟢 Giống (3 chars) | Dùng chung được nhưng _HY đã có |
+| `usp_DoMakeMaterialIQCDetailList_HY` | 🟢 Giống (9 chars) | Dùng chung được nhưng _HY đã có |
+| `usp_DoMakeMaterialQcSampleResult_HY` | 🟢 Giống (3 chars) | Dùng chung được nhưng _HY đã có |
+| `usp_DoUpdateMaterialQcInfo_Fail_HY` | 🟢 Giống (5 chars) | Dùng chung được nhưng _HY đã có |
+| `usp_DoUpdateMaterialQcInfo_Success_HY` | 🟢 Giống (3 chars) | Dùng chung được nhưng _HY đã có |
+| `usp_DoSendEmailForDefectReportIQC_HY` | 🟡 Minor diff (248 chars) | Giữ _HY an toàn |
+| `usp_IQcDefectReport_HY_iud` | 🟢 Giống (7 chars) | Dùng chung được nhưng _HY đã có |
+| `usp_DefectReportNoChange_HY_iud` | 🟢 Giống (3 chars) | Dùng chung được nhưng _HY đã có |
+| `usp_MaterialQcInfoChangeLotNo_HY_iud` | 🟢 Giống (1 char) | Dùng chung được nhưng _HY đã có |
+| `usp_ModifyRevisionsVerFromC220_VVTF4_HY` | 🟢 Giống (1 char) | Dùng chung được nhưng _HY đã có |
+| `usp_NCR_Report_HY_iud` | 🟢 Giống (1 char) | Dùng chung được nhưng _HY đã có |
+| `usp_QcDefectIQCReport_HY_get` | 🟢 Giống (3 chars) | Dùng chung được nhưng _HY đã có |
+| `usp_UpdateDefectDetailIQC_VVT_HY` | 🟢 Giống (9 chars) | Dùng chung được nhưng _HY đã có |
+| `usp_GetMaterialQcInfo_ForReport_HY` | 🟢 Giống (1 char) | Dùng chung được nhưng _HY đã có |
+| 11 popup SPs | ⚪ Shared | Giữ nguyên trong layout |
+
+**Tables:** `STB_MaterialQcInfo`, `STB_MaterialQcDetail`, `STB_MaterialQcSampleResult`, `STB_MaterialMaster`, `STB_IQcDefectReport` — dùng chung
+
+> **Ghi chú:** 16/20 SPs _HY gần giống hệt gốc. Tuy nhiên vì đã tạo sẵn _HY nên cứ dùng _HY — layout sẽ reference _HY names. 2 SPs **PHẢI** dùng _HY vì logic khác.
+
+---
+
+### 4. B310 → `HY310` — Create PO
+
+**Clone từ:** `ProductionOrderInfo` (B310)  
+**Layout gốc:** 677,500 chars | **Parent HY:** `Production_HY`
+
+> **Lưu ý:** `HY311` (PO_Electrode_HY) đã tồn tại nhưng là **PO Electrode** (2 objects, simplified) — KHÁC với B310 (General PO, 17 objects).
+
+#### Cần tạo:
+- [x] SPs _HY: 7 SPs — **ĐÃ ĐỦ** trong DB
+- [ ] Screen registration → TCode `HY310`, Name `ProductionOrderInfo_HY`
+- [ ] Layout clone + replace SP names
+- [ ] Screen objects → ~17 objects
+- [ ] Permission → Admin
+
+#### SPs:
+
+| SP HY | So với gốc | Hành động |
+|---|---|---|
+| `usp_ProductionOrderInfo_HY_get` | 🔴 Khác lớn (911 chars) | **PHẢI dùng _HY** |
+| `usp_ProductionOrderBom_HY_get` | 🟡 Minor diff (344 chars) | Giữ _HY an toàn |
+| `usp_ProductionOrderRouting_HY_get` | 🟡 Minor diff (276 chars) | Giữ _HY an toàn |
+| `usp_ProductionOrderRouting_HY_iud` | 🔴 Khác lớn (679 chars) | **PHẢI dùng _HY** |
+| `usp_DoFixProductionOrder_HY` | 🟡 Minor diff (298 chars) | Giữ _HY an toàn |
+| `usp_DoCancelPO_HY` | 🟡 Minor diff (481 chars) | Giữ _HY an toàn |
+| `usp_GetMaterialGIForPO_HY` | 🟡 Minor diff (296 chars) | Giữ _HY an toàn |
+| 5 popup SPs | ⚪ Shared | Giữ nguyên |
+
+**Tables:** `STB_ProductionOrderInfo`, `STB_ProductionOrderBom`, `STB_ProductionOrderRouting`, `STB_MaterialMaster`, `STB_BasicRoutingInfo` — dùng chung
+
+---
+
+### 5. B442 → `HY442` — Daily Plan Electrode
+
+**Clone từ:** `ElectrodePlan_Vietnam` (B442)  
+**Layout gốc:** 1,158,611 chars | **Parent HY:** `ElectrodeHY`
+
+#### Cần tạo:
+- [x] SPs _HY: 7 SPs — **ĐÃ ĐỦ** trong DB
+- [ ] Screen registration → TCode `HY442`, Name `ElectrodePlan_HY`
+- [ ] Layout clone + replace SP names
+- [ ] Screen objects
+- [ ] Permission → Admin
+- [ ] ⚠️ **Prerequisite:** Electrode Lines cần tạo trước
+
+#### SPs:
+
+| SP HY | So với gốc | Hành động |
+|---|---|---|
+| `usp_DayProdPlan_HY_get` | 🟢 Giống gốc (3 chars) | Dùng chung được nhưng _HY đã có |
+| `usp_DayProdPlan_HY_iud` | 🔴 Khác lớn (1473 chars) | **PHẢI dùng _HY** |
+| `usp_DoCancelDayProdPlan_HY` | 🟡 Minor diff (329 chars) | Giữ _HY an toàn |
+| `usp_DoFixDayProdPlan_HY` | 🟡 Minor diff (330 chars) | Giữ _HY an toàn |
+| `usp_SetInfo_HY_get` | 🟡 Minor diff (175 chars) | Giữ _HY an toàn |
+| `usp_SetInfo_HY_iud_VNT` | 🔴 Khác lớn (2526 chars) | **PHẢI dùng _HY** |
+| `usp_MainAssemblePartWeight_HY_get` | 🟢 Giống (1 char) | Dùng chung được nhưng _HY đã có |
+| 8 popup SPs | ⚪ Shared | Giữ nguyên |
+
+**Tables:** `STB_DayProdPlan`, `STB_SetInfo`, `STB_ProductionOrderInfo`, `STB_MaterialMaster`, `STB_LineInfo`, `STB_RouteInfo`, `STB_MachineMaster`, `STB_CompanyInfo`, `STB_WorkCenterInfo` — dùng chung  
+**Functions:** `fnGetLocalTime`, `fnSplitToTable` — dùng chung
+
+---
+
+### 6. B470 → `HY470` — Electrode Process Steps (Mixing)
+
+**Clone từ:** `VNT_ElectrodePrcsCard` (B470)  
+**Layout gốc:** 848,754 chars | **Parent HY:** `ElectrodeHY`
+
+#### Cần tạo:
+- [x] SPs _HY: 6 SPs — **ĐÃ ĐỦ** trong DB
+- [ ] Screen registration → TCode `HY470`, Name `ElectrodePrcsCard_HY`
+- [ ] Layout clone + replace SP names
+- [ ] Screen objects
+- [ ] Permission → Admin
+- [ ] ⚠️ **Prerequisite:** Electrode Lines
+
+#### SPs:
+
+| SP HY | So với gốc | Hành động |
+|---|---|---|
+| `usp_ElectrodeStep_HY_get` | 🟡 Minor diff (306 chars) | Giữ _HY an toàn |
+| `usp_ElectrodeStep_HY_iud` | 🔴 Khác lớn (880 chars) | **PHẢI dùng _HY** |
+| `usp_ElectrodeCommon_HY_get` | 🟡 Minor diff (397 chars) | Giữ _HY an toàn |
+| `usp_ElectrodeCommon_HY_iud` | 🔴 Khác lớn (1584 chars) | **PHẢI dùng _HY** |
+| `usp_ElectrodeOven_HY_get` | 🟡 Minor diff (281 chars) | Giữ _HY an toàn |
+| `usp_ElectrodeOven_HY_iud` | 🔴 Khác lớn (818 chars) | **PHẢI dùng _HY** |
+| `usp_ElectrodeStep_popup` | ⚪ Shared | Giữ nguyên |
+| `usp_MaterialMasterByMaterialType_popup` | ⚪ Shared | Giữ nguyên |
+
+**Tables:** `STB_ElectrodeStep`, `STB_ElectrodeCommon`, `STB_ElectrodeOven`, `STB_MaterialMaster` — dùng chung
+
+---
+
+### 7. B552 → `HY552` — Electrode Measure Results (Phức tạp nhất)
+
+**Clone từ:** `Vietnam_ElectrodeMeasureResult` (B552)  
+**Layout gốc:** 2,760,010 chars | **Parent HY:** `ElectrodeHY`
+
+#### Cần tạo:
+- [x] SPs _HY: 25 SPs — **ĐÃ ĐỦ** trong DB
+- [ ] Screen registration → TCode `HY552`, Name `ElectrodeMeasureResult_HY`
+- [ ] Layout clone + replace SP names (2-phase do NVARCHAR(MAX) limit)
+- [ ] Screen objects → ~76 objects
+- [ ] Permission → Admin
+- [ ] ⚠️ **Prerequisite:** Electrode Lines
+
+#### SPs:
+
+**TẤT CẢ 25 SPs _HY gần GIỐNG HỆT gốc** (size diff 1-9 chars) — nhưng vì đã tạo sẵn nên layout sẽ reference _HY names.
+
+| SP HY | Size Diff | Phân loại |
+|---|---|---|
+| `usp_ElectrodeCoatingInfo_HY_get` | 1 | 🟢 Giống gốc |
+| `usp_ElectrodeCoatingInfo_HY_iud` | 1 | 🟢 Giống gốc |
+| `usp_ElectrodeCoatingVisualInspectionInfo_HY_get` | 3 | 🟢 Giống gốc |
+| `usp_ElectrodeCoatingVisualInspectionInfo_HY_iud` | 1 | 🟢 Giống gốc |
+| `usp_ElectrodeMixInfo_HY_get` | 2 | 🟢 Giống gốc |
+| `usp_ElectrodeMixInfo_HY_iud` | 3 | 🟢 Giống gốc |
+| `usp_ElectrodeMixStepInfo_HY_get` | 1 | 🟢 Giống gốc |
+| `usp_ElectrodeMixStepInfo_HY_iud` | 1 | 🟢 Giống gốc |
+| `usp_ElectrodeRollPressingInfo_HY_get` | 3 | 🟢 Giống gốc |
+| `usp_ElectrodeRollPressingInfo_HY_iud` | 1 | 🟢 Giống gốc |
+| `usp_ElectrodeRollPressingVisualInspectionInfo_HY_get` | 1 | 🟢 Giống gốc |
+| `usp_ElectrodeRollPressingVisualInspectionInfo_HY_iud` | 1 | 🟢 Giống gốc |
+| `usp_ElectrodeSlittingInfo_HY_get` | 3 | 🟢 Giống gốc |
+| `usp_ElectrodeSlittingInfo_HY_iud` | 3 | 🟢 Giống gốc |
+| `usp_ElectrodeSlittingResult_HY_get` | 1 | 🟢 Giống gốc |
+| `usp_ElectrodeSlittingResult_HY_iud` | 3 | 🟢 Giống gốc |
+| `usp_ElectrodeWasteInfoNew_HY_iud` | 3 | 🟢 Giống gốc |
+| `usp_ElectrodeWastePriceNewByBarcode_HY_get` | 3 | 🟢 Giống gốc |
+| `usp_ElectrodCoatingInfo_Viscosity_VVT_HY_iud` | 3 | 🟢 Giống gốc |
+| `usp_DoUpdateCoatingBarcodePrintYn_HY` | 3 | 🟢 Giống gốc |
+| `usp_DoUpdateRollPressBarcodePrintYn_HY` | 3 | 🟢 Giống gốc |
+| `usp_DoUpdateSlitingBarcodePrintYn_HY` | 3 | 🟢 Giống gốc |
+| `usp_LocationElectric_HY` | 9 | 🟢 Giống gốc |
+| `usp_test_check_expired_HY` | 1 | 🟢 Giống gốc |
+| `usp_Vietnam_RollPressingSlitting_HY_get` | 2 | 🟢 Giống gốc |
+| 13+ popup SPs | — | ⚪ Shared |
+
+**Tables:** `STB_ElectrodeCoatingInfo`, `STB_ElectrodeCoatingVisualInspectionInfo`, `STB_ElectrodeMixInfo`, `STB_ElectrodeMixStepInfo`, `STB_ElectrodeRollPressingInfo`, `STB_ElectrodeRollPressingVisualInspectionInfo`, `STB_ElectrodeSlittingInfo`, `STB_ElectrodeSlittingResult`, `STB_ElectrodeWasteInfo`, `STB_SlittingLocationConfig_VVT`, `STB_CoatingToSlittingMaster`, `STB_ProdRouteHist` — dùng chung  
+**Functions:** `fnGetElectrodeDensity`, `fnGetElectrodeDensityAvg`, `fnGetElectrodeDensityNew`, `fnGetElectrodeThickness01/02/03` — dùng chung
+
+---
+
+### 8. B802 → `HY802` — Electrode Report
+
+**Clone từ:** `Vietnam_EletrodeProdRouteHist` (B802)  
+**Layout gốc:** 1,857,876 chars | **Parent HY:** `ElectrodeHY`
+
+#### Cần tạo:
+- [x] SPs _HY: 2 SPs — **ĐÃ ĐỦ**
+- [ ] Screen registration → TCode `HY802`, Name `ElectrodeProdRouteHist_HY`
+- [ ] Layout clone + replace SP names
+- [ ] Screen objects → ~6 objects
+- [ ] Permission → Admin
+- [ ] ⚠️ **Prerequisite:** Electrode Lines
+
+#### SPs:
+
+| SP HY | So với gốc | Hành động |
+|---|---|---|
+| `usp_Vietnam_ElectrodeProdRouteHist_HY_get` | 🟡 Minor diff (57 chars) | Giữ _HY |
+| `usp_Vietnam_ElectrodeDefectHist_HY_get` | 🟢 Giống gốc (1 char) | Dùng chung được nhưng _HY đã có |
+| 5 popup SPs | ⚪ Shared | Giữ nguyên |
+
+**Tables:** `STB_ProdRouteHist`, `STB_ElectrodeCoatingInfo`, `STB_ElectrodeRollPressingInfo`, `STB_ElectrodeSlittingInfo`, `STB_ElectrodeMixInfo` — dùng chung  
+**Functions:** `fnGetJobDateShiftTime` — dùng chung
+
+---
+
+### 9. C460 → `HY460` — Electrode QC Inspection
+
+**Clone từ:** `ElectrodeInspectionHistoryForBarcode` (C460)  
+**Layout gốc:** 935,087 chars | **Parent HY:** `QC_HY`
+
+> **Lưu ý:** `HY443` (CommInspectionHistoryForBarcode_HY) đã tồn tại nhưng là **General CommInsp** — KHÁC với C460 (Electrode Inspection).
+
+#### Cần tạo:
+- [x] SPs _HY: 7 SPs — **ĐÃ ĐỦ**
+- [ ] Screen registration → TCode `HY460`, Name `ElectrodeInspectionHistoryForBarcode_HY`
+- [ ] Layout clone + replace SP names (⚠️ cần 3-phase: longest-first để tránh double-replace `DoFinishCommInspDoc` vs `DoFinishCommInspDoc_VNT`)
+- [ ] Screen objects → ~19 objects
+- [ ] Permission → Admin
+- [ ] ⚠️ **Prerequisite:** Electrode Lines
+
+#### SPs:
+
+**TẤT CẢ 7 SPs _HY GIỐNG HỆT gốc** (size diff 1-3 chars)
+
+| SP HY | Size Diff | Phân loại |
+|---|---|---|
+| `usp_GetElectrodeInspectionHistoryForBarcode_HY` | 1 | 🟢 Giống gốc |
+| `usp_DoAddCommInspMeasureHistForBarcode_HY` | 3 | 🟢 Giống gốc |
+| `usp_DoFinishCommInspDoc_HY` | 3 | 🟢 Giống gốc |
+| `usp_DoFinishCommInspDoc_VNT_HY` | 3 | 🟢 Giống gốc |
+| `usp_DoLossElectrodeProcess_HY_iud` | 3 | 🟢 Giống gốc |
+| `usp_ElectrodeCoatingInfo_HY_get` | 1 | 🟢 Giống gốc |
+| `usp_ElectrodeDivision_popup_HY` | 3 | 🟢 Giống gốc |
+| 8 popup SPs | — | ⚪ Shared |
+
+**Tables:** `STB_CommInspDocHistory`, `STB_CommInspDocItem`, `STB_CommInspMeasureHist`, `STB_ElectrodeCoatingInfo`, `STB_ProdRouteHist` — dùng chung
+
+---
+
+## Scripts đã tạo sẵn (trong `sql/scripts/hy_clone/`)
+
+| Script | Mô tả | Trạng thái |
+|---|---|---|
+| `01_register_hy_screens.sql` | INSERT 7 screens vào STB_ScreenInfo | ✅ Sẵn sàng |
+| `02_clone_hy_layouts.sql` | Clone layouts + REPLACE SP names | ✅ Sẵn sàng (đã fix double-replace) |
+| `03_clone_hy_screen_objects.sql` | Clone ~200 ScreenObjects | ✅ Sẵn sàng |
+| `04_grant_hy_permissions.sql` | Grant Admin permissions | ✅ Sẵn sàng |
+| `deploy_phase1_screens.sql` | Deploy-ready version (no transaction) | ⚠️ Đã chạy + rollback |
+| `rollback_phase1.sql` | Rollback script | ✅ Đã chạy thành công |
+
+---
+
+## Tổng kết: Phân loại toàn bộ SPs
+
+| Phân loại | Số lượng | % | Chi tiết |
 |---|---|---|---|
-| `usp_QcInspectionGroup_HY_get` | `usp_QcInspectionGroup_get` | 231 | 🟡 MINOR DIFF |
-| `usp_QcInspectionGroup_HY_iud` | `usp_QcInspectionGroup_iud` | 196 | 🟡 MINOR DIFF |
-| `usp_QcInspectionGroup_HY_popup` | `usp_QcInspectionGroup_popup` | 3 | 🟢 DÙNG CHUNG |
-| `usp_QcInspectionItem_HY_get` | `usp_QcInspectionItem_get` | 234 | 🟡 MINOR DIFF |
-| `usp_QcInspectionItem_HY_iud` | `usp_QcInspectionItem_iud` | 196 | 🟡 MINOR DIFF |
-| `usp_GetAql_popup` | — | — | ⚪ SHARED |
-| `usp_GetInspectionLevel_popup` | — | — | ⚪ SHARED |
-| `usp_GetInspectionType_popup` | — | — | ⚪ SHARED |
+| 🟢 **Giống gốc** (diff < 50 chars) | 30 SPs | 44% | Chỉ khác tên SP, dùng chung được |
+| 🟡 **Minor diff** (50-500 chars) | 20 SPs | 29% | Có sửa nhỏ, giữ _HY an toàn |
+| 🔴 **Khác lớn** (> 500 chars) | 12 SPs | 18% | **PHẢI dùng _HY**, logic IUD khác |
+| 🔵 **HY-only** (không có gốc) | 5 SPs | 7% | Chỉ HY mới có |
+| ⚪ **Popup/Shared** | 36+ SPs | — | Dùng chung tất cả nhà máy |
 
-**Kết luận C121:** 4 SPs MINOR DIFF (giữ riêng an toàn), 1 SP dùng chung được, 3 popup shared.
+### 12 SPs BẮT BUỘC dùng riêng (_HY):
 
-### Tables (dùng chung)
-
-| Table | Vai trò |
-|---|---|
-| `STB_CommInspSelectGroup` | Nhóm kiểm tra |
-| `STB_CommInspSelectItem` | Hạng mục kiểm tra |
-| `STB_QcInspectionGroup` | Nhóm QC |
-| `STB_QcInspectionItem` | Hạng mục QC |
-
----
-
-## 2. C122 → `C122_HY` — Thiết lập tiêu chuẩn kiểm tra nguyên liệu ✅
-
-**Trạng thái:** ĐÃ CÓ screen
-
-| SP HY | SP Gốc | Size Diff | Phân loại |
-|---|---|---|---|
-| `usp_MaterialQcInspectionItem_ByMaterial_HY_get` | `usp_MaterialQcInspectionItem_ByMaterial_get` | 1478 | 🔴 PHẢI TÁCH RIÊNG |
-| `usp_MaterialQcInspectionItem_HY_iud` | `usp_MaterialQcInspectionItem_iud` | 322 | 🟡 MINOR DIFF |
-| `usp_MaterialMaster_popup` | — | — | ⚪ SHARED |
-
-**Kết luận C122:** 1 SP PHẢI tách riêng (logic query khác biệt lớn), 1 minor diff, 1 shared.
-
-### Tables (dùng chung)
-
-| Table | Vai trò |
-|---|---|
-| `STB_MaterialQcInspectionItem` | Tiêu chuẩn QC theo material |
-| `STB_MaterialMaster` | Master nguyên liệu |
-| `STB_QcInspectionItem` | Hạng mục QC (ref) |
-
----
-
-## 3. C220 → `HY220` — IQC Confirmation ❌ CHƯA CÓ screen
-
-| SP HY | SP Gốc | Size Diff | Phân loại |
-|---|---|---|---|
-| `usp_MaterialQcInfo_HY_get` | `usp_MaterialQcInfo_get` | 2 | 🟢 DÙNG CHUNG |
-| `usp_MaterialQcInfo_HY_iud` | `usp_MaterialQcInfo_iud` | 3 | 🟢 DÙNG CHUNG |
-| `usp_MaterialQcDetail_HY_get` | `usp_MaterialQcDetail_get` | 626 | 🔴 PHẢI TÁCH RIÊNG |
-| `usp_MaterialQcDetail_HY_iud` | `usp_MaterialQcDetail_iud` | 1 | 🟢 DÙNG CHUNG |
-| `usp_MaterialQcSampleResult_HY_get` | `usp_MaterialQcSampleResult_get` | 2213 | 🔴 PHẢI TÁCH RIÊNG |
-| `usp_MaterialQcSampleResult_HY_iud` | `usp_MaterialQcSampleResult_iud` | 1 | 🟢 DÙNG CHUNG |
-| `usp_DoChangeMaterialQcToPass_HY` | `usp_DoChangeMaterialQcToPass` | 3 | 🟢 DÙNG CHUNG |
-| `usp_DoMakeMaterialIQCDetailList_HY` | `usp_DoMakeMaterialIQCDetailList` | 9 | 🟢 DÙNG CHUNG |
-| `usp_DoMakeMaterialQcSampleResult_HY` | `usp_DoMakeMaterialQcSampleResult` | 3 | 🟢 DÙNG CHUNG |
-| `usp_DoUpdateMaterialQcInfo_Fail_HY` | `usp_DoUpdateMaterialQcInfo_Fail` | 5 | 🟢 DÙNG CHUNG |
-| `usp_DoUpdateMaterialQcInfo_Success_HY` | `usp_DoUpdateMaterialQcInfo_Success` | 3 | 🟢 DÙNG CHUNG |
-| `usp_DoSendEmailForDefectReportIQC_HY` | `usp_DoSendEmailForDefectReportIQC` | 248 | 🟡 MINOR DIFF |
-| `usp_IQcDefectReport_HY_iud` | `usp_IQcDefectReport_iud` | 7 | 🟢 DÙNG CHUNG |
-| `usp_DefectReportNoChange_HY_iud` | `usp_DefectReportNoChange_iud` | 3 | 🟢 DÙNG CHUNG |
-| `usp_MaterialQcInfoChangeLotNo_HY_iud` | `usp_MaterialQcInfoChangeLotNo_iud` | 1 | 🟢 DÙNG CHUNG |
-| `usp_ModifyRevisionsVerFromC220_VVTF4_HY` | `usp_ModifyRevisionsVerFromC220_VVTF4` | 1 | 🟢 DÙNG CHUNG |
-| `usp_NCR_Report_HY_iud` | `usp_NCR_Report_iud` | 1 | 🟢 DÙNG CHUNG |
-| `usp_QcDefectIQCReport_HY_get` | `usp_QcDefectIQCReport_get` | 3 | 🟢 DÙNG CHUNG |
-| `usp_UpdateDefectDetailIQC_VVT_HY` | `usp_UpdateDefectDetailIQC_VVT` | 9 | 🟢 DÙNG CHUNG |
-| `usp_GetMaterialQcInfo_ForReport_HY` | `usp_GetMaterialQcInfo_ForReport` | 1 | 🟢 DÙNG CHUNG |
-| Popups (11 SPs) | — | — | ⚪ SHARED |
-
-**Kết luận C220:** 16/20 SPs riêng HY thực ra **DÙNG CHUNG ĐƯỢC** (chỉ khác tên). Chỉ 2 SPs **PHẢI tách riêng** (`_Detail_get` và `_SampleResult_get`), 1 minor diff (`SendEmail`).
-
-### Tables (dùng chung)
-
-| Table | Vai trò |
-|---|---|
-| `STB_MaterialQcInfo` | Thông tin QC nguyên liệu |
-| `STB_MaterialQcDetail` | Chi tiết QC |
-| `STB_MaterialQcSampleResult` | Kết quả mẫu |
-| `STB_MaterialMaster` | Master nguyên liệu |
-| `STB_IQcDefectReport` | Báo cáo lỗi IQC |
-
----
-
-## 4. B310 → `HY310` — Tạo PO ❌ CHƯA CÓ screen
-
-| SP HY | SP Gốc | Size Diff | Phân loại |
-|---|---|---|---|
-| `usp_ProductionOrderInfo_HY_get` | `usp_ProductionOrderInfo_get` | 911 | 🔴 PHẢI TÁCH RIÊNG |
-| `usp_ProductionOrderBom_HY_get` | `usp_ProductionOrderBom_get` | 344 | 🟡 MINOR DIFF |
-| `usp_ProductionOrderRouting_HY_get` | `usp_ProductionOrderRouting_get` | 276 | 🟡 MINOR DIFF |
-| `usp_ProductionOrderRouting_HY_iud` | `usp_ProductionOrderRouting_iud` | 679 | 🔴 PHẢI TÁCH RIÊNG |
-| `usp_DoFixProductionOrder_HY` | `usp_DoFixProductionOrder` | 298 | 🟡 MINOR DIFF |
-| `usp_DoCancelPO_HY` | `usp_DoCancelPO` | 481 | 🟡 MINOR DIFF |
-| `usp_GetMaterialGIForPO_HY` | `usp_GetMaterialGIForPO` | 296 | 🟡 MINOR DIFF |
-| Popups (5 SPs) | — | — | ⚪ SHARED |
-
-**Kết luận B310:** 2 SPs **PHẢI tách riêng**, 5 SPs minor diff (giữ riêng an toàn), 5 popups shared.
-
-### Tables (dùng chung)
-
-| Table | Vai trò |
-|---|---|
-| `STB_ProductionOrderInfo` | Lệnh sản xuất |
-| `STB_ProductionOrderBom` | BOM theo PO |
-| `STB_ProductionOrderRouting` | Routing theo PO |
-| `STB_MaterialMaster` | Master nguyên liệu |
-| `STB_BasicRoutingInfo` | Master routing |
-
----
-
-## 5. B442 → `HY442` — Daily Plan Electrode ❌ CHƯA CÓ screen
-
-| SP HY | SP Gốc | Size Diff | Phân loại |
-|---|---|---|---|
-| `usp_DayProdPlan_HY_get` | `usp_DayProdPlan_get` | 3 | 🟢 DÙNG CHUNG |
-| `usp_DayProdPlan_HY_iud` | `usp_DayProdPlan_iud` | 1473 | 🔴 PHẢI TÁCH RIÊNG |
-| `usp_DoCancelDayProdPlan_HY` | `usp_DoCancelDayProdPlan` | 329 | 🟡 MINOR DIFF |
-| `usp_DoFixDayProdPlan_HY` | `usp_DoFixDayProdPlan` | 330 | 🟡 MINOR DIFF |
-| `usp_SetInfo_HY_get` | `usp_SetInfo_get` | 175 | 🟡 MINOR DIFF |
-| `usp_SetInfo_HY_iud_VNT` | `usp_SetInfo_iud_VNT` | 2526 | 🔴 PHẢI TÁCH RIÊNG |
-| `usp_MainAssemblePartWeight_HY_get` | `usp_MainAssemblePartWeight_get` | 1 | 🟢 DÙNG CHUNG |
-| Popups (8 SPs) | — | — | ⚪ SHARED |
-
-**Kết luận B442:** 2 SPs dùng chung, 2 SPs **PHẢI tách riêng** (logic IUD khác lớn), 3 minor diff, 8 shared.
-
-### Tables (dùng chung)
-
-| Table | Vai trò |
-|---|---|
-| `STB_DayProdPlan` | Kế hoạch ngày |
-| `STB_SetInfo` | Thông tin Set/Lot |
-| `STB_ProductionOrderInfo` | PO liên kết |
-| `STB_MaterialMaster` | Master nguyên liệu |
-| `STB_LineInfo` | Dây chuyền |
-| `STB_RouteInfo` | Route |
-| `STB_MachineMaster` | Máy |
-| `STB_CompanyInfo` | Công ty |
-| `STB_WorkCenterInfo` | Nhà máy |
-
-### Functions (dùng chung)
-
-| Function | Vai trò |
-|---|---|
-| `fnGetLocalTime` | Chuyển UTC → local |
-| `fnSplitToTable` | Split chuỗi |
-
----
-
-## 6. B470 → `HY470` — Electrode Process Steps (Mixing) ❌ CHƯA CÓ screen
-
-| SP HY | SP Gốc | Size Diff | Phân loại |
-|---|---|---|---|
-| `usp_ElectrodeStep_HY_get` | `usp_ElectrodeStep_get` | 306 | 🟡 MINOR DIFF |
-| `usp_ElectrodeStep_HY_iud` | `usp_ElectrodeStep_iud` | 880 | 🔴 PHẢI TÁCH RIÊNG |
-| `usp_ElectrodeCommon_HY_get` | `usp_ElectrodeCommon_get` | 397 | 🟡 MINOR DIFF |
-| `usp_ElectrodeCommon_HY_iud` | `usp_ElectrodeCommon_iud` | 1584 | 🔴 PHẢI TÁCH RIÊNG |
-| `usp_ElectrodeOven_HY_get` | `usp_ElectrodeOven_get` | 281 | 🟡 MINOR DIFF |
-| `usp_ElectrodeOven_HY_iud` | `usp_ElectrodeOven_iud` | 818 | 🔴 PHẢI TÁCH RIÊNG |
-| `usp_ElectrodeStep_popup` | — | — | ⚪ SHARED |
-| `usp_MaterialMasterByMaterialType_popup` | — | — | ⚪ SHARED |
-
-**Kết luận B470:** 3 SPs `_iud` **PHẢI tách riêng** (logic insert/update/delete khác), 3 SPs `_get` minor diff, 2 shared.
-
-### Tables (dùng chung)
-
-| Table | Vai trò |
-|---|---|
-| `STB_ElectrodeStep` | Công đoạn electrode |
-| `STB_ElectrodeCommon` | Thông số chung |
-| `STB_ElectrodeOven` | Thông số lò sấy |
-| `STB_MaterialMaster` | Master nguyên liệu |
-
----
-
-## 7. B552 → `HY552` — Electrode Measure Results ❌ CHƯA CÓ screen
-
-| SP HY | SP Gốc | Size Diff | Phân loại |
-|---|---|---|---|
-| `usp_ElectrodeCoatingInfo_HY_get` | `usp_ElectrodeCoatingInfo_get` | 1 | 🟢 DÙNG CHUNG |
-| `usp_ElectrodeCoatingInfo_HY_iud` | `usp_ElectrodeCoatingInfo_iud` | 1 | 🟢 DÙNG CHUNG |
-| `usp_ElectrodeCoatingVisualInspectionInfo_HY_get` | `_get` | 3 | 🟢 DÙNG CHUNG |
-| `usp_ElectrodeCoatingVisualInspectionInfo_HY_iud` | `_iud` | 1 | 🟢 DÙNG CHUNG |
-| `usp_ElectrodeMixInfo_HY_get` | `_get` | 2 | 🟢 DÙNG CHUNG |
-| `usp_ElectrodeMixInfo_HY_iud` | `_iud` | 3 | 🟢 DÙNG CHUNG |
-| `usp_ElectrodeMixStepInfo_HY_get` | `_get` | 1 | 🟢 DÙNG CHUNG |
-| `usp_ElectrodeMixStepInfo_HY_iud` | `_iud` | 1 | 🟢 DÙNG CHUNG |
-| `usp_ElectrodeRollPressingInfo_HY_get` | `_get` | 3 | 🟢 DÙNG CHUNG |
-| `usp_ElectrodeRollPressingInfo_HY_iud` | `_iud` | 1 | 🟢 DÙNG CHUNG |
-| `usp_ElectrodeRollPressingVisualInspectionInfo_HY_get` | `_get` | 1 | 🟢 DÙNG CHUNG |
-| `usp_ElectrodeRollPressingVisualInspectionInfo_HY_iud` | `_iud` | 1 | 🟢 DÙNG CHUNG |
-| `usp_ElectrodeSlittingInfo_HY_get` | `_get` | 3 | 🟢 DÙNG CHUNG |
-| `usp_ElectrodeSlittingInfo_HY_iud` | `_iud` | 3 | 🟢 DÙNG CHUNG |
-| `usp_ElectrodeSlittingResult_HY_get` | `_get` | 1 | 🟢 DÙNG CHUNG |
-| `usp_ElectrodeSlittingResult_HY_iud` | `_iud` | 3 | 🟢 DÙNG CHUNG |
-| `usp_ElectrodeWasteInfoNew_HY_iud` | `_iud` | 3 | 🟢 DÙNG CHUNG |
-| `usp_ElectrodeWastePriceNewByBarcode_HY_get` | `_get` | 3 | 🟢 DÙNG CHUNG |
-| `usp_ElectrodCoatingInfo_Viscosity_VVT_HY_iud` | `_iud` | 3 | 🟢 DÙNG CHUNG |
-| `usp_DoUpdateCoatingBarcodePrintYn_HY` | original | 3 | 🟢 DÙNG CHUNG |
-| `usp_DoUpdateRollPressBarcodePrintYn_HY` | original | 3 | 🟢 DÙNG CHUNG |
-| `usp_DoUpdateSlitingBarcodePrintYn_HY` | original | 3 | 🟢 DÙNG CHUNG |
-| `usp_LocationElectric_HY` | original | 9 | 🟢 DÙNG CHUNG |
-| `usp_test_check_expired_HY` | original | 1 | 🟢 DÙNG CHUNG |
-| `usp_Vietnam_RollPressingSlitting_HY_get` | original | 2 | 🟢 DÙNG CHUNG |
-| Popups (8+ SPs) | — | — | ⚪ SHARED |
-
-**Kết luận B552: 25/25 SPs riêng HY thực chất DÙNG CHUNG ĐƯỢC** — tất cả chỉ khác tên SP (diff 1-9 chars). Đây là màn phức tạp nhất nhưng SPs **hoàn toàn giống nhau**.
-
-### Tables (dùng chung)
-
-| Table | Vai trò |
-|---|---|
-| `STB_ElectrodeCoatingInfo` | Kết quả coating |
-| `STB_ElectrodeCoatingVisualInspectionInfo` | Visual coating |
-| `STB_ElectrodeMixInfo` | Kết quả mixing |
-| `STB_ElectrodeMixStepInfo` | Chi tiết mixing |
-| `STB_ElectrodeRollPressingInfo` | Kết quả cán |
-| `STB_ElectrodeRollPressingVisualInspectionInfo` | Visual cán |
-| `STB_ElectrodeSlittingInfo` | Kết quả cắt |
-| `STB_ElectrodeSlittingResult` | Chi tiết cắt |
-| `STB_ElectrodeWasteInfo` | Phế liệu |
-| `STB_SlittingLocationConfig_VVT` | Vị trí cắt |
-| `STB_CoatingToSlittingMaster` | Mapping coating→slitting |
-| `STB_ProdRouteHist` | Lịch sử route |
-
-### Functions (dùng chung)
-
-| Function | Vai trò |
-|---|---|
-| `fnGetElectrodeDensity` | Mật độ electrode |
-| `fnGetElectrodeDensityAvg` | Mật độ TB |
-| `fnGetElectrodeDensityNew` | Mật độ (v2) |
-| `fnGetElectrodeThickness01` | Độ dày #1 |
-| `fnGetElectrodeThickness02` | Độ dày #2 |
-| `fnGetElectrodeThickness03` | Độ dày #3 |
-
----
-
-## 8. B802 → `HY802` — Báo cáo sản xuất electrode ❌ CHƯA CÓ screen
-
-| SP HY | SP Gốc | Size Diff | Phân loại |
-|---|---|---|---|
-| `usp_Vietnam_ElectrodeProdRouteHist_HY_get` | `_get` | 57 | 🟡 MINOR DIFF |
-| `usp_Vietnam_ElectrodeDefectHist_HY_get` | `_get` | 1 | 🟢 DÙNG CHUNG |
-| Popups (5 SPs) | — | — | ⚪ SHARED |
-
-**Kết luận B802:** 1 SP dùng chung, 1 minor diff, 5 shared. Rất đơn giản.
-
-### Tables (dùng chung)
-
-| Table | Vai trò |
-|---|---|
-| `STB_ProdRouteHist` | Lịch sử route |
-| `STB_ElectrodeCoatingInfo` | Data coating |
-| `STB_ElectrodeRollPressingInfo` | Data cán |
-| `STB_ElectrodeSlittingInfo` | Data cắt |
-| `STB_ElectrodeMixInfo` | Data mixing |
-
-### Functions (dùng chung)
-
-| Function | Vai trò |
-|---|---|
-| `fnGetJobDateShiftTime` | Lấy ca/ngày |
-
----
-
-## 9. C460 → `HY460` — QC Electrode Inspection ❌ CHƯA CÓ screen
-
-| SP HY | SP Gốc | Size Diff | Phân loại |
-|---|---|---|---|
-| `usp_GetElectrodeInspectionHistoryForBarcode_HY` | original | 1 | 🟢 DÙNG CHUNG |
-| `usp_DoAddCommInspMeasureHistForBarcode_HY` | original | 3 | 🟢 DÙNG CHUNG |
-| `usp_DoFinishCommInspDoc_HY` | original | 3 | 🟢 DÙNG CHUNG |
-| `usp_DoFinishCommInspDoc_VNT_HY` | original | 3 | 🟢 DÙNG CHUNG |
-| `usp_DoLossElectrodeProcess_HY_iud` | original | 3 | 🟢 DÙNG CHUNG |
-| `usp_ElectrodeCoatingInfo_HY_get` | original | 1 | 🟢 DÙNG CHUNG |
-| `usp_ElectrodeDivision_popup_HY` | original | 3 | 🟢 DÙNG CHUNG |
-| Popups (8 SPs) | — | — | ⚪ SHARED |
-
-**Kết luận C460: 7/7 SPs riêng HY DÙNG CHUNG ĐƯỢC** — tất cả chỉ khác tên SP.
-
-### Tables (dùng chung)
-
-| Table | Vai trò |
-|---|---|
-| `STB_CommInspDocHistory` | Lịch sử kiểm tra |
-| `STB_CommInspDocItem` | Hạng mục kiểm tra |
-| `STB_CommInspMeasureHist` | Kết quả đo |
-| `STB_ElectrodeCoatingInfo` | Data coating |
-| `STB_ProdRouteHist` | Lịch sử route |
-
----
-
-## Phụ lục A: 🔴 Danh sách 12 SPs PHẢI TÁCH RIÊNG (MUST_SEPARATE)
-
-Các SP này có logic khác biệt **đáng kể** so với bản gốc — **BẮT BUỘC dùng `_HY`**:
-
-| # | SP HY | Size Diff | Màn hình |
+| # | SP | Diff | Màn |
 |---|---|---|---|
 | 1 | `usp_MaterialQcInspectionItem_ByMaterial_HY_get` | 1478 | C122 |
 | 2 | `usp_MaterialQcDetail_HY_get` | 626 | C220 |
@@ -350,57 +368,7 @@ Các SP này có logic khác biệt **đáng kể** so với bản gốc — **B
 | 11 | `usp_DoAddCommInspMeasureHistForBarcode_HY_TEST` | 4475 | (test) |
 | 12 | `usp_ElectrodCoatingInfo_Viscosity_VVT_HY_iud` | (large) | B552 |
 
----
+### Tables & Functions: 100% DÙNG CHUNG
 
-## Phụ lục B: 🟢 Danh sách 30 SPs CÓ THỂ DÙNG CHUNG
-
-Các SP `_HY` này gần như **giống hệt** bản gốc (chỉ khác 1-9 chars = tên SP):
-
-| # | SP HY | Size Diff | Màn hình |
-|---|---|---|---|
-| 1 | `usp_MaterialQcInfo_HY_get` | 2 | C220 |
-| 2 | `usp_MaterialQcInfo_HY_iud` | 3 | C220 |
-| 3 | `usp_MaterialQcDetail_HY_iud` | 1 | C220 |
-| 4 | `usp_MaterialQcSampleResult_HY_iud` | 1 | C220 |
-| 5 | `usp_DoChangeMaterialQcToPass_HY` | 3 | C220 |
-| 6 | `usp_DoMakeMaterialIQCDetailList_HY` | 9 | C220 |
-| 7 | `usp_DoMakeMaterialQcSampleResult_HY` | 3 | C220 |
-| 8 | `usp_DoUpdateMaterialQcInfo_Fail_HY` | 5 | C220 |
-| 9 | `usp_DoUpdateMaterialQcInfo_Success_HY` | 3 | C220 |
-| 10 | `usp_IQcDefectReport_HY_iud` | 7 | C220 |
-| 11 | `usp_DefectReportNoChange_HY_iud` | 3 | C220 |
-| 12 | `usp_MaterialQcInfoChangeLotNo_HY_iud` | 1 | C220 |
-| 13 | `usp_ModifyRevisionsVerFromC220_VVTF4_HY` | 1 | C220 |
-| 14 | `usp_NCR_Report_HY_iud` | 1 | C220 |
-| 15 | `usp_QcDefectIQCReport_HY_get` | 3 | C220 |
-| 16 | `usp_UpdateDefectDetailIQC_VVT_HY` | 9 | C220 |
-| 17 | `usp_GetMaterialQcInfo_ForReport_HY` | 1 | C220 |
-| 18 | `usp_DayProdPlan_HY_get` | 3 | B442 |
-| 19 | `usp_MainAssemblePartWeight_HY_get` | 1 | B442 |
-| 20-44 | Toàn bộ B552 SPs (25 SPs) | 1-9 | B552 |
-| 45 | `usp_Vietnam_ElectrodeDefectHist_HY_get` | 1 | B802 |
-| 46-52 | Toàn bộ C460 SPs (7 SPs) | 1-3 | C460 |
-
----
-
-## Phụ lục C: 🔵 SPs Chỉ HY Mới Có (NO_ORIGINAL_FOUND)
-
-| SP | Size | Mô tả |
-|---|---|---|
-| `usp_GetMaterialOQcInfo_HY_get` | 15581 | OQC cho HY (không dùng trong 9 màn) |
-| `usp_MaterialQcInspectionItemByMaterial_HY_get` | 3709 | Version 2 (không dùng trong 9 màn) |
-| `usp_VN_Add_FinishGood_HY_New` | 1832 | Thành phẩm HY |
-| `usp_VN_IMPORTFINISHEDGOOD_HY_New` | 4475 | Import thành phẩm HY |
-| `usp_VN_Update_GoodFinish_HY_New` | 765 | Update thành phẩm HY |
-
----
-
-## Phụ lục D: Tables & Functions — 100% DÙNG CHUNG
-
-Không có table hay function nào cần tạo riêng cho HY. Tất cả dùng chung, phân biệt data bằng:
-- `WorkCenterCode = 'VVT_F5'`
-- `LineCode LIKE 'VVHY%'`
-- `CompanyCode` parameter
-
-### Lưu ý quan trọng
-**Hưng Yên chưa có Electrode Lines** trong `STB_LineInfo`. Cần tạo trước khi dùng B442/B470/B552/B802/C460.
+- **39 tables** — Phân biệt data HY bằng `WorkCenterCode = 'VVT_F5'` hoặc `LineCode LIKE 'VVHY%'`
+- **10 functions** — Shared, không có version _HY
