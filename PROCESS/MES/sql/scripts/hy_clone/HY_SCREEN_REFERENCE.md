@@ -9,8 +9,8 @@
 
 | # | Gốc | TCode HY | Tên Screen HY | Trạng thái |
 |---|---|---|---|---|
-| 1 | C121 | `HY121` | `QcInspectionGroupItem_HY` | ❌ Cần tạo |
-| 2 | C122 | `HY122` | `MaterialInspectionCriteria_HY` | ❌ Cần tạo |
+| 1 | C121 | `HY121` | `QcInspectionGroup_HY` | ❌ Cần tạo |
+| 2 | C122 | `HY122` | `MaterialQcInspectionItemByMaterial_HY` | ❌ Cần tạo |
 | 3 | C220 | `HY220` | `MaterialIqcInfoSampleManagement_HY` | ❌ Cần tạo |
 | 4 | B310 | `HY310` | `ProductionOrderInfo_HY` | ❌ Cần tạo |
 | 5 | B442 | `HY442` | `ElectrodePlan_HY` | ❌ Cần tạo |
@@ -23,7 +23,9 @@
 
 ## 1. C121 → `HY121` — Quản lý nhóm & hạng mục kiểm tra ❌ CẦN TẠO
 
-**Clone từ:** `QcInspectionGroupItem` (C121) | **Parent:** `QC_HY`
+**Clone từ:** `QcInspectionGroup` (C121, 6 objects, 273K layout) | **Parent:** `QC_HY`
+
+> ⚠️ **CONFLICT:** TCode `HY121` đã tồn tại = `QCInspectionGroupCode_HY` (3 objects, 69K layout — chỉ có Group, thiếu Item). Cần **xóa HY121 cũ** hoặc đặt TCode khác.
 
 ### Nghiệp vụ
 
@@ -63,7 +65,9 @@ Màn hình cấu hình **nền tảng QC** — thiết lập các nhóm kiểm t
 
 ## 2. C122 → `HY122` — Tiêu chuẩn kiểm tra nguyên liệu ❌ CẦN TẠO
 
-**Clone từ:** `MaterialInspectionCriteria` (C122) | **Parent:** `QC_HY`
+**Clone từ:** `MaterialQcInspectionItemByMaterial` (C122, 9 objects, 826K layout) | **Parent:** `QC_HY`
+
+> ⚠️ **Lưu ý:** HY151 (`MaterialQcInspectionItem_HY`, 9 objects) đã tồn tại với chức năng tương tự nhưng dùng SP khác (`usp_MaterialQcInspectionItemByMaterial_HY_get` thay vì `usp_MaterialQcInspectionItem_ByMaterial_HY_get`). Kiểm tra xem có cần tạo HY122 riêng không.
 
 ### Nghiệp vụ
 
