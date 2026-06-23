@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="TaskMind — Ứng dụng quản lý công việc thông minh với nhắc nhở tự động. Không bao giờ quên task nữa!">
+  <meta name="theme-color" content="#6c5ce7">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>TaskMind — Smart Task Manager</title>
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/index.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/taskboard.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/settings.css">
+  <link rel="stylesheet" href="css/animations.css">
+
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
+</head>
+<body>
+  <!-- Ambient Particles -->
+  <div class="ambient-particles" aria-hidden="true">
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+  </div>
+
+  <div class="app">
+    <!-- ===== Navigation ===== -->
+    <nav class="nav" id="main-nav">
+      <div class="nav-brand">
+        <div class="nav-brand-icon">🧠</div>
+        <span class="gradient-text">TaskMind</span>
+      </div>
+
+      <div class="nav-links">
+        <a href="#board" class="nav-link active" data-page="board" id="nav-board">
+          <span class="nav-link-icon">📋</span>
+          <span>Board</span>
+        </a>
+        <a href="#dashboard" class="nav-link" data-page="dashboard" id="nav-dashboard">
+          <span class="nav-link-icon">📊</span>
+          <span>Dashboard</span>
+          <span class="notification-dot" id="nav-notification-dot" style="display:none;"></span>
+        </a>
+        <a href="#settings" class="nav-link" data-page="settings" id="nav-settings">
+          <span class="nav-link-icon">⚙️</span>
+          <span>Settings</span>
+        </a>
+      </div>
+
+      <div class="nav-actions">
+        <span class="badge badge-danger" id="nav-notification-badge" style="display:none;" data-tooltip="Tasks cần chú ý">0</span>
+        <button class="btn btn-primary btn-sm" id="add-task-nav-btn" onclick="TaskBoard.openAddModal()">
+          ✨ Thêm task
+        </button>
+      </div>
+    </nav>
+
+    <!-- ===== Main Content ===== -->
+    <main class="main-content">
+
+      <!-- ========== BOARD PAGE ========== -->
+      <section class="page active" id="page-board">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">📋 Task Board</h1>
+            <p class="page-subtitle">Kéo thả task giữa các cột · <kbd style="background:var(--bg-tertiary);padding:2px 6px;border-radius:4px;font-size:0.7rem;font-family:var(--font-mono);">Ctrl+N</kbd> thêm nhanh</p>
+          </div>
+          <div class="page-actions">
+            <div class="search-bar">
+              <span class="search-bar-icon">🔍</span>
+              <input type="text" id="search-input" placeholder="Tìm task..." autocomplete="off">
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Stats Bar -->
+        <div class="quick-stats" id="quick-stats">
+          <div class="quick-stat quick-stat-info">
+            <span class="quick-stat-dot"></span>
+            <span>Tổng</span>
+            <span class="quick-stat-value" id="qs-total">0</span>
+          </div>
+          <div class="quick-stat quick-stat-success">
+            <span class="quick-stat-dot"></span>
+            <span>Xong</span>
+            <span class="quick-stat-value" id="qs-done">0</span>
+          </div>
+          <div class="quick-stat quick-stat-danger">
+            <span class="quick-stat-dot"></span>
+            <span>Quên</span>
+            <span class="quick-stat-value" id="qs-forgotten">0</span>
+          </div>
+          <div class="quick-stat quick-stat-warning">
+            <span class="quick-stat-dot"></span>
+            <span>Quá hạn</span>
+            <span class="quick-stat-value" id="qs-overdue">0</span>
+          </div>
+        </div>
+
+        <!-- Toolbar: Filters + Sort + View Toggle -->
+        <div class="board-toolbar">
+          <div class="board-toolbar-left">
+            <div class="filter-pills">
+              <button class="filter-pill active" data-filter="all">Tất cả</button>
+              <button class="filter-pill" data-filter="work">💼 Work</button>
+              <button class="filter-pill" data-filter="personal">🏠 Personal</button>
+              <button class="filter-pill" data-filter="learning">📚 Learning</button>
+              <button class="filter-pill" data-filter="other">📌 Other</button>
+            </div>
+          </div>
+          <div class="board-toolbar-right">
+            <!-- Sort -->
+            <div class="sort-dropdown-container">
+              <button class="sort-btn" id="sort-toggle-btn">
+                ↕️ Sắp xếp
+              </button>
+              <div class="sort-dropdown" id="sort-dropdown">
+                <button class="sort-option active" data-sort="smart">
+                  <span class="sort-option-icon">🧠</span> Thông minh
+                </button>
+                <button class="sort-option" data-sort="priority">
+                  <span class="sort-option-icon">🔴</span> Ưu tiên
+                </button>
+                <button class="sort-option" data-sort="newest">
+                  <span class="sort-option-icon">🆕</span> Mới nhất
+                </button>
+                <button class="sort-option" data-sort="oldest">
+                  <span class="sort-option-icon">📜</span> Cũ nhất
+                </button>
+                <button class="sort-option" data-sort="deadline">
+                  <span class="sort-option-icon">⏰</span> Deadline
+                </button>
+                <button class="sort-option" data-sort="alpha">
+                  <span class="sort-option-icon">🔤</span> A → Z
+                </button>
+              </div>
+            </div>
+
+            <!-- View Toggle -->
+            <div class="view-toggle">
+              <button class="view-toggle-btn active" data-view="board" title="Kanban Board">
+                ▦ Board
+              </button>
+              <button class="view-toggle-btn" data-view="list" title="Danh sách">
+                ☰ List
+              </button>
+            </div>
+
+            <!-- Export/Import -->
+            <button class="btn btn-ghost btn-sm" id="export-btn" data-tooltip="Xuất backup JSON">
+              💾 Export
+            </button>
+            <button class="btn btn-ghost btn-sm" id="import-btn" data-tooltip="Nhập backup JSON">
+              📂 Import
+            </button>
+            <input type="file" id="import-input" accept=".json" style="display:none;">
+          </div>
+        </div>
+
+        <!-- Kanban Board View -->
+        <div class="kanban-board" id="kanban-board">
+          <!-- To Do Column -->
+          <div class="kanban-column" id="column-todo">
+            <div class="column-header">
+              <div class="column-title">
+                <span class="column-dot column-dot-todo"></span>
+                To Do
+              </div>
+              <span class="column-count" data-status="todo">0</span>
+            </div>
+            <div class="column-progress"><div class="column-progress-bar" data-status="todo" style="width:0%"></div></div>
+            <div class="column-tasks" data-status="todo"></div>
+            <div class="column-footer">
+              <button class="add-task-inline" onclick="TaskBoard.openAddModal('todo')">
+                + Thêm task
+              </button>
+            </div>
+          </div>
+
+          <!-- Doing Column -->
+          <div class="kanban-column" id="column-doing">
+            <div class="column-header">
+              <div class="column-title">
+                <span class="column-dot column-dot-doing"></span>
+                Đang làm
+              </div>
+              <span class="column-count" data-status="doing">0</span>
+            </div>
+            <div class="column-progress"><div class="column-progress-bar" data-status="doing" style="width:0%"></div></div>
+            <div class="column-tasks" data-status="doing"></div>
+            <div class="column-footer">
+              <button class="add-task-inline" onclick="TaskBoard.openAddModal('doing')">
+                + Thêm task
+              </button>
+            </div>
+          </div>
+
+          <!-- Done Column -->
+          <div class="kanban-column" id="column-done">
+            <div class="column-header">
+              <div class="column-title">
+                <span class="column-dot column-dot-done"></span>
+                Hoàn thành
+              </div>
+              <span class="column-count" data-status="done">0</span>
+            </div>
+            <div class="column-progress"><div class="column-progress-bar" data-status="done" style="width:0%"></div></div>
+            <div class="column-tasks" data-status="done"></div>
+          </div>
+        </div>
+
+        <!-- List View (hidden by default) -->
+        <div class="list-view" id="list-view"></div>
+      </section>
+
+      <!-- ========== DASHBOARD PAGE ========== -->
+      <section class="page" id="page-dashboard">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">📊 Dashboard</h1>
+            <p class="page-subtitle">Tổng quan tiến độ và thống kê</p>
+          </div>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+          <div class="stat-card stat-card-total">
+            <div class="stat-card-icon">📋</div>
+            <div class="stat-card-value" id="stat-total">0</div>
+            <div class="stat-card-label">Tổng task</div>
+          </div>
+          <div class="stat-card stat-card-doing">
+            <div class="stat-card-icon">🚀</div>
+            <div class="stat-card-value" id="stat-doing">0</div>
+            <div class="stat-card-label">Đang làm</div>
+          </div>
+          <div class="stat-card stat-card-done">
+            <div class="stat-card-icon">✅</div>
+            <div class="stat-card-value" id="stat-done">0</div>
+            <div class="stat-card-label">Hoàn thành</div>
+          </div>
+          <div class="stat-card stat-card-forgotten">
+            <div class="stat-card-icon">⚠️</div>
+            <div class="stat-card-value" id="stat-forgotten">0</div>
+            <div class="stat-card-label">Bị quên</div>
+          </div>
+          <div class="stat-card stat-card-overdue">
+            <div class="stat-card-icon">⏰</div>
+            <div class="stat-card-value" id="stat-overdue">0</div>
+            <div class="stat-card-label">Quá hạn</div>
+          </div>
+        </div>
+
+        <!-- Dashboard Grid -->
+        <div class="dashboard-grid">
+          <!-- Forgotten Alerts -->
+          <div class="dashboard-panel">
+            <div class="panel-header">
+              <div class="panel-title">⚠️ Tasks bị quên</div>
+            </div>
+            <div class="panel-body">
+              <div class="forgotten-list" id="forgotten-alerts-list"></div>
+            </div>
+          </div>
+
+          <!-- Completion Rate -->
+          <div class="dashboard-panel">
+            <div class="panel-header">
+              <div class="panel-title">🎯 Tỉ lệ hoàn thành</div>
+            </div>
+            <div class="panel-body">
+              <div class="completion-ring-container">
+                <div class="completion-ring">
+                  <svg viewBox="0 0 160 160">
+                    <defs>
+                      <linearGradient id="completionGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color: #6c5ce7;" />
+                        <stop offset="50%" style="stop-color: #a29bfe;" />
+                        <stop offset="100%" style="stop-color: #00b894;" />
+                      </linearGradient>
+                    </defs>
+                    <circle class="ring-bg" cx="80" cy="80" r="70" />
+                    <circle class="ring-fill" cx="80" cy="80" r="70" />
+                  </svg>
+                  <div class="completion-ring-text">
+                    <span class="completion-ring-value" id="completion-value">0%</span>
+                    <span class="completion-ring-label">Hoàn thành</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Category Breakdown -->
+          <div class="dashboard-panel">
+            <div class="panel-header">
+              <div class="panel-title">📊 Phân loại</div>
+            </div>
+            <div class="panel-body">
+              <div class="category-chart" id="category-chart"></div>
+            </div>
+          </div>
+
+          <!-- Streak -->
+          <div class="dashboard-panel">
+            <div class="panel-header">
+              <div class="panel-title">🔥 Chuỗi hoàn thành</div>
+            </div>
+            <div class="panel-body">
+              <div class="streak-display">
+                <div class="streak-number gradient-text" id="streak-count">0</div>
+                <div class="streak-info">
+                  <div class="streak-label">ngày liên tiếp hoàn thành task</div>
+                  <div class="streak-fire" id="streak-fire"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Activity Timeline -->
+          <div class="dashboard-panel dashboard-panel-full">
+            <div class="panel-header">
+              <div class="panel-title">🕐 Hoạt động gần đây</div>
+            </div>
+            <div class="panel-body">
+              <div class="activity-timeline" id="activity-timeline"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========== SETTINGS PAGE ========== -->
+      <section class="page" id="page-settings">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">⚙️ Settings</h1>
+            <p class="page-subtitle">Tuỳ chỉnh TaskMind theo cách của bạn</p>
+          </div>
+        </div>
+
+        <div class="settings-container">
+          <!-- Reminder Settings -->
+          <div class="settings-section">
+            <div class="settings-section-header">
+              <span class="settings-section-icon">🔔</span>
+              <span class="settings-section-title">Nhắc nhở</span>
+            </div>
+            <div class="settings-section-body">
+              <div class="settings-row">
+                <div class="settings-row-info">
+                  <div class="settings-row-label">Thông báo trình duyệt</div>
+                  <div class="settings-row-description">Nhận popup notification khi có task sắp deadline hoặc bị quên</div>
+                </div>
+                <div class="settings-row-control">
+                  <label class="toggle-switch">
+                    <input type="checkbox" id="setting-notifications" checked>
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="settings-row">
+                <div class="settings-row-info">
+                  <div class="settings-row-label">Ngưỡng "quên" (ngày)</div>
+                  <div class="settings-row-description">Task ở cột "Đang làm" không được cập nhật sau bao nhiêu ngày sẽ bị đánh dấu quên</div>
+                </div>
+                <div class="settings-row-control">
+                  <input type="number" class="settings-number" id="setting-forgotten-days" min="1" max="30" value="2">
+                </div>
+              </div>
+
+              <div class="settings-row">
+                <div class="settings-row-info">
+                  <div class="settings-row-label">Nhắc khi idle (phút)</div>
+                  <div class="settings-row-description">Thông báo nhắc bạn quay lại làm việc sau bao nhiêu phút không hoạt động</div>
+                </div>
+                <div class="settings-row-control">
+                  <input type="number" class="settings-number" id="setting-idle-minutes" min="5" max="120" value="30">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Category Management -->
+          <div class="settings-section">
+            <div class="settings-section-header">
+              <span class="settings-section-icon">🏷️</span>
+              <span class="settings-section-title">Phân loại</span>
+            </div>
+            <div class="settings-section-body">
+              <div class="category-list" id="category-list"></div>
+              <div class="add-category-row">
+                <input type="text" class="add-category-input" id="add-category-input" placeholder="Tên category mới..." maxlength="20">
+                <button class="btn btn-primary btn-sm" id="add-category-btn">+ Thêm</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Data Management -->
+          <div class="settings-section">
+            <div class="settings-section-header">
+              <span class="settings-section-icon">💾</span>
+              <span class="settings-section-title">Dữ liệu</span>
+            </div>
+            <div class="settings-section-body">
+              <div class="settings-row">
+                <div class="settings-row-info">
+                  <div class="settings-row-label">Backup & Restore</div>
+                  <div class="settings-row-description">Xuất hoặc nhập dữ liệu dạng JSON. Dùng để chuyển thiết bị hoặc backup.</div>
+                </div>
+                <div class="settings-row-control data-section">
+                  <button class="btn btn-secondary btn-sm" id="settings-export-btn">💾 Export</button>
+                  <button class="btn btn-secondary btn-sm" id="settings-import-btn">📂 Import</button>
+                  <input type="file" id="settings-import-input" accept=".json" style="display:none;">
+                </div>
+              </div>
+              <div class="data-info" id="data-stats">Đang tải...</div>
+            </div>
+          </div>
+
+          <!-- Danger Zone -->
+          <div class="settings-section danger-zone">
+            <div class="settings-section-header">
+              <span class="settings-section-icon">⚠️</span>
+              <span class="settings-section-title">Vùng nguy hiểm</span>
+            </div>
+            <div class="settings-section-body">
+              <div class="settings-row">
+                <div class="settings-row-info">
+                  <div class="settings-row-label">Xóa toàn bộ dữ liệu</div>
+                  <div class="settings-row-description">Xóa vĩnh viễn tất cả tasks, activity, settings. Không thể hoàn tác!</div>
+                </div>
+                <div class="settings-row-control">
+                  <button class="btn btn-danger btn-sm" id="clear-all-data">🗑️ Xóa tất cả</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- ===== MODALS ===== -->
+
+  <!-- Add/Edit Task Modal -->
+  <div class="modal-overlay" id="task-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modal-title">✨ Thêm task mới</h3>
+        <button class="modal-close" title="Đóng">✕</button>
+      </div>
+      <div class="modal-body">
+        <form id="task-form" onsubmit="return false;">
+          <input type="hidden" id="task-id">
+          <input type="hidden" id="task-status" value="todo">
+
+          <div class="form-group">
+            <label class="form-label" for="task-title-input">Tên task *</label>
+            <input type="text" class="form-input" id="task-title-input" placeholder="VD: Hoàn thành báo cáo Q3" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="task-description-input">Mô tả</label>
+            <textarea class="form-textarea" id="task-description-input" placeholder="Mô tả chi tiết công việc (tuỳ chọn)" rows="3"></textarea>
+          </div>
+
+          <div class="task-form-row">
+            <div class="form-group">
+              <label class="form-label" for="task-category-input">Phân loại</label>
+              <select class="form-select" id="task-category-input">
+                <option value="Work">💼 Work</option>
+                <option value="Personal">🏠 Personal</option>
+                <option value="Learning">📚 Learning</option>
+                <option value="Other">📌 Other</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="task-priority-input">Mức ưu tiên</label>
+              <select class="form-select" id="task-priority-input">
+                <option value="medium">🟡 Trung bình</option>
+                <option value="high">🔴 Cao</option>
+                <option value="low">🟢 Thấp</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="task-deadline-input">Deadline</label>
+            <input type="datetime-local" class="form-input" id="task-deadline-input">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="App.closeModal('task-modal')">Huỷ</button>
+        <button class="btn btn-primary" id="save-task-btn">💾 Lưu task</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Morning Briefing Modal -->
+  <div class="modal-overlay" id="briefing-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title" id="briefing-greeting">🌅 Chào buổi sáng!</h3>
+        <button class="modal-close" title="Đóng">✕</button>
+      </div>
+      <div class="modal-body">
+        <p style="color: var(--text-secondary); margin-bottom: var(--space-md); font-size: var(--font-size-sm);" id="briefing-greeting-sub">
+          Đây là tóm tắt công việc của bạn:
+        </p>
+
+        <div class="briefing-stats">
+          <div class="briefing-stat">
+            <div class="briefing-stat-icon">📝</div>
+            <div class="briefing-stat-info">
+              <div class="briefing-stat-value" id="briefing-todo">0</div>
+              <div class="briefing-stat-label">Chờ làm</div>
+            </div>
+          </div>
+          <div class="briefing-stat">
+            <div class="briefing-stat-icon">🚀</div>
+            <div class="briefing-stat-info">
+              <div class="briefing-stat-value" id="briefing-doing">0</div>
+              <div class="briefing-stat-label">Đang làm</div>
+            </div>
+          </div>
+          <div class="briefing-stat">
+            <div class="briefing-stat-icon">✅</div>
+            <div class="briefing-stat-info">
+              <div class="briefing-stat-value" id="briefing-done">0</div>
+              <div class="briefing-stat-label">Đã xong</div>
+            </div>
+          </div>
+          <div class="briefing-stat">
+            <div class="briefing-stat-icon">⚠️</div>
+            <div class="briefing-stat-info">
+              <div class="briefing-stat-value" id="briefing-forgotten-count">0</div>
+              <div class="briefing-stat-label">Bị quên</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Forgotten tasks detail -->
+        <div id="briefing-forgotten-list-container" style="display:none;">
+          <div class="briefing-forgotten">
+            <div class="briefing-forgotten-title">⚠️ Tasks bị quên:</div>
+            <div class="briefing-forgotten-list"></div>
+          </div>
+        </div>
+
+        <!-- Due soon -->
+        <div id="briefing-due-soon" style="display:none;">
+          <div class="briefing-forgotten" style="background: var(--color-warning-light); border-color: rgba(243,156,18,0.15);">
+            <div class="briefing-forgotten-title" style="color: var(--color-warning);">⏰ Sắp deadline:</div>
+            <div class="briefing-forgotten-list"></div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" onclick="App.closeModal('briefing-modal')">💪 Bắt đầu làm việc!</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Scripts (order matters) -->
+  <script src="js/storage.js"></script>
+  <script src="js/reminder.js"></script>
+  <script src="js/taskboard.js"></script>
+  <script src="js/dashboard.js"></script>
+  <script src="js/settings.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
