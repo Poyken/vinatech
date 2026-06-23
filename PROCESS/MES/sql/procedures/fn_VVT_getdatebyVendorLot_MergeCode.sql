@@ -8,7 +8,7 @@
 --declare @duy varchar(20)=  [dbo].[fn_VVT_getdatebyVendorLot_MergeCode]('153_TRAY1325','20260603','VV026')
 --print @duy
 -- =============================================
-ALTER FUNCTION [dbo].[fn_VVT_getdatebyVendorLot_MergeCode] (
+CREATE FUNCTION [dbo].[fn_VVT_getdatebyVendorLot_MergeCode] (
 		@materialcode varchar(20) = null,
 		@vendorlot    nvarchar(1000) = null,
 		@sourceCustomerCode nvarchar(100) = null
@@ -29,6 +29,9 @@ declare @test varchar(200)=@materialcode +'--'+@vendorlot+'--'+@sourceCustomerCo
 	if(@vendorlot like '%#%' and CHARINDEX('#',@vendorlot,1)<12) 
 		set @vendorlot = stuff(@vendorlot,1,CHARINDEX('#',@vendorlot,1),'')
 
+	-- ducnv 2026-06-23: Handle '/' separator - take first lot number only (e.g., 010082606010578001/01008... → 010082606010578001)
+	if(@vendorlot like '%/%')
+		set @vendorlot = LEFT(@vendorlot, CHARINDEX('/', @vendorlot) - 1)
 	   	
 	declare @datetest varchar(10)= getdate() ;
 	declare @YEARstrElectrode varchar(100)=  'PQRSTUVWXYZABCDEFGHJKLMNO';
@@ -61,7 +64,8 @@ declare @test varchar(200)=@materialcode +'--'+@vendorlot+'--'+@sourceCustomerCo
 			'MMHA00-003',
 			'MMHA00-001',
 			'BELAB0-008',
-			'DOW01-001')
+			'DOW01-001',
+			'BEINS0-004001')
 		and @vendorlot LIKE '[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]'
 	then
 		SUBSTRING(@vendorlot,1,4) + '-' +
@@ -321,7 +325,7 @@ declare @test varchar(200)=@materialcode +'--'+@vendorlot+'--'+@sourceCustomerCo
 						,'GBAKAC-092'
 						) then 
 							case 
-							--Kiem tra xem NCC nao de doc lotno tung nha cung cap rieng
+							--Kiá»ƒm tra xem NCC nÃ o Ä‘á»ƒ Ä‘á»c lotno tá»«ng nhÃ  cung cáº¥p riÃªng
 								when @sourceCustomerCode in ('VV033')
 									then
 										case 
@@ -375,10 +379,13 @@ declare @test varchar(200)=@materialcode +'--'+@vendorlot+'--'+@sourceCustomerCo
 											end		
 		
 
-									--Day cua nha AOXING cung cap nhom
+									--ÄÃ¢y cá»§a nhÃ  AOXING cung cáº¥p nhÃ´m
 								when @sourceCustomerCode in ('VV040')
 									then
 										case 
+										-- ducnv 2026-06-23: VV040 lot 18 số thuần số (vd: 042812605080970005 → 2026-05-08)
+										when LEN(@vendorlot) >= 18 AND ISNUMERIC(@vendorlot) = 1
+											then '20'+ substring(@vendorlot,6,2)+'-'+ substring(@vendorlot,8,2)+'-'+ substring(@vendorlot,10,2)
 										when  @materialcode in (
 										'GBAKAC-005'
 										,'GBAKAC-060'
@@ -423,7 +430,7 @@ declare @test varchar(200)=@materialcode +'--'+@vendorlot+'--'+@sourceCustomerCo
 										end
 							-- End 
 									
-								-- ducnv 2026-06-23: NCC P000849 format lotno 18 số, vị trí 6,8,10
+								-- vanduc edited by Mrs.Van Oc 2026-06-23: NCC P000849 format lotno 18 số, vị trí 6,8,10
 								when @sourceCustomerCode in ('P000849')
 									then
 										'20'+ substring(@vendorlot,6,2)
@@ -432,7 +439,7 @@ declare @test varchar(200)=@materialcode +'--'+@vendorlot+'--'+@sourceCustomerCo
 														+'-'
 														+ substring(@vendorlot,10,2)
 									
-							-- Neu khong thuoc nha cung cap rieng thi se tu phan tich chung
+							-- Náº¿u khÃ´ng thuá»™c nhÃ  cung cáº¥p riÃªng thÃ¬ sáº½ tá»± phÃ¢n tÃ­ch chung
 									else
 									'20'+ substring(@vendorlot,5,2) 
 															+'-'
@@ -479,7 +486,7 @@ when @materialcode in (
 						 --'GCMDPT-475'
 						) then 
 							case 
-										--Kiem tra xem NCC nao de doc lotno tung nha cung cap rieng
+							--Kiá»ƒm tra xem NCC nÃ o Ä‘á»ƒ Ä‘á»c lotno tá»«ng nhÃ  cung cáº¥p riÃªng
 								when @sourceCustomerCode in ('VV034')
 									then
 										case 
@@ -513,8 +520,11 @@ when @materialcode in (
 														+substring(@vendorlot,5,2)
 							end 
 	when @materialcode in ('GAKCCA-003','GAKCCA-002') then '20'+ substring(@vendorlot,2,2)+'-'+ substring(@vendorlot,4,2)+'-'+ substring(@vendorlot,6,2)
-	-- ducnv 2026-06-23: GBLYAC-002 NCC P000849 format lotno 18 số, vị trí 6,8,10
-	when @materialcode in ('GBLYAC-002') and @sourceCustomerCode in ('P000849')
+	-- vanduc edited by Mrs.Van Oc 2026-06-23: GBLYAC-002 NCC P000849/VV040 format lotno 18 số, vị trí 6,8,10
+	when @materialcode in ('GBLYAC-002') and (
+		@sourceCustomerCode in ('P000849')
+		OR (@sourceCustomerCode in ('VV040') AND LEN(@vendorlot) >= 18 AND ISNUMERIC(@vendorlot) = 1)
+	)
 		then '20'+ substring(@vendorlot,6,2)+'-'+ substring(@vendorlot,8,2)+'-'+ substring(@vendorlot,10,2)
 
 	when @materialcode in ('GBLYAC-002','GBLYAC-003','GBLYAC-004', 'GBLYAC-006') then '20'+ substring(@vendorlot,5,2)+'-'+ substring(@vendorlot,7,2)+'-'+ substring(@vendorlot,9,2)
@@ -728,6 +738,7 @@ when @materialcode in (
 
 	when (@materialcode IN (
 						'WRHI00-001', 
+						'WRHI00-007',--vanduc edited by Mrs.Van Oc 20260623
 						'BEMP00-005', 
 						'BEMC00-113',
 						'PBDM00-187',
@@ -764,7 +775,7 @@ when @materialcode in (
 						--vanduc edited by Mr.Cuong 20260602 START
 						'128649',
 						--END
-						-- ducnv 2026-06-23: Thêm 16 mã nguyên phụ liệu đóng gói - không có vendor lot
+						-- vanduc edited by Mrs.Van Oc 2026-06-23: Thêm 16 mã nguyên phụ liệu đóng gói - không có vendor lot
 						'OTCTN2',
 						'INCTN1',
 						'INCTN2',
@@ -947,4 +958,3 @@ when @materialcode in (
 	return @date
 
 end
-
