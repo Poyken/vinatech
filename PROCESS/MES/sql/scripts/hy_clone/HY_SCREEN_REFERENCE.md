@@ -1,46 +1,55 @@
-# Danh Sách 9 Màn Hình HY — SPs, Tables, Functions
+# Danh Sách 9 Màn Hình HY — Phân Loại: Dùng Riêng vs Dùng Chung
 
-> **Ngày tạo:** 2026-06-23  
+> **Ngày tạo:** 2026-06-23 (Updated: phân loại chi tiết dựa trên so sánh SP content)  
 > **Nhà máy:** Hưng Yên (VVT_F5)  
-> **Trạng thái:** Tất cả DB objects (SP, Table, Function) đã tồn tại — không cần tạo mới.
+> **Phương pháp:** So sánh `LEN(definition)` giữa SP gốc và SP `_HY` + kiểm tra hardcode factory code
 
 ---
 
-## Tóm tắt nhanh
+## Quy ước phân loại
 
-| # | Gốc | TCode HY | Tên HY Screen | Layout Name HY | Trạng thái |
-|---|---|---|---|---|---|
-| 1 | C121 | `C121_HY` | `QcInspectionGroupItem_HY` | `QcInspectionGroupItem_HY` | ✅ Đã có |
-| 2 | C122 | `C122_HY` | `MaterialInspectionCriteria_HY` | `MaterialInspectionCriteria_HY` | ✅ Đã có |
-| 3 | C220 | `HY220` | `MaterialIqcInfoSampleManagement_HY` | `MaterialIqcInfoSampleManagement_HY` | ❌ Chưa có |
-| 4 | B310 | `HY310` | `ProductionOrderInfo_HY` | `ProductionOrderInfo_HY` | ❌ Chưa có |
-| 5 | B442 | `HY442` | `ElectrodePlan_HY` | `ElectrodePlan_HY` | ❌ Chưa có |
-| 6 | B470 | `HY470` | `ElectrodePrcsCard_HY` | `ElectrodePrcsCard_HY` | ❌ Chưa có |
-| 7 | B552 | `HY552` | `ElectrodeMeasureResult_HY` | `ElectrodeMeasureResult_HY` | ❌ Chưa có |
-| 8 | B802 | `HY802` | `ElectrodeProdRouteHist_HY` | `ElectrodeProdRouteHist_HY` | ❌ Chưa có |
-| 9 | C460 | `HY460` | `ElectrodeInspectionHistoryForBarcode_HY` | `ElectrodeInspectionHistoryForBarcode_HY` | ❌ Chưa có |
+| Phân loại | Ý nghĩa | Tiêu chí |
+|---|---|---|
+| 🟢 **DÙNG CHUNG** | Dùng SP gốc, không cần `_HY` | Size diff < 50 chars (chỉ đổi tên SP) |
+| 🟡 **MINOR DIFF** | Có chỉnh sửa nhỏ, nhưng logic cốt lõi giống | Size diff 50-500 chars |
+| 🔴 **PHẢI TÁCH RIÊNG** | Logic khác biệt đáng kể | Size diff > 500 chars |
+| 🔵 **HY-ONLY** | SP chỉ tồn tại cho HY, không có bản gốc | Không tìm thấy original |
+| ⚪ **POPUP/SHARED** | SP dùng chung (popup, utility) | Không có `_HY` version |
 
 ---
 
-## 1. C121 → `C121_HY` — Quản lý nhóm kiểm tra & hạng mục kiểm tra
+## Tóm tắt tổng hợp
 
-**Mô tả:** Manage inspection items and inspection teams  
-**Trạng thái:** ✅ ĐÃ CÓ (Screen + Layout + Objects + Permission)
+| Phân loại | Số lượng SPs | Ghi chú |
+|---|---|---|
+| 🟢 DÙNG CHUNG (CAN_SHARE) | **30 SPs** | Nội dung gần giống gốc — có thể dùng SP gốc |
+| 🟡 MINOR DIFF | **20 SPs** | Cần review: có thể merge hoặc giữ riêng |
+| 🔴 PHẢI TÁCH RIÊNG (MUST_SEPARATE) | **12 SPs** | Logic khác biệt lớn — BẮT BUỘC dùng `_HY` |
+| 🔵 HY-ONLY | **5 SPs** | Chỉ HY mới có |
+| ⚪ POPUP/SHARED | **36+ SPs** | Popup/utility dùng chung tất cả nhà máy |
+| **Tables** | **39 bảng** | **100% dùng chung** (filter WorkCenterCode) |
+| **Functions** | **10 functions** | **100% dùng chung** |
 
-### Stored Procedures
+---
 
-| SP HY (dùng trong layout) | SP Gốc | Loại | Trạng thái |
+## 1. C121 → `C121_HY` — Quản lý nhóm kiểm tra & hạng mục kiểm tra ✅
+
+**Trạng thái:** ĐÃ CÓ screen
+
+| SP HY | SP Gốc | Size Diff | Phân loại |
 |---|---|---|---|
-| `usp_QcInspectionGroup_HY_get` | `usp_QcInspectionGroup_get` | Riêng HY | ✅ Có |
-| `usp_QcInspectionGroup_HY_iud` | `usp_QcInspectionGroup_iud` | Riêng HY | ✅ Có |
-| `usp_QcInspectionGroup_HY_popup` | `usp_QcInspectionGroup_popup` | Riêng HY | ✅ Có |
-| `usp_QcInspectionItem_HY_get` | `usp_QcInspectionItem_get` | Riêng HY | ✅ Có |
-| `usp_QcInspectionItem_HY_iud` | `usp_QcInspectionItem_iud` | Riêng HY | ✅ Có |
-| `usp_GetAql_popup` | — | Dùng chung | ✅ Có |
-| `usp_GetInspectionLevel_popup` | — | Dùng chung | ✅ Có |
-| `usp_GetInspectionType_popup` | — | Dùng chung | ✅ Có |
+| `usp_QcInspectionGroup_HY_get` | `usp_QcInspectionGroup_get` | 231 | 🟡 MINOR DIFF |
+| `usp_QcInspectionGroup_HY_iud` | `usp_QcInspectionGroup_iud` | 196 | 🟡 MINOR DIFF |
+| `usp_QcInspectionGroup_HY_popup` | `usp_QcInspectionGroup_popup` | 3 | 🟢 DÙNG CHUNG |
+| `usp_QcInspectionItem_HY_get` | `usp_QcInspectionItem_get` | 234 | 🟡 MINOR DIFF |
+| `usp_QcInspectionItem_HY_iud` | `usp_QcInspectionItem_iud` | 196 | 🟡 MINOR DIFF |
+| `usp_GetAql_popup` | — | — | ⚪ SHARED |
+| `usp_GetInspectionLevel_popup` | — | — | ⚪ SHARED |
+| `usp_GetInspectionType_popup` | — | — | ⚪ SHARED |
 
-### Tables
+**Kết luận C121:** 4 SPs MINOR DIFF (giữ riêng an toàn), 1 SP dùng chung được, 3 popup shared.
+
+### Tables (dùng chung)
 
 | Table | Vai trò |
 |---|---|
@@ -49,26 +58,21 @@
 | `STB_QcInspectionGroup` | Nhóm QC |
 | `STB_QcInspectionItem` | Hạng mục QC |
 
-### Functions
-
-Không dùng function riêng.
-
 ---
 
-## 2. C122 → `C122_HY` — Thiết lập tiêu chuẩn kiểm tra nguyên liệu
+## 2. C122 → `C122_HY` — Thiết lập tiêu chuẩn kiểm tra nguyên liệu ✅
 
-**Mô tả:** Establish inspection criteria for each raw material  
-**Trạng thái:** ✅ ĐÃ CÓ (Screen + Layout + Objects + Permission)
+**Trạng thái:** ĐÃ CÓ screen
 
-### Stored Procedures
-
-| SP HY | SP Gốc | Loại | Trạng thái |
+| SP HY | SP Gốc | Size Diff | Phân loại |
 |---|---|---|---|
-| `usp_MaterialQcInspectionItem_ByMaterial_HY_get` | `usp_MaterialQcInspectionItem_ByMaterial_get` | Riêng HY | ✅ Có |
-| `usp_MaterialQcInspectionItem_HY_iud` | `usp_MaterialQcInspectionItem_iud` | Riêng HY | ✅ Có |
-| `usp_MaterialMaster_popup` | — | Dùng chung | ✅ Có |
+| `usp_MaterialQcInspectionItem_ByMaterial_HY_get` | `usp_MaterialQcInspectionItem_ByMaterial_get` | 1478 | 🔴 PHẢI TÁCH RIÊNG |
+| `usp_MaterialQcInspectionItem_HY_iud` | `usp_MaterialQcInspectionItem_iud` | 322 | 🟡 MINOR DIFF |
+| `usp_MaterialMaster_popup` | — | — | ⚪ SHARED |
 
-### Tables
+**Kết luận C122:** 1 SP PHẢI tách riêng (logic query khác biệt lớn), 1 minor diff, 1 shared.
+
+### Tables (dùng chung)
 
 | Table | Vai trò |
 |---|---|
@@ -76,61 +80,37 @@ Không dùng function riêng.
 | `STB_MaterialMaster` | Master nguyên liệu |
 | `STB_QcInspectionItem` | Hạng mục QC (ref) |
 
-### Functions
-
-Không dùng function riêng.
-
 ---
 
-## 3. C220 → `HY220` — Kiểm tra chất lượng nguyên liệu nhập kho (IQC)
+## 3. C220 → `HY220` — IQC Confirmation ❌ CHƯA CÓ screen
 
-**Mô tả:** When raw materials arrive, their quality must be checked  
-**Trạng thái:** ❌ CHƯA CÓ screen (SPs đã đủ)
-
-### Stored Procedures
-
-| SP HY | SP Gốc | Loại | Trạng thái |
+| SP HY | SP Gốc | Size Diff | Phân loại |
 |---|---|---|---|
-| `usp_MaterialQcInfo_HY_get` | `usp_MaterialQcInfo_get` | Riêng HY | ✅ Có |
-| `usp_MaterialQcInfo_HY_iud` | `usp_MaterialQcInfo_iud` | Riêng HY | ✅ Có |
-| `usp_MaterialQcDetail_HY_get` | `usp_MaterialQcDetail_get` | Riêng HY | ✅ Có |
-| `usp_MaterialQcDetail_HY_iud` | `usp_MaterialQcDetail_iud` | Riêng HY | ✅ Có |
-| `usp_MaterialQcSampleResult_HY_get` | `usp_MaterialQcSampleResult_get` | Riêng HY | ✅ Có |
-| `usp_MaterialQcSampleResult_HY_iud` | `usp_MaterialQcSampleResult_iud` | Riêng HY | ✅ Có |
-| `usp_DoChangeMaterialQcToPass_HY` | `usp_DoChangeMaterialQcToPass` | Riêng HY | ✅ Có |
-| `usp_DoMakeMaterialIQCDetailList_HY` | `usp_DoMakeMaterialIQCDetailList` | Riêng HY | ✅ Có |
-| `usp_DoMakeMaterialQcSampleResult_HY` | `usp_DoMakeMaterialQcSampleResult` | Riêng HY | ✅ Có |
-| `usp_DoUpdateMaterialQcInfo_Fail_HY` | `usp_DoUpdateMaterialQcInfo_Fail` | Riêng HY | ✅ Có |
-| `usp_DoUpdateMaterialQcInfo_Success_HY` | `usp_DoUpdateMaterialQcInfo_Success` | Riêng HY | ✅ Có |
-| `usp_DoSendEmailForDefectReportIQC_HY` | `usp_DoSendEmailForDefectReportIQC` | Riêng HY | ✅ Có |
-| `usp_IQcDefectReport_HY_iud` | `usp_IQcDefectReport_iud` | Riêng HY | ✅ Có |
-| `usp_DefectReportNoChange_HY_iud` | `usp_DefectReportNoChange_iud` | Riêng HY | ✅ Có |
-| `usp_MaterialQcInfoChangeLotNo_HY_iud` | `usp_MaterialQcInfoChangeLotNo_iud` | Riêng HY | ✅ Có |
-| `usp_ModifyRevisionsVerFromC220_VVTF4_HY` | `usp_ModifyRevisionsVerFromC220_VVTF4` | Riêng HY | ✅ Có |
-| `usp_NCR_Report_HY_iud` | `usp_NCR_Report_iud` | Riêng HY | ✅ Có |
-| `usp_QcDefectIQCReport_HY_get` | `usp_QcDefectIQCReport_get` | Riêng HY | ✅ Có |
-| `usp_UpdateDefectDetailIQC_VVT_HY` | `usp_UpdateDefectDetailIQC_VVT` | Riêng HY | ✅ Có |
-| `usp_GetMaterialQcInfo_ForReport_HY` | `usp_GetMaterialQcInfo_ForReport` | Riêng HY | ✅ Có |
-| `usp_DoConfirmCancelQc2` | — | Dùng chung | ✅ Có |
-| `usp_CompanyInfo_popup` | — | Dùng chung | ✅ Có |
-| `usp_WorkCenterInfo_popup` | — | Dùng chung | ✅ Có |
-| `usp_MaterialTypeCode_popup` | — | Dùng chung | ✅ Có |
-| `usp_PurchaseMaterialMaster_popup` | — | Dùng chung | ✅ Có |
-| `usp_VendorCustomerInfo_popup` | — | Dùng chung | ✅ Có |
-| `usp_GetBaseCode_popup` | — | Dùng chung | ✅ Có |
-| `usp_GetBaseCodeRemarkFilter_popup` | — | Dùng chung | ✅ Có |
-| `usp_GetTestResult_popup` | — | Dùng chung | ✅ Có |
-| `usp_DecisionResult_popup` | — | Dùng chung | ✅ Có |
-| `usp_ProdWorkerInfo_Popup` | — | Dùng chung | ✅ Có |
-| `usp_ProdIInspectionWorkerInfo_Popup` | — | Dùng chung | ✅ Có |
-| `usp_ProductGroup_get` | — | Dùng chung | ✅ Có |
-| `usp_NameErrorIQC` | — | Dùng chung | ✅ Có |
-| `usp_DefectCauseGroup_get` | — | Dùng chung | ✅ Có |
-| `usp_DefectCauseGroup_popup` | — | Dùng chung | ✅ Có |
+| `usp_MaterialQcInfo_HY_get` | `usp_MaterialQcInfo_get` | 2 | 🟢 DÙNG CHUNG |
+| `usp_MaterialQcInfo_HY_iud` | `usp_MaterialQcInfo_iud` | 3 | 🟢 DÙNG CHUNG |
+| `usp_MaterialQcDetail_HY_get` | `usp_MaterialQcDetail_get` | 626 | 🔴 PHẢI TÁCH RIÊNG |
+| `usp_MaterialQcDetail_HY_iud` | `usp_MaterialQcDetail_iud` | 1 | 🟢 DÙNG CHUNG |
+| `usp_MaterialQcSampleResult_HY_get` | `usp_MaterialQcSampleResult_get` | 2213 | 🔴 PHẢI TÁCH RIÊNG |
+| `usp_MaterialQcSampleResult_HY_iud` | `usp_MaterialQcSampleResult_iud` | 1 | 🟢 DÙNG CHUNG |
+| `usp_DoChangeMaterialQcToPass_HY` | `usp_DoChangeMaterialQcToPass` | 3 | 🟢 DÙNG CHUNG |
+| `usp_DoMakeMaterialIQCDetailList_HY` | `usp_DoMakeMaterialIQCDetailList` | 9 | 🟢 DÙNG CHUNG |
+| `usp_DoMakeMaterialQcSampleResult_HY` | `usp_DoMakeMaterialQcSampleResult` | 3 | 🟢 DÙNG CHUNG |
+| `usp_DoUpdateMaterialQcInfo_Fail_HY` | `usp_DoUpdateMaterialQcInfo_Fail` | 5 | 🟢 DÙNG CHUNG |
+| `usp_DoUpdateMaterialQcInfo_Success_HY` | `usp_DoUpdateMaterialQcInfo_Success` | 3 | 🟢 DÙNG CHUNG |
+| `usp_DoSendEmailForDefectReportIQC_HY` | `usp_DoSendEmailForDefectReportIQC` | 248 | 🟡 MINOR DIFF |
+| `usp_IQcDefectReport_HY_iud` | `usp_IQcDefectReport_iud` | 7 | 🟢 DÙNG CHUNG |
+| `usp_DefectReportNoChange_HY_iud` | `usp_DefectReportNoChange_iud` | 3 | 🟢 DÙNG CHUNG |
+| `usp_MaterialQcInfoChangeLotNo_HY_iud` | `usp_MaterialQcInfoChangeLotNo_iud` | 1 | 🟢 DÙNG CHUNG |
+| `usp_ModifyRevisionsVerFromC220_VVTF4_HY` | `usp_ModifyRevisionsVerFromC220_VVTF4` | 1 | 🟢 DÙNG CHUNG |
+| `usp_NCR_Report_HY_iud` | `usp_NCR_Report_iud` | 1 | 🟢 DÙNG CHUNG |
+| `usp_QcDefectIQCReport_HY_get` | `usp_QcDefectIQCReport_get` | 3 | 🟢 DÙNG CHUNG |
+| `usp_UpdateDefectDetailIQC_VVT_HY` | `usp_UpdateDefectDetailIQC_VVT` | 9 | 🟢 DÙNG CHUNG |
+| `usp_GetMaterialQcInfo_ForReport_HY` | `usp_GetMaterialQcInfo_ForReport` | 1 | 🟢 DÙNG CHUNG |
+| Popups (11 SPs) | — | — | ⚪ SHARED |
 
-> **Ghi chú:** 7 tên SP trong layout gốc (`usp_DoCancelIQC`, `usp_DoConfirmIQC`, `usp_DoCancelProd`, `usp_DoConfirmProd`, `usp_MaterialIqcDetail_iud`, `usp_MaterialIqcSampleResult_iud`, `usp_DoLossCommInspDoc_VNT`) là **client-side action bindings** — không phải DB SPs, không cần tạo.
+**Kết luận C220:** 16/20 SPs riêng HY thực ra **DÙNG CHUNG ĐƯỢC** (chỉ khác tên). Chỉ 2 SPs **PHẢI tách riêng** (`_Detail_get` và `_SampleResult_get`), 1 minor diff (`SendEmail`).
 
-### Tables
+### Tables (dùng chung)
 
 | Table | Vai trò |
 |---|---|
@@ -140,331 +120,287 @@ Không dùng function riêng.
 | `STB_MaterialMaster` | Master nguyên liệu |
 | `STB_IQcDefectReport` | Báo cáo lỗi IQC |
 
-### Functions
-
-Không dùng function riêng.
-
 ---
 
-## 4. B310 → `HY310` — Tạo lệnh sản xuất (Production Order)
+## 4. B310 → `HY310` — Tạo PO ❌ CHƯA CÓ screen
 
-**Mô tả:** Create PO  
-**Trạng thái:** ❌ CHƯA CÓ screen (SPs đã đủ)
-
-### Stored Procedures
-
-| SP HY | SP Gốc | Loại | Trạng thái |
+| SP HY | SP Gốc | Size Diff | Phân loại |
 |---|---|---|---|
-| `usp_ProductionOrderInfo_HY_get` | `usp_ProductionOrderInfo_get` | Riêng HY | ✅ Có |
-| `usp_ProductionOrderBom_HY_get` | `usp_ProductionOrderBom_get` | Riêng HY | ✅ Có |
-| `usp_ProductionOrderRouting_HY_get` | `usp_ProductionOrderRouting_get` | Riêng HY | ✅ Có |
-| `usp_ProductionOrderRouting_HY_iud` | `usp_ProductionOrderRouting_iud` | Riêng HY | ✅ Có |
-| `usp_DoFixProductionOrder_HY` | `usp_DoFixProductionOrder` | Riêng HY | ✅ Có |
-| `usp_DoCancelPO_HY` | `usp_DoCancelPO` | Riêng HY | ✅ Có |
-| `usp_GetMaterialGIForPO_HY` | `usp_GetMaterialGIForPO` | Riêng HY | ✅ Có |
-| `usp_DoCreateProductionOrder` | — | Dùng chung (generic) | ✅ Có |
-| `usp_BasicRoutingInfo_popup` | — | Dùng chung | ✅ Có |
-| `usp_CompanyInfo_popup` | — | Dùng chung | ✅ Có |
-| `usp_GetRouteInfoAll_popup` | — | Dùng chung | ✅ Có |
-| `usp_ProductionMaterialPopup` | — | Dùng chung | ✅ Có |
-| `usp_WorkCenterInfo_popup` | — | Dùng chung | ✅ Có |
+| `usp_ProductionOrderInfo_HY_get` | `usp_ProductionOrderInfo_get` | 911 | 🔴 PHẢI TÁCH RIÊNG |
+| `usp_ProductionOrderBom_HY_get` | `usp_ProductionOrderBom_get` | 344 | 🟡 MINOR DIFF |
+| `usp_ProductionOrderRouting_HY_get` | `usp_ProductionOrderRouting_get` | 276 | 🟡 MINOR DIFF |
+| `usp_ProductionOrderRouting_HY_iud` | `usp_ProductionOrderRouting_iud` | 679 | 🔴 PHẢI TÁCH RIÊNG |
+| `usp_DoFixProductionOrder_HY` | `usp_DoFixProductionOrder` | 298 | 🟡 MINOR DIFF |
+| `usp_DoCancelPO_HY` | `usp_DoCancelPO` | 481 | 🟡 MINOR DIFF |
+| `usp_GetMaterialGIForPO_HY` | `usp_GetMaterialGIForPO` | 296 | 🟡 MINOR DIFF |
+| Popups (5 SPs) | — | — | ⚪ SHARED |
 
-> **Ghi chú:** `usp_DoCreateProductionOrder` là SP generic, filter theo parameter `WorkCenterCode`. Không cần tạo `_HY` version.
+**Kết luận B310:** 2 SPs **PHẢI tách riêng**, 5 SPs minor diff (giữ riêng an toàn), 5 popups shared.
 
-### Tables
+### Tables (dùng chung)
 
 | Table | Vai trò |
 |---|---|
-| `STB_ProductionOrderInfo` | Lệnh sản xuất (filter `WorkCenterCode = 'VVT_F5'`) |
+| `STB_ProductionOrderInfo` | Lệnh sản xuất |
 | `STB_ProductionOrderBom` | BOM theo PO |
 | `STB_ProductionOrderRouting` | Routing theo PO |
 | `STB_MaterialMaster` | Master nguyên liệu |
 | `STB_BasicRoutingInfo` | Master routing |
 
-### Functions
-
-Không dùng function riêng.
-
 ---
 
-## 5. B442 → `HY442` — Tạo kế hoạch sản xuất hàng ngày (Electrode)
+## 5. B442 → `HY442` — Daily Plan Electrode ❌ CHƯA CÓ screen
 
-**Mô tả:** Create Daily Plan  
-**Trạng thái:** ❌ CHƯA CÓ screen (SPs đã đủ)
-
-### Stored Procedures
-
-| SP HY | SP Gốc | Loại | Trạng thái |
+| SP HY | SP Gốc | Size Diff | Phân loại |
 |---|---|---|---|
-| `usp_DayProdPlan_HY_get` | `usp_DayProdPlan_get` | Riêng HY | ✅ Có |
-| `usp_DayProdPlan_HY_iud` | `usp_DayProdPlan_iud` | Riêng HY | ✅ Có |
-| `usp_DoCancelDayProdPlan_HY` | `usp_DoCancelDayProdPlan` | Riêng HY | ✅ Có |
-| `usp_DoFixDayProdPlan_HY` | `usp_DoFixDayProdPlan` | Riêng HY | ✅ Có |
-| `usp_SetInfo_HY_get` | `usp_SetInfo_get` | Riêng HY | ✅ Có |
-| `usp_SetInfo_HY_iud_VNT` | `usp_SetInfo_iud_VNT` | Riêng HY | ✅ Có |
-| `usp_MainAssemblePartWeight_HY_get` | `usp_MainAssemblePartWeight_get` | Riêng HY | ✅ Có |
-| `usp_BomVersion_popup` | — | Dùng chung | ✅ Có |
-| `usp_CompanyInfo_popup` | — | Dùng chung | ✅ Có |
-| `usp_LineInfo_popup` | — | Dùng chung | ✅ Có |
-| `usp_ProductGroup_popup` | — | Dùng chung | ✅ Có |
-| `usp_ProductionMaterialPopup` | — | Dùng chung | ✅ Có |
-| `usp_RouteInfoForLine_popup` | — | Dùng chung | ✅ Có |
-| `usp_ShiftCode_popup` | — | Dùng chung | ✅ Có |
-| `usp_WorkCenterInfo_popup` | — | Dùng chung | ✅ Có |
+| `usp_DayProdPlan_HY_get` | `usp_DayProdPlan_get` | 3 | 🟢 DÙNG CHUNG |
+| `usp_DayProdPlan_HY_iud` | `usp_DayProdPlan_iud` | 1473 | 🔴 PHẢI TÁCH RIÊNG |
+| `usp_DoCancelDayProdPlan_HY` | `usp_DoCancelDayProdPlan` | 329 | 🟡 MINOR DIFF |
+| `usp_DoFixDayProdPlan_HY` | `usp_DoFixDayProdPlan` | 330 | 🟡 MINOR DIFF |
+| `usp_SetInfo_HY_get` | `usp_SetInfo_get` | 175 | 🟡 MINOR DIFF |
+| `usp_SetInfo_HY_iud_VNT` | `usp_SetInfo_iud_VNT` | 2526 | 🔴 PHẢI TÁCH RIÊNG |
+| `usp_MainAssemblePartWeight_HY_get` | `usp_MainAssemblePartWeight_get` | 1 | 🟢 DÙNG CHUNG |
+| Popups (8 SPs) | — | — | ⚪ SHARED |
 
-### Tables
+**Kết luận B442:** 2 SPs dùng chung, 2 SPs **PHẢI tách riêng** (logic IUD khác lớn), 3 minor diff, 8 shared.
+
+### Tables (dùng chung)
 
 | Table | Vai trò |
 |---|---|
-| `STB_DayProdPlan` | Kế hoạch ngày (filter `WorkCenterCode`, `LineCode`) |
+| `STB_DayProdPlan` | Kế hoạch ngày |
 | `STB_SetInfo` | Thông tin Set/Lot |
 | `STB_ProductionOrderInfo` | PO liên kết |
 | `STB_MaterialMaster` | Master nguyên liệu |
-| `STB_LineInfo` | Thông tin dây chuyền |
-| `STB_RouteInfo` | Thông tin route |
-| `STB_MachineMaster` | Master máy |
-| `STB_CompanyInfo` | Thông tin công ty |
-| `STB_WorkCenterInfo` | Thông tin nhà máy |
+| `STB_LineInfo` | Dây chuyền |
+| `STB_RouteInfo` | Route |
+| `STB_MachineMaster` | Máy |
+| `STB_CompanyInfo` | Công ty |
+| `STB_WorkCenterInfo` | Nhà máy |
 
-### Functions
+### Functions (dùng chung)
 
-| Function | Loại | Vai trò |
-|---|---|---|
-| `fnGetLocalTime` | Scalar | Chuyển UTC → local time |
-| `fnSplitToTable` | Table-valued | Split chuỗi thành bảng |
+| Function | Vai trò |
+|---|---|
+| `fnGetLocalTime` | Chuyển UTC → local |
+| `fnSplitToTable` | Split chuỗi |
 
 ---
 
-## 6. B470 → `HY470` — Thiết lập công đoạn Mixing (trộn)
+## 6. B470 → `HY470` — Electrode Process Steps (Mixing) ❌ CHƯA CÓ screen
 
-**Mô tả:** Set up the Mixing process steps  
-**Trạng thái:** ❌ CHƯA CÓ screen (SPs đã đủ)
-
-### Stored Procedures
-
-| SP HY | SP Gốc | Loại | Trạng thái |
+| SP HY | SP Gốc | Size Diff | Phân loại |
 |---|---|---|---|
-| `usp_ElectrodeStep_HY_get` | `usp_ElectrodeStep_get` | Riêng HY | ✅ Có |
-| `usp_ElectrodeStep_HY_iud` | `usp_ElectrodeStep_iud` | Riêng HY | ✅ Có |
-| `usp_ElectrodeCommon_HY_get` | `usp_ElectrodeCommon_get` | Riêng HY | ✅ Có |
-| `usp_ElectrodeCommon_HY_iud` | `usp_ElectrodeCommon_iud` | Riêng HY | ✅ Có |
-| `usp_ElectrodeOven_HY_get` | `usp_ElectrodeOven_get` | Riêng HY | ✅ Có |
-| `usp_ElectrodeOven_HY_iud` | `usp_ElectrodeOven_iud` | Riêng HY | ✅ Có |
-| `usp_ElectrodeStep_popup` | — | Dùng chung | ✅ Có |
-| `usp_MaterialMasterByMaterialType_popup` | — | Dùng chung | ✅ Có |
+| `usp_ElectrodeStep_HY_get` | `usp_ElectrodeStep_get` | 306 | 🟡 MINOR DIFF |
+| `usp_ElectrodeStep_HY_iud` | `usp_ElectrodeStep_iud` | 880 | 🔴 PHẢI TÁCH RIÊNG |
+| `usp_ElectrodeCommon_HY_get` | `usp_ElectrodeCommon_get` | 397 | 🟡 MINOR DIFF |
+| `usp_ElectrodeCommon_HY_iud` | `usp_ElectrodeCommon_iud` | 1584 | 🔴 PHẢI TÁCH RIÊNG |
+| `usp_ElectrodeOven_HY_get` | `usp_ElectrodeOven_get` | 281 | 🟡 MINOR DIFF |
+| `usp_ElectrodeOven_HY_iud` | `usp_ElectrodeOven_iud` | 818 | 🔴 PHẢI TÁCH RIÊNG |
+| `usp_ElectrodeStep_popup` | — | — | ⚪ SHARED |
+| `usp_MaterialMasterByMaterialType_popup` | — | — | ⚪ SHARED |
 
-### Tables
+**Kết luận B470:** 3 SPs `_iud` **PHẢI tách riêng** (logic insert/update/delete khác), 3 SPs `_get` minor diff, 2 shared.
+
+### Tables (dùng chung)
 
 | Table | Vai trò |
 |---|---|
 | `STB_ElectrodeStep` | Công đoạn electrode |
-| `STB_ElectrodeCommon` | Thông số chung electrode |
+| `STB_ElectrodeCommon` | Thông số chung |
 | `STB_ElectrodeOven` | Thông số lò sấy |
 | `STB_MaterialMaster` | Master nguyên liệu |
 
-### Functions
-
-Không dùng function riêng.
-
 ---
 
-## 7. B552 → `HY552` — Kết quả sản xuất electrode từng công đoạn
+## 7. B552 → `HY552` — Electrode Measure Results ❌ CHƯA CÓ screen
 
-**Mô tả:** Electrode production results at each stage  
-**Trạng thái:** ❌ CHƯA CÓ screen (SPs đã đủ) — Phức tạp nhất (25 SPs riêng HY)
-
-### Stored Procedures
-
-| SP HY | SP Gốc | Loại | Trạng thái |
+| SP HY | SP Gốc | Size Diff | Phân loại |
 |---|---|---|---|
-| `usp_ElectrodeCoatingInfo_HY_get` | `usp_ElectrodeCoatingInfo_get` | Riêng HY | ✅ Có |
-| `usp_ElectrodeCoatingInfo_HY_iud` | `usp_ElectrodeCoatingInfo_iud` | Riêng HY | ✅ Có |
-| `usp_ElectrodeCoatingVisualInspectionInfo_HY_get` | `usp_ElectrodeCoatingVisualInspectionInfo_get` | Riêng HY | ✅ Có |
-| `usp_ElectrodeCoatingVisualInspectionInfo_HY_iud` | `usp_ElectrodeCoatingVisualInspectionInfo_iud` | Riêng HY | ✅ Có |
-| `usp_ElectrodeMixInfo_HY_get` | `usp_ElectrodeMixInfo_get` | Riêng HY | ✅ Có |
-| `usp_ElectrodeMixInfo_HY_iud` | `usp_ElectrodeMixInfo_iud` | Riêng HY | ✅ Có |
-| `usp_ElectrodeMixStepInfo_HY_get` | `usp_ElectrodeMixStepInfo_get` | Riêng HY | ✅ Có |
-| `usp_ElectrodeMixStepInfo_HY_iud` | `usp_ElectrodeMixStepInfo_iud` | Riêng HY | ✅ Có |
-| `usp_ElectrodeRollPressingInfo_HY_get` | `usp_ElectrodeRollPressingInfo_get` | Riêng HY | ✅ Có |
-| `usp_ElectrodeRollPressingInfo_HY_iud` | `usp_ElectrodeRollPressingInfo_iud` | Riêng HY | ✅ Có |
-| `usp_ElectrodeRollPressingVisualInspectionInfo_HY_get` | `usp_ElectrodeRollPressingVisualInspectionInfo_get` | Riêng HY | ✅ Có |
-| `usp_ElectrodeRollPressingVisualInspectionInfo_HY_iud` | `usp_ElectrodeRollPressingVisualInspectionInfo_iud` | Riêng HY | ✅ Có |
-| `usp_ElectrodeSlittingInfo_HY_get` | `usp_ElectrodeSlittingInfo_get` | Riêng HY | ✅ Có |
-| `usp_ElectrodeSlittingInfo_HY_iud` | `usp_ElectrodeSlittingInfo_iud` | Riêng HY | ✅ Có |
-| `usp_ElectrodeSlittingResult_HY_get` | `usp_ElectrodeSlittingResult_get` | Riêng HY | ✅ Có |
-| `usp_ElectrodeSlittingResult_HY_iud` | `usp_ElectrodeSlittingResult_iud` | Riêng HY | ✅ Có |
-| `usp_ElectrodeWasteInfoNew_HY_iud` | `usp_ElectrodeWasteInfoNew_iud` | Riêng HY | ✅ Có |
-| `usp_ElectrodeWastePriceNewByBarcode_HY_get` | `usp_ElectrodeWastePriceNewByBarcode_get` | Riêng HY | ✅ Có |
-| `usp_ElectrodCoatingInfo_Viscosity_VVT_HY_iud` | `usp_ElectrodCoatingInfo_Viscosity_VVT_iud` | Riêng HY | ✅ Có |
-| `usp_DoUpdateCoatingBarcodePrintYn_HY` | `usp_DoUpdateCoatingBarcodePrintYn` | Riêng HY | ✅ Có |
-| `usp_DoUpdateRollPressBarcodePrintYn_HY` | `usp_DoUpdateRollPressBarcodePrintYn` | Riêng HY | ✅ Có |
-| `usp_DoUpdateSlitingBarcodePrintYn_HY` | `usp_DoUpdateSlitingBarcodePrintYn` | Riêng HY | ✅ Có |
-| `usp_LocationElectric_HY` | `usp_LocationElectric` | Riêng HY | ✅ Có |
-| `usp_test_check_expired_HY` | `usp_test_check_expired` | Riêng HY | ✅ Có |
-| `usp_Vietnam_RollPressingSlitting_HY_get` | `usp_Vietnam_RollPressingSlitting_get` | Riêng HY | ✅ Có |
-| `usp_RouteInfo_get` | — | Dùng chung (param-based) | ✅ Có |
-| `usp_GetBaseCode_popup` | — | Dùng chung | ✅ Có |
-| `usp_GetBasicRouteingDetailForRoute_popup` | — | Dùng chung (param-based) | ✅ Có |
-| `usp_MaterialMaster_popup` | — | Dùng chung | ✅ Có |
-| `usp_ProductMachine_popup` | — | Dùng chung (param-based) | ✅ Có |
-| `usp_ProductMachineForRoute_popup` | — | Dùng chung (param-based) | ✅ Có |
-| `usp_ProdWorkerInfo_Popup` | — | Dùng chung | ✅ Có |
-| `usp_Vietnam_DefectInfo_popup` | — | Dùng chung | ✅ Có |
-| `usp_CommonCode_INOUT_popup` | — | Dùng chung | ✅ Có |
-| `usp_CommonCode_OKNG_popup` | — | Dùng chung | ✅ Có |
-| `usp_CommonCode_OX_LEFT_popup` | — | Dùng chung | ✅ Có |
-| `usp_CommonCode_OX_RIGHT_popup` | — | Dùng chung | ✅ Có |
-| `usp_CommonCode_YesNo_popup` | — | Dùng chung | ✅ Có |
-| `usp_CommonCode_YesNo_PushingYn_popup` | — | Dùng chung | ✅ Có |
+| `usp_ElectrodeCoatingInfo_HY_get` | `usp_ElectrodeCoatingInfo_get` | 1 | 🟢 DÙNG CHUNG |
+| `usp_ElectrodeCoatingInfo_HY_iud` | `usp_ElectrodeCoatingInfo_iud` | 1 | 🟢 DÙNG CHUNG |
+| `usp_ElectrodeCoatingVisualInspectionInfo_HY_get` | `_get` | 3 | 🟢 DÙNG CHUNG |
+| `usp_ElectrodeCoatingVisualInspectionInfo_HY_iud` | `_iud` | 1 | 🟢 DÙNG CHUNG |
+| `usp_ElectrodeMixInfo_HY_get` | `_get` | 2 | 🟢 DÙNG CHUNG |
+| `usp_ElectrodeMixInfo_HY_iud` | `_iud` | 3 | 🟢 DÙNG CHUNG |
+| `usp_ElectrodeMixStepInfo_HY_get` | `_get` | 1 | 🟢 DÙNG CHUNG |
+| `usp_ElectrodeMixStepInfo_HY_iud` | `_iud` | 1 | 🟢 DÙNG CHUNG |
+| `usp_ElectrodeRollPressingInfo_HY_get` | `_get` | 3 | 🟢 DÙNG CHUNG |
+| `usp_ElectrodeRollPressingInfo_HY_iud` | `_iud` | 1 | 🟢 DÙNG CHUNG |
+| `usp_ElectrodeRollPressingVisualInspectionInfo_HY_get` | `_get` | 1 | 🟢 DÙNG CHUNG |
+| `usp_ElectrodeRollPressingVisualInspectionInfo_HY_iud` | `_iud` | 1 | 🟢 DÙNG CHUNG |
+| `usp_ElectrodeSlittingInfo_HY_get` | `_get` | 3 | 🟢 DÙNG CHUNG |
+| `usp_ElectrodeSlittingInfo_HY_iud` | `_iud` | 3 | 🟢 DÙNG CHUNG |
+| `usp_ElectrodeSlittingResult_HY_get` | `_get` | 1 | 🟢 DÙNG CHUNG |
+| `usp_ElectrodeSlittingResult_HY_iud` | `_iud` | 3 | 🟢 DÙNG CHUNG |
+| `usp_ElectrodeWasteInfoNew_HY_iud` | `_iud` | 3 | 🟢 DÙNG CHUNG |
+| `usp_ElectrodeWastePriceNewByBarcode_HY_get` | `_get` | 3 | 🟢 DÙNG CHUNG |
+| `usp_ElectrodCoatingInfo_Viscosity_VVT_HY_iud` | `_iud` | 3 | 🟢 DÙNG CHUNG |
+| `usp_DoUpdateCoatingBarcodePrintYn_HY` | original | 3 | 🟢 DÙNG CHUNG |
+| `usp_DoUpdateRollPressBarcodePrintYn_HY` | original | 3 | 🟢 DÙNG CHUNG |
+| `usp_DoUpdateSlitingBarcodePrintYn_HY` | original | 3 | 🟢 DÙNG CHUNG |
+| `usp_LocationElectric_HY` | original | 9 | 🟢 DÙNG CHUNG |
+| `usp_test_check_expired_HY` | original | 1 | 🟢 DÙNG CHUNG |
+| `usp_Vietnam_RollPressingSlitting_HY_get` | original | 2 | 🟢 DÙNG CHUNG |
+| Popups (8+ SPs) | — | — | ⚪ SHARED |
 
-### Tables
+**Kết luận B552: 25/25 SPs riêng HY thực chất DÙNG CHUNG ĐƯỢC** — tất cả chỉ khác tên SP (diff 1-9 chars). Đây là màn phức tạp nhất nhưng SPs **hoàn toàn giống nhau**.
+
+### Tables (dùng chung)
 
 | Table | Vai trò |
 |---|---|
 | `STB_ElectrodeCoatingInfo` | Kết quả coating |
-| `STB_ElectrodeCoatingVisualInspectionInfo` | Kiểm tra visual coating |
+| `STB_ElectrodeCoatingVisualInspectionInfo` | Visual coating |
 | `STB_ElectrodeMixInfo` | Kết quả mixing |
-| `STB_ElectrodeMixStepInfo` | Chi tiết bước mixing |
+| `STB_ElectrodeMixStepInfo` | Chi tiết mixing |
 | `STB_ElectrodeRollPressingInfo` | Kết quả cán |
-| `STB_ElectrodeRollPressingVisualInspectionInfo` | Kiểm tra visual cán |
+| `STB_ElectrodeRollPressingVisualInspectionInfo` | Visual cán |
 | `STB_ElectrodeSlittingInfo` | Kết quả cắt |
-| `STB_ElectrodeSlittingResult` | Kết quả chi tiết cắt |
-| `STB_ElectrodeWasteInfo` | Phế liệu electrode |
-| `STB_SlittingLocationConfig_VVT` | Cấu hình vị trí cắt |
+| `STB_ElectrodeSlittingResult` | Chi tiết cắt |
+| `STB_ElectrodeWasteInfo` | Phế liệu |
+| `STB_SlittingLocationConfig_VVT` | Vị trí cắt |
 | `STB_CoatingToSlittingMaster` | Mapping coating→slitting |
-| `STB_ProdRouteHist` | Lịch sử route sản xuất |
+| `STB_ProdRouteHist` | Lịch sử route |
 
-### Functions
+### Functions (dùng chung)
 
-| Function | Loại | Vai trò |
-|---|---|---|
-| `fnGetElectrodeDensity` | Scalar | Tính mật độ electrode |
-| `fnGetElectrodeDensityAvg` | Scalar | Mật độ trung bình |
-| `fnGetElectrodeDensityNew` | Scalar | Mật độ (phiên bản mới) |
-| `fnGetElectrodeThickness01` | Scalar | Độ dày electrode #1 |
-| `fnGetElectrodeThickness02` | Scalar | Độ dày electrode #2 |
-| `fnGetElectrodeThickness03` | Scalar | Độ dày electrode #3 |
+| Function | Vai trò |
+|---|---|
+| `fnGetElectrodeDensity` | Mật độ electrode |
+| `fnGetElectrodeDensityAvg` | Mật độ TB |
+| `fnGetElectrodeDensityNew` | Mật độ (v2) |
+| `fnGetElectrodeThickness01` | Độ dày #1 |
+| `fnGetElectrodeThickness02` | Độ dày #2 |
+| `fnGetElectrodeThickness03` | Độ dày #3 |
 
 ---
 
-## 8. B802 → `HY802` — Báo cáo kết quả sản xuất electrode
+## 8. B802 → `HY802` — Báo cáo sản xuất electrode ❌ CHƯA CÓ screen
 
-**Mô tả:** Report on electrode production results  
-**Trạng thái:** ❌ CHƯA CÓ screen (SPs đã đủ)
-
-### Stored Procedures
-
-| SP HY | SP Gốc | Loại | Trạng thái |
+| SP HY | SP Gốc | Size Diff | Phân loại |
 |---|---|---|---|
-| `usp_Vietnam_ElectrodeProdRouteHist_HY_get` | `usp_Vietnam_ElectrodeProdRouteHist_get` | Riêng HY | ✅ Có |
-| `usp_Vietnam_ElectrodeDefectHist_HY_get` | `usp_Vietnam_ElectrodeDefectHist_get` | Riêng HY | ✅ Có |
-| `usp_CompanyInfo_get` | — | Dùng chung | ✅ Có |
-| `usp_GetBaseCode_popup` | — | Dùng chung | ✅ Có |
-| `usp_GetBaseCode_popup2` | — | Dùng chung | ✅ Có |
-| `usp_vvt_RnDorProduction_popup` | — | Dùng chung | ✅ Có |
-| `usp_WorkCenterInfo_popup` | — | Dùng chung | ✅ Có |
+| `usp_Vietnam_ElectrodeProdRouteHist_HY_get` | `_get` | 57 | 🟡 MINOR DIFF |
+| `usp_Vietnam_ElectrodeDefectHist_HY_get` | `_get` | 1 | 🟢 DÙNG CHUNG |
+| Popups (5 SPs) | — | — | ⚪ SHARED |
 
-### Tables
+**Kết luận B802:** 1 SP dùng chung, 1 minor diff, 5 shared. Rất đơn giản.
+
+### Tables (dùng chung)
 
 | Table | Vai trò |
 |---|---|
-| `STB_ProdRouteHist` | Lịch sử route sản xuất |
-| `STB_ElectrodeCoatingInfo` | Data coating (ref) |
-| `STB_ElectrodeRollPressingInfo` | Data cán (ref) |
-| `STB_ElectrodeSlittingInfo` | Data cắt (ref) |
-| `STB_ElectrodeMixInfo` | Data mixing (ref) |
+| `STB_ProdRouteHist` | Lịch sử route |
+| `STB_ElectrodeCoatingInfo` | Data coating |
+| `STB_ElectrodeRollPressingInfo` | Data cán |
+| `STB_ElectrodeSlittingInfo` | Data cắt |
+| `STB_ElectrodeMixInfo` | Data mixing |
 
-### Functions
+### Functions (dùng chung)
 
-| Function | Loại | Vai trò |
-|---|---|---|
-| `fnGetJobDateShiftTime` | Scalar | Lấy ca/ngày theo thời gian |
+| Function | Vai trò |
+|---|---|
+| `fnGetJobDateShiftTime` | Lấy ca/ngày |
 
 ---
 
-## 9. C460 → `HY460` — QC kiểm tra electrode nhập kho
+## 9. C460 → `HY460` — QC Electrode Inspection ❌ CHƯA CÓ screen
 
-**Mô tả:** QC workers inspect the incoming electrodes  
-**Trạng thái:** ❌ CHƯA CÓ screen (SPs đã đủ)
-
-### Stored Procedures
-
-| SP HY | SP Gốc | Loại | Trạng thái |
+| SP HY | SP Gốc | Size Diff | Phân loại |
 |---|---|---|---|
-| `usp_GetElectrodeInspectionHistoryForBarcode_HY` | `usp_GetElectrodeInspectionHistoryForBarcode` | Riêng HY | ✅ Có |
-| `usp_DoAddCommInspMeasureHistForBarcode_HY` | `usp_DoAddCommInspMeasureHistForBarcode` | Riêng HY | ✅ Có |
-| `usp_DoFinishCommInspDoc_HY` | `usp_DoFinishCommInspDoc` | Riêng HY | ✅ Có |
-| `usp_DoFinishCommInspDoc_VNT_HY` | `usp_DoFinishCommInspDoc_VNT` | Riêng HY | ✅ Có |
-| `usp_DoLossElectrodeProcess_HY_iud` | `usp_DoLossElectrodeProcess_iud` | Riêng HY | ✅ Có |
-| `usp_ElectrodeCoatingInfo_HY_get` | `usp_ElectrodeCoatingInfo_get` | Riêng HY | ✅ Có |
-| `usp_ElectrodeDivision_popup_HY` | `usp_ElectrodeDivision_popup` | Riêng HY | ✅ Có |
-| `usp_DoLossCommInspDoc_VNT` | — | Dùng chung (generic) | ✅ Có |
-| `usp_CommInspSelectItem_popup` | — | Dùng chung | ✅ Có |
-| `usp_CommonCode_OKNG_popup` | — | Dùng chung | ✅ Có |
-| `usp_CompanyInfo_popup` | — | Dùng chung | ✅ Có |
-| `usp_DefectInfo_popup` | — | Dùng chung (param-based) | ✅ Có |
-| `usp_LineInfo_popup` | — | Dùng chung | ✅ Có |
-| `usp_ProdWorkerInfo_Popup` | — | Dùng chung | ✅ Có |
-| `usp_RouteInfoForLine_popup` | — | Dùng chung | ✅ Có |
-| `usp_WorkCenterInfo_popup` | — | Dùng chung | ✅ Có |
+| `usp_GetElectrodeInspectionHistoryForBarcode_HY` | original | 1 | 🟢 DÙNG CHUNG |
+| `usp_DoAddCommInspMeasureHistForBarcode_HY` | original | 3 | 🟢 DÙNG CHUNG |
+| `usp_DoFinishCommInspDoc_HY` | original | 3 | 🟢 DÙNG CHUNG |
+| `usp_DoFinishCommInspDoc_VNT_HY` | original | 3 | 🟢 DÙNG CHUNG |
+| `usp_DoLossElectrodeProcess_HY_iud` | original | 3 | 🟢 DÙNG CHUNG |
+| `usp_ElectrodeCoatingInfo_HY_get` | original | 1 | 🟢 DÙNG CHUNG |
+| `usp_ElectrodeDivision_popup_HY` | original | 3 | 🟢 DÙNG CHUNG |
+| Popups (8 SPs) | — | — | ⚪ SHARED |
 
-### Tables
+**Kết luận C460: 7/7 SPs riêng HY DÙNG CHUNG ĐƯỢC** — tất cả chỉ khác tên SP.
+
+### Tables (dùng chung)
 
 | Table | Vai trò |
 |---|---|
 | `STB_CommInspDocHistory` | Lịch sử kiểm tra |
 | `STB_CommInspDocItem` | Hạng mục kiểm tra |
 | `STB_CommInspMeasureHist` | Kết quả đo |
-| `STB_ElectrodeCoatingInfo` | Data coating (ref) |
+| `STB_ElectrodeCoatingInfo` | Data coating |
 | `STB_ProdRouteHist` | Lịch sử route |
-
-### Functions
-
-Không dùng function riêng.
 
 ---
 
-## Phụ lục: Tổng hợp DB Objects dùng chung (không cần tạo _HY)
+## Phụ lục A: 🔴 Danh sách 12 SPs PHẢI TÁCH RIÊNG (MUST_SEPARATE)
 
-### Tables dùng chung (16 bảng)
+Các SP này có logic khác biệt **đáng kể** so với bản gốc — **BẮT BUỘC dùng `_HY`**:
 
-Tất cả bảng dưới đây đều đã tồn tại. Dữ liệu HY được phân biệt bằng `WorkCenterCode = 'VVT_F5'` hoặc `LineCode LIKE 'VVHY%'`.
+| # | SP HY | Size Diff | Màn hình |
+|---|---|---|---|
+| 1 | `usp_MaterialQcInspectionItem_ByMaterial_HY_get` | 1478 | C122 |
+| 2 | `usp_MaterialQcDetail_HY_get` | 626 | C220 |
+| 3 | `usp_MaterialQcSampleResult_HY_get` | 2213 | C220 |
+| 4 | `usp_ProductionOrderInfo_HY_get` | 911 | B310 |
+| 5 | `usp_ProductionOrderRouting_HY_iud` | 679 | B310 |
+| 6 | `usp_DayProdPlan_HY_iud` | 1473 | B442 |
+| 7 | `usp_SetInfo_HY_iud_VNT` | 2526 | B442 |
+| 8 | `usp_ElectrodeStep_HY_iud` | 880 | B470 |
+| 9 | `usp_ElectrodeCommon_HY_iud` | 1584 | B470 |
+| 10 | `usp_ElectrodeOven_HY_iud` | 818 | B470 |
+| 11 | `usp_DoAddCommInspMeasureHistForBarcode_HY_TEST` | 4475 | (test) |
+| 12 | `usp_ElectrodCoatingInfo_Viscosity_VVT_HY_iud` | (large) | B552 |
 
-| Table | Dùng bởi màn |
-|---|---|
-| `STB_ProductionOrderInfo` | B310, B442 |
-| `STB_ProductionOrderBom` | B310 |
-| `STB_ProductionOrderRouting` | B310 |
-| `STB_DayProdPlan` | B442 |
-| `STB_SetInfo` | B442 |
-| `STB_MaterialMaster` | Tất cả |
-| `STB_MaterialQcInfo` | C220 |
-| `STB_MaterialQcDetail` | C220 |
-| `STB_QcInspectionGroup` | C121 |
-| `STB_QcInspectionItem` | C121, C122 |
-| `STB_ElectrodeCoatingInfo` | B552, B802, C460 |
-| `STB_ElectrodeSlittingResult` | B552 |
-| `STB_ProdRouteHist` | B802, C460 |
-| `STB_CommInspDocHistory` | C460 |
-| `STB_LineInfo` | B442, C460 |
-| `STB_CompanyInfo` | B310, B442, B802 |
+---
 
-### Functions dùng chung (10 functions)
+## Phụ lục B: 🟢 Danh sách 30 SPs CÓ THỂ DÙNG CHUNG
 
-| Function | Loại | Dùng bởi |
+Các SP `_HY` này gần như **giống hệt** bản gốc (chỉ khác 1-9 chars = tên SP):
+
+| # | SP HY | Size Diff | Màn hình |
+|---|---|---|---|
+| 1 | `usp_MaterialQcInfo_HY_get` | 2 | C220 |
+| 2 | `usp_MaterialQcInfo_HY_iud` | 3 | C220 |
+| 3 | `usp_MaterialQcDetail_HY_iud` | 1 | C220 |
+| 4 | `usp_MaterialQcSampleResult_HY_iud` | 1 | C220 |
+| 5 | `usp_DoChangeMaterialQcToPass_HY` | 3 | C220 |
+| 6 | `usp_DoMakeMaterialIQCDetailList_HY` | 9 | C220 |
+| 7 | `usp_DoMakeMaterialQcSampleResult_HY` | 3 | C220 |
+| 8 | `usp_DoUpdateMaterialQcInfo_Fail_HY` | 5 | C220 |
+| 9 | `usp_DoUpdateMaterialQcInfo_Success_HY` | 3 | C220 |
+| 10 | `usp_IQcDefectReport_HY_iud` | 7 | C220 |
+| 11 | `usp_DefectReportNoChange_HY_iud` | 3 | C220 |
+| 12 | `usp_MaterialQcInfoChangeLotNo_HY_iud` | 1 | C220 |
+| 13 | `usp_ModifyRevisionsVerFromC220_VVTF4_HY` | 1 | C220 |
+| 14 | `usp_NCR_Report_HY_iud` | 1 | C220 |
+| 15 | `usp_QcDefectIQCReport_HY_get` | 3 | C220 |
+| 16 | `usp_UpdateDefectDetailIQC_VVT_HY` | 9 | C220 |
+| 17 | `usp_GetMaterialQcInfo_ForReport_HY` | 1 | C220 |
+| 18 | `usp_DayProdPlan_HY_get` | 3 | B442 |
+| 19 | `usp_MainAssemblePartWeight_HY_get` | 1 | B442 |
+| 20-44 | Toàn bộ B552 SPs (25 SPs) | 1-9 | B552 |
+| 45 | `usp_Vietnam_ElectrodeDefectHist_HY_get` | 1 | B802 |
+| 46-52 | Toàn bộ C460 SPs (7 SPs) | 1-3 | C460 |
+
+---
+
+## Phụ lục C: 🔵 SPs Chỉ HY Mới Có (NO_ORIGINAL_FOUND)
+
+| SP | Size | Mô tả |
 |---|---|---|
-| `fnGetJobDateShiftTime` | Scalar | B442, B802 |
-| `fnGetLocalTime` | Scalar | B442 |
-| `fnGetElectrodeDensity` | Scalar | B552 |
-| `fnGetElectrodeDensityAvg` | Scalar | B552 |
-| `fnGetElectrodeDensityNew` | Scalar | B552 |
-| `fnGetElectrodeThickness01` | Scalar | B552 |
-| `fnGetElectrodeThickness02` | Scalar | B552 |
-| `fnGetElectrodeThickness03` | Scalar | B552 |
-| `fn_split_string` | Table-valued | Nhiều SPs |
-| `fnSplitToTable` | Table-valued | B442 |
+| `usp_GetMaterialOQcInfo_HY_get` | 15581 | OQC cho HY (không dùng trong 9 màn) |
+| `usp_MaterialQcInspectionItemByMaterial_HY_get` | 3709 | Version 2 (không dùng trong 9 màn) |
+| `usp_VN_Add_FinishGood_HY_New` | 1832 | Thành phẩm HY |
+| `usp_VN_IMPORTFINISHEDGOOD_HY_New` | 4475 | Import thành phẩm HY |
+| `usp_VN_Update_GoodFinish_HY_New` | 765 | Update thành phẩm HY |
 
-### Lưu ý: Hưng Yên chưa có Electrode Lines
+---
 
-HY hiện có 15 lines: 10 Cell (`VVHYC-01`→`10`) + 5 Module (`VVHYMD-01`→`05`).  
-**Chưa có Electrode lines** → cần tạo (vd: `VVHYEL-01`) trước khi dùng B442/B470/B552/B802/C460.
+## Phụ lục D: Tables & Functions — 100% DÙNG CHUNG
+
+Không có table hay function nào cần tạo riêng cho HY. Tất cả dùng chung, phân biệt data bằng:
+- `WorkCenterCode = 'VVT_F5'`
+- `LineCode LIKE 'VVHY%'`
+- `CompanyCode` parameter
+
+### Lưu ý quan trọng
+**Hưng Yên chưa có Electrode Lines** trong `STB_LineInfo`. Cần tạo trước khi dùng B442/B470/B552/B802/C460.
