@@ -9,23 +9,23 @@
 
 | # | Gốc | TCode HY | Tên Screen HY | Trạng thái |
 |---|---|---|---|---|
-| 1 | C121 | `HY121` | `QcInspectionGroup_HY` | ❌ Cần tạo |
-| 2 | C122 | `HY122` | `MaterialQcInspectionItemByMaterial_HY` | ❌ Cần tạo |
-| 3 | C220 | `HY220` | `MaterialIqcInfoSampleManagement_HY` | ❌ Cần tạo |
-| 4 | B310 | `HY310` | `ProductionOrderInfo_HY` | ❌ Cần tạo |
-| 5 | B442 | `HY442` | `ElectrodePlan_HY` | ❌ Cần tạo |
-| 6 | B470 | `HY470` | `ElectrodePrcsCard_HY` | ❌ Cần tạo |
-| 7 | B552 | `HY552` | `ElectrodeMeasureResult_HY` | ❌ Cần tạo |
-| 8 | B802 | `HY802` | `ElectrodeProdRouteHist_HY` | ❌ Cần tạo |
-| 9 | C460 | `HY460` | `ElectrodeInspectionHistoryForBarcode_HY` | ❌ Cần tạo |
+| 1 | C121 | `HY121` | `HYQcInspectionGroup` | ❌ Cần tạo |
+| 2 | C122 | `HY122` | `HYMaterialQcInspectionItemByMaterial` | ❌ Cần tạo |
+| 3 | C220 | `HY220` | `HYMaterialIqcInfoSampleManagement` | ❌ Cần tạo |
+| 4 | B310 | `HY310` | `HYProductionOrderInfo` | ❌ Cần tạo |
+| 5 | B442 | `HY442` | `HYElectrodePlan` | ❌ Cần tạo |
+| 6 | B470 | `HY470` | `HYElectrodePrcsCard` | ❌ Cần tạo |
+| 7 | B552 | `HY552` | `HYElectrodeMeasureResult` | ❌ Cần tạo |
+| 8 | B802 | `HY802` | `HYElectrodeProdRouteHist` | ❌ Cần tạo |
+| 9 | C460 | `HY460` | `HYElectrodeInspectionHistoryForBarcode` | ❌ Cần tạo |
 
 ---
 
 ## 1. C121 → `HY121` — Quản lý nhóm & hạng mục kiểm tra ❌ CẦN TẠO
 
-**Clone từ:** `QcInspectionGroup` (C121, 6 objects, 273K layout) | **Parent:** `QC_HY`
+**Clone từ:** `QcInspectionGroup` (C121, 6 objects, 273K layout) | **Parent:** `HYQC`
 
-> ⚠️ **CONFLICT:** TCode `HY121` đã tồn tại = `QCInspectionGroupCode_HY` (3 objects, 69K layout — chỉ có Group, thiếu Item). Cần **xóa HY121 cũ** hoặc đặt TCode khác.
+> ⚠️ **CONFLICT:** TCode `HY121` đã tồn tại = `HYQCInspectionGroupCode` (3 objects, 69K layout — chỉ có Group, thiếu Item). Cần **xóa HY121 cũ** hoặc đặt TCode khác.
 
 ### Nghiệp vụ
 
@@ -63,11 +63,13 @@ Màn hình cấu hình **nền tảng QC** — thiết lập các nhóm kiểm t
 
 ---
 
-## 2. C122 → `HY122` — Tiêu chuẩn kiểm tra nguyên liệu ❌ CẦN TẠO
+## 2. C122 → `HY122` — Tiêu chuẩn kiểm tra nguyên liệu ✅ ĐÃ TẠO (cần deploy layout)
 
-**Clone từ:** `MaterialQcInspectionItemByMaterial` (C122, 9 objects, 826K layout) | **Parent:** `QC_HY`
+**Clone từ:** `MaterialQcInspectionItemByMaterial` (C122, 9 objects, 664K layout) | **Parent:** `HYQC`
 
-> ⚠️ **Lưu ý:** HY151 (`MaterialQcInspectionItem_HY`, 9 objects) đã tồn tại với chức năng tương tự nhưng dùng SP khác (`usp_MaterialQcInspectionItemByMaterial_HY_get` thay vì `usp_MaterialQcInspectionItem_ByMaterial_HY_get`). Kiểm tra xem có cần tạo HY122 riêng không.
+> ⚠️ **HY151 (`HYMaterialQcInspectionItem`) — KHÔNG DÙNG.** HY151 dùng bảng CHUNG (`STB_MaterialQcInspectionItem`, `STB_QcInspectionItem`) → data lẫn với nhà máy khác. HY122 dùng bảng RIÊNG (`_HY`) → an toàn, tách biệt data.
+
+> 📋 **Clone method:** Dùng script `fix_hy122_clone_full.sql` — clone layout từ C122 + REPLACE 2 SP names + clone đầy đủ 9 objects. **Không thể** clone bằng tay trong Designer vì thiếu objects.
 
 ### Nghiệp vụ
 
@@ -81,6 +83,22 @@ Thiết lập **tiêu chuẩn kiểm tra cho từng mã nguyên liệu** — map
 
 **Quan hệ:** C121 (định nghĩa hạng mục) → C122 (gán cho NVL) → C220 (kiểm tra thực tế)
 
+**Make View:** Cần nhập MaterialCode hợp lệ (vd: `EDVTMD-188`) — SP sẽ error nếu không có tham số.
+
+### Objects (9 — clone đầy đủ từ C122)
+
+| ObjectName | ObjectType | Ghi chú |
+|---|---|---|
+| `usp_MaterialQcInspectionItem_ByMaterial_HY_get` | SearchFunction | **_HY** — đọc từ bảng `_HY` |
+| `usp_MaterialQcInspectionItem_HY_iud` | ExecuteFunction | **_HY** — ghi vào bảng `_HY` |
+| `MaterialQcInspectionItem_ByMaterial_HY` | View | **_HY** — grid chính |
+| `MaterialInformation` | View | Dùng chung — grid info NVL |
+| `ImportFromInspectionItem` | Action | Dùng chung — import từ Group/Item |
+| `ImportFromMaterialInspectionItem` | Action | Dùng chung — import từ NVL khác |
+| `SetAql` | Action | Dùng chung — `usp_GetAql_popup` |
+| `SetLevel` | Action | Dùng chung — `usp_GetInspectionLevel_popup` |
+| `SetInspectionType` | Action | Dùng chung — `usp_GetInspectionType_Popup` |
+
 ### SPs dùng _HY
 
 | SP |
@@ -88,21 +106,29 @@ Thiết lập **tiêu chuẩn kiểm tra cho từng mã nguyên liệu** — map
 | `usp_MaterialQcInspectionItem_ByMaterial_HY_get` |
 | `usp_MaterialQcInspectionItem_HY_iud` |
 
-### SPs dùng chung
+### SPs dùng chung (Popup)
 
 | SP |
 |---|
 | `usp_MaterialMaster_popup` |
+| `usp_GetAql_popup` |
+| `usp_GetInspectionLevel_popup` |
+| `usp_GetInspectionType_Popup` |
 
-### Tables (dùng chung)
+### Tables
 
-`STB_MaterialQcInspectionItem`, `STB_MaterialMaster`, `STB_QcInspectionItem`
+| Bảng | Loại |
+|---|---|
+| `STB_MaterialQcInspectionItem_HY` | **Riêng HY** — data QC items |
+| `STB_QcInspectionItem_HY` | **Riêng HY** — hạng mục kiểm tra |
+| `STB_QcInspectionGroup_HY` | **Riêng HY** — nhóm kiểm tra |
+| `STB_MaterialMaster` | Dùng chung |
 
 ---
 
 ## 3. C220 → `HY220` — IQC Confirmation ❌ CẦN TẠO
 
-**Clone từ:** `MaterialIqcInfoSampleManagement` | **Parent:** `QC_HY`
+**Clone từ:** `MaterialIqcInfoSampleManagement` | **Parent:** `HYQC`
 
 ### Nghiệp vụ
 
@@ -181,9 +207,9 @@ Màn hình **kiểm tra chất lượng đầu vào (IQC)** — khi nguyên li�
 
 ## 4. B310 → `HY310` — Tạo PO ❌ CẦN TẠO
 
-**Clone từ:** `ProductionOrderInfo` | **Parent:** `Production_HY`
+**Clone từ:** `ProductionOrderInfo` | **Parent:** `HYProduction`
 
-> HY311 (PO_Electrode_HY) đã có nhưng là PO Electrode simplified (2 objects) — KHÁC B310 (General PO, 17 objects).
+> HY311 (HYPOElectrode) đã có nhưng là PO Electrode simplified (2 objects) — KHÁC B310 (General PO, 17 objects).
 
 ### Nghiệp vụ
 
@@ -496,10 +522,10 @@ Màn hình **báo cáo tổng hợp** kết quả sản xuất electrode — xem
 
 ## 9. C460 → `HY460` — QC Electrode Inspection ❌ CẦN TẠO
 
-**Clone từ:** `ElectrodeInspectionHistoryForBarcode` | **Parent:** `QC_HY`  
+**Clone từ:** `ElectrodeInspectionHistoryForBarcode` | **Parent:** `HYQC`  
 ⚠️ Cần Electrode Lines. Layout cần 3-phase replace (tránh double-replace `DoFinishCommInspDoc`).
 
-> HY443 (CommInspectionHistoryForBarcode_HY) đã có nhưng là **General CommInsp** (kiểm tra Cell/Module) — KHÁC C460 (**Electrode Inspection** — kiểm tra điện cực).
+> HY443 (HYCommInspectionHistoryForBarcode) đã có nhưng là **General CommInsp** (kiểm tra Cell/Module) — KHÁC C460 (**Electrode Inspection** — kiểm tra điện cực).
 
 ### Nghiệp vụ
 
