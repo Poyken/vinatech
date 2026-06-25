@@ -13,13 +13,13 @@
 |---|---|---|---|---|
 | 1 | C121 | `HY121` | `HYQcInspectionGroup` | ✅ Đã tạo (6 objects) |
 | 2 | C122 | `HY122` | `HYMaterialQcInspectionItemByMaterial` | ✅ Đã tạo (Chờ đồng bộ/thiết kế lại layout) |
-| 3 | C220 | `HY220` | `MaterialIqcInfoSampleManagement_HY` | ❌ Cần tạo (Đã có sẵn script clone) |
-| 4 | B310 | `HY310` | `ProductionOrderInfo_HY` | ❌ Cần tạo (Đã có sẵn script clone) |
-| 5 | B442 | `HY442` | `ElectrodePlan_HY` | ❌ Cần tạo (Đã có sẵn script clone) |
-| 6 | B470 | `HY470` | `ElectrodePrcsCard_HY` | ❌ Cần tạo (Đã có sẵn script clone) |
-| 7 | B552 | `HY552` | `ElectrodeMeasureResult_HY` | ❌ Cần tạo (Đã có sẵn script clone) |
-| 8 | B802 | `HY802` | `ElectrodeProdRouteHist_HY` | ❌ Cần tạo (Đã có sẵn script clone) |
-| 9 | C460 | `HY460` | `ElectrodeInspectionHistoryForBarcode_HY` | ❌ Cần tạo (Đã có sẵn script clone) |
+| 3 | C220 | `HY220` | `HYMaterialIqcInfoSampleManagement` | ❌ Chờ deploy (Sẵn sàng script) |
+| 4 | B310 | `HY310` | `HYProductionOrderInfo` | ❌ Chờ deploy (Sẵn sàng script) |
+| 5 | B442 | `HY442` | `HYElectrodePlan` | ❌ Chờ deploy (Sẵn sàng script) |
+| 6 | B470 | `HY470` | `HYElectrodePrcsCard` | ❌ Chờ deploy (Sẵn sàng script) |
+| 7 | B552 | `HY552` | `HYElectrodeMeasureResult` | ❌ Chờ deploy (Sẵn sàng script) |
+| 8 | B802 | `HY802` | `HYElectrodeProdRouteHist` | ❌ Chờ deploy (Sẵn sàng script) |
+| 9 | C460 | `HY460` | `HYElectrodeInspectionHistoryForBarcode` | ❌ Chờ deploy (Sẵn sàng script) |
 
 ---
 
