@@ -1,7 +1,7 @@
--- =============================================
+﻿-- =============================================
 -- Hotfix ID: 12_FIX_PRODUCTION_ORDER_HUNG_YEN_SPS
 -- Target Object: usp_ProductionOrderInfo_HY_get, usp_ProductionOrderBom_HY_get, usp_GetMaterialGIForPO_HY, usp_ProductionOrderRouting_HY_get, usp_DoFixProductionOrder_HY, usp_ProductionOrderRouting_HY_iud, usp_DoCancelPO_HY
--- Author: Antigravity (Advanced Agentic Coding)
+-- Author: vanduc
 -- Date: 2026-06-11
 -- Description: Tao 7 SP lien quan cho phan he Quan ly PO Hung Yen (_HY) tren cac bang dung chung.
 -- =============================================

@@ -1,8 +1,8 @@
--- ============================================================================
+﻿-- ============================================================================
 -- DEPLOY Script: Register 7 HY Screens + Clone Layouts + Objects + Permissions
 -- Combined all-in-one for deploy_tool.ps1 (runs on SmartFactoryV2 connection)
 -- All table references use SmartFramework.dbo.XXX fully qualified names
--- Author: AI Agent (Antigravity)
+-- Author: vanduc
 -- Date: 2026-06-23
 -- ============================================================================
 

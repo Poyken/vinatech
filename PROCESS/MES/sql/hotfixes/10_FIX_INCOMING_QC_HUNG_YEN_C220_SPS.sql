@@ -1,7 +1,7 @@
 ﻿-- =============================================
 -- Hotfix ID: 10_FIX_INCOMING_QC_HUNG_YEN_C220_SPS
 -- Target Object: 20 SPs and 1 Table for Hung Yen Incoming QC (C220)
--- Author: Antigravity (Advanced Agentic Coding)
+-- Author: vanduc
 -- Date: 2026-06-11
 -- Description: Táº¡o báº£ng cáº¥u hÃ¬nh vÃ  20 Stored Procedures liÃªn quan Ä‘áº¿n mÃ n hÃ¬nh C220 HÆ°ng YÃªn (_HY).
 --              CÃ¡c báº£ng nghiá»‡p vá»¥ giao dá»‹ch (STB_MaterialQcInfo, Detail, SampleResult) Ä‘Æ°á»£c giá»¯ chung.

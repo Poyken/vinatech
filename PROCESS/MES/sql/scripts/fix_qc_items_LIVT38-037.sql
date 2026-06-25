@@ -1,5 +1,5 @@
--- =================================================================================
--- Author: Antigravity
+﻿-- =================================================================================
+-- Author: vanduc
 -- Date: 2026-06-15
 -- Description: Đăng ký hạng mục kiểm tra chất lượng (QC inspection items) cho model LIVT38-037
 --              để khắc phục lỗi "검사항목이 등록되어있지 않습니다" (Chưa đăng ký hạng mục kiểm tra)
@@ -64,7 +64,7 @@ BEGIN TRY
         ItemInspectionPrior,
         ItemReportPrior,
         GETDATE() AS CreateDateTime,
-        'Antigravity' AS CreateUserID,
+        'vanduc' AS CreateUserID,
         NULL AS ChangeDateTime,
         NULL AS ChangeUserID,
         SampleQty,

@@ -1,7 +1,7 @@
--- ============================================================================
+﻿-- ============================================================================
 -- Script 01: Register 7 New HY Screens in SmartFramework.dbo.STB_ScreenInfo
 -- Target DB: SmartFramework
--- Author: AI Agent (Antigravity)
+-- Author: vanduc
 -- Date: 2026-06-23
 -- 
 -- INSTRUCTIONS:

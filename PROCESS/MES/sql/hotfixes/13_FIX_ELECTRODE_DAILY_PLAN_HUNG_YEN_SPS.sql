@@ -1,7 +1,7 @@
--- =============================================
+﻿-- =============================================
 -- Hotfix ID: 13_FIX_ELECTRODE_DAILY_PLAN_HUNG_YEN_SPS
 -- Target Object: usp_DayProdPlan_HY_iud, usp_DoCancelDayProdPlan_HY, usp_DoFixDayProdPlan_HY, usp_SetInfo_HY_iud_VNT
--- Author: Antigravity (Advanced Agentic Coding)
+-- Author: vanduc
 -- Date: 2026-06-11
 -- Description: Tao 4 SP lien quan cho phan he Ke hoach ngay Hung Yen (_HY) tren cac bang dung chung.
 -- =============================================

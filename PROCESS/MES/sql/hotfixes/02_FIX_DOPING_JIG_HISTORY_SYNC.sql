@@ -1,7 +1,7 @@
--- =============================================
+﻿-- =============================================
 -- Hotfix ID: 02_FIX_DOPING_JIG_HISTORY_SYNC
 -- Target Object: usp_Vietnam_DopingJIG_uid
--- Author: Antigravity (Advanced Agentic Coding)
+-- Author: vanduc
 -- Date: 2026-06-10
 -- Description: Sửa lỗi thời gian tương lai khiến mất dữ liệu log lịch sử autoend của đồ gá Doping.
 -- =============================================

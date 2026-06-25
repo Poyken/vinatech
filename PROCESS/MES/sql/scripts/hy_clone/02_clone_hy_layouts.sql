@@ -1,7 +1,7 @@
--- ============================================================================
+﻿-- ============================================================================
 -- Script 02: Clone Screen Layouts for 7 HY Screens
 -- Target DB: SmartFramework
--- Author: AI Agent (Antigravity)
+-- Author: vanduc
 -- Date: 2026-06-23
 --
 -- CRITICAL: Chạy TRÊN SERVER hoặc kết nối ổn định.

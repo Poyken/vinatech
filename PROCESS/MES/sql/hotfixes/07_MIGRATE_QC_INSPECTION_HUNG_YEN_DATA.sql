@@ -1,7 +1,7 @@
--- =============================================
+﻿-- =============================================
 -- Hotfix ID: 07_MIGRATE_QC_INSPECTION_HUNG_YEN_DATA
 -- Target Object: STB_QcInspectionGroup_HY, STB_QcInspectionItem_HY
--- Author: Antigravity (Advanced Agentic Coding)
+-- Author: vanduc
 -- Date: 2026-06-11
 -- Description: Xóa sạch dữ liệu trong các bảng mới và đổ toàn bộ dữ liệu từ bảng cũ sang bảng mới.
 --              Lưu ý: Sử dụng DELETE với WHERE 1 = 1 để vượt qua kiểm tra an toàn.

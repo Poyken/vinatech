@@ -1,7 +1,7 @@
--- =============================================
+﻿-- =============================================
 -- Hotfix ID: 11_MIGRATE_INCOMING_QC_HUNG_YEN_CONFIG_DATA
 -- Target Object: STB_MaterialQcInspectionGroup_HY
--- Author: Antigravity (Advanced Agentic Coding)
+-- Author: vanduc
 -- Date: 2026-06-11
 -- Description: Xóa sạch dữ liệu trong bảng mới và đổ toàn bộ dữ liệu từ bảng STB_MaterialQcInspectionGroup sang STB_MaterialQcInspectionGroup_HY.
 --              Lưu ý: Tự động tạo bảng tạm thời nếu chưa có để đảm bảo chạy dry-run thành công.

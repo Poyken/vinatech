@@ -1,7 +1,7 @@
--- =============================================
+﻿-- =============================================
 -- Hotfix ID: 14_FIX_ELECTRODE_PRCS_CARD_HUNG_YEN_SPS
 -- Target Object: usp_ElectrodeCommon_HY_get, usp_ElectrodeCommon_HY_iud, usp_ElectrodeOven_HY_get, usp_ElectrodeOven_HY_iud, usp_ElectrodeStep_HY_get, usp_ElectrodeStep_HY_iud
--- Author: Antigravity (Advanced Agentic Coding)
+-- Author: vanduc
 -- Date: 2026-06-11
 -- Description: Clone 6 stored procedures for Electrode Process Card screen B470 for Hung Yen (_HY).
 -- =============================================

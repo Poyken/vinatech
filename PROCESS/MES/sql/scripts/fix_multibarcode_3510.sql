@@ -1,5 +1,5 @@
--- =================================================================================
--- Author: Antigravity
+﻿-- =================================================================================
+-- Author: vanduc
 -- Date: 2026-06-15
 -- Description: Fix multi-barcode save truncation error for Model 3510 Electrode Input.
 --              Extends STB_InputMaterialHistory.RawMaterialBarcode column size to NVARCHAR(1000)

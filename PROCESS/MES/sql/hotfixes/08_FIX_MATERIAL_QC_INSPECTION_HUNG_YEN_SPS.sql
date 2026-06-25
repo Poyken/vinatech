@@ -1,7 +1,7 @@
--- =============================================
+﻿-- =============================================
 -- Hotfix ID: 08_FIX_MATERIAL_QC_INSPECTION_HUNG_YEN_SPS
 -- Target Object: usp_MaterialQcInspectionItem_ByMaterial_HY_get, usp_MaterialQcInspectionItem_HY_iud, STB_MaterialQcInspectionItem_HY
--- Author: Antigravity (Advanced Agentic Coding)
+-- Author: vanduc
 -- Date: 2026-06-11
 -- Description: Tạo SP và bảng liên quan cho quản lý tiêu chuẩn kiểm tra nguyên vật liệu Hưng Yên (_HY).
 --              - STB_MaterialQcInspectionItem_HY

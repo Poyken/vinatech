@@ -1,5 +1,5 @@
--- =================================================================================
--- Author: Antigravity
+﻿-- =================================================================================
+-- Author: vanduc
 -- Date: 2026-06-15
 -- Description: PHẦN 1: TẠO BACKUP DATA TRƯỚC KHI CAN THIỆP
 --              Chạy phần này trước khi tiến hành chạy script hủy gộp box.

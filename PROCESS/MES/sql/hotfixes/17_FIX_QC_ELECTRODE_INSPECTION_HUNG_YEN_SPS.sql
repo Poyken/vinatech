@@ -1,7 +1,7 @@
 ﻿-- =============================================
 -- Hotfix ID: 17_FIX_QC_ELECTRODE_INSPECTION_HUNG_YEN_SPS
 -- Target Object: usp_DoAddCommInspMeasureHistForBarcode_HY, usp_DoFinishCommInspDoc_HY, usp_DoFinishCommInspDoc_VNT_HY, usp_ElectrodeDivision_popup_HY, usp_DoLossElectrodeProcess_HY_iud, usp_GetElectrodeInspectionHistoryForBarcode_HY
--- Author: Antigravity (Advanced Agentic Coding)
+-- Author: vanduc
 -- Date: 2026-06-11
 -- Description: Clone 6 stored procedures for QC Electrode Inspection screen C460 for Hung Yen (_HY).
 -- =============================================

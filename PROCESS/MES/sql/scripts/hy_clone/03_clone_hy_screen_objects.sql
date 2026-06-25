@@ -1,7 +1,7 @@
--- ============================================================================
+﻿-- ============================================================================
 -- Script 03: Clone ScreenObjects for 7 HY Screens
 -- Target DB: SmartFramework
--- Author: AI Agent (Antigravity)
+-- Author: vanduc
 -- Date: 2026-06-23
 --
 -- PHẢI chạy SAU script 01 + 02

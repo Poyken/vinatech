@@ -1,7 +1,7 @@
--- =============================================
+﻿-- =============================================
 -- Hotfix ID: 05_FIX_RETURNS_FG_IQC_VALIDATION
 -- Target Object: usp_DoValidateMaterialDocBarcodeForReturn
--- Author: Antigravity (Advanced Agentic Coding)
+-- Author: vanduc
 -- Date: 2026-06-10
 -- Description: Bỏ qua kiểm tra IQC đối với thành phẩm (FERT) hoặc bán thành phẩm (HALB) 
 --              khi làm thủ tục trả hàng, chỉ bắt buộc check IQC đối với NVL nhập mua (ROH).

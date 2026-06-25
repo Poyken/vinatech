@@ -26,6 +26,19 @@ ELSE
 GO
 
 -- 2. Tạo SP
+-- =============================================
+-- Author:      ducnv
+-- Create date: 2026-06-23
+-- Description: [C5400] Truy vấn kết quả kiểm tra độ dày lớp phủ (Coating Thickness)
+--              Cấu trúc tương tự C540 (usp_ProdInspectionHist_get) dùng STB_MaterialQcInfo
+--              Data nhập từ C5300
+-- Modified:
+-- Test:
+--   EXEC usp_CoatingThicknessInspectionResult_get 
+--     @pProcessUserID='ducnv', @pProcessLanguage='Korean',
+--     @pFromDate='2026-01-01', @pToDate='2026-06-23',
+--     @pBarcode=NULL, @pMaterialCode=NULL
+-- =============================================
 CREATE PROCEDURE [dbo].[usp_CoatingThicknessInspectionResult_get]
     @pProcessUserID     VARCHAR(20),
     @pProcessLanguage   VARCHAR(20),
@@ -92,7 +105,17 @@ BEGIN
             LEFT JOIN STB_LotChangeMaterialHistory lcmh WITH(NOLOCK) ON MQI.MaterialQcNo = lcmh.OldBarcode
         WHERE 1=1
             AND MQI.CompanyCode = 'VVT'
-            AND MQD.QcInspectionItemCode IN ('BE_OQC_001_001','BE_OQC_001_002','o4','G4','p4','P4','IQC_G1_516')
+            -- ★ Filter coating/thickness items:
+            AND (
+                MQD.QcInspectionItemCode IN ('BE_OQC_001_001','BE_OQC_001_002','o4','G4','p4','P4')
+                OR (
+                    MQD.QcInspectionItemCode = 'IQC_G1_516'
+                    AND (
+                        MQD.QcInspectionItemName LIKE N'%Thickness%'
+                        OR MQD.QcInspectionItemName LIKE N'%[Dd]%y%'
+                    )
+                )
+            )
             AND (@MaterialQcNo = '*' OR MQI.MaterialQcNo = @MaterialQcNo)
             AND MQI.BasicDate BETWEEN @FromDate AND @ToDate
             AND (@MaterialCode = '*' OR MQI.MaterialCode LIKE @MaterialCode + '%')

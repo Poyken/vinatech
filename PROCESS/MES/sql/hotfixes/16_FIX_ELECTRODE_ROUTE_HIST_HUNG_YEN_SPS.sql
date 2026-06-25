@@ -1,7 +1,7 @@
 ﻿-- =============================================
 -- Hotfix ID: 16_FIX_ELECTRODE_ROUTE_HIST_HUNG_YEN_SPS
 -- Target Object: usp_Vietnam_ElectrodeDefectHist_HY_get, usp_Vietnam_ElectrodeProdRouteHist_HY_get
--- Author: Antigravity (Advanced Agentic Coding)
+-- Author: vanduc
 -- Date: 2026-06-11
 -- Description: Clone 2 stored procedures for Electrode Route History screen B802 for Hung Yen (_HY).
 -- =============================================

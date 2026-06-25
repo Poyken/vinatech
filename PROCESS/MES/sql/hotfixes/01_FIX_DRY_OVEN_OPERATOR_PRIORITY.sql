@@ -1,7 +1,7 @@
--- =============================================
+﻿-- =============================================
 -- Hotfix ID: 01_FIX_DRY_OVEN_OPERATOR_PRIORITY
 -- Target Object: usp_VN_DryOver
--- Author: Antigravity (Advanced Agentic Coding)
+-- Author: vanduc
 -- Date: 2026-06-10
 -- Description: Sửa lỗi độ ưu tiên toán tử AND/OR làm bypass kiểm tra công đoạn V-22 bắt buộc.
 -- =============================================

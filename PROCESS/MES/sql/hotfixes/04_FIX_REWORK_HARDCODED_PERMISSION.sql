@@ -1,7 +1,7 @@
--- =============================================
+﻿-- =============================================
 -- Hotfix ID: 04_FIX_REWORK_HARDCODED_PERMISSION
 -- Target Object: usp_GetInforLotReworkHaNamFactory_uid
--- Author: Antigravity (Advanced Agentic Coding)
+-- Author: vanduc
 -- Date: 2026-06-10
 -- Description: Thay thế lọc cứng tài khoản người dùng bằng phân quyền động qua SmartFramework
 --              với cơ chế Fallback an toàn để không làm gián đoạn sản xuất.

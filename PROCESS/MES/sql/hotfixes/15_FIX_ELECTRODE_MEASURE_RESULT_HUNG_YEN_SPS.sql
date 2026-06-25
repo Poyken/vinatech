@@ -1,7 +1,7 @@
 ﻿-- =============================================
 -- Hotfix ID: 15_FIX_ELECTRODE_MEASURE_RESULT_HUNG_YEN_SPS
 -- Target Object: usp_ElectrodeCoatingInfo_HY_get, usp_ElectrodeCoatingInfo_HY_iud, usp_ElectrodeCoatingVisualInspectionInfo_HY_get, usp_ElectrodeCoatingVisualInspectionInfo_HY_iud, usp_ElectrodeMixInfo_HY_get, usp_ElectrodeMixInfo_HY_iud, usp_ElectrodeMixStepInfo_HY_get, usp_ElectrodeMixStepInfo_HY_iud, usp_ElectrodeRollPressingInfo_HY_get, usp_ElectrodeRollPressingInfo_HY_iud, usp_ElectrodeRollPressingVisualInspectionInfo_HY_get, usp_ElectrodeRollPressingVisualInspectionInfo_HY_iud, usp_ElectrodeSlittingInfo_HY_get, usp_ElectrodeSlittingInfo_HY_iud, usp_ElectrodeSlittingResult_HY_get, usp_ElectrodeSlittingResult_HY_iud, usp_ElectrodeWasteInfoNew_HY_iud, usp_ElectrodeWastePriceNewByBarcode_HY_get, usp_LocationElectric_HY, usp_test_check_expired_HY, usp_Vietnam_RollPressingSlitting_HY_get
--- Author: Antigravity (Advanced Agentic Coding)
+-- Author: vanduc
 -- Date: 2026-06-11
 -- Description: Clone 21 stored procedures for Electrode Measure Result screen B552 for Hung Yen (_HY).
 -- =============================================

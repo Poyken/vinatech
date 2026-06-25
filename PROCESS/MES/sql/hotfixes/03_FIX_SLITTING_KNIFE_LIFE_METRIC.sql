@@ -1,7 +1,7 @@
--- =============================================
+﻿-- =============================================
 -- Hotfix ID: 03_FIX_SLITTING_KNIFE_LIFE_METRIC
 -- Target Object: usp_DoCreateSlittingResult
--- Author: Antigravity (Advanced Agentic Coding)
+-- Author: vanduc
 -- Date: 2026-06-10
 -- Description: Đo tuổi thọ dao theo mét cắt (SUM) thay vì đếm số cuộn con (COUNT), 
 --              đồng thời gỡ bỏ lọc cứng chi nhánh Bắc Giang để hỗ trợ toàn hệ thống.

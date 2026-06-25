@@ -1,7 +1,7 @@
--- =============================================
+﻿-- =============================================
 -- Hotfix ID: 06_FIX_QC_INSPECTION_HUNG_YEN_SPS
 -- Target Object: usp_QcInspectionGroup_HY_get, usp_QcInspectionItem_HY_get, usp_QcInspectionGroup_HY_iud, usp_QcInspectionItem_HY_iud, STB_QcInspectionGroup_HY, STB_QcInspectionItem_HY
--- Author: Antigravity (Advanced Agentic Coding)
+-- Author: vanduc
 -- Date: 2026-06-11
 -- Description: Tạo 4 Stored Procedures và 2 bảng liên quan cho chi nhánh Hưng Yên (_HY).
 --              - usp_QcInspectionGroup_HY_get
