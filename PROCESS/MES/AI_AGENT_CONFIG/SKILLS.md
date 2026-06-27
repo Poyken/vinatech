@@ -186,3 +186,44 @@ ORDER BY referenced_entity_name
 | Kiến trúc MES | KB_10/ | 01_ARCHITECTURE |
 | DB Map | KB_19/ | 01_ARCHITECTURE |
 | ESM/Groupware | KB_07/ | 02_ESM_FORMS |
+
+---
+
+## 11. AUTOMATED TOOLS FOR DOCUMENTATION (CÔNG CỤ TỰ ĐỘNG HÓA TÀI LIỆU)
+
+Dưới đây là các script Node.js dùng để tự động hóa trích xuất, gộp, sắp xếp và chuẩn hóa dữ liệu màn hình từ database SmartFramework và ghi vào tài liệu tổng hợp:
+
+### A. Script Trích Xuất & Sắp Xếp Luồng Vận Hành (`merge_and_sort_by_flow.js`)
+Script này đọc danh sách TCode, tự động lấy cấu hình Object từ DB và phân nhóm vào 9 bước luồng vận hành thực tế của nhà máy, sau đó tạo lại Mục Lục tự động:
+```javascript
+// Xem chi tiết code mẫu tại: scratch/merge_and_sort_by_flow.js
+// Script hoạt động theo luồng:
+// 1. Phân tích nội dung cũ và trích xuất danh sách màn hình theo TCode.
+// 2. Định nghĩa mảng flowSteps chứa thứ tự TCode của 9 bước vận hành nhà máy.
+// 3. Đọc dữ liệu missing screens vừa trích xuất từ database.
+// 4. Tạo lại Mục Lục (Table of Contents) với liên kết dạng slug chuẩn Markdown.
+// 5. Kết hợp và lưu đè lên file ALL_SCREENS_DOCUMENTATION.md.
+```
+
+### B. Script Cập Nhật Bảng Thống Kê Tổng Hợp Realtime (`update_statistics.js`)
+Script này phân tích cú pháp của file Markdown tổng hợp, đếm số lượng màn hình và đếm tổng các loại đối tượng (Views, Search, Execute, Actions) thực tế trong mỗi bước, sau đó tự động ghi đè lại bảng thống kê ở cuối trang:
+```javascript
+// Xem chi tiết code mẫu tại: scratch/update_statistics.js
+// Script hoạt động theo luồng:
+// 1. Định vị phần "# THỐNG KÊ TỔNG HỢP" trong file.
+// 2. Dùng Regex quét dòng: "| **Tổng Objects** | **X** (Y View + Z SearchFunction...)" của từng màn hình.
+// 3. Cộng dồn số lượng theo từng bước vận hành từ 1 đến 9.
+// 4. Định dạng và ghi đè bảng thống kê mới cùng tổng cộng toàn hệ thống.
+```
+
+### C. Script Dọn Dẹp & Chuẩn Hóa Định Dạng (`clean_dividers.js`)
+Script này tự động rà soát, dọn dẹp các ghi chú, dòng ngăn cách tạm thời, hoặc các tiêu đề nhóm cũ bị thừa trong quá trình gộp file để đảm bảo tính toàn vẹn và sạch sẽ của tài liệu:
+```javascript
+// Xem chi tiết code mẫu tại: scratch/clean_dividers.js
+// Script tự động Replace các mẫu lỗi như:
+// - "> **Tài liệu tiếp tục ở phần sau..."
+// - "> Tổng cộng 100+ màn hình..."
+// - "# CÁC MÀN HÌNH ... CHƯA CÓ BODY"
+// - Các khoảng trắng trống liên tiếp (> 3 dòng) hoặc separator đôi.
+```
+
