@@ -1,5 +1,5 @@
 # 🚗 Lịch sử di chuyển sang các cơ sở khác (Bắc Giang 1 & Bắc Giang 2)
-### Thời gian: Từ ngày 25/05/2026 đến 25/06/2026
+### Thời gian: Từ ngày 25/05/2026 đến 26/06/2026
 
 Dưới đây là chi tiết các lần di chuyển làm việc tại nhà máy Bắc Giang 1 (BG1) và Bắc Giang 2 (BG2) được tổng hợp từ báo cáo tuần và thông tin bổ sung:
 
@@ -20,6 +20,7 @@ Dưới đây là chi tiết các lần di chuyển làm việc tại nhà máy 
 | 13 | **22/06/2026** | Thứ Hai | **Bắc Giang 2** | - Về Bắc Ninh họp đầu tuần, sau đó di chuyển sang BG2 hỗ trợ audit. | Người dùng bổ sung |
 | 14 | **22/06/2026** | Thứ Hai | **Bắc Giang 1** | - Di chuyển sang nhà máy Bắc Giang 1 để thu hồi thiết bị. | Người dùng bổ sung |
 | 15 | **23/06/2026** | Thứ Ba | **Bắc Giang 1** | - Tiếp tục di chuyển sang nhà máy Bắc Giang 1 để thu hồi thiết bị. | Người dùng bổ sung |
+| 16 | **26/06/2026** | Thứ Năm | **Bắc Giang 2** | - Di chuyển sang BG2 đào tạo user. | Người dùng bổ sung |
 
 ---
 
@@ -27,9 +28,9 @@ Dưới đây là chi tiết các lần di chuyển làm việc tại nhà máy 
 
 | Chỉ số | Giá trị |
 | :--- | :--- |
-| **Tổng số ngày di chuyển** | **15 lượt** (trên 13 ngày riêng biệt) |
+| **Tổng số ngày di chuyển** | **16 lượt** (trên 14 ngày riêng biệt) |
 | **Số lượt đi Bắc Giang 1** | **6 lượt** |
-| **Số lượt đi Bắc Giang 2** | **9 lượt** |
+| **Số lượt đi Bắc Giang 2** | **10 lượt** |
 | **Số tuần có di chuyển đầu tuần (BN → BG2 audit)** | **4 tuần** (01/06, 08/06, 15/06, 22/06) |
 
 ---
@@ -49,6 +50,7 @@ Dưới đây là chi tiết các lần di chuyển làm việc tại nhà máy 
 * **18/06/2026** → **BG2**: Cài Windows cho 2 máy tính cấu hình cao
 * **22/06/2026** → **BG2 + BG1**: Họp đầu tuần BN → BG2 audit + BG1 thu hồi thiết bị
 * **23/06/2026** → **BG1**: Tiếp tục thu hồi thiết bị tại BG1
+* **26/06/2026** → **BG2**: Đào tạo user tại BG2
 
 ---
-*Ghi chú: Lịch sử được cập nhật vào ngày 25/06/2026. Mỗi thứ Hai đều về Bắc Ninh họp đầu tuần, sau đó qua Bắc Giang 2 hỗ trợ audit.*
+*Ghi chú: Lịch sử được cập nhật vào ngày 26/06/2026. Mỗi thứ Hai đều về Bắc Ninh họp đầu tuần, sau đó qua Bắc Giang 2 hỗ trợ audit.*

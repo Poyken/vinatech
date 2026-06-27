@@ -1,0 +1,16 @@
+NAME,DEPARTMENT,DATE GET ISSUE,NAME ISSUE,THE SOLVE,TYPE ISSUE,DATE SOLVE ISSUE,SOLVE ISSUE BY,STATUS,REMARK
+Nguyen Van Duc,EA Team,22/6/2026,Equipment Recovery BG1,Thu hồi thiết bị tại xưởng nhà máy Bắc Giang 1: kiểm đếm; vệ sinh; phân loại và chuyển về Bắc Ninh.,Support,22/6/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,22/6/2026,Groupware & ECM Account Creation,Tạo tài khoản Groupware và ECM cho anh Nhiệm và anh Huân.,Support,22/6/2026,Nguyen Van Duc,Done,GW/ECM
+Nguyen Van Duc,EA Team,22/6/2026,Label Printing New Template,In tem theo mẫu mới cho các bộ phận tham khảo.,Support,22/6/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,23/6/2026,ECM User Support BG2,Hỗ trợ user nhà máy Bắc Giang 2 sử dụng hệ thống ECM.,Support,23/6/2026,Nguyen Van Duc,Done,ECM
+Nguyen Van Duc,EA Team,23/6/2026,Printer Setup BG2,Kết nối máy in cho các user mới của nhà máy Bắc Giang 2.,Support,23/6/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,23/6/2026,MES Screen Development HY,Tiếp tục phát triển các màn hình trên hệ thống MES cho nhà máy Hưng Yên.,Support,23/6/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,23/6/2026,Equipment Handover BG2,Bàn giao thiết bị cho user mới của nhà máy Bắc Giang 2.,Support,23/6/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,24/6/2026,Equipment Dismantling & Recovery BG1,Tháo dỡ và thu hồi thiết bị tại các kho và xưởng nhà máy Bắc Giang 1.,Support,24/6/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,24/6/2026,Hardware & Software Support,Hỗ trợ user xử lý phần cứng; ECM và FortiClient cho chị Thu.,Support,24/6/2026,Nguyen Van Duc,Done,ECM
+Nguyen Van Duc,EA Team,24/6/2026,Printer Setup QC Department,Cài đặt máy in cho toàn bộ phòng QC.,Support,24/6/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,24/6/2026,Network Troubleshooting EA Korean Staff,Xử lý sự cố mạng cho nhân viên EA người Hàn.,Support,24/6/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,24/6/2026,HDD Upgrade & Printer Support,Nới ổ cứng cho laptop của chị Thu; hỗ trợ máy in cho user mới sang Bắc Giang 2.,Support,24/6/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,25/6/2026,MES Screen Development HY,Tiếp tục phát triển các màn hình trên hệ thống MES cho nhà máy Hưng Yên.,Support,25/6/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,25/6/2026,MES User Support,Hỗ trợ user sử dụng và xử lý lỗi trên hệ thống MES.,Support,25/6/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,25/6/2026,Attendance Device Recovery & Network Setup BG1,Thu hồi thiết bị chấm công tại Bắc Giang 1 và setup mạng cho phòng bảo vệ nhà máy Bắc Giang 1; đảm bảo vận hành ổn định.,Support,25/6/2026,Nguyen Van Duc,Done,HW
