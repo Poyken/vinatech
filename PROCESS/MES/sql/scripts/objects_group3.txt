@@ -1,0 +1,383 @@
+﻿
+ScreenName                             ObjectName                                         ObjectType      Caption                          
+----------                             ----------                                         ----------      -------                          
+BaseCode                               usp_BaseCode_iud                                   ExecuteFunction                                  
+BaseCode                               usp_BaseCode_get                                   SearchFunction                                   
+BaseCode                               BaseCode                                           View            ^기본 코드^                          
+Daifuku_Warehouse                      PackingID_Del                                      Action          ^PackingID_Del^                  
+Daifuku_Warehouse                      Refresh                                            Action          ^Refresh^                        
+Daifuku_Warehouse                      WaitingForArrival                                  Action          ^WaitingForArrival^              
+Daifuku_Warehouse                      usp_DaifukuWarehouse_Del                           ExecuteFunction                                  
+Daifuku_Warehouse                      usp_DaifukuWarehouse_iud                           ExecuteFunction                                  
+Daifuku_Warehouse                      usp_WarehouseGrid_iud                              ExecuteFunction                                  
+Daifuku_Warehouse                      usp_DaifukuWarehouse_get                           SearchFunction                                   
+Daifuku_Warehouse                      DaifukuWarehouse                                   View            ^DaifukuWarehouse^               
+DayProdPlanForMainLotMDL               AddMainAssemblePart                                Action          ^자재Lot추가^                        
+DayProdPlanForMainLotMDL               CancelDayPlan                                      Action          ^CancelDayPlan^                  
+DayProdPlanForMainLotMDL               CreateSetInfo                                      Action          ^CreateSetInfo^                  
+DayProdPlanForMainLotMDL               DoFinishDayPlan                                    Action          ^계획마감^                           
+DayProdPlanForMainLotMDL               DoGI                                               Action          ^자재출고처리^                         
+DayProdPlanForMainLotMDL               FixDayPlan                                         Action          ^FixDayPlan^                     
+DayProdPlanForMainLotMDL               InputLabelQty                                      Action          ^LabelPrint^                     
+DayProdPlanForMainLotMDL               InputLotQty                                        Action          ^Lot생성^                          
+DayProdPlanForMainLotMDL               POSelectDialog                                     Action          ^POSelectDialog^                 
+DayProdPlanForMainLotMDL               PrintSlteeingLabel                                 Action          ^라벨인쇄^                           
+DayProdPlanForMainLotMDL               Refresh                                            Action          ^Refresh^                        
+DayProdPlanForMainLotMDL               RefreshSetInfo                                     Action          ^Refresh^                        
+DayProdPlanForMainLotMDL               usp_DayProdPlan_iud                                ExecuteFunction                                  
+DayProdPlanForMainLotMDL               usp_DoCancelDayProdPlan                            ExecuteFunction                                  
+DayProdPlanForMainLotMDL               usp_DoCreateSetInfoForProdQty_VNT                  ExecuteFunction                                  
+DayProdPlanForMainLotMDL               usp_DoFinishDayProdPlan                            ExecuteFunction                                  
+DayProdPlanForMainLotMDL               usp_DoFixDayProdPlan                               ExecuteFunction                                  
+DayProdPlanForMainLotMDL               usp_SetInfo_iud                                    ExecuteFunction                                  
+DayProdPlanForMainLotMDL               usp_DayProdPlan_get                                SearchFunction                                   
+DayProdPlanForMainLotMDL               usp_SetInfo_get                                    SearchFunction                                   
+DayProdPlanForMainLotMDL               DayProdPlan                                        View            ^DayProdPlan^                    
+DayProdPlanForMainLotMDL               SetInfo                                            View            ^SetInfo^                        
+LabelInfo                              CopyLabel                                          Action          ^CopyLabel^                      
+LabelInfo                              usp_LabelInfo_iud                                  ExecuteFunction                                  
+LabelInfo                              usp_LabelInfo_get                                  SearchFunction                                   
+LabelInfo                              LabelInfo                                          View            ^라벨양식정보^                         
+MaterialReceipt                        CancelDoc                                          Action          ^CancelDoc^                      
+MaterialReceipt                        CancelFinish                                       Action          ^완료취소^                           
+MaterialReceipt                        DoFInish                                           Action          ^입고완료^                           
+MaterialReceipt                        DoFix                                              Action          ^입고확정^                           
+MaterialReceipt                        DoGR                                               Action          ^입하처리^                           
+MaterialReceipt                        Refresh                                            Action          ^새로고침^                           
+MaterialReceipt                        usp_DoArriveMaterialDelivery                       ExecuteFunction                                  
+MaterialReceipt                        usp_DoCancelFinishMaterialDoc                      ExecuteFunction                                  
+MaterialReceipt                        usp_DoCancelMaterialDoc                            ExecuteFunction                                  
+MaterialReceipt                        usp_DoFinishMaterialDoc                            ExecuteFunction                                  
+MaterialReceipt                        usp_DoFixMaterialDoc                               ExecuteFunction                                  
+MaterialReceipt                        usp_DoMaterialDocMasterDetail_iud                  ExecuteFunction                                  
+MaterialReceipt                        usp_MaterialDocDetail_get                          SearchFunction                                   
+MaterialReceipt                        usp_MaterialDocInfo_get                            SearchFunction                                   
+MaterialReceipt                        MaterialDocDetail                                  View            ^MaterialDocDetail^              
+MaterialReceipt                        MaterialDocInfo                                    View            ^MaterialDocInfo^                
+MaterialReceiptAndPrintLabel           AddDate                                            Action          ^AddDate^                        
+MaterialReceiptAndPrintLabel           AddProDate                                         Action          ^AddProDate^                     
+MaterialReceiptAndPrintLabel           BG2_ViewCell                                       Action          ^BG2_ViewCell^                   
+MaterialReceiptAndPrintLabel           CancelDoc                                          Action          ^CancelDoc^                      
+MaterialReceiptAndPrintLabel           CancelFinish                                       Action          ^완료취소^                           
+MaterialReceiptAndPrintLabel           ChangeLotNo                                        Action          ^Lot번호저장^                        
+MaterialReceiptAndPrintLabel           DeleteDocLotInfo                                   Action          ^선택라벨삭제^                         
+MaterialReceiptAndPrintLabel           DoFInish                                           Action          ^입고완료^                           
+MaterialReceiptAndPrintLabel           DoFix                                              Action          ^입고확정^                           
+MaterialReceiptAndPrintLabel           DoGR                                               Action          ^입하처리^                           
+MaterialReceiptAndPrintLabel           Inbigtem                                           Action          ^In tem to^                      
+MaterialReceiptAndPrintLabel           InputLabelQty                                      Action          ^LabelPrint^                     
+MaterialReceiptAndPrintLabel           LabelInfoManualInsert                              Action          ^LabelInfoManualInsert^          
+MaterialReceiptAndPrintLabel           LotNoManualInput                                   Action          ^LotNoManualInput^               
+MaterialReceiptAndPrintLabel           LuuCapJIANGHAI                                     Action          ^LuuCapJIANGHAI^                 
+MaterialReceiptAndPrintLabel           MakeLabel                                          Action          ^라벨생성^                           
+MaterialReceiptAndPrintLabel           MakeLabelManual                                    Action          ^MakeLabelManual^                
+MaterialReceiptAndPrintLabel           Pass_Print                                         Action          ^Pass_Print^                     
+MaterialReceiptAndPrintLabel           PrintLabelSelected                                 Action          ^LabelPrint^                     
+MaterialReceiptAndPrintLabel           Refresh                                            Action          ^새로고침^                           
+MaterialReceiptAndPrintLabel           RefreshDetail                                      Action          디테일새로고침                          
+MaterialReceiptAndPrintLabel           RefreshDocLot                                      Action          ^LOT새로고침^                        
+MaterialReceiptAndPrintLabel           ScanBarcode                                        Action          ^바코드스캔^                          
+MaterialReceiptAndPrintLabel           TradeDate                                          Action          ^거래일자^                           
+MaterialReceiptAndPrintLabel           usp_AddDate                                        ExecuteFunction                                  
+MaterialReceiptAndPrintLabel           usp_AddStartDate                                   ExecuteFunction                                  
+MaterialReceiptAndPrintLabel           usp_DoArriveMaterialDelivery                       ExecuteFunction                                  
+MaterialReceiptAndPrintLabel           usp_DoCancelFinishMaterialDoc                      ExecuteFunction                                  
+MaterialReceiptAndPrintLabel           usp_DoCancelMaterialDoc                            ExecuteFunction                                  
+MaterialReceiptAndPrintLabel           usp_DoChangeMaterialDocLotInfo                     ExecuteFunction                                  
+MaterialReceiptAndPrintLabel           usp_DoCreateLabel                                  ExecuteFunction                                  
+MaterialReceiptAndPrintLabel           usp_DoCreateLabelManual                            ExecuteFunction                                  
+MaterialReceiptAndPrintLabel           usp_DoDeleteMaterialDocLotInfo                     ExecuteFunction                                  
+MaterialReceiptAndPrintLabel           usp_DoFinishMaterialDoc                            ExecuteFunction                                  
+MaterialReceiptAndPrintLabel           usp_DoFixMaterialDoc                               ExecuteFunction                                  
+MaterialReceiptAndPrintLabel           usp_DoMaterialDocMasterDetail_iud                  ExecuteFunction                                  
+MaterialReceiptAndPrintLabel           usp_DoUpdateTradeDate_iud                          ExecuteFunction                                  
+MaterialReceiptAndPrintLabel           usp_GetOrderMaterialMaster_popup                   ExecuteFunction                                  
+MaterialReceiptAndPrintLabel           usp_MaterialDocDetail_iud                          ExecuteFunction                                  
+MaterialReceiptAndPrintLabel           usp_MaterialDocInfo_iud                            ExecuteFunction                                  
+MaterialReceiptAndPrintLabel           usp_MaterialDocLotInfo_iud                         ExecuteFunction                                  
+MaterialReceiptAndPrintLabel           usp_UpdateLevelJIANGHAI                            ExecuteFunction                                  
+MaterialReceiptAndPrintLabel           usp_MaterialDocDetail_get                          SearchFunction                                   
+MaterialReceiptAndPrintLabel           usp_MaterialDocInfo_get                            SearchFunction                                   
+MaterialReceiptAndPrintLabel           usp_MaterialDocLotInfo_get                         SearchFunction                                   
+MaterialReceiptAndPrintLabel           MaterialDocDetail                                  View            ^MaterialDocDetail^              
+MaterialReceiptAndPrintLabel           MaterialDocInfo                                    View            ^MaterialDocInfo^                
+MaterialReceiptAndPrintLabel           MaterialDocLotInfo                                 View            ^MaterialDocLotInfo^             
+MaterialReturnAndPrintLabel            AddDate                                            Action          ^AddDate^                        
+MaterialReturnAndPrintLabel            CancelDoc                                          Action          ^CancelDoc^                      
+MaterialReturnAndPrintLabel            CancelFinish                                       Action          ^완료취소^                           
+MaterialReturnAndPrintLabel            ChangeLotNo                                        Action          ^Lot번호저장^                        
+MaterialReturnAndPrintLabel            DeleteDocLotInfo                                   Action          ^선택라벨삭제^                         
+MaterialReturnAndPrintLabel            DoFInish                                           Action          ^입고완료^                           
+MaterialReturnAndPrintLabel            DoFix                                              Action          ^입고확정^                           
+MaterialReturnAndPrintLabel            DoGR                                               Action          ^입하처리^                           
+MaterialReturnAndPrintLabel            InputLabelQty                                      Action          ^LabelPrint^                     
+MaterialReturnAndPrintLabel            InTemThuCong                                       Action          ^InTemThuCong^                   
+MaterialReturnAndPrintLabel            MakeLabel                                          Action          ^라벨생성^                           
+MaterialReturnAndPrintLabel            PrintLabelSelected                                 Action          ^라벨인쇄^                           
+MaterialReturnAndPrintLabel            Refresh                                            Action          ^새로고침^                           
+MaterialReturnAndPrintLabel            RefreshDetail                                      Action          디테일새로고침                          
+MaterialReturnAndPrintLabel            RefreshDocLot                                      Action          ^LOT새로고침^                        
+MaterialReturnAndPrintLabel            ScanBarcode                                        Action          ^바코드스캔^                          
+MaterialReturnAndPrintLabel            usp_AddDate                                        ExecuteFunction                                  
+MaterialReturnAndPrintLabel            usp_addDate_F620                                   ExecuteFunction                                  
+MaterialReturnAndPrintLabel            usp_DoArriveMaterialDelivery                       ExecuteFunction                                  
+MaterialReturnAndPrintLabel            usp_DoCancelFinishMaterialDoc                      ExecuteFunction                                  
+MaterialReturnAndPrintLabel            usp_DoCancelMaterialDoc                            ExecuteFunction                                  
+MaterialReturnAndPrintLabel            usp_DoChangeMaterialDocLotInfo                     ExecuteFunction                                  
+MaterialReturnAndPrintLabel            usp_DoCreateLabel                                  ExecuteFunction                                  
+MaterialReturnAndPrintLabel            usp_DoCreateVVTLabel                               ExecuteFunction                                  
+MaterialReturnAndPrintLabel            usp_DoDeleteMaterialDocLotInfo                     ExecuteFunction                                  
+MaterialReturnAndPrintLabel            usp_DoFinishMaterialDoc                            ExecuteFunction                                  
+MaterialReturnAndPrintLabel            usp_DoFixMaterialDoc                               ExecuteFunction                                  
+MaterialReturnAndPrintLabel            usp_DoMaterialDocMasterDetail_iud                  ExecuteFunction                                  
+MaterialReturnAndPrintLabel            usp_MaterialDocDetail_iud                          ExecuteFunction                                  
+MaterialReturnAndPrintLabel            usp_MaterialDocInfo_iud                            ExecuteFunction                                  
+MaterialReturnAndPrintLabel            usp_MaterialDocLotInfo_iud                         ExecuteFunction                                  
+MaterialReturnAndPrintLabel            usp_MaterialDocDetail_get                          SearchFunction                                   
+MaterialReturnAndPrintLabel            usp_MaterialDocInfo_get                            SearchFunction                                   
+MaterialReturnAndPrintLabel            usp_MaterialDocLotInfo_get                         SearchFunction                                   
+MaterialReturnAndPrintLabel            MaterialDocDetail                                  View            ^MaterialDocDetail^              
+MaterialReturnAndPrintLabel            MaterialDocInfo                                    View            ^MaterialDocInfo^                
+MaterialReturnAndPrintLabel            MaterialDocLotInfo                                 View            ^MaterialDocLotInfo^             
+MaterialReturnOrder                    Refresh                                            Action          ^새로고침^                           
+MaterialReturnOrder                    usp_DoFixMaterialDocList                           ExecuteFunction                                  
+MaterialReturnOrder                    usp_DoMaterialDocMasterDetail_iud                  ExecuteFunction                                  
+MaterialReturnOrder                    usp_MaterialDocDetail_get                          SearchFunction                                   
+MaterialReturnOrder                    usp_MaterialDocInfo_get                            SearchFunction                                   
+MaterialReturnOrder                    MaterialDocDetail                                  View            ^MaterialDocDetail^              
+MaterialReturnOrder                    MaterialDocInfo                                    View            ^MaterialDocInfo^                
+MaterialStock                          InputLabelQty                                      Action          ^LabelPrint^                     
+MaterialStock                          PrintLabelSelected                                 Action          ^LabelPrint^                     
+MaterialStock                          RefreshDocLot                                      Action          ^RefreshDocLot^                  
+MaterialStock                          usp_MaterialLotInfo_get                            SearchFunction                                   
+MaterialStock                          usp_MaterialStock_get                              SearchFunction                                   
+MaterialStock                          MaterialLotInfo                                    View            ^MaterialLotInfo^                
+MaterialStock                          MaterialStockView                                  View            ^자재재고정보^                         
+MaterialStockAttributeInfo             usp_MaterialStockAttributeInfo_iud                 ExecuteFunction                                  
+MaterialStockAttributeInfo             usp_MaterialStockAttributeInfo_get                 SearchFunction                                   
+MaterialStockAttributeInfo             MaterialStockAttributeInfoView                     View            ^자재재고관리속성^                       
+MaterialStocktakingDoc                 AddStocktakingPlanResult                           Action          ^AddStocktakingPlanResult^       
+MaterialStocktakingDoc                 ApplyStocktaking                                   Action          ^실사반영처리^                         
+MaterialStocktakingDoc                 Refresh                                            Action          ^Refresh^                        
+MaterialStocktakingDoc                 usp_DoApplyStocktakingToStock                      ExecuteFunction                                  
+MaterialStocktakingDoc                 usp_DoMakeStocktakingPlanResult                    ExecuteFunction                                  
+MaterialStocktakingDoc                 usp_StocktakingDoc_iud                             ExecuteFunction                                  
+MaterialStocktakingDoc                 usp_StocktakingPlanResult_iud                      ExecuteFunction                                  
+MaterialStocktakingDoc                 usp_StocktakingDoc_get                             SearchFunction                                   
+MaterialStocktakingDoc                 usp_StocktakingPlanResult_get                      SearchFunction                                   
+MaterialStocktakingDoc                 StocktakingDoc                                     View            ^StocktakingDoc^                 
+MaterialStocktakingDoc                 StocktakingPlanResult                              View            ^StocktakingPlanResult^          
+ProductReturnAndPrintLabel             CancelDoc                                          Action          ^CancelDoc^                      
+ProductReturnAndPrintLabel             CancelFinish                                       Action          ^완료취소^                           
+ProductReturnAndPrintLabel             ChangeLotNo                                        Action          ^Lot번호저장^                        
+ProductReturnAndPrintLabel             DeleteDocLotInfo                                   Action          ^선택라벨삭제^                         
+ProductReturnAndPrintLabel             DoFInish                                           Action          ^입고완료^                           
+ProductReturnAndPrintLabel             DoFix                                              Action          ^입고확정^                           
+ProductReturnAndPrintLabel             DoGR                                               Action          ^입하처리^                           
+ProductReturnAndPrintLabel             MakeLabel                                          Action          ^라벨생성^                           
+ProductReturnAndPrintLabel             PrintLabelSelected                                 Action          ^라벨인쇄^                           
+ProductReturnAndPrintLabel             Refresh                                            Action          ^새로고침^                           
+ProductReturnAndPrintLabel             RefreshDetail                                      Action          디테일새로고침                          
+ProductReturnAndPrintLabel             RefreshDocLot                                      Action          ^LOT새로고침^                        
+ProductReturnAndPrintLabel             ScanBarcode                                        Action          ^바코드스캔^                          
+ProductReturnAndPrintLabel             usp_DoArriveMaterialDelivery                       ExecuteFunction                                  
+ProductReturnAndPrintLabel             usp_DoCancelFinishMaterialDoc                      ExecuteFunction                                  
+ProductReturnAndPrintLabel             usp_DoCancelMaterialDoc                            ExecuteFunction                                  
+ProductReturnAndPrintLabel             usp_DoChangeMaterialDocLotInfo                     ExecuteFunction                                  
+ProductReturnAndPrintLabel             usp_DoCreateLabel                                  ExecuteFunction                                  
+ProductReturnAndPrintLabel             usp_DoDeleteMaterialDocLotInfo                     ExecuteFunction                                  
+ProductReturnAndPrintLabel             usp_DoFinishMaterialDoc                            ExecuteFunction                                  
+ProductReturnAndPrintLabel             usp_DoFixMaterialDoc                               ExecuteFunction                                  
+ProductReturnAndPrintLabel             usp_DoMaterialDocMasterDetail_iud                  ExecuteFunction                                  
+ProductReturnAndPrintLabel             usp_MaterialDocDetail_iud                          ExecuteFunction                                  
+ProductReturnAndPrintLabel             usp_MaterialDocInfo_iud                            ExecuteFunction                                  
+ProductReturnAndPrintLabel             usp_MaterialDocLotInfo_iud                         ExecuteFunction                                  
+ProductReturnAndPrintLabel             usp_MaterialDocDetail_get                          SearchFunction                                   
+ProductReturnAndPrintLabel             usp_MaterialDocInfo_get                            SearchFunction                                   
+ProductReturnAndPrintLabel             usp_MaterialDocLotInfo_get                         SearchFunction                                   
+ProductReturnAndPrintLabel             MaterialDocDetail                                  View            ^MaterialDocDetail^              
+ProductReturnAndPrintLabel             MaterialDocInfo                                    View            ^MaterialDocInfo^                
+ProductReturnAndPrintLabel             MaterialDocLotInfo                                 View            ^MaterialDocLotInfo^             
+SalesGI                                CancelDoc                                          Action          ^출고취소^                           
+SalesGI                                CancelFinish                                       Action          ^완료취소^                           
+SalesGI                                Finish                                             Action          ^출고완료^                           
+SalesGI                                Fix                                                Action          ^출고확정^                           
+SalesGI                                PickingCancel                                      Action          ^피킹취소^                           
+SalesGI                                PrintReport                                        Action          ^출하지시서인쇄^                        
+SalesGI                                Refresh                                            Action          ^새로고침^                           
+SalesGI                                RefreshDocDetail                                   Action          DocDetail새로고침                    
+SalesGI                                RefreshDocLot                                      Action          ^DocLot새로고침^                     
+SalesGI                                ScanLotForDetail                                   Action          ^바코드스캔^                          
+SalesGI                                ScanLotForLot                                      Action          ^바코드스캔^                          
+SalesGI                                SearchStockLot                                     Action          ^재고선택^                           
+SalesGI                                usp_DoCancelFinishMaterialDoc                      ExecuteFunction                                  
+SalesGI                                usp_DoCancelMaterialDoc                            ExecuteFunction                                  
+SalesGI                                usp_DoFinishMaterialDoc                            ExecuteFunction                                  
+SalesGI                                usp_DoFixMaterialDoc                               ExecuteFunction                                  
+SalesGI                                usp_DoUploadMaterialDocToERP_DL                    ExecuteFunction                                  
+SalesGI                                usp_MaterialDocDetail_iud                          ExecuteFunction                                  
+SalesGI                                usp_MaterialDocInfo_iud                            ExecuteFunction                                  
+SalesGI                                usp_MaterialDocLotInfo_iud                         ExecuteFunction                                  
+SalesGI                                usp_PDADoPicking                                   ExecuteFunction                                  
+SalesGI                                usp_PDADoPickingCancel                             ExecuteFunction                                  
+SalesGI                                usp_MaterialDocDetail_get                          SearchFunction                                   
+SalesGI                                usp_MaterialDocInfo_get                            SearchFunction                                   
+SalesGI                                usp_MaterialDocLotInfo_get                         SearchFunction                                   
+SalesGI                                MaterialDocDetail                                  View            ^출고상세내역^                         
+SalesGI                                MaterialDocInfo                                    View            ^출고내역^                           
+SalesGI                                MaterialDocLotInfo                                 View            ^출고LOT내역^                        
+SerialRule                             usp_SerialRule_iud                                 ExecuteFunction                                  
+SerialRule                             usp_SerialRule_get                                 SearchFunction                                   
+SerialRule                             SerialRule                                         View            ^채번규칙^                           
+SlittingLot                            PartLabel                                          Action          Label Print                      
+SlittingLot                            Refresh                                            Action          Refresh                          
+SlittingLot                            SplitLot                                           Action          Split Lot                        
+SlittingLot                            usp_DoSplitLot                                     ExecuteFunction                                  
+SlittingLot                            usp_GetSplitedMaterialLotInfo                      SearchFunction                                   
+SlittingLot                            SplitedMaterialLotInfo                             View            Splited Material Lot Info        
+SlittingLOTMaterialHaNam               ChotSlitting                                       Action          ^chốt slitting^                  
+SlittingLOTMaterialHaNam               CreateLableNG                                      Action          ^Tạo tem NG^                     
+SlittingLOTMaterialHaNam               MakeLable                                          Action          ^라벨생성^                           
+SlittingLOTMaterialHaNam               NewAction                                          Action          ^NewAction^                      
+SlittingLOTMaterialHaNam               PartLabel                                          Action          ^라벨발행^                           
+SlittingLOTMaterialHaNam               Refresh                                            Action          ^Refresh^                        
+SlittingLOTMaterialHaNam               SendWarehouseNVL                                   Action          ^Trả về kho NVL^                 
+SlittingLOTMaterialHaNam               SplitLot                                           Action          ^SplitLot^                       
+SlittingLOTMaterialHaNam               usp_ChotSlittingLot                                ExecuteFunction                                  
+SlittingLOTMaterialHaNam               usp_CreateLotSlitting_NG_HN_uid                    ExecuteFunction                                  
+SlittingLOTMaterialHaNam               usp_DoSlittingLot                                  ExecuteFunction                                  
+SlittingLOTMaterialHaNam               usp_DoSplitLot                                     ExecuteFunction                                  
+SlittingLOTMaterialHaNam               usp_Update_POIL_Lot_Transfer_WarehouseCode         ExecuteFunction                                  
+SlittingLOTMaterialHaNam               usp_GetSplitedMaterialLotInfo                      SearchFunction                                   
+SlittingLOTMaterialHaNam               usp_GetSplittingMaterialLotInfo                    SearchFunction                                   
+SlittingLOTMaterialHaNam               SplitedMaterialLotInfo                             View            ^SplitedMaterialLotInfo^         
+SlittingLOTMaterialHaNam               SplittingMaterialLotInfo                           View            ^SplittingMaterialLotInfo^       
+SplitLot                               LabelPrintVN                                       Action          ^LabelPrintVN^                   
+SplitLot                               PartLabel                                          Action          ^라벨발행^                           
+SplitLot                               Refresh                                            Action          ^Refresh^                        
+SplitLot                               SplitLot                                           Action          ^SplitLot^                       
+SplitLot                               usp_DoSplitLot                                     ExecuteFunction                                  
+SplitLot                               usp_GetMaterialLotInfo_ToCut                       SearchFunction                                   
+SplitLot                               usp_GetSplitedMaterialLotInfo                      SearchFunction                                   
+SplitLot                               MaterialLotInfoToCut                               View            ^MaterialLotInfoToCut^           
+UserInfo                               usp_UserInfoUserPermissionGroup_iud                ExecuteFunction                                  
+UserInfo                               usp_UserInfo_get                                   SearchFunction                                   
+UserInfo                               usp_UserPermissionGroup_get                        SearchFunction                                   
+UserInfo                               UserList                                           View            ^사용자정보^                          
+UserInfo                               UserPermissonGroup                                 View            ^사용자권한그룹^                        
+UserType                               usp_UserType_iud                                   ExecuteFunction                                  
+UserType                               usp_UserType_get                                   SearchFunction                                   
+UserType                               UserTypeList                                       View            ^사용자유형^                          
+UserTypePermission                     GrantAll                                           Action          ^전체권한^                           
+UserTypePermission                     SelectedAll                                        Action          ^전체선택^                           
+UserTypePermission                     SelectedDelete                                     Action          ^SelectedDelete^                 
+UserTypePermission                     SelectedExcel                                      Action          ^SelectedExcel^                  
+UserTypePermission                     SelectedImport                                     Action          ^SelectedImport^                 
+UserTypePermission                     SelectedModify                                     Action          ^SelectedModify^                 
+UserTypePermission                     UnSelectedAll                                      Action          ^전체해제^                           
+UserTypePermission                     UnSelectedDelete                                   Action          ^UnSelectedDelete^               
+UserTypePermission                     UnSelectedExcel                                    Action          ^UnSelectedExcel^                
+UserTypePermission                     UnSelectedImport                                   Action          ^UnSelectedImport^               
+UserTypePermission                     UnSelectedModify                                   Action          ^UnSelectedModify^               
+UserTypePermission                     usp_DoGrantAll                                     ExecuteFunction                                  
+UserTypePermission                     usp_DoSaveUserTypePermissionAll                    ExecuteFunction                                  
+UserTypePermission                     usp_GetFunctionListForUserType                     SearchFunction                                   
+UserTypePermission                     usp_GetScreenListForUserType                       SearchFunction                                   
+UserTypePermission                     usp_GetViewListForUserType                         SearchFunction                                   
+UserTypePermission                     usp_UserType_get                                   SearchFunction                                   
+UserTypePermission                     FunctionList                                       View            ^기능리스트^                          
+UserTypePermission                     MenuList                                           View            ^메뉴리스트^                          
+UserTypePermission                     UserTypeList                                       View            ^사용자유형^                          
+UserTypePermission                     ViewList                                           View            ^뷰리스트^                           
+VendorMappingByMaterialInfo            usp_MaterialVendorMapping_iud                      ExecuteFunction                                  
+VendorMappingByMaterialInfo            usp_GetCustomerMappingByMaterial                   SearchFunction                                   
+VendorMappingByMaterialInfo            usp_GetPurchaseMaterialMaster                      SearchFunction                                   
+VendorMappingByMaterialInfo            CustomerMappingByMaterialDetailView                View            ^자재별업체지정디테일^                     
+VendorMappingByMaterialInfo            PurchaseMaterialMasterView                         View            ^자재별업체지정마스터^                     
+VendorMenuManagement                   AddMenu                                            Action          ^메뉴복사^                           
+VendorMenuManagement                   usp_VendorScreenInfo_iud                           ExecuteFunction                                  
+VendorMenuManagement                   usp_GetPossableScreenInfo_get                      SearchFunction                                   
+VendorMenuManagement                   usp_VendorScreenInfo_get                           SearchFunction                                   
+VendorMenuManagement                   GetPossableScreenInfo                              View            ^GetPossableScreenInfo^          
+VendorMenuManagement                   ScreenInfo                                         View            ^업체화면정보^                         
+Vietnam_MaterialGrFromOrder            FixDelivery                                        Action          ^납품확정^                           
+Vietnam_MaterialGrFromOrder            InterfaceErp_SA                                    Action          ^ERP수신^                          
+Vietnam_MaterialGrFromOrder            MaterialGrOrder                                    Action          ^발주자재선택^                         
+Vietnam_MaterialGrFromOrder            Refresh                                            Action          ^새로고침^                           
+Vietnam_MaterialGrFromOrder            SalesOrderItemSelect                               Action          ^수주정보^                           
+Vietnam_MaterialGrFromOrder            SelectOrder                                        Action          ^발주서선택^                          
+Vietnam_MaterialGrFromOrder            usp_DoFixMaterialDocList                           ExecuteFunction                                  
+Vietnam_MaterialGrFromOrder            usp_DoMaterialDocMasterDetail_iud                  ExecuteFunction                                  
+Vietnam_MaterialGrFromOrder            usp_MaterialDocDetail_Vietnam_get                  SearchFunction                                   
+Vietnam_MaterialGrFromOrder            usp_MaterialDocInfo_get                            SearchFunction                                   
+Vietnam_MaterialGrFromOrder            MaterialDocDetail                                  View            ^MaterialDocDetail^              
+Vietnam_MaterialGrFromOrder            MaterialDocInfo                                    View            ^MaterialDocInfo^                
+VisionGroupInspInfo                    usp_VisionGroupInspectionInfo_get                  SearchFunction                                   
+VisionGroupInspInfo                    VisionGroupInspectionInfo                          View            ^VisionGroupInspectionInfo^      
+VNE_BoxLabelPrintHist                  1stBoxLabelPrint                                   Action          ^1stBoxLabelPrint^               
+VNE_BoxLabelPrintHist                  2ndBoxLabelPrint                                   Action          ^2ndBoxLabelPrint^               
+VNE_BoxLabelPrintHist                  LabelReprinting                                    Action          ^LabelReprinting^                
+VNE_BoxLabelPrintHist                  PrintLabel                                         Action          ^PrintLabel^                     
+VNE_BoxLabelPrintHist                  ProdShipment                                       Action          ^ProdShipment^                   
+VNE_BoxLabelPrintHist                  RefreshView                                        Action          ^RefreshView^                    
+VNE_BoxLabelPrintHist                  VINAEnesolBoxMatchingHist                          Action          ^VINAEnesolBoxMatchingHist^      
+VNE_BoxLabelPrintHist                  usp_VINAEnesolBoxLabelPrintHist_iud                ExecuteFunction                                  
+VNE_BoxLabelPrintHist                  usp_VINAEnesolBoxLabelPrintHist_get                SearchFunction                                   
+VNE_BoxLabelPrintHist                  VINAEnesolBoxLabelPrintHist                        View            ^VINAEnesolBoxLabelPrintHist^    
+VNE_CustomerPartNoInfo                 usp_CustomerPartNoInfo_iud                         ExecuteFunction                                  
+VNE_CustomerPartNoInfo                 usp_CustomerPartNo_get                             SearchFunction                                   
+VNE_CustomerPartNoInfo                 CustomerPartNo                                     View            ^CustomerPartNo^                 
+VNT_MaterialWarehouseInOutHist         ConfirmGetMaterials                                Action          ^Xác nhận cấp NVL^               
+VNT_MaterialWarehouseInOutHist         MaterialWarehouseInOutRequest                      Action          ^MaterialWarehouseOutRequest^    
+VNT_MaterialWarehouseInOutHist         MaterialWarehouseInRequest                         Action          ^MaterialWarehouseInRequest^     
+VNT_MaterialWarehouseInOutHist         PhieuNhapKhoNVL                                    Action          ^Phiếu xuất kho nguyên vật liệu^ 
+VNT_MaterialWarehouseInOutHist         Vietnam_MaterialOut                                Action          ^Vietnam_Nguyen lieu dau ra^     
+VNT_MaterialWarehouseInOutHist         usp_MaterialWarehouseInOutHist_del                 ExecuteFunction                                  
+VNT_MaterialWarehouseInOutHist         usp_MaterialWarehouseInOutHist_get                 SearchFunction                                   
+VNT_MaterialWarehouseInOutHist         MaterialWarehouseInOutHist                         View            ^MaterialWarehouseInOutHist^     
+VNT_ModuleProductionInfo               usp_ModuleProductionInfo_iud                       ExecuteFunction                                  
+VNT_ModuleProductionInfo               usp_ModuleProductionInfo_get                       SearchFunction                                   
+VNT_ModuleProductionInfo               ModuleProductionInfo                               View            ^ModuleProductionInfo^           
+VNT_NordexPackingLabelPrintingHist_get Jabil Label                                        Action          ^Jabil Label^                    
+VNT_NordexPackingLabelPrintingHist_get Standard Packing Label                             Action          ^Standard Packing Label^         
+VNT_NordexPackingLabelPrintingHist_get usp_NordexPackingLabelPrintingHist_get             SearchFunction                                   
+VNT_NordexPackingLabelPrintingHist_get NordexPackingLabelPrintingHist                     View            ^NordexPackingLabelPrintingHist^ 
+VNT_SelfInspectionRawMaterialBE        DoFinishCommInsp                                   Action          ^검사합격^                           
+VNT_SelfInspectionRawMaterialBE        DoHoldCommInsp                                     Action          ^검사부적합처리^                        
+VNT_SelfInspectionRawMaterialBE        DoLossCommInsp                                     Action          ^DoLossCommInsp^                 
+VNT_SelfInspectionRawMaterialBE        DoLossCommInspDialog                               Action          ^제품폐기^                           
+VNT_SelfInspectionRawMaterialBE        InputDefectCode                                    Action          ^검사부적합^                          
+VNT_SelfInspectionRawMaterialBE        Refresh                                            Action          ^Refresh^                        
+VNT_SelfInspectionRawMaterialBE        SetHolding                                         Action          ^SetHolding^                     
+VNT_SelfInspectionRawMaterialBE        usp_DoAddCommInspMeasureHistForBarcode             ExecuteFunction                                  
+VNT_SelfInspectionRawMaterialBE        usp_DoAddCommInspMeasureHistForBarcodeSelfInsp_iud ExecuteFunction                                  
+VNT_SelfInspectionRawMaterialBE        usp_DoFinishCommInspDoc                            ExecuteFunction                                  
+VNT_SelfInspectionRawMaterialBE        usp_DoFinishCommInspDoc_VNT                        ExecuteFunction                                  
+VNT_SelfInspectionRawMaterialBE        usp_RawMaterialInputHist_iud                       ExecuteFunction                                  
+VNT_SelfInspectionRawMaterialBE        usp_GetCommInspectionHistoryForBarcode             SearchFunction                                   
+VNT_SelfInspectionRawMaterialBE        usp_RawMaterialInputHist_get                       SearchFunction                                   
+VNT_SelfInspectionRawMaterialBE        CommInspectionHistoryForBarcode                    View            ^SelfInspectionHistoryForBarcode^
+VNT_SelfInspectionRawMaterialBE        RawMaterialInputHist                               View            ^RawMaterialInputHist^           
+VNT_VisionInspectionResult             usp_VisionInspectionResult_get                     SearchFunction                                   
+VNT_VisionInspectionResult             VisionInspectionResult                             View            ^VisionInspectionResult^         
+VNT_XRFInspInfo                        usp_XRFInspectionInfo_get                          SearchFunction                                   
+VNT_XRFInspInfo                        XRFInspectionInfo                                  View            ^XRFInspectionInfo^              
+VVT_MaterialDocDetailHistory_vvt1      PhieuXuatKhoNVL                                    Action          ^Phiếu xuất nguyên vật liệu^     
+VVT_MaterialDocDetailHistory_vvt1      usp_VVT_GetMaterialDoc_DetailHistory               SearchFunction                                   
+VVT_MaterialDocDetailHistory_vvt1      usp_VVT_GetMaterialDoc_SummaryHistory              SearchFunction                                   
+VVT_MaterialDocDetailHistory_vvt1      MaterialDocDetailHistory                           View            ^MaterialDocDetailHistory^       
+VVT_MaterialDocDetailHistory_vvt1      VVT_MaterialDoc_SummaryHistory                     View            ^VVT_MaterialDoc_SummaryHistory^ 
+VVT_MaterialStockList                  HuyLinkVitri                                       Action          ^Huy Link Vi tri^                
+VVT_MaterialStockList                  LabelPrint                                         Action          ^라벨발행^                           
+VVT_MaterialStockList                  LinkVitri                                          Action          ^Link Vi tri^                    
+VVT_MaterialStockList                  PriorFIFO                                          Action          ^Danh Sach Uu Tien FIFO^         
+VVT_MaterialStockList                  VVT_List_Export_NVL                                Action          ^Danh sách xuất hàng^            
+VVT_MaterialStockList                  usp_vvt_MaterialLotInfo_get                        SearchFunction                                   
+VVT_MaterialStockList                  vvt_MaterialLotInfo_vew                            View            ^vvt_MaterialLotInfo_vew^        
+WidthSlittingWH                        Refresh                                            Action          ^Refresh^                        
+WidthSlittingWH                        usp_WidthSlitting_uid                              ExecuteFunction                                  
+WidthSlittingWH                        usp_WidthSlitting_get                              SearchFunction                                   
+WidthSlittingWH                        WidthSlitting                                      View            ^WidthSlitting^                  
+
+
+

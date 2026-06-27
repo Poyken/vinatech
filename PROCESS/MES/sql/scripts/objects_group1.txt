@@ -1,0 +1,501 @@
+﻿
+ScreenName                       ObjectName                                         ObjectType      Caption                                    
+----------                       ----------                                         ----------      -------                                    
+ANDONReport_V1                   usp_getAndon_v1                                    SearchFunction                                             
+ANDONReport_V1                   getAndon_v1                                        View            ^getAndon_v1^                              
+AssyCardInfo                     DoCreateWasteElectrolyteInfo                       Action          ^DoCreateWasteElectrolyteInfo^             
+AssyCardInfo                     DryOven                                            Action          ^Sấy hàng^                                 
+AssyCardInfo                     OvenBarcodePrint                                   Action          ^OvenBarcodePrint^                         
+AssyCardInfo                     OvenInput                                          Action          ^OvenInput^                                
+AssyCardInfo                     OvenOutput                                         Action          ^OvenOutput^                               
+AssyCardInfo                     ProdQtyInput                                       Action          ^ProdQtyInput^                             
+AssyCardInfo                     RawMaterialInput                                   Action          ^RawMaterialInput^                         
+AssyCardInfo                     SelfInspectionInput                                Action          ^SelfInspectionInput^                      
+AssyCardInfo                     SelfInspRawMaterialVPC0825                         Action          ^SelfInspRawMaterialVPC^                   
+AssyCardInfo                     SelftInspRawMaterial                               Action          ^SelftInspRawMaterial^                     
+AssyCardInfo                     VVT_SelfInspRawMaterial                            Action          ^VVT_SelfInspRawMaterial^                  
+AssyCardInfo                     VVT_SelfInspRawMaterialBG2                         Action          ^Việt Nam_Kiểm tra thương xuyên BG2^       
+AssyCardInfo                     XRayImagePopup                                     Action          ^XRayImagePopup^                           
+AssyCardInfo                     usp_AssyCardInfoCommon_get                         SearchFunction                                             
+AssyCardInfo                     usp_AssyCardInfoOven_get                           SearchFunction                                             
+AssyCardInfo                     usp_AssyCardInfoProdQty_get                        SearchFunction                                             
+AssyCardInfo                     usp_GetRawMaterialLotForBarcode_VNT_SF             SearchFunction                                             
+AssyCardInfo                     usp_RawMaterialInputHist_get                       SearchFunction                                             
+AssyCardInfo                     AssyCardInfoCommon                                 View            ^AssyCardInfoCommon^                       
+AssyCardInfo                     AssyCardInfoOven                                   View            ^AssyCardInfoOven^                         
+AssyCardInfo                     AssyCardInfoProdQty                                View            ^AssyCardInfoProdQty^                      
+AssyCardInfo                     RawMaterialInputHist                               View            ^RawMaterialInputHist^                     
+BendingTapping                   PrintLabel                                         Action          ^In tem Marking^                           
+BendingTapping                   PrintMarkingLabel                                  Action          ^PrintMarkingLabel^                        
+BendingTapping                   RefreshView                                        Action          ^RefreshView^                              
+BendingTapping                   SavePrintHist                                      Action          ^SavePrintHist^                            
+BendingTapping                   usp_MarkingLabelPrintHistVVT_iud                   ExecuteFunction                                            
+BendingTapping                   usp_new_Tapping_VVT_iud                            ExecuteFunction                                            
+BendingTapping                   usp_STB_BENDING_TAPPING                            ExecuteFunction                                            
+BendingTapping                   usp_new_Tapping_VVT_get                            SearchFunction                                             
+BendingTapping                   VN_BENDING_TAPPING                                 View            ^VN_BENDING_TAPPING^                       
+BomInfo                          MoveMaterial                                       Action          ^BOM에추가^                                   
+BomInfo                          Research                                           Action          ^재검색^                                      
+BomInfo                          usp_BomDetail_iud                                  ExecuteFunction                                            
+BomInfo                          usp_BomFacilityRoute_iud                           ExecuteFunction                                            
+BomInfo                          usp_BomHeader_iud                                  ExecuteFunction                                            
+BomInfo                          usp_BomDetail_get                                  SearchFunction                                             
+BomInfo                          usp_BomFacilityRoute_get                           SearchFunction                                             
+BomInfo                          usp_BomHeader_get                                  SearchFunction                                             
+BomInfo                          usp_GetBOMMaterialMaster                           SearchFunction                                             
+BomInfo                          usp_GetBOMMaterialMasterSub                        SearchFunction                                             
+BomInfo                          BomDetailList                                      View            ^BOM세부정보^                                  
+BomInfo                          BomFacilityRoute                                   View            ^BomFacilityRoute^                         
+BomInfo                          BomHeaderList                                      View            ^BOM정보^                                    
+BomInfo                          BomMaterialMasterList                              View            ^품목정보^                                     
+BomInfo                          BomMaterialMasterSubList                           View            ^품목목록^                                     
+ChangeNameLotNo                  Refresh                                            Action          ^Refresh^                                  
+ChangeNameLotNo                  usp_ChangeLotnoPrintTem                            ExecuteFunction                                            
+ChangeNameLotNo                  usp_GetListChangeLotno                             SearchFunction                                             
+ChangeNameLotNo                  ListChangeLotno                                    View            ^ListChangeLotno^                          
+DayProdPlanForMainLot            AddMainAssemblePart                                Action          ^자재Lot추가^                                  
+DayProdPlanForMainLot            CancelDayPlan                                      Action          ^CancelDayPlan^                            
+DayProdPlanForMainLot            CreateSetInfo                                      Action          ^CreateSetInfo^                            
+DayProdPlanForMainLot            DoFinishDayPlan                                    Action          ^계획마감^                                     
+DayProdPlanForMainLot            DoGI                                               Action          ^자재출고처리^                                   
+DayProdPlanForMainLot            FixDayPlan                                         Action          ^FixDayPlan^                               
+DayProdPlanForMainLot            InputLabelQty                                      Action          ^LabelPrint^                               
+DayProdPlanForMainLot            InputLotQty                                        Action          ^Lot생성^                                    
+DayProdPlanForMainLot            POSelectDialog                                     Action          ^POSelectDialog^                           
+DayProdPlanForMainLot            PrintSlteeingLabel                                 Action          ^라벨인쇄^                                     
+DayProdPlanForMainLot            Refresh                                            Action          ^Refresh^                                  
+DayProdPlanForMainLot            RefreshSetInfo                                     Action          ^Refresh^                                  
+DayProdPlanForMainLot            usp_DayProdPlan_iud                                ExecuteFunction                                            
+DayProdPlanForMainLot            usp_DoCancelDayProdPlan                            ExecuteFunction                                            
+DayProdPlanForMainLot            usp_DoCreateSetInfoForProdQty_VNT                  ExecuteFunction                                            
+DayProdPlanForMainLot            usp_DoFinishDayProdPlan                            ExecuteFunction                                            
+DayProdPlanForMainLot            usp_DoFixDayProdPlan                               ExecuteFunction                                            
+DayProdPlanForMainLot            usp_SetInfo_iud                                    ExecuteFunction                                            
+DayProdPlanForMainLot            usp_DayProdPlan_get                                SearchFunction                                             
+DayProdPlanForMainLot            usp_SetInfo_get                                    SearchFunction                                             
+DayProdPlanForMainLot            DayProdPlan                                        View            ^DayProdPlan^                              
+DayProdPlanForMainLot            SetInfo                                            View            ^SetInfo^                                  
+DigiKeyLabelInner_get            DeleteView                                         Action          DeleteView                                 
+DigiKeyLabelInner_get            PrintLabel                                         Action          ^PrintLabel^                               
+DigiKeyLabelInner_get            PrintLogisticLabel                                 Action          ^PrintLogisticLabel^                       
+DigiKeyLabelInner_get            SavePrintHist                                      Action          ^SavePrintHist^                            
+DigiKeyLabelInner_get            SetLabelQty                                        Action          ^IN NHÃN SP^                               
+DigiKeyLabelInner_get            SetLogisticLabelQty                                Action          ^SetLogisticLabelQty^                      
+DigiKeyLabelInner_get            SetPackListNumber                                  Action          ^SetPackListNumber^                        
+DigiKeyLabelInner_get            SetPOLineNumber                                    Action          ^SetPOLineNumber^                          
+DigiKeyLabelInner_get            SetPONumber                                        Action          ^IN NHÃN LOGISTIC^                         
+DigiKeyLabelInner_get            usp_VN_DigiKeyLabelInnerPrintHist_iud              ExecuteFunction                                            
+DigiKeyLabelInner_get            usp_DigiKeyLabelInner_get_Vietnam                  SearchFunction                                             
+DigiKeyLabelInner_get            DigiKeyLabelInner_Vietnam                          View            ^DigiKeyLabelInner_Vietnam^                
+DigikeyLabelLevelPackage_get     DeleteView                                         Action          ^DeleteView^                               
+DigikeyLabelLevelPackage_get     PrintLabel                                         Action          ^IN TEM^                                   
+DigikeyLabelLevelPackage_get     SavePrintHist                                      Action          ^SavePrintHist^                            
+DigikeyLabelLevelPackage_get     usp_VN_DigiKeySingleLevelPackagePrintHist_iud      ExecuteFunction                                            
+DigikeyLabelLevelPackage_get     usp_DigiKeySingleLevelPackage_get_Vietnam          SearchFunction                                             
+DigikeyLabelLevelPackage_get     DigiKeySingleLevelPackage_Vietnam                  View            ^DigiKeySingleLevelPackage_Vietnam^        
+ElectrodePlan_Vietnam            AddMainAssemblePart                                Action          ^자재Lot추가^                                  
+ElectrodePlan_Vietnam            AddPartWeight                                      Action          ^중량입력^                                     
+ElectrodePlan_Vietnam            CancelDayPlan                                      Action          ^CancelDayPlan^                            
+ElectrodePlan_Vietnam            CopyLot                                            Action          ^CopyLot^                                  
+ElectrodePlan_Vietnam            DoGI                                               Action          ^자재출고처리^                                   
+ElectrodePlan_Vietnam            FixDayPlan                                         Action          ^FixDayPlan^                               
+ElectrodePlan_Vietnam            InputLabelQty                                      Action          ^LabelPrint^                               
+ElectrodePlan_Vietnam            LabelPrint                                         Action          ^LabelPrint^                               
+ElectrodePlan_Vietnam            POSelectDialog                                     Action          ^POSelectDialog^                           
+ElectrodePlan_Vietnam            Refresh                                            Action          ^Refresh^                                  
+ElectrodePlan_Vietnam            RefreshSetInfo                                     Action          ^Refresh^                                  
+ElectrodePlan_Vietnam            usp_DayProdPlan_iud                                ExecuteFunction                                            
+ElectrodePlan_Vietnam            usp_DoCancelDayProdPlan                            ExecuteFunction                                            
+ElectrodePlan_Vietnam            usp_DoFixDayProdPlan                               ExecuteFunction                                            
+ElectrodePlan_Vietnam            usp_SetInfo_iud_VNT                                ExecuteFunction                                            
+ElectrodePlan_Vietnam            usp_DayProdPlan_get                                SearchFunction                                             
+ElectrodePlan_Vietnam            usp_MainAssemblePartWeight_get                     SearchFunction                                             
+ElectrodePlan_Vietnam            usp_SetInfo_get                                    SearchFunction                                             
+ElectrodePlan_Vietnam            DayProdPlan                                        View            ^DayProdPlan^                              
+ElectrodePlan_Vietnam            MainAssemblePartWeight                             View            ^MainAssemblePartWeight^                   
+ElectrodePlan_Vietnam            SetInfo                                            View            ^SetInfo^                                  
+Kho_Donggoi2                     BoxIDInfoRefresh                                   Action          ^BoxIDInfoRefresh^                         
+Kho_Donggoi2                     DeleteAndRefresh                                   Action          ^DeleteAndRefresh^                         
+Kho_Donggoi2                     DeleteData                                         Action          ^데이터삭제^                                    
+Kho_Donggoi2                     DoCancelProdPacking                                Action          ^실적취소^                                     
+Kho_Donggoi2                     DoDummy                                            Action          ^DoDummy^                                  
+Kho_Donggoi2                     DoProductionByBoxCount                             Action          ^BoxID생성^                                  
+Kho_Donggoi2                     HelaBarcodePrint                                   Action          ^HelaBarcodePrint^                         
+Kho_Donggoi2                     InputBoxQty                                        Action          ^In Tem &^                                 
+Kho_Donggoi2                     InputLabelQty                                      Action          ^In nhan^                                  
+Kho_Donggoi2                     IsLabelPrint                                       Action          ^IsLabelPrint^                             
+Kho_Donggoi2                     LabelPrint                                         Action          ^LabelPrint^                               
+Kho_Donggoi2                     LotRefresh                                         Action          ^LotRefresh^                               
+Kho_Donggoi2                     Lotweightshow                                      Action          ^Lot weight show^                          
+Kho_Donggoi2                     MergeBox                                           Action          ^Box합치기^                                   
+Kho_Donggoi2                     OnlyRefresh                                        Action          ^OnlyRefresh^                              
+Kho_Donggoi2                     PackingLotRemainQty                                Action          ^PackingLotRemainQty^                      
+Kho_Donggoi2                     PreMergeBox                                        Action          ^PreMergeBox^                              
+Kho_Donggoi2                     PrintLabelWH                                       Action          ^PrintLabelWH^                             
+Kho_Donggoi2                     PrintSagem                                         Action          ^PrintSagem^                               
+Kho_Donggoi2                     Refresh                                            Action          ^Refresh^                                  
+Kho_Donggoi2                     Refresh2                                           Action          ^취소^                                       
+Kho_Donggoi2                     SagemCom                                           Action          ^Open Sagem^                               
+Kho_Donggoi2                     SaveLabelInfo                                      Action          ^Luu Packing Qty^                          
+Kho_Donggoi2                     SaveLabelInfo2                                     Action          ^SaveLabelInfo2^                           
+Kho_Donggoi2                     SavePrintQty                                       Action          ^SavePrintQty^                             
+Kho_Donggoi2                     SetSagem1                                          Action          ^Set.Sagem1^                               
+Kho_Donggoi2                     SplitBoxQty                                        Action          ^Chia box^                                 
+Kho_Donggoi2                     SplitBoxQtyProc                                    Action          ^SplitBoxQtyProc^                          
+Kho_Donggoi2                     TapingLabel                                        Action          ^In Label Taping^                          
+Kho_Donggoi2                     usp_BoxCheckSetupValue                             ExecuteFunction                                            
+Kho_Donggoi2                     usp_BoxCheckSetupValueTwo                          ExecuteFunction                                            
+Kho_Donggoi2                     usp_DoCancelProdPacking_LotNo                      ExecuteFunction                                            
+Kho_Donggoi2                     usp_DoCreatePackingLabelInfo                       ExecuteFunction                                            
+Kho_Donggoi2                     usp_DoProcessProdPackingByOne_VNT                  ExecuteFunction                                            
+Kho_Donggoi2                     usp_PackingLabelPrintInfo                          ExecuteFunction                                            
+Kho_Donggoi2                     usp_savePackingLabelQty_VVT                        ExecuteFunction                                            
+Kho_Donggoi2                     usp_SplitPackingBox                                ExecuteFunction                                            
+Kho_Donggoi2                     usp_Vietnam_DoProcessProdPacking_VVT               ExecuteFunction                                            
+Kho_Donggoi2                     usp_ProdRouteHist_get                              SearchFunction                                             
+Kho_Donggoi2                     usp_Vietnam_GetBoxIDForLotNo_VVT                   SearchFunction                                             
+Kho_Donggoi2                     usp_Vietnam_GetProdPackingForBarcode_VVT           SearchFunction                                             
+Kho_Donggoi2                     BoxIDForLotNo_VNT                                  View            ^BoxIDForLotNo_VNT^                        
+Kho_Donggoi2                     ProdPackingForBarcode                              View            ^ProdPackingForBarcode^                    
+Kho_Donggoi2                     ProdRouteHist                                      View            ^ProdRouteHist^                            
+LineRouteMapping                 UseAll                                             Action          ^전체사용^                                     
+LineRouteMapping                 usp_LineRouteMapping_iud                           ExecuteFunction                                            
+LineRouteMapping                 usp_LineInfo_get                                   SearchFunction                                             
+LineRouteMapping                 usp_LineRouteMapping_get                           SearchFunction                                             
+LineRouteMapping                 LineInfo                                           View            ^LineInfo^                                 
+LineRouteMapping                 LineRouteMapping                                   View            ^LineRouteMapping^                         
+MachineMaster                    usp_MachineMaster_iud                              ExecuteFunction                                            
+MachineMaster                    usp_MachineMaster_get                              SearchFunction                                             
+MachineMaster                    MachineMaster                                      View            ^MachineMaster^                            
+MaterialMaster                   usp_MaterialMaster_iud                             ExecuteFunction                                            
+MaterialMaster                   usp_MaterialMaster_get                             SearchFunction                                             
+MaterialMaster                   usp_MaterialRevision_get                           SearchFunction                                             
+MaterialMaster                   usp_MaterialVendor_get                             SearchFunction                                             
+MaterialMaster                   MaterialMaster                                     View            ^MaterialMaster^                           
+MaterialMaster                   MaterialRevision                                   View            ^MaterialRevision^                         
+MaterialMaster                   MaterialVendor                                     View            ^MaterialVendor^                           
+ModelBasicInfo                   usp_ModelBasicInfo_iud                             ExecuteFunction                                            
+ModelBasicInfo                   usp_ModelBasicInfo_get                             SearchFunction                                             
+ModelBasicInfo                   ModelBasicInfo                                     View            ^ModelBasicInfo^                           
+ModelLabelInfo                   usp_DoMakeModelLabelInfo                           ExecuteFunction                                            
+ModelLabelInfo                   usp_DoSaveModelLabelInfoSpec                       ExecuteFunction                                            
+ModelLabelInfo                   usp_ModelLabelInfo_iud                             ExecuteFunction                                            
+ModelLabelInfo                   usp_GetLabelInfoByMaterial                         SearchFunction                                             
+ModelLabelInfo                   usp_MaterialMaster_get                             SearchFunction                                             
+ModelLabelInfo                   GetLabelInfoByMaterial                             View            ^GetLabelInfoByMaterial^                   
+ModelLabelInfo                   MaterialMaster                                     View            ^MaterialMaster^                           
+PackingQtyWarehouse              usp_Vietnam_PackingQtyWarehouse_A419_iud           ExecuteFunction                                            
+PackingQtyWarehouse              usp_Vietnam_PackingQtyWarehouse_A419_get           SearchFunction                                             
+PackingQtyWarehouse              Vietnam_PackingQtyWarehouse_A419                   View            ^Vietnam_PackingQtyWarehouse_A419^         
+PACLabelCartonAndWeight          CartonNumberLabel                                  Action          ^Tem thùng Carton^                         
+PACLabelCartonAndWeight          PrintTestLabel                                     Action          ^PrintTestLabel^                           
+PACLabelCartonAndWeight          PrintWeightLabel                                   Action          ^PrintWeightLabel^                         
+PACLabelCartonAndWeight          SetLabelQty                                        Action          ^Tem Cân Nặng^                             
+PACLabelCartonAndWeight          usp_PACLabelCartonWeight_get_Vietnam               SearchFunction                                             
+PACLabelCartonAndWeight          PACLabelCartonWeight_Vietnam                       View            ^PACLabelCartonWeight_Vietnam^             
+ProdRouteForPacking22            BoxIDInfoRefresh                                   Action          ^BoxIDInfoRefresh^                         
+ProdRouteForPacking22            DeleteAndRefresh                                   Action          ^DeleteAndRefresh^                         
+ProdRouteForPacking22            DeleteData                                         Action          ^데이터삭제^                                    
+ProdRouteForPacking22            DoCancelProdPacking                                Action          ^실적취소^                                     
+ProdRouteForPacking22            DoProductionByBoxCount                             Action          ^BoxID생성^                                  
+ProdRouteForPacking22            HelaBarcodePrint                                   Action          ^HelaBarcodePrint^                         
+ProdRouteForPacking22            InputBoxQty                                        Action          ^InputBoxQty^                              
+ProdRouteForPacking22            InputLabelQty                                      Action          ^라벨인쇄^                                     
+ProdRouteForPacking22            LabelPrint                                         Action          ^LabelPrint^                               
+ProdRouteForPacking22            LotRefresh                                         Action          ^LotRefresh^                               
+ProdRouteForPacking22            MergeBox                                           Action          ^Box합치기^                                   
+ProdRouteForPacking22            OnlyRefresh                                        Action          ^OnlyRefresh^                              
+ProdRouteForPacking22            PackingLotRemainQty                                Action          ^PackingLotRemainQty^                      
+ProdRouteForPacking22            Refresh                                            Action          ^Refresh^                                  
+ProdRouteForPacking22            Refresh2                                           Action          ^취소^                                       
+ProdRouteForPacking22            SaveLabelInfo                                      Action          ^SaveLabelInfo^                            
+ProdRouteForPacking22            VietnamBoxLabelPrint                               Action          ^VietnamBoxLabelPrint^                     
+ProdRouteForPacking22            usp_DoCancelProdPacking_LotNo                      ExecuteFunction                                            
+ProdRouteForPacking22            usp_DoCreatePackingLabelInfo                       ExecuteFunction                                            
+ProdRouteForPacking22            usp_DoProcessProdPacking_VNT                       ExecuteFunction                                            
+ProdRouteForPacking22            usp_DoProcessProdPackingByOne_VNT                  ExecuteFunction                                            
+ProdRouteForPacking22            usp_GetBoxIDForLotNo_VNT                           SearchFunction                                             
+ProdRouteForPacking22            usp_GetProdPackingForBarcode_VNT                   SearchFunction                                             
+ProdRouteForPacking22            usp_ProdRouteHist_get                              SearchFunction                                             
+ProdRouteForPacking22            BoxIDForLotNo_VNT                                  View            ^BoxIDForLotNo_VNT^                        
+ProdRouteForPacking22            ProdPackingForBarcode                              View            ^ProdPackingForBarcode^                    
+ProdRouteForPacking22            ProdRouteHist                                      View            ^ProdRouteHist^                            
+ProductionOrderForChangeMaterial ChangeMaterial                                     Action          ^기종변경^                                     
+ProductionOrderForChangeMaterial RefreshSetInfo                                     Action          ^RefreshSetInfo^                           
+ProductionOrderForChangeMaterial usp_DoChangeMaterialForSetInfo                     ExecuteFunction                                            
+ProductionOrderForChangeMaterial usp_GetDayProdPlanForChangeMaterial                SearchFunction                                             
+ProductionOrderForChangeMaterial usp_GetSetInfoForChangeMaterial                    SearchFunction                                             
+ProductionOrderForChangeMaterial DayProdPlanForChangeMaterial                       View            ^DayProdPlanForChangeMaterial^             
+ProductionOrderForChangeMaterial SetInfoForChangeMaterial                           View            ^SetInfoForChangeMaterial^                 
+ProductionOrderInfo              CreateManualPO                                     Action          ^수동PO생성^                                   
+ProductionOrderInfo              DoGI                                               Action          ^자재출고처리^                                   
+ProductionOrderInfo              Fix                                                Action          ^확정^                                       
+ProductionOrderInfo              POCancel                                           Action          ^POCancel^                                 
+ProductionOrderInfo              Refresh                                            Action          ^Refresh^                                  
+ProductionOrderInfo              Tao_PO_ReDroping                                   Action          ^Tao_PO_ReDroping^                         
+ProductionOrderInfo              usp_DoCancelPO                                     ExecuteFunction                                            
+ProductionOrderInfo              usp_DoFixProductionOrder                           ExecuteFunction                                            
+ProductionOrderInfo              usp_ProductionOrderRouting_iud                     ExecuteFunction                                            
+ProductionOrderInfo              usp_GetMaterialGIForPO                             SearchFunction                                             
+ProductionOrderInfo              usp_ProductionOrderBom_get                         SearchFunction                                             
+ProductionOrderInfo              usp_ProductionOrderInfo_get                        SearchFunction                                             
+ProductionOrderInfo              usp_ProductionOrderRouting_get                     SearchFunction                                             
+ProductionOrderInfo              MaterialGIForPO                                    View            ^MaterialGIForPO^                          
+ProductionOrderInfo              ProductionOrderBom                                 View            ^ProductionOrderBom^                       
+ProductionOrderInfo              ProductionOrderInfo                                View            ^ProductionOrderInfo^                      
+ProductionOrderInfo              ProductionOrderRouting                             View            ^ProductionOrderRouting^                   
+ProductMachine                   usp_ProductMachine_iud                             ExecuteFunction                                            
+ProductMachine                   usp_ProductMachine_get                             SearchFunction                                             
+ProductMachine                   ProductMachine                                     View            ^ProductMachine^                           
+ProdWorkerInfo                   usp_ProdWorkerInfo_iud                             ExecuteFunction                                            
+ProdWorkerInfo                   usp_ProdWorkerInfo_get                             SearchFunction                                             
+ProdWorkerInfo                   ProdWorkerInfo                                     View            ^ProdWorkerInfo^                           
+ReworkSorting                    usp_new_Tapping_VVT_iud                            ExecuteFunction                                            
+ReworkSorting                    usp_STB_BENDING_TAPPING                            ExecuteFunction                                            
+ReworkSorting                    usp_new_Tapping_VVT_get                            SearchFunction                                             
+ReworkSorting                    VN_BENDING_TAPPING                                 View            ^Rework Sorting^                           
+ScrapAfterProduction             ViewDetails                                        Action          ^Xem thông tin chi tiết^                   
+ScrapAfterProduction             usp_addscrapafterproduction                        ExecuteFunction                                            
+ScrapAfterProduction             usp_vn_scrapafterproduction                        SearchFunction                                             
+ScrapAfterProduction             vn_scrapafterproduction                            View            ^vn_scrapafterproduction^                  
+SummaryTappingBennding           PrintMarkingLabel                                  Action          ^In tem Marking^                           
+SummaryTappingBennding           SavePrintHist                                      Action          ^SavePrintHist^                            
+SummaryTappingBennding           usp_BENDING_TAPPING_Delete                         ExecuteFunction                                            
+SummaryTappingBennding           usp_MarkingLabelPrintHistVVT_iud                   ExecuteFunction                                            
+SummaryTappingBennding           usp_Vietnam_TappingBennding_get                    SearchFunction                                             
+SummaryTappingBennding           VN_TappingBennding                                 View            ^VN_TappingBennding^                       
+Vietnam_Donggoi                  BoxIDInfoRefresh                                   Action          ^BoxIDInfoRefresh^                         
+Vietnam_Donggoi                  ChonSoLuongIntem                                   Action          ^Chọn số lượng in tem^                     
+Vietnam_Donggoi                  DeleteAndRefresh                                   Action          ^DeleteAndRefresh^                         
+Vietnam_Donggoi                  DeleteData                                         Action          ^데이터삭제^                                    
+Vietnam_Donggoi                  DoCancelProdPacking                                Action          ^실적취소^                                     
+Vietnam_Donggoi                  DoDummy                                            Action          ^DoDummy^                                  
+Vietnam_Donggoi                  DoProductionByBoxCount                             Action          ^BoxID생성^                                  
+Vietnam_Donggoi                  HelaBarcodePrint                                   Action          ^HelaBarcodePrint^                         
+Vietnam_Donggoi                  InputBoxQty                                        Action          ^In Tem &^                                 
+Vietnam_Donggoi                  InputLabelQty                                      Action          ^In nhan^                                  
+Vietnam_Donggoi                  IntemThepPartNo                                    Action          ^In tem hộp^                               
+Vietnam_Donggoi                  IsLabelPrint                                       Action          ^IsLabelPrint^                             
+Vietnam_Donggoi                  LabelPrint                                         Action          ^LabelPrint^                               
+Vietnam_Donggoi                  LotRefresh                                         Action          ^LotRefresh^                               
+Vietnam_Donggoi                  Lotweightshow                                      Action          ^Lot weight show^                          
+Vietnam_Donggoi                  MergeBox                                           Action          ^Box합치기^                                   
+Vietnam_Donggoi                  OnlyRefresh                                        Action          ^OnlyRefresh^                              
+Vietnam_Donggoi                  PackingLotRemainQty                                Action          ^PackingLotRemainQty^                      
+Vietnam_Donggoi                  PreMergeBox                                        Action          ^PreMergeBox^                              
+Vietnam_Donggoi                  PrintLabelWH                                       Action          ^PrintLabelWH^                             
+Vietnam_Donggoi                  PrintSagem                                         Action          ^PrintSagem^                               
+Vietnam_Donggoi                  Refresh                                            Action          ^Refresh^                                  
+Vietnam_Donggoi                  Refresh2                                           Action          ^취소^                                       
+Vietnam_Donggoi                  SagemCom                                           Action          ^Open Sagem^                               
+Vietnam_Donggoi                  SaveLabelInfo                                      Action          ^Luu Packing Qty^                          
+Vietnam_Donggoi                  SaveLabelInfo2                                     Action          ^SaveLabelInfo2^                           
+Vietnam_Donggoi                  SavePrintQty                                       Action          ^SavePrintQty^                             
+Vietnam_Donggoi                  SetSagem1                                          Action          ^Set.Sagem1^                               
+Vietnam_Donggoi                  SplitBoxQty                                        Action          ^Chia box^                                 
+Vietnam_Donggoi                  SplitBoxQtyProc                                    Action          ^SplitBoxQtyProc^                          
+Vietnam_Donggoi                  TapingLabel                                        Action          ^In Label Taping^                          
+Vietnam_Donggoi                  ZYS_InputLabelQty                                  Action          ^ZYS_InputLabelQty^                        
+Vietnam_Donggoi                  ZYS_IsLabelPrint                                   Action          ^ZYS_IsLabelPrint^                         
+Vietnam_Donggoi                  ZYS_PrintLabel                                     Action          ^ZYS_PrintLabel^                           
+Vietnam_Donggoi                  ZYS_SavePrintHist                                  Action          ^ZYS_SavePrintHist^                        
+Vietnam_Donggoi                  ZYS_SetLotQty                                      Action          ^In Tem ZYS^                               
+Vietnam_Donggoi                  usp_BoxCheckSetupValue                             ExecuteFunction                                            
+Vietnam_Donggoi                  usp_BoxCheckSetupValueTwo                          ExecuteFunction                                            
+Vietnam_Donggoi                  usp_DoCancelProdPacking_LotNo                      ExecuteFunction                                            
+Vietnam_Donggoi                  usp_DoCreatePackingLabelInfo                       ExecuteFunction                                            
+Vietnam_Donggoi                  usp_DoProcessProdPackingByOne_VNT                  ExecuteFunction                                            
+Vietnam_Donggoi                  usp_PackingLabelPrintInfo                          ExecuteFunction                                            
+Vietnam_Donggoi                  usp_savePackingLabelQty_VVT                        ExecuteFunction                                            
+Vietnam_Donggoi                  usp_SplitPackingBox                                ExecuteFunction                                            
+Vietnam_Donggoi                  usp_Vietnam_DoProcessProdPacking_VVT               ExecuteFunction                                            
+Vietnam_Donggoi                  usp_ZYSLabelPrintHist_iud                          ExecuteFunction                                            
+Vietnam_Donggoi                  usp_ProdRouteHist_get                              SearchFunction                                             
+Vietnam_Donggoi                  usp_Vietnam_GetBoxIDForLotNo_VVT                   SearchFunction                                             
+Vietnam_Donggoi                  usp_Vietnam_GetProdPackingForBarcode_VVT           SearchFunction                                             
+Vietnam_Donggoi                  BoxIDForLotNo_VNT                                  View            ^BoxIDForLotNo_VNT^                        
+Vietnam_Donggoi                  ProdPackingForBarcode                              View            ^ProdPackingForBarcode^                    
+Vietnam_Donggoi                  ProdRouteHist                                      View            ^ProdRouteHist^                            
+Vietnam_ElectrodeMeasureResult   CheckPrint                                         Action          ^CheckPrint^                               
+Vietnam_ElectrodeMeasureResult   CheckPrint2                                        Action          ^CheckPrint2^                              
+Vietnam_ElectrodeMeasureResult   CheckPrintExpired                                  Action          ^CheckPrintExpiredn^                       
+Vietnam_ElectrodeMeasureResult   CreateSlittingInfo                                 Action          ^CreateSlittingInfo^                       
+Vietnam_ElectrodeMeasureResult   DoElectrodeInspection                              Action          ^DoElectrodeInspection^                    
+Vietnam_ElectrodeMeasureResult   ElectrodeWasteLabelPrintAction                     Action          ^ElectrodeWasteLabelPrintAction^           
+Vietnam_ElectrodeMeasureResult   FoilWasteLabelPrintAction                          Action          ^FoilWasteLabelPrintAction^                
+Vietnam_ElectrodeMeasureResult   PackingLabelPrintCoating                           Action          ^PackingLabelPrintCoating^                 
+Vietnam_ElectrodeMeasureResult   PackingLabelPrintRollPress                         Action          ^PackingLabelPrintRollPress^               
+Vietnam_ElectrodeMeasureResult   PackingLabelPrintRollPressNormal                   Action          ^PackingLabelPrintRollPressNormal^         
+Vietnam_ElectrodeMeasureResult   PrintElectrodeWasteLabel                           Action          ^PrintElectrodeWasteLabel^                 
+Vietnam_ElectrodeMeasureResult   PrintElectrodeWasteList                            Action          ^PrintElectrodeWasteList^                  
+Vietnam_ElectrodeMeasureResult   PrintFoilWasteList                                 Action          ^PrintFoilWasteList^                       
+Vietnam_ElectrodeMeasureResult   PrintLabel                                         Action          ^PrintLabel^                               
+Vietnam_ElectrodeMeasureResult   RefreshView                                        Action          ^RefreshView^                              
+Vietnam_ElectrodeMeasureResult   ScanSlittingLocation                               Action          ^Scan Slitting Location^                   
+Vietnam_ElectrodeMeasureResult   ScanSlittingLocation2                              Action          ^Scan Slitting Location.^                  
+Vietnam_ElectrodeMeasureResult   UpdatePrintYn                                      Action          ^UpdatePrintYn^                            
+Vietnam_ElectrodeMeasureResult   UpdatePrintYn2                                     Action          ^UpdatePrintYn2^                           
+Vietnam_ElectrodeMeasureResult   UpdatePrintYn3                                     Action          ^UpdatePrintYn3^                           
+Vietnam_ElectrodeMeasureResult   VietnamPackLabelCoating                            Action          ^VietnamPackLabelCoating^                  
+Vietnam_ElectrodeMeasureResult   VietnamPackLabelRollPress                          Action          ^VietnamPackLabelRollPress^                
+Vietnam_ElectrodeMeasureResult   usp_DoUpdateCoatingBarcodePrintYn                  ExecuteFunction                                            
+Vietnam_ElectrodeMeasureResult   usp_DoUpdateRollPressBarcodePrintYn                ExecuteFunction                                            
+Vietnam_ElectrodeMeasureResult   usp_DoUpdateSlitingBarcodePrintYn                  ExecuteFunction                                            
+Vietnam_ElectrodeMeasureResult   usp_ElectrodCoatingInfo_Viscosity_VVT_iud          ExecuteFunction                                            
+Vietnam_ElectrodeMeasureResult   usp_ElectrodeCoatingInfo_iud                       ExecuteFunction                                            
+Vietnam_ElectrodeMeasureResult   usp_ElectrodeCoatingVisualInspectionInfo_iud       ExecuteFunction                                            
+Vietnam_ElectrodeMeasureResult   usp_ElectrodeMixInfo_iud                           ExecuteFunction                                            
+Vietnam_ElectrodeMeasureResult   usp_ElectrodeMixStepInfo_iud                       ExecuteFunction                                            
+Vietnam_ElectrodeMeasureResult   usp_ElectrodeRollPressingInfo_iud                  ExecuteFunction                                            
+Vietnam_ElectrodeMeasureResult   usp_ElectrodeRollPressingVisualInspectionInfo_iud  ExecuteFunction                                            
+Vietnam_ElectrodeMeasureResult   usp_ElectrodeSlittingInfo_iud                      ExecuteFunction                                            
+Vietnam_ElectrodeMeasureResult   usp_ElectrodeSlittingResult_iud                    ExecuteFunction                                            
+Vietnam_ElectrodeMeasureResult   usp_ElectrodeWasteInfoNew_iud                      ExecuteFunction                                            
+Vietnam_ElectrodeMeasureResult   usp_test_check_expired                             ExecuteFunction                                            
+Vietnam_ElectrodeMeasureResult   usp_ElectrodeCoatingInfo_get                       SearchFunction                                             
+Vietnam_ElectrodeMeasureResult   usp_ElectrodeCoatingVisualInspectionInfo_get       SearchFunction                                             
+Vietnam_ElectrodeMeasureResult   usp_ElectrodeMixInfo_get                           SearchFunction                                             
+Vietnam_ElectrodeMeasureResult   usp_ElectrodeMixStepInfo_get                       SearchFunction                                             
+Vietnam_ElectrodeMeasureResult   usp_ElectrodeRollPressingInfo_get                  SearchFunction                                             
+Vietnam_ElectrodeMeasureResult   usp_ElectrodeRollPressingVisualInspectionInfo_get  SearchFunction                                             
+Vietnam_ElectrodeMeasureResult   usp_ElectrodeSlittingInfo_get                      SearchFunction                                             
+Vietnam_ElectrodeMeasureResult   usp_ElectrodeSlittingResult_get                    SearchFunction                                             
+Vietnam_ElectrodeMeasureResult   usp_ElectrodeWastePriceNewByBarcode_get            SearchFunction                                             
+Vietnam_ElectrodeMeasureResult   usp_LocationElectric                               SearchFunction                                             
+Vietnam_ElectrodeMeasureResult   usp_Vietnam_RollPressingSlitting_get               SearchFunction                                             
+Vietnam_ElectrodeMeasureResult   ElectrodeCoatingInfo                               View            ^ElectrodeCoatingInfo^                     
+Vietnam_ElectrodeMeasureResult   ElectrodeCoatingVisualInspectionInfo               View            ^ElectrodeCoatingVisualInspectionInfo^     
+Vietnam_ElectrodeMeasureResult   ElectrodeMixInfo                                   View            ^ElectrodeMixInfo^                         
+Vietnam_ElectrodeMeasureResult   ElectrodeMixStepInfo                               View            ^ElectrodeMixStepInfo^                     
+Vietnam_ElectrodeMeasureResult   ElectrodeRollPressingInfo                          View            ^ElectrodeRollPressingInfo^                
+Vietnam_ElectrodeMeasureResult   ElectrodeRollPressingVisualInspectionInfo          View            ^ElectrodeRollPressingVisualInspectionInfo^
+Vietnam_ElectrodeMeasureResult   ElectrodeSlittingInfo                              View            ^ElectrodeSlittingInfo^                    
+Vietnam_ElectrodeMeasureResult   ElectrodeSlittingResult                            View            ^ElectrodeSlittingResult^                  
+Vietnam_ElectrodeMeasureResult   ElectrodeWastePriceNewByBarcode                    View            ^ElectrodeWastePriceNewByBarcode^          
+Vietnam_ElectrodeMeasureResult   LocationElectric                                   View            ^LocationElectric^                         
+Vietnam_ElectrodeMeasureResult   Vietnam_RollPressingSlitting                       View            ^Vietnam_RollPressingSlitting^             
+Vietnam_EletrodeProdRouteHist    MixingStep                                         Action          ^Mixing Step^                              
+Vietnam_EletrodeProdRouteHist    Thickness                                          Action          ^Thickness^                                
+Vietnam_EletrodeProdRouteHist    usp_Vietnam_ElectrodeDefectHist_get                SearchFunction                                             
+Vietnam_EletrodeProdRouteHist    usp_Vietnam_ElectrodeProdRouteHist_get             SearchFunction                                             
+Vietnam_EletrodeProdRouteHist    ElectrodeProdRouteHist                             View            ^ElectrodeProdRouteHist^                   
+Vietnam_EletrodeProdRouteHist    Vietnam_ElectrodeDefectHist                        View            ^Vietnam_ElectrodeDefectHist^              
+Vietnam_PrintLotChanged          ChangelinecodeVVT                                  Action          ^Thay doi ma Line^                         
+Vietnam_PrintLotChanged          Genus_NewAdd                                       Action          ^Genus_NewAdd^                             
+Vietnam_PrintLotChanged          InputLabelQty                                      Action          ^In Tem Lot^                               
+Vietnam_PrintLotChanged          PrintGenusNewAdd                                   Action          ^PrintGenusNewAdd^                         
+Vietnam_PrintLotChanged          PrintSlteeingLabel                                 Action          ^라벨인쇄^                                     
+Vietnam_PrintLotChanged          Refresh                                            Action          ^Refresh^                                  
+Vietnam_PrintLotChanged          RefreshSetInfo                                     Action          ^Refresh^                                  
+Vietnam_PrintLotChanged          usp_Set_VVT_Info_get                               ExecuteFunction                                            
+Vietnam_PrintLotChanged          usp_Set_VVT_Info_get                               SearchFunction                                             
+Vietnam_PrintLotChanged          Set_VVT_Info                                       View            ^Set_VVT_Info^                             
+VNT_ElectrodePrcsCard            전극공정카드출력                                           Action          ^ElectrodePrcsCardPrint^                   
+VNT_ElectrodePrcsCard            usp_ElectrodeCommon_iud                            ExecuteFunction                                            
+VNT_ElectrodePrcsCard            usp_ElectrodeOven_iud                              ExecuteFunction                                            
+VNT_ElectrodePrcsCard            usp_ElectrodeStep_iud                              ExecuteFunction                                            
+VNT_ElectrodePrcsCard            usp_ElectrodeCommon_get                            SearchFunction                                             
+VNT_ElectrodePrcsCard            usp_ElectrodeOven_get                              SearchFunction                                             
+VNT_ElectrodePrcsCard            usp_ElectrodeStep_get                              SearchFunction                                             
+VNT_ElectrodePrcsCard            ElectrodeCommon                                    View            ^ElectrodeCommon^                          
+VNT_ElectrodePrcsCard            ElectrodeOven                                      View            ^ElectrodeOven^                            
+VNT_ElectrodePrcsCard            ElectrodeStep                                      View            ^ElectrodeStep^                            
+VNT_LotTrackingInfo_vvt21        LuuSave                                            Action          ^Luu - Save^                               
+VNT_LotTrackingInfo_vvt21        refressh                                           Action          ^Refresh^                                  
+VNT_LotTrackingInfo_vvt21        SaveClassQty                                       Action          ^Lưu số lượng cấp^                         
+VNT_LotTrackingInfo_vvt21        usp_ModifyPack_VVT_iud                             ExecuteFunction                                            
+VNT_LotTrackingInfo_vvt21        usp_ModifyPackingQtyByClassify_VVT                 ExecuteFunction                                            
+VNT_LotTrackingInfo_vvt21        usp_ModifyPackingQtyByLevel_VVT                    ExecuteFunction                                            
+VNT_LotTrackingInfo_vvt21        usp_Vietnam_PackPrintTime_get                      SearchFunction                                             
+VNT_LotTrackingInfo_vvt21        Vietnam_PackPrintTime_view                         View            ^Vietnam_PackPrintTime_view^               
+VNT_LotTrackingInfo_vvt22        RefreshView                                        Action          ^RefreshView^                              
+VNT_LotTrackingInfo_vvt22        SaveNotes                                          Action          ^Save Notes^                               
+VNT_LotTrackingInfo_vvt22        usp_ModifyNotesB782_VVT                            ExecuteFunction                                            
+VNT_LotTrackingInfo_vvt22        usp_LotTrackingInfo_VVT2_get                       SearchFunction                                             
+VNT_LotTrackingInfo_vvt22        LotTrackingInfo                                    View            ^LotTrackingInfo^                          
+VNT_ModuleLotTrackingInfo_vvt21  LuuSave                                            Action          ^Luu - Save^                               
+VNT_ModuleLotTrackingInfo_vvt21  refressh                                           Action          ^Refresh^                                  
+VNT_ModuleLotTrackingInfo_vvt21  usp_ModifyPack_VVT_iud                             ExecuteFunction                                            
+VNT_ModuleLotTrackingInfo_vvt21  usp_Vietnam_ModulePackPrintTime_get                SearchFunction                                             
+VNT_ModuleLotTrackingInfo_vvt21  Vietnam_ModulePackPrintTime                        View            ^Vietnam_ModulePackPrintTime^              
+VNT_ModuleLotTrackingInfo_vvt22  usp_ModuleLotTrackingInfo_VVT2_get                 SearchFunction                                             
+VNT_ModuleLotTrackingInfo_vvt22  ModuleLotTrackingInfo_VVT2                         View            ^ModuleLotTrackingInfo_VVT2^               
+VNT_ProdRouteByBarcode           지연사유등록                                             Action          ^지연사유등록^                                   
+VNT_ProdRouteByBarcode           AddDefect                                          Action          ^불량입력^                                     
+VNT_ProdRouteByBarcode           DeleteView                                         Action          ^DeleteView^                               
+VNT_ProdRouteByBarcode           DoSplitLotAgingHN                                  Action          ^DoSplitLotAgingHN^                        
+VNT_ProdRouteByBarcode           DoUpdateDRIExtText02                               Action          ^DoUpdateDRIExtText02^                     
+VNT_ProdRouteByBarcode           Fail                                               Action          ^Fail^                                     
+VNT_ProdRouteByBarcode           InputInterimProdQty                                Action          ^InputInterimProdQty^                      
+VNT_ProdRouteByBarcode           LotProdStart                                       Action          ^LotProdStart^                             
+VNT_ProdRouteByBarcode           Pass                                               Action          ^Pass^                                     
+VNT_ProdRouteByBarcode           PrintWasteLabel                                    Action          ^PrintWasteLabel^                          
+VNT_ProdRouteByBarcode           ProdFinish                                         Action          ^실적완료^                                     
+VNT_ProdRouteByBarcode           Refresh                                            Action          ^Refresh^                                  
+VNT_ProdRouteByBarcode           RefreshDefectView                                  Action          ^RefreshDefectView^                        
+VNT_ProdRouteByBarcode           RefreshView                                        Action          ^RefreshView^                              
+VNT_ProdRouteByBarcode           ReSend                                             Action          ^ReSend^                                   
+VNT_ProdRouteByBarcode           SplitLotAging                                      Action          ^Chia Lot Aging^                           
+VNT_ProdRouteByBarcode           TranferRepair                                      Action          ^Chuyển repair^                            
+VNT_ProdRouteByBarcode           UpdateMarkingLetter                                Action          ^UpdateMarkingLetter^                      
+VNT_ProdRouteByBarcode           usp_AddRepairInfor_BG2                             ExecuteFunction                                            
+VNT_ProdRouteByBarcode           usp_DoCreateTaktTimeForRoute                       ExecuteFunction                                            
+VNT_ProdRouteByBarcode           usp_DoProcessDefectRepairInfoByBarcode_SmartApp    ExecuteFunction                                            
+VNT_ProdRouteByBarcode           usp_DoProcessProdRouteHistForCalc_SmartApp_VNT     ExecuteFunction                                            
+VNT_ProdRouteByBarcode           usp_DoSplitLotAgingHN                              ExecuteFunction                                            
+VNT_ProdRouteByBarcode           usp_DoUpdateDRIExtText02_iud                       ExecuteFunction                                            
+VNT_ProdRouteByBarcode           usp_DoUpdateProdRouteHistMarkingLetter             ExecuteFunction                                            
+VNT_ProdRouteByBarcode           usp_FailBarcodeForRoute                            ExecuteFunction                                            
+VNT_ProdRouteByBarcode           usp_InterimProdQtyInfo_iud                         ExecuteFunction                                            
+VNT_ProdRouteByBarcode           usp_PassBarcodeForRoute                            ExecuteFunction                                            
+VNT_ProdRouteByBarcode           usp_GetProdRouteBarcodeForDefect_VNT               SearchFunction                                             
+VNT_ProdRouteByBarcode           usp_GetProdRouteHistForBarcode_VNT                 SearchFunction                                             
+VNT_ProdRouteByBarcode           usp_WasteWeight_get                                SearchFunction                                             
+VNT_ProdRouteByBarcode           ProdRouteBarcodeForDefect_VNT                      View            ^ProdRouteBarcodeForDefect_VNT^            
+VNT_ProdRouteByBarcode           ProdRouteHistForBarcode_VNT                        View            ^ProdRouteHistForBarcode_VNT^              
+VNT_ProdRouteByBarcode           WasteWeight                                        View            ^WasteWeight^                              
+VNT_RawMaterialInputFullHist     usp_RawMaterialInputFullHist_get                   SearchFunction                                             
+VNT_RawMaterialInputFullHist     RawMaterialInputFullHist                           View            ^RawMaterialInputFullHist^                 
+VNT_SelfInspectionRawMaterial2   DoFinishCommInsp                                   Action          ^검사합격^                                     
+VNT_SelfInspectionRawMaterial2   DoHoldCommInsp                                     Action          ^검사부적합처리^                                  
+VNT_SelfInspectionRawMaterial2   DoLossCommInsp                                     Action          ^DoLossCommInsp^                           
+VNT_SelfInspectionRawMaterial2   DoLossCommInspDialog                               Action          ^제품폐기^                                     
+VNT_SelfInspectionRawMaterial2   InputDefectCode                                    Action          ^검사부적합^                                    
+VNT_SelfInspectionRawMaterial2   Refresh                                            Action          ^Refresh^                                  
+VNT_SelfInspectionRawMaterial2   SetHolding                                         Action          ^SetHolding^                               
+VNT_SelfInspectionRawMaterial2   usp_DoAddCommInspMeasureHistForBarcode             ExecuteFunction                                            
+VNT_SelfInspectionRawMaterial2   usp_DoAddCommInspMeasureHistForBarcodeSelfInsp_iud ExecuteFunction                                            
+VNT_SelfInspectionRawMaterial2   usp_DoFinishCommInspDoc                            ExecuteFunction                                            
+VNT_SelfInspectionRawMaterial2   usp_DoFinishCommInspDoc_VNT                        ExecuteFunction                                            
+VNT_SelfInspectionRawMaterial2   usp_RawMaterialInputHist_iud                       ExecuteFunction                                            
+VNT_SelfInspectionRawMaterial2   usp_Vietnam_RawMaterialInputHist_uid               ExecuteFunction                                            
+VNT_SelfInspectionRawMaterial2   usp_GetCommInspectionHistoryForBarcode             SearchFunction                                             
+VNT_SelfInspectionRawMaterial2   usp_RawMaterialInputHist_get                       SearchFunction                                             
+VNT_SelfInspectionRawMaterial2   CommInspectionHistoryForBarcode                    View            ^SelfInspectionHistoryForBarcode^          
+VNT_SelfInspectionRawMaterial2   RawMaterialInputHist                               View            ^RawMaterialInputHist^                     
+VVT_ESR_data                     Refresh                                            Action          ^Refresh^                                  
+VVT_ESR_data                     Save New Data                                      Action          ^Save New Data^                            
+VVT_ESR_data                     usp_VVT_ESRdata_uid                                ExecuteFunction                                            
+VVT_ESR_data                     usp_VVT_ESRdata_get                                SearchFunction                                             
+VVT_ESR_data                     usp_VVT_ESRMONITOR                                 SearchFunction                                             
+VVT_ESR_data                     VVT_ESRdata                                        View            ^VVT_ESRdata^                              
+VVT_ESR_data                     VVT_ESRMONITOR                                     View            ^VVT_ESRMONITOR^                           
+VVT_LabelPAC_Outer               PrintLabelOuter                                    Action          ^In tem THÙNG NGOÀI^                       
+VVT_LabelPAC_Outer               usp_PACBoxLabalInfo_get_Vietnam                    SearchFunction                                             
+VVT_LabelPAC_Outer               PACBoxLabalInfo_Vietnam                            View            ^Tem Thùng ngoài PAC^                      
+VVT_PrintBoxLabelPAC             DeleteData                                         Action          ^DeleteData^                               
+VVT_PrintBoxLabelPAC             PrintLabelPAC                                      Action          ^IN TEM^                                   
+VVT_PrintBoxLabelPAC             RefreshView                                        Action          ^RefreshView^                              
+VVT_PrintBoxLabelPAC             SavePrintHist                                      Action          ^SavePrintHist^                            
+VVT_PrintBoxLabelPAC             usp_VN_PACBoxLabelPrintHist_iud                    ExecuteFunction                                            
+VVT_PrintBoxLabelPAC             usp_PACBoxLabalInfo_get_Vietnam                    SearchFunction                                             
+VVT_PrintBoxLabelPAC             PACBoxLabalInfo_Vietnam                            View            ^PACBoxLabalInfo_Vietnam^                  
+VvtProdBadStatus                 usp_Get_VVT_Prod_Bad_Stat_tail                     SearchFunction                                             
+VvtProdBadStatus                 usp_Get_VVT_Prod_Bad_Status                        SearchFunction                                             
+VvtProdBadStatus                 usp_GetProdBadStatus_LotCheck                      SearchFunction                                             
+VvtProdBadStatus                 ProdBadStatus                                      View            ^ProdBadStatus^                            
+VvtProdBadStatus                 ProdBadStatus_Detail                               View            ^ProdBadStatus_Detail^                     
+VvtProdBadStatus                 ProdBadStatus_LotCheck                             View            ^ProdBadStatus_LotCheck^                   
+
+
+
