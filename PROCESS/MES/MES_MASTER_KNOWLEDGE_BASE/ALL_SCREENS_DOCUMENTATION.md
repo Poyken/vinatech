@@ -2242,6 +2242,11 @@ Màn hình **kiểm tra chất lượng đầu vào (IQC)** — khi nguyên li�
 1. Quản lý và theo dõi thông tin các lệnh sản xuất PO (Production Order) được đồng bộ từ ERP hoặc tạo thủ công.
 2. Hiển thị trạng thái PO, số lượng yêu cầu, số lượng đã sản xuất và tiến độ thực tế phục vụ lập kế hoạch.
 
+### Ví dụ thực tế & Nghiệp vụ
+
+*   **Mục đích:** Quản lý tập trung tiến độ tổng thể của các lệnh sản xuất PO nhận về từ ERP để giúp phòng Kế hoạch điều phối sản xuất kịp thời hạn giao hàng.
+*   **Ví dụ:** Khi có đơn hàng bán `50,000 tụ điện` được đẩy từ SAP về MES dưới dạng PO số `PO-2026-001`. Màn hình B301 hiển thị tổng quan tiến độ của PO này (ví dụ: Đã sản xuất được `20,000 cái`, còn thiếu `30,000 cái` cần lập kế hoạch chạy tiếp).
+
 ### Views (0)
 
 > Không có View riêng.
@@ -2286,6 +2291,11 @@ Màn hình **Lệnh sản xuất (Production Order - PO)** — dùng để lập
 3. PO được **Fix** → đóng băng, chuẩn bị sản xuất
 4. PO fix → B442/B450 sử dụng để tạo kế hoạch ngày
 5. Hủy PO → chỉ hủy được khi chưa phát sinh sản lượng
+
+### Ví dụ thực tế & Nghiệp vụ
+
+*   **Mục đích:** Khởi tạo lệnh sản xuất chi tiết cho xưởng chạy, tự động áp dụng công thức nguyên liệu (BOM) và sơ đồ công đoạn (Routing) chuẩn cho lệnh đó.
+*   **Ví dụ:** Để chạy PO `50,000 tụ điện` từ B301, quản đốc vào B310 click **CreateManualPO** để tạo PO chi tiết cho sản phẩm `VNT-3V-360F`. Hệ thống tự động gán BOM phiên bản mới nhất và Routing chuẩn. Quản đốc bấm **Fix (Xác nhận)** để khóa thông số, lúc này lệnh chính thức có hiệu lực và các tổ sản xuất có thể bấm **DoGI (Xuất kho nguyên vật liệu)** để yêu cầu cấp màng nhôm, vỏ nhôm... ra chuyền.
 
 ### Cấu Trúc UI
 
@@ -2389,6 +2399,11 @@ Giao diện **ProductionOrderForChangeMaterial** dùng để thực hiện nghi�
 
 **Lưu ý vận hành:**
 - Sau B351 phải sửa Barcode format
+
+### Ví dụ thực tế & Nghiệp vụ
+
+*   **Mục đích:** Xử lý việc chuyển đổi dòng sản phẩm (đổi Model) trên dây chuyền sản xuất dở dang khi hai model sử dụng chung một số loại bán thành phẩm.
+*   **Ví dụ:** Xưởng đang chạy dở bán thành phẩm cho Model `VNT-3V-360F` thì nhận lệnh chuyển đổi sang chạy Model `VNT-3V-400F`. Do hai model dùng chung lõi tụ nhưng khác vỏ nhôm và nhãn mác, quản đốc dùng B351 để chuyển đổi liên kết các Lot dở dang đó sang PO mới và lưu vết lịch sử đổi vật liệu để phục vụ truy vết.
 
 
 ### Views (2)
