@@ -1,7 +1,8 @@
-﻿# 🗂️ NAIS MES — Knowledge Base Index
+# 🗂️ NAIS MES — Knowledge Base Index
 
-> **Cập nhật:** 2026-06-19 | **Tổng:** 24 files, 1,085+ KB | **DB Verified:** 19 DBs, 6,648 tables, 3,416 SPs (SmartFactoryV2)
+> **Cập nhật:** 2026-06-27 | **Tổng:** 24 files, 1,085+ KB | **DB Verified:** 19 DBs, 6,648 tables, 3,416 SPs (SmartFactoryV2)
 > **Groupware KB:** → [GW_INDEX.md](../../GROUPWARE/GROUPWARE_KNOWLEDGE_BASE/GW_INDEX.md)
+> **Luồng đi màn hình:** → [PROCESS_FLOW_MAP.md](PROCESS_FLOW_MAP.md) (bản đồ điều hướng process)
 
 ---
 

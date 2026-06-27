@@ -4,6 +4,12 @@
 > **Nguồn dữ liệu:** KB_04, KB_31, KB_35, DB SmartFactoryV2 + SmartFramework (DB verified)
 > **Phạm vi:** Toàn bộ nút bấm (DB-verified), SP, bảng DB, luồng xử lý, và kịch bản lỗi
 
+> 🧭 **Điều hướng:**
+> - Tổng quan luồng đóng gói → [PROCESS_FLOW_MAP.md §Phase 5](MES_MASTER_KNOWLEDGE_BASE/PROCESS_FLOW_MAP.md)
+> - Nghiệp vụ đóng gói chung → [KB_04](MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_01_CORE_PACKAGING.md)
+> - Bugs đóng gói → [KB_04/KB_04_02_SCREEN_BUGS.md](MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_02_SCREEN_BUGS.md)
+> - File này là **nghiên cứu sâu chỉ cho B523 + Z530** — DB verified 17 nút bấm + 9 validation gates.
+
 ---
 
 ## 1. 🏗️ Kiến Trúc Tổng Quan: Mô Hình 3 Lớp In Tem
