@@ -348,7 +348,7 @@ COMMIT TRANSACTION;
 
 | # | Triệu chứng | Nguyên nhân | Fix |
 |---|---|---|---|
-| 1 | Dropdown "Tên phân loại lỗi" có mã 05, 06 trùng với 03, 07 | `SmartFramework.STB_BaseCode` (CodeGroup='DefectDivisionCode') chứa entries trùng: 05=제품검사(베트남) trùng 03=제품검사, 06=출하검사(베트남) trùng 07=FOQC | Cập nhật bản ghi giao dịch: `UPDATE STB_QCDefectDetailsRecord SET DefectDivisionCode='03' WHERE DefectDivisionCode='05'`, tương tự 06→07. Sau đó xóa: `DELETE FROM SmartFramework.dbo.STB_BaseCode WHERE CodeGroup='DefectDivisionCode' AND ItemCode IN ('05','06')`. Script: `SQL_Scripts/C585_delete_defect_division_05_06.sql` |
+| 1 | Dropdown "Tên phân loại lỗi" có mã 05, 06 trùng với 03, 07 | `SmartFramework.STB_BaseCode` (CodeGroup='DefectDivisionCode') chứa entries trùng: 05=제품검사(베트남) trùng 03=제품검사, 06=출하검사(베트남) trùng 07=FOQC | Cập nhật bản ghi giao dịch: `UPDATE STB_QCDefectDetailsRecord SET DefectDivisionCode='03' WHERE DefectDivisionCode='05'`, tương tự 06→07. Sau đó xóa: `DELETE FROM SmartFramework.dbo.STB_BaseCode WHERE CodeGroup='DefectDivisionCode' AND ItemCode IN ('05','06')`. Script: `sql/data_fixes/C585_delete_defect_division_05_06.sql` |
 
 > 🔗 Popup: `GetBaseCode2` → `SmartFramework.STB_BaseCode`. SP: `usp_QCDefectDetailsRecordDummy_get` / `usp_DoCreateQCDefectDetailsRecord_iud`
 

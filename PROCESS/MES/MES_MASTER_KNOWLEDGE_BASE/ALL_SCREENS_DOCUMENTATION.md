@@ -5653,7 +5653,7 @@ Giao diện **VVT_DoCreateDefectOQC** dùng để thực hiện nghiệp vụ: *
 
 | # | Triệu chứng | Nguyên nhân | Cách khắc phục | Quy trình hỗ trợ |
 |---|---|---|---|---|
-| 1 | Dropdown "Tên phân loại lỗi" có mã 05, 06 trùng với 03, 07 | `SmartFramework.STB_BaseCode` (CodeGroup='DefectDivisionCode') chứa entries trùng: 05=제품검사(베트남) trùng 03=제품검사, 06=출하검사(베트남) trùng 07=FOQC | Cập nhật bản ghi giao dịch: `UPDATE STB_QCDefectDetailsRecord SET DefectDivisionCode='03' WHERE DefectDivisionCode='05'`, tương tự 06→07. Sau đó xóa: `DELETE FROM SmartFramework.dbo.STB_BaseCode WHERE CodeGroup='DefectDivisionCode' AND ItemCode IN ('05','06')`. Script: `SQL_Scripts/C585_delete_defect_division_05_06.sql` | Tra cứu chi tiết tại kịch bản sửa lỗi của màn hình trong KB_31. |
+| 1 | Dropdown "Tên phân loại lỗi" có mã 05, 06 trùng với 03, 07 | `SmartFramework.STB_BaseCode` (CodeGroup='DefectDivisionCode') chứa entries trùng: 05=제품검사(베트남) trùng 03=제품검사, 06=출하검사(베트남) trùng 07=FOQC | Cập nhật bản ghi giao dịch: `UPDATE STB_QCDefectDetailsRecord SET DefectDivisionCode='03' WHERE DefectDivisionCode='05'`, tương tự 06→07. Sau đó xóa: `DELETE FROM SmartFramework.dbo.STB_BaseCode WHERE CodeGroup='DefectDivisionCode' AND ItemCode IN ('05','06')`. Script: `sql/data_fixes/C585_delete_defect_division_05_06.sql` | Tra cứu chi tiết tại kịch bản sửa lỗi của màn hình trong KB_31. |
 
 ---
 
