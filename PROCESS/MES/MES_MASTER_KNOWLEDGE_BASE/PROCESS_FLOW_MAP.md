@@ -23,7 +23,7 @@
 |---|---|---|
 | [VNT_VVT_MES_OPERATIONAL_GUIDE_E2E.md](VNT_VVT_MES_OPERATIONAL_GUIDE_E2E.md) | Thao tác chi tiết Step-by-step + biến đổi DB từng bước | Khi cần biết bấm nút nào, quét gì, DB thay đổi gì |
 | [ALL_SCREENS_DOCUMENTATION.md](ALL_SCREENS_DOCUMENTATION.md) | Tài liệu chi tiết 129 màn hình: SP, View, Action, DB table | Khi cần tra cứu kỹ thuật 1 màn hình cụ thể |
-| [in tem b523 va design z530.md](../in%20tem%20b523%20va%20design%20z530.md) | Nghiên cứu sâu B523 (17 nút, 9 validation gates) + Z530 (thiết kế tem) | Khi debug in tem / đóng gói |
+| [in_tem_b523_va_design_z530.md](in_tem_b523_va_design_z530.md) | Nghiên cứu sâu B523 (17 nút, 9 validation gates) + Z530 (thiết kế tem) | Khi debug in tem / đóng gói |
 
 ### Nhóm 3: KB Chuyên Sâu (Đọc theo vấn đề)
 
@@ -121,7 +121,7 @@ A410 (Model Master) ──→ A419 (Packing Standard) ──→ A210/A310 (BOM)
 | **A210/A310** | BOM định mức NVL | → B530 Backflush trừ kho | [E2E §1.3](VNT_VVT_MES_OPERATIONAL_GUIDE_E2E.md), [KB_06](KB_06_MASTER_DATA_TOOLS.md) |
 | **A230** | Vật tư + độ dày | → B442 tự load | [KB_06](KB_06_MASTER_DATA_TOOLS.md), [ALL_SCREENS](ALL_SCREENS_DOCUMENTATION.md#a230-materialmaster) |
 | **C121→C122** | Nhóm & hạng mục QC → gán NVL | → C220 tạo phiếu IQC | [KB_05 §7](KB_05/KB_05_01_QC_OVERVIEW.md), [ALL_SCREENS](ALL_SCREENS_DOCUMENTATION.md#c121-qcinspectiongroup) |
-| **A460→Z530** | Mapping Model→Tem + Thiết kế tem | → B523/B790 in tem | [B523+Z530 Research](../in%20tem%20b523%20va%20design%20z530.md), [ALL_SCREENS](ALL_SCREENS_DOCUMENTATION.md#a460-modellabelinfo) |
+| **A460→Z530** | Mapping Model→Tem + Thiết kế tem | → B523/B790 in tem | [B523+Z530 Research](in_tem_b523_va_design_z530.md), [ALL_SCREENS](ALL_SCREENS_DOCUMENTATION.md#a460-modellabelinfo) |
 
 > 📖 **Checklist thêm Model mới (8 bước bắt buộc):** [new_model_checklist.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/.gemini/antigravity-ide/knowledge/vinatech_new_model_checklist/artifacts/new_model_checklist.md)
 
@@ -283,7 +283,7 @@ B523 (Đóng gói — 17 nút, 9 validation gates)
 
 | Màn hình | Vai trò | Gate chặn | Doc chi tiết |
 |---|---|---|---|
-| **B523** | Đóng gói Cell→Túi/Hộp→Carton | ⚠️ IsProdFinish, PQC, A419 config | [E2E §6.1](VNT_VVT_MES_OPERATIONAL_GUIDE_E2E.md), [KB_04 §4.1](KB_04/KB_04_01_CORE_PACKAGING.md), **[B523+Z530 Deep Research](../in%20tem%20b523%20va%20design%20z530.md)**, [ALL_SCREENS](ALL_SCREENS_DOCUMENTATION.md#b523-vietnam_donggoi) |
+| **B523** | Đóng gói Cell→Túi/Hộp→Carton | ⚠️ IsProdFinish, PQC, A419 config | [E2E §6.1](VNT_VVT_MES_OPERATIONAL_GUIDE_E2E.md), [KB_04 §4.1](KB_04/KB_04_01_CORE_PACKAGING.md), **[B523+Z530 Deep Research](in_tem_b523_va_design_z530.md)**, [ALL_SCREENS](ALL_SCREENS_DOCUMENTATION.md#b523-vietnam_donggoi) |
 | **C512** | Tạo Lot OQC | — | [E2E §6.2](VNT_VVT_MES_OPERATIONAL_GUIDE_E2E.md), [KB_05 §7.2](KB_05/KB_05_03_QC_FLOW.md), [ALL_SCREENS](ALL_SCREENS_DOCUMENTATION.md#c512-setlistforoqclotmanagement_vvt2) |
 | **C530** | OQC Sample thủ công | — | [E2E §6.3](VNT_VVT_MES_OPERATIONAL_GUIDE_E2E.md), [KB_05 §9](KB_05/KB_05_03_QC_FLOW.md), [ALL_SCREENS](ALL_SCREENS_DOCUMENTATION.md#c530-materialoqcinfosamplemanagement) |
 | **C546** | FOQC — OCV/ESR tự động | — | [E2E §6.4](VNT_VVT_MES_OPERATIONAL_GUIDE_E2E.md), [KB_05 §9.6](KB_05/KB_05_03_QC_FLOW.md), [ALL_SCREENS](ALL_SCREENS_DOCUMENTATION.md#c546-foqc_materialoqcinfosamplemanagement) |
@@ -378,7 +378,7 @@ flowchart LR
 ## 🚦 CỔNG CHẶN HỆ THỐNG (VALIDATION GATES)
 
 > Chi tiết đầy đủ: [E2E Guide — Bảng cơ chế chặn](VNT_VVT_MES_OPERATIONAL_GUIDE_E2E.md#-tóm-tắt-các-cơ-chế-chặn-của-hệ-thống-validation-gates-summary)  
-> Chi tiết B523 (9 gates): [B523+Z530 Research §3.5](../in%20tem%20b523%20va%20design%20z530.md)
+> Chi tiết B523 (9 gates): [B523+Z530 Research §3.5](in_tem_b523_va_design_z530.md)
 
 | Phase | Gate | Mô tả | Sửa ở đâu |
 |---|---|---|---|
@@ -388,7 +388,7 @@ flowchart LR
 | 3 | B530 → Chốt SL | Chưa quét B597 | Hoàn thành B597 |
 | 3 | B530 → Chốt SL | Vượt SL chặng trước | Kiểm tra B782 |
 | 5 | B523 → Đóng gói | Thiếu config A419 | Cấu hình A419 |
-| 5 | B523 → Gộp Box | 9 cổng chặn tuần tự | [Xem flow chart B523](../in%20tem%20b523%20va%20design%20z530.md) |
+| 5 | B523 → Gộp Box | 9 cổng chặn tuần tự | [Xem flow chart B523](in_tem_b523_va_design_z530.md) |
 | 6 | C560 → Nhập TP | OQC chưa PASS | Hoàn thành OQC |
 
 ---
@@ -405,8 +405,8 @@ flowchart LR
 | **B450** | [KB_03 §5.7](KB_03/KB_03_01_OVERVIEW.md) | [§4.1](VNT_VVT_MES_OPERATIONAL_GUIDE_E2E.md) | [B450](ALL_SCREENS_DOCUMENTATION.md#b450-dayprodplanformainlot) |
 | **B540** / **B597** | [KB_03](KB_03/KB_03_02_CELL_LINE.md), [KB_05 §7](KB_05/KB_05_01_QC_OVERVIEW.md) | [§5](VNT_VVT_MES_OPERATIONAL_GUIDE_E2E.md) | [B540](ALL_SCREENS_DOCUMENTATION.md#b540-assycardinfo) |
 | **B530** | [KB_03](KB_03/KB_03_02_CELL_LINE.md), [KB_30](KB_30_CORE_SP_ENGINE.md) | [§5.3](VNT_VVT_MES_OPERATIONAL_GUIDE_E2E.md) | [B530](ALL_SCREENS_DOCUMENTATION.md#b530-vnt_prodroutebybarcode) |
-| **B523** / HN523 | [KB_04](KB_04/KB_04_01_CORE_PACKAGING.md), [B523+Z530](../in%20tem%20b523%20va%20design%20z530.md) | [§6.1](VNT_VVT_MES_OPERATIONAL_GUIDE_E2E.md) | [B523](ALL_SCREENS_DOCUMENTATION.md#b523-vietnam_donggoi) |
-| **Z530** / **A460** | [B523+Z530 Research](../in%20tem%20b523%20va%20design%20z530.md) | — | [Z530](ALL_SCREENS_DOCUMENTATION.md#z530-labelinfo) |
+| **B523** / HN523 | [KB_04](KB_04/KB_04_01_CORE_PACKAGING.md), [B523+Z530](in_tem_b523_va_design_z530.md) | [§6.1](VNT_VVT_MES_OPERATIONAL_GUIDE_E2E.md) | [B523](ALL_SCREENS_DOCUMENTATION.md#b523-vietnam_donggoi) |
+| **Z530** / **A460** | [B523+Z530 Research](in_tem_b523_va_design_z530.md) | — | [Z530](ALL_SCREENS_DOCUMENTATION.md#z530-labelinfo) |
 | **C512** / **C530** / **C546** | [KB_05](KB_05/KB_05_03_QC_FLOW.md) | [§6.2-6.4](VNT_VVT_MES_OPERATIONAL_GUIDE_E2E.md) | [C530](ALL_SCREENS_DOCUMENTATION.md#c530-materialoqcinfosamplemanagement) |
 | **C560** / **HN551** | [KB_02](KB_02/KB_02_02_FG_WMS.md) | [§7](VNT_VVT_MES_OPERATIONAL_GUIDE_E2E.md) | [C560](ALL_SCREENS_DOCUMENTATION.md#c560-vnt_productsreceipthist) |
 | **K101-K199** (BG2) | [KB_03 §6.14](KB_03/KB_03_02_CELL_LINE.md), [BG2](../sql/scripts/bg2/) | — | [K101](ALL_SCREENS_DOCUMENTATION.md#k101-dayprodplanformainlotmdl) |
@@ -421,7 +421,7 @@ flowchart LR
 
 | Nhóm | Màn hình | Chức năng | Tài liệu |
 |---|---|---|---|
-| **Tem khách hàng** | B754-B758, B790, B791, B767 | PAC, DigiKey, Phoenix, Sanmina | [KB_35](KB_35_TRIGGERS_JOBS_LABELS.md), [B523+Z530](../in%20tem%20b523%20va%20design%20z530.md) |
+| **Tem khách hàng** | B754-B758, B790, B791, B767 | PAC, DigiKey, Phoenix, Sanmina | [KB_35](KB_35_TRIGGERS_JOBS_LABELS.md), [B523+Z530](in_tem_b523_va_design_z530.md) |
 | **Bending/Tapping** | B717, B718 | Bẻ cong / Dán keo | [KB_03 §6.6](KB_03/KB_03_02_CELL_LINE.md) |
 | **Barrel/Schneider** | B528, B453, B560 | Thùng tròn, Schneider, Hela | [KB_03 §6.10](KB_03/KB_03_02_CELL_LINE.md) |
 | **ESR/Aging** | C522, B934, B935, B786 | Đo ESR tự động | [KB_05 §9](KB_05/KB_05_03_QC_FLOW.md) |
@@ -448,7 +448,8 @@ flowchart LR
 |---|---|---|
 | `GEMINI.md` | 1 KB | Auto-context cho AI |
 | `README.md` | 2 KB | Chuyển hướng tới KB |
-| `in tem b523 va design z530.md` | 38 KB | **Nghiên cứu sâu B523+Z530** |
+| `in_tem_b523_va_design_z530.md` | 38 KB | **Nghiên cứu sâu B523+Z530** |
+| `C5300_CoatingThickness_Guide.md` | 10 KB | **Hướng dẫn tạo màn hình truy vấn PCBA BG2** |
 | `AI_AGENT_CONFIG/BOOTSTRAP.md` | 5 KB | Đọc đầu session |
 | `AI_AGENT_CONFIG/KNOWLEDGE.md` | 9 KB | Cheat sheet bảng/SP |
 | `AI_AGENT_CONFIG/RULES.md` + `SKILLS.md` + `README.md` | 15 KB | Quy tắc + Templates |
@@ -474,4 +475,4 @@ flowchart LR
 ---
 
 > **Ngày cập nhật:** 2026-06-27 | **Tác giả:** Antigravity AI  
-> **Single Source of Truth cho navigation.** Content chi tiết → [E2E Guide](VNT_VVT_MES_OPERATIONAL_GUIDE_E2E.md). Giáo trình → [Curriculum](VNT_VVT_MES_OPERATIONAL_CURRICULUM.md). Kỹ thuật SP/DB → [KB files](KB_INDEX.md). B523/Z530 sâu → [Research file](../in%20tem%20b523%20va%20design%20z530.md).
+> **Single Source of Truth cho navigation.** Content chi tiết → [E2E Guide](VNT_VVT_MES_OPERATIONAL_GUIDE_E2E.md). Giáo trình → [Curriculum](VNT_VVT_MES_OPERATIONAL_CURRICULUM.md). Kỹ thuật SP/DB → [KB files](KB_INDEX.md). B523/Z530 sâu → [Research file](in_tem_b523_va_design_z530.md).
