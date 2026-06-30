@@ -14,11 +14,12 @@
 MES/
 ├── README.md                              # File này - Hướng dẫn chuyển hướng
 ├── AI_AGENT_CONFIG/                       # Cấu hình tối ưu dành cho AI Agent
+│   ├── BOOTSTRAP.md                       # Khởi động (đọc đầu tiên mỗi phiên)
 │   ├── RULES.md                           # Quy tắc an toàn bắt buộc (SELECT-only)
 │   ├── KNOWLEDGE.md                       # Cheat sheet tra cứu nhanh bảng/SP
 │   └── SKILLS.md                          # SQL/PS templates & lessons learned
-├── sql/                                   # Mã nguồn đối tượng CSDL
-│   └── hotfixes/                          # Lịch sử 5 SQL hotfix scripts đã triển khai
 ├── db_sync_tool.ps1                       # PowerShell tải SP tạm từ DB (không commit Git)
-└── deploy_tool.ps1                        # PowerShell để triển khai SQL lên DB
+├── deploy_tool.ps1                        # PowerShell để triển khai SQL lên DB
+├── run_query.ps1                          # PowerShell truy vấn DB an toàn (SELECT-only)
+└── validate_sql.ps1                       # PowerShell kiểm tra cú pháp SQL trước khi chạy
 ```

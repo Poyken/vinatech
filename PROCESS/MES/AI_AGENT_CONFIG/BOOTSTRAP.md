@@ -109,8 +109,7 @@ MES/
 │   ├── KB_INDEX.md        ← Mục lục + routing
 │   ├── KB_02/ → KB_05/    ← ⚡ 4 CHUNKED: KB_02,03,04,05
 │   └── KB_01..KB_36       ← Files gốc + non-chunked
-├── sql/hotfixes/           ← 17 scripts
-└── *.ps1                   ← 4 tools
+└── *.ps1                   ← 4 tools (run_query, db_sync_tool, deploy_tool, validate_sql)
 ```
 
 ---
