@@ -27,13 +27,10 @@ if (Test-Path $validateScript) {
     }
 }
 
-$server = "dbserver.hycap.co.kr,5398"
-$database = "SmartFactoryV2"
-$user = "vinaadmin"
-$password = "vina1234%6&8"
-$connectionString = "Server=$server;Database=$database;User Id=$user;Password=$password;TrustServerCertificate=True;Timeout=30;"
+# Load shared database utilities
+. (Join-Path $PSScriptRoot "db_shared.ps1")
 
-$connection = New-Object System.Data.SqlClient.SqlConnection($connectionString)
+$connection = Get-DbConnection
 $connection.Open()
 
 try {

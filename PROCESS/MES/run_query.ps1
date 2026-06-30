@@ -5,12 +5,8 @@ param (
     [string]$Format = "Table"
 )
 
-# Connect to database using standard credentials
-$server = "dbserver.hycap.co.kr,5398"
-$database = "SmartFactoryV2"
-$user = "vinaadmin"
-$password = "vina1234%6&8"
-$connectionString = "Server=$server;Database=$database;User Id=$user;Password=$password;TrustServerCertificate=True;Timeout=30;"
+# Load shared database utilities
+. (Join-Path $PSScriptRoot "db_shared.ps1")
 
 $sqlText = ""
 
@@ -29,28 +25,21 @@ if (![string]::IsNullOrEmpty($Query)) {
     exit 1
 }
 
-# Simple security check to block modifying DDL/DML statements
-$restrictedKeywords = @(
-    "\bINSERT\b", "\bUPDATE\b", "\bDELETE\b", "\bMERGE\b",
-    "\bDROP\b", "\bALTER\b", "\bTRUNCATE\b", "\bCREATE\b"
-)
-
-foreach ($keyword in $restrictedKeywords) {
-    if ($sqlText -match "(?mi)$keyword") {
-        Write-Error "Safety violation: Modifying command detected ($keyword). run_query.ps1 only allows read-only queries."
-        exit 1
-    }
+# Run safety checks
+$safetyResult = Test-SqlReadOnlySafety -SqlText $sqlText
+if (!$safetyResult.IsValid) {
+    Write-Error $safetyResult.Error
+    exit 1
 }
 
-# Force warning if query doesn't use NOLOCK on major transactional tables
-$transactionTables = @("STB_ProdRouteHist", "STB_MaterialLotInfo", "STB_SetInfo", "STB_MaterialDocDetail")
-foreach ($table in $transactionTables) {
-    if ($sqlText -match "(?mi)\b$table\b" -and $sqlText -notmatch "(?mi)\b$table\b.*\bNOLOCK\b") {
-        Write-Host "Warning: Query accesses transactional table '$table' without WITH(NOLOCK). This could cause locks." -ForegroundColor Yellow
-    }
+# Get NOLOCK warnings
+$noLockWarnings = Get-NoLockWarnings -SqlText $sqlText
+foreach ($warning in $noLockWarnings) {
+    Write-Host $warning -ForegroundColor Yellow
 }
 
-$conn = New-Object System.Data.SqlClient.SqlConnection($connectionString)
+# Execute query
+$conn = Get-DbConnection
 try {
     $conn.Open()
     $cmd = $conn.CreateCommand()

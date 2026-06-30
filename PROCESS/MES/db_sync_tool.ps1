@@ -20,17 +20,14 @@ if ($Clean) {
     exit 0
 }
 
-$server = "dbserver.hycap.co.kr,5398"
-$database = "SmartFactoryV2"
-$user = "vinaadmin"
-$password = "vina1234%6&8"
-$cs = "Server=$server;Database=$database;User Id=$user;Password=$password;TrustServerCertificate=True;Timeout=30;"
+# Load shared database utilities
+. (Join-Path $PSScriptRoot "db_shared.ps1")
 
 if (!(Test-Path $procDir)) {
     New-Item -ItemType Directory -Force -Path $procDir | Out-Null
 }
 
-$conn = New-Object System.Data.SqlClient.SqlConnection($cs)
+$conn = Get-DbConnection
 $conn.Open()
 
 function Export-SP([string]$name) {

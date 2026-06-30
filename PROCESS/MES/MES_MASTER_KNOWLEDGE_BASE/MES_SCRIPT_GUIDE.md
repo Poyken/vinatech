@@ -76,7 +76,7 @@ Trước khi áp dụng bất kỳ thay đổi nào lên database Production, fi
 
 ### 📋 Cách sử dụng:
 ```powershell
-powershell -File .\validate_sql.ps1 -FilePath "Đường_dẫn_file_SQL"
+powershell -File .\validate_sql.ps1 -SqlPath "Đường_dẫn_file_SQL"
 ```
 
 ### 🔒 Các quy tắc kiểm tra (Rules enforced):
@@ -87,7 +87,7 @@ powershell -File .\validate_sql.ps1 -FilePath "Đường_dẫn_file_SQL"
 ### 💡 Ví dụ thực tế:
 ```powershell
 # Kiểm tra file SQL sửa lỗi trong thư mục nháp/scratch trước khi deploy
-powershell -File .\validate_sql.ps1 -FilePath "C:\Users\User Vinatech.DESKTOP-RJJSEQU\.gemini\antigravity-ide\brain\cab9e98e-f5af-4971-93ca-36def1d031e9\scratch\fix_slitting.sql"
+powershell -File .\validate_sql.ps1 -SqlPath "C:\Users\User Vinatech.DESKTOP-RJJSEQU\.gemini\antigravity-ide\brain\cab9e98e-f5af-4971-93ca-36def1d031e9\scratch\fix_slitting.sql"
 ```
 
 ---
@@ -98,14 +98,14 @@ Khi file SQL sửa lỗi đã vượt qua bộ lọc an toàn của `validate_sq
 
 ### 📋 Cách sử dụng:
 ```powershell
-powershell -File .\deploy_tool.ps1 -FilePath "Đường_dẫn_file_SQL"
+powershell -File .\deploy_tool.ps1 -SqlPath "Đường_dẫn_file_SQL"
 ```
-*   `-FilePath` *(Bắt buộc):* Đường dẫn tới file SQL cần deploy.
+*   `-SqlPath` *(Bắt buộc):* Đường dẫn tới file SQL cần deploy.
 
 ### 💡 Ví dụ thực tế:
 ```powershell
 # Triển khai SQL sửa lỗi từ thư mục nháp/scratch trực tiếp lên DB
-powershell -File .\deploy_tool.ps1 -FilePath "C:\Users\User Vinatech.DESKTOP-RJJSEQU\.gemini\antigravity-ide\brain\cab9e98e-f5af-4971-93ca-36def1d031e9\scratch\fix_slitting.sql"
+powershell -File .\deploy_tool.ps1 -SqlPath "C:\Users\User Vinatech.DESKTOP-RJJSEQU\.gemini\antigravity-ide\brain\cab9e98e-f5af-4971-93ca-36def1d031e9\scratch\fix_slitting.sql"
 ```
 
 ---
