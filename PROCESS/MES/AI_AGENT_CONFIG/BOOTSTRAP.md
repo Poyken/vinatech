@@ -26,6 +26,7 @@
 | **User** | `vinaadmin` |
 
 ```
+.\search_kb.ps1 -Query "từ_khóa"       # 🔍 Tìm kiếm tài liệu cục bộ trước khi truy vấn DB
 .\run_query.ps1 -Query "SELECT ..."   # Query nhanh
 .\validate_sql.ps1 <file.sql>          # Validate trước deploy
 .\deploy_tool.ps1 <file.sql>           # Deploy SQL
@@ -79,14 +80,15 @@
 
 ---
 
-## 🚀 WORKFLOW XỬ LÝ BUG — 5 bước
+## 🚀 WORKFLOW XỬ LÝ BUG — 6 bước
 
 ```
 1. THU THẬP  → Màn hình? Barcode? Thao tác? Lỗi gì?
-2. TRA CỨU   → KB_31 (Bug Fixbook) → KB chuyên sâu qua INDEX
-3. XÁC MINH  → .\run_query.ps1 -Query "SELECT ..."
-4. FIX        → SQL (BEGIN TRAN...ROLLBACK) → validate → deploy
-5. GHI CHÉP  → hotfixes/README.md + commit
+2. TRA CỨU   → Chạy .\search_kb.ps1 để quét lỗi trong tài liệu và HOTFIX_LOG.md trước
+3. XÁC MINH  → .\run_query.ps1 -Query "SELECT ..." đối chiếu thực tế dữ liệu
+4. FIX        → Viết SQL (BEGIN TRAN...ROLLBACK) → validate → deploy
+5. GHI CHÉP  → Ghi nhận lỗi mới vá vào AI_AGENT_CONFIG/HOTFIX_LOG.md
+6. DỌN DẸP   → Xóa các file SP tạm thời qua .\db_sync_tool.ps1 -Clean và commit
 ```
 
 ---

@@ -10,6 +10,7 @@
 3. **Fetch trước khi sửa** — Query SP mới nhất từ `sys.sql_modules`
 4. **WITH(NOLOCK)** trên bảng giao dịch lớn
 5. **Hỏi trước khi làm** — Thiếu thông tin → dừng hỏi user
+6. **Tra cứu KB trước** — Bắt buộc chạy `.\search_kb.ps1` tìm mã lỗi/màn hình trước khi truy vấn DB
 
 ## Kết Nối DB
 
@@ -20,6 +21,7 @@
 ## Tools (chạy từ MES/)
 
 ```
+.\search_kb.ps1 -Query "keyword"         # Tìm kiếm tài liệu cục bộ
 .\run_query.ps1 -Query "SELECT ..."     # Query nhanh
 .\validate_sql.ps1 <file.sql>            # Validate trước deploy  
 .\deploy_tool.ps1 <file.sql>             # Deploy SQL
