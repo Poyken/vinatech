@@ -247,13 +247,7 @@
 
 ## F140 — Vendor-Material Mapping (Ánh xạ NCC - Vật tư)
 
-> 🔗 **Xem thêm:** Mục [F130 / F140 / A210](#f130--f140--a210--supplier-mapping--material-sync) phía trên đã có chi tiết.
-
-### Lỗi 1: Popup chọn NCC trống khi tạo phiếu nhập kho F312/F330
-*   **Triệu chứng:** Thủ kho không tìm thấy NCC trong popup.
-*   **Nguyên nhân gốc:** Chưa mapping NCC với vật tư trong `STB_MaterialVendorMapping`.
-*   **Cách khắc phục:** Vào F140, chọn vật tư, tick chọn NCC được phép mua, nhấn Lưu.
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_07/KB_07_01_OVERVIEW_FLOWS.md § 6](../KB_07/KB_07_01_OVERVIEW_FLOWS.md).
+> 🔗 **Nội dung đầy đủ đã có tại:** [F130 / F140 / A210](#f130--f140--a210--supplier-mapping--material-sync) phía trên (triệu chứng Popup NCC trống + SQL insert + KB_07 ref).
 
 ---
 

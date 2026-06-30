@@ -1,4 +1,4 @@
-﻿# KB_02 - Kho Nguyên Vật Liệu (WMS)
+# KB_02 - Kho Nguyên Vật Liệu (WMS)
 
 > **Màn hình:** F330, F312, F430, F110, F710, F721, F741, C220, HN551, HN866, HN544, FG00
 > **Bảng chính:** `STB_MaterialLotInfo`, `STB_MaterialDocInfo`, `STB_MaterialStock`, `STB_MaterialWarehouse`
@@ -569,7 +569,7 @@ Giao dịch xuất sai lúc 12:07 trưa ngày 11/05/2026 cho Lot `ML202602090001
 
 ---
 
-### 4.14 Fix: LIKE filter sai cho MaterialLocationCode khi cập nhật LotAttr10 (Đặc tính 10)
+### 4.18 Fix: LIKE filter sai cho MaterialLocationCode khi cập nhật LotAttr10 (Đặc tính 10)
 
 > **Ngày phát hiện:** 2026-06-03
 > **Màn hình:** F330, F710

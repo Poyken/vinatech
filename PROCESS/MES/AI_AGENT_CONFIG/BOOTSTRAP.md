@@ -45,7 +45,7 @@
 | **SQL templates/Debug** | `SKILLS.md` | Copy-paste ready |
 | **Quy tắc chi tiết** | `RULES.md` | Đầy đủ hơn section trên |
 | **Bug theo màn hình** | **KB_31** (Bug Fixbook) | 70+ bugs, đọc trước |
-| **KB chuyên sâu** | `KB_INDEX.md` → chunk cụ thể | 7 files đã CHUNKED |
+| **KB chuyên sâu** | `KB_INDEX.md` → chunk cụ thể | 5 folders đã CHUNKED |
 | **Screen→SP→Table** | KB_32 hoặc KI: screen_id_reference | |
 
 ### KB Routing nhanh
@@ -56,13 +56,10 @@
 | Đóng gói/in tem | KB_04/ | → 01_CORE_PACKAGING |
 | QC/Electrode | KB_05/ | → 01_QC_OVERVIEW hoặc 02_ELECTRODE |
 | Kho NVL/TP | KB_02/ | → 01_NVL_WMS hoặc 02_FG_WMS |
-| Groupware/ERP | KB_07/ | → 01_OVERVIEW_FLOWS |
-| Kiến trúc/Data flow | KB_10/ | → 01_ARCHITECTURE |
-| DB Map | KB_19/ | → 01_ARCHITECTURE |
-| Model mới | KB_06 | Không chunked |
-| Hưng Yên | KB_25 | Không chunked |
-| Hà Nam screens | KB_36 | Không chunked |
-| Trace methodology | KB_14 | Không chunked |
+| Model mới | KB_06_MASTER_DATA_TOOLS.md | Không chunked |
+| Hưng Yên | KB_25/ | → 01_OVERVIEW |
+| Hà Nam screens | KB_36_HANAM_FACTORY_SCREENS.md | Không chunked |
+| Phân quyền / Tạo màn hình | KB_01_UI_AND_SCREENS.md | Không chunked |
 
 ---
 
@@ -110,8 +107,8 @@ MES/
 ├── AI_AGENT_CONFIG/       ← BOOTSTRAP, RULES, KNOWLEDGE, SKILLS
 ├── MES_MASTER_KNOWLEDGE_BASE/
 │   ├── KB_INDEX.md        ← Mục lục + routing
-│   ├── KB_02/ → KB_19/    ← ⚡ 7 CHUNKED: KB_02,03,04,05,07,10,19
-│   └── KB_01..KB_37       ← Files gốc + non-chunked
+│   ├── KB_02/ → KB_05/    ← ⚡ 4 CHUNKED: KB_02,03,04,05
+│   └── KB_01..KB_36       ← Files gốc + non-chunked
 ├── sql/hotfixes/           ← 17 scripts
 └── *.ps1                   ← 4 tools
 ```
@@ -127,4 +124,4 @@ MES/
 - [ ] Script fix đã bọc `BEGIN TRAN...ROLLBACK`?
 
 ---
-*Cập nhật: 2026-06-19 — Trimmed for token efficiency. Chi tiết: KNOWLEDGE.md (bảng/SP), SKILLS.md (templates), RULES.md (quy tắc đầy đủ).*
+*Cập nhật: 2026-06-30 — Trimmed for token efficiency. Đã rút gọn 65% KB, tập trung tối đa vào nhận/fix bug và tạo màn hình.*

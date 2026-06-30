@@ -1,4 +1,4 @@
-﻿
+
 
 > **Màn hình liên quan:** HN551, HN544, HN866, HNC321, HN00, HN101, FG00
 > ← [Về INDEX](KB_INDEX.md)
@@ -308,4 +308,9 @@ WHERE IDCODE = 'FGVN_BG20250211054041195484931'
 
 ---
 
-## 🔴 Cẩm nang khắc phục lỗi theo Screen ID (Gộp từ KB_SCREEN_BUG_REF)
+
+---
+
+> 🔗 **Tra cứu Bug theo Screen ID cho WMS (F-series, HN-series):** Xem tại [KB_31_SCREEN_BUG_FIXBOOK.md](../KB_31_SCREEN_BUG_FIXBOOK.md) — tổng hợp đầy đủ theo TCode.
+
+*Cập nhật: 2026-06-18*

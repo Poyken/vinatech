@@ -1,4 +1,4 @@
-﻿## 6. 🏭 Cell Line — Vận Hành Chi Tiết Từng Màn Hình
+## 6. 🏭 Cell Line — Vận Hành Chi Tiết Từng Màn Hình
 
 > **Nguồn:** Phân tích 41 SP + ảnh màn hình (2026-04-13)
 
@@ -560,9 +560,9 @@ Dưới đây là ma trận trạng thái các hạng mục công việc đã tr
     *   *Đạt 90%:* In tem nhãn đóng gói, nhập kho bằng phần mềm, kiểm tra dữ liệu nhập/xuất kho trên hệ thống MES, xuất kho thành phẩm. Cần tích hợp nốt phần in ấn và đồng bộ dữ liệu xuất hàng.
 
 
-#### 3. Kiu1EBF
- Tru00FAc Hu1EC7 Thu1ED1
-g BG2 — Deep Dive
+#### 3. Kiến Trúc Hệ Thống BG2 — Deep Dive
+
+> ⚠️ **Lưu ý:** Nội dung phần này (3.1–3.8) có lỗi encoding — các ký tự tiếng Việt được lưu dưới dạng Unicode escape (`u1EBF`, `u00FA`...) thay vì UTF-8 thực. Cần sửa lại file gốc.
 
 ##### 3.1 Phu00E2
  Biu1EC7	 WorkCenterCode
@@ -1172,13 +1172,19 @@ $$\text{CurrentQty} = \text{LengthSlitting} \times \left(\frac{\text{WidthSlitti
 #### 5. Danh Sách Lỗi Logic, Điểm Yếu & Giải Pháp (Bugs & Troubleshooting)
 
 ##### 🔴 Bug #1: Lỗi toán tử SQL bypass kiểm tra công đoạn V-22 bắt buộc (`usp_VN_DryOver`)
-*   **Chi tiết & Giải pháp:** Xem chi tiết tại [../KB_03/KB_03_02_CELL_LINE.md#lỗi-1-lỗi-toán-tử-sql-bypass-kiểm-tra-công-đoạn-sấy-v-22-bắt-buộc](../KB_03/KB_03_02_CELL_LINE.md#lỗi-1-lỗi-toán-tử-sql-bypass-kiểm-tra-công-đoạn-sấy-v-22-bắt-buộc).
+*   **Triệu chứng:** Hệ thống cho phép Lot ra lò dù chưa đủ thời gian sấy.
+*   **Nguyên nhân:** SP `usp_VN_DryOver` có điều kiện so sánh sai `= NULL` thay vì `IS NULL`.
+*   **Fix:** ALTER SP sửa `= NULL` → `IS NULL` trong đoạn check `@pCompanyCode`.
 
 ##### 🔴 Bug #2: Bug thời gian ghi nhận lịch sử Doping JIG khiến mất dữ liệu log (`usp_Vietnam_DopingJIG_uid`)
-*   **Chi tiết & Giải pháp:** Xem chi tiết tại [../KB_03/KB_03_02_CELL_LINE.md#lỗi-1-lỗi-thời-gian-ghi-nhận-lịch-sử-jig-khiến-mất-dữ-liệu-log-khi-tự-động-ngắt](../KB_03/KB_03_02_CELL_LINE.md#lỗi-1-lỗi-thời-gian-ghi-nhận-lịch-sử-jig-khiến-mất-dữ-liệu-log-khi-tự-động-ngắt).
+*   **Triệu chứng:** JIG chạy 6h auto-end nhưng lịch sử biến mất khỏi `Stb_VVT_DopingJIG_History`.
+*   **Nguyên nhân:** SP `autoend` không INSERT vào `Stb_VVT_DopingJIG_History`.
+*   **Fix:** ALTER SP thêm INSERT vào bảng History sau khi tự ngắt.
 
 ##### 🔴 Bug #3: Mismatch logic tuổi thọ dao và Hardcode địa lý Bắc Giang (`usp_DoCreateSlittingResult`)
-*   **Chi tiết & Giải pháp:** Xem chi tiết tại [../KB_03/KB_03_02_CELL_LINE.md#lỗi-2-mismatch-logic-tính-tuổi-thọ-dao-slitting-và-hardcode-địa-lý-bắc-giang](../KB_03/KB_03_02_CELL_LINE.md#lỗi-2-mismatch-logic-tính-tuổi-thọ-dao-slitting-và-hardcode-địa-lý-bắc-giang).
+*   **Triệu chứng:** Nhà máy Hà Nam/Hưng Yên không cảnh báo thay dao. Dao bị khóa sớm do tính sai tuổi thọ.
+*   **Nguyên nhân:** (1) Hardcode `RouteCode = 'V-11_BG'`, (2) Đếm số cuộn thay vì tổng số mét cắt.
+*   **Fix:** Sửa điều kiện `RouteCode LIKE 'V-11%'` + đổi cơ chế sang `SUM(GoodQtyLength)`. Xem [KB_02/KB_02_03_SCREEN_BUGS.md §F742/F746 Lỗi 2](../KB_02/KB_02_03_SCREEN_BUGS.md).
 
 
 ---

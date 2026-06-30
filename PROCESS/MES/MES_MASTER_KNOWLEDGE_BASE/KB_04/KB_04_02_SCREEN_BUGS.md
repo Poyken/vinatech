@@ -1,4 +1,4 @@
-﻿## 🔴 Cẩm nang khắc phục lỗi theo Screen ID (Gộp từ KB_SCREEN_BUG_REF)
+## 🔴 Cẩm nang khắc phục lỗi theo Screen ID (Gộp từ KB_SCREEN_BUG_REF)
 
 ## B351 — Lot Transition (Chuyển đổi Lot)
 
@@ -245,91 +245,6 @@ Công nhân scan Lot/Barcode sản phẩm tại màn hình đóng gói **B523**,
 
 #### 🛠️ KỊCH BẢN C: Hủy gộp box khi Lot/Packing đã được nhập kho thành phẩm (Finish Goods)/Hủy Packing B523
 *   **Triệu chứng:** Khi cần hủy/rã box để đóng gói lại nhưng hệ thống chặn không cho hủy trên giao diện UI (báo lỗi: *"Lot này đã được nhập kho, không thể huỷ gộp box..."*).
-*   **Nguyên nhân gốc:** Lô thành phẩm đã chạy qua bước Nhập kho thành phẩm và có bản ghi trong bảng `STB_VN_FINISHGOODS_HN_New` (hoặc bảng thành phẩm tương ứng của từng nhà máy) cùng với Material Documents (`STB_MaterialDocInfo` có `IsCancel = 0`).
-Để tìm và xác định các thông tin còn lại từ các mã đầu vào: PKQO1600231, PKQO1600242 và Lot ve260518-011 phục vụ cho kịch bản hủy gộp box thành phẩm tại ../KB_04/KB_04_01_CORE_PACKAGING.md
-, bạn có thể chạy các câu truy vấn SELECT kiểm tra dưới đây:
-
-1. Hướng dẫn các câu lệnh SQL để truy vấn thông tin
-Bước 1: Tìm Mã chứng từ nhập kho (MaterialDocNo) & User tạo
-Mã chứng từ nhập kho vật tư liên kết trực tiếp với các Packing ID thông qua bảng STB_MaterialDocLotInfo:
-
-sql
-SELECT MaterialDocNo, PackingID, LotNo, CreateUserID, CreateDateTime 
-FROM STB_MaterialDocLotInfo WITH(NOLOCK) 
-WHERE PackingID IN ('PKQO1600231', 'PKQO1600242');
-Bước 2: Tìm Số lượng của từng Box (CurrentQty)
-Để tính tổng số lượng cần giảm trừ (TỔNG_SỐ_LƯỢNG_HỦY), tra cứu trong bảng STB_MaterialLotInfo:
-
-sql
-SELECT PackingID, LotNo, CurrentQty 
-FROM STB_MaterialLotInfo WITH(NOLOCK) 
-WHERE PackingID IN ('PKQO1600231', 'PKQO1600242');
-Bước 3: Tìm Mã điều khiển (ControlNo) & Mã PO (PONo)
-Tra cứu từ bảng quản lý Lot/Barcode sản phẩm STB_SetInfo:
-
-sql
-SELECT Barcode, ControlNo, PONo, MaterialCode 
-FROM STB_SetInfo WITH(NOLOCK) 
-WHERE Barcode = 'VE260518-011';
-Bước 4: Xác định công đoạn cuối (RouteCode)
-Tra cứu lịch sử công đoạn chốt của Lot trong bảng STB_ProdRouteHist:
-
-sql
-SELECT RouteCode, ProdQty, CreateDateTime 
-FROM STB_ProdRouteHist WITH(NOLOCK) 
-WHERE ControlNo = 'MÃ_CONTROL_NO_TÌM_ĐƯỢC_Ở_BƯỚC_3' 
-ORDER BY CreateDateTime DESC;
-Bước 5: Tìm Mã tổng hợp công đoạn (ProductSummaryID)
-Tra cứu trong bảng tổng hợp STB_ProdRouteSummary bằng cách lọc theo PONo, RouteCode (công đoạn cuối) và ngày ghi nhận tương ứng:
-
-sql
-SELECT ProductSummaryID, OutputQty, JobDate 
-FROM STB_ProdRouteSummary WITH(NOLOCK) 
-WHERE PONo = 'MÃ_PO_NO_TÌM_ĐƯỢC_Ở_BƯỚC_3' 
-  AND RouteCode = 'MÃ_ROUTE_CUỐI_TÌM_ĐƯỢC_Ở_BƯỚC_4';
-2. Các thông tin thực tế đã tìm thấy trong Database
-Tôi đã chạy các lệnh SELECT kiểm tra trên Database của bạn và ghi nhận các thông tin cụ thể như sau:
-
-Mã chứng từ nhập kho (MaterialDocNo):
-PKQO1600231 tương ứng với mã chứng từ: 260616000243
-PKQO1600242 tương ứng với mã chứng từ: 260616000254
-Tài khoản tạo: doanthao
-Số lượng hủy:
-PKQO1600231 có số lượng: 505
-PKQO1600242 có số lượng: 295
-Tổng số lượng hủy: 505 + 295 = 800
-Thông tin Lot & PO:
-ControlNo của Lot VE260518-011 là: 20260515000379
-PONo là: 260515000004
-Công đoạn chốt cuối cùng: VE10
-Mã tổng hợp công đoạn (ProductSummaryID): 20260616000895 (cho ngày scan cuối là ngày 16/06/2026).
-3. Script SQL hoàn chỉnh (sẵn sàng chạy trên SSMS)
-Dưới đây là Script hoàn chỉnh đã được điền sẵn các thông số thực tế của bạn. Script được cấu hình mặc định là ROLLBACK TRANSACTION để bạn chạy thử nghiệm an toàn trên SSMS trước:
-
-sql
-BEGIN TRANSACTION;
-BEGIN TRY
-    -- 1. Xóa bản ghi trong kho thành phẩm để bypass điều kiện chặn (nếu đã có dữ liệu)
-    DELETE FROM STB_VN_FINISHGOODS_HN_New 
-    WHERE PackingID IN ('PKQO1600231', 'PKQO1600242') AND LotNo = 'VE260518-011';
-    -- 2. Gọi procedure hệ thống hủy tài liệu nhập kho vật tư (giải phóng STB_MaterialLotInfo)
-    EXEC usp_DoCancelMaterialDoc 
-        @pProcessLanguage = 'vn',
-        @pProcessUserID = 'doanthao',
-        @pMaterialDocNo = '260616000243';
-    EXEC usp_DoCancelMaterialDoc 
-        @pProcessLanguage = 'vn',
-        @pProcessUserID = 'doanthao',
-        @pMaterialDocNo = '260616000254';
-    -- 3. Cập nhật giảm sản lượng chốt công đoạn cuối (VE10) trong STB_ProdRouteHist
-    UPDATE STB_ProdRouteHist
-    SET ProdQty = ProdQty - 800
-    WHERE ControlNo = '20260515000379' AND RouteCode = 'VE10';
-    -- 4. Cập nhật giảm sản lượng trong bảng tổng hợp công đoạn STB_ProdRouteSummary
-    UPDATE STB_ProdRouteSummary
-    SET OutputQty = OutputQty - 800
-    WHERE ProductSummaryID = '20260616000895';
-    -- 5. Cập nhật giảm sản lượng hoàn thành của PO (STB_ProductionOrderInfo)
     UPDATE STB_ProductionOrderInfo
     SET ProdFinishQty = ProdFinishQty - 800
     WHERE PONo = '260515000004';
@@ -551,13 +466,47 @@ WHERE Barcode = 'VVQM153R025606'
 **Bảng liên quan:** `VVT_OQC_REFER` — lưu thông tin phân cấp OQC
 
 | Cột | Ý nghĩa |
-|---
+|-----|---------|
+| `lotid` | Mã lot (= Barcode) |
+| `mergeid` | Mã gộp (thường = lotid) |
+| `levelB` | Cấp phân loại (B, C, D...) |
+| `finished` | Trạng thái gộp (`'1'` = đã gộp xong, `NULL` = chưa) |
+| `CreateUserID` | User thực hiện |
 
-### 6.20 Bug: B442 không hiển thị "Độ dày" (Thickness) cho model Electrode mới (SIExtReal03 = 0)
+**SP đằng sau C531:**
 
-> **Ngày:** 2026-06-18 | **Màn hình:** B442 (Kế hoạch Điện cực - ElectrodePlan) | **Nhà máy:** VVT_F1 (Bắc Ninh) + VVT_F2 (Bắc Giang)
+| SP | Chức năng |
+|----|-----------|
+| `usp_GetProdOQCgForBarcode_VVT` | Load data barcode lên grid |
+| `usp_DoProcessOQCrefer_VVT` | Lưu phân cấp OQC vào `VVT_OQC_REFER` |
 
-**Triệu chứng:** Khi tạo Lot sản xuất Electrode tại B442, cột "Độ dày" trên grid SetInfo hiển thị `0.00`, dẫn đến tem in ra không có thông số độ dày. Trong khi các model cũ cùng loại (`CRFYL85`, `CRFYN85L`) hiển thị đúng (120, 180).
+**Quy trình sửa cấp OQC:**
+
+```sql
+-- 1. Kiểm tra trạng thái hiện tại
+SELECT lotid, mergeid, levelB, finished, CreateUserID 
+FROM VVT_OQC_REFER WITH(NOLOCK) 
+WHERE lotid = 'MÃ_LOT';
+
+-- 2. Sửa cấp + reset finished để gộp lại
+BEGIN TRAN
+UPDATE VVT_OQC_REFER
+SET levelB = 'CẤP_ĐÚNG',    -- Ví dụ: 'B'
+    finished = NULL
+WHERE lotid = 'MÃ_LOT'
+  AND levelB = 'CẤP_SAI';   -- Guard: chỉ sửa đúng bản ghi sai
+SELECT @@ROWCOUNT AS [Rows]; -- Phải = 1
+-- Xác nhận xong → đổi ROLLBACK thành COMMIT
+ROLLBACK
+
+-- 3. Sau khi COMMIT: Vào lại C531 → quét barcode → chọn đúng cấp → gộp lại
+```
+
+> [!IMPORTANT]
+> Nếu lot đã được gộp box (`STB_MaterialLotInfo.PackingID IS NOT NULL`), cần kiểm tra xem box đó có cần điều chỉnh cấp không.
+
+---
+
 
 **Root Cause:** Model mới (`CRFYL85-01`, `CRFYN85L-01`) chưa được cấu hình cột `MaterialThickness` trong bảng `STB_MaterialMaster`.
 
