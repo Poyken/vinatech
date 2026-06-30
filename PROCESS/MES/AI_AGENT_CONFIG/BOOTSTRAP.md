@@ -27,11 +27,15 @@
 
 ```
 .\search_kb.ps1 -Query "từ_khóa"       # 🔍 Tìm kiếm tài liệu cục bộ trước khi truy vấn DB
-.\run_query.ps1 -Query "SELECT ..."   # Query nhanh
+.\run_query.ps1 -Query "SELECT ..."   # Query nhanh (tự động hiển thị KB tham chiếu)
 .\validate_sql.ps1 <file.sql>          # Validate trước deploy
 .\deploy_tool.ps1 <file.sql>           # Deploy SQL
-.\db_sync_tool.ps1 -SPName "usp_xxx"   # Tải SP tạm
+.\db_sync_tool.ps1 -SPName "usp_xxx"   # Tải SP tạm (tự động hiển thị KB tham chiếu)
 .\db_sync_tool.ps1 -Clean              # Xóa SP tạm
+.\record_hotfix.ps1 -TCode "B523" ...  # Tự động hóa ghi chép lỗi vào HOTFIX_LOG.md và KB_31
+.\self_improve.ps1                     # Tự kiểm tra, audit workspace trước khi kết thúc task
+.\debug_screen.ps1 -TCode "B523"       # Chẩn đoán màn hình (Menu, SP, Grid) & đề xuất KB
+.\debug_screen.ps1 -ErrorMsg "loi"     # Tìm SP ném lỗi qua chuỗi dịch nghĩa tiếng Việt/tiếng Anh
 ```
 
 ---
@@ -80,15 +84,16 @@
 
 ---
 
-## 🚀 WORKFLOW XỬ LÝ BUG — 6 bước
+## 🚀 WORKFLOW XỬ LÝ BUG — 7 bước
 
 ```
 1. THU THẬP  → Màn hình? Barcode? Thao tác? Lỗi gì?
-2. TRA CỨU   → Chạy .\search_kb.ps1 để quét lỗi trong tài liệu và HOTFIX_LOG.md trước
+2. TRA CỨU   → Chạy .\debug_screen.ps1 để chẩn đoán thông số màn hình / truy vết SP ném lỗi và đề xuất tài liệu
 3. XÁC MINH  → .\run_query.ps1 -Query "SELECT ..." đối chiếu thực tế dữ liệu
 4. FIX        → Viết SQL (BEGIN TRAN...ROLLBACK) → validate → deploy
-5. GHI CHÉP  → Ghi nhận lỗi mới vá vào AI_AGENT_CONFIG/HOTFIX_LOG.md
-6. DỌN DẸP   → Xóa các file SP tạm thời qua .\db_sync_tool.ps1 -Clean và commit
+5. GHI CHÉP  → Chạy .\record_hotfix.ps1 để lưu thông tin lỗi và tự động vá vào KB_31 Sổ tay cứu hộ
+6. AUDIT     → Chạy .\self_improve.ps1 để audit tuân thủ quy tắc và chất lượng code
+7. DỌN DẸP   → Xóa các file SP tạm thời qua .\db_sync_tool.ps1 -Clean và commit
 ```
 
 ---

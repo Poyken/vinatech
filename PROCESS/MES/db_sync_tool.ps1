@@ -44,6 +44,7 @@ function Export-SP([string]$name) {
 }
 
 if ($SPName) {
+    Invoke-ProactiveKbSearch -SqlText $SPName
     Export-SP $SPName
 } else {
     Write-Host "No SPName specified. Syncing default project SPs..." -ForegroundColor Cyan

@@ -38,6 +38,9 @@ foreach ($warning in $noLockWarnings) {
     Write-Host $warning -ForegroundColor Yellow
 }
 
+# Scan local documentation for query components
+Invoke-ProactiveKbSearch -SqlText $sqlText
+
 # Execute query
 $conn = Get-DbConnection
 try {

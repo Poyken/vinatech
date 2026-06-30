@@ -25,14 +25,15 @@
 
 ```
 Bước 1: Thu thập — Màn hình? Barcode? Thao tác? Lỗi gì? Ai/Khi nào?
-Bước 2: Tra cứu KB cục bộ (BẮT BUỘC TRƯỚC KHI TRUY VẤN DB)
-        - Chạy: .\search_kb.ps1 -Query "mã lỗi / TCode / SP / Triệu chứng"
-        - Đọc tài liệu màn hình, KB_31 (Bug Fixbook) và HOTFIX_LOG.md trước khi phán đoán.
-Bước 3: Xác minh DB — SELECT trạng thái Barcode/Lot bằng tool .\run_query.ps1 để đối chiếu thực tế.
-Bước 4: Impact check — KI:deep_system_map (SP callers, table sizes) trước khi sửa
-Bước 5: Script Fix — Viết SQL template bọc trong TRANSACTION, kiểm tra an toàn bằng .\validate_sql.ps1
-Bước 6: Ghi chép nhật ký — Cập nhật con bug mới vá vào file AI_AGENT_CONFIG/HOTFIX_LOG.md để học hỏi qua thời gian.
-Bước 7: Xác nhận & Dọn dẹp — Kiểm tra kết quả, chạy .\db_sync_tool.ps1 -Clean để giữ Git sạch
+Bước 2: Tra cứu KB & Chẩn đoán (BẮT BUỘC TRƯỚC KHI TRUY VẤN DB)
+        - Chạy `.\debug_screen.ps1 -TCode "TCODE"` để tìm nhanh các Stored Procedure, UI Action, Grid map của màn hình và đề xuất tài liệu.
+        - Nếu có chuỗi thông báo lỗi, chạy `.\debug_screen.ps1 -ErrorMsg "loi"` để tự động tra cứu String Resources và truy tìm SP ném lỗi.
+        - Đọc kỹ tài liệu màn hình, KB_31 (Bug Fixbook) và HOTFIX_LOG.md trước khi phán đoán.
+Bước 3: Xác minh DB — SELECT trạng thái Barcode/Lot bằng tool `.\run_query.ps1` để đối chiếu thực tế.
+Bước 4: Impact check — KI:deep_system_map (SP callers, table sizes) trước khi sửa.
+Bước 5: Script Fix — Viết SQL template bọc trong TRANSACTION, kiểm tra an toàn bằng `.\validate_sql.ps1`.
+Bước 6: Tự động ghi chép nhật ký — Chạy `.\record_hotfix.ps1 -TCode "TCODE" -Symptom "..." -Cause "..." -SQLPatch "..."` để lưu trữ lỗi vào HOTFIX_LOG.md và tự động đẩy vào KB_31 (Sổ tay cứu hộ).
+Bước 7: Xác nhận & Dọn dẹp — Chạy `.\self_improve.ps1` để tự đánh giá tuân thủ quy tắc và chạy `.\db_sync_tool.ps1 -Clean` để dọn dẹp các SP tạm thời trước khi hoàn tất task.
 ```
 
 ## 4. CẤM & HẠN CHẾ

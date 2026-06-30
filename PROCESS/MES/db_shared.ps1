@@ -134,3 +134,80 @@ function Test-SqlDeploySafety {
         Warnings = $warnings
     }
 }
+
+# Proactively scan local markdown files for keywords used in SQL queries/commands
+function Invoke-ProactiveKbSearch {
+    param (
+        [string]$SqlText
+    )
+
+    if ([string]::IsNullOrEmpty($SqlText)) { return }
+
+    # Extract keywords
+    $keywords = @()
+    
+    # Stored Procedures (usp_...)
+    $spMatches = [regex]::Matches($SqlText, '\b[uU][sS][pP]_[a-zA-Z0-9_]+\b')
+    foreach ($m in $spMatches) { $keywords += $m.Value }
+    
+    # Table names (STB_... or VVT_...)
+    $tblMatches = [regex]::Matches($SqlText, '\b(?:[sS][tT][bB]|[vV][vV][tT])_[a-zA-Z0-9_]+\b')
+    foreach ($m in $tblMatches) { $keywords += $m.Value }
+    
+    # Screen IDs (A123, B456, etc. or HN523, HNC321)
+    $scrMatches = [regex]::Matches($SqlText, '\b(?:HN)?[a-zA-Z][0-9]{3}\b')
+    foreach ($m in $scrMatches) { $keywords += $m.Value }
+    
+    $keywords = $keywords | Select-Object -Unique
+    if ($keywords.Count -eq 0) { return }
+    
+    Write-Host ""
+    Write-Host "======================================================================" -ForegroundColor Cyan
+    Write-Host "(!) [PROACTIVE KB SUGGESTION] Detected keywords: $($keywords -join ', ')" -ForegroundColor Cyan
+    Write-Host "Checking local Vinatech MES KBs for business logic..." -ForegroundColor Cyan
+    Write-Host "----------------------------------------------------------------------" -ForegroundColor Cyan
+
+    $KbPath = Join-Path $PSScriptRoot "MES_MASTER_KNOWLEDGE_BASE"
+    $ConfigPath = Join-Path $PSScriptRoot "AI_AGENT_CONFIG"
+    
+    # Find all markdown files
+    $files = @()
+    if (Test-Path $KbPath) { $files += Get-ChildItem -Path $KbPath -Filter "*.md" -Recurse }
+    if (Test-Path $ConfigPath) { $files += Get-ChildItem -Path $ConfigPath -Filter "*.md" -Recurse }
+    
+    foreach ($keyword in $keywords) {
+        $keywordMatchCount = 0
+        Write-Host "--> Keyword: $keyword" -ForegroundColor Yellow
+        
+        foreach ($file in $files) {
+            $relative = $file.FullName.Replace($PSScriptRoot, ".").Replace("\", "/")
+            $content = Get-Content -Path $file.FullName -Encoding UTF8 -ErrorAction SilentlyContinue
+            if (-not $content) { continue }
+            
+            $lineNum = 1
+            $fileMatches = 0
+            foreach ($line in $content) {
+                if ($line -match [regex]::Escape($keyword)) {
+                    $trimmed = $line.Trim()
+                    # Skip empty lines or short headers
+                    if ($trimmed.Length -gt 5 -and $trimmed -notmatch "^[#\-\s\=\|]+$") {
+                        Write-Host ("  [" + $relative + ":" + $lineNum + "] ") -NoNewline -ForegroundColor Gray
+                        Write-Host "$trimmed" -ForegroundColor White
+                        $fileMatches++
+                        $keywordMatchCount++
+                    }
+                }
+                if ($fileMatches -ge 3) { break } # Cap per file
+                $lineNum++
+            }
+            if ($keywordMatchCount -ge 8) { break } # Cap per keyword
+        }
+        
+        if ($keywordMatchCount -eq 0) {
+            Write-Host "  No business rules documented for $keyword." -ForegroundColor Gray
+        }
+        Write-Host ""
+    }
+    Write-Host "======================================================================" -ForegroundColor Cyan
+}
+
