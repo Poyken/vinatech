@@ -23,10 +23,10 @@
 | File / Folder | Tên | Nội dung chính |
 |--------------|-----|----------------|
 | [KB_01_UI_AND_SCREENS.md](KB_01_UI_AND_SCREENS.md) | **UI & Screens** | Login, Z110/Z220/Z330 Tạo màn hình mới, Phân quyền, Error localized, B786, B934 |
-| [KB_02](KB_02/INDEX.md) | **WMS / Kho** | FIFO, Hạn sử dụng, Phiếu nhập kho F330, Kho Hà Nam, Bugs F-series |
+| [KB_02](KB_02/INDEX.md) | **WMS / Kho** | FIFO, Hạn dùng, Nhập kho F330, Xuất kho F430, HN551, HN866, FG00, Bugs |
 | [KB_03](KB_03/INDEX.md) | **Sản Xuất** | B530 Chốt sản lượng, B540 quét NVL, Ngày ca JobDate, Bugs B-series |
 | [KB_04](KB_04/INDEX.md) | **Đóng Gói & Tem** | B523 Gộp box, C531 OQC Grade, in tem PAC/Digikey, Hủy gộp box, Bugs |
-| [KB_05](KB_05/INDEX.md) | **QC & Điện Cực** | IQC/PQC/OQC, Cản OQC C512, Điện cực, Slitting, Bugs QC C-series |
+| [KB_05](KB_05/INDEX.md) | **QC & Điện Cực** | IQC/PQC/OQC, Cản OQC C512, Điện cực, Slitting, Xả cuộn, Bugs |
 | [KB_06_MASTER_DATA_TOOLS.md](KB_06_MASTER_DATA_TOOLS.md) | **Master Data** | Đăng ký Model A410, NVL A230, Tiêu chuẩn đóng gói A419, Checklist thêm model mới |
 
 ### 2. Sổ Tay Tra Cứu & Trạm Đặc Thù
@@ -36,7 +36,6 @@
 | [KB_25](KB_25/INDEX.md) | **Hưng Yên** | Màn hình D-series của nhà máy Enesol Hưng Yên |
 | [KB_30_CORE_SP_ENGINE.md](KB_30_CORE_SP_ENGINE.md) | **Core SP Engine** | Phân tích line-by-line: usp_DoProcessProdRouteHist, Backflush, ForCalc, Packing, B450 Barcode rules |
 | [KB_31_SCREEN_BUG_FIXBOOK.md](KB_31_SCREEN_BUG_FIXBOOK.md) | **Sổ tay Fix Bug** | **Sổ tay cứu hộ 70+ bugs theo TCode thực tế (Đọc khi nhận bug)** |
-| [KB_32_SCREEN_SP_TABLE_MAP.md](KB_32_SCREEN_SP_TABLE_MAP.md) | **Mapping Screen** | Bản đồ Screen → SP → Table của 15 màn hình cốt lõi |
 | [KB_33_FACTORY_WORKCENTER_MATRIX.md](KB_33_FACTORY_WORKCENTER_MATRIX.md) | **Factory Matrix** | Các nhà máy, LineCode, WorkCenter, định dạng Barcode đầu mã |
 | [KB_36_HANAM_FACTORY_SCREENS.md](KB_36_HANAM_FACTORY_SCREENS.md) | **Hà Nam Screens** | Danh sách 83 màn hình và 63 SP đặc thù của nhà máy Hà Nam |
 | [MES_SCRIPT_GUIDE.md](MES_SCRIPT_GUIDE.md) | **Script Tools** | Hướng dẫn sử dụng run_query, validate_sql, deploy_tool, db_sync_tool |

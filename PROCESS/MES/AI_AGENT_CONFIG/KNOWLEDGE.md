@@ -145,20 +145,19 @@ ORDER BY RMIH.CreateDateTime DESC;
 | `new_model_checklist` | Thêm model mới (8 bước) |
 | `system_environment` | Connection info, IP, URL |
 
-## 7. KB FILES MAP (15 files, 4 chunked)
+## 7. KB FILES MAP (13 files, 4 chunked)
 
 | # | File | Phạm vi | Size |
 |---|------|---------|------|
 | 01 | KB_01_UI_AND_SCREENS | Login, phân quyền, Z110/Z220/Z330 tạo màn hình, B786, B934 | 7KB |
-| **02** | **KB_02/ ⚡CHUNKED** | Kho WMS: NVL, TP, FIFO, Holding | 79KB→3c |
+| **02** | **KB_02/ ⚡CHUNKED** | Kho WMS: NVL, TP, FIFO, Holding | 78KB→2c |
 | **03** | **KB_03/ ⚡CHUNKED** | Sản xuất Cell/Module, B530/B597 | 150KB→4c |
-| **04** | **KB_04/ ⚡CHUNKED** | Đóng gói B523/B525, in tem | 76KB→2c |
-| **05** | **KB_05/ ⚡CHUNKED** | QC IQC/PQC/OQC, Electrode, ESR | 105KB→5c |
+| **04** | **KB_04/ ⚡CHUNKED** | Đóng gói B523/B525, in tem | 71KB→2c |
+| **05** | **KB_05/ ⚡CHUNKED** | QC IQC/PQC/OQC, Electrode, ESR, Slitting | 109KB→2c |
 | 06 | KB_06_MASTER_DATA_TOOLS | Master data, model mới | 28KB |
-| **25** | **KB_25/ ⚡CHUNKED** | Hưng Yên, D-series | 42KB→3c |
+| **25** | **KB_25/ ⚡CHUNKED** | Hưng Yên, D-series | 41KB→3c |
 | 30 | KB_30_CORE_SP_ENGINE | Core SP (DoProcess/Backflush/Packing) | 24KB |
 | **31** | **KB_31_SCREEN_BUG_FIXBOOK** | **★ Bug fix 70+ bugs** | **31KB** |
-| **32** | **KB_32_SCREEN_SP_TABLE_MAP** | Screen→SP→Table | 20KB |
 | 33 | KB_33_FACTORY_WORKCENTER | Ma trận nhà máy/WorkCenter | 9KB |
 | 36 | KB_36_HANAM_FACTORY_SCREENS | Hà Nam 83 screens | 21KB |
 

@@ -1,0 +1,931 @@
+﻿# KB_05 — Kiểm tra Chất lượng (QC) & Điện cực
+
+> **Màn hình:** B597, C443, C512, C486, C530, C546, B552, B270, B540, C121-C564, F743-F748
+> **Bảng chính:** `STB_MaterialQcInfo` (35 cols), `STB_MaterialQcInspectionItem` (USL/LSL), `STB_CommInspDocHistory`
+> **🔑 Keywords:** QC, chất lượng, kiểm tra, IQC, PQC, OQC, FOQC, electrode, điện cực, slitting, aging, hạng mục, spec, USL, LSL, Pass, Fail, Hold, mẫu, sample
+> ← [Về INDEX](KB_INDEX.md)
+
+---
+
+## 7. 🔬 Kiểm tra Chất lượng (QC)
+
+### 7.1 B597 báo lỗi "Hạng mục kiểm tra cũ / sai"
+
+**Triệu chứng:** Vào B597 hoặc C443, hệ thống load lại hạng mục cũ của lần trước, không cho sửa.
+
+**Nguyên nhân:** `STB_CommInspDocHistory` đã có bản ghi cũ cho Barcode này.
+
+**Debug và Fix:**
+```sql
+-- Bước 1: Tìm CommInspDocNo từ Barcode
+SELECT CIDH.CommInspDocNo, CIDH.ProdNo, CIDH.CreateDateTime
+FROM STB_CommInspDocHistory CIDH
+JOIN STB_SetInfo SI ON CIDH.ProdNo = SI.ControlNo
+WHERE SI.Barcode = 'VVPO093R010707'
+
+-- Hoặc tìm trực tiếp bằng ControlNo
+SELECT * FROM STB_CommInspDocHistory
+WHERE ProdNo = (SELECT ControlNo FROM STB_SetInfo WHERE Barcode = 'VVPP163R072732')
+
+-- Bước 2: Xem hạng mục kiểm tra đang có
+SELECT * FROM STB_CommInspDocItem
+WHERE CommInspDocNo = 'CommInspDocNo_Tìm_Được'
+
+-- Bước 3: Xóa để hệ thống khởi tạo lại (xóa Item trước, rồi xóa History)
+DELETE FROM STB_CommInspDocItem WHERE CommInspDocNo = 'CommInspDocNo_Cần_Xóa'
+DELETE FROM STB_CommInspDocHistory WHERE CommInspDocNo = 'CommInspDocNo_Cần_Xóa'
+```
+
+> ⚠️ Sau khi xóa, QC cần **tắt màn hình và mở lại** để hệ thống load bộ tiêu chuẩn mới.
+
+**SP liên quan:**
+- C443: `usp_GetCommInspection_HistoryForBarcode_Vietnam`
+- B597: `usp_GetCommInspectionHistoryForBarcode`
+
+---
+
+### 7.2 Không tìm thấy Lot ở màn C512
+
+**3 nguyên nhân — Debug theo thứ tự:**
+
+```sql
+-- Bước 1: Kiểm tra Lot đã tồn tại chưa
+SELECT Barcode, MaterialCode, InputLineCode, CurrentRouteCode, LotDecisionResult
+FROM STB_SetInfo WHERE Barcode = 'Mã_Barcode'
+-- Nếu có kết quả → Lot đã tồn tại → Báo QC tìm lại đúng barcode
+-- Nếu không có → Lot chưa được tạo → Quay lại B450 tạo Lot
+
+-- Bước 2: Kiểm tra A410 đã setup OQC chưa
+SELECT ModelCode, OqcType, InspectionType, OqcInspectionRuleType
+FROM STB_ModelBasicInfo
+WHERE ModelCode = 'Mã_Model'
+-- Nếu OqcType NULL hoặc InspectionType NULL → Chưa setup → Mở màn hình A410 để cấu hình OQC (hoặc chạy SQL set MANUAL / SAMPLE / BY_MODEL)
+-- Sau khi setup xong → Tắt và mở lại C151, vào lại C512
+
+-- Bước 3: Kiểm tra đã đăng ký hạng mục kiểm tra cho model chưa (Tránh lỗi tiếng Hàn "검사항목이 등록되어있지 않습니다")
+SELECT * FROM STB_MaterialQcInspectionItem WHERE MaterialCode = 'Mã_Model'
+-- Nếu không có dòng nào → Chưa đăng ký hạng mục kiểm tra → Cần sao chép từ model chị em trong DB hoặc cấu hình trên màn hình C151
+
+-- Bước 4 (Hà Nam): Kiểm tra Route bắt đầu
+SELECT CurrentRouteCode FROM STB_SetInfo WHERE Barcode = 'Mã_Barcode'
+-- Nếu bắt đầu từ VE02 → Không hiện ở C512 → Đây là thiết kế của hệ thống
+```
+
+---
+
+### 7.3 B597 báo lỗi "Hết hạn sử dụng"
+
+→ Xem [KB_02 Mục 4.10](../KB_02/KB_02_01_NVL_WMS.md#410-kiểm-tra-hạn-sử-dụng-nvl-expiry-date) để tra cứu công thức tính.
+
+---
+
+### 7.4 B597 báo lỗi "Không tồn tại thiết lập Vỏ Nhôm"
+
+**Triệu chứng:** `"Không tồn tại thiết lập Vỏ Nhôm của LotNo... với mã Vỏ Nhôm: GBDYAC-004 <> ECVT30-367"`
+
+> ⚠️ **Đã xác minh (2026-05-17):** Bảng `STB_AluCaseMapping_VVT` **KHÔNG TỒN TẠI** trong `SmartFactoryV2`. Logic kiểm tra vỏ nhôm được **hardcode hoàn toàn** bên trong SP `usp_Vietnam_RawMaterialInputHist_uid` (bằng IF/NOT IN). Không có bảng mapping rười!
+
+**Debug:**
+```sql
+-- Không có bảng để query -- phải đọc thẳng vào SP:
+SELECT OBJECT_DEFINITION(OBJECT_ID('usp_Vietnam_RawMaterialInputHist_uid'))
+-- Ctrl+F tìm từ khóa 'Vỏ Nhôm' hoặc 'AluCase' hoặc 'GBDYAC'
+-- Tìm đến khối IF chặn → Thêm mã vỏ mới vào danh sách NOT IN
+```
+
+**Fix (chỉ có 1 cách duy nhất) - Sửa trong SP:**
+```sql
+-- Tìm đoạn code chặn trong SP
+SELECT OBJECT_DEFINITION(OBJECT_ID('usp_Vietnam_RawMaterialInputHist_uid'))
+-- VD tìm tới dòng:
+-- IF (@MaterialCode = 'ECVT30-367' AND @pRawMaterialBarcode NOT IN ('GBRLAC-004', 'GBDYAC-004'))
+-- → Thêm mã vỏ mới vào NOT IN list rồi deploy lại SP
+```
+
+
+---
+
+### 7.5 B597 báo lỗi "Mã Electrolyte không khớp với BOM"
+
+**Triệu chứng:** `"Mã Electrolyte/DUNG DỊCH được thiết lập, khác với mã QRCODE nhập vào B597"`
+
+**Nguyên nhân:** Công nhân đang dùng mã NVL thay thế (VD: `GBEC00-011`) nhưng BOM vẫn cấu hình mã cũ (`GBCP00-001`).
+
+**Debug:**
+```sql
+-- Kiểm tra BOM của Model đang sản xuất
+SELECT BD.MaterialCode AS [Mã_NVL_BOM], BD.MaterialName
+FROM STB_BomDetail BD
+JOIN STB_BomHeader BH ON BD.BomHeaderNo = BH.BomHeaderNo
+WHERE BH.MaterialCode = 'Mã_Model_SX'
+AND BD.MaterialCode LIKE 'GBE%'  -- Lọc các mã electrolyte
+```
+
+**Xử lý:**
+1. **Đúng chuyên môn:** Báo EA/R&D kiểm tra BOM có cần cập nhật không
+2. **IT fix tạm (chờ BOM update):** Vào SP `usp_Vietnam_RawMaterialInputHist_uid` → Tìm CTE `eleclyte1` → Thêm ngoại lệ:
+```sql
+-- Thêm vào CTE eleclyte1 trong SP:
+UNION ALL
+SELECT 'GBEC00-011' AS electrolyte, 'WEC3R0606QG' AS model, '1840' AS size
+```
+
+---
+
+### 7.6 B597 báo lỗi "Chuỗi điện cực không khớp" (Electrode Thickness)
+
+**Nguyên nhân:** NVL điện cực mới đăng ký thiếu hoặc sai Độ dày (`MaterialThickness`). Hệ thống so sánh chuỗi bị lỗi khi độ dày `200` != `200.000000`.
+
+**Debug:**
+```sql
+-- Kiểm tra MaterialThickness trong Master
+SELECT MaterialCode, MaterialThickness FROM STB_MaterialMaster
+WHERE MaterialCode = 'Mã_Điện_Cực'
+
+-- Kiểm tra độ dày đã nhập trong Lot (SIExtReal03)
+SELECT Barcode, SIExtReal03 AS [Do_Day_Da_Nhap] FROM STB_SetInfo
+WHERE Barcode = 'Mã_Barcode_Bị_Lỗi'
+```
+
+**Fix theo thứ tự:**
+```sql
+-- Fix 1: Sửa MaterialMaster thành số nguyên (không có .000)
+UPDATE STB_MaterialMaster
+SET MaterialThickness = '200'  -- Không phải '200.000000'
+WHERE MaterialCode = 'Mã_Điện_Cực'
+
+-- Fix 2: Nếu công nhân đã tạo Lot rồi → Sửa cả SIExtReal03
+UPDATE STB_SetInfo
+SET SIExtReal03 = 200  -- Số nguyên, không có thập phân
+WHERE Barcode = 'Mã_Barcode'
+
+-- Fix 3: Nếu lỗi liên quan đến bảng điện cực
+UPDATE STB_ElectrodeWastePriceNew SET ElectrodeThickness = 200 WHERE [Điều_Kiện]
+UPDATE STB_ElectrodeWasteInfoNew SET ElectrodeThickness = 200 WHERE [Điều_Kiện]
+```
+
+---
+
+### 7.7 B597 báo lỗi HOLDING
+
+**Nguyên nhân:** Lô NVL đang ở trạng thái HOLD do chưa qua IQC hoặc bị hold thủ công.
+
+> ⚠️ **Xác minh DB (2026-05-17):** `STB_MaterialQcInfo` KHÔNG có cột `InspectionStatus` hay `HoldReason`. HOLD được xác định qua `MaterialWarehouseCode` trong `STB_MaterialLotInfo` (giá trị: `HOLDING_VN_WH`, `HOLDING_BG_WH`, `HOLDING_HN_WH`).
+
+```sql
+-- Kiểm tra Lot NVL có đang HOLD không
+SELECT LotID, MaterialWarehouseCode, MaterialCode, CurrentQty
+FROM STB_MaterialLotInfo
+WHERE LotID = 'ML...'
+-- Nếu MaterialWarehouseCode LIKE 'HOLDING_%' → Hàng đang bị giữ
+
+-- Muốn bỏ HOLD (cần có sự đồng ý của QC) → Chuyển sang kho chính:
+UPDATE STB_MaterialLotInfo
+SET MaterialWarehouseCode = 'ROH_VN_WH',  -- Thay bằng kho đúng
+    MaterialLocationCode = 'ROH_VN_WH_01'
+WHERE LotID = 'ML...'
+```
+
+> Các giá trị HOLDING thực tế: `HOLDING_VN_WH` (Bắc Ninh), `HOLDING_BG_WH` (Bắc Giang), `HOLDING_HN_WH` (Hà Nam)
+
+---
+
+### 7.9 B597 báo lỗi "String or binary data would be truncated" khi quét gộp nhiều mã điện cực (Model 3510 / 35105)
+
+*   **Triệu chứng:** Khi quét gộp từ 5 mã barcode điện cực trở lên cho 1 Lot tại trạm B597, hệ thống báo lỗi đỏ `"String or binary data would be truncated"` và không cho lưu.
+*   **Chi tiết & Giải pháp:** Xem chi tiết nguyên nhân gốc và SQL script khắc phục tại [Mục Lỗi 3](#lỗi-3-lỗi-string-or-binary-data-would-be-truncated-khi-quét-gộp-5-mã-điện-cực-1-lot-model-3510--35105) bên dưới.
+
+---
+
+### 7.8 Màn hình C486 (Error Data Sorting): Nâng cấp giao diện (Thêm cột, Rebuild bảng & Fix layout grid)
+
+**Yêu cầu:** Thêm 2 cột mới cho màn hình C486: `Invoice` (nằm trước `LotNo`) và `Note` (nằm sau `Total`) cho cả 2 nguyên vật liệu **ALCase** và **Plate**, giữ nguyên dữ liệu lịch sử và đúng thứ tự cột khi `SELECT *`.
+
+#### 1. Phương pháp Rebuild bảng để giữ đúng thứ tự cột vật lý:
+Do SQL Server không có lệnh `ALTER TABLE ADD COLUMN ... BEFORE/AFTER` giống MySQL, giải pháp là tạo bảng tạm `_NEW` đúng thứ tự -> Copy dữ liệu -> Drop bảng cũ -> Rename bảng mới:
+```sql
+BEGIN TRANSACTION;
+BEGIN TRY
+    -- B1. Tạo bảng tạm với đúng thứ tự cột mong muốn
+    CREATE TABLE [dbo].[STB_VVT_SortingErrorData_ALCase_NEW] (
+        [ID] INT IDENTITY(1,1) NOT NULL,
+        ...
+        [MaterialCode] NVARCHAR(50) NULL,
+        [Invoice] NVARCHAR(100) NULL, -- << Cột mới đặt trước LotNo
+        [LotNo] NVARCHAR(50) NULL,
+        ...
+        [Total] INT NULL,
+        [Note] NVARCHAR(500) NULL, -- << Cột mới đặt sau Total
+        [CreateUserID] VARCHAR(20) NULL, ...
+    );
+
+    -- B2. Bật IDENTITY_INSERT để copy dữ liệu lịch sử (cột mới để NULL)
+    SET IDENTITY_INSERT [dbo].[STB_VVT_SortingErrorData_ALCase_NEW] ON;
+    INSERT INTO [dbo].[STB_VVT_SortingErrorData_ALCase_NEW] (ID, [Date], ..., Invoice, LotNo, ..., Total, Note, ...)
+    SELECT ID, [Date], ..., NULL AS Invoice, LotNo, ..., Total, NULL AS Note, ...
+    FROM [dbo].[STB_VVT_SortingErrorData_ALCase];
+    SET IDENTITY_INSERT [dbo].[STB_VVT_SortingErrorData_ALCase_NEW] OFF;
+
+    -- B3. Drop bảng cũ và đổi tên bảng mới
+    DROP TABLE [dbo].[STB_VVT_SortingErrorData_ALCase];
+    EXEC sp_rename 'STB_VVT_SortingErrorData_ALCase_NEW', 'STB_VVT_SortingErrorData_ALCase';
+    EXEC sp_rename 'PK_STB_VVT_SortingErrorData_ALCase_NEW', 'PK_STB_VVT_SortingErrorData_ALCase';
+
+    COMMIT TRANSACTION;
+END TRY
+BEGIN CATCH
+    IF @@TRANCOUNT > 0 ROLLBACK TRANSACTION;
+    THROW;
+END CATCH
+```
+
+#### 2. Cập nhật các Stored Procedure:
+* **SP GET (`usp_VVT_SortingErrorData_ALCase_get` / `usp_VVT_SortingErrorData_Plate_get`):** 
+  Thêm cột mới vào đúng vị trí trong danh sách SELECT. Tránh lặp alias vô ích như `Note, Note AS [Note]`. Giữ nguyên ép kiểu `CAST(Qty AS VARCHAR(10))` để tránh lỗi định dạng khi người dùng copy-paste từ Excel vào Grid trên giao diện.
+* **SP IUD (`usp_VVT_SortingErrorData_ALCase_iud` / `usp_VVT_SortingErrorData_Plate_iud`):** 
+  Do SmartFramework đẩy dữ liệu lưu dưới dạng `@pXml`, cần thêm map các cột mới (`Invoice`, `Note`) ở 3 vị trí trong SP: phần `UPDATE T SET ...`, cấu trúc `WITH` của `OPENXML` (cho cả Update và Insert) và lệnh `INSERT INTO ... SELECT ...`.
+
+#### 3. Xử lý lỗi layout grid (Ví dụ: Dư cột `Note1` trên giao diện):
+* **Triệu chứng:** Cột `Note1` hiện ra trên Grid dù trong cấu trúc bảng DB không có cột này.
+* **Nguyên nhân:** Khi người dùng thiết kế giao diện và nhấn **Save Layout**, SmartFramework chụp lại cấu hình lưới và lưu dưới dạng XML vào bảng `SmartFramework.dbo.STB_ScreenLayoutInfo`. Nếu trước đó có cột `Note1` (do gõ nhầm hoặc test), grid sẽ tự khôi phục cột này lên giao diện.
+* **Cách check nhanh bằng SQL:**
+  ```sql
+  SELECT Name, DATALENGTH(XmlLayout) AS XmlLength, CHARINDEX('Note1', XmlLayout) AS Note1Position
+  FROM SmartFramework.dbo.STB_ScreenLayoutInfo WITH (NOLOCK)
+  WHERE Name = 'ErrorDataSorting'
+  ```
+* **Cách sửa triệt để:** Mở màn hình **C486**, kéo bỏ cột `Note1` ra khỏi lưới (hoặc ẩn đi trong Column Chooser), sau đó chuột phải chọn **Save Layout** để cập nhật đè cấu hình XML sạch lên database.
+
+---
+
+
+
+## 8. âš¡ Äiá»‡n cá»±c (Electrode)
+
+### 8.1 Chá»‰nh chiá»u rá»™ng Slitting (B552)
+
+```sql
+-- Xem cáº¥u hÃ¬nh master slitting
+SELECT * FROM STB_CoatingToSlittingMaster
+-- WHERE CoatingMaterialCode = 'MÃ£_Coating'
+
+-- Cáº­p nháº­t chiá»u rá»™ng slitting
+UPDATE stb_slittinglocationconfig_vvt
+SET Width = 16
+WHERE SlittingCode = 'YP' AND SlittingSize = 200 AND PartNo = '1625' AND id = 12
+```
+
+---
+
+### 8.2 Lá»—i "ChÆ°a CONFIG trong STB_SLITTINGLOCATIONCONFIG_VVT"
+
+**Triá»‡u chá»©ng:** `"KhÃ´ng tá»“n táº¡i thiáº¿t láº­p Äiá»‡n cá»±c cá»§a LotNo... ChÆ°a CONFIG trong báº£ng: STB_SLITTINGLOCATIONCONFIG_VVT"`
+
+**Debug:**
+```sql
+-- Xem thÃ´ng sá»‘ lá»—i trong thÃ´ng bÃ¡o (VD: PartNo=1025, Farad=10, Width=17.7)
+-- Kiá»ƒm tra báº£ng Ä‘Ã£ cÃ³ chÆ°a
+SELECT * FROM stb_slittinglocationconfig_vvt WHERE PartNo = '1025'
+```
+
+**Fix â€” ThÃªm cáº¥u hÃ¬nh má»›i:**
+```sql
+-- Template: BY = Cá»±c dÆ°Æ¡ng (+), YP = Cá»±c Ã¢m (-)
+INSERT INTO stb_slittinglocationconfig_vvt
+    (PartNo, SlittingCode, SlittingSize, Farad, Width, WarehouseLocation, LocationWarehouse)
+VALUES
+    ('1025', 'BY', '200', '10', '17.7', 'VVT_F2', 'kho2'),  -- Cá»±c dÆ°Æ¡ng
+    ('1025', 'YP', '180', '10', '17.7', 'VVT_F2', 'kho2')   -- Cá»±c Ã¢m
+
+-- XÃ¡c nháº­n Ä‘Ã£ thÃªm
+SELECT * FROM stb_slittinglocationconfig_vvt WHERE PartNo = '1025'
+```
+
+**Template thÃªm nhiá»u model cÃ¹ng lÃºc:**
+```sql
+INSERT INTO stb_slittinglocationconfig_vvt
+    (PartNo, SlittingCode, SlittingSize, Farad, Width, WarehouseLocation, LocationWarehouse)
+VALUES
+    ('1025', 'BY', '200', '10', '17.7', 'VVT_F2', 'kho2'),
+    ('1025', 'YP', '180', '10', '17.7', 'VVT_F2', 'kho2'),
+    ('1325', 'BY', '200', '15', '18.7', 'VVT_F2', 'kho2'),
+    ('1325', 'YP', '180', '15', '18.7', 'VVT_F2', 'kho2'),
+    ('1030', 'BY', '200', '10', '23.7', 'VVT_F2', 'kho2'),
+    ('1030', 'YP', '180', '10', '23.7', 'VVT_F2', 'kho2')
+
+-- Sau Ä‘Ã³ cáº­p nháº­t sá»‘ cuá»™n vÃ  vá»‹ trÃ­ kho
+UPDATE stb_slittinglocationconfig_vvt
+SET RollQty = 20, PositiveLocation = 'A6-T3', NegativeLocation = 'B6-T3'
+WHERE PartNo IN ('1025', '1325', '1030')
+```
+
+---
+
+### 8.3 Checklist khi B597 bÃ¡o lá»—i khi lÆ°u NVL
+
+```
+Theo thá»© tá»± SP usp_Vietnam_RawMaterialInputHist_uid kiá»ƒm tra:
+â–¡ 1. HOLDING? â†’ SELECT MaterialWarehouseCode FROM STB_MaterialLotInfo (Check 'HOLDING_%')
+â–¡ 2. Háº¿t háº¡n? â†’ Truy váº¥n LotAttr10 tá»« STB_MaterialDocLotInfo (náº¿u rá»—ng vÃ  lÃ  Lot tÃ¡ch %SP%/%SL%/%SM% thÃ¬ check trong STB_MaterialLotInfo) + MMExtInt01 (xem KB_02 Má»¥c 4.10)
+â–¡ 3. Sai chá»§ng loáº¡i? â†’ Kiá»ƒm tra BOM cÃ³ mÃ£ NVL Ä‘Ã³ khÃ´ng (STB_BomDetail)
+â–¡ 4. Sai Ä‘á»™ dÃ y Ä‘iá»‡n cá»±c? â†’ Kiá»ƒm tra MaterialThickness (pháº£i lÃ  sá»‘ nguyÃªn)
+â–¡ 5. Sai mÃ£ Electrolyte? â†’ Kiá»ƒm tra CTE eleclyte1 trong SP
+â–¡ 6. Thiáº¿u cáº¥u hÃ¬nh Vá» NhÃ´m? â†’ Sá»­a hardcode trong SP (Báº£ng AluCaseMapping khÃ´ng tá»“n táº¡i)
+â–¡ 7. Thiáº¿u cáº¥u hÃ¬nh Slitting? â†’ Kiá»ƒm tra STB_SLITTINGLOCATIONCONFIG_VVT
+```
+
+> ðŸš¦ **Tham chiáº¿u má»Ÿ rá»™ng:** ToÃ n bá»™ 7 gates trÃªn Ä‘Ã£ Ä‘Æ°á»£c tá»•ng há»£p cÃ¹ng 11 nhÃ³m cháº·n tÆ°Æ¡ng tá»± (B530, B523, B452, B618, QC Audit, Returns, LÃ² Sáº¥y, Slitting Knife...) táº¡i **[KB_14 Â§6 â€” Tá»•ng Há»£p Pattern Validation Gates](../KB_14/KB_14_01_METHODOLOGY.md#6-tá»•ng-há»£p-pattern-validation-gates)**. Xem Ä‘Ã³ Ä‘á»ƒ biáº¿t cÃ¡ch má»Ÿ rá»™ng/thÃªm gate má»›i theo 4 Pattern thiáº¿t káº¿ (A/B/C/D).
+
+---
+
+### 8.4 Logic kho Ä‘iá»‡n cá»±c
+
+```
+MÃ£ lot Ä‘iá»‡n cá»±c Slitting: VV... hoáº·c VJ...
+MÃ£ lot kho nguyÃªn liá»‡u: ML...
+
+P (BY) = Cá»±c DÆ°Æ¡ng (+)
+M (YP) = Cá»±c Ã‚m (-)
+
+Kiá»ƒm tra tá»“n kho Ä‘iá»‡n cá»±c â†’ **Stb_SlittingStock_VVT**
+```
+
+> Äiá»‡n cá»±c pháº£i dÃ¹ng mÃ£ Lot kho (prefix `ML`) khi nháº­p kho nguyÃªn liá»‡u.
+
+### 8.5 Lá»—i popup khÃ´ng hiá»‡n dá»¯ liá»‡u á»Ÿ B270
+
+ðŸ‘‰ **Chi tiáº¿t Trace & Fix:** Xem táº¡i [KB_01_UI_PHAN_QUYEN.md Â§ 1.3](KB_01_UI_PHAN_QUYEN.md)
+
+---
+
+### 8.6 Quy trÃ¬nh cÃ¢n Ä‘iá»‡n cá»±c Mixing & Pháº§n má»m CÃ¢n Ä‘iá»‡n cá»±c (electrode.weighing)
+
+#### A. Giá»›i thiá»‡u pháº§n má»m CÃ¢n Ä‘iá»‡n cá»±c (`electrode.weighing`):
+*   **Má»¥c Ä‘Ã­ch:** á»¨ng dá»¥ng Electron Desktop App dÃ¹ng Ä‘á»ƒ quáº£n lÃ½ quÃ¡ trÃ¬nh cÃ¢n nguyÃªn liá»‡u (Than hoáº¡t tÃ­nh, cháº¥t dáº«n Ä‘iá»‡n, cháº¥t káº¿t dÃ­nh, nÆ°á»›c cáº¥t...) trÆ°á»›c khi cho vÃ o mÃ¡y trá»™n (Mixing) Ä‘á»ƒ táº¡o dung dá»‹ch Slurry.
+*   **Káº¿t ná»‘i pháº§n cá»©ng:** Káº¿t ná»‘i cá»•ng COM (RS232) Ä‘á»c sá»‘ cÃ¢n trá»±c tiáº¿p tá»« cÃ¢n Ä‘iá»‡n tá»­, chá»‘ng cÃ´ng nhÃ¢n nháº­p tay sai sá»‘.
+*   **Káº¿t ná»‘i Database:** Káº¿t ná»‘i trá»±c tiáº¿p Ä‘áº¿n database `SmartFactoryV2` cá»§a Vinatech qua tÃ i khoáº£n `vinaadmin`.
+*   **Logic xá»­ lÃ½:** Khi scan mÃ£ Lot Ä‘iá»‡n cá»±c, á»©ng dá»¥ng gá»i SP `usp_ElectrodeStep_get` (Ä‘á»c cáº¥u hÃ¬nh bÆ°á»›c cÃ¢n) vÃ  `usp_GetElectroMixPresentStep_vietnam` (Ä‘á»c bÆ°á»›c hiá»‡n táº¡i) Ä‘á»ƒ load cÃ´ng thá»©c vÃ  thá»© tá»± bÆ°á»›c cÃ¢n (`Seq`). Khi cÃ¢n Ä‘Ãºng khoáº£ng spec (`StdMinVal` - `StdMaxVal`), pháº§n má»m lÆ°u dá»¯ liá»‡u qua SP `usp_DoCreateElectrodeMixStepInfo_electron` vÃ  chá»‘t máº» trá»™n Ä‘á»ƒ chuyá»ƒn sang cÃ´ng Ä‘oáº¡n trÃ¡ng phá»§ (Coating).
+
+#### B. CÃ¡c lá»—i thÆ°á»ng gáº·p vÃ  cÃ¡ch kháº¯c phá»¥c:
+
+##### 1. Lá»—i nháº£y bÆ°á»›c cÃ¢n, khÃ´ng cÃ¢n láº§n lÆ°á»£t tá»« trÃªn xuá»‘ng (Than hoáº¡t tÃ­nh bá»‹ Ä‘áº©y xuá»‘ng dÆ°á»›i)
+*   **Triá»‡u chá»©ng:** "CÃ¡c bÆ°á»›c cÃ¢n cá»© nháº£y khÃ´ng Ä‘Ãºng thá»© tá»± process nÃªn khÃ´ng cÃ¢n Ä‘Æ°á»£c", "MÃ£ Ä‘iá»‡n cá»±c HCE Ä‘ang lá»—i chÆ°a thao tÃ¡c Ä‘Æ°á»£c, sáº£n xuáº¥t ra mÃ  khÃ´ng Ä‘Æ°á»£c ghi nháº­n trÃªn há»‡ thá»‘ng".
+*   **NguyÃªn nhÃ¢n:** 
+    *   TrÃªn giao diá»‡n pháº§n má»m cÃ³ checkbox **"CA ÄÃŠM CHUáº¨N Bá»Š TRÆ¯á»šC"** (`isnight`). á»ž ca Ä‘Ãªm, Binder/CMC cáº§n khuáº¥y trÆ°á»›c (20-40 phÃºt) nÃªn há»‡ thá»‘ng cung cáº¥p tÃ¹y chá»n nÃ y Ä‘á»ƒ Ä‘áº£o thá»© tá»± cÃ¢n, Ä‘Æ°a Binder lÃªn trÆ°á»›c Than hoáº¡t tÃ­nh (SP sáº½ nháº­n tham sá»‘ `@pOrder = 'kdem'`).
+    *   Náº¿u ca ngÃ y lÃ m viá»‡c mÃ  **quÃªn bá» tÃ­ch checkbox nÃ y**, thá»© tá»± cÃ¢n sáº½ bá»‹ nháº£y lá»™n xá»™n khiáº¿n cÃ´ng nhÃ¢n khÃ´ng thá»ƒ cÃ¢n láº§n lÆ°á»£t tá»« trÃªn xuá»‘ng vÃ  bá»‹ há»‡ thá»‘ng cháº·n. Máº» trá»™n bá»‹ káº¹t khÃ´ng thá»ƒ chá»‘t hoÃ n thÃ nh, dáº«n Ä‘áº¿n sáº£n pháº©m sáº£n xuáº¥t ra khÃ´ng Ä‘Æ°á»£c ghi nháº­n trÃªn MES.
+*   **CÃ¡ch kháº¯c phá»¥c:**
+    *   *BÆ°á»›c 1 (Váº­n hÃ nh):* CÃ´ng nhÃ¢n ca ngÃ y **bá» tÃ­ch checkbox "CA ÄÃŠM CHUáº¨N Bá»Š TRÆ¯á»šC"** trÃªn giao diá»‡n chÃ­nh cá»§a pháº§n má»m, sau Ä‘Ã³ báº¥m nÃºt **"LÃ m má»›i mÃ n hÃ¬nh"** Ä‘á»ƒ quay láº¡i thá»© tá»± cÃ¢n than trÆ°á»›c.
+    *   *BÆ°á»›c 2 (IT reset Lot bá»‹ káº¹t):* Náº¿u Lot Ä‘iá»‡n cá»±c (VÃ­ dá»¥: Lot cá»§a mÃ£ `HCE-202`) Ä‘Ã£ bá»‹ ghi nháº­n sai thá»© tá»± vÃ  káº¹t giá»¯a chá»«ng, IT cháº¡y lá»‡nh xÃ³a dá»¯ liá»‡u cÃ¢n táº¡m cá»§a Lot Ä‘Ã³ Ä‘á»ƒ cÃ¢n láº¡i Ä‘Ãºng tá»« Ä‘áº§u:
+        ```sql
+        BEGIN TRANSACTION;
+        DELETE FROM STB_ElectrodeMixStepInfo WHERE ElectrodeLotNumber = 'MÃ£_Lot_Äiá»‡n_Cá»±c_HCE';
+        COMMIT TRANSACTION;
+        ```
+        *Máº¹o:* CÃ³ thá»ƒ dÃ¹ng 2 Stored Procedures sau Ä‘á»ƒ kiá»ƒm tra cáº¥u hÃ¬nh vÃ  bÆ°á»›c cÃ¢n hiá»‡n táº¡i cá»§a báº¿n Ä‘iá»‡n cá»±c CMC (káº¿t há»£p Ä‘á»c code JavaScript trong pháº§n má»m):
+        ```sql
+        -- Kiá»ƒm tra bÆ°á»›c hiá»‡n táº¡i (tham sá»‘ thá»© 2 truyá»n 'kdem' náº¿u lÃ  ca Ä‘Ãªm)
+        EXEC usp_GetElectroMixPresentStep_vietnam 'VVQN1620001E28', '';
+        
+        -- Láº¥y chi tiáº¿t cáº¥u hÃ¬nh bÆ°á»›c cÃ¢n trá»™n
+        EXEC usp_Vietnam_ElectrodeMixingConfig_get 'VVQN1620001E28', '', 'ML20260124000020', '';
+        ```
+
+##### 2. Äiá»‡n cá»±c mÃ£ liá»‡u `3582-600F CY` khÃ´ng táº¡o/in Ä‘Æ°á»£c tem
+*   **Triá»‡u chá»©ng:** Khi sáº£n xuáº¥t Ä‘iá»‡n cá»±c mÃ£ liá»‡u `3582-600F CY`, há»‡ thá»‘ng khÃ´ng cho in tem Ä‘iá»‡n cá»±c.
+*   **Chi tiáº¿t & Giáº£i phÃ¡p:** ÄÃ¢y lÃ  model má»›i thiáº¿u cáº¥u hÃ¬nh Slitting. Xem hÆ°á»›ng dáº«n chi tiáº¿t tá»«ng bÆ°á»›c xá»­ lÃ½ vÃ  SQL script thÃªm cáº¥u hÃ¬nh táº¡i [Ká»‹ch báº£n 5](#ká»‹ch-báº£n-sá»±-cá»‘-kháº©n-cáº¥p-5-Ä‘iá»‡n-cá»±c-3582-600f-cy-khÃ´ng-táº¡o-Ä‘Æ°á»£c-tem).
+
+---
+
+*Cáº­p nháº­t: 2026-05-26*
+
+---
+
+### 8.7 Tá»•ng Quan Quy TrÃ¬nh Sáº£n Xuáº¥t & Kiá»ƒm Tra Cháº¥t LÆ°á»£ng Äiá»‡n Cá»±c (Electrode Flow)
+
+Quy trÃ¬nh quáº£n lÃ½ sáº£n xuáº¥t vÃ  kiá»ƒm Ä‘á»‹nh cháº¥t lÆ°á»£ng Ä‘á»‘i vá»›i cÃ´ng Ä‘oáº¡n Äiá»‡n cá»±c Ä‘Æ°á»£c váº­n hÃ nh khÃ©p kÃ­n qua cÃ¡c bÆ°á»›c sau:
+
+#### 1. Láº­p Káº¿ Hoáº¡ch & In Tem Äiá»‡n Cá»±c (B310, B442, A230)
+*   **Táº¡o PO (B310):** Bá»™ pháº­n káº¿ hoáº¡ch khá»Ÿi táº¡o Ä‘Æ¡n Ä‘áº·t hÃ ng sáº£n xuáº¥t PO lÃ m cÄƒn cá»© cháº¡y chuyá»n.
+*   **Táº¡o Káº¿ hoáº¡ch ngÃ y (B442):** Dá»±a trÃªn PO thÃ¡ng Ä‘Ã£ duyá»‡t, káº¿ hoáº¡ch ngÃ y Ä‘Æ°á»£c láº­p trÃªn B442. Khi káº¿ hoáº¡ch Ä‘Æ°á»£c xÃ¡c nháº­n lÆ°u, há»‡ thá»‘ng sáº½ tá»± Ä‘á»™ng sinh mÃ£ Lot Ä‘iá»‡n cá»±c vÃ  báº¯t Ä‘áº§u cho phÃ©p in tem nhÃ£n.
+*   **LiÃªn káº¿t Ä‘á»™ dÃ y váº­t liá»‡u (A230):** MÃ n hÃ¬nh B442 liÃªn káº¿t trá»±c tiáº¿p vá»›i dá»¯ liá»‡u Ä‘á»™ dÃ y khai bÃ¡o táº¡i mÃ n hÃ¬nh **A230 (ThÃ´ng tin váº­t liá»‡u)**. Táº¡i tab "MÃ£ nguyÃªn liá»‡u", náº¿u mÃ£ váº¡ch barcode tÆ°Æ¡ng á»©ng Ä‘Ã£ Ä‘Æ°á»£c cÃ i Ä‘áº·t thÃ´ng sá»‘ Ä‘á»™ dÃ y hoáº·c ngÆ°á»i dÃ¹ng Ä‘iá»n Ä‘á»™ dÃ y bÃªn A230, há»‡ thá»‘ng sáº½ tá»± Ä‘á»™ng liÃªn káº¿t vÃ  Ä‘iá»n thÃ´ng sá»‘ nÃ y vÃ o cá»™t Ä‘á»™ dÃ y cá»§a B442. Náº¿u chÆ°a Ä‘Æ°á»£c cáº¥u hÃ¬nh, OP buá»™c pháº£i nháº­p thá»§ cÃ´ng báº±ng tay (thao tÃ¡c nÃ y dá»… gÃ¢y sai sÃ³t vÃ  cháº­m trá»…).
+
+
+*   **Cáº¥u hÃ¬nh in tem Electrode (A460 â†’ STB_ModelLabelInfo):** Äá»ƒ in tem tá»« B442, model Electrode pháº£i cÃ³ record trong báº£ng `STB_ModelLabelInfo`. Náº¿u thiáº¿u â†’ lá»—i **"Not found label type"** khi báº¥m LabelPrint.
+
+    ```sql
+    -- Kiá»ƒm tra: SELECT ModelCode, LabelType FROM STB_ModelLabelInfo WHERE ModelCode = 'MÃƒ_MODEL';
+    -- Náº¿u thiáº¿u â†’ copy tá»« model cÅ© cÃ¹ng loáº¡i. Xem KB_04 Â§6.20 cho SQL chi tiáº¿t.
+    ```
+
+    > **LabelType phá»• biáº¿n cho Electrode:** `ElectLabel` (tem Ä‘iá»‡n cá»±c B442), `AssembleLabel` (tem SX B450/B540), `PartLabel` (tem váº­t tÆ° F330), `BoxLabel2` (tem box Ä‘áº·c biá»‡t).
+
+*   **Checklist thÃªm model Electrode má»›i (CRF%):**
+    1. A230 â†’ `MaterialThickness` (VD: 120, 180, 200)
+    2. A460 â†’ `STB_ModelLabelInfo` (ElectLabel + cÃ¡c label type cáº§n thiáº¿t)
+    3. B442 â†’ Táº¡o lot test â†’ kiá»ƒm tra cá»™t "Äá»™ dÃ y" + in tem
+
+    > ðŸ”— Xem thÃªm: KB_04 Â§6.20, KB_14 Â§7.2
+
+#### 2. Váº­n HÃ nh 4 CÃ´ng Äoáº¡n Äiá»‡n Cá»±c & Nháº­p Liá»‡u trÃªn B552
+Quy trÃ¬nh sáº£n xuáº¥t Ä‘iá»‡n cá»±c gá»“m 4 cÃ´ng Ä‘oáº¡n chÃ­nh vÃ  má»—i cÃ´ng Ä‘oáº¡n tÆ°Æ¡ng á»©ng vá»›i má»™t tab dá»¯ liá»‡u trÃªn mÃ n hÃ¬nh **B552**:
+1.  **Mixing (Pha trá»™n):** 
+    *   Sá»­ dá»¥ng cáº¥u hÃ¬nh cÃ¢n Ä‘iá»‡n cá»±c thiáº¿t láº­p trÃªn mÃ n **B470** (Tháº» cÃ´ng Ä‘oáº¡n do bÃªn Ká»¹ thuáº­t sáº£n xuáº¥t - KTSP thiáº¿t láº­p vÃ  ban hÃ nh). 
+    *   Há»‡ thá»‘ng mÃ¡y CMC sáº½ thá»±c hiá»‡n cÃ¢n trá»™n theo cÃ´ng thá»©c. Tab Mixing trÃªn B552 sáº½ tá»± Ä‘á»™ng láº¥y dá»¯ liá»‡u tá»« há»‡ thá»‘ng cÃ¢n CMC sang. OP chá»‰ cáº§n kiá»ƒm tra vÃ  nháº­p sá»‘ lÆ°á»£ng NG phÃ¡t sinh (náº¿u cÃ³) lÃªn há»‡ thá»‘ng.
+2.  **Coating (Phá»§):** TrÃ¡ng phá»§ há»—n há»£p dung dá»‹ch Ä‘iá»‡n cá»±c lÃªn foil. OP thá»±c hiá»‡n nháº­p lÆ°á»£ng pháº¿ NG phÃ¡t sinh.
+3.  **Rollpress (Ã‰p):** Ã‰p nÃ©n cuá»™n foil Ä‘á»ƒ Ä‘áº¡t Ä‘á»™ dÃ y tiÃªu chuáº©n vÃ  Ä‘áº£m báº£o lá»›p phá»§ bÃ¡m Ä‘á»u. OP nháº­p thÃ´ng sá»‘ NG.
+4.  **Slitting (Cáº¯t):** Cáº¯t cuá»™n Ä‘iá»‡n cá»±c lá»›n thÃ nh cÃ¡c cuá»™n nhá» theo kÃ­ch thÆ°á»›c spec yÃªu cáº§u Ä‘á»ƒ chuyá»ƒn sang chuyá»n Cell láº¯p rÃ¡p. Táº¡i tab Slitting trÃªn B552, OP sáº½ tiáº¿n hÃ nh táº¡o tem nhÃ£n vÃ  in tem barcode dÃ¡n lÃªn tá»«ng cuá»™n Ä‘iá»‡n cá»±c sau khi cáº¯t.
+
+#### 3. BÃ¡o CÃ¡o & Äá»‘i SoÃ¡t Äiá»‡n Cá»±c (B802)
+*   **B802 (Tra cá»©u lá»‹ch sá»­ sáº£n xuáº¥t Ä‘iá»‡n cá»±c):** Tra cá»©u toÃ n bá»™ thÃ´ng tin sáº£n lÆ°á»£ng, pháº¿ tháº£i (NG), chi phÃ­ sáº£n xuáº¥t, vÃ  chi phÃ­ pháº¿ pháº©m.
+*   **âš ï¸ LÆ°u Ã½ lá»—i thiáº¿u cÃ´ng Ä‘oáº¡n:** Má»™t mÃ£ Lot Ä‘iá»‡n cá»±c báº¯t buá»™c pháº£i Ä‘i qua Ä‘áº§y Ä‘á»§ cáº£ 4 cÃ´ng Ä‘oáº¡n (Mixing, Coating, Rollpress, Slitting). Náº¿u trÃªn bÃ¡o cÃ¡o B802 hiá»ƒn thá»‹ thiáº¿u báº¥t ká»³ cÃ´ng Ä‘oáº¡n nÃ o, nguyÃªn nhÃ¢n cháº¯c cháº¯n lÃ  do OP quÃªn hoáº·c chÆ°a nháº­p Ä‘áº§y Ä‘á»§ dá»¯ liá»‡u cÃ´ng Ä‘oáº¡n Ä‘Ã³ táº¡i mÃ n hÃ¬nh **B552**. Khi tra cá»©u trÃªn B802, OP click vÃ o má»™t mÃ£ Lot cá»¥ thá»ƒ Ä‘á»ƒ hiá»ƒn thá»‹ chi tiáº¿t thÃ´ng sá»‘ tá»«ng cÃ´ng Ä‘oáº¡n á»Ÿ tab phÃ­a dÆ°á»›i.
+*   **Quy táº¯c nháº­p cá»™t sá»‘ liá»‡u:**
+    *   Cá»™t `Defect (KG)`: Do OP nháº­p thá»§ cÃ´ng sá»‘ kg pháº¿ tháº£i thá»±c táº¿ cÃ¢n Ä‘Æ°á»£c.
+    *   Cá»™t `Sá»‘ lÆ°á»£ng OK`: Sá»‘ lÆ°á»£ng cuá»™n/mÃ©t Ä‘iá»‡n cá»±c Ä‘áº¡t cháº¥t lÆ°á»£ng Ä‘Æ°á»£c OP nháº­p vÃ o.
+    *   Cá»™t `Sá»‘ lÆ°á»£ng NG`: Sá»‘ lÆ°á»£ng cuá»™n/mÃ©t Ä‘iá»‡n cá»±c lá»—i Ä‘Æ°á»£c OP nháº­p vÃ o. CÃ¡c cá»™t chá»‰ sá»‘ chi phÃ­ vÃ  tá»· lá»‡ lá»—i cÃ²n láº¡i sáº½ do há»‡ thá»‘ng tá»± Ä‘á»™ng tÃ­nh theo cÃ´ng thá»©c.
+
+#### 4. Quy TrÃ¬nh Kiá»ƒm Tra Cháº¥t LÆ°á»£ng QC Äiá»‡n Cá»±c (C460, C141, C143)
+*   BÃªn cáº¡nh há»‡ thá»‘ng cÃ¢n CMC tá»± Ä‘á»™ng, bá»™ pháº­n QC thá»±c hiá»‡n kiá»ƒm tra ngoáº¡i quan vÃ  Ä‘o Ä‘áº¡c kÃ­ch thÆ°á»›c cÆ¡ lÃ½ cá»§a cuá»™n Ä‘iá»‡n cá»±c.
+*   **C460 (Nháº­p káº¿t quáº£ kiá»ƒm tra QC):** CÃ´ng nhÃ¢n QC trá»±c tiáº¿p nháº­p cÃ¡c káº¿t quáº£ Ä‘o Ä‘áº¡c kiá»ƒm tra cuá»™n Ä‘iá»‡n cá»±c táº¡i Ä‘Ã¢y.
+*   **C141 & C143 (Thiáº¿t láº­p háº¡ng má»¥c kiá»ƒm tra):** CÃ¡c háº¡ng má»¥c kiá»ƒm tra chung vÃ  spec dung sai riÃªng biá»‡t cho tá»«ng model Ä‘iá»‡n cá»±c Ä‘Æ°á»£c Ä‘á»‹nh nghÄ©a trÆ°á»›c táº¡i mÃ n hÃ¬nh **C141 (Háº¡ng má»¥c chung)** vÃ  **C143 (Spec theo Model)** Ä‘á»ƒ lÃ m cÄƒn cá»© cho C460 validate tá»± Ä‘á»™ng.
+
+---
+
+### 8.8 Há»— trá»£ lÆ°u nhiá»u mÃ£ váº¡ch nguyÃªn váº­t liá»‡u (Multi-barcode Appending) cho Äiá»‡n cá»±c vÃ  Vá» Case
+
+*   **MÃ´ táº£:** Há»‡ thá»‘ng há»— trá»£ báº¯n ná»‘i tiáº¿p nhiá»u cuá»™n nguyÃªn váº­t liá»‡u khÃ¡c nhau (ngÄƒn cÃ¡ch bá»Ÿi dáº¥u `;`) trÃªn cÃ¹ng má»™t Lot sáº£n pháº©m Ä‘á»ƒ trÃ¡nh trÆ°á»ng há»£p cuá»™n cÅ© háº¿t giá»¯a chá»«ng nhÆ°ng Lot chÆ°a cháº¡y xong.
+*   **Chi tiáº¿t & Giáº£i phÃ¡p:** Xem chi tiáº¿t vá» logic kiá»ƒm tra vÃ  lÆ°u trong SP `usp_Vietnam_RawMaterialInputHist_uid`, cÅ©ng nhÆ° cÃ¡ch gá»™p hiá»ƒn thá»‹ trÃªn lÆ°á»›i táº¡i [../KB_03/KB_03_02_CELL_LINE.md#619-há»—-trá»£-lÆ°u-nhiá»u-mÃ£-váº¡ch-nguyÃªn-váº­t-liá»‡u-multi-barcode-appending-cho-Ä‘iá»‡n-cá»±c-vÃ -vá»-case](../KB_03/KB_03_02_CELL_LINE.md#619-há»—-trá»£-lÆ°u-nhiá»u-mÃ£-váº¡ch-nguyÃªn-váº­t-liá»‡u-multi-barcode-appending-cho-Ä‘iá»‡n-cá»±c-vÃ -vá»-case).
+
+---
+
+### 8.9 ðŸ”´ Lá»—i Máº¥t Sáº£n LÆ°á»£ng Äáº§u VÃ o (Mixing Input = 0) â€” BY/YP 120/180 A301 1.5B
+
+> **PhÃ¡t hiá»‡n:** 2026-06-19 | **áº¢nh hÆ°á»Ÿng:** ~1 thÃ¡ng sáº£n xuáº¥t (tá»« ~26/05/2026)
+
+#### Triá»‡u chá»©ng:
+*   Sáº£n xuáº¥t gáº§n 1 thÃ¡ng nhÆ°ng trÃªn MES **khÃ´ng cÃ³ sáº£n lÆ°á»£ng Ä‘áº§u vÃ o** (cá»™t "Trá»ng lÆ°á»£ng váº­t liá»‡u 1/2" = 0).
+*   **CÃ³ sáº£n lÆ°á»£ng Ä‘áº§u ra** (Coating output) â†’ gÃ¢y sai lá»‡ch kiá»ƒm kÃª.
+*   Báº£ng `STB_ElectrodeMixStepInfo` cÃ³ **0 records** cho cÃ¡c lot prefix `VVQO1812xxx`.
+*   Báº£ng `STB_ElectrodeCoatingInfo` **CÃ“ records** (VD: E22=270kg, E25=420kg).
+
+#### Models bá»‹ áº£nh hÆ°á»Ÿng:
+
+| Model | MaterialCode | Má»©c Ä‘á»™ |
+|-------|-------------|--------|
+| BY 120 A301 1.5B (+) | `CREBL85L` | ðŸ”´ 100% thiáº¿u |
+| YP 120 A301 1.5B (-) | `CRFYL85-01` | ðŸ”´ 100% thiáº¿u |
+| YP 180 A301 1.5B (-) | `CRFYN85L-01` | ðŸ”´ 100% thiáº¿u |
+| YP 200 1.5B (+) | `CREYO85-03` | âš ï¸ GiÃ¡n Ä‘oáº¡n |
+
+#### NguyÃªn nhÃ¢n Ä‘Ã£ loáº¡i trá»« (DB + SP Ä‘á»u OK):
+*   âœ… `STB_ElectrodeStep` â€” cáº¥u hÃ¬nh bÆ°á»›c cÃ¢n **Äáº¦Y Äá»¦** (9 bÆ°á»›c D/G/K/S) cho cáº£ `CREBL85L` vÃ  `CRFYL85-01`.
+*   âœ… `usp_DoCreateElectrodeMixStepInfo_electron` â€” SP ghi data khÃ´ng cÃ³ validation cháº·n.
+*   âœ… `usp_GetElectroMixPresentStep_vietnam` â€” tráº£ vá» Ä‘Ãºng bÆ°á»›c hiá»‡n táº¡i.
+*   âœ… `usp_Vietnam_ElectrodeMixingConfig_get` â€” tráº£ vá» 5 config giá»‘ng model hoáº¡t Ä‘á»™ng bÃ¬nh thÆ°á»ng.
+
+#### NguyÃªn nhÃ¢n gá»‘c â€” Pháº§n má»m cÃ¢n NVL Mixing (electrode.weighing):
+*   á»¨ng dá»¥ng Electron cÃ i trÃªn **mÃ¡y CMC nhÃ  mÃ¡y Báº¯c Ninh** (KHÃ”NG pháº£i app `4.8.Warehouse Weight` â€” Ä‘Ã³ lÃ  cÃ¢n thÃ nh pháº©m B523).
+*   App cÃ¢n mixing khÃ´ng gá»i hoáº·c gá»i tháº¥t báº¡i SP `usp_DoCreateElectrodeMixStepInfo_electron`.
+
+#### Query kiá»ƒm tra:
+```sql
+-- Kiá»ƒm tra Lot cÃ³ mixing data khÃ´ng
+SELECT SI.Barcode, SI.MaterialCode,
+    CASE WHEN EXISTS (SELECT 1 FROM STB_ElectrodeMixStepInfo M WITH(NOLOCK)
+        WHERE M.ElectrodeLotNumber = SI.Barcode) THEN 'YES' ELSE 'NO' END AS HasMixing,
+    CASE WHEN EXISTS (SELECT 1 FROM STB_ElectrodeCoatingInfo C WITH(NOLOCK)
+        WHERE C.ElectrodeLotNumber = SI.Barcode) THEN 'YES' ELSE 'NO' END AS HasCoating
+FROM STB_SetInfo SI WITH(NOLOCK)
+WHERE SI.MaterialCode IN ('CREBL85L', 'CRFYL85-01', 'CRFYN85L-01')
+    AND SI.CreateDateTime >= '2026-05-20'
+ORDER BY SI.CreateDateTime DESC
+```
+
+---
+
+
+
+## 9. 🔬 QC Flow Đầy Đủ — IQC → PQC → OQC → Bending/Cutting
+
+### 9.1 IQC (Incoming Quality Control — Kiểm tra NVL đầu vào)
+
+```
+C121 (Nhóm hạng mục kiểm tra)
+    → Thêm nhóm kiểm tra IQC → Tích "Sử dụng" → Lưu
+    → Thêm hạng mục trong từng nhóm
+    ↓
+C122 (Chỉ định hạng mục cho từng NVL)
+    → Tìm NVL → Ấn "Chọn trong nhóm/Hạng mục" → Tick → OK → Lưu
+    ↓
+C220 (Kiểm tra NVL đầu vào)
+    → Khi NVL về kho → IQC vào C220 để nhập kết quả kiểm tra
+```
+
+```sql
+-- Kiểm tra hạng mục IQC của NVL
+SELECT cit.CommInspTypeName, ci.CommInspItemName, ci.CommInspUpperLimit, ci.CommInspLowerLimit
+FROM STB_CommInspItem ci
+JOIN STB_CommInspTypeInfo cit ON cit.CommInspTypeCode = ci.CommInspTypeCode
+JOIN STB_CommInspIndividualSpec cs ON cs.CommInspItemCode = ci.CommInspItemCode
+WHERE cs.MaterialCode = 'mã_nvl'
+
+-- Xem lịch sử kiểm tra IQC theo NVL
+SELECT * FROM STB_CommInspDocHistory
+WHERE MaterialCode = 'mã_nvl' AND CreateDateTime >= '2026-04-01'
+```
+
+---
+
+### 9.2 PQC (Process Quality Control — Kiểm tra trong quá trình SX)
+
+```
+C141 (Thiết lập chung PQC cho tất cả model)
+    → Hạng mục, loại input (1=số, 2=checkbox)
+    ↓
+C143 (Hạng mục kiểm tra riêng theo từng model)
+    → Mapping MaterialCode → hạng mục cụ thể
+    ↓
+C443 (Kiểm tra công đoạn ngoài cell line)
+    → Scan Barcode → Nhập giá trị → Hoàn thành
+    → SP: usp_GetCommInspection_HistoryForBarcode_Vietnam
+    ↓
+C430 (Lịch sử kiểm tra công đoạn Cell Line)
+C321 (Sửa chữa lỗi — Reliability Assy)
+```
+
+**C443 — SP đầy đủ:**
+
+| SP | Loại | Chức năng |
+|----|------|-----------|
+| `usp_GetCommInspection_HistoryForBarcode_Vietnam` | Search | Lấy lịch sử + template hạng mục |
+| `usp_DoAddCommInspMeasureHistForBarcode` | Execute | Thêm kết quả đo từng hạng mục |
+| `usp_DoFinishCommInspDoc` | Execute | Hoàn thành tài liệu kiểm tra |
+| `usp_DoFinishCommInspDoc_VNT` | Execute | Hoàn thành tài liệu kiểm tra VNT |
+
+```sql
+-- Sửa hạng mục kiểm tra tại C443 (xóa CommInspDoc cũ rồi tạo lại)
+-- Bước 1: Tìm CommInspDocNo theo Barcode
+SELECT * FROM STB_CommInspDocHistory
+WHERE ProdNo = (SELECT ControlNo FROM STB_SetInfo WHERE Barcode = 'VVPP163R072732')
+
+-- Bước 2: Xóa để tạo lại
+DELETE FROM STB_CommInspDocItem WHERE CommInspDocNo = '...'
+DELETE FROM STB_CommInspDocHistory WHERE CommInspDocNo = '...'
+```
+
+---
+
+### 9.3 OQC (Outgoing Quality Control — Kiểm tra thành phẩm)
+
+```
+C121 (Nhóm hạng mục — dùng chung với IQC)
+    ↓
+C151 (Hạng mục kiểm tra OQC theo từng sản phẩm)
+    → Tìm MaterialCode → Chọn trong nhóm → Tick → OK → Lưu
+    → Nếu Model không có trong popup: Vào A410 → Thiết lập OQCType/InspectionLevel → Tắt C151 và vào lại
+    ↓
+C512 (Quản lý Lot kiểm tra sản phẩm)
+    → Dán Barcode → Tìm kiếm → Tạo Lot
+    → TH1 không thấy: Đã tạo Lot rồi → sang C530
+    → TH2 không thấy: Chưa thiết lập hạng mục tại A410
+    → TH3 (HN): Mã test tháng 12 bắt đầu Route VE02 → không hiện (thiết kế hệ thống)
+    ↓
+C530 (Kiểm tra sản phẩm theo từng mẫu)
+    → Nhập Barcode + Mã NV → Tìm kiếm
+    → Chọn hạng mục → Nhập giá trị bên phải → Save bên phải
+    → Chọn Pass ở bên trái → Save bên trái → Đánh giá OK → Lưu
+    → Nếu thêm/sửa hạng mục ở C151 → Ấn "Tổng hợp hạng mục" để reset
+    ↓
+C540 (Lịch sử kiểm tra từ C530)
+    ↓
+C510 → C546 → C541 (Kiểm tra ESR xuất kho)
+```
+
+```sql
+-- Model đã config OQC chưa
+SELECT ModelCode, OqcType, OqcInspectionRuleType, InspectionType, InspectionLevel
+FROM STB_ModelBasicInfo WHERE ModelCode = 'mã_model'
+
+-- Nếu NULL → update:
+UPDATE STB_ModelBasicInfo
+SET OqcType = 'MANUAL', OqcInspectionRuleType = 'BY_MODEL',
+    InspectionType = 'SAMPLE', InspectionLevel = 'SAMPLE'
+WHERE ModelCode = 'mã_model'
+
+-- Xóa CommInspDoc bị sai → tạo lại từ C512
+DELETE FROM STB_CommInspDocItem WHERE CommInspDocNo = '...'
+DELETE FROM STB_CommInspDocHistory WHERE CommInspDocNo = '...'
+
+-- Sửa kết quả OQC
+UPDATE STB_CommInspDocHistory
+SET CommInspResult = 'PASS', FinishDateTime = GETDATE()
+WHERE CommInspDocNo = '...'
+```
+
+---
+
+### 9.4 Bending/Cutting QC (C561~C564)
+
+```
+C561 (Hạng mục kiểm tra Bending/Cutting theo từng model)
+    → Tìm MaterialCode → Chọn nhóm → Tick → OK → Lưu
+    ↓
+C562 (Tạo Lot kiểm tra Bending/Cutting)
+    → Dán Barcode → Tìm kiếm → Tạo Lot
+    ↓
+C563 (Kiểm tra Lot Bending/Cutting)
+    → Giống C530: Nhập barcode → Chọn hạng mục → Nhập giá trị → Save → Đánh giá OK
+    → Nếu sửa C561 → Ấn "Tổng hợp hạng mục" để reset giá trị
+    ↓
+C564 (Lịch sử kiểm tra Bending/Cutting)
+```
+
+---
+
+### 9.5 C321 — PQC Reliability Assy (Sửa Chữa Lỗi Cell Line)
+
+**Chức năng:** PQC quản lý hàng phát sinh lỗi cần sửa chữa trong quá trình sản xuất.
+
+| SP | Chức năng |
+|----|-----------|
+| `usp_Vietnam_GetDefectRepairInfo_ForRepair` | Lấy thông tin lỗi cần sửa chữa |
+| `usp_GetDefectRepairDetailInfo_ForRepair` | Lấy chi tiết nguyên nhân lỗi |
+| `usp_GetDefectRepairPartInfo` | Lấy thông tin vật tư thay thế |
+| `usp_DoProcessLossForBarcode_VNT` | Xử lý tổn thất — ghi nhận lỗi |
+
+```sql
+-- Kiểm tra lỗi theo barcode
+SELECT * FROM STB_DefectRepairInfo WHERE ControlNo IN (
+    SELECT ControlNo FROM STB_SetInfo WHERE Barcode = 'VV...'
+)
+```
+
+> ⚠️ SQL sửa DefectQty và ProdQty công đoạn sau → xem [KB_03 Mục 5.8](../KB_03/KB_03_02_CELL_LINE.md#58-sửa-số-lượng-ng-defectqty-màn-b791) để tránh trùng lặp.
+
+---
+
+### 9.6 C546 (FOQC) — OCV/ESR chỉ hiển thị 20ea thay vì 50ea
+
+**Triệu chứng:** Trên tab C546 (FOQC_시료별제품검사), hạng mục OCV (`FOQC_V01_07`) chỉ hiển thị tối đa 20 dòng đo thực tế từ máy (hoặc 0 dòng nếu chưa đo) thay vì hiển thị đủ 50 dòng theo tiêu chuẩn mẫu (SampleQty=50). 
+
+**Nguyên nhân gốc (Root Causes):**
+1. **Lỗi trong SP lấy kết quả đo (`usp_MaterialQcSampleResult_get`):** Phiên bản cũ không hỗ trợ pattern `FOQC_V01_07` (chỉ hỗ trợ `PQC_V01_07`) nên bị nhảy sang logic mặc định `SampleQty=20` và gán trùng giá trị OCV. (Đã sửa).
+2. **Thiếu Block OCV trong SP khởi tạo dòng trống (`usp_Vietnam_MaterialFOQcDetail_get`):** 
+   - Khi QC mở màn hình C546, hệ thống gọi SP `usp_Vietnam_MaterialFOQcDetail_get` để khởi tạo các dòng mẫu trống trong bảng `STB_MaterialQcSampleResult` cho đủ số lượng `SampleQty=50`.
+   - Trong SP này, lập trình viên đã viết các khối loop `WHILE` để tạo dòng trống cho `DetailNo = 19` (20ea), `DetailNo = 3` (ESR - 50ea), và `DetailNo = 4` (10ea), nhưng **hoàn toàn bỏ quên hạng mục OCV (DetailNo = 2)**!
+   - Vì không được khởi tạo dòng trống, lưới OCV trên giao diện chỉ có thể hiển thị tối đa số dòng thực tế đo được từ máy (20 dòng) mà không thể lấp đầy đủ 50 dòng.
+
+**Giải pháp sửa đổi:**
+1. **Deploy lại Stored Procedure `usp_Vietnam_MaterialFOQcDetail_get`:**
+   - Thêm khối loop `WHILE` cho `DetailNo = 2` để tự động tạo đủ 50 dòng trống cho OCV.
+   - Nội dung block thêm mới:
+     ```sql
+     -- OCV Block (DetailNo = 2)
+     set @MaterialQcSampleNo1  = (select COUNT(MaterialQcSampleNo) from STB_MaterialQcSampleResult WITH(NOLOCK) where MaterialQcDetailNo=2 and MaterialQcNo=@FoqcMaterialQcNo) + 1
+     set @sampleqty  = (select sampleqty from STB_MaterialQcDetail where MaterialQcDetailNo=2 and MaterialQcNo=@FoqcMaterialQcNo)
+
+     WHILE @MaterialQcSampleNo1 <= @sampleqty
+     BEGIN						
+         select @tung= @tung +'.3'	
+         insert into STB_MaterialQcSampleResult (MaterialQcNo, MaterialQcDetailNo, MaterialQcSampleNo, SampleSerialNo, TestUserID, TestDateTime, TestValue, TestResult, CreateDateTime, CreateUserID, ChangeDateTime, ChangeUserID)
+         values (@FoqcMaterialQcNo, 2, (select isnull(MAX(MaterialQcSampleNo),0) from STB_MaterialQcSampleResult WITH(NOLOCK) where MaterialQcDetailNo=2 and MaterialQcNo=@FoqcMaterialQcNo) + 1 , NULL, NULL, NULL, NULL, NULL, getdate(), @pProcessUserID, NULL, NULL)
+         SELECT @MaterialQcSampleNo1 = (select COUNT(MaterialQcSampleNo) from STB_MaterialQcSampleResult WITH(NOLOCK) where MaterialQcDetailNo=2 and MaterialQcNo=@FoqcMaterialQcNo) + 1
+     END
+     ```
+
+**Debug & Kiểm tra dữ liệu (SSMS):**
+```sql
+-- 1. Kiểm tra SampleQty và Pattern hiện tại của Lot FOQC
+SELECT MaterialQcNo, MaterialQcDetailNo, QcInspectionItemCode, SampleQty, PassedSampleQty, DecisionResult
+FROM STB_MaterialQcDetail WHERE MaterialQcNo = 'F' + 'Mã_Barcode'
+
+-- 2. Kiểm tra số dòng thực tế đã ghi nhận trong bảng SampleResult
+SELECT MaterialQcDetailNo, COUNT(*) AS Total,
+       SUM(CASE WHEN TestValue IS NOT NULL THEN 1 ELSE 0 END) AS WithValue,
+       SUM(CASE WHEN TestValue IS NULL THEN 1 ELSE 0 END) AS EmptyRows
+FROM STB_MaterialQcSampleResult 
+WHERE MaterialQcNo = 'F' + 'Mã_Barcode'
+GROUP BY MaterialQcDetailNo
+
+-- 3. Kiểm tra dữ liệu thô từ máy đo trong Monitor
+SELECT ID, lotno, value AS ESR, valueocv AS OCV, UploadToMes, UploadOCVToMess
+FROM Stb_ESRValueMonitor WHERE lotno = 'Mã_Barcode' ORDER BY ID
+```
+
+**Fix data khi bị lệch số dòng:**
+*Xem chi tiết các bước chạy rollback và reset dữ liệu tại file script [fix_c546_ocv_lots.sql](../sql/scripts/fix_c546_ocv_lots.sql)*
+
+**Các Stored Procedure liên quan (C546):**
+
+| SP | Loại | Chức năng |
+|----|------|-----------|
+| `usp_GetMaterialOQcInfo` | Search | Lấy thông tin Lot QC |
+| `usp_MaterialQcDetail_get` | Search | Lấy danh sách hạng mục kiểm tra |
+| `usp_MaterialQcSampleResult_get` | Search | **Lấy giá trị đo từ Stb_ESRValueMonitor** |
+| `usp_MaterialQcSampleResult_iud` | Execute | Lưu giá trị đo thủ công |
+| `usp_DoMakeMaterialQcSampleResult` | Execute | Tạo sample result |
+| `usp_DoUpdateMaterialQcInfo_Success` | Execute | Đánh giá OK |
+| `usp_DoUpdateMaterialQcInfo_Fail` | Execute | Đánh giá NG |
+
+**Bảng DB liên quan:**
+
+| Bảng | Vai trò |
+|------|---------|
+| `STB_MaterialQcInfo` | Lot QC header (chứa CompanyCode) |
+| `STB_MaterialQcDetail` | Hạng mục kiểm tra (SampleQty, LSL, USL, Pattern) |
+| `STB_MaterialQcSampleResult` | Kết quả đo từng mẫu (TestValue) |
+| `Stb_ESRValueMonitor` | Dữ liệu nguồn từ máy đo ESR/OCV |
+| `STB_LotChangeMaterialHistory` | Lịch sử đổi barcode (SP tra ngược OldBarcode) |
+
+---
+
+### 9.7 QC Nâng Cao — Quy trình ESR, Vision, X-Ray & Aging
+
+#### 9.7.1 Giám sát chất lượng điện trở ESR (ESR Inspection)
+Hệ thống MES ghi nhận dữ liệu đo kiểm ESR tự động và thủ công qua các bảng và Stored Procedure:
+* **Bảng dữ liệu:** `STB_VVT_ESRDATA` (Lưu thông số đo kiểm thực tế từ máy).
+* **Stored Procedure:** `usp_VVT_ESRdata_uid`
+  * Chức năng: Lưu thủ công hoặc tự động kết quả kiểm tra điện trở ESR bao gồm: `@pinspectvalue` (ESR đo được), `@pinspectvalue1`, `@pinspectvalue2`, `@pinspectime` (thời gian đo), `@plinecode` (mã line), `@pmaterialcode` (mã model).
+  * Quy tắc: Nếu giá trị đo hoặc mã line truyền vào bị rỗng, SP sẽ tự động dừng. Nếu mã máy bị trống, hệ thống gán mặc định bằng mã số Line.
+
+#### 9.7.2 Quy trình kiểm tra ngoại quan bằng 비전 (Vision Inspection)
+Dây chuyền sản xuất sử dụng 3 nhóm hệ thống 비전 (Vision Camera) tương ứng với 3 công đoạn kiểm tra ngoại quan khác nhau:
+* **Các bảng dữ liệu:**
+  1. `STB_VisionGroup1InspectionInfo`: Kiểm tra cuốn điện cực (Winding).
+  2. `STB_VisionGroup2InspectionInfo`: Kiểm tra dập cao su & lắp tancha (Rubber / Riveting).
+  3. `STB_VisionGroup3InspectionInfo`: Kiểm tra bọc vỏ nhựa & định hình miệng (Sleeving / Curling).
+* **Stored Procedure:** `usp_VisionGroupInspectionInfo_get`
+  * Chức năng: Truy vấn gộp (`UNION ALL`) dữ liệu hình ảnh và lỗi phát hiện từ cả 3 nhóm Vision trên.
+  * Cấu trúc dữ liệu ghi nhận: Mã thiết bị (`MachineID`), mã Lot (`LotNo`), barcode chi tiết (`Barcode`), số thứ tự Camera (`CameraNo`), loại lỗi ngoại quan (`DefectType`), tọa độ lỗi (`XAxis`, `YAxis`), kích thước lỗi (`LongSize`, `ShortSize`, `Size`), diện tích (`Area`), độ dày (`Thickness`), khoảng cách chân (`Distance`), thuật toán phát hiện (`AlgType`), và dữ liệu nhị phân của hình ảnh chụp lỗi (`Image`).
+
+#### 9.7.3 Đo kiểm X-Ray & XRF (X-Ray & XRF Inspection)
+Công đoạn kiểm tra cấu trúc bên trong cuộn cell (X-Ray) và đo độ dày lớp mạ/thành phần nguyên tố bằng quang phổ huỳnh quang tia X (XRF):
+* **Kiểm tra chụp X-Ray:**
+  * Bảng DB: `STB_XRayImageUploadHist` (Lưu lịch sử upload) liên kết với `SmartFramework_File.dbo.STB_AttachedFileMaster` (Lưu trữ file vật lý — ⚠️ bảng này nằm trong DB `SmartFramework_File`, không nằm trong `SmartFactoryV2`).
+  * Stored Procedure: `usp_XRayImageUploadHist_get`
+    * Chức năng: Lấy thông tin lịch sử chụp X-Ray của Barcode sản phẩm, trả về tên file hình ảnh (`FileName`), kích thước file (`FileSize`), và dữ liệu nhị phân file ảnh chụp cấu hình lõi (`FileData`).
+* **Đo phổ XRF:**
+  * Bảng DB: `STB_XRFInspectionInfo`
+  * Stored Procedure: `usp_XRFInspectionInfo_get`
+    * Chức năng: Lấy kết quả phân tích nguyên tố chi tiết của barcode, ghi nhận: detector (`Detector`), thời gian đo (`RunTime`), và 3 kết quả đo kiểm huỳnh quang tương ứng (`Result1`, `Result2`, `Result3`).
+
+#### 9.7.4 Quy trình lão hóa & đo kiểm OCV sau Aging (Aging Sorting & OCV)
+Sau khi hoàn thành công đoạn lão hóa nhiệt (Aging), sản phẩm được đo kiểm điện áp hở mạch (OCV) và phân loại chất lượng:
+* **Các bảng dữ liệu:**
+  * `STB_MaterialQcInfo` & `STB_MaterialQcDetail` (Chứa thông tin cấu hình lô kiểm định).
+  * `STB_QC_LOTNO_MODULE` (Bảng lưu kết quả kiểm định cho hàng Module).
+  * `STB_MaterialQcSampleResult` (Lưu giá trị OCV/ESR chi tiết từng mẫu).
+* **Stored Procedure:**
+  1. `usp_VVT_AgingInspectionHist_vvt_get`
+     * Chức năng: Tìm kiếm lịch sử kiểm đo OCV/ESR sau Aging (với mã tài liệu `InspectionDocType = 'AOQC'`).
+     * Quy tắc định danh: Hệ thống tự động tạo mã QC dạng `A` + `Barcode` (Ví dụ: Barcode `VVLR133R010603` sẽ tương ứng với `MaterialQcNo = 'AVVLR133R010603'`).
+     * SP hỗ trợ tự động truy vết lịch sử đổi mã barcode cũ/mới qua bảng `STB_LotChangeMaterialHistory`.
+  2. `usp_Vietnam_GetMaterialAgingInfo`
+     * Chức năng: Phục vụ màn hình xuất xưởng và kiểm định FOQC. Thực hiện gộp dữ liệu giữa hàng Cell (thông tin OQC Pass trong `STB_MaterialQcInfo`) và hàng Module (thông tin Pass trong `STB_QC_LOTNO_MODULE`).
+
+---
+
+
+
+
+## 10. ⚡ Điện Cực — Slitting Hà Nam (F743~F748, C243)
+
+### 10.1 Flow Slitting Hà Nam
+
+```
+F744 (Thiết lập chiều rộng)
+    → Thêm MaterialCode + Width + Đơn vị (M2 hoặc KG)
+    → NG_ConPaper + NG_Poil: 2 mã đặc biệt KHÔNG được xóa/sửa
+    ↓
+F743 (Thực hiện Slitting)
+    → Chọn MaterialCode → Tìm kiếm → Xem foil ban đầu (trái) + đã cắt (phải)
+    → Thêm foil đã cắt: (+) → Chọn mã NVL con → Nhập Length → Save
+    → Sau khi xong: Ấn "Chốt Slitting" → Chuyển sang C243
+    → In tem: Tick chọn → Ấn "Phát hành tem" → Chọn máy in
+    ↓
+C243 (QC Kiểm tra Lot Slitting)
+    → QC check sau khi Slitting đã chốt
+    → Đánh giá OK: Tự động Pass + Chuyển NG_ConPaper/NG_Poil → kho NG
+    → Đánh giá NG: Lot bị Reject → kho NG
+    ↓
+F746 (Lịch sử Slitting) → F747 (Lịch sử check NG/Pass) → F748 (Chuyển về kho NVL)
+```
+
+#### ⚠️ Hủy/Rollback Slitting (F742)
+*   **Quy tắc:** Để thực hiện rollback cắt điện cực và cho phép cắt lại ở màn hình **F742**, bắt buộc phải xóa lịch sử ghi nhận ở màn hình **F746** trước.
+
+**Lỗi thường gặp Slitting:**
+
+| Lỗi | Nguyên nhân | Giải pháp |
+|-----|-------------|-----------|
+| "Trùng mã nguyên liệu" | Mã NVL đã thiết lập trong F744 rồi | Kiểm tra và sửa bản ghi cũ |
+| Lot không tồn tại khi chuyển F430 | Lot chưa được QC check ở C243 | Vào C243 check trước |
+| Không chuyển về kho được | Lot bị QC đánh Reject | Không thể chuyển — xử lý theo quy trình NG |
+
+👉 **Chi tiết Script Fix (Thiết lập & Cấu hình Slitting):** Xem tại [KB_12_DEEP_CORE_ANALYSIS_AND_AUDIT.md § 4](KB_12_DEEP_CORE_ANALYSIS_AND_AUDIT.md).
+
+---
+
+## 11. 🔄 4M Change, CAPA & Phân Loại Mã Lỗi (Gộp từ KB_23)
+
+Hệ thống quản lý biến động chất lượng hiện trường và quy trình xử lý hành động khắc phục/phòng ngừa.
+
+### 11.1 Quản Lý Thay Đổi 4M (Man, Machine, Material, Method)
+Ghi nhận mọi biến động liên quan đến con người, máy móc, nguyên vật liệu hoặc phương pháp sản xuất qua bảng `STB_QC4MChangeDataRecord`.
+Màn hình: `VVT_DoCreateQC4MChange` (Tạo mới), `VVT_ViewDetailQC4MChange` (Phê duyệt), `VVT_View4MChange` (Xem lịch sử).
+
+```sql
+-- Xem các bản ghi 4M Change gần đây
+SELECT QC4MNo, ChangeType4M, Model, LineCode, RouteCode,
+       ReasonForChange, Status, ApprovalDate, EffectiveDate
+FROM STB_QC4MChangeDataRecord
+WHERE CreateDateTime >= DATEADD(MONTH, -1, GETDATE())
+ORDER BY CreateDateTime DESC;
+
+-- Lọc theo thay đổi Nguyên vật liệu (Material)
+SELECT * FROM STB_QC4MChangeDataRecord
+WHERE ChangeType4M = 'Material'
+ORDER BY CreateDateTime DESC;
+```
+
+### 11.2 CAPA (Corrective And Preventive Action)
+Khi phát hiện lỗi hệ thống hoặc lỗi nghiêm trọng từ khách hàng, Lot hàng bị ảnh hưởng sẽ được tách riêng tại màn hình `VVT_CAPAInputSeparateLot` để kiểm tra đánh giá trước khi thực hiện hành động khắc phục.
+
+### 11.3 Sửa Chữa Sản Phẩm Lỗi (Defect Repair)
+Sản phẩm lỗi được tái chế/sửa chữa và ghi nhận tại các bảng:
+*   `STB_DefectRepairInfo`: Thông tin chung về sửa chữa sản phẩm lỗi.
+*   `STB_DefectRepairDetailInfo`: Chi tiết công đoạn/hạng mục sửa chữa.
+*   `STB_DefectRepairPartInfo`: Phụ tùng hoặc vật tư tiêu hao dùng cho sửa chữa.
+
+```sql
+-- Xem lịch sử sửa chữa sản phẩm lỗi trong tuần
+SELECT * FROM STB_DefectRepairInfo
+WHERE CreateDateTime >= DATEADD(DAY, -7, GETDATE())
+ORDER BY CreateDateTime DESC;
+```
+
+### 11.4 Phân Loại Nhóm Lỗi & Nguyên Nhân (Defect Master)
+Danh sách mã lỗi nghiệp vụ được lưu trữ tập trung để phục vụ thống kê:
+*   `STB_DefectGroup`: Nhóm lỗi lớn (Major, Minor, Critical).
+*   `STB_DefectInfo`: Danh mục mã lỗi chi tiết hiển thị trên các màn hình scan.
+*   `STB_DefectCauseGroup`: Nhóm nguyên nhân lỗi.
+*   `STB_DefectCauseInfo`: Chi tiết nguyên nhân lỗi.
+
+```sql
+-- Xem danh sách mã lỗi đang hoạt động (IsUsed=1)
+SELECT DefectCode, DefectName, DefectGroupCode
+FROM STB_DefectInfo
+WHERE IsUsed = 1
+ORDER BY DefectGroupCode, DefectCode;
+```
+
+### 11.5 Báo Cáo Chất Lượng QC (QC Defect Reports)
+Các bảng ghi nhận chi tiết lỗi IQC/PQC/OQC:
+*   `STB_QcDefectReport`: Báo cáo lỗi QC chung.
+*   `STB_IOQCDefectInfo` & `STB_IOQCDefectDetail`: Thông tin chi tiết lỗi IQC và OQC.
+*   `STB_QCDefectDetailsRecord`: Nhật ký record lỗi chi tiết.
+
+---
+
+## 12. 🔬 Reliability Test — Kiểm Tra Độ Tin Cậy (Gộp từ KB_24)
+
+Quy trình thử nghiệm sản phẩm tụ điện trong môi trường khắc nghiệt (nhiệt độ cao, điện áp cao, độ ẩm cao) để đánh giá tuổi thọ và độ ổn định.
+
+### 12.1 Quy Trình Vận Hành
+1.  **Tạo Request (`STB_ReliabilityTestRequestInfo`):** Bộ phận QC hoặc R&D gửi yêu cầu kiểm tra, xác định Lot sản xuất hàng loạt cần test và điều kiện kiểm tra (ESR, dung lượng, dòng rò).
+2.  **Lấy Mẫu (`STB_ReliabilityTestSampleInfo`):** Tiếp nhận yêu cầu, tách Lot mẫu, khai báo điều kiện test (Điện áp, Nhiệt độ, Độ ẩm) và số lượng mẫu kiểm tra.
+3.  **Đo Lường Định Kỳ (`STB_ReliabilityTestMeasureInfo`):** Tiến hành đo thông số tụ điện theo chu kỳ (Cycle 1, 2, 3...) và ghi nhận kết quả OCV, ESR, dung lượng.
+4.  **Kết luận & Đóng yêu cầu.**
+
+### 12.2 Truy Vấn Dữ Liệu Kiểm Thử
+```sql
+-- Xem các yêu cầu kiểm tra độ tin cậy gần đây
+SELECT RTRequestNo, RequestDate, MassProductionLotNo,
+       TestPurposeComment, RequesterID, TestClassCode
+FROM STB_ReliabilityTestRequestInfo
+ORDER BY RequestDate DESC;
+
+-- Xem thông tin mẫu đang kiểm tra
+SELECT RTSampleNo, RTRequestNo, SampleLotNo, SampleQty,
+       VoltCondition, TemperatureCondition, HumidityCondition
+FROM STB_ReliabilityTestSampleInfo
+ORDER BY CreateDateTime DESC;
+
+-- Xem kết quả đo kiểm chi tiết theo chu kỳ của một Lot
+SELECT RTDate, MeasureCycle, SampleLotNo, SampleSeqNo,
+       TestName, MeasureValue, CharacterizationCode
+FROM STB_ReliabilityTestMeasureInfo
+WHERE SampleLotNo = 'LOT_CẦN_TRA'
+ORDER BY MeasureCycle, SampleSeqNo;
+```
+
+---
+
+> 📌 **Phân tích sâu & DB Audit:** Xem chi tiết phân tích kiến trúc database, DNA hệ thống và kết quả Audit tại [KB_12_DEEP_CORE_ANALYSIS_AND_AUDIT.md](KB_12_DEEP_CORE_ANALYSIS_AND_AUDIT.md).
+
+*Cập nhật: 2026-06-14 | Gộp nội dung từ KB_23 và KB_24 để đồng bộ hoá tri thức quản lý chất lượng (QC)*
+
+
+
+
+---
+
