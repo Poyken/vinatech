@@ -4,7 +4,6 @@
 
 > 🧭 **Điều hướng nhanh:**
 > - Cần **bản đồ luồng đi nhanh** (chỉ link) → [PROCESS_FLOW_MAP.md](PROCESS_FLOW_MAP.md)
-> - Cần **giáo trình học bài bản** → [VNT_VVT_MES_OPERATIONAL_CURRICULUM.md](VNT_VVT_MES_OPERATIONAL_CURRICULUM.md)
 > - Cần **tra cứu kỹ thuật 1 màn** → [ALL_SCREENS_DOCUMENTATION.md](ALL_SCREENS_DOCUMENTATION.md)
 > - File này là **hướng dẫn thao tác chi tiết step-by-step** — đọc khi cần biết bấm nút nào.
 

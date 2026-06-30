@@ -161,11 +161,9 @@ ORDER BY RMIH.CreateDateTime DESC;
 | **10** | **KB_10/ ⚡CHUNKED** | Kiến trúc MES & Data Flow | 92KB→4c |
 | 12 | KB_12_DEEP_CORE_ANALYSIS | Deep Core & DB Audit | 23KB |
 | **14** | **KB_14/ ⚡CHUNKED** | Trace bug, 12 Gates | 40KB→3c |
-| 15 | KB_15_EA_MES_CASE_STUDY | Case Study thực tế | 32KB |
 | **19** | **KB_19/ ⚡CHUNKED** | 19 DBs Map, 6648 tables | 86KB→4c |
 | **25** | **KB_25/ ⚡CHUNKED** | Hưng Yên, D-series | 42KB→3c |
 | **26** | **KB_26/ ⚡CHUNKED** | Liên kết hệ thống, bug logic | 42KB→3c |
-| 29 | KB_29_DEEP_DISCOVERY_PROMPT | Meta-prompt phân tích ngược | 11KB |
 | 30 | KB_30_CORE_SP_ENGINE | Core SP (B530/B523/F330) | 24KB |
 | **31** | **KB_31_SCREEN_BUG_FIXBOOK** | **★ Bug fix 70+ bugs** | **27KB** |
 | **32** | **KB_32_SCREEN_SP_TABLE_MAP** | Screen→SP→Table | 20KB |

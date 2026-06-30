@@ -189,6 +189,7 @@
 | 5 | "String or binary data truncated" khi quét gộp 5 mã điện cực | Cột `RawMaterialBarcode NVARCHAR(100)` quá ngắn | `ALTER TABLE STB_InputMaterialHistory ALTER COLUMN RawMaterialBarcode NVARCHAR(1000)` + sửa SP tương ứng — xem [KB_05 §7.5](KB_05/KB_05_01_QC_OVERVIEW.md) |
 | 6 | "Mã Electrolyte/DUNG DỊCH được thiết lập, khác với mã QRCODE nhập vào" | Quét mã dung dịch sai chủng loại → SP check bảng config | Kiểm tra đúng mã NVL dung dịch, hoặc thêm vào config |
 | 7 | OP nhập NVL module (Wire/PCB/Chip) bằng gõ tay thay vì scan barcode lot cho model 1840-WC(40) | SP `usp_Vietnam_RawMaterialInputHist_uid` dòng 318 exclude `MODULE%` khỏi validation → OP gõ tự do `40`, `dm`, `0` | Thêm block chặn sau `END -- end chặn chemical`: check `@mmmaterialcode` (lookup sẵn từ `stb_materialdoclotinfo` line 264). ModuleWire→WRHI00-007, ModuleChip→VRE-009, ModulePCB→PBDM00-004. Nếu `@mmmaterialcode=''` (gõ tay) → RAISERROR. ducnv 2026-06-19 |
+| 8 | Quét điện cực báo "Lỗi BOM CREYO85B-02 không được phép dùng cho model ECVT30-293" và chặn lưu tồn kho slitting | Quét mã Coating-Roll (CREYO85B-02/CRFYO85B-02) trong khi BOM PO 260601000001 chỉ chứa mã Slitting-Roll (SREYO85A/SRFYO85A), đồng thời Lot chưa có tồn kho slitting | Cách 1: Sửa SP `usp_Vietnam_RawMaterialInputHist_uid` map mã tráng sang mã slitting tại L1279 và bypass slitting stock check tại L2124. Cách 2: Chuyển Lot sang chạy dưới PO `260623000007` (Model `ECVT30-367`) để bypass BOM check (nếu đã khai báo slitting stock). |
 
 > 🔗 Chi tiết: [KB_05 §7](KB_05/KB_05_01_QC_OVERVIEW.md), [KB_03 §B597](KB_03/KB_03_02_CELL_LINE.md)
 
@@ -404,8 +405,10 @@ COMMIT TRANSACTION;
 | 1 | "Trùng mã nguyên liệu" khi Slitting | F744 đã có record cho MaterialCode | Kiểm tra + sửa record cũ trong F744 |
 | 2 | Lot không tồn tại khi chuyển F430 | Lot chưa QC check ở C243 | Vào C243 check trước |
 | 3 | Hủy/Rollback Slitting bị lỗi | Chưa xóa lịch sử F746 trước | Xóa F746 trước rồi mới rollback F742 |
+| 4 | Không tìm thấy foil mới trong popup hoặc thiếu dòng trên F744 | Mã foil con chưa đăng ký trong STB_MaterialMaster hoặc thiếu dòng trong STB_WidthSlitting | (1) Đăng ký foil vào STB_MaterialMaster nhóm ANODE-FOIL, (2) Set F110 stock attributes, (3) Thêm cấu hình width vào STB_WidthSlitting. Script mẫu: [add_foil_f744_5.5mm.sql](sql/scripts/add_foil_f744_5.5mm.sql) |
 
-> 🔗 Chi tiết: [KB_05 §10](KB_05/KB_05_01_QC_OVERVIEW.md)
+> 🔗 Chi tiết: [KB_05 §10](KB_05/KB_05_01_QC_OVERVIEW.md), [KB_02 §Lỗi 4](KB_02/KB_02_03_SCREEN_BUGS.md#lỗi-4-không-tìm-thấy-mã-foil-mới-trong-popup-để-thiết-lập-chiều-rộng-cắt-ở-f744)
+
 
 ---
 

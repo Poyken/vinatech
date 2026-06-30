@@ -2,7 +2,7 @@
 
 > **Mục tiêu:** Bản đồ điều hướng duy nhất để hiểu quy trình vận hành nhà máy đi qua màn hình nào, theo thứ tự nào, liên kết thế nào, và đọc tài liệu chi tiết ở đâu.  
 > **Nguyên tắc:** File này CHỈ CHỨA LINK — nội dung chi tiết nằm ở các KB/doc chuyên biệt.  
-> **Cập nhật:** 2026-06-27 | **Tổng:** 81 file .md (không tính node_modules)  
+> **Cập nhật:** 2026-06-29 | **Tổng:** 78 file .md (không tính node_modules)  
 > ← [Về INDEX](KB_INDEX.md)
 
 ---
@@ -15,7 +15,6 @@
 |---|---|---|
 | **[PROCESS_FLOW_MAP.md](PROCESS_FLOW_MAP.md)** | **File này** — Bản đồ luồng đi & link | Đọc đầu tiên khi cần hiểu quy trình |
 | [KB_INDEX.md](KB_INDEX.md) | Bảng tra cứu chính: TABLE→KB, SCREEN→KB, Triệu chứng→KB | Khi cần debug hoặc tra cứu nhanh |
-| [VNT_VVT_MES_OPERATIONAL_CURRICULUM.md](VNT_VVT_MES_OPERATIONAL_CURRICULUM.md) | Giáo trình học tập 6 phần + SQL trace + lộ trình đọc KB | Khi mới vào, cần học bài bản |
 
 ### Nhóm 2: Hướng Dẫn Thao Tác Chi Tiết (Đọc khi cần "bấm nút nào")
 
@@ -42,9 +41,7 @@
 | SP Engine | [KB_30](KB_30_CORE_SP_ENGINE.md) | Core SP line-by-line |
 | Screen→SP→Table | [KB_32](KB_32_SCREEN_SP_TABLE_MAP.md) | Map kỹ thuật Screen→SP→Table |
 | Deep Core Audit | [KB_12](KB_12_DEEP_CORE_ANALYSIS_AND_AUDIT.md) | Deep core analysis |
-| Case Study | [KB_15](KB_15_EA_MES_CASE_STUDY_XUONG_MAY.md) | Ví dụ thực tế |
 | SP Archaeology | [KB_37](KB_37_SP_ARCHAEOLOGY_BUGS_AND_PATTERNS.md) | TOP 20 SPs, patterns |
-| Discovery Prompt | [KB_29](KB_29_SUPER_DEEP_SYSTEM_DISCOVERY_PROMPT.md) | Meta-prompt (AI only) |
 
 ### Nhóm 4: Nhà Máy Đặc Thù
 
@@ -439,7 +436,7 @@ flowchart LR
 
 ---
 
-## 📁 KIỂM KÊ TÀI LIỆU SOURCE (81 FILES)
+## 📁 KIỂM KÊ TÀI LIỆU SOURCE (78 FILES)
 
 > Danh sách đầy đủ tất cả .md trong `MES/` (không tính node_modules). Grouped by role.
 
@@ -454,10 +451,10 @@ flowchart LR
 | `AI_AGENT_CONFIG/KNOWLEDGE.md` | 9 KB | Cheat sheet bảng/SP |
 | `AI_AGENT_CONFIG/RULES.md` + `SKILLS.md` + `README.md` | 15 KB | Quy tắc + Templates |
 
-### MES_MASTER_KNOWLEDGE_BASE (56 files)
+### MES_MASTER_KNOWLEDGE_BASE (53 files)
 | Nhóm | Files | Tổng Size |
 |---|---|---|
-| **Navigational** | PROCESS_FLOW_MAP, KB_INDEX, E2E Guide, Curriculum | ~90 KB |
+| **Navigational** | PROCESS_FLOW_MAP, KB_INDEX, E2E Guide | ~70 KB |
 | **ALL_SCREENS** | ALL_SCREENS_DOCUMENTATION | 438 KB |
 | **KB_01-KB_37** | 11 standalone + 10 chunked (42 chunks) | ~1,100 KB |
 | **Operational** | Daily Playbook, Operational Log, Script Guide | 20 KB |
@@ -474,5 +471,5 @@ flowchart LR
 
 ---
 
-> **Ngày cập nhật:** 2026-06-27 | **Tác giả:** Antigravity AI  
-> **Single Source of Truth cho navigation.** Content chi tiết → [E2E Guide](VNT_VVT_MES_OPERATIONAL_GUIDE_E2E.md). Giáo trình → [Curriculum](VNT_VVT_MES_OPERATIONAL_CURRICULUM.md). Kỹ thuật SP/DB → [KB files](KB_INDEX.md). B523/Z530 sâu → [Research file](in_tem_b523_va_design_z530.md).
+> **Ngày cập nhật:** 2026-06-29 | **Tác giả:** Antigravity AI  
+> **Single Source of Truth cho navigation.** Content chi tiết → [E2E Guide](VNT_VVT_MES_OPERATIONAL_GUIDE_E2E.md). Kỹ thuật SP/DB → [KB files](KB_INDEX.md). B523/Z530 sâu → [Research file](in_tem_b523_va_design_z530.md).

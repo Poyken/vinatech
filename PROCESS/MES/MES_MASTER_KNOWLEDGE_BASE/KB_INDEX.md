@@ -68,7 +68,6 @@
 | → [01_METHODOLOGY](KB_14/KB_14_01_METHODOLOGY.md) | 11 KB | §1-3 Triết lý, 6 bước trace, Data Log |
 | → [02_SQL_VALIDATION](KB_14/KB_14_02_SQL_VALIDATION.md) | 20 KB | §4-6 SQL utilities, 12 Validation Gates |
 | → [03_CASE_STUDY](KB_14/KB_14_03_CASE_STUDY.md) | 9 KB | §7 Case Study end-to-end |
-| [KB_15](KB_15_EA_MES_CASE_STUDY_XUONG_MAY.md) | 32 KB | Case Study thực tế cho EA/MES |
 
 ### Infrastructure & Mapping
 
@@ -105,7 +104,6 @@
 
 | File | Size | Nội dung |
 |------|------|---------|
-| [KB_29](KB_29_SUPER_DEEP_SYSTEM_DISCOVERY_PROMPT.md) | 11 KB | Meta-prompt phân tích ngược |
 | [MES_DAILY_PLAYBOOK](MES_DAILY_PLAYBOOK.md) | — | Giám sát hệ thống hằng ngày |
 | [MES_OPERATIONAL_LOG](MES_OPERATIONAL_LOG.md) | — | Nhật ký sự cố |
 | [MES_SCRIPT_GUIDE](MES_SCRIPT_GUIDE.md) | — | Hướng dẫn 4 PowerShell scripts |

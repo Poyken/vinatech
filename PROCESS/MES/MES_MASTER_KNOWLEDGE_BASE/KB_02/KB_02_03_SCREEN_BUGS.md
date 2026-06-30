@@ -1,4 +1,4 @@
-﻿
+
 ## A130 — Warehouse & Location (Khai báo kho & vị trí)
 
 ### Lỗi 1: Không hiển thị hoặc thiếu vị trí kho (Location) khi làm thủ tục nhập kho F330 hoặc chuyển kho
@@ -190,6 +190,19 @@
 *   **Nguyên nhân gốc:** Giao dịch chốt Slitting đã ghi nhận các Lot con vào bảng lịch sử.
 *   **Cách khắc phục:** OP truy cập màn hình lịch sử slitting **F746**, tìm và xóa bỏ các dòng lịch sử của Lot con tương ứng trước, sau đó mới có thể thực hiện rollback/xóa Lot mẹ tại màn hình rollback **F742**.
 *   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_OVERVIEW.md § 10.1](../KB_05/KB_05_01_QC_OVERVIEW.md#101-flow-slitting-hà-nam).
+
+### Lỗi 4: Không tìm thấy mã Foil mới trong popup để thiết lập chiều rộng cắt ở F744
+*   **Triệu chứng:** Khi bấm nút Thêm trên giao diện F744 để cấu hình chiều rộng slitting cho model/foil mới, người dùng không tìm thấy mã foil cần chọn trong popup. Hoặc trên lưới F744 thiếu dòng của mã foil con.
+*   **Nguyên nhân gốc:** 
+    1. Mã foil con (ví dụ: `10199058855` - U199 58.8VFS 5.5mm) chưa được khai báo trong danh mục vật tư `STB_MaterialMaster`. Popup của màn hình F744 (gọi stored procedure `usp_SlittingMaterial_popup_2`) chỉ lấy các vật tư đã đăng ký trong `STB_MaterialMaster` thuộc các nhóm `ProductGroupCode` là `ANODE-FOIL`, `CATHODE-FOIL`, `CON-PAPER`, `RadialTaping`.
+    2. Bảng cấu hình chiều rộng `STB_WidthSlitting` chưa có dòng thiết lập chiều rộng cho mã foil tương ứng.
+*   **Cách khắc phục:**
+    1. Đăng ký mã foil con vào bảng `STB_MaterialMaster` (ví dụ mã `10199058855` với `ProductGroupCode = 'ANODE-FOIL'`, `MaterialTypeCode = 'ROH'`, `MaterialUnit = 'M2'`).
+    2. Cấu hình thuộc tính tồn kho trong `STB_MaterialStockAttributeInfo` cho mã foil mới.
+    3. Thêm bản ghi cấu hình chiều rộng cắt (ví dụ: `Width = 5.5`) vào bảng `STB_WidthSlitting`.
+    
+    *Tham chiếu SQL script mẫu đã lưu tại local: [add_foil_f744_5.5mm.sql](../sql/scripts/add_foil_f744_5.5mm.sql)*
+
 
 ---
 

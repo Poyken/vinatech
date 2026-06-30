@@ -1,4 +1,4 @@
-﻿## 🔴 Cẩm nang khắc phục lỗi theo Screen ID (Gộp từ KB_SCREEN_BUG_REF)
+## 🔴 Cẩm nang khắc phục lỗi theo Screen ID (Gộp từ KB_SCREEN_BUG_REF)
 
 ## B597 — Material Scanning & PQC Verification (Scan nguyên vật liệu đầu vào chuyền)
 
@@ -27,6 +27,50 @@
        ```
     2. Sửa tham số `@pRawMaterialBarcode` và các biến nội bộ chứa chuỗi ghép barcode (ví dụ: `@RawMaterialBarcode`, `@LotMaterialBarcode`) trong stored procedure `usp_Vietnam_RawMaterialInputHist_uid` thành `NVARCHAR(1000)`.
 *   **Chi tiết nghiệp vụ:** Xem file script [fix_multibarcode_3510.sql](../sql/scripts/fix_multibarcode_3510.sql).
+
+### Lỗi 4: Lỗi BOM điện cực dạng tráng (Coating) không khớp với BOM gốc dạng chia cuộn (Slitting) cho model 1030L (ECVT30-293) tại B597
+*   **Triệu chứng:** Khi quét điện cực dương (+) hoặc âm (-) tại trạm **B597** cho model `1030L` (mã model thực tế `ECVT30-293`), hệ thống báo lỗi: `"lỗi BOM CREYO85B-02 không được phép dùng cho model ECVT30-293"`.
+*   **Nguyên nhân gốc:**
+    1. **Sai lệch cấu trúc BOM**: Trong BOM gốc (phiên bản `2001`) của model `ECVT30-293`, R&D khai báo mã điện cực chia cuộn (**Slitting-Roll** - ví dụ `SREYO85A` và `SRFYO85A`). Tuy nhiên, Lot điện cực quấn thực tế cấp cho chuyền là mã cuộn tráng (**Coating-Roll** - ví dụ `CREYO85B-02` và `CRFYO85B-02`). Khi SP `usp_Vietnam_RawMaterialInputHist_uid` đối chiếu mã cuộn tráng đã quét với BOM, hệ thống không tìm thấy và chặn lại.
+    2. **Chặn tồn kho Slitting ảo**: Lot điện cực quét vào không tồn tại hoặc chưa được khai báo đồng bộ vào bảng tồn kho slitting ảo `Stb_SlittingStock_VVT`, dẫn đến việc tiếp tục bị chặn bởi lỗi `"Chưa nhập thông tin Slitting Điện cực ở màn hình B552..."` (nếu vượt qua lỗi BOM).
+*   **Cách khắc phục:**
+    *   **Phương án 1 (Khuyên dùng - Deploy SP bypass):**
+        Sửa đổi SP `usp_Vietnam_RawMaterialInputHist_uid` để vừa ánh xạ tương đương mã Coating sang Slitting trong BOM, vừa bypass tồn kho slitting cho mã này.
+        1. Sửa đoạn check BOM (khoảng dòng 1279):
+           ```sql
+           IF not EXISTS(
+               SELECT 1 FROM STB_BomDetail 
+               WHERE MaterialCode=@MaterialCodeNotLowESR 
+                 AND BomVersion='2001' 
+                 AND (
+                     ChildMaterialCode=@MaterialCodeBOM
+                     OR (@MaterialCodeNotLowESR = 'ECVT30-293' AND @MaterialCodeBOM = 'CREYO85B-02' AND ChildMaterialCode = 'SREYO85A')
+                     OR (@MaterialCodeNotLowESR = 'ECVT30-293' AND @MaterialCodeBOM = 'CRFYO85B-02' AND ChildMaterialCode = 'SRFYO85A')
+                 )
+           )
+           ```
+        2. Sửa đoạn check tồn kho Slitting (khoảng dòng 2124):
+           ```sql
+           --update for 1030L (ECVT30-293)
+           if (@materialCodeCheck IN ('ECVT30-293') and @rawMaterialCheck IN ('CREYO85B-02', 'CRFYO85B-02'))
+           begin
+               set @count=1;
+           end
+           --end 1030L
+           ```
+        3. Deploy SP lên hệ thống DB:
+           ```powershell
+           .\deploy_tool.ps1 sql\procedures\usp_Vietnam_RawMaterialInputHist_uid.sql
+           ```
+    *   **Phương án 2 (Đổi PO/Model - Giải pháp tạm của xưởng):**
+        Nếu xưởng chuyển đổi Lot sản phẩm sang chạy dưới PO của model chị em **`ECVT30-367`** (ví dụ PO `260623000007`), hệ thống sẽ cho phép lưu vì `ECVT30-367` không nằm trong danh sách kiểm tra BOM nghiêm ngặt trong SP (tự động bypass check BOM). Tuy nhiên, phương án này **chỉ thành công** nếu các cuộn điện cực quét vào đã được khai báo tồn kho trong `Stb_SlittingStock_VVT` từ trước (nếu chưa khai báo thì vẫn sẽ bị chặn lỗi tồn kho Slitting).
+        Để thực hiện chuyển đổi PO bằng SQL cho Lot sản phẩm (chỉ dùng khi có phê duyệt):
+        ```sql
+        BEGIN TRANSACTION;
+        UPDATE STB_SetInfo SET PONo = 'MÃ_PO_MỚI', MaterialCode = 'MÃ_MODEL_MỚI' WHERE Barcode = 'MÃ_LOT_SẢN_PHẨM';
+        UPDATE STB_ProdRouteHist SET PONo = 'MÃ_PO_MỚI', MaterialCode = 'MÃ_MODEL_MỚI' WHERE ControlNo = (SELECT ControlNo FROM STB_SetInfo WHERE Barcode = 'MÃ_LOT_SẢN_PHẨM');
+        COMMIT TRANSACTION; -- Đổi thành ROLLBACK nếu muốn kiểm tra trước
+        ```
 
 ---
 
