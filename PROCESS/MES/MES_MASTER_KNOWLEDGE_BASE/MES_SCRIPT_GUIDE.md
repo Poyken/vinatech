@@ -1,7 +1,7 @@
 # 🛠️ Script & Tool Guide — Hướng Dẫn Sử Dụng Script PowerShell Bổ Trợ
 
 > **Dành cho:** AI Agent (Antigravity) & Kỹ sư EA/IT vận hành dự án MES Vinatech.
-> **Vị trí các script:** Nằm trực tiếp tại thư mục gốc của dự án (`c:\Users\User Vinatech.DESKTOP-RJJSEQU\Desktop\MES\`).
+> **Vị trí các script:** Nằm trực tiếp tại thư mục gốc của dự án (`c:\Users\User Vinatech.DESKTOP-RJJSEQU\Desktop\PROCESS\MES\`).
 > ← [Về INDEX](KB_INDEX.md)
 
 Tài liệu này hướng dẫn chi tiết cách sử dụng, các tham số đầu vào, logic xử lý nội bộ và cơ chế bảo mật an toàn của 4 script PowerShell hỗ trợ đắc lực cho việc tương tác cơ sở dữ liệu và mã nguồn.
@@ -46,25 +46,25 @@ powershell -File .\run_query.ps1 -Query "SELECT ModelCode, MBIExtText04, MBIExtT
 
 ## 2. 🔄 db_sync_tool.ps1 — Tải & Dọn Dẹp Stored Procedure Tạm
 
-Do mã nguồn các Stored Procedure của MES nằm hoàn toàn trong database và không được tracking bằng Git, script này giúp tải định nghĩa SP từ DB về máy dưới dạng file `.sql` để đọc/sửa, và dọn dẹp sạch sẽ khi hoàn tất để giữ Git workspace không bị bẩn.
+Do mã nguồn các Stored Procedure của MES nằm hoàn toàn trong database và không được tracking bằng Git để tránh phình dung lượng, script này giúp tải định nghĩa SP từ DB về máy dưới dạng file `.sql` để đọc/sửa, và dọn dẹp sạch sẽ khi hoàn tất để giữ Git workspace luôn sạch.
 
 ### 📋 Cách sử dụng & Tham số:
 ```powershell
-# Tải SP về máy
+# Tải SP về máy (Tự động tạo thư mục tạm sql/procedures/ nếu chưa có)
 powershell -File .\db_sync_tool.ps1 -SPName "Tên_Stored_Procedure"
 
 # Dọn dẹp sạch sẽ các file SP đã tải tạm thời
 powershell -File .\db_sync_tool.ps1 -Clean
 ```
-*   `-SPName`: Tên của Stored Procedure cần tải về (ví dụ: `usp_DoProcessProdRouteHist`). File tải về sẽ nằm trong thư mục `sql/procedures/[Tên_SP].sql`.
-*   `-Clean`: Xóa toàn bộ các tệp tin trong thư mục `sql/procedures/` để khôi phục trạng thái Git sạch trước khi commit.
+*   `-SPName`: Tên của Stored Procedure cần tải về (ví dụ: `usp_DoProcessProdRouteHist`). File tải về sẽ nằm trong thư mục tạm `sql/procedures/[Tên_SP].sql`.
+*   `-Clean`: Xóa toàn bộ các tệp tin trong thư mục tạm `sql/procedures/` để khôi phục trạng thái Git sạch trước khi commit.
 
 ### 💡 Ví dụ thực tế:
 ```powershell
 # Tải SP chốt sản lượng về phân tích
 powershell -File .\db_sync_tool.ps1 -SPName "usp_DoProcessProdRouteHistForCalc_SmartApp_VNT"
 
-# Sau khi đã phân tích xong, dọn dẹp sạch thư mục sql/procedures/
+# Sau khi đã phân tích xong, dọn dẹp sạch thư mục tạm sql/
 powershell -File .\db_sync_tool.ps1 -Clean
 ```
 
@@ -86,31 +86,31 @@ powershell -File .\validate_sql.ps1 -FilePath "Đường_dẫn_file_SQL"
 
 ### 💡 Ví dụ thực tế:
 ```powershell
-# Kiểm tra file hotfix số 18 trước khi triển khai
-powershell -File .\validate_sql.ps1 -FilePath "sql/hotfixes/18_FIX_WMS_FIFO_BYPASS.sql"
+# Kiểm tra file SQL sửa lỗi trong thư mục nháp/scratch trước khi deploy
+powershell -File .\validate_sql.ps1 -FilePath "C:\Users\User Vinatech.DESKTOP-RJJSEQU\.gemini\antigravity-ide\brain\cab9e98e-f5af-4971-93ca-36def1d031e9\scratch\fix_slitting.sql"
 ```
 
 ---
 
-## 4. 🚀 deploy_tool.ps1 — Triển Khai Hotfix Lên Production
+## 🚀 deploy_tool.ps1 — Triển Khai Hotfix Lên Production
 
-Khi file hotfix SQL đã vượt qua bộ lọc an toàn của `validate_sql.ps1`, kỹ sư IT hoặc AI Agent (dưới sự phê duyệt cụ thể của User) sẽ thực hiện deploy script lên database.
+Khi file SQL sửa lỗi đã vượt qua bộ lọc an toàn của `validate_sql.ps1`, kỹ sư IT hoặc AI Agent (dưới sự phê duyệt cụ thể của User) sẽ thực hiện deploy script trực tiếp lên database.
 
 ### 📋 Cách sử dụng:
 ```powershell
-powershell -File .\deploy_tool.ps1 -FilePath "Đường_dẫn_file_SQL_Hotfix"
+powershell -File .\deploy_tool.ps1 -FilePath "Đường_dẫn_file_SQL"
 ```
-*   `-FilePath` *(Bắt buộc):* Đường dẫn tới file hotfix SQL cần deploy.
+*   `-FilePath` *(Bắt buộc):* Đường dẫn tới file SQL cần deploy.
 
 ### 💡 Ví dụ thực tế:
 ```powershell
-# Triển khai hotfix số 06 cho nhà máy Hưng Yên
-powershell -File .\deploy_tool.ps1 -FilePath "sql/hotfixes/06_FIX_QC_INSPECTION_HUNG_YEN_SPS.sql"
+# Triển khai SQL sửa lỗi từ thư mục nháp/scratch trực tiếp lên DB
+powershell -File .\deploy_tool.ps1 -FilePath "C:\Users\User Vinatech.DESKTOP-RJJSEQU\.gemini\antigravity-ide\brain\cab9e98e-f5af-4971-93ca-36def1d031e9\scratch\fix_slitting.sql"
 ```
 
 ---
 
 ## ⚠️ Checklist An Toàn Khi Sử Dụng Scripts cho AI Agent
 - [ ] **SELECT-ONLY:** Luôn ưu tiên dùng `run_query.ps1` để đọc dữ liệu.
-- [ ] **Không sửa SP trực tiếp:** Khi cần sửa SP, dùng `db_sync_tool.ps1 -SPName` tải về máy $\rightarrow$ tạo file hotfix trong `sql/hotfixes/` $\rightarrow$ chạy `validate_sql.ps1` kiểm tra $\rightarrow$ bàn giao file SQL cho User tự chạy hoặc sử dụng `deploy_tool.ps1`.
-- [ ] **Git Clean:** Bắt buộc chạy `powershell -File .\db_sync_tool.ps1 -Clean` để dọn dẹp các tệp tạm trong `sql/procedures/` trước khi kết thúc turn làm việc.
+- [ ] **Không sửa SP trực tiếp:** Khi cần sửa SP, dùng `db_sync_tool.ps1 -SPName` tải về máy $\rightarrow$ tạo file sửa đổi tạm thời trong thư mục nháp/scratch $\rightarrow$ chạy `validate_sql.ps1` kiểm tra $\rightarrow$ bàn giao file SQL cho User tự chạy hoặc sử dụng `deploy_tool.ps1`.
+- [ ] **Git Clean:** Bắt buộc chạy `powershell -File .\db_sync_tool.ps1 -Clean` để dọn dẹp các tệp tạm trong `sql/` trước khi kết thúc turn làm việc.

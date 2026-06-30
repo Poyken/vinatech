@@ -1,7 +1,6 @@
 # 🗂️ NAIS MES — Knowledge Base Index (Streamlined)
 
-> **Cập nhật:** 2026-06-30 | **Tổng:** 15 files/folders (đã tối ưu hóa 65% token) | **DB:** SmartFactoryV2 + SmartFramework
-> **Luồng đi màn hình:** → [PROCESS_FLOW_MAP.md](PROCESS_FLOW_MAP.md) (bản đồ điều hướng process)
+> **Cập nhật:** 2026-06-30 | **Tổng:** 14 files/folders (đã tối ưu hóa 65% token) | **DB:** SmartFactoryV2 + SmartFramework
 
 ---
 
