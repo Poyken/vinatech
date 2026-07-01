@@ -2,8 +2,24 @@ param (
     [string]$TCode,
     [string]$ErrorMsg,
     [string]$Barcode,
-    [string]$LotID
+    [string]$LotID,
+    [string]$OutFile
 )
+
+# Initialize variables to hold diagnostic data
+$dtScreen = $null
+$dtObjects = $null
+$dtRes = $null
+$dtSps = $null
+$dtSet = $null
+$dtModel = $null
+$dtHist = $null
+$dtFed = $null
+$dtPo = $null
+$dtLot = $null
+$dtQc = $null
+$dtUsage = $null
+$dtMat = $null
 
 # Load shared database utilities
 . (Join-Path $PSScriptRoot "db_shared.ps1")
@@ -14,6 +30,7 @@ if ([string]::IsNullOrEmpty($TCode) -and [string]::IsNullOrEmpty($ErrorMsg) -and
     Write-Host "  .\debug_screen.ps1 -ErrorMsg 'chua duoc dua vao tuyen'" -ForegroundColor Yellow
     Write-Host "  .\debug_screen.ps1 -Barcode 'K16418106262500772'" -ForegroundColor Yellow
     Write-Host "  .\debug_screen.ps1 -LotID 'WRHI00-002'" -ForegroundColor Yellow
+    Write-Host "  .\debug_screen.ps1 -Barcode 'K164...' -OutFile report.html" -ForegroundColor Yellow
     exit 1
 }
 
@@ -377,3 +394,289 @@ if ($LotID) {
 }
 
 $conn.Close()
+
+# If OutFile is specified, export the styled HTML report and launch the browser
+if ($OutFile) {
+    $absolutePath = [System.IO.Path]::GetFullPath($OutFile)
+    
+    $html = @"
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MES Diagnostic Report - $Barcode $LotID $TCode</title>
+    <style>
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0f172a; color: #f1f5f9; padding: 2rem; margin: 0; line-height: 1.5; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #334155; padding-bottom: 1rem; margin-bottom: 2rem; }
+        .header h1 { margin: 0; color: #38bdf8; font-size: 2rem; }
+        .header .meta { text-align: right; color: #94a3b8; font-size: 0.9rem; }
+        .card { background: #1e293b; border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; border: 1px solid #334155; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        .card h2 { margin-top: 0; color: #f472b6; border-bottom: 1px solid #334155; padding-bottom: 0.5rem; font-size: 1.3rem; }
+        .grid-meta { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+        .meta-item { background: #0f172a; padding: 1rem; border-radius: 8px; border: 1px solid #334155; }
+        .meta-item label { display: block; color: #94a3b8; font-size: 0.8rem; text-transform: uppercase; margin-bottom: 0.25rem; }
+        .meta-item span { font-weight: 600; color: #f1f5f9; }
+        table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+        th { background: #334155; text-align: left; padding: 0.75rem; color: #38bdf8; font-weight: 600; font-size: 0.9rem; }
+        td { padding: 0.75rem; border-bottom: 1px solid #334155; font-size: 0.9rem; color: #cbd5e1; }
+        tr:hover td { background: rgba(56, 189, 248, 0.03); color: #f1f5f9; }
+        .badge { display: inline-block; padding: 0.25rem 0.5rem; border-radius: 4px; font-weight: bold; font-size: 0.75rem; }
+        .badge-success { background: rgba(74, 222, 128, 0.1); color: #4ade80; border: 1px solid #4ade80; }
+        .badge-danger { background: rgba(248, 113, 113, 0.1); color: #f87171; border: 1px solid #f87171; }
+        .warning-card { background: rgba(248, 113, 113, 0.05); border: 1px solid #f87171; border-left: 6px solid #f87171; padding: 1rem; border-radius: 8px; color: #f87171; margin-bottom: 1.5rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div>
+                <h1>MES Diagnostic & Trace Report</h1>
+                <div style="color: #94a3b8; margin-top: 0.25rem;">Target: $Barcode $LotID $TCode</div>
+            </div>
+            <div class="meta">
+                <div>Generated: $((Get-Date).ToString("yyyy-MM-dd HH:mm:ss"))</div>
+                <div>Server: dbserver.hycap.co.kr,5398</div>
+            </div>
+        </div>
+"@
+
+        if ($dtScreen -and $dtScreen.Rows.Count -gt 0) {
+            $row = $dtScreen.Rows[0]
+            $html += @"
+        <div class="card">
+            <h2>Screen Info (TCode: $TCode)</h2>
+            <div class="grid-meta">
+                <div class="meta-item"><label>Screen Name</label><span>$($row.Name)</span></div>
+                <div class="meta-item"><label>Caption</label><span>$($row.Caption)</span></div>
+                <div class="meta-item"><label>Parent Menu</label><span>$($row.ParentName)</span></div>
+                <div class="meta-item"><label>Show In Menu</label><span>$($row.ShowInMenu)</span></div>
+            </div>
+        </div>
+"@
+        }
+
+        if ($dtObjects -and $dtObjects.Rows.Count -gt 0) {
+            $html += @"
+        <div class="card">
+            <h2>Registered Stored Procedures & UI Objects</h2>
+            <table>
+                <thead>
+                    <tr><th>ObjectName</th><th>ObjectType</th><th>Caption</th></tr>
+                </thead>
+                <tbody>
+"@
+            foreach ($r in $dtObjects.Rows) {
+                $html += "<tr><td>$($r.ObjectName)</td><td>$($r.ObjectType)</td><td>$($r.Caption)</td></tr>"
+            }
+            $html += "</tbody></table></div>"
+        }
+
+        if ($dtRes -and $dtRes.Rows.Count -gt 0) {
+            $html += @"
+        <div class="card">
+            <h2>Matched String Resources</h2>
+            <table>
+                <thead>
+                    <tr><th>Name</th><th>Language</th><th>Value</th></tr>
+                </thead>
+                <tbody>
+"@
+            foreach ($r in $dtRes.Rows) {
+                $html += "<tr><td>$($r.Name)</td><td>$($r.Language)</td><td>$($r.Value)</td></tr>"
+            }
+            $html += "</tbody></table></div>"
+        }
+
+        if ($dtSps -and $dtSps.Rows.Count -gt 0) {
+            $html += @"
+        <div class="card">
+            <h2>Referencing Stored Procedures</h2>
+            <table>
+                <thead>
+                    <tr><th>Stored Procedure Name</th><th>Matched Key(s)</th></tr>
+                </thead>
+                <tbody>
+"@
+            foreach ($spRow in $dtSps.Rows) {
+                $spName = $spRow.SPName
+                $matchedKeys = @()
+                foreach ($key in $keys) {
+                    $cleanKey = $key.Replace("^", "")
+                    if ($spRow.definition -match [regex]::Escape($key) -or $spRow.definition -match [regex]::Escape($cleanKey)) {
+                        $matchedKeys += $key
+                    }
+                }
+                $html += "<tr><td><strong>$spName</strong></td><td>$($matchedKeys -join ', ')</td></tr>"
+            }
+            $html += "</tbody></table></div>"
+        }
+
+        if ($dtSet -and $dtSet.Rows.Count -gt 0) {
+            $row = $dtSet.Rows[0]
+            $qcBadge = if ($row.LotDecisionResult -eq 'Pass') { "<span class='badge badge-success'>PASS</span>" } else { "<span class='badge badge-danger'>$($row.LotDecisionResult)</span>" }
+            $html += @"
+        <div class="card">
+            <h2>Barcode Info (STB_SetInfo)</h2>
+            <div class="grid-meta">
+                <div class="meta-item"><label>ControlNo</label><span>$($row.ControlNo)</span></div>
+                <div class="meta-item"><label>PONo</label><span>$($row.PONo)</span></div>
+                <div class="meta-item"><label>MaterialCode</label><span>$($row.MaterialCode)</span></div>
+                <div class="meta-item"><label>SetSeq</label><span>$($row.SetSeq)</span></div>
+                <div class="meta-item"><label>IsLineInput</label><span>$($row.IsLineInput)</span></div>
+                <div class="meta-item"><label>QC Status</label><span>$qcBadge</span></div>
+                <div class="meta-item"><label>Create DateTime</label><span>$($row.CreateDateTime)</span></div>
+            </div>
+        </div>
+"@
+        }
+
+        if ($dtModel -and $dtModel.Rows.Count -gt 0) {
+            $row = $dtModel.Rows[0]
+            $html += @"
+        <div class="card">
+            <h2>Model Configuration (STB_ModelBasicInfo)</h2>
+            <div class="grid-meta">
+                <div class="meta-item"><label>ModelCode</label><span>$($row.ModelCode)</span></div>
+                <div class="meta-item"><label>ModelName</label><span>$($row.ModelName)</span></div>
+                <div class="meta-item"><label>OqcType</label><span>$($row.OqcType)</span></div>
+                <div class="meta-item"><label>Voltage</label><span>$($row.Voltage)</span></div>
+                <div class="meta-item"><label>Farad</label><span>$($row.Farad)</span></div>
+                <div class="meta-item"><label>AC ESR</label><span>$($row.AcEsr)</span></div>
+                <div class="meta-item"><label>DC ESR</label><span>$($row.DcEsr)</span></div>
+                <div class="meta-item"><label>Leakage Current</label><span>$($row.LeakageCurrent)</span></div>
+            </div>
+        </div>
+"@
+        } elseif ($matCode) {
+            $html += @"
+        <div class="warning-card">
+            <strong>[WARNING]</strong> Model $matCode is NOT configured in STB_ModelBasicInfo!
+        </div>
+"@
+        }
+
+        if ($dtHist -and $dtHist.Rows.Count -gt 0) {
+            $html += @"
+        <div class="card">
+            <h2>Routing Scan History (STB_ProdRouteHist)</h2>
+            <table>
+                <thead>
+                    <tr><th>CreateDateTime</th><th>RouteCode</th><th>LineCode</th><th>MachineCode</th><th>WorkerCode</th><th>ProdQty</th><th>JobDate</th></tr>
+                </thead>
+                <tbody>
+"@
+            foreach ($r in $dtHist.Rows) {
+                $html += "<tr><td>$($r.CreateDateTime)</td><td><strong>$($r.RouteCode)</strong></td><td>$($r.LineCode)</td><td>$($r.MachineCode)</td><td>$($r.WorkerCode)</td><td>$($r.ProdQty)</td><td>$($r.JobDate)</td></tr>"
+            }
+            $html += "</tbody></table></div>"
+        }
+
+        if ($dtFed -and $dtFed.Rows.Count -gt 0) {
+            $html += @"
+        <div class="card">
+            <h2>Raw Material Feeding History (STB_RawMaterialInputHist)</h2>
+            <table>
+                <thead>
+                    <tr><th>CreateDateTime</th><th>RouteCode</th><th>LotMaterialCode</th><th>RawMaterialBarcode</th><th>MaterialLotNo</th><th>Qty</th><th>MachineCode</th></tr>
+                </thead>
+                <tbody>
+"@
+            foreach ($r in $dtFed.Rows) {
+                $html += "<tr><td>$($r.CreateDateTime)</td><td>$($r.RouteCode)</td><td>$($r.LotMaterialCode)</td><td>$($r.RawMaterialBarcode)</td><td>$($r.MaterialLotNo)</td><td>$($r.Qty)</td><td>$($r.MachineCode)</td></tr>"
+            }
+            $html += "</tbody></table></div>"
+        }
+
+        if ($dtPo -and $dtPo.Rows.Count -gt 0) {
+            $html += @"
+        <div class="card">
+            <h2>PO Routing Definition</h2>
+            <table>
+                <thead>
+                    <tr><th>RouteIndex</th><th>RouteCode</th><th>IsInputRoute</th><th>IsOutputRoute</th><th>CompanyCode</th></tr>
+                </thead>
+                <tbody>
+"@
+            foreach ($r in $dtPo.Rows) {
+                $html += "<tr><td>$($r.RouteIndex)</td><td><strong>$($r.RouteCode)</strong></td><td>$($r.IsInputRoute)</td><td>$($r.IsOutputRoute)</td><td>$($r.CompanyCode)</td></tr>"
+            }
+            $html += "</tbody></table></div>"
+        }
+
+        if ($dtLot -and $dtLot.Rows.Count -gt 0) {
+            $row = $dtLot.Rows[0]
+            $html += @"
+        <div class="card">
+            <h2>Material Lot Info (STB_MaterialLotInfo)</h2>
+            <div class="grid-meta">
+                <div class="meta-item"><label>MaterialLotNo</label><span>$($row.MaterialLotNo)</span></div>
+                <div class="meta-item"><label>LotID</label><span>$($row.LotID)</span></div>
+                <div class="meta-item"><label>MaterialCode</label><span>$($row.MaterialCode)</span></div>
+                <div class="meta-item"><label>Warehouse</label><span>$($row.MaterialWarehouseCode)</span></div>
+                <div class="meta-item"><label>Initial Qty</label><span>$($row.InitialQty)</span></div>
+                <div class="meta-item"><label>Current Qty</label><span>$($row.CurrentQty)</span></div>
+                <div class="meta-item"><label>Vendor Lot No</label><span>$($row.VendorLotNo)</span></div>
+                <div class="meta-item"><label>Create DateTime</label><span>$($row.CreateDateTime)</span></div>
+            </div>
+        </div>
+"@
+        }
+
+        if ($dtQc -and $dtQc.Rows.Count -gt 0) {
+            $row = $dtQc.Rows[0]
+            $badgeClass = if ($row.DecisionResult -eq 'PASS' -or $row.DecisionResult -eq 'Pass') { "badge-success" } else { "badge-danger" }
+            $html += @"
+        <div class="card">
+            <h2>QC Inspection Result (STB_MaterialQcInfo)</h2>
+            <div class="grid-meta">
+                <div class="meta-item"><label>Decision Result</label><span class="badge $badgeClass">$($row.DecisionResult)</span></div>
+                <div class="meta-item"><label>Decision DateTime</label><span>$($row.DecisionDateTime)</span></div>
+                <div class="meta-item"><label>Decision User</label><span>$($row.DecisionUserID)</span></div>
+            </div>
+        </div>
+"@
+        }
+
+        if ($dtUsage -and $dtUsage.Rows.Count -gt 0) {
+            $html += @"
+        <div class="card">
+            <h2>Raw Material Usage History (Where Fed)</h2>
+            <table>
+                <thead>
+                    <tr><th>CreateDateTime</th><th>TargetBarcode</th><th>RouteCode</th><th>LotMaterialCode</th><th>Qty</th><th>MachineCode</th></tr>
+                </thead>
+                <tbody>
+"@
+            foreach ($r in $dtUsage.Rows) {
+                $html += "<tr><td>$($r.CreateDateTime)</td><td><strong>$($r.TargetBarcode)</strong></td><td>$($r.RouteCode)</td><td>$($r.LotMaterialCode)</td><td>$($r.Qty)</td><td>$($r.MachineCode)</td></tr>"
+            }
+            $html += "</tbody></table></div>"
+        }
+
+        if ($dtMat -and $dtMat.Rows.Count -gt 0) {
+            $row = $dtMat.Rows[0]
+            $html += @"
+        <div class="card">
+            <h2>Material Master Info (STB_MaterialMaster)</h2>
+            <div class="grid-meta">
+                <div class="meta-item"><label>MaterialCode</label><span>$($row.MaterialCode)</span></div>
+                <div class="meta-item"><label>MaterialName</label><span>$($row.MaterialName)</span></div>
+                <div class="meta-item"><label>Spec</label><span>$($row.MaterialSpec)</span></div>
+                <div class="meta-item"><label>Unit</label><span>$($row.MaterialUnit)</span></div>
+                <div class="meta-item"><label>Type</label><span>$($row.MaterialTypeCode)</span></div>
+            </div>
+        </div>
+"@
+        }
+
+        $html += @"
+    </div>
+</body>
+</html>
+"@
+
+    $html | Out-File -FilePath $absolutePath -Encoding utf8
+    Write-Host "[OK] Styled HTML report generated at: $absolutePath" -ForegroundColor Green
+    Start-Process $absolutePath
+}
