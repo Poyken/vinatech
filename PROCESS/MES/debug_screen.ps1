@@ -21,6 +21,65 @@ $dtQc = $null
 $dtUsage = $null
 $dtMat = $null
 
+# Custom terminal table formatter to prevent truncation/wrapping on narrow consoles
+function Out-ConsoleTable {
+    param(
+        [System.Data.DataTable]$DataTable,
+        [string[]]$Columns,
+        [int[]]$Widths,
+        [string[]]$Headers
+    )
+    
+    if (-not $DataTable -or $DataTable.Rows.Count -eq 0) { return }
+    
+    # Print Header
+    $headerLine = ""
+    $separatorLine = ""
+    for ($i = 0; $i -lt $Columns.Count; $i++) {
+        $headerName = if ($Headers) { $Headers[$i] } else { $Columns[$i] }
+        $width = $Widths[$i]
+        
+        $headerLine += "{0,-$width}" -f $headerName
+        $separatorLine += ("-" * ($width - 1)) + " "
+    }
+    Write-Host $headerLine -ForegroundColor Cyan
+    Write-Host $separatorLine -ForegroundColor Gray
+    
+    # Print Rows
+    foreach ($row in $DataTable.Rows) {
+        $rowLine = ""
+        for ($i = 0; $i -lt $Columns.Count; $i++) {
+            $colName = $Columns[$i]
+            $width = $Widths[$i]
+            $val = $row.$colName
+            
+            # Format value
+            $strVal = ""
+            if ($val -is [System.DateTime]) {
+                $strVal = $val.ToString("MM/dd HH:mm:ss")
+            } elseif ($val -eq $null -or $val -is [System.DBNull]) {
+                $strVal = ""
+            } else {
+                $strVal = $val.ToString()
+            }
+            
+            # Truncate if exceeds width (minus 1 space for padding)
+            $limit = $width - 1
+            if ($strVal.Length -gt $limit) {
+                if ($limit -gt 3) {
+                    $strVal = $strVal.Substring(0, $limit - 3) + "..."
+                } else {
+                    $strVal = $strVal.Substring(0, $limit)
+                }
+            }
+            
+            $rowLine += "{0,-$width}" -f $strVal
+        }
+        Write-Host $rowLine -ForegroundColor White
+    }
+    Write-Host ""
+}
+
 # Load shared database utilities
 . (Join-Path $PSScriptRoot "db_shared.ps1")
 
@@ -75,7 +134,7 @@ if ($TCode) {
         if ($dtObjects.Rows.Count -eq 0) {
             Write-Host "No UI objects/procedures mapped in STB_ScreenObjects." -ForegroundColor Gray
         } else {
-            $dtObjects | Format-Table -AutoSize | Out-String | Write-Host -ForegroundColor White
+            Out-ConsoleTable -DataTable $dtObjects -Columns @("ObjectName", "ObjectType", "Caption") -Widths @(40, 20, 30) -Headers @("Object Name", "Object Type", "Caption")
         }
     }
     
@@ -100,7 +159,7 @@ if ($ErrorMsg) {
         Write-Host "[WARNING] No matching entries found in SmartFramework.dbo.STB_StringResources." -ForegroundColor Yellow
     } else {
         Write-Host "Found matching localized entries:" -ForegroundColor Yellow
-        $dtRes | Format-Table -AutoSize | Out-String | Write-Host -ForegroundColor White
+        Out-ConsoleTable -DataTable $dtRes -Columns @("Name", "Language", "Value") -Widths @(35, 12, 45) -Headers @("Key Name", "Language", "Value")
         
         # Extract unique keys
         $keys = @()
@@ -180,7 +239,7 @@ if ($Barcode) {
         Write-Host "No record found in STB_SetInfo for Barcode." -ForegroundColor Yellow
     } else {
         Write-Host "STB_SetInfo Record:" -ForegroundColor Yellow
-        $dtSet | Format-Table -AutoSize | Out-String | Write-Host -ForegroundColor White
+        Out-ConsoleTable -DataTable $dtSet -Columns @("ControlNo", "PONo", "MaterialCode", "SetSeq", "IsLineInput", "LotDecisionResult") -Widths @(16, 14, 15, 8, 13, 12) -Headers @("Control No", "PO No", "Material Code", "Seq", "Line Input", "QC Decision")
         
         $controlNo = $dtSet.Rows[0].ControlNo
         $poNo = $dtSet.Rows[0].PONo
@@ -201,7 +260,7 @@ if ($Barcode) {
             
             if ($dtModel.Rows.Count -gt 0) {
                 Write-Host "Model Basic Configuration (STB_ModelBasicInfo):" -ForegroundColor Yellow
-                $dtModel | Format-Table -AutoSize | Out-String | Write-Host -ForegroundColor White
+                Out-ConsoleTable -DataTable $dtModel -Columns @("ModelCode", "ModelName", "OqcType", "Voltage", "Farad", "AcEsr", "DcEsr", "LeakageCurrent") -Widths @(15, 12, 10, 10, 8, 8, 8, 12) -Headers @("Model Code", "Model Name", "OQC Type", "Volt", "Farad", "AC ESR", "DC ESR", "Leak Current")
             } else {
                 Write-Host ("  [WARNING] Model " + $matCode + " is NOT configured in STB_ModelBasicInfo!") -ForegroundColor Red
             }
@@ -211,7 +270,7 @@ if ($Barcode) {
         Write-Host "Routing Scan History (STB_ProdRouteHist):" -ForegroundColor Yellow
         $cmdHist = $conn.CreateCommand()
         $cmdHist.CommandText = "
-            SELECT CreateDateTime, RouteCode, LineCode, MachineCode, WorkerCode, ProdQty, JobDate, ShiftCode, CreateUserID
+            SELECT CreateDateTime, RouteCode, LineCode, MachineCode, CreateUserID, ProdQty, JobDate
             FROM SmartFactoryV2.dbo.STB_ProdRouteHist WITH(NOLOCK)
             WHERE ControlNo = @ControlNo
             ORDER BY CreateDateTime;"
@@ -224,14 +283,14 @@ if ($Barcode) {
         if ($dtHist.Rows.Count -eq 0) {
             Write-Host ("  No routing scan history found for this ControlNo (" + $controlNo + ").") -ForegroundColor Gray
         } else {
-            $dtHist | Format-Table -AutoSize | Out-String | Write-Host -ForegroundColor White
+            Out-ConsoleTable -DataTable $dtHist -Columns @("CreateDateTime", "RouteCode", "LineCode", "MachineCode", "CreateUserID") -Widths @(18, 12, 15, 18, 15) -Headers @("Scan Date/Time", "Route", "Line Code", "Machine Code", "User ID")
         }
         
         # 4. Query Raw Material Feeding History (STB_RawMaterialInputHist)
         Write-Host "Raw Material Feeding History (STB_RawMaterialInputHist):" -ForegroundColor Yellow
         $cmdFed = $conn.CreateCommand()
         $cmdFed.CommandText = "
-            SELECT CreateDateTime, RouteCode, LotMaterialCode, RawMaterialBarcode, MaterialLotNo, Qty, MachineCode, CreateUserID
+            SELECT CreateDateTime, RouteCode, LotMaterialCode, RawMaterialBarcode, Qty, CreateUserID
             FROM SmartFactoryV2.dbo.STB_RawMaterialInputHist WITH(NOLOCK)
             WHERE Barcode = @Barcode OR MaterialLotNo = @Barcode
             ORDER BY CreateDateTime;"
@@ -244,7 +303,7 @@ if ($Barcode) {
         if ($dtFed.Rows.Count -eq 0) {
             Write-Host "  No raw material feeding logs found for this barcode." -ForegroundColor Gray
         } else {
-            $dtFed | Format-Table -AutoSize | Out-String | Write-Host -ForegroundColor White
+            Out-ConsoleTable -DataTable $dtFed -Columns @("CreateDateTime", "RouteCode", "LotMaterialCode", "RawMaterialBarcode", "Qty", "CreateUserID") -Widths @(18, 8, 18, 22, 8, 15) -Headers @("Feed Date/Time", "Route", "Material Code", "Raw Material Lot", "Qty", "User ID")
         }
         
         # 5. Query PO Routing Definition
@@ -265,7 +324,7 @@ if ($Barcode) {
             if ($dtPo.Rows.Count -eq 0) {
                 Write-Host "  No routing definition found for PO." -ForegroundColor Gray
             } else {
-                $dtPo | Format-Table -AutoSize | Out-String | Write-Host -ForegroundColor White
+                Out-ConsoleTable -DataTable $dtPo -Columns @("RouteIndex", "RouteCode", "IsInputRoute", "IsOutputRoute", "CompanyCode") -Widths @(12, 12, 15, 15, 12) -Headers @("Route Index", "Route Code", "Input Route", "Output Route", "Company")
             }
         }
     }
@@ -303,11 +362,11 @@ if ($LotID) {
             Write-Host "No record found in STB_MaterialLotInfo or STB_MaterialDocLotInfo for LotID." -ForegroundColor Yellow
         } else {
             Write-Host "STB_MaterialDocLotInfo Record (Doc Lot):" -ForegroundColor Yellow
-            $dtLot2 | Format-Table -AutoSize | Out-String | Write-Host -ForegroundColor White
+            Out-ConsoleTable -DataTable $dtLot2 -Columns @("MaterialDocNo", "LotID", "MaterialLotNo", "MaterialCode", "StockQty", "MaterialLocationCode", "CreateDateTime") -Widths @(15, 22, 16, 15, 12, 12, 18) -Headers @("Doc No", "Lot ID", "Mat Lot No", "Material Code", "Stock Qty", "Location", "Create Date/Time")
         }
     } else {
         Write-Host "STB_MaterialLotInfo Record:" -ForegroundColor Yellow
-        $dtLot | Format-Table -AutoSize | Out-String | Write-Host -ForegroundColor White
+        Out-ConsoleTable -DataTable $dtLot -Columns @("MaterialLotNo", "LotID", "MaterialCode", "MaterialWarehouseCode", "InitialQty", "CurrentQty", "CreateDateTime") -Widths @(16, 22, 15, 15, 12, 12, 18) -Headers @("Mat Lot No", "Lot ID", "Material Code", "Warehouse", "Initial Qty", "Current Qty", "Create Date/Time")
         
         $matLotNo = $dtLot.Rows[0].MaterialLotNo
         $matCode = $dtLot.Rows[0].MaterialCode
@@ -327,7 +386,7 @@ if ($LotID) {
         
         if ($dtQc.Rows.Count -gt 0) {
             Write-Host "QC Inspection Result (STB_MaterialQcInfo):" -ForegroundColor Yellow
-            $dtQc | Format-Table -AutoSize | Out-String | Write-Host -ForegroundColor White
+            Out-ConsoleTable -DataTable $dtQc -Columns @("DecisionResult", "DecisionDateTime", "DecisionUserID") -Widths @(15, 18, 15) -Headers @("QC Decision", "Decision Date/Time", "QC User")
         } else {
             Write-Host "  No QC inspection result found in STB_MaterialQcInfo for this lot." -ForegroundColor Gray
         }
@@ -336,7 +395,7 @@ if ($LotID) {
         Write-Host "Raw Material Usage History (Where this lot was fed - STB_RawMaterialInputHist):" -ForegroundColor Yellow
         $cmdUsage = $conn.CreateCommand()
         $cmdUsage.CommandText = "
-            SELECT CreateDateTime, Barcode AS TargetBarcode, RouteCode, LotMaterialCode, Qty, MachineCode, CreateUserID
+            SELECT CreateDateTime, Barcode AS TargetBarcode, RouteCode, LotMaterialCode, Qty, CreateUserID
             FROM SmartFactoryV2.dbo.STB_RawMaterialInputHist WITH(NOLOCK)
             WHERE RawMaterialBarcode = @LotID OR MaterialLotNo = @LotID OR MaterialLotNo = @MatLotNo
             ORDER BY CreateDateTime;"
@@ -350,7 +409,7 @@ if ($LotID) {
         if ($dtUsage.Rows.Count -eq 0) {
             Write-Host "  This lot has not been recorded as fed into any product barcode." -ForegroundColor Gray
         } else {
-            $dtUsage | Format-Table -AutoSize | Out-String | Write-Host -ForegroundColor White
+            Out-ConsoleTable -DataTable $dtUsage -Columns @("CreateDateTime", "TargetBarcode", "RouteCode", "LotMaterialCode", "Qty", "CreateUserID") -Widths @(18, 22, 8, 18, 8, 15) -Headers @("Usage Date/Time", "Target Barcode", "Route", "Material Code", "Qty", "User ID")
         }
         
         # 4. Query Model Configuration (STB_ModelBasicInfo)
@@ -368,7 +427,7 @@ if ($LotID) {
             
             if ($dtModel.Rows.Count -gt 0) {
                 Write-Host "Model Basic Configuration (STB_ModelBasicInfo):" -ForegroundColor Yellow
-                $dtModel | Format-Table -AutoSize | Out-String | Write-Host -ForegroundColor White
+                Out-ConsoleTable -DataTable $dtModel -Columns @("ModelCode", "ModelName", "OqcType", "Voltage", "Farad", "AcEsr", "DcEsr", "LeakageCurrent") -Widths @(15, 12, 10, 10, 8, 8, 8, 12) -Headers @("Model Code", "Model Name", "OQC Type", "Volt", "Farad", "AC ESR", "DC ESR", "Leak Current")
             } else {
                 Write-Host ("  [WARNING] Model " + $matCode + " is NOT configured in STB_ModelBasicInfo!") -ForegroundColor Red
             }
@@ -388,7 +447,7 @@ if ($LotID) {
         
         if ($dtMat.Rows.Count -gt 0) {
             Write-Host "Material Master Info:" -ForegroundColor Yellow
-            $dtMat | Format-Table -AutoSize | Out-String | Write-Host -ForegroundColor White
+            Out-ConsoleTable -DataTable $dtMat -Columns @("MaterialCode", "MaterialName", "MaterialSpec", "MaterialUnit", "MaterialTypeCode") -Widths @(15, 30, 20, 8, 10) -Headers @("Material Code", "Material Name", "Spec", "Unit", "Type")
         }
     }
 }
