@@ -36,6 +36,7 @@
 
 ## Tra Cứu
 
+- **Tri thức tích hợp chéo (Groupware/MES) →** [Master Index](../SYSTEM_MASTER_KNOWLEDGE_BASE/README.md) (VOL_01: Kiến trúc, VOL_02: Nghiệp vụ, VOL_03: Troubleshooting)
 - **Bug theo màn hình →** KB_31 (Bug Fixbook)
 - **Config files →** `AI_AGENT_CONFIG/` (BOOTSTRAP.md, RULES.md, KNOWLEDGE.md, SKILLS.md)
 - **KB chuyên sâu →** `MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md`

@@ -5,8 +5,22 @@
 
 ---
 
-## 1. BẢNG DỮ LIỆU TRỌNG TÂM
+## 1. BẢNG DỮ LIỆU TRỌNG TÂM & BẢNG GIAO DỊCH LỚN (NOLOCK TARGETS)
 
+### 1.1 Các Bảng Dữ Liệu Lớn Nhất Cần Dùng WITH(NOLOCK) Triệt Để
+*Dữ liệu kiểm tra thực tế trên SmartFactoryV2:*
+- **`STB_VVT_ESRDATA`** (~401M dòng): Chứa kết quả đo ESR lớn nhất hệ thống. Luôn dùng NOLOCK và WHERE cụ thể.
+- **`STB_ProductStockInfo`** (~65M dòng): Thông tin tồn kho sản phẩm.
+- **`STB_CommInspMeasureHist`** (~60M dòng): Lịch sử đo kiểm chất lượng QA.
+- **`STB_ESRInspectionData`** (~39M dòng): Dữ liệu kiểm định điện trở ESR.
+- **`STB_CommInspDocItem`** (~33M dòng): Các hạng mục của chứng từ kiểm định.
+- **`STB_IoTMeasureHist`** (~28M dòng): Lịch sử đo đạc từ thiết bị IoT.
+- **`STB_Vvt_SdProds`** (~22M dòng): Dữ liệu sản lượng / bán thành phẩm.
+- **`STB_ProcedureLog`** (~19M dòng): Log thực thi các Stored Procedure hệ thống.
+- **`STB_VN_FINISHGOODS_CAPTURE`** (~13M dòng): Bảng snapshot thành phẩm Việt Nam.
+- **`stb_DetailAgaingHN`** (~11M dòng): Chi tiết công đoạn Aging tại Hà Nam.
+
+### 1.2 Bảng Dữ Liệu Nghiệp Vụ Trọng Tâm
 | Bảng | Mục đích | Dùng khi |
 |------|----------|----------|
 | `STB_SetInfo` | Barcode sản phẩm (ControlNo, ProdQty, LotDecisionResult, IsDefect) | Debug mọi lỗi sản xuất |
@@ -26,8 +40,9 @@
 | `STB_ElectrodeStep` | Cấu hình bước cân điện cực | B552/Mixing |
 | `STB_VietNam_CheckBarcode_2624` | Barrel barcode (thùng NVL) | Trace thùng |
 
-## 2. SP PATTERN NAMING
+## 2. SP PATTERN NAMING & ACTIVE SP REFERENCE
 
+### 2.1 SP Naming Conventions
 | Prefix | Loại |
 |--------|------|
 | `usp_Get...` / `usp_..._get` | SELECT/Load data |
@@ -35,6 +50,25 @@
 | `usp_Vietnam_...` / `usp_VN_...` | Customized cho VN |
 | `usp_VVT_...` | Vinatech-specific |
 | `usp_HN_...` | Hà Nam-specific |
+
+### 2.2 Active & Critical SPs (Đang Bảo Trì/Sửa Đổi Gần Đây)
+- **`usp_ChangeLotnoPrintTem`**: Dùng khi cần đổi số lô (Lot No) và in lại tem tương ứng trên UI.
+- **`usp_DoCheckLabelPrintCount`**: Kiểm tra và kiểm soát số lần in tem nhãn để ngăn chặn in thừa hoặc in lậu tem tại hiện trường.
+- **`usp_DoAddTempAndHumRemindMail_VVTF3`**: Tự động gửi email nhắc nhở về các thông số nhiệt độ và độ ẩm vượt ngưỡng tại nhà máy Hà Nam F3.
+- **`usp_StrippingElectrode_get_V1`**: Truy vấn thông tin Stripping điện cực ở công đoạn Electrode.
+- **`usp_GetMaterialOQcInfo_VVTF4`**: Lấy thông tin OQC của Lot vật tư tại nhà máy Hưng Yên F4.
+- **`usp_Vietnam_GetLabelsForLotNo_HN`**: Lấy danh sách các mẫu nhãn dán tương ứng với số Lot tại Hà Nam.
+- **`usp_GetProdRouteHistForBarcode_VNT`**: Xem lịch sử định tuyến (Route History) cho một barcode tại nhà máy Bắc Ninh.
+- **`usp_DoMakeRawMaterialInputHistBE`**: Tạo lịch sử nạp nguyên vật liệu cho backend xử lý.
+- **`usp_DoChangeMaterialDocLotInfo`**: Chỉnh sửa thông tin chứng từ lô vật tư.
+
+### 2.3 Core Mapped SPs (Màn Hình Core & SP Đăng Ký)
+- **B523 — Divide Packaging (Gộp Box nhỏ/Đóng gói)**:
+  - *Search / Load data*: `usp_Vietnam_GetProdPackingForBarcode_VVT` (tải danh sách đóng gói theo barcode), `usp_Vietnam_GetBoxIDForLotNo_VVT` (lấy BoxID cho Lot).
+  - *Execute / Save / Process*: `usp_Vietnam_DoProcessProdPacking_VVT` (logic gộp box chính), `usp_DoCancelProdPacking_LotNo` (hủy gộp box), `usp_DoCreatePackingLabelInfo` (tạo tem đóng gói).
+- **B530 — Production Route Input (Chốt sản lượng công đoạn)**:
+  - *Search & Execute*: `usp_DoProcessProdRouteHist_VNT` (logic chốt sản lượng và tự động trừ kho ảo Backflush).
+
 
 ## 3. FACTORY MATRIX
 

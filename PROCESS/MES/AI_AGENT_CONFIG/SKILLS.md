@@ -225,5 +225,45 @@ Script này tự động rà soát, dọn dẹp các ghi chú, dòng ngăn cách
 // - "> Tổng cộng 100+ màn hình..."
 // - "# CÁC MÀN HÌNH ... CHƯA CÓ BODY"
 // - Các khoảng trắng trống liên tiếp (> 3 dòng) hoặc separator đôi.
+
+
+## 12. TEMPLATE CHO ACTIVE SPS (IN TEM & EMAIL CẢNH BÁO)
+
+### A. Kiểm Tra In Tem Nhãn (usp_DoCheckLabelPrintCount)
+Sử dụng khi cần kiểm tra/kiểm soát số lần in tem của một mã sản phẩm cụ thể nhằm ngăn chặn in lậu/in trùng:
+```sql
+-- 1. Kiểm tra số lần in tem thực tế của ControlNo
+SELECT COUNT(*) AS PrintedCount 
+FROM STB_LabelPrintCountInfo WITH(NOLOCK) 
+WHERE ControlNo = '@ControlNo';
+
+-- 2. Kiểm tra mã vật tư từ SetInfo
+SELECT MaterialCode 
+FROM STB_SetInfo WITH(NOLOCK) 
+WHERE ControlNo = '@ControlNo';
+```
+
+### B. Kiểm Tra Log Nhiệt Độ Độ Ẩm Vượt Ngưỡng (usp_DoAddTempAndHumRemindMail_VVTF3)
+Sử dụng khi kiểm tra dữ liệu từ thiết bị IoT giám sát kho Hà Nam F3 vượt Spec (Nhiệt độ: 18-25°C, Độ ẩm: 0-70%):
+```sql
+-- 1. Check số lượng bản ghi vượt Spec nhiệt độ trong 10 phút gần đây
+SELECT COUNT(*) AS TempAlertCount 
+FROM STB_IoTMeasureHist WITH(NOLOCK)
+WHERE DeviceID IN ('Vina-Enesol-Material', 'Vina-Enesol-Finish-G')
+  AND ChangeUserID IS NULL
+  AND MeasureItemCode = 'Temperature'
+  AND MeasureValue NOT BETWEEN 18 AND 25
+  AND CreateDateTime >= DATEADD(MINUTE, -10, GETDATE());
+
+-- 2. Check chi tiết các bản ghi vượt Spec
+SELECT DeviceID, MeasureItemCode, MeasureValue, LSL = 18, USL = 25, CreateDateTime
+FROM STB_IoTMeasureHist WITH(NOLOCK)
+WHERE DeviceID IN ('Vina-Enesol-Material', 'Vina-Enesol-Finish-G')
+  AND ChangeUserID IS NULL
+  AND ((MeasureItemCode = 'Temperature' AND MeasureValue NOT BETWEEN 18 AND 25)
+       OR (MeasureItemCode = 'Humidity' AND MeasureValue NOT BETWEEN 0 AND 70))
+  AND CreateDateTime >= DATEADD(MINUTE, -10, GETDATE())
+ORDER BY CreateDateTime ASC;
+```
 ```
 
