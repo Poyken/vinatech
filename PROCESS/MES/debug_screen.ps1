@@ -173,6 +173,7 @@ if ($ErrorMsg) {
         
         $conditions = @()
         $cmdSp = $conn.CreateCommand()
+        $cmdSp.CommandTimeout = 90
         
         $i = 0
         foreach ($key in $keys) {
@@ -289,10 +290,15 @@ if ($Barcode) {
         # 4. Query Raw Material Feeding History (STB_RawMaterialInputHist)
         Write-Host "Raw Material Feeding History (STB_RawMaterialInputHist):" -ForegroundColor Yellow
         $cmdFed = $conn.CreateCommand()
+        $cmdFed.CommandTimeout = 90
         $cmdFed.CommandText = "
             SELECT CreateDateTime, RouteCode, LotMaterialCode, RawMaterialBarcode, Qty, CreateUserID
             FROM SmartFactoryV2.dbo.STB_RawMaterialInputHist WITH(NOLOCK)
-            WHERE Barcode = @Barcode OR MaterialLotNo = @Barcode
+            WHERE Barcode = @Barcode
+            UNION ALL
+            SELECT CreateDateTime, RouteCode, LotMaterialCode, RawMaterialBarcode, Qty, CreateUserID
+            FROM SmartFactoryV2.dbo.STB_RawMaterialInputHist WITH(NOLOCK)
+            WHERE MaterialLotNo = @Barcode
             ORDER BY CreateDateTime;"
         $cmdFed.Parameters.AddWithValue("@Barcode", $Barcode) | Out-Null
         
@@ -394,10 +400,19 @@ if ($LotID) {
         # 3. Query Raw Material Usage History (Where this lot was fed - STB_RawMaterialInputHist)
         Write-Host "Raw Material Usage History (Where this lot was fed - STB_RawMaterialInputHist):" -ForegroundColor Yellow
         $cmdUsage = $conn.CreateCommand()
+        $cmdUsage.CommandTimeout = 90
         $cmdUsage.CommandText = "
             SELECT CreateDateTime, Barcode AS TargetBarcode, RouteCode, LotMaterialCode, Qty, CreateUserID
             FROM SmartFactoryV2.dbo.STB_RawMaterialInputHist WITH(NOLOCK)
-            WHERE RawMaterialBarcode = @LotID OR MaterialLotNo = @LotID OR MaterialLotNo = @MatLotNo
+            WHERE RawMaterialBarcode = @LotID
+            UNION ALL
+            SELECT CreateDateTime, Barcode AS TargetBarcode, RouteCode, LotMaterialCode, Qty, CreateUserID
+            FROM SmartFactoryV2.dbo.STB_RawMaterialInputHist WITH(NOLOCK)
+            WHERE MaterialLotNo = @LotID
+            UNION ALL
+            SELECT CreateDateTime, Barcode AS TargetBarcode, RouteCode, LotMaterialCode, Qty, CreateUserID
+            FROM SmartFactoryV2.dbo.STB_RawMaterialInputHist WITH(NOLOCK)
+            WHERE MaterialLotNo = @MatLotNo
             ORDER BY CreateDateTime;"
         $cmdUsage.Parameters.AddWithValue("@LotID", $LotID) | Out-Null
         $cmdUsage.Parameters.AddWithValue("@MatLotNo", $matLotNo) | Out-Null
