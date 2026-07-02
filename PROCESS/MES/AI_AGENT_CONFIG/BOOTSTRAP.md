@@ -1,11 +1,13 @@
 # ⚡ BOOTSTRAP — Đọc file này ĐẦU TIÊN mỗi session mới
 
 > **Cách dùng:** Khi bắt đầu session mới, user nói: *"Đọc file `MES/AI_AGENT_CONFIG/BOOTSTRAP.md` trước"*
-> **Cập nhật:** 2026-06-19
+> **Cập nhật:** 2026-07-02
 
 ---
 
-## 🔒 QUY TẮC VÀNG (KHÔNG ĐƯỢC VI PHẠM)
+## 🔒 QUY TẮC VÀNG
+
+> Chi tiết đầy đủ → [RULES.md](RULES.md)
 
 1. **SELECT-ONLY** — Tuyệt đối KHÔNG INSERT/UPDATE/DELETE/ALTER/CREATE/DROP trực tiếp trên production DB
 2. **Script → User chạy** — Viết script fix (bọc `BEGIN TRAN...ROLLBACK`) → user tự chạy SSMS hoặc qua `deploy_tool.ps1`
@@ -19,11 +21,10 @@
 
 ## 🔌 KẾT NỐI & TOOLS
 
-| Server | `dbserver.hycap.co.kr,5398` |
-|--------|-----|
-| **DB chính** | `SmartFactoryV2` |
-| **DB framework** | `SmartFramework` |
-| **User** | `vinaadmin` |
+> Thông tin kết nối chi tiết → [`db_config.json`](../db_config.json) | Hướng dẫn tool chi tiết → [MES_SCRIPT_GUIDE.md](../MES_MASTER_KNOWLEDGE_BASE/MES_SCRIPT_GUIDE.md)
+
+| DB chính | `SmartFactoryV2` | DB framework | `SmartFramework` |
+|----------|-------------------|--------------|-------------------|
 
 ```
 .\search_kb.ps1 -Query "từ_khóa"       # 🔍 Tìm kiếm tài liệu cục bộ trước khi truy vấn DB
@@ -106,21 +107,6 @@
 
 ---
 
-## 📁 CẤU TRÚC DỰ ÁN
-
-```
-MES/
-├── GEMINI.md              ← Auto-context
-├── AI_AGENT_CONFIG/       ← BOOTSTRAP, RULES, KNOWLEDGE, SKILLS
-├── MES_MASTER_KNOWLEDGE_BASE/
-│   ├── KB_INDEX.md        ← Mục lục + routing
-│   ├── KB_02/ → KB_05/    ← ⚡ 4 CHUNKED: KB_02,03,04,05
-│   └── KB_01..KB_36       ← Files gốc + non-chunked
-└── *.ps1                   ← 4 tools (run_query, db_sync_tool, deploy_tool, validate_sql)
-```
-
----
-
 ## ⚠️ CHECKLIST TRƯỚC KHI TRẢ LỜI
 
 - [ ] Hiểu user hỏi về nhà máy nào? (BN/BG/HN/HY)
@@ -130,4 +116,4 @@ MES/
 - [ ] Script fix đã bọc `BEGIN TRAN...ROLLBACK`?
 
 ---
-*Cập nhật: 2026-06-30 — Trimmed for token efficiency. Đã rút gọn 65% KB, tập trung tối đa vào nhận/fix bug và tạo màn hình.*
+*Cập nhật: 2026-07-02 — Loại bỏ trùng lặp DB config & cấu trúc thư mục. SoT: db_config.json, RULES.md, README.md.*

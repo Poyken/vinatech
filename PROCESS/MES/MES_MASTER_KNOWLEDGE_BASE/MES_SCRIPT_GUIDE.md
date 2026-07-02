@@ -110,7 +110,6 @@ powershell -File .\deploy_tool.ps1 -SqlPath "C:\Users\User Vinatech.DESKTOP-RJJS
 
 ---
 
-## ⚠️ Checklist An Toàn Khi Sử Dụng Scripts cho AI Agent
-- [ ] **SELECT-ONLY:** Luôn ưu tiên dùng `run_query.ps1` để đọc dữ liệu.
-- [ ] **Không sửa SP trực tiếp:** Khi cần sửa SP, dùng `db_sync_tool.ps1 -SPName` tải về máy $\rightarrow$ tạo file sửa đổi tạm thời trong thư mục nháp/scratch $\rightarrow$ chạy `validate_sql.ps1` kiểm tra $\rightarrow$ bàn giao file SQL cho User tự chạy hoặc sử dụng `deploy_tool.ps1`.
-- [ ] **Git Clean:** Bắt buộc chạy `powershell -File .\db_sync_tool.ps1 -Clean` để dọn dẹp các tệp tạm trong `sql/` trước khi kết thúc turn làm việc.
+## ⚠️ Quy Tắc An Toàn
+Các script trên tương tác trực tiếp với cơ sở dữ liệu. Vui lòng tham khảo chi tiết các quy tắc an toàn dữ liệu bắt buộc tại [RULES.md](../AI_AGENT_CONFIG/RULES.md).
+

@@ -4,6 +4,13 @@ electrode.weighing/
 *.dll
 node_modules/
 
+# Ignore temporary output files
+diagnostic_report.html
+*.html
+
+# Ignore temporary SP files (downloaded by db_sync_tool.ps1)
+sql/procedures/*.sql
+
 # Ignore Agent files
 .gemini/
 .brain/
