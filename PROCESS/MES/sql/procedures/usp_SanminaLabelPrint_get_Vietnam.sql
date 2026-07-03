@@ -152,6 +152,7 @@ BEGIN
 			END
 	END
 
+	/*--vanduc edited vy Mrs.DuongHoa 20260703 up-date Sanmina label*/
 	-- 1. Tính Serial Number tự tăng dựa trên Tuần + Năm (@rDC2)
 	DECLARE @SerialPrefix VARCHAR(10) = 'VINA' + @rDC2
 	DECLARE @MaxSerial INT = 0
@@ -199,6 +200,7 @@ BEGIN
 
 	DROP TABLE #tmp
 	DROP TABLE #LabelTypes
+	/*--vanduc edited vy Mrs.DuongHoa 20260703 up-date Sanmina label*/
 
 END
 
