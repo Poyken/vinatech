@@ -20,9 +20,9 @@ CREATE PROCEDURE usp_SanminaIndiaLabelPrintHist_iud
             @pInspEmpID VARCHAR(10),
              @pInspEmpName NVARCHAR(100),
              @pCartonBoxNo VARCHAR(10),
-             /*--vanduc edited vy Mrs.DuongHoa 20260703 up-date Sanmina label*/
+             /*--vanduc edited by Mrs.DuongHoa 20260703 up-date Sanmina label START*/
              @pBoxSerialNo VARCHAR(30) = NULL
-             /*--vanduc edited vy Mrs.DuongHoa 20260703 up-date Sanmina label*/
+             /*END*/
 AS
 BEGIN
 	-- SET NOCOUNT ON added to prevent extra result sets from
@@ -46,9 +46,9 @@ BEGIN
             CartonBoxNo,
             PrintTime,
             PrintUserID,
-            /*--vanduc edited vy Mrs.DuongHoa 20260703 up-date Sanmina label*/
+            /*--vanduc edited by Mrs.DuongHoa 20260703 up-date Sanmina label START*/
             BoxSerialNo
-            /*--vanduc edited vy Mrs.DuongHoa 20260703 up-date Sanmina label*/
+            /*END*/
     )
     values (
             @PSupplierName,
@@ -66,9 +66,9 @@ BEGIN
             @PCartonBoxNo,
             GETDATE(),
             @pProcessUserID,
-            /*--vanduc edited vy Mrs.DuongHoa 20260703 up-date Sanmina label*/
+            /*--vanduc edited by Mrs.DuongHoa 20260703 up-date Sanmina label START*/
             @pBoxSerialNo
-            /*--vanduc edited vy Mrs.DuongHoa 20260703 up-date Sanmina label*/
+            /*END*/
     )
 
 END

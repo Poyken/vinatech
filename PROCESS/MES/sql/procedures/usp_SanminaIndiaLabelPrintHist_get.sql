@@ -36,9 +36,9 @@ BEGIN
         SIL.CartonBoxNo,
         SIL.PrintTime,
         SIL.PrintUserID,
-		/*--vanduc edited vy Mrs.DuongHoa 20260703 up-date Sanmina label*/
+		/*--vanduc edited by Mrs.DuongHoa 20260703 up-date Sanmina label START*/
 		SIL.BoxSerialNo
-		/*--vanduc edited vy Mrs.DuongHoa 20260703 up-date Sanmina label*/
+		/*END*/
 
 
 	from STB_SanminaIndiaLabelPrintHist SIL WITH(NOLOCK)
