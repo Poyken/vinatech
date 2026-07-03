@@ -156,6 +156,41 @@
     ```
 *   **Chi tiết nghiệp vụ:** Xem tại [Kịch bản 1](#kịch-bản-sự-cố-khẩn-cấp-1-hủy-kết-quả-kiểm-tra-chất-lượng-qc-b597c443).
 
+### Lỗi 2: Cần hủy/đo lại kết quả kiểm tra của một công đoạn riêng biệt (ví dụ: Winding) trên màn hình C443
+*   **Triệu chứng:** Hạng mục đo của một công đoạn cụ thể (ví dụ Winding - Quấn `VE01`) bị nhập sai thông số, cần mở khóa (unlock) để nhập lại mẫu đo từ đầu, nhưng không được phép xóa toàn bộ phiếu QC (vì có thể ảnh hưởng đến dữ liệu các công đoạn khác đã làm).
+*   **Nguyên nhân gốc:** 
+    1. Chi tiết kết quả đo được lưu trong bảng `STB_CommInspMeasureHist` liên kết qua `STB_CommInspDocItem`.
+    2. Cột `ItemQty` trong `STB_CommInspDocItem` ghi nhận số mẫu thực tế đã đo (ví dụ: `9`). Khi `ItemQty` = `ItemTargetQty`, Client C443 sẽ tự động khóa cứng ô nhập liệu của công đoạn đó.
+*   **Cách khắc phục:** 
+    1. Xóa các dòng đo chi tiết của công đoạn đó trong `STB_CommInspMeasureHist`.
+    2. Reset số lượng mẫu đã đo `ItemQty` về `0` trong `STB_CommInspDocItem` để Client C443 mở khóa lưới nhập liệu.
+    ```sql
+    BEGIN TRANSACTION;
+    
+    -- 1. Xóa chi tiết các giá trị đo kiểm của công đoạn (ví dụ Winding: RouteCode = 'VE01')
+    DELETE MH
+    FROM STB_CommInspMeasureHist MH
+    JOIN STB_CommInspDocItem Item ON MH.CommInspDocItemNo = Item.CommInspDocItemNo
+    JOIN STB_CommInspDocHistory Hist ON Item.CommInspDocNo = Hist.CommInspDocNo
+    JOIN STB_SetInfo SI ON Hist.ProdNo = SI.ControlNo
+    WHERE SI.Barcode = 'MÃ_BARCODE'
+      AND Item.RouteCode = 'MÃ_CÔNG_ĐOẠN' -- Ví dụ: 'VE01' cho Winding
+      AND Hist.CommInspTypeCode = 'VE_ROUTE_QUALITY';
+
+    -- 2. Reset số lượng mẫu đã đo (ItemQty) về 0 để mở khóa ô nhập liệu trên Client C443
+    UPDATE Item
+    SET Item.ItemQty = 0
+    FROM STB_CommInspDocItem Item
+    JOIN STB_CommInspDocHistory Hist ON Item.CommInspDocNo = Hist.CommInspDocNo
+    JOIN STB_SetInfo SI ON Hist.ProdNo = SI.ControlNo
+    WHERE SI.Barcode = 'MÃ_BARCODE'
+      AND Item.RouteCode = 'MÃ_CÔNG_ĐOẠN' -- Ví dụ: 'VE01' cho Winding
+      AND Hist.CommInspTypeCode = 'VE_ROUTE_QUALITY';
+
+    COMMIT TRANSACTION; -- Hoặc ROLLBACK TRANSACTION;
+    ```
+    > ⚠️ **Lưu ý:** Sau khi chạy script, yêu cầu QC **tắt hoàn toàn màn hình C443 và mở lại** để hệ thống xóa bộ nhớ đệm (cache) và tải lại số lượng trống từ DB.
+
 ---
 
 
