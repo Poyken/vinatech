@@ -116,6 +116,27 @@
     ```
 *   **Chi tiết nghiệp vụ:** Xem tại [../KB_02/KB_02_01_NVL_WMS.md § 4.17](../KB_02/KB_02_01_NVL_WMS.md#417-thu-hồi-lot-từ-f430-về-kho-revert-xuất-kho).
 
+### Lỗi 3: Cần sửa/lùi ngày xuất kho của Lot vật tư đã xuất ra chuyền ở màn F430
+*   **Triệu chứng:** Người dùng yêu cầu thay đổi/lùi ngày xuất kho thực tế của các mã Lot đã xuất về một ngày nhất định trong quá khứ để làm báo cáo hoặc sửa sai sót thời gian.
+*   **Nguyên nhân gốc:** Khi bấm xác nhận xuất kho tại F430, hệ thống ghi nhận thời gian xuất kho vào trường `CreateDateTime` của bảng lịch sử giao dịch [STB_MaterialWarehouseInOutHist](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_02/KB_02_01_WMS_CORE.md#stb_materialwarehouseinouthist).
+*   **Cách khắc phục:**
+    1. Tra cứu mã giao dịch xuất kho (`MaterialWarehouseInOutHistNo`) của Lot:
+       ```sql
+       SELECT MaterialWarehouseInOutHistNo, LotID, CreateDateTime FROM STB_MaterialWarehouseInOutHist WITH(NOLOCK) WHERE LotID = 'MÃ_LOT' ORDER BY CreateDateTime DESC;
+       ```
+    2. Cập nhật lùi ngày trong `STB_MaterialWarehouseInOutHist` qua Transaction (giữ nguyên giờ phút giây):
+       ```sql
+       BEGIN TRAN;
+       UPDATE STB_MaterialWarehouseInOutHist
+       SET CreateDateTime = CAST('YYYY-MM-DD' AS DATETIME) + CAST(CreateDateTime AS TIME)
+       WHERE MaterialWarehouseInOutHistNo = 'MÃ_GIAO_DỊCH_XUẤT_SAI';
+       -- Kiểm tra lại
+       SELECT MaterialWarehouseInOutHistNo, LotID, CreateDateTime FROM STB_MaterialWarehouseInOutHist WHERE MaterialWarehouseInOutHistNo = 'MÃ_GIAO_DỊCH_XUẤT_SAI';
+       COMMIT TRAN; -- hoặc ROLLBACK TRAN;
+       ```
+    3. **Lưu ý quan trọng về tính đồng bộ:** Kiểm tra xem ngày xuất mới có trước ngày nhập kho thực tế của Lot hay không (so sánh với `STB_MaterialLotInfo.CreateDateTime` hoặc ngày của phiếu nhập `STB_MaterialDocInfo`). Nếu lùi ngày xuất về trước cả ngày nhập kho, sẽ xảy ra lỗi âm kho và sai logic thời gian. Khi đó cần lùi đồng bộ cả ngày của phiếu nhập kho và ngày tạo Lot tồn kho.
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_02/KB_02_01_NVL_WMS.md § 4.6](../KB_02/KB_02_01_NVL_WMS.md#46-sửa-ngày-xuất-kho-màn-f430).
+
 ---
 
 
