@@ -1,4 +1,4 @@
-﻿
+
 # KB_04 — Đóng Gói & In Tem (Packaging & Label Printing)
 
 > **Màn hình:** B523, B525, B453, B560, B789, B781, B353, B442, A419, A460, B754~B758, B790, Z530, C531
@@ -463,6 +463,22 @@ SELECT LabelType, FormatName, LabelRemark, DataSourceViewName, CreateUserID, Cha
 FROM SmartFramework.dbo.STB_LabelInfo WITH(NOLOCK)
 WHERE LabelType LIKE '%Sanmina%' OR FormatName LIKE '%Sanmina%';
 ```
+
+---
+
+### 6.9.4 Lỗi đúp dòng dữ liệu khi tìm kiếm lần 2 trên màn hình B767 (Sanmina India Label)
+
+*   **Triệu chứng:** Khi người dùng click Tìm kiếm (Search) lần đầu, lưới (grid) hiển thị đúng 3 dòng (1 Outer, 2 Inners). Nhưng khi click Tìm kiếm lần thứ 2, lưới bị đúp thành 6 dòng dữ liệu (lần lượt lặp lại các dòng Outer, Inner).
+*   **Nguyên nhân gốc:**
+    *   Hàm tìm kiếm `usp_SanminaLabelPrint_get_Vietnam` được cấu hình trên lưới màn hình **B767** có thuộc tính **`데이터 추가` (Append Data)** đặt là **`True`** (tương ứng thẻ XML `<Append>true</Append>` trong `STB_ScreenLayoutInfo`).
+    *   Đối với các màn hình thông thường (như Phoenix Contact - B790), dữ liệu tìm kiếm lần trước và lần sau hoàn toàn trùng khớp nên lưới tự động loại bỏ trùng lặp.
+    *   Tuy nhiên, tem Sanmina có sinh số Serial tự tăng (`BoxSerialNo`, `PrintSerialNo` dựa trên `@MaxSerial` trong bảng lịch sử in). Lần tìm kiếm thứ 2 sinh ra dãy số Serial mới khác với lần tìm kiếm thứ nhất. Lưới NAIS phát hiện các dòng dữ liệu mới có sự khác biệt (ở cột số Serial) nên tự động append tiếp vào cuối grid thay vì làm sạch lưới.
+*   **Cách khắc phục:**
+    1. Mở màn hình thiết kế **B767** trong NAIS System screen creator.
+    2. Chọn đối tượng **`usp_SanminaLabelPrint_get_Vietnam`** dưới nhánh `Search Function`.
+    3. Tại bảng thuộc tính **Property (F4)** bên phải, tìm nhóm **Group** $\rightarrow$ thuộc tính **`데이터 추가`** (Append Data).
+    4. Thay đổi giá trị từ **`True`** sang **`False`** (lưu dưới dạng `<Append>false</Append>`).
+    5. Thực hiện **Save Layout** và **Approve** lại màn hình.
 
 ---
 

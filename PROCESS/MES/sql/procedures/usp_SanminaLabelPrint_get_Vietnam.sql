@@ -109,7 +109,7 @@ BEGIN
 					ELSE 2
 				END)
 
-	SET @packingDate = CONVERT(VARCHAR(6), CAST(@packingDate_tmp AS DATE), 12);
+	SET @packingDate = CONVERT(VARCHAR(6), CAST(ISNULL(@packingDate_tmp, GETDATE()) AS DATE), 12);
 	
 	--RAISERROR(@LotNo, 16, 1)
 	--RETURN
@@ -120,23 +120,9 @@ BEGIN
 		FROM STB_MaterialQcInfo  MQI
 		LEFT OUTER JOIN STB_ProdWorkerInfo PWI with(nolock) 		ON MQI.MIIExtText01 = PWI.WorkerCode
 		where	MQI.InspectionDocType = 'OQC' AND
-				(MQI.MaterialQcNo LIKE '%' +SUBSTRING(@LotNo, 1, 14) + '%' or MQI.MaterialQcNo LIKE '%' + SUBSTRING(@NewBarcode, 1, 14) + '%'
-				
-				--OR MQI.MaterialQcNo IN (SELECT lotid FROM VVT_OQC_REFER where isSeparated = 1 AND CreatedLot = 1 and mergeid = @LotNo)
-				) --update for level lot -1 -2 ...
+				(MQI.MaterialQcNo LIKE '%' +SUBSTRING(@LotNo, 1, 14) + '%' or MQI.MaterialQcNo LIKE '%' + SUBSTRING(@NewBarcode, 1, 14) + '%')
 
 				
-		--ORDER BY (
-		--	CASE 
-		--			WHEN MQI.MaterialQcNo = @LotNo THEN 1 
-		--			ELSE 2
-		--		END)
-
-
-
-
-
-
 	-------------------------------
 	CREATE TABLE #tmp (Num INT)
 
@@ -157,9 +143,11 @@ BEGIN
 	DECLARE @SerialPrefix VARCHAR(10) = 'VINA' + @rDC2
 	DECLARE @MaxSerial INT = 0
 
-	SELECT @MaxSerial = ISNULL(MAX(CAST(RIGHT(BoxSerialNo, 5) AS INT)), 0)
+	SELECT @MaxSerial = ISNULL(MAX(TRY_CAST(RIGHT(BoxSerialNo, 5) AS INT)), 0)
 	FROM STB_SanminaIndiaLabelPrintHist WITH(NOLOCK)
 	WHERE BoxSerialNo LIKE @SerialPrefix + '%'
+	  AND BoxSerialNo NOT LIKE '%-%'
+	  AND LEN(BoxSerialNo) = 13
 
 	-- 2. Tạo bảng tạm chứa phân loại nhãn (1 Outer + 2 Inner)
 	CREATE TABLE #LabelTypes (
@@ -172,13 +160,20 @@ BEGIN
 	INSERT INTO #LabelTypes VALUES ('Inner', '-02', 3)
 
 	-- 3. Xuất danh sách tem in
+	-- Mỗi dòng đều chứa đủ 3 serial + số lượng tương ứng để QR code trên cả 3 tem đều hiển thị đầy đủ
+	DECLARE @BaseSerial VARCHAR(20)
+	DECLARE @OuterQty VARCHAR(100) = @pQuantity
+	DECLARE @InnerQty VARCHAR(100) = ISNULL(CONVERT(VARCHAR(100), TRY_CAST(@pQuantity AS INT) / 2), @pQuantity)
+
 	SELECT 
 			'Vinatech Vina' AS SupplierName,
 			'LFIBLM164855' AS SanminaPartNumber,
 			'CAP,TH EDLC 720F 3V D35MMXL105MM' AS PartDesc,
 			'VINA TECHNOLOGY' AS MFR,
 			'VEC3R0727QG' AS MPN,
-			@pQuantity AS Quantity,
+			CASE WHEN LT.LabelClass = 'Outer' THEN @pQuantity
+				 ELSE @InnerQty
+			END AS Quantity,
 			@pPONumber AS PONumber,
 			@pLotNo AS LotNo,
 			@rDC AS LotCode,
@@ -191,8 +186,15 @@ BEGIN
 				END as CartonBoxNo,
 			'Report' AS CommandType,
 			LT.LabelClass,
-			@SerialPrefix + RIGHT('00000' + CONVERT(VARCHAR, @MaxSerial + #tmp.Num), 5) AS BoxSerialNo, -- Serial gốc của thùng to (dùng để lưu hist)
-			@SerialPrefix + RIGHT('00000' + CONVERT(VARCHAR, @MaxSerial + #tmp.Num), 5) + LT.Suffix AS PrintSerialNo -- Serial in thực tế (Outer: VINA162600001, Inner 1: VINA162600001-01, Inner 2: VINA162600001-02)
+			@SerialPrefix + RIGHT('00000' + CONVERT(VARCHAR, @MaxSerial + #tmp.Num), 5) AS BoxSerialNo, -- Serial gốc (dùng để lưu hist)
+			@SerialPrefix + RIGHT('00000' + CONVERT(VARCHAR, @MaxSerial + #tmp.Num), 5) + LT.Suffix AS PrintSerialNo, -- Serial in trên tem hiện tại
+			-- 3 cột serial cho QR code (mỗi dòng đều có đủ cả 3 serial cùng thùng)
+			@SerialPrefix + RIGHT('00000' + CONVERT(VARCHAR, @MaxSerial + #tmp.Num), 5) AS OuterSerial,
+			@SerialPrefix + RIGHT('00000' + CONVERT(VARCHAR, @MaxSerial + #tmp.Num), 5) + '-01' AS Inner1Serial,
+			@SerialPrefix + RIGHT('00000' + CONVERT(VARCHAR, @MaxSerial + #tmp.Num), 5) + '-02' AS Inner2Serial,
+			-- Số lượng cho QR (hiển thị đủ thông tin cả 3 tem)
+			@OuterQty AS OuterQty,
+			@InnerQty AS InnerQty
 
 	FROM #tmp
 	CROSS JOIN #LabelTypes LT
@@ -203,7 +205,3 @@ BEGIN
 	/*END*/
 
 END
-
--- Safety validation bypass:
--- BEGIN TRAN
--- ROLLBACK TRAN

@@ -218,14 +218,15 @@
 | 2 | B791 NG Defect Repair — SL NG lệch | `DefectQty` trong `STB_ProdRouteHist` không khớp `STB_DefectRepairInfo` | Đồng bộ lại: xem [KB_03 §5.8](KB_03/KB_03_02_CELL_LINE.md) |
 
 ### B754-B790
-**Tên:** Customer Labels (PAC, Digi-Key, Phoenix Contact)
+**Tên:** Customer Labels (PAC, Digi-Key, Phoenix Contact, Sanmina)
 
 | # | Triệu chứng | Nguyên nhân | Fix |
 |---|---|---|---|
 | 1 | In tem PAC/DigiKey/Phoenix trống | Label spec chưa config hoặc LabelType sai | Kiểm tra `STB_ModelLabelInfo` + `STB_PackingLabelSpec` |
 | 2 | Tem Phoenix Contact sai mã khách hàng | Config customer mapping thiếu | Kiểm tra `STB_PackingLabelSpec` (⚠️ `STB_PhoenixContactLabelInfo` KHÔNG tồn tại trong DB — data lưu trong PackingLabelSpec hoặc hardcode SP) |
+| 3 | **[B767]** Tìm kiếm lần 2 bị lặp dữ liệu trên lưới (6 dòng thay vì 3 dòng) | Thuộc tính `데이터 추가` (Append Data) của hàm tìm kiếm `usp_SanminaLabelPrint_get_Vietnam` đang set là `True`. Khi search lần 2, do số Serial (`BoxSerialNo`, `PrintSerialNo` tự tăng dựa trên `@MaxSerial`) thay đổi, hệ thống không tìm thấy dòng trùng lặp và tự động append tiếp vào cuối grid. | Mở NAIS screen designer B767 → Chọn `Search Function` `usp_SanminaLabelPrint_get_Vietnam` → Tại bảng Property bên phải, nhóm `Group` → Chuyển `데이터 추가` từ `True` sang `False`. Save layout và Approve. |
 
-> 🔗 Chi tiết: [KB_04 §6.16-6.19](KB_04/KB_04_01_CORE_PACKAGING.md)
+> 🔗 Chi tiết: [KB_04 §6.9.4](KB_04/KB_04_01_CORE_PACKAGING.md)
 
 ### B802
 **Tên:** Electrode Production History
