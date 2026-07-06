@@ -1,4 +1,4 @@
-# KB_31: Sổ Tay Tra Cứu Bug & Fix Theo Màn Hình
+﻿# KB_31: Sổ Tay Tra Cứu Bug & Fix Theo Màn Hình
 
 > **📌 Mục đích:** Khi nhận được báo lỗi từ user → tra TCode tại đây → tìm ngay bug + cách fix.
 > **🔑 Keywords:** bug, fix, sổ tay, TCode, màn hình, triệu chứng, nguyên nhân, SQL fix, sửa lỗi, khắc phục
@@ -129,6 +129,7 @@
 | 3 | Gộp box HN523 lỗi Qty=0 | `STB_PackingStandard` thiếu record cho model Hà Nam | INSERT record vào `STB_PackingStandard` — xem [KB_04 §6.13](KB_04/KB_04_01_CORE_PACKAGING.md) |
 | 4 | Gộp box lỗi do PO có công đoạn hậu đóng gói B523 | Thiếu lịch sử Route `V-28_BG` | Chèn dòng ProdRouteHist giả lập — xem [KB_04 §6.13.2](KB_04/KB_04_01_CORE_PACKAGING.md) |
 | 5 | MergeQty không chia đúng khi gộp nhiều Lot | Logic `@pMergeQty < @total + @InProdQty` bị edge case | Kiểm tra số lượng Lot trước khi gộp, đảm bảo tổng = MergeQty |
+| 6 | Sanmina QR code has redundant quantities and serials on inner labels | Stored procedure usp_SanminaLabelPrint_get_Vietnam did not return a filtered list of serials and quantities for inner labels. | `-- ============================================= -- Author:		Mr.Manh -- Create date: 2025-12-26 -- Description:	Get Sanmina label -- =================...` |
 
 > 🔗 Chi tiết: [KB_04 §6](KB_04/KB_04_01_CORE_PACKAGING.md), [KB_30 §5](KB_30_CORE_SP_ENGINE.md)
 
@@ -493,6 +494,13 @@ COMMIT TRANSACTION;
 
 ---
 
+
+### K366
+**Ten:** Chua xac dinh
+
+| # | Trieu chung | Nguyen nhan | Fix |
+|---|---|---|---|
+| 1 | K366 screen displays blank Status column (Final conclusion Pass/Fail) | Stored procedure usp_LotTrackingInfo_VVTF4_get does not return the Status column to map to the grid. | `-- ============================================= -- Author:		Nguyễn Hải Triều(Mr.Dev) -- Create date: 2026-06-18 -- Description:	Kiểm tra dữ liệu Lot ...` |
 ## P-Series: HR & Tài Liệu
 
 ### P111

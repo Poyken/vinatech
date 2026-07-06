@@ -86,6 +86,58 @@ VALUES ('Vietnam_NewScreen', 'usp_Vietnam_NewScreenData_iud', 'ExecuteFunction',
     VALUES ('tên_user', 'Vietnam_NewScreen', 'ALL', 1); -- Hoặc FuncID = 'Search' / 'Save'
     ```
 
+### Bước 4: Chi tiết cấu hình thuộc tính hàm tìm kiếm (SearchFunction Properties)
+
+Khi cấu hình một đối tượng `SearchFunction` (hàm tìm kiếm dữ liệu dạng `get`) trên giao diện thiết kế NAIS MES, bảng thuộc tính **Property (F4)** bên phải cung cấp các trường thiết lập hoạt động:
+
+*   **Author (Tác giả):** Tên lập trình viên thiết kế hàm (Ví dụ: `Mr.Manh`).
+*   **CLR사용 (Sử dụng CLR):** Xác định hàm có gọi đến thư viện .NET CLR được cài đặt dưới SQL Server hay không (`True`/`False`).
+*   **CreateDate (Ngày tạo):** Ngày đăng ký Stored Procedure vào màn hình.
+*   **Description (Mô tả):** Đoạn văn bản mô tả chức năng nghiệp vụ của hàm (Ví dụ: `Get Sanmina label`).
+*   **검색시 동작 (Tự chạy khi load):**
+    *   `True`: Hàm tìm kiếm tự động kích hoạt ngay khi mở màn hình (không cần nhấn nút Search).
+    *   `False`: Chờ người dùng nhập tham số và click nút Tìm kiếm thủ công.
+*   **대상시스템 (Hệ thống đích):** Chỉ định Database Server đích để thực thi câu lệnh (mặc định là `SmartFactory`).
+*   **데이터 추가 (Nối tiếp dữ liệu - Append):**
+    *   `True` (Append): Dữ liệu tìm kiếm mới sẽ được **thêm nối tiếp** vào cuối lưới đang hiển thị. Nếu dữ liệu có chứa số Serial tự tăng thay đổi theo từng lần tìm kiếm, chế độ này sẽ gây ra lỗi đúp dòng dữ liệu (dup value).
+    *   `False` (Clear & Rebind): Lưới sẽ tự động xóa sạch dữ liệu cũ hiển thị trước đó rồi mới nạp dữ liệu mới vào.
+*   **데이터셋 (Dataset):** Kiểu đối tượng Dataset trong .NET dùng để nhận cấu trúc dữ liệu trả về từ DB.
+*   **데이터셋 포맷 (Định dạng Dataset):** Định dạng truyền nhận dữ liệu giữa Client và Server (Ví dụ: `Xml` hoặc `Json`).
+*   **메인함수 (Hàm chính):** Xác định đây có phải là hàm tìm kiếm chính của màn hình này hay không (`True`/`False`).
+*   **반환테이블 (Table trả về):** Định nghĩa cấu trúc danh sách các bảng kết quả trả về từ Stored Procedure.
+*   **배치처리 맵갯수 (Số map Batch):** Số lượng mapping dữ liệu phục vụ cho xử lý theo lô (Batch Processing).
+*   **원본모듈 (Module gốc):** Module chứa định nghĩa hàm gốc (mặc định là `Default`).
+*   **이름 (Tên đối tượng):** Tên đặt cho đối tượng hàm hiển thị trên cây giao diện (thường trùng tên SP).
+*   **타임아웃(초) (Thời gian chờ):** Thời gian chờ tối đa (giây) trước khi ngắt kết nối và báo lỗi Query Timeout (mặc định là `30` giây).
+*   **트랜잭션사용 (Sử dụng Transaction):** Có bọc truy vấn trong Transaction hay không (thường đặt là `False` cho các hàm GET để tránh khóa bảng và tối ưu hóa hiệu suất đọc).
+*   **파라미터 (Tham số):** Tập hợp danh sách các tham số đầu vào được ánh xạ từ UI vào Stored Procedure.
+*   **파라미터 매핑 (Mapping tham số):** Thiết lập chi tiết cách truyền dữ liệu từ các điều khiển (controls) nhập liệu trên UI vào tham số tương ứng.
+*   **함수명 (Tên Stored Procedure):** Tên chính xác của Stored Procedure dưới Database SQL Server (Ví dụ: `usp_SanminaLabelPrint_get_Vietnam`).
+
+### Bước 5: Chi tiết cấu hình tham số đầu vào tìm kiếm (Search Parameters)
+
+Khi nhấn mở thuộc tính **파라미터 (Parameters)** của hàm tìm kiếm, bảng cấu hình tham số hiện ra với các cột điều khiển hành vi hiển thị và nhập liệu:
+
+*   **Name (Tên tham số):** Tên chính xác của tham số đầu vào khai báo trong Stored Procedure dưới SQL Server (Ví dụ: `ProcessUserID`, `PONumber`, `LotNo`).
+*   **Caption (Nhãn đa ngôn ngữ):** Nhãn đại diện dùng để ánh xạ đa ngôn ngữ từ bảng `STB_StringResources` (Ví dụ: `^PONumber^`, `^LotNo^`).
+*   **Display Text (Nhãn hiển thị):** Nhãn hiển thị thực tế trên giao diện vùng tìm kiếm để người dùng đọc (Ví dụ: `Số lot no`, `Số lượng hoàn thành`, `Số thùng trên pallet`).
+*   **Editor Type (Loại điều khiển):** Kiểu ô nhập liệu trên giao diện:
+    *   `None`/`TextEdit`: Ô nhập văn bản/số thông thường.
+    *   `ComboBox`: Hộp chọn thả xuống (Dropdown list).
+    *   `DateEdit`: Ô chọn ngày tháng (Calendar).
+*   **Mandatory (Bắt buộc):** Nếu tick chọn, người dùng bắt buộc phải điền thông tin vào ô này thì nút Tìm kiếm mới hoạt động.
+*   **Visible (Hiển thị):** Quyết định tham số này có hiển thị trên vùng điều khiển tìm kiếm ở phía trên màn hình hay không.
+*   **ReadOnly (Chỉ đọc):** Nếu tick chọn, ô nhập liệu sẽ bị khóa (grey out) và người dùng chỉ có thể xem giá trị mặc định, không thể tự sửa.
+*   **New Line (Xuống dòng):** Nếu tick chọn, điều khiển nhập liệu tiếp theo sẽ tự động xuống dòng mới trên UI thiết kế tìm kiếm để căn chỉnh giao diện đẹp hơn.
+*   **Default Value Type (Kiểu giá trị mặc định):** Loại nguồn cấp dữ liệu mặc định:
+    *   `Const`: Giá trị cố định (Ví dụ: số `1`).
+    *   `Session`: Lấy từ thông tin phiên đăng nhập hiện tại (như User ID).
+    *   `None`: Không có giá trị mặc định.
+*   **Default Value (Giá trị mặc định):** Giá trị cụ thể được điền sẵn khi mở màn hình (Ví dụ: `1` cho tham số `TotalBox`).
+*   **Width (Chiều rộng):** Độ rộng hiển thị của ô nhập liệu trên giao diện (tính bằng pixel, Ví dụ: `100`, `120`).
+*   **Popup Grid Name (Lưới Popup):** Tên màn hình/lưới popup liên kết để chọn giá trị nâng cao (dùng cho các trường chọn mã phức tạp).
+*   **Use Scan (Cho phép quét):** Nếu tick chọn, ô nhập liệu này sẽ được cấu hình để lắng nghe tín hiệu từ máy quét barcode (quét một phát tự điền và tự động kích hoạt tìm kiếm nếu được thiết lập).
+
 ---
 
 ## 3. 💬 Cơ Chế Lỗi Đa Ngôn Ngữ (String Resources)

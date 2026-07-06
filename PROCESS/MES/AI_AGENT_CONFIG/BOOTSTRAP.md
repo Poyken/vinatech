@@ -1,4 +1,4 @@
-# ⚡ BOOTSTRAP — Đọc file này ĐẦU TIÊN mỗi session mới
+﻿# ⚡ BOOTSTRAP — Đọc file này ĐẦU TIÊN mỗi session mới
 
 > **Cách dùng:** Khi bắt đầu session mới, user nói: *"Đọc file `MES/AI_AGENT_CONFIG/BOOTSTRAP.md` trước"*
 > **Cập nhật:** 2026-07-02
@@ -102,7 +102,7 @@
 ## 📋 TRẠNG THÁI DỰ ÁN
 
 - **Hotfixes deployed:** 17 scripts (01-05: Bug fix SX, 06-17: Clone SP Hưng Yên)
-- **Hotfix tiếp theo:** ID = **18**
+- **Hotfix tiếp theo:** ID = **20**
 - **Nhà máy:** VNT (Bắc Ninh), VVT_F1/F2 (Bắc Giang), VVT_F3 (Hà Nam), VVT_F4 (Hưng Yên)
 
 ---
