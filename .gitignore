@@ -28,3 +28,4 @@ node_modules/
 
 # Windows desktop ini
 desktop.ini
+*.lnk

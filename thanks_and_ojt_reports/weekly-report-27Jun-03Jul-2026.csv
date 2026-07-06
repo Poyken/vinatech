@@ -1,0 +1,32 @@
+NAME,DEPARTMENT,DATE GET ISSUE,NAME ISSUE,THE SOLVE,TYPE ISSUE,DATE SOLVE ISSUE,SOLVE ISSUE BY,STATUS,REMARK
+Nguyen Van Duc,EA Team,27/6/2026,Equipment Handover & User Support,Bàn giao thiết bị cho manager sản xuất BG2 và bộ phận Purchase; hỗ trợ người dùng mới của bộ phận Purchase.,Support,27/6/2026,Nguyen Van Duc,Done,HW/SW
+Nguyen Van Duc,EA Team,27/6/2026,QC Printer Connection Check,Kiểm tra và khắc phục kết nối máy in cho bộ phận QC.,Support,27/6/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,29/6/2026,MES Data Correction,Chỉnh sửa dữ liệu trên hệ thống MES cho chị Vân Ốc.,Support,29/6/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,29/6/2026,Kiosk Order Processing,Tiếp nhận đơn hàng và chuẩn bị cấu hình thiết bị cho 12 máy Kiosk.,Support,29/6/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,29/6/2026,Hardware Support — Chi Chinh,Hỗ trợ khắc phục sự cố phần cứng máy tính cho chị Chính.,Support,29/6/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,29/6/2026,Printer Installation — QC,Cài đặt kết nối máy in cho bộ phận QC.,Support,29/6/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,29/6/2026,ECM User Support,Hỗ trợ người dùng thao tác và sử dụng hệ thống ECM.,Support,29/6/2026,Nguyen Van Duc,Done,ECM
+Nguyen Van Duc,EA Team,29/6/2026,Printer Installation — Chi Hop,Cài đặt máy in cho máy tính của chị Hợp.,Support,29/6/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,30/6/2026,ECM Support — Chi Tuyet Purchase,Hỗ trợ xử lý lỗi và hướng dẫn sử dụng hệ thống ECM cho chị Tuyết bộ phận Purchase.,Support,30/6/2026,Nguyen Van Duc,Done,ECM
+Nguyen Van Duc,EA Team,30/6/2026,Software Setup,Cài đặt và cấu hình phần mềm làm việc cho người dùng.,Support,30/6/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,30/6/2026,MES User Support — Anh Tai & Chi Van Oc,Hỗ trợ xử lý nghiệp vụ và khắc phục lỗi trên hệ thống MES cho anh Tài và chị Vân Ốc.,Support,30/6/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,30/6/2026,Scanner Setup — Chi Hoai QC,Lắp đặt và cài đặt driver máy scan cho chị Hoài bộ phận QC.,Support,30/6/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,30/6/2026,Printer Setup — Linh PS,Cài đặt kết nối máy in cho Linh bộ phận PS.,Support,30/6/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,30/6/2026,EST Tool Support — Anh Duong Pham,Hỗ trợ cài đặt và khắc phục lỗi sử dụng EST Tool cho anh Dương Phạm.,Support,30/6/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,30/6/2026,MES Support — Chi Duyen Ha Nam,Hỗ trợ nghiệp vụ và xử lý lỗi hệ thống MES cho chị Duyên tại chi nhánh Hà Nam.,Support,30/6/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,1/7/2026,MES Support — Chi Van Oc,Hỗ trợ xử lý dữ liệu và nghiệp vụ trên hệ thống MES cho chị Vân Ốc.,Support,1/7/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,1/7/2026,Printer Setup — Chi Tuyet Purchase,Cài đặt và kết nối máy in cho chị Tuyết bộ phận Purchase.,Support,1/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,1/7/2026,Remote Equipment Check — Chi Dinh Thu,Hỗ trợ kiểm tra kỹ thuật và tình trạng hoạt động của thiết bị từ xa cho chị Đinh Thư.,Support,1/7/2026,Nguyen Van Duc,Done,HW/SW
+Nguyen Van Duc,EA Team,1/7/2026,Windows Reinstallation — Anh Su,Cài đặt lại hệ điều hành Windows và các phần mềm văn phòng cho máy tính anh Sử.,Support,1/7/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,1/7/2026,Printer Setup — BG2 Production,Lắp đặt và cài đặt kết nối máy in cho khu vực sản xuất tại nhà máy Bắc Giang 2.,Support,1/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,1/7/2026,PDF Reader Installation,Cài đặt phần mềm đọc và chỉnh sửa file PDF cho người dùng.,Support,1/7/2026,Nguyen Van Duc,Done,SW
+Nguyen Van Duc,EA Team,1/7/2026,ECM Login Support,Hỗ trợ khắc phục lỗi không đăng nhập được vào hệ thống ECM cho người dùng.,Support,1/7/2026,Nguyen Van Duc,Done,ECM
+Nguyen Van Duc,EA Team,1/7/2026,Equipment Recovery — Tran Quang Thang,Thu hồi và bàn giao lại các thiết bị công nghệ thông tin từ nhân viên Trần Quang Thắng đã nghỉ việc.,Support,1/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,1/7/2026,Printer Repair — Anh Nhiem,Kiểm tra và sửa lỗi kẹt giấy; khắc phục sự cố máy in cho anh Nhiệm.,Support,1/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,1/7/2026,PC Replacement — BG1 User,Tiến hành thay thế và đổi máy tính PC mới cho người dùng tại nhà máy Bắc Giang 1.,Support,1/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,2/7/2026,ECM Login Support — Chi Dinh Thu,Hỗ trợ xử lý lỗi tài khoản và đăng nhập hệ thống ECM cho chị Đinh Thư.,Support,2/7/2026,Nguyen Van Duc,Done,ECM
+Nguyen Van Duc,EA Team,2/7/2026,Printer Setup — Chi Dinh Thu,Cài đặt và kết nối máy in cho chị Đinh Thư.,Support,2/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,2/7/2026,Projector Transport & Setup — Bac Ninh,Vận chuyển thiết bị máy chiếu sang văn phòng Bắc Ninh; tiến hành lắp đặt và chạy thử.,Support,2/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,2/7/2026,Printer Repair — Electrode & Packaging,Sửa chữa và khắc phục lỗi máy in cho bộ phận sản xuất Điện cực và Đóng gói.,Support,2/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,2/7/2026,Foot Press Machine Setup — Chi Xuyen Chi,Lắp đặt và cấu hình kết nối điều khiển máy dập chân cho chị Xuyến Chi.,Support,2/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,2/7/2026,Network Troubleshooting — Chi Bang May R&D,Kiểm tra và khắc phục sự cố mất kết nối mạng cho chị Băng Mây phòng R&D.,Support,2/7/2026,Nguyen Van Duc,Done,HW
