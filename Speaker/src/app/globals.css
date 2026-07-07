@@ -32,7 +32,7 @@
   --color-card: var(--card);
   --color-border: var(--border);
   
-  --font-sans: var(--font-outfit), var(--font-plus-jakarta), sans-serif;
+  --font-sans: var(--font-inter), var(--font-plus-jakarta), sans-serif;
   --font-mono: monospace;
   
   --animate-wave: wave 1.2s ease-in-out infinite alternate;

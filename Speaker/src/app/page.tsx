@@ -58,22 +58,22 @@ export default async function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-12 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
           {/* Left Text Column */}
           <div className="lg:col-span-7 space-y-6 text-left">
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-white border border-stone-200 rounded-full text-xs font-bold text-primary tracking-wide shadow-sm">
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-white border border-stone-200 rounded-full text-xs font-bold text-primary tracking-wide shadow-sm animate-fade-in-up stagger-1">
               <Sparkles className="w-3.5 h-3.5" />
               Công Nghệ Âm Thanh Mới Nhất 2026
             </div>
             
-            <h1 className="text-4xl sm:text-6xl font-black tracking-tight leading-none text-stone-900 uppercase">
+            <h1 className="text-4xl sm:text-6xl font-black tracking-tight leading-none text-stone-900 uppercase animate-fade-in-up stagger-2">
               Âm Thanh Tuyệt Mỹ <br />
               <span className="text-primary">Không Gian</span> <br />
               Đẳng Cấp
             </h1>
             
-            <p className="text-stone-600 text-base sm:text-lg max-w-xl leading-relaxed">
+            <p className="text-stone-600 text-base sm:text-lg max-w-xl leading-relaxed animate-fade-in-up stagger-3">
               Trải nghiệm các dòng loa Hi-Fi, loa cột gia đình, và loa kiểm âm phòng thu chính hãng từ các thương hiệu hàng đầu thế giới với ưu đãi độc quyền tại Poyken Sound.
             </p>
             
-            <div className="flex flex-wrap gap-4 pt-2">
+            <div className="flex flex-wrap gap-4 pt-2 animate-fade-in-up stagger-4">
               <Link
                 href="/catalog"
                 className="px-8 py-4 bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 text-white font-extrabold tracking-wide rounded-full hover:shadow-lg hover:shadow-primary/20 transition-all hover:scale-105 active:scale-95 text-center flex items-center gap-2 justify-center shadow-md shadow-primary/10 btn-premium"
@@ -91,7 +91,7 @@ export default async function HomePage() {
           </div>
 
           {/* Right Sound wave graphics */}
-          <div className="lg:col-span-5 flex flex-col items-center justify-center relative">
+          <div className="lg:col-span-5 flex flex-col items-center justify-center relative animate-fade-in-up stagger-3">
             <div className="w-72 h-72 sm:w-96 sm:h-96 rounded-full border-4 border-stone-200 flex items-center justify-center p-6 relative animate-float animate-glow-slow shadow-inner bg-white/50">
               {/* Spinning record background */}
               <div className="absolute inset-0 rounded-full border border-dashed border-stone-300 animate-spin-slow" style={{ animationDuration: '20s' }} />
@@ -131,10 +131,10 @@ export default async function HomePage() {
       {/* 2. BRANDS HIGHLIGHT */}
       <section className="w-full py-16 bg-stone-50 border-y border-stone-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <p className="text-center text-xs font-bold uppercase tracking-widest text-stone-500 mb-8">
+          <p className="text-center text-xs font-bold uppercase tracking-widest text-stone-500 mb-8 animate-fade-in-up stagger-1">
             THƯƠNG HIỆU PHÂN PHỐI ĐỘC QUYỀN
           </p>
-          <div className="grid grid-cols-2 md:grid-cols-6 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-6 gap-6 animate-fade-in-up stagger-2">
             {brands.map((brand) => (
               <Link 
                 key={brand.name}
@@ -169,7 +169,7 @@ export default async function HomePage() {
       {/* 3. CATEGORIES SECTION */}
       <section className="w-full py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row justify-between items-end mb-10 gap-4">
+          <div className="flex flex-col md:flex-row justify-between items-end mb-10 gap-4 animate-fade-in-up stagger-1">
             <div className="text-left">
               <span className="text-xs font-black uppercase text-primary tracking-widest">PHÂN LOẠI THIẾT BỊ</span>
               <h2 className="text-3xl font-extrabold text-stone-900 uppercase mt-1">DÒNG SẢN PHẨM PHÙ HỢP</h2>
@@ -182,7 +182,7 @@ export default async function HomePage() {
             </Link>
           </div>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 animate-fade-in-up stagger-2">
             {categories.map((cat) => (
               <Link
                 key={cat.id}
@@ -210,7 +210,7 @@ export default async function HomePage() {
       {/* 4. FEATURED PRODUCTS */}
       <section className="w-full py-20 bg-stone-50/50 border-t border-stone-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row justify-between items-end mb-10 gap-4">
+          <div className="flex flex-col md:flex-row justify-between items-end mb-10 gap-4 animate-fade-in-up stagger-1">
             <div className="text-left">
               <span className="text-xs font-black uppercase text-primary tracking-widest">NỔI BẬT NHẤT</span>
               <h2 className="text-3xl font-extrabold text-stone-900 uppercase mt-1">LOA ĐƯỢC ĐÁNH GIÁ CAO NHẤT</h2>
@@ -223,7 +223,7 @@ export default async function HomePage() {
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 animate-fade-in-up stagger-2">
             {featuredProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
@@ -287,7 +287,7 @@ export default async function HomePage() {
       {/* 7. AUDIO JOURNAL / BLOG SECTION */}
       <section className="w-full py-20 bg-stone-50/30 border-t border-stone-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row justify-between items-end mb-10 gap-4">
+          <div className="flex flex-col md:flex-row justify-between items-end mb-10 gap-4 animate-fade-in-up stagger-1">
             <div className="text-left">
               <span className="text-xs font-black uppercase text-primary tracking-widest">Khám phá cẩm nang</span>
               <h2 className="text-3xl font-extrabold text-stone-900 uppercase mt-1">CẨM NANG ÂM THANH</h2>
@@ -300,7 +300,7 @@ export default async function HomePage() {
             </a>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 animate-fade-in-up stagger-2">
             {/* Post 1 */}
             <div className="group bg-white border border-stone-200 rounded-2xl overflow-hidden hover-glow flex flex-col justify-between">
               <div className="aspect-video w-full overflow-hidden bg-stone-100 border-b border-stone-200">
@@ -385,12 +385,12 @@ export default async function HomePage() {
       {/* 8. BENEFITS SECTION */}
       <section id="benefits" className="w-full py-20 bg-white border-t border-stone-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-xl mx-auto mb-16">
+          <div className="text-center max-w-xl mx-auto mb-16 animate-fade-in-up stagger-1">
             <span className="text-xs font-black uppercase text-primary tracking-widest">TẠI SAO CHỌN POYKEN SOUND</span>
             <h2 className="text-3xl font-extrabold text-stone-900 uppercase mt-1">DỊCH VỤ PREMIUM XỨNG TẦM</h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 animate-fade-in-up stagger-2">
             {benefits.map((benefit, idx) => (
               <div 
                 key={idx}

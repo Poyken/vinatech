@@ -54,17 +54,17 @@ export default function ProductCard({ product }: ProductCardProps) {
         </span>
 
         {/* Hover Quick View / Shop Controls */}
-        <div className="absolute inset-0 bg-black/10 backdrop-blur-[1px] flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300">
+        <div className="absolute inset-0 bg-black/15 backdrop-blur-[1px] flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none group-hover:pointer-events-auto">
           <Link
             href={`/product/${product.slug}`}
-            className="p-3 bg-white hover:bg-stone-50 text-stone-800 rounded-full hover:scale-110 transition-all shadow-lg border border-stone-200"
+            className="p-3 bg-white hover:bg-stone-50 text-stone-800 rounded-full hover:scale-110 shadow-lg border border-stone-200 transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 delay-[50ms] ease-out"
             title="Xem chi tiết"
           >
             <Eye className="w-5 h-5 text-stone-600" />
           </Link>
           <button
             onClick={() => addToCart(product)}
-            className="p-3 bg-primary hover:bg-orange-700 text-white rounded-full hover:scale-110 transition-all shadow-lg shadow-primary/20"
+            className="p-3 bg-primary hover:bg-orange-700 text-white rounded-full hover:scale-110 shadow-lg shadow-primary/20 transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 delay-[120ms] ease-out"
             title="Thêm vào giỏ hàng"
           >
             <ShoppingCart className="w-5 h-5" />

@@ -1,19 +1,19 @@
 import type { Metadata } from 'next';
-import { Outfit, Plus_Jakarta_Sans } from 'next/font/google';
+import { Inter, Plus_Jakarta_Sans } from 'next/font/google';
 import './globals.css';
 import { CartProvider } from '../context/CartContext';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import CartDrawer from '../components/CartDrawer';
 
-const outfit = Outfit({
-  variable: '--font-outfit',
-  subsets: ['latin'],
+const inter = Inter({
+  variable: '--font-inter',
+  subsets: ['latin', 'vietnamese'],
 });
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   variable: '--font-plus-jakarta',
-  subsets: ['latin'],
+  subsets: ['latin', 'vietnamese'],
 });
 
 export const metadata: Metadata = {
@@ -29,7 +29,7 @@ export default function RootLayout({
   return (
     <html
       lang="vi"
-      className={`${outfit.variable} ${plusJakartaSans.variable} h-full antialiased`}
+      className={`${inter.variable} ${plusJakartaSans.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground font-sans">
         <CartProvider>
