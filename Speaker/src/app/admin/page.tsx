@@ -2,20 +2,26 @@
 
 import React, { useState, useEffect } from 'react';
 import { Order, Product, Category } from '../../lib/types';
-import { Package, ShieldCheck, ChevronDown, ChevronUp, Plus, Trash2, ListOrdered, PlusCircle, TrendingUp, AlertTriangle, Lock } from 'lucide-react';
+import { Package, ShieldCheck, ChevronDown, ChevronUp, Plus, Trash2, ListOrdered, PlusCircle, TrendingUp, AlertTriangle, Lock, LogOut } from 'lucide-react';
 import Link from 'next/link';
+import { useSession, signOut } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 export default function AdminPage() {
+  const router = useRouter();
+  const { data: session, status } = useSession();
   const [activeTab, setActiveTab] = useState<'orders' | 'add-product'>('orders');
   const [orders, setOrders] = useState<Order[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [expandedOrderId, setExpandedOrderId] = useState<string | null>(null);
 
-  // Passcode security states
-  const [isUnlocked, setIsUnlocked] = useState(false);
-  const [passcode, setPasscode] = useState('');
-  const [passcodeError, setPasscodeError] = useState(false);
+  // Redirect to login if unauthenticated
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      router.push('/admin/login');
+    }
+  }, [status, router]);
 
   // Form states for new product
   const [productName, setProductName] = useState('');
@@ -34,7 +40,36 @@ export default function AdminPage() {
     { key: 'Kết nối', value: 'Bluetooth 5.0, AUX' },
   ]);
 
+  const [productImage, setProductImage] = useState('');
+  const [isUploading, setIsUploading] = useState(false);
   const [formSuccess, setFormSuccess] = useState(false);
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsUploading(true);
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const res = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setProductImage(data.url);
+      } else {
+        alert('Tải ảnh thất bại!');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Lỗi kết nối tải ảnh!');
+    } finally {
+      setIsUploading(false);
+    }
+  };
 
   // Load orders, categories, and products on mount
   useEffect(() => {
@@ -123,7 +158,7 @@ export default function AdminPage() {
           description: productDescription,
           categoryId: productCategoryId,
           stock: Number(productStock),
-          images: ['https://images.unsplash.com/photo-1545454675-3531b543be5d?q=80&w=800&auto=format&fit=crop'],
+          images: productImage ? [productImage] : ['https://images.unsplash.com/photo-1545454675-3531b543be5d?q=80&w=800&auto=format&fit=crop'],
           specs: specRecord,
           audioUrl: productAudioUrl || null,
         })
@@ -134,6 +169,7 @@ export default function AdminPage() {
       }
 
       // Clear Form
+      setProductImage('');
       setProductName('');
       setProductSlug('');
       setProductPrice('');
@@ -166,62 +202,20 @@ export default function AdminPage() {
   const totalRevenue = orders.reduce((sum, o) => sum + o.total, 0);
   const lowStockCount = products.filter((p) => p.stock <= 5).length;
 
-  // Passcode authentication screen
-  if (!isUnlocked) {
+  // Loading or redirecting state
+  if (status === 'loading') {
     return (
-      <div className="max-w-md mx-auto px-4 py-24 text-left">
-        <div className="bg-white border border-stone-200 rounded-3xl p-8 shadow-lg space-y-6 animate-in fade-in duration-300">
-          <div className="text-center space-y-2">
-            <div className="w-12 h-12 bg-primary/10 border border-primary/20 text-primary rounded-full flex items-center justify-center mx-auto shadow-sm">
-              <Lock className="w-6 h-6" />
-            </div>
-            <h1 className="text-xl font-extrabold text-stone-900 uppercase">Khu Vực Quản Trị</h1>
-            <p className="text-xs text-stone-500 max-w-[280px] mx-auto leading-relaxed">
-              Vui lòng nhập mật mã quản trị viên Poyken Sound để truy cập danh sách đơn hàng và quản lý sản phẩm.
-            </p>
-          </div>
-
-          <form 
-            onSubmit={(e) => {
-              e.preventDefault();
-              if (passcode === '1234') {
-                setIsUnlocked(true);
-                setPasscodeError(false);
-              } else {
-                setPasscodeError(true);
-                setPasscode('');
-              }
-            }} 
-            className="space-y-4"
-          >
-            <div className="space-y-1.5">
-              <label className="text-xs font-bold text-stone-500 uppercase tracking-wider block">Mật mã truy cập</label>
-              <input
-                type="password"
-                placeholder="Nhập mã bảo mật (Thử: 1234)..."
-                value={passcode}
-                onChange={(e) => setPasscode(e.target.value)}
-                className={`w-full bg-stone-50 border rounded-xl px-4 py-3 text-xs text-stone-850 focus:bg-white focus:outline-none ${
-                  passcodeError ? 'border-red-500 focus:border-red-500 focus:ring-red-100' : 'border-stone-250 focus:border-primary'
-                }`}
-              />
-              {passcodeError && (
-                <span className="text-[10px] text-red-650 font-bold block mt-1 animate-pulse">
-                  Mật mã sai! Vui lòng thử lại hoặc sử dụng mã "1234".
-                </span>
-              )}
-            </div>
-
-            <button
-              type="submit"
-              className="w-full py-3 bg-stone-900 hover:bg-primary text-white font-extrabold text-xs uppercase tracking-wider rounded-xl transition-all shadow-sm flex items-center justify-center gap-1.5"
-            >
-              Xác Nhận Truy Cập
-            </button>
-          </form>
+      <div className="min-h-[60vh] flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
+          <p className="text-xs text-stone-500 font-bold tracking-wider uppercase">Đang tải cấu hình bảo mật...</p>
         </div>
       </div>
     );
+  }
+
+  if (!session) {
+    return null; // Will redirect via useEffect
   }
 
   return (
@@ -235,29 +229,39 @@ export default function AdminPage() {
         </div>
 
         {/* Tab Controls */}
-        <div className="flex bg-stone-100 border border-stone-200 p-1.5 rounded-xl shadow-inner">
+        <div className="flex items-center gap-3">
+          <div className="flex bg-stone-100 border border-stone-200 p-1.5 rounded-xl shadow-inner">
+            <button
+              onClick={() => setActiveTab('orders')}
+              className={`flex items-center gap-2 px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-lg transition-all ${
+                activeTab === 'orders'
+                  ? 'bg-primary text-white shadow-sm'
+                  : 'text-stone-600 hover:text-stone-900'
+              }`}
+            >
+              <ListOrdered className="w-4 h-4" />
+              Đơn Hàng ({orders.length})
+            </button>
+            
+            <button
+              onClick={() => setActiveTab('add-product')}
+              className={`flex items-center gap-2 px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-lg transition-all ${
+                activeTab === 'add-product'
+                  ? 'bg-primary text-white shadow-sm'
+                  : 'text-stone-600 hover:text-stone-900'
+              }`}
+            >
+              <Plus className="w-4 h-4" />
+              Thêm Loa Mới
+            </button>
+          </div>
+
           <button
-            onClick={() => setActiveTab('orders')}
-            className={`flex items-center gap-2 px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-lg transition-all ${
-              activeTab === 'orders'
-                ? 'bg-primary text-white shadow-sm'
-                : 'text-stone-600 hover:text-stone-900'
-            }`}
+            onClick={() => signOut({ callbackUrl: '/admin/login' })}
+            className="flex items-center gap-1.5 px-4 py-3 bg-red-500/10 hover:bg-red-500 hover:text-white border border-red-200/50 hover:border-red-500 rounded-xl text-xs font-extrabold text-red-650 transition-all active:scale-95 shadow-sm"
           >
-            <ListOrdered className="w-4 h-4" />
-            Đơn Hàng ({orders.length})
-          </button>
-          
-          <button
-            onClick={() => setActiveTab('add-product')}
-            className={`flex items-center gap-2 px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-lg transition-all ${
-              activeTab === 'add-product'
-                ? 'bg-primary text-white shadow-sm'
-                : 'text-stone-600 hover:text-stone-900'
-            }`}
-          >
-            <Plus className="w-4 h-4" />
-            Thêm Loa Mới
+            <LogOut className="w-4 h-4" />
+            Đăng Xuất
           </button>
         </div>
       </div>
@@ -538,7 +542,7 @@ export default function AdminPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5">
             {/* Price */}
             <div className="space-y-1.5">
               <label className="text-xs font-bold text-stone-500 uppercase tracking-wider">Giá khuyến mãi (VND) *</label>
@@ -574,6 +578,31 @@ export default function AdminPage() {
                 onChange={(e) => setProductAudioUrl(e.target.value)}
                 className="w-full bg-stone-50 border border-stone-250 rounded-xl px-4 py-3 text-xs text-stone-850 placeholder-stone-400 focus:bg-white focus:outline-none focus:border-primary"
               />
+            </div>
+
+            {/* Image Upload Input */}
+            <div className="space-y-1.5 text-left">
+              <label className="text-xs font-bold text-stone-500 uppercase tracking-wider">Hình Ảnh Sản Phẩm</label>
+              <div className="flex gap-2">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  className="hidden"
+                  id="image-upload-file"
+                />
+                <label
+                  htmlFor="image-upload-file"
+                  className="flex-1 bg-stone-50 hover:bg-stone-100 border border-stone-250 rounded-xl px-4 py-3 text-xs text-stone-600 font-semibold cursor-pointer text-center truncate transition-colors flex items-center justify-center min-h-[44px]"
+                >
+                  {isUploading ? 'Đang tải lên...' : productImage ? '✓ Đã tải ảnh' : 'Chọn ảnh...'}
+                </label>
+                {productImage && (
+                  <div className="w-11 h-11 border border-stone-200 rounded-xl overflow-hidden flex-shrink-0">
+                    <img src={productImage} alt="Preview" className="w-full h-full object-cover" />
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 

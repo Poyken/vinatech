@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Product } from '../lib/types';
+import { SessionProvider } from 'next-auth/react';
 
 export interface CartItem {
   product: Product;
@@ -102,21 +103,23 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const cartTotal = cart.reduce((total, item) => total + item.product.price * item.quantity, 0);
 
   return (
-    <CartContext.Provider
-      value={{
-        cart,
-        cartCount,
-        cartTotal,
-        isCartOpen,
-        setCartOpen,
-        addToCart,
-        removeFromCart,
-        updateQuantity,
-        clearCart,
-      }}
-    >
-      {children}
-    </CartContext.Provider>
+    <SessionProvider>
+      <CartContext.Provider
+        value={{
+          cart,
+          cartCount,
+          cartTotal,
+          isCartOpen,
+          setCartOpen,
+          addToCart,
+          removeFromCart,
+          updateQuantity,
+          clearCart,
+        }}
+      >
+        {children}
+      </CartContext.Provider>
+    </SessionProvider>
   );
 }
 
