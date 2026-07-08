@@ -10,17 +10,17 @@ export const revalidate = 0; // Fresh data on reload
 const getCategoryIcon = (id: string) => {
   switch (id) {
     case 'cat-bookshelf':
-      return <Speaker className="w-5 h-5 text-stone-600 group-hover:text-primary transition-colors" />;
+      return <Speaker className="w-5 h-5 text-zinc-400 group-hover:text-primary transition-colors" />;
     case 'cat-floorstanding':
-      return <Volume2 className="w-5 h-5 text-stone-600 group-hover:text-primary transition-colors" />;
+      return <Volume2 className="w-5 h-5 text-zinc-400 group-hover:text-primary transition-colors" />;
     case 'cat-bluetooth':
-      return <Smartphone className="w-5 h-5 text-stone-600 group-hover:text-primary transition-colors" />;
+      return <Smartphone className="w-5 h-5 text-zinc-400 group-hover:text-primary transition-colors" />;
     case 'cat-soundbar':
-      return <Tv className="w-5 h-5 text-stone-600 group-hover:text-primary transition-colors" />;
+      return <Tv className="w-5 h-5 text-zinc-400 group-hover:text-primary transition-colors" />;
     case 'cat-monitor':
-      return <Music4 className="w-5 h-5 text-stone-600 group-hover:text-primary transition-colors" />;
+      return <Music4 className="w-5 h-5 text-zinc-400 group-hover:text-primary transition-colors" />;
     default:
-      return <Speaker className="w-5 h-5 text-stone-600 group-hover:text-primary transition-colors" />;
+      return <Speaker className="w-5 h-5 text-zinc-400 group-hover:text-primary transition-colors" />;
   }
 };
 
@@ -53,23 +53,23 @@ export default async function HomePage() {
         <div className="absolute bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2 w-[30rem] h-[30rem] rounded-full bg-amber-500/3 blur-[100px] pointer-events-none" />
         
         {/* Grid Background */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#e2e0df_1px,transparent_1px),linear-gradient(to_bottom,#e2e0df_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] opacity-50" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,var(--border)_1px,transparent_1px),linear-gradient(to_bottom,var(--border)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] opacity-40 dark:opacity-50" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-12 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
           {/* Left Text Column */}
           <div className="lg:col-span-7 space-y-6 text-left">
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-white border border-stone-200 rounded-full text-xs font-bold text-primary tracking-wide shadow-sm animate-fade-in-up stagger-1">
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-input-bg border border-border rounded-full text-xs font-bold text-primary tracking-wide shadow-sm animate-fade-in-up stagger-1">
               <Sparkles className="w-3.5 h-3.5" />
               Công Nghệ Âm Thanh Mới Nhất 2026
             </div>
             
-            <h1 className="text-4xl sm:text-6xl font-black tracking-tight leading-none text-stone-900 uppercase animate-fade-in-up stagger-2">
+            <h1 className="text-4xl sm:text-6xl font-black tracking-tight leading-none text-foreground uppercase animate-fade-in-up stagger-2">
               Âm Thanh Tuyệt Mỹ <br />
-              <span className="text-primary">Không Gian</span> <br />
+              <span className="text-primary">Trong Không Gian</span> <br />
               Đẳng Cấp
             </h1>
             
-            <p className="text-stone-600 text-base sm:text-lg max-w-xl leading-relaxed animate-fade-in-up stagger-3">
+            <p className="text-muted-text text-base sm:text-lg max-w-xl leading-relaxed animate-fade-in-up stagger-3">
               Trải nghiệm các dòng loa Hi-Fi, loa cột gia đình, và loa kiểm âm phòng thu chính hãng từ các thương hiệu hàng đầu thế giới với ưu đãi độc quyền tại Poyken Sound.
             </p>
             
@@ -83,7 +83,7 @@ export default async function HomePage() {
               </Link>
               <a
                 href="#benefits"
-                className="px-8 py-4 bg-white hover:bg-stone-50 text-stone-800 font-bold border border-stone-200 rounded-full transition-all text-center shadow-sm hover-glow"
+                className="px-8 py-4 bg-input-bg hover:bg-card-hover text-foreground font-bold border border-border rounded-full transition-all text-center shadow-sm hover-glow"
               >
                 Tại Sao Chọn Chúng Tôi?
               </a>
@@ -92,18 +92,18 @@ export default async function HomePage() {
 
           {/* Right Sound wave graphics */}
           <div className="lg:col-span-5 flex flex-col items-center justify-center relative animate-fade-in-up stagger-3">
-            <div className="w-72 h-72 sm:w-96 sm:h-96 rounded-full border-4 border-stone-200 flex items-center justify-center p-6 relative animate-float animate-glow-slow shadow-inner bg-white/50">
+            <div className="w-72 h-72 sm:w-96 sm:h-96 rounded-full border-4 border-border flex items-center justify-center p-6 relative animate-float animate-glow-slow shadow-inner bg-muted-bg/30">
               {/* Spinning record background */}
-              <div className="absolute inset-0 rounded-full border border-dashed border-stone-300 animate-spin-slow" style={{ animationDuration: '20s' }} />
-              <div className="absolute inset-10 rounded-full border border-stone-200/50" />
-              <div className="absolute inset-20 rounded-full border border-stone-200/80" />
+              <div className="absolute inset-0 rounded-full border border-dashed border-border/80 animate-spin-slow" style={{ animationDuration: '20s' }} />
+              <div className="absolute inset-10 rounded-full border border-border/50" />
+              <div className="absolute inset-20 rounded-full border border-border/80" />
               
               {/* Inner Glowing Speaker Core */}
-              <div className="w-full h-full rounded-full bg-gradient-to-tr from-white via-stone-50 to-stone-100 border border-stone-200 flex flex-col items-center justify-center shadow-lg relative overflow-hidden group animate-pulse-subtle">
+              <div className="w-full h-full rounded-full bg-gradient-to-tr from-card via-card to-background border border-border flex flex-col items-center justify-center shadow-lg relative overflow-hidden group animate-pulse-subtle">
                 <div className="absolute inset-0 bg-gradient-to-tr from-primary/5 to-transparent group-hover:from-primary/10 transition-all" />
                 
                 {/* Real Spinning Speaker Driver Image */}
-                <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full overflow-hidden border-2 border-stone-200/80 shadow-md relative z-10 flex-shrink-0 group-hover:scale-110 transition-transform duration-700">
+                <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full overflow-hidden border-2 border-border/80 shadow-md relative z-10 flex-shrink-0 group-hover:scale-110 transition-transform duration-700">
                   <img 
                     src="https://images.unsplash.com/photo-1545454675-3531b543be5d?q=80&w=800&auto=format&fit=crop" 
                     alt="Speaker Driver Core" 
@@ -129,9 +129,9 @@ export default async function HomePage() {
       </section>
 
       {/* 2. BRANDS HIGHLIGHT */}
-      <section className="w-full py-16 bg-stone-50 border-y border-stone-200">
+      <section className="w-full py-16 bg-muted-bg/20 border-y border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <p className="text-center text-xs font-bold uppercase tracking-widest text-stone-500 mb-8 animate-fade-in-up stagger-1">
+          <p className="text-center text-xs font-bold uppercase tracking-widest text-muted-text mb-8 animate-fade-in-up stagger-1">
             THƯƠNG HIỆU PHÂN PHỐI ĐỘC QUYỀN
           </p>
           <div className="grid grid-cols-2 md:grid-cols-6 gap-6 animate-fade-in-up stagger-2">
@@ -139,7 +139,7 @@ export default async function HomePage() {
               <Link 
                 key={brand.name}
                 href={`/catalog?brand=${brand.name}`}
-                className="relative h-28 rounded-2xl overflow-hidden group border border-stone-200/80 shadow-sm hover-glow flex flex-col justify-end"
+                className="relative h-28 rounded-2xl overflow-hidden group border border-border shadow-sm hover-glow flex flex-col justify-end"
               >
                 {/* Background Brand Image */}
                 <img 
@@ -167,16 +167,16 @@ export default async function HomePage() {
       </section>
 
       {/* 3. CATEGORIES SECTION */}
-      <section className="w-full py-20 bg-white">
+      <section className="w-full py-20 bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row justify-between items-end mb-10 gap-4 animate-fade-in-up stagger-1">
             <div className="text-left">
               <span className="text-xs font-black uppercase text-primary tracking-widest">PHÂN LOẠI THIẾT BỊ</span>
-              <h2 className="text-3xl font-extrabold text-stone-900 uppercase mt-1">DÒNG SẢN PHẨM PHÙ HỢP</h2>
+              <h2 className="text-3xl font-extrabold text-foreground uppercase mt-1">DÒNG SẢN PHẨM PHÙ HỢP</h2>
             </div>
             <Link 
               href="/catalog" 
-              className="text-sm font-bold text-stone-500 hover:text-primary transition-colors"
+              className="text-sm font-bold text-muted-text hover:text-primary transition-colors"
             >
               Xem tất cả dòng loa →
             </Link>
@@ -187,17 +187,17 @@ export default async function HomePage() {
               <Link
                 key={cat.id}
                 href={`/catalog?categoryId=${cat.id}`}
-                className="group relative p-6 bg-stone-50 hover:bg-white border border-stone-200 hover:border-stone-350 rounded-2xl overflow-hidden transition-all flex flex-col justify-between min-h-[140px] shadow-sm hover:shadow text-left"
+                className="group relative p-6 bg-card border border-border hover:border-border-hover hover:bg-card-hover rounded-2xl overflow-hidden transition-all flex flex-col justify-between min-h-[140px] shadow-sm hover:shadow text-left"
               >
                 <div className="absolute inset-0 bg-gradient-to-tr from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                <div className="w-10 h-10 bg-white border border-stone-200 rounded-xl flex items-center justify-center mb-4 group-hover:border-primary transition-colors">
+                <div className="w-10 h-10 bg-input-bg border border-border rounded-xl flex items-center justify-center mb-4 group-hover:border-primary transition-colors">
                   {getCategoryIcon(cat.id)}
                 </div>
                 <div>
-                  <h3 className="text-base font-extrabold text-stone-800 group-hover:text-primary transition-colors leading-tight">
+                  <h3 className="text-base font-extrabold text-foreground group-hover:text-primary transition-colors leading-tight">
                     {cat.name}
                   </h3>
-                  <p className="text-xs text-stone-500 mt-1 uppercase tracking-wider font-semibold">
+                  <p className="text-xs text-muted-text mt-1 uppercase tracking-wider font-semibold">
                     Xem sản phẩm
                   </p>
                 </div>
@@ -208,16 +208,16 @@ export default async function HomePage() {
       </section>
 
       {/* 4. FEATURED PRODUCTS */}
-      <section className="w-full py-20 bg-stone-50/50 border-t border-stone-200">
+      <section className="w-full py-20 bg-muted-bg/10 border-t border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row justify-between items-end mb-10 gap-4 animate-fade-in-up stagger-1">
             <div className="text-left">
               <span className="text-xs font-black uppercase text-primary tracking-widest">NỔI BẬT NHẤT</span>
-              <h2 className="text-3xl font-extrabold text-stone-900 uppercase mt-1">LOA ĐƯỢC ĐÁNH GIÁ CAO NHẤT</h2>
+              <h2 className="text-3xl font-extrabold text-foreground uppercase mt-1">LOA ĐƯỢC ĐÁNH GIÁ CAO NHẤT</h2>
             </div>
             <Link 
               href="/catalog?sort=rating" 
-              className="text-sm font-bold text-stone-500 hover:text-primary transition-colors"
+              className="text-sm font-bold text-muted-text hover:text-primary transition-colors"
             >
               Xem toàn bộ sản phẩm →
             </Link>
@@ -232,16 +232,16 @@ export default async function HomePage() {
       </section>
 
       {/* 5. INTERACTIVE SOUND QUIZ WIDGET */}
-      <section className="w-full py-16 bg-white border-t border-stone-200">
+      <section className="w-full py-16 bg-background border-t border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SoundQuizWidget />
         </div>
       </section>
 
       {/* 6. SPOTLIGHT CAMPAIGN BANNER */}
-      <section className="w-full py-16 bg-white border-t border-stone-200">
+      <section className="w-full py-16 bg-background border-t border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="relative rounded-3xl overflow-hidden bg-gradient-to-r from-stone-900 to-stone-850 text-white p-8 sm:p-12 md:p-16 flex flex-col md:flex-row justify-between items-center gap-8 shadow-xl">
+          <div className="relative rounded-3xl overflow-hidden bg-gradient-to-r from-stone-950 to-stone-900 text-white p-8 sm:p-12 md:p-16 flex flex-col md:flex-row justify-between items-center gap-8 shadow-xl border border-border">
             {/* Background pattern mask */}
             <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:3rem_3rem] pointer-events-none" />
             <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-[30rem] h-[30rem] rounded-full bg-primary/10 blur-[100px] pointer-events-none" />
@@ -273,7 +273,7 @@ export default async function HomePage() {
             </div>
 
             {/* Campaign Image Mockup */}
-            <div className="w-full sm:w-80 md:w-96 aspect-square rounded-2xl overflow-hidden bg-stone-850 border border-white/10 shadow-2xl relative z-10 flex-shrink-0 animate-pulse-subtle">
+            <div className="w-full sm:w-80 md:w-96 aspect-square rounded-2xl overflow-hidden bg-input-bg border border-border shadow-2xl relative z-10 flex-shrink-0 animate-pulse-subtle">
               <img 
                 src="https://images.unsplash.com/photo-1612196808214-b8e1d6145a8c?q=80&w=600&auto=format&fit=crop" 
                 alt="Marshall Stanmore Speaker" 
@@ -285,16 +285,16 @@ export default async function HomePage() {
       </section>
 
       {/* 7. AUDIO JOURNAL / BLOG SECTION */}
-      <section className="w-full py-20 bg-stone-50/30 border-t border-stone-200">
+      <section className="w-full py-20 bg-muted-bg/10 border-t border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row justify-between items-end mb-10 gap-4 animate-fade-in-up stagger-1">
             <div className="text-left">
               <span className="text-xs font-black uppercase text-primary tracking-widest">Khám phá cẩm nang</span>
-              <h2 className="text-3xl font-extrabold text-stone-900 uppercase mt-1">CẨM NANG ÂM THANH</h2>
+              <h2 className="text-3xl font-extrabold text-foreground uppercase mt-1">CẨM NANG ÂM THANH</h2>
             </div>
             <a 
               href="#" 
-              className="text-sm font-bold text-stone-500 hover:text-primary transition-colors"
+              className="text-sm font-bold text-muted-text hover:text-primary transition-colors"
             >
               Xem tất cả bài viết →
             </a>
@@ -302,8 +302,8 @@ export default async function HomePage() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 animate-fade-in-up stagger-2">
             {/* Post 1 */}
-            <div className="group bg-white border border-stone-200 rounded-2xl overflow-hidden hover-glow flex flex-col justify-between">
-              <div className="aspect-video w-full overflow-hidden bg-stone-100 border-b border-stone-200">
+            <div className="group bg-card border border-border rounded-2xl overflow-hidden hover-glow flex flex-col justify-between">
+              <div className="aspect-video w-full overflow-hidden bg-input-bg border-b border-border">
                 <img 
                   src="https://images.unsplash.com/photo-1545454675-3531b543be5d?q=80&w=500&auto=format&fit=crop" 
                   alt="Bookshelf Speaker Placement" 
@@ -313,14 +313,14 @@ export default async function HomePage() {
               <div className="p-6 text-left space-y-3 flex-1 flex flex-col justify-between">
                 <div className="space-y-2">
                   <span className="text-[9px] font-bold text-primary uppercase tracking-wider bg-primary/10 border border-primary/20 px-2 py-0.5 rounded">Hướng dẫn</span>
-                  <h3 className="text-sm font-black text-stone-850 group-hover:text-primary transition-colors leading-snug">
+                  <h3 className="text-sm font-black text-foreground group-hover:text-primary transition-colors leading-snug">
                     Cách bố trí loa Bookshelf chuẩn góc nghe nhạc Hi-Fi trong phòng khách
                   </h3>
-                  <p className="text-[11px] text-stone-500 leading-relaxed line-clamp-2">
+                  <p className="text-[11px] text-muted-text leading-relaxed line-clamp-2">
                     Bố trí loa không chỉ đơn giản là đặt chúng lên kệ. Khám phá quy tắc tam giác đều và cách chống rung chấn giúp tối ưu hóa âm hình sân khấu.
                   </p>
                 </div>
-                <div className="flex items-center justify-between pt-4 border-t border-stone-100 text-[10px] text-stone-400">
+                <div className="flex items-center justify-between pt-4 border-t border-border text-[10px] text-muted-text/80">
                   <span>Bởi Kỹ sư âm thanh Huy Trần</span>
                   <span>05 Tháng 7, 2026</span>
                 </div>
@@ -328,8 +328,8 @@ export default async function HomePage() {
             </div>
 
             {/* Post 2 */}
-            <div className="group bg-white border border-stone-200 rounded-2xl overflow-hidden hover-glow flex flex-col justify-between">
-              <div className="aspect-video w-full overflow-hidden bg-stone-100 border-b border-stone-200">
+            <div className="group bg-card border border-border rounded-2xl overflow-hidden hover-glow flex flex-col justify-between">
+              <div className="aspect-video w-full overflow-hidden bg-input-bg border-b border-border">
                 <img 
                   src="https://images.unsplash.com/photo-1598653222000-6b7b7a552625?q=80&w=500&auto=format&fit=crop" 
                   alt="Monitor Speaker Compare" 
@@ -339,14 +339,14 @@ export default async function HomePage() {
               <div className="p-6 text-left space-y-3 flex-1 flex flex-col justify-between">
                 <div className="space-y-2">
                   <span className="text-[9px] font-bold text-primary uppercase tracking-wider bg-primary/10 border border-primary/20 px-2 py-0.5 rounded">So sánh</span>
-                  <h3 className="text-sm font-black text-stone-850 group-hover:text-primary transition-colors leading-snug">
+                  <h3 className="text-sm font-black text-foreground group-hover:text-primary transition-colors leading-snug">
                     So sánh loa kiểm âm KRK Rokit và Yamaha HS Series: Đâu là chân ái?
                   </h3>
-                  <p className="text-[11px] text-stone-500 leading-relaxed line-clamp-2">
+                  <p className="text-[11px] text-muted-text leading-relaxed line-clamp-2">
                     Lựa chọn giữa đáp tuyến phẳng tịt của Yamaha HS5 và âm trầm đầy đặn của KRK Rokit 5 luôn là bài toán khó cho người mới bắt đầu làm nhạc.
                   </p>
                 </div>
-                <div className="flex items-center justify-between pt-4 border-t border-stone-100 text-[10px] text-stone-400">
+                <div className="flex items-center justify-between pt-4 border-t border-border text-[10px] text-muted-text/80">
                   <span>Bởi Producer Minh Đức</span>
                   <span>02 Tháng 7, 2026</span>
                 </div>
@@ -354,8 +354,8 @@ export default async function HomePage() {
             </div>
 
             {/* Post 3 */}
-            <div className="group bg-white border border-stone-200 rounded-2xl overflow-hidden hover-glow flex flex-col justify-between">
-              <div className="aspect-video w-full overflow-hidden bg-stone-100 border-b border-stone-200">
+            <div className="group bg-card border border-border rounded-2xl overflow-hidden hover-glow flex flex-col justify-between">
+              <div className="aspect-video w-full overflow-hidden bg-input-bg border-b border-border">
                 <img 
                   src="https://images.unsplash.com/photo-1545048702-79362596cdc9?q=80&w=500&auto=format&fit=crop" 
                   alt="What is Dolby Atmos" 
@@ -365,14 +365,14 @@ export default async function HomePage() {
               <div className="p-6 text-left space-y-3 flex-1 flex flex-col justify-between">
                 <div className="space-y-2">
                   <span className="text-[9px] font-bold text-primary uppercase tracking-wider bg-primary/10 border border-primary/20 px-2 py-0.5 rounded">Kiến thức</span>
-                  <h3 className="text-sm font-black text-stone-850 group-hover:text-primary transition-colors leading-snug">
+                  <h3 className="text-sm font-black text-foreground group-hover:text-primary transition-colors leading-snug">
                     Dolby Atmos là gì? Tại sao loa Soundbar thế hệ mới bắt buộc phải có?
                   </h3>
-                  <p className="text-[11px] text-stone-500 leading-relaxed line-clamp-2">
+                  <p className="text-[11px] text-muted-text leading-relaxed line-clamp-2">
                     Không chỉ dừng lại ở âm thanh vòm 5.1 hay 7.1, Dolby Atmos kiến tạo một bầu trời âm thanh 3D trên đỉnh đầu mang tính cách mạng cho rạp phim tại gia.
                   </p>
                 </div>
-                <div className="flex items-center justify-between pt-4 border-t border-stone-100 text-[10px] text-stone-400">
+                <div className="flex items-center justify-between pt-4 border-t border-border text-[10px] text-muted-text/80">
                   <span>Bởi Reviewer Hoàng Bách</span>
                   <span>28 Tháng 6, 2026</span>
                 </div>
@@ -383,24 +383,24 @@ export default async function HomePage() {
       </section>
 
       {/* 8. BENEFITS SECTION */}
-      <section id="benefits" className="w-full py-20 bg-white border-t border-stone-200">
+      <section id="benefits" className="w-full py-20 bg-background border-t border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-xl mx-auto mb-16 animate-fade-in-up stagger-1">
             <span className="text-xs font-black uppercase text-primary tracking-widest">TẠI SAO CHỌN POYKEN SOUND</span>
-            <h2 className="text-3xl font-extrabold text-stone-900 uppercase mt-1">DỊCH VỤ PREMIUM XỨNG TẦM</h2>
+            <h2 className="text-3xl font-extrabold text-foreground uppercase mt-1">DỊCH VỤ PREMIUM XỨNG TẦM</h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 animate-fade-in-up stagger-2">
             {benefits.map((benefit, idx) => (
               <div 
                 key={idx}
-                className="p-8 bg-stone-50/50 border border-stone-200 hover:border-stone-350 hover:bg-white rounded-2xl flex flex-col items-center text-center space-y-4 hover-glow transition-all"
+                className="p-8 bg-card border border-border hover:border-border-hover hover:bg-card-hover rounded-2xl flex flex-col items-center text-center space-y-4 hover-glow transition-all"
               >
-                <div className="p-4 bg-white border border-stone-200 rounded-full text-primary group-hover:scale-110 transition-transform shadow-sm">
+                <div className="p-4 bg-input-bg border border-border rounded-full text-primary group-hover:scale-110 transition-transform shadow-sm">
                   <benefit.icon className="w-8 h-8" />
                 </div>
-                <h3 className="text-lg font-bold text-stone-850 uppercase tracking-wide">{benefit.title}</h3>
-                <p className="text-sm text-stone-500 leading-relaxed max-w-xs">{benefit.desc}</p>
+                <h3 className="text-lg font-bold text-foreground uppercase tracking-wide">{benefit.title}</h3>
+                <p className="text-sm text-muted-text leading-relaxed max-w-xs">{benefit.desc}</p>
               </div>
             ))}
           </div>
@@ -408,21 +408,21 @@ export default async function HomePage() {
       </section>
 
       {/* 9. NEWSLETTER PROMO */}
-      <section className="w-full py-24 relative overflow-hidden bg-gradient-to-b from-stone-50 to-stone-100 border-t border-stone-200">
+      <section className="w-full py-24 relative overflow-hidden bg-gradient-to-b from-muted-bg/10 to-muted-bg/30 border-t border-border">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[40rem] h-[20rem] rounded-full bg-primary/5 blur-[120px] pointer-events-none" />
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 space-y-6">
           <span className="text-xs font-black uppercase text-primary tracking-widest">ĐĂNG KÝ HỘI VIÊN V.I.P</span>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-stone-900 uppercase leading-none">
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-foreground uppercase leading-none">
             NHẬN VOUCHER GIẢM 10% CHO ĐƠN HÀNG ĐẦU TIÊN
           </h2>
-          <p className="text-sm text-stone-600 max-w-md mx-auto leading-relaxed">
+          <p className="text-sm text-muted-text max-w-md mx-auto leading-relaxed">
             Đăng ký nhận bản tin để không bỏ lỡ các thông báo mở bán loa phiên bản giới hạn và các chương trình ưu đãi đặc quyền.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto pt-2">
             <input
               type="email"
               placeholder="Email của bạn..."
-              className="bg-white border border-stone-200 text-sm text-stone-900 placeholder-stone-400 px-5 py-3 rounded-full focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 flex-1 shadow-sm"
+              className="bg-input-bg border border-border text-sm text-foreground placeholder-muted-text/70 px-5 py-3 rounded-full focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 flex-1 shadow-sm"
             />
             <button className="bg-primary hover:bg-orange-700 text-white text-sm font-extrabold px-8 py-3 rounded-full hover:shadow-lg hover:shadow-primary/10 transition-all hover:scale-105 active:scale-95 shadow-md shadow-primary/10 btn-premium">
               ĐĂNG KÝ NGAY

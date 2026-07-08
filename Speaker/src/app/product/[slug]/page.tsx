@@ -55,7 +55,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1">
       {/* 1. Breadcrumbs */}
-      <nav className="flex items-center gap-2 text-xs font-semibold text-stone-500 mb-8 uppercase tracking-wider">
+      <nav className="flex items-center gap-2 text-xs font-semibold text-muted-text mb-8 uppercase tracking-wider">
         <Link href="/" className="hover:text-primary transition-colors">
           Trang Chủ
         </Link>
@@ -75,7 +75,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
             <span>/</span>
           </>
         )}
-        <span className="text-stone-600 truncate max-w-[200px]">
+        <span className="text-foreground truncate max-w-[200px]">
           {product.name}
         </span>
       </nav>
@@ -88,12 +88,12 @@ export default async function ProductDetailPage({ params }: PageProps) {
 
       {/* 3. Related Products Slider */}
       {relatedProducts.length > 0 && (
-        <div className="mt-20 pt-10 border-t border-stone-200 text-left">
+        <div className="mt-20 pt-10 border-t border-border text-left">
           <div>
             <span className="text-xs font-black uppercase text-primary tracking-widest">
               Gợi ý cho bạn
             </span>
-            <h2 className="text-2xl font-extrabold text-stone-900 uppercase mt-1 mb-8">
+            <h2 className="text-2xl font-extrabold text-foreground uppercase mt-1 mb-8">
               Sản Phẩm Tương Tự
             </h2>
           </div>

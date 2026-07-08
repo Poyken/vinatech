@@ -126,12 +126,12 @@ export default function ProductDetailInteractive({ product, initialReviews }: Pr
 
   return (
     <div className="space-y-12">
-      {/* 1. Product Layout Grid */}
+      {/* 1. Product Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
         
         {/* Left Column: Gallery */}
         <div className="lg:col-span-6 space-y-4">
-          <div className="aspect-square bg-white border border-stone-200 rounded-3xl flex items-center justify-center overflow-hidden relative group shadow-sm">
+          <div className="aspect-square bg-card border border-border rounded-3xl flex items-center justify-center overflow-hidden relative group shadow-sm">
             {selectedImage ? (
               <img 
                 src={selectedImage} 
@@ -141,7 +141,7 @@ export default function ProductDetailInteractive({ product, initialReviews }: Pr
             ) : (
               <span className="text-8xl select-none group-hover:scale-105 transition-transform duration-500">🔊</span>
             )}
-            <span className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm border border-stone-200/60 px-3 py-1 rounded-full text-xs text-primary font-bold shadow-sm">
+            <span className="absolute bottom-4 left-4 bg-card/90 backdrop-blur-sm border border-border px-3 py-1 rounded-full text-xs text-primary font-bold shadow-sm">
               {product.brand} Original
             </span>
           </div>
@@ -151,8 +151,8 @@ export default function ProductDetailInteractive({ product, initialReviews }: Pr
                 <button
                   key={index}
                   onClick={() => setSelectedImage(img)}
-                  className={`w-20 h-20 bg-white border rounded-xl flex items-center justify-center overflow-hidden hover:border-primary transition-all p-1 shadow-sm ${
-                    selectedImage === img ? 'border-primary ring-2 ring-primary/10' : 'border-stone-200'
+                  className={`w-20 h-20 bg-input-bg border rounded-xl flex items-center justify-center overflow-hidden hover:border-primary transition-all p-1 shadow-sm ${
+                    selectedImage === img ? 'border-primary ring-2 ring-primary/10' : 'border-border'
                   }`}
                 >
                   <img src={img} alt="" className="w-full h-full object-cover rounded-lg" />
@@ -166,7 +166,7 @@ export default function ProductDetailInteractive({ product, initialReviews }: Pr
         <div className="lg:col-span-6 space-y-6 text-left">
           <div>
             <span className="text-xs font-black uppercase text-primary tracking-widest">{product.brand}</span>
-            <h1 className="text-3xl font-extrabold text-stone-900 uppercase mt-1 leading-tight">{product.name}</h1>
+            <h1 className="text-3xl font-extrabold text-foreground uppercase mt-1 leading-tight">{product.name}</h1>
             
             {/* Rating Stars */}
             <div className="flex items-center gap-2 mt-2">
@@ -175,38 +175,38 @@ export default function ProductDetailInteractive({ product, initialReviews }: Pr
                   <Star
                     key={i}
                     className={`w-4 h-4 ${
-                      i < Math.floor(product.rating) ? 'fill-amber-500 text-amber-500' : 'text-stone-200 fill-stone-100'
+                      i < Math.floor(product.rating) ? 'fill-amber-500 text-amber-500' : 'text-border fill-border'
                     }`}
                   />
                 ))}
               </div>
-              <span className="text-xs font-bold text-stone-500">
+              <span className="text-xs font-bold text-muted-text">
                 {product.rating} / 5.0 ({reviews.length} đánh giá)
               </span>
             </div>
           </div>
 
           {/* Pricing Box */}
-          <div className="p-5 bg-white border border-stone-200 rounded-2xl flex items-center justify-between shadow-sm">
+          <div className="p-5 bg-card border border-border rounded-2xl flex items-center justify-between shadow-sm">
             <div className="space-y-1">
-              <span className="text-xs text-stone-500 font-bold uppercase tracking-wider block">Giá bán lẻ đề xuất</span>
+              <span className="text-xs text-muted-text font-bold uppercase tracking-wider block">Giá bán lẻ đề xuất</span>
               <div className="flex items-center gap-3">
                 <span className="text-2xl font-black text-primary">{formatPrice(product.price)}</span>
                 {product.originalPrice && (
-                  <span className="text-sm text-stone-400 line-through">{formatPrice(product.originalPrice)}</span>
+                  <span className="text-sm text-muted-text line-through">{formatPrice(product.originalPrice)}</span>
                 )}
               </div>
             </div>
             
             {/* Stock status */}
             <div className="text-right">
-              <span className="text-xs text-stone-500 block font-semibold">Tình trạng kho</span>
+              <span className="text-xs text-muted-text block font-semibold">Tình trạng kho</span>
               {product.stock > 0 ? (
-                <span className="text-xs bg-green-500/10 text-green-700 font-extrabold px-2 py-0.5 rounded border border-green-500/20 mt-1 inline-block">
+                <span className="text-xs bg-green-500/10 text-green-655 font-extrabold px-2 py-0.5 rounded border border-green-500/20 mt-1 inline-block">
                   Còn {product.stock} Chiếc
                 </span>
               ) : (
-                <span className="text-xs bg-red-500/10 text-red-700 font-extrabold px-2 py-0.5 rounded border border-red-500/20 mt-1 inline-block">
+                <span className="text-xs bg-red-500/10 text-red-655 font-extrabold px-2 py-0.5 rounded border border-red-500/20 mt-1 inline-block">
                   Hết Hàng
                 </span>
               )}
@@ -214,16 +214,16 @@ export default function ProductDetailInteractive({ product, initialReviews }: Pr
           </div>
 
           {/* Short Description */}
-          <p className="text-sm text-stone-600 leading-relaxed">{product.description}</p>
+          <p className="text-sm text-muted-text leading-relaxed">{product.description}</p>
 
           {/* Dynamic Audio Player wave simulation */}
-          <div className="p-5 bg-white border border-stone-200 rounded-2xl space-y-4 shadow-sm">
+          <div className="p-5 bg-card border border-border rounded-2xl space-y-4 shadow-sm">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <div className="w-2.5 h-2.5 rounded-full bg-primary animate-ping" />
-                <span className="text-xs font-black uppercase text-stone-850 tracking-wider">Trải Nghiệm Phòng Lọc Âm Thanh</span>
+                <span className="text-xs font-black uppercase text-foreground tracking-wider">Trải Nghiệm Phòng Lọc Âm Thanh</span>
               </div>
-              <span className="text-[10px] text-stone-500 font-bold uppercase">Simulated Sound Profile</span>
+              <span className="text-[10px] text-muted-text font-bold uppercase">Simulated Sound Profile</span>
             </div>
 
             <div className="flex items-center gap-4">
@@ -235,7 +235,7 @@ export default function ProductDetailInteractive({ product, initialReviews }: Pr
               </button>
 
               {/* sound wave bar visualizer */}
-              <div className="flex-1 h-14 flex items-end justify-between px-2 bg-stone-50 rounded-xl border border-stone-200 overflow-hidden py-1.5 relative">
+              <div className="flex-1 h-14 flex items-end justify-between px-2 bg-input-bg rounded-xl border border-border overflow-hidden py-1.5 relative">
                 {waveHeights.map((h, i) => (
                   <div
                     key={i}
@@ -243,32 +243,32 @@ export default function ProductDetailInteractive({ product, initialReviews }: Pr
                     style={{ 
                       height: `${h}%`,
                       opacity: isPlaying ? 0.9 : 0.25,
-                      backgroundColor: isPlaying ? 'var(--primary)' : '#d6d3d1'
+                      backgroundColor: isPlaying ? 'var(--primary)' : 'var(--border)'
                     }}
                   />
                 ))}
               </div>
             </div>
             
-            <p className="text-[11px] text-stone-500 leading-tight">
-              * Nhấn Play để nghe thử demo dải âm đặc trưng của loa qua máy phát âm thanh giả lập.
+            <p className="text-[11px] text-muted-text leading-tight">
+              * Nhấn Play để nghe thử dải âm đặc trưng của loa qua máy phát âm thanh giả lập.
             </p>
           </div>
 
           {/* Purchase Controls */}
           {product.stock > 0 && (
             <div className="flex gap-4 pt-2">
-              <div className="flex items-center bg-white border border-stone-200 rounded-xl shadow-sm">
+              <div className="flex items-center bg-input-bg border border-border rounded-xl shadow-sm">
                 <button
                   onClick={() => setQuantity(q => Math.max(1, q - 1))}
-                  className="px-4 py-3 text-stone-500 hover:text-stone-800 transition-colors"
+                  className="px-4 py-3 text-muted-text hover:text-foreground transition-colors"
                 >
                   -
                 </button>
-                <span className="w-10 text-center text-stone-800 font-bold text-sm">{quantity}</span>
+                <span className="w-10 text-center text-foreground font-bold text-sm">{quantity}</span>
                 <button
                   onClick={() => setQuantity(q => Math.min(product.stock, q + 1))}
-                  className="px-4 py-3 text-stone-500 hover:text-stone-800 transition-colors"
+                  className="px-4 py-3 text-muted-text hover:text-foreground transition-colors"
                 >
                   +
                 </button>
@@ -276,7 +276,7 @@ export default function ProductDetailInteractive({ product, initialReviews }: Pr
 
               <button
                 onClick={() => addToCart(product, quantity)}
-                className="flex-1 py-4 bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 text-white font-black rounded-xl hover:shadow-lg hover:shadow-primary/10 flex items-center justify-center gap-2 transition-all hover:scale-[1.01] active:scale-[0.99] shadow-md"
+                className="flex-1 py-4 bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 text-white font-black rounded-xl hover:shadow-lg hover:shadow-primary/10 flex items-center justify-center gap-2 transition-all hover:scale-[1.01] active:scale-[0.99] shadow-md shadow-primary/10"
               >
                 <ShoppingCart className="w-5 h-5" />
                 Thêm Vào Giỏ Hàng
@@ -288,22 +288,22 @@ export default function ProductDetailInteractive({ product, initialReviews }: Pr
       </div>
 
       {/* 2. Technical Specifications Table */}
-      <div className="pt-6 border-t border-stone-200">
-        <h2 className="text-xl font-extrabold text-stone-800 uppercase mb-6 tracking-wide text-left">Thông Số Kỹ Thuật</h2>
-        <div className="bg-white border border-stone-200 rounded-2xl overflow-hidden shadow-sm">
+      <div className="pt-6 border-t border-border">
+        <h2 className="text-xl font-extrabold text-foreground uppercase mb-6 tracking-wide text-left">Thông Số Kỹ Thuật</h2>
+        <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-sm">
           <table className="w-full text-left border-collapse">
             <tbody>
               {Object.entries(product.specs).map(([key, val], idx) => (
                 <tr 
                   key={key}
-                  className={`border-b border-stone-100 last:border-0 ${
-                    idx % 2 === 0 ? 'bg-stone-50/50' : 'bg-transparent'
+                  className={`border-b border-border last:border-0 ${
+                    idx % 2 === 0 ? 'bg-muted-bg/30' : 'bg-transparent'
                   }`}
                 >
-                  <td className="px-6 py-4 text-xs font-bold text-stone-500 uppercase tracking-wider w-1/3 border-r border-stone-100">
+                  <td className="px-6 py-4 text-xs font-bold text-muted-text uppercase tracking-wider w-1/3 border-r border-border">
                     {key}
                   </td>
-                  <td className="px-6 py-4 text-sm text-stone-700">
+                  <td className="px-6 py-4 text-sm text-foreground">
                     {val}
                   </td>
                 </tr>
@@ -314,31 +314,31 @@ export default function ProductDetailInteractive({ product, initialReviews }: Pr
       </div>
 
       {/* 3. Review Sections */}
-      <div className="pt-8 border-t border-stone-200 grid grid-cols-1 lg:grid-cols-12 gap-10">
+      <div className="pt-8 border-t border-border grid grid-cols-1 lg:grid-cols-12 gap-10">
         
         {/* Left: Review List */}
         <div className="lg:col-span-7 space-y-6 text-left">
-          <h2 className="text-xl font-extrabold text-stone-800 uppercase tracking-wide">
+          <h2 className="text-xl font-extrabold text-foreground uppercase tracking-wide">
             Đánh giá khách hàng ({reviews.length})
           </h2>
 
           <div className="space-y-4">
             {reviews.length === 0 ? (
-              <p className="text-sm text-stone-500">Chưa có đánh giá nào cho sản phẩm này. Hãy là người đầu tiên chia sẻ cảm nhận!</p>
+              <p className="text-sm text-muted-text">Chưa có đánh giá nào cho sản phẩm này. Hãy là người đầu tiên chia sẻ cảm nhận!</p>
             ) : (
               reviews.map((rev) => (
                 <div 
                   key={rev.id}
-                  className="p-5 bg-white border border-stone-200 rounded-2xl space-y-3 shadow-sm"
+                  className="p-5 bg-card border border-border rounded-2xl space-y-3 shadow-sm"
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 rounded-full bg-stone-100 border border-stone-200 flex items-center justify-center text-stone-600">
+                      <div className="w-8 h-8 rounded-full bg-input-bg border border-border flex items-center justify-center text-muted-text">
                         <User className="w-4 h-4" />
                       </div>
                       <div>
-                        <h4 className="text-sm font-bold text-stone-800 leading-none">{rev.userName}</h4>
-                        <span className="text-[10px] text-stone-500 mt-1 block">Khách mua hàng thực tế</span>
+                        <h4 className="text-sm font-bold text-foreground leading-none">{rev.userName}</h4>
+                        <span className="text-[10px] text-muted-text/80 mt-1 block">Khách mua hàng thực tế</span>
                       </div>
                     </div>
 
@@ -347,14 +347,14 @@ export default function ProductDetailInteractive({ product, initialReviews }: Pr
                         <Star
                           key={i}
                           className={`w-3.5 h-3.5 ${
-                            i < rev.rating ? 'fill-amber-500 text-amber-500' : 'text-stone-200 fill-stone-100'
+                            i < rev.rating ? 'fill-amber-500 text-amber-500' : 'text-border fill-border'
                           }`}
                         />
                       ))}
                     </div>
                   </div>
 
-                  <p className="text-sm text-stone-600 pl-10 leading-relaxed">
+                  <p className="text-sm text-muted-text pl-10 leading-relaxed">
                     {rev.comment}
                   </p>
                 </div>
@@ -365,8 +365,8 @@ export default function ProductDetailInteractive({ product, initialReviews }: Pr
 
         {/* Right: Write Review Form */}
         <div className="lg:col-span-5 text-left">
-          <div className="p-6 bg-white border border-stone-200 rounded-3xl space-y-5 shadow-sm">
-            <h3 className="text-base font-bold text-stone-850 uppercase tracking-wider border-l-2 border-primary pl-3">
+          <div className="p-6 bg-card border border-border rounded-3xl space-y-5 shadow-sm">
+            <h3 className="text-base font-bold text-foreground uppercase tracking-wider border-l-2 border-primary pl-3">
               Viết đánh giá sản phẩm
             </h3>
 
@@ -375,14 +375,14 @@ export default function ProductDetailInteractive({ product, initialReviews }: Pr
                 <CheckCircle2 className="w-5 h-5 flex-shrink-0 mt-0.5" />
                 <div>
                   <h4 className="text-sm font-bold">Gửi đánh giá thành công!</h4>
-                  <p className="text-xs text-green-600/80 mt-0.5">Cảm ơn bạn đã đóng góp đánh giá sản phẩm của Poyken Sound.</p>
+                  <p className="text-xs text-green-655/80 mt-0.5">Cảm ơn bạn đã đóng góp đánh giá sản phẩm của Poyken Sound.</p>
                 </div>
               </div>
             ) : (
               <form onSubmit={handleAddReview} className="space-y-4">
                 {/* Rating selection */}
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-stone-500 uppercase tracking-wider block">Chọn Số Sao</label>
+                  <label className="text-xs font-bold text-muted-text uppercase tracking-wider block">Chọn Số Sao</label>
                   <div className="flex gap-1.5">
                     {[1, 2, 3, 4, 5].map((star) => (
                       <button
@@ -393,7 +393,7 @@ export default function ProductDetailInteractive({ product, initialReviews }: Pr
                       >
                         <Star 
                           className={`w-6 h-6 ${
-                            star <= reviewRating ? 'fill-amber-500 text-amber-500' : 'text-stone-200 fill-stone-100'
+                            star <= reviewRating ? 'fill-amber-500 text-amber-500' : 'text-border fill-border'
                           }`} 
                         />
                       </button>
@@ -403,33 +403,33 @@ export default function ProductDetailInteractive({ product, initialReviews }: Pr
 
                 {/* Name */}
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-stone-500 uppercase tracking-wider block">Họ Tên</label>
+                  <label className="text-xs font-bold text-muted-text uppercase tracking-wider block">Họ Tên</label>
                   <input
                     type="text"
                     required
                     placeholder="Nhập họ tên của bạn..."
                     value={reviewName}
                     onChange={(e) => setReviewName(e.target.value)}
-                    className="w-full bg-stone-50 border border-stone-250 rounded-xl px-4 py-2.5 text-xs text-stone-800 placeholder-stone-400 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20"
+                    className="w-full bg-input-bg border border-border rounded-xl px-4 py-2.5 text-xs text-foreground placeholder-muted-text/70 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20"
                   />
                 </div>
 
                 {/* Comment */}
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-stone-500 uppercase tracking-wider block">Nhận xét</label>
+                  <label className="text-xs font-bold text-muted-text uppercase tracking-wider block">Nhận xét</label>
                   <textarea
                     required
                     rows={4}
                     placeholder="Chia sẻ trải nghiệm của bạn về chất lượng âm thanh, độ hoàn thiện của sản phẩm..."
                     value={reviewComment}
                     onChange={(e) => setReviewComment(e.target.value)}
-                    className="w-full bg-stone-50 border border-stone-250 rounded-xl px-4 py-2.5 text-xs text-stone-800 placeholder-stone-400 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 resize-none"
+                    className="w-full bg-input-bg border border-border rounded-xl px-4 py-2.5 text-xs text-foreground placeholder-muted-text/70 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 resize-none"
                   />
                 </div>
 
                 <button
                   type="submit"
-                  className="w-full py-3 bg-stone-800 hover:bg-primary text-white font-extrabold text-xs uppercase tracking-wider rounded-xl transition-all flex items-center justify-center gap-1.5 shadow-sm"
+                  className="w-full py-3 bg-input-bg hover:bg-primary hover:text-white text-foreground border border-border font-extrabold text-xs uppercase tracking-wider rounded-xl transition-all flex items-center justify-center gap-1.5 shadow-sm active:scale-95"
                 >
                   <Send className="w-3.5 h-3.5" />
                   Gửi Đánh Giá

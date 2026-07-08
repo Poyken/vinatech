@@ -120,15 +120,15 @@ export default function SoundQuizWidget() {
   const currentOption = options.find((opt) => opt.id === selectedId) || options[0];
 
   return (
-    <div className="bg-stone-50 border border-stone-200 rounded-3xl p-6 sm:p-10 shadow-sm max-w-7xl mx-auto w-full">
+    <div className="bg-card border border-border rounded-3xl p-6 sm:p-10 shadow-sm max-w-7xl mx-auto w-full">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
         
         {/* Left: Option selector */}
         <div className="lg:col-span-5 space-y-6 text-left">
           <div>
             <span className="text-xs font-black uppercase text-primary tracking-widest">Cá nhân hóa trải nghiệm</span>
-            <h3 className="text-2xl sm:text-3xl font-extrabold text-stone-900 uppercase mt-1">Gu Âm Nhạc Của Bạn?</h3>
-            <p className="text-xs text-stone-500 mt-2 leading-relaxed">
+            <h3 className="text-2xl sm:text-3xl font-extrabold text-foreground uppercase mt-1">Gu Âm Nhạc Của Bạn?</h3>
+            <p className="text-xs text-muted-text mt-2 leading-relaxed">
               Chọn phong cách âm nhạc yêu thích của bạn dưới đây, hệ thống Poyken Sound sẽ ngay lập tức đề xuất mẫu loa có chất âm tương ứng hoàn hảo nhất.
             </p>
           </div>
@@ -142,18 +142,18 @@ export default function SoundQuizWidget() {
                   onClick={() => setSelectedId(opt.id)}
                   className={`p-4 rounded-2xl border cursor-pointer flex gap-4 items-center transition-all ${
                     isSelected
-                      ? 'bg-white border-primary shadow-md shadow-primary/5 translate-x-1'
-                      : 'bg-transparent border-stone-200 hover:border-stone-300'
+                      ? 'bg-muted-bg border-primary shadow-md shadow-primary/5 translate-x-1'
+                      : 'bg-transparent border-border/80 hover:border-border-hover'
                   }`}
                 >
                   <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 border ${
-                    isSelected ? 'bg-primary/5 border-primary/20' : 'bg-white border-stone-200'
+                    isSelected ? 'bg-primary/5 border-primary/20' : 'bg-input-bg border-border'
                   }`}>
                     {opt.icon}
                   </div>
                   <div>
-                    <h4 className="text-xs font-black text-stone-850 uppercase tracking-wide">{opt.title}</h4>
-                    <p className="text-[10px] text-stone-500 mt-0.5 max-w-[280px] leading-tight">{opt.desc}</p>
+                    <h4 className="text-xs font-black text-foreground uppercase tracking-wide">{opt.title}</h4>
+                    <p className="text-[10px] text-muted-text mt-0.5 max-w-[280px] leading-tight">{opt.desc}</p>
                   </div>
                 </div>
               );
@@ -162,15 +162,15 @@ export default function SoundQuizWidget() {
         </div>
 
         {/* Right: Dynamic recommendations card */}
-        <div className="lg:col-span-7 bg-white border border-stone-200 rounded-3xl p-6 sm:p-8 flex flex-col justify-between shadow-sm relative overflow-hidden min-h-[380px] text-left animate-in fade-in duration-300">
+        <div className="lg:col-span-7 bg-muted-bg/60 border border-border rounded-3xl p-6 sm:p-8 flex flex-col justify-between shadow-sm relative overflow-hidden min-h-[380px] text-left animate-in fade-in duration-300">
           <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-2xl -mr-10 -mt-10" />
           
           <div className="relative z-10">
             <span className="text-[10px] bg-primary/10 text-primary font-black uppercase px-2 py-0.5 rounded-md border border-primary/20 tracking-wider">
               {currentOption.genre}
             </span>
-            <h4 className="text-lg font-black text-stone-900 uppercase mt-3">Đề xuất hoàn hảo cho bạn</h4>
-            <p className="text-xs text-stone-500 mt-1 max-w-md leading-relaxed">
+            <h4 className="text-lg font-black text-foreground uppercase mt-3">Đề xuất hoàn hảo cho bạn</h4>
+            <p className="text-xs text-muted-text mt-1 max-w-md leading-relaxed">
               Các chuyên gia âm thanh Poyken Sound đã tối ưu hóa cấu hình sản phẩm dưới đây giúp tái hiện chân thực nhất dải âm phù hợp với dòng nhạc bạn chọn.
             </p>
           </div>
@@ -180,10 +180,10 @@ export default function SoundQuizWidget() {
             {currentOption.recommendations.map((prod) => (
               <div 
                 key={prod.slug}
-                className="group border border-stone-150 rounded-2xl p-4 bg-stone-50/50 hover:bg-white hover:border-primary/20 transition-all hover:shadow-md"
+                className="group border border-border rounded-2xl p-4 bg-card hover:bg-card-hover hover:border-primary/20 transition-all hover:shadow-md"
               >
                 {/* Image */}
-                <div className="aspect-video w-full rounded-xl overflow-hidden bg-stone-100 border border-stone-200 relative">
+                <div className="aspect-video w-full rounded-xl overflow-hidden bg-input-bg border border-border relative">
                   <img 
                     src={prod.image} 
                     alt={prod.name} 
@@ -192,14 +192,14 @@ export default function SoundQuizWidget() {
                 </div>
                 {/* Meta */}
                 <div className="mt-3">
-                  <span className="text-[9px] font-bold text-stone-400 uppercase tracking-widest">{prod.brand}</span>
-                  <h5 className="text-xs font-black text-stone-850 truncate group-hover:text-primary transition-colors mt-0.5">{prod.name}</h5>
+                  <span className="text-[9px] font-bold text-muted-text uppercase tracking-widest">{prod.brand}</span>
+                  <h5 className="text-xs font-black text-foreground truncate group-hover:text-primary transition-colors mt-0.5">{prod.name}</h5>
                   
                   <div className="flex justify-between items-center mt-2.5">
                     <span className="text-xs font-extrabold text-primary">{prod.price}</span>
                     <Link
                       href={`/product/${prod.slug}`}
-                      className="p-1.5 bg-white border border-stone-200 rounded-full text-stone-600 hover:text-primary hover:border-primary transition-all active:scale-95 shadow-sm"
+                      className="p-1.5 bg-input-bg border border-border rounded-full text-muted-text hover:text-primary hover:border-primary transition-all active:scale-95 shadow-sm"
                     >
                       <ArrowRight className="w-3.5 h-3.5" />
                     </Link>
@@ -209,8 +209,8 @@ export default function SoundQuizWidget() {
             ))}
           </div>
 
-          <div className="flex items-center justify-between border-t border-stone-150 pt-4 relative z-10 text-xs">
-            <span className="text-stone-500 flex items-center gap-1">
+          <div className="flex items-center justify-between border-t border-border pt-4 relative z-10 text-xs">
+            <span className="text-muted-text flex items-center gap-1">
               <Heart className="w-4 h-4 text-primary fill-primary/10" />
               Độc quyền phân phối tại Việt Nam
             </span>

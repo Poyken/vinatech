@@ -49,10 +49,10 @@ export default async function CatalogPage({ searchParams }: PageProps) {
         <span className="text-xs font-black uppercase text-primary tracking-widest">
           Danh mục thiết bị
         </span>
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-stone-900 uppercase mt-1">
+        <h1 className="text-3xl sm:text-4xl font-extrabold text-foreground uppercase mt-1">
           Loa & Thiết Bị Âm Thanh
         </h1>
-        <p className="text-sm text-stone-500 mt-2">
+        <p className="text-sm text-muted-text mt-2">
           Hiển thị {products.length} sản phẩm phù hợp với bộ lọc của bạn.
         </p>
       </div>
@@ -70,19 +70,19 @@ export default async function CatalogPage({ searchParams }: PageProps) {
         {/* Right Grid */}
         <main className="lg:col-span-3">
           {products.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-20 bg-stone-50 border border-stone-200 rounded-2xl text-center space-y-4 shadow-sm">
-              <div className="p-4 bg-white border border-stone-200 rounded-full text-stone-400">
+            <div className="flex flex-col items-center justify-center py-20 bg-muted-bg/30 border border-border rounded-2xl text-center space-y-4 shadow-sm">
+              <div className="p-4 bg-input-bg border border-border rounded-full text-muted-text">
                 <SlidersHorizontal className="w-10 h-10" />
               </div>
               <div>
-                <h3 className="text-lg font-bold text-stone-900 uppercase">Không tìm thấy loa</h3>
-                <p className="text-sm text-stone-500 mt-1 max-w-xs mx-auto">
+                <h3 className="text-lg font-bold text-foreground uppercase">Không tìm thấy loa</h3>
+                <p className="text-sm text-muted-text mt-1 max-w-xs mx-auto">
                   Rất tiếc, không có sản phẩm nào đáp ứng được các bộ lọc tìm kiếm hiện tại của bạn.
                 </p>
               </div>
               <a
                 href="/catalog"
-                className="px-6 py-2 bg-white hover:bg-stone-50 text-stone-800 text-xs font-bold border border-stone-200 rounded-full transition-all shadow-sm"
+                className="px-6 py-2 bg-input-bg hover:bg-card-hover text-foreground text-xs font-bold border border-border rounded-full transition-all shadow-sm"
               >
                 Đặt Lại Bộ Lọc
               </a>
