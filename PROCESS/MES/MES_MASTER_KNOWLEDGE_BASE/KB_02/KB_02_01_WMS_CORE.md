@@ -3,7 +3,7 @@
 > **Màn hình:** F330, F312, F430, F110, F710, F721, F741, C220, HN551, HN866, HN544, FG00
 > **Bảng chính:** `STB_MaterialLotInfo`, `STB_MaterialDocInfo`, `STB_MaterialStock`, `STB_MaterialWarehouse`
 > **🔑 Keywords:** kho, warehouse, tồn kho, nhập kho, xuất kho, FIFO, holding, hết hạn, lot, NVL, nguyên vật liệu, phiếu nhập, phiếu xuất, chuyển kho
-> ← [Về INDEX](KB_INDEX.md)
+> ← [Về INDEX](../KB_INDEX.md)
 
 ---
 
@@ -73,7 +73,7 @@ flowchart TD
 
 ---
 
-### 4.1 Tìm kiếm [F721] trả về cả danh sách (không lọc được)
+### 4.1 [F721] — Tìm kiếm trả về cả danh sách (không lọc được)
 
 **Nguyên nhân:** Điều kiện lọc trong SP bị sai hoặc tham số truyền vào rỗng.
 
@@ -87,13 +87,13 @@ SELECT OBJECT_DEFINITION(OBJECT_ID('usp_vvt_MaterialLotInfo_get'))
 
 ---
 
-### 4.2 Không tìm thấy mã lot ở màn [C512]
+### 4.2 [C512] — Không tìm thấy mã lot ở màn
 
-👉 **Chi tiết Nguyên nhân & Cách xử lý:** Xem tại [../KB_05/KB_05_01_QC_OVERVIEW.md § 7.2](../KB_05/KB_05_01_QC_OVERVIEW.md)
+👉 **Chi tiết Nguyên nhân & Cách xử lý:** Xem tại [../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md § 7.2](../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md)
 
 ---
 
-### 4.3 Chỉnh lại Kho bị nhập sai ở màn [F330]
+### 4.3 [F330] — Chỉnh lại Kho bị nhập sai ở màn
 
 **Triệu chứng:** Hàng nhập vào đúng nhưng kho bị chọn sai (VD: nhập vào kho BG nhưng lẽ ra phải vào kho BN).
 
@@ -134,7 +134,7 @@ WHERE LotID IN ('LotID1', 'LotID2', ...)
 
 ---
 
-### 4.4 Chỉnh Code NVL nhập sai ở màn [F312]
+### 4.4 [F312] — Chỉnh Code NVL nhập sai ở màn
 
 **Triệu chứng:** Nhập nhầm mã NVL khi làm phiếu nhập kho F312.
 
@@ -164,7 +164,7 @@ WHERE LotID IN (
 
 ---
 
-### 4.5 Sửa số lượng màn [F312]
+### 4.5 [F312] — Sửa số lượng màn
 
 **Triệu chứng:** Số lượng phiếu nhập bị sai.
 
@@ -181,7 +181,7 @@ WHERE MaterialDocNo = '250213000154' AND MaterialCode = '122507G1PT0'
 
 ---
 
-### 4.6 Sửa ngày xuất kho màn [F430]
+### 4.6 [F430] — Sửa ngày xuất kho màn
 
 **Triệu chứng:** Hàng xuất kho bị ghi nhận sai ngày.
 
@@ -221,7 +221,7 @@ WHERE LotID = 'ML20250430000174'
 
 ---
 
-### 4.8 Sửa Location vật tư ([F721] - Thuộc tính LotAttr09)
+### 4.8 [F721] — Sửa Location vật tư ( Thuộc tính LotAttr09)
 
 ```sql
 -- Xem location hiện tại
@@ -306,7 +306,7 @@ WHERE MDLI.LotID = 'ML...'
 
 ---
 
-### 4.11 Lỗi không lưu được [F330] - Cấu hình và sửa lỗi đọc "Đặc tính 10" (Vendor Lot No)
+### 4.11 [F330] — Lỗi không lưu được Cấu hình và sửa lỗi đọc "Đặc tính 10" (Vendor Lot No)
 
 **Triệu chứng:** F330 báo lỗi khi nhập mã Lot nhà cung cấp ở "Đặc tính 10" (hoặc Lot tự động bị đưa vào kho `HOLDING` do thiếu Đặc tính 10).
 
@@ -314,7 +314,7 @@ WHERE MDLI.LotID = 'ML...'
 
 Có **3 cách xử lý/thiết lập** tùy thuộc vào tình huống:
 
-#### Cách 1: Cấu hình độ dài quét tem trên UI [F330] (Khi mã Lot Vendor quá dài)
+#### [F330] — Cách 1: Cấu hình độ dài quét tem trên UI (Khi mã Lot Vendor quá dài)
 * **Vị trí thiết lập:** Vào màn hình **F330** -> Tab thứ 3.
 * **Thực hiện:** Thiết lập cấu hình chiều dài quét của mã để cắt chuỗi barcode lấy phần Lot phù hợp, giúp tránh lỗi do chuỗi barcode truyền vào quá dài.
 
@@ -322,9 +322,9 @@ Có **3 cách xử lý/thiết lập** tùy thuộc vào tình huống:
 Khi nhà cung cấp thay đổi định dạng mã Lot Vendor, hệ thống sẽ không đọc được ngày sản xuất, gây lỗi `Exception occurred` hoặc tính sai hạn dùng. Bạn cần sửa đổi các SQL Function tương ứng.
 
 ##### 1. Phân biệt 2 Function của hệ thống:
-* **Hàm [fn_VVT_getdatebyVendorLot](../KB_10/KB_10_01_ARCHITECTURE.md) (2 tham số: `@materialcode`, `@vendorlot`):**
+* **Hàm fn_VVT_getdatebyVendorLot (2 tham số: `@materialcode`, `@vendorlot`):**
   * Dùng cho các vật tư chỉ có một định dạng Vendor Lot duy nhất từ một nhà cung cấp, không phân biệt nhà cung cấp khác nhau.
-* **Hàm [fn_VVT_getdatebyVendorLot_MergeCode](../KB_10/KB_10_01_ARCHITECTURE.md) (3 tham số: `@materialcode`, `@vendorlot`, `@sourceCustomerCode`):**
+* **Hàm fn_VVT_getdatebyVendorLot_MergeCode (3 tham số: `@materialcode`, `@vendorlot`, `@sourceCustomerCode`):**
   * Dùng khi **cùng một mã vật tư** nhưng được cung cấp bởi **nhiều nhà cung cấp khác nhau** (`@sourceCustomerCode` ví dụ: `VV033`, `VV040`, `VV034`...) có định dạng mã Lot khác nhau (đặc biệt là nhóm Vỏ nhôm `GBAKAC-%`, Sleeve `GCMDPT-%`, Băng keo `GBRLAC-%`).
 
 ##### 2. Sửa ở đâu và sửa thế nào?
@@ -394,7 +394,7 @@ Khi nhà cung cấp thay đổi định dạng mã Lot Vendor, hệ thống sẽ
 ##### 4. Nguyên tắc kiểm tra sau khi sửa:
 Chạy lệnh `SELECT` kiểm tra hàm trực tiếp trong SSMS trước khi thực hiện giao dịch nhập kho:
 ```sql
-SELECT [dbo].[fn_VVT_getdatebyVendorLot_MergeCode]('MÃ_VẬT_TƯ', 'MÃ_VENDOR_LOT_TEST', 'MÃ_NCC')
+SELECT dbo.fn_VVT_getdatebyVendorLot_MergeCode('MÃ_VẬT_TƯ', 'MÃ_VENDOR_LOT_TEST', 'MÃ_NCC')
 -- Kết quả trả về phải đúng định dạng YYYY-MM-DD (Ví dụ: '2026-05-30')
 ```
 
@@ -424,11 +424,11 @@ WHERE LotID = 'lot_id_cần_sửa';
 
 ---
 
-### 4.12 Lỗi "Không tồn tại thiết lập Vỏ Nhôm" ([B597])
+### 4.12 [B597] — Lỗi "Không tồn tại thiết lập Vỏ Nhôm" ()
 
 *   **Triệu chứng:** `"Không tồn tại thiết lập Vỏ Nhôm của LotNo... với mã Vỏ Nhôm: GBDYAC-004 <> ECVT30-367"`
-*   **Chi tiết & Giải pháp:** Xem chi tiết nguyên nhân gốc, cách trace và SQL script khắc phục tại [../KB_05/KB_05_01_QC_OVERVIEW.md#74-b597-báo-lỗi-không-tồn-tại-thiết-lập-vỏ-nhôm](../KB_05/KB_05_01_QC_OVERVIEW.md#74-b597-báo-lỗi-không-tồn-tại-thiết-lập-vỏ-nhôm).
-*   **Checklist lỗi B597 đầy đủ:** Xem tại [../KB_05/KB_05_01_QC_OVERVIEW.md#83-checklist-khi-b597-báo-lỗi-khi-lưu-nvl](../KB_05/KB_05_01_QC_OVERVIEW.md#83-checklist-khi-b597-báo-lỗi-khi-lưu-nvl).
+*   **Chi tiết & Giải pháp:** Xem chi tiết nguyên nhân gốc, cách trace và SQL script khắc phục tại [../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md#74-b597-báo-lỗi-không-tồn-tại-thiết-lập-vỏ-nhôm](../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md#74-b597-báo-lỗi-không-tồn-tại-thiết-lập-vỏ-nhôm).
+*   **Checklist lỗi B597 đầy đủ:** Xem tại [../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md#83-checklist-khi-b597-báo-lỗi-khi-lưu-nvl](../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md#83-checklist-khi-b597-báo-lỗi-khi-lưu-nvl).
 
 ---
 
@@ -449,7 +449,7 @@ DELETE FROM STB_VNSparePartInfo WHERE sparepartcode = '[Mã cần xóa]'
 
 ---
 
-### 4.15 Luồng nhập kho đầy đủ ([F330])
+### 4.15 [F330] — Luồng nhập kho đầy đủ ()
 
 ```
 Groupware (Arrival Confirmation duyệt xong)
@@ -468,7 +468,7 @@ NVL sẵn sàng cho sản xuất
 
 ---
 
-### 4.16 Hủy phiếu nhập kho [F330] đã Confirmed
+### 4.16 [F330] — Hủy phiếu nhập kho đã Confirmed
 
 > ⚠️ **Chỉ làm khi hàng chưa được xuất kho hoặc dùng sản xuất.**
 
@@ -496,7 +496,7 @@ DELETE FROM STB_MaterialDocInfo WHERE MaterialDocNo = 'Số_Tài_Liệu'
 
 ---
 
-### 4.17 Thu hồi Lot từ [F430] về kho (Revert xuất kho)
+### 4.17 [F430] — Thu hồi Lot từ về kho (Revert xuất kho)
 
 **Tình huống:** Cần revert hàng đã xuất ở F430 về lại kho.
 
@@ -622,7 +622,7 @@ Với mỗi mã nguyên vật liệu (`MaterialCode`), hệ thống cấu hình 
 *   `IsUseBarcode`: Có bắt buộc quản lý và quét bằng tem nhãn barcode hay không.
 *   `IsFIFO`: Có kích hoạt tính năng kiểm tra Nhập trước - Xuất trước (FIFO) đối với mã này hay không.
 *   `IsLotUse`: Có bắt buộc tách hàng thành các mã Lot riêng biệt để theo dõi vòng đời hay không.
-*   *Lưu ý lỗi:* Nếu nguyên vật liệu mới không gộp box được (lỗi tại B523), thủ kho cần kiểm tra xem mã vật tư đó đã được tích đầy đủ các cờ cấu hình trên hay chưa (Xem hướng dẫn thiết lập Master Data tại [KB_06 § 2.1](KB_06_MASTER_DATA_TOOLS.md)).
+*   *Lưu ý lỗi:* Nếu nguyên vật liệu mới không gộp box được (lỗi tại B523), thủ kho cần kiểm tra xem mã vật tư đó đã được tích đầy đủ các cờ cấu hình trên hay chưa (Xem hướng dẫn thiết lập Master Data tại [KB_06 § 2.1](../KB_06_MASTER_DATA_TOOLS.md)).
 
 ---
 
@@ -692,11 +692,11 @@ Thủ kho quét mã Lot của nguyên vật liệu tại F430 để xác nhận 
 
 Dưới đây là cẩm nang vận hành chi tiết các màn hình thuộc phân hệ Kho Nguyên Vật Liệu (WMS) được đúc kết từ tài liệu thực tế của nhà máy:
 
-#### 1. Quản lý Nhà cung cấp & Chỉ định Vật tư ([A130], [F130], [F140])
+#### [A130]/[F130]/[F140] — Quản lý Nhà cung cấp & Chỉ định Vật tư
 *   **A130 (Thông tin đối tác giao dịch):** Dùng để thêm, sửa, xóa thông tin nhà cung cấp NVL và tài khoản đối tác.
 *   **F130 / F140 (Chỉ định nhà cung cấp - vật tư):** Thiết lập mối quan hệ ánh xạ giữa mã NVL và mã nhà cung cấp (Vendor). Chỉ khi được thiết lập tại đây thì NVL mới có thể gọi ra trong các phiếu nhập kho.
 
-#### 2. Tạo ghi chú đơn hàng nhập kho [F312] (Inward Slip)
+#### [F312] — Tạo ghi chú đơn hàng nhập kho (Inward Slip)
 *   Thực hiện chọn "Code bên giao dịch" (liên kết từ cấu hình F130) để hiển thị danh sách NVL được phép của nhà cung cấp đó.
 *   **⚠️ Khắc phục lỗi NVL không hiển thị trong màn hình F312:** Khi lập phiếu mà không tìm thấy mã NVL của nhà cung cấp trong ô lựa chọn, kiểm tra 3 nguyên nhân sau:
     1.  Mã NVL chưa được Map với nhà cung cấp tại màn hình **F140/F130**.
@@ -704,7 +704,7 @@ Dưới đây là cẩm nang vận hành chi tiết các màn hình thuộc phâ
     3.  Mã NVL không bị đóng ở A230 nhưng **chưa tích chọn** vào 2 cột thuộc tính: **"Đang mua"** và **"Đang đặt hàng"** (đây là các cờ cấu hình bắt buộc cho hàng mua ngoài).
 *   Nhập số lượng yêu cầu thực tế (`RequestQty`) và nhấn biểu tượng **Save** ở lưới bên dưới để lưu.
 
-#### 3. Tiếp nhận, Nhập kho và In tem tại [F330] (Warehouse Entry & Label Printing)
+#### [F330] — Tiếp nhận, Nhập kho và In tem (Warehouse Entry & Label Printing)
 *   **Bước 1 (Xử lý hàng về):** Khi phiếu F312 mới tạo được gọi ra ở F330, cột `DocStatusName` ban đầu sẽ hiển thị trạng thái **"CREATE"**. Thủ kho bắt buộc phải click chọn dòng dữ liệu và nhấn nút **"Xử lý hàng nhập về"** để hệ thống chuyển trạng thái sang **"ARRIVAL"**. Lúc này nút tạo Lot mới sáng lên để thao tác.
 *   **Bước 2 (Chia tem & Khai báo đặc tính 10):**
     *   Nhập `PackingQty` (Số lượng NVL của 1 tem/thùng) -> Hệ thống tự động tính Số tem = `ReceiveQty` / `PackingQty`.
@@ -712,9 +712,9 @@ Dưới đây là cẩm nang vận hành chi tiết các màn hình thuộc phâ
     *   **⚠️ Cực kỳ quan trọng:** Sau khi sinh Lot, thủ kho bắt buộc phải nhập giá trị **"Số Lot No của nhà cung cấp"** vào cột **"Đặc tính 10"** (`LotAttr10` / `LotExtText10`) để hệ thống chạy hàm parse tự động tính ra ngày sản xuất và thời hạn hết hạn. Nếu cột này bị bỏ trống hoặc không nhảy ngày hết hạn, Lot sẽ tự động bị hệ thống đưa vào kho ảo **`HOLDING`** khi xuất kho và không thể cấp phát cho sản xuất. Nếu gặp sự cố điền Lot No đúng nhưng không nhảy đặc tính ngày, hãy báo ngay cho EA Team.
 *   **Bước 3 (Xác nhận nhập kho):** Chỉ khi kết quả kiểm tra IQC tại màn hình **C220** của Lot hàng đó đã chuyển trạng thái **"PASS"** thì thủ kho mới có thể thực hiện nhấn 2 nút **"Kết thúc nhập kho"** và **"Xác nhận nhập kho"** tại F330. Việc nhấn đủ 2 nút này là bắt buộc để kết thúc quy trình nhập.
 
-    > 🚦 **Tham chiếu mở rộng:** Chi tiết logic, mã SQL debug, và cách mở rộng cho cổng chặn IQC nhập kho (F330/C220) được tổng hợp tại **[KB_14 §6.3 Nhóm 11 — F330/C220 IQC](../KB_14/KB_14_01_METHODOLOGY.md#nhóm-11-f330c220--chặn-nhập-kho-iqc-validation-liên-phòng-ban)**.
+    > 🚦 **Tham chiếu mở rộng:** Chi tiết logic, mã SQL debug, và cách mở rộng cho cổng chặn IQC nhập kho (F330/C220) được tổng hợp tại **KB_14 §6.3 Nhóm 11 — F330/C220 IQC**.
 
-#### 4. Cấp phát sản xuất & Quy trình hoàn trả NVL ([F430], [F610], [F620])
+#### [F430]/[F610]/[F620] — Cấp phát sản xuất & Quy trình hoàn trả NVL
 *   **Xuất kho ra chuyền (F430):** Sử dụng nút "Nguyên liệu đầu ra" để xuất NVL ra CellLine theo nguyên tắc FIFO. Nếu Lot nào thiếu ngày sản xuất ở đặc tính 10, hệ thống sẽ tự động chuyển Lot đó vào kho HOLDING.
 *   **Quy trình hoàn trả NVL (Returns):**
     *   **Trường hợp 1 (Xuất nhầm Line hoặc Hoàn trả 100%):** Nếu xuất nhầm Line hoặc xuất ra bao nhiêu (ví dụ 500) mà trả lại nguyên vẹn bấy nhiêu (500), thủ kho sử dụng nút **"Nguyên liệu đầu vào"** tại màn hình **F430** để nhập lại kho.
@@ -723,7 +723,7 @@ Dưới đây là cẩm nang vận hành chi tiết các màn hình thuộc phâ
         2.  Vào màn hình **F620** để thực hiện bước 2 xác nhận nhập lại số dư 400 con.
         3.  Tiến hành quy trình nhập kho bình thường và thực hiện tách tem tại **F740** để in lại tem nhãn tương ứng với số lượng thực tế trả về.
 
-#### 5. Báo cáo tồn kho & Lịch sử kho ([F721], [F761], [F740])
+#### [F721]/[F761]/[F740] — Báo cáo tồn kho & Lịch sử kho
 *   **F761 (Lịch sử NVL vào kho):** Tra cứu toàn bộ lịch sử nhập kho. Chú ý cột `DocTypeName` nếu hiển thị chữ tiếng Hàn đại diện cho giao dịch hoàn trả từ sản xuất, các trường hợp còn lại là nhập mới từ phiếu F312. Tab "Summary" phục vụ bộ phận Kế toán đối soát.
 *   **F721 (Báo cáo tồn kho NVL & Vị trí):** Dùng để xem tồn kho NVL hiện tại và thực hiện gán vị trí vật lý (Location). Thủ kho nhập vị trí và mã nguyên vật liệu, quét mã LotID để cập nhật vị trí lên hệ thống (có thể lưu từng Lot hoặc chọn tất cả rồi bấm lưu đồng loạt). Thông tin này sẽ đồng bộ trực tiếp lên màn hình Tivi giám sát vị trí kho (`192.168.1.234:9000/tv`).
 *   **F740 (Tách Lot theo số lượng):** Dùng để chia tách 1 Lot có số lượng lớn thành nhiều Lot nhỏ theo nhu cầu thực tế (ví dụ: tách 1 Lot 400 thành 300 và 100). Nhập số lượng cần tách, nút **"SplitLot"** sẽ sáng lên để thực hiện thao tác tách Lot.
@@ -736,7 +736,7 @@ Dưới đây là cẩm nang vận hành chi tiết các màn hình thuộc phâ
 ## 5. 📦 Kho Thành Phẩm (Finished Goods WMS - Gộp từ KB_08)
 
 
-### 1. Lỗi Hàng xuất ở [HN551] nhưng tồn kho [HN866] vẫn còn
+### [HN551]/[HN866] — 1. Lỗi Hàng xuất ở nhưng tồn kho vẫn còn
 
 **Tư duy trace:**
 - **HN551 (Xuất):** Ghi vào `STB_VN_FINISHGOODS_HN_Export` và đánh dấu "đã đi" vào sổ tồn kho.
@@ -794,7 +794,7 @@ WHERE PackingOutPutFinishGoodsID = 'PKHN023117'
 
 ---
 
-### 2.1 Lỗi Unique Constraint khi Gộp Túi Bóng ([HN544]) — PKQN2100175
+### 2.1 [HN544] — Lỗi Unique Constraint khi Gộp Túi Bóng () PKQN2100175
 
 **Triệu chứng:** Khi User nhập `Packing ID: PKQN2100175` trên màn hình **[HN544] Gộp túi bóng thành hộp nhỏ** và nhấn Tìm kiếm, hệ thống báo lỗi:
 > **Column 'LotID' is constrained to be unique. Value '63RHHL180ME16XB001QN2100012' is already present.**
@@ -898,7 +898,7 @@ WHERE Barcode IN ('pkpt2000146', 'pkpt2000147', 'pkpt2000145')
 UPDATE STB_MaterialLotInfo SET MaterialCode = '5H1_MATERIAL_CODE_ĐÚNG'
 WHERE LotNo IN ('pkpt2000146', 'pkpt2000147', 'pkpt2000145')
 
-#### 3.1 Đăng ký thay đổi mã vật tư thủ công qua STB_ChangeMaterialCode_HN (Màn hình [HN15])
+#### 3.1 [HN15] — Đăng ký thay đổi mã vật tư thủ công qua STB_ChangeMaterialCode_HN (Màn hình )
 Trong một số trường hợp tại nhà máy Hà Nam, khi người dùng thực hiện thay đổi mã vật tư cho Lot đóng gói và cần ghi nhận lịch sử vào hệ thống để theo dõi và đồng bộ kho, ta thực hiện chèn dữ liệu lịch sử đổi mã vật tư:
 ```sql
 INSERT INTO STB_ChangeMaterialCode_HN (
@@ -923,7 +923,7 @@ VALUES (
 
 ---
 
-### 4. Lỗi màn [HNC321] (Qc nhập NG sản phẩm mang đi kiểm tra — Báo lỗi chữ Hàn Quốc)
+### [HNC321] — 4. Lỗi màn (Qc nhập NG sản phẩm mang đi kiểm tra Báo lỗi chữ Hàn Quốc)
 
 Chi tiết về triệu chứng, nguyên nhân và các phương án bypass (bao gồm script SQL chèn lịch sử giả lập) đối với lỗi nhập phế màn HNC321, vui lòng tham khảo tại:
 👉 [../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md § Kịch bản 3 — Lỗi nhập phế màn HNC321 báo lỗi tiếng Hàn](../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md#kịch-bản-sự-cố-khẩn-cấp-3-lỗi-nhập-phế-hnc321-báo-lỗi-tiếng-hàn)
@@ -960,7 +960,7 @@ WHERE Barcode = 'VE260509-004'
 
 ---
 
-### 6. [HN00] — Tồn Kho Thành Phẩm Hà Nam
+### [HN00] — 6. Tồn Kho Thành Phẩm Hà Nam
 
 **Chức năng:** Màn hình quản lý thành phẩm riêng cho nhà máy **Hà Nam (VVT_F3)**.
 
@@ -979,7 +979,7 @@ ORDER BY CreateDateTime DESC
 
 ---
 
-### 7. [HN101] — Thiết Lập Đơn Giá Theo Mã Kế Toán
+### [HN101] — 7. Thiết Lập Đơn Giá Theo Mã Kế Toán
 
 **Chức năng:** Thiết lập đơn giá → hệ thống tự động tính tiền theo mã kế toán hiển thị tại HN00.
 

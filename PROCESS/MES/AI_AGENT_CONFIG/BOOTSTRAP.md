@@ -1,4 +1,4 @@
-﻿# ⚡ BOOTSTRAP — Đọc file này ĐẦU TIÊN mỗi session mới
+# ⚡ BOOTSTRAP — Đọc file này ĐẦU TIÊN mỗi session mới
 
 > **Cách dùng:** Khi bắt đầu session mới, user nói: *"Đọc file `MES/AI_AGENT_CONFIG/BOOTSTRAP.md` trước"*
 > **Cập nhật:** 2026-07-02
@@ -60,8 +60,8 @@
 |---|---|---|
 | Sản xuất/chốt SL | KB_03/ | → 02_CELL_LINE |
 | Đóng gói/in tem | KB_04/ | → 01_CORE_PACKAGING |
-| QC/Electrode | KB_05/ | → 01_QC_OVERVIEW hoặc 02_ELECTRODE |
-| Kho NVL/TP | KB_02/ | → 01_NVL_WMS hoặc 02_FG_WMS |
+| QC/Electrode | KB_05/ | → 01_QC_AND_ELECTRODE_CORE |
+| Kho NVL/TP | KB_02/ | → 01_WMS_CORE |
 | Model mới | KB_06_MASTER_DATA_TOOLS.md | Không chunked |
 | Hưng Yên | KB_25/ | → 01_OVERVIEW |
 | Hà Nam screens | KB_36_HANAM_FACTORY_SCREENS.md | Không chunked |

@@ -39,11 +39,11 @@
 
 ## [D000] — VinaEnesol Management Menu (Menu quản lý VinaEnesol)
 
-### Lỗi 1: Không truy cập được menu VinaEnesol [D000]
+### [D000] — Lỗi 1: Không truy cập được menu VinaEnesol
 *   **Triệu chứng:** Người dùng không thấy menu VinaEnesol trên giao diện MES.
 *   **Nguyên nhân gốc:** Menu D000 chưa được phân quyền cho Role của người dùng tại Z220/Z330.
 *   **Cách khắc phục:** Vào Z220 gán Screen D000 cho Role tương ứng, vào Z330 kiểm tra đã publish.
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_25/KB_25_01_OVERVIEW.md § 2](../KB_25/KB_25_01_OVERVIEW.md) và [../KB_19/KB_19_01_ARCHITECTURE.md § 4](../KB_19/KB_19_01_ARCHITECTURE.md#4-kiến-trúc-màn-hình-động-dynamic-ui-registry-của-smartframework).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_25/KB_25_01_OVERVIEW.md § 2](../KB_25/KB_25_01_OVERVIEW.md) và ../KB_19/KB_19_01_ARCHITECTURE.md § 4.
 
 ---
 

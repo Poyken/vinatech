@@ -33,7 +33,7 @@
     ```
 *   **Chi tiết nghiệp vụ:** Xem tại [../KB_04/KB_04_01_CORE_PACKAGING.md § 6.1](../KB_04/KB_04_01_CORE_PACKAGING.md#61-lỗi-chưa-có-tiêu-chuẩn-đóng-gói-b523).
 
-### Lỗi 2: Không gộp được Box Cell/Module do chưa có Lot, thiếu QC hoặc cờ [F110]
+### [F110] — Lỗi 2: Không gộp được Box Cell/Module do chưa có Lot, thiếu QC hoặc cờ
 *   **Triệu chứng:** Hệ thống từ chối gộp box cho Lot tại **B523** hoặc **B525**.
 *   **Nguyên nhân gốc:** Lot chưa được đánh giá QC Pass (`LotDecisionResult` rỗng/FAIL), hoặc mã vật tư chưa được bật các cờ quản lý Lot (`IsLotUse=1`, `IsUseBarcode=1`) tại F110.
 *   **Cách khắc phục:**
@@ -73,11 +73,11 @@
 
 ## [B717] — Bending & Tapping (Uốn chân & Dán băng keo Cell)
 
-### Lỗi 1: Nhập sai thông số uốn/dán tại [B717] không thể sửa hoặc xóa trực tiếp trên giao diện
+### [B717] — Lỗi 1: Nhập sai thông số uốn/dán tại không thể sửa hoặc xóa trực tiếp trên giao diện
 *   **Triệu chứng:** OP nhập nhầm số lượng, sai kích thước hoặc thông số uốn dán tại **B717**, không thấy nút Edit hay Delete trên UI để chỉnh sửa lại.
 *   **Nguyên nhân gốc:** Hệ thống chỉ được thiết kế để ghi nhận 1 lần (Insert hoặc Override) và không hỗ trợ tính năng sửa/xóa giao dịch trên client app.
 *   **Cách khắc phục:** IT kiểm tra và chạy script SQL update trực tiếp sản lượng hoặc xóa bản ghi giao dịch sai trong bảng tương ứng để OP quét lại.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_12_DEEP_CORE_ANALYSIS_AND_AUDIT.md § 5 (Mục 3)](KB_12_DEEP_CORE_ANALYSIS_AND_AUDIT.md#5-⚠️-5-điểm-nguy-hiểm-ẩn--developer-phải-biết).
+*   **Chi tiết nghiệp vụ:** Xem tại KB_12_DEEP_CORE_ANALYSIS_AND_AUDIT.md § 5 (Mục 3).
 
 ---
 
@@ -86,7 +86,7 @@
 
 > 🔗 **Xem thêm:** Mục [B523 / B525](#b523--b525--packaging--box-matching) phía trên đã có chi tiết lỗi đóng gói.
 
-### Lỗi 1: Không gộp được Box tại kho (khác [B523] dành cho sản xuất)
+### [B523] — Lỗi 1: Không gộp được Box tại kho (khác dành cho sản xuất)
 *   **Triệu chứng:** Thủ kho thao tác đóng gói tại B525 bị chặn tương tự B523.
 *   **Nguyên nhân gốc:** B525 là phiên bản dành cho kho, cùng logic với B523 nhưng lọc theo WarehouseCode. Thiếu cờ `IsLotUse` hoặc `IsUseBarcode` tại F110.
 *   **Cách khắc phục:** Áp dụng cùng quy trình debug 4 bước như B523 (xem mục B523 phía trên).
@@ -99,7 +99,7 @@
 
 > 🔗 **Xem thêm:** Mục [B682 / B781 / B786 / B789 / B791](#b682--b781--b786--b789--b791--stage-prices) phía trên đã có chi tiết lỗi đơn giá.
 
-### Lỗi 1: Sai ngày in tem đóng gói tại [B781]
+### [B781] — Lỗi 1: Sai ngày in tem đóng gói tại
 *   **Triệu chứng:** Báo cáo B781 hiển thị sai ngày in/đóng gói so với thực tế.
 *   **Nguyên nhân gốc:** Cột `PrintTime` trong `STB_SavePackingTime_VVT` bị ghi sai khi nhập tay tại B523.
 *   **Cách khắc phục:** Chạy SQL sửa trực tiếp: `UPDATE STB_SavePackingTime_VVT SET PrintTime = 'NGÀY_ĐÚNG' WHERE LotNo = 'MÃ_LOT'`.
@@ -123,9 +123,9 @@
 
 ---
 
-### Kịch bản sự cố khẩn cấp 1: Lỗi không gộp được Box ([B523])
+### [B523] — Kịch bản sự cố khẩn cấp 1: Lỗi không gộp được Box ()
 
-### 4.1 LỖI KHÔNG GỘP ĐƯỢC BOX (MÀN HÌNH [B523])
+### 4.1 [B523] — LỖI KHÔNG GỘP ĐƯỢC BOX (MÀN HÌNH )
 
 #### 🔴 Triệu chứng hiện trường:
 Công nhân scan Lot/Barcode sản phẩm tại màn hình đóng gói **B523**, nhưng hệ thống báo lỗi đỏ: *"Chưa có tiêu chuẩn đóng gói"* hoặc *"Barcode không đủ điều kiện gộp box"*.
@@ -181,7 +181,7 @@ Công nhân scan Lot/Barcode sản phẩm tại màn hình đóng gói **B523**,
 
 ---
 
-### Kịch bản sự cố khẩn cấp 2: Hủy gộp box / Rã box ([B523])
+### [B523] — Kịch bản sự cố khẩn cấp 2: Hủy gộp box / Rã box ()
 
 #### 🛠️ KỊCH BẢN A: Hủy gộp box / Rã box để đóng gói lại
 *   **Ví dụ Demo:** Hủy gộp box (rã box) mã `PKHN023117` để giải phóng các Lot con bên trong.
@@ -243,7 +243,7 @@ Công nhân scan Lot/Barcode sản phẩm tại màn hình đóng gói **B523**,
     ```
 
 
-#### 🛠️ KỊCH BẢN C: Hủy gộp box khi Lot/Packing đã được nhập kho thành phẩm (Finish Goods)/Hủy Packing [B523]
+#### [B523] — 🛠️ KỊCH BẢN C: Hủy gộp box khi Lot/Packing đã được nhập kho thành phẩm (Finish Goods)/Hủy Packing
 *   **Triệu chứng:** Khi cần hủy/rã box để đóng gói lại nhưng hệ thống chặn không cho hủy trên giao diện UI (báo lỗi: *"Lot này đã được nhập kho, không thể huỷ gộp box..."*).
     UPDATE STB_ProductionOrderInfo
     SET ProdFinishQty = ProdFinishQty - 800
@@ -308,9 +308,9 @@ END CATCH;
 
 ---
 
-### Kịch bản sự cố khẩn cấp 3: Không in được tem ([B450]/[B523]/[B756]/[A460])
+### [B450]/[B523]/[B756]/[A460] — Kịch bản sự cố khẩn cấp 3: Không in được tem (///)
 
-### 4.5 LỖI KHÔNG IN ĐƯỢC TEM ([B450] / [B523] / [B756] / [A460])
+### 4.5 [B450]/[B523]/[B756]/[A460] — LỖI KHÔNG IN ĐƯỢC TEM ( / / / )
 
 #### 🔴 Triệu chứng hiện trường:
 Người dùng thao tác tạo Lot sản xuất hoặc in tem đóng gói nhưng máy in không phản hồi hoặc giao diện báo lỗi: *"Không tìm thấy định dạng nhãn"* hoặc tem in ra bị thiếu các thông số bắt buộc (Vol, Farad, Datecode...).
@@ -351,7 +351,7 @@ Người dùng thao tác tạo Lot sản xuất hoặc in tem đóng gói nhưng
 
 ---
 
-### 6.18 Bug: [B353] chuyển đổi Lot nhưng [B523] vẫn in tem theo Lot cũ (STB_ChangePartNoAndLotNo bị bỏ qua)
+### 6.18 [B353]/[B523] — Bug: chuyển đổi Lot nhưng vẫn in tem theo Lot cũ (STB_ChangePartNoAndLotNo bị bỏ qua)
 
 > **Ngày phát hiện:** 2026-06-18 | **Lot mẫu:** `VJQM153R025606` → `VVQM153R025606` | **Model:** `ECVT30-255` (`WEC3R0256QG`)
 
@@ -457,7 +457,7 @@ WHERE Barcode = 'VVQM153R025606'
 > **Pattern chung:** Bug này sẽ xảy ra với **MỌI** lot thuộc model có `PrintVJ = 1` khi dùng B353 để chuyển tên lot từ VJ→VV. Cho đến khi SP được fix, phải workaround bằng cách **hardcode** thêm WHEN clause cho từng lot cụ thể trong SP, giống cách `ducnv` đã làm ở dòng ~621-751.
 
 ---
-### 6.19 Sửa cấp OQC chọn nhầm tại [C531] (VVT_OQC_REFER)
+### 6.19 [C531] — Sửa cấp OQC chọn nhầm tại (VVT_OQC_REFER)
 
 > **Ngày:** 2026-06-18 | **Màn hình:** C531 (VVT_CAPA input division / Tạo phân cấp dung lượng OQC)
 

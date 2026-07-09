@@ -3,7 +3,7 @@
 > **M�n h�nh:** B597, C443, C512, C486, C530, C546, B552, B270, B540, C121-C564, F743-F748
 > **B?ng ch�nh:** `STB_MaterialQcInfo` (35 cols), `STB_MaterialQcInspectionItem` (USL/LSL), `STB_CommInspDocHistory`
 > **?? Keywords:** QC, ch?t lu?ng, ki?m tra, IQC, PQC, OQC, FOQC, electrode, di?n c?c, slitting, aging, h?ng m?c, spec, USL, LSL, Pass, Fail, Hold, m?u, sample
-> ? [V? INDEX](KB_INDEX.md)
+> ? [V? INDEX](../KB_INDEX.md)
 
 ---
 
@@ -44,7 +44,7 @@ DELETE FROM STB_CommInspDocHistory WHERE CommInspDocNo = 'CommInspDocNo_C?n_X�
 
 ---
 
-### 7.2 Kh�ng t�m th?y Lot ? m�n [C512]
+### 7.2 [C512] — Kh�ng t�m th?y Lot ? m�n
 
 **3 nguy�n nh�n � Debug theo th? t?:**
 
@@ -75,7 +75,7 @@ SELECT CurrentRouteCode FROM STB_SetInfo WHERE Barcode = 'M�_Barcode'
 
 ### 7.3 [B597] b�o l?i "H?t h?n s? d?ng"
 
-? Xem [KB_02 M?c 4.10](../KB_02/KB_02_01_NVL_WMS.md#410-ki?m-tra-h?n-s?-d?ng-nvl-expiry-date) d? tra c?u c�ng th?c t�nh.
+? Xem [KB_02 M?c 4.10](../KB_02/KB_02_01_WMS_CORE.md#410-ki?m-tra-h?n-s?-d?ng-nvl-expiry-date) d? tra c?u c�ng th?c t�nh.
 
 ---
 
@@ -197,7 +197,7 @@ WHERE LotID = 'ML...'
 
 ---
 
-### 7.8 M�n h�nh [C486] (Error Data Sorting): N�ng c?p giao di?n (Th�m c?t, Rebuild b?ng & Fix layout grid)
+### 7.8 [C486] — M�n h�nh (Error Data Sorting): N�ng c?p giao di?n (Th�m c?t, Rebuild b?ng & Fix layout grid)
 
 **Y�u c?u:** Th�m 2 c?t m?i cho m�n h�nh C486: `Invoice` (n?m tru?c `LotNo`) v� `Note` (n?m sau `Total`) cho c? 2 nguy�n v?t li?u **ALCase** v� **Plate**, gi? nguy�n d? li?u l?ch s? v� d�ng th? t? c?t khi `SELECT *`.
 
@@ -262,7 +262,7 @@ END CATCH
 
 ## 8. ⚡ Điện cực (Electrode)
 
-### 8.1 Chỉnh chiều rộng Slitting ([B552])
+### 8.1 [B552] — Chỉnh chiều rộng Slitting ()
 
 ```sql
 -- Xem cấu hình master slitting
@@ -321,7 +321,7 @@ WHERE PartNo IN ('1025', '1325', '1030')
 
 ---
 
-### 8.3 Checklist khi [B597] báo lỗi khi lưu NVL
+### 8.3 [B597] — Checklist khi báo lỗi khi lưu NVL
 
 ```
 Theo thứ tự SP usp_Vietnam_RawMaterialInputHist_uid kiểm tra:
@@ -334,7 +334,7 @@ Theo thứ tự SP usp_Vietnam_RawMaterialInputHist_uid kiểm tra:
 □ 7. Thiếu cấu hình Slitting? → Kiểm tra STB_SLITTINGLOCATIONCONFIG_VVT
 ```
 
-> 🚦 **Tham chiếu mở rộng:** Toàn bộ 7 gates trên đã được tổng hợp cùng 11 nhóm chặn tương tự (B530, B523, B452, B618, QC Audit, Returns, Lò Sấy, Slitting Knife...) tại **[KB_14 §6 — Tổng Hợp Pattern Validation Gates](../KB_14/KB_14_01_METHODOLOGY.md#6-tổng-hợp-pattern-validation-gates)**. Xem đó để biết cách mở rộng/thêm gate mới theo 4 Pattern thiết kế (A/B/C/D).
+> 🚦 **Tham chiếu mở rộng:** Toàn bộ 7 gates trên đã được tổng hợp cùng 11 nhóm chặn tương tự (B530, B523, B452, B618, QC Audit, Returns, Lò Sấy, Slitting Knife...) tại **KB_14 §6 — Tổng Hợp Pattern Validation Gates**. Xem đó để biết cách mở rộng/thêm gate mới theo 4 Pattern thiết kế (A/B/C/D).
 
 ---
 
@@ -352,9 +352,9 @@ Kiểm tra tồn kho điện cực → **Stb_SlittingStock_VVT**
 
 > Điện cực phải dùng mã Lot kho (prefix `ML`) khi nhập kho nguyên liệu.
 
-### 8.5 Lỗi popup không hiện dữ liệu ở [B270]
+### 8.5 [B270] — Lỗi popup không hiện dữ liệu ở
 
-👉 **Chi tiết Trace & Fix:** Xem tại [KB_01_UI_PHAN_QUYEN.md § 1.3](KB_01_UI_PHAN_QUYEN.md)
+👉 **Chi tiết Trace & Fix:** Xem tại [KB_01_UI_AND_SCREENS.md § 1.3](../KB_01_UI_AND_SCREENS.md)
 
 ---
 
@@ -404,7 +404,7 @@ Kiểm tra tồn kho điện cực → **Stb_SlittingStock_VVT**
 
 Quy trình quản lý sản xuất và kiểm định chất lượng đối với công đoạn Điện cực được vận hành khép kín qua các bước sau:
 
-#### 1. Lập Kế Hoạch & In Tem Điện Cực ([B310], [B442], [A230])
+#### [B310]/[B442]/[A230] — 1. Lập Kế Hoạch & In Tem Điện Cực (, , )
 *   **Tạo PO (B310):** Bộ phận kế hoạch khởi tạo đơn đặt hàng sản xuất PO làm căn cứ chạy chuyền.
 *   **Tạo Kế hoạch ngày (B442):** Dựa trên PO tháng đã duyệt, kế hoạch ngày được lập trên B442. Khi kế hoạch được xác nhận lưu, hệ thống sẽ tự động sinh mã Lot điện cực và bắt đầu cho phép in tem nhãn.
 *   **Liên kết độ dày vật liệu (A230):** Màn hình B442 liên kết trực tiếp với dữ liệu độ dày khai báo tại màn hình **A230 (Thông tin vật liệu)**. Tại tab "Mã nguyên liệu", nếu mã vạch barcode tương ứng đã được cài đặt thông số độ dày hoặc người dùng điền độ dày bên A230, hệ thống sẽ tự động liên kết và điền thông số này vào cột độ dày của B442. Nếu chưa được cấu hình, OP buộc phải nhập thủ công bằng tay (thao tác này dễ gây sai sót và chậm trễ).
@@ -426,7 +426,7 @@ Quy trình quản lý sản xuất và kiểm định chất lượng đối v�
 
     > 🔗 Xem thêm: KB_04 §6.20, KB_14 §7.2
 
-#### 2. Vận Hành 4 Công Đoạn Điện Cực & Nhập Liệu trên [B552]
+#### [B552] — 2. Vận Hành 4 Công Đoạn Điện Cực & Nhập Liệu trên
 Quy trình sản xuất điện cực gồm 4 công đoạn chính và mỗi công đoạn tương ứng với một tab dữ liệu trên màn hình **B552**:
 1.  **Mixing (Pha trộn):** 
     *   Sử dụng cấu hình cân điện cực thiết lập trên màn **B470** (Thẻ công đoạn do bên Kỹ thuật sản xuất - KTSP thiết lập và ban hành). 
@@ -435,7 +435,7 @@ Quy trình sản xuất điện cực gồm 4 công đoạn chính và mỗi cô
 3.  **Rollpress (Ép):** Ép nén cuộn foil để đạt độ dày tiêu chuẩn và đảm bảo lớp phủ bám đều. OP nhập thông số NG.
 4.  **Slitting (Cắt):** Cắt cuộn điện cực lớn thành các cuộn nhỏ theo kích thước spec yêu cầu để chuyển sang chuyền Cell lắp ráp. Tại tab Slitting trên B552, OP sẽ tiến hành tạo tem nhãn và in tem barcode dán lên từng cuộn điện cực sau khi cắt.
 
-#### 3. Báo Cáo & Đối Soát Điện Cực ([B802])
+#### [B802] — 3. Báo Cáo & Đối Soát Điện Cực ()
 *   **B802 (Tra cứu lịch sử sản xuất điện cực):** Tra cứu toàn bộ thông tin sản lượng, phế thải (NG), chi phí sản xuất, và chi phí phế phẩm.
 *   **⚠️ Lưu ý lỗi thiếu công đoạn:** Một mã Lot điện cực bắt buộc phải đi qua đầy đủ cả 4 công đoạn (Mixing, Coating, Rollpress, Slitting). Nếu trên báo cáo B802 hiển thị thiếu bất kỳ công đoạn nào, nguyên nhân chắc chắn là do OP quên hoặc chưa nhập đầy đủ dữ liệu công đoạn đó tại màn hình **B552**. Khi tra cứu trên B802, OP click vào một mã Lot cụ thể để hiển thị chi tiết thông số từng công đoạn ở tab phía dưới.
 *   **Quy tắc nhập cột số liệu:**
@@ -443,7 +443,7 @@ Quy trình sản xuất điện cực gồm 4 công đoạn chính và mỗi cô
     *   Cột `Số lượng OK`: Số lượng cuộn/mét điện cực đạt chất lượng được OP nhập vào.
     *   Cột `Số lượng NG`: Số lượng cuộn/mét điện cực lỗi được OP nhập vào. Các cột chỉ số chi phí và tỷ lệ lỗi còn lại sẽ do hệ thống tự động tính theo công thức.
 
-#### 4. Quy Trình Kiểm Tra Chất Lượng QC Điện Cực ([C460], [C141], [C143])
+#### [C460]/[C141]/[C143] — 4. Quy Trình Kiểm Tra Chất Lượng QC Điện Cực (, , )
 *   Bên cạnh hệ thống cân CMC tự động, bộ phận QC thực hiện kiểm tra ngoại quan và đo đạc kích thước cơ lý của cuộn điện cực.
 *   **C460 (Nhập kết quả kiểm tra QC):** Công nhân QC trực tiếp nhập các kết quả đo đạc kiểm tra cuộn điện cực tại đây.
 *   **C141 & C143 (Thiết lập hạng mục kiểm tra):** Các hạng mục kiểm tra chung và spec dung sai riêng biệt cho từng model điện cực được định nghĩa trước tại màn hình **C141 (Hạng mục chung)** và **C143 (Spec theo Model)** để làm căn cứ cho C460 validate tự động.
@@ -457,7 +457,7 @@ Quy trình sản xuất điện cực gồm 4 công đoạn chính và mỗi cô
 
 ---
 
-### 8.9 🔴 Lỗi Mất Sản Lượng Đầu Vào (Mixing Input = 0) — BY/YP 120/180 [A301] 1.5B
+### 8.9 [A301] — 🔴 Lỗi Mất Sản Lượng Đầu Vào (Mixing Input = 0) BY/YP 120/180 1.5B
 
 > **Phát hiện:** 2026-06-19 | **Ảnh hưởng:** ~1 tháng sản xuất (từ ~26/05/2026)
 
@@ -623,7 +623,7 @@ WHERE CommInspDocNo = '...'
 
 ---
 
-### 9.4 Bending/Cutting QC ([C561]~[C564])
+### 9.4 [C561]/[C564] — Bending/Cutting QC (~)
 
 ```
 C561 (H?ng m?c ki?m tra Bending/Cutting theo t?ng model)
@@ -712,7 +712,7 @@ FROM Stb_ESRValueMonitor WHERE lotno = 'M�_Barcode' ORDER BY ID
 ```
 
 **Fix data khi b? l?ch s? d�ng:**
-*Xem chi ti?t c�c bu?c ch?y rollback v� reset d? li?u t?i file script [fix_c546_ocv_lots.sql](../sql/scripts/fix_c546_ocv_lots.sql)*
+*Xem chi ti?t c�c bu?c ch?y rollback v� reset d? li?u t?i file script **fix_c546_ocv_lots.sql***
 
 **C�c Stored Procedure li�n quan (C546):**
 
@@ -787,7 +787,7 @@ Sau khi ho�n th�nh c�ng do?n l�o h�a nhi?t (Aging), s?n ph?m du?c do k
 
 
 
-## 10. ? �i?n C?c � Slitting H� Nam ([F743]~[F748], [C243])
+## [F743]/[F748]/[C243] — 10. ? �i?n C?c � Slitting H� Nam (~, )
 
 ### 10.1 Flow Slitting H� Nam
 
@@ -810,7 +810,7 @@ C243 (QC Ki?m tra Lot Slitting)
 F746 (L?ch s? Slitting) ? F747 (L?ch s? check NG/Pass) ? F748 (Chuy?n v? kho NVL)
 ```
 
-#### ?? H?y/Rollback Slitting ([F742])
+#### [F742] — ?? H?y/Rollback Slitting ()
 *   **Quy t?c:** �? th?c hi?n rollback c?t di?n c?c v� cho ph�p c?t l?i ? m�n h�nh **F742**, b?t bu?c ph?i x�a l?ch s? ghi nh?n ? m�n h�nh **F746** tru?c.
 
 **L?i thu?ng g?p Slitting:**
@@ -821,7 +821,7 @@ F746 (L?ch s? Slitting) ? F747 (L?ch s? check NG/Pass) ? F748 (Chuy?n v? kho NVL
 | Lot kh�ng t?n t?i khi chuy?n F430 | Lot chua du?c QC check ? C243 | V�o C243 check tru?c |
 | Kh�ng chuy?n v? kho du?c | Lot b? QC d�nh Reject | Kh�ng th? chuy?n � x? l� theo quy tr�nh NG |
 
-?? **Chi ti?t Script Fix (Thi?t l?p & C?u h�nh Slitting):** Xem t?i [KB_12_DEEP_CORE_ANALYSIS_AND_AUDIT.md � 4](KB_12_DEEP_CORE_ANALYSIS_AND_AUDIT.md).
+?? **Chi ti?t Script Fix (Thi?t l?p & C?u h�nh Slitting):** Xem t?i KB_12_DEEP_CORE_ANALYSIS_AND_AUDIT.md � 4.
 
 ---
 
@@ -920,7 +920,7 @@ ORDER BY MeasureCycle, SampleSeqNo;
 
 ---
 
-> ?? **Ph�n t�ch s�u & DB Audit:** Xem chi ti?t ph�n t�ch ki?n tr�c database, DNA h? th?ng v� k?t qu? Audit t?i [KB_12_DEEP_CORE_ANALYSIS_AND_AUDIT.md](KB_12_DEEP_CORE_ANALYSIS_AND_AUDIT.md).
+> ?? **Ph�n t�ch s�u & DB Audit:** Xem chi ti?t ph�n t�ch ki?n tr�c database, DNA h? th?ng v� k?t qu? Audit t?i KB_12_DEEP_CORE_ANALYSIS_AND_AUDIT.md.
 
 *C?p nh?t: 2026-06-14 | G?p n?i dung t? KB_23 v� KB_24 d? d?ng b? ho� tri th?c qu?n l� ch?t lu?ng (QC)*
 

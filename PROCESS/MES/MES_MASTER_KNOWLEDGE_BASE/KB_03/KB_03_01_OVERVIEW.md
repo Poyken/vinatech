@@ -3,7 +3,7 @@
 > **Màn hình:** B310, B450, B452, B523, B528, B530, B540, B597, B598, B682, B717, B726, B781, B782, B791, B802, B882
 > **Bảng chính:** `STB_SetInfo` (76 cols), `STB_ProdRouteHist` (23 cols), `STB_DayProdPlan`, `STB_ProductionOrderInfo`
 > **🔑 Keywords:** sản xuất, routing, barcode, scan, công đoạn, chốt sản lượng, line, chuyền, PO, kế hoạch, JobDate, NG, defect, module, cell, electrode, ANDON
-> ← [Về INDEX](KB_INDEX.md)
+> ← [Về INDEX](../KB_INDEX.md)
 
 ---
 
@@ -25,7 +25,7 @@ B530 → Nhập số lượng sản xuất (bắt buộc nhập "Making")
 B523 → Đóng gói & In label thùng hàng
 ```
 
-> 🏭 **Cơ sở:** Luồng trên là chuẩn **VVT_F1 (Bắc Ninh)**. Hà Nam dùng HN523 thay B523. BG2 dùng K101 thay B450, K109 thay B597. Xem [KB_INDEX § Mapping](KB_INDEX.md#bản-đồ-cơ-sở--màn-hình-factory--screen-mapping).
+> 🏭 **Cơ sở:** Luồng trên là chuẩn **VVT_F1 (Bắc Ninh)**. Hà Nam dùng HN523 thay B523. BG2 dùng K101 thay B450, K109 thay B597. Xem [KB_INDEX § Mapping](../KB_INDEX.md#bản-đồ-cơ-sở--màn-hình-factory--screen-mapping).
 
 > ⚠️ **Cột IsFixed ở B450 phải được tích** mới tạo được Lot.
 > ⚠️ **B530 bắt buộc nhập chữ "Making"** (chọn ở cột Status) nếu không công đoạn V25 sẽ bị chặn không cho lưu. Đây là điều kiện tiên quyết để hệ thống ghi nhận đang sản xuất.
@@ -34,7 +34,7 @@ B523 → Đóng gói & In label thùng hàng
 
 ---
 
-### 5.2 Sửa JobDate màn [B782] (Lịch sử Routing)
+### 5.2 [B782] — Sửa JobDate màn (Lịch sử Routing)
 
 **Triệu chứng:** Barcode bị ghi nhận sai ngày sản xuất ở công đoạn nào đó.
 
@@ -63,7 +63,7 @@ AND RouteCode = 'V-22_BG'  -- Chỉ sửa công đoạn cụ thể, không sửa
 
 ---
 
-### 5.3 Sửa JobDate màn [B781] (Packing History)
+### 5.3 [B781] — Sửa JobDate màn (Packing History)
 
 **Triệu chứng:** Lịch sử đóng gói bị ghi nhầm ngày.
 
@@ -83,7 +83,7 @@ AND ID IN ('1217734', '1217736')  -- Dùng ID cụ thể, an toàn hơn
 
 ---
 
-### 5.4 Sửa JobDate màn [B598] (Production Error)
+### 5.4 [B598] — Sửa JobDate màn (Production Error)
 
 > ⚠️ **Cơ chế đặc biệt:** `JobDate` được tự động tạo từ `CreateDateTime`. Muốn JobDate về ngày **17** thì phải set `CreateDateTime` về ngày **18** (cộng 1 ngày so với ngày muốn).
 
@@ -100,7 +100,7 @@ WHERE IDPE IN ('ID1', 'ID2', ...)
 
 ---
 
-### 5.5 Sửa ngày màn [B726] (Scrap After Production)
+### 5.5 [B726] — Sửa ngày màn (Scrap After Production)
 
 ```sql
 -- Tìm dữ liệu: Ấn "Xem thông tin chi tiết" trên màn B726 để lấy ID
@@ -121,7 +121,7 @@ WHERE ID IN (6030, 6032, 6027, 6025, 6026, 6031)
 
 ### 5.6 Sửa ngày màn FG00 (Kho Thành Phẩm BG)
 
-👉 **Chi tiết Script Fix:** Xem tại [../KB_02/KB_02_01_NVL_WMS.md § 8](../KB_02/KB_02_01_NVL_WMS.md)
+👉 **Chi tiết Script Fix:** Xem tại [../KB_02/KB_02_01_WMS_CORE.md § 8](../KB_02/KB_02_01_WMS_CORE.md)
 
 ---
 
@@ -149,7 +149,7 @@ DELETE FROM STB_ProductionOrderInfo WHERE PONo IN ('250303000008', '250304000011
 
 ---
 
-### 5.8 Sửa số lượng NG DefectQty (Màn [B791])
+### 5.8 [B791] — Sửa số lượng NG DefectQty (Màn )
 
 **Triệu chứng:** Số lượng lỗi (NG) bị ghi nhận sai, cần sửa lại.
 
@@ -171,7 +171,7 @@ WHERE ControlNo = '20250314000351' AND RouteCode = 'MV-05'
 
 ---
 
-### 5.9 Chuyển Line sản xuất ([B452])
+### 5.9 [B452] — Chuyển Line sản xuất ()
 
 **Khi nào dùng:** Công nhân lập kế hoạch chọn nhầm Line ở B450, nhưng đã có sản lượng thực tế rồi.
 
@@ -222,7 +222,7 @@ SELECT Barcode FROM STB_SetInfo WHERE Barcode = @NewBarcode
 
 ---
 
-### 5.11 Lỗi kế hoạch ngày chọn nhầm Line ([B450])
+### 5.11 [B450] — Lỗi kế hoạch ngày chọn nhầm Line ()
 
 **Triệu chứng:** 2 Model khác nhau xuất hiện trên cùng 1 Line trong báo cáo Excel/Pivot.
 
@@ -246,7 +246,7 @@ ORDER BY DayPlanNo ASC
 - **Chưa có sản lượng:** Hủy kế hoạch sai tại B450 → Tạo lại đúng Line
 - **Đã có sản lượng:** Dùng script "Chuyển Line sản xuất" (Mục 5.9 trên)
 
-### 5.12 Mở dữ liệu Andon theo tháng ([B882])
+### 5.12 [B882] — Mở dữ liệu Andon theo tháng ()
 
 **SP:** `usp_Vietnam_AndonDetail_get`
 → Vào SP → Tìm điều kiện lọc theo tháng → Chỉnh lại khoảng thời gian user yêu cầu.
@@ -308,7 +308,7 @@ SELECT (RTRIM(LTRIM(SUBSTRING('HY-CAP VEC3R0606QG (1840)', CHARINDEX(' ', 'HY-CA
 
 ---
 
-### 5.15 Tra cứu Model Code và Size tại màn [B597]
+### 5.15 [B597] — Tra cứu Model Code và Size tại màn
 
 **Mục đích:** Khi cần kiểm tra nhanh Size của Barcode tại công đoạn QC inline.
 

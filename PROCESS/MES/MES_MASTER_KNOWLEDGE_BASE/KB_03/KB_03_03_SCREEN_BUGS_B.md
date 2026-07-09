@@ -2,24 +2,24 @@
 
 ## [B210] / [B220] / [B230] / [B240] — Production Routing Setup (Thiết lập định tuyến sản xuất)
 
-### Lỗi 1: Màn hình [B450] không tìm thấy Line sản xuất để tạo Lot
+### [B450] — Lỗi 1: Màn hình không tìm thấy Line sản xuất để tạo Lot
 *   **Triệu chứng:** Khi lập kế hoạch ngày tại **B450** để sinh mã Lot cho PO, người dùng không thể chọn được Line sản xuất mong muốn trong dropdown.
 *   **Nguyên nhân gốc:** Line sản xuất chưa được kích hoạt (`IsUsed = 0`) tại màn hình đăng ký Line **B210** (`STB_LineInfo`), hoặc cấu hình sai mã nhà máy (`WorkCenterCode`).
 *   **Cách khắc phục:** Vào màn hình **B210**, tìm Line tương ứng, kiểm tra và tick chọn cờ `IsUsed`, đảm bảo `WorkCenterCode` khớp với khu vực sản xuất rồi Lưu lại.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_06_MASTER_DATA_TOOLS.md § 10](KB_06_MASTER_DATA_TOOLS.md#10-thiết-lập-line--route-b210b220b230b240).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_06_MASTER_DATA_TOOLS.md § 10](../KB_06_MASTER_DATA_TOOLS.md#10-thiết-lập-line--route-b210b220b230b240).
 
-### Lỗi 2: Giao diện [B530] không hiển thị Máy khi OP scan chốt công đoạn
+### [B530] — Lỗi 2: Giao diện không hiển thị Máy khi OP scan chốt công đoạn
 *   **Triệu chứng:** OP thực hiện quét chốt sản lượng tại **B530** nhưng không hiển thị danh sách thiết bị/máy chạy trong dropdown chọn máy.
 *   **Nguyên nhân gốc:** Máy móc chưa được cấu hình phân bổ thuộc công đoạn (RouteCode) đang chạy trong bảng `STB_MachineMaster` (Màn hình **B240**).
 *   **Cách khắc phục:** Vào màn hình **B240**, kiểm tra và gán máy móc đang chạy vào đúng công đoạn (RouteCode) tương ứng.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_06_MASTER_DATA_TOOLS.md § 10](KB_06_MASTER_DATA_TOOLS.md#10-thiết-lập-line--route-b210b220b230b240).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_06_MASTER_DATA_TOOLS.md § 10](../KB_06_MASTER_DATA_TOOLS.md#10-thiết-lập-line--route-b210b220b230b240).
 
 ---
 
 
 ## [B250] / [B270] — Cell / Machine Mapping (Đồng bộ chuyền & máy chạy mới)
 
-### Lỗi 1: Popup gán máy [B270] trống không hiển thị danh sách thiết bị
+### [B270] — Lỗi 1: Popup gán máy trống không hiển thị danh sách thiết bị
 *   **Triệu chứng:** Khi bấm vào popup để gán máy chạy cho Route sản xuất ở màn hình **B270**, danh sách máy trống trơn không có bản ghi nào.
 *   **Nguyên nhân gốc:** Do Stored Procedure `usp_Set_VVT_Info_get` bị hardcode kiểm tra Whitelist UserID của người thao tác, hoặc cấu hình sai thiết lập máy trong bảng `STB_ProductMachine`.
 *   **Cách khắc phục:**
@@ -28,7 +28,7 @@
     -- Thêm điều kiện Whitelist User trong SP
     SELECT OBJECT_DEFINITION(OBJECT_ID('usp_Set_VVT_Info_get'));
     ```
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_01_UI_PHAN_QUYEN.md § 1.3](KB_01_UI_PHAN_QUYEN.md#13-lỗi-popup-b270-trống-không-hiện-danh-sách-máy).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_01_UI_AND_SCREENS.md § 1.3](../KB_01_UI_AND_SCREENS.md#13-lỗi-popup-b270-trống-không-hiện-danh-sách-máy).
 
 ### Lỗi 2: Cell hoặc Line sản xuất mới thêm không hiển thị hoặc không quét được trên hệ thống
 *   **Triệu chứng:** Khi có yêu cầu thêm Cell/Line mới (Ví dụ: `VVBNTC-05`), OP không thể thực hiện các thao tác gán máy hay quét sản lượng ở các công đoạn.
@@ -52,18 +52,18 @@
     ) r;
     COMMIT;
     ```
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_06_MASTER_DATA_TOOLS.md § 7](KB_06_MASTER_DATA_TOOLS.md#7-thêm-cellline-mới-b250-b270).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_06_MASTER_DATA_TOOLS.md § 7](../KB_06_MASTER_DATA_TOOLS.md#7-thêm-cellline-mới-b250-b270).
 
 ---
 
 
 ## [B260] — Worker Management (Nhân sự sản xuất)
 
-### Lỗi 1: Tên nhân viên mới không hiển thị trong dropdown chọn nhân viên tại [B530] hoặc [B540]
+### [B530]/[B540] — Lỗi 1: Tên nhân viên mới không hiển thị trong dropdown chọn nhân viên tại hoặc
 *   **Triệu chứng:** Nhân viên đã đăng ký thành công trên MES nhưng OP không tìm thấy tên khi chốt sản lượng.
 *   **Nguyên nhân gốc:** Khi khai báo nhân viên, cột mã nhóm nhân viên (`WorkerGroupCode`) bị điền sai (không phải nhóm `VE-01` của nhà máy).
 *   **Cách khắc phục:** Vào màn hình **B260**, tìm mã nhân viên, cập nhật lại cột `WorkerGroupCode` chính xác thành `VE-01` rồi nhấn Lưu.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_06_MASTER_DATA_TOOLS.md § 12](KB_06_MASTER_DATA_TOOLS.md#12-b260---thông-tin-nhân-viên-sản-xuất).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_06_MASTER_DATA_TOOLS.md § 12](../KB_06_MASTER_DATA_TOOLS.md#12-b260---thông-tin-nhân-viên-sản-xuất).
 
 ---
 
@@ -76,18 +76,18 @@
 *   **Cách khắc phục:**
     1. Yêu cầu quản lý duyệt PO trên Groupware.
     2. Nếu đã duyệt nhưng vẫn lệch, IT kiểm tra trạng thái Windows Service ESM, hoặc chạy query cưỡng bức đồng bộ thủ công qua ESM Bridge Tables.
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_07/KB_07_01_OVERVIEW_FLOWS.md § 6](../KB_07/KB_07_01_OVERVIEW_FLOWS.md#6-lỗi-không-đồng-bộ-được-po-từ-groupware-sang-mes).
+*   **Chi tiết nghiệp vụ:** Xem tại ../KB_07/KB_07_01_OVERVIEW_FLOWS.md § 6.
 
 ---
 
 
 ## [B418] — Packing Quantity Standards (Quy cách đóng gói theo Size)
 
-### Lỗi 1: Popup gộp Box tại [B523] báo lỗi "Chưa có tiêu chuẩn đóng gói" do sai lệch kích thước Size
+### [B523] — Lỗi 1: Popup gộp Box tại báo lỗi "Chưa có tiêu chuẩn đóng gói" do sai lệch kích thước Size
 *   **Triệu chứng:** Khi công nhân quét gộp Box tại B523, hệ thống báo lỗi chặn đứng quy trình: `"Chưa có tiêu chuẩn đóng gói"`.
 *   **Nguyên nhân gốc:** Kích thước Size của Model (`MBISizeD` lấy từ **A410**) chưa được khai báo số lượng đóng gói định mức (`PackQty`) tương ứng trong bảng `STB_PackingStandard`.
 *   **Cách khắc phục:** Vào màn hình **A418**, đăng ký Size mới và thiết lập số lượng đóng gói định mức tương ứng (`PackQty`) rồi nhấn Lưu.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_06_MASTER_DATA_TOOLS.md § 11](KB_06_MASTER_DATA_TOOLS.md#11-a418---số-lượng-đóng-gói-theo-size).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_06_MASTER_DATA_TOOLS.md § 11](../KB_06_MASTER_DATA_TOOLS.md#11-a418---số-lượng-đóng-gói-theo-size).
 
 ---
 
@@ -98,7 +98,7 @@
 *   **Triệu chứng:** Khi lập kế hoạch và in tem điện cực tại **B442**, Model mới không hiển thị hoặc không cho phép in.
 *   **Nguyên nhân gốc:** Model chưa được khai báo ở bảng thông tin Model master (**A230**) hoặc thiếu cấu hình công đoạn tương ứng.
 *   **Cách khắc phục:** Đăng ký đầy đủ mã Model ở màn hình **A230** trước khi thao tác trên **B442**.
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_OVERVIEW.md § 1 (Phần 1)](../KB_05/KB_05_01_QC_OVERVIEW.md#1-lập-kế-hoạch--in-tem-điện-cực-b310-b442-a230).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md § 1 (Phần 1)](../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md#1-lập-kế-hoạch--in-tem-điện-cực-b310-b442-a230).
 
 ---
 
@@ -122,7 +122,7 @@
 *   **Nguyên nhân gốc:** Lỗi logic so sánh Null trong SP `usp_DoProcessProdRouteHistForCalc_SmartApp_VNT` dòng 218: `IF @SIExtInt01 = Null` (Trong SQL phải dùng `IS NULL`).
 *   **Cách khắc phục:**
     ALTER SP sửa lại cú pháp so sánh Null chuẩn: `IF @SIExtInt01 IS NULL`.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_12_DEEP_CORE_ANALYSIS_AND_AUDIT.md § 2.2](KB_12_DEEP_CORE_ANALYSIS_AND_AUDIT.md#bug-1-gate-20-phút-không-bao-giờ-hoạt-động).
+*   **Chi tiết nghiệp vụ:** Xem tại KB_12_DEEP_CORE_ANALYSIS_AND_AUDIT.md § 2.2.
 
 ### Lỗi 2: OP báo lỗi không chốt được công đoạn, báo "Routing không có trong PO" hoặc "Đã hoàn thành thực tế rồi"
 *   **Triệu chứng:** OP scan chốt sản lượng tại **B530** hệ thống báo lỗi không chốt được.
@@ -130,7 +130,7 @@
 *   **Cách khắc phục:**
     IT kiểm tra lịch sử quét Routing của Barcode bằng Golden Query để phát hiện công đoạn bị bỏ qua. Cho OP quay lại scan trạm trước, hoặc chèn dòng Routing giả lập để thông luồng (Xem phương pháp trace tại [Kịch bản 2](#kịch-bản-sự-cố-khẩn-cấp-2-lỗi-không-chốt-được-công-đoạn-b530)).
 
-### Lỗi 3: Thiếu hoặc dư thừa danh mục lỗi (Defect Code) hiển thị tại lưới nhập lỗi của xưởng BN & [BG1]
+### [BG1] — Lỗi 3: Thiếu hoặc dư thừa danh mục lỗi (Defect Code) hiển thị tại lưới nhập lỗi của xưởng BN &
 *   **Triệu chứng:** Giao diện nhập lỗi của tổ sản xuất Bắc Ninh và Bắc Giang 1 hiển thị các danh mục lỗi cũ đã bãi bỏ (gây nhầm lẫn cho công nhân), hoặc thiếu các mã lỗi mới phát sinh cần theo dõi để quản lý chất lượng tốt hơn.
 *   **Nguyên nhân gốc:** Bảng master data danh mục lỗi `STB_DefectInfo` chưa được cập nhật kịp thời theo rà soát thực tế của tổ sản xuất.
 *   **Cách khắc phục:**
@@ -150,7 +150,7 @@
        - `V-24_NE6_BG`: Curling_NG thừa thiếu cân nặng (Curling_Overweight or underweight)
        - `V-24_NE7_BG`: Curling_Xước chân tancha (Curling_Lead terminal scrash)
        - `V-24_NE8_BG`: Curling_Lỗi mẻ miệng curling (Curling_Deformation around mouth)
-*   **Chi tiết nghiệp vụ:** Xem tại [fix_b530_disable_defects_BG.sql](../sql/scripts/fix_b530_disable_defects_BG.sql) và [fix_b530_add_defects_BG.sql](../sql/scripts/fix_b530_add_defects_BG.sql).
+*   **Chi tiết nghiệp vụ:** Xem tại **fix_b530_disable_defects_BG.sql** và **fix_b530_add_defects_BG.sql**.
 
 ### 🔬 Phân Tích Core Engine: `usp_DoProcessProdRouteHist` (406 dòng)
 
@@ -287,7 +287,7 @@ Bước 7: Xác nhận phiếu → EXEC usp_DoFixMaterialDoc
     VALUES ('MÃ_PART_NO', 'BY', '200', '10', '17.7', 'VVT_F2', 'kho2'),
            ('MÃ_PART_NO', 'YP', '180', '10', '17.7', 'VVT_F2', 'kho2');
     ```
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_OVERVIEW.md § 8.2](../KB_05/KB_05_01_QC_OVERVIEW.md#82-lỗi-chưa-config-trong-stb_slittinglocationconfig_vvt).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md § 8.2](../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md#82-lỗi-chưa-config-trong-stb_slittinglocationconfig_vvt).
 
 ---
 
@@ -308,12 +308,12 @@ Bước 7: Xác nhận phiếu → EXEC usp_DoFixMaterialDoc
 
 ## [B618] — Rework (Làm lại sản phẩm)
 
-### Lỗi 1: Không có quyền thao tác trên giao diện Rework [B618]
+### [B618] — Lỗi 1: Không có quyền thao tác trên giao diện Rework
 *   **Triệu chứng:** Công nhân không thể thực hiện quét/xác nhận làm lại sản phẩm lỗi tại chuyền.
 *   **Nguyên nhân gốc:** SP `usp_Vietnam_GetLotInfoForRework_VNT` bị hardcode kiểm tra Whitelist UserID.
 *   **Cách khắc phục:**
     Sửa SP để bổ sung thêm UserID của OP hiện hành vào danh sách Whitelist cho phép thao tác Rework.
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_26/KB_26_01_LINKS_BUGS.md § 2](../KB_26/KB_26_01_LINKS_BUGS.md#2-lỗi-phân-quyền-màn-hình-rework-b618).
+*   **Chi tiết nghiệp vụ:** Xem tại ../KB_26/KB_26_01_LINKS_BUGS.md § 2.
 
 ---
 
@@ -329,9 +329,9 @@ Bước 7: Xác nhận phiếu → EXEC usp_DoFixMaterialDoc
     INSERT INTO STB_VVT_StagePrices (model, WorkCenterCode, RouteV22, PriceV22...)
     VALUES ('MÃ_MODEL', 'MÃ_NHÀ_MÁY', 'ROUTE_CODE', ĐƠN_GIÁ);
     ```
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_06_MASTER_DATA_TOOLS.md § 3](KB_06_MASTER_DATA_TOOLS.md#3-fix-giá-công-đoạn-stage-prices).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_06_MASTER_DATA_TOOLS.md § 3](../KB_06_MASTER_DATA_TOOLS.md#3-fix-giá-công-đoạn-stage-prices).
 
-### Lỗi 2: Báo cáo lỗi chi tiết Cell [B682] bị lẫn lộn các lỗi không thuộc bộ phận sản xuất (VE%, VP%)
+### [B682] — Lỗi 2: Báo cáo lỗi chi tiết Cell bị lẫn lộn các lỗi không thuộc bộ phận sản xuất (VE%, VP%)
 *   **Triệu chứng:** Báo cáo chi tiết lỗi sản phẩm Cell Line Bắc Giang/Bắc Ninh hiển thị lẫn lộn cả các lỗi thuộc bộ phận Điện cực (Electrode - mã `VE%`) và bộ phận Module (mã `VP%`).
 *   **Nguyên nhân gốc:** Stored Procedure `usp_Get_VVT_Prod_Bad_Status` khi truy vấn lịch sử công đoạn và bảng lỗi `STB_DefectRepairInfo` chỉ lọc `RouteCode LIKE 'V%'`. Do công đoạn của Điện cực Hà Nam bắt đầu bằng `VE` (Ví dụ: `VE01`) và Module bắt đầu bằng `VP` (Ví dụ: `VP01`), chúng đều bị lọc nhầm vào kết quả Cell Line Bắc Giang/Bắc Ninh.
 *   **Cách khắc phục:** Sửa SP `usp_Get_VVT_Prod_Bad_Status` tại khối CTE `ViewBarcode` và `RawView` để thêm logic lọc loại trừ:
@@ -340,7 +340,7 @@ Bước 7: Xác nhận phiếu → EXEC usp_DoFixMaterialDoc
     AND b.RouteCode LIKE 'V%'
     AND (@WorkCenterCode = 'VVT_F3' OR (b.RouteCode NOT LIKE 'VE%' AND b.RouteCode NOT LIKE 'VP%'))
     ```
-*   **Chi tiết nghiệp vụ:** Xem tại mã nguồn Stored Procedure [usp_Get_VVT_Prod_Bad_Status.sql](../sql/procedures/usp_Get_VVT_Prod_Bad_Status.sql#L53).
+*   **Chi tiết nghiệp vụ:** Xem tại mã nguồn Stored Procedure **usp_Get_VVT_Prod_Bad_Status.sql**.
 
 ---
 
@@ -362,7 +362,7 @@ Bước 7: Xác nhận phiếu → EXEC usp_DoFixMaterialDoc
 
 ## [B757] / [B758] — Digi-Key Customer Labels (In tem nhãn khách hàng Digi-Key)
 
-### Lỗi 1: Lỗi in nhãn Logistic tại [B757] bị chặn báo thiếu thông tin
+### [B757] — Lỗi 1: Lỗi in nhãn Logistic tại bị chặn báo thiếu thông tin
 *   **Triệu chứng:** Bấm "IN NHÃN LOGISTIC" hệ thống báo lỗi không in được.
 *   **Nguyên nhân gốc:** Chưa nhập đủ các trường bắt buộc gồm: PO Number, PO Line Number, Pack List Number.
 *   **Cách khắc phục:**
@@ -391,11 +391,11 @@ Bước 7: Xác nhận phiếu → EXEC usp_DoFixMaterialDoc
 
 ## [B802] — Electrode Production History (Báo cáo & Đối soát điện cực)
 
-### Lỗi 1: Sai lệch số lượng/mã cuộn điện cực thực tế so với báo cáo [B802]
+### [B802] — Lỗi 1: Sai lệch số lượng/mã cuộn điện cực thực tế so với báo cáo
 *   **Triệu chứng:** Khi mở báo cáo lịch sử sản xuất điện cực trên **B802**, số lượng cuộn hoặc tổng số mét sản xuất thực tế bị lệch so với dữ liệu chốt công đoạn.
 *   **Nguyên nhân gốc:** Bỏ qua việc quét/chốt các công đoạn bán thành phẩm điện cực (Coating/Slitting) hoặc do sai lệch giá trị `ProdQty` trong bảng `STB_ProdRouteHist` của điện cực.
 *   **Cách khắc phục:** IT tiến hành đối soát thông tin qua bảng lịch sử điện cực `STB_ElectrodeProdRouteHist` và điều chỉnh lại sản lượng thực tế khớp với số mét cuộn.
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_03/KB_03_02_CELL_LINE.md § 6.11](../KB_03/KB_03_02_CELL_LINE.md#611-b802---vietnam-electrode-prod-route-hist-lịch-sử-sx-điện-cực) và [../KB_05/KB_05_01_QC_OVERVIEW.md § 3](../KB_05/KB_05_01_QC_OVERVIEW.md#3-báo-cáo--đối-soát-điện-cực-b802).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_03/KB_03_02_CELL_LINE.md § 6.11](../KB_03/KB_03_02_CELL_LINE.md#611-b802---vietnam-electrode-prod-route-hist-lịch-sử-sx-điện-cực) và [../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md § 3](../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md#3-báo-cáo--đối-soát-điện-cực-b802).
 
 ---
 
@@ -416,7 +416,7 @@ Bước 7: Xác nhận phiếu → EXEC usp_DoFixMaterialDoc
 
 ## [HN523] / [HN544] — Custom Matching & Merge (Gộp box túi nilon / Gộp tùy chỉnh Hà Nam)
 
-### Lỗi 1: Khi bấm gộp box tùy chỉnh ở [HN544] báo lỗi "Column LotID is constrained to be unique"
+### [HN544] — Lỗi 1: Khi bấm gộp box tùy chỉnh ở báo lỗi "Column LotID is constrained to be unique"
 *   **Triệu chứng:** OP nhập Packing ID tại màn hình **HN544** nhấn Tìm kiếm hệ thống crash báo lỗi trùng lặp khóa chính LotID: `Value '...' is already present`.
 *   **Nguyên nhân gốc:** Stored Procedure `usp_GetMaterialLotInfo_Packing_VVT_F3` sử dụng `UNION ALL` gộp 3 truy vấn, trong đó truy vấn thứ 3 thực hiện JOIN với bảng chia tách `STB_DividePackaging` bị sai logic khi có mã cha chưa phân tách (PackingParentID = NULL), trả về dòng dummy có LotID bị null/duplicate.
 *   **Cách khắc phục:**
@@ -425,9 +425,9 @@ Bước 7: Xác nhận phiếu → EXEC usp_DoFixMaterialDoc
     WHERE DP.PackingID = @pPackingID  
       AND ISNULL(DP.PackingParentID, '') <> '' -- Dòng sửa lỗi
     ```
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_02/KB_02_01_NVL_WMS.md § 2.1](../KB_02/KB_02_01_NVL_WMS.md#21-lỗi-unique-constraint-khi-gộp-túi-bóng-hn544--pkqn2100175).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_02/KB_02_01_WMS_CORE.md § 2.1](../KB_02/KB_02_01_WMS_CORE.md#21-lỗi-unique-constraint-khi-gộp-túi-bóng-hn544--pkqn2100175).
 
-### Lỗi 2: Gộp túi bóng thành hộp nhỏ ở [HN544] bị mất số lượng (CurrentQty = 0)
+### [HN544] — Lỗi 2: Gộp túi bóng thành hộp nhỏ ở bị mất số lượng (CurrentQty = 0)
 *   **Triệu chứng:** Sau khi thực hiện gộp nilon thành hộp nhỏ, số lượng tồn hiển thị bằng 0 và không in được tem nhãn.
 *   **Nguyên nhân gốc:** Lệch dữ liệu khi dồn số lượng giữa các Lot phụ.
 *   **Cách khắc phục:**
@@ -438,7 +438,7 @@ Bước 7: Xác nhận phiếu → EXEC usp_DoFixMaterialDoc
     ```
 *   **Chi tiết nghiệp vụ:** Xem tại [../KB_04/KB_04_01_CORE_PACKAGING.md § 6.5](../KB_04/KB_04_01_CORE_PACKAGING.md#65-lỗi-gộp-túi-bóng-bị-mất-số-lượng-qty--0--hn544).
 
-### Lỗi 3: Báo lỗi tiếng Hàn "Bạn chưa nhập kết quả..." hoặc sản lượng hiển thị bằng 0 ở [HN523]
+### [HN523] — Lỗi 3: Báo lỗi tiếng Hàn "Bạn chưa nhập kết quả..." hoặc sản lượng hiển thị bằng 0 ở
 *   **Triệu chứng:** Nhập mã Lot để gộp box ở màn hình gộp tùy chỉnh **HN523**, hệ thống báo lỗi tiếng Hàn hoặc hiển thị sản lượng đầu ra (OutputQty) bằng 0.
 *   **Nguyên nhân gốc:** Cấu hình Routing của PO thiếu cờ công đoạn cuối làm công đoạn đầu ra (`IsOutputRoute = 1`), khiến Stored Procedure `usp_Vietnam_GetProdPackingForBarcode_VVT` trả về sản lượng bằng 0.
 *   **Cách khắc phục:** Cập nhật lại cấu hình Routing của PO trên DB để đặt công đoạn cuối làm công đoạn đầu ra:
@@ -452,7 +452,7 @@ Bước 7: Xác nhận phiếu → EXEC usp_DoFixMaterialDoc
 
 ## [HN551] / [HN866] — FG Export & InStock (Xuất kho & Tồn kho thành phẩm Hà Nam)
 
-### Lỗi 1: Hàng đã xuất kho ở [HN551] nhưng tồn kho trên màn [HN866] vẫn còn nguyên
+### [HN551]/[HN866] — Lỗi 1: Hàng đã xuất kho ở nhưng tồn kho trên màn vẫn còn nguyên
 *   **Triệu chứng:** Lịch sử xuất hàng đã ghi nhận thành công tại màn hình xuất **HN551** nhưng khi vào màn hình kiểm tra tồn kho **HN866** vẫn thấy hiện Packing ID cũ, gây lệch tồn kho thực tế.
 *   **Nguyên nhân gốc:** SP xử lý xuất kho `ExportWarehouseFinshGoodInventory_uid` thực hiện ghi nhận vào bảng xuất `STB_VN_FINISHGOODS_HN_Export` nhưng bị lỗi/quên không cập nhật cột cờ xuất `QtyOutput` trong bảng tồn kho `FinishGoodMESInstock_HN`.
 *   **Cách khắc phục:**
@@ -462,14 +462,14 @@ Bước 7: Xác nhận phiếu → EXEC usp_DoFixMaterialDoc
     UPDATE FinishGoodMESInstock_HN SET QtyOutput = Quantity WHERE PackingID = 'MÃ_PACKING_LỖI';
     UPDATE STB_VN_FINISHGOODS_HN_Export SET StatusExport = 1 WHERE PackingID = 'MÃ_PACKING_LỖI';
     ```
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_02/KB_02_01_NVL_WMS.md § 1](../KB_02/KB_02_01_NVL_WMS.md#1-lỗi-hàng-xuất-ở-hn551-nhưng-tồn-kho-hn866-vẫn-còn).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_02/KB_02_01_WMS_CORE.md § 1](../KB_02/KB_02_01_WMS_CORE.md#1-lỗi-hàng-xuất-ở-hn551-nhưng-tồn-kho-hn866-vẫn-còn).
 
 ---
 
 
 ## [K101] / [K109] / [K110] — [BG2] Production Plan & Scan (Sản xuất và quét NVL nhà máy [BG2])
 
-### Lỗi 1: Không tạo được Lot hoặc không chốt được sản lượng tại nhà máy Bắc Giang 2 ([BG2])
+### [BG2] — Lỗi 1: Không tạo được Lot hoặc không chốt được sản lượng tại nhà máy Bắc Giang 2 ()
 *   **Triệu chứng:** Công nhân tại nhà máy BG2 không thể thực hiện các thao tác lập kế hoạch ngày hay quét chốt sản lượng trên các màn hình chuẩn B450 hay B597.
 *   **Nguyên nhân gốc:** Nhà máy BG2 chạy cơ sở dữ liệu và phân hệ riêng biệt, sử dụng màn hình đặc thù: **K101** (tương đương B450) và **K109** (tương đương B597) có lọc riêng cho `WorkCenterCode = 'VVT_BG2'`.
 *   **Cách khắc phục:** Hướng dẫn công nhân mở đúng màn hình của BG2:

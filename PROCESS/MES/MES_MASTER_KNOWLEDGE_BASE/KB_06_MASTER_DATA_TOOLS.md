@@ -9,7 +9,7 @@
 
 ## 1. 📐 Master Data & Model
 
-### 1.1 Thêm Model mới vào STB_ModelBasicInfo ([A410])
+### 1.1 [A410] — Thêm Model mới vào STB_ModelBasicInfo ()
 
 > ⚠️ Nếu model có trong `STB_MaterialMaster` (A230) nhưng **không có** trong `STB_ModelBasicInfo` -> C512 không tìm thấy, B597 không chọn được, Vol/Farad không hiện.
 
@@ -81,7 +81,7 @@ WHERE ModelCode = 'Mã_Model'
 
 ---
 
-### 1.3 Đăng ký mã vật tư mới vào STB_MaterialMaster ([A230]) qua SQL
+### 1.3 [A230] — Đăng ký mã vật tư mới vào STB_MaterialMaster () qua SQL
 Nếu dữ liệu chưa tự động đồng bộ từ SAP/Groupware sang MES và cần chèn khẩn cấp bằng SQL để sản xuất:
 ```sql
 INSERT INTO STB_MaterialMaster (
@@ -119,7 +119,7 @@ Trong hệ thống MES Vinatech, một sản phẩm thường có hai loại mã
 
 ---
 
-## 2. ⚙️ Cấu hình Vận hành ([F110])
+## [F110] — 2. ⚙️ Cấu hình Vận hành ()
 
 ### 2.1 Lỗi NVL mới không gộp Box được
 
@@ -174,7 +174,7 @@ SELECT OBJECT_DEFINITION(OBJECT_ID('fn_VVT_StagePricesMODULE'))
 
 ## 4. 🛢️ Lỗi Vỏ Nhôm (Aluminum Case Mapping)
 
--> Xem [KB_05 Mục 7.4](KB_05/KB_05_01_QC_OVERVIEW.md#74-b597-báo-lỗi-không-tồn-tại-thiết-lập-vỏ-nhôm) để debug và fix.
+-> Xem [KB_05 Mục 7.4](KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md#74-b597-báo-lỗi-không-tồn-tại-thiết-lập-vỏ-nhôm) để debug và fix.
 
 ---
 
@@ -290,7 +290,7 @@ ORDER BY CreateDateTime DESC
 
 ---
 
-## 7. 🏗️ Thêm Cell/Line mới ([B250], [B270])
+## [B250]/[B270] — 7. 🏗️ Thêm Cell/Line mới (, )
 
 > Khi có yêu cầu thêm Cell mới (VD: VVBNTC-05), cần cập nhật **3 bảng** Master để đồng bộ.
 
@@ -440,7 +440,7 @@ BƯỚC 7 - Test
 
 ---
 
-## 10. 🏗️ Thiết Lập Line & Route ([B210]/[B220]/[B230]/[B240])
+## [B210]/[B220]/[B230]/[B240] — 10. 🏗️ Thiết Lập Line & Route (///)
 
 > Bộ tứ màn hình Master Data quan trọng nhất về Thiết lập Định tuyến sản xuất.
 
@@ -485,7 +485,7 @@ Khi có yêu cầu điều chỉnh quy trình sản xuất (ví dụ: **bỏ cô
 
 ---
 
-## 11. 📐 [A418] - Số Lượng Đóng Gói Theo Size
+## [A418] — 11. 📐 Số Lượng Đóng Gói Theo Size
 
 **Luồng dữ liệu:** A410 (MBISizeD) -> A418 (PackQty) -> B523 (popup số lượng gộp box)
 
@@ -500,7 +500,7 @@ SELECT * FROM STB_PackingStandard WHERE ProdSize = 'MBISizeD_của_model'
 
 ---
 
-## 12. 👥 [B260] - Thông Tin Nhân Viên Sản Xuất
+## [B260] — 12. 👥 Thông Tin Nhân Viên Sản Xuất
 
 > ⚠️ **WorkerGroupCode PHẢI là `VE-01`** - Nếu điền sai -> nhân viên không hiển thị trong dropdown tại B530, B540
 
@@ -559,7 +559,7 @@ Dưới đây là 10 màn hình cốt lõi nhất thường gặp sự cố ho�
 
 ## Appendix A — Column-Level Schema (DB Verified 2026-06-18)
 
-### A.1 `STB_ModelBasicInfo` — 61 columns ([A410])
+### [A410] — A.1 `STB_ModelBasicInfo` 61 columns ()
 
 > **PK:** `ModelCode` (varchar 50)
 
@@ -588,7 +588,7 @@ Dưới đây là 10 màn hình cốt lõi nhất thường gặp sự cố ho�
 | `MBIExtImage01~05` | `varbinary(MAX)` | 5 trường hình ảnh |
 | `MBIExtBit01` | `bit` | Trường cờ mở rộng |
 
-### A.2 `STB_MaterialMaster` — 82 columns ([A230])
+### [A230] — A.2 `STB_MaterialMaster` 82 columns ()
 
 > **PK:** `MaterialCode` (varchar 50)
 
@@ -617,7 +617,7 @@ Dưới đây là 10 màn hình cốt lõi nhất thường gặp sự cố ho�
 | `MMExtText01~10` | `nvarchar(400)` | 10 trường mở rộng text |
 | `MMExtInt01~05` / `MMExtReal01~05` | | 10 trường mở rộng số |
 
-### A.3 `STB_PackingStandard` — 11 columns ([A419])
+### [A419] — A.3 `STB_PackingStandard` 11 columns ()
 
 > **PK Composite:** `MaterialTypeCode` + `Size` + `Voltage` + `Farad`
 

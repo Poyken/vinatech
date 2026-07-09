@@ -66,7 +66,7 @@ WHERE ScreenName = '@SCREEN_NAME'
 
 ---
 
-## 4. 📦 CHECK GỘP BOX ([B523])
+## [B523] — 4. 📦 CHECK GỘP BOX ()
 
 ```sql
 -- 1. F110 — IsLotUse?

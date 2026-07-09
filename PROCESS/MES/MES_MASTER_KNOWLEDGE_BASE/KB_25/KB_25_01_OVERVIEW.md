@@ -3,7 +3,7 @@
 > **Màn hình:** D000, D051, D100, D110, HY screens
 > **🔑 Keywords:** Enesol, Hưng Yên, VVT_F4, pin, battery, D-series, box matching, inner box, outer box, 93 SPs
 > **Verified against DB:** 2026-06-10
-> ← [Về INDEX](KB_INDEX.md)
+> ← [Về INDEX](../KB_INDEX.md)
 
 ---
 
@@ -25,7 +25,7 @@ Hệ thống MES Vinatech quản lý vận hành của nhà máy **Hưng Yên (W
 *   **Electrode Hung Yên (`HY00004`):** Quản lý sản xuất điện cực Hưng Yên.
 *   *Ghi chú:* Các thư mục này chủ yếu chứa các màn hình tiêu chuẩn của hệ thống được phân quyền cho nhân sự Hưng Yên, không tạo các màn hình tùy biến riêng ngoại trừ màn hình `PO_Electrode_HY` (`HY311`).
 
-### 2.2 VinaEnesol Management (`[D000]`)
+### 2.2 [D000] — VinaEnesol Management (``)
 Bộ màn hình custom riêng phục vụ nghiệp vụ đóng gói và in ấn tem nhãn của VinaEnesol:
 *   **VNE_CustomerPartNoInfo (`D051`):** Thiết lập thông tin mã vật tư của khách hàng tương ứng với mã nội bộ của Vinatech.
 *   **VNE_BoxLabelPrint:** Màn hình in nhãn hộp nhỏ (Inner Box / Small Box - `LabelClassCode = '1'`).
@@ -226,7 +226,7 @@ Tạo PO → Đăng ký BOM → Kế hoạch ngày → In tem → Tạo Lot
 *   **Đăng nhập:** Sử dụng tài khoản worker Hưng Yên được cấp riêng để đăng nhập vào hệ thống MES của công ty, chọn ngôn ngữ làm việc và tích chọn *Remember* để lưu lại phiên đăng nhập sau.
 *   **Tìm kiếm màn hình:** Ấn vào icon kính lúp trên góc trái giao diện chính, điền mã Screen ID (ví dụ: B230, A230...) vào ô tìm kiếm rồi ấn OK để mở nhanh màn hình tương ứng.
 
-#### 2. Màn hình [A230] (Thông tin vật liệu Master)
+#### [A230] — 2. Màn hình (Thông tin vật liệu Master)
 Thiết lập toàn bộ thông tin cơ bản cho nguyên vật liệu, bán thành phẩm và thành phẩm.
 *   **Cột "Mã loại NVL" (Material Type):** Chọn đúng loại để tránh lỗi hiển thị nhầm lẫn giữa Cell và Module ngoài sản xuất:
     *   `EROH`: Mã vật tư điện cực (cấp cho công đoạn Mixing).
@@ -243,33 +243,33 @@ Thiết lập toàn bộ thông tin cơ bản cho nguyên vật liệu, bán th�
 *   **Cột "BasicRoutingCode":** Chọn quy trình định tuyến sản xuất mặc định của mã hàng.
 *   **Cột "MMEXtIN1" (Shelf Life):** Số tháng hạn dùng trước khi hết hạn sử dụng.
 
-#### 3. Màn hình [A410] (Thông tin Model)
+#### [A410] — 3. Màn hình (Thông tin Model)
 *   Các thông số kích thước và tính chất tự động đồng bộ từ màn hình A230 sang (chỉ áp dụng cho hàng Cell và Module).
 *   **Cột "Đường kính" (Diameter):** Quyết định chủng loại và kích thước bao của con hàng.
 *   **⚠️ Lưu ý lỗi QC không tìm thấy Lot:** Nếu bên QC không tìm thấy Lot hàng để tạo phiếu kiểm tra trên giao diện, IT cần vào màn hình A410 này kiểm tra xem model tương ứng đã được thiết lập loại OQC (OqcType, InspectionType...) hay chưa.
 
-#### 4. Màn hình [A310] (Thông tin BOM)
+#### [A310] — 4. Màn hình (Thông tin BOM)
 *   Khai báo định mức cấu thành sản phẩm (BOM) bao gồm Điện cực, Cell và Module.
 *   **BOM Version:** Quy chuẩn version từ `51` đến `999` là của Việt Nam (phổ biến đang sử dụng là Bom `99` hoặc `99.100`), còn version `1000` là dữ liệu đồng bộ tự động từ hệ thống ERP.
 *   Chú ý khai báo chuẩn `ChildMaterialCode` và `ChildBomversion`. Hàng Cell chạy từ V-22 (công đoạn cuốn). Hàng Module liên kết các công đoạn MV-01, MV-03, MV-04, MV-05. Riêng dòng sản phẩm khách hàng JIANG-HAI chạy logic định mức đặc biệt.
 
-#### 5. Cấu hình Line & Công đoạn ([B210], [B220], [B230], [B240])
+#### [B210]/[B220]/[B230]/[B240] — 5. Cấu hình Line & Công đoạn (, , , )
 *   **B210 (Thông tin Line):** Thêm, sửa, xóa thông tin line sản xuất ngoài nhà máy. Chú ý cấu hình trường **"Mã kho Nguyên liệu"** để liên kết đúng kho cấp liệu cho chuyền.
 *   **B220 (Thông tin công đoạn):** Khai báo danh mục các công đoạn sản xuất.
 *   **B230 (Thông tin cấu trúc công đoạn trên Line):** Chọn mã Line ở cột bên trái. Ở bảng bên phải hiển thị danh sách công đoạn, OP tích chọn vào cột **"Sử dụng"** và **"Sử dụng trong Line"** đối với những công đoạn có trên Line đó. Cột **"Thông số Route"** dùng để đánh số thứ tự sản xuất (Routing Index).
 *   **B240 (Thông tin Routing):** Thiết lập cấu hình quy trình định tuyến chi tiết của sản phẩm. Khi cấu hình bắt buộc phải khai báo rõ công đoạn nào là **Input** (Đầu vào nhận Lot), công đoạn nào là **Output** (Đầu ra thành phẩm), và đánh số chỉ mục Index tuần tự.
 
-#### 6. Thiết bị & Nhân viên ([B250], [B260], [B270], [Z210])
+#### [B250]/[B260]/[B270]/[Z210] — 6. Thiết bị & Nhân viên (, , , )
 *   **B250 (Thông tin thiết bị):** Khai báo danh mục toàn bộ máy móc, thiết bị của nhà máy Hưng Yên.
 *   **B270 (Thông tin thiết bị sản xuất):** Mapping thiết bị cụ thể vào từng Line và công đoạn sản xuất tương ứng.
 *   **B260 / B220 (Nhân viên sản xuất):** Khai báo danh sách và mã số thẻ của công nhân.
 *   **Z210 (Phân quyền tài khoản):** Cấp quyền truy cập menu chức năng và phân quyền thao tác cho từng nhóm tài khoản worker Hưng Yên.
 
-#### 7. [F110] (Thuộc tính quản lý tồn kho)
+#### [F110] — 7. (Thuộc tính quản lý tồn kho)
 *   Quản lý thuộc tính tồn kho của NVL (EROH, FERT, HALB, ROH...).
 *   **⚠️ Lưu ý lỗi gộp Box:** Trong F110 có cột cờ **`IsLotUse`**. Thủ kho bắt buộc phải tích chọn cờ này cho mã vật tư thì ngoài sản xuất công nhân mới có thể thực hiện quét gộp Box thành công tại màn hình **B523**.
 
-#### 8. [A130] (Kho/Location & Đối tác)
+#### [A130] — 8. (Kho/Location & Đối tác)
 *   **Tab Kho/Location:** Thêm, sửa, xóa thông tin kho vật lý và tọa độ Location trong kho tại Hưng Yên.
 *   **Tab Đối tác giao dịch:** Quản lý danh mục nhà cung cấp nguyên vật liệu. Liên kết với **F140/F130** để chỉ định nhà cung cấp cấp phát những mã NVL nào.
 

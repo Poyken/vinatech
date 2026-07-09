@@ -8,14 +8,14 @@
 *   **Cách khắc phục:**
     1. Check QC: Yêu cầu QC PASS hoặc chuyển kho Lot về kho chính `ROH_WH` bằng SQL.
     2. Bypass gia hạn dùng tạm thời (Ghi nhận biên bản audit): UPDATE ngày tạo `CreateDateTime` lùi lại hoặc chạy lệnh bỏ qua FIFO.
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_OVERVIEW.md § 7](../KB_05/KB_05_01_QC_OVERVIEW.md#7-lỗi-quét-nguyên-vật-liệu-b597--pqc-check).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md § 7](../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md#7-lỗi-quét-nguyên-vật-liệu-b597--pqc-check).
 
-### Lỗi 2: Lỗi quét vỏ nhôm (AluCase) mới báo sai chủng loại tại [B597]
+### [B597] — Lỗi 2: Lỗi quét vỏ nhôm (AluCase) mới báo sai chủng loại tại
 *   **Triệu chứng:** Quét mã vỏ nhôm mới hệ thống báo lỗi chặn đứng sản xuất.
 *   **Nguyên nhân gốc:** Logic kiểm tra vỏ nhôm không nằm trong DB cấu hình mà bị hardcode trực tiếp trong SP `usp_Vietnam_RawMaterialInputHist_uid`.
 *   **Cách khắc phục:**
     ALTER SP `usp_Vietnam_RawMaterialInputHist_uid` để bổ sung mã vỏ nhôm mới vào khối điều kiện `IF / NOT IN`.
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_OVERVIEW.md § 7.4](../KB_05/KB_05_01_QC_OVERVIEW.md#74-lỗi-vỏ-nhôm-alucase).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md § 7.4](../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md#74-lỗi-vỏ-nhôm-alucase).
 
 ### Lỗi 3: Lỗi "String or binary data would be truncated" khi quét gộp 5 mã điện cực 1 Lot (Model 3510 / 35105)
 *   **Triệu chứng:** Khi quét gộp 5 mã barcode điện cực cho 1 Lot tại B597, hệ thống báo lỗi đỏ `"String or binary data would be truncated"` và không cho lưu.
@@ -26,9 +26,9 @@
        ALTER TABLE STB_InputMaterialHistory ALTER COLUMN RawMaterialBarcode NVARCHAR(1000) NULL;
        ```
     2. Sửa tham số `@pRawMaterialBarcode` và các biến nội bộ chứa chuỗi ghép barcode (ví dụ: `@RawMaterialBarcode`, `@LotMaterialBarcode`) trong stored procedure `usp_Vietnam_RawMaterialInputHist_uid` thành `NVARCHAR(1000)`.
-*   **Chi tiết nghiệp vụ:** Xem file script [fix_multibarcode_3510.sql](../sql/scripts/fix_multibarcode_3510.sql).
+*   **Chi tiết nghiệp vụ:** Xem file script **fix_multibarcode_3510.sql**.
 
-### Lỗi 4: Lỗi BOM điện cực dạng tráng (Coating) không khớp với BOM gốc dạng chia cuộn (Slitting) cho model 1030L (ECVT30-293) tại [B597]
+### [B597] — Lỗi 4: Lỗi BOM điện cực dạng tráng (Coating) không khớp với BOM gốc dạng chia cuộn (Slitting) cho model 1030L (ECVT30 293) tại
 *   **Triệu chứng:** Khi quét điện cực dương (+) hoặc âm (-) tại trạm **B597** cho model `1030L` (mã model thực tế `ECVT30-293`), hệ thống báo lỗi: `"lỗi BOM CREYO85B-02 không được phép dùng cho model ECVT30-293"`.
 *   **Nguyên nhân gốc:**
     1. **Sai lệch cấu trúc BOM**: Trong BOM gốc (phiên bản `2001`) của model `ECVT30-293`, R&D khai báo mã điện cực chia cuộn (**Slitting-Roll** - ví dụ `SREYO85A` và `SRFYO85A`). Tuy nhiên, Lot điện cực quấn thực tế cấp cho chuyền là mã cuộn tráng (**Coating-Roll** - ví dụ `CREYO85B-02` và `CRFYO85B-02`). Khi SP `usp_Vietnam_RawMaterialInputHist_uid` đối chiếu mã cuộn tráng đã quét với BOM, hệ thống không tìm thấy và chặn lại.
@@ -95,26 +95,26 @@
 *   **Cách khắc phục:**
     1. Vào **C121** thêm nhóm kiểm tra và các hạng mục chi tiết.
     2. Vào **C122**, chọn mã nguyên vật liệu và click chọn nhóm kiểm tra tương ứng để map dữ liệu.
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_OVERVIEW.md § 9.1](../KB_05/KB_05_01_QC_OVERVIEW.md#91-iqc-incoming-quality-control--kiểm-tra-nvl-đầu-vào).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md § 9.1](../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md#91-iqc-incoming-quality-control--kiểm-tra-nvl-đầu-vào).
 
 ---
 
 
 ## [C220] — IQC Incoming Quality Control (Xác nhận kết quả IQC)
 
-### Lỗi 1: Lỗi bị chặn "Receiving Confirmation" khi gộp nhập kho tại [F330]
+### [F330] — Lỗi 1: Lỗi bị chặn "Receiving Confirmation" khi gộp nhập kho tại
 *   **Triệu chứng:** Thủ kho bấm nhận hàng tại **F330** hệ thống báo lỗi chặn giao dịch.
 *   **Nguyên nhân gốc:** Kết quả kiểm tra mẫu IQC của Lot hàng tại màn hình **C220** vẫn ở trạng thái chờ đánh giá hoặc đã bị đánh giá FAIL.
 *   **Cách khắc phục:**
     Yêu cầu bộ phận QC hoàn thành nhập kết quả đo và xác nhận cờ chất lượng PASS cho Lot hàng trên màn hình **C220**.
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_02/KB_02_01_NVL_WMS.md § 4.15](../KB_02/KB_02_01_NVL_WMS.md#415-luồng-nhập-kho-đầy-đủ-f330).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_02/KB_02_01_WMS_CORE.md § 4.15](../KB_02/KB_02_01_WMS_CORE.md#415-luồng-nhập-kho-đầy-đủ-f330).
 
 ---
 
 
 ## [C321] / [HNC321] — Defect Repair & Scrap Management (Quản lý sửa chữa & báo phế sản phẩm)
 
-### Lỗi 1: Lỗi chặn lưu "이전 공정에 실적처리 이력이 없습니다" (Không có lịch sử công đoạn trước) tại [HNC321]
+### [HNC321] — Lỗi 1: Lỗi chặn lưu "이전 공정에 실적처리 이력이 없습니다" (Không có lịch sử công đoạn trước) tại
 *   **Triệu chứng:** Khi OP nhập số lượng phế cho Barcode tại trạm kiểm tra (Ví dụ: `VE08`), hệ thống chặn lại và báo lỗi tiếng Hàn.
 *   **Nguyên nhân gốc:** Stored Procedure `usp_Vietnam_ScrapInput_HN` chặn giao dịch nếu sản phẩm chưa từng có lịch sử chốt sản lượng (Routing History) ở công đoạn ngay trước đó (Ví dụ: `VE07`).
 *   **Cách khắc phục:** IT kiểm tra công đoạn trước và chèn một dòng Routing giả lập để thông luồng:
@@ -130,13 +130,13 @@
          'MÃ_LINE_HIỆN_TẠI', 'MÃ_MÁY_HIỆN_TẠI', 20, 20, CAST(GETDATE() AS DATE), 'A', 'vinaadmin', GETDATE());
     COMMIT TRANSACTION;
     ```
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_02/KB_02_01_NVL_WMS.md § 4](../KB_02/KB_02_01_NVL_WMS.md#4-lỗi-màn-hnc321-qc-nhập-ng-sản-phẩm-mang-đi-kiểm-tra--báo-lỗi-chữ-hàn-quốc) và [Kịch bản 3](#kịch-bản-sự-cố-khẩn-cấp-3-lỗi-nhập-phế-hnc321-báo-lỗi-tiếng-hàn).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_02/KB_02_01_WMS_CORE.md § 4](../KB_02/KB_02_01_WMS_CORE.md#4-lỗi-màn-hnc321-qc-nhập-ng-sản-phẩm-mang-đi-kiểm-tra--báo-lỗi-chữ-hàn-quốc) và [Kịch bản 3](#kịch-bản-sự-cố-khẩn-cấp-3-lỗi-nhập-phế-hnc321-báo-lỗi-tiếng-hàn).
 
-### Lỗi 2: Nhập phế/sửa chữa tại [C321] báo lỗi hoặc không cập nhật được thông số sửa chữa
+### [C321] — Lỗi 2: Nhập phế/sửa chữa tại báo lỗi hoặc không cập nhật được thông số sửa chữa
 *   **Triệu chứng:** OP không lưu được thông tin sửa chữa/vật tư thay thế, hoặc bị sai lệch số lượng NG (`DefectQty`) ở các trạm tiếp theo.
 *   **Nguyên nhân gốc:** Lỗi khi đồng bộ dữ liệu giữa bảng thông tin lỗi `STB_DefectRepairInfo` và số lượng chốt sản lượng của công đoạn.
 *   **Cách khắc phục:** IT kiểm tra thông số và cập nhật đồng bộ lại cột `DefectQty` hoặc `ProdQty` bằng cách chỉnh sửa trực tiếp DB.
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_OVERVIEW.md § 9.5](../KB_05/KB_05_01_QC_OVERVIEW.md#95-c321---pqc-reliability-assy-sửa-chữa-lỗi-cell-line).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md § 9.5](../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md#95-c321---pqc-reliability-assy-sửa-chữa-lỗi-cell-line).
 
 ---
 
@@ -156,7 +156,7 @@
     ```
 *   **Chi tiết nghiệp vụ:** Xem tại [Kịch bản 1](#kịch-bản-sự-cố-khẩn-cấp-1-hủy-kết-quả-kiểm-tra-chất-lượng-qc-b597c443).
 
-### Lỗi 2: Cần hủy/đo lại kết quả kiểm tra của một công đoạn riêng biệt (ví dụ: Winding) trên màn hình [C443]
+### [C443] — Lỗi 2: Cần hủy/đo lại kết quả kiểm tra của một công đoạn riêng biệt (ví dụ: Winding) trên màn hình
 *   **Triệu chứng:** Hạng mục đo của một công đoạn cụ thể (ví dụ Winding - Quấn `VE01`) bị nhập sai thông số, cần mở khóa (unlock) để nhập lại mẫu đo từ đầu, nhưng không được phép xóa toàn bộ phiếu QC (vì có thể ảnh hưởng đến dữ liệu các công đoạn khác đã làm).
 *   **Nguyên nhân gốc:** 
     1. Chi tiết kết quả đo được lưu trong bảng `STB_CommInspMeasureHist` liên kết qua `STB_CommInspDocItem`.
@@ -204,22 +204,22 @@
     ```sql
     -- Script reset metadata layout cho grid C486
     ```
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_OVERVIEW.md § 7.8](../KB_05/KB_05_01_QC_OVERVIEW.md#78-cột-note1-thừa-trên-grid-c486-và-logic-rebuild-bảng).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md § 7.8](../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md#78-cột-note1-thừa-trên-grid-c486-và-logic-rebuild-bảng).
 
 ---
 
 
 ## [C512] / [C530] / [C546] — OQC Lot Management (Quản lý chất lượng đầu ra)
 
-### Lỗi 1: Lỗi không tìm thấy Lot khi tạo hồ sơ kiểm tra OQC ở [C512]
+### [C512] — Lỗi 1: Lỗi không tìm thấy Lot khi tạo hồ sơ kiểm tra OQC ở
 *   **Triệu chứng:** Bấm tạo Lot OQC tại **C512** hệ thống báo không tìm thấy bản ghi Lot nào của sản phẩm.
 *   **Nguyên nhân gốc:** Lot sản phẩm chưa hoàn thành công đoạn đóng gói cuối (chưa gộp Box tại B523) hoặc PO chưa cấu hình cờ đầu ra sản phẩm `IsOutputRoute = 1`.
 *   **Cách khắc phục:**
     1. Kiểm tra Lot đã được quét gộp box tại B523 chưa.
     2. Sửa cờ `IsOutputRoute = 1` cho công đoạn cuối của PO trong `STB_ProductionOrderRouting` nếu cấu hình BOM/Routing bị thiếu.
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_OVERVIEW.md § 7.2](../KB_05/KB_05_01_QC_OVERVIEW.md#72-không-tìm-thấy-lot-ở-màn-c512).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md § 7.2](../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md#72-không-tìm-thấy-lot-ở-màn-c512).
 
-### Lỗi 2: Đo OQC OCV/ESR tại [C546] chỉ hiển thị 20 dòng thay vì 50 dòng
+### [C546] — Lỗi 2: Đo OQC OCV/ESR tại chỉ hiển thị 20 dòng thay vì 50 dòng
 *   **Triệu chứng:** Máy đo trả về kết quả cho 50 mẫu test nhưng trên giao diện C546 hệ thống chỉ load và hiển thị 20 dòng mẫu đo (lưới OCV/ESR hiển thị không đủ 50 dòng trống để nhập/hiển thị).
 *   **Nguyên nhân gốc:** 
     1. SP get kết quả mẫu `usp_MaterialQcSampleResult_get` bị thiếu pattern `'FOQC_V01_07/08'`.
@@ -240,9 +240,9 @@
        COMMIT TRANSACTION;
        ```
     3. Yêu cầu QC tắt và mở lại màn hình C546, quét lại Barcode để hệ thống sinh đủ 50 dòng.
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_OVERVIEW.md § 9.6](../KB_05/KB_05_01_QC_OVERVIEW.md#96-c546-foqc-ocvsr-chỉ-hiển-thị-20ea-thay-vì-50ea-ocv-lệch-dữ-liệu) và file script vá lỗi [fix_c546_ocv_lots.sql](../sql/scripts/fix_c546_ocv_lots.sql).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md § 9.6](../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md#96-c546-foqc-ocvsr-chỉ-hiển-thị-20ea-thay-vì-50ea-ocv-lệch-dữ-liệu) và file script vá lỗi **fix_c546_ocv_lots.sql**.
 
-### Lỗi 3: Đo kiểm ESR tại [C530] chỉ hiển thị 10 dòng kết quả thay vì 20 dòng mẫu đo
+### [C530] — Lỗi 3: Đo kiểm ESR tại chỉ hiển thị 10 dòng kết quả thay vì 20 dòng mẫu đo
 *   **Triệu chứng:** Khi mở màn hình [C530] để nhập kết quả đo cho hạng mục ESR với số lượng mẫu (Sample Qty) thiết lập là 20, lưới kết quả đo bên phải chỉ hiển thị đúng 10 dòng kết quả đo từ máy đo và không sinh ra thêm 10 dòng trống tiếp theo để điền cho đủ 20 dòng.
 *   **Nguyên nhân gốc:** 
     1. **Nghiệp vụ:** Số lượng mẫu đo từ máy bị thiếu (Máy đo ESR chỉ thực hiện đo và đẩy về 10 giá trị vào bảng `Stb_ESRValueMonitor` với trạng thái `UploadToMes IS NULL`). Hoặc Lot QC này chưa được nhấn nút "Tạo danh sách mẫu" (Create Sample List) sau khi cấu hình số lượng mẫu ESR tăng lên 20, nên danh sách mẫu trống chưa được sinh ra đầy đủ trước khi đồng bộ.
@@ -271,7 +271,7 @@
     1. **QC thao tác nhanh:** Chọn hạng mục **ESR** ở lưới bên trái của màn hình [C530] và bấm nút **"Tạo danh sách mẫu"** (Nút màu xanh có icon danh sách và dấu tích ở góc trái phía trên của lưới bên trái - Create IQC Item Sample List) để kích hoạt SP `usp_DoMakeMaterialQcSampleResult.sql` quét lại thiết lập `SampleQty = 20` và tự động sinh thêm 10 dòng trống tiếp theo (từ dòng 11 đến 20) vào bảng kết quả đo.
     2. **Khắc phục logic trong SP:** Đồng bộ/sửa đổi logic khởi tạo của SP `usp_MaterialQcSampleResult_get` để tránh lệch chỉ số khi số lượng mẫu đo từ máy truyền về ít hơn số lượng mẫu thiết lập trong tiêu chuẩn.
 
-### Lỗi 4: Lỗi "검사항목이 등록되어있지 않습니다" (Chưa đăng ký hạng mục kiểm tra) khi tạo Lot OQC tại [C512]
+### [C512] — Lỗi 4: Lỗi "검사항목이 등록되어있지 않습니다" (Chưa đăng ký hạng mục kiểm tra) khi tạo Lot OQC tại
 *   **Triệu chứng:** Khi bấm tạo Lot OQC tại màn hình **C512**, hệ thống báo lỗi tiếng Hàn `"검사항목이 등록되어있지 않습니다"` và chặn không cho tiến hành.
 *   **Nguyên nhân gốc:** Model sản phẩm mới (ví dụ: `LIVT38-037`) chưa được cấu hình thuộc tính OQC trong bảng `STB_ModelBasicInfo` (bị trống các cột `OqcType`, `InspectionType`, `OqcInspectionRuleType`) và không có bản ghi hạng mục đo kiểm tiêu chuẩn nào trong bảng `STB_MaterialQcInspectionItem`.
 *   **Cách khắc phục:**
@@ -284,21 +284,21 @@
     *   **Bằng UI (Dành cho User):**
         1. Mở màn hình **A410**, tìm model `LIVT38-037` và cập nhật: `OqcType` = `MANUAL`, `OqcInspectionRuleType` = `BY_MODEL`, `InspectionType` = `SAMPLE`. Nhấn **Lưu**.
         2. Tắt và mở lại màn hình **C151**, chọn model `LIVT38-037` rồi gán và Lưu spec cho 5 hạng mục QC chính (`IQC_GPD_22`, `PQC_V01_06`, `PQC_V01_07`, `PQC_V01_08`, `PQC_V01_09`) tương tự `LIVT38-010`.
-*   **Chi tiết nghiệp vụ:** Xem file script [fix_qc_items_LIVT38-037.sql](../sql/scripts/fix_qc_items_LIVT38-037.sql).
+*   **Chi tiết nghiệp vụ:** Xem file script **fix_qc_items_LIVT38-037.sql**.
 
 ---
 
 
 ## [C561] / [C562] / [C563] / [C564] — Bending/Cutting QC (Kiểm tra chất lượng uốn/cắt Cell)
 
-### Lỗi 1: Quét Barcode tại [C563] báo lỗi thiếu hạng mục đo hoặc không hiển thị thông số đo
+### [C563] — Lỗi 1: Quét Barcode tại báo lỗi thiếu hạng mục đo hoặc không hiển thị thông số đo
 *   **Triệu chứng:** Khi mở màn hình kiểm định uốn/cắt **C563** và quét barcode của mẫu uốn/cắt Cell, lưới đo trống trơn hoặc báo lỗi chặn.
 *   **Nguyên nhân gốc:** Model sản phẩm chưa được cấu hình nhóm hạng mục kiểm tra QC tại **C561** hoặc chưa được tạo Lot kiểm định tại **C562**.
 *   **Cách khắc phục:**
     1. Vào màn hình **C561**, tìm đúng `MaterialCode`, chọn nhóm kiểm tra và Lưu lại.
     2. Vào màn hình **C562**, quét barcode sản phẩm để sinh Lot kiểm định.
     3. Quay lại màn hình **C563** thực hiện nhập dữ liệu. Nếu đã cấu hình mà vẫn trống, nhấn nút `"Tổng hợp hạng mục"` để đồng bộ và làm mới danh sách đo.
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_OVERVIEW.md § 9.4](../KB_05/KB_05_01_QC_OVERVIEW.md#94-bendingcutting-qc-c561c564).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md § 9.4](../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md#94-bendingcutting-qc-c561c564).
 
 ---
 
@@ -309,7 +309,7 @@
 *   **Triệu chứng:** Khi tạo hồ sơ OQC tại C512, số lượng mẫu lấy kiểm tra không đúng với quy tắc AQL.
 *   **Nguyên nhân gốc:** Bảng quy tắc AQL chưa được cấu hình cho kích thước lô hàng tương ứng.
 *   **Cách khắc phục:** Vào C112, kiểm tra và bổ sung quy tắc AQL cho size lô hàng (Lot Size) phù hợp.
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_19/KB_19_01_ARCHITECTURE.md](../KB_19/KB_19_01_ARCHITECTURE.md).
+*   **Chi tiết nghiệp vụ:** Xem tại ../KB_19/KB_19_01_ARCHITECTURE.md.
 
 ---
 
@@ -322,29 +322,29 @@
 *   **Triệu chứng:** Lot nguyên liệu hiển thị trên lưới QC nhưng không có hạng mục để nhập kết quả đo.
 *   **Nguyên nhân gốc:** Mã NVL chưa được gán nhóm hạng mục kiểm tra IQC tại C122.
 *   **Cách khắc phục:** Vào C122, chọn mã NVL, click chọn nhóm kiểm tra tương ứng để map dữ liệu.
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_OVERVIEW.md § 9.1](../KB_05/KB_05_01_QC_OVERVIEW.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md § 9.1](../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md).
 
 ---
 
 
 ## [C131] — Inspection Item Master (Danh mục hạng mục kiểm tra)
 
-### Lỗi 1: Thêm hạng mục kiểm tra mới không hiển thị tại [C143]
+### [C143] — Lỗi 1: Thêm hạng mục kiểm tra mới không hiển thị tại
 *   **Triệu chứng:** Hạng mục đo mới tạo tại C131 không xuất hiện khi cấu hình kiểm tra tại C143.
 *   **Nguyên nhân gốc:** Cờ `IsUsed = 0` hoặc loại dữ liệu nhập (`DataType`) chưa được thiết lập đúng (1=số, 2=checkbox).
 *   **Cách khắc phục:** Vào C131 kiểm tra cờ `IsUsed=1` và chọn DataType phù hợp.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_06_MASTER_DATA_TOOLS.md § 14](KB_06_MASTER_DATA_TOOLS.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_06_MASTER_DATA_TOOLS.md § 14](../KB_06_MASTER_DATA_TOOLS.md).
 
 ---
 
 
 ## [C132] — Inspection Group Setup (Thiết lập nhóm kiểm tra)
 
-### Lỗi 1: Nhóm kiểm tra QC không hiển thị khi gán cho NVL tại [C122] hoặc sản phẩm tại [C143]
+### [C122]/[C143] — Lỗi 1: Nhóm kiểm tra QC không hiển thị khi gán cho NVL tại hoặc sản phẩm tại
 *   **Triệu chứng:** Khi mở popup chọn nhóm kiểm tra, danh sách trống hoặc thiếu nhóm mới tạo.
 *   **Nguyên nhân gốc:** Nhóm kiểm tra chưa được kích hoạt (`IsUsed = 0`) hoặc chưa được gán MaterialTypeCode phù hợp.
 *   **Cách khắc phục:** Vào C132 kiểm tra nhóm mới, tick `IsUsed=1`, chọn đúng MaterialTypeCode.
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_02/KB_02_01_NVL_WMS.md](../KB_02/KB_02_01_NVL_WMS.md) và [../KB_10/KB_10_01_ARCHITECTURE.md § 0](../KB_10/KB_10_01_ARCHITECTURE.md#0-bản-dịch-bình-dân-hiểu-sơ-đồ-luồng-dữ-liệu-mes-trong-5-phút).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_02/KB_02_01_WMS_CORE.md](../KB_02/KB_02_01_WMS_CORE.md) và ../KB_10/KB_10_01_ARCHITECTURE.md § 0.
 
 ---
 
@@ -355,29 +355,29 @@
 *   **Triệu chứng:** Grid nhập liệu kiểm tra QC hiển thị ô nhập số nhưng yêu cầu là checkbox, hoặc ngược lại.
 *   **Nguyên nhân gốc:** Cột "Loại dữ liệu nhập vào" tại C141 bị thiết lập sai (`1`=số, `2`=tích checkbox).
 *   **Cách khắc phục:** Vào C141, sửa lại cột DataType cho hạng mục tương ứng.
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_OVERVIEW.md § 9](../KB_05/KB_05_01_QC_OVERVIEW.md) và [KB_06_MASTER_DATA_TOOLS.md](KB_06_MASTER_DATA_TOOLS.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md § 9](../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md) và [KB_06_MASTER_DATA_TOOLS.md](../KB_06_MASTER_DATA_TOOLS.md).
 
 ---
 
 
 ## [C143] — Inspection Item Configuration (Thiết lập hạng mục kiểm tra chi tiết)
 
-### Lỗi 1: Mã NVL quét tại [B597] không đi đến đúng hạng mục kiểm tra
+### [B597] — Lỗi 1: Mã NVL quét tại không đi đến đúng hạng mục kiểm tra
 *   **Triệu chứng:** NVL quét tại B597 bị map sai nhóm kiểm tra, hiện ra các hạng mục đo không liên quan.
 *   **Nguyên nhân gốc:** Cấu hình tại C143 map sai mã NVL vào nhóm hạng mục không phù hợp.
 *   **Cách khắc phục:** Vào C143, tìm mã NVL, chỉnh lại nhóm hạng mục kiểm tra tương ứng.
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_OVERVIEW.md § 9](../KB_05/KB_05_01_QC_OVERVIEW.md) và [KB_06_MASTER_DATA_TOOLS.md](KB_06_MASTER_DATA_TOOLS.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md § 9](../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md) và [KB_06_MASTER_DATA_TOOLS.md](../KB_06_MASTER_DATA_TOOLS.md).
 
 ---
 
 
 ## [C151] — Material QC Detail Setup (Thiết lập chi tiết QC vật tư)
 
-### Lỗi 1: Sau khi set [A410] xong phải tắt [C151] rồi mở lại mới hiển thị đúng
+### [A410]/[C151] — Lỗi 1: Sau khi set xong phải tắt rồi mở lại mới hiển thị đúng
 *   **Triệu chứng:** Cấu hình tại A410 đã lưu nhưng C151 vẫn hiện dữ liệu cũ.
 *   **Nguyên nhân gốc:** Cache dữ liệu trên client. C151 không tự refresh sau khi A410 thay đổi.
 *   **Cách khắc phục:** Đóng tab C151, mở lại từ menu. Dữ liệu sẽ load lại từ DB.
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_OVERVIEW.md § 9](../KB_05/KB_05_01_QC_OVERVIEW.md) và [KB_06_MASTER_DATA_TOOLS.md](KB_06_MASTER_DATA_TOOLS.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md § 9](../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md) và [KB_06_MASTER_DATA_TOOLS.md](../KB_06_MASTER_DATA_TOOLS.md).
 
 ---
 
@@ -401,18 +401,18 @@
 *   **Triệu chứng:** Grid đo QC điện cực trống hoặc giá trị đo bị sai.
 *   **Nguyên nhân gốc:** Dữ liệu đo chưa được upload từ máy đo hoặc mapping giữa Lot điện cực và hạng mục đo bị sai.
 *   **Cách khắc phục:** Kiểm tra kết nối máy đo và trạng thái upload trong `Stb_ESRValueMonitor`.
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_OVERVIEW.md § 8](../KB_05/KB_05_01_QC_OVERVIEW.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md § 8](../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md).
 
 ---
 
 
 ## [C430] — QC Receiving Inspection (Kiểm tra chất lượng nhận hàng)
 
-### Lỗi 1: Không tìm thấy Lot NVL để kiểm tra tại [C430]
+### [C430] — Lỗi 1: Không tìm thấy Lot NVL để kiểm tra tại
 *   **Triệu chứng:** QC mở C430 nhưng không thấy Lot NVL mới nhập kho để kiểm tra.
 *   **Nguyên nhân gốc:** Lot NVL chưa được nhập kho tại F330 hoặc chưa được chuyển trạng thái từ `HOLDING_WH`.
 *   **Cách khắc phục:** Kiểm tra F330 đã hoàn thành nhập kho, kiểm tra `STB_MaterialLotInfo` xem WarehouseCode.
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_02/KB_02_01_NVL_WMS.md § 4.15](../KB_02/KB_02_01_NVL_WMS.md) và [../KB_05/KB_05_01_QC_OVERVIEW.md](../KB_05/KB_05_01_QC_OVERVIEW.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_02/KB_02_01_WMS_CORE.md § 4.15](../KB_02/KB_02_01_WMS_CORE.md) và [../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md](../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md).
 
 ---
 
@@ -423,7 +423,7 @@
 *   **Triệu chứng:** Mở C451 nhưng danh sách Lot chờ OQC trống.
 *   **Nguyên nhân gốc:** Lot chưa hoàn thành đóng gói tại B523 hoặc cờ `IsOutputRoute` chưa được bật.
 *   **Cách khắc phục:** Kiểm tra Lot đã gộp Box xong tại B523. Kiểm tra `IsOutputRoute = 1` trong `STB_ProductionOrderRouting`.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_06_MASTER_DATA_TOOLS.md § 14](KB_06_MASTER_DATA_TOOLS.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_06_MASTER_DATA_TOOLS.md § 14](../KB_06_MASTER_DATA_TOOLS.md).
 
 ---
 
@@ -434,7 +434,7 @@
 *   **Triệu chứng:** Mở C460 không thấy kết quả QC điện cực.
 *   **Nguyên nhân gốc:** Chưa thực hiện QC điện cực hoặc dữ liệu QC chưa được đồng bộ.
 *   **Cách khắc phục:** Kiểm tra các bảng `STB_CommInspDocHistory`, `STB_CommInspDocItem` xem dữ liệu QC điện cực đã được ghi nhận chưa.
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_OVERVIEW.md § 3](../KB_05/KB_05_01_QC_OVERVIEW.md) và [../KB_25/KB_25_01_OVERVIEW.md](../KB_25/KB_25_01_OVERVIEW.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md § 3](../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md) và [../KB_25/KB_25_01_OVERVIEW.md](../KB_25/KB_25_01_OVERVIEW.md).
 
 ---
 
@@ -443,11 +443,11 @@
 
 > 🔗 **Xem thêm:** Mục [C512 / C530 / C546](#c512--c530--c546--oqc-lot-management) phía trên đã có chi tiết lỗi OQC.
 
-### Lỗi 1: Không tìm thấy Lot tại [C510] để tạo hồ sơ OQC
+### [C510] — Lỗi 1: Không tìm thấy Lot tại để tạo hồ sơ OQC
 *   **Triệu chứng:** Tìm kiếm Lot tại C510 trả về kết quả trống.
 *   **Nguyên nhân gốc:** 3 nguyên nhân chính: (1) Lot chưa được tạo/gộp box, (2) Chưa set A410, (3) Nhà máy HN dùng Route VE02 riêng.
 *   **Cách khắc phục:** Áp dụng checklist 3 bước debug giống C512 (xem mục C512 phía trên).
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_OVERVIEW.md § 7.2](../KB_05/KB_05_01_QC_OVERVIEW.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md § 7.2](../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md).
 
 ---
 
@@ -458,7 +458,7 @@
 *   **Triệu chứng:** Kết quả Aging/ESR tại C522 bị thiếu hoặc không khớp với máy đo.
 *   **Nguyên nhân gốc:** Phần mềm ESR chưa upload dữ liệu vào bảng `Stb_ESRValueMonitor` hoặc cờ `UploadToMes` chưa được set.
 *   **Cách khắc phục:** Kiểm tra phần mềm đo ESR trên máy, reset cờ upload nếu cần.
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_19/KB_19_01_ARCHITECTURE.md](../KB_19/KB_19_01_ARCHITECTURE.md).
+*   **Chi tiết nghiệp vụ:** Xem tại ../KB_19/KB_19_01_ARCHITECTURE.md.
 
 ---
 
@@ -471,7 +471,7 @@
 *   **Triệu chứng:** Lot đã bị FAIL/Reject tại QC Audit C530 nhưng sau kiểm tra lại cần chuyển sang PASS.
 *   **Nguyên nhân gốc:** UI không cho phép đổi ngược trạng thái. Cần can thiệp DB.
 *   **Cách khắc phục:** Xóa kết quả QC cũ trong `STB_CommInspDocHistory` và `STB_CommInspDocItem`, sau đó QC kiểm tra lại từ đầu.
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_26/KB_26_01_LINKS_BUGS.md § 3.2](../KB_26/KB_26_01_LINKS_BUGS.md).
+*   **Chi tiết nghiệp vụ:** Xem tại ../KB_26/KB_26_01_LINKS_BUGS.md § 3.2.
 
 ---
 
@@ -482,7 +482,7 @@
 *   **Triệu chứng:** Báo cáo C540 thiếu kết quả đo hoặc hiện sai trạng thái PASS/FAIL.
 *   **Nguyên nhân gốc:** Lệch dữ liệu giữa `STB_CommInspDocHistory` và `STB_MaterialQcSampleResult`.
 *   **Cách khắc phục:** Kiểm tra trực tiếp DB, đối chiếu kết quả QC trong 2 bảng và sửa lại nếu lệch.
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_OVERVIEW.md § 9](../KB_05/KB_05_01_QC_OVERVIEW.md) và [KB_06_MASTER_DATA_TOOLS.md](KB_06_MASTER_DATA_TOOLS.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md § 9](../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md) và [KB_06_MASTER_DATA_TOOLS.md](../KB_06_MASTER_DATA_TOOLS.md).
 
 ---
 
@@ -493,7 +493,7 @@
 *   **Triệu chứng:** Mở C541 nhưng grid chi tiết kết quả trống trơn.
 *   **Nguyên nhân gốc:** Chưa thực hiện QC hoặc `CommInspDocNo` bị NULL trong bảng `STB_CommInspDocItem`.
 *   **Cách khắc phục:** Kiểm tra Lot đã hoàn thành QC chưa. Nếu đã QC mà vẫn trống, kiểm tra liên kết giữa `STB_CommInspDocHistory` và `STB_CommInspDocItem`.
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_OVERVIEW.md § 9](../KB_05/KB_05_01_QC_OVERVIEW.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md § 9](../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md).
 
 ---
 
@@ -502,7 +502,7 @@
 
 > 🔗 **Xem thêm:** Mục [C512 / C530 / C546](#c512--c530--c546--oqc-lot-management) phía trên đã có chi tiết lỗi OCV/ESR hiển thị 20ea thay vì 50ea.
 
-### Lỗi 1: [C546] chỉ hiển thị 20 dòng mẫu thay vì 50 dòng
+### [C546] — Lỗi 1: chỉ hiển thị 20 dòng mẫu thay vì 50 dòng
 *   **Triệu chứng:** Máy đo trả về 50 mẫu nhưng C546 chỉ load 20 dòng.
 *   **Nguyên nhân gốc:** `SampleQty` trong `STB_MaterialQcDetail` bị lệch so với dữ liệu máy đo.
 *   **Cách khắc phục:** Xóa kết quả QC lỗi, reset cờ upload:
@@ -510,7 +510,7 @@
     DELETE FROM STB_MaterialQcSampleResult WHERE MaterialQcNo = 'F_MÃ_BARCODE';
     UPDATE Stb_ESRValueMonitor SET UploadToMes = 0, UploadOCVToMess = 0 WHERE lotno = 'MÃ_BARCODE';
     ```
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_OVERVIEW.md § 9.6](../KB_05/KB_05_01_QC_OVERVIEW.md) và [../KB_26/KB_26_01_LINKS_BUGS.md](../KB_26/KB_26_01_LINKS_BUGS.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md § 9.6](../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md) và ../KB_26/KB_26_01_LINKS_BUGS.md.
 
 ---
 
@@ -521,7 +521,7 @@
 *   **Triệu chứng:** Mở C560 nhưng danh sách Lot vật tư cần QC bị trống.
 *   **Nguyên nhân gốc:** Lot vật tư chưa được nhập kho hoặc chưa chuyển trạng thái sang chờ QC.
 *   **Cách khắc phục:** Kiểm tra F330 đã nhập kho, kiểm tra bảng `STB_MaterialLotInfo` xem `WarehouseCode` và `QcStatus`.
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_02/KB_02_01_NVL_WMS.md](../KB_02/KB_02_01_NVL_WMS.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_02/KB_02_01_WMS_CORE.md](../KB_02/KB_02_01_WMS_CORE.md).
 
 ---
 
@@ -530,11 +530,11 @@
 
 > 🔗 **Xem thêm:** Mục [C561 / C562 / C563 / C564](#c561--c562--c563--c564--bendingcutting-qc) phía trên đã có chi tiết quy trình QC Bending/Cutting.
 
-### Lỗi 1: Không tạo được Lot kiểm định tại [C562]
+### [C562] — Lỗi 1: Không tạo được Lot kiểm định tại
 *   **Triệu chứng:** Quét barcode sản phẩm tại C562 nhưng không sinh được Lot kiểm định.
 *   **Nguyên nhân gốc:** Model chưa được cấu hình nhóm kiểm tra tại C561.
 *   **Cách khắc phục:** Vào C561 trước, gán nhóm kiểm tra cho MaterialCode, sau đó quay lại C562.
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_OVERVIEW.md § 9.4](../KB_05/KB_05_01_QC_OVERVIEW.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md § 9.4](../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md).
 
 ---
 
@@ -547,7 +547,7 @@
 *   **Triệu chứng:** Quét barcode mẫu tại C563, grid trống không có hạng mục.
 *   **Nguyên nhân gốc:** Chưa cấu hình C561 hoặc chưa tạo Lot kiểm định C562.
 *   **Cách khắc phục:** Cấu hình C561 → Tạo Lot C562 → Quay lại C563. Nếu vẫn trống, nhấn "Tổng hợp hạng mục".
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_OVERVIEW.md § 9.4](../KB_05/KB_05_01_QC_OVERVIEW.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md § 9.4](../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md).
 
 ---
 
@@ -556,11 +556,11 @@
 
 > 🔗 **Xem thêm:** Mục [C561 / C562 / C563 / C564](#c561--c562--c563--c564--bendingcutting-qc) phía trên.
 
-### Lỗi 1: Báo cáo kết quả [C564] không hiện dữ liệu sau khi đo
+### [C564] — Lỗi 1: Báo cáo kết quả không hiện dữ liệu sau khi đo
 *   **Triệu chứng:** Đã nhập kết quả đo tại C563 nhưng C564 báo cáo trống.
 *   **Nguyên nhân gốc:** Kết quả đo chưa được submit/confirm tại C563 (chưa nhấn Save).
 *   **Cách khắc phục:** Quay lại C563, đảm bảo nhấn Save/Confirm để kết quả được ghi nhận vào DB.
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_OVERVIEW.md § 9.4](../KB_05/KB_05_01_QC_OVERVIEW.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md § 9.4](../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md).
 
 ---
 
@@ -571,7 +571,7 @@
 *   **Triệu chứng:** Kết quả chia cuộn tại F744 hiển thị sai chiều rộng hoặc thiếu cuộn.
 *   **Nguyên nhân gốc:** Cấu hình Slitting tại B552 (bảng `stb_slittinglocationconfig_vvt`) bị sai Width.
 *   **Cách khắc phục:** Kiểm tra cấu hình B552 và sửa lại Width cho PartNo tương ứng.
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_OVERVIEW.md § 8](../KB_05/KB_05_01_QC_OVERVIEW.md) và [KB_06_MASTER_DATA_TOOLS.md](KB_06_MASTER_DATA_TOOLS.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md § 8](../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md) và [KB_06_MASTER_DATA_TOOLS.md](../KB_06_MASTER_DATA_TOOLS.md).
 
 ---
 
@@ -580,11 +580,11 @@
 
 > 🔗 **Xem thêm:** Mục [F742 / F746](#f742--f746--slitting--curling) phía trên.
 
-### Lỗi 1: Hủy/Rollback Slitting [F742] phải xóa [F746] trước
+### [F742]/[F746] — Lỗi 1: Hủy/Rollback Slitting phải xóa trước
 *   **Triệu chứng:** Cần rollback kết quả Slitting nhưng hệ thống báo lỗi ràng buộc dữ liệu.
 *   **Nguyên nhân gốc:** Bảng F746 (Curling) có FK reference đến F742 (Slitting). Phải xóa F746 trước.
 *   **Cách khắc phục:** Xóa kết quả Curling (F746) trước, sau đó mới xóa kết quả Slitting (F742).
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_OVERVIEW.md § 10.1](../KB_05/KB_05_01_QC_OVERVIEW.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md § 10.1](../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md).
 
 ---
 
@@ -595,7 +595,7 @@
 *   **Triệu chứng:** Công đoạn tráng điện cực tại F747 không lưu được kết quả.
 *   **Nguyên nhân gốc:** Lot điện cực chưa hoàn thành công đoạn trước (Mixing) hoặc cấu hình Route điện cực sai.
 *   **Cách khắc phục:** Kiểm tra Lot đã hoàn thành Mixing, kiểm tra Route điện cực tại B220.
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_OVERVIEW.md § 8](../KB_05/KB_05_01_QC_OVERVIEW.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md § 8](../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md).
 
 ---
 
@@ -608,7 +608,7 @@
 *   **Triệu chứng:** F748 không hiện đầy đủ các công đoạn của cuộn điện cực.
 *   **Nguyên nhân gốc:** Một số công đoạn bị bỏ qua khi scan hoặc bảng `STB_ElectrodeProdRouteHist` thiếu dữ liệu.
 *   **Cách khắc phục:** Kiểm tra bảng `STB_ElectrodeProdRouteHist` xem có đủ công đoạn không, chèn bổ sung nếu thiếu.
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_OVERVIEW.md § 8](../KB_05/KB_05_01_QC_OVERVIEW.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md § 8](../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md).
 
 ---
 
@@ -652,9 +652,9 @@
 
 ---
 
-### Kịch bản sự cố khẩn cấp 1: Hủy kết quả kiểm tra chất lượng QC ([B597]/[C443])
+### [B597]/[C443] — Kịch bản sự cố khẩn cấp 1: Hủy kết quả kiểm tra chất lượng QC (/)
 
-#### 🔬 KỊCH BẢN B: Hủy kết quả kiểm tra chất lượng QC ([B597] / [C443])
+#### [B597]/[C443] — 🔬 KỊCH BẢN B: Hủy kết quả kiểm tra chất lượng QC ( / )
 *   **Triệu chứng:** QC đánh giá nhầm Lot hàng sang FAIL hoặc load nhầm hạng mục kiểm tra cũ, muốn hủy kết quả để đo lại từ đầu.
 *   **Ví dụ Demo:** Hủy tài liệu QC bị sai cho Barcode `VVPP163R072732`.
 *   **Quy trình xử lý bằng Transaction:**
@@ -697,9 +697,9 @@
 
 ---
 
-### Kịch bản sự cố khẩn cấp 2: Hủy/Sửa kết quả OQC thành phẩm ([C512]/[C530])
+### [C512]/[C530] — Kịch bản sự cố khẩn cấp 2: Hủy/Sửa kết quả OQC thành phẩm (/)
 
-#### 📦 KỊCH BẢN C: Hủy/Sửa kết quả OQC Thành phẩm ([C512] / [C530])
+#### [C512]/[C530] — 📦 KỊCH BẢN C: Hủy/Sửa kết quả OQC Thành phẩm ( / )
 *   **Triệu chứng:** Lô thành phẩm bị đánh giá nhầm trạng thái FAIL khiến thủ kho không thể nhập kho ở F110.
 *   **Quy trình xử lý nhanh (Bypass sang PASS):**
     ```sql
@@ -720,9 +720,9 @@
 
 ---
 
-### Kịch bản sự cố khẩn cấp 3: Lỗi nhập phế [HNC321] báo lỗi tiếng Hàn
+### [HNC321] — Kịch bản sự cố khẩn cấp 3: Lỗi nhập phế báo lỗi tiếng Hàn
 
-### 4.6 LỖI NHẬP PHẾ MÀN [HNC321] BÁO LỖI TIẾNG HÀN (이전 공정에 실적처리 이력이 없습니다)
+### 4.6 [HNC321] — LỖI NHẬP PHẾ MÀN BÁO LỖI TIẾNG HÀN (이전 공정에 실적처리 이력이 없습니다)
 
 #### 🔴 Triệu chứng hiện trường:
 Tại màn hình **HNC321** *(Qc nhập NG sản phẩm mang đi kiểm tra)*, khi nhập số lượng phế cho Barcode `ve260509-001` tại công đoạn `VE08` (Mã lỗi `VE08_34` - Taping khác...), hệ thống báo lỗi đỏ:

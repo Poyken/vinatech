@@ -1,4 +1,4 @@
-# KB_30: Core SP Engine — Trái Tim Hệ Thống MES
+﻿# KB_30: Core SP Engine — Trái Tim Hệ Thống MES
 
 > **File này chứa phân tích chi tiết các Stored Procedure cốt lõi nhất của hệ thống MES.**
 > **🔑 Keywords:** SP engine, DoProcess, Backflush, ForCalc, Packing, OPENXML, stored procedure, core logic
@@ -42,7 +42,7 @@
 ## 2. SP #1: `usp_DoProcessProdRouteHist` (406 dòng)
 
 > **Mỗi lần OP quét barcode tại bất kỳ công đoạn nào → SP này được gọi.**
-> File SQL: [usp_DoProcessProdRouteHist.sql](../sql/procedures/usp_DoProcessProdRouteHist.sql)
+> File SQL: **usp_DoProcessProdRouteHist.sql**
 
 ### 2.1 Tham Số (20 params)
 
@@ -214,7 +214,7 @@ SET @pProdRouteHistNo = @ProdRouteHistNo
 ## 3. SP #2: `usp_DoProcessProdGIMaterialByBOM` (268 dòng)
 
 > **Backflush = Tự động trừ kho NVL theo BOM khi chốt sản lượng.**
-> File SQL: [usp_DoProcessProdGIMaterialByBOM.sql](../sql/procedures/usp_DoProcessProdGIMaterialByBOM.sql)
+> File SQL: **usp_DoProcessProdGIMaterialByBOM.sql**
 
 ### 3.1 Luồng Xử Lý 7 Bước
 
@@ -315,7 +315,7 @@ EXEC usp_DoFixMaterialDoc @MaterialDocNo
 ## 5. SP #4: `usp_Vietnam_DoProcessProdPacking_VVT` (217 dòng)
 
 > **Đóng gói — xử lý gộp box/đóng thùng tại B523.**
-> File SQL: [usp_Vietnam_DoProcessProdPacking_VVT.sql](../sql/procedures/usp_Vietnam_DoProcessProdPacking_VVT.sql)
+> File SQL: **usp_Vietnam_DoProcessProdPacking_VVT.sql**
 
 ### 5.1 Pattern: OPENXML + CURSOR
 
@@ -433,7 +433,7 @@ Kết quả: 1 dòng mới trong STB_ProdRouteHist, NVL bị trừ, tổng hợp
 ## 8. SP #5: `usp_DoCreateSetInfoForProdQty_VNT` (477 dòng)
 
 > **Tạo Barcode / Lot cho sản phẩm** — gọi khi xác nhận kế hoạch ngày (B450, K101).
-> File SQL: [usp_DoCreateSetInfoForProdQty_VNT.sql](../sql/procedures/usp_DoCreateSetInfoForProdQty_VNT.sql)
+> File SQL: **usp_DoCreateSetInfoForProdQty_VNT.sql**
 
 ### 8.1 Format Barcode
 

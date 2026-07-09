@@ -32,7 +32,7 @@
    - `PartLabel` dùng cho tem kho nguyên vật liệu (F330).
    - `ElectLabel` dùng cho tem điện cực (B442).
 
-### 1.3 Whitelist đổi Line sản xuất ([B452])
+### 1.3 [B452] — Whitelist đổi Line sản xuất ()
 **Triệu chứng:** Nhân viên báo không đổi được Line trên màn hình B452.
 **Khắc phục:** Danh sách User được phép đổi Line được hardcode trực tiếp trong SP `usp_Set_VVT_Info_get`. Sửa SP để bổ sung UserID của nhân viên:
 ```sql
@@ -47,7 +47,7 @@ SELECT OBJECT_DEFINITION(OBJECT_ID('usp_Set_VVT_Info_get'))
 
 Hệ thống MES NAIS chạy trên cơ chế **Metadata-Driven**. Giao diện (UI) không chứa logic tĩnh; mọi hành vi (nút bấm, lưới hiển thị, Stored Procedure được gọi) đều được cấu hình dưới DB thông qua metadata.
 
-### Bước 1: Khai báo Màn hình mới ([Z110] / STB_ScreenInfo)
+### [Z110] — Bước 1: Khai báo Màn hình mới ( / STB_ScreenInfo)
 Mỗi màn hình mới cần có một định danh (ScreenID/TCode) và tên kỹ thuật (Name).
 ```sql
 INSERT INTO SmartFramework.dbo.STB_ScreenInfo (Name, TCode, Caption, ParentName, IsPublish, CreateDateTime)
@@ -77,7 +77,7 @@ INSERT INTO SmartFramework.dbo.STB_ScreenObjects (ScreenName, ObjectName, Object
 VALUES ('Vietnam_NewScreen', 'usp_Vietnam_NewScreenData_iud', 'ExecuteFunction', 'Execute action');
 ```
 
-### Bước 3: Phân quyền truy cập ([Z220] / [Z330])
+### [Z220]/[Z330] — Bước 3: Phân quyền truy cập ( / )
 Để tài khoản người dùng nhìn thấy và sử dụng được màn hình:
 1.  **Publish màn hình (Z330):** Đảm bảo cờ `IsPublish = 1` trong `STB_ScreenInfo`.
 2.  **Gán quyền cho User (Z220 / STB_UserPermission):**

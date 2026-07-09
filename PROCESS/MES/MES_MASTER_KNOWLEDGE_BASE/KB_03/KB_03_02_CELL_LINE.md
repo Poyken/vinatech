@@ -40,7 +40,7 @@
 | `usp_DoFixDayProdPlan` | Đánh dấu kế hoạch đã Fixed (IsFixed=1) |
 | `usp_DoCancelDayProdPlan` | Hủy kế hoạch |
 | `usp_DoFinishDayProdPlan` | Đóng kế hoạch ngày |
-| `usp_DoCreateSetInfoForProdQty_VNT` | **★ CORE — Tạo barcode (YearCode+MonthCode+Serial)** → [KB_30](KB_30_CORE_SP_ENGINE.md) |
+| `usp_DoCreateSetInfoForProdQty_VNT` | **★ CORE — Tạo barcode (YearCode+MonthCode+Serial)** → [KB_30](../KB_30_CORE_SP_ENGINE.md) |
 | `usp_SetInfo_iud` | IUD thông tin SetInfo (barcode metadata) |
 
 **Lỗi thường gặp:**
@@ -91,7 +91,7 @@
 [GATE 7] PO không có Route: PONo IS NULL → RAISERROR 'Routing này không có trong PO'
 ```
 
-> 🚦 **Tham chiếu mở rộng:** Chi tiết logic, mã SQL debug, và cách mở rộng cho 7 cổng chặn B530 trên (cùng 11 nhóm chặn tương tự như B597, B523, B452, B618, QC Audit...) được tổng hợp đầy đủ tại **[KB_14 §6 — Tổng Hợp Pattern Validation Gates](../KB_14/KB_14_01_METHODOLOGY.md#6-tổng-hợp-pattern-validation-gates)**.
+> 🚦 **Tham chiếu mở rộng:** Chi tiết logic, mã SQL debug, và cách mở rộng cho 7 cổng chặn B530 trên (cùng 11 nhóm chặn tương tự như B597, B523, B452, B618, QC Audit...) được tổng hợp đầy đủ tại **KB_14 §6 — Tổng Hợp Pattern Validation Gates**.
 
 
 **Cột IsRawMaterialInputFinish — Gate quan trọng nhất:**
@@ -207,7 +207,7 @@ IF @pProcessUserID NOT IN ('vvt_worker','vvtworker',...)
     RAISERROR('Chưa cân — không được in label')
 ```
 
-> 🚦 **Tham chiếu mở rộng:** Chi tiết các cổng chặn đóng gói (cân hàng, tiêu chuẩn đóng gói, in tem giới hạn) được tổng hợp tại **[KB_14 §6.3 Nhóm 3 — Đóng Gói](../KB_14/KB_14_01_METHODOLOGY.md#nhóm-3-b523--chặn-đóng-gói-sp-usp_vietnam_doprocessprodpacking_vvt)**.
+> 🚦 **Tham chiếu mở rộng:** Chi tiết các cổng chặn đóng gói (cân hàng, tiêu chuẩn đóng gói, in tem giới hạn) được tổng hợp tại **KB_14 §6.3 Nhóm 3 — Đóng Gói**.
 
 ---
 
@@ -509,7 +509,7 @@ GROUP BY LineCode ORDER BY TongPhe DESC
 
 ---
 
-### 6.14 Nhà Máy [BG2] — Cấu Hình Triển Khai Hệ Thống MES
+### 6.14 [BG2] — Nhà Máy Cấu Hình Triển Khai Hệ Thống MES
 
 Hệ thống MES tại nhà máy Bắc Giang 2 (BG2) sử dụng hai màn hình giao dịch chính được tùy biến riêng:
 *   **K101 (Kế hoạch sản xuất ngày BG2):** Tương đương với màn hình tiêu chuẩn **B450** nhưng chạy logic riêng cho nhà máy BG2.
@@ -560,168 +560,105 @@ Dưới đây là ma trận trạng thái các hạng mục công việc đã tr
     *   *Đạt 90%:* In tem nhãn đóng gói, nhập kho bằng phần mềm, kiểm tra dữ liệu nhập/xuất kho trên hệ thống MES, xuất kho thành phẩm. Cần tích hợp nốt phần in ấn và đồng bộ dữ liệu xuất hàng.
 
 
-#### 3. Kiến Trúc Hệ Thống [BG2] — Deep Dive
+#### [BG2] — 3. Kiến Trúc Hệ Thống Deep Dive
 
-> ⚠️ **Lưu ý:** Nội dung phần này (3.1–3.8) có lỗi encoding — các ký tự tiếng Việt được lưu dưới dạng Unicode escape (`u1EBF`, `u00FA`...) thay vì UTF-8 thực. Cần sửa lại file gốc.
+##### 3.1 Phân Biệt WorkCenterCode
+BG2 dùng **chung database SmartFactoryV2** (không tách DB riêng). Phân biệt bằng WorkCenterCode:
 
-##### 3.1 Phu00E2
- Biu1EC7	 WorkCenterCode
-BG2 du00F9
-g **chung database SmartFactoryV2** (khu00F4
-g tu00E1ch DB riu00EA
-g). Phu00E2
- biu1EC7	 bu1EB1
-g WorkCenterCode:
-
-| WorkCenterCode | Nhu00E0 mu00E1y | Ghi chu00FA |
+| WorkCenterCode | Nhà máy | Ghi chú |
 |---|---|---|
-| `VVT_F4` | Bu1EAFc Giang 2 (Cell Line) | Du00F9
-g trong STB_DayProdPlan, STB_SetInfo |
-| `VNT_F4` | Bu1EAFc Giang 2 (Module/BE) | Du00F9
-g trong WorkCenterInfo |
+| `VVT_F4` | Bắc Giang 2 (Cell Line) | Dùng trong `STB_DayProdPlan`, `STB_SetInfo` |
+| `VNT_F4` | Bắc Giang 2 (Module/BE) | Dùng trong `WorkCenterInfo` |
 
-> u26A0`uFE0F **Lu01B0u u00FD:** SP `usp_DoCreateSetInfoForProdQty_VNT` du00F9
-g `VVT_F4` u0111`u1EC3 phu00E2
- nhu00E1
-h logic tu1EA1o Barcode. Khi query du1EEF liu1EC7u BG2, cu1EA7
- check Cu1EA2 HAI code.
+> ⚠️ **Lưu ý:** SP `usp_DoCreateSetInfoForProdQty_VNT` dùng `VVT_F4` để phân nhánh logic tạo Barcode. Khi query dữ liệu BG2, cần check CẢ HAI code.
 
-##### 3.2 Su1EA3
- Phu1EA9m BG2 (Module / PCBA / SL7)
+##### 3.2 Sản Phẩm BG2 (Module / PCBA / SL7)
+BG2 **KHÔNG sản xuất tụ điện thô thông thường** (Cell). BG2 sản xuất **Module lắp ráp** cho khách hàng OEM:
 
-BG2 **KHu00D4NG su1EA3
- xuu1EA5	 tu1EE5 u0111iu1EC7
- thu00F4
-g thu01B0`u1EDD
-g** (Cell). BG2 su1EA3
- xuu1EA5	 **Module lu1EAFp ru00E1p** cho khu00E1ch hu00E0
-g OEM:
-
-| MaterialCode | MaterialName | MaterialType | Khu00E1ch hu00E0
-g | Barcode Prefix |
+| MaterialCode | MaterialName | MaterialType | Khách hàng | Barcode Prefix |
 |---|---|---|---|---|
 | `BEPCBA-001` | 164181 | FERT | **Bloom Energy** (PCBA) | `K164...` |
 | `EDVTMD-248` | 100099 | FERT | **Pliops** (SCM) | `K100...` |
 | `EDVTSY-001` | 711711 | FERT | **Bloom Energy** (SL-7) | `VH-711711...` |
 | `EDVTMD-246` | VEM540R0335QG | MDL | **Nordex** | Theo VNT_F3 format |
 
-##### 3.3 Logic Tu1EA1o Barcode [BG2] — Phu00E2
- Tu00EDch SP `usp_DoCreateSetInfoForProdQty_VNT`
-
-**Nhu00E1
-h VVT_F4 (du00F2
-g 383-430 trong SP):**
-
+##### 3.3 [BG2] — Logic Tạo Barcode Phân Tích SP `usp_DoCreateSetInfoForProdQty_VNT`
+**Nhánh VVT_F4 (dòng 383-430 trong SP):**
 ```
 CASE 1: PCBA/SCM (BEPCBA, EDVTMD-248)
-  Header = 'K' + BloomEnergyPartNumber        -- Vu00ED du1EE5: 'K164181'
+  Header = 'K' + BloomEnergyPartNumber        -- Ví dụ: 'K164181'
   Barcode = Header + BOMRevision + Year + Week + Serial(5 digits)
-  Ku1EBF	 quu1EA3: K16418106262500741
+  Kết quả: K16418106262500741
 
 CASE 2: SL-7 (EDVTSY-001)
-  Header = 'VH-' + BloomEnergyPartNumber      -- Vu00ED du1EE5: 'VH-711711'
+  Header = 'VH-' + BloomEnergyPartNumber      -- Ví dụ: 'VH-711711'
   Barcode = Header + '-' + Serial(6) + '-' + Week + Year + '-' + RevisionChar
-  Ku1EBF	 quu1EA3: VH-711711-000001-2626-A
+  Kết quả: VH-711711-000001-2626-A
 
-Ngou1EA1i lu1EC7 Nordex (EDVTMD-246): u0111i vu00E0o nhu00E1
-h VNT_F3 (du00F2
-g 311 SP)
+Ngoại lệ Nordex (EDVTMD-246): đi vào nhánh VNT_F3 (dòng 311 SP)
 ```
 
-##### 3.4 Tou00E0
- Bu1ED9 18 Mu00E0
- Hu00EC
-h K1xx
+##### 3.4 Toàn Bộ 18 Màn Hình K1xx
 
-| TCode | ScreenName | Chu1EE9c nu0103
-g | SP chu00ED
-h |
+| TCode | ScreenName | Chức năng | SP chính |
 |---|---|---|---|
-| **K100** | VNT_ModuleProdManagement_MENU | Menu chu00ED
-h Module BG2 | u2014 |
-| **K101** | DayProdPlanForMainLotMDL | Ku1EBF hou1EA1ch SX ngu00E0y (u2248B450) | `usp_DoCreateSetInfoForProdQty_VNT` |
-| **K105** | VNT_ModuleAssemblyLabelInfo | In tem lu1EAFp ru00E1p Module | `usp_ModuleAssemblyLabelInfo_get` |
-| **K107** | VNT_GetProdRouteHistForBarcode_PS | Lu1ECBch su1EED routing barcode | `usp_GetProdRouteHistForBarcode_PS_get` |
-| **K109** | VNT_SelfInspectionRawMaterialBE | Quu00E9	 NVL BloomEnergy (u2248B597) | `usp_RawMaterialInputHist_iud` |
-| **K110** | VNT_ModuleProductionInfo | Quu1EA3
- lu00FD SX Module | `usp_ModuleProductionInfo_iud/get` |
-| **K120** | VNT_ModuleSemiProductionInfo | Bu00E1
- thu00E0
-h phu1EA9m Module | `usp_ModuleSemiProductionInfo_iud/get` |
+| **K100** | VNT_ModuleProdManagement_MENU | Menu chính Module BG2 | — |
+| **K101** | DayProdPlanForMainLotMDL | Kế hoạch SX ngày (≈ B450) | `usp_DoCreateSetInfoForProdQty_VNT` |
+| **K105** | VNT_ModuleAssemblyLabelInfo | In tem lắp ráp Module | `usp_ModuleAssemblyLabelInfo_get` |
+| **K107** | VNT_GetProdRouteHistForBarcode_PS | Lịch sử routing barcode | `usp_GetProdRouteHistForBarcode_PS_get` |
+| **K109** | VNT_SelfInspectionRawMaterialBE | Quét NVL BloomEnergy (≈ B597) | `usp_RawMaterialInputHist_iud` |
+| **K110** | VNT_ModuleProductionInfo | Quản lý SX Module | `usp_ModuleProductionInfo_iud/get` |
+| **K120** | VNT_ModuleSemiProductionInfo | Bán thành phẩm Module | `usp_ModuleSemiProductionInfo_iud/get` |
 | **K130** | VNT_ModuleLabelInfo | In tem Module (SerialNo) | `usp_DoCreateModuleLabelInfo` |
-| **K140** | VNT_ModuleProductionHistForPliops | Lu1ECBch su1EED SX Pliops | `usp_ModuleProductionHist_iud/get` |
-| **K150** | VNT_ModuleSelfInspectionRawMaterial | Tu1EF1 kiu1EC3m NVL Module | `usp_RawMaterialInputHist_iud` |
-| **K160** | VNT_PackingLabelHistForPS | Lu1ECBch su1EED tem u0111`u00F3
-g gu00F3i | `usp_PackingLabelHistForPS_iud/get` |
-| **K170** | VNT_GetBomInfoByLotOrItem | BOM theo Lot/Item | u2014 |
-| **K180** | VNT_RawMaterialReverseTraceability | Truy xuu1EA5	 NVL ngu01B0`u1EE3c | `usp_GetReverseModelBomByBarcode` |
-| **K181** | VNT_DelegateMaterialInputLog | Log u1EE7y quyu1EC1
- NVL | u2014 |
+| **K140** | VNT_ModuleProductionHistForPliops | Lịch sử SX Pliops | `usp_ModuleProductionHist_iud/get` |
+| **K150** | VNT_ModuleSelfInspectionRawMaterial | Tự kiểm NVL Module | `usp_RawMaterialInputHist_iud` |
+| **K160** | VNT_PackingLabelHistForPS | Lịch sử tem đóng gói | `usp_PackingLabelHistForPS_iud/get` |
+| **K170** | VNT_GetBomInfoByLotOrItem | BOM theo Lot/Item | — |
+| **K180** | VNT_RawMaterialReverseTraceability | Truy xuất NVL ngược | `usp_GetReverseModelBomByBarcode` |
+| **K181** | VNT_DelegateMaterialInputLog | Log ủy quyền NVL | — |
 | **K190** | VNT_ProductTrackingByChangeNoticeInfo | Tracking Change Notice | `usp_ProductTrackingByChangeNoticeInfo` |
 | **K195** | VNT_SubAssemblyInfoForBE | Sub-Assembly BloomEnergy | `usp_SubAssemblyInfoForBE_get` |
 | **K198** | VNT_PrintBloomEnergySL7Label | Tem Bloom Energy SL-7 | `usp_DoPrintBloomEnergySL7Label` |
-| **K199** | VNT_NordexPackingLabelPrintingHist_get | Lu1ECBch su1EED tem Nordex | `usp_NordexPackingLabelPrintingHist_get` |
+| **K199** | VNT_NordexPackingLabelPrintingHist_get | Lịch sử tem Nordex | `usp_NordexPackingLabelPrintingHist_get` |
 
-##### 3.5 Database Tables Riu00EA
-g Module (16 bu1EA3
-g)
+##### 3.5 Database Tables Riêng Module (16 bảng)
 
-| Bu1EA3
-g | Rows | Vai tru00F2 |
+| Bảng | Rows | Vai trò |
 |---|---|---|
-| `STB_QC_LOTNO_MODULE_VALUES` | 113,948 | Giu00E1 tru1ECB u0111o kiu1EC3m QC Module |
-| `STB_ModuleAssemblyLabelInfo` | 16,507 | Tem lu1EAFp ru00E1p Module |
-| `STB_ModuleSemiProductionInfo` | 2,425 | Bu00E1
- TP Module (K120) |
+| `STB_QC_LOTNO_MODULE_VALUES` | 113,948 | Giá trị đo kiểm QC Module |
+| `STB_ModuleAssemblyLabelInfo` | 16,507 | Tem lắp ráp Module |
+| `STB_ModuleSemiProductionInfo` | 2,425 | Bán TP Module (K120) |
 | `STB_ModuleLabelInfo` | 1,665 | Tem Module (K130) |
 | `STB_ModuleProductionInfo` | 1,183 | SX Module (K110) |
-| `STB_ModuleProductionHist` | 250 | Lu1ECBch su1EED SX (K140) |
+| `STB_ModuleProductionHist` | 250 | Lịch sử SX (K140) |
 | `STB_VN_MASTERMODULES` | 1,592 | Master Module config |
-| `STB_VN_DETAILMODULES` | 2,027 | Chi tiu1EBF	 Module |
+| `STB_VN_DETAILMODULES` | 2,027 | Chi tiết Module |
 
-##### 3.6 [K130] u2014 Logic Tu1EA1o Serial Tem Module
+##### 3.6 [K130] — Logic Tạo Serial Tem Module
+Format: `PLS` + RevisionChar + Year(2) + WeekIndex(2) + `V` + Serial(4)  
+Ví dụ: `PLS1262600V0001`  
+Bảng lưu: `STB_ModuleLabelInfo` — Key: `ModuleSerialNo`
 
-Format: `PLS` + RevisionChar + Year(2) + WeekIndex(2) + `V` + Serial(4)
-Vu00ED du1EE5: `PLS1262600V0001`
-Bu1EA3
-g lu01B0u: `STB_ModuleLabelInfo` u2014 Key: `ModuleSerialNo`
+##### 3.7 [K110] — Module Production (usp_ModuleProductionInfo_iud)
+Bảng `STB_ModuleProductionInfo`:
+- `SemiProdLotNo1`, `SemiProdLotNo2`: Lot bán TP đầu vào
+- `PinHoleQty`: Số lỗ kim (kiểm tra chất lượng)
+- `Farad`, `ESR`: Thông số điện
+- `FinishedProdLotNo`: Lot thành phẩm đầu ra
 
-##### 3.7 [K110] u2014 Module Production (usp_ModuleProductionInfo_iud)
+> **Khác biệt với Cell Line:** Module KHÔNG dùng `STB_ProdRouteHist`. Dùng bảng riêng `STB_ModuleProductionInfo` + `STB_ModuleSemiProductionInfo`.
 
-Bu1EA3
-g `STB_ModuleProductionInfo`:
-- `SemiProdLotNo1`, `SemiProdLotNo2`: Lot bu00E1
- TP u0111`u1EA7u vu00E0o
-- `PinHoleQty`: Su1ED1 lu1ED7 kim (kiu1EC3m tra chu1EA5	 lu01B0`u1EE3
-g)
-- `Farad`, `ESR`: Thu00F4
-g su1ED1 u0111iu1EC7
-
-- `FinishedProdLotNo`: Lot thu00E0
-h phu1EA9m u0111`u1EA7u ra
-
-> **Khu00E1c biu1EC7	 vu1EDBi Cell Line:** Module KHONG du00F9
-g `STB_ProdRouteHist`. Du00F9
-g bu1EA3
-g riu00EA
-g `STB_ModuleProductionInfo` + `STB_ModuleSemiProductionInfo`.
-
-##### 3.8 [K109] vs [K150] u2014 Hai Mu00E0
- Hu00EC
-h Quu00E9	 NVL
+##### 3.8 [K109] vs [K150] — Hai Màn Hình Quét NVL
 
 | | K109 | K150 |
 |---|---|---|
-| **Mu1EE5c u0111`u00EDch** | Quu00E9	 NVL Bloom Energy | Quu00E9	 NVL Module chung |
-| **SP back-end** | Giu1ED1
-g nhau | Giu1ED1
-g nhau |
-| **Khu00E1c biu1EC7	** | Client UI filter riu00EA
-g BE | Client UI filter Module |
+| **Mục đích** | Quét NVL Bloom Energy | Quét NVL Module chung |
+| **SP back-end** | Giống nhau | Giống nhau |
+| **Khác biệt** | Client UI filter riêng BE | Client UI filter Module |
 
 ---
 
-### 6.15 Spare Part — [H301]/[H302]/[H303]/[H305]
+### 6.15 [H301]/[H302]/[H303]/[H305] — Spare Part ///
 
 | Màn hình | Chức năng |
 |----------|-----------|
@@ -734,7 +671,7 @@ g BE | Client UI filter Module |
 
 ---
 
-### 6.16 In Tem Khách Hàng Đặc Biệt ([B754]~[B758])
+### 6.16 [B754]/[B758] — In Tem Khách Hàng Đặc Biệt (~)
 
 | Màn hình | Khách hàng | Chức năng |
 |----------|-----------|-----------|
@@ -763,7 +700,7 @@ g BE | Client UI filter Module |
 10. CHƯA NHẬP "MAKING" ĐẾN V-25 BỊ CHẶN → MarkingLetter rỗng tại bước trước
 ```
 
-### 6.18 Cấu hình danh mục mã lỗi [B530] nhà máy Bắc Giang (BG)
+### 6.18 [B530] — Cấu hình danh mục mã lỗi nhà máy Bắc Giang (BG)
 
 **Yêu cầu:** Đồng bộ danh mục mã lỗi trên màn hình B530 tại nhà máy Bắc Giang để tránh trùng lặp và phản ánh chính xác các lỗi phát sinh trong thực tế.
 
@@ -775,7 +712,7 @@ Set `IsUsed = 0` trong bảng `STB_DefectInfo` cho các mã lỗi sau:
 - **Sleeving (V-25_BG):** `V-25_01_BG`, `V-25_2CT_BG`, `V-25_X03_BG`, `V-25_X12_BG`
 - **Ngoại quan (V-27_BG):** `V-27_ZC_BG`, `V-27_ZD_BG`, `V-27_4GV_BG`, `V-27_5VI_BG`, `V-27_XP1_BG`, `V-27_RELY_BG`
 
-*Chi tiết SQL tham khảo file script [fix_b530_disable_defects_BG.sql](../sql/scripts/fix_b530_disable_defects_BG.sql)*
+*Chi tiết SQL tham khảo file script **fix_b530_disable_defects_BG.sql***
 
 **2. Thêm mới 7 mã lỗi thực tế vận hành:**
 INSERT vào bảng `STB_DefectInfo` các mã lỗi sau:
@@ -787,9 +724,9 @@ INSERT vào bảng `STB_DefectInfo` các mã lỗi sau:
 - **Curling:** `V-24_NE7_BG` (Curling_Xước chân tancha)
 - **Curling:** `V-24_NE8_BG` (Curling_Lỗi mẻ miệng curling)
 
-*Chi tiết SQL tham khảo file script [fix_b530_add_defects_BG.sql](../sql/scripts/fix_b530_add_defects_BG.sql)*
+*Chi tiết SQL tham khảo file script **fix_b530_add_defects_BG.sql***
 
-#### 6.18.1 Bối Cảnh Thay Đổi Quy Mô Lot Size & Mã Lỗi [B530]
+#### 6.18.1 [B530] — Bối Cảnh Thay Đổi Quy Mô Lot Size & Mã Lỗi
 Trong quá trình vận hành hệ thống MES tại nhà máy Vinatech Bắc Giang (BG), bộ phận sản xuất và chất lượng đã phát hành hai yêu cầu thay đổi cấu hình dữ liệu quan trọng:
 1. **Thay đổi quy mô Lot No sản phẩm** (Lot Size) kết hợp thay đổi phương pháp sấy và số lượng mẫu test phá hủy.
 2. **Chuẩn hóa danh mục mã lỗi hiển thị trên màn hình B530** (disable 28 mã trùng lặp/dư thừa và thêm mới 7 mã lỗi thực tế).
@@ -970,7 +907,7 @@ WHERE ManagementNo = 'MÃ_QUẢN_LÝ'
 ORDER BY DayOfCalibration DESC;
 ```
 
-#### 6.21.4 Spare Part (Phụ Tùng) [H301] ~ [H305]
+#### 6.21.4 [H301]/[H305] — Spare Part (Phụ Tùng) ~
 Kho phụ tùng thay thế cho máy móc tại xưởng được theo dõi qua các bảng:
 *   `STB_VNSparePartInfo`: Master danh sách phụ tùng (spec, đơn giá, tồn an toàn).
 *   `STB_VNSparePartStockInfo`: Tồn kho phụ tùng.
@@ -1184,7 +1121,7 @@ $$\text{CurrentQty} = \text{LengthSlitting} \times \left(\frac{\text{WidthSlitti
 ##### 🔴 Bug #3: Mismatch logic tuổi thọ dao và Hardcode địa lý Bắc Giang (`usp_DoCreateSlittingResult`)
 *   **Triệu chứng:** Nhà máy Hà Nam/Hưng Yên không cảnh báo thay dao. Dao bị khóa sớm do tính sai tuổi thọ.
 *   **Nguyên nhân:** (1) Hardcode `RouteCode = 'V-11_BG'`, (2) Đếm số cuộn thay vì tổng số mét cắt.
-*   **Fix:** Sửa điều kiện `RouteCode LIKE 'V-11%'` + đổi cơ chế sang `SUM(GoodQtyLength)`. Xem [KB_02/KB_02_03_SCREEN_BUGS.md §F742/F746 Lỗi 2](../KB_02/KB_02_03_SCREEN_BUGS.md).
+*   **Fix:** Sửa điều kiện `RouteCode LIKE 'V-11%'` + đổi cơ chế sang `SUM(GoodQtyLength)`. Xem [KB_02/KB_02_02_SCREEN_BUGS.md §F742/F746 Lỗi 2](../KB_02/KB_02_02_SCREEN_BUGS.md).
 
 
 ---

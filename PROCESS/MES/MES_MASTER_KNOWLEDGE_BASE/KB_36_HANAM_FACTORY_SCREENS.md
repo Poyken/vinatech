@@ -2,7 +2,7 @@
 
 > **Verified against DB:** 2026-06-18
 > **🔑 Keywords:** Hà Nam, VVT_F3, HN screen, HNC, VE route, QC subsystem, vision, IoT, XRF, BOM, sales, H screen
-> ← [Về INDEX](KB_INDEX.md) | Cross-ref: [KB_02 §HN](KB_02/KB_02_01_NVL_WMS.md), [KB_34 §Route](KB_34_UNDOCUMENTED_SUBSYSTEMS.md)
+> ← [Về INDEX](KB_INDEX.md) | Cross-ref: [KB_02 §HN](KB_02/KB_02_01_WMS_CORE.md), KB_34 §Route
 
 ---
 
@@ -131,7 +131,7 @@
 
 > H-series = hệ thống quản lý thiết bị, phụ tùng, hiệu chuẩn, văn phòng phẩm.
 
-### 4.1 Equipment Management ([H01]-[H07])
+### 4.1 [H01]/[H07] — Equipment Management ( )
 | TCode | Caption | Chức năng |
 |---|---|---|
 | `H01` | Thông tin kho thiết bị | Equipment warehouse |
@@ -147,7 +147,7 @@
 | `H44` | Thông tin thiết bị (extended) | Equipment detail |
 | `H804` | Lịch sử thông tin bảo trì | Maintenance history |
 
-### 4.2 Calibration Management ([H101]-[H104])
+### 4.2 [H101]/[H104] — Calibration Management ( )
 | TCode | Caption | Chức năng |
 |---|---|---|
 | `H101` | VVT_Quản lý thiết bị hiệu chuẩn | **★ Calibration management** |
@@ -155,7 +155,7 @@
 | `H103` | VVT_Thêm thiết bị hiệu chuẩn | Add calibration device |
 | `H104` | VVT_Xem thiết bị hiệu chuẩn | View calibration device |
 
-### 4.3 Spare Parts ([H131]-[H270])
+### 4.3 [H131]/[H270] — Spare Parts ( )
 | TCode | Caption | Ghi chú |
 |---|---|---|
 | `H131` | VN_SparePartInfo | SP master info |
@@ -169,7 +169,7 @@
 | `H270` | ReportSparePartDetail | SP detail report |
 | `H301-H305` | Special Spare Parts | **★ Documented KB_03** |
 
-### 4.4 Stationery Management ([H141]-[H149]) — Văn phòng phẩm
+### 4.4 [H141]/[H149] — Stationery Management ( ) Văn phòng phẩm
 | TCode | Caption | Chức năng |
 |---|---|---|
 | `H141` | StationeryInfor | Thông tin VPP |

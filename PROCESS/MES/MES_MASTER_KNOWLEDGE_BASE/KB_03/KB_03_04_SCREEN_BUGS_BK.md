@@ -6,7 +6,7 @@
 *   **Triệu chứng:** Khi lập PO tại B310, danh sách công đoạn bị thiếu hoặc sai thứ tự.
 *   **Nguyên nhân gốc:** Nhóm Route chưa được cấu hình đúng tại B220.
 *   **Cách khắc phục:** Vào B220 kiểm tra Route Group, đảm bảo các RouteCode được gán đúng thứ tự.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_06_MASTER_DATA_TOOLS.md § 10](KB_06_MASTER_DATA_TOOLS.md) và [../KB_25/KB_25_01_OVERVIEW.md](../KB_25/KB_25_01_OVERVIEW.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_06_MASTER_DATA_TOOLS.md § 10](../KB_06_MASTER_DATA_TOOLS.md) và [../KB_25/KB_25_01_OVERVIEW.md](../KB_25/KB_25_01_OVERVIEW.md).
 
 ---
 
@@ -15,11 +15,11 @@
 
 > 🔗 **Xem thêm:** Mục [B210 / B220 / B230 / B240](#b210--b220--b230--b240--production-routing-setup) phía trên.
 
-### Lỗi 1: Dùng [B230] thay thế khi [B270] bị lỗi popup
+### [B230]/[B270] — Lỗi 1: Dùng thay thế khi bị lỗi popup
 *   **Triệu chứng:** B270 bị lỗi popup trống không hiển thị danh sách máy. Cần cách thay thế.
 *   **Nguyên nhân gốc:** SP `usp_Set_VVT_Info_get` bị hardcode Whitelist UserID tại B270.
 *   **Cách khắc phục:** Sử dụng B230 để gán máy vào Route khi B270 gặp sự cố. B230 có giao diện tương tự nhưng không qua SP bị whitelist.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_01_UI_PHAN_QUYEN.md § 1.3](KB_01_UI_PHAN_QUYEN.md) và [../KB_25/KB_25_01_OVERVIEW.md](../KB_25/KB_25_01_OVERVIEW.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_01_UI_AND_SCREENS.md § 1.3](../KB_01_UI_AND_SCREENS.md) và [../KB_25/KB_25_01_OVERVIEW.md](../KB_25/KB_25_01_OVERVIEW.md).
 
 ---
 
@@ -28,11 +28,11 @@
 
 > 🔗 **Xem thêm:** Mục [B210 / B220 / B230 / B240](#b210--b220--b230--b240--production-routing-setup) phía trên.
 
-### Lỗi 1: [B530] không hiển thị máy trong dropdown khi chốt sản lượng
+### [B530] — Lỗi 1: không hiển thị máy trong dropdown khi chốt sản lượng
 *   **Triệu chứng:** OP quét chốt sản lượng tại B530 nhưng không thấy máy trong danh sách chọn.
 *   **Nguyên nhân gốc:** Máy chưa được gán vào Route đang chạy tại B240.
 *   **Cách khắc phục:** Vào B240, chọn máy và gán vào RouteCode tương ứng.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_06_MASTER_DATA_TOOLS.md § 10](KB_06_MASTER_DATA_TOOLS.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_06_MASTER_DATA_TOOLS.md § 10](../KB_06_MASTER_DATA_TOOLS.md).
 
 ---
 
@@ -45,11 +45,11 @@
 
 ## [B301] — Production Order Info (Thông tin lệnh sản xuất chi tiết)
 
-### Lỗi 1: Dữ liệu PO bị lệch giữa [B301] và [B310]
+### [B301]/[B310] — Lỗi 1: Dữ liệu PO bị lệch giữa và
 *   **Triệu chứng:** Thông tin chi tiết PO tại B301 không khớp với tổng quan tại B310.
 *   **Nguyên nhân gốc:** Bảng `STB_ProductionOrderInfo` có dữ liệu không nhất quán do đồng bộ lỗi từ Groupware.
 *   **Cách khắc phục:** Kiểm tra dữ liệu trực tiếp trong DB và đồng bộ lại từ Groupware ESM Bridge.
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_19/KB_19_01_ARCHITECTURE.md](../KB_19/KB_19_01_ARCHITECTURE.md).
+*   **Chi tiết nghiệp vụ:** Xem tại ../KB_19/KB_19_01_ARCHITECTURE.md.
 
 ---
 
@@ -64,7 +64,7 @@
 *   **Cách khắc phục:** Vào B450, tìm dòng kế hoạch ngày tương ứng, tick chọn cột `IsFixed` rồi nhấn Lưu. Sau đó bấm tạo Lot.
 *   **Chi tiết nghiệp vụ:** Xem tại [../KB_03/KB_03_02_CELL_LINE.md § 2](../KB_03/KB_03_02_CELL_LINE.md).
 
-### Lỗi 2: Xóa PO phải xóa đồng thời ở [B310] và [B450]
+### [B310]/[B450] — Lỗi 2: Xóa PO phải xóa đồng thời ở và
 *   **Triệu chứng:** Xóa PO tại B310 nhưng dữ liệu kế hoạch ngày vẫn còn tại B450 gây lỗi trùng.
 *   **Nguyên nhân gốc:** Xóa PO cần xóa cả 3 bảng: `STB_ProductionOrderInfo`, `STB_ProductionOrderBom`, `STB_ProductionOrderRouting` (B310) VÀ `STB_DayProdPlan`, `STB_SetInfo` (B450).
 *   **Cách khắc phục:** Xóa PO theo quy trình đầy đủ 5 bảng.
@@ -101,7 +101,7 @@
 *   **Triệu chứng:** B470 không hiện dữ liệu Line điện cực hoặc hiện sai công đoạn đang chạy.
 *   **Nguyên nhân gốc:** Dữ liệu điện cực lưu ở bảng riêng (`STB_ElectrodeCoatingInfo`, `STB_ElectrodeSlittingResult`). Nếu Line điện cực chưa được cấu hình Route tương ứng thì B470 sẽ trống.
 *   **Cách khắc phục:** Kiểm tra cấu hình Route điện cực tại B220 và mapping máy tại B270.
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_OVERVIEW.md § 8](../KB_05/KB_05_01_QC_OVERVIEW.md) và [../KB_25/KB_25_01_OVERVIEW.md](../KB_25/KB_25_01_OVERVIEW.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md § 8](../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md) và [../KB_25/KB_25_01_OVERVIEW.md](../KB_25/KB_25_01_OVERVIEW.md).
 
 ---
 
@@ -123,7 +123,7 @@
 *   **Triệu chứng:** OP quét nhập NVL tại B540 nhưng hệ thống không cho lưu, báo thiếu thông tin bắt buộc.
 *   **Nguyên nhân gốc:** 4 cột màu đặc biệt trên lưới B540 phải được nhập đầy đủ trước khi in barcode. Đây là requirement cứng trong SP `usp_Vietnam_RawMaterialInputHist_uid`.
 *   **Cách khắc phục:** Hướng dẫn OP nhập đầy đủ 4 cột màu (hiển thị nền vàng/cam trên grid). Nếu vẫn lỗi, kiểm tra `STB_MaterialLotInfo` xem Lot NVL có tồn tại không.
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_03/KB_03_02_CELL_LINE.md § 6.4](../KB_03/KB_03_02_CELL_LINE.md) và [../KB_14/KB_14_01_METHODOLOGY.md](../KB_14/KB_14_01_METHODOLOGY.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_03/KB_03_02_CELL_LINE.md § 6.4](../KB_03/KB_03_02_CELL_LINE.md) và ../KB_14/KB_14_01_METHODOLOGY.md.
 
 ### Lỗi 2: Checkbox ProdQtyFinishYN không tích được
 *   **Triệu chứng:** OP muốn hoàn thành công đoạn nhưng không tích được checkbox `ProdQtyFinishYN`.
@@ -147,7 +147,7 @@
 
 ## [B733] — Box Matching Report (Báo cáo gộp Box)
 
-### Lỗi 1: Báo cáo [B733] hiển thị trống không có dữ liệu
+### [B733] — Lỗi 1: Báo cáo hiển thị trống không có dữ liệu
 *   **Triệu chứng:** Mở B733 tìm kiếm Lot nhưng không hiện kết quả gộp Box nào.
 *   **Nguyên nhân gốc:** Lot đó chưa được gộp Box tại B523 (chưa hoàn thành đóng gói).
 *   **Cách khắc phục:** Kiểm tra B523 xem Lot đã được gộp Box chưa. Nếu chưa, thực hiện gộp Box trước rồi quay lại B733.
@@ -177,7 +177,7 @@
 *   **Triệu chứng:** In tem thùng lớn B756 thiếu Serial nhãn hoặc không hiện trọng lượng.
 *   **Nguyên nhân gốc:** Chưa tick `IsOuter = 1` khi in nhãn ngoài, hoặc chưa bật `IsWeightLabel`.
 *   **Cách khắc phục:** Tick `IsOuter` cho nhãn ngoài. Tick `IsWeightLabel` cho tem cân nặng.
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_04/KB_04_01_CORE_PACKAGING.md § 6.9.1](../KB_04/KB_04_01_CORE_PACKAGING.md) và [../KB_14/KB_14_01_METHODOLOGY.md](../KB_14/KB_14_01_METHODOLOGY.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_04/KB_04_01_CORE_PACKAGING.md § 6.9.1](../KB_04/KB_04_01_CORE_PACKAGING.md) và ../KB_14/KB_14_01_METHODOLOGY.md.
 
 ---
 
@@ -186,7 +186,7 @@
 
 > 🔗 **Xem thêm:** Mục [B757 / B758](#b757--b758--digi-key-customer-labels) phía trên đã có chi tiết lỗi in tem Digi-Key.
 
-### Lỗi 1: Không in được tem Mixed Load tại [B758]
+### [B758] — Lỗi 1: Không in được tem Mixed Load tại
 *   **Triệu chứng:** In tem thùng hàng hỗn hợp (Mixed Load) Digi-Key bị lỗi.
 *   **Nguyên nhân gốc:** Thùng chứa nhiều model/size khác nhau, SP cần kiểm tra tất cả barcode trong thùng khớp.
 *   **Cách khắc phục:** Đảm bảo tất cả barcode trong thùng đã được gộp box tại B523 và thông tin PO đầy đủ.
@@ -208,7 +208,7 @@
 
 ## [B782] — Lot Routing History (Lịch sử Routing theo Lot)
 
-### Lỗi 1: Sai ngày sản xuất (JobDate) trên báo cáo [B782]
+### [B782] — Lỗi 1: Sai ngày sản xuất (JobDate) trên báo cáo
 *   **Triệu chứng:** Barcode hiển thị sai ngày sản xuất trên lịch sử Routing.
 *   **Nguyên nhân gốc:** Cột `JobDate` trong `STB_ProdRouteHist` bị ghi nhận sai do OP chốt sản lượng không đúng ca.
 *   **Cách khắc phục:**
@@ -243,7 +243,7 @@
 *   **Triệu chứng:** Sau khi sửa chữa lỗi NG, số lượng hàng lỗi và hàng tốt bị lệch tổng.
 *   **Nguyên nhân gốc:** SP `usp_ModuleLotTrackingInfo_VVT2_get` đọc từ cả `STB_DefectRepairInfo` và `STB_ProdRouteHist`. Khi sửa phải cập nhật đồng bộ cả 2 bảng.
 *   **Cách khắc phục:** Cập nhật đồng thời `DefectQty` trong `STB_DefectRepairInfo` và `ProdQty` trong `STB_ProdRouteHist`.
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_03/KB_03_02_CELL_LINE.md § 5.8](../KB_03/KB_03_02_CELL_LINE.md) và [../KB_05/KB_05_01_QC_OVERVIEW.md § 9.5](../KB_05/KB_05_01_QC_OVERVIEW.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_03/KB_03_02_CELL_LINE.md § 5.8](../KB_03/KB_03_02_CELL_LINE.md) và [../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md § 9.5](../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md).
 
 ---
 
@@ -254,7 +254,7 @@
 *   **Triệu chứng:** Dashboard ANDON tại B882 không hiển thị sản lượng real-time.
 *   **Nguyên nhân gốc:** SP `usp_Vietnam_AndonDetail_get` lấy dữ liệu từ `STB_ProdRouteHist` lọc theo `WorkCenterCode`. Nếu WorkCenterCode sai hoặc không khớp sẽ trống.
 *   **Cách khắc phục:** Kiểm tra tham số filter WorkCenterCode trên ANDON display khớp với mã nhà máy đang chạy.
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_03/KB_03_02_CELL_LINE.md § 6](../KB_03/KB_03_02_CELL_LINE.md) và [../KB_19/KB_19_01_ARCHITECTURE.md](../KB_19/KB_19_01_ARCHITECTURE.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_03/KB_03_02_CELL_LINE.md § 6](../KB_03/KB_03_02_CELL_LINE.md) và ../KB_19/KB_19_01_ARCHITECTURE.md.
 
 ---
 
@@ -265,7 +265,7 @@
 *   **Triệu chứng:** OP đăng nhập MES nhưng các nút Save/Delete trên màn hình sản xuất bị disable.
 *   **Nguyên nhân gốc:** UserID chưa được cấp quyền Execute cho các Button trên ScreenObject.
 *   **Cách khắc phục:** Vào B934 hoặc Z220 gán quyền Execute cho Role tương ứng.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_01_UI_PHAN_QUYEN.md § 2](KB_01_UI_PHAN_QUYEN.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_01_UI_AND_SCREENS.md § 2](../KB_01_UI_AND_SCREENS.md).
 
 ---
 
@@ -276,7 +276,7 @@
 *   **Triệu chứng:** Sau khi tạo màn hình mới, nhóm SX không nhìn thấy trên menu MES.
 *   **Nguyên nhân gốc:** Màn hình mới chưa được gán vào Role của nhóm SX tại B935/Z220.
 *   **Cách khắc phục:** Vào B935 hoặc Z220, chọn Role Group tương ứng, tick chọn Screen ID mới, Lưu lại.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_01_UI_PHAN_QUYEN.md § 1.4](KB_01_UI_PHAN_QUYEN.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_01_UI_AND_SCREENS.md § 1.4](../KB_01_UI_AND_SCREENS.md).
 
 ---
 
@@ -333,7 +333,7 @@
 
 > 🔗 **Xem thêm:** Mục [K101 / K109 / K110](#k101--k109--k110--bg2-production-plan--scan) phía trên đã có chi tiết BG2.
 
-### Lỗi 1: Quét NVL tại [BG2] bị chặn sai chủng loại
+### [BG2] — Lỗi 1: Quét NVL tại bị chặn sai chủng loại
 *   **Triệu chứng:** OP BG2 quét NVL bị lỗi tương tự B597 nhưng trên giao diện K109.
 *   **Nguyên nhân gốc:** Logic K109 tương đương B597, lọc riêng cho `WorkCenterCode = 'VVT_BG2'`. Cùng nguyên nhân HOLD/Hết hạn/Sai BOM.
 *   **Cách khắc phục:** Áp dụng cùng quy trình debug B597 (xem mục B597 phía trên).
@@ -368,20 +368,20 @@
 
 ## [K110] — [BG2] Warehouse Operations (Vận hành kho [BG2])
 
-### Lỗi 1: Kho [BG2] không hiển thị NVL đã nhập
+### [BG2] — Lỗi 1: Kho không hiển thị NVL đã nhập
 *   **Triệu chứng:** Thủ kho BG2 không tìm thấy NVL đã nhập kho tại K110.
 *   **Nguyên nhân gốc:** WarehouseCode của kho BG2 khác với kho chính. Dữ liệu lọc theo `WorkCenterCode = 'VVT_BG2'`.
 *   **Cách khắc phục:** Kiểm tra WarehouseCode của phiếu nhập kho F330 khớp với kho BG2.
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_02/KB_02_01_NVL_WMS.md](../KB_02/KB_02_01_NVL_WMS.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_02/KB_02_01_WMS_CORE.md](../KB_02/KB_02_01_WMS_CORE.md).
 
 ---
 
 
 ---
 
-### Kịch bản sự cố khẩn cấp 1: Hủy/Xóa sản lượng công đoạn sản xuất ([B530])
+### [B530] — Kịch bản sự cố khẩn cấp 1: Hủy/Xóa sản lượng công đoạn sản xuất ()
 
-#### 📐 KỊCH BẢN A: Hủy/Xóa sản lượng công đoạn sản xuất (Màn hình [B530])
+#### [B530] — 📐 KỊCH BẢN A: Hủy/Xóa sản lượng công đoạn sản xuất (Màn hình )
 *   **Triệu chứng:** Công nhân scan nhầm sản lượng vào công đoạn `V-26` (Aging) trong khi Lot chưa chạy xong công đoạn `V-25`. Cần hủy công đoạn `V-26`.
 *   **Ví dụ Demo:** Hủy công đoạn sản xuất mã `VE08` của Lot `VE260509-004`.
 *   **Quy trình xử lý bằng Transaction:**
@@ -418,7 +418,7 @@
 
 ---
 
-### Kịch bản sự cố khẩn cấp 2: Lỗi không chốt được công đoạn ([B530])
+### [B530] — Kịch bản sự cố khẩn cấp 2: Lỗi không chốt được công đoạn ()
 
 #### 📐 KỊCH BẢN A: Chặn do quên scan Nguyên vật liệu tại trạm trước (V-23 / V-24)
 *   **Triệu chứng:** Khi bấm chốt công đoạn `V-23` (Lắp cao su) hoặc `V-24` (Curling), hệ thống báo lỗi: *"Chưa nhập NVL cho Lắp Cao Su"* hoặc *"Chưa nhập NVL cho Curling"*.
