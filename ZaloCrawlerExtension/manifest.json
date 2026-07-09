@@ -1,0 +1,27 @@
+{
+  "manifest_version": 3,
+  "name": "Zalo Web Chat Crawler",
+  "version": "1.0",
+  "description": "Tự động cuộn và cào tin nhắn Zalo Web theo mốc thời gian",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage"
+  ],
+  "host_permissions": [
+    "https://chat.zalo.me/*"
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://chat.zalo.me/*"
+      ],
+      "js": [
+        "content.js"
+      ]
+    }
+  ]
+}
