@@ -26,7 +26,7 @@
 
 ## A-Series: Master Data & Kế Hoạch
 
-### A230
+### [A230]
 **Tên:** Thông tin vật liệu (Material Master)
 
 | # | Triệu chứng | Nguyên nhân | Fix |
@@ -36,7 +36,7 @@
 
 > 🔗 Chi tiết: [KB_06 §9.1](KB_06_MASTER_DATA_TOOLS.md)
 
-### A310
+### [A310]
 **Tên:** Route Info (Định nghĩa công đoạn)
 
 | # | Triệu chứng | Nguyên nhân | Fix |
@@ -45,7 +45,7 @@
 
 > 🔗 Chi tiết: [KB_06 §9.4](KB_06_MASTER_DATA_TOOLS.md)
 
-### A410
+### [A410]
 **Tên:** Model Basic Info (Cấu hình model)
 
 | # | Triệu chứng | Nguyên nhân | Fix |
@@ -54,7 +54,7 @@
 
 > 🔗 Chi tiết: [KB_06 §9.5](KB_06_MASTER_DATA_TOOLS.md)
 
-### A418
+### [A418]
 **Tên:** Packing Qty per Size (SL đóng gói theo Size)
 
 | # | Triệu chứng | Nguyên nhân | Fix |
@@ -63,7 +63,7 @@
 
 > 🔗 Chi tiết: [KB_06 §9.6](KB_06_MASTER_DATA_TOOLS.md)
 
-### A460
+### [A460]
 **Tên:** Model Label Info (Cấu hình in tem)
 
 | # | Triệu chứng | Nguyên nhân | Fix |
@@ -72,7 +72,7 @@
 
 > 🔗 Chi tiết: [KB_04 §6.20](KB_04/KB_04_01_CORE_PACKAGING.md), [KB_05 §8.7](KB_05/KB_05_01_QC_OVERVIEW.md)
 
-### A510
+### [A510]
 **Tên:** Production Order (Lệnh sản xuất - PO)
 
 | # | Triệu chứng | Nguyên nhân | Fix |
@@ -83,7 +83,7 @@
 
 ## B-Series: Sản Xuất (Production)
 
-### B210-B270
+### [B210]-[B270]
 **Tên:** Line/Route/Machine Setup
 
 | # | Triệu chứng | Nguyên nhân | Fix |
@@ -94,7 +94,7 @@
 
 > 🔗 Chi tiết: [KB_03 §B210-B270](KB_03/KB_03_02_CELL_LINE.md), [KB_01 §1.3](KB_01_UI_PHAN_QUYEN.md)
 
-### B310
+### [B310]
 **Tên:** Production Order Info (Quản lý PO)
 
 | # | Triệu chứng | Nguyên nhân | Fix |
@@ -102,7 +102,7 @@
 | 1 | PO không tạo được Lot | BOM/Route chưa cấu hình cho PO | Kiểm tra `STB_ProductionOrderRouting`, `STB_ProductionOrderBom` |
 | 2 | ProdFinishQty lệch so với thực tế | Crash giữa SP `usp_DoProcessProdRouteHist` → dữ liệu partial | `UPDATE STB_ProductionOrderInfo SET ProdFinishQty = (SELECT SUM(ProdQty) FROM STB_ProdRouteHist WHERE PONo='mã' AND RouteCode='V-28') WHERE PONo='mã'` |
 
-### B442
+### [B442]
 **Tên:** Electrode Day Plan (Kế hoạch ngày điện cực)
 
 | # | Triệu chứng | Nguyên nhân | Fix |
@@ -112,14 +112,14 @@
 
 > 🔗 Chi tiết: [KB_05 §8.7](KB_05/KB_05_01_QC_OVERVIEW.md)
 
-### B452
+### [B452]
 **Tên:** Line Changing (Chuyển Line sản xuất)
 
 | # | Triệu chứng | Nguyên nhân | Fix |
 |---|---|---|---|
 | 1 | Chuyển Line lỗi "Barcode đã tồn tại trên Line khác" | Barcode chưa được `IsLineInput=0` ở Line cũ | `UPDATE STB_SetInfo SET IsLineInput=0, InputLineCode='' WHERE Barcode='mã' AND InputLineCode='LINE_CŨ'` |
 
-### B523
+### [B523]
 **Tên:** Packing / Gộp Box (★ HOT — nhiều bug nhất)
 
 | # | Triệu chứng | Nguyên nhân | Fix |
@@ -133,14 +133,14 @@
 
 > 🔗 Chi tiết: [KB_04 §6](KB_04/KB_04_01_CORE_PACKAGING.md), [KB_30 §5](KB_30_CORE_SP_ENGINE.md)
 
-### B528
+### [B528]
 **Tên:** Barrel Barcode (In tem thùng phuy)
 
 | # | Triệu chứng | Nguyên nhân | Fix |
 |---|---|---|---|
 | 1 | Tem barrel in trống hoặc thiếu thông tin | Label config chưa set cho model dạng Barrel | Kiểm tra `STB_ModelLabelInfo` → LabelType='BarrelLabel' |
 
-### B530
+### [B530]
 **Tên:** Route Input / Production Qty Output (★ CORE — Nhập sản lượng)
 
 | # | Triệu chứng | Nguyên nhân | Fix |
@@ -155,14 +155,14 @@
 
 > 🔗 Chi tiết: [KB_03 §B530](KB_03/KB_03_02_CELL_LINE.md), [KB_30 §2](KB_30_CORE_SP_ENGINE.md), [KB_12 §2](KB_12_DEEP_CORE_ANALYSIS_AND_AUDIT.md)
 
-### B540
+### [B540]
 **Tên:** Process Input V22→V28 (Nhập NVL theo công đoạn)
 
 | # | Triệu chứng | Nguyên nhân | Fix |
 |---|---|---|---|
 | 1 | Scan NVL bị lỗi "Sai chủng loại" | Mã NVL không nằm trong BOM config của PO cho Route | Kiểm tra BOM: `SELECT * FROM STB_ProductionOrderBom WHERE PONo='mã' AND RouteCode='V-22'` |
 
-### B552
+### [B552]
 **Tên:** Slitting Configurations (Thiết lập chia cuộn điện cực)
 
 | # | Triệu chứng | Nguyên nhân | Fix |
@@ -171,14 +171,14 @@
 
 > 🔗 Chi tiết: [KB_05 §7.6](KB_05/KB_05_01_QC_OVERVIEW.md)
 
-### B560
+### [B560]
 **Tên:** Hela OutBox List (In tem thùng Hela)
 
 | # | Triệu chứng | Nguyên nhân | Fix |
 |---|---|---|---|
 | 1 | In tem Hela trống hoặc sai format | Config label Hela chưa map đúng model | Kiểm tra `STB_HelaPackingCheckHist` + Label config |
 
-### B597
+### [B597]
 **Tên:** Material Scanning (★ HOT — Scan NVL đầu vào chuyền)
 
 | # | Triệu chứng | Nguyên nhân | Fix |
@@ -194,7 +194,7 @@
 
 > 🔗 Chi tiết: [KB_05 §7](KB_05/KB_05_01_QC_OVERVIEW.md), [KB_03 §B597](KB_03/KB_03_02_CELL_LINE.md)
 
-### B598
+### [B598]
 **Tên:** Material Scrap Report (Báo phế NVL)
 
 | # | Triệu chứng | Nguyên nhân | Fix |
@@ -203,14 +203,14 @@
 
 > 🔗 Chi tiết: [KB_03 §6.12](KB_03/KB_03_02_CELL_LINE.md)
 
-### B618
+### [B618]
 **Tên:** Rework (Làm lại sản phẩm)
 
 | # | Triệu chứng | Nguyên nhân | Fix |
 |---|---|---|---|
 | 1 | "Bạn không có quyền vui lòng liên hệ EA !" | SP `usp_GetInforLotReworkHaNamFactory_uid` hardcode check UserID | Thêm UserID vào whitelist trong SP hoặc tạo record permission — xem [KB_26 §4.5](KB_26/KB_26_01_LINKS_BUGS.md) |
 
-### B682-B791
+### [B682]-[B791]
 **Tên:** Stage Prices & Defect Reports
 
 | # | Triệu chứng | Nguyên nhân | Fix |
@@ -218,7 +218,7 @@
 | 1 | B786 ESR không hiện data | ESR data chưa upload hoặc Lot chưa match | Kiểm tra `STB_VVT_ESRDATA` WHERE Barcode='mã' |
 | 2 | B791 NG Defect Repair — SL NG lệch | `DefectQty` trong `STB_ProdRouteHist` không khớp `STB_DefectRepairInfo` | Đồng bộ lại: xem [KB_03 §5.8](KB_03/KB_03_02_CELL_LINE.md) |
 
-### B754-B790
+### [B754]-[B790]
 **Tên:** Customer Labels (PAC, Digi-Key, Phoenix Contact, Sanmina)
 
 | # | Triệu chứng | Nguyên nhân | Fix |
@@ -229,7 +229,7 @@
 
 > 🔗 Chi tiết: [KB_04 §6.9.4](KB_04/KB_04_01_CORE_PACKAGING.md)
 
-### B802
+### [B802]
 **Tên:** Electrode Production History
 
 | # | Triệu chứng | Nguyên nhân | Fix |
@@ -237,7 +237,7 @@
 | 1 | Thiếu công đoạn trên báo cáo | OP chưa nhập đủ 4 công đoạn (Mixing/Coating/Rollpress/Slitting) tại B552 | Yêu cầu OP bổ sung nhập liệu tại B552 |
 | 2 | 🔴 BY/YP 120/180 A301 1.5B: Mixing Input = 0, có Coating Output | App cân NVL Mixing trên máy CMC không gọi SP `usp_DoCreateElectrodeMixStepInfo_electron`. DB + SP + config `STB_ElectrodeStep` đều OK. Ảnh hưởng: `CREBL85L`, `CRFYL85-01`, `CRFYN85L-01`. Phát hiện 2026-06-19. | Kiểm tra phần mềm cân trên máy CMC (log, phiên bản, kết nối DB). Xem [KB_05 §8.9](KB_05/KB_05_02_ELECTRODE.md) |
 
-### B882
+### [B882]
 **Tên:** ANDON Display
 
 | # | Triệu chứng | Nguyên nhân | Fix |
@@ -248,7 +248,7 @@
 
 ## C-Series: QC & Chất Lượng
 
-### C121-C122
+### [C121]-[C122]
 **Tên:** QC Inspection Setup
 
 | # | Triệu chứng | Nguyên nhân | Fix |
@@ -257,21 +257,21 @@
 
 > 🔗 Chi tiết: [KB_05 §9.1](KB_05/KB_05_01_QC_OVERVIEW.md)
 
-### C220
+### [C220]
 **Tên:** IQC Incoming Quality Control
 
 | # | Triệu chứng | Nguyên nhân | Fix |
 |---|---|---|---|
 | 1 | F330 bị chặn "Receiving Confirmation" | IQC chưa PASS Lot tại C220 | QC hoàn thành nhập kết quả + xác nhận PASS |
 
-### C243
+### [C243]
 **Tên:** QC Kiểm Tra Lot Slitting
 
 | # | Triệu chứng | Nguyên nhân | Fix |
 |---|---|---|---|
 | 1 | Lot slitting không chuyển về kho được | QC đánh Reject → không thể chuyển | Xử lý theo quy trình NG — không bypass |
 
-### C321
+### [C321]
 **Tên:** PQC Reliability Assy (Sửa chữa lỗi Cell Line)
 
 | # | Triệu chứng | Nguyên nhân | Fix |
@@ -280,7 +280,7 @@
 
 > 🔗 Chi tiết: [KB_05 §9.5](KB_05/KB_05_01_QC_OVERVIEW.md)
 
-### C443
+### [C443]
 **Tên:** PQC Quality Verification
 
 | # | Triệu chứng | Nguyên nhân | Fix |
@@ -301,21 +301,21 @@ COMMIT TRANSACTION;
 
 > 🔗 Chi tiết: [KB_14 §Kịch bản 1](KB_14/KB_14_01_METHODOLOGY.md)
 
-### C451
+### [C451]
 **Tên:** PQC Inspection
 
 | # | Triệu chứng | Nguyên nhân | Fix |
 |---|---|---|---|
 | 1 | Load lại hạng mục cũ, không cho sửa | Cache QC document từ lần trước | Xóa CommInspDoc cũ rồi tạo lại — xem C443 |
 
-### C486
+### [C486]
 **Tên:** QC Measuring Items (Đo kích thước điện cực)
 
 | # | Triệu chứng | Nguyên nhân | Fix |
 |---|---|---|---|
 | 1 | Cột Note1 thừa trên Grid / cột bị xáo | Lỗi metadata grid trong SmartFramework | Rebuild bảng + ALTER bảng tương ứng — xem [KB_05 §7.8](KB_05/KB_05_01_QC_OVERVIEW.md) |
 
-### C512
+### [C512]
 **Tên:** OQC Lot Management
 
 | # | Triệu chứng | Nguyên nhân | Fix |
@@ -323,7 +323,7 @@ COMMIT TRANSACTION;
 | 1 | Không tìm thấy Lot khi tạo OQC | Lot chưa gộp box B523 HOẶC PO thiếu `IsOutputRoute=1` | Kiểm tra B523 + sửa `STB_ProductionOrderRouting` |
 | 2 | Model mới không hiện khi chọn | A410 chưa config OqcType | Xem A410 ở trên |
 
-### C530 (OQC)
+### [C530] (OQC)
 **Tên:** OQC Product Inspection
 
 | # | Triệu chứng | Nguyên nhân | Fix |
@@ -331,14 +331,14 @@ COMMIT TRANSACTION;
 | 1 | Sửa hạng mục ở C151 nhưng C530 không hiện | Chưa ấn "Tổng hợp hạng mục" | Vào C530 → ấn nút "Tổng hợp hạng mục" để reset |
 | 2 | OQC bị lỗi khi bấm Reject nhưng muốn Pass lại | Nút Pass bị disable sau Reject | ⚠️ `CommInspResult` KHÔNG phải cột trong DB — OQC Pass/Fail được xử lý qua SP `usp_DoUpdateMaterialQcInfo_Success/Fail`. Cách fix: (1) Xóa MaterialQcInfo cũ bằng `usp_DoDeleteMaterialQcInfo`, (2) Tạo lại OQC mới tại C512, (3) Nhập lại kết quả QC. Xem [KB_26 §4.2](KB_26/KB_26_01_LINKS_BUGS.md) |
 
-### C546
+### [C546]
 **Tên:** FOQC — OCV/ESR Measurement
 
 | # | Triệu chứng | Nguyên nhân | Fix |
 |---|---|---|---|
 | 1 | OCV chỉ hiện 20 dòng thay vì 50 | SP `usp_Vietnam_MaterialFOQcDetail_get` thiếu block WHILE cho DetailNo=2 (OCV) | Thêm block WHILE cho OCV — xem [KB_05 §9.6](KB_05/KB_05_01_QC_OVERVIEW.md) |
 
-### C560
+### [C560]
 **Tên:** FG Receipt (Nhập kho thành phẩm)
 
 | # | Triệu chứng | Nguyên nhân | Fix |
@@ -346,7 +346,7 @@ COMMIT TRANSACTION;
 | 1 | Không hiện dữ liệu hàng chờ QC Audit | SP filter theo `WorkCenterCode` không match nhà máy HN/HY | ALTER SP thêm WorkCenterCode mới — xem [KB_26 §4.3](KB_26/KB_26_01_LINKS_BUGS.md) |
 | 2 | Báo "chưa kiểm tra QC" dù carton mới đã Pass | Bug logic `AND @Statusout IS NULL` trong SP | Sửa logic AND → OR hoặc check đúng carton mới |
 
-### C585
+### [C585]
 **Tên:** VVT Thêm chi tiết lỗi theo Lot
 
 | # | Triệu chứng | Nguyên nhân | Fix |
@@ -359,7 +359,7 @@ COMMIT TRANSACTION;
 
 ## D-Series: Enesol / Hưng Yên
 
-### D100-D110
+### [D100]-[D110]
 **Tên:** VinaEnesol Label Print & History
 
 | # | Triệu chứng | Nguyên nhân | Fix |
@@ -374,7 +374,7 @@ COMMIT TRANSACTION;
 
 ## F-Series: Kho & Vật Tư
 
-### F330
+### [F330]
 **Tên:** Material Receipt (Phiếu nhập kho NVL)
 
 | # | Triệu chứng | Nguyên nhân | Fix |
@@ -385,21 +385,21 @@ COMMIT TRANSACTION;
 
 > 🔗 Chi tiết: [KB_02 §4.15](KB_02/KB_02_01_NVL_WMS.md)
 
-### F430
+### [F430]
 **Tên:** Material Transfer (Chuyển kho)
 
 | # | Triệu chứng | Nguyên nhân | Fix |
 |---|---|---|---|
 | 1 | Lot không chuyển kho được | Lot bị HOLD hoặc QC Reject | Giải phóng HOLD hoặc xử lý theo quy trình NG |
 
-### F721
+### [F721]
 **Tên:** Material Stock (Tồn kho NVL)
 
 | # | Triệu chứng | Nguyên nhân | Fix |
 |---|---|---|---|
 | 1 | Tồn kho âm | Backflush trừ quá hoặc phiếu xuất kho tạo sai | Kiểm tra `STB_MaterialStock` + `STB_MaterialDocInfo` type='GI' |
 
-### F743-F748
+### [F743]-[F748]
 **Tên:** Electrode Slitting
 
 | # | Triệu chứng | Nguyên nhân | Fix |
@@ -416,7 +416,7 @@ COMMIT TRANSACTION;
 
 ## G-Series: Thành Phẩm
 
-### G660
+### [G660]
 **Tên:** Daifuku Warehouse (Kho robot tự động)
 
 | # | Triệu chứng | Nguyên nhân | Fix |
@@ -427,7 +427,7 @@ COMMIT TRANSACTION;
 
 ## H-Series: Hà Nam (VVT_F3)
 
-### HN523
+### [HN523]
 **Tên:** Packing Hà Nam
 
 | # | Triệu chứng | Nguyên nhân | Fix |
@@ -435,7 +435,7 @@ COMMIT TRANSACTION;
 | 1 | Gộp box lỗi Qty=0 | `STB_PackingStandard` thiếu record cho model HN | INSERT record — xem [KB_04 §6.13](KB_04/KB_04_01_CORE_PACKAGING.md) |
 | 2 | Gộp túi nilon lỗi | `STB_PackingNilonToBoxSmall_HN` config sai | Kiểm tra + update config |
 
-### HNC321
+### [HNC321]
 **Tên:** Defect Repair Hà Nam
 
 | # | Triệu chứng | Nguyên nhân | Fix |
@@ -453,7 +453,7 @@ COMMIT TRANSACTION;
 
 > 🔗 Chi tiết: [KB_05 §HNC321](KB_05/KB_05_01_QC_OVERVIEW.md), [KB_14 §Kịch bản 3](KB_14/KB_14_01_METHODOLOGY.md)
 
-### HN551
+### [HN551]
 **Tên:** FG Export Hà Nam
 
 | # | Triệu chứng | Nguyên nhân | Fix |
@@ -462,30 +462,30 @@ COMMIT TRANSACTION;
 
 ---
 
-## K-Series: Đặc Biệt / BG2
+## K-Series: Đặc Biệt / [BG2]
 
-### K101
+### [K101]
 **Tên:** Lot Tracking BG2
 
 | # | Triệu chứng | Nguyên nhân | Fix |
 |---|---|---|---|
 | 1 | Lot tracking trống cho PO BG2 | PO chưa config Route cho BG2 (V-22_BG, V-28_BG) | Thêm Route BG2 vào PO |
 
-### K109
+### [K109]
 **Tên:** BG2 Production Plan
 
 | # | Triệu chứng | Nguyên nhân | Fix |
 |---|---|---|---|
 | 1 | Không tạo được kế hoạch ngày BG2 | DayPlan table thiếu config WorkCenterCode='VVT_F4' | Kiểm tra `STB_DayProdPlan` + config |
 
-### K110
+### [K110]
 **Tên:** BG2 Material Scan
 
 | # | Triệu chứng | Nguyên nhân | Fix |
 |---|---|---|---|
 | 1 | Scan NVL BG2 bị chặn | NVL kho BG2 chưa config WarehouseCode | Map kho BG2 trong `STB_LineRouteMapping` |
 
-### K198-K199
+### [K198]-[K199]
 **Tên:** Customer Labels (Bloom / Nordex)
 
 | # | Triệu chứng | Nguyên nhân | Fix |
@@ -495,7 +495,7 @@ COMMIT TRANSACTION;
 ---
 
 
-### K366
+### [K366]
 **Ten:** Chua xac dinh
 
 | # | Trieu chung | Nguyen nhan | Fix |
@@ -503,7 +503,7 @@ COMMIT TRANSACTION;
 | 1 | K366 screen displays blank Status column (Final conclusion Pass/Fail) | Stored procedure usp_LotTrackingInfo_VVTF4_get does not return the Status column to map to the grid. | `-- ============================================= -- Author:		Nguyễn Hải Triều(Mr.Dev) -- Create date: 2026-06-18 -- Description:	Kiểm tra dữ liệu Lot ...` |
 ## P-Series: HR & Tài Liệu
 
-### P111
+### [P111]
 **Tên:** Attendance (Chấm công)
 
 | # | Triệu chứng | Nguyên nhân | Fix |
@@ -514,7 +514,7 @@ COMMIT TRANSACTION;
 
 ## Z-Series: System Admin
 
-### Z410
+### [Z410]
 **Tên:** User Management
 
 | # | Triệu chứng | Nguyên nhân | Fix |
@@ -524,7 +524,7 @@ COMMIT TRANSACTION;
 
 > 🔗 Chi tiết: [KB_06 §9.3](KB_06_MASTER_DATA_TOOLS.md)
 
-### Z530
+### [Z530]
 **Tên:** Label Info (Label Design)
 
 | # | Triệu chứng | Nguyên nhân | Fix |
@@ -545,7 +545,7 @@ COMMIT TRANSACTION;
 |---|---|---|
 | Update ngày SX hàng loạt → chỉ Lot cuối cùng được đồng bộ | SP dùng `MAX(LotID)` thay vì loop qua tất cả | ALTER SP sửa logic loop — xem [KB_26 §4.6](KB_26/KB_26_01_LINKS_BUGS.md) |
 
-### Customer Return (G400) Reject
+### Customer Return ([G400]) Reject
 | Triệu chứng | Nguyên nhân | Fix |
 |---|---|---|
 | Trả hàng lỗi "Chưa hoàn thành IQC" | SP check IQC PASS cả khi hàng trả lại (không cần IQC) | ALTER SP bypass IQC check cho Return type — xem [KB_26 §4.7](KB_26/KB_26_01_LINKS_BUGS.md) |

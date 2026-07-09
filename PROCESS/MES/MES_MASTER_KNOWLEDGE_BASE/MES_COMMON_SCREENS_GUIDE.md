@@ -1,4 +1,4 @@
-# 🗺️ Cẩm Nang Tra Cứu & Vận Hành Các Màn Hình MES Thường Dùng (NAIS MES Guide)
+﻿# 🗺️ Cẩm Nang Tra Cứu & Vận Hành Các Màn Hình MES Thường Dùng (NAIS MES Guide)
 
 Tài liệu này tổng hợp chi tiết tất cả các màn hình (TCode) hoạt động trong hệ thống NAIS MES tại Vinatech. Mỗi màn hình được phân tích theo hai phần chính:
 1. **Ý nghĩa & Nghiệp vụ:** Vai trò thực tế trên dây chuyền sản xuất và kho.
@@ -265,7 +265,7 @@ Tài liệu này tổng hợp chi tiết tất cả các màn hình (TCode) ho�
     * *Nghiệp vụ:* Khóa Lot và ghi nhận số lượng báo phế thành phẩm.
     * *Logic & SP:* Gọi SP `usp_vn_scrapafterproduction` để ghi nhận báo phế vào bảng `STB_VN_SCRAP_AFTERPRODUCTIONS`.
 
-### 36. [B754/B755/B756] In tem khách hàng PAC
+### 36. [B754/[B755]/B756] In tem khách hàng PAC
 * **Ý nghĩa & Nghiệp vụ:** In nhãn sản phẩm và tem thùng Carton cho dự án khách hàng PAC.
 * **Cơ chế nút bấm đặc thù:**
   * **In tem thùng Carton (tại B756):**
@@ -312,7 +312,7 @@ Tài liệu này tổng hợp chi tiết tất cả các màn hình (TCode) ho�
     * *Nghiệp vụ:* Khôi phục lại trạng thái chưa gộp box cho Lot khi quét BoxID.
     * *Logic & SP:* Thực thi SP `usp_Vietnam_GetBoxIDForLotNo_VVT` để giải phóng liên kết `PackingID` trong `STB_SavePackingTime_VVT`.
 
-### 42. [B790] Báo cáo chi tiết nạp NVL (B597 Report)
+### 42. [B790] Báo cáo chi tiết nạp NVL ([B597] Report)
 * **Ý nghĩa & Nghiệp vụ:** Báo cáo chi tiết lịch sử quét mã nguyên vật liệu đầu vào chuyền của các Lot.
 * **Cơ chế nút bấm:**
   * **Tìm kiếm (`Search`):** Truy vấn dữ liệu nạp từ bảng `STB_CommInspDocHistory` và `STB_RawMaterialInputHist`.
@@ -360,7 +360,7 @@ Tài liệu này tổng hợp chi tiết tất cả các màn hình (TCode) ho�
 * **Cơ chế nút bấm:**
   * *Các màn hình này không có nút nghiệp vụ đặc thù, chỉ sử dụng các nút CRUD cơ bản tác động lên bảng `STB_CommInspSelectGroup` và `STB_CommInspItem`.*
 
-### 49. [C131/C132/C141/C143/C151/C153] Hạng mục QC chung & QC theo Model (QC Master Config)
+### 49. [C131/[C132]/[C141]/[C143]/[C151]/C153] Hạng mục QC chung & QC theo Model (QC Master Config)
 * **Ý nghĩa & Nghiệp vụ:** Định nghĩa hạng mục đo (C131/C132), loại dữ liệu đầu vào (C141), gán hạng mục đo PQC cho model (C143), hạng mục OQC cho model (C151) và quy định số lượng mẫu đo kiểm (C153).
 * **Cơ chế nút bấm:**
   * *Các màn hình này chỉ sử dụng các nút CRUD cơ bản.*
@@ -481,7 +481,7 @@ Tài liệu này tổng hợp chi tiết tất cả các màn hình (TCode) ho�
     * *Nghiệp vụ:* Chốt lưu thông tin phân loại lỗi cho mã Lot.
     * *Logic & SP:* Gọi SP `usp_DoCreateQCDefectDetailsRecord_iud` để chèn bản ghi lỗi vào bảng `STB_QCDefectDetailsRecord`, và dùng mã nhóm CodeGroup = `DefectDivisionCode` trong bảng base `STB_BaseCode` của `SmartFramework` để hiển thị danh mục.
 
-### 67. [C561/C562/C563/C564] QC công đoạn Bending / Cutting
+### 67. [C561/[C562]/[C563]/C564] QC công đoạn Bending / Cutting
 * **Ý nghĩa & Nghiệp vụ:** Đo và chốt thông số kỹ thuật (độ bẻ cong chân, kích thước cắt vỏ) tại các công đoạn gia công cơ khí.
 * **Cơ chế nút bấm:**
   * **Lưu kết quả đo:** Ghi nhận dữ liệu đo kiểm vào bảng `STB_MaterialQcDetail_BendingCutting`.
@@ -644,9 +644,9 @@ Tài liệu này tổng hợp chi tiết tất cả các màn hình (TCode) ho�
 
 ---
 
-## 📦 NHÓM IN TEM KHÁCH HÀNG ĐẶC BIỆT (B754~B758)
+## 📦 NHÓM IN TEM KHÁCH HÀNG ĐẶC BIỆT ([B754]~[B758])
 
-### 91. [B754/B755/B756] In tem khách hàng PAC
+### 91. [B754/[B755]/B756] In tem khách hàng PAC
 * **Ý nghĩa & Nghiệp vụ:** In nhãn sản phẩm và tem thùng Carton cho dự án khách hàng PAC.
 * **Cơ chế nút bấm đặc thù:**
   * **In tem thùng Carton (tại B756):**

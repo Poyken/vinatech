@@ -1,11 +1,13 @@
 // Zalo Web Chat Crawler - content.js
 
 let isCrawling = false;
+let isMonitoring = false;
+let monitorIntervalId = null;
 let config = null;
 let allCrawledMessages = [];
 let processedChatRooms = new Set();
 
-// Lắng nghe sự kiện từ popup.js
+// Lắng nghe sự kiện từ popup.js hoặc background.js
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === 'START_CRAWL') {
     if (isCrawling) {
@@ -24,6 +26,15 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     isCrawling = false;
     logToPopup("[Hệ thống] Đã nhận lệnh dừng cào từ người dùng.");
     sendResponse({ status: 'stopped' });
+  } else if (request.action === 'START_MONITOR') {
+    config = request.config;
+    startMonitoring();
+    sendResponse({ status: 'monitoring_started' });
+  } else if (request.action === 'STOP_MONITOR') {
+    stopMonitoring();
+    sendResponse({ status: 'monitoring_stopped' });
+  } else if (request.action === 'GET_MONITOR_STATUS') {
+    sendResponse({ isMonitoring: isMonitoring });
   }
 });
 
@@ -603,3 +614,514 @@ function extractVisibleMessagesFallback(container, chatRoomName, targetDate) {
   
   return results;
 }
+
+// ==========================================
+// AUTO MONITOR & MES INTELLIGENCE SIDEBAR
+// ==========================================
+
+let lastUserActivityTime = Date.now();
+let isScanningNow = false;
+let sidebarPollInterval = null;
+
+// Theo dõi hoạt động của người dùng để tránh làm phiền khi đang gõ
+window.addEventListener('mousemove', () => lastUserActivityTime = Date.now());
+window.addEventListener('keydown', () => lastUserActivityTime = Date.now());
+window.addEventListener('click', () => lastUserActivityTime = Date.now());
+window.addEventListener('scroll', () => lastUserActivityTime = Date.now());
+
+function startMonitoring() {
+  if (isMonitoring) return;
+  isMonitoring = true;
+  console.log("[Monitor] Chế độ giám sát tự động bắt đầu.");
+  
+  createSidebarUI();
+  
+  // Quét lần đầu tiên sau 5 giây
+  setTimeout(runMonitorIteration, 5000);
+  
+  // Lên lịch quét định kỳ
+  const minutes = (config && config.monitorInterval) ? parseInt(config.monitorInterval) : 5;
+  monitorIntervalId = setInterval(runMonitorIteration, minutes * 60 * 1000);
+}
+
+function stopMonitoring() {
+  if (!isMonitoring) return;
+  isMonitoring = false;
+  
+  if (monitorIntervalId) {
+    clearInterval(monitorIntervalId);
+    monitorIntervalId = null;
+  }
+  
+  console.log("[Monitor] Chế độ giám sát tự động kết thúc.");
+  removeSidebarUI();
+}
+
+async function runMonitorIteration() {
+  if (!isMonitoring || isScanningNow || isCrawling) return;
+  
+  // Kiểm tra trạng thái Idle (30 giây)
+  const idleTime = Date.now() - lastUserActivityTime;
+  if (idleTime < 30 * 1000) {
+    console.log(`[Monitor] Người dùng đang hoạt động (Idle: ${Math.round(idleTime/1000)}s). Hoãn quét 30 giây...`);
+    setTimeout(runMonitorIteration, 30 * 1000);
+    return;
+  }
+  
+  isScanningNow = true;
+  updateSidebarStatus("Đang quét tin nhắn...");
+  
+  try {
+    await scanForMentions();
+  } catch (error) {
+    console.error("[Monitor] Lỗi khi quét:", error);
+  } finally {
+    isScanningNow = false;
+    updateSidebarStatus("Đang giám sát (mỗi 5 phút)");
+  }
+}
+
+// Lấy tên phòng chat hiện tại đang mở
+function getActiveChatName() {
+  const headerEl = document.querySelector('div.header-title, span.chat-title, div[class*="header-title"], .chat-title');
+  if (headerEl) {
+    return headerEl.textContent.trim().replace(/\s+/g, ' ');
+  }
+  return "";
+}
+
+// Quét toàn bộ cuộc trò chuyện hôm nay xem có nhắc tên
+async function scanForMentions() {
+  const sidebar = findSidebarScrollContainer(config.selectors.selSidebar);
+  if (!sidebar) {
+    console.log("[Monitor] Không tìm thấy sidebar.");
+    return;
+  }
+  
+  const chatItems = Array.from(sidebar.querySelectorAll(config.selectors.selChatItem));
+  if (chatItems.length === 0) return;
+  
+  // Lưu lại phòng chat hiện tại để khôi phục sau khi quét
+  const originalActiveChat = getActiveChatName();
+  console.log(`[Monitor] Phòng chat hiện tại: "${originalActiveChat}"`);
+  
+  // Tải cache từ bộ nhớ
+  const cacheData = await new Promise(resolve => {
+    chrome.storage.local.get(['scannedChatsCache'], (res) => {
+      resolve(res.scannedChatsCache || {});
+    });
+  });
+  
+  const newCache = { ...cacheData };
+  let foundIssues = [];
+  let scannedCount = 0;
+  
+  for (const item of chatItems) {
+    if (!isMonitoring || isCrawling) break;
+    
+    // Tìm tiêu đề
+    let chatName = "";
+    const titleEl = item.querySelector(config.selectors.selChatHeader) || item.querySelector('.name, [class*="title"], [class*="name"]');
+    if (titleEl) {
+      chatName = titleEl.textContent.trim();
+    } else {
+      chatName = item.getAttribute('title') || item.innerText.split('\n')[0] || "";
+    }
+    chatName = chatName.replace(/\s+/g, ' ');
+    
+    if (chatName === "" || chatName.includes("Truyền File") || chatName.includes("Cloud của tôi")) {
+      continue;
+    }
+    
+    // Tìm thời gian tin nhắn cuối cùng ở sidebar
+    let lastMsgTimeText = "";
+    const timeEl = item.querySelector('[class*="time"], [class*="clock"], .time');
+    if (timeEl) {
+      lastMsgTimeText = timeEl.textContent.trim();
+    }
+    
+    // Tìm nội dung tin nhắn cuối cùng (preview)
+    let lastMsgPreview = "";
+    const previewEl = item.querySelector('[class*="message"], [class*="preview"], .message, .snippet');
+    if (previewEl) {
+      lastMsgPreview = previewEl.textContent.trim();
+    }
+    
+    // Chỉ quét các phòng chat có hoạt động hôm nay (chứa ":" biểu thị giờ, ví dụ "10:30")
+    if (!lastMsgTimeText.includes(':')) {
+      continue;
+    }
+    
+    // Kiểm tra xem phòng này có thay đổi gì từ lần quét trước không
+    const cacheKey = chatName;
+    const cacheVal = newCache[cacheKey];
+    if (cacheVal && cacheVal.time === lastMsgTimeText && cacheVal.preview === lastMsgPreview) {
+      // Không có gì thay đổi, bỏ qua không cần click vào để quét lại
+      continue;
+    }
+    
+    console.log(`[Monitor] Phát hiện thay đổi trong phòng "${chatName}", tiến hành quét...`);
+    
+    // Click vào phòng để mở chat
+    simulateClick(item);
+    await sleep(1500);
+    
+    // Cào tin nhắn hôm nay
+    const targetDate = new Date();
+    targetDate.setHours(0, 0, 0, 0); // Chỉ lấy tin nhắn hôm nay
+    
+    const roomMessages = await crawlSingleChatRoom(chatName, targetDate);
+    
+    // Quét tìm @nguyễn văn đức
+    const mentionPattern = /@nguyễn văn đức/gi;
+    if (roomMessages && roomMessages.length > 0) {
+      roomMessages.forEach(msg => {
+        if (mentionPattern.test(msg.text)) {
+          // Lưu lại các issue
+          foundIssues.push(msg);
+        }
+      });
+    }
+    
+    // Lưu vào cache
+    newCache[cacheKey] = {
+      time: lastMsgTimeText,
+      preview: lastMsgPreview
+    };
+    
+    scannedCount++;
+    if (scannedCount >= 10) break; // Giới hạn quét tối đa 10 phòng mới mỗi lần để tránh quá tải
+  }
+  
+  // Lưu cache mới
+  chrome.storage.local.set({ scannedChatsCache: newCache });
+  
+  // Trở về phòng chat cũ
+  if (originalActiveChat && getActiveChatName() !== originalActiveChat) {
+    console.log(`[Monitor] Đang khôi phục lại phòng chat: "${originalActiveChat}"`);
+    openChatRoomByName(originalActiveChat);
+    await sleep(1000);
+  }
+  
+  // Đẩy issues lên server
+  if (foundIssues.length > 0) {
+    console.log(`[Monitor] Phát hiện ${foundIssues.length} tin nhắn nhắc tên. Gửi lên server...`);
+    chrome.runtime.sendMessage({
+      action: 'API_REQUEST',
+      method: 'POST',
+      path: '/api/issues',
+      body: foundIssues
+    }, (res) => {
+      if (res && res.success) {
+        console.log("[Monitor] Đã lưu issues thành công lên server.");
+        refreshSidebarIssues();
+      }
+    });
+  }
+}
+
+// Mở chat room theo tên
+function openChatRoomByName(name) {
+  const sidebar = findSidebarScrollContainer(config.selectors.selSidebar);
+  if (!sidebar) return false;
+  const items = Array.from(sidebar.querySelectorAll(config.selectors.selChatItem));
+  for (const item of items) {
+    let chatName = "";
+    const titleEl = item.querySelector(config.selectors.selChatHeader) || item.querySelector('.name, [class*="title"], [class*="name"]');
+    if (titleEl) {
+      chatName = titleEl.textContent.trim();
+    } else {
+      chatName = item.getAttribute('title') || item.innerText.split('\n')[0] || "";
+    }
+    chatName = chatName.replace(/\s+/g, ' ');
+    if (chatName === name) {
+      simulateClick(item);
+      return true;
+    }
+  }
+  return false;
+}
+
+// Tự động gõ và gửi tin nhắn trong Zalo Web
+async function sendZaloMessage(text) {
+  const inputEl = document.getElementById('rich-input') || document.querySelector('[contenteditable="true"]');
+  if (!inputEl) {
+    console.error("[Monitor] Không tìm thấy khung soạn thảo tin nhắn.");
+    return false;
+  }
+  
+  inputEl.focus();
+  inputEl.innerHTML = ''; // Clear text cũ
+  
+  // Insert text bằng command insertText để Zalo nhận dạng sự thay đổi dữ liệu trong Draft.js
+  document.execCommand('insertText', false, text);
+  await sleep(500);
+  
+  // Click nút gửi
+  const sendBtn = document.querySelector('[class*="btn-send"]') || document.querySelector('[data-testid="chat-input-send-btn"]');
+  if (sendBtn) {
+    simulateClick(sendBtn);
+    return true;
+  } else {
+    // Nhấn Enter
+    const enterEvent = new KeyboardEvent('keydown', {
+      key: 'Enter', code: 'Enter', keyCode: 13, which: 13, bubbles: true
+    });
+    inputEl.dispatchEvent(enterEvent);
+    return true;
+  }
+}
+
+// ==========================================
+// SIDEBAR INTERFACE INJECTION
+// ==========================================
+
+function createSidebarUI() {
+  if (document.getElementById('mes-assistant-sidebar-container')) return;
+  
+  // Container chính
+  const container = document.createElement('div');
+  container.id = 'mes-assistant-sidebar-container';
+  container.className = 'mes-sidebar-collapsed';
+  
+  // Floating Button
+  const button = document.createElement('div');
+  button.id = 'mes-sidebar-toggle-btn';
+  button.innerHTML = `
+    <div class="mes-bot-icon">🤖</div>
+    <div class="mes-btn-label">MES Assistant</div>
+  `;
+  button.addEventListener('click', toggleSidebar);
+  
+  // Sidebar Panel
+  const panel = document.createElement('div');
+  panel.id = 'mes-sidebar-panel';
+  panel.innerHTML = `
+    <div class="mes-sidebar-header">
+      <h3>Trợ lý MES Vinatech</h3>
+      <span class="mes-close-btn">&times;</span>
+    </div>
+    <div class="mes-sidebar-status">
+      <span class="mes-status-dot"></span>
+      <span id="mes-sidebar-status-text">Đang kết nối...</span>
+    </div>
+    <div class="mes-sidebar-content">
+      <div id="mes-issues-list" class="mes-issues-list">
+        <div class="mes-empty-state">Chưa phát hiện lỗi nào cần giải quyết hôm nay.</div>
+      </div>
+    </div>
+    <div class="mes-sidebar-footer">
+      <small>Dữ liệu cục bộ được kiểm duyệt 100%</small>
+    </div>
+  `;
+  
+  container.appendChild(button);
+  container.appendChild(panel);
+  document.body.appendChild(container);
+  
+  panel.querySelector('.mes-close-btn').addEventListener('click', toggleSidebar);
+  
+  // Khởi động vòng lặp lấy dữ liệu (polling) mỗi 10 giây
+  refreshSidebarIssues();
+  sidebarPollInterval = setInterval(refreshSidebarIssues, 10000);
+}
+
+function removeSidebarUI() {
+  const container = document.getElementById('mes-assistant-sidebar-container');
+  if (container) {
+    container.remove();
+  }
+  if (sidebarPollInterval) {
+    clearInterval(sidebarPollInterval);
+    sidebarPollInterval = null;
+  }
+}
+
+function toggleSidebar() {
+  const container = document.getElementById('mes-assistant-sidebar-container');
+  if (!container) return;
+  if (container.classList.contains('mes-sidebar-collapsed')) {
+    container.classList.remove('mes-sidebar-collapsed');
+    container.classList.add('mes-sidebar-expanded');
+    refreshSidebarIssues();
+  } else {
+    container.classList.remove('mes-sidebar-expanded');
+    container.classList.add('mes-sidebar-collapsed');
+  }
+}
+
+function updateSidebarStatus(text) {
+  const statusText = document.getElementById('mes-sidebar-status-text');
+  if (statusText) {
+    statusText.textContent = text;
+  }
+}
+
+function refreshSidebarIssues() {
+  if (!isMonitoring) return;
+  
+  chrome.runtime.sendMessage({
+    action: 'API_REQUEST',
+    method: 'GET',
+    path: '/api/issues'
+  }, (res) => {
+    if (res && res.success) {
+      updateSidebarStatus(isScanningNow ? "Đang quét tin nhắn..." : "Đang giám sát (mỗi 5 phút)");
+      renderIssues(res.data);
+    } else {
+      updateSidebarStatus("Lỗi kết nối Local Server");
+    }
+  });
+}
+
+function renderIssues(issues) {
+  const listEl = document.getElementById('mes-issues-list');
+  if (!listEl) return;
+  
+  // Lọc chỉ lấy các issue hôm nay có status là crawled, pending_approval, hoặc approved
+  const activeIssues = issues.filter(i => i.status !== 'resolved' && i.status !== 'rejected');
+  
+  if (activeIssues.length === 0) {
+    listEl.innerHTML = '<div class="mes-empty-state">Chưa phát hiện lỗi nào cần giải quyết hôm nay.</div>';
+    return;
+  }
+  
+  listEl.innerHTML = '';
+  activeIssues.forEach(issue => {
+    const card = document.createElement('div');
+    card.className = `mes-issue-card status-${issue.status}`;
+    
+    let statusText = "Đang tìm phương án...";
+    if (issue.status === 'pending_approval') statusText = "Chờ duyệt phương án";
+    if (issue.status === 'approved') statusText = "Đã duyệt - Đang gửi...";
+    
+    let solutionHtml = '';
+    if (issue.status === 'pending_approval') {
+      // Escape HTML in solution for safety
+      const escapedSol = issue.solution
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+        
+      solutionHtml = `
+        <div class="mes-solution-box">
+          <strong>Phương án đề xuất:</strong>
+          <pre class="mes-solution-content">${escapedSol}</pre>
+        </div>
+        <div class="mes-action-buttons">
+          <button class="mes-btn mes-btn-approve" data-id="${issue.id}">Phê duyệt & Gửi</button>
+          <button class="mes-btn mes-btn-reject" data-id="${issue.id}">Từ chối</button>
+        </div>
+      `;
+    } else {
+      solutionHtml = `
+        <div class="mes-loading-box">
+          <div class="mes-spinner"></div>
+          <span>Hệ thống đang phân tích lỗi và đề xuất SQL...</span>
+        </div>
+      `;
+    }
+    
+    card.innerHTML = `
+      <div class="mes-card-header">
+        <span class="mes-room-name">${issue.chatRoom}</span>
+        <span class="mes-msg-time">${issue.time}</span>
+      </div>
+      <div class="mes-card-sender">Người gửi: <strong>${issue.sender}</strong></div>
+      <div class="mes-card-body">"${issue.text}"</div>
+      <div class="mes-card-status">${statusText}</div>
+      ${solutionHtml}
+    `;
+    
+    listEl.appendChild(card);
+    
+    // Add Event Listeners
+    if (issue.status === 'pending_approval') {
+      card.querySelector('.mes-btn-approve').addEventListener('click', () => {
+        approveAndSendIssue(issue.id, issue.chatRoom, issue.solution);
+      });
+      card.querySelector('.mes-btn-reject').addEventListener('click', () => {
+        rejectIssue(issue.id);
+      });
+    }
+  });
+}
+
+// Xử lý khi bấm nút Duyệt
+async function approveAndSendIssue(id, chatRoom, solution) {
+  console.log(`[Monitor] Phê duyệt issue ${id}. Đang chuẩn bị gửi...`);
+  updateSidebarStatus("Đang gửi câu trả lời...");
+  
+  // 1. Gửi lệnh approve lên server
+  chrome.runtime.sendMessage({
+    action: 'API_REQUEST',
+    method: 'POST',
+    path: '/api/approve',
+    body: { id }
+  }, async (res) => {
+    if (res && res.success) {
+      const originalChat = getActiveChatName();
+      
+      // 2. Chuyển sang phòng chat chứa lỗi
+      const opened = openChatRoomByName(chatRoom);
+      if (!opened) {
+        console.error(`[Monitor] Không thể chuyển tới phòng chat "${chatRoom}".`);
+        updateSidebarStatus("Lỗi chuyển phòng chat");
+        return;
+      }
+      
+      await sleep(1500);
+      
+      // 3. Gửi tin nhắn
+      const sent = await sendZaloMessage(solution);
+      if (sent) {
+        console.log(`[Monitor] Đã gửi giải pháp thành công tới "${chatRoom}".`);
+        
+        // 4. Báo cho server biết đã gửi xong
+        chrome.runtime.sendMessage({
+          action: 'API_REQUEST',
+          method: 'POST',
+          path: '/api/sent',
+          body: { id }
+        }, (sentRes) => {
+          refreshSidebarIssues();
+        });
+      } else {
+        console.error("[Monitor] Lỗi khi gửi tin nhắn.");
+      }
+      
+      // 5. Quay về phòng chat cũ
+      if (originalChat && getActiveChatName() !== originalChat) {
+        openChatRoomByName(originalChat);
+      }
+    } else {
+      console.error("[Monitor] Phê duyệt thất bại trên server.");
+    }
+  });
+}
+
+// Xử lý khi từ chối
+function rejectIssue(id) {
+  console.log(`[Monitor] Từ chối issue ${id}`);
+  chrome.runtime.sendMessage({
+    action: 'API_REQUEST',
+    method: 'POST',
+    path: '/api/reject',
+    body: { id }
+  }, (res) => {
+    if (res && res.success) {
+      refreshSidebarIssues();
+    }
+  });
+}
+
+// Tự động khôi phục trạng thái giám sát khi load trang Zalo Web
+chrome.storage.local.get(['isMonitoring', 'monitorInterval', 'selectors'], (res) => {
+  if (res.isMonitoring) {
+    config = {
+      monitorInterval: res.monitorInterval || 5,
+      selectors: res.selectors
+    };
+    startMonitoring();
+  }
+});

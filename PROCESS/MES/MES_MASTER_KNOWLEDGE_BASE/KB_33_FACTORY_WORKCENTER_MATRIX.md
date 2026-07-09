@@ -1,4 +1,4 @@
-# KB_33: Factory WorkCenter Matrix — Bản Đồ Nhà Máy (Verified)
+﻿# KB_33: Factory WorkCenter Matrix — Bản Đồ Nhà Máy (Verified)
 
 > **📌 Mục đích:** Tra cứu nhanh WorkCenterCode → Nhà máy → Route → Barcode format.
 > **🔑 Keywords:** factory, nhà máy, WorkCenter, VVT_F1, VVT_F3, VVT_F4, line, route, barcode format, BG, HN, HY
@@ -120,7 +120,7 @@ Serial: model-dependent format
 
 ## 5. SP Validation Logic Theo Nhà Máy
 
-### B530 (ForBarcode SP) — Phân nhánh theo WorkCenter
+### [B530] (ForBarcode SP) — Phân nhánh theo WorkCenter
 
 ```sql
 -- Bắc Ninh + BG1 (VVT_F1, VVT_F2): Bắt buộc chọn máy (trừ V-28, V-27, V-33)

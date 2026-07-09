@@ -1,4 +1,4 @@
-# ⚡ SKILLS — Vinatech MES Agent (PowerShell & SQL Templates)
+﻿# ⚡ SKILLS — Vinatech MES Agent (PowerShell & SQL Templates)
 
 > **Mục đích:** Các script template sẵn sàng dùng, chỉ cần thay params
 > **Cập nhật:** 2026-06-19
@@ -66,7 +66,7 @@ WHERE ScreenName = '@SCREEN_NAME'
 
 ---
 
-## 4. 📦 CHECK GỘP BOX (B523)
+## 4. 📦 CHECK GỘP BOX ([B523])
 
 ```sql
 -- 1. F110 — IsLotUse?

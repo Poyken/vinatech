@@ -1,4 +1,4 @@
-
+﻿
 # KB_04 — Đóng Gói & In Tem (Packaging & Label Printing)
 
 > **Màn hình:** B523, B525, B453, B560, B789, B781, B353, B442, A419, A460, B754~B758, B790, Z530, C531
@@ -179,7 +179,7 @@ LEFT JOIN LabelInfo LBI    -- CTE từ SmartFramework.dbo.STB_LabelInfo
 
 ---
 
-### 6.1 Lỗi "Chưa có tiêu chuẩn đóng gói" (B523)
+### 6.1 Lỗi "Chưa có tiêu chuẩn đóng gói" ([B523])
 
 **Triệu chứng:** B523 báo lỗi "Chưa có tiêu chuẩn đóng gói" khi thử gộp box.
 
@@ -201,7 +201,7 @@ VALUES ('FERT', '0813', NULL, NULL, 500, 4000, 8000, GETDATE(), 'vinaadmin')
 
 ---
 
-### 6.2 Sửa tên Lot sau B351 (Chuyển đổi Lot — Barcode có dấu chấm)
+### 6.2 Sửa tên Lot sau [B351] (Chuyển đổi Lot — Barcode có dấu chấm)
 
 **Triệu chứng:** Sau khi B351 chuyển đổi Lot, Barcode xuất hiện dấu chấm (`.`) thay vì chữ `R`.
 
@@ -221,7 +221,7 @@ SELECT Barcode FROM STB_SetInfo WHERE Barcode = @NewBC
 
 ---
 
-### 6.3 Sửa mã NVL in lại tem B523 (in sai MaterialCode - Lỗi tem in 5H1 nhưng hệ thống là 6D1)
+### 6.3 Sửa mã NVL in lại tem [B523] (in sai MaterialCode - Lỗi tem in 5H1 nhưng hệ thống là 6D1)
 
 **Nguyên nhân:** Có sự lệch mã sản phẩm giữa `STB_MaterialLotInfo.MaterialCode` và `STB_SetInfo.MaterialCode` dẫn đến việc in ra sai mẫu tem.
 
@@ -256,7 +256,7 @@ WHERE MaterialLotNo = 20240612000524; -- Thay thế bằng PK thực tế
 
 ---
 
-### 6.4 Lỗi không gộp Box được (B523 — Quy trình debug chuẩn)
+### 6.4 Lỗi không gộp Box được ([B523] — Quy trình debug chuẩn)
 
 **Debug theo thứ tự 4 bước:**
 
@@ -285,7 +285,7 @@ SELECT * FROM STB_PackingStandard WITH(NOLOCK) WHERE MaterialTypeCode = 'FERT'
 
 ---
 
-### 6.5 Lỗi gộp túi bóng bị mất số lượng (Qty = 0) — HN544
+### 6.5 Lỗi gộp túi bóng bị mất số lượng (Qty = 0) — [HN544]
 
 **Triệu chứng:** Sau khi gộp túi bóng thành hộp nhỏ, số lượng hiển thị = 0, không in được tem.
 
@@ -305,7 +305,7 @@ DELETE FROM STB_MaterialLotInfo WHERE MaterialLotNo IN ('LotID_Thừa_1', 'LotID
 
 ---
 
-### 6.6 Lỗi Packing Qty âm ở B523 / B789
+### 6.6 Lỗi Packing Qty âm ở [B523] / [B789]
 
 **SP liên quan:** `usp_savePackingLabelQty_VVT`
 
@@ -376,7 +376,7 @@ UPDATE STB_Vietnam_PackingPrinting SET PrintVJ = 0 WHERE MaterialCode = 'Mã_NVL
 
 ---
 
-### 6.8 B525 — Gộp Box Module
+### 6.8 [B525] — Gộp Box Module
 
 **Chức năng:** Đóng gói dành riêng cho **hàng Module** (khác với B523 là Cell).
 
@@ -404,7 +404,7 @@ VALUES ('RDMD00-368', 'HY-CAP WEC9R0166QG-WC(130)', 'MDL', 'HC-EDLC', 40, 18, 0,
 
 ---
 
-### 6.9 B453 — In Tem INNER / OUTER (Customer Label)
+### 6.9 [B453] — In Tem INNER / OUTER (Customer Label)
 
 **Chức năng:** In tem khách hàng cho hàng Module (PAC, Digi-Key...).
 
@@ -429,7 +429,7 @@ B525 — Gộp Box Module ➔ B453 — In tem INNER (không tick IsOuter) ➔ B4
 
 ---
 
-### 6.9.1 In Tem Khách Hàng PAC (B754 / B755 / B756)
+### 6.9.1 In Tem Khách Hàng PAC ([B754] / [B755] / [B756])
 
 *   **B754 — In nhãn Inner/Outer:** Sử dụng để in nhãn sản phẩm theo thiết kế của khách hàng PAC. Inner và Outer có Serial Number độc lập (xem quy tắc in tại mục §6.9).
 *   **B755 — Xem lịch sử:** Tra cứu tất cả các nhãn PAC đã được in từ màn hình B754.
@@ -439,7 +439,7 @@ B525 — Gộp Box Module ➔ B453 — In tem INNER (không tick IsOuter) ➔ B4
 
 ---
 
-### 6.9.2 In Tem Khách Hàng Digi-Key (B757 / B758)
+### 6.9.2 In Tem Khách Hàng Digi-Key ([B757] / [B758])
 
 *   **B757 — In nhãn sản phẩm và nhãn Logistic:**
     *   *Nhãn sản phẩm:* Nhập/quét mã Lot hàng $\rightarrow$ Click **"IN NHÃN SP"**.
@@ -466,7 +466,7 @@ WHERE LabelType LIKE '%Sanmina%' OR FormatName LIKE '%Sanmina%';
 
 ---
 
-### 6.9.4 Lỗi đúp dòng dữ liệu khi tìm kiếm lần 2 trên màn hình B767 (Sanmina India Label)
+### 6.9.4 Lỗi đúp dòng dữ liệu khi tìm kiếm lần 2 trên màn hình [B767] (Sanmina India Label)
 
 *   **Triệu chứng:** Khi người dùng click Tìm kiếm (Search) lần đầu, lưới (grid) hiển thị đúng 3 dòng (1 Outer, 2 Inners). Nhưng khi click Tìm kiếm lần thứ 2, lưới bị đúp thành 6 dòng dữ liệu (lần lượt lặp lại các dòng Outer, Inner).
 *   **Nguyên nhân gốc:**
@@ -482,7 +482,7 @@ WHERE LabelType LIKE '%Sanmina%' OR FormatName LIKE '%Sanmina%';
 
 ---
 
-### 6.10 Thiết kế tem Phoenix Contact (Yêu cầu đặc biệt tại B790)
+### 6.10 Thiết kế tem Phoenix Contact (Yêu cầu đặc biệt tại [B790])
 
 *   **Kích thước vật lý:** Tem kích thước 80mm x 50mm (5x8 cm).
 *   **Loại tem (Label Type):** `Phoenix_Label` | **Tên mẫu (Format Name):** `Phoenix_Contact_V1`.
@@ -513,7 +513,7 @@ WHERE Barcode = 'VVPR292R710617';
 
 ---
 
-### 6.12 Checklist khi user báo "không in được tem" (B450/B523)
+### 6.12 Checklist khi user báo "không in được tem" ([B450]/[B523])
 
 ```
 □ 1. A460 — Format tem có tồn tại không? Đúng loại (AssembleLabel vs PartLabel)?
@@ -527,7 +527,7 @@ WHERE Barcode = 'VVPR292R710617';
 
 ---
 
-### 6.13 Phân tích nguyên nhân lỗi "Gộp box tùy chỉnh" trên màn hình HN523 (Sản lượng hiển thị = 0 / Cảnh báo tiếng Hàn)
+### 6.13 Phân tích nguyên nhân lỗi "Gộp box tùy chỉnh" trên màn hình [HN523] (Sản lượng hiển thị = 0 / Cảnh báo tiếng Hàn)
 
 **Triệu chứng:** Khi nhấn nút "Gộp box tùy chỉnh" cho một mã Lot, hệ thống báo lỗi tiếng Hàn: `"Bạn chưa nhập kết quả sản xuất cho công đoạn này"` (hoặc sản lượng OutputQty hiển thị bằng 0), mặc dù thực tế công nhân đã hoàn thành đầy đủ các công đoạn sản xuất.
 
@@ -562,7 +562,7 @@ WHERE Barcode = 'VVPR292R710617';
      COMMIT TRANSACTION;
      ```
 
-### 6.13.2 Lỗi "포장 (Dong goi) 공정에서 실적을 입력하지 않았습니다" khi gộp box (B523)
+### 6.13.2 Lỗi "포장 (Dong goi) 공정에서 실적을 입력하지 않았습니다" khi gộp box ([B523])
 
 **Triệu chứng:** Khi công nhân nhấn nút "Box합치기" (Gộp box) tại màn hình **B523** (đối với các dòng sản phẩm có bước hậu đóng gói như `V-34_BG` - Re-inspection), hệ thống báo lỗi tiếng Hàn: `"포장 (Dong goi) 공정에서 실적을 입력하지 않았습니다"` mặc dù Lot đã chốt đầy đủ các công đoạn sản xuất trước đó.
 
@@ -607,7 +607,7 @@ WHERE Barcode = 'VVPR292R710617';
 
 ---
 
-### 6.14 Lỗi cắt chuỗi danh sách tem nhỏ (B560 - Truncation in InBoxLabelList)
+### 6.14 Lỗi cắt chuỗi danh sách tem nhỏ ([B560] - Truncation in InBoxLabelList)
 
 **Triệu chứng:** Khi in tem thùng Hela trên màn hình B560, nếu số lượng tem hộp nhỏ (InBoxLabel) vượt quá khoảng 73 tem, hệ thống sẽ tự động cắt ngắn chuỗi `InBoxLabelList` khiến màn hình B560 chỉ hiển thị `InBoxLabelCount = 73` thay vì 80 tem như thực tế.
 
@@ -651,7 +651,7 @@ WHERE Barcode = 'VVPR292R710617';
 
 ---
 
-### 6.16 Màn hình & Cấu hình Thiết Kế Tem (Z530/A460)
+### 6.16 Màn hình & Cấu hình Thiết Kế Tem ([Z530]/[A460])
 
 *   **Z530 (Label Layout Design):** Thiết kế mẫu in tem nhãn (phần mềm client dùng template dạng XML).
 *   **A460 (Label Format Mapping):** Mapping mã sản phẩm (ModelCode) với định dạng tem in cụ thể.

@@ -2,6 +2,8 @@
 
 let crawledData = null; // Lưu trữ dữ liệu sau khi cào thành công
 
+
+
 document.addEventListener('DOMContentLoaded', async () => {
   // Thiết lập ngày mặc định là hôm qua
   const startDateInput = document.getElementById('startDate');
@@ -11,10 +13,16 @@ document.addEventListener('DOMContentLoaded', async () => {
   startDateInput.value = yesterday.toISOString().split('T')[0];
 
   // Load cấu hình đã lưu từ storage
-  chrome.storage.local.get(['startDate', 'delayTime', 'maxChats', 'selectors', 'lastCrawledData'], (res) => {
+  chrome.storage.local.get(['startDate', 'delayTime', 'maxChats', 'selectors', 'lastCrawledData', 'isMonitoring', 'monitorInterval'], (res) => {
     if (res.startDate) startDateInput.value = res.startDate;
     if (res.delayTime) document.getElementById('delayTime').value = res.delayTime;
     if (res.maxChats) document.getElementById('maxChats').value = res.maxChats;
+    if (res.monitorInterval) document.getElementById('monitorInterval').value = res.monitorInterval;
+    
+    if (res.isMonitoring !== undefined) {
+      document.getElementById('chkMonitor').checked = res.isMonitoring;
+      toggleMonitorInputs(res.isMonitoring);
+    }
     
     // Load selectors nâng cao
     if (res.selectors) {
@@ -37,6 +45,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (!activeTab || !activeTab.url.includes('chat.zalo.me')) {
     addLog('[LỖI] Bạn phải mở và đứng ở trang chat.zalo.me để sử dụng extension này!', true);
     document.getElementById('btnStart').disabled = true;
+    document.getElementById('chkMonitor').disabled = true;
     updateStatus('Không khả dụng', 'stopped');
   }
 
@@ -45,6 +54,14 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('btnStop').addEventListener('click', stopCrawl);
   document.getElementById('btnExportJSON').addEventListener('click', exportToJSON);
   document.getElementById('btnExportCSV').addEventListener('click', exportToCSV);
+
+  // Lắng nghe sự kiện giám sát
+  document.getElementById('chkMonitor').addEventListener('change', toggleMonitoring);
+  document.getElementById('monitorInterval').addEventListener('change', saveMonitorConfig);
+
+  // Kiểm tra trạng thái server ngay lúc đầu và lặp lại
+  checkServerStatus();
+  setInterval(checkServerStatus, 5000);
 });
 
 // Lắng nghe thông điệp từ content.js
@@ -230,4 +247,80 @@ function exportToCSV() {
   downloadAnchor.click();
   downloadAnchor.remove();
   addLog('[Hệ thống] Đã tải về file CSV chứa tin nhắn.');
+}
+
+// Kiểm tra trạng thái kết nối tới server cục bộ
+function checkServerStatus() {
+  chrome.runtime.sendMessage({
+    action: 'API_REQUEST',
+    method: 'GET',
+    path: '/api/issues'
+  }, (response) => {
+    const indicator = document.getElementById('serverStatus');
+    if (!indicator) return;
+    
+    if (response && response.success) {
+      indicator.textContent = 'Server: Online';
+      indicator.className = 'status-indicator finished'; // màu xanh lá
+    } else {
+      indicator.textContent = 'Server: Offline';
+      indicator.className = 'status-indicator stopped';  // màu đỏ
+    }
+  });
+}
+
+// Bật/tắt input khoảng thời gian
+function toggleMonitorInputs(isMonitoring) {
+  document.getElementById('monitorInterval').disabled = isMonitoring;
+}
+
+// Lưu cấu hình chu kỳ quét
+function saveMonitorConfig() {
+  const monitorInterval = parseInt(document.getElementById('monitorInterval').value) || 5;
+  chrome.storage.local.set({ monitorInterval });
+}
+
+// Kích hoạt hoặc Dừng Giám sát tự động
+async function toggleMonitoring(e) {
+  const isMonitoring = e.target.checked;
+  const monitorInterval = parseInt(document.getElementById('monitorInterval').value) || 5;
+  
+  toggleMonitorInputs(isMonitoring);
+  chrome.storage.local.set({ isMonitoring, monitorInterval });
+  
+  const activeTab = await getActiveTab();
+  if (!activeTab || !activeTab.url.includes('chat.zalo.me')) return;
+  
+  const selectors = {
+    selSidebar: document.getElementById('selSidebar').value,
+    selChatItem: document.getElementById('selChatItem').value,
+    selChatHeader: document.getElementById('selChatHeader').value,
+    selMsgList: document.getElementById('selMsgList').value,
+    selMsgItem: document.getElementById('selMsgItem').value
+  };
+
+  const action = isMonitoring ? 'START_MONITOR' : 'STOP_MONITOR';
+  addLog(`[Hệ thống] Đang gửi yêu cầu ${isMonitoring ? 'BẬT' : 'TẮT'} giám sát tự động...`);
+  
+  try {
+    chrome.tabs.sendMessage(activeTab.id, {
+      action,
+      config: {
+        monitorInterval,
+        selectors
+      }
+    }, (response) => {
+      if (chrome.runtime.lastError) {
+        addLog('[LỖI] Không thể kết nối với tab Zalo Web. Vui lòng tải lại trang Zalo Web.', true);
+        document.getElementById('chkMonitor').checked = !isMonitoring;
+        toggleMonitorInputs(!isMonitoring);
+      } else {
+        addLog(`[Hệ thống] Chế độ giám sát tự động đã ${isMonitoring ? 'BẮT ĐẦU' : 'DỪNG'}.`);
+      }
+    });
+  } catch (err) {
+    addLog(`[LỖI] Lỗi kết nối: ${err.message}`, true);
+    document.getElementById('chkMonitor').checked = !isMonitoring;
+    toggleMonitorInputs(!isMonitoring);
+  }
 }

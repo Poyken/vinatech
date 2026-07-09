@@ -1,7 +1,7 @@
+﻿
+## [A130] — Warehouse & Location (Khai báo kho & vị trí)
 
-## A130 — Warehouse & Location (Khai báo kho & vị trí)
-
-### Lỗi 1: Không hiển thị hoặc thiếu vị trí kho (Location) khi làm thủ tục nhập kho F330 hoặc chuyển kho
+### Lỗi 1: Không hiển thị hoặc thiếu vị trí kho (Location) khi làm thủ tục nhập kho [F330] hoặc chuyển kho
 *   **Triệu chứng:** Khi thực hiện nhập kho tại **F330** hoặc điều chuyển kho, người dùng không thấy vị trí kho (Location) trong danh sách để chọn, hoặc hệ thống báo lỗi không tồn tại vị trí.
 *   **Nguyên nhân gốc:** Chưa khai báo Location hoặc cờ sử dụng bị tắt (`IsUsed = 0`) trong bảng danh mục kho `STB_WarehouseLocation`.
 *   **Cách khắc phục:** Vào màn hình **A130** (hoặc check trực tiếp bảng `STB_WarehouseLocation`), cấu hình thêm vị trí kho tương ứng cho mã kho và bật cờ hoạt động.
@@ -10,9 +10,9 @@
 ---
 
 
-## F110 — Operating Properties (Cấu hình thuộc tính quản lý tồn kho)
+## [F110] — Operating Properties (Cấu hình thuộc tính quản lý tồn kho)
 
-### Lỗi 1: Vật tư mới không thực hiện gộp Box được tại B523 hoặc B525
+### Lỗi 1: Vật tư mới không thực hiện gộp Box được tại [B523] hoặc [B525]
 *   **Triệu chứng:** Khi công nhân quét gộp Box tại chuyền sản xuất, hệ thống báo lỗi chặn giao dịch do thiếu Lot hoặc cờ Barcode của mã vật tư đó.
 *   **Nguyên nhân gốc:** Bảng cấu hình thuộc tính quản lý kho `STB_MaterialStockAttributeInfo` chưa được tạo dòng cho mã vật tư mới, hoặc các cờ quản lý `IsLotUse`, `IsUseBarcode` đang bị tắt (bằng 0).
 *   **Cách khắc phục:** Vào màn hình **F110**, tìm mã vật tư, tick chọn `IsLotUse` và `IsUseBarcode` rồi nhấn Lưu. Hoặc chạy SQL cập nhật trực tiếp:
@@ -24,9 +24,9 @@
 ---
 
 
-## F130 / F140 / A210 — Supplier Mapping & Material Sync (Luồng tích hợp nhà cung cấp & đồng bộ vật tư)
+## [F130] / [F140] / [A210] — Supplier Mapping & Material Sync (Luồng tích hợp nhà cung cấp & đồng bộ vật tư)
 
-### Lỗi 1: Popup chọn Nhà cung cấp trống không khi tạo phiếu nhập kho ở F312
+### Lỗi 1: Popup chọn Nhà cung cấp trống không khi tạo phiếu nhập kho ở [F312]
 *   **Triệu chứng:** Thủ kho tạo phiếu nhập kho tại **F312** nhưng khi mở popup chọn nhà cung cấp thì danh sách trống rỗng.
 *   **Nguyên nhân gốc:** Nhà cung cấp chưa được mapping liên kết được phép cung cấp mã vật tư tương ứng trong bảng `STB_MaterialVendorMapping` (Màn hình **F130** hoặc **F140**).
 *   **Cách khắc phục:** Vào màn hình **F130** (chọn NCC, tick chọn các vật tư được phép cung cấp) hoặc **F140** (chọn vật tư, tick chọn NCC được phép mua) rồi nhấn Lưu. Hoặc chạy SQL chèn trực tiếp:
@@ -39,7 +39,7 @@
 ---
 
 
-## F330 — Goods Receipt & Part Labels (Nhập kho nguyên vật liệu)
+## [F330] — Goods Receipt & Part Labels (Nhập kho nguyên vật liệu)
 
 ### Lỗi 1: Báo lỗi "Exception occurred" khi lưu phiếu nhập kho
 *   **Triệu chứng:** Thủ kho nhập thông tin và click Lưu phiếu tại **F330** hệ thống văng popup báo lỗi Exception.
@@ -48,7 +48,7 @@
     1. Cấu hình lại chiều dài quét cắt chuỗi mã Lot Vendor trên tab 3 giao diện F330.
     2. Sửa SQL Function parse ngày SX `fn_VVT_getdatebyVendorLot_MergeCode` nếu NCC thay đổi định dạng in Lot trên tem (Xem chi tiết tại [KB_02 § 4.11](../KB_02/KB_02_01_NVL_WMS.md#411-lỗi-không-lưu-được-f330---cấu-hình-và-sửa-lỗi-đọc-đặc-tính-10-vendor-lot-no)).
 
-### Lỗi 2: Cần hủy/xóa phiếu nhập kho F330 đã được Xác nhận (Confirmed)
+### Lỗi 2: Cần hủy/xóa phiếu nhập kho [F330] đã được Xác nhận (Confirmed)
 *   **Triệu chứng:** Thủ kho click xác nhận nhập nhầm số lượng/mã hàng và cần hủy phiếu nhập kho.
 *   **Nguyên nhân gốc:** Giao dịch đã Confirmed và sinh LotInfo nên không thể xóa trực tiếp trên giao diện UI.
 *   **Cách khắc phục:**
@@ -93,7 +93,7 @@
 ---
 
 
-## F430 — Goods Issue / Production Material Request (Xuất kho ra chuyền)
+## [F430] — Goods Issue / Production Material Request (Xuất kho ra chuyền)
 
 ### Lỗi 1: Chặn quét xuất kho báo lỗi vi phạm nguyên tắc FIFO
 *   **Triệu chứng:** Quét xuất Lot NVL ra chuyền tại **F430** hệ thống chặn và báo lỗi vi phạm FIFO (Lot nhập sau không được xuất trước).
@@ -116,7 +116,7 @@
     ```
 *   **Chi tiết nghiệp vụ:** Xem tại [../KB_02/KB_02_01_NVL_WMS.md § 4.17](../KB_02/KB_02_01_NVL_WMS.md#417-thu-hồi-lot-từ-f430-về-kho-revert-xuất-kho).
 
-### Lỗi 3: Cần sửa/lùi ngày xuất kho của Lot vật tư đã xuất ra chuyền ở màn F430
+### Lỗi 3: Cần sửa/lùi ngày xuất kho của Lot vật tư đã xuất ra chuyền ở màn [F430]
 *   **Triệu chứng:** Người dùng yêu cầu thay đổi/lùi ngày xuất kho thực tế của các mã Lot đã xuất về một ngày nhất định trong quá khứ để làm báo cáo hoặc sửa sai sót thời gian.
 *   **Nguyên nhân gốc:** Khi bấm xác nhận xuất kho tại F430, hệ thống ghi nhận thời gian xuất kho vào trường `CreateDateTime` của bảng lịch sử giao dịch [STB_MaterialWarehouseInOutHist](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_02/KB_02_01_WMS_CORE.md#stb_materialwarehouseinouthist).
 *   **Cách khắc phục:**
@@ -140,7 +140,7 @@
 ---
 
 
-## F721 — WMS Material Stock (Tồn kho nguyên vật liệu)
+## [F721] — WMS Material Stock (Tồn kho nguyên vật liệu)
 
 ### Lỗi 1: Tồn kho của Lot bị treo ở trạng thái HOLD (không xuất được sản xuất)
 *   **Triệu chứng:** Lot hàng hiển thị tồn kho đầy đủ tại màn hình **F721** nhưng khi quét ở F430 báo lỗi HOLD cấm xuất.
@@ -155,7 +155,7 @@
 ---
 
 
-## F741 — Lot Splitting (Quy trình tách Lot NVL)
+## [F741] — Lot Splitting (Quy trình tách Lot NVL)
 
 ### Lỗi 1: Lỗi không thực hiện tách được Lot NVL trên giao diện
 *   **Triệu chứng:** OP thao tác chia nhỏ Lot NVL tại **F741** báo lỗi không in được tem hoặc sai số lượng chia.
@@ -166,7 +166,7 @@
 ---
 
 
-## F742 / F746 — Slitting & Curling (Chia cuộn điện cực / Bo miệng)
+## [F742] / [F746] — Slitting & Curling (Chia cuộn điện cực / Bo miệng)
 
 ### Lỗi 1: Cần hủy hoặc rollback giao dịch chia cuộn Slitting
 *   **Triệu chứng:** Công nhân nhập sai thông số số lượng/chiều dài cuộn con sau chia cuộn Slitting tại **F742** và cần hoàn tác giao dịch.
@@ -194,25 +194,25 @@
 ---
 
 
-## F743~F748 / C243 — Electrode Slitting & QC (Slitting & QC Điện cực Hà Nam)
+## [F743]~[F748] / [C243] — Electrode Slitting & QC (Slitting & QC Điện cực Hà Nam)
 
-### Lỗi 1: Cảnh báo "Trùng mã nguyên liệu" khi thiết lập chiều rộng cắt ở F744
+### Lỗi 1: Cảnh báo "Trùng mã nguyên liệu" khi thiết lập chiều rộng cắt ở [F744]
 *   **Triệu chứng:** Khai báo chiều rộng cắt cho Model mới tại **F744** bị hệ thống báo lỗi trùng mã và từ chối lưu.
 *   **Nguyên nhân gốc:** Bản ghi cấu hình chiều rộng cho mã vật liệu tương ứng đã tồn tại trong bảng cấu hình master.
 *   **Cách khắc phục:** Kiểm tra lại danh sách cấu hình hiện tại để chỉnh sửa trực tiếp thông số `Width` của bản ghi cũ thay vì tạo mới.
 
-### Lỗi 2: Lỗi "Lot không tồn tại" khi quét xuất kho điện cực tại F430
+### Lỗi 2: Lỗi "Lot không tồn tại" khi quét xuất kho điện cực tại [F430]
 *   **Triệu chứng:** Quét mã Lot cuộn điện cực sau khi slitting tại **F430** để xuất lên chuyền sản xuất bị báo lỗi Lot không tồn tại.
 *   **Nguyên nhân gốc:** Lô hàng sau khi chốt slitting tại **F743** chưa được bộ phận QC tiến hành kiểm định và xác nhận PASS tại màn hình **C243**.
 *   **Cách khắc phục:** QC truy cập màn hình **C243**, tìm Lot điện cực tương ứng, thực hiện kiểm định và xác nhận kết quả chất lượng PASS để Lot được kích hoạt tồn kho.
 
-### Lỗi 3: Cần hủy hoặc rollback kết quả chia cuộn Slitting để cắt lại tại F743
+### Lỗi 3: Cần hủy hoặc rollback kết quả chia cuộn Slitting để cắt lại tại [F743]
 *   **Triệu chứng:** OP nhập sai thông số chiều dài/số lượng cuộn con khi chia cuộn và cần rollback để thực hiện lại từ đầu.
 *   **Nguyên nhân gốc:** Giao dịch chốt Slitting đã ghi nhận các Lot con vào bảng lịch sử.
 *   **Cách khắc phục:** OP truy cập màn hình lịch sử slitting **F746**, tìm và xóa bỏ các dòng lịch sử của Lot con tương ứng trước, sau đó mới có thể thực hiện rollback/xóa Lot mẹ tại màn hình rollback **F742**.
 *   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_OVERVIEW.md § 10.1](../KB_05/KB_05_01_QC_OVERVIEW.md#101-flow-slitting-hà-nam).
 
-### Lỗi 4: Không tìm thấy mã Foil mới trong popup để thiết lập chiều rộng cắt ở F744
+### Lỗi 4: Không tìm thấy mã Foil mới trong popup để thiết lập chiều rộng cắt ở [F744]
 *   **Triệu chứng:** Khi bấm nút Thêm trên giao diện F744 để cấu hình chiều rộng slitting cho model/foil mới, người dùng không tìm thấy mã foil cần chọn trong popup. Hoặc trên lưới F744 thiếu dòng của mã foil con.
 *   **Nguyên nhân gốc:** 
     1. Mã foil con (ví dụ: `10199058855` - U199 58.8VFS 5.5mm) chưa được khai báo trong danh mục vật tư `STB_MaterialMaster`. Popup của màn hình F744 (gọi stored procedure `usp_SlittingMaterial_popup_2`) chỉ lấy các vật tư đã đăng ký trong `STB_MaterialMaster` thuộc các nhóm `ProductGroupCode` là `ANODE-FOIL`, `CATHODE-FOIL`, `CON-PAPER`, `RadialTaping`.
@@ -228,7 +228,7 @@
 ---
 
 
-## F750 — Stocktaking (Kiểm kê kho vật tư)
+## [F750] — Stocktaking (Kiểm kê kho vật tư)
 
 ### Lỗi 1: Cảnh báo "Nguyên liệu phải được xuất kho lên Line trước khi chia nhỏ..." khi tách lô giá đỡ / chất mang (Substrate)
 *   **Triệu chứng:** Khi chạy tác vụ chia/tách lô vật liệu giá đỡ substrate, hệ thống hiển thị thông báo lỗi chặn giao dịch (bằng tiếng Hàn hoặc tiếng Việt).
@@ -239,7 +239,7 @@
 ---
 
 
-## F761 — Material GR History (Lịch sử vật tư vào kho)
+## [F761] — Material GR History (Lịch sử vật tư vào kho)
 
 ### Lỗi 1: Lệch số liệu báo cáo đối soát kho kế toán do hiểu nhầm giao dịch hiển thị chữ tiếng Hàn
 *   **Triệu chứng:** Khi đối soát số liệu xuất nhập kho tại **F761**, kế toán phát hiện các dòng giao dịch có cột `DocTypeName` chứa ký tự chữ Hàn Quốc gây sai lệch số liệu nhập mới.
@@ -250,9 +250,9 @@
 ---
 
 
-## HN00 / HN101 — Hà Nam Accounting (Tồn kho & Đơn giá Hà Nam)
+## [HN00] / [HN101] — Hà Nam Accounting (Tồn kho & Đơn giá Hà Nam)
 
-### Lỗi 1: Báo cáo tồn kho thành phẩm Hà Nam HN00 hiển thị Đơn giá bằng 0
+### Lỗi 1: Báo cáo tồn kho thành phẩm Hà Nam [HN00] hiển thị Đơn giá bằng 0
 *   **Triệu chứng:** Lưới báo cáo tồn kho HN00 hiển thị số lượng đúng nhưng cột Đơn giá và Thành tiền bị trống hoặc bằng 0.
 *   **Nguyên nhân gốc:** Model sản phẩm mới chưa được khai báo đơn giá kế toán tương ứng tại màn hình **HN101** để mapping tính toán.
 *   **Cách khắc phục:**
@@ -266,14 +266,14 @@
 ---
 
 
-## F140 — Vendor-Material Mapping (Ánh xạ NCC - Vật tư)
+## [F140] — Vendor-Material Mapping (Ánh xạ NCC - Vật tư)
 
 > 🔗 **Nội dung đầy đủ đã có tại:** [F130 / F140 / A210](#f130--f140--a210--supplier-mapping--material-sync) phía trên (triệu chứng Popup NCC trống + SQL insert + KB_07 ref).
 
 ---
 
 
-## F312 — Material Doc Edit (Sửa số lượng tài liệu nhập kho NVL)
+## [F312] — Material Doc Edit (Sửa số lượng tài liệu nhập kho NVL)
 
 ### Lỗi 1: Cần sửa số lượng NVL đã nhập kho (MaterialDocNo)
 *   **Triệu chứng:** Thủ kho nhập sai số lượng vào phiếu nhập kho, cần sửa lại.
@@ -284,7 +284,7 @@
 ---
 
 
-## F320 — Material Transfer (Chuyển kho NVL)
+## [F320] — Material Transfer (Chuyển kho NVL)
 
 ### Lỗi 1: Chuyển kho NVL bị lỗi hoặc không cập nhật tồn kho
 *   **Triệu chứng:** Thực hiện chuyển NVL giữa các kho tại F320 nhưng số lượng tồn kho không giảm/tăng tương ứng.
@@ -295,9 +295,9 @@
 ---
 
 
-## F610 — Delivery Order (Đơn giao hàng)
+## [F610] — Delivery Order (Đơn giao hàng)
 
-### Lỗi 1: Không tạo được đơn giao hàng tại F610
+### Lỗi 1: Không tạo được đơn giao hàng tại [F610]
 *   **Triệu chứng:** Tạo đơn giao hàng tại F610 bị lỗi hoặc không hiện sản phẩm.
 *   **Nguyên nhân gốc:** Sản phẩm chưa qua QC Audit (C530) hoặc chưa nhập kho thành phẩm.
 *   **Cách khắc phục:** Kiểm tra sản phẩm đã PASS QC Audit và đã nhập kho FG.
@@ -306,9 +306,9 @@
 ---
 
 
-## F620 — Delivery History (Lịch sử giao hàng)
+## [F620] — Delivery History (Lịch sử giao hàng)
 
-### Lỗi 1: Lịch sử giao hàng F620 hiển thị thiếu phiếu giao
+### Lỗi 1: Lịch sử giao hàng [F620] hiển thị thiếu phiếu giao
 *   **Triệu chứng:** Phiếu giao đã tạo tại F610 nhưng không hiện tại F620.
 *   **Nguyên nhân gốc:** Phiếu chưa được confirm/approve hoặc bộ lọc ngày bị sai.
 *   **Cách khắc phục:** Kiểm tra lại bộ lọc ngày tìm kiếm, mở rộng khoảng thời gian.
@@ -317,9 +317,9 @@
 ---
 
 
-## F710 — Warehouse Inventory (Tồn kho tổng hợp)
+## [F710] — Warehouse Inventory (Tồn kho tổng hợp)
 
-### Lỗi 1: Tồn kho F710 không khớp với thực tế
+### Lỗi 1: Tồn kho [F710] không khớp với thực tế
 *   **Triệu chứng:** Số lượng tồn kho hiển thị tại F710 bị lệch so với kiểm kê thực tế.
 *   **Nguyên nhân gốc:** Trigger `tgMaterialLotInfoForUpdate` bị lỗi hoặc tồn tại phiếu nhập/xuất chưa confirm.
 *   **Cách khắc phục:** Chạy kiểm kê bằng F750 để điều chỉnh, hoặc kiểm tra trực tiếp `STB_MaterialStock`.
@@ -328,7 +328,7 @@
 ---
 
 
-## F740 — Lot Splitting & Merge (Tách/Gộp Lot NVL)
+## [F740] — Lot Splitting & Merge (Tách/Gộp Lot NVL)
 
 ### Lỗi 1: Tách Lot NVL bị lỗi không tạo được Lot con
 *   **Triệu chứng:** Thực hiện tách Lot tại F740 nhưng hệ thống không sinh Lot con.

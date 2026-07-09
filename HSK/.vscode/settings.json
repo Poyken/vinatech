@@ -1,0 +1,8 @@
+{
+  "files.associations": {
+    "*.md": "markdown"
+  },
+  "editor.fontFamily": "Consolas, 'Courier New', 'Microsoft YaHei', 'PingFang SC', monospace",
+  "markdown.preview.fontSize": 16,
+  "markdown.preview.fontFamily": "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', 'Microsoft YaHei', sans-serif"
+}

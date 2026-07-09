@@ -1,162 +1,162 @@
-﻿# KB_02 - Kho WMS Core (NVL & ThÃ nh Pháº©m)
+﻿# KB_02 - Kho WMS Core (NVL & Thành Phẩm)
 
-> **MÃ n hÃ¬nh:** F330, F312, F430, F110, F710, F721, F741, C220, HN551, HN866, HN544, FG00
-> **Báº£ng chÃ­nh:** `STB_MaterialLotInfo`, `STB_MaterialDocInfo`, `STB_MaterialStock`, `STB_MaterialWarehouse`
-> **ðŸ”‘ Keywords:** kho, warehouse, tá»“n kho, nháº­p kho, xuáº¥t kho, FIFO, holding, háº¿t háº¡n, lot, NVL, nguyÃªn váº­t liá»‡u, phiáº¿u nháº­p, phiáº¿u xuáº¥t, chuyá»ƒn kho
-> â† [Vá» INDEX](KB_INDEX.md)
+> **Màn hình:** F330, F312, F430, F110, F710, F721, F741, C220, HN551, HN866, HN544, FG00
+> **Bảng chính:** `STB_MaterialLotInfo`, `STB_MaterialDocInfo`, `STB_MaterialStock`, `STB_MaterialWarehouse`
+> **🔑 Keywords:** kho, warehouse, tồn kho, nhập kho, xuất kho, FIFO, holding, hết hạn, lot, NVL, nguyên vật liệu, phiếu nhập, phiếu xuất, chuyển kho
+> ← [Về INDEX](KB_INDEX.md)
 
 ---
 
-## 4. ðŸ“¦ Kho NguyÃªn Váº­t Liá»‡u (WMS)
+## 4. 📦 Kho Nguyên Vật Liệu (WMS)
 
-> ðŸ­ **CÆ¡ sá»Ÿ gá»‘c:** VVT_F1 (Báº¯c Ninh) â€” F-series chuáº©n dÃ¹ng chung táº¥t cáº£ cÆ¡ sá»Ÿ
-> ðŸ”€ **Biáº¿n thá»ƒ:** HN (HÃ  Nam): HN551/HN866 (kho TP), HN20-HN23 (kho R&D), HN544 (gá»™p tÃºi bÃ³ng) | BG2: K181 (log á»§y quyá»n NVL) â†’ [KB_03 Â§6.14](../KB_03/KB_03_02_CELL_LINE.md#614-nhÃ -mÃ¡y-bg2--cáº¥u-hÃ¬nh-triá»ƒn-khai-há»‡-thá»‘ng-mes)
+> 🏭 **Cơ sở gốc:** VVT_F1 (Bắc Ninh) — F-series chuẩn dùng chung tất cả cơ sở
+> 🔀 **Biến thể:** HN (Hà Nam): HN551/HN866 (kho TP), HN20-HN23 (kho R&D), HN544 (gộp túi bóng) | BG2: K181 (log ủy quyền NVL) → [KB_03 §6.14](../KB_03/KB_03_02_CELL_LINE.md#614-nhà-máy-bg2--cấu-hình-triển-khai-hệ-thống-mes)
 
-### 4.0 SÆ¡ Äá»“ Quy TrÃ¬nh Tá»•ng Quan (KHO & IQC -> Sáº¢N XUáº¤T -> PQC & OQC)
+### 4.0 Sơ Đồ Quy Trình Tổng Quan (KHO & IQC -> SẢN XUẤT -> PQC & OQC)
 
-> SÆ¡ Ä‘á»“ dÆ°á»›i Ä‘Ã¢y thá»ƒ hiá»‡n luá»“ng quy trÃ¬nh chÃ­nh xuyÃªn suá»‘t 3 khu vá»±c: **Kho & IQC**, **Sáº£n xuáº¥t**, **PQC & OQC**. Má»—i bÆ°á»›c gáº¯n vá»›i Screen ID tÆ°Æ¡ng á»©ng trÃªn há»‡ thá»‘ng MES.
+> Sơ đồ dưới đây thể hiện luồng quy trình chính xuyên suốt 3 khu vực: **Kho & IQC**, **Sản xuất**, **PQC & OQC**. Mỗi bước gắn với Screen ID tương ứng trên hệ thống MES.
 
 ```mermaid
 flowchart TD
-    subgraph KHO_IQC ["ðŸ“¦ KHO & IQC"]
+    subgraph KHO_IQC ["📦 KHO & IQC"]
         direction TB
-        K1["F312 - Táº¡o PO vÃ  chi tiáº¿t PO"]
-        K2["C220 - IQC kiá»ƒm tra hÃ ng hÃ³a Ä‘áº§u vÃ o"]
-        K3["F110 - XÃ¡c nháº­n nháº­p kho"]
-        K4["F330 - CÆ° trÃº/Thiáº¿t láº­p cÃ¡c Lot kho"]
-        K5["F741 - TÃ¡ch Lot theo sá»‘ lÆ°á»£ng mong muá»‘n"]
-        K6["F721 - Kiá»ƒm tra tá»“n kho vÃ  Link vá»‹ trÃ­"]
-        K7["F430 - Xuáº¥t hÃ ng vÃ  kiá»ƒm tra lá»‹ch sá»­"]
+        K1["F312 - Tạo PO và chi tiết PO"]
+        K2["C220 - IQC kiểm tra hàng hóa đầu vào"]
+        K3["F110 - Xác nhận nhập kho"]
+        K4["F330 - Cư trú/Thiết lập các Lot kho"]
+        K5["F741 - Tách Lot theo số lượng mong muốn"]
+        K6["F721 - Kiểm tra tồn kho và Link vị trí"]
+        K7["F430 - Xuất hàng và kiểm tra lịch sử"]
         K1 --> K2 --> K3 --> K4 --> K5 --> K6 --> K7
     end
 
-    subgraph SAN_XUAT ["âš¡ Sáº¢N XUáº¤T"]
+    subgraph SAN_XUAT ["⚡ SẢN XUẤT"]
         direction TB
-        S1["B310 - Táº¡o PO káº¿ hoáº¡ch thÃ¡ng"]
-        S2["K101/B450 - Táº¡o káº¿ hoáº¡ch ngÃ y vÃ  táº¡o Lot"]
-        S3["B597 - Nháº­p pháº¿ cÃ´ng Ä‘oáº¡n, kiá»ƒm tra Lot/NVL"]
-        S4["B530 - Nháº­p SL/HoÃ n thÃ nh cÃ´ng Ä‘oáº¡n"]
-        S5["K110/B597 - Nháº­p NVL, háº¡ng má»¥c kiá»ƒm tra trÃªn cÃ´ng Ä‘oáº¡n"]
-        S6["B782 - Kiá»ƒm tra sáº£n lÆ°á»£ng theo cÃ´ng Ä‘oáº¡n"]
-        S7["B523 - ÄÃ³ng gÃ³i"]
-        S8["B781 - Lá»‹ch sá»­ lÆ°u packing"]
-        S9["B598 - BÃ¡o pháº¿"]
+        S1["B310 - Tạo PO kế hoạch tháng"]
+        S2["K101/B450 - Tạo kế hoạch ngày và tạo Lot"]
+        S3["B597 - Nhập phế công đoạn, kiểm tra Lot/NVL"]
+        S4["B530 - Nhập SL/Hoàn thành công đoạn"]
+        S5["K110/B597 - Nhập NVL, hạng mục kiểm tra trên công đoạn"]
+        S6["B782 - Kiểm tra sản lượng theo công đoạn"]
+        S7["B523 - Đóng gói"]
+        S8["B781 - Lịch sử lưu packing"]
+        S9["B598 - Báo phế"]
         S1 --> S2 --> S3 --> S4 --> S5 --> S6 --> S7 --> S8 --> S9
     end
 
-    subgraph PQC_OQC ["ðŸ”¬ PQC & OQC"]
+    subgraph PQC_OQC ["🔬 PQC & OQC"]
         direction TB
-        Q1["C131 - ÄÄƒng kÃ½ thÃ´ng tin nhÃ³m láº§n"]
-        Q2["C132 - Cáº¥u hÃ¬nh láº§n chi tiáº¿t"]
-        Q3["C141 - Thiáº¿t láº­p thÃ´ng sá»‘ kiá»ƒm tra chung"]
-        Q4["C143 - Thiáº¿t láº­p spec riÃªng cho tá»«ng model"]
-        Q5["C443 - Kiá»ƒm tra PQC"]
-        Q6["C430 - Lá»‹ch sá»­ kiá»ƒm tra cÃ´ng Ä‘oáº¡n má»—i cell line"]
-        Q7["C321 - ThÃ´ng tin pháº¿ cÃ´ng Ä‘oáº¡n trÃªn cell line"]
-        Q8["C451 - Táº¡o Lot kiá»ƒm tra OQC"]
-        Q9["C560 - Máº«u kiá»ƒm tra OQC"]
-        Q10["C540 - Lá»‹ch sá»­ kiá»ƒm tra OQC"]
+        Q1["C131 - Đăng ký thông tin nhóm lần"]
+        Q2["C132 - Cấu hình lần chi tiết"]
+        Q3["C141 - Thiết lập thông số kiểm tra chung"]
+        Q4["C143 - Thiết lập spec riêng cho từng model"]
+        Q5["C443 - Kiểm tra PQC"]
+        Q6["C430 - Lịch sử kiểm tra công đoạn mỗi cell line"]
+        Q7["C321 - Thông tin phế công đoạn trên cell line"]
+        Q8["C451 - Tạo Lot kiểm tra OQC"]
+        Q9["C560 - Mẫu kiểm tra OQC"]
+        Q10["C540 - Lịch sử kiểm tra OQC"]
         Q1 --> Q2 --> Q3 --> Q4 --> Q5 --> Q6 --> Q7
         Q5 -.-> Q8 --> Q9 --> Q10
     end
 
-    K7 -->|"NVL sáºµn sÃ ng"| S2
-    S4 -->|"Káº¿t quáº£ SX"| Q5
-    S7 -->|"ThÃ nh pháº©m Ä‘Ã³ng gÃ³i"| Q8
+    K7 -->|"NVL sẵn sàng"| S2
+    S4 -->|"Kết quả SX"| Q5
+    S7 -->|"Thành phẩm đóng gói"| Q8
 ```
 
-**Giáº£i thÃ­ch liÃªn káº¿t giá»¯a 3 khu vá»±c:**
-- **KHO -> Sáº¢N XUáº¤T:** Sau khi NVL qua IQC (C220) vÃ  nháº­p kho (F330), NVL sáºµn sÃ ng cáº¥p cho sáº£n xuáº¥t qua F430
-- **Sáº¢N XUáº¤T -> PQC:** Káº¿t quáº£ sáº£n xuáº¥t táº¡i B530 Ä‘Æ°á»£c kiá»ƒm tra PQC táº¡i C443
-- **Sáº¢N XUáº¤T -> OQC:** Sau Ä‘Ã³ng gÃ³i (B523), thÃ nh pháº©m chuyá»ƒn sang OQC Ä‘á»ƒ táº¡o Lot kiá»ƒm tra (C451)
-- **ÄÃ³ng gÃ³i (B523):** Bá»™ chuyá»ƒn thÃ´ng tin Lot vÃ  sá»‘ lÆ°á»£ng sang báº£ng `STB_MaterialLotInfo` Ä‘á»ƒ quáº£n lÃ½ vÃ  sá»­ dá»¥ng
+**Giải thích liên kết giữa 3 khu vực:**
+- **KHO -> SẢN XUẤT:** Sau khi NVL qua IQC (C220) và nhập kho (F330), NVL sẵn sàng cấp cho sản xuất qua F430
+- **SẢN XUẤT -> PQC:** Kết quả sản xuất tại B530 được kiểm tra PQC tại C443
+- **SẢN XUẤT -> OQC:** Sau đóng gói (B523), thành phẩm chuyển sang OQC để tạo Lot kiểm tra (C451)
+- **Đóng gói (B523):** Bộ chuyển thông tin Lot và số lượng sang bảng `STB_MaterialLotInfo` để quản lý và sử dụng
 
 ---
 
-### 4.1 TÃ¬m kiáº¿m F721 tráº£ vá» cáº£ danh sÃ¡ch (khÃ´ng lá»c Ä‘Æ°á»£c)
+### 4.1 Tìm kiếm [F721] trả về cả danh sách (không lọc được)
 
-**NguyÃªn nhÃ¢n:** Äiá»u kiá»‡n lá»c trong SP bá»‹ sai hoáº·c tham sá»‘ truyá»n vÃ o rá»—ng.
+**Nguyên nhân:** Điều kiện lọc trong SP bị sai hoặc tham số truyền vào rỗng.
 
 **Debug:**
 ```sql
 SELECT OBJECT_DEFINITION(OBJECT_ID('usp_vvt_MaterialLotInfo_get'))
--- TÃ¬m Ä‘áº¿n pháº§n WHERE -> Kiá»ƒm tra Ä‘iá»u kiá»‡n lá»c theo MaterialCode
+-- Tìm đến phần WHERE -> Kiểm tra điều kiện lọc theo MaterialCode
 ```
 
-> âš ï¸ **LÆ°u Ã½ áº©n:** SP `usp_vvt_MaterialLotInfo_get` (tÃªn "_get") thá»±c táº¿ **UPDATE 2 báº£ng** má»—i khi cháº¡y - tá»± Ä‘á»™ng Ä‘iá»n `LotAttr10` cho cÃ¡c Lot bá»‹ thiáº¿u ngÃ y SX báº±ng cÃ¡ch parse mÃ£ Vendor Lot. KhÃ´ng cÃ³ transaction báº£o vá»‡ pháº§n UPDATE nÃ y.
+> ⚠️ **Lưu ý ẩn:** SP `usp_vvt_MaterialLotInfo_get` (tên "_get") thực tế **UPDATE 2 bảng** mỗi khi chạy - tự động điền `LotAttr10` cho các Lot bị thiếu ngày SX bằng cách parse mã Vendor Lot. Không có transaction bảo vệ phần UPDATE này.
 
 ---
 
-### 4.2 KhÃ´ng tÃ¬m tháº¥y mÃ£ lot á»Ÿ mÃ n C512
+### 4.2 Không tìm thấy mã lot ở màn [C512]
 
-ðŸ‘‰ **Chi tiáº¿t NguyÃªn nhÃ¢n & CÃ¡ch xá»­ lÃ½:** Xem táº¡i [../KB_05/KB_05_01_QC_OVERVIEW.md Â§ 7.2](../KB_05/KB_05_01_QC_OVERVIEW.md)
+👉 **Chi tiết Nguyên nhân & Cách xử lý:** Xem tại [../KB_05/KB_05_01_QC_OVERVIEW.md § 7.2](../KB_05/KB_05_01_QC_OVERVIEW.md)
 
 ---
 
-### 4.3 Chá»‰nh láº¡i Kho bá»‹ nháº­p sai á»Ÿ mÃ n F330
+### 4.3 Chỉnh lại Kho bị nhập sai ở màn [F330]
 
-**Triá»‡u chá»©ng:** HÃ ng nháº­p vÃ o Ä‘Ãºng nhÆ°ng kho bá»‹ chá»n sai (VD: nháº­p vÃ o kho BG nhÆ°ng láº½ ra pháº£i vÃ o kho BN).
+**Triệu chứng:** Hàng nhập vào đúng nhưng kho bị chọn sai (VD: nhập vào kho BG nhưng lẽ ra phải vào kho BN).
 
-> âš ï¸ Pháº£i UPDATE Ä‘á»“ng thá»i **3 báº£ng**: `STB_MaterialDocInfo`, `STB_MaterialDocLotInfo`, `STB_MaterialLotInfo`. Thiáº¿u báº£ng nÃ o sáº½ gÃ¢y lá»‡ch dá»¯ liá»‡u.
+> ⚠️ Phải UPDATE đồng thời **3 bảng**: `STB_MaterialDocInfo`, `STB_MaterialDocLotInfo`, `STB_MaterialLotInfo`. Thiếu bảng nào sẽ gây lệch dữ liệu.
 
 ```sql
--- BÆ°á»›c 1: XÃ¡c Ä‘á»‹nh MaterialDocNo
+-- Bước 1: Xác định MaterialDocNo
 SELECT * FROM STB_MaterialDocInfo WHERE MaterialDocNo = '250221000220'
 
--- BÆ°á»›c 2: Sá»­a header phiáº¿u
+-- Bước 2: Sửa header phiếu
 UPDATE STB_MaterialDocInfo
 SET TargetMaterialWarehouseCode = 'ROH_HN_WH'
 WHERE MaterialDocNo = '250221000220'
 
--- BÆ°á»›c 3: TÃ¬m cÃ¡c LotID trong phiáº¿u
+-- Bước 3: Tìm các LotID trong phiếu
 SELECT LotID, MaterialLocationCode FROM STB_MaterialDocLotInfo
 WHERE MaterialDocNo = '250221000220'
 
--- BÆ°á»›c 4: Update vá»‹ trÃ­ trong phiáº¿u
+-- Bước 4: Update vị trí trong phiếu
 UPDATE STB_MaterialDocLotInfo
 SET MaterialLocationCode = 'ROH_HN_WH_01'
 WHERE LotID IN ('LotID1', 'LotID2', ...)
 
--- BÆ°á»›c 5: Update tá»“n kho thá»±c táº¿
+-- Bước 5: Update tồn kho thực tế
 UPDATE STB_MaterialLotInfo
 SET MaterialWarehouseCode = 'ROH_HN_WH',
     MaterialLocationCode = 'ROH_HN_WH_01'
 WHERE LotID IN ('LotID1', 'LotID2', ...)
 ```
 
-**MÃ£ kho hay dÃ¹ng:**
+**Mã kho hay dùng:**
 
-| NhÃ  mÃ¡y | WarehouseCode | LocationCode |
+| Nhà máy | WarehouseCode | LocationCode |
 |---------|--------------|-------------|
-| Báº¯c Giang | `ROH_BG_WH` | `ROH_BG_WH_01` |
-| HÃ  Nam | `ROH_HN_WH` | `ROH_HN_WH_01` |
-| Báº¯c Ninh (VVT) | `ROH_VN_WH` | `ROH_VN_WH_01` |
+| Bắc Giang | `ROH_BG_WH` | `ROH_BG_WH_01` |
+| Hà Nam | `ROH_HN_WH` | `ROH_HN_WH_01` |
+| Bắc Ninh (VVT) | `ROH_VN_WH` | `ROH_VN_WH_01` |
 
 ---
 
-### 4.4 Chá»‰nh Code NVL nháº­p sai á»Ÿ mÃ n F312
+### 4.4 Chỉnh Code NVL nhập sai ở màn [F312]
 
-**Triá»‡u chá»©ng:** Nháº­p nháº§m mÃ£ NVL khi lÃ m phiáº¿u nháº­p kho F312.
+**Triệu chứng:** Nhập nhầm mã NVL khi làm phiếu nhập kho F312.
 
 ```sql
--- Sá»­a Ä‘á»“ng bá»™ 3 báº£ng (Ä‘áº§y Ä‘á»§, bao gá»“m tá»“n kho thá»±c táº¿)
--- BÆ°á»›c 1: Xem phiáº¿u hiá»‡n táº¡i
+-- Sửa đồng bộ 3 bảng (đầy đủ, bao gồm tồn kho thực tế)
+-- Bước 1: Xem phiếu hiện tại
 SELECT * FROM STB_MaterialDocDetail WHERE MaterialDocNo = '250806000399'
 SELECT * FROM STB_MaterialDocLotInfo WHERE MaterialDocNo = '250806000399'
 
--- BÆ°á»›c 2: Sá»­a mÃ£ NVL trong Detail
+-- Bước 2: Sửa mã NVL trong Detail
 UPDATE STB_MaterialDocDetail
-SET MaterialCode = 'MÃƒ_ÄÃšNG'
-WHERE MaterialDocNo = '250806000399' AND MaterialCode = 'MÃƒ_SAI'
+SET MaterialCode = 'MÃ_ĐÚNG'
+WHERE MaterialDocNo = '250806000399' AND MaterialCode = 'MÃ_SAI'
 
--- BÆ°á»›c 3: Sá»­a mÃ£ NVL trong LotInfo
+-- Bước 3: Sửa mã NVL trong LotInfo
 UPDATE STB_MaterialDocLotInfo
-SET MaterialCode = 'MÃƒ_ÄÃšNG'
-WHERE MaterialDocNo = '250806000399' AND MaterialCode = 'MÃƒ_SAI'
+SET MaterialCode = 'MÃ_ĐÚNG'
+WHERE MaterialDocNo = '250806000399' AND MaterialCode = 'MÃ_SAI'
 
--- BÆ°á»›c 4: Sá»­a tá»“n kho thá»±c táº¿
+-- Bước 4: Sửa tồn kho thực tế
 UPDATE STB_MaterialLotInfo
-SET MaterialCode = 'MÃƒ_ÄÃšNG'
+SET MaterialCode = 'MÃ_ĐÚNG'
 WHERE LotID IN (
     SELECT LotID FROM STB_MaterialDocLotInfo WHERE MaterialDocNo = '250806000399'
 )
@@ -164,16 +164,16 @@ WHERE LotID IN (
 
 ---
 
-### 4.5 Sá»­a sá»‘ lÆ°á»£ng mÃ n F312
+### 4.5 Sửa số lượng màn [F312]
 
-**Triá»‡u chá»©ng:** Sá»‘ lÆ°á»£ng phiáº¿u nháº­p bá»‹ sai.
+**Triệu chứng:** Số lượng phiếu nhập bị sai.
 
 ```sql
--- Xem sá»‘ lÆ°á»£ng hiá»‡n táº¡i
+-- Xem số lượng hiện tại
 SELECT * FROM STB_MaterialDocDetail
 WHERE MaterialDocNo = '250213000154' AND MaterialCode = '122507G1PT0'
 
--- Sá»­a táº¥t cáº£ cÃ¡c cá»™t sá»‘ lÆ°á»£ng
+-- Sửa tất cả các cột số lượng
 UPDATE STB_MaterialDocDetail
 SET RequestQty = 200000, AllowQty = 200000, PickingAssignQty = 200000
 WHERE MaterialDocNo = '250213000154' AND MaterialCode = '122507G1PT0'
@@ -181,16 +181,16 @@ WHERE MaterialDocNo = '250213000154' AND MaterialCode = '122507G1PT0'
 
 ---
 
-### 4.6 Sá»­a ngÃ y xuáº¥t kho mÃ n F430
+### 4.6 Sửa ngày xuất kho màn [F430]
 
-**Triá»‡u chá»©ng:** HÃ ng xuáº¥t kho bá»‹ ghi nháº­n sai ngÃ y.
+**Triệu chứng:** Hàng xuất kho bị ghi nhận sai ngày.
 
 ```sql
--- TÃ¬m báº£n ghi cáº§n sá»­a
+-- Tìm bản ghi cần sửa
 SELECT * FROM STB_MaterialWarehouseInOutHist
 WHERE LotID IN ('ML20250620000036', 'ML20250520000061')
 
--- Sá»­a ngÃ y (giá»¯ nguyÃªn giá» phÃºt giÃ¢y)
+-- Sửa ngày (giữ nguyên giờ phút giây)
 UPDATE STB_MaterialWarehouseInOutHist
 SET CreateDateTime = CAST('2025-06-30' AS DATETIME) + CAST(CreateDateTime AS TIME)
 WHERE LotID IN ('ML20250620000036', 'ML20250520000061')
@@ -198,21 +198,21 @@ WHERE LotID IN ('ML20250620000036', 'ML20250520000061')
 
 ---
 
-### 4.7 Chuyá»ƒn Lot tá»« kho Holding ra kho chÃ­nh
+### 4.7 Chuyển Lot từ kho Holding ra kho chính
 
-> **MÃ£ HOLDING thá»±c táº¿ (xÃ¡c minh DB 2026-05-17):** `HOLDING_VN_WH` (Báº¯c Ninh), `HOLDING_BG_WH` (Báº¯c Giang), `HOLDING_HN_WH` (HÃ  Nam).
+> **Mã HOLDING thực tế (xác minh DB 2026-05-17):** `HOLDING_VN_WH` (Bắc Ninh), `HOLDING_BG_WH` (Bắc Giang), `HOLDING_HN_WH` (Hà Nam).
 
 ```sql
--- BÆ°á»›c 1: Xem tráº¡ng thÃ¡i Lot hiá»‡n táº¡i
+-- Bước 1: Xem trạng thái Lot hiện tại
 SELECT LotID, MaterialWarehouseCode, MaterialLocationCode
 FROM STB_MaterialLotInfo WHERE LotID = 'ML20250430000174'
 
--- BÆ°á»›c 2: Cáº­p nháº­t lá»‹ch sá»­ xuáº¥t nháº­p (náº¿u cÃ³)
+-- Bước 2: Cập nhật lịch sử xuất nhập (nếu có)
 UPDATE STB_MaterialWarehouseInOutHist
 SET TargetMaterialWarehouseCode = 'ROH_VN_WH'
 WHERE LotID = 'ML20250430000174'
 
--- BÆ°á»›c 3: Cáº­p nháº­t tá»“n kho
+-- Bước 3: Cập nhật tồn kho
 UPDATE STB_MaterialLotInfo
 SET MaterialWarehouseCode = 'ROH_VN_WH',
     MaterialLocationCode = 'ROH_VN_WH_01'
@@ -221,141 +221,141 @@ WHERE LotID = 'ML20250430000174'
 
 ---
 
-### 4.8 Sá»­a Location váº­t tÆ° (F721 - Thuá»™c tÃ­nh LotAttr09)
+### 4.8 Sửa Location vật tư ([F721] - Thuộc tính LotAttr09)
 
 ```sql
--- Xem location hiá»‡n táº¡i
+-- Xem location hiện tại
 SELECT LotID, LotAttr09 AS [Location], MaterialLocationCode
 FROM STB_MaterialDocLotInfo WHERE LotID = 'ML...'
 
--- Sá»­a location (pháº£i sá»­a cáº£ 2 báº£ng)
-UPDATE STB_MaterialDocLotInfo SET LotAttr09 = 'Vá»‹_TrÃ­_Má»›i' WHERE LotID = 'ML...'
-UPDATE STB_MaterialLotInfo SET MaterialLocationCode = 'Vá»‹_TrÃ­_Má»›i' WHERE LotID = 'ML...'
+-- Sửa location (phải sửa cả 2 bảng)
+UPDATE STB_MaterialDocLotInfo SET LotAttr09 = 'Vị_Trí_Mới' WHERE LotID = 'ML...'
+UPDATE STB_MaterialLotInfo SET MaterialLocationCode = 'Vị_Trí_Mới' WHERE LotID = 'ML...'
 ```
-> **Xem vá»‹ trÃ­ trá»±c quan:** `192.168.1.234:9000/tv`
+> **Xem vị trí trực quan:** `192.168.1.234:9000/tv`
 
 ---
 
-### 4.9 FIFO & Validation NVL (Táº¯t/Báº­t cháº·n)
+### 4.9 FIFO & Validation NVL (Tắt/Bật chặn)
 
-- **Táº¯t FIFO cho toÃ n bá»™:** SP `usp_MaterialWarehouseInOutHist_iud` -> Comment out dÃ²ng FIFO check
-- **Táº¯t FIFO cho NVL cá»¥ thá»ƒ:** SP `usp_VVTMaterialWarehouse_validFIFO`
+- **Tắt FIFO cho toàn bộ:** SP `usp_MaterialWarehouseInOutHist_iud` -> Comment out dòng FIFO check
+- **Tắt FIFO cho NVL cụ thể:** SP `usp_VVTMaterialWarehouse_validFIFO`
 
-> âš ï¸ **Nordex Audit (tá»« 2026-02-05):** Logic cháº·n quÃ©t sai BOM trong SP `usp_RawMaterialInputHist_iud` Ä‘ang bá»‹ **Comment Out táº¡m thá»i**. Há»‡ thá»‘ng hiá»‡n cháº¥p nháº­n NVL khÃ´ng cÃ³ trong BOM - cáº§n báº­t láº¡i sau khi audit xong.
+> ⚠️ **Nordex Audit (từ 2026-02-05):** Logic chặn quét sai BOM trong SP `usp_RawMaterialInputHist_iud` đang bị **Comment Out tạm thời**. Hệ thống hiện chấp nhận NVL không có trong BOM - cần bật lại sau khi audit xong.
 
-**Bypass NVL háº¿t háº¡n (khi QC Ä‘Ã£ Ä‘á»“ng Ã½):**
+**Bypass NVL hết hạn (khi QC đã đồng ý):**
 ```sql
 INSERT INTO stb_vvt_OpenExpiredMaterial
     (MaterialCode, LotID, ExpiredDate, OpenDate, OpenUserID, Remark)
 VALUES
-    ('mÃ£_nvl', 'lot_id', '2026-04-10', GETDATE(), 'admin', 'QC Ä‘Ã£ kiá»ƒm tra OK')
+    ('mã_nvl', 'lot_id', '2026-04-10', GETDATE(), 'admin', 'QC đã kiểm tra OK')
 
--- Kiá»ƒm tra bypass Ä‘ang active
+-- Kiểm tra bypass đang active
 SELECT * FROM stb_vvt_OpenExpiredMaterial
-WHERE MaterialCode = 'mÃ£_nvl' AND OpenDate >= DATEADD(DAY, -30, GETDATE())
+WHERE MaterialCode = 'mã_nvl' AND OpenDate >= DATEADD(DAY, -30, GETDATE())
 ```
 
 ---
 
-### 4.10 Kiá»ƒm tra Háº¡n sá»­ dá»¥ng NVL (Expiry Date)
+### 4.10 Kiểm tra Hạn sử dụng NVL (Expiry Date)
 
-- **NgÃ y sáº£n xuáº¥t:** Cá»™t `LotAttr10` trong `STB_MaterialDocLotInfo`
-- **Shelf Life:** Cá»™t `MMExtInt01` trong `STB_MaterialMaster`
-- **Háº¡n dÃ¹ng = LotAttr10 + MMExtInt01 (thÃ¡ng)**
-- **Äáº·c biá»‡t `MDFLUX-002`:** hardcode 179 ngÃ y thay vÃ¬ 180
+- **Ngày sản xuất:** Cột `LotAttr10` trong `STB_MaterialDocLotInfo`
+- **Shelf Life:** Cột `MMExtInt01` trong `STB_MaterialMaster`
+- **Hạn dùng = LotAttr10 + MMExtInt01 (tháng)**
+- **Đặc biệt `MDFLUX-002`:** hardcode 179 ngày thay vì 180
 
 ```sql
--- Tra cá»©u nhanh háº¡n sá»­ dá»¥ng cá»§a 1 Lot
+-- Tra cứu nhanh hạn sử dụng của 1 Lot
 SELECT
     MDLI.LotID,
-    MDLI.LotAttr10 AS [NgÃ y_SX],
-    MM.MMExtInt01 AS [Háº¡n_ThÃ¡ng],
-    DATEADD(MONTH, MM.MMExtInt01, MDLI.LotAttr10) AS [NgÃ y_Háº¿t_Háº¡n],
+    MDLI.LotAttr10 AS [Ngày_SX],
+    MM.MMExtInt01 AS [Hạn_Tháng],
+    DATEADD(MONTH, MM.MMExtInt01, MDLI.LotAttr10) AS [Ngày_Hết_Hạn],
     CASE WHEN DATEADD(MONTH, MM.MMExtInt01, MDLI.LotAttr10) < GETDATE()
-         THEN 'ÄÃƒ Háº¾T Háº N' ELSE 'CÃ’N Háº N' END AS [Tráº¡ng_ThÃ¡i]
+         THEN 'ĐÃ HẾT HẠN' ELSE 'CÒN HẠN' END AS [Trạng_Thái]
 FROM STB_MaterialDocLotInfo MDLI
 JOIN STB_MaterialMaster MM ON MDLI.MaterialCode = MM.MaterialCode
 WHERE MDLI.LotID = 'ML...'
 ```
 
-**Xá»­ lÃ½ náº¿u háº¿t háº¡n nhÆ°ng hÃ ng váº«n dÃ¹ng Ä‘Æ°á»£c:**
-1. BÃ¡o QC xÃ¡c nháº­n gia háº¡n
-2. ThÃªm vÃ o `stb_vvt_OpenExpiredMaterial` (xem Â§4.9) hoáº·c sá»­a `LotAttr10` / tÄƒng `MMExtInt01`
+**Xử lý nếu hết hạn nhưng hàng vẫn dùng được:**
+1. Báo QC xác nhận gia hạn
+2. Thêm vào `stb_vvt_OpenExpiredMaterial` (xem §4.9) hoặc sửa `LotAttr10` / tăng `MMExtInt01`
 
-**HÆ°á»›ng dáº«n thay Ä‘á»•i háº¡n sá»­ dá»¥ng NVL (VÃ­ dá»¥: tá»« 5 thÃ¡ng lÃªn 6 thÃ¡ng á»Ÿ mÃ n F330):**
-- **CÃ¡ch 1 (Qua UI):** VÃ o mÃ n hÃ¬nh **A230 (ThÃ´ng tin NVL Master)** -> TÃ¬m kiáº¿m theo mÃ£ nguyÃªn váº­t liá»‡u -> Táº¡i cá»™t cáº¥u hÃ¬nh háº¡n sá»­ dá»¥ng (**Shelf Life (thÃ¡ng)** hoáº·c **MMExtInt01**) sá»­a Ä‘á»•i giÃ¡ trá»‹ (VD tá»« `5` lÃªn `6`) -> Báº¥m **Save** Ä‘á»ƒ lÆ°u.
-- **CÃ¡ch 2 (Qua SQL Query):**
+**Hướng dẫn thay đổi hạn sử dụng NVL (Ví dụ: từ 5 tháng lên 6 tháng ở màn F330):**
+- **Cách 1 (Qua UI):** Vào màn hình **A230 (Thông tin NVL Master)** -> Tìm kiếm theo mã nguyên vật liệu -> Tại cột cấu hình hạn sử dụng (**Shelf Life (tháng)** hoặc **MMExtInt01**) sửa đổi giá trị (VD từ `5` lên `6`) -> Bấm **Save** để lưu.
+- **Cách 2 (Qua SQL Query):**
   ```sql
-  -- BÆ°á»›c 1: SELECT kiá»ƒm tra trÆ°á»›c
+  -- Bước 1: SELECT kiểm tra trước
   SELECT MaterialCode, MaterialName, MMExtInt01
   FROM STB_MaterialMaster
-  WHERE MaterialCode = 'MÃƒ_NVL'; -- VD: 'MDFLUX-003'
+  WHERE MaterialCode = 'MÃ_NVL'; -- VD: 'MDFLUX-003'
 
-  -- BÆ°á»›c 2: UPDATE qua Transaction
+  -- Bước 2: UPDATE qua Transaction
   BEGIN TRAN;
   UPDATE STB_MaterialMaster
-  SET MMExtInt01 = 6 -- Sá»‘ thÃ¡ng háº¡n dÃ¹ng má»›i
-  WHERE MaterialCode = 'MÃƒ_NVL';
+  SET MMExtInt01 = 6 -- Số tháng hạn dùng mới
+  WHERE MaterialCode = 'MÃ_NVL';
   
-  -- SELECT láº¡i xÃ¡c nháº­n
-  SELECT MaterialCode, MaterialName, MMExtInt01 FROM STB_MaterialMaster WHERE MaterialCode = 'MÃƒ_NVL';
+  -- SELECT lại xác nhận
+  SELECT MaterialCode, MaterialName, MMExtInt01 FROM STB_MaterialMaster WHERE MaterialCode = 'MÃ_NVL';
   
-  COMMIT TRAN; -- hoáº·c ROLLBACK TRAN;
+  COMMIT TRAN; -- hoặc ROLLBACK TRAN;
   ```
-- **LÆ°u Ã½:** Sau khi thay Ä‘á»•i, ngÃ y háº¿t háº¡n má»›i á»Ÿ mÃ n F330 sáº½ tá»± Ä‘á»™ng cáº­p nháº­t real-time theo cáº¥u hÃ¬nh má»›i. Äá»‘i vá»›i cÃ¡c mÃ£ dung mÃ´i Ä‘áº·c biá»‡t (nhÆ° `MDFLUX-002`), há»‡ thá»‘ng Ã¡p dá»¥ng logic `(MMExtInt01 * 30) - 1` ngÃ y (6 thÃ¡ng tÆ°Æ¡ng Ä‘Æ°Æ¡ng 179 ngÃ y).
+- **Lưu ý:** Sau khi thay đổi, ngày hết hạn mới ở màn F330 sẽ tự động cập nhật real-time theo cấu hình mới. Đối với các mã dung môi đặc biệt (như `MDFLUX-002`), hệ thống áp dụng logic `(MMExtInt01 * 30) - 1` ngày (6 tháng tương đương 179 ngày).
 
 ---
 
-### 4.11 Lá»—i khÃ´ng lÆ°u Ä‘Æ°á»£c F330 - Cáº¥u hÃ¬nh vÃ  sá»­a lá»—i Ä‘á»c "Äáº·c tÃ­nh 10" (Vendor Lot No)
+### 4.11 Lỗi không lưu được [F330] - Cấu hình và sửa lỗi đọc "Đặc tính 10" (Vendor Lot No)
 
-**Triá»‡u chá»©ng:** F330 bÃ¡o lá»—i khi nháº­p mÃ£ Lot nhÃ  cung cáº¥p á»Ÿ "Äáº·c tÃ­nh 10" (hoáº·c Lot tá»± Ä‘á»™ng bá»‹ Ä‘Æ°a vÃ o kho `HOLDING` do thiáº¿u Äáº·c tÃ­nh 10).
+**Triệu chứng:** F330 báo lỗi khi nhập mã Lot nhà cung cấp ở "Đặc tính 10" (hoặc Lot tự động bị đưa vào kho `HOLDING` do thiếu Đặc tính 10).
 
-**Báº£n cháº¥t:** "Äáº·c tÃ­nh 10" (`LotExtText10` / `LotAttr10`) Ä‘áº¡i diá»‡n cho mÃ£ Vendor Lot cá»§a nhÃ  cung cáº¥p. Máº·c Ä‘á»‹nh há»‡ thá»‘ng sá»­ dá»¥ng hÃ m parse SQL Ä‘á»ƒ tá»± Ä‘á»™ng bÃ³c tÃ¡ch thÃ´ng tin ngÃ y sáº£n xuáº¥t tá»« mÃ£ nÃ y.
+**Bản chất:** "Đặc tính 10" (`LotExtText10` / `LotAttr10`) đại diện cho mã Vendor Lot của nhà cung cấp. Mặc định hệ thống sử dụng hàm parse SQL để tự động bóc tách thông tin ngày sản xuất từ mã này.
 
-CÃ³ **3 cÃ¡ch xá»­ lÃ½/thiáº¿t láº­p** tÃ¹y thuá»™c vÃ o tÃ¬nh huá»‘ng:
+Có **3 cách xử lý/thiết lập** tùy thuộc vào tình huống:
 
-#### CÃ¡ch 1: Cáº¥u hÃ¬nh Ä‘á»™ dÃ i quÃ©t tem trÃªn UI F330 (Khi mÃ£ Lot Vendor quÃ¡ dÃ i)
-* **Vá»‹ trÃ­ thiáº¿t láº­p:** VÃ o mÃ n hÃ¬nh **F330** -> Tab thá»© 3.
-* **Thá»±c hiá»‡n:** Thiáº¿t láº­p cáº¥u hÃ¬nh chiá»u dÃ i quÃ©t cá»§a mÃ£ Ä‘á»ƒ cáº¯t chuá»—i barcode láº¥y pháº§n Lot phÃ¹ há»£p, giÃºp trÃ¡nh lá»—i do chuá»—i barcode truyá»n vÃ o quÃ¡ dÃ i.
+#### Cách 1: Cấu hình độ dài quét tem trên UI [F330] (Khi mã Lot Vendor quá dài)
+* **Vị trí thiết lập:** Vào màn hình **F330** -> Tab thứ 3.
+* **Thực hiện:** Thiết lập cấu hình chiều dài quét của mã để cắt chuỗi barcode lấy phần Lot phù hợp, giúp tránh lỗi do chuỗi barcode truyền vào quá dài.
 
-#### CÃ¡ch 2: Chá»‰nh sá»­a hÃ m tá»± Ä‘á»™ng parse ngÃ y sáº£n xuáº¥t trong SQL (PhÆ°Æ¡ng phÃ¡p chuáº©n hay dÃ¹ng)
-Khi nhÃ  cung cáº¥p thay Ä‘á»•i Ä‘á»‹nh dáº¡ng mÃ£ Lot Vendor, há»‡ thá»‘ng sáº½ khÃ´ng Ä‘á»c Ä‘Æ°á»£c ngÃ y sáº£n xuáº¥t, gÃ¢y lá»—i `Exception occurred` hoáº·c tÃ­nh sai háº¡n dÃ¹ng. Báº¡n cáº§n sá»­a Ä‘á»•i cÃ¡c SQL Function tÆ°Æ¡ng á»©ng.
+#### Cách 2: Chỉnh sửa hàm tự động parse ngày sản xuất trong SQL (Phương pháp chuẩn hay dùng)
+Khi nhà cung cấp thay đổi định dạng mã Lot Vendor, hệ thống sẽ không đọc được ngày sản xuất, gây lỗi `Exception occurred` hoặc tính sai hạn dùng. Bạn cần sửa đổi các SQL Function tương ứng.
 
-##### 1. PhÃ¢n biá»‡t 2 Function cá»§a há»‡ thá»‘ng:
-* **HÃ m [fn_VVT_getdatebyVendorLot](../KB_10/KB_10_01_ARCHITECTURE.md) (2 tham sá»‘: `@materialcode`, `@vendorlot`):**
-  * DÃ¹ng cho cÃ¡c váº­t tÆ° chá»‰ cÃ³ má»™t Ä‘á»‹nh dáº¡ng Vendor Lot duy nháº¥t tá»« má»™t nhÃ  cung cáº¥p, khÃ´ng phÃ¢n biá»‡t nhÃ  cung cáº¥p khÃ¡c nhau.
-* **HÃ m [fn_VVT_getdatebyVendorLot_MergeCode](../KB_10/KB_10_01_ARCHITECTURE.md) (3 tham sá»‘: `@materialcode`, `@vendorlot`, `@sourceCustomerCode`):**
-  * DÃ¹ng khi **cÃ¹ng má»™t mÃ£ váº­t tÆ°** nhÆ°ng Ä‘Æ°á»£c cung cáº¥p bá»Ÿi **nhiá»u nhÃ  cung cáº¥p khÃ¡c nhau** (`@sourceCustomerCode` vÃ­ dá»¥: `VV033`, `VV040`, `VV034`...) cÃ³ Ä‘á»‹nh dáº¡ng mÃ£ Lot khÃ¡c nhau (Ä‘áº·c biá»‡t lÃ  nhÃ³m Vá» nhÃ´m `GBAKAC-%`, Sleeve `GCMDPT-%`, BÄƒng keo `GBRLAC-%`).
+##### 1. Phân biệt 2 Function của hệ thống:
+* **Hàm [fn_VVT_getdatebyVendorLot](../KB_10/KB_10_01_ARCHITECTURE.md) (2 tham số: `@materialcode`, `@vendorlot`):**
+  * Dùng cho các vật tư chỉ có một định dạng Vendor Lot duy nhất từ một nhà cung cấp, không phân biệt nhà cung cấp khác nhau.
+* **Hàm [fn_VVT_getdatebyVendorLot_MergeCode](../KB_10/KB_10_01_ARCHITECTURE.md) (3 tham số: `@materialcode`, `@vendorlot`, `@sourceCustomerCode`):**
+  * Dùng khi **cùng một mã vật tư** nhưng được cung cấp bởi **nhiều nhà cung cấp khác nhau** (`@sourceCustomerCode` ví dụ: `VV033`, `VV040`, `VV034`...) có định dạng mã Lot khác nhau (đặc biệt là nhóm Vỏ nhôm `GBAKAC-%`, Sleeve `GCMDPT-%`, Băng keo `GBRLAC-%`).
 
-##### 2. Sá»­a á»Ÿ Ä‘Ã¢u vÃ  sá»­a tháº¿ nÃ o?
-* **BÆ°á»›c 1: XÃ¡c Ä‘á»‹nh hÃ m cáº§n sá»­a**
-  Xem Stored Procedure cá»§a mÃ n hÃ¬nh (vÃ­ dá»¥: `usp_MaterialDocLotInfo_get` hoáº·c `usp_vvt_MaterialLotInfo_get`) Ä‘ang gá»i hÃ m nÃ o. ThÆ°á»ng cÃ¡c nÃ¢ng cáº¥p má»›i cá»§a Vinatech Ä‘á»u Æ°u tiÃªn chuyá»ƒn qua dÃ¹ng hÃ m 3 tham sá»‘ `fn_VVT_getdatebyVendorLot_MergeCode` Ä‘á»ƒ quáº£n lÃ½ theo nhÃ  cung cáº¥p (NCC).
-* **BÆ°á»›c 2: Viáº¿t cÃ¢u lá»‡nh `ALTER FUNCTION`**
-  ThÃªm má»™t nhÃ¡nh `WHEN` vÃ o khá»‘i `CASE` cá»§a function tÆ°Æ¡ng á»©ng trong database.
+##### 2. Sửa ở đâu và sửa thế nào?
+* **Bước 1: Xác định hàm cần sửa**
+  Xem Stored Procedure của màn hình (ví dụ: `usp_MaterialDocLotInfo_get` hoặc `usp_vvt_MaterialLotInfo_get`) đang gọi hàm nào. Thường các nâng cấp mới của Vinatech đều ưu tiên chuyển qua dùng hàm 3 tham số `fn_VVT_getdatebyVendorLot_MergeCode` để quản lý theo nhà cung cấp (NCC).
+* **Bước 2: Viết câu lệnh `ALTER FUNCTION`**
+  Thêm một nhánh `WHEN` vào khối `CASE` của function tương ứng trong database.
 
-##### 3. CÃ¡c máº«u viáº¿t logic parse ngÃ y thÃ´ng dá»¥ng:
+##### 3. Các mẫu viết logic parse ngày thông dụng:
 
-* **Máº«u 1: Äá»‹nh dáº¡ng Year-Month-Day dáº¡ng sá»‘ thÃ´ng thÆ°á»ng (vÃ­ dá»¥: `260530...` -> 2026-05-30)**
+* **Mẫu 1: Định dạng Year-Month-Day dạng số thông thường (ví dụ: `260530...` -> 2026-05-30)**
   ```sql
-  when @materialcode in ('MÃƒ_Váº¬T_TÆ¯') then '20'+ substring(@vendorlot,1,2)+'-'+ substring(@vendorlot,3,2)+'-'+ substring(@vendorlot,5,2)
+  when @materialcode in ('MÃ_VẬT_TƯ') then '20'+ substring(@vendorlot,1,2)+'-'+ substring(@vendorlot,3,2)+'-'+ substring(@vendorlot,5,2)
   ```
-  *(Náº¿u láº¥y nÄƒm 4 chá»¯ sá»‘ thÃ¬ dÃ¹ng `substring(@vendorlot,1,4)` tÃ¹y vá»‹ trÃ­)*
+  *(Nếu lấy năm 4 chữ số thì dùng `substring(@vendorlot,1,4)` tùy vị trí)*
 
-  *VÃ­ dá»¥ thá»±c táº¿ (`GBCP00-005` vá»›i mÃ£ lot `H226042815` -> `2026-04-28`):*
-  NÄƒm (`26`) náº±m tá»« kÃ½ tá»± thá»© 3 (Ä‘á»™ dÃ i 2), ThÃ¡ng (`04`) náº±m tá»« kÃ½ tá»± thá»© 5 (Ä‘á»™ dÃ i 2), NgÃ y (`28`) náº±m tá»« kÃ½ tá»± thá»© 7 (Ä‘á»™ dÃ i 2).
-  * **Náº¿u viáº¿t má»›i:**
+  *Ví dụ thực tế (`GBCP00-005` với mã lot `H226042815` -> `2026-04-28`):*
+  Năm (`26`) nằm từ ký tự thứ 3 (độ dài 2), Tháng (`04`) nằm từ ký tự thứ 5 (độ dài 2), Ngày (`28`) nằm từ ký tự thứ 7 (độ dài 2).
+  * **Nếu viết mới:**
     ```sql
     when @materialcode = 'GBCP00-005' then '20' + substring(@vendorlot,3,2) + '-' + substring(@vendorlot,5,2) + '-' + substring(@vendorlot,7,2)
     ```
-  * **Náº¿u gá»™p vÃ o Case cÃ³ sáºµn (KhuyÃªn dÃ¹ng):** Trong hÃ m `fn_VVT_getdatebyVendorLot_MergeCode` Ä‘Ã£ cÃ³ sáºµn nhÃ³m dÃ¹ng chung logic parse nÃ y. Chá»‰ cáº§n chÃ¨n thÃªm `'GBCP00-005'` vÃ o danh sÃ¡ch `IN` cÃ³ sáºµn:
+  * **Nếu gộp vào Case có sẵn (Khuyên dùng):** Trong hàm `fn_VVT_getdatebyVendorLot_MergeCode` đã có sẵn nhóm dùng chung logic parse này. Chỉ cần chèn thêm `'GBCP00-005'` vào danh sách `IN` có sẵn:
     ```sql
     when @materialcode in ('GCTN00-003', 'GBCP00-004', 'GBCP00-005') then 
         '20' + substring(@vendorlot,3,2) + '-' + substring(@vendorlot,5,2) + '-' + substring(@vendorlot,7,2)
     ```
 
-* **Máº«u 2: PhÃ¢n biá»‡t theo NhÃ  cung cáº¥p (`@sourceCustomerCode`)** (Chá»‰ dÃ¹ng trong hÃ m `_MergeCode`)
+* **Mẫu 2: Phân biệt theo Nhà cung cấp (`@sourceCustomerCode`)** (Chỉ dùng trong hàm `_MergeCode`)
   
-  *VÃ­ dá»¥ 1: Vá» nhÃ´m `GBAKAC-005` phÃ¢n biá»‡t giá»¯a NCC `VV033` vÃ  cÃ¡c NCC khÃ¡c:*
+  *Ví dụ 1: Vỏ nhôm `GBAKAC-005` phân biệt giữa NCC `VV033` và các NCC khác:*
   ```sql
   when @materialcode = 'GBAKAC-005' then 
       case 
@@ -364,7 +364,7 @@ Khi nhÃ  cung cáº¥p thay Ä‘á»•i Ä‘á»‹nh dáº¡ng mÃ£ Lot V
       end
   ```
 
-  *VÃ­ dá»¥ 2: BÄƒng keo `GBRLAC-005` tá»« NCC `VV040` (MÃ£ Lot dáº¡ng `062182605230673302` -> parse thÃ nh `2026-05-23`):*
+  *Ví dụ 2: Băng keo `GBRLAC-005` từ NCC `VV040` (Mã Lot dạng `062182605230673302` -> parse thành `2026-05-23`):*
   ```sql
   when @materialcode = 'GBRLAC-005' then 
       case 
@@ -373,153 +373,153 @@ Khi nhÃ  cung cáº¥p thay Ä‘á»•i Ä‘á»‹nh dáº¡ng mÃ£ Lot V
       end
   ```
 
-* **Máº«u 3: Äá»‹nh dáº¡ng mÃ£ hÃ³a ThÃ¡ng báº±ng Chá»¯ cÃ¡i (A=10, B=11, C=12 hoáº·c A=01, B=02...)**
+* **Mẫu 3: Định dạng mã hóa Tháng bằng Chữ cái (A=10, B=11, C=12 hoặc A=01, B=02...)**
   ```sql
-  when @materialcode = 'GBAKAC-039' then '202'+ substring(@vendorlot,2,1) -- NÄƒm
+  when @materialcode = 'GBAKAC-039' then '202'+ substring(@vendorlot,2,1) -- Năm
                                          +'-'
                                          + right('0' + case 
                                          when substring(@vendorlot,3,1)='A' then '10'
                                          when substring(@vendorlot,3,1)='B' then '11'
                                          when substring(@vendorlot,3,1)='C' then '12'
-                                         else substring(@vendorlot,3,1) end,2) -- ThÃ¡ng
+                                         else substring(@vendorlot,3,1) end,2) -- Tháng
                                          +'-'
-                                         + substring(@vendorlot,4,2) -- NgÃ y
+                                         + substring(@vendorlot,4,2) -- Ngày
   ```
 
-* **Máº«u 4: Äá»‹nh dáº¡ng cá»©ng ngÃ y 15 hÃ ng thÃ¡ng (khi mÃ£ Lot chá»‰ cÃ³ NÄƒm-ThÃ¡ng)**
+* **Mẫu 4: Định dạng cứng ngày 15 hàng tháng (khi mã Lot chỉ có Năm-Tháng)**
   ```sql
   when @materialcode='GADPCB-002' then '20'+ substring(@vendorlot,1,2)+'-'+ substring(@vendorlot,3,2) + '-15'
   ```
 
-##### 4. NguyÃªn táº¯c kiá»ƒm tra sau khi sá»­a:
-Cháº¡y lá»‡nh `SELECT` kiá»ƒm tra hÃ m trá»±c tiáº¿p trong SSMS trÆ°á»›c khi thá»±c hiá»‡n giao dá»‹ch nháº­p kho:
+##### 4. Nguyên tắc kiểm tra sau khi sửa:
+Chạy lệnh `SELECT` kiểm tra hàm trực tiếp trong SSMS trước khi thực hiện giao dịch nhập kho:
 ```sql
-SELECT [dbo].[fn_VVT_getdatebyVendorLot_MergeCode]('MÃƒ_Váº¬T_TÆ¯', 'MÃƒ_VENDOR_LOT_TEST', 'MÃƒ_NCC')
--- Káº¿t quáº£ tráº£ vá» pháº£i Ä‘Ãºng Ä‘á»‹nh dáº¡ng YYYY-MM-DD (VÃ­ dá»¥: '2026-05-30')
+SELECT [dbo].[fn_VVT_getdatebyVendorLot_MergeCode]('MÃ_VẬT_TƯ', 'MÃ_VENDOR_LOT_TEST', 'MÃ_NCC')
+-- Kết quả trả về phải đúng định dạng YYYY-MM-DD (Ví dụ: '2026-05-30')
 ```
 
-#### CÃ¡ch 3: Sá»­a thá»§ cÃ´ng báº±ng SQL (Workaround bypass nhanh)
-Náº¿u cáº§n Ä‘Æ°a Lot ra khá»i kho HOLDING vÃ  bá»• sung Äáº·c tÃ­nh 10 kháº©n cáº¥p:
+#### Cách 3: Sửa thủ công bằng SQL (Workaround bypass nhanh)
+Nếu cần đưa Lot ra khỏi kho HOLDING và bổ sung Đặc tính 10 khẩn cấp:
 ```sql
--- BÆ°á»›c 1: ThÃªm Äáº·c tÃ­nh 10 (MÃ£ Lot Vendor) vÃ o Lot
+-- Bước 1: Thêm Đặc tính 10 (Mã Lot Vendor) vào Lot
 UPDATE STB_MaterialLotInfo
-SET LotExtText10 = 'MÃƒ_LOT_VENDOR_ÄÃšNG'
-WHERE LotID = 'lot_id_cáº§n_sá»­a';
+SET LotExtText10 = 'MÃ_LOT_VENDOR_ĐÚNG'
+WHERE LotID = 'lot_id_cần_sửa';
 
--- BÆ°á»›c 2: KÃ©o Lot ra khá»i kho HOLDING vá» kho chÃ­nh (VÃ­ dá»¥: ROH_BN_WH)
+-- Bước 2: Kéo Lot ra khỏi kho HOLDING về kho chính (Ví dụ: ROH_BN_WH)
 UPDATE STB_MaterialLotInfo
 SET MaterialWarehouseCode = 'ROH_BN_WH', 
     MaterialLocationCode = 'ROH_BN_WH_01'
-WHERE LotID = 'lot_id_cáº§n_sá»­a';
+WHERE LotID = 'lot_id_cần_sửa';
 
--- BÆ°á»›c 3: Cáº­p nháº­t Ä‘á»“ng bá»™ NgÃ y sáº£n xuáº¥t (LotAttr10) Ä‘á»ƒ trÃ¡nh lá»—i háº¡n dÃ¹ng (Expiry Date check)
+-- Bước 3: Cập nhật đồng bộ Ngày sản xuất (LotAttr10) để tránh lỗi hạn dùng (Expiry Date check)
 UPDATE STB_MaterialDocLotInfo  
-SET LotAttr10 = 'YYYY-MM-DD' -- VÃ­ dá»¥: '2026-04-10'
-WHERE LotID = 'lot_id_cáº§n_sá»­a';
+SET LotAttr10 = 'YYYY-MM-DD' -- Ví dụ: '2026-04-10'
+WHERE LotID = 'lot_id_cần_sửa';
 
 UPDATE STB_MaterialLotInfo  
 SET LotAttr10 = 'YYYY-MM-DD'
-WHERE LotID = 'lot_id_cáº§n_sá»­a';
+WHERE LotID = 'lot_id_cần_sửa';
 ```
 
 ---
 
-### 4.12 Lá»—i "KhÃ´ng tá»“n táº¡i thiáº¿t láº­p Vá» NhÃ´m" (B597)
+### 4.12 Lỗi "Không tồn tại thiết lập Vỏ Nhôm" ([B597])
 
-*   **Triá»‡u chá»©ng:** `"KhÃ´ng tá»“n táº¡i thiáº¿t láº­p Vá» NhÃ´m cá»§a LotNo... vá»›i mÃ£ Vá» NhÃ´m: GBDYAC-004 <> ECVT30-367"`
-*   **Chi tiáº¿t & Giáº£i phÃ¡p:** Xem chi tiáº¿t nguyÃªn nhÃ¢n gá»‘c, cÃ¡ch trace vÃ  SQL script kháº¯c phá»¥c táº¡i [../KB_05/KB_05_01_QC_OVERVIEW.md#74-b597-bÃ¡o-lá»—i-khÃ´ng-tá»“n-táº¡i-thiáº¿t-láº­p-vá»-nhÃ´m](../KB_05/KB_05_01_QC_OVERVIEW.md#74-b597-bÃ¡o-lá»—i-khÃ´ng-tá»“n-táº¡i-thiáº¿t-láº­p-vá»-nhÃ´m).
-*   **Checklist lá»—i B597 Ä‘áº§y Ä‘á»§:** Xem táº¡i [../KB_05/KB_05_01_QC_OVERVIEW.md#83-checklist-khi-b597-bÃ¡o-lá»—i-khi-lÆ°u-nvl](../KB_05/KB_05_01_QC_OVERVIEW.md#83-checklist-khi-b597-bÃ¡o-lá»—i-khi-lÆ°u-nvl).
-
----
-
-### 4.13 FIFO Kho thÃ nh pháº©m (FG00)
-
-- **VVT (Báº¯c Ninh):** SP `usp_VN_Update_ExportExcel`
-- **Báº¯c Giang:** SP `usp_VN_Update_ExportExcel_BG`
-- **Báº­t/táº¯t FIFO cho FG:** VÃ o mÃ n **F110** -> TÃ­ch/bá» tÃ­ch option FIFO
+*   **Triệu chứng:** `"Không tồn tại thiết lập Vỏ Nhôm của LotNo... với mã Vỏ Nhôm: GBDYAC-004 <> ECVT30-367"`
+*   **Chi tiết & Giải pháp:** Xem chi tiết nguyên nhân gốc, cách trace và SQL script khắc phục tại [../KB_05/KB_05_01_QC_OVERVIEW.md#74-b597-báo-lỗi-không-tồn-tại-thiết-lập-vỏ-nhôm](../KB_05/KB_05_01_QC_OVERVIEW.md#74-b597-báo-lỗi-không-tồn-tại-thiết-lập-vỏ-nhôm).
+*   **Checklist lỗi B597 đầy đủ:** Xem tại [../KB_05/KB_05_01_QC_OVERVIEW.md#83-checklist-khi-b597-báo-lỗi-khi-lưu-nvl](../KB_05/KB_05_01_QC_OVERVIEW.md#83-checklist-khi-b597-báo-lỗi-khi-lưu-nvl).
 
 ---
 
-### 4.14 XÃ³a mÃ£ Sparepart thá»«a
+### 4.13 FIFO Kho thành phẩm (FG00)
+
+- **VVT (Bắc Ninh):** SP `usp_VN_Update_ExportExcel`
+- **Bắc Giang:** SP `usp_VN_Update_ExportExcel_BG`
+- **Bật/tắt FIFO cho FG:** Vào màn **F110** -> Tích/bỏ tích option FIFO
+
+---
+
+### 4.14 Xóa mã Sparepart thừa
 
 ```sql
-SELECT * FROM STB_VNSparePartInfo WHERE sparepartcode = '[MÃ£ cáº§n xÃ³a]'
-DELETE FROM STB_VNSparePartInfo WHERE sparepartcode = '[MÃ£ cáº§n xÃ³a]'
+SELECT * FROM STB_VNSparePartInfo WHERE sparepartcode = '[Mã cần xóa]'
+DELETE FROM STB_VNSparePartInfo WHERE sparepartcode = '[Mã cần xóa]'
 ```
 
 ---
 
-### 4.15 Luá»“ng nháº­p kho Ä‘áº§y Ä‘á»§ (F330)
+### 4.15 Luồng nhập kho đầy đủ ([F330])
 
 ```
-Groupware (Arrival Confirmation duyá»‡t xong)
-    â†“
-F330 - Nháº­n hÃ ng, in tem NVL, gÃ¡n Lot vÃ o kho
-    â†“
-C220 - IQC kiá»ƒm tra cháº¥t lÆ°á»£ng -> PASS
-    â†“
+Groupware (Arrival Confirmation duyệt xong)
+    ↓
+F330 - Nhận hàng, in tem NVL, gán Lot vào kho
+    ↓
+C220 - IQC kiểm tra chất lượng -> PASS
+    ↓
 Groupware (Receiving Confirmation)
-    â†“
-NVL sáºµn sÃ ng cho sáº£n xuáº¥t
+    ↓
+NVL sẵn sàng cho sản xuất
 ```
 
-> KhÃ´ng nháº­p Ä‘Æ°á»£c F330 -> Groupware chÆ°a duyá»‡t Arrival Confirmation?
-> KhÃ´ng lÃ m Ä‘Æ°á»£c Receiving Confirmation -> C220 chÆ°a PASS?
+> Không nhập được F330 -> Groupware chưa duyệt Arrival Confirmation?
+> Không làm được Receiving Confirmation -> C220 chưa PASS?
 
 ---
 
-### 4.16 Há»§y phiáº¿u nháº­p kho F330 Ä‘Ã£ Confirmed
+### 4.16 Hủy phiếu nhập kho [F330] đã Confirmed
 
-> âš ï¸ **Chá»‰ lÃ m khi hÃ ng chÆ°a Ä‘Æ°á»£c xuáº¥t kho hoáº·c dÃ¹ng sáº£n xuáº¥t.**
+> ⚠️ **Chỉ làm khi hàng chưa được xuất kho hoặc dùng sản xuất.**
 
 ```sql
--- BÆ°á»›c 1: TÃ¬m phiáº¿u cáº§n há»§y
-SELECT * FROM STB_MaterialDocInfo WHERE MaterialDocNo = 'Sá»‘_TÃ i_Liá»‡u'
+-- Bước 1: Tìm phiếu cần hủy
+SELECT * FROM STB_MaterialDocInfo WHERE MaterialDocNo = 'Số_Tài_Liệu'
 
--- BÆ°á»›c 2: Kiá»ƒm tra xem Ä‘Ã£ cÃ³ IQC chÆ°a - náº¿u cÃ³ pháº£i xÃ³a IQC records trÆ°á»›c
-SELECT * FROM STB_MaterialQcInfo WHERE MaterialDocNo = 'Sá»‘_TÃ i_Liá»‡u'
--- Náº¿u cÃ³ IQC PASS -> xÃ³a thÃªm:
-DELETE FROM STB_IQcDefectReport WHERE MaterialDocNo = 'Sá»‘_TÃ i_Liá»‡u'
-DELETE FROM STB_MaterialQcInfo WHERE MaterialDocNo = 'Sá»‘_TÃ i_Liá»‡u'
+-- Bước 2: Kiểm tra xem đã có IQC chưa - nếu có phải xóa IQC records trước
+SELECT * FROM STB_MaterialQcInfo WHERE MaterialDocNo = 'Số_Tài_Liệu'
+-- Nếu có IQC PASS -> xóa thêm:
+DELETE FROM STB_IQcDefectReport WHERE MaterialDocNo = 'Số_Tài_Liệu'
+DELETE FROM STB_MaterialQcInfo WHERE MaterialDocNo = 'Số_Tài_Liệu'
 
--- BÆ°á»›c 3: Láº¥y danh sÃ¡ch LotID
-SELECT LotID FROM STB_MaterialDocLotInfo WHERE MaterialDocNo = 'Sá»‘_TÃ i_Liá»‡u'
+-- Bước 3: Lấy danh sách LotID
+SELECT LotID FROM STB_MaterialDocLotInfo WHERE MaterialDocNo = 'Số_Tài_Liệu'
 
--- BÆ°á»›c 4: XÃ³a theo thá»© tá»± ngÆ°á»£c (trÃ¡nh lá»—i FK)
+-- Bước 4: Xóa theo thứ tự ngược (tránh lỗi FK)
 DELETE FROM STB_MaterialLotInfo WHERE LotID IN (
-    SELECT LotID FROM STB_MaterialDocLotInfo WHERE MaterialDocNo = 'Sá»‘_TÃ i_Liá»‡u'
+    SELECT LotID FROM STB_MaterialDocLotInfo WHERE MaterialDocNo = 'Số_Tài_Liệu'
 )
-DELETE FROM STB_MaterialDocLotInfo WHERE MaterialDocNo = 'Sá»‘_TÃ i_Liá»‡u'
-DELETE FROM STB_MaterialDocDetail WHERE MaterialDocNo = 'Sá»‘_TÃ i_Liá»‡u'
-DELETE FROM STB_MaterialDocInfo WHERE MaterialDocNo = 'Sá»‘_TÃ i_Liá»‡u'
+DELETE FROM STB_MaterialDocLotInfo WHERE MaterialDocNo = 'Số_Tài_Liệu'
+DELETE FROM STB_MaterialDocDetail WHERE MaterialDocNo = 'Số_Tài_Liệu'
+DELETE FROM STB_MaterialDocInfo WHERE MaterialDocNo = 'Số_Tài_Liệu'
 ```
 
 ---
 
-### 4.17 Thu há»“i Lot tá»« F430 vá» kho (Revert xuáº¥t kho)
+### 4.17 Thu hồi Lot từ [F430] về kho (Revert xuất kho)
 
-**TÃ¬nh huá»‘ng:** Cáº§n revert hÃ ng Ä‘Ã£ xuáº¥t á»Ÿ F430 vá» láº¡i kho.
+**Tình huống:** Cần revert hàng đã xuất ở F430 về lại kho.
 
 ```sql
--- BÆ°á»›c 1: Xem tráº¡ng thÃ¡i tá»“n kho hiá»‡n táº¡i
+-- Bước 1: Xem trạng thái tồn kho hiện tại
 SELECT LotID, MaterialWarehouseCode, MaterialLocationCode, CurrentQty
 FROM STB_MaterialLotInfo WHERE LotID = 'ML20260407000696'
 
--- BÆ°á»›c 2: TÃ¬m ID giao dá»‹ch xuáº¥t kho cáº§n xÃ³a
+-- Bước 2: Tìm ID giao dịch xuất kho cần xóa
 SELECT MaterialWarehouseInOutHistNo, SourceMaterialWarehouseCode,
        TargetMaterialWarehouseCode, CreateDateTime
 FROM STB_MaterialWarehouseInOutHist
 WHERE LotID = 'ML20260407000696'
 ORDER BY CreateDateTime DESC
 
--- BÆ°á»›c 3: Xem vá»‹ trÃ­ gá»‘c lÃºc má»›i nháº­p kho
+-- Bước 3: Xem vị trí gốc lúc mới nhập kho
 SELECT LotID, MaterialLocationCode
 FROM STB_MaterialDocLotInfo WHERE LotID = 'ML20260407000696'
 
--- BÆ°á»›c 4: Thá»±c hiá»‡n revert
+-- Bước 4: Thực hiện revert
 BEGIN TRAN
     DELETE FROM STB_MaterialWarehouseInOutHist
-    WHERE MaterialWarehouseInOutHistNo = 'MÃƒ_GIAO_Dá»ŠCH_Cáº¦N_XÃ“A'
+    WHERE MaterialWarehouseInOutHistNo = 'MÃ_GIAO_DỊCH_CẦN_XÓA'
 
     UPDATE STB_MaterialLotInfo
     SET MaterialWarehouseCode = 'ROH_HN_WH',
@@ -527,243 +527,243 @@ BEGIN TRAN
     WHERE LotID = 'ML20260407000696'
 
     SELECT * FROM STB_MaterialLotInfo WHERE LotID = 'ML20260407000696'
--- COMMIT khi cháº¯c cháº¯n Ä‘Ãºng, ROLLBACK náº¿u sai
+-- COMMIT khi chắc chắn đúng, ROLLBACK nếu sai
 ```
 
-> **Táº¡i sao pháº£i xÃ³a `STB_MaterialWarehouseInOutHist`?** Náº¿u chá»‰ sá»­a kho mÃ  khÃ´ng xÃ³a lá»‹ch sá»­, bÃ¡o cÃ¡o xuáº¥t nháº­p tá»“n cuá»‘i thÃ¡ng sáº½ bá»‹ lá»‡ch.
+> **Tại sao phải xóa `STB_MaterialWarehouseInOutHist`?** Nếu chỉ sửa kho mà không xóa lịch sử, báo cáo xuất nhập tồn cuối tháng sẽ bị lệch.
 
-#### ðŸ“ VÃ­ dá»¥ thá»±c táº¿ (Há»§y xuáº¥t / Tráº£ láº¡i kho HÃ  Nam):
-Giao dá»‹ch xuáº¥t sai lÃºc 12:07 trÆ°a ngÃ y 11/05/2026 cho Lot `ML20260209000136`.
-1. **Kiá»ƒm tra tráº¡ng thÃ¡i hiá»‡n táº¡i:**
+#### 📝 Ví dụ thực tế (Hủy xuất / Trả lại kho Hà Nam):
+Giao dịch xuất sai lúc 12:07 trưa ngày 11/05/2026 cho Lot `ML20260209000136`.
+1. **Kiểm tra trạng thái hiện tại:**
    ```sql
-   -- Kiá»ƒm tra Lot Ä‘ang á»Ÿ kho nÃ o
+   -- Kiểm tra Lot đang ở kho nào
    SELECT MaterialWarehouseCode, MaterialLocationCode FROM STB_MaterialLotInfo WHERE LotID = 'ML20260209000136';
-   -- Káº¿t quáº£: Lot Ä‘ang á»Ÿ kho ROUTE_HN_WH (Ä‘Ã£ lÃªn chuyá»n).
+   -- Kết quả: Lot đang ở kho ROUTE_HN_WH (đã lên chuyền).
 
-   -- TrÃ­ch xuáº¥t lá»‹ch sá»­ xuáº¥t/nháº­p Ä‘á»ƒ tÃ¬m MaterialWarehouseInOutHistNo Ä‘áº¡i diá»‡n cho cÃº click xuáº¥t sai táº¡i F430
+   -- Trích xuất lịch sử xuất/nhập để tìm MaterialWarehouseInOutHistNo đại diện cho cú click xuất sai tại F430
    SELECT * FROM STB_MaterialWarehouseInOutHist
    WHERE LotID = 'ML20260209000136'
    ORDER BY CreateDateTime DESC;
-   -- Káº¿t quáº£: TÃ¬m Ä‘Æ°á»£c MaterialWarehouseInOutHistNo = '20260511000320' (xuáº¥t bá»Ÿi user VES-019 lÃªn chuyá»n VELINE-09 lÃºc 12:07:31).
+   -- Kết quả: Tìm được MaterialWarehouseInOutHistNo = '20260511000320' (xuất bởi user VES-019 lên chuyền VELINE-09 lúc 12:07:31).
    ```
-2. **Ká»‹ch báº£n sá»­a lá»—i an toÃ n báº±ng Transaction:**
+2. **Kịch bản sửa lỗi an toàn bằng Transaction:**
    ```sql
    BEGIN TRAN;
 
-   -- B1: XÃ³a vá»‡t log giao dá»‹ch xuáº¥t kho táº¡i F430
+   -- B1: Xóa vệt log giao dịch xuất kho tại F430
    DELETE FROM STB_MaterialWarehouseInOutHist 
    WHERE LotID = 'ML20260209000136' AND MaterialWarehouseInOutHistNo = '20260511000320';
 
-   -- B2: KÃ©o cuá»™n nguyÃªn liá»‡u tá»« kho áº£o trÃªn chuyá»n (ROUTE_HN_WH) quay trá»Ÿ vá» kho váº­t lÃ½ gá»‘c (ROH_HN_WH)
+   -- B2: Kéo cuộn nguyên liệu từ kho ảo trên chuyền (ROUTE_HN_WH) quay trở về kho vật lý gốc (ROH_HN_WH)
    UPDATE STB_MaterialLotInfo
    SET 
        MaterialWarehouseCode = 'ROH_HN_WH', 
        MaterialLocationCode = 'ROH_HN_WH_01'
    WHERE LotID = 'ML20260209000136';
 
-   -- Kiá»ƒm tra láº¡i trÆ°á»›c khi chá»‘t
+   -- Kiểm tra lại trước khi chốt
    SELECT * FROM STB_MaterialLotInfo WHERE LotID = 'ML20260209000136';
 
-   COMMIT TRAN; -- Hoáº·c ROLLBACK náº¿u cÃ³ lá»—i
+   COMMIT TRAN; -- Hoặc ROLLBACK nếu có lỗi
    ```
 
 ---
 
-### 4.18 Fix: LIKE filter sai cho MaterialLocationCode khi cáº­p nháº­t LotAttr10 (Äáº·c tÃ­nh 10)
+### 4.18 Fix: LIKE filter sai cho MaterialLocationCode khi cập nhật LotAttr10 (Đặc tính 10)
 
-> **NgÃ y phÃ¡t hiá»‡n:** 2026-06-03
-> **MÃ n hÃ¬nh:** F330, F710
-> **SP liÃªn quan:** `usp_DoChangeMaterialDocLotInfo`, `usp_vvt_MaterialLotInfo_get`
-> **Root cause:** Äiá»u kiá»‡n `LIKE` filter cho `MaterialLocationCode` khÃ´ng match vÃ¬ thiáº¿u trailing `%`
+> **Ngày phát hiện:** 2026-06-03
+> **Màn hình:** F330, F710
+> **SP liên quan:** `usp_DoChangeMaterialDocLotInfo`, `usp_vvt_MaterialLotInfo_get`
+> **Root cause:** Điều kiện `LIKE` filter cho `MaterialLocationCode` không match vì thiếu trailing `%`
 
-#### MÃ´ táº£ lá»—i
-- Khi nháº­p nguyÃªn váº­t liá»‡u vÃ o kho BG2 (`MODULE_BG2_WH_01`), trÆ°á»ng `LotAttr10` (Äáº·c tÃ­nh 10 / NgÃ y SX Vendor) khÃ´ng Ä‘Æ°á»£c tá»± Ä‘á»™ng parse tá»« `LotNo`.
-- GiÃ¡ trá»‹ `LotAttr10` giá»¯ nguyÃªn `1900-01-01` thay vÃ¬ chuyá»ƒn thÃ nh ngÃ y Ä‘Ãºng (vÃ­ dá»¥: `20260528` â†’ `2026-05-28`).
+#### Mô tả lỗi
+- Khi nhập nguyên vật liệu vào kho BG2 (`MODULE_BG2_WH_01`), trường `LotAttr10` (Đặc tính 10 / Ngày SX Vendor) không được tự động parse từ `LotNo`.
+- Giá trị `LotAttr10` giữ nguyên `1900-01-01` thay vì chuyển thành ngày đúng (ví dụ: `20260528` → `2026-05-28`).
 
-#### NguyÃªn nhÃ¢n gá»‘c
-Trong 2 SP `usp_DoChangeMaterialDocLotInfo` vÃ  `usp_vvt_MaterialLotInfo_get`, Ä‘oáº¡n UPDATE `LotAttr10` cÃ³ Ä‘iá»u kiá»‡n:
+#### Nguyên nhân gốc
+Trong 2 SP `usp_DoChangeMaterialDocLotInfo` và `usp_vvt_MaterialLotInfo_get`, đoạn UPDATE `LotAttr10` có điều kiện:
 ```sql
-MaterialLocationCode LIKE '%BG2_WH'  -- âŒ SAI
+MaterialLocationCode LIKE '%BG2_WH'  -- ❌ SAI
 ```
-NhÆ°ng táº¥t cáº£ location code Ä‘á»u cÃ³ suffix `_01`, vÃ­ dá»¥:
-- `MODULE_BG2_WH_01` â† khÃ´ng match `'%BG2_WH'`
-- `HEADQUARTER_VN_WH_01` â† khÃ´ng match `'%VN_WH'`
+Nhưng tất cả location code đều có suffix `_01`, ví dụ:
+- `MODULE_BG2_WH_01` ← không match `'%BG2_WH'`
+- `HEADQUARTER_VN_WH_01` ← không match `'%VN_WH'`
 
-Lá»—i tÆ°Æ¡ng tá»± xáº£y ra cho `%VN_WH`, `%BG_WH`, `%HN_WH`.
+Lỗi tương tự xảy ra cho `%VN_WH`, `%BG_WH`, `%HN_WH`.
 
-#### CÃ¡ch fix
-ThÃªm trailing `%` vÃ o táº¥t cáº£ LIKE pattern:
+#### Cách fix
+Thêm trailing `%` vào tất cả LIKE pattern:
 ```sql
-MaterialLocationCode LIKE '%BG2_WH%'  -- âœ… ÄÃšNG
-MaterialLocationCode LIKE '%VN_WH%'   -- âœ… ÄÃšNG
-MaterialLocationCode LIKE '%BG_WH%'   -- âœ… ÄÃšNG
-MaterialLocationCode LIKE '%HN_WH%'   -- âœ… ÄÃšNG
+MaterialLocationCode LIKE '%BG2_WH%'  -- ✅ ĐÚNG
+MaterialLocationCode LIKE '%VN_WH%'   -- ✅ ĐÚNG
+MaterialLocationCode LIKE '%BG_WH%'   -- ✅ ĐÚNG
+MaterialLocationCode LIKE '%HN_WH%'   -- ✅ ĐÚNG
 ```
 
-#### LÆ°u Ã½ quan trá»ng
-- Lá»—i nÃ y áº£nh hÆ°á»Ÿng **táº¥t cáº£ cÃ¡c kho** náº¿u location code cÃ³ suffix (khÃ´ng chá»‰ BG2).
-- Sau khi fix SP, cáº§n chá» user má»Ÿ láº¡i F330/F710 Ä‘á»ƒ SP tá»± Ä‘á»™ng cáº­p nháº­t cÃ¡c lot cÅ©.
-- HÃ m `fn_VVT_getdatebyVendorLot_MergeCode` parse ngÃ y **hoáº¡t Ä‘á»™ng Ä‘Ãºng** â€” lá»—i chá»‰ náº±m á»Ÿ WHERE clause.
+#### Lưu ý quan trọng
+- Lỗi này ảnh hưởng **tất cả các kho** nếu location code có suffix (không chỉ BG2).
+- Sau khi fix SP, cần chờ user mở lại F330/F710 để SP tự động cập nhật các lot cũ.
+- Hàm `fn_VVT_getdatebyVendorLot_MergeCode` parse ngày **hoạt động đúng** — lỗi chỉ nằm ở WHERE clause.
 
-*Cáº­p nháº­t: 2026-06-10*
+*Cập nhật: 2026-06-10*
 
 ---
 
-### 4.19 F110 â€” XÃ¡c nháº­n nháº­p kho vÃ  Cáº¥u hÃ¬nh Kho (Warehouse Configurations)
+### 4.19 [F110] — Xác nhận nhập kho và Cấu hình Kho (Warehouse Configurations)
 
-**MÃ n hÃ¬nh:** F110 (XÃ¡c nháº­n nháº­p kho NVL sau IQC)  
-**Báº£ng DB liÃªn quan:** `STB_MaterialWarehouse`, `STB_MaterialStockAttributeInfo`
+**Màn hình:** F110 (Xác nhận nhập kho NVL sau IQC)  
+**Bảng DB liên quan:** `STB_MaterialWarehouse`, `STB_MaterialStockAttributeInfo`
 
-#### 1. CÆ¡ cháº¿ quáº£n lÃ½ kho áº£o & Line Warehouse (`STB_MaterialWarehouse`)
-Má»—i kho trong há»‡ thá»‘ng (ká»ƒ cáº£ kho áº£o trÃªn cÃ¡c chuyá»n sáº£n xuáº¥t) Ä‘Æ°á»£c quáº£n lÃ½ trong báº£ng `STB_MaterialWarehouse`. Cá» `IsRouteWarehouse = 1` dÃ¹ng Ä‘á»ƒ phÃ¢n biá»‡t kho áº£o cáº¡nh chuyá»n (Route Warehouse) vá»›i kho váº­t lÃ½ thÃ´ng thÆ°á»ng.
+#### 1. Cơ chế quản lý kho ảo & Line Warehouse (`STB_MaterialWarehouse`)
+Mỗi kho trong hệ thống (kể cả kho ảo trên các chuyền sản xuất) được quản lý trong bảng `STB_MaterialWarehouse`. Cờ `IsRouteWarehouse = 1` dùng để phân biệt kho ảo cạnh chuyền (Route Warehouse) với kho vật lý thông thường.
 
-#### 2. Cáº¥u hÃ¬nh quáº£n lÃ½ tá»“n kho theo tá»«ng mÃ£ nguyÃªn váº­t liá»‡u (`STB_MaterialStockAttributeInfo`)
-Vá»›i má»—i mÃ£ nguyÃªn váº­t liá»‡u (`MaterialCode`), há»‡ thá»‘ng cáº¥u hÃ¬nh cÃ¡c cá» Ä‘iá»u kiá»‡n sau Ä‘á»ƒ quyáº¿t Ä‘á»‹nh hÃ nh vi nháº­p/xuáº¥t táº¡i F110/F330/F430:
-*   `IsUseBarcode`: CÃ³ báº¯t buá»™c quáº£n lÃ½ vÃ  quÃ©t báº±ng tem nhÃ£n barcode hay khÃ´ng.
-*   `IsFIFO`: CÃ³ kÃ­ch hoáº¡t tÃ­nh nÄƒng kiá»ƒm tra Nháº­p trÆ°á»›c - Xuáº¥t trÆ°á»›c (FIFO) Ä‘á»‘i vá»›i mÃ£ nÃ y hay khÃ´ng.
-*   `IsLotUse`: CÃ³ báº¯t buá»™c tÃ¡ch hÃ ng thÃ nh cÃ¡c mÃ£ Lot riÃªng biá»‡t Ä‘á»ƒ theo dÃµi vÃ²ng Ä‘á»i hay khÃ´ng.
-*   *LÆ°u Ã½ lá»—i:* Náº¿u nguyÃªn váº­t liá»‡u má»›i khÃ´ng gá»™p box Ä‘Æ°á»£c (lá»—i táº¡i B523), thá»§ kho cáº§n kiá»ƒm tra xem mÃ£ váº­t tÆ° Ä‘Ã³ Ä‘Ã£ Ä‘Æ°á»£c tÃ­ch Ä‘áº§y Ä‘á»§ cÃ¡c cá» cáº¥u hÃ¬nh trÃªn hay chÆ°a (Xem hÆ°á»›ng dáº«n thiáº¿t láº­p Master Data táº¡i [KB_06 Â§ 2.1](KB_06_MASTER_DATA_TOOLS.md)).
+#### 2. Cấu hình quản lý tồn kho theo từng mã nguyên vật liệu (`STB_MaterialStockAttributeInfo`)
+Với mỗi mã nguyên vật liệu (`MaterialCode`), hệ thống cấu hình các cờ điều kiện sau để quyết định hành vi nhập/xuất tại F110/F330/F430:
+*   `IsUseBarcode`: Có bắt buộc quản lý và quét bằng tem nhãn barcode hay không.
+*   `IsFIFO`: Có kích hoạt tính năng kiểm tra Nhập trước - Xuất trước (FIFO) đối với mã này hay không.
+*   `IsLotUse`: Có bắt buộc tách hàng thành các mã Lot riêng biệt để theo dõi vòng đời hay không.
+*   *Lưu ý lỗi:* Nếu nguyên vật liệu mới không gộp box được (lỗi tại B523), thủ kho cần kiểm tra xem mã vật tư đó đã được tích đầy đủ các cờ cấu hình trên hay chưa (Xem hướng dẫn thiết lập Master Data tại [KB_06 § 2.1](KB_06_MASTER_DATA_TOOLS.md)).
 
 ---
 
-### 4.20 F741 â€” Quy trÃ¬nh TÃ¡ch Lot NguyÃªn Váº­t Liá»‡u (Lot Splitting)
+### 4.20 [F741] — Quy trình Tách Lot Nguyên Vật Liệu (Lot Splitting)
 
-**MÃ n hÃ¬nh:** F741 (TÃ¡ch Lot trÆ°á»›c khi cáº¥p lÃªn chuyá»n)  
-**Stored Procedure chÃ­nh:** `usp_DoSplitRawMaterialAndMove`  
-**Báº£ng ghi nháº­n lá»‹ch sá»­:** `STB_SupportRawMaterialSplitHist`
+**Màn hình:** F741 (Tách Lot trước khi cấp lên chuyền)  
+**Stored Procedure chính:** `usp_DoSplitRawMaterialAndMove`  
+**Bảng ghi nhận lịch sử:** `STB_SupportRawMaterialSplitHist`
 
-#### 1. Quy trÃ¬nh nghiá»‡p vá»¥ thá»±c táº¿
-Khi xuáº¥t nguyÃªn váº­t liá»‡u lÃªn dÃ¢y chuyá»n sáº£n xuáº¥t, náº¿u sá»‘ lÆ°á»£ng cuá»™n/thÃ¹ng gá»‘c quÃ¡ lá»›n so vá»›i nhu cáº§u cá»§a chuyá»n, thá»§ kho sá»­ dá»¥ng mÃ n hÃ¬nh F741 Ä‘á»ƒ tÃ¡ch Lot gá»‘c thÃ nh cÃ¡c Lot con cÃ³ sá»‘ lÆ°á»£ng nhá» hÆ¡n.
+#### 1. Quy trình nghiệp vụ thực tế
+Khi xuất nguyên vật liệu lên dây chuyền sản xuất, nếu số lượng cuộn/thùng gốc quá lớn so với nhu cầu của chuyền, thủ kho sử dụng màn hình F741 để tách Lot gốc thành các Lot con có số lượng nhỏ hơn.
 
-#### 2. Logic xá»­ lÃ½ chi tiáº¿t trong database
-Khi thá»§ kho click xÃ¡c nháº­n tÃ¡ch Lot trÃªn UI, há»‡ thá»‘ng sáº½ thá»±c hiá»‡n SP `usp_DoSplitRawMaterialAndMove` theo cÃ¡c bÆ°á»›c:
-1.  **Kiá»ƒm tra Ä‘iá»u kiá»‡n Lot cha:**
-    *   Lot gá»‘c (`@pMaterialLotNo`) pháº£i tá»“n táº¡i trong báº£ng `STB_MaterialLotInfo`.
-    *   `PickingQty = 0` (Lot hiá»‡n táº¡i khÃ´ng trong tráº¡ng thÃ¡i Ä‘ang bá»‹ khÃ³a Ä‘á»ƒ xuáº¥t kho).
-    *   Sá»‘ lÆ°á»£ng yÃªu cáº§u tÃ¡ch (`@pSplitQty`) pháº£i lá»›n hÆ¡n `0` vÃ  nhá» hÆ¡n sá»‘ lÆ°á»£ng tá»“n hiá»‡n táº¡i cá»§a Lot cha (`CurrentQty`).
-2.  **Sinh Lot con má»›i:**
-    *   Gá»i hÃ m `SmartFramework.dbo.usp_DoCreateSerial` Ä‘á»ƒ tá»± Ä‘á»™ng sinh mÃ£ sá»‘ `MaterialLotNo` má»›i cho Lot con.
-3.  **Táº¡o báº£n ghi Lot con (`STB_MaterialLotInfo`):**
-    *   Sao chÃ©p toÃ n bá»™ thÃ´ng tin thuá»™c tÃ­nh tá»« Lot cha sang Lot con.
-    *   Äáº·t `InitialQty = @pSplitQty` vÃ  `CurrentQty = @ppSplitQty`.
-    *   Äáº·t cá» `IsSplitLot = 1` Ä‘á»ƒ Ä‘Ã¡nh dáº¥u Ä‘Ã¢y lÃ  Lot Ä‘Æ°á»£c tÃ¡ch.
-    *   Ghi nháº­n `BefMaterialLotNo` = `MaterialLotNo` cá»§a Lot cha (hoáº·c giá»¯ nguyÃªn Lot gá»‘c ban Ä‘áº§u náº¿u Lot cha cÅ©ng lÃ  Lot Ä‘Ã£ tÃ¡ch).
-    *   Thiáº¿t láº­p láº¡i `PackingID` = `LotID` má»›i (Lot con sáº½ cÃ³ mÃ£ Ä‘Ã³ng gÃ³i riÃªng Ä‘á»™c láº­p vá»›i Lot cha).
-4.  **Cáº­p nháº­t tá»“n kho Lot cha:**
-    *   Giáº£m sá»‘ lÆ°á»£ng tá»“n thá»±c táº¿ cá»§a Lot cha trong `STB_MaterialLotInfo`:
+#### 2. Logic xử lý chi tiết trong database
+Khi thủ kho click xác nhận tách Lot trên UI, hệ thống sẽ thực hiện SP `usp_DoSplitRawMaterialAndMove` theo các bước:
+1.  **Kiểm tra điều kiện Lot cha:**
+    *   Lot gốc (`@pMaterialLotNo`) phải tồn tại trong bảng `STB_MaterialLotInfo`.
+    *   `PickingQty = 0` (Lot hiện tại không trong trạng thái đang bị khóa để xuất kho).
+    *   Số lượng yêu cầu tách (`@pSplitQty`) phải lớn hơn `0` và nhỏ hơn số lượng tồn hiện tại của Lot cha (`CurrentQty`).
+2.  **Sinh Lot con mới:**
+    *   Gọi hàm `SmartFramework.dbo.usp_DoCreateSerial` để tự động sinh mã số `MaterialLotNo` mới cho Lot con.
+3.  **Tạo bản ghi Lot con (`STB_MaterialLotInfo`):**
+    *   Sao chép toàn bộ thông tin thuộc tính từ Lot cha sang Lot con.
+    *   Đặt `InitialQty = @pSplitQty` và `CurrentQty = @ppSplitQty`.
+    *   Đặt cờ `IsSplitLot = 1` để đánh dấu đây là Lot được tách.
+    *   Ghi nhận `BefMaterialLotNo` = `MaterialLotNo` của Lot cha (hoặc giữ nguyên Lot gốc ban đầu nếu Lot cha cũng là Lot đã tách).
+    *   Thiết lập lại `PackingID` = `LotID` mới (Lot con sẽ có mã đóng gói riêng độc lập với Lot cha).
+4.  **Cập nhật tồn kho Lot cha:**
+    *   Giảm số lượng tồn thực tế của Lot cha trong `STB_MaterialLotInfo`:
         ```sql
         UPDATE STB_MaterialLotInfo
         SET CurrentQty = CurrentQty - @SplitQty
         WHERE MaterialLotNo = @MaterialLotNo;
         ```
-5.  **Ghi log giao dá»‹ch:**
-    *   Ghi nháº­n log giao dá»‹ch xuáº¥t nháº­p kho áº£o trong báº£ng `STB_MaterialWarehouseInOutHist`.
-    *   Ghi nháº­n liÃªn káº¿t cha-con vÃ o báº£ng Ä‘á»‘i chiáº¿u `STB_SupportRawMaterialSplitHist`:
+5.  **Ghi log giao dịch:**
+    *   Ghi nhận log giao dịch xuất nhập kho ảo trong bảng `STB_MaterialWarehouseInOutHist`.
+    *   Ghi nhận liên kết cha-con vào bảng đối chiếu `STB_SupportRawMaterialSplitHist`:
         ```sql
         INSERT INTO STB_SupportRawMaterialSplitHist (MergeLotID, SplitLotID, TotalCurrentQty, SplitQty, IsFixed, CreateDateTime, CreateUserID)
         VALUES (@MaterialLotNo, @NewMaterialLotNo, @CurrentQty - @SplitQty, @SplitQty, 0, GETDATE(), @ProcessUserID);
         ```
-6.  **Di chuyá»ƒn vá»‹ trÃ­:** Náº¿u ngÆ°á»i dÃ¹ng truyá»n vÃ o vá»‹ trÃ­ Ä‘Ã­ch (`@pTargetLocation`), há»‡ thá»‘ng sáº½ tá»± Ä‘á»™ng cáº­p nháº­t vá»‹ trÃ­ má»›i cho Lot con vá»«a sinh ra.
+6.  **Di chuyển vị trí:** Nếu người dùng truyền vào vị trí đích (`@pTargetLocation`), hệ thống sẽ tự động cập nhật vị trí mới cho Lot con vừa sinh ra.
 
 ---
 
-### 4.21 F430 â€” Chi tiáº¿t Quy trÃ¬nh Xuáº¥t kho NVL (WMS Export Logic)
+### 4.21 [F430] — Chi tiết Quy trình Xuất kho NVL (WMS Export Logic)
 
-**MÃ n hÃ¬nh:** F430 (Xuáº¥t kho nguyÃªn váº­t liá»‡u)  
-**Stored Procedure chÃ­nh:** `usp_MaterialWarehouseInOutHist_iud_ConfirmExportNVL`  
-**SP kiá»ƒm tra logic:** `usp_VVTMaterialWarehouse_validFIFO`
+**Màn hình:** F430 (Xuất kho nguyên vật liệu)  
+**Stored Procedure chính:** `usp_MaterialWarehouseInOutHist_iud_ConfirmExportNVL`  
+**SP kiểm tra logic:** `usp_VVTMaterialWarehouse_validFIFO`
 
-#### 1. Quy trÃ¬nh nghiá»‡p vá»¥ thá»±c táº¿
-Thá»§ kho quÃ©t mÃ£ Lot cá»§a nguyÃªn váº­t liá»‡u táº¡i F430 Ä‘á»ƒ xÃ¡c nháº­n xuáº¥t kho cáº¥p cho sáº£n xuáº¥t. HÃ ng sau khi quÃ©t sáº½ chuyá»ƒn tá»« cÃ¡c kho váº­t lÃ½ gá»‘c (`ROH_VN_WH`, `ROH_HN_WH`...) sang kho áº£o trÃªn cÃ¡c chuyá»n sáº£n xuáº¥t (`ROUTE_WH`, `ROUTE_HN_WH`...).
+#### 1. Quy trình nghiệp vụ thực tế
+Thủ kho quét mã Lot của nguyên vật liệu tại F430 để xác nhận xuất kho cấp cho sản xuất. Hàng sau khi quét sẽ chuyển từ các kho vật lý gốc (`ROH_VN_WH`, `ROH_HN_WH`...) sang kho ảo trên các chuyền sản xuất (`ROUTE_WH`, `ROUTE_HN_WH`...).
 
-#### 2. Logic xá»­ lÃ½ chi tiáº¿t trong database
-1.  **Kiá»ƒm tra FIFO báº¯t buá»™c:**
-    *   Äá»‘i vá»›i cÃ¡c kho nguyÃªn liá»‡u chÃ­nh nhÆ° `ROH_WH` hoáº·c `ROH_VN_WH`, há»‡ thá»‘ng gá»i SP `usp_VVTMaterialWarehouse_validFIFO` vá»›i tham sá»‘ `@pKindCheck = 'FIFO'`.
-    *   SP nÃ y Ä‘á»‘i soÃ¡t ngÃ y nháº­p kho (`GRDate`) cá»§a Lot Ä‘ang quÃ©t vá»›i cÃ¡c Lot cÃ¹ng mÃ£ hÃ ng Ä‘ang tá»“n trong kho. Náº¿u phÃ¡t hiá»‡n cÃ³ Lot nháº­p trÆ°á»›c nhÆ°ng chÆ°a Ä‘Æ°á»£c xuáº¥t, há»‡ thá»‘ng sáº½ cháº·n giao dá»‹ch vÃ  bÃ¡o lá»—i vi pháº¡m nguyÃªn táº¯c FIFO.
-2.  **Kháº¥u trá»« & Di chuyá»ƒn vá»‹ trÃ­:**
-    *   Há»‡ thá»‘ng cáº­p nháº­t thÃ´ng tin kho vÃ  vá»‹ trÃ­ má»›i cho Lot trong báº£ng `STB_MaterialLotInfo` (Chuyá»ƒn `MaterialWarehouseCode` sang kho áº£o cáº¡nh chuyá»n tÆ°Æ¡ng á»©ng vá»›i Line sáº£n xuáº¥t Ä‘Æ°á»£c chá»n).
-    *   Ghi log lá»‹ch sá»­ xuáº¥t kho chi tiáº¿t vÃ o báº£ng `STB_MaterialWarehouseInOutHist` Ä‘á»ƒ phá»¥c vá»¥ Ä‘á»‘i soÃ¡t vÃ  bÃ¡o cÃ¡o xuáº¥t nháº­p tá»“n cuá»‘i thÃ¡ng.
-3.  **KhÃ´i phá»¥c xuáº¥t kho (Revert):**
-    *   Náº¿u thá»§ kho quÃ©t xuáº¥t nháº§m Lot, khÃ´ng Ä‘Æ°á»£c thá»±c hiá»‡n xuáº¥t Ä‘Ã¨ hay cáº­p nháº­t thá»§ cÃ´ng má»™t báº£ng riÃªng láº». Quy trÃ¬nh khÃ´i phá»¥c chuáº©n yÃªu cáº§u xÃ³a dÃ²ng log giao dá»‹ch tÆ°Æ¡ng á»©ng trong `STB_MaterialWarehouseInOutHist` vÃ  cáº­p nháº­t láº¡i kho/vá»‹ trÃ­ gá»‘c cá»§a Lot trong `STB_MaterialLotInfo` vá» kho váº­t lÃ½ ban Ä‘áº§u (Xem chi tiáº¿t cÃ¢u lá»‡nh rollback táº¡i má»¥c Â§4.17).
-
----
-
-### 4.22 HÆ°á»›ng Dáº«n Váº­n HÃ nh & Kháº¯c Phá»¥c Lá»—i Quy TrÃ¬nh Kho NVL (WMS)
-
-DÆ°á»›i Ä‘Ã¢y lÃ  cáº©m nang váº­n hÃ nh chi tiáº¿t cÃ¡c mÃ n hÃ¬nh thuá»™c phÃ¢n há»‡ Kho NguyÃªn Váº­t Liá»‡u (WMS) Ä‘Æ°á»£c Ä‘Ãºc káº¿t tá»« tÃ i liá»‡u thá»±c táº¿ cá»§a nhÃ  mÃ¡y:
-
-#### 1. Quáº£n lÃ½ NhÃ  cung cáº¥p & Chá»‰ Ä‘á»‹nh Váº­t tÆ° (A130, F130, F140)
-*   **A130 (ThÃ´ng tin Ä‘á»‘i tÃ¡c giao dá»‹ch):** DÃ¹ng Ä‘á»ƒ thÃªm, sá»­a, xÃ³a thÃ´ng tin nhÃ  cung cáº¥p NVL vÃ  tÃ i khoáº£n Ä‘á»‘i tÃ¡c.
-*   **F130 / F140 (Chá»‰ Ä‘á»‹nh nhÃ  cung cáº¥p - váº­t tÆ°):** Thiáº¿t láº­p má»‘i quan há»‡ Ã¡nh xáº¡ giá»¯a mÃ£ NVL vÃ  mÃ£ nhÃ  cung cáº¥p (Vendor). Chá»‰ khi Ä‘Æ°á»£c thiáº¿t láº­p táº¡i Ä‘Ã¢y thÃ¬ NVL má»›i cÃ³ thá»ƒ gá»i ra trong cÃ¡c phiáº¿u nháº­p kho.
-
-#### 2. Táº¡o ghi chÃº Ä‘Æ¡n hÃ ng nháº­p kho F312 (Inward Slip)
-*   Thá»±c hiá»‡n chá»n "Code bÃªn giao dá»‹ch" (liÃªn káº¿t tá»« cáº¥u hÃ¬nh F130) Ä‘á»ƒ hiá»ƒn thá»‹ danh sÃ¡ch NVL Ä‘Æ°á»£c phÃ©p cá»§a nhÃ  cung cáº¥p Ä‘Ã³.
-*   **âš ï¸ Kháº¯c phá»¥c lá»—i NVL khÃ´ng hiá»ƒn thá»‹ trong mÃ n hÃ¬nh F312:** Khi láº­p phiáº¿u mÃ  khÃ´ng tÃ¬m tháº¥y mÃ£ NVL cá»§a nhÃ  cung cáº¥p trong Ã´ lá»±a chá»n, kiá»ƒm tra 3 nguyÃªn nhÃ¢n sau:
-    1.  MÃ£ NVL chÆ°a Ä‘Æ°á»£c Map vá»›i nhÃ  cung cáº¥p táº¡i mÃ n hÃ¬nh **F140/F130**.
-    2.  MÃ£ NVL Ä‘ang bá»‹ khÃ³a/ngÆ°ng sá»­ dá»¥ng trong mÃ n hÃ¬nh **A230 (ThÃ´ng tin váº­t liá»‡u)** (cá»™t "Äang Ä‘Ã³ng" bá»‹ tÃ­ch chá»n).
-    3.  MÃ£ NVL khÃ´ng bá»‹ Ä‘Ã³ng á»Ÿ A230 nhÆ°ng **chÆ°a tÃ­ch chá»n** vÃ o 2 cá»™t thuá»™c tÃ­nh: **"Äang mua"** vÃ  **"Äang Ä‘áº·t hÃ ng"** (Ä‘Ã¢y lÃ  cÃ¡c cá» cáº¥u hÃ¬nh báº¯t buá»™c cho hÃ ng mua ngoÃ i).
-*   Nháº­p sá»‘ lÆ°á»£ng yÃªu cáº§u thá»±c táº¿ (`RequestQty`) vÃ  nháº¥n biá»ƒu tÆ°á»£ng **Save** á»Ÿ lÆ°á»›i bÃªn dÆ°á»›i Ä‘á»ƒ lÆ°u.
-
-#### 3. Tiáº¿p nháº­n, Nháº­p kho vÃ  In tem táº¡i F330 (Warehouse Entry & Label Printing)
-*   **BÆ°á»›c 1 (Xá»­ lÃ½ hÃ ng vá»):** Khi phiáº¿u F312 má»›i táº¡o Ä‘Æ°á»£c gá»i ra á»Ÿ F330, cá»™t `DocStatusName` ban Ä‘áº§u sáº½ hiá»ƒn thá»‹ tráº¡ng thÃ¡i **"CREATE"**. Thá»§ kho báº¯t buá»™c pháº£i click chá»n dÃ²ng dá»¯ liá»‡u vÃ  nháº¥n nÃºt **"Xá»­ lÃ½ hÃ ng nháº­p vá»"** Ä‘á»ƒ há»‡ thá»‘ng chuyá»ƒn tráº¡ng thÃ¡i sang **"ARRIVAL"**. LÃºc nÃ y nÃºt táº¡o Lot má»›i sÃ¡ng lÃªn Ä‘á»ƒ thao tÃ¡c.
-*   **BÆ°á»›c 2 (Chia tem & Khai bÃ¡o Ä‘áº·c tÃ­nh 10):**
-    *   Nháº­p `PackingQty` (Sá»‘ lÆ°á»£ng NVL cá»§a 1 tem/thÃ¹ng) -> Há»‡ thá»‘ng tá»± Ä‘á»™ng tÃ­nh Sá»‘ tem = `ReceiveQty` / `PackingQty`.
-    *   Nháº­p cÃ¡c thÃ´ng tin báº¯t buá»™c (mÃ u xanh Ä‘áº­m) -> Nháº¥n nÃºt **"Táº¡o tem"** Ä‘á»ƒ sinh danh sÃ¡ch Lot.
-    *   **âš ï¸ Cá»±c ká»³ quan trá»ng:** Sau khi sinh Lot, thá»§ kho báº¯t buá»™c pháº£i nháº­p giÃ¡ trá»‹ **"Sá»‘ Lot No cá»§a nhÃ  cung cáº¥p"** vÃ o cá»™t **"Äáº·c tÃ­nh 10"** (`LotAttr10` / `LotExtText10`) Ä‘á»ƒ há»‡ thá»‘ng cháº¡y hÃ m parse tá»± Ä‘á»™ng tÃ­nh ra ngÃ y sáº£n xuáº¥t vÃ  thá»i háº¡n háº¿t háº¡n. Náº¿u cá»™t nÃ y bá»‹ bá» trá»‘ng hoáº·c khÃ´ng nháº£y ngÃ y háº¿t háº¡n, Lot sáº½ tá»± Ä‘á»™ng bá»‹ há»‡ thá»‘ng Ä‘Æ°a vÃ o kho áº£o **`HOLDING`** khi xuáº¥t kho vÃ  khÃ´ng thá»ƒ cáº¥p phÃ¡t cho sáº£n xuáº¥t. Náº¿u gáº·p sá»± cá»‘ Ä‘iá»n Lot No Ä‘Ãºng nhÆ°ng khÃ´ng nháº£y Ä‘áº·c tÃ­nh ngÃ y, hÃ£y bÃ¡o ngay cho EA Team.
-*   **BÆ°á»›c 3 (XÃ¡c nháº­n nháº­p kho):** Chá»‰ khi káº¿t quáº£ kiá»ƒm tra IQC táº¡i mÃ n hÃ¬nh **C220** cá»§a Lot hÃ ng Ä‘Ã³ Ä‘Ã£ chuyá»ƒn tráº¡ng thÃ¡i **"PASS"** thÃ¬ thá»§ kho má»›i cÃ³ thá»ƒ thá»±c hiá»‡n nháº¥n 2 nÃºt **"Káº¿t thÃºc nháº­p kho"** vÃ  **"XÃ¡c nháº­n nháº­p kho"** táº¡i F330. Viá»‡c nháº¥n Ä‘á»§ 2 nÃºt nÃ y lÃ  báº¯t buá»™c Ä‘á»ƒ káº¿t thÃºc quy trÃ¬nh nháº­p.
-
-    > ðŸš¦ **Tham chiáº¿u má»Ÿ rá»™ng:** Chi tiáº¿t logic, mÃ£ SQL debug, vÃ  cÃ¡ch má»Ÿ rá»™ng cho cá»•ng cháº·n IQC nháº­p kho (F330/C220) Ä‘Æ°á»£c tá»•ng há»£p táº¡i **[KB_14 Â§6.3 NhÃ³m 11 â€” F330/C220 IQC](../KB_14/KB_14_01_METHODOLOGY.md#nhÃ³m-11-f330c220--cháº·n-nháº­p-kho-iqc-validation-liÃªn-phÃ²ng-ban)**.
-
-#### 4. Cáº¥p phÃ¡t sáº£n xuáº¥t & Quy trÃ¬nh hoÃ n tráº£ NVL (F430, F610, F620)
-*   **Xuáº¥t kho ra chuyá»n (F430):** Sá»­ dá»¥ng nÃºt "NguyÃªn liá»‡u Ä‘áº§u ra" Ä‘á»ƒ xuáº¥t NVL ra CellLine theo nguyÃªn táº¯c FIFO. Náº¿u Lot nÃ o thiáº¿u ngÃ y sáº£n xuáº¥t á»Ÿ Ä‘áº·c tÃ­nh 10, há»‡ thá»‘ng sáº½ tá»± Ä‘á»™ng chuyá»ƒn Lot Ä‘Ã³ vÃ o kho HOLDING.
-*   **Quy trÃ¬nh hoÃ n tráº£ NVL (Returns):**
-    *   **TrÆ°á»ng há»£p 1 (Xuáº¥t nháº§m Line hoáº·c HoÃ n tráº£ 100%):** Náº¿u xuáº¥t nháº§m Line hoáº·c xuáº¥t ra bao nhiÃªu (vÃ­ dá»¥ 500) mÃ  tráº£ láº¡i nguyÃªn váº¹n báº¥y nhiÃªu (500), thá»§ kho sá»­ dá»¥ng nÃºt **"NguyÃªn liá»‡u Ä‘áº§u vÃ o"** táº¡i mÃ n hÃ¬nh **F430** Ä‘á»ƒ nháº­p láº¡i kho.
-    *   **TrÆ°á»ng há»£p 2 (Tráº£ láº¡i sá»‘ dÆ° thá»«a - HoÃ n tráº£ má»™t pháº§n):** Náº¿u xuáº¥t ra line 500 con, sáº£n xuáº¥t sá»­ dá»¥ng háº¿t 100 con vÃ  tráº£ láº¡i kho 400 con dÆ° thá»«a, **TUYá»†T Äá»I KHÃ”NG** dÃ¹ng mÃ n hÃ¬nh F430. Quy trÃ¬nh báº¯t buá»™c lÃ :
-        1.  VÃ o mÃ n hÃ¬nh **F610** Ä‘á»ƒ thá»±c hiá»‡n bÆ°á»›c 1 nháº­p láº¡i kho.
-        2.  VÃ o mÃ n hÃ¬nh **F620** Ä‘á»ƒ thá»±c hiá»‡n bÆ°á»›c 2 xÃ¡c nháº­n nháº­p láº¡i sá»‘ dÆ° 400 con.
-        3.  Tiáº¿n hÃ nh quy trÃ¬nh nháº­p kho bÃ¬nh thÆ°á»ng vÃ  thá»±c hiá»‡n tÃ¡ch tem táº¡i **F740** Ä‘á»ƒ in láº¡i tem nhÃ£n tÆ°Æ¡ng á»©ng vá»›i sá»‘ lÆ°á»£ng thá»±c táº¿ tráº£ vá».
-
-#### 5. BÃ¡o cÃ¡o tá»“n kho & Lá»‹ch sá»­ kho (F721, F761, F740)
-*   **F761 (Lá»‹ch sá»­ NVL vÃ o kho):** Tra cá»©u toÃ n bá»™ lá»‹ch sá»­ nháº­p kho. ChÃº Ã½ cá»™t `DocTypeName` náº¿u hiá»ƒn thá»‹ chá»¯ tiáº¿ng HÃ n Ä‘áº¡i diá»‡n cho giao dá»‹ch hoÃ n tráº£ tá»« sáº£n xuáº¥t, cÃ¡c trÆ°á»ng há»£p cÃ²n láº¡i lÃ  nháº­p má»›i tá»« phiáº¿u F312. Tab "Summary" phá»¥c vá»¥ bá»™ pháº­n Káº¿ toÃ¡n Ä‘á»‘i soÃ¡t.
-*   **F721 (BÃ¡o cÃ¡o tá»“n kho NVL & Vá»‹ trÃ­):** DÃ¹ng Ä‘á»ƒ xem tá»“n kho NVL hiá»‡n táº¡i vÃ  thá»±c hiá»‡n gÃ¡n vá»‹ trÃ­ váº­t lÃ½ (Location). Thá»§ kho nháº­p vá»‹ trÃ­ vÃ  mÃ£ nguyÃªn váº­t liá»‡u, quÃ©t mÃ£ LotID Ä‘á»ƒ cáº­p nháº­t vá»‹ trÃ­ lÃªn há»‡ thá»‘ng (cÃ³ thá»ƒ lÆ°u tá»«ng Lot hoáº·c chá»n táº¥t cáº£ rá»“i báº¥m lÆ°u Ä‘á»“ng loáº¡t). ThÃ´ng tin nÃ y sáº½ Ä‘á»“ng bá»™ trá»±c tiáº¿p lÃªn mÃ n hÃ¬nh Tivi giÃ¡m sÃ¡t vá»‹ trÃ­ kho (`192.168.1.234:9000/tv`).
-*   **F740 (TÃ¡ch Lot theo sá»‘ lÆ°á»£ng):** DÃ¹ng Ä‘á»ƒ chia tÃ¡ch 1 Lot cÃ³ sá»‘ lÆ°á»£ng lá»›n thÃ nh nhiá»u Lot nhá» theo nhu cáº§u thá»±c táº¿ (vÃ­ dá»¥: tÃ¡ch 1 Lot 400 thÃ nh 300 vÃ  100). Nháº­p sá»‘ lÆ°á»£ng cáº§n tÃ¡ch, nÃºt **"SplitLot"** sáº½ sÃ¡ng lÃªn Ä‘á»ƒ thá»±c hiá»‡n thao tÃ¡c tÃ¡ch Lot.
+#### 2. Logic xử lý chi tiết trong database
+1.  **Kiểm tra FIFO bắt buộc:**
+    *   Đối với các kho nguyên liệu chính như `ROH_WH` hoặc `ROH_VN_WH`, hệ thống gọi SP `usp_VVTMaterialWarehouse_validFIFO` với tham số `@pKindCheck = 'FIFO'`.
+    *   SP này đối soát ngày nhập kho (`GRDate`) của Lot đang quét với các Lot cùng mã hàng đang tồn trong kho. Nếu phát hiện có Lot nhập trước nhưng chưa được xuất, hệ thống sẽ chặn giao dịch và báo lỗi vi phạm nguyên tắc FIFO.
+2.  **Khấu trừ & Di chuyển vị trí:**
+    *   Hệ thống cập nhật thông tin kho và vị trí mới cho Lot trong bảng `STB_MaterialLotInfo` (Chuyển `MaterialWarehouseCode` sang kho ảo cạnh chuyền tương ứng với Line sản xuất được chọn).
+    *   Ghi log lịch sử xuất kho chi tiết vào bảng `STB_MaterialWarehouseInOutHist` để phục vụ đối soát và báo cáo xuất nhập tồn cuối tháng.
+3.  **Khôi phục xuất kho (Revert):**
+    *   Nếu thủ kho quét xuất nhầm Lot, không được thực hiện xuất đè hay cập nhật thủ công một bảng riêng lẻ. Quy trình khôi phục chuẩn yêu cầu xóa dòng log giao dịch tương ứng trong `STB_MaterialWarehouseInOutHist` và cập nhật lại kho/vị trí gốc của Lot trong `STB_MaterialLotInfo` về kho vật lý ban đầu (Xem chi tiết câu lệnh rollback tại mục §4.17).
 
 ---
 
+### 4.22 Hướng Dẫn Vận Hành & Khắc Phục Lỗi Quy Trình Kho NVL (WMS)
+
+Dưới đây là cẩm nang vận hành chi tiết các màn hình thuộc phân hệ Kho Nguyên Vật Liệu (WMS) được đúc kết từ tài liệu thực tế của nhà máy:
+
+#### 1. Quản lý Nhà cung cấp & Chỉ định Vật tư ([A130], [F130], [F140])
+*   **A130 (Thông tin đối tác giao dịch):** Dùng để thêm, sửa, xóa thông tin nhà cung cấp NVL và tài khoản đối tác.
+*   **F130 / F140 (Chỉ định nhà cung cấp - vật tư):** Thiết lập mối quan hệ ánh xạ giữa mã NVL và mã nhà cung cấp (Vendor). Chỉ khi được thiết lập tại đây thì NVL mới có thể gọi ra trong các phiếu nhập kho.
+
+#### 2. Tạo ghi chú đơn hàng nhập kho [F312] (Inward Slip)
+*   Thực hiện chọn "Code bên giao dịch" (liên kết từ cấu hình F130) để hiển thị danh sách NVL được phép của nhà cung cấp đó.
+*   **⚠️ Khắc phục lỗi NVL không hiển thị trong màn hình F312:** Khi lập phiếu mà không tìm thấy mã NVL của nhà cung cấp trong ô lựa chọn, kiểm tra 3 nguyên nhân sau:
+    1.  Mã NVL chưa được Map với nhà cung cấp tại màn hình **F140/F130**.
+    2.  Mã NVL đang bị khóa/ngưng sử dụng trong màn hình **A230 (Thông tin vật liệu)** (cột "Đang đóng" bị tích chọn).
+    3.  Mã NVL không bị đóng ở A230 nhưng **chưa tích chọn** vào 2 cột thuộc tính: **"Đang mua"** và **"Đang đặt hàng"** (đây là các cờ cấu hình bắt buộc cho hàng mua ngoài).
+*   Nhập số lượng yêu cầu thực tế (`RequestQty`) và nhấn biểu tượng **Save** ở lưới bên dưới để lưu.
+
+#### 3. Tiếp nhận, Nhập kho và In tem tại [F330] (Warehouse Entry & Label Printing)
+*   **Bước 1 (Xử lý hàng về):** Khi phiếu F312 mới tạo được gọi ra ở F330, cột `DocStatusName` ban đầu sẽ hiển thị trạng thái **"CREATE"**. Thủ kho bắt buộc phải click chọn dòng dữ liệu và nhấn nút **"Xử lý hàng nhập về"** để hệ thống chuyển trạng thái sang **"ARRIVAL"**. Lúc này nút tạo Lot mới sáng lên để thao tác.
+*   **Bước 2 (Chia tem & Khai báo đặc tính 10):**
+    *   Nhập `PackingQty` (Số lượng NVL của 1 tem/thùng) -> Hệ thống tự động tính Số tem = `ReceiveQty` / `PackingQty`.
+    *   Nhập các thông tin bắt buộc (màu xanh đậm) -> Nhấn nút **"Tạo tem"** để sinh danh sách Lot.
+    *   **⚠️ Cực kỳ quan trọng:** Sau khi sinh Lot, thủ kho bắt buộc phải nhập giá trị **"Số Lot No của nhà cung cấp"** vào cột **"Đặc tính 10"** (`LotAttr10` / `LotExtText10`) để hệ thống chạy hàm parse tự động tính ra ngày sản xuất và thời hạn hết hạn. Nếu cột này bị bỏ trống hoặc không nhảy ngày hết hạn, Lot sẽ tự động bị hệ thống đưa vào kho ảo **`HOLDING`** khi xuất kho và không thể cấp phát cho sản xuất. Nếu gặp sự cố điền Lot No đúng nhưng không nhảy đặc tính ngày, hãy báo ngay cho EA Team.
+*   **Bước 3 (Xác nhận nhập kho):** Chỉ khi kết quả kiểm tra IQC tại màn hình **C220** của Lot hàng đó đã chuyển trạng thái **"PASS"** thì thủ kho mới có thể thực hiện nhấn 2 nút **"Kết thúc nhập kho"** và **"Xác nhận nhập kho"** tại F330. Việc nhấn đủ 2 nút này là bắt buộc để kết thúc quy trình nhập.
+
+    > 🚦 **Tham chiếu mở rộng:** Chi tiết logic, mã SQL debug, và cách mở rộng cho cổng chặn IQC nhập kho (F330/C220) được tổng hợp tại **[KB_14 §6.3 Nhóm 11 — F330/C220 IQC](../KB_14/KB_14_01_METHODOLOGY.md#nhóm-11-f330c220--chặn-nhập-kho-iqc-validation-liên-phòng-ban)**.
+
+#### 4. Cấp phát sản xuất & Quy trình hoàn trả NVL ([F430], [F610], [F620])
+*   **Xuất kho ra chuyền (F430):** Sử dụng nút "Nguyên liệu đầu ra" để xuất NVL ra CellLine theo nguyên tắc FIFO. Nếu Lot nào thiếu ngày sản xuất ở đặc tính 10, hệ thống sẽ tự động chuyển Lot đó vào kho HOLDING.
+*   **Quy trình hoàn trả NVL (Returns):**
+    *   **Trường hợp 1 (Xuất nhầm Line hoặc Hoàn trả 100%):** Nếu xuất nhầm Line hoặc xuất ra bao nhiêu (ví dụ 500) mà trả lại nguyên vẹn bấy nhiêu (500), thủ kho sử dụng nút **"Nguyên liệu đầu vào"** tại màn hình **F430** để nhập lại kho.
+    *   **Trường hợp 2 (Trả lại số dư thừa - Hoàn trả một phần):** Nếu xuất ra line 500 con, sản xuất sử dụng hết 100 con và trả lại kho 400 con dư thừa, **TUYỆT ĐỐI KHÔNG** dùng màn hình F430. Quy trình bắt buộc là:
+        1.  Vào màn hình **F610** để thực hiện bước 1 nhập lại kho.
+        2.  Vào màn hình **F620** để thực hiện bước 2 xác nhận nhập lại số dư 400 con.
+        3.  Tiến hành quy trình nhập kho bình thường và thực hiện tách tem tại **F740** để in lại tem nhãn tương ứng với số lượng thực tế trả về.
+
+#### 5. Báo cáo tồn kho & Lịch sử kho ([F721], [F761], [F740])
+*   **F761 (Lịch sử NVL vào kho):** Tra cứu toàn bộ lịch sử nhập kho. Chú ý cột `DocTypeName` nếu hiển thị chữ tiếng Hàn đại diện cho giao dịch hoàn trả từ sản xuất, các trường hợp còn lại là nhập mới từ phiếu F312. Tab "Summary" phục vụ bộ phận Kế toán đối soát.
+*   **F721 (Báo cáo tồn kho NVL & Vị trí):** Dùng để xem tồn kho NVL hiện tại và thực hiện gán vị trí vật lý (Location). Thủ kho nhập vị trí và mã nguyên vật liệu, quét mã LotID để cập nhật vị trí lên hệ thống (có thể lưu từng Lot hoặc chọn tất cả rồi bấm lưu đồng loạt). Thông tin này sẽ đồng bộ trực tiếp lên màn hình Tivi giám sát vị trí kho (`192.168.1.234:9000/tv`).
+*   **F740 (Tách Lot theo số lượng):** Dùng để chia tách 1 Lot có số lượng lớn thành nhiều Lot nhỏ theo nhu cầu thực tế (ví dụ: tách 1 Lot 400 thành 300 và 100). Nhập số lượng cần tách, nút **"SplitLot"** sẽ sáng lên để thực hiện thao tác tách Lot.
 
 ---
 
-## 5. ðŸ“¦ Kho ThÃ nh Pháº©m (Finished Goods WMS - Gá»™p tá»« KB_08)
+
+---
+
+## 5. 📦 Kho Thành Phẩm (Finished Goods WMS - Gộp từ KB_08)
 
 
-### 1. Lá»—i HÃ ng xuáº¥t á»Ÿ HN551 nhÆ°ng tá»“n kho HN866 váº«n cÃ²n
+### 1. Lỗi Hàng xuất ở [HN551] nhưng tồn kho [HN866] vẫn còn
 
-**TÆ° duy trace:**
-- **HN551 (Xuáº¥t):** Ghi vÃ o `STB_VN_FINISHGOODS_HN_Export` vÃ  Ä‘Ã¡nh dáº¥u "Ä‘Ã£ Ä‘i" vÃ o sá»• tá»“n kho.
-- **HN866 (Tá»“n):** Chá»‰ Ä‘á»c sá»• tá»“n kho â€” cÃ¡i nÃ o `QtyOutput = 0` thÃ¬ hiá»‡n lÃªn.
-- **NguyÃªn nhÃ¢n thÆ°á»ng gáº·p:** HN551 Ä‘Ã£ ghi sá»• xuáº¥t nhÆ°ng **quÃªn cáº­p nháº­t** sá»• tá»“n kho.
+**Tư duy trace:**
+- **HN551 (Xuất):** Ghi vào `STB_VN_FINISHGOODS_HN_Export` và đánh dấu "đã đi" vào sổ tồn kho.
+- **HN866 (Tồn):** Chỉ đọc sổ tồn kho — cái nào `QtyOutput = 0` thì hiện lên.
+- **Nguyên nhân thường gặp:** HN551 đã ghi sổ xuất nhưng **quên cập nhật** sổ tồn kho.
 
 ```sql
 DECLARE @PackingID NVARCHAR(50) = 'PKHN023117'
 
--- BÆ¯á»šC 1: Kiá»ƒm tra tráº¡ng thÃ¡i xuáº¥t kho
+-- BƯỚC 1: Kiểm tra trạng thái xuất kho
 SELECT CodeExport, PackingID, LotNo, Qty, StatusExport, CreateDateTime
 FROM STB_VN_FINISHGOODS_HN_Export WHERE PackingID = @PackingID
 
--- BÆ¯á»šC 2: Kiá»ƒm tra tá»“n kho thá»±c táº¿
--- QtyOutput = 0 nhÆ°ng BÆ¯á»šC 1 cÃ³ data â†’ Lá»–I LOGIC TRá»ª KHO
+-- BƯỚC 2: Kiểm tra tồn kho thực tế
+-- QtyOutput = 0 nhưng BƯỚC 1 có data → LỖI LOGIC TRỪ KHO
 SELECT PackingID, Quantity, QtyOutput
 FROM FinishGoodMESInstock_HN WHERE PackingID = @PackingID
 
--- BÆ¯á»šC 3: Kiá»ƒm tra Packing lÃ  "Tem To" hay "Tem Nhá»"
+-- BƯỚC 3: Kiểm tra Packing là "Tem To" hay "Tem Nhỏ"
 SELECT PackingID FROM STB_PackingOutPutFinishGoods_HN
 WHERE PackingOutPutFinishGoodsID = @PackingID
--- CÃ³ káº¿t quáº£ â†’ Tem To â†’ xuáº¥t 1 mÃ£ nÃ y sáº½ tá»± Ä‘á»™ng xuáº¥t cÃ¡c box con bÃªn trong
+-- Có kết quả → Tem To → xuất 1 mã này sẽ tự động xuất các box con bên trong
 ```
 
-**Fix (náº¿u QtyOutput sai):**
+**Fix (nếu QtyOutput sai):**
 ```sql
--- âš ï¸ XÃ¡c minh DB (2026-05-17): Báº£ng KHÃ”NG cÃ³ cá»™t StatusInstock â€” chá»‰ cÃ³ QtyOutput
+-- ⚠️ Xác minh DB (2026-05-17): Bảng KHÔNG có cột StatusInstock — chỉ có QtyOutput
 UPDATE FinishGoodMESInstock_HN
 SET QtyOutput = Quantity
 WHERE PackingID = @PackingID
@@ -773,55 +773,55 @@ SET StatusExport = 1
 WHERE PackingID = @PackingID
 ```
 
-> **SP xuáº¥t kho:** `ExportWarehouseFinshGoodInventory_uid`
+> **SP xuất kho:** `ExportWarehouseFinshGoodInventory_uid`
 
 ---
 
-### 2. PhÃ¢n biá»‡t Tem To vÃ  Tem Nhá» (HÃ  Nam)
+### 2. Phân biệt Tem To và Tem Nhỏ (Hà Nam)
 
-| Loáº¡i tem | Äá»‹nh nghÄ©a | Báº£ng DB | Khi xuáº¥t |
+| Loại tem | Định nghĩa | Bảng DB | Khi xuất |
 |----------|-----------|---------|---------|
-| **Tem To** (Pallet/Gá»™p) | Äáº¡i diá»‡n cho nhiá»u thÃ¹ng gá»™p láº¡i | `STB_PackingOutPutFinishGoods_HN` | Tá»± Ä‘á»™ng xuáº¥t táº¥t cáº£ box con bÃªn trong |
-| **Tem Nhá»** (Box Ä‘Æ¡n) | DÃ¡n trÃªn tá»«ng thÃ¹ng riÃªng láº» | KhÃ´ng cÃ³ trong báº£ng trÃªn | Xuáº¥t tá»«ng box riÃªng |
+| **Tem To** (Pallet/Gộp) | Đại diện cho nhiều thùng gộp lại | `STB_PackingOutPutFinishGoods_HN` | Tự động xuất tất cả box con bên trong |
+| **Tem Nhỏ** (Box đơn) | Dán trên từng thùng riêng lẻ | Không có trong bảng trên | Xuất từng box riêng |
 
 ```sql
--- Kiá»ƒm tra PackingID lÃ  Tem To hay Tem Nhá»
+-- Kiểm tra PackingID là Tem To hay Tem Nhỏ
 SELECT COUNT(*) AS [SoKetQua]
 FROM STB_PackingOutPutFinishGoods_HN
 WHERE PackingOutPutFinishGoodsID = 'PKHN023117'
--- CÃ³ káº¿t quáº£ â†’ Tem To | KhÃ´ng cÃ³ â†’ Tem Nhá»
+-- Có kết quả → Tem To | Không có → Tem Nhỏ
 ```
 
 ---
 
-### 2.1 Lá»—i Unique Constraint khi Gá»™p TÃºi BÃ³ng (HN544) â€” PKQN2100175
+### 2.1 Lỗi Unique Constraint khi Gộp Túi Bóng ([HN544]) — PKQN2100175
 
-**Triá»‡u chá»©ng:** Khi User nháº­p `Packing ID: PKQN2100175` trÃªn mÃ n hÃ¬nh **[HN544] Gá»™p tÃºi bÃ³ng thÃ nh há»™p nhá»** vÃ  nháº¥n TÃ¬m kiáº¿m, há»‡ thá»‘ng bÃ¡o lá»—i:
+**Triệu chứng:** Khi User nhập `Packing ID: PKQN2100175` trên màn hình **[HN544] Gộp túi bóng thành hộp nhỏ** và nhấn Tìm kiếm, hệ thống báo lỗi:
 > **Column 'LotID' is constrained to be unique. Value '63RHHL180ME16XB001QN2100012' is already present.**
 
-##### ðŸ”´ NguyÃªn nhÃ¢n gá»‘c rá»…:
-Stored Procedure `usp_GetMaterialLotInfo_Packing_VVT_F3` sá»­ dá»¥ng `UNION ALL` Ä‘á»ƒ gá»™p 3 truy váº¥n:
+##### 🔴 Nguyên nhân gốc rễ:
+Stored Procedure `usp_GetMaterialLotInfo_Packing_VVT_F3` sử dụng `UNION ALL` để gộp 3 truy vấn:
 
-1. **Truy váº¥n 1:** QuÃ©t `STB_MaterialLotInfo` cÃ³ `PackingID = 'PKQN2100175'` â†’ TÃ¬m **1 dÃ²ng** (LotID: `63RHHL180ME16XB001QN2100012`)
-2. **Truy váº¥n 2:** QuÃ©t tá»« `STB_PackingNilonToBoxSmall_HN` (há»™p nhá» gá»™p)
-3. **Truy váº¥n 3 (Lá»–I):** QuÃ©t `STB_DividePackaging` cÃ³ `PackingID = 'PKQN2100175'`
-   - DÃ²ng nÃ y lÃ  **mÃ£ cha chÆ°a Ä‘Æ°á»£c chia tÃ¡ch**, nÃªn cá»™t `PackingParentID` bá»‹ **NULL/trá»‘ng**
+1. **Truy vấn 1:** Quét `STB_MaterialLotInfo` có `PackingID = 'PKQN2100175'` → Tìm **1 dòng** (LotID: `63RHHL180ME16XB001QN2100012`)
+2. **Truy vấn 2:** Quét từ `STB_PackingNilonToBoxSmall_HN` (hộp nhỏ gộp)
+3. **Truy vấn 3 (LỖI):** Quét `STB_DividePackaging` có `PackingID = 'PKQN2100175'`
+   - Dòng này là **mã cha chưa được chia tách**, nên cột `PackingParentID` bị **NULL/trống**
    - JOIN condition: `LEFT JOIN STB_MaterialLotInfo MLI ON MLI.LotNo = DP.LotNo and MLI.PackingID = DP.PackingParentID`
-   - VÃ¬ `DP.PackingParentID = NULL`, LEFT JOIN khÃ´ng khá»›p â†’ **tráº£ vá» dÃ²ng dummy vá»›i `LotID = NULL`**
-   - Káº¿t quáº£: Truy váº¥n 3 tráº£ vá» **dÃ²ng thá»© 2 cÃ³ `LotID = NULL`**
+   - Vì `DP.PackingParentID = NULL`, LEFT JOIN không khớp → **trả về dòng dummy với `LotID = NULL`**
+   - Kết quả: Truy vấn 3 trả về **dòng thứ 2 có `LotID = NULL`**
 
-4. **Khi DataTable nháº­n dá»¯ liá»‡u:** DataTable cÃ³ constraint `Unique = true` trÃªn cá»™t `LotID`
-   - Client-side code Ä‘iá»n giÃ¡ trá»‹ máº·c Ä‘á»‹nh tá»« dÃ²ng 1 â†’ **Duplicate LotID**
-   - Ngoáº¡i lá»‡ Ä‘Æ°á»£c nÃ©m ra
+4. **Khi DataTable nhận dữ liệu:** DataTable có constraint `Unique = true` trên cột `LotID`
+   - Client-side code điền giá trị mặc định từ dòng 1 → **Duplicate LotID**
+   - Ngoại lệ được ném ra
 
-##### ðŸ› ï¸ **Giáº£i phÃ¡p:**
+##### 🛠️ **Giải pháp:**
 
-**Script 1: Há»§y giao dá»‹ch lá»—i (Revert Merge)**
+**Script 1: Hủy giao dịch lỗi (Revert Merge)**
 ```sql
 BEGIN TRANSACTION;
 BEGIN TRY
 
-    -- 1. SAO LÆ¯U Báº¢NG Há»˜P NHá»Ž TRÆ¯á»šC KHI XÃ“A
+    -- 1. SAO LƯU BẢNG HỘP NHỎ TRƯỚC KHI XÓA
     IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'STB_PackingNilonToBoxSmall_HN_BK')
     BEGIN
         SELECT * INTO STB_PackingNilonToBoxSmall_HN_BK 
@@ -836,70 +836,70 @@ BEGIN TRY
         WHERE PackingNilonToBoxSmallID = 'PK202605210000000005';
     END
 
-    -- 2. XÃ“A GIAO Dá»ŠCH Lá»–I á»ž STB_DividePackaging
+    -- 2. XÓA GIAO DỊCH LỖI Ở STB_DividePackaging
     DELETE FROM STB_DividePackaging 
     WHERE PackingID = 'PKQN2100175';
     
-    -- 3. XÃ“A RECORD Há»˜P NHá»Ž
+    -- 3. XÓA RECORD HỘP NHỎ
     DELETE FROM STB_PackingNilonToBoxSmall_HN 
     WHERE PackingNilonToBoxSmallID = 'PK202605210000000005';
 
     COMMIT TRANSACTION;
-    PRINT '==> HOÃ€N THÃ€NH Há»¦Y GIAO Dá»ŠCH THÃ€NH CÃ”NG!';
+    PRINT '==> HOÀN THÀNH HỦY GIAO DỊCH THÀNH CÔNG!';
 
 END TRY
 BEGIN CATCH
     ROLLBACK TRANSACTION;
-    PRINT '==> CÃ“ Lá»–I Xáº¢Y RA. ÄÃƒ ROLLBACK!';
+    PRINT '==> CÓ LỖI XẢY RA. ĐÃ ROLLBACK!';
     SELECT ERROR_MESSAGE() AS ErrorMessage;
 END CATCH;
 ```
 
-**Script 2: Sá»­a Stored Procedure (NgÄƒn cháº·n lá»—i láº·p láº¡i)**
+**Script 2: Sửa Stored Procedure (Ngăn chặn lỗi lặp lại)**
 
-Sá»­a Ä‘á»•i cÃ¢u truy váº¥n 3 Ä‘á»ƒ loáº¡i trá»« cÃ¡c mÃ£ cha chÆ°a phÃ¢n tÃ¡ch:
+Sửa đổi câu truy vấn 3 để loại trừ các mã cha chưa phân tách:
 
 ```sql
 USE [SmartFactoryV2]
 GO
 
--- TÃ¬m ra pháº§n UNION ALL cuá»‘i cÃ¹ng (truy váº¥n 3)
--- ThÃªm Ä‘iá»u kiá»‡n: AND ISNULL(DP.PackingParentID, '') <> ''
+-- Tìm ra phần UNION ALL cuối cùng (truy vấn 3)
+-- Thêm điều kiện: AND ISNULL(DP.PackingParentID, '') <> ''
 
--- THÃŠM DÃ’NG NÃ€Y vÃ o cuá»‘i WHERE clause cá»§a UNION ALL thá»© 3:
+-- THÊM DÒNG NÀY vào cuối WHERE clause của UNION ALL thứ 3:
 WHERE DP.PackingID = @pPackingID  
-  AND ISNULL(DP.PackingParentID, '') <> ''  -- â† DÃ’NG Má»šI
+  AND ISNULL(DP.PackingParentID, '') <> ''  -- ← DÒNG MỚI
 ```
 
-> **SP Ä‘áº§y Ä‘á»§:** Xem chi tiáº¿t Stored Procedure tÆ°Æ¡ng á»©ng trong database Ä‘á»ƒ Ã¡p dá»¥ng thay Ä‘á»•i trÃªn.
+> **SP đầy đủ:** Xem chi tiết Stored Procedure tương ứng trong database để áp dụng thay đổi trên.
 
 ---
 
-### 3. Lá»—i Lot bá»‹ Ä‘á»•i MaterialCode sau khi sáº£n xuáº¥t (VD: 5H1 â†’ 6D1)
+### 3. Lỗi Lot bị đổi MaterialCode sau khi sản xuất (VD: 5H1 → 6D1)
 
-**Triá»‡u chá»©ng:** HÃ ng Ä‘ang nháº­p liá»‡u vá»›i Making = 5H1 nhÆ°ng sau Ä‘Ã³ trÃªn há»‡ thá»‘ng bá»‹ chuyá»ƒn sang 6D1.
+**Triệu chứng:** Hàng đang nhập liệu với Making = 5H1 nhưng sau đó trên hệ thống bị chuyển sang 6D1.
 
 ```sql
--- BÆ°á»›c 1: Kiá»ƒm tra MaterialCode hiá»‡n táº¡i
+-- Bước 1: Kiểm tra MaterialCode hiện tại
 SELECT SI.Barcode, SI.MaterialCode, SI.InputLineCode, SI.CreateDateTime
 FROM STB_SetInfo SI
 WHERE SI.Barcode IN ('pkpt2000146', 'pkpt2000147', 'pkpt2000145')
 
--- BÆ°á»›c 2: Kiá»ƒm tra lá»‹ch sá»­ thay Ä‘á»•i MaterialCode
+-- Bước 2: Kiểm tra lịch sử thay đổi MaterialCode
 SELECT * FROM STB_LotChangeMaterialHistory
 WHERE NewBarcode IN ('pkpt2000146', 'pkpt2000147', 'pkpt2000145')
    OR OldBarcode IN ('pkpt2000146', 'pkpt2000147', 'pkpt2000145')
 ORDER BY CreateDateTime DESC
 
--- BÆ°á»›c 3: Fix â€” Ä‘á»•i láº¡i MaterialCode Ä‘Ãºng
-UPDATE STB_SetInfo SET MaterialCode = '5H1_MATERIAL_CODE_ÄÃšNG'
+-- Bước 3: Fix — đổi lại MaterialCode đúng
+UPDATE STB_SetInfo SET MaterialCode = '5H1_MATERIAL_CODE_ĐÚNG'
 WHERE Barcode IN ('pkpt2000146', 'pkpt2000147', 'pkpt2000145')
 
-UPDATE STB_MaterialLotInfo SET MaterialCode = '5H1_MATERIAL_CODE_ÄÃšNG'
+UPDATE STB_MaterialLotInfo SET MaterialCode = '5H1_MATERIAL_CODE_ĐÚNG'
 WHERE LotNo IN ('pkpt2000146', 'pkpt2000147', 'pkpt2000145')
 
-#### 3.1 ÄÄƒng kÃ½ thay Ä‘á»•i mÃ£ váº­t tÆ° thá»§ cÃ´ng qua STB_ChangeMaterialCode_HN (MÃ n hÃ¬nh HN15)
-Trong má»™t sá»‘ trÆ°á»ng há»£p táº¡i nhÃ  mÃ¡y HÃ  Nam, khi ngÆ°á»i dÃ¹ng thá»±c hiá»‡n thay Ä‘á»•i mÃ£ váº­t tÆ° cho Lot Ä‘Ã³ng gÃ³i vÃ  cáº§n ghi nháº­n lá»‹ch sá»­ vÃ o há»‡ thá»‘ng Ä‘á»ƒ theo dÃµi vÃ  Ä‘á»“ng bá»™ kho, ta thá»±c hiá»‡n chÃ¨n dá»¯ liá»‡u lá»‹ch sá»­ Ä‘á»•i mÃ£ váº­t tÆ°:
+#### 3.1 Đăng ký thay đổi mã vật tư thủ công qua STB_ChangeMaterialCode_HN (Màn hình [HN15])
+Trong một số trường hợp tại nhà máy Hà Nam, khi người dùng thực hiện thay đổi mã vật tư cho Lot đóng gói và cần ghi nhận lịch sử vào hệ thống để theo dõi và đồng bộ kho, ta thực hiện chèn dữ liệu lịch sử đổi mã vật tư:
 ```sql
 INSERT INTO STB_ChangeMaterialCode_HN (
     oldMaterialCode, 
@@ -911,65 +911,65 @@ INSERT INTO STB_ChangeMaterialCode_HN (
     LotID
 )
 VALUES (
-    '2VSC820MC8XXXXVC01', -- MÃ£ váº­t tÆ° cÅ©
-    1,                    -- Tráº¡ng thÃ¡i sá»­ dá»¥ng (Active)
-    GETDATE(),            -- NgÃ y táº¡o
-    'vanduc',             -- User thá»±c hiá»‡n
-    '2RSC820MC7XXXXB001', -- MÃ£ váº­t tÆ° má»›i
-    'PKQN1100015',        -- MÃ£ thÃ¹ng Ä‘Ã³ng gÃ³i (PackingID)
-    'SP260511-001'        -- MÃ£ Lot sáº£n pháº©m (LotID)
+    '2VSC820MC8XXXXVC01', -- Mã vật tư cũ
+    1,                    -- Trạng thái sử dụng (Active)
+    GETDATE(),            -- Ngày tạo
+    'vanduc',             -- User thực hiện
+    '2RSC820MC7XXXXB001', -- Mã vật tư mới
+    'PKQN1100015',        -- Mã thùng đóng gói (PackingID)
+    'SP260511-001'        -- Mã Lot sản phẩm (LotID)
 );
 ```
 
 ---
 
-### 4. Lá»—i mÃ n HNC321 (Qc nháº­p NG sáº£n pháº©m mang Ä‘i kiá»ƒm tra â€” BÃ¡o lá»—i chá»¯ HÃ n Quá»‘c)
+### 4. Lỗi màn [HNC321] (Qc nhập NG sản phẩm mang đi kiểm tra — Báo lỗi chữ Hàn Quốc)
 
-Chi tiáº¿t vá» triá»‡u chá»©ng, nguyÃªn nhÃ¢n vÃ  cÃ¡c phÆ°Æ¡ng Ã¡n bypass (bao gá»“m script SQL chÃ¨n lá»‹ch sá»­ giáº£ láº­p) Ä‘á»‘i vá»›i lá»—i nháº­p pháº¿ mÃ n HNC321, vui lÃ²ng tham kháº£o táº¡i:
-ðŸ‘‰ [../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md Â§ Ká»‹ch báº£n 3 â€” Lá»—i nháº­p pháº¿ mÃ n HNC321 bÃ¡o lá»—i tiáº¿ng HÃ n](../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md#ká»‹ch-báº£n-sá»±-cá»‘-kháº©n-cáº¥p-3-lá»—i-nháº­p-pháº¿-hnc321-bÃ¡o-lá»—i-tiáº¿ng-hÃ n)
+Chi tiết về triệu chứng, nguyên nhân và các phương án bypass (bao gồm script SQL chèn lịch sử giả lập) đối với lỗi nhập phế màn HNC321, vui lòng tham khảo tại:
+👉 [../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md § Kịch bản 3 — Lỗi nhập phế màn HNC321 báo lỗi tiếng Hàn](../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md#kịch-bản-sự-cố-khẩn-cấp-3-lỗi-nhập-phế-hnc321-báo-lỗi-tiếng-hàn)
 
 ---
 
-### 5. XÃ³a nháº­p sáº£n lÆ°á»£ng cÃ´ng Ä‘oáº¡n (VD: VE260509-004)
+### 5. Xóa nhập sản lượng công đoạn (VD: VE260509-004)
 
-**Triá»‡u chá»©ng:** Cáº§n há»§y/xÃ³a dá»¯ liá»‡u nháº­p sáº£n lÆ°á»£ng á»Ÿ 1 cÃ´ng Ä‘oáº¡n cá»¥ thá»ƒ.
+**Triệu chứng:** Cần hủy/xóa dữ liệu nhập sản lượng ở 1 công đoạn cụ thể.
 
-> âš ï¸ **LÆ°u Ã½:** XÃ³a phiáº¿u F330 (nháº­p kho NVL) cáº§n xÃ³a IQC trÆ°á»›c (náº¿u cÃ³).
+> ⚠️ **Lưu ý:** Xóa phiếu F330 (nhập kho NVL) cần xóa IQC trước (nếu có).
 
-**XÃ³a sáº£n lÆ°á»£ng cÃ´ng Ä‘oáº¡n:**
+**Xóa sản lượng công đoạn:**
 ```sql
--- BÆ°á»›c 1: Xem lá»‹ch sá»­ routing cá»§a Barcode
+-- Bước 1: Xem lịch sử routing của Barcode
 SELECT * FROM STB_ProdRouteHist
 WHERE ControlNo = (SELECT ControlNo FROM STB_SetInfo WHERE Barcode = 'VE260509-004')
 ORDER BY ProdDateTime DESC
 
--- BÆ°á»›c 2: XÃ³a dÃ²ng lá»‹ch sá»­ routing cáº§n xÃ³a (VD: VE08)
+-- Bước 2: Xóa dòng lịch sử routing cần xóa (VD: VE08)
 DELETE FROM STB_ProdRouteHist
 WHERE ControlNo = (SELECT ControlNo FROM STB_SetInfo WHERE Barcode = 'VE260509-004')
 AND RouteCode = 'VE08'
 
--- BÆ°á»›c 3: Reset DefectQty náº¿u cáº§n
+-- Bước 3: Reset DefectQty nếu cần
 UPDATE STB_SetInfo
 SET DefectQty = 0, IsDefect = 0
 WHERE Barcode = 'VE260509-004'
--- Chá»‰ lÃ m náº¿u DefectQty thá»±c sá»± cáº§n reset
+-- Chỉ làm nếu DefectQty thực sự cần reset
 ```
 
-**XÃ³a phiáº¿u nháº­p kho F330 (cÃ³ IQC):**
-ðŸ‘‰ **Chi tiáº¿t Script Fix:** Xem táº¡i [KB_02_01_WMS_CORE.md Â§ 4.16](KB_02_01_WMS_CORE.md)
+**Xóa phiếu nhập kho F330 (có IQC):**
+👉 **Chi tiết Script Fix:** Xem tại [KB_02_01_WMS_CORE.md § 4.16](KB_02_01_WMS_CORE.md)
 
 ---
 
-### 6. HN00 â€” Tá»“n Kho ThÃ nh Pháº©m HÃ  Nam
+### 6. [HN00] — Tồn Kho Thành Phẩm Hà Nam
 
-**Chá»©c nÄƒng:** MÃ n hÃ¬nh quáº£n lÃ½ thÃ nh pháº©m riÃªng cho nhÃ  mÃ¡y **HÃ  Nam (VVT_F3)**.
+**Chức năng:** Màn hình quản lý thành phẩm riêng cho nhà máy **Hà Nam (VVT_F3)**.
 
-- Route: HÃ  Nam dÃ¹ng prefix `VE-` (thay vÃ¬ `V-` cá»§a Báº¯c Ninh)
+- Route: Hà Nam dùng prefix `VE-` (thay vì `V-` của Bắc Ninh)
 - Barcode: `VE260507-001` format
-- ÄÆ¡n giÃ¡: Láº¥y tá»« **HN101** theo mÃ£ káº¿ toÃ¡n
+- Đơn giá: Lấy từ **HN101** theo mã kế toán
 
 ```sql
--- Kiá»ƒm tra tá»“n kho thÃ nh pháº©m HÃ  Nam
+-- Kiểm tra tồn kho thành phẩm Hà Nam
 SELECT PackingID, MaterialCode, Quantity, QtyOutput,
        Quantity - QtyOutput AS [TonThucTe]
 FROM FinishGoodMESInstock_HN
@@ -979,69 +979,69 @@ ORDER BY CreateDateTime DESC
 
 ---
 
-### 7. HN101 â€” Thiáº¿t Láº­p ÄÆ¡n GiÃ¡ Theo MÃ£ Káº¿ ToÃ¡n
+### 7. [HN101] — Thiết Lập Đơn Giá Theo Mã Kế Toán
 
-**Chá»©c nÄƒng:** Thiáº¿t láº­p Ä‘Æ¡n giÃ¡ â†’ há»‡ thá»‘ng tá»± Ä‘á»™ng tÃ­nh tiá»n theo mÃ£ káº¿ toÃ¡n hiá»ƒn thá»‹ táº¡i HN00.
+**Chức năng:** Thiết lập đơn giá → hệ thống tự động tính tiền theo mã kế toán hiển thị tại HN00.
 
-**Quy trÃ¬nh:** TÃ¬m kiáº¿m â†’ (+) ThÃªm â†’ Äiá»n Ä‘áº§y Ä‘á»§ â†’ LÆ°u
+**Quy trình:** Tìm kiếm → (+) Thêm → Điền đầy đủ → Lưu
 
 ```sql
--- Kiá»ƒm tra Ä‘Æ¡n giÃ¡ Ä‘Ã£ cÃ³ chÆ°a (âš ï¸ Báº£ng ná»™i bá»™ HÃ  Nam, cÃ³ thá»ƒ lÃ  View hoáº·c báº£ng táº¡m)
-SELECT * FROM STB_HN_AccountingPrice WHERE MaterialCode = 'MÃ£_Model'
+-- Kiểm tra đơn giá đã có chưa (⚠️ Bảng nội bộ Hà Nam, có thể là View hoặc bảng tạm)
+SELECT * FROM STB_HN_AccountingPrice WHERE MaterialCode = 'Mã_Model'
 
--- ThÃªm Ä‘Æ¡n giÃ¡ má»›i
+-- Thêm đơn giá mới
 INSERT INTO STB_HN_AccountingPrice (MaterialCode, AccountingCode, Price, CreateDateTime, CreateUserID)
-VALUES ('MÃ£_Model', 'MÃ£_Káº¿_ToÃ¡n', 0.254, GETDATE(), 'vinaadmin')
+VALUES ('Mã_Model', 'Mã_Kế_Toán', 0.254, GETDATE(), 'vinaadmin')
 ```
 
 ---
 
-### 8. FG02 â€” Kho ThÃ nh Pháº©m Báº¯c Giang (FG00)
+### 8. FG02 — Kho Thành Phẩm Bắc Giang (FG00)
 
-**Chá»©c nÄƒng:** MÃ n hÃ¬nh quáº£n lÃ½ thÃ nh pháº©m riÃªng cho nhÃ  mÃ¡y **Báº¯c Giang (VVT_F2)**.
+**Chức năng:** Màn hình quản lý thành phẩm riêng cho nhà máy **Bắc Giang (VVT_F2)**.
 
-- Route: Báº¯c Giang dÃ¹ng prefix `V-` (thay vÃ¬ `VE-` cá»§a HÃ  Nam)
+- Route: Bắc Giang dùng prefix `V-` (thay vì `VE-` của Hà Nam)
 - Barcode: `VVXX123R000001` format
-- Báº£ng: `STB_VN_FINISHGOODS_BG`
+- Bảng: `STB_VN_FINISHGOODS_BG`
 
 ```sql
--- Kiá»ƒm tra tá»“n kho thÃ nh pháº©m Báº¯c Giang
+-- Kiểm tra tồn kho thành phẩm Bắc Giang
 SELECT IDCODE, MaterialCode, Quantity, CreateDate, DateExport
 FROM STB_VN_FINISHGOODS_BG
 WHERE CreateDate >= DATEADD(DAY, -30, GETDATE())
 ORDER BY CreateDate DESC
 ```
 
-**Sá»­a ngÃ y mÃ n FG00:**
+**Sửa ngày màn FG00:**
 ```sql
--- Xem trÆ°á»›c
+-- Xem trước
 SELECT IDCODE, CreateDate, DateExport FROM STB_VN_FINISHGOODS_BG
 WHERE IDCODE = 'FGVN_BG20250211054041195484931'
 
--- Sá»­a cáº£ 2 cá»™t ngÃ y
+-- Sửa cả 2 cột ngày
 UPDATE STB_VN_FINISHGOODS_BG
 SET CreateDate = CAST('2025-01-11' AS DATE),
     DateExport = CAST('2025-01-11' AS DATE)
 WHERE IDCODE = 'FGVN_BG20250211054041195484931'
 ```
 
-**So sÃ¡nh HN00 vs FG00:**
+**So sánh HN00 vs FG00:**
 
-| Äáº·c Ä‘iá»ƒm | HN00 (HÃ  Nam) | FG00 (Báº¯c Giang) |
+| Đặc điểm | HN00 (Hà Nam) | FG00 (Bắc Giang) |
 |----------|---------------|------------------|
-| Báº£ng | `FinishGoodMESInstock_HN` | `STB_VN_FINISHGOODS_BG` |
+| Bảng | `FinishGoodMESInstock_HN` | `STB_VN_FINISHGOODS_BG` |
 | Route prefix | `VE-` | `V-` |
 | Barcode format | `VE260507-001` | `VVXX123R000001` |
-| ÄÆ¡n giÃ¡ | HN101 (theo mÃ£ káº¿ toÃ¡n) | KhÃ´ng cÃ³ mÃ n thiáº¿t láº­p riÃªng |
+| Đơn giá | HN101 (theo mã kế toán) | Không có màn thiết lập riêng |
 
-*Cáº­p nháº­t: 2026-05-22*
-
-
----
+*Cập nhật: 2026-05-22*
 
 
 ---
 
-> ðŸ”— **Tra cá»©u Bug theo Screen ID cho WMS (F-series, HN-series):** Xem táº¡i [KB_31_SCREEN_BUG_FIXBOOK.md](../KB_31_SCREEN_BUG_FIXBOOK.md) â€” tá»•ng há»£p Ä‘áº§y Ä‘á»§ theo TCode.
 
-*Cáº­p nháº­t: 2026-06-18*
+---
+
+> 🔗 **Tra cứu Bug theo Screen ID cho WMS (F-series, HN-series):** Xem tại [KB_31_SCREEN_BUG_FIXBOOK.md](../KB_31_SCREEN_BUG_FIXBOOK.md) — tổng hợp đầy đủ theo TCode.
+
+*Cập nhật: 2026-06-18*

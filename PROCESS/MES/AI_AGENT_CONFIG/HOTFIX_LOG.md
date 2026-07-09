@@ -23,7 +23,7 @@
 
 *(Chưa có bản ghi mới trong phiên này. Hãy bắt đầu ghi chép khi xử lý con bug tiếp theo!)*
 
-### 📍 ID_18 - K366 - K366 screen displays blank Status column (Final conclusion P...
+### 📍 ID_18 - [K366] - [K366] screen displays blank Status column (Final conclusion P...
 * **Ngay sua:** `2026-07-06`
 * **Man hinh lien quan (TCode):** `K366 - Chua xac dinh`
 * **Trieu chung loi:** K366 screen displays blank Status column (Final conclusion Pass/Fail)
@@ -258,7 +258,7 @@ BEGIN
 END
   ```
 
-### 📍 ID_19 - B523 - Sanmina QR code has redundant quantities and serials on inne...
+### 📍 ID_19 - [B523] - Sanmina QR code has redundant quantities and serials on inne...
 * **Ngay sua:** `2026-07-06`
 * **Man hinh lien quan (TCode):** `B523 - Đóng gói`
 * **Trieu chung loi:** Sanmina QR code has redundant quantities and serials on inner labels

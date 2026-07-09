@@ -1,4 +1,4 @@
-## 6. 🏭 Cell Line — Vận Hành Chi Tiết Từng Màn Hình
+﻿## 6. 🏭 Cell Line — Vận Hành Chi Tiết Từng Màn Hình
 
 > **Nguồn:** Phân tích 41 SP + ảnh màn hình (2026-04-13)
 
@@ -22,7 +22,7 @@
 
 ---
 
-### 6.2 B450 — Kế Hoạch Sản Xuất Theo Ngày
+### 6.2 [B450] — Kế Hoạch Sản Xuất Theo Ngày
 
 > 🏭 **Cơ sở gốc:** VVT_F1 (Bắc Ninh) | 🔀 **Biến thể:** **K101** (BG2 — Module, barcode `K164...`) → [§6.14](#614-nhà-máy-bg2--cấu-hình-triển-khai-hệ-thống-mes)
 
@@ -54,7 +54,7 @@
 
 ---
 
-### 6.3 B530 — Nhập Số Lượng Sản Xuất (Chi Tiết SP)
+### 6.3 [B530] — Nhập Số Lượng Sản Xuất (Chi Tiết SP)
 
 > 🏭 **Cơ sở gốc:** VVT_F1 | 🔀 **Biến thể:** BG2 dùng chung B530 (cùng SP). HN cấu hình mã lỗi riêng → [§6.18](#618-cấu-hình-danh-mục-mã-lỗi-b530-nhà-máy-bắc-giang-bg)
 
@@ -120,7 +120,7 @@ WHERE Barcode = 'VV...' AND RouteCode = 'V-23'
 
 ---
 
-### 6.4 B540 — Assy Card Info
+### 6.4 [B540] — Assy Card Info
 
 **Các tab chính:**
 
@@ -144,7 +144,7 @@ WHERE MaterialCode = 'mã_hàng'
 
 ---
 
-### 6.4b B597 — Kiểm Tra Thường Xuyên / Tự Kiểm NVL (SelfInspection)
+### 6.4b [B597] — Kiểm Tra Thường Xuyên / Tự Kiểm NVL (SelfInspection)
 
 > 🏭 **Cơ sở gốc:** VVT_F1 | 🔀 **Biến thể:** **K109** (BG2), **HN597** (Hà Nam)
 
@@ -171,7 +171,7 @@ WHERE MaterialCode = 'mã_hàng'
 
 ---
 
-### 6.5 B523 — Đóng Gói (Gộp Box) — Quy Trình Mới
+### 6.5 [B523] — Đóng Gói (Gộp Box) — Quy Trình Mới
 
 > 🏭 **Cơ sở gốc:** VVT_F1 | 🔀 **Biến thể:** **HN523** (Hà Nam), **HN544** (gộp túi bóng) → [KB_04 §6.5, §6.13](../KB_04/KB_04_01_CORE_PACKAGING.md)
 
@@ -211,7 +211,7 @@ IF @pProcessUserID NOT IN ('vvt_worker','vvtworker',...)
 
 ---
 
-### 6.6 B717 — Bending & Tapping
+### 6.6 [B717] — Bending & Tapping
 
 > ⚠️ **Chỉ lưu được 1 lần đầu tiên** — nếu nhập sai phải UPDATE thủ công SQL
 
@@ -227,7 +227,7 @@ DELETE FROM STB_VN_BENDING_TAPPING WHERE LOTNO = 'mã_lot'
 
 ---
 
-### 6.7 B452 — Đổi Line Sai (Vietnam Print Lot Changed)
+### 6.7 [B452] — Đổi Line Sai (Vietnam Print Lot Changed)
 
 **Phân quyền đặc biệt:** Chỉ UserID trong whitelist hardcode trong SP mới được đổi Line.
 
@@ -358,7 +358,7 @@ VALUES
 
 ---
 
-### 6.9 B351 — Lot Chuyển Đổi Nguyên Liệu
+### 6.9 [B351] — Lot Chuyển Đổi Nguyên Liệu
 
 **Khi nào dùng:** Cần đổi mã hàng cho Lot đã sản xuất (sản xuất nhầm model, đổi PO).
 
@@ -382,7 +382,7 @@ UPDATE STB_LotChangeMaterialHistory SET NewBarcode = 'VVPR152R740601' WHERE Newb
 
 ---
 
-### 6.10 B528 — Barrel Barcode (Gộp Thùng Xuất Hàng)
+### 6.10 [B528] — Barrel Barcode (Gộp Thùng Xuất Hàng)
 
 **Chức năng:** Tra cứu thùng Barrel/Carton khi xuất hàng.
 
@@ -411,7 +411,7 @@ DELETE FROM STB_VietNam_CheckBarcode_2624 WHERE ID = [id]
 
 ---
 
-### 6.11 B802 — Vietnam Electrode Prod Route Hist (Lịch Sử SX Điện Cực)
+### 6.11 [B802] — Vietnam Electrode Prod Route Hist (Lịch Sử SX Điện Cực)
 
 **Chức năng:** Báo cáo lịch sử sản xuất và phế điện cực theo từng công đoạn (Mixing → Coating → Rollpress → Slitting).
 
@@ -456,7 +456,7 @@ B802 (Electrode Prod Route Hist) — XEM TỔNG HỢP:
 
 ---
 
-### 6.12 B598 — Báo Phế Sản Xuất (Production Error/Scrap)
+### 6.12 [B598] — Báo Phế Sản Xuất (Production Error/Scrap)
 
 > 🏭 **Cơ sở gốc:** VVT_F1 | 🔀 **Biến thể:** **HN598** (Hà Nam — cùng logic, filter riêng)
 
@@ -509,7 +509,7 @@ GROUP BY LineCode ORDER BY TongPhe DESC
 
 ---
 
-### 6.14 Nhà Máy BG2 — Cấu Hình Triển Khai Hệ Thống MES
+### 6.14 Nhà Máy [BG2] — Cấu Hình Triển Khai Hệ Thống MES
 
 Hệ thống MES tại nhà máy Bắc Giang 2 (BG2) sử dụng hai màn hình giao dịch chính được tùy biến riêng:
 *   **K101 (Kế hoạch sản xuất ngày BG2):** Tương đương với màn hình tiêu chuẩn **B450** nhưng chạy logic riêng cho nhà máy BG2.
@@ -560,7 +560,7 @@ Dưới đây là ma trận trạng thái các hạng mục công việc đã tr
     *   *Đạt 90%:* In tem nhãn đóng gói, nhập kho bằng phần mềm, kiểm tra dữ liệu nhập/xuất kho trên hệ thống MES, xuất kho thành phẩm. Cần tích hợp nốt phần in ấn và đồng bộ dữ liệu xuất hàng.
 
 
-#### 3. Kiến Trúc Hệ Thống BG2 — Deep Dive
+#### 3. Kiến Trúc Hệ Thống [BG2] — Deep Dive
 
 > ⚠️ **Lưu ý:** Nội dung phần này (3.1–3.8) có lỗi encoding — các ký tự tiếng Việt được lưu dưới dạng Unicode escape (`u1EBF`, `u00FA`...) thay vì UTF-8 thực. Cần sửa lại file gốc.
 
@@ -605,7 +605,7 @@ g | Barcode Prefix |
 | `EDVTSY-001` | 711711 | FERT | **Bloom Energy** (SL-7) | `VH-711711...` |
 | `EDVTMD-246` | VEM540R0335QG | MDL | **Nordex** | Theo VNT_F3 format |
 
-##### 3.3 Logic Tu1EA1o Barcode BG2 — Phu00E2
+##### 3.3 Logic Tu1EA1o Barcode [BG2] — Phu00E2
  Tu00EDch SP `usp_DoCreateSetInfoForProdQty_VNT`
 
 **Nhu00E1
@@ -679,14 +679,14 @@ g | Rows | Vai tru00F2 |
 | `STB_VN_MASTERMODULES` | 1,592 | Master Module config |
 | `STB_VN_DETAILMODULES` | 2,027 | Chi tiu1EBF	 Module |
 
-##### 3.6 K130 u2014 Logic Tu1EA1o Serial Tem Module
+##### 3.6 [K130] u2014 Logic Tu1EA1o Serial Tem Module
 
 Format: `PLS` + RevisionChar + Year(2) + WeekIndex(2) + `V` + Serial(4)
 Vu00ED du1EE5: `PLS1262600V0001`
 Bu1EA3
 g lu01B0u: `STB_ModuleLabelInfo` u2014 Key: `ModuleSerialNo`
 
-##### 3.7 K110 u2014 Module Production (usp_ModuleProductionInfo_iud)
+##### 3.7 [K110] u2014 Module Production (usp_ModuleProductionInfo_iud)
 
 Bu1EA3
 g `STB_ModuleProductionInfo`:
@@ -706,7 +706,7 @@ g bu1EA3
 g riu00EA
 g `STB_ModuleProductionInfo` + `STB_ModuleSemiProductionInfo`.
 
-##### 3.8 K109 vs K150 u2014 Hai Mu00E0
+##### 3.8 [K109] vs [K150] u2014 Hai Mu00E0
  Hu00EC
 h Quu00E9	 NVL
 
@@ -721,7 +721,7 @@ g BE | Client UI filter Module |
 
 ---
 
-### 6.15 Spare Part — H301/H302/H303/H305
+### 6.15 Spare Part — [H301]/[H302]/[H303]/[H305]
 
 | Màn hình | Chức năng |
 |----------|-----------|
@@ -734,7 +734,7 @@ g BE | Client UI filter Module |
 
 ---
 
-### 6.16 In Tem Khách Hàng Đặc Biệt (B754~B758)
+### 6.16 In Tem Khách Hàng Đặc Biệt ([B754]~[B758])
 
 | Màn hình | Khách hàng | Chức năng |
 |----------|-----------|-----------|
@@ -763,7 +763,7 @@ g BE | Client UI filter Module |
 10. CHƯA NHẬP "MAKING" ĐẾN V-25 BỊ CHẶN → MarkingLetter rỗng tại bước trước
 ```
 
-### 6.18 Cấu hình danh mục mã lỗi B530 nhà máy Bắc Giang (BG)
+### 6.18 Cấu hình danh mục mã lỗi [B530] nhà máy Bắc Giang (BG)
 
 **Yêu cầu:** Đồng bộ danh mục mã lỗi trên màn hình B530 tại nhà máy Bắc Giang để tránh trùng lặp và phản ánh chính xác các lỗi phát sinh trong thực tế.
 
@@ -789,7 +789,7 @@ INSERT vào bảng `STB_DefectInfo` các mã lỗi sau:
 
 *Chi tiết SQL tham khảo file script [fix_b530_add_defects_BG.sql](../sql/scripts/fix_b530_add_defects_BG.sql)*
 
-#### 6.18.1 Bối Cảnh Thay Đổi Quy Mô Lot Size & Mã Lỗi B530
+#### 6.18.1 Bối Cảnh Thay Đổi Quy Mô Lot Size & Mã Lỗi [B530]
 Trong quá trình vận hành hệ thống MES tại nhà máy Vinatech Bắc Giang (BG), bộ phận sản xuất và chất lượng đã phát hành hai yêu cầu thay đổi cấu hình dữ liệu quan trọng:
 1. **Thay đổi quy mô Lot No sản phẩm** (Lot Size) kết hợp thay đổi phương pháp sấy và số lượng mẫu test phá hủy.
 2. **Chuẩn hóa danh mục mã lỗi hiển thị trên màn hình B530** (disable 28 mã trùng lặp/dư thừa và thêm mới 7 mã lỗi thực tế).
@@ -970,7 +970,7 @@ WHERE ManagementNo = 'MÃ_QUẢN_LÝ'
 ORDER BY DayOfCalibration DESC;
 ```
 
-#### 6.21.4 Spare Part (Phụ Tùng) H301 ~ H305
+#### 6.21.4 Spare Part (Phụ Tùng) [H301] ~ [H305]
 Kho phụ tùng thay thế cho máy móc tại xưởng được theo dõi qua các bảng:
 *   `STB_VNSparePartInfo`: Master danh sách phụ tùng (spec, đơn giá, tồn an toàn).
 *   `STB_VNSparePartStockInfo`: Tồn kho phụ tùng.

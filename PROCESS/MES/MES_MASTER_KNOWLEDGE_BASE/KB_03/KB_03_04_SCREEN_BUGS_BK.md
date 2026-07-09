@@ -1,4 +1,4 @@
-﻿## B220 — Route Group Setup (Thiết lập nhóm Route)
+﻿## [B220] — Route Group Setup (Thiết lập nhóm Route)
 
 > 🔗 **Xem thêm:** Mục [B210 / B220 / B230 / B240](#b210--b220--b230--b240--production-routing-setup) phía trên đã có chi tiết lỗi thiết lập Line/Route.
 
@@ -11,11 +11,11 @@
 ---
 
 
-## B230 — Machine Route Mapping (Ánh xạ máy - Route)
+## [B230] — Machine Route Mapping (Ánh xạ máy - Route)
 
 > 🔗 **Xem thêm:** Mục [B210 / B220 / B230 / B240](#b210--b220--b230--b240--production-routing-setup) phía trên.
 
-### Lỗi 1: Dùng B230 thay thế khi B270 bị lỗi popup
+### Lỗi 1: Dùng [B230] thay thế khi [B270] bị lỗi popup
 *   **Triệu chứng:** B270 bị lỗi popup trống không hiển thị danh sách máy. Cần cách thay thế.
 *   **Nguyên nhân gốc:** SP `usp_Set_VVT_Info_get` bị hardcode Whitelist UserID tại B270.
 *   **Cách khắc phục:** Sử dụng B230 để gán máy vào Route khi B270 gặp sự cố. B230 có giao diện tương tự nhưng không qua SP bị whitelist.
@@ -24,11 +24,11 @@
 ---
 
 
-## B240 — Machine Master Setup (Thiết lập máy theo công đoạn)
+## [B240] — Machine Master Setup (Thiết lập máy theo công đoạn)
 
 > 🔗 **Xem thêm:** Mục [B210 / B220 / B230 / B240](#b210--b220--b230--b240--production-routing-setup) phía trên.
 
-### Lỗi 1: B530 không hiển thị máy trong dropdown khi chốt sản lượng
+### Lỗi 1: [B530] không hiển thị máy trong dropdown khi chốt sản lượng
 *   **Triệu chứng:** OP quét chốt sản lượng tại B530 nhưng không thấy máy trong danh sách chọn.
 *   **Nguyên nhân gốc:** Máy chưa được gán vào Route đang chạy tại B240.
 *   **Cách khắc phục:** Vào B240, chọn máy và gán vào RouteCode tương ứng.
@@ -37,15 +37,15 @@
 ---
 
 
-## B270 — Product Machine Mapping (Ánh xạ máy - sản phẩm)
+## [B270] — Product Machine Mapping (Ánh xạ máy - sản phẩm)
 
 > 🔗 **Xem thêm:** Mục [B250 / B270](#b250--b270--cell--machine-mapping) phía trên đã có chi tiết lỗi popup trống và thêm Cell/Line mới.
 
 
 
-## B301 — Production Order Info (Thông tin lệnh sản xuất chi tiết)
+## [B301] — Production Order Info (Thông tin lệnh sản xuất chi tiết)
 
-### Lỗi 1: Dữ liệu PO bị lệch giữa B301 và B310
+### Lỗi 1: Dữ liệu PO bị lệch giữa [B301] và [B310]
 *   **Triệu chứng:** Thông tin chi tiết PO tại B301 không khớp với tổng quan tại B310.
 *   **Nguyên nhân gốc:** Bảng `STB_ProductionOrderInfo` có dữ liệu không nhất quán do đồng bộ lỗi từ Groupware.
 *   **Cách khắc phục:** Kiểm tra dữ liệu trực tiếp trong DB và đồng bộ lại từ Groupware ESM Bridge.
@@ -54,7 +54,7 @@
 ---
 
 
-## B450 — Day Production Plan (Kế hoạch sản xuất ngày)
+## [B450] — Day Production Plan (Kế hoạch sản xuất ngày)
 
 > 🔗 **Xem thêm:** Mục [B310 / B450](#b310--b450--production-orders--day-plan) phía trên đã có chi tiết lỗi đồng bộ PO.
 
@@ -64,7 +64,7 @@
 *   **Cách khắc phục:** Vào B450, tìm dòng kế hoạch ngày tương ứng, tick chọn cột `IsFixed` rồi nhấn Lưu. Sau đó bấm tạo Lot.
 *   **Chi tiết nghiệp vụ:** Xem tại [../KB_03/KB_03_02_CELL_LINE.md § 2](../KB_03/KB_03_02_CELL_LINE.md).
 
-### Lỗi 2: Xóa PO phải xóa đồng thời ở B310 và B450
+### Lỗi 2: Xóa PO phải xóa đồng thời ở [B310] và [B450]
 *   **Triệu chứng:** Xóa PO tại B310 nhưng dữ liệu kế hoạch ngày vẫn còn tại B450 gây lỗi trùng.
 *   **Nguyên nhân gốc:** Xóa PO cần xóa cả 3 bảng: `STB_ProductionOrderInfo`, `STB_ProductionOrderBom`, `STB_ProductionOrderRouting` (B310) VÀ `STB_DayProdPlan`, `STB_SetInfo` (B450).
 *   **Cách khắc phục:** Xóa PO theo quy trình đầy đủ 5 bảng.
@@ -73,7 +73,7 @@
 ---
 
 
-## B453 — Production Schedule (Lịch trình sản xuất)
+## [B453] — Production Schedule (Lịch trình sản xuất)
 
 ### Lỗi 1: Lịch trình sản xuất không hiển thị dữ liệu sau khi tạo Lot
 *   **Triệu chứng:** Sau khi tạo Lot tại B450, mở B453 nhưng không thấy lịch trình sản xuất tương ứng.
@@ -84,7 +84,7 @@
 ---
 
 
-## B460 — Production Line Status (Trạng thái Line sản xuất)
+## [B460] — Production Line Status (Trạng thái Line sản xuất)
 
 ### Lỗi 1: Trạng thái Line không cập nhật real-time
 *   **Triệu chứng:** Màn hình B460 hiển thị trạng thái Line sản xuất bị delay hoặc không chính xác.
@@ -95,7 +95,7 @@
 ---
 
 
-## B470 — Electrode Line Status (Trạng thái Line điện cực)
+## [B470] — Electrode Line Status (Trạng thái Line điện cực)
 
 ### Lỗi 1: Trạng thái Line điện cực không hiển thị hoặc không chính xác
 *   **Triệu chứng:** B470 không hiện dữ liệu Line điện cực hoặc hiện sai công đoạn đang chạy.
@@ -106,7 +106,7 @@
 ---
 
 
-## B528 — Barrel Barcode (In tem thùng phuy/Barrel)
+## [B528] — Barrel Barcode (In tem thùng phuy/Barrel)
 
 ### Lỗi 1: Lỗi in tem Barrel hoặc không sinh được mã Barcode Barrel
 *   **Triệu chứng:** Bấm in tem thùng Barrel tại B528 bị lỗi hoặc barcode không hiển thị.
@@ -117,7 +117,7 @@
 ---
 
 
-## B540 — Process Input V22→V28 (Nhập NVL theo công đoạn)
+## [B540] — Process Input V22→V28 (Nhập NVL theo công đoạn)
 
 ### Lỗi 1: Không nhập được NVL do thiếu 4 cột màu bắt buộc
 *   **Triệu chứng:** OP quét nhập NVL tại B540 nhưng hệ thống không cho lưu, báo thiếu thông tin bắt buộc.
@@ -134,7 +134,7 @@
 ---
 
 
-## B726 — Scrap After Production (Báo phế sau sản xuất)
+## [B726] — Scrap After Production (Báo phế sau sản xuất)
 
 ### Lỗi 1: Báo phế không thành công hoặc bản ghi phế không hiển thị
 *   **Triệu chứng:** OP thực hiện báo phế sản phẩm sau sản xuất tại B726 nhưng hệ thống không ghi nhận hoặc dữ liệu không hiển thị.
@@ -145,9 +145,9 @@
 ---
 
 
-## B733 — Box Matching Report (Báo cáo gộp Box)
+## [B733] — Box Matching Report (Báo cáo gộp Box)
 
-### Lỗi 1: Báo cáo B733 hiển thị trống không có dữ liệu
+### Lỗi 1: Báo cáo [B733] hiển thị trống không có dữ liệu
 *   **Triệu chứng:** Mở B733 tìm kiếm Lot nhưng không hiện kết quả gộp Box nào.
 *   **Nguyên nhân gốc:** Lot đó chưa được gộp Box tại B523 (chưa hoàn thành đóng gói).
 *   **Cách khắc phục:** Kiểm tra B523 xem Lot đã được gộp Box chưa. Nếu chưa, thực hiện gộp Box trước rồi quay lại B733.
@@ -156,7 +156,7 @@
 ---
 
 
-## B755 — PAC Inner Label (In tem nhãn trong PAC)
+## [B755] — PAC Inner Label (In tem nhãn trong PAC)
 
 > 🔗 **Xem thêm:** Mục [B754 / B756](#b754--b756--pac-customer-labels) phía trên đã có chi tiết lỗi in tem PAC.
 
@@ -169,7 +169,7 @@
 ---
 
 
-## B756 — PAC Outer Label (In tem nhãn ngoài PAC)
+## [B756] — PAC Outer Label (In tem nhãn ngoài PAC)
 
 > 🔗 **Xem thêm:** Mục [B754 / B756](#b754--b756--pac-customer-labels) phía trên đã có chi tiết lỗi in tem PAC Outer.
 
@@ -182,11 +182,11 @@
 ---
 
 
-## B758 — Digi-Key Mixed Load Label (In tem hàng hỗn hợp Digi-Key)
+## [B758] — Digi-Key Mixed Load Label (In tem hàng hỗn hợp Digi-Key)
 
 > 🔗 **Xem thêm:** Mục [B757 / B758](#b757--b758--digi-key-customer-labels) phía trên đã có chi tiết lỗi in tem Digi-Key.
 
-### Lỗi 1: Không in được tem Mixed Load tại B758
+### Lỗi 1: Không in được tem Mixed Load tại [B758]
 *   **Triệu chứng:** In tem thùng hàng hỗn hợp (Mixed Load) Digi-Key bị lỗi.
 *   **Nguyên nhân gốc:** Thùng chứa nhiều model/size khác nhau, SP cần kiểm tra tất cả barcode trong thùng khớp.
 *   **Cách khắc phục:** Đảm bảo tất cả barcode trong thùng đã được gộp box tại B523 và thông tin PO đầy đủ.
@@ -195,7 +195,7 @@
 ---
 
 
-## B767 — Customer Label Print (In tem nhãn khách hàng chung)
+## [B767] — Customer Label Print (In tem nhãn khách hàng chung)
 
 ### Lỗi 1: Không in được tem cho khách hàng mới
 *   **Triệu chứng:** Khi in tem cho khách hàng mới tại B767, hệ thống báo lỗi không tìm thấy mẫu tem.
@@ -206,9 +206,9 @@
 ---
 
 
-## B782 — Lot Routing History (Lịch sử Routing theo Lot)
+## [B782] — Lot Routing History (Lịch sử Routing theo Lot)
 
-### Lỗi 1: Sai ngày sản xuất (JobDate) trên báo cáo B782
+### Lỗi 1: Sai ngày sản xuất (JobDate) trên báo cáo [B782]
 *   **Triệu chứng:** Barcode hiển thị sai ngày sản xuất trên lịch sử Routing.
 *   **Nguyên nhân gốc:** Cột `JobDate` trong `STB_ProdRouteHist` bị ghi nhận sai do OP chốt sản lượng không đúng ca.
 *   **Cách khắc phục:**
@@ -222,7 +222,7 @@
 ---
 
 
-## B786 — ESR History (Lịch sử ESR toàn nhà máy)
+## [B786] — ESR History (Lịch sử ESR toàn nhà máy)
 
 > 🔗 **Xem thêm:** Mục [B682 / B781 / B786 / B789 / B791](#b682--b781--b786--b789--b791--stage-prices) phía trên.
 
@@ -235,7 +235,7 @@
 ---
 
 
-## B791 — NG Defect Repair (Sửa chữa lỗi NG)
+## [B791] — NG Defect Repair (Sửa chữa lỗi NG)
 
 > 🔗 **Xem thêm:** Mục [B682 / B781 / B786 / B789 / B791](#b682--b781--b786--b789--b791--stage-prices) phía trên.
 
@@ -248,7 +248,7 @@
 ---
 
 
-## B882 — ANDON Display (Màn hình ANDON trên MES)
+## [B882] — ANDON Display (Màn hình ANDON trên MES)
 
 ### Lỗi 1: Dữ liệu ANDON không cập nhật hoặc hiển thị trống
 *   **Triệu chứng:** Dashboard ANDON tại B882 không hiển thị sản lượng real-time.
@@ -259,7 +259,7 @@
 ---
 
 
-## B934 — User Permission Config (Cấu hình quyền người dùng SX)
+## [B934] — User Permission Config (Cấu hình quyền người dùng SX)
 
 ### Lỗi 1: Người dùng không có quyền thao tác trên màn hình sản xuất
 *   **Triệu chứng:** OP đăng nhập MES nhưng các nút Save/Delete trên màn hình sản xuất bị disable.
@@ -270,7 +270,7 @@
 ---
 
 
-## B935 — Role Screen Mapping (Gán màn hình cho vai trò SX)
+## [B935] — Role Screen Mapping (Gán màn hình cho vai trò SX)
 
 ### Lỗi 1: Nhóm vai trò sản xuất không thấy màn hình mới trên menu
 *   **Triệu chứng:** Sau khi tạo màn hình mới, nhóm SX không nhìn thấy trên menu MES.
@@ -281,7 +281,7 @@
 ---
 
 
-## H302 — Machine Repair History (Lịch sử sửa chữa máy)
+## [H302] — Machine Repair History (Lịch sử sửa chữa máy)
 
 > 🔗 **Xem thêm:** Mục [H301~H305](#h301h305--spare-parts-management) phía trên đã có tổng quan Spare Parts.
 
@@ -294,7 +294,7 @@
 ---
 
 
-## H303 — Machine Calibration (Hiệu chuẩn thiết bị đo)
+## [H303] — Machine Calibration (Hiệu chuẩn thiết bị đo)
 
 ### Lỗi 1: Thiết bị đo hết hạn hiệu chuẩn nhưng hệ thống không cảnh báo
 *   **Triệu chứng:** Thiết bị đo vượt quá hạn hiệu chuẩn mà H303 không cảnh báo.
@@ -305,7 +305,7 @@
 ---
 
 
-## H304 — Spare Part Inventory (Tồn kho phụ tùng)
+## [H304] — Spare Part Inventory (Tồn kho phụ tùng)
 
 ### Lỗi 1: Tồn kho phụ tùng bị lệch so với thực tế
 *   **Triệu chứng:** H304 hiển thị số lượng phụ tùng tồn kho khác với kiểm kê thực tế.
@@ -316,7 +316,7 @@
 ---
 
 
-## H305 — Spare Part In/Out History (Lịch sử xuất nhập phụ tùng)
+## [H305] — Spare Part In/Out History (Lịch sử xuất nhập phụ tùng)
 
 > 🔗 **Xem thêm:** Mục [H301~H305](#h301h305--spare-parts-management) phía trên đã có tổng quan Spare Parts.
 
@@ -329,11 +329,11 @@
 ---
 
 
-## K109 — BG2 Material Scanning (Quét NVL nhà máy BG2)
+## [K109] — [BG2] Material Scanning (Quét NVL nhà máy [BG2])
 
 > 🔗 **Xem thêm:** Mục [K101 / K109 / K110](#k101--k109--k110--bg2-production-plan--scan) phía trên đã có chi tiết BG2.
 
-### Lỗi 1: Quét NVL tại BG2 bị chặn sai chủng loại
+### Lỗi 1: Quét NVL tại [BG2] bị chặn sai chủng loại
 *   **Triệu chứng:** OP BG2 quét NVL bị lỗi tương tự B597 nhưng trên giao diện K109.
 *   **Nguyên nhân gốc:** Logic K109 tương đương B597, lọc riêng cho `WorkCenterCode = 'VVT_BG2'`. Cùng nguyên nhân HOLD/Hết hạn/Sai BOM.
 *   **Cách khắc phục:** Áp dụng cùng quy trình debug B597 (xem mục B597 phía trên).
@@ -366,9 +366,9 @@
 ---
 
 
-## K110 — BG2 Warehouse Operations (Vận hành kho BG2)
+## [K110] — [BG2] Warehouse Operations (Vận hành kho [BG2])
 
-### Lỗi 1: Kho BG2 không hiển thị NVL đã nhập
+### Lỗi 1: Kho [BG2] không hiển thị NVL đã nhập
 *   **Triệu chứng:** Thủ kho BG2 không tìm thấy NVL đã nhập kho tại K110.
 *   **Nguyên nhân gốc:** WarehouseCode của kho BG2 khác với kho chính. Dữ liệu lọc theo `WorkCenterCode = 'VVT_BG2'`.
 *   **Cách khắc phục:** Kiểm tra WarehouseCode của phiếu nhập kho F330 khớp với kho BG2.
@@ -379,9 +379,9 @@
 
 ---
 
-### Kịch bản sự cố khẩn cấp 1: Hủy/Xóa sản lượng công đoạn sản xuất (B530)
+### Kịch bản sự cố khẩn cấp 1: Hủy/Xóa sản lượng công đoạn sản xuất ([B530])
 
-#### 📐 KỊCH BẢN A: Hủy/Xóa sản lượng công đoạn sản xuất (Màn hình B530)
+#### 📐 KỊCH BẢN A: Hủy/Xóa sản lượng công đoạn sản xuất (Màn hình [B530])
 *   **Triệu chứng:** Công nhân scan nhầm sản lượng vào công đoạn `V-26` (Aging) trong khi Lot chưa chạy xong công đoạn `V-25`. Cần hủy công đoạn `V-26`.
 *   **Ví dụ Demo:** Hủy công đoạn sản xuất mã `VE08` của Lot `VE260509-004`.
 *   **Quy trình xử lý bằng Transaction:**
@@ -418,7 +418,7 @@
 
 ---
 
-### Kịch bản sự cố khẩn cấp 2: Lỗi không chốt được công đoạn (B530)
+### Kịch bản sự cố khẩn cấp 2: Lỗi không chốt được công đoạn ([B530])
 
 #### 📐 KỊCH BẢN A: Chặn do quên scan Nguyên vật liệu tại trạm trước (V-23 / V-24)
 *   **Triệu chứng:** Khi bấm chốt công đoạn `V-23` (Lắp cao su) hoặc `V-24` (Curling), hệ thống báo lỗi: *"Chưa nhập NVL cho Lắp Cao Su"* hoặc *"Chưa nhập NVL cho Curling"*.

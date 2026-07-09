@@ -37,9 +37,9 @@
 ---
 
 
-## D000 — VinaEnesol Management Menu (Menu quản lý VinaEnesol)
+## [D000] — VinaEnesol Management Menu (Menu quản lý VinaEnesol)
 
-### Lỗi 1: Không truy cập được menu VinaEnesol D000
+### Lỗi 1: Không truy cập được menu VinaEnesol [D000]
 *   **Triệu chứng:** Người dùng không thấy menu VinaEnesol trên giao diện MES.
 *   **Nguyên nhân gốc:** Menu D000 chưa được phân quyền cho Role của người dùng tại Z220/Z330.
 *   **Cách khắc phục:** Vào Z220 gán Screen D000 cho Role tương ứng, vào Z330 kiểm tra đã publish.
@@ -48,7 +48,7 @@
 ---
 
 
-## D051 — Customer Part No Info (Mã vật tư khách hàng Enesol)
+## [D051] — Customer Part No Info (Mã vật tư khách hàng Enesol)
 
 ### Lỗi 1: Mã sản phẩm khách hàng không mapping được với mã nội bộ
 *   **Triệu chứng:** Khi in tem Enesol, mã khách hàng (CustomerPartNo) hiện trống hoặc sai.
@@ -59,7 +59,7 @@
 ---
 
 
-## D100 — Enesol Box Label Print (In tem hộp Enesol)
+## [D100] — Enesol Box Label Print (In tem hộp Enesol)
 
 ### Lỗi 1: Không in được tem hộp Enesol (Inner/Outer Box)
 *   **Triệu chứng:** Bấm in tem tại D100 nhưng máy in không chạy hoặc tem trống.
@@ -70,7 +70,7 @@
 ---
 
 
-## D110 — Enesol Box Label History (Lịch sử in tem Enesol)
+## [D110] — Enesol Box Label History (Lịch sử in tem Enesol)
 
 ### Lỗi 1: Lịch sử in tem Enesol hiện thiếu hoặc trùng dữ liệu
 *   **Triệu chứng:** Bảng lịch sử D110 hiển thị thiếu bản ghi hoặc có bản ghi trùng lặp.

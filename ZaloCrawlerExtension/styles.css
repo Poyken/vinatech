@@ -343,3 +343,316 @@ footer p {
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.2);
 }
+
+/* ==========================================================================
+   INJECTED MES SIDEBAR STYLES (Zalo Web Context)
+   ========================================================================== */
+
+#mes-assistant-sidebar-container {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: #e2e8f0;
+}
+
+/* Floating Toggle Button */
+#mes-sidebar-toggle-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 999999;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 10px 16px;
+  border-radius: 30px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+}
+
+#mes-sidebar-toggle-btn:hover {
+  transform: translateY(-2px);
+  background: rgba(15, 23, 42, 0.95);
+  border-color: #38bdf8;
+  box-shadow: 0 6px 24px rgba(56, 189, 248, 0.2);
+}
+
+.mes-bot-icon {
+  font-size: 20px;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-3px); }
+  100% { transform: translateY(0px); }
+}
+
+.mes-btn-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #38bdf8;
+}
+
+/* Sidebar Panel */
+#mes-sidebar-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 380px;
+  height: 100vh;
+  z-index: 999998;
+  background: rgba(9, 13, 22, 0.95);
+  backdrop-filter: blur(20px);
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mes-sidebar-collapsed #mes-sidebar-panel {
+  transform: translateX(100%);
+}
+
+.mes-sidebar-expanded #mes-sidebar-panel {
+  transform: translateX(0);
+}
+
+.mes-sidebar-expanded #mes-sidebar-toggle-btn {
+  right: 400px;
+}
+
+/* Header & Status */
+.mes-sidebar-header {
+  padding: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mes-sidebar-header h3 {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0;
+  background: linear-gradient(135deg, #38bdf8, #0284c7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.mes-close-btn {
+  font-size: 24px;
+  cursor: pointer;
+  color: #94a3b8;
+  transition: color 0.2s;
+  line-height: 1;
+}
+
+.mes-close-btn:hover {
+  color: #f87171;
+}
+
+.mes-sidebar-status {
+  padding: 8px 20px;
+  background: rgba(255, 255, 255, 0.02);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+}
+
+.mes-status-dot {
+  width: 8px;
+  height: 8px;
+  background: #10b981;
+  border-radius: 50%;
+  animation: pulse 1.5s infinite alternate;
+}
+
+#mes-sidebar-status-text {
+  color: #94a3b8;
+}
+
+/* Content List */
+.mes-sidebar-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+.mes-issues-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.mes-empty-state {
+  text-align: center;
+  color: #64748b;
+  padding: 40px 20px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+/* Issue Card */
+.mes-issue-card {
+  background: rgba(30, 41, 59, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: all 0.2s ease;
+}
+
+.mes-issue-card:hover {
+  border-color: rgba(56, 189, 248, 0.3);
+  background: rgba(30, 41, 59, 0.6);
+}
+
+.mes-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mes-room-name {
+  font-weight: 700;
+  font-size: 13px;
+  color: #38bdf8;
+  max-width: 70%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mes-msg-time {
+  font-size: 11px;
+  color: #64748b;
+}
+
+.mes-card-sender {
+  font-size: 12px;
+  color: #cbd5e1;
+}
+
+.mes-card-body {
+  font-size: 13px;
+  color: #e2e8f0;
+  background: rgba(15, 23, 42, 0.4);
+  padding: 10px;
+  border-radius: 8px;
+  border-left: 3px solid #64748b;
+  font-style: italic;
+}
+
+.mes-card-status {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #f59e0b;
+}
+
+/* Solution and Loading States */
+.mes-solution-box {
+  margin-top: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mes-solution-content {
+  background: #020617;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  padding: 12px;
+  font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+  font-size: 11px;
+  color: #a7f3d0;
+  max-height: 250px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  word-break: break-all;
+  line-height: 1.4;
+}
+
+.mes-loading-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(15, 23, 42, 0.3);
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+.mes-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-top-color: #38bdf8;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Buttons in Sidebar */
+.mes-action-buttons {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.mes-btn {
+  flex: 1;
+  border: none;
+  border-radius: 6px;
+  padding: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.mes-btn-approve {
+  background: #0284c7;
+  color: white;
+}
+
+.mes-btn-approve:hover {
+  background: #0369a1;
+}
+
+.mes-btn-reject {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  color: #f87171;
+}
+
+.mes-btn-reject:hover {
+  background: rgba(239, 68, 68, 0.2);
+}
+
+.mes-sidebar-footer {
+  padding: 12px 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  text-align: center;
+  font-size: 10px;
+  color: #64748b;
+}
+
+/* Offline state for serverStatus indicator in popup */
+.status-indicator.offline {
+  background-color: rgba(239, 68, 68, 0.15);
+  color: var(--danger);
+}
