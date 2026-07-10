@@ -1,0 +1,27 @@
+NAME,DEPARTMENT,DATE GET ISSUE,NAME ISSUE,THE SOLVE,TYPE ISSUE,DATE SOLVE ISSUE,SOLVE ISSUE BY,STATUS,REMARK
+Nguyen Van Duc,EA Team,6/7/2026,Sanmina Customer Label Support,Hỗ trợ kiểm tra và cấu hình in con tem cho khách hàng Sanmina trên hệ thống MES.,Support,6/7/2026,Nguyen Van Duc,Done,MES
+Nguyen Van Duc,EA Team,6/7/2026,Network Troubleshooting BG1,Hỗ trợ chị Dương Hoa kiểm tra kết nối và khắc phục sự cố mạng LAN tại nhà máy BG1.,Support,6/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,6/7/2026,MES Screen Update — K366,Cập nhật giao diện và chức năng màn hình K366 trên hệ thống MES cho anh Bách.,Support,6/7/2026,Nguyen Van Duc,Done,MES
+Nguyen Van Duc,EA Team,6/7/2026,Equipment Delivery to Bac Ninh,Hỗ trợ xuất và vận chuyển các thiết bị kỹ thuật từ nhà máy BG2 về văn phòng Bắc Ninh.,Support,6/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,6/7/2026,Equipment Recovery — QC Department,Thu hồi và bàn giao lại các thiết bị IT của chị Hoàng Hà QC.,Support,6/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,6/7/2026,MES Support — Chi Lan Anh QC,Hỗ trợ giải đáp nghiệp vụ và xử lý lỗi trên hệ thống MES cho chị Lan Anh bộ phận QC qua Messenger.,Support,6/7/2026,Nguyen Van Duc,Done,MES
+Nguyen Van Duc,EA Team,7/7/2026,ECM Installation — OQC BG2,Cài đặt và cấu hình phần mềm ECM cho bộ phận OQC tại nhà máy BG2.,Support,7/7/2026,Nguyen Van Duc,Done,ECM
+Nguyen Van Duc,EA Team,7/7/2026,ECM Login Support,Hỗ trợ người dùng khắc phục sự cố tài khoản và đăng nhập vào hệ thống ECM.,Support,7/7/2026,Nguyen Van Duc,Done,ECM
+Nguyen Van Duc,EA Team,7/7/2026,MES Kiosk Troubleshooting — Chi Linh,Kiểm tra và khắc phục lỗi phần mềm MES cho trạm Kios của chị Linh.,Support,7/7/2026,Nguyen Van Duc,Done,MES
+Nguyen Van Duc,EA Team,7/7/2026,Network Cable Setup — Anh Luan QC,Thiết lập và đi dây mạng LAN kết nối internet cho anh Luân bộ phận QC.,Support,7/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,7/7/2026,Equipment Troubleshooting — Chi Lan Anh QC,Xử lý sự cố lỗi kết nối thiết bị phần cứng cho chị Lan Anh bộ phận QC.,Support,7/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,8/7/2026,Kiosk Software Setup — BG2 Tầng 1,Cài đặt và cấu hình phần mềm hệ thống cho 2 trạm Kios tại khu vực tầng 1 nhà máy BG2.,Support,8/7/2026,Nguyen Van Duc,Done,MES
+Nguyen Van Duc,EA Team,8/7/2026,Software Troubleshooting — Anh Luan QC,Hỗ trợ anh Luân bộ phận QC khắc phục lỗi không mở được file và ứng dụng làm việc.,Support,8/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,8/7/2026,PDF Reader Installation — Anh Nhiem,Hỗ trợ anh Nhiệm cài đặt ứng dụng đọc và chỉnh sửa file PDF.,Support,8/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,8/7/2026,Power & HDMI Cables Handover — Anh Bach,Cấp phát bổ sung dây nguồn màn hình và cáp HDMI cho anh Bách.,Support,8/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,8/7/2026,Software Support — Chi Thu,Hỗ trợ cài đặt phần mềm và giải quyết sự cố ứng dụng cho chị Thư.,Support,8/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,9/7/2026,Office Account Activation,Hỗ trợ người dùng kích hoạt tài khoản bản quyền Microsoft Office.,Support,9/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,9/7/2026,Testing Equipment Setup — Anh Nhiem,Hỗ trợ chuẩn bị và bàn giao thiết bị kiểm tra đo đạc cho anh Nhiệm.,Support,9/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,9/7/2026,ERP Personnel Data Entry,Nhập thông tin lý lịch và dữ liệu công nhân mới vào hệ thống ERP.,Support,9/7/2026,Nguyen Van Duc,Done,GW
+Nguyen Van Duc,EA Team,9/7/2026,MES Error Check — Chi Muoi Chip,Kiểm tra lỗi hiển thị và xử lý dữ liệu trên hệ thống MES cho chị Mười Chip.,Support,9/7/2026,Nguyen Van Duc,Done,MES
+Nguyen Van Duc,EA Team,9/7/2026,User Equipment Inspection,Kiểm tra tình trạng hoạt động và vệ sinh phần cứng máy tính cho người dùng.,Support,9/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,10/7/2026,ECM System Support,Hỗ trợ giải đáp và xử lý các lỗi nghiệp vụ liên quan đến hệ thống quản lý tài liệu ECM cho người dùng.,Support,10/7/2026,Nguyen Van Duc,Done,ECM
+Nguyen Van Duc,EA Team,10/7/2026,Printer Installation — BG2 User,Hỗ trợ cài đặt driver và kết nối máy in văn phòng cho người dùng mới tại nhà máy BG2.,Support,10/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,10/7/2026,Network Connectivity Check — BG1 Office,Kiểm tra độ ổn định của mạng không dây Wifi và tối ưu hóa kết nối tại văn phòng BG1.,Support,10/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,10/7/2026,Password Reset Support,Hỗ trợ reset mật khẩu tài khoản hệ thống và email cho các user gặp sự cố đăng nhập.,Support,10/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,10/7/2026,Damaged IT Equipment Collection,Tiến hành kiểm tra; phân loại và thu hồi các thiết bị IT bị hỏng hóc đưa về kho bảo quản.,Support,10/7/2026,Nguyen Van Duc,Done,HW

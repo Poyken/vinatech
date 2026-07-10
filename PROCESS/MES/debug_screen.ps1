@@ -636,12 +636,12 @@ if ($OutFile) {
             <h2>Routing Scan History (STB_ProdRouteHist)</h2>
             <table>
                 <thead>
-                    <tr><th>CreateDateTime</th><th>RouteCode</th><th>LineCode</th><th>MachineCode</th><th>WorkerCode</th><th>ProdQty</th><th>JobDate</th></tr>
+                    <tr><th>CreateDateTime</th><th>RouteCode</th><th>LineCode</th><th>MachineCode</th><th>User ID</th><th>ProdQty</th><th>JobDate</th></tr>
                 </thead>
                 <tbody>
 "@
             foreach ($r in $dtHist.Rows) {
-                $html += "<tr><td>$($r.CreateDateTime)</td><td><strong>$($r.RouteCode)</strong></td><td>$($r.LineCode)</td><td>$($r.MachineCode)</td><td>$($r.WorkerCode)</td><td>$($r.ProdQty)</td><td>$($r.JobDate)</td></tr>"
+                $html += "<tr><td>$($r.CreateDateTime)</td><td><strong>$($r.RouteCode)</strong></td><td>$($r.LineCode)</td><td>$($r.MachineCode)</td><td>$($r.CreateUserID)</td><td>$($r.ProdQty)</td><td>$($r.JobDate)</td></tr>"
             }
             $html += "</tbody></table></div>"
         }
@@ -652,12 +652,12 @@ if ($OutFile) {
             <h2>Raw Material Feeding History (STB_RawMaterialInputHist)</h2>
             <table>
                 <thead>
-                    <tr><th>CreateDateTime</th><th>RouteCode</th><th>LotMaterialCode</th><th>RawMaterialBarcode</th><th>MaterialLotNo</th><th>Qty</th><th>MachineCode</th></tr>
+                    <tr><th>CreateDateTime</th><th>RouteCode</th><th>LotMaterialCode</th><th>RawMaterialBarcode</th><th>Qty</th><th>User ID</th></tr>
                 </thead>
                 <tbody>
 "@
             foreach ($r in $dtFed.Rows) {
-                $html += "<tr><td>$($r.CreateDateTime)</td><td>$($r.RouteCode)</td><td>$($r.LotMaterialCode)</td><td>$($r.RawMaterialBarcode)</td><td>$($r.MaterialLotNo)</td><td>$($r.Qty)</td><td>$($r.MachineCode)</td></tr>"
+                $html += "<tr><td>$($r.CreateDateTime)</td><td>$($r.RouteCode)</td><td>$($r.LotMaterialCode)</td><td>$($r.RawMaterialBarcode)</td><td>$($r.Qty)</td><td>$($r.CreateUserID)</td></tr>"
             }
             $html += "</tbody></table></div>"
         }
@@ -718,12 +718,12 @@ if ($OutFile) {
             <h2>Raw Material Usage History (Where Fed)</h2>
             <table>
                 <thead>
-                    <tr><th>CreateDateTime</th><th>TargetBarcode</th><th>RouteCode</th><th>LotMaterialCode</th><th>Qty</th><th>MachineCode</th></tr>
+                    <tr><th>CreateDateTime</th><th>TargetBarcode</th><th>RouteCode</th><th>LotMaterialCode</th><th>Qty</th><th>User ID</th></tr>
                 </thead>
                 <tbody>
 "@
             foreach ($r in $dtUsage.Rows) {
-                $html += "<tr><td>$($r.CreateDateTime)</td><td><strong>$($r.TargetBarcode)</strong></td><td>$($r.RouteCode)</td><td>$($r.LotMaterialCode)</td><td>$($r.Qty)</td><td>$($r.MachineCode)</td></tr>"
+                $html += "<tr><td>$($r.CreateDateTime)</td><td><strong>$($r.TargetBarcode)</strong></td><td>$($r.RouteCode)</td><td>$($r.LotMaterialCode)</td><td>$($r.Qty)</td><td>$($r.CreateUserID)</td></tr>"
             }
             $html += "</tbody></table></div>"
         }

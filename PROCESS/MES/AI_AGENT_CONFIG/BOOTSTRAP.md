@@ -27,14 +27,12 @@
 |----------|-------------------|--------------|-------------------|
 
 ```
-.\search_kb.ps1 -Query "từ_khóa"       # 🔍 Tìm kiếm tài liệu cục bộ trước khi truy vấn DB
 .\run_query.ps1 -Query "SELECT ..."   # Query nhanh (tự động hiển thị KB tham chiếu)
 .\validate_sql.ps1 <file.sql>          # Validate trước deploy
 .\deploy_tool.ps1 <file.sql>           # Deploy SQL
 .\db_sync_tool.ps1 -SPName "usp_xxx"   # Tải SP tạm (tự động hiển thị KB tham chiếu)
 .\db_sync_tool.ps1 -Clean              # Xóa SP tạm
 .\record_hotfix.ps1 -TCode "B523" ...  # Tự động hóa ghi chép lỗi vào HOTFIX_LOG.md và KB_31
-.\self_improve.ps1                     # Tự kiểm tra, audit workspace trước khi kết thúc task
 .\debug_screen.ps1 -TCode "B523"       # Chẩn đoán màn hình (Menu, SP, Grid) & đề xuất KB
 .\debug_screen.ps1 -ErrorMsg "loi"     # Tìm SP ném lỗi qua chuỗi dịch nghĩa tiếng Việt/tiếng Anh
 ```
@@ -93,7 +91,7 @@
 3. XÁC MINH  → .\run_query.ps1 -Query "SELECT ..." đối chiếu thực tế dữ liệu
 4. FIX        → Viết SQL (BEGIN TRAN...ROLLBACK) → validate → deploy
 5. GHI CHÉP  → Chạy .\record_hotfix.ps1 để lưu thông tin lỗi và tự động vá vào KB_31 Sổ tay cứu hộ
-6. AUDIT     → Chạy .\self_improve.ps1 để audit tuân thủ quy tắc và chất lượng code
+6. AUDIT     → Tự đối chiếu, kiểm tra kỹ để đảm bảo an toàn & tuân thủ quy tắc
 7. DỌN DẸP   → Xóa các file SP tạm thời qua .\db_sync_tool.ps1 -Clean và commit
 ```
 
@@ -103,7 +101,7 @@
 
 - **Hotfixes deployed:** 17 scripts (01-05: Bug fix SX, 06-17: Clone SP Hưng Yên)
 - **Hotfix tiếp theo:** ID = **20**
-- **Nhà máy:** VNT (Bắc Ninh), VVT_F1/F2 (Bắc Giang), VVT_F3 (Hà Nam), VVT_F4 (Hưng Yên)
+- **Nhà máy (SoT: KB_33):** VNT_F1/VVT_F1=Bắc Ninh, VNT_F2=Electrode/MEA, VVT_F2=BG1, VVT_F3=Hà Nam, VVT_F4=BG2, VNT_F5=Hưng Yên
 
 ---
 

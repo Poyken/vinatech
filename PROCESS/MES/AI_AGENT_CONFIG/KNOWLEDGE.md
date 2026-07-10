@@ -70,13 +70,16 @@
   - *Search & Execute*: `usp_DoProcessProdRouteHist_VNT` (logic chốt sản lượng và tự động trừ kho ảo Backflush).
 
 
-## 3. FACTORY MATRIX
+## 3. FACTORY MATRIX (SoT: KB_33, DB verified)
 
-| Nhà máy | CompanyCode | Route prefix | Barcode format | Kho TP |
-|---------|-------------|--------------|----------------|--------|
-| Bắc Ninh (Electrode) | VNT | `E-xx` | `VV...` | — |
-| Bắc Giang (Cell) | VVT (F1/F2) | `V-xx` | `VV...(Cell)` `VJ...(convert)` | `STB_VN_FINISHGOODS_BG` |
-| Hà Nam | VVT_F3 | `VE-xx` | `VE260507-001` | `FinishGoodMESInstock_HN` |
+| Nhà máy | WorkCenter | Route prefix | Barcode format | Kho TP |
+|---------|------------|--------------|----------------|--------|
+| Bắc Ninh | VNT_F1 / VVT_F1 | `V-xx` | `VJ`(VNT) / `VV`(VVT) | `PROD_VN_WH` |
+| Electrode/MEA | VNT_F2 | `E-xx` | `MEA` | — |
+| Bắc Giang 1 | VVT_F2 | `V-xx_BG` | `VV` | `PROD_BG_WH` |
+| Hà Nam | VNT_F3 / VVT_F3 | `VE-xx` | `VE` | `PROD_HN_WH` |
+| Bắc Giang 2 | VNT_F4 / VVT_F4 | `VP-xx`, `ND-xx` | `K` | *(chưa setup)* |
+| Hưng Yên | VNT_F5 | `D-xxx` | — | *(chưa setup)* |
 
 ## 4. GOLDEN QUERY — Full Trace Barcode (Truy vết 360°)
 

@@ -30,7 +30,5 @@ MES/
 ├── run_query.ps1                          # PowerShell truy vấn DB an toàn (SELECT-only)
 ├── validate_sql.ps1                       # PowerShell kiểm tra cú pháp SQL trước khi chạy
 ├── debug_screen.ps1                       # PowerShell chẩn đoán lỗi màn hình theo TCode/ErrorMsg
-├── record_hotfix.ps1                      # PowerShell ghi nhận lỗi và tự động vá vào KB_31
-├── search_kb.ps1                          # PowerShell tìm kiếm tri thức nhanh cục bộ
-└── self_improve.ps1                       # PowerShell tự đánh giá, audit tuân thủ quy tắc
+└── record_hotfix.ps1                      # PowerShell ghi nhận lỗi và tự động vá vào KB_31
 ```
