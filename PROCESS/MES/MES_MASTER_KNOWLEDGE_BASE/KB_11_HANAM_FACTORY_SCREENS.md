@@ -1,4 +1,4 @@
-﻿# KB_36 — Hà Nam Factory Screen Map & Deep System Discovery
+﻿# KB_11 — Hà Nam Factory Screen Map & Deep System Discovery
 
 > **Verified against DB:** 2026-06-18
 > **🔑 Keywords:** Hà Nam, VVT_F3, HN screen, HNC, VE route, QC subsystem, vision, IoT, XRF, BOM, sales, H screen
@@ -356,8 +356,8 @@
 | **B** | **298** | ~60% | KB_03, KB_04 |
 | **C** | **141** | ~30% | KB_05 |
 | **F** | **87** | ~25% | KB_02 |
-| **HN** | **83** | **~5%→100%** | **KB_36** ✅ |
-| **H** | **82** | **~10%→90%** | **KB_36** ✅ |
+| **HN** | **83** | **~5%→100%** | **KB_11** ✅ |
+| **H** | **82** | **~10%→90%** | **KB_11** ✅ |
 | **Z** | **42** | ~15% | KB_01, KB_34 |
 | **A** | **29** | ~20% | KB_06 |
 | **K** | **28** | ~15% | KB_03 |
@@ -368,12 +368,12 @@
 | **FG** | **23** | ~50% | KB_34 |
 | **G** | **22** | ~50% | KB_34 |
 | **M** | **22** | ~70% | KB_34 |
-| **HY** | **17** | **0%→100%** | **KB_36** ✅ |
+| **HY** | **17** | **0%→100%** | **KB_11** ✅ |
 | **T** | **16** | ~40% | KB_34 |
 | **S** | **12** | ~50% | KB_34 |
 | **W** | **10** | ~50% | KB_34 |
 | **R** | **9** | ~50% | KB_34 |
-| **D** | **6** | ~80% | KB_25 |
+| **D** | **6** | ~80% | KB_07 |
 | **TOTAL** | **~1,044** | **~60%** | 23 KB files |
 
 ---
@@ -470,3 +470,4 @@
 ---
 
 *Cập nhật: 2026-06-18 — Bổ sung Appendix: 63 HN-isolated SPs (phân loại theo chức năng) + 5 HN-specific Tables. DB verified.*
+

@@ -1,4 +1,4 @@
-# 🚀 VINATECH MES - SYSTEM INDEX
+﻿# 🚀 VINATECH MES - SYSTEM INDEX
 
 > [!IMPORTANT]
 > **CẬP NHẬT QUAN TRỌNG:** Toàn bộ hệ thống tri thức, quy trình nghiệp vụ và hướng dẫn sửa lỗi tích hợp giữa Groupware và MES đã được hợp nhất thành một thư viện duy nhất để tránh trùng lặp dữ liệu và phân mảnh:
@@ -23,12 +23,13 @@ MES/
 │   └── HOTFIX_LOG.md                      # Nhật ký các lỗi đã được xử lý (Hotfix logs)
 ├── MES_MASTER_KNOWLEDGE_BASE/             # Cơ sở tri thức chuyên sâu
 │   ├── KB_INDEX.md                        # Chỉ mục định tuyến KB
-│   └── KB_01 ... KB_36                    # Hướng dẫn chi tiết các màn hình/nghiệp vụ
+│   └── KB_01 ... KB_11                    # Hướng dẫn chi tiết các màn hình/nghiệp vụ
 ├── db_shared.ps1                          # Module chia sẻ logic DB và safety checks
 ├── db_sync_tool.ps1                       # PowerShell tải SP tạm từ DB (không commit Git)
 ├── deploy_tool.ps1                        # PowerShell để triển khai SQL lên DB
 ├── run_query.ps1                          # PowerShell truy vấn DB an toàn (SELECT-only)
 ├── validate_sql.ps1                       # PowerShell kiểm tra cú pháp SQL trước khi chạy
 ├── debug_screen.ps1                       # PowerShell chẩn đoán lỗi màn hình theo TCode/ErrorMsg
-└── record_hotfix.ps1                      # PowerShell ghi nhận lỗi và tự động vá vào KB_31
+└── record_hotfix.ps1                      # PowerShell ghi nhận lỗi và tự động vá vào KB_09
 ```
+

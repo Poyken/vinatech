@@ -1,4 +1,4 @@
-﻿# KB_30: Core SP Engine — Trái Tim Hệ Thống MES
+﻿# KB_08: Core SP Engine — Trái Tim Hệ Thống MES
 
 > **File này chứa phân tích chi tiết các Stored Procedure cốt lõi nhất của hệ thống MES.**
 > **🔑 Keywords:** SP engine, DoProcess, Backflush, ForCalc, Packing, OPENXML, stored procedure, core logic
@@ -308,7 +308,7 @@ EXEC usp_DoFixMaterialDoc @MaterialDocNo
 > IF @SIExtInt01 = Null  -- ← BUG! SQL không bao giờ TRUE khi so sánh = Null
 > -- Phải sửa thành: IF @SIExtInt01 IS NULL
 > ```
-> → Xem chi tiết tại KB_12 §2.2.
+> → Xem chi tiết tại [KB_03/KB_03_03_SCREEN_BUGS_B.md#lỗi-1-lỗi-cấm-scan-nhanh-dưới-20-phút-gate-20-phút-bị-lỗikhông-chặn-được](KB_03/KB_03_03_SCREEN_BUGS_B.md#lỗi-1-lỗi-cấm-scan-nhanh-dưới-20-phút-gate-20-phút-bị-lỗikhông-chặn-được).
 
 ---
 
@@ -597,3 +597,4 @@ STB_MaterialDocDetail    STB_MaterialDocDetail
 usp_DoFixMaterialDoc (576/day)
 (Sửa chữa/điều chỉnh phiếu NVL)
 ```
+

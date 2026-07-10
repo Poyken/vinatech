@@ -1,4 +1,4 @@
-param (
+﻿param (
     [Parameter(Mandatory=$true)]
     [string]$TCode,
     [Parameter(Mandatory=$true)]
@@ -14,7 +14,7 @@ param (
 $mesRoot = $PSScriptRoot
 $bootstrapPath = Join-Path $mesRoot "AI_AGENT_CONFIG\BOOTSTRAP.md"
 $hotfixLogPath = Join-Path $mesRoot "AI_AGENT_CONFIG\HOTFIX_LOG.md"
-$fixbookPath = Join-Path $mesRoot "MES_MASTER_KNOWLEDGE_BASE\KB_31_SCREEN_BUG_FIXBOOK.md"
+$fixbookPath = Join-Path $mesRoot "MES_MASTER_KNOWLEDGE_BASE\KB_09_SCREEN_BUG_FIXBOOK.md"
 $kbIndexPath = Join-Path $mesRoot "MES_MASTER_KNOWLEDGE_BASE\KB_INDEX.md"
 
 # 2. Get Next Hotfix ID and update BOOTSTRAP.md
@@ -81,7 +81,7 @@ if (Test-Path $hotfixLogPath) {
     Write-Host "[OK] Added entry ID_$hotfixId to HOTFIX_LOG.md" -ForegroundColor Green
 }
 
-# 5. Insert entry into KB_31_SCREEN_BUG_FIXBOOK.md
+# 5. Insert entry into KB_09_SCREEN_BUG_FIXBOOK.md
 if (Test-Path $fixbookPath) {
     $fixbookLines = [System.Collections.Generic.List[string]]::new()
     $fixbookLines.AddRange([System.IO.File]::ReadAllLines($fixbookPath, [System.Text.Encoding]::UTF8))
@@ -137,9 +137,9 @@ if (Test-Path $fixbookPath) {
         $newTableRow = "| $nextRowId | $cleanSymptom | $cleanCause | $cleanPatch |"
         $fixbookLines.Insert($insertAt, $newTableRow)
         [System.IO.File]::WriteAllLines($fixbookPath, $fixbookLines, [System.Text.Encoding]::UTF8)
-        Write-Host "[OK] Inserted hotfix into existing TCode section $TCode in KB_31" -ForegroundColor Green
+        Write-Host "[OK] Inserted hotfix into existing TCode section $TCode in KB_09" -ForegroundColor Green
     } else {
-        Write-Host "[INFO] TCode section $TCode not found in KB_31. Creating it..." -ForegroundColor Cyan
+        Write-Host "[INFO] TCode section $TCode not found in KB_09. Creating it..." -ForegroundColor Cyan
         $seriesPrefix = $TCode.SubString(0, 1).ToUpper()
         
         $seriesHeadingPattern = ""
@@ -196,6 +196,7 @@ if (Test-Path $fixbookPath) {
             $idx++
         }
         [System.IO.File]::WriteAllLines($fixbookPath, $fixbookLines, [System.Text.Encoding]::UTF8)
-        Write-Host "[OK] Created new TCode section and added hotfix to KB_31" -ForegroundColor Green
+        Write-Host "[OK] Created new TCode section and added hotfix to KB_09" -ForegroundColor Green
     }
 }
+

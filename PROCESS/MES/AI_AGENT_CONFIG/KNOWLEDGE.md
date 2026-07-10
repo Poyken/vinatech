@@ -1,4 +1,4 @@
-# 📚 KNOWLEDGE — Vinatech MES Quick Reference (Load khi cần)
+﻿# 📚 KNOWLEDGE — Vinatech MES Quick Reference (Load khi cần)
 
 > **Mục đích:** Cheat sheet nén gọn để AI trả lời nhanh mà không phải đọc 30 KB files
 > **Cập nhật:** 2026-06-19
@@ -70,7 +70,7 @@
   - *Search & Execute*: `usp_DoProcessProdRouteHist_VNT` (logic chốt sản lượng và tự động trừ kho ảo Backflush).
 
 
-## 3. FACTORY MATRIX (SoT: KB_33, DB verified)
+## 3. FACTORY MATRIX (SoT: KB_10, DB verified)
 
 | Nhà máy | WorkCenter | Route prefix | Barcode format | Kho TP |
 |---------|------------|--------------|----------------|--------|
@@ -159,7 +159,7 @@ ORDER BY RMIH.CreateDateTime DESC;
 
 | Triệu chứng | KB |
 |--------------|----| 
-| **Mọi lỗi → tra mã màn hình** | **KB_31 (Bug Fixbook, đọc trước)** |
+| **Mọi lỗi → tra mã màn hình** | **KB_09 (Bug Fixbook, đọc trước)** |
 | Không đăng nhập MES | KB_01 §1.1 |
 | Không in được tem | KB_01 §1.2, KB_04 §6.12 |
 | Gộp box lỗi | KB_04 §6.4, §6.13 |
@@ -192,11 +192,11 @@ ORDER BY RMIH.CreateDateTime DESC;
 | **04** | **KB_04/ ⚡CHUNKED** | Đóng gói B523/B525, in tem | 71KB→2c |
 | **05** | **KB_05/ ⚡CHUNKED** | QC IQC/PQC/OQC, Electrode, ESR, Slitting | 109KB→2c |
 | 06 | KB_06_MASTER_DATA_TOOLS | Master data, model mới | 28KB |
-| **25** | **KB_25/ ⚡CHUNKED** | Hưng Yên, D-series | 41KB→3c |
-| 30 | KB_30_CORE_SP_ENGINE | Core SP (DoProcess/Backflush/Packing) | 24KB |
-| **31** | **KB_31_SCREEN_BUG_FIXBOOK** | **★ Bug fix 70+ bugs** | **31KB** |
-| 33 | KB_33_FACTORY_WORKCENTER | Ma trận nhà máy/WorkCenter | 9KB |
-| 36 | KB_36_HANAM_FACTORY_SCREENS | Hà Nam 83 screens | 21KB |
+| **25** | **KB_07/ ⚡CHUNKED** | Hưng Yên, D-series | 41KB→3c |
+| 30 | KB_08_CORE_SP_ENGINE | Core SP (DoProcess/Backflush/Packing) | 24KB |
+| **31** | **KB_09_SCREEN_BUG_FIXBOOK** | **★ Bug fix 70+ bugs** | **31KB** |
+| 33 | KB_10_FACTORY_WORKCENTER | Ma trận nhà máy/WorkCenter | 9KB |
+| 36 | KB_11_HANAM_FACTORY_SCREENS | Hà Nam 83 screens | 21KB |
 
 
 ## 8. ⚠️ COLUMN NAME TRAPS (Hay bị sai)
@@ -213,3 +213,4 @@ ORDER BY RMIH.CreateDateTime DESC;
 | `STB_MaterialHoldInfo` | KHÔNG TỒN TẠI | Dùng MaterialWarehouseCode='HOLDING_*' |
 | `STB_BarrelBarcodeInfo` | KHÔNG TỒN TẠI | Dùng STB_VietNam_CheckBarcode_2624 |
 | `STB_HN_AccountingPrice` | KHÔNG TỒN TẠI | Table legacy đã bị xóa |
+

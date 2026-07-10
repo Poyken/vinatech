@@ -40,7 +40,7 @@
 | `usp_DoFixDayProdPlan` | Đánh dấu kế hoạch đã Fixed (IsFixed=1) |
 | `usp_DoCancelDayProdPlan` | Hủy kế hoạch |
 | `usp_DoFinishDayProdPlan` | Đóng kế hoạch ngày |
-| `usp_DoCreateSetInfoForProdQty_VNT` | **★ CORE — Tạo barcode (YearCode+MonthCode+Serial)** → [KB_30](../KB_30_CORE_SP_ENGINE.md) |
+| `usp_DoCreateSetInfoForProdQty_VNT` | **★ CORE — Tạo barcode (YearCode+MonthCode+Serial)** → [KB_08](../KB_08_CORE_SP_ENGINE.md) |
 | `usp_SetInfo_iud` | IUD thông tin SetInfo (barcode metadata) |
 
 **Lỗi thường gặp:**
@@ -985,7 +985,7 @@ ORDER BY PRH.CreateDateTime ASC;
 
 ---
 
-### 6.23 Thiết Bị Phụ Trợ MES (Lò Sấy, Gá Doping & Dao Cắt Slitting) (Gộp từ KB_30)
+### 6.23 Thiết Bị Phụ Trợ MES (Lò Sấy, Gá Doping & Dao Cắt Slitting) (Gộp từ KB_08)
 
 
 > **Môi trường:** SmartFactoryV2 & SmartFramework trên dbserver.hycap.co.kr,5398
@@ -1125,4 +1125,5 @@ $$\text{CurrentQty} = \text{LengthSlitting} \times \left(\frac{\text{WidthSlitti
 
 
 ---
+
 

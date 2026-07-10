@@ -5,7 +5,7 @@
 *   **Triệu chứng:** Khi thực hiện nhập kho tại **F330** hoặc điều chuyển kho, người dùng không thấy vị trí kho (Location) trong danh sách để chọn, hoặc hệ thống báo lỗi không tồn tại vị trí.
 *   **Nguyên nhân gốc:** Chưa khai báo Location hoặc cờ sử dụng bị tắt (`IsUsed = 0`) trong bảng danh mục kho `STB_WarehouseLocation`.
 *   **Cách khắc phục:** Vào màn hình **A130** (hoặc check trực tiếp bảng `STB_WarehouseLocation`), cấu hình thêm vị trí kho tương ứng cho mã kho và bật cờ hoạt động.
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_25/KB_25_01_OVERVIEW.md § 8](../KB_25/KB_25_01_OVERVIEW.md#8-a130-kholocation--đối-tác).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_07/KB_07_01_OVERVIEW.md § 8](../KB_07/KB_07_01_OVERVIEW.md#8-a130-kholocation--đối-tác).
 
 ---
 
@@ -234,7 +234,7 @@
 *   **Triệu chứng:** Khi chạy tác vụ chia/tách lô vật liệu giá đỡ substrate, hệ thống hiển thị thông báo lỗi chặn giao dịch (bằng tiếng Hàn hoặc tiếng Việt).
 *   **Nguyên nhân gốc:** Lô vật liệu gốc chưa được thực hiện xuất kho lên chuyền sản xuất (chưa nằm ở kho công đoạn có cờ `IsRouteWarehouse = 1` mà vẫn đang tồn ở kho chính ROH), vi phạm điều kiện kiểm tra của Stored Procedure `usp_DoMakeStocktakingPlanResultForSupport`.
 *   **Cách khắc phục:** Thủ kho thực hiện xuất kho Lot vật liệu gốc lên chuyền sản xuất trước (qua màn hình **F430**), sau đó mới thực hiện thao tác chia tách lô trên giao diện UI.
-*   **Chi tiết nghiệp vụ:** Xem tại ../KB_26/KB_26_01_LINKS_BUGS.md § 5.
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_02_SCREEN_BUGS_QC.md#f742f746--lỗi-1-hủyrollback-slitting-phải-xóa-trước](../KB_05/KB_05_02_SCREEN_BUGS_QC.md#f742f746--lỗi-1-hủyrollback-slitting-phải-xóa-trước).
 
 ---
 
@@ -339,3 +339,5 @@
 ---
 
 ## Appendix — Warehouse Infrastructure (DB Verified 2026-06-18)
+
+

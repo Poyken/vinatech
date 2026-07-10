@@ -1,4 +1,4 @@
-# 🗂️ NAIS MES — Knowledge Base Index (Streamlined)
+﻿# 🗂️ NAIS MES — Knowledge Base Index (Streamlined)
 
 > **Cập nhật:** 2026-06-30 | **Tổng:** 14 files/folders (đã tối ưu hóa 65% token) | **DB:** SmartFactoryV2 + SmartFramework
 
@@ -9,9 +9,9 @@
 | Bạn biết gì? | Tra ở đâu |
 |---|---|
 | **Mã màn hình** (VD: B523) | → **KI: screen_id_reference** hoặc [Bảng tra SCREEN](#-tra-cứu-theo-screen-id-tcode) |
-| **Triệu chứng lỗi** | → **KB_31** (Bug Fixbook - 70+ bugs) hoặc [Bảng tra TRIỆU CHỨNG](#-tra-cứu-theo-triệu-chứng) |
+| **Triệu chứng lỗi** | → **KB_09** (Bug Fixbook - 70+ bugs) hoặc [Bảng tra TRIỆU CHỨNG](#-tra-cứu-theo-triệu-chứng) |
 | **Phân quyền / Tạo màn hình mới** | → [KB_01_UI_AND_SCREENS.md](KB_01_UI_AND_SCREENS.md) |
-| **SP core chốt sản lượng / đóng gói** | → [KB_30_CORE_SP_ENGINE.md](KB_30_CORE_SP_ENGINE.md) |
+| **SP core chốt sản lượng / đóng gói** | → [KB_08_CORE_SP_ENGINE.md](KB_08_CORE_SP_ENGINE.md) |
 | **Tìm kiếm nhanh** | `Ctrl + Shift + F` gõ keyword trực tiếp trong VS Code |
 
 ---
@@ -33,11 +33,11 @@
 
 | File | Tên | Nội dung chính |
 |------|-----|----------------|
-| [KB_25](KB_25/INDEX.md) | **Hưng Yên** | Màn hình D-series của nhà máy Enesol Hưng Yên |
-| [KB_30_CORE_SP_ENGINE.md](KB_30_CORE_SP_ENGINE.md) | **Core SP Engine** | Phân tích line-by-line: usp_DoProcessProdRouteHist, Backflush, ForCalc, Packing, B450 Barcode rules |
-| [KB_31_SCREEN_BUG_FIXBOOK.md](KB_31_SCREEN_BUG_FIXBOOK.md) | **Sổ tay Fix Bug** | **Sổ tay cứu hộ 70+ bugs theo TCode thực tế (Đọc khi nhận bug)** |
-| [KB_33_FACTORY_WORKCENTER_MATRIX.md](KB_33_FACTORY_WORKCENTER_MATRIX.md) | **Factory Matrix** | Các nhà máy, LineCode, WorkCenter, định dạng Barcode đầu mã |
-| [KB_36_HANAM_FACTORY_SCREENS.md](KB_36_HANAM_FACTORY_SCREENS.md) | **Hà Nam Screens** | Danh sách 83 màn hình và 63 SP đặc thù của nhà máy Hà Nam |
+| [KB_07](KB_07/INDEX.md) | **Hưng Yên** | Màn hình D-series của nhà máy Enesol Hưng Yên |
+| [KB_08_CORE_SP_ENGINE.md](KB_08_CORE_SP_ENGINE.md) | **Core SP Engine** | Phân tích line-by-line: usp_DoProcessProdRouteHist, Backflush, ForCalc, Packing, B450 Barcode rules |
+| [KB_09_SCREEN_BUG_FIXBOOK.md](KB_09_SCREEN_BUG_FIXBOOK.md) | **Sổ tay Fix Bug** | **Sổ tay cứu hộ 70+ bugs theo TCode thực tế (Đọc khi nhận bug)** |
+| [KB_10_FACTORY_WORKCENTER_MATRIX.md](KB_10_FACTORY_WORKCENTER_MATRIX.md) | **Factory Matrix** | Các nhà máy, LineCode, WorkCenter, định dạng Barcode đầu mã |
+| [KB_11_HANAM_FACTORY_SCREENS.md](KB_11_HANAM_FACTORY_SCREENS.md) | **Hà Nam Screens** | Danh sách 83 màn hình và 63 SP đặc thù của nhà máy Hà Nam |
 | [MES_SCRIPT_GUIDE.md](MES_SCRIPT_GUIDE.md) | **Script Tools** | Hướng dẫn sử dụng run_query, validate_sql, deploy_tool, db_sync_tool |
 
 ---
@@ -55,7 +55,7 @@
 | B452 | Đổi Line | KB_03 | — |
 | B523 | **Đóng gói** | **KB_04** | KB_03 |
 | B525 | Đóng gói kho | KB_04 | KB_02 |
-| B530 | Chốt sản lượng | KB_03 | KB_30 |
+| B530 | Chốt sản lượng | KB_03 | KB_08 |
 | B540 | Quét NVL vào Line | KB_03 | KB_05 |
 | B552 | Slitting | KB_05 | — |
 | B597 | **Quét NVL QC** | **KB_05** | KB_03 |

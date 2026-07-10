@@ -1,4 +1,4 @@
-# GEMINI.md — Auto-Context cho Vinatech MES Workspace
+﻿# GEMINI.md — Auto-Context cho Vinatech MES Workspace
 
 > **Mục đích:** File này được AI tự đọc khi mở workspace. Chứa context tối thiểu.
 > **Chi tiết đầy đủ:** Đọc `AI_AGENT_CONFIG/BOOTSTRAP.md`
@@ -22,7 +22,8 @@
 ## Tra Cứu
 
 - **Tri thức tích hợp chéo (Groupware/MES) →** [Master Index](../SYSTEM_MASTER_KNOWLEDGE_BASE/README.md) (VOL_01: Kiến trúc, VOL_02: Nghiệp vụ, VOL_03: Troubleshooting)
-- **Bug theo màn hình →** KB_31 (Bug Fixbook)
+- **Bug theo màn hình →** KB_09 (Bug Fixbook)
 - **Config files →** `AI_AGENT_CONFIG/` (BOOTSTRAP.md, RULES.md, KNOWLEDGE.md, SKILLS.md)
 - **KB chuyên sâu →** `MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md`
 - **Knowledge Items →** screen_id_reference, deep_system_map, kb_verification
+

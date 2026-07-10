@@ -122,7 +122,7 @@
 *   **Nguyên nhân gốc:** Lỗi logic so sánh Null trong SP `usp_DoProcessProdRouteHistForCalc_SmartApp_VNT` dòng 218: `IF @SIExtInt01 = Null` (Trong SQL phải dùng `IS NULL`).
 *   **Cách khắc phục:**
     ALTER SP sửa lại cú pháp so sánh Null chuẩn: `IF @SIExtInt01 IS NULL`.
-*   **Chi tiết nghiệp vụ:** Xem tại KB_12_DEEP_CORE_ANALYSIS_AND_AUDIT.md § 2.2.
+*   **Chi tiết nghiệp vụ:** Xem phân tích chi tiết stored procedure tại [../KB_08_CORE_SP_ENGINE.md#gate-20-phút](../KB_08_CORE_SP_ENGINE.md#gate-20-phút).
 
 ### Lỗi 2: OP báo lỗi không chốt được công đoạn, báo "Routing không có trong PO" hoặc "Đã hoàn thành thực tế rồi"
 *   **Triệu chứng:** OP scan chốt sản lượng tại **B530** hệ thống báo lỗi không chốt được.
@@ -313,7 +313,7 @@ Bước 7: Xác nhận phiếu → EXEC usp_DoFixMaterialDoc
 *   **Nguyên nhân gốc:** SP `usp_Vietnam_GetLotInfoForRework_VNT` bị hardcode kiểm tra Whitelist UserID.
 *   **Cách khắc phục:**
     Sửa SP để bổ sung thêm UserID của OP hiện hành vào danh sách Whitelist cho phép thao tác Rework.
-*   **Chi tiết nghiệp vụ:** Xem tại ../KB_26/KB_26_01_LINKS_BUGS.md § 2.
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_09_SCREEN_BUG_FIXBOOK.md#b618](../KB_09_SCREEN_BUG_FIXBOOK.md#b618).
 
 ---
 
@@ -524,5 +524,7 @@ Bước 7: Xác nhận phiếu → EXEC usp_DoFixMaterialDoc
 *   **Phòng ngừa:** Thêm bước kiểm tra `STB_BomRevision_Map` vào quy trình thêm model mới (xem `new_model_checklist.md` Bước 3b).
 
 ---
+
+
 
 

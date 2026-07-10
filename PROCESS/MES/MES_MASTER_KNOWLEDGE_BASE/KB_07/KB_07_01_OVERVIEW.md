@@ -1,4 +1,4 @@
-﻿# KB_25 — VinaEnesol & Hưng Yên Factory Specifics
+﻿# KB_07 — VinaEnesol & Hưng Yên Factory Specifics
 
 > **Màn hình:** D000, D051, D100, D110, HY screens
 > **🔑 Keywords:** Enesol, Hưng Yên, VVT_F4, pin, battery, D-series, box matching, inner box, outer box, 93 SPs
@@ -326,4 +326,5 @@ Dưới đây là bảng đối soát tiến độ triển khai cấu hình các
 | | Thông tin thiết bị máy móc (**B250**) | Mr. Triều | **100%** | Đã cấu hình hoạt động |
 
 ---
+
 

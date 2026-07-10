@@ -1,4 +1,4 @@
-# ⚡ BOOTSTRAP — Đọc file này ĐẦU TIÊN mỗi session mới
+﻿# ⚡ BOOTSTRAP — Đọc file này ĐẦU TIÊN mỗi session mới
 
 > **Cách dùng:** Khi bắt đầu session mới, user nói: *"Đọc file `MES/AI_AGENT_CONFIG/BOOTSTRAP.md` trước"*
 > **Cập nhật:** 2026-07-02
@@ -32,7 +32,7 @@
 .\deploy_tool.ps1 <file.sql>           # Deploy SQL
 .\db_sync_tool.ps1 -SPName "usp_xxx"   # Tải SP tạm (tự động hiển thị KB tham chiếu)
 .\db_sync_tool.ps1 -Clean              # Xóa SP tạm
-.\record_hotfix.ps1 -TCode "B523" ...  # Tự động hóa ghi chép lỗi vào HOTFIX_LOG.md và KB_31
+.\record_hotfix.ps1 -TCode "B523" ...  # Tự động hóa ghi chép lỗi vào HOTFIX_LOG.md và KB_09
 .\debug_screen.ps1 -TCode "B523"       # Chẩn đoán màn hình (Menu, SP, Grid) & đề xuất KB
 .\debug_screen.ps1 -ErrorMsg "loi"     # Tìm SP ném lỗi qua chuỗi dịch nghĩa tiếng Việt/tiếng Anh
 ```
@@ -48,7 +48,7 @@
 | **Bảng/SP/Column reference** | `KNOWLEDGE.md` | Cheat sheet nén gọn |
 | **SQL templates/Debug** | `SKILLS.md` | Copy-paste ready |
 | **Quy tắc chi tiết** | `RULES.md` | Đầy đủ hơn section trên |
-| **Bug theo màn hình** | **KB_31** (Bug Fixbook) | 70+ bugs, đọc trước |
+| **Bug theo màn hình** | **KB_09** (Bug Fixbook) | 70+ bugs, đọc trước |
 | **KB chuyên sâu** | `KB_INDEX.md` → chunk cụ thể | 5 folders đã CHUNKED |
 | **Screen→SP→Table** | KB_32 hoặc KI: screen_id_reference | |
 
@@ -61,8 +61,8 @@
 | QC/Electrode | KB_05/ | → 01_QC_AND_ELECTRODE_CORE |
 | Kho NVL/TP | KB_02/ | → 01_WMS_CORE |
 | Model mới | KB_06_MASTER_DATA_TOOLS.md | Không chunked |
-| Hưng Yên | KB_25/ | → 01_OVERVIEW |
-| Hà Nam screens | KB_36_HANAM_FACTORY_SCREENS.md | Không chunked |
+| Hưng Yên | KB_07/ | → 01_OVERVIEW |
+| Hà Nam screens | KB_11_HANAM_FACTORY_SCREENS.md | Không chunked |
 | Phân quyền / Tạo màn hình | KB_01_UI_AND_SCREENS.md | Không chunked |
 
 ---
@@ -90,7 +90,7 @@
 2. TRA CỨU   → Chạy .\debug_screen.ps1 để chẩn đoán thông số màn hình / truy vết SP ném lỗi và đề xuất tài liệu
 3. XÁC MINH  → .\run_query.ps1 -Query "SELECT ..." đối chiếu thực tế dữ liệu
 4. FIX        → Viết SQL (BEGIN TRAN...ROLLBACK) → validate → deploy
-5. GHI CHÉP  → Chạy .\record_hotfix.ps1 để lưu thông tin lỗi và tự động vá vào KB_31 Sổ tay cứu hộ
+5. GHI CHÉP  → Chạy .\record_hotfix.ps1 để lưu thông tin lỗi và tự động vá vào KB_09 Sổ tay cứu hộ
 6. AUDIT     → Tự đối chiếu, kiểm tra kỹ để đảm bảo an toàn & tuân thủ quy tắc
 7. DỌN DẸP   → Xóa các file SP tạm thời qua .\db_sync_tool.ps1 -Clean và commit
 ```
@@ -101,7 +101,7 @@
 
 - **Hotfixes deployed:** 17 scripts (01-05: Bug fix SX, 06-17: Clone SP Hưng Yên)
 - **Hotfix tiếp theo:** ID = **20**
-- **Nhà máy (SoT: KB_33):** VNT_F1/VVT_F1=Bắc Ninh, VNT_F2=Electrode/MEA, VVT_F2=BG1, VVT_F3=Hà Nam, VVT_F4=BG2, VNT_F5=Hưng Yên
+- **Nhà máy (SoT: KB_10):** VNT_F1/VVT_F1=Bắc Ninh, VNT_F2=Electrode/MEA, VVT_F2=BG1, VVT_F3=Hà Nam, VVT_F4=BG2, VNT_F5=Hưng Yên
 
 ---
 
@@ -115,3 +115,4 @@
 
 ---
 *Cập nhật: 2026-07-02 — Loại bỏ trùng lặp DB config & cấu trúc thư mục. SoT: db_config.json, RULES.md, README.md.*
+

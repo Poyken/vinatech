@@ -6,7 +6,7 @@
 *   **Triệu chứng:** Khi lập PO tại B310, danh sách công đoạn bị thiếu hoặc sai thứ tự.
 *   **Nguyên nhân gốc:** Nhóm Route chưa được cấu hình đúng tại B220.
 *   **Cách khắc phục:** Vào B220 kiểm tra Route Group, đảm bảo các RouteCode được gán đúng thứ tự.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_06_MASTER_DATA_TOOLS.md § 10](../KB_06_MASTER_DATA_TOOLS.md) và [../KB_25/KB_25_01_OVERVIEW.md](../KB_25/KB_25_01_OVERVIEW.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_06_MASTER_DATA_TOOLS.md § 10](../KB_06_MASTER_DATA_TOOLS.md) và [../KB_07/KB_07_01_OVERVIEW.md](../KB_07/KB_07_01_OVERVIEW.md).
 
 ---
 
@@ -19,7 +19,7 @@
 *   **Triệu chứng:** B270 bị lỗi popup trống không hiển thị danh sách máy. Cần cách thay thế.
 *   **Nguyên nhân gốc:** SP `usp_Set_VVT_Info_get` bị hardcode Whitelist UserID tại B270.
 *   **Cách khắc phục:** Sử dụng B230 để gán máy vào Route khi B270 gặp sự cố. B230 có giao diện tương tự nhưng không qua SP bị whitelist.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_01_UI_AND_SCREENS.md § 1.3](../KB_01_UI_AND_SCREENS.md) và [../KB_25/KB_25_01_OVERVIEW.md](../KB_25/KB_25_01_OVERVIEW.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_01_UI_AND_SCREENS.md § 1.3](../KB_01_UI_AND_SCREENS.md) và [../KB_07/KB_07_01_OVERVIEW.md](../KB_07/KB_07_01_OVERVIEW.md).
 
 ---
 
@@ -90,7 +90,7 @@
 *   **Triệu chứng:** Màn hình B460 hiển thị trạng thái Line sản xuất bị delay hoặc không chính xác.
 *   **Nguyên nhân gốc:** Dữ liệu lấy từ bảng `STB_SetInfo` kết hợp `STB_ProdRouteHist` có thể bị delay do cache hoặc lỗi refresh.
 *   **Cách khắc phục:** Nhấn nút Refresh/Tìm kiếm lại. Nếu vẫn sai, kiểm tra trực tiếp bảng `STB_ProdRouteHist` xem công đoạn đã được ghi nhận chưa.
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_03/KB_03_02_CELL_LINE.md § 6](../KB_03/KB_03_02_CELL_LINE.md) và [../KB_25/KB_25_01_OVERVIEW.md](../KB_25/KB_25_01_OVERVIEW.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_03/KB_03_02_CELL_LINE.md § 6](../KB_03/KB_03_02_CELL_LINE.md) và [../KB_07/KB_07_01_OVERVIEW.md](../KB_07/KB_07_01_OVERVIEW.md).
 
 ---
 
@@ -101,7 +101,7 @@
 *   **Triệu chứng:** B470 không hiện dữ liệu Line điện cực hoặc hiện sai công đoạn đang chạy.
 *   **Nguyên nhân gốc:** Dữ liệu điện cực lưu ở bảng riêng (`STB_ElectrodeCoatingInfo`, `STB_ElectrodeSlittingResult`). Nếu Line điện cực chưa được cấu hình Route tương ứng thì B470 sẽ trống.
 *   **Cách khắc phục:** Kiểm tra cấu hình Route điện cực tại B220 và mapping máy tại B270.
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md § 8](../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md) và [../KB_25/KB_25_01_OVERVIEW.md](../KB_25/KB_25_01_OVERVIEW.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md § 8](../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md) và [../KB_07/KB_07_01_OVERVIEW.md](../KB_07/KB_07_01_OVERVIEW.md).
 
 ---
 
@@ -455,4 +455,5 @@
     ```
 
 ---
+
 

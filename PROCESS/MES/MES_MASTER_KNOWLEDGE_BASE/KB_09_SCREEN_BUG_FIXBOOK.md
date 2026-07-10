@@ -1,4 +1,4 @@
-﻿# KB_31: Sổ Tay Tra Cứu Bug & Fix Theo Màn Hình
+﻿# KB_09: Sổ Tay Tra Cứu Bug & Fix Theo Màn Hình
 
 > **📌 Mục đích:** Khi nhận được báo lỗi từ user → tra TCode tại đây → tìm ngay bug + cách fix.
 > **🔑 Keywords:** bug, fix, sổ tay, TCode, màn hình, triệu chứng, nguyên nhân, SQL fix, sửa lỗi, khắc phục
@@ -131,7 +131,7 @@
 | 5 | MergeQty không chia đúng khi gộp nhiều Lot | Logic `@pMergeQty < @total + @InProdQty` bị edge case | Kiểm tra số lượng Lot trước khi gộp, đảm bảo tổng = MergeQty |
 | 6 | Sanmina QR code has redundant quantities and serials on inner labels | Stored procedure usp_SanminaLabelPrint_get_Vietnam did not return a filtered list of serials and quantities for inner labels. | `-- ============================================= -- Author:		Mr.Manh -- Create date: 2025-12-26 -- Description:	Get Sanmina label -- =================...` |
 
-> 🔗 Chi tiết: [KB_04 §6](KB_04/KB_04_01_CORE_PACKAGING.md), [KB_30 §5](KB_30_CORE_SP_ENGINE.md)
+> 🔗 Chi tiết: [KB_04 §6](KB_04/KB_04_01_CORE_PACKAGING.md), [KB_08 §5](KB_08_CORE_SP_ENGINE.md)
 
 ### [B528]
 **Tên:** Barrel Barcode (In tem thùng phuy)
@@ -145,15 +145,15 @@
 
 | # | Triệu chứng | Nguyên nhân | Fix |
 |---|---|---|---|
-| 1 | Gate 20 phút không hoạt động — OP scan liên tục không bị chặn | BUG: `IF @SIExtInt01 = Null` (phải là `IS NULL`) trong SP `usp_DoProcessProdRouteHistForCalc_SmartApp_VNT` | ALTER SP sửa `= Null` → `IS NULL` — xem KB_12 §2.2 |
+| 1 | Gate 20 phút không hoạt động — OP scan liên tục không bị chặn | BUG: `IF @SIExtInt01 = Null` (phải là `IS NULL`) trong SP `usp_DoProcessProdRouteHistForCalc_SmartApp_VNT` | ALTER SP sửa `= Null` → `IS NULL` — xem [KB_08 §4.2](KB_08_CORE_SP_ENGINE.md#42-bug-đã-phát-hiện) |
 | 2 | "Routing không có trong PO" hoặc "Đã hoàn thành" | Bỏ qua công đoạn trước chưa scan, hoặc PO config sai RouteIndex | Dùng Golden Query trace: `SELECT * FROM STB_ProdRouteHist WHERE ControlNo=(SELECT ControlNo FROM STB_SetInfo WHERE Barcode='mã') ORDER BY ProdDateTime` |
 | 3 | Lỗi "Vượt SL công đoạn trước" (전공정의 수량을 초과할수 없습니다) | CurrentRouteQty + ProdQty > BefRouteQty | Kiểm tra SL Route trước: nếu đúng → chốt thêm ở Route trước. Nếu sai → sửa ProdQty |
 | 4 | Thiếu/dư danh mục lỗi (Defect Code) trên lưới nhập lỗi | `STB_DefectInfo` chưa cập nhật | `UPDATE STB_DefectInfo SET IsUsed=0 WHERE DefectCode IN ('cũ')` + `INSERT INTO STB_DefectInfo (...) VALUES (...)` — xem [KB_03 §B530 Lỗi 3](KB_03/KB_03_02_CELL_LINE.md) |
 | 5 | "Barcode chưa được đưa vào tuyến" (투입처리 되지 않은 바코드) | Barcode chưa qua công đoạn đầu (IsLineInput=0) | Scan lại từ công đoạn đầu (IsInputRoute=1), hoặc IT chạy: `UPDATE STB_SetInfo SET IsLineInput=1 WHERE ControlNo='mã'` |
-| 6 | "PQC chưa nhập số lượng NG" | SP check DefectQty ở công đoạn trước phải > 0 khi có mã lỗi `_00` (Đạt) | Logic bug — mã `_00` = OK nhưng SP đọc COUNT lỗi = 0 → nhầm là chưa nhập. Fix: ALTER SP hoặc IT nhập 1 dòng DefectQty=0 cho mã `_00` — xem KB_26 §4.1 |
+| 6 | "PQC chưa nhập số lượng NG" | SP check DefectQty ở công đoạn trước phải > 0 khi có mã lỗi `_00` (Đạt) | Logic bug — mã `_00` = OK nhưng SP đọc COUNT lỗi = 0 → nhầm là chưa nhập. Fix: ALTER SP hoặc IT nhập 1 dòng DefectQty=0 cho mã `_00` |
 | 7 | Grid `ProdRouteBarcodeForDefect_VNT` hiển thị lỗi sai/thừa cần xóa | OP nhập nhầm defect hoặc defect tạo tự động không đúng | Xóa mềm: `UPDATE STB_DefectRepairInfo SET IsDelete='1', ChangeDateTime=GETDATE(), ChangeUserID='ducnv_fix' WHERE ControlNo=(SELECT ControlNo FROM STB_SetInfo WHERE Barcode='MÃ_BARCODE') AND IsDelete='0'`. VD: Barcode `K16418106262500772` → ControlNo `20260618000445`, DefectSummaryNo `20260619000834/835` (VP02_005, ND02_006). ducnv 2026-06-19 |
 
-> 🔗 Chi tiết: [KB_03 §B530](KB_03/KB_03_02_CELL_LINE.md), [KB_30 §2](KB_30_CORE_SP_ENGINE.md), KB_12 §2
+> 🔗 Chi tiết: [KB_03 §B530](KB_03/KB_03_02_CELL_LINE.md), [KB_08 §2](KB_08_CORE_SP_ENGINE.md) và [KB_08](KB_08_CORE_SP_ENGINE.md)
 
 ### [B540]
 **Tên:** Process Input V22→V28 (Nhập NVL theo công đoạn)
@@ -167,9 +167,9 @@
 
 | # | Triệu chứng | Nguyên nhân | Fix |
 |---|---|---|---|
-| 1 | "Không tồn tại thiết lập Điện cực... Chưa CONFIG STB_SLITTINGLOCATIONCONFIG_VVT" | Bảng `STB_SlittingLocationConfig_VVT` thiếu record cho model | `INSERT INTO STB_SlittingLocationConfig_VVT (MaterialCode, LocationCode, ...) VALUES (...)` — xem KB_12 §4 |
+| 1 | "Không tồn tại thiết lập Điện cực... Chưa CONFIG STB_SLITTINGLOCATIONCONFIG_VVT" | Bảng `STB_SlittingLocationConfig_VVT` thiếu record cho model | `INSERT INTO STB_SlittingLocationConfig_VVT (MaterialCode, LocationCode, ...) VALUES (...)` — xem [KB_05_02 §8.2](KB_05/KB_05_02_SCREEN_BUGS_QC.md#82-lỗi-chưa-config-trong-stb_slittinglocationconfig_vvt) |
 
-> 🔗 Chi tiết: [KB_05 §7.6](KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md)
+> 🔗 Chi tiết: [KB_05_02 §7.6](KB_05/KB_05_02_SCREEN_BUGS_QC.md)
 
 ### [B560]
 **Tên:** Hela OutBox List (In tem thùng Hela)
@@ -186,13 +186,13 @@
 | 1 | Cảnh báo đỏ HOLD — "Lot chưa QC" | Lot nằm kho `HOLDING_WH` | QC hoàn thành IQC hoặc chuyển kho: `UPDATE STB_MaterialLotInfo SET MaterialWarehouseCode='ROH_WH' WHERE LotID='mã'` (⚠️ Cột là `MaterialWarehouseCode`, KHÔNG phải `WarehouseCode`) |
 | 2 | Cảnh báo "Hết hạn sử dụng" | Lot vi phạm FIFO/Expiry | Gia hạn: `UPDATE STB_MaterialLotInfo SET CreateDateTime = DATEADD(DAY,-30,GETDATE()) WHERE LotID='mã'` |
 | 3 | "Sai chủng loại" — NVL không trong BOM | NVL scan không match BOM config PO | Kiểm tra BOM tại B310 hoặc SQL |
-| 4 | Vỏ nhôm (AluCase) mới báo sai chủng loại | Mã vỏ nhôm bị **hardcode** trong SP `usp_Vietnam_RawMaterialInputHist_uid` | ALTER SP bổ sung mã mới vào `IF / NOT IN` — xem [KB_05 §7.4](KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md) |
-| 5 | "String or binary data truncated" khi quét gộp 5 mã điện cực | Cột `RawMaterialBarcode NVARCHAR(100)` quá ngắn | `ALTER TABLE STB_InputMaterialHistory ALTER COLUMN RawMaterialBarcode NVARCHAR(1000)` + sửa SP tương ứng — xem [KB_05 §7.5](KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md) |
+| 4 | Vỏ nhôm (AluCase) mới báo sai chủng loại | Mã vỏ nhôm bị **hardcode** trong SP `usp_Vietnam_RawMaterialInputHist_uid` | ALTER SP bổ sung mã mới vào `IF / NOT IN` — xem [KB_05_02 §7.4](KB_05/KB_05_02_SCREEN_BUGS_QC.md) |
+| 5 | "String or binary data truncated" khi quét gộp 5 mã điện cực | Cột `RawMaterialBarcode NVARCHAR(100)` quá ngắn | `ALTER TABLE STB_InputMaterialHistory ALTER COLUMN RawMaterialBarcode NVARCHAR(1000)` + sửa SP tương ứng — xem [KB_05_02 §7.5](KB_05/KB_05_02_SCREEN_BUGS_QC.md) |
 | 6 | "Mã Electrolyte/DUNG DỊCH được thiết lập, khác với mã QRCODE nhập vào" | Quét mã dung dịch sai chủng loại → SP check bảng config | Kiểm tra đúng mã NVL dung dịch, hoặc thêm vào config |
 | 7 | OP nhập NVL module (Wire/PCB/Chip) bằng gõ tay thay vì scan barcode lot cho model 1840-WC(40) | SP `usp_Vietnam_RawMaterialInputHist_uid` dòng 318 exclude `MODULE%` khỏi validation → OP gõ tự do `40`, `dm`, `0` | Thêm block chặn sau `END -- end chặn chemical`: check `@mmmaterialcode` (lookup sẵn từ `stb_materialdoclotinfo` line 264). ModuleWire→WRHI00-007, ModuleChip→VRE-009, ModulePCB→PBDM00-004. Nếu `@mmmaterialcode=''` (gõ tay) → RAISERROR. ducnv 2026-06-19 |
 | 8 | Quét điện cực báo "Lỗi BOM CREYO85B-02 không được phép dùng cho model ECVT30-293" và chặn lưu tồn kho slitting | Quét mã Coating-Roll (CREYO85B-02/CRFYO85B-02) trong khi BOM PO 260601000001 chỉ chứa mã Slitting-Roll (SREYO85A/SRFYO85A), đồng thời Lot chưa có tồn kho slitting | Cách 1: Sửa SP `usp_Vietnam_RawMaterialInputHist_uid` map mã tráng sang mã slitting tại L1279 và bypass slitting stock check tại L2124. Cách 2: Chuyển Lot sang chạy dưới PO `260623000007` (Model `ECVT30-367`) để bypass BOM check (nếu đã khai báo slitting stock). |
 
-> 🔗 Chi tiết: [KB_05 §7](KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md), [KB_03 §B597](KB_03/KB_03_02_CELL_LINE.md)
+> 🔗 Chi tiết: [KB_05_02 §7](KB_05/KB_05_02_SCREEN_BUGS_QC.md), [KB_03 §B597](KB_03/KB_03_02_CELL_LINE.md)
 
 ### [B598]
 **Tên:** Material Scrap Report (Báo phế NVL)
@@ -208,7 +208,7 @@
 
 | # | Triệu chứng | Nguyên nhân | Fix |
 |---|---|---|---|
-| 1 | "Bạn không có quyền vui lòng liên hệ EA !" | SP `usp_GetInforLotReworkHaNamFactory_uid` hardcode check UserID | Thêm UserID vào whitelist trong SP hoặc tạo record permission — xem KB_26 §4.5 |
+| 1 | "Bạn không có quyền vui lòng liên hệ EA !" | SP `usp_GetInforLotReworkHaNamFactory_uid` hardcode check UserID | Thêm UserID vào whitelist trong SP hoặc tạo record permission |
 
 ### [B682]-[B791]
 **Tên:** Stage Prices & Defect Reports
@@ -313,7 +313,7 @@ COMMIT TRANSACTION;
 
 | # | Triệu chứng | Nguyên nhân | Fix |
 |---|---|---|---|
-| 1 | Cột Note1 thừa trên Grid / cột bị xáo | Lỗi metadata grid trong SmartFramework | Rebuild bảng + ALTER bảng tương ứng — xem [KB_05 §7.8](KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md) |
+| 1 | Cột Note1 thừa trên Grid / cột bị xáo | Lỗi metadata grid trong SmartFramework | Rebuild bảng + ALTER bảng tương ứng — xem [KB_05_02 §7.8](KB_05/KB_05_02_SCREEN_BUGS_QC.md) |
 
 ### [C512]
 **Tên:** OQC Lot Management
@@ -329,21 +329,21 @@ COMMIT TRANSACTION;
 | # | Triệu chứng | Nguyên nhân | Fix |
 |---|---|---|---|
 | 1 | Sửa hạng mục ở C151 nhưng C530 không hiện | Chưa ấn "Tổng hợp hạng mục" | Vào C530 → ấn nút "Tổng hợp hạng mục" để reset |
-| 2 | OQC bị lỗi khi bấm Reject nhưng muốn Pass lại | Nút Pass bị disable sau Reject | ⚠️ `CommInspResult` KHÔNG phải cột trong DB — OQC Pass/Fail được xử lý qua SP `usp_DoUpdateMaterialQcInfo_Success/Fail`. Cách fix: (1) Xóa MaterialQcInfo cũ bằng `usp_DoDeleteMaterialQcInfo`, (2) Tạo lại OQC mới tại C512, (3) Nhập lại kết quả QC. Xem KB_26 §4.2 |
+| 2 | OQC bị lỗi khi bấm Reject nhưng muốn Pass lại | Nút Pass bị disable sau Reject | ⚠️ `CommInspResult` KHÔNG phải cột trong DB — OQC Pass/Fail được xử lý qua SP `usp_DoUpdateMaterialQcInfo_Success/Fail`. Cách fix: (1) Xóa MaterialQcInfo cũ bằng `usp_DoDeleteMaterialQcInfo`, (2) Tạo lại OQC mới tại C512, (3) Nhập lại kết quả QC |
 
 ### [C546]
 **Tên:** FOQC — OCV/ESR Measurement
 
 | # | Triệu chứng | Nguyên nhân | Fix |
 |---|---|---|---|
-| 1 | OCV chỉ hiện 20 dòng thay vì 50 | SP `usp_Vietnam_MaterialFOQcDetail_get` thiếu block WHILE cho DetailNo=2 (OCV) | Thêm block WHILE cho OCV — xem [KB_05 §9.6](KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md) |
+| 1 | OCV chỉ hiện 20 dòng thay vì 50 | SP `usp_Vietnam_MaterialFOQcDetail_get` thiếu block WHILE cho DetailNo=2 (OCV) | Thêm block WHILE cho OCV — xem [KB_05_02 §9.6](KB_05/KB_05_02_SCREEN_BUGS_QC.md) |
 
 ### [C560]
 **Tên:** FG Receipt (Nhập kho thành phẩm)
 
 | # | Triệu chứng | Nguyên nhân | Fix |
 |---|---|---|---|
-| 1 | Không hiện dữ liệu hàng chờ QC Audit | SP filter theo `WorkCenterCode` không match nhà máy HN/HY | ALTER SP thêm WorkCenterCode mới — xem KB_26 §4.3 |
+| 1 | Không hiện dữ liệu hàng chờ QC Audit | SP filter theo `WorkCenterCode` không match nhà máy HN/HY | ALTER SP thêm WorkCenterCode mới |
 | 2 | Báo "chưa kiểm tra QC" dù carton mới đã Pass | Bug logic `AND @Statusout IS NULL` trong SP | Sửa logic AND → OR hoặc check đúng carton mới |
 
 ### [C585]
@@ -364,11 +364,11 @@ COMMIT TRANSACTION;
 
 | # | Triệu chứng | Nguyên nhân | Fix |
 |---|---|---|---|
-| 1 | CustomerPartNo trống khi in tem | `STB_CustomerPartNoInfo` thiếu mapping model→customer | INSERT mapping: xem [KB_25 §5.4](KB_25/KB_25_01_OVERVIEW.md) |
+| 1 | CustomerPartNo trống khi in tem | `STB_CustomerPartNoInfo` thiếu mapping model→customer | INSERT mapping: xem [KB_07 §5.4](KB_07/KB_07_01_OVERVIEW.md) |
 | 2 | Máy in không chạy hoặc tem trống | Cấu hình printer hoặc label template lỗi | Kiểm tra kết nối printer + template trong Z530 |
 | 3 | D110 thiếu/trùng bản ghi | Insert duplicate hoặc filter sai | Kiểm tra SP `usp_VNE_BoxLabelPrintHist_*` |
 
-> 🔗 Chi tiết: [KB_25 §5](KB_25/KB_25_01_OVERVIEW.md)
+> 🔗 Chi tiết: [KB_07 §5](KB_07/KB_07_01_OVERVIEW.md)
 
 ---
 
@@ -451,7 +451,7 @@ VALUES (@CtrlNo, (SELECT ISNULL(MAX(ProcSeq),0)+1 FROM STB_ProdRouteHist WHERE C
 COMMIT TRANSACTION;
 ```
 
-> 🔗 Chi tiết: [KB_05 §HNC321](KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md), KB_14 §Kịch bản 3
+> 🔗 Chi tiết: [KB_05_02 §HNC321](KB_05/KB_05_02_SCREEN_BUGS_QC.md), KB_14 §Kịch bản 3
 
 ### [HN551]
 **Tên:** FG Export Hà Nam
@@ -538,27 +538,27 @@ COMMIT TRANSACTION;
 ### Vendor Lot Parse Crash
 | Triệu chứng | Nguyên nhân | Fix |
 |---|---|---|
-| Crash "Conversion failed" khi parse Vendor Lot `WRHI00-002` | SP cố parse numeric từ chuỗi chứa ký tự đặc biệt | ALTER SP thêm `TRY_CONVERT` thay vì `CONVERT` — xem KB_26 §4.4 |
+| Crash "Conversion failed" khi parse Vendor Lot `WRHI00-002` | SP cố parse numeric từ chuỗi chứa ký tự đặc biệt | ALTER SP thêm `TRY_CONVERT` thay vì `CONVERT` |
 
 ### LotAttr10 Batch Update Bug
 | Triệu chứng | Nguyên nhân | Fix |
 |---|---|---|
-| Update ngày SX hàng loạt → chỉ Lot cuối cùng được đồng bộ | SP dùng `MAX(LotID)` thay vì loop qua tất cả | ALTER SP sửa logic loop — xem KB_26 §4.6 |
+| Update ngày SX hàng loạt → chỉ Lot cuối cùng được đồng bộ | SP dùng `MAX(LotID)` thay vì loop qua tất cả | ALTER SP sửa logic loop |
 
 ### [G400] — Customer Return () Reject
 | Triệu chứng | Nguyên nhân | Fix |
 |---|---|---|
-| Trả hàng lỗi "Chưa hoàn thành IQC" | SP check IQC PASS cả khi hàng trả lại (không cần IQC) | ALTER SP bypass IQC check cho Return type — xem KB_26 §4.7 |
+| Trả hàng lỗi "Chưa hoàn thành IQC" | SP check IQC PASS cả khi hàng trả lại (không cần IQC) | ALTER SP bypass IQC check cho Return type |
 
 ### Lò Sấy Bypass (Hưng Yên)
 | Triệu chứng | Nguyên nhân | Fix |
 |---|---|---|
-| Lot chưa hoàn thành V-22 nhưng vẫn vào lò sấy được | SP không check `IsRouteFinish` trước khi cho vào lò | Thêm validation check — xem [KB_25 §5.1](KB_25/KB_25_01_OVERVIEW.md) |
+| Lot chưa hoàn thành V-22 nhưng vẫn vào lò sấy được | SP không check `IsRouteFinish` trước khi cho vào lò | Thêm validation check — xem [KB_07 §5.1](KB_07/KB_07_01_OVERVIEW.md) |
 
 ### Doping JIG Auto-End Mất Lịch Sử
 | Triệu chứng | Nguyên nhân | Fix |
 |---|---|---|
-| JIG chạy 6h auto-end → lịch sử biến mất | SP `autoend` không INSERT vào `Stb_VVT_DopingJIG_History` | ALTER SP thêm INSERT — xem [KB_25 §5.2](KB_25/KB_25_01_OVERVIEW.md) |
+| JIG chạy 6h auto-end → lịch sử biến mất | SP `autoend` không INSERT vào `Stb_VVT_DopingJIG_History` | ALTER SP thêm INSERT — xem [KB_07 §5.2](KB_07/KB_07_01_OVERVIEW.md) |
 
 ---
 
@@ -578,4 +578,8 @@ COMMIT TRANSACTION;
 
 ---
 
-*Cập nhật: 2026-06-19 | Tổng hợp từ KB_02, KB_03, KB_04, KB_05, KB_06, KB_12, KB_14, KB_25, KB_26*
+*Cập nhật: 2026-06-19 | Tổng hợp từ KB_02, KB_03, KB_04, KB_05, KB_06, KB_14, KB_07*
+
+
+
+

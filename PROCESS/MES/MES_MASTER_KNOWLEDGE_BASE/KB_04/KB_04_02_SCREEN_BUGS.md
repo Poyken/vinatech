@@ -1,4 +1,4 @@
-﻿## 🔴 Cẩm nang khắc phục lỗi theo Screen ID (Gộp từ KB_SCREEN_BUG_REF)
+## 🔴 Cẩm nang khắc phục lỗi theo Screen ID (Gộp từ KB_SCREEN_BUG_REF)
 
 ## [B351] — Lot Transition (Chuyển đổi Lot)
 
@@ -77,7 +77,7 @@
 *   **Triệu chứng:** OP nhập nhầm số lượng, sai kích thước hoặc thông số uốn dán tại **B717**, không thấy nút Edit hay Delete trên UI để chỉnh sửa lại.
 *   **Nguyên nhân gốc:** Hệ thống chỉ được thiết kế để ghi nhận 1 lần (Insert hoặc Override) và không hỗ trợ tính năng sửa/xóa giao dịch trên client app.
 *   **Cách khắc phục:** IT kiểm tra và chạy script SQL update trực tiếp sản lượng hoặc xóa bản ghi giao dịch sai trong bảng tương ứng để OP quét lại.
-*   **Chi tiết nghiệp vụ:** Xem tại KB_12_DEEP_CORE_ANALYSIS_AND_AUDIT.md § 5 (Mục 3).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_03/KB_03_02_CELL_LINE.md#66-b717--bending--tapping](../KB_03/KB_03_02_CELL_LINE.md#66-b717--bending--tapping).
 
 ---
 

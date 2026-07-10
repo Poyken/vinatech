@@ -89,7 +89,7 @@ SELECT OBJECT_DEFINITION(OBJECT_ID('usp_vvt_MaterialLotInfo_get'))
 
 ### 4.2 [C512] — Không tìm thấy mã lot ở màn
 
-👉 **Chi tiết Nguyên nhân & Cách xử lý:** Xem tại [../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md § 7.2](../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md)
+👉 **Chi tiết Nguyên nhân & Cách xử lý:** Xem tại [../KB_05/KB_05_02_SCREEN_BUGS_QC.md#c512--c530--c546--oqc-lot-management-quản-lý-chất-lượng-đầu-ra](../KB_05/KB_05_02_SCREEN_BUGS_QC.md#c512--c530--c546--oqc-lot-management-quản-lý-chất-lượng-đầu-ra)
 
 ---
 
@@ -427,8 +427,8 @@ WHERE LotID = 'lot_id_cần_sửa';
 ### 4.12 [B597] — Lỗi "Không tồn tại thiết lập Vỏ Nhôm" ()
 
 *   **Triệu chứng:** `"Không tồn tại thiết lập Vỏ Nhôm của LotNo... với mã Vỏ Nhôm: GBDYAC-004 <> ECVT30-367"`
-*   **Chi tiết & Giải pháp:** Xem chi tiết nguyên nhân gốc, cách trace và SQL script khắc phục tại [../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md#74-b597-báo-lỗi-không-tồn-tại-thiết-lập-vỏ-nhôm](../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md#74-b597-báo-lỗi-không-tồn-tại-thiết-lập-vỏ-nhôm).
-*   **Checklist lỗi B597 đầy đủ:** Xem tại [../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md#83-checklist-khi-b597-báo-lỗi-khi-lưu-nvl](../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md#83-checklist-khi-b597-báo-lỗi-khi-lưu-nvl).
+*   **Chi tiết & Giải pháp:** Xem chi tiết nguyên nhân gốc, cách trace và SQL script khắc phục tại [../KB_05/KB_05_02_SCREEN_BUGS_QC.md#b597--lỗi-2-lỗi-quét-vỏ-nhôm-alucase-mới-báo-sai-chủng-loại-tại](../KB_05/KB_05_02_SCREEN_BUGS_QC.md#b597--lỗi-2-lỗi-quét-vỏ-nhôm-alucase-mới-báo-sai-chủng-loại-tại).
+*   **Checklist lỗi B597 đầy đủ:** Xem tại [../KB_05/KB_05_02_SCREEN_BUGS_QC.md#83-b597--checklist-khi-báo-lỗi-khi-lưu-nvl](../KB_05/KB_05_02_SCREEN_BUGS_QC.md#83-b597--checklist-khi-báo-lỗi-khi-lưu-nvl).
 
 ---
 
@@ -926,7 +926,7 @@ VALUES (
 ### [HNC321] — 4. Lỗi màn (Qc nhập NG sản phẩm mang đi kiểm tra Báo lỗi chữ Hàn Quốc)
 
 Chi tiết về triệu chứng, nguyên nhân và các phương án bypass (bao gồm script SQL chèn lịch sử giả lập) đối với lỗi nhập phế màn HNC321, vui lòng tham khảo tại:
-👉 [../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md § Kịch bản 3 — Lỗi nhập phế màn HNC321 báo lỗi tiếng Hàn](../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md#kịch-bản-sự-cố-khẩn-cấp-3-lỗi-nhập-phế-hnc321-báo-lỗi-tiếng-hàn)
+👉 [../KB_05/KB_05_02_SCREEN_BUGS_QC.md#kịch-bản-sự-cố-khẩn-cấp-3-lỗi-nhập-phế-hnc321-báo-lỗi-tiếng-hàn](../KB_05/KB_05_02_SCREEN_BUGS_QC.md#kịch-bản-sự-cố-khẩn-cấp-3-lỗi-nhập-phế-hnc321-báo-lỗi-tiếng-hàn)
 
 ---
 
@@ -1042,6 +1042,7 @@ WHERE IDCODE = 'FGVN_BG20250211054041195484931'
 
 ---
 
-> 🔗 **Tra cứu Bug theo Screen ID cho WMS (F-series, HN-series):** Xem tại [KB_31_SCREEN_BUG_FIXBOOK.md](../KB_31_SCREEN_BUG_FIXBOOK.md) — tổng hợp đầy đủ theo TCode.
+> 🔗 **Tra cứu Bug theo Screen ID cho WMS (F-series, HN-series):** Xem tại [KB_09_SCREEN_BUG_FIXBOOK.md](../KB_09_SCREEN_BUG_FIXBOOK.md) — tổng hợp đầy đủ theo TCode.
 
 *Cập nhật: 2026-06-18*
+
