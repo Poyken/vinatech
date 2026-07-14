@@ -1,4 +1,4 @@
-﻿# KB_06 - Master Data, SQL Tools & Manual Bypass
+# KB_06 - Master Data, SQL Tools & Manual Bypass
 
 > **Màn hình:** A230, A310, A410, A418, A419, B210-B240, B250, B260, B270, C131, C430, F110, F741
 > **Bảng chính:** `STB_ModelBasicInfo` (61 cols), `STB_MaterialMaster` (82 cols), `STB_PackingStandard` (11 cols)
@@ -182,27 +182,8 @@ SELECT OBJECT_DEFINITION(OBJECT_ID('fn_VVT_StagePricesMODULE'))
 
 ### 5.1 Golden Query: Kiểm tra lịch sử toàn bộ 1 Barcode
 
-```sql
-SELECT
-    SI.Barcode,
-    SI.MaterialCode,
-    MM.MaterialName,
-    SI.ProdQty,
-    SI.InputLineCode,
-    SI.PONo,
-    SI.LotDecisionResult AS [KQ_QC],
-    PRH.RouteCode,
-    RI.RouteName AS [Ten_Cong_Doan],
-    PRH.ProdDateTime AS [Thoi_Gian],
-    DP.PackingID AS [Ma_Thung]
-FROM STB_SetInfo SI
-JOIN STB_MaterialMaster MM ON SI.MaterialCode = MM.MaterialCode
-LEFT JOIN STB_ProdRouteHist PRH ON SI.ControlNo = PRH.ControlNo
-LEFT JOIN STB_RouteInfo RI ON PRH.RouteCode = RI.RouteCode
-LEFT JOIN STB_DividePackaging DP ON SI.ControlNo = DP.LotNo
-WHERE SI.Barcode = '[Barcode]'
-ORDER BY PRH.ProdDateTime ASC
-```
+👉 **Golden Query đầy đủ (3 mẫu):** Xem tại [KNOWLEDGE.md](file:///c:/Users/User Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/AI_AGENT_CONFIG/KNOWLEDGE.md#L84) (§ 4. Golden Query — Full Trace Barcode). Bao gồm mẫu cho Cell/Module, Điện cực, và NVL.
+
 
 ---
 

@@ -730,13 +730,10 @@ Dưới đây là cẩm nang vận hành chi tiết các màn hình thuộc phâ
 
 ---
 
-
----
-
 ## 5. 📦 Kho Thành Phẩm (Finished Goods WMS - Gộp từ KB_08)
 
-
 ### [HN551]/[HN866] — 1. Lỗi Hàng xuất ở nhưng tồn kho vẫn còn
+
 
 **Tư duy trace:**
 - **HN551 (Xuất):** Ghi vào `STB_VN_FINISHGOODS_HN_Export` và đánh dấu "đã đi" vào sổ tồn kho.
@@ -897,8 +894,10 @@ WHERE Barcode IN ('pkpt2000146', 'pkpt2000147', 'pkpt2000145')
 
 UPDATE STB_MaterialLotInfo SET MaterialCode = '5H1_MATERIAL_CODE_ĐÚNG'
 WHERE LotNo IN ('pkpt2000146', 'pkpt2000147', 'pkpt2000145')
+```
 
 #### 3.1 [HN15] — Đăng ký thay đổi mã vật tư thủ công qua STB_ChangeMaterialCode_HN (Màn hình )
+
 Trong một số trường hợp tại nhà máy Hà Nam, khi người dùng thực hiện thay đổi mã vật tư cho Lot đóng gói và cần ghi nhận lịch sử vào hệ thống để theo dõi và đồng bộ kho, ta thực hiện chèn dữ liệu lịch sử đổi mã vật tư:
 ```sql
 INSERT INTO STB_ChangeMaterialCode_HN (

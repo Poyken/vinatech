@@ -1,4 +1,4 @@
-## 🔴 Cẩm nang khắc phục lỗi theo Screen ID (Gộp từ KB_SCREEN_BUG_REF)
+﻿## 🔴 Cẩm nang khắc phục lỗi theo Screen ID (Gộp từ KB_SCREEN_BUG_REF)
 
 ## [B597] — Material Scanning & PQC Verification (Scan nguyên vật liệu đầu vào chuyền)
 
@@ -872,8 +872,6 @@ Khi công đoạn trước bị bỏ qua không quét chốt và hàng thực t�
     ```
 ---
 
----
-
 ### Kịch bản sự cố khẩn cấp 4: Lỗi nhảy bước cân điện cực Mixing
 
 ### 4.7 LỖI NHẢY BƯỚC CÂN ĐIỆN CỰC MIXING (PHẦN MỀM electrode.weighing)
@@ -899,8 +897,6 @@ Khi công đoạn trước bị bỏ qua không quét chốt và hàng thực t�
     COMMIT TRANSACTION;
     ```
     Sau đó chốt mẻ trộn bình thường để hệ thống tự động ghi nhận sản lượng Slurry, thông luồng cho Coating/Slitting tiếp theo.
-
----
 
 ---
 
@@ -1293,147 +1289,10 @@ Kiểm tra tồn kho điện cực → **Stb_SlittingStock_VVT**
 
 ### 8.6 Quy trình cân điện cực Mixing & Phần mềm Cân điện cực (electrode.weighing)
 
-#### A. Giới thiệu phần mềm Cân điện cực (`electrode.weighing`):
-*   **Mục đích:** Ứng dụng Electron Desktop App dùng để quản lý quá trình cân nguyên liệu (Than hoạt tính, chất dẫn điện, chất kết dính, nước cất...) trước khi cho vào máy trộn (Mixing) để tạo dung dịch Slurry.
-*   **Kết nối phần cứng:** Kết nối cổng COM (RS232) đọc số cân trực tiếp từ cân điện tử, chống công nhân nhập tay sai số.
-*   **Kết nối Database:** Kết nối trực tiếp đến database `SmartFactoryV2` của Vinatech qua tài khoản `vinaadmin`.
-*   **Logic xử lý:** Khi scan mã Lot điện cực, ứng dụng gọi SP `usp_ElectrodeStep_get` (đọc cấu hình bước cân) và `usp_GetElectroMixPresentStep_vietnam` (đọc bước hiện tại) để load công thức và thứ tự bước cân (`Seq`). Khi cân đúng khoảng spec (`StdMinVal` - `StdMaxVal`), phần mềm lưu dữ liệu qua SP `usp_DoCreateElectrodeMixStepInfo_electron` và chốt mẻ trộn để chuyển sang công đoạn tráng phủ (Coating).
-
-#### B. Các lỗi thường gặp và cách khắc phục:
-
-##### 1. Lỗi nhảy bước cân, không cân lần lượt từ trên xuống (Than hoạt tính bị đẩy xuống dưới)
-*   **Triệu chứng:** "Các bước cân cứ nhảy không đúng thứ tự process nên không cân được", "Mã điện cực HCE đang lỗi chưa thao tác được, sản xuất ra mà không được ghi nhận trên hệ thống".
-*   **Nguyên nhân:** 
-    *   Trên giao diện phần mềm có checkbox **"CA ĐÊM CHUẨN BỊ TRƯỚC"** (`isnight`). Ở ca đêm, Binder/CMC cần khuấy trước (20-40 phút) nên hệ thống cung cấp tùy chọn này để đảo thứ tự cân, đưa Binder lên trước Than hoạt tính (SP sẽ nhận tham số `@pOrder = 'kdem'`).
-    *   Nếu ca ngày làm việc mà **quên bỏ tích checkbox này**, thứ tự cân sẽ bị nhảy lộn xộn khiến công nhân không thể cân lần lượt từ trên xuống và bị hệ thống chặn. Mẻ trộn bị kẹt không thể chốt hoàn thành, dẫn đến sản phẩm sản xuất ra không được ghi nhận trên MES.
-*   **Cách khắc phục:**
-    *   *Bước 1 (Vận hành):* Công nhân ca ngày **bỏ tích checkbox "CA ĐÊM CHUẨN BỊ TRƯỚC"** trên giao diện chính của phần mềm, sau đó bấm nút **"Làm mới màn hình"** để quay lại thứ tự cân than trước.
-    *   *Bước 2 (IT reset Lot bị kẹt):* Nếu Lot điện cực (Ví dụ: Lot của mã `HCE-202`) đã bị ghi nhận sai thứ tự và kẹt giữa chừng, IT chạy lệnh xóa dữ liệu cân tạm của Lot đó để cân lại đúng từ đầu:
-        ```sql
-        BEGIN TRANSACTION;
-        DELETE FROM STB_ElectrodeMixStepInfo WHERE ElectrodeLotNumber = 'Mã_Lot_Điện_Cực_HCE';
-        COMMIT TRANSACTION;
-        ```
-        *Mẹo:* Có thể dùng 2 Stored Procedures sau để kiểm tra cấu hình và bước cân hiện tại của bến điện cực CMC (kết hợp đọc code JavaScript trong phần mềm):
-        ```sql
-        -- Kiểm tra bước hiện tại (tham số thứ 2 truyền 'kdem' nếu là ca đêm)
-        EXEC usp_GetElectroMixPresentStep_vietnam 'VVQN1620001E28', '';
-        
-        -- Lấy chi tiết cấu hình bước cân trộn
-        EXEC usp_Vietnam_ElectrodeMixingConfig_get 'VVQN1620001E28', '', 'ML20260124000020', '';
-        ```
-
-##### 2. Điện cực mã liệu `3582-600F CY` không tạo/in được tem
-*   **Triệu chứng:** Khi sản xuất điện cực mã liệu `3582-600F CY`, hệ thống không cho in tem điện cực.
-*   **Chi tiết & Giải pháp:** Đây là model mới thiếu cấu hình Slitting. Xem hướng dẫn chi tiết từng bước xử lý và SQL script thêm cấu hình tại [Kịch bản 5](#kịch-bản-sự-cố-khẩn-cấp-5-điện-cực-3582-600f-cy-không-tạo-được-tem).
+👉 **Chi tiết Quy trình & Cách khắc phục sự cố cân điện cực (nhảy bước cân, model 3582-600F CY):** Xem chi tiết tại [KB_05_01_QC_AND_ELECTRODE_CORE.md § 8.6](../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md#86-quy-trình-cân-điện-cực-mixing-phần-mềm-cân-điện-cực-electrodeweighing).
 
 ---
 
-*Cập nhật: 2026-05-26*
+### 8.7 Quy trình PQC Reliability Assy & FOQC OCV (C321 / C546)
 
----
-
-
----
-
-### Phụ lục bổ sung: Sửa chữa lỗi Cell & FOQC OCV (Chuyển từ KB_05_01)
-
-### 9.5 [C321] � PQC Reliability Assy (S?a Ch?a L?i Cell Line)
-
-**Ch?c nang:** PQC qu?n l� h�ng ph�t sinh l?i c?n s?a ch?a trong qu� tr�nh s?n xu?t.
-
-| SP | Ch?c nang |
-|----|-----------|
-| `usp_Vietnam_GetDefectRepairInfo_ForRepair` | L?y th�ng tin l?i c?n s?a ch?a |
-| `usp_GetDefectRepairDetailInfo_ForRepair` | L?y chi ti?t nguy�n nh�n l?i |
-| `usp_GetDefectRepairPartInfo` | L?y th�ng tin v?t tu thay th? |
-| `usp_DoProcessLossForBarcode_VNT` | X? l� t?n th?t � ghi nh?n l?i |
-
-```sql
--- Ki?m tra l?i theo barcode
-SELECT * FROM STB_DefectRepairInfo WHERE ControlNo IN (
-    SELECT ControlNo FROM STB_SetInfo WHERE Barcode = 'VV...'
-)
-```
-
-> ?? SQL s?a DefectQty v� ProdQty c�ng do?n sau ? xem [KB_03 M?c 5.8](../KB_03/KB_03_02_CELL_LINE.md#58-s?a-s?-lu?ng-ng-defectqty-m�n-b791) d? tr�nh tr�ng l?p.
-
----
-
-### 9.6 [C546] (FOQC) � OCV/ESR ch? hi?n th? 20ea thay v� 50ea
-
-**Tri?u ch?ng:** Tr�n tab C546 (FOQC_???????), h?ng m?c OCV (`FOQC_V01_07`) ch? hi?n th? t?i da 20 d�ng do th?c t? t? m�y (ho?c 0 d�ng n?u chua do) thay v� hi?n th? d? 50 d�ng theo ti�u chu?n m?u (SampleQty=50). 
-
-**Nguy�n nh�n g?c (Root Causes):**
-1. **L?i trong SP l?y k?t qu? do (`usp_MaterialQcSampleResult_get`):** Phi�n b?n cu kh�ng h? tr? pattern `FOQC_V01_07` (ch? h? tr? `PQC_V01_07`) n�n b? nh?y sang logic m?c d?nh `SampleQty=20` v� g�n tr�ng gi� tr? OCV. (�� s?a).
-2. **Thi?u Block OCV trong SP kh?i t?o d�ng tr?ng (`usp_Vietnam_MaterialFOQcDetail_get`):** 
-   - Khi QC m? m�n h�nh C546, h? th?ng g?i SP `usp_Vietnam_MaterialFOQcDetail_get` d? kh?i t?o c�c d�ng m?u tr?ng trong b?ng `STB_MaterialQcSampleResult` cho d? s? lu?ng `SampleQty=50`.
-   - Trong SP n�y, l?p tr�nh vi�n d� vi?t c�c kh?i loop `WHILE` d? t?o d�ng tr?ng cho `DetailNo = 19` (20ea), `DetailNo = 3` (ESR - 50ea), v� `DetailNo = 4` (10ea), nhung **ho�n to�n b? qu�n h?ng m?c OCV (DetailNo = 2)**!
-   - V� kh�ng du?c kh?i t?o d�ng tr?ng, lu?i OCV tr�n giao di?n ch? c� th? hi?n th? t?i da s? d�ng th?c t? do du?c t? m�y (20 d�ng) m� kh�ng th? l?p d?y d? 50 d�ng.
-
-**Gi?i ph�p s?a d?i:**
-1. **Deploy l?i Stored Procedure `usp_Vietnam_MaterialFOQcDetail_get`:**
-   - Th�m kh?i loop `WHILE` cho `DetailNo = 2` d? t? d?ng t?o d? 50 d�ng tr?ng cho OCV.
-   - N?i dung block th�m m?i:
-     ```sql
-     -- OCV Block (DetailNo = 2)
-     set @MaterialQcSampleNo1  = (select COUNT(MaterialQcSampleNo) from STB_MaterialQcSampleResult WITH(NOLOCK) where MaterialQcDetailNo=2 and MaterialQcNo=@FoqcMaterialQcNo) + 1
-     set @sampleqty  = (select sampleqty from STB_MaterialQcDetail where MaterialQcDetailNo=2 and MaterialQcNo=@FoqcMaterialQcNo)
-
-     WHILE @MaterialQcSampleNo1 <= @sampleqty
-     BEGIN						
-         select @tung= @tung +'.3'	
-         insert into STB_MaterialQcSampleResult (MaterialQcNo, MaterialQcDetailNo, MaterialQcSampleNo, SampleSerialNo, TestUserID, TestDateTime, TestValue, TestResult, CreateDateTime, CreateUserID, ChangeDateTime, ChangeUserID)
-         values (@FoqcMaterialQcNo, 2, (select isnull(MAX(MaterialQcSampleNo),0) from STB_MaterialQcSampleResult WITH(NOLOCK) where MaterialQcDetailNo=2 and MaterialQcNo=@FoqcMaterialQcNo) + 1 , NULL, NULL, NULL, NULL, NULL, getdate(), @pProcessUserID, NULL, NULL)
-         SELECT @MaterialQcSampleNo1 = (select COUNT(MaterialQcSampleNo) from STB_MaterialQcSampleResult WITH(NOLOCK) where MaterialQcDetailNo=2 and MaterialQcNo=@FoqcMaterialQcNo) + 1
-     END
-     ```
-
-**Debug & Ki?m tra d? li?u (SSMS):**
-```sql
--- 1. Ki?m tra SampleQty v� Pattern hi?n t?i c?a Lot FOQC
-SELECT MaterialQcNo, MaterialQcDetailNo, QcInspectionItemCode, SampleQty, PassedSampleQty, DecisionResult
-FROM STB_MaterialQcDetail WHERE MaterialQcNo = 'F' + 'M�_Barcode'
-
--- 2. Ki?m tra s? d�ng th?c t? d� ghi nh?n trong b?ng SampleResult
-SELECT MaterialQcDetailNo, COUNT(*) AS Total,
-       SUM(CASE WHEN TestValue IS NOT NULL THEN 1 ELSE 0 END) AS WithValue,
-       SUM(CASE WHEN TestValue IS NULL THEN 1 ELSE 0 END) AS EmptyRows
-FROM STB_MaterialQcSampleResult 
-WHERE MaterialQcNo = 'F' + 'M�_Barcode'
-GROUP BY MaterialQcDetailNo
-
--- 3. Ki?m tra d? li?u th� t? m�y do trong Monitor
-SELECT ID, lotno, value AS ESR, valueocv AS OCV, UploadToMes, UploadOCVToMess
-FROM Stb_ESRValueMonitor WHERE lotno = 'M�_Barcode' ORDER BY ID
-```
-
-**Fix data khi b? l?ch s? d�ng:**
-*Xem chi ti?t c�c bu?c ch?y rollback v� reset d? li?u t?i file script **fix_c546_ocv_lots.sql***
-
-**C�c Stored Procedure li�n quan (C546):**
-
-| SP | Lo?i | Ch?c nang |
-|----|------|-----------|
-| `usp_GetMaterialOQcInfo` | Search | L?y th�ng tin Lot QC |
-| `usp_MaterialQcDetail_get` | Search | L?y danh s�ch h?ng m?c ki?m tra |
-| `usp_MaterialQcSampleResult_get` | Search | **L?y gi� tr? do t? Stb_ESRValueMonitor** |
-| `usp_MaterialQcSampleResult_iud` | Execute | Luu gi� tr? do th? c�ng |
-| `usp_DoMakeMaterialQcSampleResult` | Execute | T?o sample result |
-| `usp_DoUpdateMaterialQcInfo_Success` | Execute | ��nh gi� OK |
-| `usp_DoUpdateMaterialQcInfo_Fail` | Execute | ��nh gi� NG |
-
-**B?ng DB li�n quan:**
-
-| B?ng | Vai tr� |
-|------|---------|
-| `STB_MaterialQcInfo` | Lot QC header (ch?a CompanyCode) |
-| `STB_MaterialQcDetail` | H?ng m?c ki?m tra (SampleQty, LSL, USL, Pattern) |
-| `STB_MaterialQcSampleResult` | K?t qu? do t?ng m?u (TestValue) |
-| `Stb_ESRValueMonitor` | D? li?u ngu?n t? m�y do ESR/OCV |
-| `STB_LotChangeMaterialHistory` | L?ch s? d?i barcode (SP tra ngu?c OldBarcode) |
-
----
-
-
-
+👉 **Chi tiết sửa lỗi PQC Cell Line (C321) & FOQC OCV/ESR hiển thị thiếu dòng (C546):** Xem chi tiết tại [KB_05_01_QC_AND_ELECTRODE_CORE.md § 9.5-9.6](../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md#95-c321--pqc-reliability-assy-sửa-chữa-lỗi-cell-line).

@@ -298,13 +298,8 @@ ORDER BY RouteIndex ASC;
 
 **Mục đích:** Khi cần lấy mã Part No rút gọn (VD: `VEC3R0606QG`) từ chuỗi Model Name đầy đủ (VD: `HY-CAP VEC3R0606QG (1840)`).
 
-```sql
--- Cách 1: Dùng chuỗi REPLACE lồng nhau (loại bỏ prefix/suffix)
-SELECT REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE('HY-CAP VEC3R0606QG (1840)','HY-CAP ',''),'HY-CAP',''),'-C',''),'-M',''),'MSP',''),'(CY)','') AS model
+👉 **SQL lấy PartNo/Size:** Xem tại [KB_06_MASTER_DATA_TOOLS.md](file:///c:/Users/User Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_06_MASTER_DATA_TOOLS.md#L209) (§ 5.2 Lấy PartNo & Size từ tên Model).
 
--- Cách 2: Dùng SUBSTRING (lấy 12 ký tự sau dấu cách đầu tiên)
-SELECT (RTRIM(LTRIM(SUBSTRING('HY-CAP VEC3R0606QG (1840)', CHARINDEX(' ', 'HY-CAP VEC3R0606QG (1840)'), 12)))) AS partno
-```
 
 ---
 

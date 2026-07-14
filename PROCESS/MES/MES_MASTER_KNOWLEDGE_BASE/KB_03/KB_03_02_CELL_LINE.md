@@ -1102,9 +1102,17 @@ Hệ thống kiểm tra nếu thời gian hiện tại chưa vượt qua thời 
 Số lượng tồn kho của cuộn cực con sau khi slitting (`CurrentQty`) không tính bằng số cuộn mà tính bằng diện tích ($m^2$):
 $$\text{CurrentQty} = \text{LengthSlitting} \times \left(\frac{\text{WidthSlitting}}{1000}\right)$$
 ```sql
+-- Ví dụ: Cuộn cực con dài 300m, rộng 50mm
+-- CurrentQty = 300 * (50 / 1000) = 15.0 (m²)
+UPDATE STB_MaterialLotInfo
+SET CurrentQty = @LengthSlitting * (@WidthSlitting / 1000.0)
+WHERE MaterialLotNo = @NewLotNo;
+```
+
 ---
 
 #### 5. Danh Sách Lỗi Logic, Điểm Yếu & Giải Pháp (Bugs & Troubleshooting)
+
 
 ##### 🔴 Bug #1: Lỗi toán tử SQL bypass kiểm tra công đoạn V-22 bắt buộc (`usp_VN_DryOver`)
 *   **Triệu chứng:** Hệ thống cho phép Lot ra lò dù chưa đủ thời gian sấy.

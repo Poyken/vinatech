@@ -1,4 +1,4 @@
-## 🔴 Cẩm nang khắc phục lỗi theo Screen ID (Gộp từ KB_SCREEN_BUG_REF)
+﻿## 🔴 Cẩm nang khắc phục lỗi theo Screen ID (Gộp từ KB_SCREEN_BUG_REF)
 
 ## [B351] — Lot Transition (Chuyển đổi Lot)
 
@@ -179,8 +179,6 @@ Công nhân scan Lot/Barcode sản phẩm tại màn hình đóng gói **B523**,
 
 ---
 
----
-
 ### [B523] — Kịch bản sự cố khẩn cấp 2: Hủy gộp box / Rã box ()
 
 #### 🛠️ KỊCH BẢN A: Hủy gộp box / Rã box để đóng gói lại
@@ -303,8 +301,6 @@ END CATCH;
         THROW;
     END CATCH;
     ```
-
----
 
 ---
 

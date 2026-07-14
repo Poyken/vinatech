@@ -1,4 +1,4 @@
-﻿## 🔴 Cẩm nang khắc phục lỗi theo Screen ID (Gộp từ KB_SCREEN_BUG_REF)
+## 🔴 Cẩm nang khắc phục lỗi theo Screen ID (Gộp từ KB_SCREEN_BUG_REF)
 
 ## [B210] / [B220] / [B230] / [B240] — Production Routing Setup (Thiết lập định tuyến sản xuất)
 
@@ -341,8 +341,6 @@ Bước 7: Xác nhận phiếu → EXEC usp_DoFixMaterialDoc
     AND (@WorkCenterCode = 'VVT_F3' OR (b.RouteCode NOT LIKE 'VE%' AND b.RouteCode NOT LIKE 'VP%'))
     ```
 *   **Chi tiết nghiệp vụ:** Xem tại mã nguồn Stored Procedure **usp_Get_VVT_Prod_Bad_Status.sql**.
-
----
 
 ---
 
