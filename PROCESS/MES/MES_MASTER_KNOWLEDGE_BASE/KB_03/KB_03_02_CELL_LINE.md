@@ -1,4 +1,4 @@
-﻿## 6. 🏭 Cell Line — Vận Hành Chi Tiết Từng Màn Hình
+## 6. 🏭 Cell Line — Vận Hành Chi Tiết Từng Màn Hình
 
 > **Nguồn:** Phân tích 41 SP + ảnh màn hình (2026-04-13)
 
@@ -91,7 +91,7 @@
 [GATE 7] PO không có Route: PONo IS NULL → RAISERROR 'Routing này không có trong PO'
 ```
 
-> 🚦 **Tham chiếu mở rộng:** Chi tiết logic, mã SQL debug, và cách mở rộng cho 7 cổng chặn B530 trên (cùng 11 nhóm chặn tương tự như B597, B523, B452, B618, QC Audit...) được tổng hợp đầy đủ tại **KB_14 §6 — Tổng Hợp Pattern Validation Gates**.
+> 🚦 **Tham chiếu mở rộng:** Chi tiết logic, mã SQL debug cho 7 cổng chặn B530 trên được tích hợp trực tiếp trong SP [usp_DoProcessProdRouteHistForCalc_SmartApp_VNT](file:///c:/Users/User Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_08_CORE_SP_ENGINE.md#L290).
 
 
 **Cột IsRawMaterialInputFinish — Gate quan trọng nhất:**
@@ -207,7 +207,7 @@ IF @pProcessUserID NOT IN ('vvt_worker','vvtworker',...)
     RAISERROR('Chưa cân — không được in label')
 ```
 
-> 🚦 **Tham chiếu mở rộng:** Chi tiết các cổng chặn đóng gói (cân hàng, tiêu chuẩn đóng gói, in tem giới hạn) được tổng hợp tại **KB_14 §6.3 Nhóm 3 — Đóng Gói**.
+> 🚦 **Tham chiếu mở rộng:** Chi tiết các cổng chặn đóng gói (cân hàng, tiêu chuẩn đóng gói, in tem giới hạn) được thực hiện tại màn hình đóng gói [B523](file:///c:/Users/User Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_01_CORE_PACKAGING.md#L11).
 
 ---
 
@@ -373,12 +373,10 @@ VALUES
 SELECT OldBarcode, NewBarcode, ChangeDateTime, ChangeUserID
 FROM STB_LotChangeMaterialHistory
 WHERE OldBarcode = 'VV...' OR NewBarcode = 'VV...'
-
--- Sửa lại Barcode nếu định dạng sai sau khi đổi
-UPDATE STB_RawMaterialInputHist SET Barcode = 'VVPR152R740601' WHERE Barcode = 'VVPR152.740601'
-UPDATE STB_SetInfo SET Barcode = 'VVPR152R740601' WHERE Barcode = 'VVPR152.740601'
-UPDATE STB_LotChangeMaterialHistory SET NewBarcode = 'VVPR152R740601' WHERE Newbarcode = 'VVPR152.740601'
 ```
+
+👉 **Sửa lại Barcode nếu định dạng sai sau khi đổi (Lỗi dấu chấm):** Xem chi tiết script sửa lỗi tại [KB_04_02_SCREEN_BUGS.md](file:///c:/Users/User Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_02_SCREEN_BUGS.md#L10) (§ B351 Lỗi 1).
+
 
 ---
 

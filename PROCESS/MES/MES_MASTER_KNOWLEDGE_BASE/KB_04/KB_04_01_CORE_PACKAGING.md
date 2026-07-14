@@ -1,4 +1,4 @@
-﻿
+
 # KB_04 — Đóng Gói & In Tem (Packaging & Label Printing)
 
 > **Màn hình:** B523, B525, B453, B560, B789, B781, B353, B442, A419, A460, B754~B758, B790, Z530, C531
@@ -10,7 +10,7 @@
 
 ## 6. 📦 Đóng gói & In tem nhãn
 
-> 🚦 **Tham chiếu mở rộng:** Toàn bộ cơ chế cổng chặn (Validation Gates) liên quan đến đóng gói B523, in tem nhãn, phân quyền người dùng, và checklist thêm gate mới được tổng hợp tại **KB_14 §6.3 Nhóm 3 — Đóng Gói**.
+> 🚦 **Tham chiếu mở rộng:** Cơ chế cổng chặn (Validation Gates) liên quan đến đóng gói B523 và in tem nhãn được tích hợp trực tiếp trong các Stored Procedure của hệ thống (ví dụ: `usp_DoProcessProdRouteHistForCalc_SmartApp_VNT`, `usp_Vietnam_DoProcessProdPacking_VVT`).
 >
 > 🏭 **Cơ sở gốc:** VVT_F1 (Bắc Ninh) | **Biến thể theo cơ sở:**
 > - **Hà Nam (VVT_F3):** HN523 (đóng gói), HN542/HN543 (chia tem), HN544 (gộp túi bóng), HN553/HN711 (tem Solum)

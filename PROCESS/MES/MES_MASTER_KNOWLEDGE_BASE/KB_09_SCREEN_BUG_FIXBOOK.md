@@ -1,4 +1,4 @@
-﻿# KB_09: Sổ Tay Tra Cứu Bug & Fix Theo Màn Hình
+# KB_09: Sổ Tay Tra Cứu Bug & Fix Theo Màn Hình
 
 > **📌 Mục đích:** Khi nhận được báo lỗi từ user → tra TCode tại đây → tìm ngay bug + cách fix.
 > **🔑 Keywords:** bug, fix, sổ tay, TCode, màn hình, triệu chứng, nguyên nhân, SQL fix, sửa lỗi, khắc phục
@@ -299,7 +299,7 @@ DELETE FROM STB_CommInspDocHistory WHERE CommInspDocNo = @DocNo;
 COMMIT TRANSACTION;
 ```
 
-> 🔗 Chi tiết: KB_14 §Kịch bản 1
+> 🔗 Chi tiết: [KB_05_02_SCREEN_BUGS_QC.md](file:///c:/Users/User Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_02_SCREEN_BUGS_QC.md#L752) (§ Kịch bản B: Hủy kết quả QC)
 
 ### [C451]
 **Tên:** PQC Inspection
@@ -451,7 +451,7 @@ VALUES (@CtrlNo, (SELECT ISNULL(MAX(ProcSeq),0)+1 FROM STB_ProdRouteHist WHERE C
 COMMIT TRANSACTION;
 ```
 
-> 🔗 Chi tiết: [KB_05_02 §HNC321](KB_05/KB_05_02_SCREEN_BUGS_QC.md), KB_14 §Kịch bản 3
+> 🔗 Chi tiết: [KB_05_02_SCREEN_BUGS_QC.md](file:///c:/Users/User Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_02_SCREEN_BUGS_QC.md#L820) (§ Kịch bản sự cố khẩn cấp 3: Lỗi nhập phế HNC321)
 
 ### [HN551]
 **Tên:** FG Export Hà Nam
@@ -568,7 +568,7 @@ COMMIT TRANSACTION;
 1. User báo lỗi → Xác định TCode (mã màn hình)
 2. Tra TCode trong file này → tìm Triệu chứng matching
 3. Nếu tìm thấy → đọc Fix + tham chiếu KB gốc
-4. Nếu KHÔNG tìm thấy → dùng KB_14 (Trace Methodology):
+4. Nếu KHÔNG tìm thấy → dùng quy trình Trace Methodology dưới đây:
    a. Bước 0: Tra Screen→SP mapping (STB_ScreenObjects)
    b. Bước 1: Thu thập triệu chứng
    c. Bước 2: Pull SP code → đọc RAISERROR
@@ -578,7 +578,8 @@ COMMIT TRANSACTION;
 
 ---
 
-*Cập nhật: 2026-06-19 | Tổng hợp từ KB_02, KB_03, KB_04, KB_05, KB_06, KB_14, KB_07*
+*Cập nhật: 2026-06-19 | Tổng hợp từ KB_02, KB_03, KB_04, KB_05, KB_06, KB_07*
+
 
 
 

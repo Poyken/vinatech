@@ -1,4 +1,4 @@
-﻿# 📚 KNOWLEDGE — Vinatech MES Quick Reference (Load khi cần)
+# 📚 KNOWLEDGE — Vinatech MES Quick Reference (Load khi cần)
 
 > **Mục đích:** Cheat sheet nén gọn để AI trả lời nhanh mà không phải đọc 30 KB files
 > **Cập nhật:** 2026-06-19
@@ -165,7 +165,7 @@ ORDER BY RMIH.CreateDateTime DESC;
 | Gộp box lỗi | KB_04 §6.4, §6.13 |
 | Lỗi QC/chưa pass | KB_05 §9 |
 | NVL hết hạn | KB_02 §4.10 |
-| Chốt công đoạn lỗi | KB_14 §4.4 |
+| Chốt công đoạn lỗi | KB_03 §6.3 |
 | Model mới chưa cấu hình | KB_06 §1 |
 | Phế NVL B598 | KB_03 §6.12 |
 | Kho HN lỗi | KB_02/ → 02_FG_WMS |

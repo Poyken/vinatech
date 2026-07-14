@@ -1,4 +1,4 @@
-﻿## [B220] — Route Group Setup (Thiết lập nhóm Route)
+## [B220] — Route Group Setup (Thiết lập nhóm Route)
 
 > 🔗 **Xem thêm:** Mục [B210 / B220 / B230 / B240](#b210--b220--b230--b240--production-routing-setup) phía trên đã có chi tiết lỗi thiết lập Line/Route.
 
@@ -123,7 +123,7 @@
 *   **Triệu chứng:** OP quét nhập NVL tại B540 nhưng hệ thống không cho lưu, báo thiếu thông tin bắt buộc.
 *   **Nguyên nhân gốc:** 4 cột màu đặc biệt trên lưới B540 phải được nhập đầy đủ trước khi in barcode. Đây là requirement cứng trong SP `usp_Vietnam_RawMaterialInputHist_uid`.
 *   **Cách khắc phục:** Hướng dẫn OP nhập đầy đủ 4 cột màu (hiển thị nền vàng/cam trên grid). Nếu vẫn lỗi, kiểm tra `STB_MaterialLotInfo` xem Lot NVL có tồn tại không.
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_03/KB_03_02_CELL_LINE.md § 6.4](../KB_03/KB_03_02_CELL_LINE.md) và ../KB_14/KB_14_01_METHODOLOGY.md.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_03_02_CELL_LINE.md](file:///c:/Users/User Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_02_CELL_LINE.md#L123) (§ 6.4 [B540] — Assy Card Info).
 
 ### Lỗi 2: Checkbox ProdQtyFinishYN không tích được
 *   **Triệu chứng:** OP muốn hoàn thành công đoạn nhưng không tích được checkbox `ProdQtyFinishYN`.
@@ -177,7 +177,7 @@
 *   **Triệu chứng:** In tem thùng lớn B756 thiếu Serial nhãn hoặc không hiện trọng lượng.
 *   **Nguyên nhân gốc:** Chưa tick `IsOuter = 1` khi in nhãn ngoài, hoặc chưa bật `IsWeightLabel`.
 *   **Cách khắc phục:** Tick `IsOuter` cho nhãn ngoài. Tick `IsWeightLabel` cho tem cân nặng.
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_04/KB_04_01_CORE_PACKAGING.md § 6.9.1](../KB_04/KB_04_01_CORE_PACKAGING.md) và ../KB_14/KB_14_01_METHODOLOGY.md.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_04_01_CORE_PACKAGING.md](file:///c:/Users/User Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_01_CORE_PACKAGING.md) (§ 6.0.1 PAC Inner/Outer).
 
 ---
 
@@ -382,39 +382,8 @@
 ### [B530] — Kịch bản sự cố khẩn cấp 1: Hủy/Xóa sản lượng công đoạn sản xuất ()
 
 #### [B530] — 📐 KỊCH BẢN A: Hủy/Xóa sản lượng công đoạn sản xuất (Màn hình )
-*   **Triệu chứng:** Công nhân scan nhầm sản lượng vào công đoạn `V-26` (Aging) trong khi Lot chưa chạy xong công đoạn `V-25`. Cần hủy công đoạn `V-26`.
-*   **Ví dụ Demo:** Hủy công đoạn sản xuất mã `VE08` của Lot `VE260509-004`.
-*   **Quy trình xử lý bằng Transaction:**
-    ```sql
-    BEGIN TRANSACTION;
-    BEGIN TRY
-        -- 1. Xem lịch sử công đoạn của Barcode để xác định sequence (ProcSeq)
-        SELECT PRH.ControlNo, PRH.RouteCode, PRH.ProdQty, PRH.CreateDateTime
-        FROM STB_ProdRouteHist PRH
-        JOIN STB_SetInfo SI ON PRH.ControlNo = SI.ControlNo
-        WHERE SI.Barcode = 'VE260521-002'
-
-
-        -- 2. Thực hiện xóa công đoạn bị nhầm (Ví dụ: RouteCode = 'VE08')
-        -- Ràng buộc xóa theo ControlNo và đúng RouteCode của dòng cuối
-        DELETE FROM STB_ProdRouteHist
-        WHERE ControlNo = (SELECT ControlNo FROM STB_SetInfo WHERE Barcode = 'VE260509-004')
-          AND RouteCode = 'VE08';
-
-        -- 3. Cập nhật reset trạng thái lỗi (DefectQty) trên SetInfo nếu cần
-        UPDATE STB_SetInfo
-        SET DefectQty = 0, IsDefect = 0
-        WHERE Barcode = 'VE260509-004';
-        --thường là sẽ cần phải xóa ng theo nhưng nếu user quên chưa nhập ng (nv vẫn =0) thì không cần xóa ng
-
-        COMMIT TRANSACTION;
-        PRINT 'Hủy công đoạn thành công!';
-    END TRY
-    BEGIN CATCH
-        ROLLBACK TRANSACTION;
-        PRINT 'Lỗi: ' + ERROR_MESSAGE();
-    END CATCH;
-    ```
+*   **Triệu chứng:** Công nhân scan nhầm sản lượng vào công đoạn sau khi Lot chưa chạy xong công đoạn trước, hoặc nhập sai công đoạn/NG nhầm.
+*   **Quy trình xử lý chuẩn & Script Transaction:** Xem hướng dẫn chi tiết tại [KB_03_01_OVERVIEW.md](file:///c:/Users/User Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_01_OVERVIEW.md#L334) (§ 5.16 Quy trình 3 bước "Thám tử" truy vết và Hủy công đoạn / NG nhầm).
 
 ---
 

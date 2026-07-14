@@ -1,4 +1,4 @@
-﻿# KB_03 — Sản Xuất & Lịch Sử Routing
+# KB_03 — Sản Xuất & Lịch Sử Routing
 
 > **Màn hình:** B310, B450, B452, B523, B528, B530, B540, B597, B598, B682, B717, B726, B781, B782, B791, B802, B882
 > **Bảng chính:** `STB_SetInfo` (76 cols), `STB_ProdRouteHist` (23 cols), `STB_DayProdPlan`, `STB_ProductionOrderInfo`
@@ -368,20 +368,18 @@ DELETE FROM STB_ProdRouteHist
 WHERE ControlNo = (SELECT ControlNo FROM STB_SetInfo WHERE Barcode = 'VE260506-001')
   AND RouteCode IN ('VE08', 'VE09');
 
--- 2. Xóa các bản ghi lỗi (NG) nhập nhầm ở công đoạn sau và trạm trước lúc quét chuyển
--- Giải thích: Việc thêm trạm VE07 với mốc thời gian chèn nhầm là để xóa đi lượng phế
--- nhập nhầm cho trạm VE07 lúc khai báo chuyển tiếp VE08. Nếu giữ nguyên lượng phế này,
--- sản lượng của Lot khi chốt sang VE08 sẽ luôn bị hệ thống tự động trừ đi, không thể 
--- đưa về sản lượng gốc 5883 để công nhân nhập lại.
+-- 2. Xóa các bản ghi lỗi (NG) nhập nhầm ở các công đoạn quét nhầm
 DELETE FROM STB_DefectRepairInfo 
 WHERE ControlNo = (SELECT ControlNo FROM STB_SetInfo WHERE Barcode = 'VE260506-001')
-  AND (
-    FindRouteCode IN ('VE08', 'VE09')
-    OR 
-    (FindRouteCode = 'VE07' AND CreateDateTime >= '2026-05-11 16:00:00')
-  );
+  AND FindRouteCode IN ('VE08', 'VE09');
 
--- 3. Kiểm tra lại: Lot phải khôi phục về trạng thái cuối cùng ở VE07 với ProdQty = 5883
+-- 3. Reset thông số DefectQty và IsDefect trong STB_SetInfo về 0 (hoặc số lượng lỗi thực tế còn lại nếu có)
+UPDATE STB_SetInfo
+SET DefectQty = 0,
+    IsDefect = 0
+WHERE Barcode = 'VE260506-001';
+
+-- 4. Kiểm tra lại: Lot phải khôi phục về trạng thái cuối cùng ở VE07 với ProdQty = 5883
 SELECT RouteCode, ProdQty, CreateDateTime 
 FROM STB_ProdRouteHist 
 WHERE ControlNo = (SELECT ControlNo FROM STB_SetInfo WHERE Barcode = 'VE260506-001')

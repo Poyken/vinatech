@@ -177,16 +177,7 @@ C321 (S?a ch?a l?i � Reliability Assy)
 | `usp_DoFinishCommInspDoc` | Execute | Ho�n th�nh t�i li?u ki?m tra |
 | `usp_DoFinishCommInspDoc_VNT` | Execute | Ho�n th�nh t�i li?u ki?m tra VNT |
 
-```sql
--- S?a h?ng m?c ki?m tra t?i C443 (x�a CommInspDoc cu r?i t?o l?i)
--- Bu?c 1: T�m CommInspDocNo theo Barcode
-SELECT * FROM STB_CommInspDocHistory
-WHERE ProdNo = (SELECT ControlNo FROM STB_SetInfo WHERE Barcode = 'VVPP163R072732')
-
--- Bu?c 2: X�a d? t?o l?i
-DELETE FROM STB_CommInspDocItem WHERE CommInspDocNo = '...'
-DELETE FROM STB_CommInspDocHistory WHERE CommInspDocNo = '...'
-```
+👉 **Sửa hạng mục kiểm tra tại C443 (Lịch sử tài liệu cũ/sai):** Xem chi tiết quy trình xóa tài liệu cũ để khởi tạo lại tại [KB_05_02_SCREEN_BUGS_QC.md](file:///c:/Users/User Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_02_SCREEN_BUGS_QC.md#L945) (§ 7.1 [B597]/[C443]).
 
 ---
 

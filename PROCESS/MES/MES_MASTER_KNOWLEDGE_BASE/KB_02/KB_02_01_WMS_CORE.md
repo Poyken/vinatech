@@ -1,4 +1,4 @@
-﻿# KB_02 - Kho WMS Core (NVL & Thành Phẩm)
+# KB_02 - Kho WMS Core (NVL & Thành Phẩm)
 
 > **Màn hình:** F330, F312, F430, F110, F710, F721, F741, C220, HN551, HN866, HN544, FG00
 > **Bảng chính:** `STB_MaterialLotInfo`, `STB_MaterialDocInfo`, `STB_MaterialStock`, `STB_MaterialWarehouse`
@@ -712,7 +712,7 @@ Dưới đây là cẩm nang vận hành chi tiết các màn hình thuộc phâ
     *   **⚠️ Cực kỳ quan trọng:** Sau khi sinh Lot, thủ kho bắt buộc phải nhập giá trị **"Số Lot No của nhà cung cấp"** vào cột **"Đặc tính 10"** (`LotAttr10` / `LotExtText10`) để hệ thống chạy hàm parse tự động tính ra ngày sản xuất và thời hạn hết hạn. Nếu cột này bị bỏ trống hoặc không nhảy ngày hết hạn, Lot sẽ tự động bị hệ thống đưa vào kho ảo **`HOLDING`** khi xuất kho và không thể cấp phát cho sản xuất. Nếu gặp sự cố điền Lot No đúng nhưng không nhảy đặc tính ngày, hãy báo ngay cho EA Team.
 *   **Bước 3 (Xác nhận nhập kho):** Chỉ khi kết quả kiểm tra IQC tại màn hình **C220** của Lot hàng đó đã chuyển trạng thái **"PASS"** thì thủ kho mới có thể thực hiện nhấn 2 nút **"Kết thúc nhập kho"** và **"Xác nhận nhập kho"** tại F330. Việc nhấn đủ 2 nút này là bắt buộc để kết thúc quy trình nhập.
 
-    > 🚦 **Tham chiếu mở rộng:** Chi tiết logic, mã SQL debug, và cách mở rộng cho cổng chặn IQC nhập kho (F330/C220) được tổng hợp tại **KB_14 §6.3 Nhóm 11 — F330/C220 IQC**.
+    > 🚦 **Tham chiếu mở rộng:** Chi tiết logic, mã SQL debug cho cổng chặn IQC nhập kho (F330/C220) được tích hợp trong các stored procedure kiểm định chất lượng đầu vào.
 
 #### [F430]/[F610]/[F620] — Cấp phát sản xuất & Quy trình hoàn trả NVL
 *   **Xuất kho ra chuyền (F430):** Sử dụng nút "Nguyên liệu đầu ra" để xuất NVL ra CellLine theo nguyên tắc FIFO. Nếu Lot nào thiếu ngày sản xuất ở đặc tính 10, hệ thống sẽ tự động chuyển Lot đó vào kho HOLDING.
@@ -930,33 +930,17 @@ Chi tiết về triệu chứng, nguyên nhân và các phương án bypass (bao
 
 ---
 
-### 5. Xóa nhập sản lượng công đoạn (VD: VE260509-004)
+### 5. Xóa nhập sản lượng công đoạn / Hủy công đoạn / NG nhầm
 
-**Triệu chứng:** Cần hủy/xóa dữ liệu nhập sản lượng ở 1 công đoạn cụ thể.
+**Triệu chứng:** Cần hủy/xóa dữ liệu nhập sản lượng ở 1 công đoạn cụ thể hoặc xử lý NG nhầm.
 
 > ⚠️ **Lưu ý:** Xóa phiếu F330 (nhập kho NVL) cần xóa IQC trước (nếu có).
 
 **Xóa sản lượng công đoạn:**
-```sql
--- Bước 1: Xem lịch sử routing của Barcode
-SELECT * FROM STB_ProdRouteHist
-WHERE ControlNo = (SELECT ControlNo FROM STB_SetInfo WHERE Barcode = 'VE260509-004')
-ORDER BY ProdDateTime DESC
-
--- Bước 2: Xóa dòng lịch sử routing cần xóa (VD: VE08)
-DELETE FROM STB_ProdRouteHist
-WHERE ControlNo = (SELECT ControlNo FROM STB_SetInfo WHERE Barcode = 'VE260509-004')
-AND RouteCode = 'VE08'
-
--- Bước 3: Reset DefectQty nếu cần
-UPDATE STB_SetInfo
-SET DefectQty = 0, IsDefect = 0
-WHERE Barcode = 'VE260509-004'
--- Chỉ làm nếu DefectQty thực sự cần reset
-```
+👉 **Quy trình chuẩn & Script Transaction:** Xem hướng dẫn chi tiết tại [KB_03_01_OVERVIEW.md](file:///c:/Users/User Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_01_OVERVIEW.md#L334) (§ 5.16 Quy trình 3 bước "Thám tử" truy vết và Hủy công đoạn / NG nhầm).
 
 **Xóa phiếu nhập kho F330 (có IQC):**
-👉 **Chi tiết Script Fix:** Xem tại [KB_02_01_WMS_CORE.md § 4.16](KB_02_01_WMS_CORE.md)
+👉 **Chi tiết Script Fix:** Xem tại [KB_02_01_WMS_CORE.md](file:///c:/Users/User Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_02/KB_02_01_WMS_CORE.md#L471) (§ 4.16 [F330] — Hủy phiếu nhập kho đã Confirmed).
 
 ---
 
