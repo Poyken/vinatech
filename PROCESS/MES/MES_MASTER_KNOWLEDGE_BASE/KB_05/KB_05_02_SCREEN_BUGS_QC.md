@@ -1,4 +1,4 @@
-﻿## 🔴 Cẩm nang khắc phục lỗi theo Screen ID (Gộp từ KB_SCREEN_BUG_REF)
+## 🔴 Cẩm nang khắc phục lỗi theo Screen ID (Gộp từ KB_SCREEN_BUG_REF)
 
 ## [B597] — Material Scanning & PQC Verification (Scan nguyên vật liệu đầu vào chuyền)
 
@@ -108,6 +108,101 @@
 *   **Cách khắc phục:**
     Yêu cầu bộ phận QC hoàn thành nhập kết quả đo và xác nhận cờ chất lượng PASS cho Lot hàng trên màn hình **C220**.
 *   **Chi tiết nghiệp vụ:** Xem tại [../KB_02/KB_02_01_WMS_CORE.md § 4.15](../KB_02/KB_02_01_WMS_CORE.md#415-luồng-nhập-kho-đầy-đủ-f330).
+
+### Lỗi 2: Số lượng mẫu yêu cầu (Slg mẫu ycau) lệch so với Số lượng mẫu đo thực tế (Số lượng mẫu)
+*   **Triệu chứng:** 
+    1. Trên lưới hạng mục đo của màn hình **C220**, cột "Slg mẫu ycau" hiển thị số lượng mẫu nhỏ hơn cột "Số lượng mẫu" (Ví dụ: yêu cầu là 4 nhưng số lượng mẫu hiển thị là 5), làm phát sinh thêm dòng nhập mẫu đo thừa ngoài tiêu chuẩn.
+    2. **Đặc biệt (Hiện tượng cache dòng đo thừa):** Sau khi đã sửa cấu hình AQL ở C113/C112 làm giảm số lượng mẫu (ví dụ về 2), cột "Slg mẫu ycau" và "Số lượng mẫu" ở grid trái đã cập nhật hiển thị đúng là 2, nhưng grid bên phải ("Kết quả kiểm tra...") vẫn hiển thị thừa dòng đo (ví dụ vẫn hiện 5 dòng từ 1 đến 5).
+*   **Nguyên nhân gốc:** 
+    1. **Cột Slg mẫu ycau (RequestSampleQty)** được tính tự động từ hàm `dbo.fnGetQcStandardSampleQty` dựa trên số lượng lô hàng (`QcQty`). Nếu số lượng lô hàng nhỏ hơn số lượng mẫu chuẩn của AQL, hàm tự động khống chế số lượng mẫu yêu cầu bằng đúng số lượng lô hàng (Lot Size = 4, S1 AQL tiêu chuẩn là 5 -> khống chế về 4).
+    2. **Cột Số lượng mẫu (SampleQty)** bị gán cứng bằng 5 trong stored procedure `usp_DoMakeMaterialIQCDetailList` khi khởi tạo chi tiết kiểm tra cho các hạng mục có cấp kiểm tra **S1** (đã được Mr.Manh giới hạn theo `MaterialCode` ngày 06-05-2026 nhưng vẫn giữ cờ gán cứng `THEN 5`).
+    3. **Tại sao vẫn hiện 5 dòng đo sau khi giảm cấu hình:** Stored procedure sinh mẫu đo (`usp_DoMakeMaterialQcSampleResult`) chỉ có logic chèn thêm dòng khi thiếu chứ không tự động xóa bớt dòng khi thừa. Khi thay đổi cấu hình giảm mẫu (ví dụ từ 5 về 2), các dòng đo số 3, 4, 5 đã sinh ra trước đó vẫn tồn tại trong bảng `STB_MaterialQcSampleResult` và không tự động bị xóa đi.
+*   **Cách khắc phục / Xử lý:**
+    *   **Phương án 1 (Khuyên dùng - Cấu hình hệ thống qua UI C113):** Sửa đổi số lượng mẫu quy định của Cấp kiểm tra trực tiếp trên giao diện để áp dụng tự động cho các Lot sau:
+        1. Mở màn hình **[C113] Thông tin tiêu chuẩn kiểm tra mẫu**.
+        2. Tìm dòng cấu hình của Cấp kiểm tra **S1** (khoảng Lot Size từ 2 đến 50).
+        3. Đúp chuột vào ô **Số lượng mẫu** (đang hiển thị là 5) $\rightarrow$ sửa thành số mẫu mong muốn (Ví dụ: sửa thành **2** cho phù hợp thực tế).
+        4. *(Khuyên làm)* Sửa cột **MinGrQty** từ **2** thành **1** để xử lý trường hợp Lot nhập về chỉ có 1 sản phẩm không bị lỗi NULL.
+        5. Nhấn **Lưu** trên thanh công cụ của C113.
+    *   **Phương án 2 (Xử lý tạm thời cho Lot hiện tại):** QC có thể thử sửa trực tiếp giá trị cột **Số lượng mẫu (SampleQty)** trên lưới của màn hình **C220** (nếu tài khoản được phân quyền sửa), hoặc chạy SQL cập nhật trực tiếp trên database (nhớ bôi đen chuyển `ROLLBACK` thành `COMMIT` để lệnh xóa thực sự có hiệu lực):
+        ```sql
+        BEGIN TRAN;
+        -- 1. Đưa SampleQty về đúng cấu hình mới (ví dụ là 2) cho các dòng S1 cần sửa (ví dụ dòng 3 đến 9)
+        UPDATE STB_MaterialQcDetail 
+        SET SampleQty = 2 
+        WHERE MaterialQcNo = '26071300011' 
+          AND MaterialQcDetailNo BETWEEN 3 AND 9;
+        
+        -- 2. Xóa các dòng mẫu thừa (ví dụ mẫu số 3, 4, 5) trong kết quả mẫu
+        DELETE FROM STB_MaterialQcSampleResult 
+        WHERE MaterialQcNo = '26071300011' 
+          AND MaterialQcDetailNo BETWEEN 3 AND 9
+          AND MaterialQcSampleNo > 2;
+        COMMIT; -- Hoặc ROLLBACK để kiểm tra
+        ```
+        *(Sau khi chạy SQL, cần đóng tab C220 trên Client và mở lại để xóa cache hiển thị).*
+    *   **Phương án 3 (Sửa code SP):** Sửa đổi logic gán cứng mẫu trong stored procedure `usp_DoMakeMaterialIQCDetailList` để tự động gọi hàm tính mẫu động thay vì gán cứng `THEN 5` cho cấp S1. Tuy nhiên cách này cần kiểm thử kỹ do ảnh hưởng đến các mã vật tư S1 khác của nhà máy.
+
+### 🔍 Hướng dẫn Trace và Điều tra Lỗi màn hình C220
+Khi gặp sự cố lệch số lượng mẫu hoặc thông tin kiểm tra tại màn hình C220, IT thực hiện trace theo các bước sau:
+
+#### 💡 Cách xác định Mã phiếu IQC (MaterialQcNo)
+Mã phiếu IQC (`MaterialQcNo`) có thể được tìm thấy bằng 3 cách:
+1. **Trên giao diện (UI) C220:** Xem cột **"Số NVL IQC"** trên lưới dữ liệu (Ví dụ: `26071300011`).
+2. **Từ Barcode Lot con thực tế (LotID / MaterialLotNo):** Nếu chỉ có barcode của cuộn/hộp nguyên liệu (Ví dụ: `ML20260713000165`), chạy SQL để tìm mã phiếu IQC liên kết:
+   ```sql
+   SELECT DISTINCT MaterialIqcNo, MaterialCode 
+   FROM STB_MaterialDocDetail WITH(NOLOCK)
+   WHERE MaterialDocNo = (
+       SELECT MaterialDocNo 
+       FROM STB_MaterialDocLotInfo WITH(NOLOCK) 
+       WHERE MaterialLotNo = 'MÃ_BARCODE_CON'
+   )
+   ```
+3. **Từ Số tài liệu nhập kho (MaterialDocNo):** Nếu chỉ biết số phiếu nhập kho ở ô "Số tài liệu" trên UI (Ví dụ: `260713000054`), chạy SQL để lấy mã phiếu IQC:
+   ```sql
+   SELECT DISTINCT MaterialIqcNo, MaterialCode 
+   FROM STB_MaterialDocDetail WITH(NOLOCK)
+   WHERE MaterialDocNo = 'SỐ_PHIẾU_NHẬP_KHO'
+   ```
+
+*   **Bước 1: Kiểm tra thông tin chung và tổng sản lượng Lot nhập kho**
+    Xác định mã nguyên vật liệu (`MaterialCode`) và tổng số lượng (`QcQty`) thực tế ghi nhận trên phiếu IQC:
+    ```sql
+    SELECT MaterialQcNo, MaterialCode, QcQty 
+    FROM STB_MaterialQcInfo WITH(NOLOCK) 
+    WHERE MaterialQcNo = 'MÃ_LOT_IQC' -- Ví dụ: '26071300011'
+    ```
+    *Lưu ý: Nếu số lượng lô hàng (`QcQty`) bị sai lệch so với thực tế nhập kho, cần đối chiếu với bảng chi tiết phiếu nhập `STB_MaterialDocDetail` và các Lot con trong `STB_MaterialDocLotInfo` để tính tổng.*
+
+*   **Bước 2: Kiểm tra cấu hình chi tiết hạng mục đo của Lot**
+    Xem mức mẫu yêu cầu (`RequestSampleQty`) và số mẫu đo thực tế (`SampleQty`) đang lưu trong DB:
+    ```sql
+    SELECT MaterialQcDetailNo, QcInspectionItemCode, QcInspectionItemName, InspectionLevel, AQL, RequestSampleQty, SampleQty 
+    FROM STB_MaterialQcDetail WITH(NOLOCK) 
+    WHERE MaterialQcNo = 'MÃ_LOT_IQC'
+    ```
+
+*   **Bước 3: Tra cứu thiết lập hạng mục kiểm tra vật tư (Master QC)**
+    Kiểm tra xem mã vật tư này có thiết lập cấp độ kiểm tra nào đặc biệt (như S1, S2, G1...) trong danh mục hay không:
+    ```sql
+    SELECT MaterialCode, QcInspectionItemCode, InspectionLevel, AQL, SampleQty 
+    FROM STB_MaterialQcInspectionItem WITH(NOLOCK) 
+    WHERE MaterialCode = 'MÃ_VẬT_TƯ' -- Ví dụ: 'BEASSY-004'
+    ```
+
+*   **Bước 4: Đối chiếu quy tắc tính mẫu AQL tiêu chuẩn**
+    Kiểm tra bảng quy định AQL của hệ thống để xác nhận số lượng mẫu chuẩn ứng với Lot Size và Cấp kiểm tra:
+    ```sql
+    SELECT * 
+    FROM STB_InspectionLevel WITH(NOLOCK) 
+    WHERE InspectionLevel = 'MÃ_CẤP_KIỂM_TRA' -- Ví dụ: 'S1'
+    ```
+    Chạy thử hàm tính mẫu tiêu chuẩn để xem kết quả trả về:
+    ```sql
+    SELECT dbo.fnGetQcStandardSampleQty('SAMPLE', [SỐ_LƯỢNG_LOT], [AQL], '[CẤP_KIỂM_TRA]') AS StandardQty
+    -- Ví dụ: SELECT dbo.fnGetQcStandardSampleQty('SAMPLE', 4, 2.500, 'S1')
+    ```
 
 ---
 
@@ -382,12 +477,14 @@
 ---
 
 
-## [C153] — QC Sample Config (Cấu hình mẫu kiểm tra QC)
+## [C113] — QC Sample Config (Cấu hình mẫu kiểm tra QC)
+
+> ⚠️ **Lưu ý kỹ thuật:** Màn hình **C153** thực tế không tồn tại trong hệ thống CSDL (`STB_ScreenInfo`). Đây là lỗi gõ nhầm (typo) từ tài liệu cũ, thực chất màn hình cấu hình này là **C113 (Cấp kiểm tra)**.
 
 ### Lỗi 1: Số lượng mẫu kiểm tra (SampleQty) không khớp với thực tế đo
 *   **Triệu chứng:** Máy đo trả về 50 mẫu nhưng C546 chỉ hiện 20 dòng.
 *   **Nguyên nhân gốc:** `SampleQty` cấu hình trong bảng `STB_MaterialQcDetail` bị thiết lập sai.
-*   **Cách khắc phục:** Vào C153 hoặc chỉnh trực tiếp `STB_MaterialQcDetail` để SampleQty khớp số lượng mẫu thực tế.
+*   **Cách khắc phục:** Vào C113 (Thông tin tiêu chuẩn kiểm tra mẫu) hoặc chỉnh trực tiếp `STB_MaterialQcDetail` để SampleQty khớp số lượng mẫu thực tế.
 *   **Chi tiết nghiệp vụ:** Xem tại [../KB_03/KB_03_02_CELL_LINE.md](../KB_03/KB_03_02_CELL_LINE.md).
 
 ---
