@@ -110,6 +110,44 @@ powershell -File .\deploy_tool.ps1 -SqlPath "C:\Users\User Vinatech.DESKTOP-RJJS
 
 ---
 
+## 5. 🕵️‍♂️ Database Archaeology & Change Tracking — Quy Trình Khảo Cổ & Tra Cứu Lịch Sử Đối Tượng DB
+
+Khi cần xác định **ai, khi nào, và nội dung gì** đã được chỉnh sửa trong một Stored Procedure hoặc Table trực tiếp trên Database Production (nơi không được Git tracking thường xuyên):
+
+### 📋 Bước 1: Kiểm tra thời điểm sửa đổi gần nhất từ hệ thống DB
+Chạy truy vấn để lấy ngày tạo (`create_date`) và ngày chỉnh sửa gần nhất (`modify_date`) từ `sys.objects`:
+```powershell
+powershell -File .\run_query.ps1 -Query "SELECT name, create_date, modify_date FROM sys.objects WHERE name = 'Tên_Stored_Procedure_Hoặc_Bảng'"
+```
+*Lưu ý: Múi giờ của Database Server có thể lệch với múi giờ máy local (Ví dụ: DB Server Vinatech chạy múi giờ Hàn Quốc KST GMT+9, lệch +2 tiếng so với Việt Nam ICT GMT+7).*
+
+### 📋 Bước 2: Truy vết lịch sử SP thông qua Git log (Nếu từng được backup)
+Mặc dù thư mục `sql/procedures/` được dọn sạch trước khi commit, trong lịch sử Git vẫn lưu trữ các file SP đã được tải về phân tích ở các commit cũ:
+1. **Tìm các commit từng chứa file SP:**
+   ```powershell
+   git log --name-only --format="COMMIT %h %ad : %s" | ForEach-Object { if ($_ -match "^COMMIT") { $currentCommit = $_ } elseif ($_ -match "Tên_Stored_Procedure.sql") { Write-Output "$currentCommit -> $_" } }
+   ```
+2. **Khôi phục file SP từ commit lịch sử:**
+   ```powershell
+   git show [Mã_Commit]:[Đường_dẫn_file_trong_commit] > sql/procedures/old_version.sql
+   ```
+   *(Nếu file được xuất ra dạng UTF-16LE gây lỗi đọc file của AI, hãy dùng PowerShell chuyển đổi sang UTF-8: `Get-Content -Path "file_cu" | Out-File -FilePath "file_moi" -Encoding utf8`).*
+
+### 📋 Bước 3: So sánh line-by-line để tìm dòng thay đổi
+Dùng công cụ `fc.exe /N` của Windows hoặc `Compare-Object` của PowerShell để chỉ ra chính xác các dòng code được thêm vào, xóa đi hoặc sửa đổi giữa bản cũ và bản live vừa tải từ DB về:
+```powershell
+fc.exe /N sql\procedures\old_version.sql sql\procedures\live_version.sql
+```
+
+### 📋 Bước 4: Kiểm tra chéo các phụ thuộc mới (Dependencies)
+Nếu phát hiện trong đoạn code mới thêm có gọi tới các SP hoặc Function lạ, hãy kiểm tra ngày tạo của đối tượng đó để xác minh thời điểm tích hợp:
+```powershell
+powershell -File .\run_query.ps1 -Query "SELECT name, create_date, modify_date FROM sys.objects WHERE name = 'Tên_SP_Mới_Tích_Hợp'"
+```
+
+---
+
 ## ⚠️ Quy Tắc An Toàn
 Các script trên tương tác trực tiếp với cơ sở dữ liệu. Vui lòng tham khảo chi tiết các quy tắc an toàn dữ liệu bắt buộc tại [RULES.md](../AI_AGENT_CONFIG/RULES.md).
+
 
