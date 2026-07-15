@@ -36,7 +36,7 @@ function Export-SP([string]$name) {
     $defn = $cmd.ExecuteScalar()
     if ($defn) {
         $outputPath = Join-Path $procDir "$name.sql"
-        [System.IO.File]::WriteAllText($outputPath, $defn, [System.Text.Encoding]::UTF8)
+        [System.IO.File]::WriteAllText($outputPath, $defn, (New-Object System.Text.UTF8Encoding $true))
         Write-Host "Sync successful: Exported $name to $outputPath" -ForegroundColor Green
     } else {
         Write-Host "Failed to find Stored Procedure '$name' in database." -ForegroundColor Red

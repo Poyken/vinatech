@@ -22,6 +22,8 @@
 - Luôn `WITH(NOLOCK)` trên: `STB_ProdRouteHist`, `STB_MaterialLotInfo`, `STB_SetInfo`, `STB_MaterialDocDetail`
 - Dùng PK/ID cụ thể trong WHERE, không dùng điều kiện mơ hồ
 - Sửa đồng bộ đủ bảng liên quan (VD: sửa SetInfo phải check MaterialLotInfo)
+- **Unicode & Font**: Luôn viết chuỗi Unicode (tiếng Việt có dấu, tiếng Hàn,...) có tiền tố `N` phía trước (ví dụ: `N'Tiếng Việt'`, `N'한글'`).
+- **File Encoding**: Mọi file SQL phải lưu dưới dạng mã hóa `UTF-8 with BOM` (UTF-8-BOM) để SSMS và VS Code không bị lỗi font khi đọc/ghi.
 
 ---
 
