@@ -110,6 +110,29 @@ flowchart TD
 | `usp_DoRfcLogin` | Kết nối dạng API/RFC từ hệ thống khác | Chỉ xác thực cục bộ (Local database) thông qua hàm `PWDCOMPARE` trên bảng `STB_UserInfo` (Không phân luồng ERP). | `STB_UserInfo.Password` |
 | `usp_DoMobileLogin` | MES trên thiết bị di động (PDA) | Kiểm tra trực tiếp plaintext password bằng toán tử so sánh bằng (`=`). | So sánh plaintext trực tiếp với `STB_UserInfo.Password` |
 
+### 2.3 🔄 Cơ Chế & Lịch Trình Đồng Bộ Nhân Sự & Phòng Ban (User & Department Sync)
+
+Hệ thống ERP Douzone (`NEOE`) đóng vai trò là **Nguồn lưu trữ gốc (Single Source of Truth)** cho toàn bộ danh mục nhân sự (`MA_EMP`) và phòng ban (`MA_DEPT`). Khi có sự thay đổi thông tin nhân sự (ví dụ: chuyển phòng ban `CD_DEPT` hoặc thay đổi Cost Center `CD_CC`), dữ liệu được đồng bộ sang Groupware và MES thông qua các cơ chế sau:
+
+#### A. Đồng bộ ERP ➔ Groupware (Real-time)
+*   **Trạng thái:** Tức thời (Thời gian thực).
+*   **Cơ chế:** Khi có bất kỳ thay đổi nào trên bảng nhân sự ERP `NEOE.NEOE.MA_EMP`, Trigger **`NEOE.UT_MA_EMP_BIZBOX_GW`** cài trên bảng này sẽ tự động capture thông tin cập nhật (bao gồm mã phòng ban `@P_CD_DEPT`) và ghi nhận vào bảng mapped trung gian **`NEOE.NEOE.USER_MAPPING_INFO`** để Groupware Bizbox đồng bộ tài khoản ngay lập tức.
+*   **Lưu ý nghiệp vụ:** Các tờ trình phê duyệt điện tử (Workflows) trên Groupware định tuyến người duyệt dựa trên sơ đồ phòng ban. Nếu thông tin phòng ban không được đồng bộ đúng với `VINA_ORG_CHART_NODE`, các tờ trình do nhân viên đó tạo ra (hoặc gửi đến họ duyệt) sẽ bị đứng luồng hoặc báo lỗi `PENDING`.
+
+#### B. Đồng bộ ERP ➔ MES (Cho nhân sự Hàn Quốc - CdCompany = 1000)
+*   **Trạng thái:** Theo lịch trình cố định.
+*   **Lịch trình:** Job **`ERP ???? I/F`** chạy lúc **17:00:00 hàng ngày**.
+*   **Cơ chế:** SQL Agent Job gọi Stored Procedure **`SmartFactoryV2.dbo.usp_Workinfolist_iud`** thực hiện lệnh `MERGE` để cập nhật/thêm mới danh sách nhân viên sản xuất từ `NEOE.NEOE.MA_EMP` vào bảng nhân sự sản xuất MES **`SmartFactoryV2.dbo.STB_ProdWorkerInfo`**.
+
+#### C. Đồng bộ ERP ➔ MES (Cho nhân sự Việt Nam - CdCompany = 2000)
+*   **Trạng thái:** Không chạy ngầm tự động theo giờ cố định.
+*   **Cơ chế:** Việc cập nhật sang bảng nhân viên MES Việt Nam **`SmartFactoryV2.dbo.STB_VN_Employees`** sử dụng Stored Procedure **`SmartFactoryV2.dbo.usp_VN_Import_Employees`**, được kích hoạt bằng 2 cách:
+    1.  **Thủ công:** Admin MES mở màn hình cấu hình nhân sự (Z410) trên MES GUI và nhấn nút **Đồng bộ (Sync)**.
+    2.  **Web Service API:** Khi nhân viên Nhân sự lưu thông tin chỉnh sửa trên phần mềm quản lý HR, ứng dụng HR sẽ tự động gọi API Web Service của MES để đẩy dữ liệu nhân viên mới/thay đổi sang MES.
+*   **Lưu ý đặc biệt khi update thủ công bằng SQL:**
+    1.  Khi thay đổi `CD_DEPT` trong `NEOE.NEOE.MA_EMP`, bắt buộc phải cập nhật đồng bộ cột Cost Center **`CD_CC`** tương ứng của phòng ban đó (lấy từ `NEOE.NEOE.MA_DEPT`) để hạch toán chi phí lương chính xác.
+    2.  Đối với MES Việt Nam, do không có Job tự động sync database, IT cần chủ động chạy thêm câu lệnh cập nhật thủ công bảng **`SmartFactoryV2.dbo.STB_VN_Employees`** (cột `CODEDEPARTMENT` và `DEPARTMENTNAME`) để tránh lệch thông tin phòng ban hiện tại (ở MES) với phòng ban mới (ở ERP).
+
 ---
 
 ## 3. 🔄 Bản Đồ Tương Tác Giữa Các Biểu Mẫu Groupware Và Màn Hình MES (Form-to-Screen Map)
