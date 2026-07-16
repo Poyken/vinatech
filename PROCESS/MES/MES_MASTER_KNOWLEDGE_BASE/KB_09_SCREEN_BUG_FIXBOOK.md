@@ -1,4 +1,4 @@
-# KB_09: Sổ Tay Tra Cứu Bug & Fix Theo Màn Hình
+﻿# KB_09: Sổ Tay Tra Cứu Bug & Fix Theo Màn Hình
 
 > **📌 Mục đích:** Khi nhận được báo lỗi từ user → tra TCode tại đây → tìm ngay bug + cách fix.
 > **🔑 Keywords:** bug, fix, sổ tay, TCode, màn hình, triệu chứng, nguyên nhân, SQL fix, sửa lỗi, khắc phục
@@ -246,6 +246,13 @@
 
 ---
 
+
+### B767
+**Ten:** Chua xac dinh
+
+| # | Trieu chung | Nguyen nhan | Fix |
+|---|---|---|---|
+| 1 | S/N of the first label (Outer label) is blank on Sanmina label print | Stored procedure usp_SanminaLabelPrint_get_Vietnam set PrintSerialNo to empty and BoxSerialNo to first inner serial for Outer label. Changed it to output comma-separated list of inner box serials for both. | `ALTER PROCEDURE [dbo].[usp_SanminaLabelPrint_get_Vietnam] ... (BoxSerialNo and PrintSerialNo case expressions changed to combine Inner1Serial and Inne...` |
 ## C-Series: QC & Chất Lượng
 
 ### [C121]-[C122]

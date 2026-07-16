@@ -1,4 +1,4 @@
-﻿# 📓 Vinatech MES Agent — Hotfix Log (Nhật ký lỗi & Giải pháp)
+# 📓 Vinatech MES Agent — Hotfix Log (Nhật ký lỗi & Giải pháp)
 
 > **Mục đích:** Bảng lưu trữ lịch sử các con bug đã được AI xử lý thành công. File này đóng vai trò là "Bộ nhớ dài hạn" để AI tra cứu trước khi xử lý các sự cố tiếp theo nhằm tự tối ưu bản thân qua thời gian.
 > **Quy trình:** Khi hoàn thành fix bất kỳ lỗi nào, AI bắt buộc phải mô tả chi tiết lỗi vào danh sách dưới đây và thực hiện commit.
@@ -482,4 +482,21 @@ BEGIN
 	/*END*/
 
 END
+  ```
+
+### 📍 ID_20 - B767 - S/N of the first label (Outer label) is blank on Sanmina lab...
+* **Ngay sua:** `2026-07-16`
+* **Man hinh lien quan (TCode):** `B767 - Chua xac dinh`
+* **Trieu chung loi:** S/N of the first label (Outer label) is blank on Sanmina label print
+* **Nguyen nhan goc (Root Cause):** Stored procedure usp_SanminaLabelPrint_get_Vietnam set PrintSerialNo to empty and BoxSerialNo to first inner serial for Outer label. Changed it to output comma-separated list of inner box serials for both.
+* **Phuong an sua loi (SQL Patch / Action):**
+  ```sql
+-- 1. Cap nhat stored procedure lay du lieu in tem:
+ALTER PROCEDURE [dbo].[usp_SanminaLabelPrint_get_Vietnam] ... (BoxSerialNo and PrintSerialNo case expressions changed to combine Inner1Serial and Inner2Serial with comma-separated values for Outer label class)
+
+-- 2. Thay doi do dai cot BoxSerialNo trong bang lich su in de phu hop voi chuoi gop cua tem Outer:
+ALTER TABLE STB_SanminaIndiaLabelPrintHist ALTER COLUMN BoxSerialNo VARCHAR(50);
+
+-- 3. Cap nhat tham so @pBoxSerialNo trong stored procedure insert lich su:
+ALTER PROCEDURE [dbo].[usp_SanminaIndiaLabelPrintHist_iud] ... (@pBoxSerialNo VARCHAR(50) = NULL)
   ```
