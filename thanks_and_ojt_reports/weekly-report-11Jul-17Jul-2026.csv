@@ -1,0 +1,36 @@
+NAME,DEPARTMENT,DATE GET ISSUE,NAME ISSUE,THE SOLVE,TYPE ISSUE,DATE SOLVE ISSUE,SOLVE ISSUE BY,STATUS,REMARK
+Nguyen Van Duc,EA Team,11/7/2026,Sanmina Customer Label Edit,Hỗ trợ sửa đổi và cấu hình in con tem cho khách hàng Sanmina trên hệ thống MES.,Support,11/7/2026,Nguyen Van Duc,Done,MES
+Nguyen Van Duc,EA Team,11/7/2026,Work Software Installation — Purchase Team,Hỗ trợ cài đặt các phần mềm phục vụ công việc cho người dùng thuộc bộ phận Purchase.,Support,11/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,11/7/2026,Disable Software Startup — Anh Cuong Production,Hỗ trợ cấu hình tắt tính năng tự khởi động của phần mềm khi mở máy tính cho anh Cương bộ phận Sản xuất.,Support,11/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,11/7/2026,Office Activation Support,Hỗ trợ người dùng kích hoạt bản quyền Microsoft Office.,Support,11/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,13/7/2026,ECM Login Support,Hỗ trợ người dùng khắc phục sự cố tài khoản và đăng nhập vào hệ thống ECM.,Support,13/7/2026,Nguyen Van Duc,Done,ECM
+Nguyen Van Duc,EA Team,13/7/2026,MES User Support,Hỗ trợ kiểm tra lỗi hiển thị và xử lý dữ liệu trên hệ thống MES cho người dùng.,Support,13/7/2026,Nguyen Van Duc,Done,MES
+Nguyen Van Duc,EA Team,13/7/2026,ERP Personnel Data Entry,Nhập thông tin lý lịch và dữ liệu nhân sự mới vào hệ thống ERP.,Support,13/7/2026,Nguyen Van Duc,Done,GW
+Nguyen Van Duc,EA Team,13/7/2026,Network Connectivity Check,Kiểm tra độ ổn định của mạng LAN/Wifi và tối ưu hóa kết nối tại văn phòng.,Support,13/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,13/7/2026,IT Equipment Recovery,Thu hồi và bàn giao lại các thiết bị IT của nhân viên nghỉ việc.,Support,13/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,13/7/2026,PDF Reader Installation,Hỗ trợ cài đặt phần mềm đọc và chỉnh sửa file PDF cho người dùng.,Support,13/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,14/7/2026,MES Support — Anh Luan QC,Hỗ trợ xử lý nghiệp vụ và khắc phục lỗi trên hệ thống MES cho anh Luân bộ phận QC.,Support,14/7/2026,Nguyen Van Duc,Done,MES
+Nguyen Van Duc,EA Team,14/7/2026,Software Update — Anh Cong IQC,Hỗ trợ cập nhật phần mềm làm việc lên phiên bản mới cho anh Công bộ phận IQC.,Support,14/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,14/7/2026,FortiClient Support — Chi Lan Anh QC,Hỗ trợ cài đặt và cấu hình phần mềm FortiClient VPN cho chị Lan Anh bộ phận QC.,Support,14/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,14/7/2026,ECM Login Support,Hỗ trợ người dùng khắc phục lỗi không đăng nhập được vào hệ thống ECM.,Support,14/7/2026,Nguyen Van Duc,Done,ECM
+Nguyen Van Duc,EA Team,14/7/2026,MES Support — Chi Thao Ha Nam,Hỗ trợ nghiệp vụ và xử lý lỗi hệ thống MES cho chị Thảo tại chi nhánh Hà Nam.,Support,14/7/2026,Nguyen Van Duc,Done,MES
+Nguyen Van Duc,EA Team,14/7/2026,Device Setup for New User,Lắp đặt và cấu hình thiết bị máy tính; thiết bị ngoại vi cho nhân viên mới.,Support,14/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,15/7/2026,Software & Hardware Setup — New User,Hỗ trợ lắp đặt thiết bị phần cứng và cài đặt các phần mềm văn phòng; làm việc cho nhân viên mới.,Support,15/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,15/7/2026,Groupware Account Creation,Tạo tài khoản Groupware (GW) cho người dùng mới trên hệ thống.,Support,15/7/2026,Nguyen Van Duc,Done,GW
+Nguyen Van Duc,EA Team,15/7/2026,Auto Software Setup Support — Anh Tam Nguyen,Hỗ trợ anh Tâm Nguyễn chạy script tự động cài đặt và cấu hình các phần mềm làm việc.,Support,15/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,15/7/2026,Printer Connection — Production & QC AM,Hỗ trợ kết nối máy in văn phòng và cấu hình driver cho bộ phận AM của Sản xuất và QC.,Support,15/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,15/7/2026,Windows Reinstallation,Cài đặt lại hệ điều hành Windows và các ứng dụng văn phòng cơ bản cho máy tính gặp sự cố.,Support,15/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,16/7/2026,Account Login Support,Hỗ trợ người dùng đăng nhập các tài khoản hệ thống (Email; Portal; Windows).,Support,16/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,16/7/2026,NAIS System Account Creation,Tạo và phân quyền tài khoản hệ thống NAIS System cho người dùng mới.,Support,16/7/2026,Nguyen Van Duc,Done,MES
+Nguyen Van Duc,EA Team,16/7/2026,Network Cable Deployment — IQC,Tiến hành đi dây mạng LAN kết nối internet cho khu vực làm việc của bộ phận IQC.,Support,16/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,16/7/2026,Printer Label Alignment — Production,Hỗ trợ căn chỉnh vị trí in và kích thước con tem trên máy in barcode cho bộ phận Sản xuất.,Support,16/7/2026,Nguyen Van Duc,Done,MES
+Nguyen Van Duc,EA Team,16/7/2026,Printer Connection for New User,Cấu hình và kết nối máy in văn phòng cho máy tính của nhân viên mới.,Support,16/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,16/7/2026,Vendor Supervision & Support,Hỗ trợ và giám sát nhà thầu (vendor) thực hiện thi công lắp đặt hạ tầng mạng; thiết bị tại nhà máy.,Support,16/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,16/7/2026,MES Account Creation for New User,Hỗ trợ tạo mới tài khoản đăng nhập hệ thống MES cho nhân viên mới.,Support,16/7/2026,Nguyen Van Duc,Done,MES
+Nguyen Van Duc,EA Team,16/7/2026,ECM Login Support,Hỗ trợ người dùng đăng nhập tài khoản vào hệ thống quản lý tài liệu ECM.,Support,16/7/2026,Nguyen Van Duc,Done,ECM
+Nguyen Van Duc,EA Team,16/7/2026,Printer Connection Support,Hỗ trợ người dùng cấu hình và kết nối với máy in mạng trong văn phòng.,Support,16/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,17/7/2026,MES Screen Troubleshooting,Hỗ trợ kiểm tra lỗi hiển thị và cập nhật màn hình nghiệp vụ trên hệ thống MES cho user.,Support,17/7/2026,Nguyen Van Duc,Done,MES
+Nguyen Van Duc,EA Team,17/7/2026,Password Reset Support,Hỗ trợ khôi phục mật khẩu tài khoản hệ thống cho các user gặp sự cố đăng nhập.,Support,17/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,17/7/2026,Damaged IT Equipment Collection,Tiến hành thu hồi; phân loại các thiết bị IT bị hỏng đưa về kho bảo quản.,Support,17/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,17/7/2026,Software Troubleshooting,Hỗ trợ người dùng khắc phục lỗi phần mềm làm việc không hoạt động hoặc bị xung đột hệ thống.,Support,17/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,17/7/2026,ECM System Support,Hỗ trợ giải đáp các thắc mắc nghiệp vụ và xử lý lỗi trên hệ thống quản lý tài liệu ECM.,Support,17/7/2026,Nguyen Van Duc,Done,ECM
