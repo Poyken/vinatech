@@ -5,11 +5,15 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useCart } from '../context/CartContext';
 import { useTheme } from '../context/ThemeContext';
-import { ShoppingCart, Search, Menu, X, Disc, Phone, Sun, Moon } from 'lucide-react';
+import { useCompare } from '../context/CompareContext';
+import { useAudio } from '../context/AudioContext';
+import { ShoppingCart, Search, Menu, X, Disc, Phone, Sun, Moon, SlidersHorizontal } from 'lucide-react';
 
 export default function Header() {
   const { cartCount, setCartOpen } = useCart();
   const { theme, toggleTheme } = useTheme();
+  const { compareItems, setCompareModalOpen } = useCompare();
+  const { isPlaying } = useAudio();
   const pathname = usePathname();
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
@@ -78,7 +82,7 @@ export default function Header() {
             {/* Brand Logo */}
             <Link href="/" className="flex items-center gap-2.5 group flex-shrink-0">
               <div className="relative">
-                <Disc className="w-8 h-8 text-primary animate-spin-slow group-hover:scale-110 transition-all" style={{ animationDuration: '6s' }} />
+                <Disc className={`w-8 h-8 text-primary group-hover:scale-110 transition-all ${isPlaying ? 'animate-spin-slow text-amber-500' : ''}`} style={{ animationDuration: '6s' }} />
                 <div className="absolute inset-0 rounded-full bg-primary/10 scale-0 group-hover:scale-150 transition-transform duration-500 opacity-0 group-hover:opacity-100" />
               </div>
               <div className="flex flex-col leading-none">
@@ -129,6 +133,23 @@ export default function Header() {
 
             {/* Action Buttons */}
             <div className="flex items-center gap-3 flex-shrink-0">
+              
+              {/* Compare Button */}
+              {compareItems.length > 0 && (
+                <button
+                  type="button"
+                  onClick={() => setCompareModalOpen(true)}
+                  className="relative p-2.5 bg-primary/10 border border-primary/30 hover:border-primary rounded-xl text-primary font-bold text-xs flex items-center gap-1.5 transition-all active:scale-95 shadow-sm"
+                  aria-label="So sánh loa"
+                >
+                  <SlidersHorizontal className="w-4 h-4" />
+                  <span className="hidden sm:inline">So Sánh</span>
+                  <span className="bg-primary text-white text-[10px] font-extrabold w-4 h-4 rounded-full flex items-center justify-center">
+                    {compareItems.length}
+                  </span>
+                </button>
+              )}
+
               {/* Theme Toggle Button */}
               <button
                 type="button"

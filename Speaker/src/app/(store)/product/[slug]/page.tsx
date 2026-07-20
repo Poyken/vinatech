@@ -1,9 +1,10 @@
 import React from 'react';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { dataService } from '../../../lib/dataService';
-import ProductDetailInteractive from '../../../components/ProductDetailInteractive';
-import ProductCard from '../../../components/ProductCard';
+import { productService } from '../../../../services/productService';
+import { categoryService } from '../../../../services/categoryService';
+import ProductDetailInteractive from '../../../../components/ProductDetailInteractive';
+import ProductCard from '../../../../components/ProductCard';
 import { Metadata } from 'next';
 
 interface PageProps {
@@ -15,7 +16,7 @@ export const revalidate = 0; // Ensure data is loaded in real-time
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const resolvedParams = await params;
   const { slug } = resolvedParams;
-  const product = await dataService.getProductBySlug(slug);
+  const product = await productService.getProductBySlug(slug);
 
   if (!product) {
     return {
@@ -34,22 +35,20 @@ export default async function ProductDetailPage({ params }: PageProps) {
   const resolvedParams = await params;
   const { slug } = resolvedParams;
 
-  const product = await dataService.getProductBySlug(slug);
+  const product = await productService.getProductBySlug(slug);
 
   if (!product) {
     notFound();
   }
 
-  // Fetch related products (same category, excluding current product)
-  const allRelated = await dataService.getProducts({ 
+  const allRelated = await productService.getProducts({ 
     categoryId: product.categoryId 
   });
   const relatedProducts = allRelated
     .filter(p => p.id !== product.id)
-    .slice(0, 3); // limit to 3 items
+    .slice(0, 3);
 
-  // Fetch category name
-  const categories = await dataService.getCategories();
+  const categories = await categoryService.getCategories();
   const category = categories.find(c => c.id === product.categoryId);
 
   return (

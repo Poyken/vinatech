@@ -3,9 +3,9 @@ import { Inter, Plus_Jakarta_Sans } from 'next/font/google';
 import './globals.css';
 import { CartProvider } from '../context/CartContext';
 import { ThemeProvider } from '../context/ThemeContext';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
-import CartDrawer from '../components/CartDrawer';
+import { ToastProvider } from '../context/ToastContext';
+import { AudioProvider } from '../context/AudioContext';
+import { CompareProvider } from '../context/CompareContext';
 
 const inter = Inter({
   variable: '--font-inter',
@@ -32,16 +32,17 @@ export default function RootLayout({
       lang="vi"
       className={`${inter.variable} ${plusJakartaSans.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-background text-foreground font-sans">
+      <body className="min-h-full flex flex-col bg-background text-foreground font-sans selection:bg-primary/20 selection:text-primary">
         <ThemeProvider>
-          <CartProvider>
-            <Header />
-            <main className="flex-1 flex flex-col">
-              {children}
-            </main>
-            <Footer />
-            <CartDrawer />
-          </CartProvider>
+          <ToastProvider>
+            <AudioProvider>
+              <CompareProvider>
+                <CartProvider>
+                  {children}
+                </CartProvider>
+              </CompareProvider>
+            </AudioProvider>
+          </ToastProvider>
         </ThemeProvider>
       </body>
     </html>

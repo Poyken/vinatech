@@ -1,9 +1,10 @@
 import React from 'react';
 import Link from 'next/link';
-import { dataService } from '../lib/dataService';
-import ProductCard from '../components/ProductCard';
-import SoundQuizWidget from '../components/SoundQuizWidget';
-import { Sparkles, Shield, Truck, Zap, Headphones, Disc, Speaker, Tv, Smartphone, Volume2, Music4 } from 'lucide-react';
+import { productService } from '../../services/productService';
+import { categoryService } from '../../services/categoryService';
+import ProductCard from '../../components/ProductCard';
+import SoundQuizWidget from '../../components/SoundQuizWidget';
+import { Sparkles, Shield, Truck, Zap, Headphones, Speaker, Tv, Smartphone, Volume2, Music4 } from 'lucide-react';
 
 export const revalidate = 0; // Fresh data on reload
 
@@ -25,8 +26,8 @@ const getCategoryIcon = (id: string) => {
 };
 
 export default async function HomePage() {
-  const categories = await dataService.getCategories();
-  const allProducts = await dataService.getProducts();
+  const categories = await categoryService.getCategories();
+  const allProducts = await productService.getProducts();
   const featuredProducts = allProducts.filter((p) => p.rating >= 4.7).slice(0, 4);
 
   const benefits = [

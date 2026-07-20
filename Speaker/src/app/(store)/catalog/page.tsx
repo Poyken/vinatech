@@ -1,7 +1,8 @@
 import React from 'react';
-import { dataService } from '../../lib/dataService';
-import ProductCard from '../../components/ProductCard';
-import CatalogFilters from '../../components/CatalogFilters';
+import { productService } from '../../../services/productService';
+import { categoryService } from '../../../services/categoryService';
+import ProductCard from '../../../components/ProductCard';
+import CatalogFilters from '../../../components/CatalogFilters';
 import { SlidersHorizontal } from 'lucide-react';
 
 interface PageProps {
@@ -11,6 +12,8 @@ interface PageProps {
     brand?: string;
     type?: string;
     sort?: string;
+    minPrice?: string;
+    maxPrice?: string;
   }>;
 }
 
@@ -19,26 +22,26 @@ export const revalidate = 0; // Bypass cache to ensure real-time search/filters
 export default async function CatalogPage({ searchParams }: PageProps) {
   const resolvedParams = await searchParams;
   
-  // Extract parameters
   const categoryId = resolvedParams.categoryId || undefined;
   const search = resolvedParams.search || undefined;
   const brand = resolvedParams.brand || undefined;
   const type = resolvedParams.type || undefined;
   const sort = resolvedParams.sort || undefined;
+  const minPrice = resolvedParams.minPrice ? Number(resolvedParams.minPrice) : undefined;
+  const maxPrice = resolvedParams.maxPrice ? Number(resolvedParams.maxPrice) : undefined;
 
-  // Fetch filtered products
-  const products = await dataService.getProducts({
+  const products = await productService.getProducts({
     categoryId,
     search,
     brand,
     type,
     sort,
+    minPrice,
+    maxPrice,
   });
 
-  // Fetch categories for filters
-  const categories = await dataService.getCategories();
+  const categories = await categoryService.getCategories();
 
-  // Preset static filter lists to make UI look professional and structured
   const brands = ['JBL', 'Marshall', 'KEF', 'Klipsch', 'KRK', 'Yamaha'];
   const types = ['Bookshelf', 'Floorstanding', 'Bluetooth', 'Soundbar', 'Monitor'];
 

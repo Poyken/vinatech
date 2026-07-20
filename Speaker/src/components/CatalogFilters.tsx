@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Category } from '../lib/types';
-import { Search, X, Filter } from 'lucide-react';
+import { Search, X, Filter, Volume2 } from 'lucide-react';
 
 interface CatalogFiltersProps {
   categories: Category[];
@@ -17,10 +17,14 @@ export default function CatalogFilters({ categories, brands, types }: CatalogFil
 
   // Local state for search to avoid lagging the URL on each keystroke
   const [searchInput, setSearchInput] = useState(searchParams.get('search') || '');
+  const [minPriceInput, setMinPriceInput] = useState(searchParams.get('minPrice') || '');
+  const [maxPriceInput, setMaxPriceInput] = useState(searchParams.get('maxPrice') || '');
 
   // Sync local search input with URL search param
   useEffect(() => {
     setSearchInput(searchParams.get('search') || '');
+    setMinPriceInput(searchParams.get('minPrice') || '');
+    setMaxPriceInput(searchParams.get('maxPrice') || '');
   }, [searchParams]);
 
   const activeCategoryId = searchParams.get('categoryId') || '';
@@ -43,8 +47,22 @@ export default function CatalogFilters({ categories, brands, types }: CatalogFil
     updateFilters('search', searchInput.trim() || null);
   };
 
+  const handlePriceFilterSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const params = new URLSearchParams(searchParams.toString());
+    if (minPriceInput) params.set('minPrice', minPriceInput);
+    else params.delete('minPrice');
+
+    if (maxPriceInput) params.set('maxPrice', maxPriceInput);
+    else params.delete('maxPrice');
+
+    router.push(`/catalog?${params.toString()}`);
+  };
+
   const handleClearAll = () => {
     setSearchInput('');
+    setMinPriceInput('');
+    setMaxPriceInput('');
     router.push('/catalog');
   };
 
@@ -53,7 +71,9 @@ export default function CatalogFilters({ categories, brands, types }: CatalogFil
     searchParams.has('categoryId') || 
     searchParams.has('brand') || 
     searchParams.has('type') ||
-    searchParams.get('sort') !== 'newest' && searchParams.has('sort');
+    searchParams.has('minPrice') ||
+    searchParams.has('maxPrice') ||
+    (searchParams.get('sort') !== 'newest' && searchParams.has('sort'));
 
   return (
     <div className="space-y-6 bg-card border border-border p-6 rounded-2xl sticky top-24 shadow-lg shadow-black/5 dark:shadow-black/20 text-left">
@@ -103,7 +123,35 @@ export default function CatalogFilters({ categories, brands, types }: CatalogFil
         </select>
       </div>
 
-      {/* 3. Category Filter */}
+      {/* 3. Price Filter */}
+      <form onSubmit={handlePriceFilterSubmit} className="space-y-2">
+        <label className="text-xs font-bold text-muted-text uppercase tracking-wider block">Khoảng Giá (VND)</label>
+        <div className="flex items-center gap-2">
+          <input
+            type="number"
+            placeholder="Từ"
+            value={minPriceInput}
+            onChange={(e) => setMinPriceInput(e.target.value)}
+            className="w-full bg-input-bg border border-border rounded-xl px-3 py-2 text-xs text-foreground focus:outline-none focus:border-primary"
+          />
+          <span className="text-muted-text text-xs font-bold">-</span>
+          <input
+            type="number"
+            placeholder="Đến"
+            value={maxPriceInput}
+            onChange={(e) => setMaxPriceInput(e.target.value)}
+            className="w-full bg-input-bg border border-border rounded-xl px-3 py-2 text-xs text-foreground focus:outline-none focus:border-primary"
+          />
+        </div>
+        <button
+          type="submit"
+          className="w-full py-2 bg-input-bg hover:bg-card-hover border border-border text-foreground text-xs font-bold rounded-xl transition-all"
+        >
+          Áp Dụng Giá
+        </button>
+      </form>
+
+      {/* 4. Category Filter */}
       <div className="space-y-2.5">
         <label className="text-xs font-bold text-muted-text uppercase tracking-wider">Dòng Loa</label>
         <div className="flex flex-col gap-1.5">
@@ -133,7 +181,7 @@ export default function CatalogFilters({ categories, brands, types }: CatalogFil
         </div>
       </div>
 
-      {/* 4. Brand Filter */}
+      {/* 5. Brand Filter */}
       <div className="space-y-2.5">
         <label className="text-xs font-bold text-muted-text uppercase tracking-wider">Hãng Sản Xuất</label>
         <div className="flex flex-wrap gap-1.5">
@@ -163,7 +211,7 @@ export default function CatalogFilters({ categories, brands, types }: CatalogFil
         </div>
       </div>
 
-      {/* 5. Type (Internal Layout type) Filter */}
+      {/* 6. Type Filter */}
       <div className="space-y-2.5">
         <label className="text-xs font-bold text-muted-text uppercase tracking-wider">Kiểu Loa</label>
         <div className="flex flex-wrap gap-1.5">

@@ -1,8 +1,9 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Order, Product, Category } from '../../lib/types';
-import { Package, ShieldCheck, ChevronDown, ChevronUp, Plus, Trash2, ListOrdered, PlusCircle, TrendingUp, AlertTriangle, Lock, LogOut } from 'lucide-react';
+import { Order, Product, Category } from '../../../lib/types';
+import { useToast } from '../../../context/ToastContext';
+import { Package, ShieldCheck, ChevronDown, ChevronUp, Plus, Trash2, ListOrdered, TrendingUp, AlertTriangle, LogOut, CheckCircle2, Clock, XCircle, RefreshCw } from 'lucide-react';
 import Link from 'next/link';
 import { useSession, signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
@@ -10,11 +11,13 @@ import { useRouter } from 'next/navigation';
 export default function AdminPage() {
   const router = useRouter();
   const { data: session, status } = useSession();
+  const { showToast } = useToast();
   const [activeTab, setActiveTab] = useState<'orders' | 'add-product'>('orders');
   const [orders, setOrders] = useState<Order[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [expandedOrderId, setExpandedOrderId] = useState<string | null>(null);
+  const [updatingOrderId, setUpdatingOrderId] = useState<string | null>(null);
 
   // Redirect to login if unauthenticated
   useEffect(() => {
@@ -60,59 +63,86 @@ export default function AdminPage() {
       if (res.ok) {
         const data = await res.json();
         setProductImage(data.url);
+        showToast('Tải ảnh thành công', 'Ảnh sản phẩm đã sẵn sàng', 'success');
       } else {
-        alert('Tải ảnh thất bại!');
+        showToast('Tải ảnh thất bại', 'Vui lòng kiểm tra lại file ảnh', 'error');
       }
     } catch (err) {
       console.error(err);
-      alert('Lỗi kết nối tải ảnh!');
+      showToast('Lỗi tải ảnh', 'Không thể kết nối đến server upload', 'error');
     } finally {
       setIsUploading(false);
     }
   };
 
   // Load orders, categories, and products on mount
-  useEffect(() => {
-    async function loadData() {
-      try {
-        const ordersRes = await fetch('/api/orders');
-        if (ordersRes.ok) {
-          const allOrders = await ordersRes.json();
-          setOrders(allOrders);
-        }
-
-        const catsRes = await fetch('/api/categories');
-        if (catsRes.ok) {
-          const allCategories = await catsRes.json();
-          setCategories(allCategories);
-          if (allCategories.length > 0 && !productCategoryId) {
-            setProductCategoryId(allCategories[0].id);
-          }
-        }
-
-        const productsRes = await fetch('/api/products');
-        if (productsRes.ok) {
-          const allProducts = await productsRes.json();
-          setProducts(allProducts);
-        }
-      } catch (err) {
-        console.error('Failed to load admin data:', err);
+  const loadData = async () => {
+    try {
+      const ordersRes = await fetch('/api/orders');
+      if (ordersRes.ok) {
+        const allOrders = await ordersRes.json();
+        setOrders(allOrders);
       }
+
+      const catsRes = await fetch('/api/categories');
+      if (catsRes.ok) {
+        const allCategories = await catsRes.json();
+        setCategories(allCategories);
+        if (allCategories.length > 0 && !productCategoryId) {
+          setProductCategoryId(allCategories[0].id);
+        }
+      }
+
+      const productsRes = await fetch('/api/products');
+      if (productsRes.ok) {
+        const allProducts = await productsRes.json();
+        setProducts(allProducts);
+      }
+    } catch (err) {
+      console.error('Failed to load admin data:', err);
     }
+  };
+
+  useEffect(() => {
     loadData();
   }, [activeTab, productCategoryId]);
+
+  // Handle status update
+  const handleUpdateOrderStatus = async (orderId: string, newStatus: string) => {
+    setUpdatingOrderId(orderId);
+    try {
+      const res = await fetch('/api/orders', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orderId, status: newStatus }),
+      });
+
+      if (res.ok) {
+        setOrders((prev) =>
+          prev.map((o) => (o.id === orderId ? { ...o, status: newStatus } : o))
+        );
+        showToast('Cập nhật trạng thái thành công', `Đơn hàng #${orderId.substring(4, 10).toUpperCase()} -> ${newStatus}`, 'success');
+      } else {
+        showToast('Cập nhật trạng thái thất bại', 'Có lỗi xảy ra', 'error');
+      }
+    } catch (err) {
+      console.error(err);
+      showToast('Lỗi kết nối', 'Không thể gửi yêu cầu đến server', 'error');
+    } finally {
+      setUpdatingOrderId(null);
+    }
+  };
 
   // Handle auto slug generation
   const handleNameChange = (name: string) => {
     setProductName(name);
-    // Generate simple slug (lowercase, replace space with hyphen, remove accent characters)
     const slug = name
       .toLowerCase()
       .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '') // remove accents
-      .replace(/[^a-z0-9\s-]/g, '') // remove special characters
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9\s-]/g, '')
       .trim()
-      .replace(/\s+/g, '-'); // replace spaces with hyphens
+      .replace(/\s+/g, '-');
     setProductSlug(slug);
   };
 
@@ -134,7 +164,6 @@ export default function AdminPage() {
     e.preventDefault();
     if (!productName || !productSlug || !productPrice || !productCategoryId) return;
 
-    // Convert specs array to Json Record
     const specRecord: Record<string, string> = {};
     specs.forEach((item) => {
       if (item.key.trim() && item.value.trim()) {
@@ -168,7 +197,6 @@ export default function AdminPage() {
         throw new Error('Failed to create product');
       }
 
-      // Clear Form
       setProductImage('');
       setProductName('');
       setProductSlug('');
@@ -183,10 +211,11 @@ export default function AdminPage() {
         { key: 'Kết nối', value: 'Bluetooth 5.0, AUX' },
       ]);
       setFormSuccess(true);
+      showToast('Đã thêm sản phẩm loa mới', productName, 'success');
       setTimeout(() => setFormSuccess(false), 3000);
     } catch (err) {
       console.error('Failed to add product:', err);
-      alert('Có lỗi xảy ra khi tạo sản phẩm.');
+      showToast('Lỗi tạo sản phẩm', 'Không thể lưu sản phẩm mới.', 'error');
     }
   };
 
@@ -198,11 +227,9 @@ export default function AdminPage() {
     setExpandedOrderId(expandedOrderId === id ? null : id);
   };
 
-  // Calculate statistics metrics
   const totalRevenue = orders.reduce((sum, o) => sum + o.total, 0);
   const lowStockCount = products.filter((p) => p.stock <= 5).length;
 
-  // Loading or redirecting state
   if (status === 'loading') {
     return (
       <div className="min-h-[60vh] flex items-center justify-center">
@@ -215,7 +242,7 @@ export default function AdminPage() {
   }
 
   if (!session) {
-    return null; // Will redirect via useEffect
+    return null;
   }
 
   return (
@@ -312,9 +339,18 @@ export default function AdminPage() {
       {/* Tab 1: Orders Management */}
       {activeTab === 'orders' && (
         <div className="space-y-6">
-          <h2 className="text-lg font-bold text-foreground uppercase border-l-2 border-primary pl-3">
-            Danh sách đơn hàng nhận được
-          </h2>
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-bold text-foreground uppercase border-l-2 border-primary pl-3">
+              Danh sách đơn hàng nhận được
+            </h2>
+            <button
+              onClick={loadData}
+              className="text-xs text-primary font-bold flex items-center gap-1 hover:underline"
+            >
+              <RefreshCw className="w-3.5 h-3.5" />
+              Làm mới
+            </button>
+          </div>
 
           {orders.length === 0 ? (
             <div className="text-center py-16 bg-card border border-border rounded-2xl shadow-sm">
@@ -327,6 +363,21 @@ export default function AdminPage() {
               {orders.map((order) => {
                 const isExpanded = expandedOrderId === order.id;
                 const orderCode = order.id.substring(4, 12).toUpperCase();
+
+                const getStatusColor = (st: string) => {
+                  switch (st) {
+                    case 'COMPLETED':
+                      return 'bg-green-500/10 text-green-500 border-green-500/20';
+                    case 'PROCESSING':
+                      return 'bg-blue-500/10 text-blue-500 border-blue-500/20';
+                    case 'CANCELLED':
+                      return 'bg-red-500/10 text-red-500 border-red-500/20';
+                    case 'PENDING':
+                    default:
+                      return 'bg-amber-500/10 text-amber-500 border-amber-500/20';
+                  }
+                };
+
                 return (
                   <div 
                     key={order.id}
@@ -344,7 +395,7 @@ export default function AdminPage() {
                         <div>
                           <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
                             Đơn hàng #{orderCode}
-                            <span className="text-[10px] bg-amber-500/10 text-amber-400 font-extrabold px-1.5 py-0.5 rounded uppercase border border-amber-500/20">
+                            <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded uppercase border ${getStatusColor(order.status)}`}>
                               {order.status}
                             </span>
                           </h4>
@@ -363,9 +414,59 @@ export default function AdminPage() {
                       </div>
                     </div>
 
-                    {/* Expandable Order Details Panel */}
+                    {/* Expandable Order Details & Status Update Panel */}
                     {isExpanded && (
-                      <div className="px-5 pb-5 pt-3 border-t border-border bg-muted-bg/10 text-xs space-y-4 animate-in slide-in-from-top-2 duration-200">
+                      <div className="px-5 pb-5 pt-3 border-t border-border bg-muted-bg/10 text-xs space-y-4 animate-fade-in">
+                        {/* Status Change Buttons */}
+                        <div className="p-3 bg-card border border-border rounded-xl flex flex-wrap items-center justify-between gap-3">
+                          <span className="font-bold text-foreground uppercase text-[11px]">Cập nhật trạng thái đơn:</span>
+                          <div className="flex flex-wrap gap-2">
+                            <button
+                              onClick={() => handleUpdateOrderStatus(order.id, 'PENDING')}
+                              disabled={updatingOrderId === order.id}
+                              className={`px-3 py-1.5 rounded-lg border text-[11px] font-bold flex items-center gap-1 transition-all ${
+                                order.status === 'PENDING' ? 'bg-amber-500 text-white border-amber-500' : 'bg-input-bg border-border text-muted-text hover:text-foreground'
+                              }`}
+                            >
+                              <Clock className="w-3.5 h-3.5" />
+                              Pending
+                            </button>
+
+                            <button
+                              onClick={() => handleUpdateOrderStatus(order.id, 'PROCESSING')}
+                              disabled={updatingOrderId === order.id}
+                              className={`px-3 py-1.5 rounded-lg border text-[11px] font-bold flex items-center gap-1 transition-all ${
+                                order.status === 'PROCESSING' ? 'bg-blue-500 text-white border-blue-500' : 'bg-input-bg border-border text-muted-text hover:text-foreground'
+                              }`}
+                            >
+                              <RefreshCw className="w-3.5 h-3.5" />
+                              Processing
+                            </button>
+
+                            <button
+                              onClick={() => handleUpdateOrderStatus(order.id, 'COMPLETED')}
+                              disabled={updatingOrderId === order.id}
+                              className={`px-3 py-1.5 rounded-lg border text-[11px] font-bold flex items-center gap-1 transition-all ${
+                                order.status === 'COMPLETED' ? 'bg-green-500 text-white border-green-500' : 'bg-input-bg border-border text-muted-text hover:text-foreground'
+                              }`}
+                            >
+                              <CheckCircle2 className="w-3.5 h-3.5" />
+                              Completed
+                            </button>
+
+                            <button
+                              onClick={() => handleUpdateOrderStatus(order.id, 'CANCELLED')}
+                              disabled={updatingOrderId === order.id}
+                              className={`px-3 py-1.5 rounded-lg border text-[11px] font-bold flex items-center gap-1 transition-all ${
+                                order.status === 'CANCELLED' ? 'bg-red-500 text-white border-red-500' : 'bg-input-bg border-border text-muted-text hover:text-foreground'
+                              }`}
+                            >
+                              <XCircle className="w-3.5 h-3.5" />
+                              Cancelled
+                            </button>
+                          </div>
+                        </div>
+
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-muted-text">
                           <div>
                             <h5 className="font-bold text-foreground uppercase mb-2">Chi tiết người nhận</h5>
@@ -623,7 +724,7 @@ export default function AdminPage() {
           <div className="space-y-4 text-left">
             <div className="flex items-center justify-between border-b border-border pb-2">
               <h3 className="text-xs font-bold text-foreground uppercase tracking-wider flex items-center gap-1">
-                <PlusCircle className="w-4 h-4 text-primary" />
+                <Plus className="w-4 h-4 text-primary" />
                 Bộ thông số kỹ thuật chi tiết
               </h3>
               <button
@@ -670,7 +771,7 @@ export default function AdminPage() {
           {/* Submit */}
           <button
             type="submit"
-            className="w-full py-4 bg-gradient-to-r from-orange-600 to-amber-600 text-white font-extrabold uppercase text-xs tracking-wider rounded-xl transition-all hover:scale-[1.01] active:scale-[0.99] shadow-md shadow-primary/10"
+            className="w-full py-4 bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 text-white font-extrabold uppercase text-xs tracking-wider rounded-xl transition-all hover:scale-[1.01] active:scale-[0.99] shadow-md shadow-primary/10 btn-premium"
           >
             Lưu Loa Mới Vào Cửa Hàng
           </button>

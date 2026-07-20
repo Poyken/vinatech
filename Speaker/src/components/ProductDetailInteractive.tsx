@@ -1,9 +1,11 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Product, Review } from '../lib/types';
 import { useCart } from '../context/CartContext';
-import { Star, ShoppingCart, Play, Pause, Send, User, CheckCircle2 } from 'lucide-react';
+import { useAudio } from '../context/AudioContext';
+import { useToast } from '../context/ToastContext';
+import { Star, ShoppingCart, Play, Pause, Send, User, CheckCircle2, Volume2, Disc, ShieldCheck } from 'lucide-react';
 
 interface ProductDetailInteractiveProps {
   product: Product;
@@ -12,15 +14,12 @@ interface ProductDetailInteractiveProps {
 
 export default function ProductDetailInteractive({ product, initialReviews }: ProductDetailInteractiveProps) {
   const { addToCart } = useCart();
+  const { playProductAudio, currentProduct, isPlaying } = useAudio();
+  const { showToast } = useToast();
+
   const [selectedImage, setSelectedImage] = useState(product.images[0] || '');
   const [quantity, setQuantity] = useState(1);
-  
-  // Audio state
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [audioProgress, setAudioProgress] = useState(0);
-  const [waveHeights, setWaveHeights] = useState<number[]>(new Array(24).fill(20));
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const isAudioActive = currentProduct?.id === product.id && isPlaying;
 
   // Review states
   const [reviews, setReviews] = useState<Review[]>(initialReviews);
@@ -34,55 +33,18 @@ export default function ProductDetailInteractive({ product, initialReviews }: Pr
     setSelectedImage(product.images[0] || '');
   }, [product]);
 
-  // Setup simulated audio URL if none provided
-  const demoAudioUrl = product.audioUrl || 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3';
-
-  // Audio effect
-  useEffect(() => {
-    return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
-      }
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
-    };
-  }, []);
-
-  const handlePlayPause = () => {
-    if (!audioRef.current) {
-      audioRef.current = new Audio(demoAudioUrl);
-      audioRef.current.loop = true;
-      audioRef.current.addEventListener('timeupdate', () => {
-        if (audioRef.current) {
-          const progress = (audioRef.current.currentTime / audioRef.current.duration) * 100;
-          setAudioProgress(isNaN(progress) ? 0 : progress);
-        }
-      });
-      audioRef.current.addEventListener('ended', () => {
-        setIsPlaying(false);
-        setAudioProgress(0);
-      });
-    }
-
-    if (isPlaying) {
-      audioRef.current.pause();
-      setIsPlaying(false);
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
-      setWaveHeights(new Array(24).fill(20));
+  const handlePlayAudioDemo = () => {
+    if (product.audioUrl) {
+      playProductAudio(product);
+      showToast(isAudioActive ? 'Tạm dừng bản nhạc thử' : 'Đang phát bản nhạc thử', product.name, 'info');
     } else {
-      audioRef.current.play().catch(err => console.log('Audio playback prevented or failed:', err));
-      setIsPlaying(true);
-      
-      // Animate the sound wave equalizer
-      intervalRef.current = setInterval(() => {
-        setWaveHeights(prev => 
-          prev.map(() => Math.floor(Math.random() * 85) + 15)
-        );
-      }, 100);
+      showToast('Chưa có mẫu âm thanh', product.name, 'info');
     }
+  };
+
+  const handleAddToCart = () => {
+    addToCart(product, quantity);
+    showToast('Đã thêm vào giỏ hàng', `${quantity}x ${product.name}`, 'success');
   };
 
   const handleAddReview = async (e: React.FormEvent) => {
@@ -113,10 +75,11 @@ export default function ProductDetailInteractive({ product, initialReviews }: Pr
       setReviewComment('');
       setReviewRating(5);
       setReviewSuccess(true);
+      showToast('Cảm ơn bạn đã gửi đánh giá!', product.name, 'success');
       setTimeout(() => setReviewSuccess(false), 3000);
     } catch (err) {
       console.error(err);
-      alert('Có lỗi xảy ra khi gửi đánh giá.');
+      showToast('Có lỗi xảy ra khi gửi đánh giá', 'Vui lòng thử lại sau', 'error');
     }
   };
 
@@ -131,31 +94,32 @@ export default function ProductDetailInteractive({ product, initialReviews }: Pr
         
         {/* Left Column: Gallery */}
         <div className="lg:col-span-6 space-y-4">
-          <div className="aspect-square bg-card border border-border rounded-3xl flex items-center justify-center overflow-hidden relative group shadow-sm">
+          <div className="aspect-square bg-card border border-border rounded-3xl flex items-center justify-center overflow-hidden relative group shadow-lg transition-all duration-500 hover:border-primary/40">
             {selectedImage ? (
               <img 
                 src={selectedImage} 
                 alt={product.name} 
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
               />
             ) : (
               <span className="text-8xl select-none group-hover:scale-105 transition-transform duration-500">🔊</span>
             )}
-            <span className="absolute bottom-4 left-4 bg-card/90 backdrop-blur-sm border border-border px-3 py-1 rounded-full text-xs text-primary font-bold shadow-sm">
+            <span className="absolute bottom-4 left-4 bg-card/90 backdrop-blur-md border border-border px-3 py-1 rounded-full text-xs text-primary font-bold shadow-sm">
               {product.brand} Original
             </span>
           </div>
+
           {product.images.length > 1 && (
             <div className="flex gap-3">
               {product.images.map((img, index) => (
                 <button
                   key={index}
                   onClick={() => setSelectedImage(img)}
-                  className={`w-20 h-20 bg-input-bg border rounded-xl flex items-center justify-center overflow-hidden hover:border-primary transition-all p-1 shadow-sm ${
-                    selectedImage === img ? 'border-primary ring-2 ring-primary/10' : 'border-border'
+                  className={`w-20 h-20 bg-input-bg border rounded-2xl flex items-center justify-center overflow-hidden hover:border-primary transition-all duration-300 p-1 shadow-sm ${
+                    selectedImage === img ? 'border-primary ring-2 ring-primary/20 scale-105' : 'border-border opacity-70 hover:opacity-100'
                   }`}
                 >
-                  <img src={img} alt="" className="w-full h-full object-cover rounded-lg" />
+                  <img src={img} alt="" className="w-full h-full object-cover rounded-xl" />
                 </button>
               ))}
             </div>
@@ -165,8 +129,8 @@ export default function ProductDetailInteractive({ product, initialReviews }: Pr
         {/* Right Column: Information Panel */}
         <div className="lg:col-span-6 space-y-6 text-left">
           <div>
-            <span className="text-xs font-black uppercase text-primary tracking-widest">{product.brand}</span>
-            <h1 className="text-3xl font-extrabold text-foreground uppercase mt-1 leading-tight">{product.name}</h1>
+            <span className="text-xs font-black uppercase text-primary tracking-widest">{product.brand} • {product.type}</span>
+            <h1 className="text-3xl sm:text-4xl font-black text-foreground uppercase mt-1 leading-tight">{product.name}</h1>
             
             {/* Rating Stars */}
             <div className="flex items-center gap-2 mt-2">
@@ -191,9 +155,9 @@ export default function ProductDetailInteractive({ product, initialReviews }: Pr
             <div className="space-y-1">
               <span className="text-xs text-muted-text font-bold uppercase tracking-wider block">Giá bán lẻ đề xuất</span>
               <div className="flex items-center gap-3">
-                <span className="text-2xl font-black text-primary">{formatPrice(product.price)}</span>
+                <span className="text-2xl sm:text-3xl font-black text-primary">{formatPrice(product.price)}</span>
                 {product.originalPrice && (
-                  <span className="text-sm text-muted-text line-through">{formatPrice(product.originalPrice)}</span>
+                  <span className="text-sm text-muted-text line-through font-medium">{formatPrice(product.originalPrice)}</span>
                 )}
               </div>
             </div>
@@ -202,11 +166,11 @@ export default function ProductDetailInteractive({ product, initialReviews }: Pr
             <div className="text-right">
               <span className="text-xs text-muted-text block font-semibold">Tình trạng kho</span>
               {product.stock > 0 ? (
-                <span className="text-xs bg-green-500/10 text-green-655 font-extrabold px-2 py-0.5 rounded border border-green-500/20 mt-1 inline-block">
+                <span className="text-xs bg-green-500/10 text-green-500 font-extrabold px-2.5 py-1 rounded-full border border-green-500/20 mt-1 inline-block">
                   Còn {product.stock} Chiếc
                 </span>
               ) : (
-                <span className="text-xs bg-red-500/10 text-red-655 font-extrabold px-2 py-0.5 rounded border border-red-500/20 mt-1 inline-block">
+                <span className="text-xs bg-red-500/10 text-red-500 font-extrabold px-2.5 py-1 rounded-full border border-red-500/20 mt-1 inline-block">
                   Hết Hàng
                 </span>
               )}
@@ -216,67 +180,66 @@ export default function ProductDetailInteractive({ product, initialReviews }: Pr
           {/* Short Description */}
           <p className="text-sm text-muted-text leading-relaxed">{product.description}</p>
 
-          {/* Dynamic Audio Player wave simulation */}
-          <div className="p-5 bg-card border border-border rounded-2xl space-y-4 shadow-sm">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="w-2.5 h-2.5 rounded-full bg-primary animate-ping" />
-                <span className="text-xs font-black uppercase text-foreground tracking-wider">Trải Nghiệm Phòng Lọc Âm Thanh</span>
+          {/* Audio Player wave demo card */}
+          {product.audioUrl && (
+            <div className="p-5 bg-card border border-border rounded-2xl space-y-4 shadow-sm hover-glow">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Disc className={`w-4 h-4 text-primary ${isAudioActive ? 'animate-spin-slow' : ''}`} />
+                  <span className="text-xs font-black uppercase text-foreground tracking-wider">Trải Nghiệm Mẫu Âm Thanh Loa</span>
+                </div>
+                <span className="text-[10px] text-amber-500 font-bold uppercase tracking-widest bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">
+                  Hi-Fi Audio Sample
+                </span>
               </div>
-              <span className="text-[10px] text-muted-text font-bold uppercase">Simulated Sound Profile</span>
-            </div>
 
-            <div className="flex items-center gap-4">
-              <button
-                onClick={handlePlayPause}
-                className="w-12 h-12 bg-primary hover:bg-orange-700 rounded-full flex items-center justify-center text-white transition-all hover:scale-105 active:scale-95 shadow-lg shadow-primary/20 flex-shrink-0"
-              >
-                {isPlaying ? <Pause className="w-5 h-5 fill-white" /> : <Play className="w-5 h-5 fill-white ml-0.5" />}
-              </button>
+              <div className="flex items-center gap-4">
+                <button
+                  onClick={handlePlayAudioDemo}
+                  className={`w-12 h-12 rounded-full flex items-center justify-center text-white transition-all duration-300 hover:scale-110 active:scale-95 shadow-lg flex-shrink-0 ${
+                    isAudioActive
+                      ? 'bg-amber-500 border-2 border-amber-400 shadow-amber-500/30 animate-pulse'
+                      : 'bg-primary hover:bg-orange-700 shadow-primary/20 btn-premium'
+                  }`}
+                >
+                  {isAudioActive ? <Pause className="w-5 h-5 fill-white" /> : <Play className="w-5 h-5 fill-white ml-0.5" />}
+                </button>
 
-              {/* sound wave bar visualizer */}
-              <div className="flex-1 h-14 flex items-end justify-between px-2 bg-input-bg rounded-xl border border-border overflow-hidden py-1.5 relative">
-                {waveHeights.map((h, i) => (
-                  <div
-                    key={i}
-                    className="w-1.5 bg-primary rounded-full transition-all duration-100 origin-bottom"
-                    style={{ 
-                      height: `${h}%`,
-                      opacity: isPlaying ? 0.9 : 0.25,
-                      backgroundColor: isPlaying ? 'var(--primary)' : 'var(--border)'
-                    }}
-                  />
-                ))}
+                {/* Animated sound wave bars */}
+                <div className="flex-1 h-12 flex items-end justify-center gap-1 px-3 bg-input-bg rounded-xl border border-border overflow-hidden py-1.5">
+                  <div className={`sound-bar ${isAudioActive ? 'animate-wave' : 'h-3 opacity-30'}`} style={{ animationDelay: '0.1s', height: isAudioActive ? '70%' : '20%' }} />
+                  <div className={`sound-bar ${isAudioActive ? 'animate-wave' : 'h-4 opacity-30'}`} style={{ animationDelay: '0.3s', height: isAudioActive ? '95%' : '30%' }} />
+                  <div className={`sound-bar ${isAudioActive ? 'animate-wave' : 'h-2 opacity-30'}`} style={{ animationDelay: '0.2s', height: isAudioActive ? '45%' : '15%' }} />
+                  <div className={`sound-bar ${isAudioActive ? 'animate-wave' : 'h-5 opacity-30'}`} style={{ animationDelay: '0.5s', height: isAudioActive ? '85%' : '25%' }} />
+                  <div className={`sound-bar ${isAudioActive ? 'animate-wave' : 'h-3 opacity-30'}`} style={{ animationDelay: '0.4s', height: isAudioActive ? '60%' : '20%' }} />
+                  <div className={`sound-bar ${isAudioActive ? 'animate-wave' : 'h-2 opacity-30'}`} style={{ animationDelay: '0.6s', height: isAudioActive ? '90%' : '15%' }} />
+                </div>
               </div>
             </div>
-            
-            <p className="text-[11px] text-muted-text leading-tight">
-              * Nhấn Play để nghe thử dải âm đặc trưng của loa qua máy phát âm thanh giả lập.
-            </p>
-          </div>
+          )}
 
           {/* Purchase Controls */}
           {product.stock > 0 && (
             <div className="flex gap-4 pt-2">
-              <div className="flex items-center bg-input-bg border border-border rounded-xl shadow-sm">
+              <div className="flex items-center bg-input-bg border border-border rounded-2xl shadow-sm">
                 <button
                   onClick={() => setQuantity(q => Math.max(1, q - 1))}
-                  className="px-4 py-3 text-muted-text hover:text-foreground transition-colors"
+                  className="px-4 py-3 text-muted-text hover:text-foreground font-bold text-base transition-colors"
                 >
                   -
                 </button>
                 <span className="w-10 text-center text-foreground font-bold text-sm">{quantity}</span>
                 <button
                   onClick={() => setQuantity(q => Math.min(product.stock, q + 1))}
-                  className="px-4 py-3 text-muted-text hover:text-foreground transition-colors"
+                  className="px-4 py-3 text-muted-text hover:text-foreground font-bold text-base transition-colors"
                 >
                   +
                 </button>
               </div>
 
               <button
-                onClick={() => addToCart(product, quantity)}
-                className="flex-1 py-4 bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 text-white font-black rounded-xl hover:shadow-lg hover:shadow-primary/10 flex items-center justify-center gap-2 transition-all hover:scale-[1.01] active:scale-[0.99] shadow-md shadow-primary/10"
+                onClick={handleAddToCart}
+                className="flex-1 py-4 bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 text-white font-extrabold uppercase tracking-wider rounded-2xl hover:shadow-xl hover:shadow-primary/20 flex items-center justify-center gap-2 transition-all duration-300 hover:scale-[1.01] active:scale-[0.99] shadow-md shadow-primary/10 btn-premium text-xs sm:text-sm"
               >
                 <ShoppingCart className="w-5 h-5" />
                 Thêm Vào Giỏ Hàng
@@ -289,7 +252,7 @@ export default function ProductDetailInteractive({ product, initialReviews }: Pr
 
       {/* 2. Technical Specifications Table */}
       <div className="pt-6 border-t border-border">
-        <h2 className="text-xl font-extrabold text-foreground uppercase mb-6 tracking-wide text-left">Thông Số Kỹ Thuật</h2>
+        <h2 className="text-xl font-extrabold text-foreground uppercase mb-6 tracking-wide text-left">Thông Số Kỹ Thuật Chi Tiết</h2>
         <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-sm">
           <table className="w-full text-left border-collapse">
             <tbody>
@@ -329,7 +292,7 @@ export default function ProductDetailInteractive({ product, initialReviews }: Pr
               reviews.map((rev) => (
                 <div 
                   key={rev.id}
-                  className="p-5 bg-card border border-border rounded-2xl space-y-3 shadow-sm"
+                  className="p-5 bg-card border border-border rounded-2xl space-y-3 shadow-sm hover:border-border-hover transition-colors"
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
@@ -371,11 +334,11 @@ export default function ProductDetailInteractive({ product, initialReviews }: Pr
             </h3>
 
             {reviewSuccess ? (
-              <div className="p-4 bg-green-500/10 border border-green-500/20 text-green-700 rounded-xl flex items-start gap-2.5 animate-in fade-in duration-300">
+              <div className="p-4 bg-green-500/10 border border-green-500/20 text-green-500 rounded-xl flex items-start gap-2.5 animate-fade-in">
                 <CheckCircle2 className="w-5 h-5 flex-shrink-0 mt-0.5" />
                 <div>
                   <h4 className="text-sm font-bold">Gửi đánh giá thành công!</h4>
-                  <p className="text-xs text-green-655/80 mt-0.5">Cảm ơn bạn đã đóng góp đánh giá sản phẩm của Poyken Sound.</p>
+                  <p className="text-xs text-green-500/80 mt-0.5">Cảm ơn bạn đã đóng góp đánh giá sản phẩm của Poyken Sound.</p>
                 </div>
               </div>
             ) : (
@@ -389,7 +352,7 @@ export default function ProductDetailInteractive({ product, initialReviews }: Pr
                         key={star}
                         type="button"
                         onClick={() => setReviewRating(star)}
-                        className="text-amber-500 hover:scale-110 transition-transform"
+                        className="text-amber-500 hover:scale-125 transition-transform duration-200"
                       >
                         <Star 
                           className={`w-6 h-6 ${
@@ -429,7 +392,7 @@ export default function ProductDetailInteractive({ product, initialReviews }: Pr
 
                 <button
                   type="submit"
-                  className="w-full py-3 bg-input-bg hover:bg-primary hover:text-white text-foreground border border-border font-extrabold text-xs uppercase tracking-wider rounded-xl transition-all flex items-center justify-center gap-1.5 shadow-sm active:scale-95"
+                  className="w-full py-3.5 bg-input-bg hover:bg-primary hover:text-white text-foreground border border-border font-extrabold text-xs uppercase tracking-wider rounded-xl transition-all duration-300 flex items-center justify-center gap-1.5 shadow-sm active:scale-95 btn-premium"
                 >
                   <Send className="w-3.5 h-3.5" />
                   Gửi Đánh Giá
