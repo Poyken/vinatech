@@ -1,4 +1,4 @@
-﻿# ⚡ SKILLS — Vinatech MES Agent (PowerShell & SQL Templates)
+# ⚡ SKILLS — Vinatech MES Agent (PowerShell & SQL Templates)
 
 > **Mục đích:** Các script template sẵn sàng dùng, chỉ cần thay params
 > **Cập nhật:** 2026-06-19
@@ -158,7 +158,7 @@ ORDER BY referenced_entity_name
 
 ## 10. 📦 ĐỌC KB CHUNKED (Tiết kiệm token)
 
-7 KB files lớn đã tách thành chunks: KB_02, KB_03, KB_04, KB_05, KB_07, KB_10, KB_19.
+5 KB folders đã tách thành chunks: KB_02, KB_03, KB_04, KB_05, KB_07.
 
 **Quy trình đọc KB chunked:**
 ```
@@ -170,7 +170,7 @@ ORDER BY referenced_entity_name
 3. Đọc chunk cụ thể:
    → MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_02_CELL_LINE.md  (64KB)
 
-4. KHÔNG đọc file gốc KB_03_SAN_XUAT.md (150KB) → lãng phí token
+4. KHÔNG đọc toàn bộ folder → lãng phí token
 ```
 
 **Map nhanh:**
@@ -179,13 +179,12 @@ ORDER BY referenced_entity_name
 | Debug B530/B523/B597 | KB_03/ | 02_CELL_LINE |
 | Bugs SX theo screen | KB_03/ | 03_SCREEN_BUGS_B |
 | Đóng gói core | KB_04/ | 01_CORE_PACKAGING |
-| QC overview | KB_05/ | 01_QC_OVERVIEW |
-| IQC→OQC flow | KB_05/ | 03_QC_FLOW |
-| Kho NVL | KB_02/ | 01_NVL_WMS |
-| Kho TP Hà Nam | KB_02/ | 02_FG_WMS |
-| Kiến trúc MES | KB_10/ | 01_ARCHITECTURE |
-| DB Map | KB_19/ | 01_ARCHITECTURE |
-| ESM/Groupware | KB_07/ | 02_ESM_FORMS |
+| QC & Electrode | KB_05/ | 01_QC_AND_ELECTRODE_CORE |
+| Bugs QC theo screen | KB_05/ | 02_SCREEN_BUGS_QC |
+| Kho NVL & TP | KB_02/ | 01_WMS_CORE |
+| Bugs kho theo screen | KB_02/ | 02_SCREEN_BUGS |
+| Hưng Yên overview | KB_07/ | 01_OVERVIEW |
+| Deploy Hưng Yên | KB_07/ | 02_DEPLOY_HY |
 
 ---
 
@@ -225,7 +224,7 @@ Script này tự động rà soát, dọn dẹp các ghi chú, dòng ngăn cách
 // - "> Tổng cộng 100+ màn hình..."
 // - "# CÁC MÀN HÌNH ... CHƯA CÓ BODY"
 // - Các khoảng trắng trống liên tiếp (> 3 dòng) hoặc separator đôi.
-
+```
 
 ## 12. TEMPLATE CHO ACTIVE SPS (IN TEM & EMAIL CẢNH BÁO)
 

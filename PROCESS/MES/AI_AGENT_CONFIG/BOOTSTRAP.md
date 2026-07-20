@@ -1,4 +1,4 @@
-﻿# ⚡ BOOTSTRAP — Đọc file này ĐẦU TIÊN mỗi session mới
+# ⚡ BOOTSTRAP — Đọc file này ĐẦU TIÊN mỗi session mới
 
 > **Cách dùng:** Khi bắt đầu session mới, user nói: *"Đọc file `MES/AI_AGENT_CONFIG/BOOTSTRAP.md` trước"*
 > **Cập nhật:** 2026-07-02
@@ -50,7 +50,7 @@
 | **Quy tắc chi tiết** | `RULES.md` | Đầy đủ hơn section trên |
 | **Bug theo màn hình** | **KB_09** (Bug Fixbook) | 70+ bugs, đọc trước |
 | **KB chuyên sâu** | `KB_INDEX.md` → chunk cụ thể | 5 folders đã CHUNKED |
-| **Screen→SP→Table** | KB_32 hoặc KI: screen_id_reference | |
+| **Screen→SP→Table** | KB_11 hoặc KI: screen_id_reference | |
 
 ### KB Routing nhanh
 
@@ -67,19 +67,13 @@
 
 ---
 
-## 🐛 LESSONS LEARNED (KHÔNG được mắc lại)
+## 🐛 LESSONS LEARNED (Top 5 — Danh sách đầy đủ xem [SKILLS.md §8](SKILLS.md#8--lessons-learned-từ-các-cuộc-trò-chuyện))
 
-1. `= Null` ≠ `IS NULL` — Gate 20 phút fail
+1. `= Null` ≠ `IS NULL` — Gate 20 phút fail (KB_08 §4.2)
 2. `STB_MaterialHoldInfo` **KHÔNG tồn tại** → dùng `MaterialWarehouseCode = 'HOLDING_*'`
-3. `CompleteRoute='1'` set cho MỌI route → dùng `IsOutputRoute`
-4. `STB_BarrelBarcodeInfo` **KHÔNG tồn tại** → `STB_VietNam_CheckBarcode_2624`
-5. `STB_AluCaseMapping_VVT` **KHÔNG tồn tại** → hardcode trong SP
-6. Git root là Desktop → scope vào `MES/`
-7. Electrode SP: `usp_ElectrodeStep_get` (không phải `_Vietnam`)
-8. Packing SP: `usp_Vietnam_DoProcessProdPacking_VVT` (không phải `usp_De...`)
-9. OQC Grade C531 → bảng `VVT_OQC_REFER`
-10. `STB_HN_AccountingPrice` / `CellTestResult` → legacy/typo
-11. CRLF warning → không mass-edit .md files
+3. `STB_BarrelBarcodeInfo` **KHÔNG tồn tại** → `STB_VietNam_CheckBarcode_2624`
+4. Packing SP: `usp_Vietnam_DoProcessProdPacking_VVT` (không phải `usp_De...`)
+5. CRLF warning → không mass-edit .md files
 
 ---
 

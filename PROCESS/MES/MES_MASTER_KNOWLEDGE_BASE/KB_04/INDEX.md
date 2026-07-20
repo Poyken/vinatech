@@ -1,6 +1,6 @@
 # KB_04 — Đóng Gói & In Tem (INDEX)
 
-> **File gốc:** `../KB_04/KB_04_01_CORE_PACKAGING.md` (76KB) đã được tách thành 3 chunks.
+> KB_04 gồm 3 files (~61KB tổng).
 
 ---
 

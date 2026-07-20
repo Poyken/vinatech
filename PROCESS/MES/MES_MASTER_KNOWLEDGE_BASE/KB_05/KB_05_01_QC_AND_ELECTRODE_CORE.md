@@ -1,4 +1,4 @@
-﻿# KB_05 — Kiểm tra Chất lượng (QC) & Điện cực
+# KB_05 — Kiểm tra Chất lượng (QC) & Điện cực
 
 > **Màn hình:** B597, C443, C512, C486, C530, C546, B552, B270, B540, C121-C564, F743-F748
 > **Bảng chính:** `STB_MaterialQcInfo` (35 cols), `STB_MaterialQcInspectionItem` (USL/LSL), `STB_CommInspDocHistory`
@@ -332,7 +332,7 @@ Theo thứ tự SP usp_Vietnam_RawMaterialInputHist_uid kiểm tra:
 □ 7. Thiếu cấu hình Slitting? → Kiểm tra STB_SLITTINGLOCATIONCONFIG_VVT
 ```
 
-> 🚦 **Tham chiếu mở rộng:** Toàn bộ 7 gates trên đã được tổng hợp cùng 11 nhóm chặn tương tự (B530, B523, B452, B618, QC Audit, Returns, Lò Sấy, Slitting Knife...) tại **[KB_14 §6 — Tổng Hợp Pattern Validation Gates](KB_14_TRACE_BUG_METHODOLOGY.md#6-tổng-hợp-pattern-validation-gates)**. Xem đó để biết cách mở rộng/thêm gate mới theo 4 Pattern thiết kế (A/B/C/D).
+> 🚦 **Tham chiếu mở rộng:** Toàn bộ các validation gates tương tự (B530, B523, B452, B618, QC Audit, Returns, Lò Sấy, Slitting Knife...) đã được tổng hợp chi tiết tại [KB_09_SCREEN_BUG_FIXBOOK.md](../KB_09_SCREEN_BUG_FIXBOOK.md) dưới dạng cẩm nang tra cứu và vá lỗi theo từng màn hình.
 
 ---
 
@@ -422,7 +422,7 @@ Quy trình quản lý sản xuất và kiểm định chất lượng đối v�
     2. A460 → `STB_ModelLabelInfo` (ElectLabel + các label type cần thiết)
     3. B442 → Tạo lot test → kiểm tra cột "Độ dày" + in tem
 
-    > 🔗 Xem thêm: KB_04 §6.20, KB_14 §7.2
+    > 🔗 Xem thêm: [KB_04_01_CORE_PACKAGING.md](../KB_04/KB_04_01_CORE_PACKAGING.md) § 6.20 và [KB_09_SCREEN_BUG_FIXBOOK.md](../KB_09_SCREEN_BUG_FIXBOOK.md).
 
 #### 2. Vận Hành 4 Công Đoạn Điện Cực & Nhập Liệu trên B552
 Quy trình sản xuất điện cực gồm 4 công đoạn chính và mỗi công đoạn tương ứng với một tab dữ liệu trên màn hình **B552**:
@@ -819,7 +819,7 @@ F746 (Lịch sử Slitting) → F747 (Lịch sử check NG/Pass) → F748 (Chuy�
 | Lot không tồn tại khi chuyển F430 | Lot chưa được QC check ở C243 | Vào C243 check trước |
 | Không chuyển về kho được | Lot bị QC đánh Reject | Không thể chuyển — xử lý theo quy trình NG |
 
-👉 **Chi tiết Script Fix (Thiết lập & Cấu hình Slitting):** Xem tại [KB_12_DEEP_CORE_ANALYSIS_AND_AUDIT.md § 4](KB_12_DEEP_CORE_ANALYSIS_AND_AUDIT.md).
+👉 **Chi tiết Script Fix (Thiết lập & Cấu hình Slitting):** Xem cấu hình chi tiết tại [KB_05_02_SCREEN_BUGS_QC.md](KB_05_02_SCREEN_BUGS_QC.md) § B552 / F744.
 
 ---
 
@@ -918,9 +918,9 @@ ORDER BY MeasureCycle, SampleSeqNo;
 
 ---
 
-> 📌 **Phân tích sâu & DB Audit:** Xem chi tiết phân tích kiến trúc database, DNA hệ thống và kết quả Audit tại [KB_12_DEEP_CORE_ANALYSIS_AND_AUDIT.md](KB_12_DEEP_CORE_ANALYSIS_AND_AUDIT.md).
+> 📌 **Phân tích sâu & DB Audit:** Xem chi tiết kết quả Audit trong tri thức tích hợp chéo (Groupware/MES) [Master Index](../../SYSTEM_MASTER_KNOWLEDGE_BASE/README.md) hoặc KI: kb_verification.
 
-*Cập nhật: 2026-06-14 | Gộp nội dung từ KB_23 và KB_24 để đồng bộ hoá tri thức quản lý chất lượng (QC)*
+*Cập nhật: 2026-06-14 | Gộp nội dung từ các tài liệu để đồng bộ hoá tri thức quản lý chất lượng (QC)*
 
 
 

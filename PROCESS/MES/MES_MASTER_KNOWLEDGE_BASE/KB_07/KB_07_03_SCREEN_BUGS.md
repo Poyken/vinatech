@@ -1,4 +1,4 @@
-﻿## 🔴 Cẩm nang khắc phục lỗi theo Screen ID (Gộp từ KB_SCREEN_BUG_REF)
+## 🔴 Cẩm nang khắc phục lỗi theo Screen ID (Gộp từ KB_SCREEN_BUG_REF)
 
 ## Dry Oven — Lò sấy điện cực (Quy trình sấy V-22)
 
@@ -43,7 +43,7 @@
 *   **Triệu chứng:** Người dùng không thấy menu VinaEnesol trên giao diện MES.
 *   **Nguyên nhân gốc:** Menu D000 chưa được phân quyền cho Role của người dùng tại Z220/Z330.
 *   **Cách khắc phục:** Vào Z220 gán Screen D000 cho Role tương ứng, vào Z330 kiểm tra đã publish.
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_07/KB_07_01_OVERVIEW.md § 2](../KB_07/KB_07_01_OVERVIEW.md) và ../KB_19/KB_19_01_ARCHITECTURE.md § 4.
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_07/KB_07_01_OVERVIEW.md § 2](../KB_07/KB_07_01_OVERVIEW.md) và [KB_10_FACTORY_WORKCENTER_MATRIX.md](../../KB_10_FACTORY_WORKCENTER_MATRIX.md) § 1.
 
 ---
 

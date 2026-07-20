@@ -1,6 +1,6 @@
 # KB_03 — Sản Xuất & Lịch Sử Routing (INDEX)
 
-> **File gốc:** `../KB_03/KB_03_02_CELL_LINE.md` (150KB) đã được tách thành 5 chunks.
+> **File gốc:** KB_03 đã được tách thành 4 chunks.
 > **Đọc chunk phù hợp** thay vì load toàn bộ 150KB.
 
 ---

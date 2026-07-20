@@ -1,4 +1,4 @@
-﻿
+
 ## [A130] — Warehouse & Location (Khai báo kho & vị trí)
 
 ### [F330] — Lỗi 1: Không hiển thị hoặc thiếu vị trí kho (Location) khi làm thủ tục nhập kho hoặc chuyển kho
@@ -258,8 +258,8 @@
 *   **Cách khắc phục:**
     Vào màn hình **HN101** thêm dòng thiết lập đơn giá mới cho Model, hoặc chạy script chèn trực tiếp:
     ```sql
-    INSERT INTO STB_HN_AccountingPrice (MaterialCode, AccountingCode, Price, CreateDateTime, CreateUserID)
-    VALUES ('MÃ_MODEL_MỚI', 'MÃ_KẾ_TOÁN', ĐƠN_GIÁ_USD, GETDATE(), 'vinaadmin');
+    INSERT INTO STB_PublicCodeAndPrice (PublicCode, Price, IsUsed, WorkCenterCode, CreateDateTime, CreateUserID)
+    VALUES ('MÃ_MODEL_MỚI_HOẶC_MÃ_KẾ_TOÁN', ĐƠN_GIÁ_USD, 1, 'VVT_F3', GETDATE(), 'vinaadmin');
     ```
 *   **Chi tiết nghiệp vụ:** Xem tại [../KB_02/KB_02_01_WMS_CORE.md § 7](../KB_02/KB_02_01_WMS_CORE.md#7-hn101--thiết-lập-đơn-giá-theo-mã-kế-toán).
 

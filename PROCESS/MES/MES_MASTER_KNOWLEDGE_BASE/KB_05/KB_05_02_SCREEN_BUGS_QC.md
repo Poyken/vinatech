@@ -1,4 +1,4 @@
-﻿## 🔴 Cẩm nang khắc phục lỗi theo Screen ID (Gộp từ KB_SCREEN_BUG_REF)
+## 🔴 Cẩm nang khắc phục lỗi theo Screen ID (Gộp từ KB_SCREEN_BUG_REF)
 
 ## [B597] — Material Scanning & PQC Verification (Scan nguyên vật liệu đầu vào chuyền)
 
@@ -404,7 +404,7 @@ Mã phiếu IQC (`MaterialQcNo`) có thể được tìm thấy bằng 3 cách:
 *   **Triệu chứng:** Khi tạo hồ sơ OQC tại C512, số lượng mẫu lấy kiểm tra không đúng với quy tắc AQL.
 *   **Nguyên nhân gốc:** Bảng quy tắc AQL chưa được cấu hình cho kích thước lô hàng tương ứng.
 *   **Cách khắc phục:** Vào C112, kiểm tra và bổ sung quy tắc AQL cho size lô hàng (Lot Size) phù hợp.
-*   **Chi tiết nghiệp vụ:** Xem tại ../KB_19/KB_19_01_ARCHITECTURE.md.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_05_01_QC_AND_ELECTRODE_CORE.md § 9](KB_05_01_QC_AND_ELECTRODE_CORE.md#9-phân-hệ-qc--chất-lượng-iqcpqcoqc).
 
 ---
 
@@ -555,7 +555,7 @@ Mã phiếu IQC (`MaterialQcNo`) có thể được tìm thấy bằng 3 cách:
 *   **Triệu chứng:** Kết quả Aging/ESR tại C522 bị thiếu hoặc không khớp với máy đo.
 *   **Nguyên nhân gốc:** Phần mềm ESR chưa upload dữ liệu vào bảng `Stb_ESRValueMonitor` hoặc cờ `UploadToMes` chưa được set.
 *   **Cách khắc phục:** Kiểm tra phần mềm đo ESR trên máy, reset cờ upload nếu cần.
-*   **Chi tiết nghiệp vụ:** Xem tại ../KB_19/KB_19_01_ARCHITECTURE.md.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_05_01_QC_AND_ELECTRODE_CORE.md § 9.7](KB_05_01_QC_AND_ELECTRODE_CORE.md#97-qc-nâng-cao--quy-trình-esr-vision-x-ray--aging).
 
 ---
 

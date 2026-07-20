@@ -13,14 +13,14 @@
 
 > ⚠️ Nếu model có trong `STB_MaterialMaster` (A230) nhưng **không có** trong `STB_ModelBasicInfo` -> C512 không tìm thấy, B597 không chọn được, Vol/Farad không hiện.
 
-**Checklist khi thêm model mới:**
+**Tóm tắt các phân hệ cần cấu hình (Xem checklist chi tiết tại [Mục 9.1](#91-checklist-thêm-model-mới-7-bước)):**
 ```
-□ 1. A230 (STB_MaterialMaster) - Mã vật tư và tên
-□ 2. A310 (STB_BomHeader/Detail) - BOM nguyên liệu - Anh Huy phụ trách
-□ 3. A320 (STB_RouteInfo) - Công đoạn sản xuất
+□ 1. A230 (STB_MaterialMaster) - Đăng ký vật tư (FERT/HALB/MDL/ROH)
+□ 2. A310 (STB_BomHeader/Detail) - BOM nguyên liệu
+□ 3. A320 (STB_RouteInfo) - Công đoạn sản xuất (Routing)
 □ 4. A410 (STB_ModelBasicInfo) - Thông số kỹ thuật (Vol, Farad, OQC Type)
-□ 5. A419 (STB_PackingStandard) - Tiêu chuẩn đóng gói
-□ 6. A460 (STB_LabelInfo) - Mẫu tem in
+□ 5. A418 (STB_PackingQtyPerSize) & A419 (STB_PackingStandard) - Tiêu chuẩn đóng gói
+□ 6. A460 (STB_ModelLabelInfo) - Mẫu tem in
 □ 7. STB_VVT_StagePrices - Giá công đoạn (cho B682/B781)
 □ 8. Cấu hình Vỏ nhôm - ⚠️ Bảng STB_AluCaseMapping_VVT KHÔNG TỒN TẠI; logic mapping được hardcode trong SP usp_Vietnam_RawMaterialInputHist_uid.
 ```

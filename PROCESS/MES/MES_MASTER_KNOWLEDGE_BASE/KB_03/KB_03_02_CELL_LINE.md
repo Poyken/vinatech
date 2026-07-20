@@ -807,7 +807,7 @@ Khi load danh sách nguyên vật liệu đã bắn của Lot, hệ thống sử
 
 ---
 
-### 6.20 📊 Dashboard, Andon & Monitoring (Gộp từ KB_22)
+### 6.20 📊 Dashboard, Andon & Monitoring
 
 Hệ thống giám sát và hiển thị sản lượng, năng suất hiện trường của MES Vinatech bao gồm 3 lớp:
 1. **Dashboard:** Tổng quan sản lượng theo công đoạn dành cho cấp quản lý.
@@ -859,7 +859,7 @@ GROUP BY LineCode, RouteCode;
 
 ---
 
-### 6.21 🔧 Máy Móc, Bảo Trì & Spare Parts Management (Gộp từ KB_20)
+### 6.21 🔧 Máy Móc, Bảo Trì & Spare Parts Management
 
 Hệ thống quản lý máy móc thiết bị hiện trường, lịch trình bảo trì và kho phụ tùng thay thế.
 
@@ -923,7 +923,7 @@ ORDER BY CurrentStock ASC;
 
 ---
 
-### 6.22 👤 Nhân Sự, Worker & Quản Lý Ca Kíp (Gộp từ KB_21)
+### 6.22 👤 Nhân Sự, Worker & Quản Lý Ca Kíp
 
 Hệ thống quản lý thông tin công nhân hiện trường, ca kíp sản xuất và nhật ký bàn giao ca.
 
@@ -977,7 +977,7 @@ ORDER BY PRH.CreateDateTime ASC;
 
 ---
 
-*Cập nhật: 2026-06-14 | Gộp nội dung từ KB_19, KB_20, KB_21, và KB_22 để đồng bộ hoá tri thức nghiệp vụ Sản Xuất*
+*Cập nhật: 2026-06-14 | Gộp nội dung từ các tài liệu nghiệp vụ để đồng bộ hoá tri thức nghiệp vụ Sản Xuất*
 
 
 

@@ -1,4 +1,4 @@
-﻿# KB_09: Sổ Tay Tra Cứu Bug & Fix Theo Màn Hình
+# KB_09: Sổ Tay Tra Cứu Bug & Fix Theo Màn Hình
 
 > **📌 Mục đích:** Khi nhận được báo lỗi từ user → tra TCode tại đây → tìm ngay bug + cách fix.
 > **🔑 Keywords:** bug, fix, sổ tay, TCode, màn hình, triệu chứng, nguyên nhân, SQL fix, sửa lỗi, khắc phục
@@ -246,13 +246,15 @@
 
 ---
 
+---
 
-### B767
-**Ten:** Chua xac dinh
+### [B767]
+**Tên:** In tem Sanmina (Sanmina Label Print)
 
-| # | Trieu chung | Nguyen nhan | Fix |
+| # | Triệu chứng | Nguyên nhân | Fix |
 |---|---|---|---|
-| 1 | S/N of the first label (Outer label) is blank on Sanmina label print | Stored procedure usp_SanminaLabelPrint_get_Vietnam set PrintSerialNo to empty and BoxSerialNo to first inner serial for Outer label. Changed it to output comma-separated list of inner box serials for both. | `ALTER PROCEDURE [dbo].[usp_SanminaLabelPrint_get_Vietnam] ... (BoxSerialNo and PrintSerialNo case expressions changed to combine Inner1Serial and Inne...` |
+| 1 | Lưới tìm kiếm lần 2 bị lặp dữ liệu (6 dòng thay vì 3 dòng) | Thuộc tính `데이터 추가` (Append Data) của hàm tìm kiếm đang set `True` | Mở NAIS screen designer B767 → Chọn SearchFunction → Chuyển `데이터 추가` từ `True` sang `False` |
+| 2 | S/N của tem Outer (tem đầu tiên) bị trống | SP `usp_SanminaLabelPrint_get_Vietnam` set PrintSerialNo trống cho Outer label | Sửa SP: gộp Inner1Serial và Inner2Serial thành danh sách phân cách bằng dấu phẩy cho BoxSerialNo và PrintSerialNo của Outer label |
 ## C-Series: QC & Chất Lượng
 
 ### [C121]-[C122]
@@ -501,13 +503,16 @@ COMMIT TRANSACTION;
 
 ---
 
+---
 
 ### [K366]
-**Ten:** Chua xac dinh
+**Tên:** Lot Tracking BG2 (Kết luận Pass/Fail)
 
-| # | Trieu chung | Nguyen nhan | Fix |
+| # | Triệu chứng | Nguyên nhân | Fix |
 |---|---|---|---|
-| 1 | K366 screen displays blank Status column (Final conclusion Pass/Fail) | Stored procedure usp_LotTrackingInfo_VVTF4_get does not return the Status column to map to the grid. | `-- ============================================= -- Author:		Nguyễn Hải Triều(Mr.Dev) -- Create date: 2026-06-18 -- Description:	Kiểm tra dữ liệu Lot ...` |
+| 1 | Cột Status (Kết luận cuối cùng Pass/Fail) hiển thị trống | SP `usp_LotTrackingInfo_VVTF4_get` không trả về cột Status | Sửa SP: thêm logic `CASE WHEN df.ControlNo IS NULL THEN 'PASS' WHEN rp.Barcode IS NOT NULL THEN 'PASS' ELSE 'FAIL' END AS Status` |
+
+---
 ## P-Series: HR & Tài Liệu
 
 ### [P111]

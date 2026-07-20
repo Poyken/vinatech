@@ -49,7 +49,7 @@
 *   **Triệu chứng:** Thông tin chi tiết PO tại B301 không khớp với tổng quan tại B310.
 *   **Nguyên nhân gốc:** Bảng `STB_ProductionOrderInfo` có dữ liệu không nhất quán do đồng bộ lỗi từ Groupware.
 *   **Cách khắc phục:** Kiểm tra dữ liệu trực tiếp trong DB và đồng bộ lại từ Groupware ESM Bridge.
-*   **Chi tiết nghiệp vụ:** Xem tại ../KB_19/KB_19_01_ARCHITECTURE.md.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_03_01_OVERVIEW.md](../KB_03_01_OVERVIEW.md) § 3.
 
 ---
 
@@ -254,7 +254,7 @@
 *   **Triệu chứng:** Dashboard ANDON tại B882 không hiển thị sản lượng real-time.
 *   **Nguyên nhân gốc:** SP `usp_Vietnam_AndonDetail_get` lấy dữ liệu từ `STB_ProdRouteHist` lọc theo `WorkCenterCode`. Nếu WorkCenterCode sai hoặc không khớp sẽ trống.
 *   **Cách khắc phục:** Kiểm tra tham số filter WorkCenterCode trên ANDON display khớp với mã nhà máy đang chạy.
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_03/KB_03_02_CELL_LINE.md § 6](../KB_03/KB_03_02_CELL_LINE.md) và ../KB_19/KB_19_01_ARCHITECTURE.md.
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_03/KB_03_02_CELL_LINE.md § 6](../KB_03/KB_03_02_CELL_LINE.md) và [KB_10_FACTORY_WORKCENTER_MATRIX.md](../../KB_10_FACTORY_WORKCENTER_MATRIX.md) § 4.
 
 ---
 

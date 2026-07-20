@@ -168,7 +168,7 @@ ORDER BY RMIH.CreateDateTime DESC;
 | Chốt công đoạn lỗi | KB_03 §6.3 |
 | Model mới chưa cấu hình | KB_06 §1 |
 | Phế NVL B598 | KB_03 §6.12 |
-| Kho HN lỗi | KB_02/ → 02_FG_WMS |
+| Kho HN lỗi | KB_02/ → 01_WMS_CORE §5 |
 | ESR/Aging | KB_05 §9.7 |
 
 ## 6. KNOWLEDGE ITEMS (KI) — Tra trước KB
@@ -182,7 +182,7 @@ ORDER BY RMIH.CreateDateTime DESC;
 | `new_model_checklist` | Thêm model mới (8 bước) |
 | `system_environment` | Connection info, IP, URL |
 
-## 7. KB FILES MAP (13 files, 4 chunked)
+## 7. KB FILES MAP (12 items, 5 chunked folders)
 
 | # | File | Phạm vi | Size |
 |---|------|---------|------|
@@ -192,11 +192,11 @@ ORDER BY RMIH.CreateDateTime DESC;
 | **04** | **KB_04/ ⚡CHUNKED** | Đóng gói B523/B525, in tem | 71KB→2c |
 | **05** | **KB_05/ ⚡CHUNKED** | QC IQC/PQC/OQC, Electrode, ESR, Slitting | 109KB→2c |
 | 06 | KB_06_MASTER_DATA_TOOLS | Master data, model mới | 28KB |
-| **25** | **KB_07/ ⚡CHUNKED** | Hưng Yên, D-series | 41KB→3c |
-| 30 | KB_08_CORE_SP_ENGINE | Core SP (DoProcess/Backflush/Packing) | 24KB |
-| **31** | **KB_09_SCREEN_BUG_FIXBOOK** | **★ Bug fix 70+ bugs** | **31KB** |
-| 33 | KB_10_FACTORY_WORKCENTER | Ma trận nhà máy/WorkCenter | 9KB |
-| 36 | KB_11_HANAM_FACTORY_SCREENS | Hà Nam 83 screens | 21KB |
+| **07** | **KB_07/ ⚡CHUNKED** | Hưng Yên, D-series | 41KB→3c |
+| 08 | KB_08_CORE_SP_ENGINE | Core SP (DoProcess/Backflush/Packing) | 24KB |
+| **09** | **KB_09_SCREEN_BUG_FIXBOOK** | **★ Bug fix 70+ bugs** | **31KB** |
+| 10 | KB_10_FACTORY_WORKCENTER | Ma trận nhà máy/WorkCenter | 9KB |
+| 11 | KB_11_HANAM_FACTORY_SCREENS | Hà Nam 83 screens | 21KB |
 
 
 ## 8. ⚠️ COLUMN NAME TRAPS (Hay bị sai)
@@ -212,5 +212,5 @@ ORDER BY RMIH.CreateDateTime DESC;
 | `FinishGoodStockOutBG` | `InvoiceFinishGoodStockOutBG` | SmartFactoryV2 |
 | `STB_MaterialHoldInfo` | KHÔNG TỒN TẠI | Dùng MaterialWarehouseCode='HOLDING_*' |
 | `STB_BarrelBarcodeInfo` | KHÔNG TỒN TẠI | Dùng STB_VietNam_CheckBarcode_2624 |
-| `STB_HN_AccountingPrice` | KHÔNG TỒN TẠI | Table legacy đã bị xóa |
+| `STB_HN_AccountingPrice` | KHÔNG TỒN TẠI | Dùng STB_PublicCodeAndPrice |
 

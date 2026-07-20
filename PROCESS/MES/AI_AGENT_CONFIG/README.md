@@ -1,4 +1,4 @@
-﻿# 🚀 AI Agent Config — Vinatech MES
+# 🚀 AI Agent Config — Vinatech MES
 
 > **Bạn là AI agent đang làm việc trên dự án MES Vinatech.**
 > **Mỗi session mới: User sẽ nói "Đọc BOOTSTRAP.md" → AI đọc 1 file và sẵn sàng ngay.**
@@ -27,9 +27,9 @@ MES/
 │   ├── RULES.md               ← Quy tắc chi tiết (tham chiếu bổ sung)
 │   ├── KNOWLEDGE.md           ← Cheat sheet bảng/SP (tham chiếu bổ sung)
 │   └── SKILLS.md              ← SQL/PS templates (tham chiếu bổ sung)
-├── MES_MASTER_KNOWLEDGE_BASE/  ← 30 KB files chi tiết (đọc khi cần)
+├── MES_MASTER_KNOWLEDGE_BASE/  ← KB files chi tiết (đọc khi cần)
 │   ├── KB_INDEX.md            ← Mục lục tra cứu nhanh
-│   └── KB_01 → KB_08          ← Tài liệu chuyên sâu từng phân hệ
+│   └── KB_01 → KB_11          ← Tài liệu chuyên sâu từng phân hệ
 ├── sql/hotfixes/               ← 17 SQL hotfix scripts đã triển khai (lịch sử)
 ├── run_query.ps1               ← Query DB nhanh
 ├── validate_sql.ps1            ← Validate SQL trước deploy

@@ -1,14 +1,14 @@
-﻿# KB_11 — Hà Nam Factory Screen Map & Deep System Discovery
+# KB_11 — Hà Nam Factory Screen Map & Deep System Discovery
 
 > **Verified against DB:** 2026-06-18
 > **🔑 Keywords:** Hà Nam, VVT_F3, HN screen, HNC, VE route, QC subsystem, vision, IoT, XRF, BOM, sales, H screen
-> ← [Về INDEX](KB_INDEX.md) | Cross-ref: [KB_02 §HN](KB_02/KB_02_01_WMS_CORE.md), KB_34 §Route
+> ← [Về INDEX](KB_INDEX.md) | Cross-ref: [KB_02 §HN](KB_02/KB_02_01_WMS_CORE.md), [KB_10 §Route](KB_10_FACTORY_WORKCENTER_MATRIX.md)
 
 ---
 
 ## 1. Tổng quan — 83 Unique HN Screens
 
-> Hà Nam (nhà máy F1) có **hệ thống screen riêng** với prefix `HN`, chiếm 8% tổng số screens. Điều này khác biệt hoàn toàn so với Bắc Giang (dùng chung B-series) và Hưng Yên (dùng D-series).
+> Hà Nam (nhà máy F3 — VVT_F3) có **hệ thống screen riêng** với prefix `HN`, chiếm 8% tổng số screens. Điều này khác biệt hoàn toàn so với Bắc Giang (dùng chung B-series) và Hưng Yên (dùng D-series).
 
 ---
 
@@ -358,23 +358,23 @@
 | **F** | **87** | ~25% | KB_02 |
 | **HN** | **83** | **~5%→100%** | **KB_11** ✅ |
 | **H** | **82** | **~10%→90%** | **KB_11** ✅ |
-| **Z** | **42** | ~15% | KB_01, KB_34 |
+| **Z** | **42** | ~15% | KB_01 |
 | **A** | **29** | ~20% | KB_06 |
 | **K** | **28** | ~15% | KB_03 |
-| **P** | **28** | ~50% | KB_34 |
-| **V** | **26** | ~50% | KB_34 |
+| **P** | **28** | ~50% | — |
+| **V** | **26** | ~50% | — |
 | **E** | **24** | ~40% | KB_05 |
-| **L** | **23** | ~50% | KB_34 |
-| **FG** | **23** | ~50% | KB_34 |
-| **G** | **22** | ~50% | KB_34 |
-| **M** | **22** | ~70% | KB_34 |
+| **L** | **23** | ~50% | — |
+| **FG** | **23** | ~50% | KB_02 |
+| **G** | **22** | ~50% | — |
+| **M** | **22** | ~70% | — |
 | **HY** | **17** | **0%→100%** | **KB_11** ✅ |
-| **T** | **16** | ~40% | KB_34 |
-| **S** | **12** | ~50% | KB_34 |
-| **W** | **10** | ~50% | KB_34 |
-| **R** | **9** | ~50% | KB_34 |
+| **T** | **16** | ~40% | — |
+| **S** | **12** | ~50% | — |
+| **W** | **10** | ~50% | — |
+| **R** | **9** | ~50% | — |
 | **D** | **6** | ~80% | KB_07 |
-| **TOTAL** | **~1,044** | **~60%** | 23 KB files |
+| **TOTAL** | **~1,044** | **~60%** | 12 KB files |
 
 ---
 

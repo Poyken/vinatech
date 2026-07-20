@@ -1,6 +1,6 @@
-﻿# 🗂️ NAIS MES — Knowledge Base Index (Streamlined)
+# 🗂️ NAIS MES — Knowledge Base Index (Streamlined)
 
-> **Cập nhật:** 2026-06-30 | **Tổng:** 14 files/folders (đã tối ưu hóa 65% token) | **DB:** SmartFactoryV2 + SmartFramework
+> **Cập nhật:** 2026-07-20 | **Tổng:** 12 KB items (5 folders + 6 files + 1 script guide) | **DB:** SmartFactoryV2 + SmartFramework
 
 ---
 
@@ -62,7 +62,7 @@
 | B598 | Báo phế NVL | KB_03 | — |
 | B682 | Stage Prices | KB_01 | KB_06 |
 | B717 | Bending/Tapping | KB_03 | — |
-| B754-B758 | Tem PAC/DigiKey | KB_03 | — |
+| B754-B758 | Tem PAC/DigiKey | KB_04 | — |
 | B781 | SL đóng gói | KB_03 | KB_01 |
 | B782 | Lịch sử SX | KB_03 | — |
 

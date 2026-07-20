@@ -969,12 +969,12 @@ ORDER BY CreateDateTime DESC
 **Quy trình:** Tìm kiếm → (+) Thêm → Điền đầy đủ → Lưu
 
 ```sql
--- Kiểm tra đơn giá đã có chưa (⚠️ Bảng nội bộ Hà Nam, có thể là View hoặc bảng tạm)
-SELECT * FROM STB_HN_AccountingPrice WHERE MaterialCode = 'Mã_Model'
+-- Kiểm tra đơn giá theo Public Code (mã kế toán / mã hàng)
+SELECT * FROM STB_PublicCodeAndPrice WITH(NOLOCK) WHERE PublicCode = 'Mã_Model_Hoặc_Mã_Kế_Toán'
 
 -- Thêm đơn giá mới
-INSERT INTO STB_HN_AccountingPrice (MaterialCode, AccountingCode, Price, CreateDateTime, CreateUserID)
-VALUES ('Mã_Model', 'Mã_Kế_Toán', 0.254, GETDATE(), 'vinaadmin')
+INSERT INTO STB_PublicCodeAndPrice (PublicCode, Price, IsUsed, WorkCenterCode, CreateDateTime, CreateUserID)
+VALUES ('Mã_Model_Hoặc_Mã_Kế_Toán', 0.254, 1, 'VVT_F3', GETDATE(), 'vinaadmin')
 ```
 
 ---
