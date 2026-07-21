@@ -272,6 +272,7 @@
 | # | Triệu chứng | Nguyên nhân | Fix |
 |---|---|---|---|
 | 1 | F330 bị chặn "Receiving Confirmation" | IQC chưa PASS Lot tại C220 | QC hoàn thành nhập kết quả + xác nhận PASS |
+| 2 | Hàng mới nhập ở F330 không hiển thị trên C220 để IQC đánh giá (ví dụ: Module Case, Middle Plate) | Thủ kho mới bấm Arrival ở F330 nhưng **chưa bấm nút "Tạo tem"** (bảng `STB_MaterialDocLotInfo` chưa có dòng). SP `usp_MaterialQcInfo_get` INNER JOIN với `STB_MaterialDocLotInfo` nên lọc bỏ các phiếu chưa sinh Lot. | Mở lại F330 → chọn phiếu nhập → nhập thông tin đóng gói / Lot Vendor → bấm **"Tạo tem"** → F5 lại C220. (2026-07-21) |
 
 ### [C243]
 **Tên:** QC Kiểm Tra Lot Slitting
@@ -395,11 +396,13 @@ COMMIT TRANSACTION;
 > 🔗 Chi tiết: [KB_02 §4.15](KB_02/KB_02_01_WMS_CORE.md)
 
 ### [F430]
-**Tên:** Material Transfer (Chuyển kho)
+**Tên:** Material Transfer (Chuyển kho / Lịch sử đầu vào - đầu ra NVL)
 
 | # | Triệu chứng | Nguyên nhân | Fix |
 |---|---|---|---|
 | 1 | Lot không chuyển kho được | Lot bị HOLD hoặc QC Reject | Giải phóng HOLD hoặc xử lý theo quy trình NG |
+| 2 | Khi xuất chuyển kho sang nhà máy Hưng Yên (`VVT_F5`), ô **Mã kho hàng (Tới)** không có kho Hưng Yên và ô **Mã chuyền** bị trống trắng tinh | 1. Popup `TargetMaterialWarehouse_Search` gọi SP `usp_TargetMaterialWarehouse_popup` chỉ lọc kho thuộc `WorkCenterCode` hiện tại. 2. Popup `LineInfo_InoutMaterial` gọi SP `usp_LineInfo_popup_InoutMaterial` lọc `WHERE MaterialWarehouseCode = @SourceMaterialWarehouse`, mã chuyền `HY_BN`/`HY_BG` bị `NULL` | 1. Sửa `usp_TargetMaterialWarehouse_popup` thêm `UNION ALL` kho Hưng Yên (`VVT_F5`). 2. Thêm `HY_BN` (VVT_F1) & `HY_BG` (VVT_F2) vào `STB_LineInfo` set `MaterialWarehouseCode = 'ROH_HY_WH'`. 3. Sửa `usp_LineInfo_popup_InoutMaterial` thêm `OR (LI.LineCode IN ('HY_BN', 'HY_BG') AND @SourceMaterialWarehouse LIKE '%HY%')`. (vanduc & Mrs.VanOc 2026-07-21) |
+
 
 ### [F721]
 **Tên:** Material Stock (Tồn kho NVL)
@@ -417,6 +420,8 @@ COMMIT TRANSACTION;
 | 2 | Lot không tồn tại khi chuyển F430 | Lot chưa QC check ở C243 | Vào C243 check trước |
 | 3 | Hủy/Rollback Slitting bị lỗi | Chưa xóa lịch sử F746 trước | Xóa F746 trước rồi mới rollback F742 |
 | 4 | Không tìm thấy foil mới trong popup hoặc thiếu dòng trên F744 | Mã foil con chưa đăng ký trong STB_MaterialMaster hoặc thiếu dòng trong STB_WidthSlitting | (1) Đăng ký foil vào STB_MaterialMaster nhóm ANODE-FOIL, (2) Set F110 stock attributes, (3) Thêm cấu hình width vào STB_WidthSlitting. Script mẫu: **add_foil_f744_5.5mm.sql** |
+| 5 | Tạo tem NG bị quá số lượng (ví dụ: cần tạo 1.13m nhưng sinh tem 25.7m khiến Slg còn lại bị âm) | SP `usp_CreateLotSlitting_NG_HN_uid` tính số lượng NG bằng `InitialQty` (dài cuộn thô ban đầu) trừ tổng tem chia, thay vì dùng `ActualExportQuantity` từ `STB_MaterialWarehouseInOutHist` (SL thực tế xuất sang kho Slitting) | ALTER SP `usp_CreateLotSlitting_NG_HN_uid` đọc `ActualExportQuantity` từ `STB_MaterialWarehouseInOutHist` trước khi tính `@TemCurrentQtyNG`. |
+
 
 > 🔗 Chi tiết: [KB_05 §10](KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md), [KB_02 §Lỗi 4](KB_02/KB_02_02_SCREEN_BUGS.md#lỗi-4-không-tìm-thấy-mã-foil-mới-trong-popup-để-thiết-lập-chiều-rộng-cắt-ở-f744)
 

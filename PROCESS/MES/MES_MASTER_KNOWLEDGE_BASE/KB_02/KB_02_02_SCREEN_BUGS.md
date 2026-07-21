@@ -68,32 +68,7 @@
     1. Hàm SQL `fn_VVT_getdatebyVendorLot_MergeCode` không có nhánh xử lý fallback cho mã PCB/dây điện khi Vendor Lot không bắt đầu bằng `'2'`.
     2. SP `usp_DoChangeMaterialDocLotInfo` khi update tồn kho `STB_MaterialLotInfo` chỉ cập nhật cột `LotNo` mà bỏ quên cột `LotAttr10` (ngày sản xuất / MFG Date).
 *   **Cách khắc phục:**
-    1. Cập nhật SQL Function `fn_VVT_getdatebyVendorLot_MergeCode` (dòng 712) để tự động fallback về ngày hiện tại (`GETDATE()` / ngày về) cho các mã PCB (`BEPCBA-%`), dây điện (`BEMC00-%`) và phụ kiện liên quan nếu Vendor Lot không đúng định dạng:
-       ```sql
-       when (
-           @materialcode like 'BEPCBA-%'
-           or @materialcode like 'BEMC00-%'
-           -- ... các mã liên quan ...
-       ) then
-           case 
-               when LEFT(@vendorlot, 1) = '2' and len(@vendorlot) >= 8 and ISDATE(substring(@vendorlot,1,4)+'-'+ substring(@vendorlot,5,2)+'-'+ substring(@vendorlot,7,2)) = 1
-                   then substring(@vendorlot,1,4)+'-'+ substring(@vendorlot,5,2)+'-'+ substring(@vendorlot,7,2)
-               else CONVERT(VARCHAR(10), GETDATE(), 120)
-           end
-       ```
-    2. Cập nhật SP `usp_DoChangeMaterialDocLotInfo` (dòng 235) để đồng bộ ngày sản xuất thực tế sang bảng tồn kho chính khi người dùng click Lot Change sửa trên UI:
-       ```sql
-       UPDATE STB_MaterialLotInfo
-       SET LotNo = @LotNo,
-           LotAttr10 = @PackDate  -- Bổ sung cập nhật MFG Date
-       WHERE Lotid = @LotId;
-       ```
-*   **Chi tiết nghiệp vụ:** Xem tại **fn_VVT_getdatebyVendorLot_MergeCode.sql** và **usp_DoChangeMaterialDocLotInfo.sql**.
-
----
-
-
-## [F430] — Goods Issue / Production Material Request (Xuất kho ra chuyền)
+    1. Cập nhật SQL Function `fn_VVT_getdatebyVendorLot_MergeCode` (dòng 712) để tự động fallback về ngày hiện tại (`GETDATE()` / ngày về) cho các mã PCB (`BEPCBA-%`), dây điện (`BEMC00-%`) và phụ kiện liên quan nếu Vendor Lot không đúng định dạ## [F430] — Goods Issue / Production Material Request (Xuất kho ra chuyền)
 
 ### Lỗi 1: Chặn quét xuất kho báo lỗi vi phạm nguyên tắc FIFO
 *   **Triệu chứng:** Quét xuất Lot NVL ra chuyền tại **F430** hệ thống chặn và báo lỗi vi phạm FIFO (Lot nhập sau không được xuất trước).
@@ -116,9 +91,9 @@
     ```
 *   **Chi tiết nghiệp vụ:** Xem tại [../KB_02/KB_02_01_WMS_CORE.md § 4.17](../KB_02/KB_02_01_WMS_CORE.md#417-thu-hồi-lot-từ-f430-về-kho-revert-xuất-kho).
 
-### [F430] — Lỗi 3: Cần sửa/lùi ngày xuất kho của Lot vật tư đã xuất ra chuyền ở màn
+### Lỗi 3: Cần sửa/lùi ngày xuất kho của Lot vật tư đã xuất ra chuyền ở màn F430
 *   **Triệu chứng:** Người dùng yêu cầu thay đổi/lùi ngày xuất kho thực tế của các mã Lot đã xuất về một ngày nhất định trong quá khứ để làm báo cáo hoặc sửa sai sót thời gian.
-*   **Nguyên nhân gốc:** Khi bấm xác nhận xuất kho tại F430, hệ thống ghi nhận thời gian xuất kho vào trường `CreateDateTime` của bảng lịch sử giao dịch [STB_MaterialWarehouseInOutHist](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_02/KB_02_01_WMS_CORE.md#stb_materialwarehouseinouthist).
+*   **Nguyên nhân gốc:** Khi bấm xác nhận xuất kho tại F430, hệ thống ghi nhận thời gian xuất kho vào trường `CreateDateTime` của bảng lịch sử giao dịch `STB_MaterialWarehouseInOutHist`.
 *   **Cách khắc phục:**
     1. Tra cứu mã giao dịch xuất kho (`MaterialWarehouseInOutHistNo`) của Lot:
        ```sql
@@ -130,12 +105,27 @@
        UPDATE STB_MaterialWarehouseInOutHist
        SET CreateDateTime = CAST('YYYY-MM-DD' AS DATETIME) + CAST(CreateDateTime AS TIME)
        WHERE MaterialWarehouseInOutHistNo = 'MÃ_GIAO_DỊCH_XUẤT_SAI';
-       -- Kiểm tra lại
-       SELECT MaterialWarehouseInOutHistNo, LotID, CreateDateTime FROM STB_MaterialWarehouseInOutHist WHERE MaterialWarehouseInOutHistNo = 'MÃ_GIAO_DỊCH_XUẤT_SAI';
-       COMMIT TRAN; -- hoặc ROLLBACK TRAN;
+       COMMIT TRAN;
        ```
-    3. **Lưu ý quan trọng về tính đồng bộ:** Kiểm tra xem ngày xuất mới có trước ngày nhập kho thực tế của Lot hay không (so sánh với `STB_MaterialLotInfo.CreateDateTime` hoặc ngày của phiếu nhập `STB_MaterialDocInfo`). Nếu lùi ngày xuất về trước cả ngày nhập kho, sẽ xảy ra lỗi âm kho và sai logic thời gian. Khi đó cần lùi đồng bộ cả ngày của phiếu nhập kho và ngày tạo Lot tồn kho.
 *   **Chi tiết nghiệp vụ:** Xem tại [../KB_02/KB_02_01_WMS_CORE.md § 4.6](../KB_02/KB_02_01_WMS_CORE.md#46-sửa-ngày-xuất-kho-màn-f430).
+
+### Lỗi 4: Ô "Mã kho hàng (Tới)" thiếu kho Hưng Yên và ô "Mã chuyền" bị trống khi xuất kho inter-factory sang Hưng Yên (VVT_F5)
+*   **Triệu chứng:** Người dùng mở popup xuất kho `VNT_MaterialWarehouseInOutHistReg` tại F430/F433 để xuất chuyển NVL sang nhà máy Hưng Yên (`VVT_F5`), nhưng ô "Mã kho hàng (Tới)" không hiển thị kho Hưng Yên. Đồng thời ô "Mã chuyền" bị trắng tinh không có dữ liệu để chọn.
+*   **Nguyên nhân gốc:** 
+    1. Popup `TargetMaterialWarehouse_Search` gọi SP `usp_TargetMaterialWarehouse_popup` lọc theo nhà máy hiện tại (`WorkCenterCode = 'VVT_F1'`/`'VVT_F2'`), lọc bỏ các kho của `VVT_F5`.
+    2. Popup ô Mã chuyền (`LineInfo_InoutMaterial`) gọi SP `usp_LineInfo_popup_InoutMaterial` lọc `WHERE LI.MaterialWarehouseCode = @SourceMaterialWarehouse`. Mã chuyền `HY_BN`/`HY_BG` bị `MaterialWarehouseCode = NULL` hoặc khi chọn các kho Hưng Yên khác nhau (`HOLDING_HY_WH`, `ROUTE_HY_WH`...) bị so sánh sai.
+*   **Cách khắc phục:**
+    1. Bổ sung `UNION ALL` nhóm kho Hưng Yên (`WorkCenterCode = 'VVT_F5'`) vào SP `usp_TargetMaterialWarehouse_popup`.
+    2. Chèn 2 mã chuyền đại diện `HY_BN` (Bắc Ninh - `VVT_F1`) và `HY_BG` (Bắc Giang - `VVT_F2`) vào `STB_LineInfo` với `MaterialWarehouseCode = 'ROH_HY_WH'`.
+    3. Cập nhật SP `usp_LineInfo_popup_InoutMaterial` nhận diện linh hoạt các kho Hưng Yên:
+       ```sql
+       WHERE ((@CompanyCode = '*') OR (LI.CompanyCode = @CompanyCode)) 
+         AND ((@WorkCenterCode = '*') OR (LI.WorkCenterCode = @WorkCenterCode))
+         AND (LI.MaterialWarehouseCode = @SourceMaterialWarehouse OR (LI.LineCode IN ('HY_BN', 'HY_BG') AND @SourceMaterialWarehouse LIKE '%HY%'))
+         AND LI.IsUsed = 1
+       ```
+*   **Chi tiết nghiệp vụ:** Xem SP `usp_TargetMaterialWarehouse_popup` và `usp_LineInfo_popup_InoutMaterial`. Updated by vanduc & Mrs.VanOc (2026-07-21).
+
 
 ---
 
@@ -224,8 +214,19 @@
     
     *Tham chiếu SQL script mẫu đã lưu tại local: **add_foil_f744_5.5mm.sql***
 
+### [F743] — Lỗi 5: Tạo tem NG bị quá số lượng / Số lượng còn lại bị âm (★ DEPLOYED 2026-07-21)
+*   **Triệu chứng:** Khi bấm nút "Tạo tem NG" tại F743, hệ thống tạo tem NG với số lượng vượt xa lượng còn lại thực tế (ví dụ: thực tế còn `1.13m`, nhưng sinh tem NG `25.7m`). Khi F5 lại màn hình, tổng tem chia vượt quá số lượng xuất và ô "Slg còn lại" bị âm (`-24.57m`).
+*   **Nguyên nhân gốc:** Stored Procedure `usp_CreateLotSlitting_NG_HN_uid` tính số lượng NG bằng `InitialQty` (độ dài cuộn thô ban đầu trong `STB_MaterialLotInfo`, ví dụ 58m) trừ tổng tem chia OK, thay vì dùng `ActualExportQuantity` trong `STB_MaterialWarehouseInOutHist` (số lượng thực tế xuất sang kho Slitting Hà Nam, ví dụ 33.43m).
+*   **Cách khắc phục:**
+    1. ALTER SP `usp_CreateLotSlitting_NG_HN_uid`: lấy `ActualExportQuantity` từ `STB_MaterialWarehouseInOutHist` (lọc theo kho `ROH_HN_WH` -> `SLITTING_HN_WH`) trước khi tính `@TemCurrentQtyNG`. Không xóa code cũ mà comment khối `/* ... */`. *(Comment đánh dấu chuẩn: `-- vanduc edited by Mr.Le Quang Tai 20260721 START ... END`)*.
+    2. Xóa tem NG tạo sai số lượng trên DB: `DELETE FROM STB_MaterialLotInfo WHERE LotID = 'SL20260721000089'`.
+*   **Đã kiểm chứng thực tế (2026-07-21):** Lot `SL20250522000064` (Xuất Slitting `33.43m`, đã chia OK `32.30m`) bấm nút "Tạo tem NG" đã sinh đúng tem NG `SL20260721000103` số lượng `1.13m`, và ô "Slg còn lại" hiển thị chính xác `0.0000000000`.
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_05_01_QC_AND_ELECTRODE_CORE.md § 10.1](../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md#101-flow-slitting-hà-nam).
+
+
 
 ---
+
 
 
 ## [F750] — Stocktaking (Kiểm kê kho vật tư)

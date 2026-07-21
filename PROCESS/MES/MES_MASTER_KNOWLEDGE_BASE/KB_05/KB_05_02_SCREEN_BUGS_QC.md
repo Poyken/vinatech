@@ -109,7 +109,14 @@
     Yêu cầu bộ phận QC hoàn thành nhập kết quả đo và xác nhận cờ chất lượng PASS cho Lot hàng trên màn hình **C220**.
 *   **Chi tiết nghiệp vụ:** Xem tại [../KB_02/KB_02_01_WMS_CORE.md § 4.15](../KB_02/KB_02_01_WMS_CORE.md#415-luồng-nhập-kho-đầy-đủ-f330).
 
-### Lỗi 2: Số lượng mẫu yêu cầu (Slg mẫu ycau) lệch so với Số lượng mẫu đo thực tế (Số lượng mẫu)
+### [F330] — Lỗi 2: Hàng mới tiếp nhận tại F330 không hiển thị trên lưới C220 để IQC đánh giá
+*   **Triệu chứng:** Phiếu nhập kho đã chuyển sang trạng thái `ARRIVAL` trên F330, `STB_MaterialQcInfo` đã sinh bản ghi nhưng khi mở **C220** tìm kiếm thì không thấy tên mã NVL (ví dụ: `MMHA00-001` Module case, `MMHA00-002` Middle plate).
+*   **Nguyên nhân gốc:** Thủ kho mới chỉ thực hiện bước xử lý hàng nhập về (Arrival) trên F330 nhưng **chưa bấm nút "Tạo tem"** (bảng `STB_MaterialDocLotInfo` chưa được tạo các bản ghi Lot con). Stored procedure `usp_MaterialQcInfo_get` thực hiện `INNER JOIN` với `STB_MaterialDocLotInfo` trong subquery gom Lot. Khi chưa có bản ghi Lot con, `MDI.MaterialDocNo` trả về `NULL`, dẫn đến câu điều kiện lọc `MDI.MaterialDocNo LIKE @MaterialDeliveryNo` bị bỏ qua bản ghi.
+*   **Cách khắc phục:**
+    Yêu cầu thủ kho mở lại màn hình **[F330]**, chọn dòng phiếu nhập tương ứng, nhập quy cách đóng gói / Đặc tính 10 và **bấm nút "Tạo tem"**. Sau đó quay lại **C220** bấm Search lại.
+*   **Ghi nhận audit:** Phát hiện & xác minh DB ngày 2026-07-21.
+
+### Lỗi 3: Số lượng mẫu yêu cầu (Slg mẫu ycau) lệch so với Số lượng mẫu đo thực tế (Số lượng mẫu)
 *   **Triệu chứng:** 
     1. Trên lưới hạng mục đo của màn hình **C220**, cột "Slg mẫu ycau" hiển thị số lượng mẫu nhỏ hơn cột "Số lượng mẫu" (Ví dụ: yêu cầu là 4 nhưng số lượng mẫu hiển thị là 5), làm phát sinh thêm dòng nhập mẫu đo thừa ngoài tiêu chuẩn.
     2. **Đặc biệt (Hiện tượng cache dòng đo thừa):** Sau khi đã sửa cấu hình AQL ở C113/C112 làm giảm số lượng mẫu (ví dụ về 2), cột "Slg mẫu ycau" và "Số lượng mẫu" ở grid trái đã cập nhật hiển thị đúng là 2, nhưng grid bên phải ("Kết quả kiểm tra...") vẫn hiển thị thừa dòng đo (ví dụ vẫn hiện 5 dòng từ 1 đến 5).

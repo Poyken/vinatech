@@ -818,8 +818,10 @@ F746 (Lịch sử Slitting) → F747 (Lịch sử check NG/Pass) → F748 (Chuy�
 | "Trùng mã nguyên liệu" | Mã NVL đã thiết lập trong F744 rồi | Kiểm tra và sửa bản ghi cũ |
 | Lot không tồn tại khi chuyển F430 | Lot chưa được QC check ở C243 | Vào C243 check trước |
 | Không chuyển về kho được | Lot bị QC đánh Reject | Không thể chuyển — xử lý theo quy trình NG |
+| Tạo tem NG F743 bị quá số lượng | SP `usp_CreateLotSlitting_NG_HN_uid` lấy InitialQty cuộn thô 58m thay vì `ActualExportQuantity` 33.43m xuất sang kho Slitting | ALTER SP `usp_CreateLotSlitting_NG_HN_uid` đọc `ActualExportQuantity` từ `STB_MaterialWarehouseInOutHist` trước khi tính `@TemCurrentQtyNG`. Xem [KB_02_02 §F743 Lỗi 5](../KB_02/KB_02_02_SCREEN_BUGS.md#f743--lỗi-5-tạo-tem-ng-bị-quá-số-lượng--số-lượng-còn-lại-bị-âm) |
 
 👉 **Chi tiết Script Fix (Thiết lập & Cấu hình Slitting):** Xem cấu hình chi tiết tại [KB_05_02_SCREEN_BUGS_QC.md](KB_05_02_SCREEN_BUGS_QC.md) § B552 / F744.
+
 
 ---
 
