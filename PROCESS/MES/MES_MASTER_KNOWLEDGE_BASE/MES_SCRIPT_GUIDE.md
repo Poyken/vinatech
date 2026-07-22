@@ -1,4 +1,4 @@
-<!--
+﻿<!--
 AI-READY METADATA
 Purpose: Hướng dẫn chi tiết cách sử dụng 6+ công cụ script PowerShell (run_query, db_sync_tool, validate_sql, deploy_tool, debug_screen, record_hotfix) và quy trình DB Archaeology
 Scope: Workspace PowerShell Tools & Execution Workflows
@@ -161,6 +161,7 @@ powershell -File .\run_query.ps1 -Query "SELECT name, create_date, modify_date F
 ---
 
 ## ⚠️ Quy Tắc An Toàn
-Các script trên tương tác trực tiếp với cơ sở dữ liệu. Vui lòng tham khảo chi tiết các quy tắc an toàn dữ liệu bắt buộc tại [RULES.md](../AI_AGENT_CONFIG/RULES.md).
+Các script trên tương tác trực tiếp với cơ sở dữ liệu. Vui lòng tham khảo chi tiết các quy tắc an toàn dữ liệu bắt buộc tại [RULES.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/AI_AGENT_CONFIG/RULES.md).
+
 
 

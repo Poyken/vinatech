@@ -1,8 +1,8 @@
-<!--
+﻿<!--
 AI-READY METADATA
 Purpose: Ma trận nhà máy (Factory WorkCenter Matrix) tra cứu WorkCenterCode, Route prefix, Barcode format & Warehouse Mapping cho 6+ nhà máy
 Scope: Factory Topology & WorkCenter Configuration
-Single Source of Truth: KB_10_FACTORY_WORKCENTER_MATRIX.md (Factory WorkCenter & Barcode Rules)
+Single Source of Truth: file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_10_FACTORY_WORKCENTER_MATRIX.md (Factory WorkCenter & Barcode Rules)
 Target Tables: STB_ProductionOrderInfo, STB_LineInfo, STB_MachineMaster, STB_YearInfo
 Related Files:
   - [KB_INDEX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
@@ -219,4 +219,5 @@ IF @WorkCenterCode = 'VVT_F4' AND @RouteCode NOT IN ('VP01')
 ---
 
 *Cập nhật: 2026-06-18 — Bổ sung Line distribution + STB_LineInfo schema (19 cols) + Machine tables (31 tables). DB verified.*
+
 

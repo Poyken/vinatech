@@ -1,4 +1,4 @@
-<!--
+﻿<!--
 AI-READY METADATA
 Purpose: Master Index & Bản đồ định tuyến tri thức (Routing Map) cho toàn bộ 12+ KB files trong MES Master Knowledge Base
 Scope: Master Knowledge Directory & TCode Mapping Matrix
@@ -51,12 +51,12 @@ Related Files:
 
 | File | Tên | Nội dung chính |
 |------|-----|----------------|
-| [KB_07](KB_07/INDEX.md) | **Hưng Yên** | Màn hình D-series của nhà máy Enesol Hưng Yên |
-| [KB_08_CORE_SP_ENGINE.md](KB_08_CORE_SP_ENGINE.md) | **Core SP Engine** | Phân tích line-by-line: usp_DoProcessProdRouteHist, Backflush, ForCalc, Packing, B450 Barcode rules |
-| [KB_09_SCREEN_BUG_FIXBOOK.md](KB_09_SCREEN_BUG_FIXBOOK.md) | **Sổ tay Fix Bug** | **Sổ tay cứu hộ 70+ bugs theo TCode thực tế (Đọc khi nhận bug)** |
-| [KB_10_FACTORY_WORKCENTER_MATRIX.md](KB_10_FACTORY_WORKCENTER_MATRIX.md) | **Factory Matrix** | Các nhà máy, LineCode, WorkCenter, định dạng Barcode đầu mã |
-| [KB_11_HANAM_FACTORY_SCREENS.md](KB_11_HANAM_FACTORY_SCREENS.md) | **Hà Nam Screens** | Danh sách 83 màn hình và 63 SP đặc thù của nhà máy Hà Nam |
-| [MES_SCRIPT_GUIDE.md](MES_SCRIPT_GUIDE.md) | **Script Tools** | Hướng dẫn sử dụng run_query, validate_sql, deploy_tool, db_sync_tool |
+| [KB_07](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_07/INDEX.md) | **Hưng Yên** | Màn hình D-series của nhà máy Enesol Hưng Yên |
+| [KB_08_CORE_SP_ENGINE.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_08_CORE_SP_ENGINE.md) | **Core SP Engine** | Phân tích line-by-line: usp_DoProcessProdRouteHist, Backflush, ForCalc, Packing, B450 Barcode rules |
+| [KB_09_SCREEN_BUG_FIXBOOK.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md) | **Sổ tay Fix Bug** | **Sổ tay cứu hộ 70+ bugs theo TCode thực tế (Đọc khi nhận bug)** |
+| [file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_10_FACTORY_WORKCENTER_MATRIX.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_10_FACTORY_WORKCENTER_MATRIX.md) | **Factory Matrix** | Các nhà máy, LineCode, WorkCenter, định dạng Barcode đầu mã |
+| [KB_11_HANAM_FACTORY_SCREENS.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_11_HANAM_FACTORY_SCREENS.md) | **Hà Nam Screens** | Danh sách 83 màn hình và 63 SP đặc thù của nhà máy Hà Nam |
+| [MES_SCRIPT_GUIDE.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/MES_SCRIPT_GUIDE.md) | **Script Tools** | Hướng dẫn sử dụng run_query, validate_sql, deploy_tool, db_sync_tool |
 
 ---
 
@@ -131,3 +131,6 @@ Related Files:
 *   **Kho nhập sai Warehouse (F330):** Phiếu nhập kho gán sai mã kho → Chi tiết: **KB_02 §4.3**
 *   **NVL báo lỗi Hết hạn sử dụng:** Cách kiểm tra hạn dùng và ân xá Lot qua bảng `stb_vvt_OpenExpiredMaterial` → Chi tiết: **KB_02 §4.10**
 *   **Chuyển Lot bị HOLD sang kho chính:** Sửa `MaterialWarehouseCode` từ `HOLDING_*` sang `ROH_*` → Chi tiết: **KB_02 §4.7**
+
+
+

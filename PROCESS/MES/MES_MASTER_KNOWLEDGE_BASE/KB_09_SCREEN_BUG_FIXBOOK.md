@@ -1,4 +1,4 @@
-<!--
+﻿<!--
 AI-READY METADATA
 Purpose: Sổ tay cứu hộ 70+ bugs theo TCode thực tế (Tra cứu triệu chứng -> nguyên nhân -> giải pháp SQL patch)
 Scope: Troubleshooting & Hotfix Knowledge Base
@@ -45,7 +45,7 @@ Related Files:
 | 1 | Model mới không hiện Vol/Farad trên chuyền | Chưa khai báo A230 hoặc thiếu cấu hình Vol/Farad | Vào A230 → tab Thông số kỹ thuật → nhập Vol, Farad, kích thước. SQL: `SELECT ModelCode, Voltage, Farad FROM STB_ModelBasicInfo WHERE ModelCode = 'mã'` |
 | 2 | Cột "Độ dày" bị trống trên B442 (Kế hoạch Electrode) | Chưa set MaterialThickness tại A230 tab "Mã nguyên liệu" | `UPDATE STB_MaterialMaster SET MaterialThickness = '120' WHERE MaterialCode = 'mã_nvl'` |
 
-> 🔗 Chi tiết: [KB_06 §9.1](KB_06_MASTER_DATA_TOOLS.md)
+> 🔗 Chi tiết: [KB_06 §9.1](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_06_MASTER_DATA_TOOLS.md)
 
 ### [A310]
 **Tên:** Route Info (Định nghĩa công đoạn)
@@ -54,7 +54,7 @@ Related Files:
 |---|---|---|---|
 | 1 | OP không thấy công đoạn mới trong danh sách Route | Chưa tạo Route tại A310 hoặc chưa map vào PO | Vào A310 → Thêm RouteCode → Map vào B210 (Line) |
 
-> 🔗 Chi tiết: [KB_06 §9.4](KB_06_MASTER_DATA_TOOLS.md)
+> 🔗 Chi tiết: [KB_06 §9.4](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_06_MASTER_DATA_TOOLS.md)
 
 ### [A410]
 **Tên:** Model Basic Info (Cấu hình model)
@@ -63,7 +63,7 @@ Related Files:
 |---|---|---|---|
 | 1 | C512 không tìm thấy Lot OQC | Chưa config OqcType, InspectionLevel tại A410 | `UPDATE STB_ModelBasicInfo SET OqcType='MANUAL', OqcInspectionRuleType='BY_MODEL', InspectionType='SAMPLE', InspectionLevel='SAMPLE' WHERE ModelCode = 'mã'` |
 
-> 🔗 Chi tiết: [KB_06 §9.5](KB_06_MASTER_DATA_TOOLS.md)
+> 🔗 Chi tiết: [KB_06 §9.5](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_06_MASTER_DATA_TOOLS.md)
 
 ### [A418]
 **Tên:** Packing Qty per Size (SL đóng gói theo Size)
@@ -72,7 +72,7 @@ Related Files:
 |---|---|---|---|
 | 1 | B523 không cho gộp Box, báo chưa có tiêu chuẩn đóng gói | Chưa khai báo A418 cho Size mới | Vào A418 → Thêm Size + PackingQty. SQL: `INSERT INTO STB_PackingQtyPerSize (SizeCode, PackingQty, ...) VALUES (...)` |
 
-> 🔗 Chi tiết: [KB_06 §9.6](KB_06_MASTER_DATA_TOOLS.md)
+> 🔗 Chi tiết: [KB_06 §9.6](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_06_MASTER_DATA_TOOLS.md)
 
 ### [A460]
 **Tên:** Model Label Info (Cấu hình in tem)
@@ -81,7 +81,7 @@ Related Files:
 |---|---|---|---|
 | 1 | In tem bị lỗi "Not found label type" | Chưa có record trong `STB_ModelLabelInfo` cho model | Copy từ model cũ cùng loại: `INSERT INTO STB_ModelLabelInfo SELECT 'MODEL_MỚI', LabelType, ... FROM STB_ModelLabelInfo WHERE ModelCode = 'MODEL_CŨ'` |
 
-> 🔗 Chi tiết: [KB_04 §6.20](KB_04/KB_04_01_CORE_PACKAGING.md), [KB_05 §8.7](KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md)
+> 🔗 Chi tiết: [KB_04 §6.20](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_01_CORE_PACKAGING.md), [KB_05 §8.7](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md)
 
 ### [A510]
 **Tên:** Production Order (Lệnh sản xuất - PO)
@@ -103,7 +103,7 @@ Related Files:
 | 2 | Line mới không hiện trên B460 | Chưa map Line→WorkCenter tại B210 | Vào B210 → Thêm mapping |
 | 3 | Machine mới scan không được | Chưa khai báo tại B240 | Vào B240 → Thêm MachineCode |
 
-> 🔗 Chi tiết: [KB_03 §B210-B270](KB_03/KB_03_02_CELL_LINE.md), [KB_01 §1.3](KB_01_UI_AND_SCREENS.md)
+> 🔗 Chi tiết: [KB_03 §B210-B270](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_02_CELL_LINE.md), [KB_01 §1.3](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_01_UI_AND_SCREENS.md)
 
 ### [B310]
 **Tên:** Production Order Info (Quản lý PO)
@@ -121,7 +121,7 @@ Related Files:
 | 1 | In tem điện cực lỗi "Not found label type" | Model chưa có record `STB_ModelLabelInfo` (LabelType='ElectLabel') | Xem A460 ở trên |
 | 2 | Cột "Độ dày" trống | A230 chưa set MaterialThickness | Xem A230 ở trên |
 
-> 🔗 Chi tiết: [KB_05 §8.7](KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md)
+> 🔗 Chi tiết: [KB_05 §8.7](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md)
 
 ### [B452]
 **Tên:** Line Changing (Chuyển Line sản xuất)
@@ -137,12 +137,12 @@ Related Files:
 |---|---|---|---|
 | 1 | Gộp box bị lỗi "Chưa có tiêu chuẩn đóng gói" | Thiếu config `STB_PackingQtyPerSize` cho Size sản phẩm | Xem A418 |
 | 2 | Gộp box bị lỗi "IsOutputRoute chưa thiết lập" | PO Routing thiếu cờ `IsOutputRoute=1` ở công đoạn cuối | `UPDATE STB_ProductionOrderRouting SET IsOutputRoute=1 WHERE PONo='mã' AND RouteCode='V-28'` |
-| 3 | Gộp box HN523 lỗi Qty=0 | `STB_PackingStandard` thiếu record cho model Hà Nam | INSERT record vào `STB_PackingStandard` — xem [KB_04 §6.13](KB_04/KB_04_01_CORE_PACKAGING.md) |
-| 4 | Gộp box lỗi do PO có công đoạn hậu đóng gói B523 | Thiếu lịch sử Route `V-28_BG` | Chèn dòng ProdRouteHist giả lập — xem [KB_04 §6.13.2](KB_04/KB_04_01_CORE_PACKAGING.md) |
+| 3 | Gộp box HN523 lỗi Qty=0 | `STB_PackingStandard` thiếu record cho model Hà Nam | INSERT record vào `STB_PackingStandard` — xem [KB_04 §6.13](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_01_CORE_PACKAGING.md) |
+| 4 | Gộp box lỗi do PO có công đoạn hậu đóng gói B523 | Thiếu lịch sử Route `V-28_BG` | Chèn dòng ProdRouteHist giả lập — xem [KB_04 §6.13.2](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_01_CORE_PACKAGING.md) |
 | 5 | MergeQty không chia đúng khi gộp nhiều Lot | Logic `@pMergeQty < @total + @InProdQty` bị edge case | Kiểm tra số lượng Lot trước khi gộp, đảm bảo tổng = MergeQty |
 | 6 | Sanmina QR code has redundant quantities and serials on inner labels | Stored procedure usp_SanminaLabelPrint_get_Vietnam did not return a filtered list of serials and quantities for inner labels. | `-- ============================================= -- Author:		Mr.Manh -- Create date: 2025-12-26 -- Description:	Get Sanmina label -- =================...` |
 
-> 🔗 Chi tiết: [KB_04 §6](KB_04/KB_04_01_CORE_PACKAGING.md), [KB_08 §5](KB_08_CORE_SP_ENGINE.md)
+> 🔗 Chi tiết: [KB_04 §6](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_01_CORE_PACKAGING.md), [KB_08 §5](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_08_CORE_SP_ENGINE.md)
 
 ### [B528]
 **Tên:** Barrel Barcode (In tem thùng phuy)
@@ -156,15 +156,15 @@ Related Files:
 
 | # | Triệu chứng | Nguyên nhân | Fix |
 |---|---|---|---|
-| 1 | Gate 20 phút không hoạt động — OP scan liên tục không bị chặn | BUG: `IF @SIExtInt01 = Null` (phải là `IS NULL`) trong SP `usp_DoProcessProdRouteHistForCalc_SmartApp_VNT` | ALTER SP sửa `= Null` → `IS NULL` — xem [KB_08 §4.2](KB_08_CORE_SP_ENGINE.md#42-bug-đã-phát-hiện) |
+| 1 | Gate 20 phút không hoạt động — OP scan liên tục không bị chặn | BUG: `IF @SIExtInt01 = Null` (phải là `IS NULL`) trong SP `usp_DoProcessProdRouteHistForCalc_SmartApp_VNT` | ALTER SP sửa `= Null` → `IS NULL` — xem [KB_08 §4.2](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_08_CORE_SP_ENGINE.md#42-bug-đã-phát-hiện) |
 | 2 | "Routing không có trong PO" hoặc "Đã hoàn thành" | Bỏ qua công đoạn trước chưa scan, hoặc PO config sai RouteIndex | Dùng Golden Query trace: `SELECT * FROM STB_ProdRouteHist WHERE ControlNo=(SELECT ControlNo FROM STB_SetInfo WHERE Barcode='mã') ORDER BY ProdDateTime` |
 | 3 | Lỗi "Vượt SL công đoạn trước" (전공정의 수량을 초과할수 없습니다) | CurrentRouteQty + ProdQty > BefRouteQty | Kiểm tra SL Route trước: nếu đúng → chốt thêm ở Route trước. Nếu sai → sửa ProdQty |
-| 4 | Thiếu/dư danh mục lỗi (Defect Code) trên lưới nhập lỗi | `STB_DefectInfo` chưa cập nhật | `UPDATE STB_DefectInfo SET IsUsed=0 WHERE DefectCode IN ('cũ')` + `INSERT INTO STB_DefectInfo (...) VALUES (...)` — xem [KB_03 §B530 Lỗi 3](KB_03/KB_03_02_CELL_LINE.md) |
+| 4 | Thiếu/dư danh mục lỗi (Defect Code) trên lưới nhập lỗi | `STB_DefectInfo` chưa cập nhật | `UPDATE STB_DefectInfo SET IsUsed=0 WHERE DefectCode IN ('cũ')` + `INSERT INTO STB_DefectInfo (...) VALUES (...)` — xem [KB_03 §B530 Lỗi 3](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_02_CELL_LINE.md) |
 | 5 | "Barcode chưa được đưa vào tuyến" (투입처리 되지 않은 바코드) | Barcode chưa qua công đoạn đầu (IsLineInput=0) | Scan lại từ công đoạn đầu (IsInputRoute=1), hoặc IT chạy: `UPDATE STB_SetInfo SET IsLineInput=1 WHERE ControlNo='mã'` |
 | 6 | "PQC chưa nhập số lượng NG" | SP check DefectQty ở công đoạn trước phải > 0 khi có mã lỗi `_00` (Đạt) | Logic bug — mã `_00` = OK nhưng SP đọc COUNT lỗi = 0 → nhầm là chưa nhập. Fix: ALTER SP hoặc IT nhập 1 dòng DefectQty=0 cho mã `_00` |
 | 7 | Grid `ProdRouteBarcodeForDefect_VNT` hiển thị lỗi sai/thừa cần xóa | OP nhập nhầm defect hoặc defect tạo tự động không đúng | Xóa mềm: `UPDATE STB_DefectRepairInfo SET IsDelete='1', ChangeDateTime=GETDATE(), ChangeUserID='ducnv_fix' WHERE ControlNo=(SELECT ControlNo FROM STB_SetInfo WHERE Barcode='MÃ_BARCODE') AND IsDelete='0'`. VD: Barcode `K16418106262500772` → ControlNo `20260618000445`, DefectSummaryNo `20260619000834/835` (VP02_005, ND02_006). ducnv 2026-06-19 |
 
-> 🔗 Chi tiết: [KB_03 §B530](KB_03/KB_03_02_CELL_LINE.md), [KB_08 §2](KB_08_CORE_SP_ENGINE.md) và [KB_08](KB_08_CORE_SP_ENGINE.md)
+> 🔗 Chi tiết: [KB_03 §B530](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_02_CELL_LINE.md), [KB_08 §2](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_08_CORE_SP_ENGINE.md) và [KB_08](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_08_CORE_SP_ENGINE.md)
 
 ### [B540]
 **Tên:** Process Input V22→V28 (Nhập NVL theo công đoạn)
@@ -178,9 +178,9 @@ Related Files:
 
 | # | Triệu chứng | Nguyên nhân | Fix |
 |---|---|---|---|
-| 1 | "Không tồn tại thiết lập Điện cực... Chưa CONFIG STB_SLITTINGLOCATIONCONFIG_VVT" | Bảng `STB_SlittingLocationConfig_VVT` thiếu record cho model | `INSERT INTO STB_SlittingLocationConfig_VVT (MaterialCode, LocationCode, ...) VALUES (...)` — xem [KB_05_02 §8.2](KB_05/KB_05_02_SCREEN_BUGS_QC.md#82-lỗi-chưa-config-trong-stb_slittinglocationconfig_vvt) |
+| 1 | "Không tồn tại thiết lập Điện cực... Chưa CONFIG STB_SLITTINGLOCATIONCONFIG_VVT" | Bảng `STB_SlittingLocationConfig_VVT` thiếu record cho model | `INSERT INTO STB_SlittingLocationConfig_VVT (MaterialCode, LocationCode, ...) VALUES (...)` — xem [KB_05_02 §8.2](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_02_SCREEN_BUGS_QC.md#82-lỗi-chưa-config-trong-stb_slittinglocationconfig_vvt) |
 
-> 🔗 Chi tiết: [KB_05_02 §7.6](KB_05/KB_05_02_SCREEN_BUGS_QC.md)
+> 🔗 Chi tiết: [KB_05_02 §7.6](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_02_SCREEN_BUGS_QC.md)
 
 ### [B560]
 **Tên:** Hela OutBox List (In tem thùng Hela)
@@ -197,13 +197,13 @@ Related Files:
 | 1 | Cảnh báo đỏ HOLD — "Lot chưa QC" | Lot nằm kho `HOLDING_WH` | QC hoàn thành IQC hoặc chuyển kho: `UPDATE STB_MaterialLotInfo SET MaterialWarehouseCode='ROH_WH' WHERE LotID='mã'` (⚠️ Cột là `MaterialWarehouseCode`, KHÔNG phải `WarehouseCode`) |
 | 2 | Cảnh báo "Hết hạn sử dụng" | Lot vi phạm FIFO/Expiry | Gia hạn: `UPDATE STB_MaterialLotInfo SET CreateDateTime = DATEADD(DAY,-30,GETDATE()) WHERE LotID='mã'` |
 | 3 | "Sai chủng loại" — NVL không trong BOM | NVL scan không match BOM config PO | Kiểm tra BOM tại B310 hoặc SQL |
-| 4 | Vỏ nhôm (AluCase) mới báo sai chủng loại | Mã vỏ nhôm bị **hardcode** trong SP `usp_Vietnam_RawMaterialInputHist_uid` | ALTER SP bổ sung mã mới vào `IF / NOT IN` — xem [KB_05_02 §7.4](KB_05/KB_05_02_SCREEN_BUGS_QC.md) |
-| 5 | "String or binary data truncated" khi quét gộp 5 mã điện cực | Cột `RawMaterialBarcode NVARCHAR(100)` quá ngắn | `ALTER TABLE STB_InputMaterialHistory ALTER COLUMN RawMaterialBarcode NVARCHAR(1000)` + sửa SP tương ứng — xem [KB_05_02 §7.5](KB_05/KB_05_02_SCREEN_BUGS_QC.md) |
+| 4 | Vỏ nhôm (AluCase) mới báo sai chủng loại | Mã vỏ nhôm bị **hardcode** trong SP `usp_Vietnam_RawMaterialInputHist_uid` | ALTER SP bổ sung mã mới vào `IF / NOT IN` — xem [KB_05_02 §7.4](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_02_SCREEN_BUGS_QC.md) |
+| 5 | "String or binary data truncated" khi quét gộp 5 mã điện cực | Cột `RawMaterialBarcode NVARCHAR(100)` quá ngắn | `ALTER TABLE STB_InputMaterialHistory ALTER COLUMN RawMaterialBarcode NVARCHAR(1000)` + sửa SP tương ứng — xem [KB_05_02 §7.5](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_02_SCREEN_BUGS_QC.md) |
 | 6 | "Mã Electrolyte/DUNG DỊCH được thiết lập, khác với mã QRCODE nhập vào" | Quét mã dung dịch sai chủng loại → SP check bảng config | Kiểm tra đúng mã NVL dung dịch, hoặc thêm vào config |
 | 7 | OP nhập NVL module (Wire/PCB/Chip) bằng gõ tay thay vì scan barcode lot cho model 1840-WC(40) | SP `usp_Vietnam_RawMaterialInputHist_uid` dòng 318 exclude `MODULE%` khỏi validation → OP gõ tự do `40`, `dm`, `0` | Thêm block chặn sau `END -- end chặn chemical`: check `@mmmaterialcode` (lookup sẵn từ `stb_materialdoclotinfo` line 264). ModuleWire→WRHI00-007, ModuleChip→VRE-009, ModulePCB→PBDM00-004. Nếu `@mmmaterialcode=''` (gõ tay) → RAISERROR. ducnv 2026-06-19 |
 | 8 | Quét điện cực báo "Lỗi BOM CREYO85B-02 không được phép dùng cho model ECVT30-293" và chặn lưu tồn kho slitting | Quét mã Coating-Roll (CREYO85B-02/CRFYO85B-02) trong khi BOM PO 260601000001 chỉ chứa mã Slitting-Roll (SREYO85A/SRFYO85A), đồng thời Lot chưa có tồn kho slitting | Cách 1: Sửa SP `usp_Vietnam_RawMaterialInputHist_uid` map mã tráng sang mã slitting tại L1279 và bypass slitting stock check tại L2124. Cách 2: Chuyển Lot sang chạy dưới PO `260623000007` (Model `ECVT30-367`) để bypass BOM check (nếu đã khai báo slitting stock). |
 
-> 🔗 Chi tiết: [KB_05_02 §7](KB_05/KB_05_02_SCREEN_BUGS_QC.md), [KB_03 §B597](KB_03/KB_03_02_CELL_LINE.md)
+> 🔗 Chi tiết: [KB_05_02 §7](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_02_SCREEN_BUGS_QC.md), [KB_03 §B597](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_02_CELL_LINE.md)
 
 ### [B598]
 **Tên:** Material Scrap Report (Báo phế NVL)
@@ -212,7 +212,7 @@ Related Files:
 |---|---|---|---|
 | 1 | Báo phế NVL bị chặn/không đồng bộ | Lệch `JobDate` giữa ca thực tế và kế hoạch | Sửa JobDate: `UPDATE STB_ProdRouteHist SET JobDate = CAST(GETDATE() AS DATE) WHERE ...` |
 
-> 🔗 Chi tiết: [KB_03 §6.12](KB_03/KB_03_02_CELL_LINE.md)
+> 🔗 Chi tiết: [KB_03 §6.12](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_02_CELL_LINE.md)
 
 ### [B618]
 **Tên:** Rework (Làm lại sản phẩm)
@@ -227,7 +227,7 @@ Related Files:
 | # | Triệu chứng | Nguyên nhân | Fix |
 |---|---|---|---|
 | 1 | B786 ESR không hiện data | ESR data chưa upload hoặc Lot chưa match | Kiểm tra `STB_VVT_ESRDATA` WHERE Barcode='mã' |
-| 2 | B791 NG Defect Repair — SL NG lệch | `DefectQty` trong `STB_ProdRouteHist` không khớp `STB_DefectRepairInfo` | Đồng bộ lại: xem [KB_03 §5.8](KB_03/KB_03_02_CELL_LINE.md) |
+| 2 | B791 NG Defect Repair — SL NG lệch | `DefectQty` trong `STB_ProdRouteHist` không khớp `STB_DefectRepairInfo` | Đồng bộ lại: xem [KB_03 §5.8](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_02_CELL_LINE.md) |
 
 ### [B754]-[B790]
 **Tên:** Customer Labels (PAC, Digi-Key, Phoenix Contact, Sanmina)
@@ -238,7 +238,7 @@ Related Files:
 | 2 | Tem Phoenix Contact sai mã khách hàng | Config customer mapping thiếu | Kiểm tra `STB_PackingLabelSpec` (⚠️ `STB_PhoenixContactLabelInfo` KHÔNG tồn tại trong DB — data lưu trong PackingLabelSpec hoặc hardcode SP) |
 | 3 | **[B767]** Tìm kiếm lần 2 bị lặp dữ liệu trên lưới (6 dòng thay vì 3 dòng) | Thuộc tính `데이터 추가` (Append Data) của hàm tìm kiếm `usp_SanminaLabelPrint_get_Vietnam` đang set là `True`. Khi search lần 2, do số Serial (`BoxSerialNo`, `PrintSerialNo` tự tăng dựa trên `@MaxSerial`) thay đổi, hệ thống không tìm thấy dòng trùng lặp và tự động append tiếp vào cuối grid. | Mở NAIS screen designer B767 → Chọn `Search Function` `usp_SanminaLabelPrint_get_Vietnam` → Tại bảng Property bên phải, nhóm `Group` → Chuyển `데이터 추가` từ `True` sang `False`. Save layout và Approve. |
 
-> 🔗 Chi tiết: [KB_04 §6.9.4](KB_04/KB_04_01_CORE_PACKAGING.md)
+> 🔗 Chi tiết: [KB_04 §6.9.4](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_01_CORE_PACKAGING.md)
 
 ### [B802]
 **Tên:** Electrode Production History
@@ -246,7 +246,7 @@ Related Files:
 | # | Triệu chứng | Nguyên nhân | Fix |
 |---|---|---|---|
 | 1 | Thiếu công đoạn trên báo cáo | OP chưa nhập đủ 4 công đoạn (Mixing/Coating/Rollpress/Slitting) tại B552 | Yêu cầu OP bổ sung nhập liệu tại B552 |
-| 2 | 🔴 BY/YP 120/180 A301 1.5B: Mixing Input = 0, có Coating Output | App cân NVL Mixing trên máy CMC không gọi SP `usp_DoCreateElectrodeMixStepInfo_electron`. DB + SP + config `STB_ElectrodeStep` đều OK. Ảnh hưởng: `CREBL85L`, `CRFYL85-01`, `CRFYN85L-01`. Phát hiện 2026-06-19. | Kiểm tra phần mềm cân trên máy CMC (log, phiên bản, kết nối DB). Xem [KB_05 §8.9](KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md) |
+| 2 | 🔴 BY/YP 120/180 A301 1.5B: Mixing Input = 0, có Coating Output | App cân NVL Mixing trên máy CMC không gọi SP `usp_DoCreateElectrodeMixStepInfo_electron`. DB + SP + config `STB_ElectrodeStep` đều OK. Ảnh hưởng: `CREBL85L`, `CRFYL85-01`, `CRFYN85L-01`. Phát hiện 2026-06-19. | Kiểm tra phần mềm cân trên máy CMC (log, phiên bản, kết nối DB). Xem [KB_05 §8.9](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md) |
 
 ### [B882]
 **Tên:** ANDON Display
@@ -275,7 +275,7 @@ Related Files:
 |---|---|---|---|
 | 1 | Lot NVL không có hạng mục kiểm tra | Chưa gán NVL vào nhóm kiểm tra tại C122 | Vào C121 thêm nhóm → C122 map NVL → nhóm |
 
-> 🔗 Chi tiết: [KB_05 §9.1](KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md)
+> 🔗 Chi tiết: [KB_05 §9.1](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md)
 
 ### [C220]
 **Tên:** IQC Incoming Quality Control
@@ -299,7 +299,7 @@ Related Files:
 |---|---|---|---|
 | 1 | Lưu sửa chữa lỗi → sai lệch DefectQty ở trạm tiếp | Đồng bộ giữa `STB_DefectRepairInfo` và `STB_ProdRouteHist` bị lệch | IT chỉnh sửa DefectQty/ProdQty trực tiếp DB |
 
-> 🔗 Chi tiết: [KB_05 §9.5](KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md)
+> 🔗 Chi tiết: [KB_05 §9.5](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md)
 
 ### [C443]
 **Tên:** PQC Quality Verification
@@ -334,7 +334,7 @@ COMMIT TRANSACTION;
 
 | # | Triệu chứng | Nguyên nhân | Fix |
 |---|---|---|---|
-| 1 | Cột Note1 thừa trên Grid / cột bị xáo | Lỗi metadata grid trong SmartFramework | Rebuild bảng + ALTER bảng tương ứng — xem [KB_05_02 §7.8](KB_05/KB_05_02_SCREEN_BUGS_QC.md) |
+| 1 | Cột Note1 thừa trên Grid / cột bị xáo | Lỗi metadata grid trong SmartFramework | Rebuild bảng + ALTER bảng tương ứng — xem [KB_05_02 §7.8](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_02_SCREEN_BUGS_QC.md) |
 
 ### [C512]
 **Tên:** OQC Lot Management
@@ -357,7 +357,7 @@ COMMIT TRANSACTION;
 
 | # | Triệu chứng | Nguyên nhân | Fix |
 |---|---|---|---|
-| 1 | OCV chỉ hiện 20 dòng thay vì 50 | SP `usp_Vietnam_MaterialFOQcDetail_get` thiếu block WHILE cho DetailNo=2 (OCV) | Thêm block WHILE cho OCV — xem [KB_05_02 §9.6](KB_05/KB_05_02_SCREEN_BUGS_QC.md) |
+| 1 | OCV chỉ hiện 20 dòng thay vì 50 | SP `usp_Vietnam_MaterialFOQcDetail_get` thiếu block WHILE cho DetailNo=2 (OCV) | Thêm block WHILE cho OCV — xem [KB_05_02 §9.6](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_02_SCREEN_BUGS_QC.md) |
 
 ### [C560]
 **Tên:** FG Receipt (Nhập kho thành phẩm)
@@ -385,11 +385,11 @@ COMMIT TRANSACTION;
 
 | # | Triệu chứng | Nguyên nhân | Fix |
 |---|---|---|---|
-| 1 | CustomerPartNo trống khi in tem | `STB_CustomerPartNoInfo` thiếu mapping model→customer | INSERT mapping: xem [KB_07 §5.4](KB_07/KB_07_01_OVERVIEW.md) |
+| 1 | CustomerPartNo trống khi in tem | `STB_CustomerPartNoInfo` thiếu mapping model→customer | INSERT mapping: xem [KB_07 §5.4](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_07/KB_07_01_OVERVIEW.md) |
 | 2 | Máy in không chạy hoặc tem trống | Cấu hình printer hoặc label template lỗi | Kiểm tra kết nối printer + template trong Z530 |
 | 3 | D110 thiếu/trùng bản ghi | Insert duplicate hoặc filter sai | Kiểm tra SP `usp_VNE_BoxLabelPrintHist_*` |
 
-> 🔗 Chi tiết: [KB_07 §5](KB_07/KB_07_01_OVERVIEW.md)
+> 🔗 Chi tiết: [KB_07 §5](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_07/KB_07_01_OVERVIEW.md)
 
 ---
 
@@ -402,9 +402,9 @@ COMMIT TRANSACTION;
 |---|---|---|---|
 | 1 | Bị chặn "Receiving Confirmation" | IQC chưa PASS tại C220 | QC hoàn thành IQC PASS trước |
 | 2 | NVL không tìm thấy trong popup chọn | Chưa khai báo NVL tại A230 | Vào A230 thêm MaterialCode |
-| 3 | Đổi mã vật tư tự động lỗi | `STB_ChangeMaterialCode_HN` thiếu mapping | INSERT mapping mã cũ→mới — xem [KB_02 §3.1](KB_02/KB_02_01_WMS_CORE.md) |
+| 3 | Đổi mã vật tư tự động lỗi | `STB_ChangeMaterialCode_HN` thiếu mapping | INSERT mapping mã cũ→mới — xem [KB_02 §3.1](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_02/KB_02_01_WMS_CORE.md) |
 
-> 🔗 Chi tiết: [KB_02 §4.15](KB_02/KB_02_01_WMS_CORE.md)
+> 🔗 Chi tiết: [KB_02 §4.15](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_02/KB_02_01_WMS_CORE.md)
 
 ### [F430]
 **Tên:** Material Transfer (Chuyển kho / Lịch sử đầu vào - đầu ra NVL)
@@ -436,7 +436,7 @@ COMMIT TRANSACTION;
 
 
 
-> 🔗 Chi tiết: [KB_05 §10](KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md), [KB_02 §Lỗi 4](KB_02/KB_02_02_SCREEN_BUGS.md#lỗi-4-không-tìm-thấy-mã-foil-mới-trong-popup-để-thiết-lập-chiều-rộng-cắt-ở-f744)
+> 🔗 Chi tiết: [KB_05 §10](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md), [KB_02 §Lỗi 4](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_02/KB_02_02_SCREEN_BUGS.md#lỗi-4-không-tìm-thấy-mã-foil-mới-trong-popup-để-thiết-lập-chiều-rộng-cắt-ở-f744)
 
 
 ---
@@ -459,7 +459,7 @@ COMMIT TRANSACTION;
 
 | # | Triệu chứng | Nguyên nhân | Fix |
 |---|---|---|---|
-| 1 | Gộp box lỗi Qty=0 | `STB_PackingStandard` thiếu record cho model HN | INSERT record — xem [KB_04 §6.13](KB_04/KB_04_01_CORE_PACKAGING.md) |
+| 1 | Gộp box lỗi Qty=0 | `STB_PackingStandard` thiếu record cho model HN | INSERT record — xem [KB_04 §6.13](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_01_CORE_PACKAGING.md) |
 | 2 | Gộp túi nilon lỗi | `STB_PackingNilonToBoxSmall_HN` config sai | Kiểm tra + update config |
 
 ### [HNC321]
@@ -552,7 +552,7 @@ COMMIT TRANSACTION;
 | 1 | Tài khoản bị khóa | Nhập sai mật khẩu quá số lần cho phép | Reset tại Z410 hoặc SQL: `UPDATE SmartFramework.dbo.STB_UserInfo SET AllowFlag=1 WHERE UserID='mã'` (⚠️ Cột là `AllowFlag`, KHÔNG có `IsLocked`) |
 | 2 | User không thấy menu | Chưa gán quyền tại Z220 (UserTypePermission) | Vào Z220 → tick quyền cho UserType |
 
-> 🔗 Chi tiết: [KB_06 §9.3](KB_06_MASTER_DATA_TOOLS.md)
+> 🔗 Chi tiết: [KB_06 §9.3](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_06_MASTER_DATA_TOOLS.md)
 
 ### [Z530]
 **Tên:** Label Info (Label Design)
@@ -583,12 +583,12 @@ COMMIT TRANSACTION;
 ### Lò Sấy Bypass (Hưng Yên)
 | Triệu chứng | Nguyên nhân | Fix |
 |---|---|---|
-| Lot chưa hoàn thành V-22 nhưng vẫn vào lò sấy được | SP không check `IsRouteFinish` trước khi cho vào lò | Thêm validation check — xem [KB_07 §5.1](KB_07/KB_07_01_OVERVIEW.md) |
+| Lot chưa hoàn thành V-22 nhưng vẫn vào lò sấy được | SP không check `IsRouteFinish` trước khi cho vào lò | Thêm validation check — xem [KB_07 §5.1](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_07/KB_07_01_OVERVIEW.md) |
 
 ### Doping JIG Auto-End Mất Lịch Sử
 | Triệu chứng | Nguyên nhân | Fix |
 |---|---|---|
-| JIG chạy 6h auto-end → lịch sử biến mất | SP `autoend` không INSERT vào `Stb_VVT_DopingJIG_History` | ALTER SP thêm INSERT — xem [KB_07 §5.2](KB_07/KB_07_01_OVERVIEW.md) |
+| JIG chạy 6h auto-end → lịch sử biến mất | SP `autoend` không INSERT vào `Stb_VVT_DopingJIG_History` | ALTER SP thêm INSERT — xem [KB_07 §5.2](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_07/KB_07_01_OVERVIEW.md) |
 
 ---
 
@@ -609,6 +609,7 @@ COMMIT TRANSACTION;
 ---
 
 *Cập nhật: 2026-06-19 | Tổng hợp từ KB_02, KB_03, KB_04, KB_05, KB_06, KB_07*
+
 
 
 

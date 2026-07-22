@@ -1,4 +1,4 @@
-<!--
+﻿<!--
 AI-READY METADATA
 Purpose: Phân tích line-by-line 4+ Stored Procedure cốt lõi nhất của hệ thống MES (DoProcess, Backflush, SmartApp variant, Packing & SetInfo Generator)
 Scope: Core Database SP Engine & Live Execution Map
@@ -321,7 +321,7 @@ EXEC usp_DoFixMaterialDoc @MaterialDocNo
 > IF @SIExtInt01 = Null  -- ← BUG! SQL không bao giờ TRUE khi so sánh = Null
 > -- Phải sửa thành: IF @SIExtInt01 IS NULL
 > ```
-> → Xem chi tiết tại [KB_03/KB_03_03_SCREEN_BUGS_B.md#lỗi-1-lỗi-cấm-scan-nhanh-dưới-20-phút-gate-20-phút-bị-lỗikhông-chặn-được](KB_03/KB_03_03_SCREEN_BUGS_B.md#lỗi-1-lỗi-cấm-scan-nhanh-dưới-20-phút-gate-20-phút-bị-lỗikhông-chặn-được).
+> → Xem chi tiết tại [KB_03/KB_03_03_SCREEN_BUGS_B.md#lỗi-1-lỗi-cấm-scan-nhanh-dưới-20-phút-gate-20-phút-bị-lỗikhông-chặn-được](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_03_SCREEN_BUGS_B.md#lỗi-1-lỗi-cấm-scan-nhanh-dưới-20-phút-gate-20-phút-bị-lỗikhông-chặn-được).
 
 ---
 
@@ -610,4 +610,5 @@ STB_MaterialDocDetail    STB_MaterialDocDetail
 usp_DoFixMaterialDoc (576/day)
 (Sửa chữa/điều chỉnh phiếu NVL)
 ```
+
 

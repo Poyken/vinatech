@@ -1,4 +1,4 @@
-
+﻿
 <!--
 AI-READY METADATA
 Purpose: Quy trình đóng gói core (B523, B525), PackingStandard schema, gộp/chia box, Z530/A460 Label Template Architecture & Debugging
@@ -29,8 +29,8 @@ Related Files:
 >
 > 🏭 **Cơ sở gốc:** VVT_F1 (Bắc Ninh) | **Biến thể theo cơ sở:**
 > - **Hà Nam (VVT_F3):** HN523 (đóng gói), HN542/HN543 (chia tem), HN544 (gộp túi bóng), HN553/HN711 (tem Solum)
-> - **BG2 (VVT_F4):** K130 (tem Module), K160 (lịch sử tem), K198 (tem Bloom Energy SL-7), K199 (tem Nordex) → [KB_03 §6.14](../KB_03/KB_03_02_CELL_LINE.md#614-nhà-máy-bg2--cấu-hình-triển-khai-hệ-thống-mes)
-> - **Hưng Yên (VVT_F5):** D051, D100, D110 → [KB_07](../KB_07/KB_07_01_OVERVIEW.md)
+> - **BG2 (VVT_F4):** K130 (tem Module), K160 (lịch sử tem), K198 (tem Bloom Energy SL-7), K199 (tem Nordex) → [KB_03 §6.14](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_02_CELL_LINE.md#614-nhà-máy-bg2--cấu-hình-triển-khai-hệ-thống-mes)
+> - **Hưng Yên (VVT_F5):** D051, D100, D110 → [KB_07](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_07/KB_07_01_OVERVIEW.md)
 
 ### 6.0 Tổng Quan Kiến Trúc In Tem Nhãn (Mô hình Giá sách ➔ Danh mục ➔ Người đọc)
 Để dễ hình dung luồng xử lý in tem trong hệ thống NAIS MES, hãy tưởng tượng:
@@ -198,8 +198,9 @@ LEFT JOIN LabelInfo LBI    -- CTE từ SmartFramework.dbo.STB_LabelInfo
 > [!NOTE]
 > **Khắc phục sự cố & Lỗi thường gặp (B351, B523, B525, B789, HN523, HN544, etc.):**
 > Toàn bộ danh sách lỗi chi tiết, nguyên nhân gốc, các kịch bản sự cố khẩn cấp và SQL hotfixes đã được chuyển sang tài liệu chuyên biệt:
-> 👉 [KB_04_02_SCREEN_BUGS.md](KB_04_02_SCREEN_BUGS.md) để tránh trùng lặp thông tin và dễ dàng tra cứu.
+> 👉 [KB_04_02_SCREEN_BUGS.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_02_SCREEN_BUGS.md) để tránh trùng lặp thông tin và dễ dàng tra cứu.
 
 ---
 *Cập nhật: 2026-07-10 — Loại bỏ trùng lặp nội dung lỗi, tách biệt Core Process vs Screen Bugs.*
+
 

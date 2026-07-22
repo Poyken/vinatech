@@ -1,4 +1,4 @@
-<!--
+﻿<!--
 AI-READY METADATA
 Purpose: Quản lý kho WMS nguyên vật liệu & thành phẩm, quy trình nhập F330, xuất F430, kiểm kê, FIFO, Hạn dùng, Holding & Hà Nam WMS
 Scope: WMS Warehouse Management Core
@@ -24,7 +24,7 @@ Related Files:
 ## 4. 📦 Kho Nguyên Vật Liệu (WMS)
 
 > 🏭 **Cơ sở gốc:** VVT_F1 (Bắc Ninh) — F-series chuẩn dùng chung tất cả cơ sở
-> 🔀 **Biến thể:** HN (Hà Nam): HN551/HN866 (kho TP), HN20-HN23 (kho R&D), HN544 (gộp túi bóng) | BG2: K181 (log ủy quyền NVL) → [KB_03 §6.14](../KB_03/KB_03_02_CELL_LINE.md#614-nhà-máy-bg2--cấu-hình-triển-khai-hệ-thống-mes)
+> 🔀 **Biến thể:** HN (Hà Nam): HN551/HN866 (kho TP), HN20-HN23 (kho R&D), HN544 (gộp túi bóng) | BG2: K181 (log ủy quyền NVL) → [KB_03 §6.14](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_02_CELL_LINE.md#614-nhà-máy-bg2--cấu-hình-triển-khai-hệ-thống-mes)
 
 ### 4.0 Sơ Đồ Quy Trình Tổng Quan (KHO & IQC -> SẢN XUẤT -> PQC & OQC)
 
@@ -103,7 +103,7 @@ SELECT OBJECT_DEFINITION(OBJECT_ID('usp_vvt_MaterialLotInfo_get'))
 
 ### 4.2 [C512] — Không tìm thấy mã lot ở màn
 
-👉 **Chi tiết Nguyên nhân & Cách xử lý:** Xem tại [../KB_05/KB_05_02_SCREEN_BUGS_QC.md#c512--c530--c546--oqc-lot-management-quản-lý-chất-lượng-đầu-ra](../KB_05/KB_05_02_SCREEN_BUGS_QC.md#c512--c530--c546--oqc-lot-management-quản-lý-chất-lượng-đầu-ra)
+👉 **Chi tiết Nguyên nhân & Cách xử lý:** Xem tại [../KB_05/KB_05_02_SCREEN_BUGS_QC.md#c512--c530--c546--oqc-lot-management-quản-lý-chất-lượng-đầu-ra](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_02_SCREEN_BUGS_QC.md#c512--c530--c546--oqc-lot-management-quản-lý-chất-lượng-đầu-ra)
 
 ---
 
@@ -441,8 +441,8 @@ WHERE LotID = 'lot_id_cần_sửa';
 ### 4.12 [B597] — Lỗi "Không tồn tại thiết lập Vỏ Nhôm" ()
 
 *   **Triệu chứng:** `"Không tồn tại thiết lập Vỏ Nhôm của LotNo... với mã Vỏ Nhôm: GBDYAC-004 <> ECVT30-367"`
-*   **Chi tiết & Giải pháp:** Xem chi tiết nguyên nhân gốc, cách trace và SQL script khắc phục tại [../KB_05/KB_05_02_SCREEN_BUGS_QC.md#b597--lỗi-2-lỗi-quét-vỏ-nhôm-alucase-mới-báo-sai-chủng-loại-tại](../KB_05/KB_05_02_SCREEN_BUGS_QC.md#b597--lỗi-2-lỗi-quét-vỏ-nhôm-alucase-mới-báo-sai-chủng-loại-tại).
-*   **Checklist lỗi B597 đầy đủ:** Xem tại [../KB_05/KB_05_02_SCREEN_BUGS_QC.md#83-b597--checklist-khi-báo-lỗi-khi-lưu-nvl](../KB_05/KB_05_02_SCREEN_BUGS_QC.md#83-b597--checklist-khi-báo-lỗi-khi-lưu-nvl).
+*   **Chi tiết & Giải pháp:** Xem chi tiết nguyên nhân gốc, cách trace và SQL script khắc phục tại [../KB_05/KB_05_02_SCREEN_BUGS_QC.md#b597--lỗi-2-lỗi-quét-vỏ-nhôm-alucase-mới-báo-sai-chủng-loại-tại](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_02_SCREEN_BUGS_QC.md#b597--lỗi-2-lỗi-quét-vỏ-nhôm-alucase-mới-báo-sai-chủng-loại-tại).
+*   **Checklist lỗi B597 đầy đủ:** Xem tại [../KB_05/KB_05_02_SCREEN_BUGS_QC.md#83-b597--checklist-khi-báo-lỗi-khi-lưu-nvl](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_02_SCREEN_BUGS_QC.md#83-b597--checklist-khi-báo-lỗi-khi-lưu-nvl).
 
 ---
 
@@ -636,7 +636,7 @@ Với mỗi mã nguyên vật liệu (`MaterialCode`), hệ thống cấu hình 
 *   `IsUseBarcode`: Có bắt buộc quản lý và quét bằng tem nhãn barcode hay không.
 *   `IsFIFO`: Có kích hoạt tính năng kiểm tra Nhập trước - Xuất trước (FIFO) đối với mã này hay không.
 *   `IsLotUse`: Có bắt buộc tách hàng thành các mã Lot riêng biệt để theo dõi vòng đời hay không.
-*   *Lưu ý lỗi:* Nếu nguyên vật liệu mới không gộp box được (lỗi tại B523), thủ kho cần kiểm tra xem mã vật tư đó đã được tích đầy đủ các cờ cấu hình trên hay chưa (Xem hướng dẫn thiết lập Master Data tại [KB_06 § 2.1](../KB_06_MASTER_DATA_TOOLS.md)).
+*   *Lưu ý lỗi:* Nếu nguyên vật liệu mới không gộp box được (lỗi tại B523), thủ kho cần kiểm tra xem mã vật tư đó đã được tích đầy đủ các cờ cấu hình trên hay chưa (Xem hướng dẫn thiết lập Master Data tại [KB_06 § 2.1](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_06_MASTER_DATA_TOOLS.md)).
 
 ---
 
@@ -940,7 +940,7 @@ VALUES (
 ### [HNC321] — 4. Lỗi màn (Qc nhập NG sản phẩm mang đi kiểm tra Báo lỗi chữ Hàn Quốc)
 
 Chi tiết về triệu chứng, nguyên nhân và các phương án bypass (bao gồm script SQL chèn lịch sử giả lập) đối với lỗi nhập phế màn HNC321, vui lòng tham khảo tại:
-👉 [../KB_05/KB_05_02_SCREEN_BUGS_QC.md#kịch-bản-sự-cố-khẩn-cấp-3-lỗi-nhập-phế-hnc321-báo-lỗi-tiếng-hàn](../KB_05/KB_05_02_SCREEN_BUGS_QC.md#kịch-bản-sự-cố-khẩn-cấp-3-lỗi-nhập-phế-hnc321-báo-lỗi-tiếng-hàn)
+👉 [../KB_05/KB_05_02_SCREEN_BUGS_QC.md#kịch-bản-sự-cố-khẩn-cấp-3-lỗi-nhập-phế-hnc321-báo-lỗi-tiếng-hàn](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_02_SCREEN_BUGS_QC.md#kịch-bản-sự-cố-khẩn-cấp-3-lỗi-nhập-phế-hnc321-báo-lỗi-tiếng-hàn)
 
 ---
 
@@ -951,7 +951,7 @@ Chi tiết về triệu chứng, nguyên nhân và các phương án bypass (bao
 > ⚠️ **Lưu ý:** Xóa phiếu F330 (nhập kho NVL) cần xóa IQC trước (nếu có).
 
 **Xóa sản lượng công đoạn:**
-👉 **Quy trình chuẩn & Script Transaction:** Xem hướng dẫn chi tiết tại [KB_03_01_OVERVIEW.md](file:///c:/Users/User Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_01_OVERVIEW.md#L334) (§ 5.16 Quy trình 3 bước "Thám tử" truy vết và Hủy công đoạn / NG nhầm).
+👉 **Quy trình chuẩn & Script Transaction:** Xem hướng dẫn chi tiết tại [file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_01_OVERVIEW.md](file:///c:/Users/User Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03/file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_01_OVERVIEW.md#L334) (§ 5.16 Quy trình 3 bước "Thám tử" truy vết và Hủy công đoạn / NG nhầm).
 
 **Xóa phiếu nhập kho F330 (có IQC):**
 👉 **Chi tiết Script Fix:** Xem tại [KB_02_01_WMS_CORE.md](file:///c:/Users/User Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_02/KB_02_01_WMS_CORE.md#L471) (§ 4.16 [F330] — Hủy phiếu nhập kho đã Confirmed).
@@ -1040,7 +1040,9 @@ WHERE IDCODE = 'FGVN_BG20250211054041195484931'
 
 ---
 
-> 🔗 **Tra cứu Bug theo Screen ID cho WMS (F-series, HN-series):** Xem tại [KB_09_SCREEN_BUG_FIXBOOK.md](../KB_09_SCREEN_BUG_FIXBOOK.md) — tổng hợp đầy đủ theo TCode.
+> 🔗 **Tra cứu Bug theo Screen ID cho WMS (F-series, HN-series):** Xem tại [KB_09_SCREEN_BUG_FIXBOOK.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md) — tổng hợp đầy đủ theo TCode.
 
 *Cập nhật: 2026-06-18*
+
+
 

@@ -1,4 +1,4 @@
-<!--
+﻿<!--
 AI-READY METADATA
 Purpose: Tất cả trong một (All-in-one): Rules + DB + Tools + Lessons Learned cho AI Agent trong phiên làm việc mới
 Scope: Entry Point & Core Operating Procedures
@@ -85,7 +85,7 @@ Related Files:
 
 ---
 
-## 🐛 LESSONS LEARNED (Top 5 — Danh sách đầy đủ xem [SKILLS.md §8](SKILLS.md#8--lessons-learned-từ-các-cuộc-trò-chuyện))
+## 🐛 LESSONS LEARNED (Top 5 — Danh sách đầy đủ xem [SKILLS.md §8](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/AI_AGENT_CONFIG/SKILLS.md#8--lessons-learned-từ-các-cuộc-trò-chuyện))
 
 1. `= Null` ≠ `IS NULL` — Gate 20 phút fail (KB_08 §4.2)
 2. `STB_MaterialHoldInfo` **KHÔNG tồn tại** → dùng `MaterialWarehouseCode = 'HOLDING_*'`
@@ -127,4 +127,5 @@ Related Files:
 
 ---
 *Cập nhật: 2026-07-02 — Loại bỏ trùng lặp DB config & cấu trúc thư mục. SoT: db_config.json, RULES.md, README.md.*
+
 

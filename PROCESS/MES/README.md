@@ -1,4 +1,4 @@
-<!--
+﻿<!--
 AI-READY METADATA
 Purpose: Workspace Root README — Hướng dẫn chuyển hướng, cấu trúc thư mục & AI Entry point cho hệ thống MES Vinatech
 Scope: Entire MES Workspace Directory
@@ -14,7 +14,7 @@ Related Files:
 > [!IMPORTANT]
 > **CẬP NHẬT QUAN TRỌNG:** Toàn bộ hệ thống tri thức, quy trình nghiệp vụ và hướng dẫn sửa lỗi tích hợp giữa Groupware và MES đã được hợp nhất thành một thư viện duy nhất để tránh trùng lặp dữ liệu và phân mảnh:
 > 
-> *   ### 🗂️ [MỤC LỤC TRUNG TÂM TRA CỨU HỆ THỐNG](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/SYSTEM_MASTER_KNOWLEDGE_BASE/README.md)
+> *   ### 🗂️ [MỤC LỤC TRUNG TÂM TRA CỨU HỆ THỐNG](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
 > 
 > Vui lòng bấm vào liên kết trên để chuyển hướng tới trang mục lục chính điều hướng 3 Volumes tri thức cốt lõi.
 
@@ -44,4 +44,6 @@ MES/
 ├── debug_screen.ps1                       # PowerShell chẩn đoán lỗi màn hình theo TCode/ErrorMsg
 └── record_hotfix.ps1                      # PowerShell ghi nhận lỗi và tự động vá vào KB_09
 ```
+
+
 

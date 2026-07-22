@@ -1,8 +1,8 @@
-<!--
+﻿<!--
 AI-READY METADATA
 Purpose: Tổng quan luồng sản xuất (B310-B882), SetInfo & ProdRouteHist Data Schemas, JobDate update scripts & Barcode traceability
 Scope: Production System Overview & Core Data Schemas
-Single Source of Truth: KB_03_01_OVERVIEW.md (Production Overview & Core Schemas)
+Single Source of Truth: file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_01_OVERVIEW.md (Production Overview & Core Schemas)
 Target Screens: B310, B450, B452, B523, B528, B530, B540, B597, B598, B682, B717, B726, B781, B782, B791, B802, B882
 Target Tables: STB_SetInfo, STB_ProdRouteHist, STB_DayProdPlan, STB_ProductionOrderInfo
 Related Files:
@@ -39,7 +39,7 @@ B530 → Nhập số lượng sản xuất (bắt buộc nhập "Making")
 B523 → Đóng gói & In label thùng hàng
 ```
 
-> 🏭 **Cơ sở:** Luồng trên là chuẩn **VVT_F1 (Bắc Ninh)**. Hà Nam dùng HN523 thay B523. BG2 dùng K101 thay B450, K109 thay B597. Xem [KB_INDEX § Mapping](../KB_INDEX.md#bản-đồ-cơ-sở--màn-hình-factory--screen-mapping).
+> 🏭 **Cơ sở:** Luồng trên là chuẩn **VVT_F1 (Bắc Ninh)**. Hà Nam dùng HN523 thay B523. BG2 dùng K101 thay B450, K109 thay B597. Xem [KB_INDEX § Mapping](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md#bản-đồ-cơ-sở--màn-hình-factory--screen-mapping).
 
 > ⚠️ **Cột IsFixed ở B450 phải được tích** mới tạo được Lot.
 > ⚠️ **B530 bắt buộc nhập chữ "Making"** (chọn ở cột Status) nếu không công đoạn V25 sẽ bị chặn không cho lưu. Đây là điều kiện tiên quyết để hệ thống ghi nhận đang sản xuất.
@@ -135,7 +135,7 @@ WHERE ID IN (6030, 6032, 6027, 6025, 6026, 6031)
 
 ### 5.6 Sửa ngày màn FG00 (Kho Thành Phẩm BG)
 
-👉 **Chi tiết Script Fix:** Xem tại [../KB_02/KB_02_01_WMS_CORE.md § 8](../KB_02/KB_02_01_WMS_CORE.md)
+👉 **Chi tiết Script Fix:** Xem tại [../KB_02/KB_02_01_WMS_CORE.md § 8](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_02/KB_02_01_WMS_CORE.md)
 
 ---
 
@@ -420,4 +420,6 @@ WHERE MarkingCode = 'MK00000974';
 *Cập nhật: 2026-05-27*
 
 ---
+
+
 

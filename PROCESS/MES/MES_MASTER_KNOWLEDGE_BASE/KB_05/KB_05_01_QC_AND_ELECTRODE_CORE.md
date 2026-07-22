@@ -1,4 +1,4 @@
-<!--
+﻿<!--
 AI-READY METADATA
 Purpose: Tổng quan quy trình QC (IQC, PQC, OQC, FOQC) & Vận hành sản xuất Điện cực (Mixing, Coating, Rollpress, Slitting)
 Scope: Quality Control Inspection & Electrode Core Operations
@@ -89,7 +89,7 @@ SELECT CurrentRouteCode FROM STB_SetInfo WHERE Barcode = 'Mã_Barcode'
 
 ### 7.3 B597 báo lỗi "Hết hạn sử dụng"
 
-→ Xem [KB_02 Mục 4.10](../KB_02/KB_02_01_NVL_WMS.md#410-kiểm-tra-hạn-sử-dụng-nvl-expiry-date) để tra cứu công thức tính.
+→ Xem [KB_02 Mục 4.10](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_02/KB_02_01_WMS_CORE.md#410-kiểm-tra-hạn-sử-dụng-nvl-expiry-date) để tra cứu công thức tính.
 
 ---
 
@@ -346,7 +346,7 @@ Theo thứ tự SP usp_Vietnam_RawMaterialInputHist_uid kiểm tra:
 □ 7. Thiếu cấu hình Slitting? → Kiểm tra STB_SLITTINGLOCATIONCONFIG_VVT
 ```
 
-> 🚦 **Tham chiếu mở rộng:** Toàn bộ các validation gates tương tự (B530, B523, B452, B618, QC Audit, Returns, Lò Sấy, Slitting Knife...) đã được tổng hợp chi tiết tại [KB_09_SCREEN_BUG_FIXBOOK.md](../KB_09_SCREEN_BUG_FIXBOOK.md) dưới dạng cẩm nang tra cứu và vá lỗi theo từng màn hình.
+> 🚦 **Tham chiếu mở rộng:** Toàn bộ các validation gates tương tự (B530, B523, B452, B618, QC Audit, Returns, Lò Sấy, Slitting Knife...) đã được tổng hợp chi tiết tại [KB_09_SCREEN_BUG_FIXBOOK.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md) dưới dạng cẩm nang tra cứu và vá lỗi theo từng màn hình.
 
 ---
 
@@ -366,7 +366,7 @@ Kiểm tra tồn kho điện cực → **Stb_SlittingStock_VVT**
 
 ### 8.5 Lỗi popup không hiện dữ liệu ở B270
 
-👉 **Chi tiết Trace & Fix:** Xem tại [KB_01_UI_PHAN_QUYEN.md § 1.3](KB_01_UI_PHAN_QUYEN.md)
+👉 **Chi tiết Trace & Fix:** Xem tại [file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_01_UI_AND_SCREENS.md § 1.3](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_01_UI_AND_SCREENS.md)
 
 ---
 
@@ -436,7 +436,7 @@ Quy trình quản lý sản xuất và kiểm định chất lượng đối v�
     2. A460 → `STB_ModelLabelInfo` (ElectLabel + các label type cần thiết)
     3. B442 → Tạo lot test → kiểm tra cột "Độ dày" + in tem
 
-    > 🔗 Xem thêm: [KB_04_01_CORE_PACKAGING.md](../KB_04/KB_04_01_CORE_PACKAGING.md) § 6.20 và [KB_09_SCREEN_BUG_FIXBOOK.md](../KB_09_SCREEN_BUG_FIXBOOK.md).
+    > 🔗 Xem thêm: [KB_04_01_CORE_PACKAGING.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_01_CORE_PACKAGING.md) § 6.20 và [KB_09_SCREEN_BUG_FIXBOOK.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md).
 
 #### 2. Vận Hành 4 Công Đoạn Điện Cực & Nhập Liệu trên B552
 Quy trình sản xuất điện cực gồm 4 công đoạn chính và mỗi công đoạn tương ứng với một tab dữ liệu trên màn hình **B552**:
@@ -465,7 +465,7 @@ Quy trình sản xuất điện cực gồm 4 công đoạn chính và mỗi cô
 ### 8.8 Hỗ trợ lưu nhiều mã vạch nguyên vật liệu (Multi-barcode Appending) cho Điện cực và Vỏ Case
 
 *   **Mô tả:** Hệ thống hỗ trợ bắn nối tiếp nhiều cuộn nguyên vật liệu khác nhau (ngăn cách bởi dấu `;`) trên cùng một Lot sản phẩm để tránh trường hợp cuộn cũ hết giữa chừng nhưng Lot chưa chạy xong.
-*   **Chi tiết & Giải pháp:** Xem chi tiết về logic kiểm tra và lưu trong SP `usp_Vietnam_RawMaterialInputHist_uid`, cũng như cách gộp hiển thị trên lưới tại [KB_03_SAN_XUAT.md#619-hỗ-trợ-lưu-nhiều-mã-vạch-nguyên-vật-liệu-multi-barcode-appending-cho-điện-cực-và-vỏ-case](KB_03_SAN_XUAT.md#619-hỗ-trợ-lưu-nhiều-mã-vạch-nguyên-vật-liệu-multi-barcode-appending-cho-điện-cực-và-vỏ-case).
+*   **Chi tiết & Giải pháp:** Xem chi tiết về logic kiểm tra và lưu trong SP `usp_Vietnam_RawMaterialInputHist_uid`, cũng như cách gộp hiển thị trên lưới tại [file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_02_CELL_LINE.md#619-hỗ-trợ-lưu-nhiều-mã-vạch-nguyên-vật-liệu-multi-barcode-appending-cho-điện-cực-và-vỏ-case](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_02_CELL_LINE.md#619-hỗ-trợ-lưu-nhiều-mã-vạch-nguyên-vật-liệu-multi-barcode-appending-cho-điện-cực-và-vỏ-case).
 
 ---
 
@@ -671,7 +671,7 @@ SELECT * FROM STB_DefectRepairInfo WHERE ControlNo IN (
 )
 ```
 
-> ⚠️ SQL sửa DefectQty và ProdQty công đoạn sau → xem [KB_03 Mục 5.8](../KB_03/KB_03_02_CELL_LINE.md#58-sửa-số-lượng-ng-defectqty-màn-b791) để tránh trùng lặp.
+> ⚠️ SQL sửa DefectQty và ProdQty công đoạn sau → xem [KB_03 Mục 5.8](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_02_CELL_LINE.md#58-sửa-số-lượng-ng-defectqty-màn-b791) để tránh trùng lặp.
 
 ---
 
@@ -724,7 +724,7 @@ FROM Stb_ESRValueMonitor WHERE lotno = 'Mã_Barcode' ORDER BY ID
 ```
 
 **Fix data khi bị lệch số dòng:**
-*Xem chi tiết các bước chạy rollback và reset dữ liệu tại file script [fix_c546_ocv_lots.sql](../sql/scripts/fix_c546_ocv_lots.sql)*
+*Xem chi tiết các bước chạy rollback và reset dữ liệu tại file script [fix_c546_ocv_lots.sql](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/sql/scripts/fix_c546_ocv_lots.sql)*
 
 **Các Stored Procedure liên quan (C546):**
 
@@ -832,9 +832,9 @@ F746 (Lịch sử Slitting) → F747 (Lịch sử check NG/Pass) → F748 (Chuy�
 | "Trùng mã nguyên liệu" | Mã NVL đã thiết lập trong F744 rồi | Kiểm tra và sửa bản ghi cũ |
 | Lot không tồn tại khi chuyển F430 | Lot chưa được QC check ở C243 | Vào C243 check trước |
 | Không chuyển về kho được | Lot bị QC đánh Reject | Không thể chuyển — xử lý theo quy trình NG |
-| Tạo tem NG F743 bị quá số lượng | SP `usp_CreateLotSlitting_NG_HN_uid` lấy InitialQty cuộn thô 58m thay vì `ActualExportQuantity` 33.43m xuất sang kho Slitting | ALTER SP `usp_CreateLotSlitting_NG_HN_uid` đọc `ActualExportQuantity` từ `STB_MaterialWarehouseInOutHist` trước khi tính `@TemCurrentQtyNG`. Xem [KB_02_02 §F743 Lỗi 5](../KB_02/KB_02_02_SCREEN_BUGS.md#f743--lỗi-5-tạo-tem-ng-bị-quá-số-lượng--số-lượng-còn-lại-bị-âm) |
+| Tạo tem NG F743 bị quá số lượng | SP `usp_CreateLotSlitting_NG_HN_uid` lấy InitialQty cuộn thô 58m thay vì `ActualExportQuantity` 33.43m xuất sang kho Slitting | ALTER SP `usp_CreateLotSlitting_NG_HN_uid` đọc `ActualExportQuantity` từ `STB_MaterialWarehouseInOutHist` trước khi tính `@TemCurrentQtyNG`. Xem [KB_02_02 §F743 Lỗi 5](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_02/KB_02_02_SCREEN_BUGS.md#f743--lỗi-5-tạo-tem-ng-bị-quá-số-lượng--số-lượng-còn-lại-bị-âm) |
 
-👉 **Chi tiết Script Fix (Thiết lập & Cấu hình Slitting):** Xem cấu hình chi tiết tại [KB_05_02_SCREEN_BUGS_QC.md](KB_05_02_SCREEN_BUGS_QC.md) § B552 / F744.
+👉 **Chi tiết Script Fix (Thiết lập & Cấu hình Slitting):** Xem cấu hình chi tiết tại [KB_05_02_SCREEN_BUGS_QC.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_02_SCREEN_BUGS_QC.md) § B552 / F744.
 
 
 ---
@@ -934,7 +934,7 @@ ORDER BY MeasureCycle, SampleSeqNo;
 
 ---
 
-> 📌 **Phân tích sâu & DB Audit:** Xem chi tiết kết quả Audit trong tri thức tích hợp chéo (Groupware/MES) [Master Index](../../SYSTEM_MASTER_KNOWLEDGE_BASE/README.md) hoặc KI: kb_verification.
+> 📌 **Phân tích sâu & DB Audit:** Xem chi tiết kết quả Audit trong tri thức tích hợp chéo (Groupware/MES) [Master Index](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md) hoặc KI: kb_verification.
 
 *Cập nhật: 2026-06-14 | Gộp nội dung từ các tài liệu để đồng bộ hoá tri thức quản lý chất lượng (QC)*
 
@@ -942,4 +942,7 @@ ORDER BY MeasureCycle, SampleSeqNo;
 
 
 ---
+
+
+
 

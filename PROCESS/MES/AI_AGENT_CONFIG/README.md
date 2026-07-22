@@ -1,4 +1,4 @@
-<!--
+﻿<!--
 AI-READY METADATA
 Purpose: Hướng dẫn tổng quan cấu trúc thư mục AI_AGENT_CONFIG và thứ tự đọc file tối ưu token cho AI Agent
 Scope: Config Directory Documentation
@@ -20,10 +20,10 @@ Related Files:
 
 | # | File | Khi nào đọc | Nội dung | Token ~est |
 |---|------|-------------|----------|-----------|
-| **0** | **[BOOTSTRAP.md](BOOTSTRAP.md)** | **LUÔN LUÔN — Mỗi session mới** | **All-in-one: rules + DB + tools + bẫy + trạng thái dự án** | **~1500** |
-| 1 | [RULES.md](RULES.md) | Khi cần chi tiết quy tắc | Quy tắc an toàn DB, workflow bug fix | ~500 |
-| 2 | [KNOWLEDGE.md](KNOWLEDGE.md) | Khi cần tra cứu bảng/SP/KB | Cheat sheet bảng/SP/factory matrix | ~800 |
-| 3 | [SKILLS.md](SKILLS.md) | Khi cần SQL template cụ thể | SQL/PS templates + debug recipes | ~600 |
+| **0** | **[BOOTSTRAP.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/AI_AGENT_CONFIG/BOOTSTRAP.md)** | **LUÔN LUÔN — Mỗi session mới** | **All-in-one: rules + DB + tools + bẫy + trạng thái dự án** | **~1500** |
+| 1 | [RULES.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/AI_AGENT_CONFIG/RULES.md) | Khi cần chi tiết quy tắc | Quy tắc an toàn DB, workflow bug fix | ~500 |
+| 2 | [KNOWLEDGE.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/AI_AGENT_CONFIG/KNOWLEDGE.md) | Khi cần tra cứu bảng/SP/KB | Cheat sheet bảng/SP/factory matrix | ~800 |
+| 3 | [SKILLS.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/AI_AGENT_CONFIG/SKILLS.md) | Khi cần SQL template cụ thể | SQL/PS templates + debug recipes | ~600 |
 
 ### Quy trình đề xuất:
 1. **Session mới** → Đọc `BOOTSTRAP.md` (đã đủ 90% context)
@@ -61,4 +61,5 @@ A: Đọc `BOOTSTRAP.md` — file này chứa tất cả quy tắc, kết nối 
 
 **Q: Khi nào cần đọc KB files?**
 A: Chỉ khi BOOTSTRAP chưa đủ. Tra `KB_INDEX.md` theo triệu chứng → đọc đúng 1 KB file liên quan.
+
 

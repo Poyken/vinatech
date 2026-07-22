@@ -1,4 +1,4 @@
-<!--
+﻿<!--
 AI-READY METADATA
 Purpose: Quy tắc bắt buộc không thể vi phạm cho AI Agent khi thao tác trên DB & Workspace MES
 Scope: Safety & Execution Rules
@@ -43,7 +43,7 @@ Related Files:
 
 ## 3. WORKFLOW XỬ LÝ BUG
 
-→ Quy trình 7 bước chi tiết: Xem [`BOOTSTRAP.md`](BOOTSTRAP.md) § WORKFLOW XỬ LÝ BUG
+→ Quy trình 7 bước chi tiết: Xem [`BOOTSTRAP.md`](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/AI_AGENT_CONFIG/BOOTSTRAP.md) § WORKFLOW XỬ LÝ BUG
 
 ---
 
@@ -60,4 +60,5 @@ Related Files:
 
 ## 5. KẾT NỐI DB
 
-→ Xem chi tiết cấu hình và thông tin kết nối tại [`db_config.json`](../db_config.json)
+→ Xem chi tiết cấu hình và thông tin kết nối tại [`db_config.json`](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/db_config.json)
+

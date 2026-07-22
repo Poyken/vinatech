@@ -1,4 +1,4 @@
-<!--
+﻿<!--
 AI-READY METADATA
 Purpose: Hướng dẫn master data (A230/A410/A419), thiết lập line/route (B210-B240), bypass thủ công, checklist thêm model mới & schema chi tiết
 Scope: Master Data & System Setup
@@ -187,7 +187,7 @@ SELECT OBJECT_DEFINITION(OBJECT_ID('fn_VVT_StagePricesMODULE'))
 
 ## 4. 🛢️ Lỗi Vỏ Nhôm (Aluminum Case Mapping)
 
--> Xem [KB_05 Mục 7.4](KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md#74-b597-báo-lỗi-không-tồn-tại-thiết-lập-vỏ-nhôm) để debug và fix.
+-> Xem [KB_05 Mục 7.4](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md#74-b597-báo-lỗi-không-tồn-tại-thiết-lập-vỏ-nhôm) để debug và fix.
 
 ---
 
@@ -280,7 +280,7 @@ ORDER BY CreateDateTime DESC
 ## 6. 🆘 Manual Lot Bypass (In tem khẩn khi không có Lot trên hệ thống)
 
 *   **Khi nào dùng:** Tình huống khẩn cấp cần in tem đóng gói gấp cho lô hàng thực tế đã đóng xong nhưng trên hệ thống MES bị lỗi không sinh được Lot (ví dụ: do sự cố đồng bộ PO ở B450).
-*   **Chi tiết & Giải pháp:** Xem quy trình cứu hộ 3 bước (INSERT/UPDATE SQL) chi tiết tại [KB_04/KB_04_01_CORE_PACKAGING.md#615-lỗi-không-in-được-tem-vì-không-có-lot-trên-hệ-thống-bypass-thủ-công](KB_04/KB_04_01_CORE_PACKAGING.md#615-lỗi-không-in-được-tem-vì-không-có-lot-trên-hệ-thống-bypass-thủ-công).
+*   **Chi tiết & Giải pháp:** Xem quy trình cứu hộ 3 bước (INSERT/UPDATE SQL) chi tiết tại [KB_04/KB_04_01_CORE_PACKAGING.md#615-lỗi-không-in-được-tem-vì-không-có-lot-trên-hệ-thống-bypass-thủ-công](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_01_CORE_PACKAGING.md#615-lỗi-không-in-được-tem-vì-không-có-lot-trên-hệ-thống-bypass-thủ-công).
 
 ---
 
@@ -628,3 +628,4 @@ Dưới đây là 10 màn hình cốt lõi nhất thường gặp sự cố ho�
 > ⚠️ **Lưu ý DB verified:** Bảng `STB_PackingStandard` KHÔNG có cột `MaterialCode` hay `PackQty`. Tra theo `MaterialTypeCode` + `Size` + `Voltage` + `Farad`.
 
 ---
+

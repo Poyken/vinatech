@@ -1,4 +1,4 @@
-
+﻿
 <!--
 AI-READY METADATA
 Purpose: Sổ tay các kịch bản lỗi & hướng dẫn khắc phục theo TCode của phân hệ Kho WMS (A130, F110, F130, F330, F430, F721, F741-F748, F750, F761, HN00, HN101)
@@ -23,7 +23,7 @@ Related Files:
 *   **Triệu chứng:** Khi thực hiện nhập kho tại **F330** hoặc điều chuyển kho, người dùng không thấy vị trí kho (Location) trong danh sách để chọn, hoặc hệ thống báo lỗi không tồn tại vị trí.
 *   **Nguyên nhân gốc:** Chưa khai báo Location hoặc cờ sử dụng bị tắt (`IsUsed = 0`) trong bảng danh mục kho `STB_WarehouseLocation`.
 *   **Cách khắc phục:** Vào màn hình **A130** (hoặc check trực tiếp bảng `STB_WarehouseLocation`), cấu hình thêm vị trí kho tương ứng cho mã kho và bật cờ hoạt động.
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_07/KB_07_01_OVERVIEW.md § 8](../KB_07/KB_07_01_OVERVIEW.md#8-a130-kholocation--đối-tác).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_07/KB_07_01_OVERVIEW.md § 8](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_07/KB_07_01_OVERVIEW.md#8-a130-kholocation--đối-tác).
 
 ---
 
@@ -37,7 +37,7 @@ Related Files:
     ```sql
     UPDATE STB_MaterialStockAttributeInfo SET IsLotUse = 1, IsUseBarcode = 1 WHERE MaterialCode = 'MÃ_VẬT_TƯ';
     ```
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_06_MASTER_DATA_TOOLS.md § 2](../KB_06_MASTER_DATA_TOOLS.md#2-cấu-hình-vận-hành-f110).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_06_MASTER_DATA_TOOLS.md § 2](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_06_MASTER_DATA_TOOLS.md#2-cấu-hình-vận-hành-f110).
 
 ---
 
@@ -64,7 +64,7 @@ Related Files:
 *   **Nguyên nhân gốc:** Trường `LotAttr10` (Đặc tính 10 / Ngày sản xuất Vendor) bị Null hoặc do định dạng quét mã Lot nhà cung cấp in quá dài vượt quá giới hạn thiết lập của trường.
 *   **Cách khắc phục:**
     1. Cấu hình lại chiều dài quét cắt chuỗi mã Lot Vendor trên tab 3 giao diện F330.
-    2. Sửa SQL Function parse ngày SX `fn_VVT_getdatebyVendorLot_MergeCode` nếu NCC thay đổi định dạng in Lot trên tem (Xem chi tiết tại [KB_02 § 4.11](../KB_02/KB_02_01_WMS_CORE.md#411-lỗi-không-lưu-được-f330---cấu-hình-và-sửa-lỗi-đọc-đặc-tính-10-vendor-lot-no)).
+    2. Sửa SQL Function parse ngày SX `fn_VVT_getdatebyVendorLot_MergeCode` nếu NCC thay đổi định dạng in Lot trên tem (Xem chi tiết tại [KB_02 § 4.11](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_02/KB_02_01_WMS_CORE.md#411-lỗi-không-lưu-được-f330---cấu-hình-và-sửa-lỗi-đọc-đặc-tính-10-vendor-lot-no)).
 
 ### [F330] — Lỗi 2: Cần hủy/xóa phiếu nhập kho đã được Xác nhận (Confirmed)
 *   **Triệu chứng:** Thủ kho click xác nhận nhập nhầm số lượng/mã hàng và cần hủy phiếu nhập kho.
@@ -78,7 +78,7 @@ Related Files:
     DELETE FROM STB_MaterialDocDetail WHERE MaterialDocNo = 'MÃ_PHIẾU';
     DELETE FROM STB_MaterialDocInfo WHERE MaterialDocNo = 'MÃ_PHIẾU';
     ```
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_02/KB_02_01_WMS_CORE.md § 4.16](../KB_02/KB_02_01_WMS_CORE.md#416-hủy-phiếu-nhập-kho-f330-đã-confirmed).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_02/KB_02_01_WMS_CORE.md § 4.16](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_02/KB_02_01_WMS_CORE.md#416-hủy-phiếu-nhập-kho-f330-đã-confirmed).
 
 ### Lỗi 3: Không đọc được ngày sản xuất cho nguyên vật liệu PCB/dây điện (không tự động nhảy hạn dùng, tự động vào kho HOLDING)
 *   **Triệu chứng:** Khi quét mã Lot nhà cung cấp cho các mã PCB (`BEPCBA-%`) và dây điện (`BEMC00-%`) tại F330, nếu mã Lot không bắt đầu bằng ký tự `'2'` (không theo format date-based lot thông thường), hệ thống không parse được ngày sản xuất, lưu `1900-01-01` vào DB, gây lỗi hạn sử dụng hoặc tự động đưa Lot vào kho `HOLDING`. Ngoài ra, khi người dùng sửa ngày sản xuất trên lưới F330 và nhấn nút "Lot 변경" (Lot Change), hệ thống không cập nhật ngày sản xuất thực tế (`LotAttr10`) trong bảng tồn kho `STB_MaterialLotInfo`.
@@ -94,7 +94,7 @@ Related Files:
 *   **Cách khắc phục:**
     1. Yêu cầu thủ kho tìm đúng Lot cũ nhất trong kho để xuất trước.
     2. Trường hợp khẩn cấp (hàng cũ bị hỏng hoặc thất lạc chưa kiểm kê), IT có thể bypass bằng cách lùi ngày tạo `CreateDateTime` của Lot hiện tại trên DB, hoặc tạm thời tắt check FIFO của mã vật tư đó bằng cách update cờ `IsFIFO = 0` tại bảng `STB_MaterialStockAttributeInfo`.
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_02/KB_02_01_WMS_CORE.md § 4.9](../KB_02/KB_02_01_WMS_CORE.md#49-fifo--validation-nvl-tắtbật-chặn).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_02/KB_02_01_WMS_CORE.md § 4.9](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_02/KB_02_01_WMS_CORE.md#49-fifo--validation-nvl-tắtbật-chặn).
 
 ### Lỗi 2: Cần thu hồi Lot nguyên liệu đã xuất nhầm lên chuyền (Revert xuất kho)
 *   **Triệu chứng:** Lot hàng đã bấm xuất ra chuyền tại F430 nhưng công nhân không chạy và cần trả lại kho gốc ROH.
@@ -107,7 +107,7 @@ Related Files:
     UPDATE STB_MaterialLotInfo SET MaterialWarehouseCode = 'ROH_HN_WH', MaterialLocationCode = 'ROH_HN_WH_01' WHERE LotID = 'MÃ_LOT';
     COMMIT TRAN;
     ```
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_02/KB_02_01_WMS_CORE.md § 4.17](../KB_02/KB_02_01_WMS_CORE.md#417-thu-hồi-lot-từ-f430-về-kho-revert-xuất-kho).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_02/KB_02_01_WMS_CORE.md § 4.17](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_02/KB_02_01_WMS_CORE.md#417-thu-hồi-lot-từ-f430-về-kho-revert-xuất-kho).
 
 ### Lỗi 3: Cần sửa/lùi ngày xuất kho của Lot vật tư đã xuất ra chuyền ở màn F430
 *   **Triệu chứng:** Người dùng yêu cầu thay đổi/lùi ngày xuất kho thực tế của các mã Lot đã xuất về một ngày nhất định trong quá khứ để làm báo cáo hoặc sửa sai sót thời gian.
@@ -125,7 +125,7 @@ Related Files:
        WHERE MaterialWarehouseInOutHistNo = 'MÃ_GIAO_DỊCH_XUẤT_SAI';
        COMMIT TRAN;
        ```
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_02/KB_02_01_WMS_CORE.md § 4.6](../KB_02/KB_02_01_WMS_CORE.md#46-sửa-ngày-xuất-kho-màn-f430).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_02/KB_02_01_WMS_CORE.md § 4.6](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_02/KB_02_01_WMS_CORE.md#46-sửa-ngày-xuất-kho-màn-f430).
 
 ### Lỗi 4: Ô "Mã kho hàng (Tới)" thiếu kho Hưng Yên và ô "Mã chuyền" bị trống khi xuất kho inter-factory sang Hưng Yên (VVT_F5)
 *   **Triệu chứng:** Người dùng mở popup xuất kho `VNT_MaterialWarehouseInOutHistReg` tại F430/F433 để xuất chuyển NVL sang nhà máy Hưng Yên (`VVT_F5`), nhưng ô "Mã kho hàng (Tới)" không hiển thị kho Hưng Yên. Đồng thời ô "Mã chuyền" bị trắng tinh không có dữ liệu để chọn.
@@ -158,7 +158,7 @@ Related Files:
     ```sql
     UPDATE STB_MaterialLotInfo SET MaterialWarehouseCode = 'ROH_HN_WH', MaterialLocationCode = 'ROH_HN_WH_01' WHERE LotID = 'MÃ_LOT';
     ```
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_02/KB_02_01_WMS_CORE.md § 4.7](../KB_02/KB_02_01_WMS_CORE.md#47-chuyển-từ-kho-holding-sang-kho-chính).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_02/KB_02_01_WMS_CORE.md § 4.7](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_02/KB_02_01_WMS_CORE.md#47-chuyển-từ-kho-holding-sang-kho-chính).
 
 ---
 
@@ -169,7 +169,7 @@ Related Files:
 *   **Triệu chứng:** OP thao tác chia nhỏ Lot NVL tại **F741** báo lỗi không in được tem hoặc sai số lượng chia.
 *   **Nguyên nhân gốc:** Thiết lập quy cách đóng gói và cờ thuộc tính Lot tại F110 bị thiếu.
 *   **Cách khắc phục:**
-    Kiểm tra và thực hiện cấu hình đúng quy trình tách Lot trên UI, đảm bảo số lượng của các Lot con tổng cộng bằng Lot mẹ (Xem chi tiết tại [../KB_02/KB_02_01_WMS_CORE.md § 4.20](../KB_02/KB_02_01_WMS_CORE.md#420-f741--quy-trình-tách-lot-nguyên-vật-liệu-lot-splitting)).
+    Kiểm tra và thực hiện cấu hình đúng quy trình tách Lot trên UI, đảm bảo số lượng của các Lot con tổng cộng bằng Lot mẹ (Xem chi tiết tại [../KB_02/KB_02_01_WMS_CORE.md § 4.20](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_02/KB_02_01_WMS_CORE.md#420-f741--quy-trình-tách-lot-nguyên-vật-liệu-lot-splitting)).
 
 ---
 
@@ -181,7 +181,7 @@ Related Files:
 *   **Nguyên nhân gốc:** Giao dịch đã sinh các Lot con liên kết khóa ngoại với Lot mẹ.
 *   **Cách khắc phục:**
     Chạy script xóa ngược: bắt buộc phải tìm và xóa các bản ghi giao dịch của các Lot con trong bảng `STB_RawMaterialInputHist` (hoặc `STB_MaterialDocLotInfo` tùy trạm) trước, sau đó mới tiến hành xóa/revert Lot mẹ tại F742.
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md § 10.1](../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md#101-hủyrollback-slitting-f742-và-f746).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md § 10.1](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md#101-hủyrollback-slitting-f742-và-f746).
 
 ### Lỗi 2: Mismatch logic tính tuổi thọ dao Slitting và Hardcode địa lý Bắc Giang
 *   **Triệu chứng:** Máy chia cuộn điện cực tại nhà máy Hà Nam hoặc Hưng Yên bị bypass hoàn toàn việc kiểm tra dao cắt (không cảnh báo thay dao), hoặc báo lỗi không tìm thấy máy nếu cố cấu hình dao. Hoặc dao slitting bị khóa thay dao quá sớm do tính sai hao mòn.
@@ -197,7 +197,7 @@ Related Files:
     -- 2. Đo tuổi thọ thực tế bằng tổng số mét cắt
     SELECT @ProdQtyCheck = ISNULL(SUM(GoodQtyLength), 0) from STB_ElectrodeSlittingResult where SlittingKnifeLotID = @SlittingKnifeLotID
     ```
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_03/KB_03_02_CELL_LINE.md § 5](../KB_03/KB_03_02_CELL_LINE.md#5-danh-sách-lỗi-logic-điểm-yếu--giải-pháp-bugs--troubleshooting).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_03/KB_03_02_CELL_LINE.md § 5](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_02_CELL_LINE.md#5-danh-sách-lỗi-logic-điểm-yếu--giải-pháp-bugs--troubleshooting).
 
 ---
 
@@ -218,7 +218,7 @@ Related Files:
 *   **Triệu chứng:** OP nhập sai thông số chiều dài/số lượng cuộn con khi chia cuộn và cần rollback để thực hiện lại từ đầu.
 *   **Nguyên nhân gốc:** Giao dịch chốt Slitting đã ghi nhận các Lot con vào bảng lịch sử.
 *   **Cách khắc phục:** OP truy cập màn hình lịch sử slitting **F746**, tìm và xóa bỏ các dòng lịch sử của Lot con tương ứng trước, sau đó mới có thể thực hiện rollback/xóa Lot mẹ tại màn hình rollback **F742**.
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md § 10.1](../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md#101-flow-slitting-hà-nam).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md § 10.1](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md#101-flow-slitting-hà-nam).
 
 ### [F744] — Lỗi 4: Không tìm thấy mã Foil mới trong popup để thiết lập chiều rộng cắt ở
 *   **Triệu chứng:** Khi bấm nút Thêm trên giao diện F744 để cấu hình chiều rộng slitting cho model/foil mới, người dùng không tìm thấy mã foil cần chọn trong popup. Hoặc trên lưới F744 thiếu dòng của mã foil con.
@@ -239,7 +239,7 @@ Related Files:
     1. ALTER SP `usp_CreateLotSlitting_NG_HN_uid`: lấy `ActualExportQuantity` từ `STB_MaterialWarehouseInOutHist` (lọc theo kho `ROH_HN_WH` -> `SLITTING_HN_WH`) trước khi tính `@TemCurrentQtyNG`. Không xóa code cũ mà comment khối `/* ... */`. *(Comment đánh dấu chuẩn: `-- vanduc edited by Mr.Le Quang Tai 20260721 START ... END`)*.
     2. Xóa tem NG tạo sai số lượng trên DB: `DELETE FROM STB_MaterialLotInfo WHERE LotID = 'SL20260721000089'`.
 *   **Đã kiểm chứng thực tế (2026-07-21):** Lot `SL20250522000064` (Xuất Slitting `33.43m`, đã chia OK `32.30m`) bấm nút "Tạo tem NG" đã sinh đúng tem NG `SL20260721000103` số lượng `1.13m`, và ô "Slg còn lại" hiển thị chính xác `0.0000000000`.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_05_01_QC_AND_ELECTRODE_CORE.md § 10.1](../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md#101-flow-slitting-hà-nam).
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_05_01_QC_AND_ELECTRODE_CORE.md § 10.1](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md#101-flow-slitting-hà-nam).
 
 ### [F742] — Lỗi 6: Cuộn nguyên liệu (Lot cha) không hiển thị trên danh sách "Chờ cắt" màn hình F742
 *   **Triệu chứng:** Người dùng yêu cầu đẩy lại cuộn nguyên liệu (Lot cha, ví dụ: `SL20250522000064` / cuộn `U147-90.4VFS 33.43 m2`) lên màn hình **F742** nhưng không tìm thấy trong danh sách "Chờ cắt".
@@ -308,7 +308,7 @@ Related Files:
 *   **Triệu chứng:** Khi chạy tác vụ chia/tách lô vật liệu giá đỡ substrate, hệ thống hiển thị thông báo lỗi chặn giao dịch (bằng tiếng Hàn hoặc tiếng Việt).
 *   **Nguyên nhân gốc:** Lô vật liệu gốc chưa được thực hiện xuất kho lên chuyền sản xuất (chưa nằm ở kho công đoạn có cờ `IsRouteWarehouse = 1` mà vẫn đang tồn ở kho chính ROH), vi phạm điều kiện kiểm tra của Stored Procedure `usp_DoMakeStocktakingPlanResultForSupport`.
 *   **Cách khắc phục:** Thủ kho thực hiện xuất kho Lot vật liệu gốc lên chuyền sản xuất trước (qua màn hình **F430**), sau đó mới thực hiện thao tác chia tách lô trên giao diện UI.
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_02_SCREEN_BUGS_QC.md#f742f746--lỗi-1-hủyrollback-slitting-phải-xóa-trước](../KB_05/KB_05_02_SCREEN_BUGS_QC.md#f742f746--lỗi-1-hủyrollback-slitting-phải-xóa-trước).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_02_SCREEN_BUGS_QC.md#f742f746--lỗi-1-hủyrollback-slitting-phải-xóa-trước](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_02_SCREEN_BUGS_QC.md#f742f746--lỗi-1-hủyrollback-slitting-phải-xóa-trước).
 
 ---
 
@@ -319,7 +319,7 @@ Related Files:
 *   **Triệu chứng:** Khi đối soát số liệu xuất nhập kho tại **F761**, kế toán phát hiện các dòng giao dịch có cột `DocTypeName` chứa ký tự chữ Hàn Quốc gây sai lệch số liệu nhập mới.
 *   **Nguyên nhân gốc:** Ký tự tiếng Hàn đại diện cho loại giao dịch "hoàn trả vật tư thừa từ sản xuất về kho ROH" (Revert từ F430) chứ không phải nhập mới từ nhà cung cấp.
 *   **Cách khắc phục:** Hướng dẫn bộ phận kế toán phân biệt loại giao dịch: Giao dịch có tên tiếng Hàn là giao dịch trả hàng ảo/revert từ sản xuất về, còn giao dịch nhập mới thực tế được sinh ra từ phiếu nhập **F312**.
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_02/KB_02_01_WMS_CORE.md § 5](../KB_02/KB_02_01_WMS_CORE.md#5-báo-cáo-tồn-kho--lịch-sử-kho-f721-f761-f740).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_02/KB_02_01_WMS_CORE.md § 5](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_02/KB_02_01_WMS_CORE.md#5-báo-cáo-tồn-kho--lịch-sử-kho-f721-f761-f740).
 
 ---
 
@@ -335,7 +335,7 @@ Related Files:
     INSERT INTO STB_PublicCodeAndPrice (PublicCode, Price, IsUsed, WorkCenterCode, CreateDateTime, CreateUserID)
     VALUES ('MÃ_MODEL_MỚI_HOẶC_MÃ_KẾ_TOÁN', ĐƠN_GIÁ_USD, 1, 'VVT_F3', GETDATE(), 'vinaadmin');
     ```
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_02/KB_02_01_WMS_CORE.md § 7](../KB_02/KB_02_01_WMS_CORE.md#7-hn101--thiết-lập-đơn-giá-theo-mã-kế-toán).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_02/KB_02_01_WMS_CORE.md § 7](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_02/KB_02_01_WMS_CORE.md#7-hn101--thiết-lập-đơn-giá-theo-mã-kế-toán).
 
 ---
 
@@ -353,7 +353,7 @@ Related Files:
 *   **Triệu chứng:** Thủ kho nhập sai số lượng vào phiếu nhập kho, cần sửa lại.
 *   **Nguyên nhân gốc:** Cột "Số tài liệu" = `MaterialDocNo` trong `STB_MaterialDocDetail`.
 *   **Cách khắc phục:** Vào F312, tìm phiếu nhập kho theo MaterialDocNo, sửa số lượng. Kho chị Xuân phụ trách.
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_02/KB_02_01_WMS_CORE.md § 4.5](../KB_02/KB_02_01_WMS_CORE.md) và ../KB_07/KB_07_01_OVERVIEW_FLOWS.md.
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_02/KB_02_01_WMS_CORE.md § 4.5](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_02/KB_02_01_WMS_CORE.md) và ../KB_07/KB_07_01_OVERVIEW_FLOWS.md.
 
 ---
 
@@ -364,7 +364,7 @@ Related Files:
 *   **Triệu chứng:** Thực hiện chuyển NVL giữa các kho tại F320 nhưng số lượng tồn kho không giảm/tăng tương ứng.
 *   **Nguyên nhân gốc:** Trigger `tgMaterialLotInfoForUpdate` trên `STB_MaterialLotInfo` tự động đồng bộ tồn kho. Nếu Trigger bị disable hoặc lỗi thì tồn kho không cập nhật.
 *   **Cách khắc phục:** Kiểm tra trạng thái Trigger, kiểm tra bảng `STB_MaterialStock` xem số lượng.
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_03/KB_03_02_CELL_LINE.md](../KB_03/KB_03_02_CELL_LINE.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_03/KB_03_02_CELL_LINE.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_02_CELL_LINE.md).
 
 ---
 
@@ -375,7 +375,7 @@ Related Files:
 *   **Triệu chứng:** Tạo đơn giao hàng tại F610 bị lỗi hoặc không hiện sản phẩm.
 *   **Nguyên nhân gốc:** Sản phẩm chưa qua QC Audit (C530) hoặc chưa nhập kho thành phẩm.
 *   **Cách khắc phục:** Kiểm tra sản phẩm đã PASS QC Audit và đã nhập kho FG.
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_02/KB_02_01_WMS_CORE.md](../KB_02/KB_02_01_WMS_CORE.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_02/KB_02_01_WMS_CORE.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_02/KB_02_01_WMS_CORE.md).
 
 ---
 
@@ -386,7 +386,7 @@ Related Files:
 *   **Triệu chứng:** Phiếu giao đã tạo tại F610 nhưng không hiện tại F620.
 *   **Nguyên nhân gốc:** Phiếu chưa được confirm/approve hoặc bộ lọc ngày bị sai.
 *   **Cách khắc phục:** Kiểm tra lại bộ lọc ngày tìm kiếm, mở rộng khoảng thời gian.
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_02/KB_02_01_WMS_CORE.md](../KB_02/KB_02_01_WMS_CORE.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_02/KB_02_01_WMS_CORE.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_02/KB_02_01_WMS_CORE.md).
 
 ---
 
@@ -397,7 +397,7 @@ Related Files:
 *   **Triệu chứng:** Số lượng tồn kho hiển thị tại F710 bị lệch so với kiểm kê thực tế.
 *   **Nguyên nhân gốc:** Trigger `tgMaterialLotInfoForUpdate` bị lỗi hoặc tồn tại phiếu nhập/xuất chưa confirm.
 *   **Cách khắc phục:** Chạy kiểm kê bằng F750 để điều chỉnh, hoặc kiểm tra trực tiếp `STB_MaterialStock`.
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_02/KB_02_01_WMS_CORE.md](../KB_02/KB_02_01_WMS_CORE.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_02/KB_02_01_WMS_CORE.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_02/KB_02_01_WMS_CORE.md).
 
 ---
 
@@ -408,10 +408,11 @@ Related Files:
 *   **Triệu chứng:** Thực hiện tách Lot tại F740 nhưng hệ thống không sinh Lot con.
 *   **Nguyên nhân gốc:** Số lượng tách vượt quá `CurrentQty` còn lại của Lot gốc.
 *   **Cách khắc phục:** Kiểm tra `CurrentQty` trong `STB_MaterialLotInfo` của Lot gốc, đảm bảo số lượng tách hợp lệ.
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_02/KB_02_01_WMS_CORE.md](../KB_02/KB_02_01_WMS_CORE.md) và [../KB_03/KB_03_02_CELL_LINE.md](../KB_03/KB_03_02_CELL_LINE.md).
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_02/KB_02_01_WMS_CORE.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_02/KB_02_01_WMS_CORE.md) và [../KB_03/KB_03_02_CELL_LINE.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_02_CELL_LINE.md).
 
 ---
 
 ## Appendix — Warehouse Infrastructure (DB Verified 2026-06-18)
+
 
 
