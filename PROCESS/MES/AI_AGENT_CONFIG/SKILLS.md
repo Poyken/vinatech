@@ -18,22 +18,26 @@ Related Files:
 
 ---
 
-## 1. 🔌 KẾT NỐI DB & CHẠY QUERY NHANH
+## 1. 🔌 KẾT NỐI DB & CÔNG CỤ TỰ ĐỘNG HÓA TỐI ƯU TOKEN
 
-Dùng trực tiếp công cụ `run_query.ps1` ở thư mục gốc để truy vấn nhanh mà không cần viết boilerplate code:
+Dùng trực tiếp các công cụ PowerShell trong `AI_AGENT_CONFIG/powershell_tools/`:
 
 ```powershell
-# Truy vấn dạng bảng (Mặc định)
+# 1. Auto-Verify dữ liệu lỗi theo Screen ID (Tiết kiệm 95% Token)
+.\AI_AGENT_CONFIG\powershell_tools\verify_bug.ps1 -ScreenID "B597" -Key "ML20260713000165"
+
+# 2. Phân tích ảnh hưởng chéo của SP trước khi sửa code
+.\AI_AGENT_CONFIG\powershell_tools\sp_impact.ps1 -SPName "usp_Vietnam_RawMaterialInputHist_uid"
+
+# 3. Ghi nhật ký Hotfix tự động vào HOTFIX_LOG.md và KI
+.\AI_AGENT_CONFIG\powershell_tools\log_hotfix.ps1 -ScreenID "B597" -Issue "Tràn chuỗi NVL" -RootCause "NVARCHAR(100)" -FixSQL "ALTER TABLE..."
+
+# 4. Truy vấn dạng bảng tiêu chuẩn
 .\run_query.ps1 -Query "SELECT TOP 10 Barcode, MaterialCode FROM STB_SetInfo WITH(NOLOCK)"
-
-# Truy vấn ra JSON (Cho các cấu trúc phức tạp cần AI parse)
-.\run_query.ps1 -Query "SELECT TOP 10 * FROM STB_SetInfo WITH(NOLOCK)" -Format JSON
-
-# Truy vấn từ file sql có sẵn
-.\run_query.ps1 -SqlPath "sql/scripts/my_query.sql" -Format CSV
 ```
 
 ---
+
 
 ## 2. 🔍 DEBUG BARCODE (SQL)
 
