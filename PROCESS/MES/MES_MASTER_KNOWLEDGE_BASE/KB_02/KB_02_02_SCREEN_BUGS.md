@@ -223,9 +223,64 @@
 *   **Đã kiểm chứng thực tế (2026-07-21):** Lot `SL20250522000064` (Xuất Slitting `33.43m`, đã chia OK `32.30m`) bấm nút "Tạo tem NG" đã sinh đúng tem NG `SL20260721000103` số lượng `1.13m`, và ô "Slg còn lại" hiển thị chính xác `0.0000000000`.
 *   **Chi tiết nghiệp vụ:** Xem tại [KB_05_01_QC_AND_ELECTRODE_CORE.md § 10.1](../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md#101-flow-slitting-hà-nam).
 
+### [F742] — Lỗi 6: Cuộn nguyên liệu (Lot cha) không hiển thị trên danh sách "Chờ cắt" màn hình F742
+*   **Triệu chứng:** Người dùng yêu cầu đẩy lại cuộn nguyên liệu (Lot cha, ví dụ: `SL20250522000064` / cuộn `U147-90.4VFS 33.43 m2`) lên màn hình **F742** nhưng không tìm thấy trong danh sách "Chờ cắt".
+*   **Nguyên nhân gốc:** 
+    1. Lot mẹ đã bị đánh dấu đã cắt (`IsSlitting = 1` hoặc `true` thay vì `0` hoặc `NULL`).
+    2. Số lượng hiện tại của Lot mẹ trong bảng tồn kho bị reset về `0` (`CurrentQty = 0.00`) sau khi thực hiện giao dịch chia cuộn trước đó.
+    3. Stored procedure `usp_ListInputNeedSlitting_HN` lọc điều kiện hiển thị: `IsParrent = '1'`, `IsSlitting = 0` hoặc `NULL`, và nằm ở kho `SLITTING_HN_WH`.
+*   **Cách khắc phục (Script bọc transaction cho User chạy):**
+    Reset lại trạng thái chưa slitting và cập nhật lại số lượng tồn kho tương ứng với số lượng thực tế cần cắt (lấy từ cột `ActualExportQuantity` của giao dịch chuyển kho gần nhất):
+    ```sql
+    BEGIN TRAN;
+    
+    -- Cập nhật trạng thái và số lượng cho Lot mẹ
+    UPDATE STB_MaterialLotInfo
+    SET IsSlitting = 0,
+        CurrentQty = 33.43 -- Số lượng thực tế cần slitting (m2)
+    WHERE LotID = 'SL20250522000064';
+    
+    -- Kiểm tra lại
+    SELECT LotID, MaterialCode, MaterialLotNo, InitialQty, CurrentQty, MaterialWarehouseCode, IsParrent, IsSlitting 
+    FROM STB_MaterialLotInfo WITH(NOLOCK)
+    WHERE LotID = 'SL20250522000064';
+    
+    -- COMMIT TRAN; -- Đổi thành COMMIT sau khi kiểm tra OK
+    ROLLBACK TRAN;
+    ```
 
+*   **Các truy vấn truy vết chi tiết (Tracert Queries):**
+    1. **Tìm mã vật tư dòng U147:**
+       ```sql
+       SELECT TOP 10 MaterialCode, MaterialName, ProductGroupCode 
+       FROM STB_MaterialMaster WITH(NOLOCK) 
+       WHERE MaterialCode LIKE '%U147%' OR MaterialName LIKE '%U147%' OR MaterialCode LIKE '%90.4%';
+       ```
+    2. **Tìm trong lịch sử chuyển kho (lọc theo lượng xuất ~33.43 m2):**
+       ```sql
+       SELECT TOP 20 LotID, SourceMaterialWarehouseCode, TargetMaterialWarehouseCode, ActualExportQuantity, CreateDateTime, CreateUserID 
+       FROM STB_MaterialWarehouseInOutHist WITH(NOLOCK) 
+       WHERE ActualExportQuantity BETWEEN 33.42 AND 33.44 
+       ORDER BY CreateDateTime DESC;
+       ```
+    3. **Truy vấn trạng thái tồn kho thực tế của Lot mẹ:**
+       ```sql
+       SELECT LotID, MaterialCode, MaterialLotNo, InitialQty, CurrentQty, PickingQty, MaterialWarehouseCode, IsParrent, IsSlitting, LotAttr10 
+       FROM STB_MaterialLotInfo WITH(NOLOCK) 
+       WHERE LotID = 'SL20250522000064';
+       ```
+
+*   **Script khôi phục trạng thái ban đầu (Backup / Rollback script nếu cần hoàn tác):**
+    Nếu lỡ chạy lệnh UPDATE trên mà muốn khôi phục lại trạng thái cũ lúc chưa sửa của Lot (để đối soát hoặc trả lại trạng thái lỗi ban đầu):
+    ```sql
+    UPDATE STB_MaterialLotInfo
+    SET IsSlitting = 1,
+        CurrentQty = 0.00
+    WHERE LotID = 'SL20250522000064';
+    ```
 
 ---
+
 
 
 

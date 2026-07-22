@@ -154,6 +154,32 @@ WHERE MLI.MaterialLotNo = 'MÃ_LOT_NGUYÊN_VẬT_LIỆU'
 ORDER BY RMIH.CreateDateTime DESC;
 ```
 
+### Mẫu 4: Truy vết Lot chờ chia cuộn Slitting Hà Nam (F742/F743)
+Dùng để kiểm tra lý do một Lot cuộn nguyên liệu (Foil/ConPaper) không hiển thị trên danh sách "Chờ cắt" màn hình [F742] / [F743]:
+```sql
+SELECT 
+    MLI.LotID,
+    MLI.MaterialLotNo,
+    MLI.MaterialCode,
+    MM.MaterialName,
+    MM.ProductGroupCode,
+    MLI.InitialQty,
+    MLI.CurrentQty,
+    MLI.MaterialWarehouseCode,
+    MLI.IsParrent,
+    MLI.IsSlitting
+FROM STB_MaterialLotInfo MLI WITH(NOLOCK)
+INNER JOIN STB_MaterialMaster MM WITH(NOLOCK) ON MLI.MaterialCode = MM.MaterialCode
+WHERE MLI.LotID = 'MÃ_LOT' OR MLI.MaterialLotNo = 'MÃ_BARCODE';
+
+-- Các điều kiện bắt buộc để Lot hiển thị tại tab "Chờ cắt" (F742):
+-- 1. MaterialWarehouseCode = 'SLITTING_HN_WH' (Đã điều chuyển sang kho slitting)
+-- 2. IsParrent = '1' (hoặc NOT NULL - phải là cuộn mẹ)
+-- 3. IsSlitting = 0 (hoặc NULL - chưa bị chốt chia cuộn)
+-- 4. CurrentQty > 0 (Số lượng tồn kho phải còn)
+-- 5. ProductGroupCode IN ('CON-PAPER','ANODE-FOIL','CATHODE-FOIL')
+```
+
 
 ## 5. TOP 10 LỖI THƯỜNG GẶP → KB FILE
 
