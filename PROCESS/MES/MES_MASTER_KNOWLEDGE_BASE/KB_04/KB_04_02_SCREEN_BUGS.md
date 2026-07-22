@@ -1,4 +1,4 @@
-﻿<!--
+<!--
 AI-READY METADATA
 Purpose: Sổ tay các kịch bản lỗi & hướng dẫn khắc phục phân hệ Đóng Gói (B351, B523, B525, B717, B781, B789, B353, C531)
 Scope: Packaging Screen Bug Fixbook & Emergency Response
@@ -76,15 +76,10 @@ Related Files:
 *   **Chi tiết nghiệp vụ:** Xem tại [../KB_04/KB_04_01_CORE_PACKAGING.md § 6.6](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_01_CORE_PACKAGING.md#66-lỗi-packing-qty-âm-ở-b523--b789).
 
 ### Lỗi 4: Lỗi "Chưa có tiêu chuẩn đóng gói" cho Model/Size 1840 khi quét gộp Box
-*   **Triệu chứng:** Khi công nhân quét gộp Box cho các Model có kích thước size `1840` tại màn hình B523, hệ thống báo lỗi đỏ chặn không cho thao tác.
+*   **Triệu chứng:** Khi quét gộp Box cho các Model size `1840` tại B523, hệ thống báo lỗi đỏ chặn không cho thao tác.
 *   **Nguyên nhân gốc:** Thiếu cấu hình định mức đóng gói cho kích thước size `1840` trong bảng `STB_PackingStandard`.
-*   **Cách khắc phục:**
-    Chạy SQL chèn bổ sung cấu hình đóng gói chuẩn (InnerBoxQty = 500, OutBoxQty = 1000) vào bảng `STB_PackingStandard`:
-    ```sql
-    INSERT INTO STB_PackingStandard (MaterialTypeCode, Size, Voltage, Farad, VinylBagQty, InnerBoxQty, OutBoxQty, CreateDateTime, CreateUserID)
-    VALUES ('FERT', '1840', 0, 0, 0, 500, 1000, GETDATE(), 'vinaadmin');
-    ```
-*   **Chi tiết nghiệp vụ:** Xem tại [Lỗi 1](#lỗi-1-báo-lỗi-chưa-có-tiêu-chuẩn-đóng-gói-khi-gộp-box) ở trên.
+*   **Cách khắc phục:** Xem kịch bản chèn `STB_PackingStandard` tại [Lỗi 1](#lỗi-1-báo-lỗi-chưa-có-tiêu-chuẩn-đóng-gói-khi-gộp-box) ở trên.
+
 
 ---
 
@@ -142,57 +137,23 @@ Related Files:
 ---
 
 
-### 4.1 [B523] — LỖI KHÔNG GỘP ĐƯỢC BOX (MÀN HÌNH )
+### 4.1 [B523] — LỖI KHÔNG GỘP ĐƯỢC BOX & RÃ BOX (MÀN HÌNH B523)
+
+> [!NOTE]
+> Chi tiết quy trình đóng gói B523 và sơ đồ flow in tem được quản lý tập trung tại [KB_04_01_CORE_PACKAGING.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_01_CORE_PACKAGING.md).
 
 #### 🔴 Triệu chứng hiện trường:
 Công nhân scan Lot/Barcode sản phẩm tại màn hình đóng gói **B523**, nhưng hệ thống báo lỗi đỏ: *"Chưa có tiêu chuẩn đóng gói"* hoặc *"Barcode không đủ điều kiện gộp box"*.
 
 #### 🔍 Quy trình truy vết & xử lý (4 bước chuẩn):
+1. **Kiểm tra Master F110 (`IsLotUse`):** Yêu cầu Master Data vào **F110** tick chọn **Use Barcode** + **Lot Use**, hoặc chạy SQL: `UPDATE STB_MaterialStockAttributeInfo SET IsLotUse = 1, IsUseBarcode = 1 WHERE MaterialCode = 'Mã_Vật_Tư';`
+2. **Kiểm tra QC Pass (`STB_SetInfo`):** Đảm bảo `LotDecisionResult = 'PASS'`.
+3. **Kiểm tra Box đã gộp (`STB_MaterialLotInfo`):** Check cột `PackingID`. Nếu có mã Box cũ, rã box cũ trước khi gộp mới.
+4. **Kiểm tra tiêu chuẩn đóng gói (`STB_PackingStandard`):** Màn hình **A419** phải có quy cách đóng gói cho size của Model.
 
-*   **Bước 1: Kiểm tra cấu hình FIFO & Barcode trong Master (F110)**
-    Hệ thống chỉ cho phép gộp box đối với các vật tư được khai báo sử dụng Barcode và quản lý Lot.
-    ```sql
-    -- Query kiểm tra master thuộc tính vật tư
-    SELECT MaterialCode, IsUseBarcode, IsLotUse 
-    FROM STB_MaterialStockAttributeInfo 
-    WHERE MaterialCode = 'Mã_Vật_Tư'; -- Ví dụ: 'LIVT38-025'
-    ```
-    *   *Cách xử lý:* Nếu bảng trả về không có dữ liệu hoặc `IsLotUse = 0`, yêu cầu Master Data vào màn hình **F110** tìm mã vật tư và tích chọn **Use Barcode** + **Lot Use**, sau đó bấm **Save**.
-    *   *Bypass nhanh bằng SQL:*
-        ```sql
-        UPDATE STB_MaterialStockAttributeInfo 
-        SET IsLotUse = 1, IsUseBarcode = 1 
-        WHERE MaterialCode = 'Mã_Vật_Tư';
-        ```
+#### 🛠️ Kịch bản Hủy gộp box / Rã box:
+Xem script `BEGIN TRAN` rã box tại [KB_04_01_CORE_PACKAGING.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_01_CORE_PACKAGING.md) hoặc [vinatech_sql_fix_templates](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/.gemini/antigravity-ide/knowledge/vinatech_sql_fix_templates/artifacts/sql_fix_templates.md).
 
-*   **Bước 2: Kiểm tra trạng thái đánh giá chất lượng (QC Pass)**
-    Hệ thống NAIS MES chặn cứng không cho đóng gói sản phẩm nếu lô hàng chưa qua kiểm tra QC hoặc bị QC đánh giá FAIL.
-    ```sql
-    -- Query kiểm tra kết quả đánh giá QC
-    SELECT Barcode, LotDecisionResult, IsDefect, DefectQty 
-    FROM STB_SetInfo 
-    WHERE Barcode = 'Mã_Barcode_Sản_Phẩm'; -- Ví dụ: 'VVPO093R010707'
-    ```
-    *   *Cách xử lý:* Nếu `LotDecisionResult` is `NULL` hoặc `'FAIL'`, yêu cầu tổ QC vào màn hình **B597** đánh giá chất lượng lô hàng sang **PASS**. (Xem thêm mục 4.2 nếu cần hủy kết quả QC cũ để đánh giá lại).
-
-*   **Bước 3: Kiểm tra xem Lot đã bị gộp vào Box khác chưa**
-    ```sql
-    -- Query kiểm tra xem Lot đã có PackingID (Box ID) gắn vào chưa
-    SELECT LotID, LotNo, PackingID, CurrentQty 
-    FROM STB_MaterialLotInfo 
-    WHERE LotNo = 'Mã_Barcode_Sản_Phẩm';
-    ```
-    *   *Cách xử lý:* Nếu cột `PackingID` hiển thị một mã khác (Ví dụ: `'PKHN023117'`), nghĩa là Lot này đã được gộp vào Box đó rồi. Công nhân không thể gộp tiếp. Cần rã Box cũ ra trước (Xem mục 4.3).
-
-*   **Bước 4: Kiểm tra tiêu chuẩn đóng gói (Packing Standard)**
-    Mỗi Model khi đóng gói cần có cấu hình số lượng mỗi túi (`VinylBagQty`), hộp nhỏ (`InnerBoxQty`), thùng to (`OutBoxQty`).
-    ```sql
-    -- Query kiểm tra tiêu chuẩn đóng gói theo loại vật tư và kích thước (Size)
-    SELECT * FROM STB_PackingStandard 
-    WHERE MaterialTypeCode = 'FERT' 
-      AND Size = 'Kích_Thước_Model'; -- Ví dụ: '0813' (đại diện size 8x13mm)
-    ```
-    *   *Cách xử lý:* Nếu bảng trống, yêu cầu Master Data vào màn hình **A419** thêm tiêu chuẩn đóng gói tương ứng với Size của Model đó.
 
 ---
 

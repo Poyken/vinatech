@@ -35,60 +35,16 @@ Related Files:
     ALTER SP `usp_Vietnam_RawMaterialInputHist_uid` để bổ sung mã vỏ nhôm mới vào khối điều kiện `IF / NOT IN`.
 *   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md § 7.4](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md#74-lỗi-vỏ-nhôm-alucase).
 
-### Lỗi 3: Lỗi "String or binary data would be truncated" khi quét gộp 5 mã điện cực 1 Lot (Model 3510 / 35105)
-*   **Triệu chứng:** Khi quét gộp 5 mã barcode điện cực cho 1 Lot tại B597, hệ thống báo lỗi đỏ `"String or binary data would be truncated"` và không cho lưu.
-*   **Nguyên nhân gốc:** Cột `RawMaterialBarcode` của bảng `STB_InputMaterialHistory` có giới hạn độ dài `NVARCHAR(100)`, trong khi chuỗi ghép từ 5 mã điện cực vượt quá giới hạn này (thường dài khoảng 102+ ký tự). Các tham số và biến nội bộ trong SP `usp_Vietnam_RawMaterialInputHist_uid` cũng bị giới hạn độ dài (`NVARCHAR(200)` hoặc `NVARCHAR(100)`).
-*   **Cách khắc phục:**
-    1. Cập nhật độ dài cột lên `NVARCHAR(1000)`:
-       ```sql
-       ALTER TABLE STB_InputMaterialHistory ALTER COLUMN RawMaterialBarcode NVARCHAR(1000) NULL;
-       ```
-    2. Sửa tham số `@pRawMaterialBarcode` và các biến nội bộ chứa chuỗi ghép barcode (ví dụ: `@RawMaterialBarcode`, `@LotMaterialBarcode`) trong stored procedure `usp_Vietnam_RawMaterialInputHist_uid` thành `NVARCHAR(1000)`.
-*   **Chi tiết nghiệp vụ:** Xem file script **fix_multibarcode_3510.sql**.
+### [B597] — Lỗi 3: Lỗi "String or binary data would be truncated" (Quét gộp 5 mã điện cực 1 Lot)
+*   **Triệu chứng:** Khi quét gộp 5 mã barcode điện cực cho 1 Lot tại B597, hệ thống báo lỗi đỏ `"String or binary data would be truncated"`.
+*   **Nguyên nhân gốc:** Cột `RawMaterialBarcode` trong `STB_InputMaterialHistory` giới hạn `NVARCHAR(100)` không đủ chứa 5 barcode.
+*   **Cách khắc phục:** Xem script SQL `ALTER TABLE` tại [vinatech_bug_fix_patterns](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/.gemini/antigravity-ide/knowledge/vinatech_bug_fix_patterns/artifacts/bug_fix_patterns.md) hoặc [KB_09_SCREEN_BUG_FIXBOOK.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md#b597--material-scanning--pqc-verification).
 
-### [B597] — Lỗi 4: Lỗi BOM điện cực dạng tráng (Coating) không khớp với BOM gốc dạng chia cuộn (Slitting) cho model 1030L (ECVT30 293) tại
-*   **Triệu chứng:** Khi quét điện cực dương (+) hoặc âm (-) tại trạm **B597** cho model `1030L` (mã model thực tế `ECVT30-293`), hệ thống báo lỗi: `"lỗi BOM CREYO85B-02 không được phép dùng cho model ECVT30-293"`.
-*   **Nguyên nhân gốc:**
-    1. **Sai lệch cấu trúc BOM**: Trong BOM gốc (phiên bản `2001`) của model `ECVT30-293`, R&D khai báo mã điện cực chia cuộn (**Slitting-Roll** - ví dụ `SREYO85A` và `SRFYO85A`). Tuy nhiên, Lot điện cực quấn thực tế cấp cho chuyền là mã cuộn tráng (**Coating-Roll** - ví dụ `CREYO85B-02` và `CRFYO85B-02`). Khi SP `usp_Vietnam_RawMaterialInputHist_uid` đối chiếu mã cuộn tráng đã quét với BOM, hệ thống không tìm thấy và chặn lại.
-    2. **Chặn tồn kho Slitting ảo**: Lot điện cực quét vào không tồn tại hoặc chưa được khai báo đồng bộ vào bảng tồn kho slitting ảo `Stb_SlittingStock_VVT`, dẫn đến việc tiếp tục bị chặn bởi lỗi `"Chưa nhập thông tin Slitting Điện cực ở màn hình B552..."` (nếu vượt qua lỗi BOM).
-*   **Cách khắc phục:**
-    *   **Phương án 1 (Khuyên dùng - Deploy SP bypass):**
-        Sửa đổi SP `usp_Vietnam_RawMaterialInputHist_uid` để vừa ánh xạ tương đương mã Coating sang Slitting trong BOM, vừa bypass tồn kho slitting cho mã này.
-        1. Sửa đoạn check BOM (khoảng dòng 1279):
-           ```sql
-           IF not EXISTS(
-               SELECT 1 FROM STB_BomDetail 
-               WHERE MaterialCode=@MaterialCodeNotLowESR 
-                 AND BomVersion='2001' 
-                 AND (
-                     ChildMaterialCode=@MaterialCodeBOM
-                     OR (@MaterialCodeNotLowESR = 'ECVT30-293' AND @MaterialCodeBOM = 'CREYO85B-02' AND ChildMaterialCode = 'SREYO85A')
-                     OR (@MaterialCodeNotLowESR = 'ECVT30-293' AND @MaterialCodeBOM = 'CRFYO85B-02' AND ChildMaterialCode = 'SRFYO85A')
-                 )
-           )
-           ```
-        2. Sửa đoạn check tồn kho Slitting (khoảng dòng 2124):
-           ```sql
-           --update for 1030L (ECVT30-293)
-           if (@materialCodeCheck IN ('ECVT30-293') and @rawMaterialCheck IN ('CREYO85B-02', 'CRFYO85B-02'))
-           begin
-               set @count=1;
-           end
-           --end 1030L
-           ```
-        3. Deploy SP lên hệ thống DB:
-           ```powershell
-           .\deploy_tool.ps1 sql\procedures\usp_Vietnam_RawMaterialInputHist_uid.sql
-           ```
-    *   **Phương án 2 (Đổi PO/Model - Giải pháp tạm của xưởng):**
-        Nếu xưởng chuyển đổi Lot sản phẩm sang chạy dưới PO của model chị em **`ECVT30-367`** (ví dụ PO `260623000007`), hệ thống sẽ cho phép lưu vì `ECVT30-367` không nằm trong danh sách kiểm tra BOM nghiêm ngặt trong SP (tự động bypass check BOM). Tuy nhiên, phương án này **chỉ thành công** nếu các cuộn điện cực quét vào đã được khai báo tồn kho trong `Stb_SlittingStock_VVT` từ trước (nếu chưa khai báo thì vẫn sẽ bị chặn lỗi tồn kho Slitting).
-        Để thực hiện chuyển đổi PO bằng SQL cho Lot sản phẩm (chỉ dùng khi có phê duyệt):
-        ```sql
-        BEGIN TRANSACTION;
-        UPDATE STB_SetInfo SET PONo = 'MÃ_PO_MỚI', MaterialCode = 'MÃ_MODEL_MỚI' WHERE Barcode = 'MÃ_LOT_SẢN_PHẨM';
-        UPDATE STB_ProdRouteHist SET PONo = 'MÃ_PO_MỚI', MaterialCode = 'MÃ_MODEL_MỚI' WHERE ControlNo = (SELECT ControlNo FROM STB_SetInfo WHERE Barcode = 'MÃ_LOT_SẢN_PHẨM');
-        COMMIT TRANSACTION; -- Đổi thành ROLLBACK nếu muốn kiểm tra trước
-        ```
+### [B597] — Lỗi 4: Lỗi BOM điện cực dạng tráng (Coating) không khớp Slitting cho model 1030L (ECVT30-293)
+*   **Triệu chứng:** Scan điện cực tại B597 cho model `1030L` báo lỗi `"lỗi BOM CREYO85B-02 không được phép dùng cho model ECVT30-293"`.
+*   **Nguyên nhân gốc:** BOM gốc khai báo Slitting roll, chuyền dùng Coating roll.
+*   **Cách khắc phục:** Xem kịch bản deploy SP bypass hoặc chuyển PO bằng SQL tại [KB_05_01_QC_AND_ELECTRODE_CORE.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md#7-lỗi-quét-nguyên-vật-liệu-b597--pqc-check).
+
 
 ---
 
@@ -345,21 +301,9 @@ Mã phiếu IQC (`MaterialQcNo`) có thể được tìm thấy bằng 3 cách:
     1. SP get kết quả mẫu `usp_MaterialQcSampleResult_get` bị thiếu pattern `'FOQC_V01_07/08'`.
     2. SP get chi tiết màn hình `usp_Vietnam_MaterialFOQcDetail_get` bị thiếu block khởi tạo dữ liệu cho hạng mục OCV (`DetailNo = 2`). Trong khi hạng mục ESR (`DetailNo = 3`) và các mục khác đều có block khởi tạo để tạo đủ 50 dòng trống, khiến lưới OCV chỉ hiển thị tối đa theo số dòng thực tế đo được từ máy đo (ví dụ: 20 dòng) thay vì 50 dòng chuẩn.
 *   **Cách khắc phục:**
-    1. Deploy SP `usp_Vietnam_MaterialFOQcDetail_get` và `usp_MaterialQcSampleResult_get` đã sửa đổi (bổ sung block khởi tạo cho OCV DetailNo = 2).
-    2. Chạy SQL Script để xóa kết quả lỗi cũ và reset trạng thái upload trong monitor để máy đo đẩy lại dữ liệu:
-       ```sql
-       BEGIN TRANSACTION;
-       -- B1: Xóa kết quả QC cũ bị lệch
-       DELETE FROM STB_MaterialQcSampleResult WHERE MaterialQcNo = 'F_MÃ_BARCODE' AND MaterialQcDetailNo IN (2, 3);
-       
-       -- B2: Reset trạng thái upload trong bảng Monitor (Set NULL để SP chạy nạp lại từ đầu)
-       UPDATE Stb_ESRValueMonitor SET UploadToMes = NULL, UploadOCVToMess = NULL WHERE lotno = 'MÃ_LOT';
-       
-       -- B3: Reset trạng thái đánh giá trong bảng Detail để QC load lại dữ liệu
-       UPDATE STB_MaterialQcDetail SET DecisionResult = NULL, PassedSampleQty = 0 WHERE MaterialQcNo = 'F_MÃ_BARCODE' AND MaterialQcDetailNo IN (2, 3);
-       COMMIT TRANSACTION;
-       ```
-    3. Yêu cầu QC tắt và mở lại màn hình C546, quét lại Barcode để hệ thống sinh đủ 50 dòng.
+    1. Deploy SP `usp_Vietnam_MaterialFOQcDetail_get` và `usp_MaterialQcSampleResult_get` đã sửa đổi.
+    2. Xem kịch bản SQL reset `Stb_ESRValueMonitor` tại [vinatech_bug_fix_patterns](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/.gemini/antigravity-ide/knowledge/vinatech_bug_fix_patterns/artifacts/bug_fix_patterns.md) hoặc [KB_05_01_QC_AND_ELECTRODE_CORE.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md#93-oqc-outgoing-quality-control--kiểm-tra-thành-phẩm).
+
 *   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md § 9.6](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md#96-c546-foqc-ocvsr-chỉ-hiển-thị-20ea-thay-vì-50ea-ocv-lệch-dữ-liệu) và file script vá lỗi **fix_c546_ocv_lots.sql**.
 
 ### [C530] — Lỗi 3: Đo kiểm ESR tại chỉ hiển thị 10 dòng kết quả thay vì 20 dòng mẫu đo
@@ -627,11 +571,8 @@ Mã phiếu IQC (`MaterialQcNo`) có thể được tìm thấy bằng 3 cách:
 ### [C546] — Lỗi 1: chỉ hiển thị 20 dòng mẫu thay vì 50 dòng
 *   **Triệu chứng:** Máy đo trả về 50 mẫu nhưng C546 chỉ load 20 dòng.
 *   **Nguyên nhân gốc:** `SampleQty` trong `STB_MaterialQcDetail` bị lệch so với dữ liệu máy đo.
-*   **Cách khắc phục:** Xóa kết quả QC lỗi, reset cờ upload:
-    ```sql
-    DELETE FROM STB_MaterialQcSampleResult WHERE MaterialQcNo = 'F_MÃ_BARCODE';
-    UPDATE Stb_ESRValueMonitor SET UploadToMes = 0, UploadOCVToMess = 0 WHERE lotno = 'MÃ_BARCODE';
-    ```
+*   **Cách khắc phục:** Xem kịch bản SQL reset C546 tại [vinatech_bug_fix_patterns](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/.gemini/antigravity-ide/knowledge/vinatech_bug_fix_patterns/artifacts/bug_fix_patterns.md) hoặc [KB_05_01_QC_AND_ELECTRODE_CORE.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md#93-oqc-outgoing-quality-control--kiểm-tra-thành-phẩm).
+
 *   **Chi tiết nghiệp vụ:** Xem tại [C546 OCV/ESR Lỗi 2](#c512--c530--c546--oqc-lot-management-quản-lý-chất-lượng-đầu-ra) trong tài liệu này.
 
 ---
@@ -694,6 +635,17 @@ Mã phiếu IQC (`MaterialQcNo`) có thể được tìm thấy bằng 3 cách:
 *   **Nguyên nhân gốc:** Cấu hình Slitting tại B552 (bảng `stb_slittinglocationconfig_vvt`) bị sai Width.
 *   **Cách khắc phục:** Kiểm tra cấu hình B552 và sửa lại Width cho PartNo tương ứng.
 *   **Chi tiết nghiệp vụ:** Xem tại [../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md § 8](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md) và [KB_06_MASTER_DATA_TOOLS.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_06_MASTER_DATA_TOOLS.md).
+
+---
+
+### 🔍 Kịch Bản Sự Cố Khẩn Cấp (Cross-Reference Single Source of Truth)
+
+> [!NOTE]
+> Các kịch bản xử lý sự cố khẩn cấp QC (HNC321 báo lỗi tiếng Hàn, electrode weighing nhảy bước cân, 3582-600F CY không tạo được tem) được quản lý tập trung tại [KB_05_01_QC_AND_ELECTRODE_CORE.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md).
+
+- **HNC321 Lỗi tiếng Hàn (`이전 공정에 실적처리 이력이 없습니다`):** Xem kịch bản bypass SQL tại [KB_05_01_QC_AND_ELECTRODE_CORE.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md#217-c321--hnc321--defect-repair--scrap-management-quản-lý-sửa-chữa--báo-phế-sản-phẩm).
+- **Lỗi nhảy bước cân Mixing Electrode (`electrode.weighing`):** Xem quy trình reset tại [KB_05_01_QC_AND_ELECTRODE_CORE.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md).
+- **Mã liệu 3582-600F CY không tạo được tem:** Xem script thêm `stb_slittinglocationconfig_vvt` tại [KB_05_01_QC_AND_ELECTRODE_CORE.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md).
 
 ---
 
@@ -768,7 +720,6 @@ Mã phiếu IQC (`MaterialQcNo`) có thể được tìm thấy bằng 3 cách:
 *   **Cách khắc phục:** Tắt hoàn toàn phần mềm MES NAIS (đóng chương trình) rồi mở lại để client xóa cache và tải lại layout mới từ database.
 
 ---
-*Cập nhật: 2026-06-13 — Hoàn thiện cẩm nang tra cứu lỗi cho **125+ màn hình** theo Screen ID riêng biệt và bổ sung phần gỡ lỗi các màn hình cô lập Hưng Yên (_HY). Mỗi màn hình có header ## ScreenID riêng, hỗ trợ tìm kiếm Ctrl+Shift+F trực tiếp.*
 
 
 
@@ -1203,9 +1154,7 @@ END CATCH
 * **Nguy�n nh�n:** Khi ngu?i d�ng thi?t k? giao di?n v� nh?n **Save Layout**, SmartFramework ch?p l?i c?u h�nh lu?i v� luu du?i d?ng XML v�o b?ng `SmartFramework.dbo.STB_ScreenLayoutInfo`. N?u tru?c d� c� c?t `Note1` (do g� nh?m ho?c test), grid s? t? kh�i ph?c c?t n�y l�n giao di?n.
 * **C�ch check nhanh b?ng SQL:**
   ```sql
-  SELECT Name, DATALENGTH(XmlLayout) AS XmlLength, CHARINDEX('Note1', XmlLayout) AS Note1Position
   FROM SmartFramework.dbo.STB_ScreenLayoutInfo WITH (NOLOCK)
-  WHERE Name = 'ErrorDataSorting'
   ```
 * **C�ch s?a tri?t d?:** M? m�n h�nh **C486**, k�o b? c?t `Note1` ra kh?i lu?i (ho?c ?n di trong Column Chooser), sau d� chu?t ph?i ch?n **Save Layout** d? c?p nh?t d� c?u h�nh XML s?ch l�n database.
 
@@ -1215,95 +1164,13 @@ END CATCH
 
 ## 8. ⚡ Điện cực (Electrode)
 
-### 8.1 [B552] — Chỉnh chiều rộng Slitting ()
+### 8.1 [B552] — Chỉnh chiều rộng Slitting
+> [!NOTE]
+> Chi tiết quy trình chỉnh chiều rộng Slitting và logic kho điện cực được quản lý tập trung tại [KB_05_01_QC_AND_ELECTRODE_CORE.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md#81-b552--chỉnh-chiều-rộng-slitting).
 
-```sql
--- Xem cấu hình master slitting
-SELECT * FROM STB_CoatingToSlittingMaster
--- WHERE CoatingMaterialCode = 'Mã_Coating'
+- **B597 Checklist 7 Cổng Chặn:** Xem checklist chi tiết tại [KB_05_01_QC_AND_ELECTRODE_CORE.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md#83-b597--checklist-khi-báo-lỗi-khi-lưu-nvl).
+- **Logic Kho Điện Cực (Stb_SlittingStock_VVT):** Xem chi tiết quy cách mã Lot `VV...`, `VJ...`, `ML...` tại [KB_05_01_QC_AND_ELECTRODE_CORE.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md#84-logic-kho-điện-cực).
 
--- Cập nhật chiều rộng slitting
-UPDATE stb_slittinglocationconfig_vvt
-SET Width = 16
-WHERE SlittingCode = 'YP' AND SlittingSize = 200 AND PartNo = '1625' AND id = 12
-```
-
----
-
-### 8.2 Lỗi "Chưa CONFIG trong STB_SLITTINGLOCATIONCONFIG_VVT"
-
-**Triệu chứng:** `"Không tồn tại thiết lập Điện cực của LotNo... Chưa CONFIG trong bảng: STB_SLITTINGLOCATIONCONFIG_VVT"`
-
-**Debug:**
-```sql
--- Xem thông số lỗi trong thông báo (VD: PartNo=1025, Farad=10, Width=17.7)
--- Kiểm tra bảng đã có chưa
-SELECT * FROM stb_slittinglocationconfig_vvt WHERE PartNo = '1025'
-```
-
-**Fix — Thêm cấu hình mới:**
-```sql
--- Template: BY = Cực dương (+), YP = Cực âm (-)
-INSERT INTO stb_slittinglocationconfig_vvt
-    (PartNo, SlittingCode, SlittingSize, Farad, Width, WarehouseLocation, LocationWarehouse)
-VALUES
-    ('1025', 'BY', '200', '10', '17.7', 'VVT_F2', 'kho2'),  -- Cực dương
-    ('1025', 'YP', '180', '10', '17.7', 'VVT_F2', 'kho2')   -- Cực âm
-
--- Xác nhận đã thêm
-SELECT * FROM stb_slittinglocationconfig_vvt WHERE PartNo = '1025'
-```
-
-**Template thêm nhiều model cùng lúc:**
-```sql
-INSERT INTO stb_slittinglocationconfig_vvt
-    (PartNo, SlittingCode, SlittingSize, Farad, Width, WarehouseLocation, LocationWarehouse)
-VALUES
-    ('1025', 'BY', '200', '10', '17.7', 'VVT_F2', 'kho2'),
-    ('1025', 'YP', '180', '10', '17.7', 'VVT_F2', 'kho2'),
-    ('1325', 'BY', '200', '15', '18.7', 'VVT_F2', 'kho2'),
-    ('1325', 'YP', '180', '15', '18.7', 'VVT_F2', 'kho2'),
-    ('1030', 'BY', '200', '10', '23.7', 'VVT_F2', 'kho2'),
-    ('1030', 'YP', '180', '10', '23.7', 'VVT_F2', 'kho2')
-
--- Sau đó cập nhật số cuộn và vị trí kho
-UPDATE stb_slittinglocationconfig_vvt
-SET RollQty = 20, PositiveLocation = 'A6-T3', NegativeLocation = 'B6-T3'
-WHERE PartNo IN ('1025', '1325', '1030')
-```
-
----
-
-### 8.3 [B597] — Checklist khi báo lỗi khi lưu NVL
-
-```
-Theo thứ tự SP usp_Vietnam_RawMaterialInputHist_uid kiểm tra:
-□ 1. HOLDING? → SELECT MaterialWarehouseCode FROM STB_MaterialLotInfo (Check 'HOLDING_%')
-□ 2. Hết hạn? → Truy vấn LotAttr10 từ STB_MaterialDocLotInfo (nếu rỗng và là Lot tách %SP%/%SL%/%SM% thì check trong STB_MaterialLotInfo) + MMExtInt01 (xem KB_02 Mục 4.10)
-□ 3. Sai chủng loại? → Kiểm tra BOM có mã NVL đó không (STB_BomDetail)
-□ 4. Sai độ dày điện cực? → Kiểm tra MaterialThickness (phải là số nguyên)
-□ 5. Sai mã Electrolyte? → Kiểm tra CTE eleclyte1 trong SP
-□ 6. Thiếu cấu hình Vỏ Nhôm? → Sửa hardcode trong SP (Bảng AluCaseMapping không tồn tại)
-□ 7. Thiếu cấu hình Slitting? → Kiểm tra STB_SLITTINGLOCATIONCONFIG_VVT
-```
-
-> 🚦 **Tham chiếu mở rộng:** Toàn bộ 7 gates trên đã được tổng hợp cùng 11 nhóm chặn tương tự (B530, B523, B452, B618, QC Audit, Returns, Lò Sấy, Slitting Knife...) trong tài liệu thiết kế các cổng chặn (Validation Gates) của hệ thống.
-
----
-
-### 8.4 Logic kho điện cực
-
-```
-Mã lot điện cực Slitting: VV... hoặc VJ...
-Mã lot kho nguyên liệu: ML...
-
-P (BY) = Cực Dương (+)
-M (YP) = Cực Âm (-)
-
-Kiểm tra tồn kho điện cực → **Stb_SlittingStock_VVT**
-```
-
-> Điện cực phải dùng mã Lot kho (prefix `ML`) khi nhập kho nguyên liệu.
 
 ### 8.5 [B270] — Lỗi popup không hiện dữ liệu ở
 
