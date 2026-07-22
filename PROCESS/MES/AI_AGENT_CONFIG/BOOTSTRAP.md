@@ -1,4 +1,4 @@
-﻿<!--
+<!--
 AI-READY METADATA
 Purpose: Tất cả trong một (All-in-one): Rules + DB + Tools + Lessons Learned cho AI Agent trong phiên làm việc mới
 Scope: Entry Point & Core Operating Procedures
@@ -95,17 +95,17 @@ Related Files:
 
 ---
 
-## 🚀 WORKFLOW XỬ LÝ BUG — 7 bước
+## 🚀 WORKFLOW XỬ LÝ BUG CHUẨN — 6 bước
 
 ```
-1. THU THẬP  → Màn hình? Barcode? Thao tác? Lỗi gì?
-2. TRA CỨU   → Chạy .\debug_screen.ps1 để chẩn đoán thông số màn hình / truy vết SP ném lỗi và đề xuất tài liệu
-3. XÁC MINH  → .\run_query.ps1 -Query "SELECT ..." đối chiếu thực tế dữ liệu
-4. FIX        → Viết SQL (BEGIN TRAN...ROLLBACK) → validate → deploy
-5. GHI CHÉP  → Chạy .\record_hotfix.ps1 để lưu thông tin lỗi và tự động vá vào KB_09 Sổ tay cứu hộ
-6. AUDIT     → Tự đối chiếu, kiểm tra kỹ để đảm bảo an toàn & tuân thủ quy tắc
-7. DỌN DẸP   → Xóa các file SP tạm thời qua .\db_sync_tool.ps1 -Clean và commit
+1. THU THẬP  → Nhận mã màn hình (TCode), LotNo/Barcode, triệu chứng từ User
+2. TRA CỨU   → TRA KB TRƯỚC (KB_09 / KI bug_fix_patterns). Nắm Root Cause + SP + Bảng DB
+3. XÁC MINH  → .\AI_AGENT_CONFIG\powershell_tools\verify_bug.ps1 -ScreenID <TCode> -Key <LotNo>
+4. FIX & AUDIT → .\AI_AGENT_CONFIG\powershell_tools\sp_impact.ps1 -SPName <SP> → Viết SQL (BEGIN TRAN...ROLLBACK)
+5. GHI CHÉP  → .\AI_AGENT_CONFIG\powershell_tools\log_hotfix.ps1 -ScreenID <TCode> ... (Lưu log & vá KI)
+6. DỌN DẸP   → Xóa SP tạm bằng .\db_sync_tool.ps1 -Clean và commit Git
 ```
+
 
 ---
 

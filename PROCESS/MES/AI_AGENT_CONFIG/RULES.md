@@ -16,9 +16,8 @@ Related Files:
 
 ---
 
-## 1. SELECT-ONLY (TUYỆT ĐỐI)
-
 ## 🛡️ Quy Tắc Cốt Lõi
+
 
 > [!CAUTION]
 > **1. SELECT-ONLY** — KHÔNG INSERT/UPDATE/DELETE/ALTER/DROP trực tiếp trên production DB.
