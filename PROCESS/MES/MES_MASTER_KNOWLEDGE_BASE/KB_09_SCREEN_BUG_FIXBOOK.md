@@ -1,9 +1,20 @@
+<!--
+AI-READY METADATA
+Purpose: Sổ tay cứu hộ 70+ bugs theo TCode thực tế (Tra cứu triệu chứng -> nguyên nhân -> giải pháp SQL patch)
+Scope: Troubleshooting & Hotfix Knowledge Base
+Single Source of Truth: KB_09_SCREEN_BUG_FIXBOOK.md (Troubleshooting & Bug Registry)
+Related Files:
+  - [KB_INDEX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
+  - [BOOTSTRAP.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/AI_AGENT_CONFIG/BOOTSTRAP.md)
+  - [HOTFIX_LOG.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/AI_AGENT_CONFIG/HOTFIX_LOG.md)
+-->
+
 # KB_09: Sổ Tay Tra Cứu Bug & Fix Theo Màn Hình
 
 > **📌 Mục đích:** Khi nhận được báo lỗi từ user → tra TCode tại đây → tìm ngay bug + cách fix.
 > **🔑 Keywords:** bug, fix, sổ tay, TCode, màn hình, triệu chứng, nguyên nhân, SQL fix, sửa lỗi, khắc phục
-> File này tổng hợp TẤT CẢ bug đã documented, sắp xếp theo TCode (Mã màn hình).
-> Mỗi entry gồm: Triệu chứng | Nguyên nhân | Fix | Tham chiếu KB gốc.
+> ← [Về INDEX](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
+
 
 ---
 

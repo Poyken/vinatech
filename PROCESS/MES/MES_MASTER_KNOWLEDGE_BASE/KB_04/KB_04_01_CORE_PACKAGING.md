@@ -1,10 +1,25 @@
 
+<!--
+AI-READY METADATA
+Purpose: Quy trình đóng gói core (B523, B525), PackingStandard schema, gộp/chia box, Z530/A460 Label Template Architecture & Debugging
+Scope: Box Packaging & Label Printing Core Engine
+Single Source of Truth: KB_04_01_CORE_PACKAGING.md (Packaging Core & Label Architecture)
+Target Screens: B523, B525, B453, B560, B789, B781, B353, B442, A419, A460, B754-B758, B790, Z530, C531
+Target Tables: STB_PackingStandard, STB_DividePackaging, STB_ModelLabelInfo, STB_SavePackingTime_VVT
+Related Files:
+  - [KB_INDEX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
+  - [KB_04 Index](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_04/INDEX.md)
+  - [KB_04_02_SCREEN_BUGS.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_02_SCREEN_BUGS.md)
+  - [KB_04_03_SANMINA_LABEL_GUIDE.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_03_SANMINA_LABEL_GUIDE.md)
+-->
+
 # KB_04 — Đóng Gói & In Tem (Packaging & Label Printing)
 
 > **Màn hình:** B523, B525, B453, B560, B789, B781, B353, B442, A419, A460, B754~B758, B790, Z530, C531
 > **Bảng chính:** `STB_PackingStandard`, `STB_DividePackaging`, `STB_ModelLabelInfo`, `STB_SavePackingTime_VVT`
 > **🔑 Keywords:** đóng gói, packing, in tem, label, gộp box, rã box, tiêu chuẩn, PackingID, BoxID, VJ, VV, Hela, PAC, DigiKey
-> ← [Về INDEX](../KB_INDEX.md)
+> ← [Về INDEX](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
+
 
 ---
 

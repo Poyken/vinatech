@@ -1,6 +1,22 @@
+<!--
+AI-READY METADATA
+Purpose: Chi tiết vận hành Cell Line & Module Line (B450, B530, B540, B597, B523, B717, B789, B791, B802, B598, B351, BG2 K101-K199, H301-H305)
+Scope: Cell Line & Module Production Operations
+Single Source of Truth: KB_03_02_CELL_LINE.md (Cell Line Execution & Module Operations)
+Target Screens: B450, B530, B540, B597, B523, B717, B789, B791, B802, B598, B351, K101-K199, H301-H305
+Target Tables: STB_SetInfo, STB_ProdRouteHist, STB_DayProdPlan, STB_SingleCellModuleMappingHist, STB_VN_MASTERMODULES
+Related Files:
+  - [KB_INDEX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
+  - [KB_03 Index](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03/INDEX.md)
+  - [KB_03_01_OVERVIEW.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_01_OVERVIEW.md)
+  - [KB_08_CORE_SP_ENGINE.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_08_CORE_SP_ENGINE.md)
+-->
+
 ## 6. 🏭 Cell Line — Vận Hành Chi Tiết Từng Màn Hình
 
 > **Nguồn:** Phân tích 41 SP + ảnh màn hình (2026-04-13)
+> ← [Về INDEX](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md) | [Về KB_03 Index](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03/INDEX.md)
+
 
 ### 6.1 Bản đồ tổng quan Cell Line (V22 → V28)
 

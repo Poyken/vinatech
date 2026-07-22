@@ -1,4 +1,22 @@
-﻿## 🔴 Cẩm nang khắc phục lỗi theo Screen ID (Gộp từ KB_SCREEN_BUG_REF)
+<!--
+AI-READY METADATA
+Purpose: Sổ tay các kịch bản lỗi & hướng dẫn khắc phục phân hệ Đóng Gói (B351, B523, B525, B717, B781, B789, B353, C531)
+Scope: Packaging Screen Bug Fixbook & Emergency Response
+Single Source of Truth: KB_04_02_SCREEN_BUGS.md (Packaging Bug Fixes)
+Target Screens: B351, B353, B523, B525, B717, B781, B789, C531
+Target Tables: STB_PackingStandard, STB_DividePackaging, STB_SavePackingTime_VVT, STB_MaterialLotInfo, STB_SetInfo
+Related Files:
+  - [KB_INDEX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
+  - [KB_04 Index](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_04/INDEX.md)
+  - [KB_04_01_CORE_PACKAGING.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_01_CORE_PACKAGING.md)
+-->
+
+# KB_04_02 — Packaging Screen Bugs & Fixes
+
+> ← [Về INDEX](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md) | [Về KB_04 Index](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_04/INDEX.md)
+
+---
+
 
 ## [B351] — Lot Transition (Chuyển đổi Lot)
 

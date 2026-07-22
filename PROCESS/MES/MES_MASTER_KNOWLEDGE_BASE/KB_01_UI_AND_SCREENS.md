@@ -1,9 +1,22 @@
-﻿# KB_01 — UI, Screen Creation & Permission Guide (SmartFramework)
+<!--
+AI-READY METADATA
+Purpose: Hướng dẫn quản trị UI, tạo màn hình mới (Z110/Z220/Z330), phân quyền, đa ngôn ngữ & màn hình B786/B934
+Scope: SmartFramework Architecture & UI Management
+Single Source of Truth: KB_01_UI_AND_SCREENS.md (Menu & UI Permission Framework)
+Target Screens: Login, A460, A419, B260, Z110, Z220, Z330, B682, B781, B789, B791, B786, B934, B935, FG02
+Target Tables: SmartFramework.dbo.STB_UserInfo, STB_UserPermission, STB_ScreenInfo, STB_ScreenObjects, STB_StringResources
+Related Files:
+  - [KB_INDEX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
+  - [BOOTSTRAP.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/AI_AGENT_CONFIG/BOOTSTRAP.md)
+-->
+
+# KB_01 — UI, Screen Creation & Permission Guide (SmartFramework)
 
 > **Màn hình:** Login, A460, A419, B260, Z110, Z220, Z330, B682, B781, B789, B791, B786, B934, B935, FG02
 > **Bảng chính:** `STB_UserInfo`, `STB_UserPermission`, `STB_ScreenInfo`, `STB_ScreenObjects`, `STB_StringResources`
 > **🔑 Keywords:** login, đăng nhập, phân quyền, user, permission, screen objects, string resources, Z220, Z330, Z110, screen creation, tạo màn hình
-> ← [Về INDEX](KB_INDEX.md)
+> ← [Về INDEX](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
+
 
 ---
 

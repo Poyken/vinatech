@@ -1,4 +1,22 @@
-## [B220] — Route Group Setup (Thiết lập nhóm Route)
+<!--
+AI-READY METADATA
+Purpose: Sổ tay khắc phục lỗi theo Screen ID phân hệ Sản Xuất (B220-B935, H302-H305, K109-K110) - Phần 2
+Scope: Production Execution Bug Fixbook Part 2
+Single Source of Truth: KB_03_04_SCREEN_BUGS_BK.md (Production Bug Fixes Part 2)
+Target Screens: B220, B230, B240, B270, B301, B450, B453, B460, B470, B528, B540, B726, B733, B755, B756, B758, B767, B782, B786, B791, B882, B934, B935, H302-H305, K109, K110
+Target Tables: STB_SetInfo, STB_ProdRouteHist, STB_DayProdPlan, STB_DefectInfo, STB_DefectRepairInfo
+Related Files:
+  - [KB_INDEX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
+  - [KB_03 Index](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03/INDEX.md)
+  - [KB_03_02_CELL_LINE.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_02_CELL_LINE.md)
+-->
+
+# KB_03_04 — Production Screen Bugs (B-Series Part 2)
+
+> ← [Về INDEX](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md) | [Về KB_03 Index](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03/INDEX.md)
+
+---
+
 
 > 🔗 **Xem thêm:** Mục [B210 / B220 / B230 / B240](#b210--b220--b230--b240--production-routing-setup) phía trên đã có chi tiết lỗi thiết lập Line/Route.
 

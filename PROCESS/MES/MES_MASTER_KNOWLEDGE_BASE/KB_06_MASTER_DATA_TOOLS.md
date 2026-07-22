@@ -1,9 +1,22 @@
+<!--
+AI-READY METADATA
+Purpose: Hướng dẫn master data (A230/A410/A419), thiết lập line/route (B210-B240), bypass thủ công, checklist thêm model mới & schema chi tiết
+Scope: Master Data & System Setup
+Single Source of Truth: KB_06_MASTER_DATA_TOOLS.md (Master Data Configuration)
+Target Screens: A230, A310, A410, A418, A419, B210-B240, B250, B260, B270, C131, C430, F110, F741
+Target Tables: STB_ModelBasicInfo, STB_MaterialMaster, STB_PackingStandard, STB_LineInfo, STB_RouteInfo, STB_MachineMaster
+Related Files:
+  - [KB_INDEX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
+  - [BOOTSTRAP.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/AI_AGENT_CONFIG/BOOTSTRAP.md)
+-->
+
 # KB_06 - Master Data, SQL Tools & Manual Bypass
 
 > **Màn hình:** A230, A310, A410, A418, A419, B210-B240, B250, B260, B270, C131, C430, F110, F741
 > **Bảng chính:** `STB_ModelBasicInfo` (61 cols), `STB_MaterialMaster` (82 cols), `STB_PackingStandard` (11 cols)
 > **🔑 Keywords:** master data, model, vật tư, material, Vol, Farad, thêm mới, checklist, line, route, cell, F110, bypass
-> ← [Về INDEX](KB_INDEX.md)
+> ← [Về INDEX](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
+
 
 ---
 

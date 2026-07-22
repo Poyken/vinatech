@@ -1,6 +1,21 @@
-﻿## 7. 🛠️ Triển Khai & Cấu Hình 9 Màn Hình Mới Hưng Yên (VVT_F5)
+<!--
+AI-READY METADATA
+Purpose: Cẩm nang triển khai & nhân bản 78 Stored Procedures, 9 screens, T-SQL Server-Side Layout Cloning & Isolated SPs cho Hưng Yên (VVT_F5)
+Scope: Hung Yen VVT_F5 Technical Deployment & SP Cloning
+Single Source of Truth: KB_07_02_DEPLOY_HY.md (Hung Yen Deployment & SP Isolation)
+Target Screens: HY121, HY122, HY220, HY310, HY442, HY470, HY552, HY802, HY460, HY141-HYFG01
+Target Tables: STB_ScreenInfo, STB_ScreenLayoutInfo, STB_VN_FINISHGOODS_HY
+Related Files:
+  - [KB_INDEX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
+  - [KB_07 Index](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_07/INDEX.md)
+  - [KB_07_01_OVERVIEW.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_07/KB_07_01_OVERVIEW.md)
+  - [KB_07_03_SCREEN_BUGS.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_07/KB_07_03_SCREEN_BUGS.md)
+-->
 
-Nhằm đảm bảo tính độc lập vận hành cho xưởng Hưng Yên (`VVT_F5`) mà không làm ảnh hưởng tới logic của các nhà máy Bắc Ninh, Bắc Giang, và Hà Nam, hệ thống thực hiện nhân bản khép kín **78 Stored Procedures** và **9 màn hình chức năng** tương ứng.
+## 7. 🛠️ Triển Khai & Cấu Hình 9 Màn Hình Mới Hưng Yên (VVT_F5)
+
+> Nhằm đảm bảo tính độc lập vận hành cho xưởng Hưng Yên (`VVT_F5`) mà không làm ảnh hưởng tới logic của các nhà máy Bắc Ninh, Bắc Giang, và Hà Nam, hệ thống thực hiện nhân bản khép kín **78 Stored Procedures** và **9 màn hình chức năng** tương ứng.
+> ← [Về INDEX](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md) | [Về KB_07 Index](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_07/INDEX.md)
 
 > VERIFIED 2026-06-18: 8/9 HY TCodes below (HY122, HY220, HY310, HY442, HY470, HY552, HY802, HY460) DO NOT EXIST in STB_ScreenInfo. Actual HY screens: HY141, HY143, HY151, HY311, HY312, HY330, HY430, HY431, HY443, HY530, HY540, HY541, HY620, HY740, HYFG01, HY103 (17 functional screens).
 

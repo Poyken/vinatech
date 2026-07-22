@@ -1,4 +1,22 @@
+<!--
+AI-READY METADATA
+Purpose: Cẩm nang kỹ thuật & quy chuẩn in tem 2D Barcode đặc thù Sanmina (Z530, A460, B767, QR-Code specification, Inner/Outer serials)
+Scope: Sanmina Custom Customer Label Specification & Blueprint
+Single Source of Truth: KB_04_03_SANMINA_LABEL_GUIDE.md (Sanmina Label Specification)
+Target Screens: Z530, A460, B767
+Target Tables: STB_SanminaIndiaLabelPrintHist, STB_ModelLabelInfo, STB_LabelInfo
+Related Files:
+  - [KB_INDEX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
+  - [KB_04 Index](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_04/INDEX.md)
+  - [KB_04_01_CORE_PACKAGING.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_01_CORE_PACKAGING.md)
+-->
+
 # Cẩm Nang Phát Triển Tem Nhãn Sanmina (Z530 & B767 Connection Guide)
+
+> ← [Về INDEX](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md) | [Về KB_04 Index](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_04/INDEX.md)
+
+---
+
 
 Tài liệu này phân tích chi tiết mối liên hệ giữa **thiết kế mẫu tem Sanmina tại màn hình Z530 (Label Info)** và **quy trình in tem thực tế tại màn hình B767 (Customer Label Print)** trên hệ thống NAIS MES của Vinatech. Tài liệu này đóng vai trò là tài liệu kỹ thuật mẫu (Blueprint) giúp lập trình viên phát triển các loại tem nhãn tương tự trong tương lai.
 

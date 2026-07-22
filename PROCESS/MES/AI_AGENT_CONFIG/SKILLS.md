@@ -1,7 +1,20 @@
+<!--
+AI-READY METADATA
+Purpose: PowerShell scripts, SQL templates, debug recipes, impact checks và công cụ tự động cho AI Agent
+Scope: Execution Scripts & Debug Recipes
+Single Source of Truth: SKILLS.md (SQL & Debug Scripts)
+Related Files:
+  - [BOOTSTRAP.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/AI_AGENT_CONFIG/BOOTSTRAP.md)
+  - [KNOWLEDGE.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/AI_AGENT_CONFIG/KNOWLEDGE.md)
+  - [run_query.ps1](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/run_query.ps1)
+  - [debug_screen.ps1](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/debug_screen.ps1)
+-->
+
 # ⚡ SKILLS — Vinatech MES Agent (PowerShell & SQL Templates)
 
 > **Mục đích:** Các script template sẵn sàng dùng, chỉ cần thay params
 > **Cập nhật:** 2026-06-19
+
 
 ---
 

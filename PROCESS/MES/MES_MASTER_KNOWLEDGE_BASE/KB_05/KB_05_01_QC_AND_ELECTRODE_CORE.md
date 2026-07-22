@@ -1,9 +1,23 @@
+<!--
+AI-READY METADATA
+Purpose: Tổng quan quy trình QC (IQC, PQC, OQC, FOQC) & Vận hành sản xuất Điện cực (Mixing, Coating, Rollpress, Slitting)
+Scope: Quality Control Inspection & Electrode Core Operations
+Single Source of Truth: KB_05_01_QC_AND_ELECTRODE_CORE.md (QC & Electrode Core Engine)
+Target Screens: B597, C443, C512, C486, C530, C546, B552, B270, B540, C121-C564, F743-F748
+Target Tables: STB_MaterialQcInfo, STB_MaterialQcInspectionItem, STB_CommInspDocHistory, STB_ElectrodeStep, STB_SlittingStock_VVT
+Related Files:
+  - [KB_INDEX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
+  - [KB_05 Index](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05/INDEX.md)
+  - [KB_05_02_SCREEN_BUGS_QC.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_02_SCREEN_BUGS_QC.md)
+-->
+
 # KB_05 — Kiểm tra Chất lượng (QC) & Điện cực
 
 > **Màn hình:** B597, C443, C512, C486, C530, C546, B552, B270, B540, C121-C564, F743-F748
 > **Bảng chính:** `STB_MaterialQcInfo` (35 cols), `STB_MaterialQcInspectionItem` (USL/LSL), `STB_CommInspDocHistory`
 > **🔑 Keywords:** QC, chất lượng, kiểm tra, IQC, PQC, OQC, FOQC, electrode, điện cực, slitting, aging, hạng mục, spec, USL, LSL, Pass, Fail, Hold, mẫu, sample
-> ← [Về INDEX](KB_INDEX.md)
+> ← [Về INDEX](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
+
 
 ---
 

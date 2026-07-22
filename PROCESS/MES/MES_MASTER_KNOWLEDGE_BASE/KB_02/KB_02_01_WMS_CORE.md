@@ -1,9 +1,23 @@
+<!--
+AI-READY METADATA
+Purpose: Quản lý kho WMS nguyên vật liệu & thành phẩm, quy trình nhập F330, xuất F430, kiểm kê, FIFO, Hạn dùng, Holding & Hà Nam WMS
+Scope: WMS Warehouse Management Core
+Single Source of Truth: KB_02_01_WMS_CORE.md (Stock & Warehouse Operations)
+Target Screens: F330, F312, F430, F110, F710, F721, F741, C220, HN551, HN866, HN544, FG00
+Target Tables: STB_MaterialLotInfo, STB_MaterialDocInfo, STB_MaterialStock, STB_MaterialWarehouse, STB_MaterialDocLotInfo
+Related Files:
+  - [KB_INDEX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
+  - [KB_02 Index](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_02/INDEX.md)
+  - [KB_02_02_SCREEN_BUGS.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_02/KB_02_02_SCREEN_BUGS.md)
+-->
+
 # KB_02 - Kho WMS Core (NVL & Thành Phẩm)
 
 > **Màn hình:** F330, F312, F430, F110, F710, F721, F741, C220, HN551, HN866, HN544, FG00
 > **Bảng chính:** `STB_MaterialLotInfo`, `STB_MaterialDocInfo`, `STB_MaterialStock`, `STB_MaterialWarehouse`
 > **🔑 Keywords:** kho, warehouse, tồn kho, nhập kho, xuất kho, FIFO, holding, hết hạn, lot, NVL, nguyên vật liệu, phiếu nhập, phiếu xuất, chuyển kho
-> ← [Về INDEX](../KB_INDEX.md)
+> ← [Về INDEX](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
+
 
 ---
 

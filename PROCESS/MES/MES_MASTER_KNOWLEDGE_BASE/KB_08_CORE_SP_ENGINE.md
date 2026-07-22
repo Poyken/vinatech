@@ -1,8 +1,21 @@
-﻿# KB_08: Core SP Engine — Trái Tim Hệ Thống MES
+<!--
+AI-READY METADATA
+Purpose: Phân tích line-by-line 4+ Stored Procedure cốt lõi nhất của hệ thống MES (DoProcess, Backflush, SmartApp variant, Packing & SetInfo Generator)
+Scope: Core Database SP Engine & Live Execution Map
+Single Source of Truth: KB_08_CORE_SP_ENGINE.md (Core SP Execution & Logic)
+Target SPs: usp_DoProcessProdRouteHist, usp_DoProcessProdGIMaterialByBOM, usp_DoProcessProdRouteHistForCalc_SmartApp_VNT, usp_Vietnam_DoProcessProdPacking_VVT, usp_DoCreateSetInfoForProdQty_VNT
+Related Files:
+  - [KB_INDEX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
+  - [BOOTSTRAP.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/AI_AGENT_CONFIG/BOOTSTRAP.md)
+  - [KNOWLEDGE.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/AI_AGENT_CONFIG/KNOWLEDGE.md)
+-->
 
-> **File này chứa phân tích chi tiết các Stored Procedure cốt lõi nhất của hệ thống MES.**
+# KB_08: Core SP Engine — Trái Tim Hệ Thống MES
+
+> **File tính năng:** Chứa phân tích chi tiết các Stored Procedure cốt lõi nhất của hệ thống MES.
 > **🔑 Keywords:** SP engine, DoProcess, Backflush, ForCalc, Packing, OPENXML, stored procedure, core logic
-> Hiểu được các SP này = hiểu được 80% logic vận hành toàn bộ nhà máy.
+> ← [Về INDEX](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
+
 
 ---
 

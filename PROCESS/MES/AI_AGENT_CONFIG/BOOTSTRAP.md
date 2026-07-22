@@ -1,3 +1,18 @@
+<!--
+AI-READY METADATA
+Purpose: Tất cả trong một (All-in-one): Rules + DB + Tools + Lessons Learned cho AI Agent trong phiên làm việc mới
+Scope: Entry Point & Core Operating Procedures
+Single Source of Truth: BOOTSTRAP.md
+Related Files:
+  - [RULES.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/AI_AGENT_CONFIG/RULES.md)
+  - [KNOWLEDGE.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/AI_AGENT_CONFIG/KNOWLEDGE.md)
+  - [SKILLS.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/AI_AGENT_CONFIG/SKILLS.md)
+  - [KB_INDEX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
+  - [run_query.ps1](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/run_query.ps1)
+  - [deploy_tool.ps1](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/deploy_tool.ps1)
+  - [db_sync_tool.ps1](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/db_sync_tool.ps1)
+-->
+
 # ⚡ BOOTSTRAP — Đọc file này ĐẦU TIÊN mỗi session mới
 
 > **Cách dùng:** Khi bắt đầu session mới, user nói: *"Đọc file `MES/AI_AGENT_CONFIG/BOOTSTRAP.md` trước"*
@@ -7,11 +22,12 @@
 
 ## 🔒 QUY TẮC VÀNG
 
-> Chi tiết đầy đủ → [RULES.md](RULES.md)
+> [!IMPORTANT]
+> Chi tiết đầy đủ quy tắc → [RULES.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/AI_AGENT_CONFIG/RULES.md)
 
 1. **SELECT-ONLY** — Tuyệt đối KHÔNG INSERT/UPDATE/DELETE/ALTER/CREATE/DROP trực tiếp trên production DB
-2. **Script → User chạy** — Viết script fix (bọc `BEGIN TRAN...ROLLBACK`) → user tự chạy SSMS hoặc qua `deploy_tool.ps1`
-3. **Fetch trước khi sửa** — Query SP mới nhất từ `sys.sql_modules`
+2. **Script → User chạy** — Viết script fix (bọc `BEGIN TRAN...ROLLBACK`) → user tự chạy SSMS hoặc qua [deploy_tool.ps1](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/deploy_tool.ps1)
+3. **Fetch trước khi sửa** — Query SP mới nhất từ `sys.sql_modules` qua [db_sync_tool.ps1](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/db_sync_tool.ps1)
 4. **Surgical changes** — Chỉ sửa đúng chỗ cần sửa, KHÔNG reformat toàn bộ SP
 5. **Không commit SP lên Git** — Dùng `db_sync_tool.ps1` tải tạm, xong `db_sync_tool.ps1 -Clean`
 6. **Hỏi trước khi làm** — Thiếu thông tin → dừng và hỏi user
@@ -21,12 +37,13 @@
 
 ## 🔌 KẾT NỐI & TOOLS
 
-> Thông tin kết nối chi tiết → [`db_config.json`](../db_config.json) | Hướng dẫn tool chi tiết → [MES_SCRIPT_GUIDE.md](../MES_MASTER_KNOWLEDGE_BASE/MES_SCRIPT_GUIDE.md)
+> [!NOTE]
+> Thông tin kết nối chi tiết → [db_config.json](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/db_config.json) | Hướng dẫn tool chi tiết → [MES_SCRIPT_GUIDE.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/MES_SCRIPT_GUIDE.md)
 
 | DB chính | `SmartFactoryV2` | DB framework | `SmartFramework` |
 |----------|-------------------|--------------|-------------------|
 
-```
+```powershell
 .\run_query.ps1 -Query "SELECT ..."   # Query nhanh (tự động hiển thị KB tham chiếu)
 .\validate_sql.ps1 <file.sql>          # Validate trước deploy
 .\deploy_tool.ps1 <file.sql>           # Deploy SQL
@@ -36,6 +53,7 @@
 .\debug_screen.ps1 -TCode "B523"       # Chẩn đoán màn hình (Menu, SP, Grid) & đề xuất KB
 .\debug_screen.ps1 -ErrorMsg "loi"     # Tìm SP ném lỗi qua chuỗi dịch nghĩa tiếng Việt/tiếng Anh
 ```
+
 
 ---
 

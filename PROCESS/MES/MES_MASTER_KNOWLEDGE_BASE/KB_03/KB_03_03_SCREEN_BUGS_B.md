@@ -1,4 +1,22 @@
-## 🔴 Cẩm nang khắc phục lỗi theo Screen ID (Gộp từ KB_SCREEN_BUG_REF)
+<!--
+AI-READY METADATA
+Purpose: Sổ tay khắc phục lỗi theo Screen ID phân hệ Sản Xuất (B210-B802, H301-H305, HN523-HN866, K101-K110) - Phần 1
+Scope: Production Execution Bug Fixbook Part 1
+Single Source of Truth: KB_03_03_SCREEN_BUGS_B.md (Production Bug Fixes Part 1)
+Target Screens: B210-B270, B310, B442, B452, B523, B528, B530, B540, B552, B560, B597, B598, B618, B682, B717, B754, B757, B790, B802, B882, H301-H305, HN523, HN544, HN551, HN866, K101, K109, K110
+Target Tables: STB_SetInfo, STB_ProdRouteHist, STB_DayProdPlan, STB_DefectInfo, STB_DefectRepairInfo
+Related Files:
+  - [KB_INDEX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
+  - [KB_03 Index](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03/INDEX.md)
+  - [KB_03_02_CELL_LINE.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_02_CELL_LINE.md)
+-->
+
+# KB_03_03 — Production Screen Bugs (B-Series Part 1)
+
+> ← [Về INDEX](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md) | [Về KB_03 Index](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03/INDEX.md)
+
+---
+
 
 ## [B210] / [B220] / [B230] / [B240] — Production Routing Setup (Thiết lập định tuyến sản xuất)
 

@@ -1,5 +1,23 @@
 
-## [A130] — Warehouse & Location (Khai báo kho & vị trí)
+<!--
+AI-READY METADATA
+Purpose: Sổ tay các kịch bản lỗi & hướng dẫn khắc phục theo TCode của phân hệ Kho WMS (A130, F110, F130, F330, F430, F721, F741-F748, F750, F761, HN00, HN101)
+Scope: WMS Screen Bug Troubleshooting
+Single Source of Truth: KB_02_02_SCREEN_BUGS.md (WMS Bug Fixbook)
+Target Screens: A130, F110, F130, F140, F312, F330, F430, F721, F741-F748, F750, F761, HN00, HN101
+Target Tables: STB_MaterialLotInfo, STB_MaterialDocInfo, STB_MaterialDocLotInfo, STB_WarehouseLocation
+Related Files:
+  - [KB_INDEX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
+  - [KB_02 Index](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_02/INDEX.md)
+  - [KB_02_01_WMS_CORE.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_02/KB_02_01_WMS_CORE.md)
+-->
+
+# KB_02_02 — WMS Screen Bugs & Troubleshooting
+
+> ← [Về INDEX](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md) | [Về KB_02 Index](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_02/INDEX.md)
+
+---
+
 
 ### [F330] — Lỗi 1: Không hiển thị hoặc thiếu vị trí kho (Location) khi làm thủ tục nhập kho hoặc chuyển kho
 *   **Triệu chứng:** Khi thực hiện nhập kho tại **F330** hoặc điều chuyển kho, người dùng không thấy vị trí kho (Location) trong danh sách để chọn, hoặc hệ thống báo lỗi không tồn tại vị trí.

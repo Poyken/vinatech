@@ -1,7 +1,20 @@
+<!--
+AI-READY METADATA
+Purpose: Hướng dẫn tổng quan cấu trúc thư mục AI_AGENT_CONFIG và thứ tự đọc file tối ưu token cho AI Agent
+Scope: Config Directory Documentation
+Single Source of Truth: AI_AGENT_CONFIG/README.md
+Related Files:
+  - [BOOTSTRAP.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/AI_AGENT_CONFIG/BOOTSTRAP.md)
+  - [RULES.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/AI_AGENT_CONFIG/RULES.md)
+  - [KNOWLEDGE.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/AI_AGENT_CONFIG/KNOWLEDGE.md)
+  - [SKILLS.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/AI_AGENT_CONFIG/SKILLS.md)
+-->
+
 # 🚀 AI Agent Config — Vinatech MES
 
 > **Bạn là AI agent đang làm việc trên dự án MES Vinatech.**
 > **Mỗi session mới: User sẽ nói "Đọc BOOTSTRAP.md" → AI đọc 1 file và sẵn sàng ngay.**
+
 
 ## ⚡ Thứ tự đọc file
 

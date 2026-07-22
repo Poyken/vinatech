@@ -1,9 +1,24 @@
-﻿# KB_07 — VinaEnesol & Hưng Yên Factory Specifics
+<!--
+AI-READY METADATA
+Purpose: Tổng quan kiến trúc & Cấu hình vận hành nhà máy Hưng Yên (VVT_F5) & VinaEnesol (D000-D110, A130-A410, B210-B270, F110)
+Scope: Hung Yen VVT_F5 Architecture & Master Data Setup
+Single Source of Truth: KB_07_01_OVERVIEW.md (Hung Yen Architecture & Master Data)
+Target Screens: D000, D051, D100, D110, A130, A230, A310, A410, B210, B220, B230, B240, B250, B260, B270, F110, HY00000-HY00004
+Target Tables: STB_CustomerInfoEnesol, STB_MaterialCodeByCustomer, STB_VINAEnesolBoxLabelPrintHist, STB_VINAEnesolBoxMatchingHist
+Related Files:
+  - [KB_INDEX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
+  - [KB_07 Index](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_07/INDEX.md)
+  - [KB_07_02_DEPLOY_HY.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_07/KB_07_02_DEPLOY_HY.md)
+  - [KB_07_03_SCREEN_BUGS.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_07/KB_07_03_SCREEN_BUGS.md)
+-->
+
+# KB_07 — VinaEnesol & Hưng Yên Factory Specifics
 
 > **Màn hình:** D000, D051, D100, D110, HY screens
 > **🔑 Keywords:** Enesol, Hưng Yên, VVT_F4, pin, battery, D-series, box matching, inner box, outer box, 93 SPs
 > **Verified against DB:** 2026-06-10
-> ← [Về INDEX](../KB_INDEX.md)
+> ← [Về INDEX](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
+
 
 ---
 

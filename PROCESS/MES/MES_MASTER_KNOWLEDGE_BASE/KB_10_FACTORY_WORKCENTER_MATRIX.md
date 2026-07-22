@@ -1,8 +1,21 @@
-﻿# KB_10: Factory WorkCenter Matrix — Bản Đồ Nhà Máy (Verified)
+<!--
+AI-READY METADATA
+Purpose: Ma trận nhà máy (Factory WorkCenter Matrix) tra cứu WorkCenterCode, Route prefix, Barcode format & Warehouse Mapping cho 6+ nhà máy
+Scope: Factory Topology & WorkCenter Configuration
+Single Source of Truth: KB_10_FACTORY_WORKCENTER_MATRIX.md (Factory WorkCenter & Barcode Rules)
+Target Tables: STB_ProductionOrderInfo, STB_LineInfo, STB_MachineMaster, STB_YearInfo
+Related Files:
+  - [KB_INDEX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
+  - [BOOTSTRAP.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/AI_AGENT_CONFIG/BOOTSTRAP.md)
+  - [KNOWLEDGE.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/AI_AGENT_CONFIG/KNOWLEDGE.md)
+-->
+
+# KB_10: Factory WorkCenter Matrix — Bản Đồ Nhà Máy (Verified)
 
 > **📌 Mục đích:** Tra cứu nhanh WorkCenterCode → Nhà máy → Route → Barcode format.
 > **🔑 Keywords:** factory, nhà máy, WorkCenter, VVT_F1, VVT_F3, VVT_F4, line, route, barcode format, BG, HN, HY
-> **Nguồn dữ liệu:** `STB_ProductionOrderInfo` (verified 2026-06-18, 22,553 POs tổng).
+> ← [Về INDEX](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
+
 
 ---
 

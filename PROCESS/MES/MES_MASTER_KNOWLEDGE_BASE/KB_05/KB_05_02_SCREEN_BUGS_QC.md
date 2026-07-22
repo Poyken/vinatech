@@ -1,4 +1,22 @@
-## 🔴 Cẩm nang khắc phục lỗi theo Screen ID (Gộp từ KB_SCREEN_BUG_REF)
+<!--
+AI-READY METADATA
+Purpose: Sổ tay các kịch bản lỗi & hướng dẫn khắc phục phân hệ Quality Control (B597, C112-C564, HNC321)
+Scope: Quality Control Screen Bug Fixbook
+Single Source of Truth: KB_05_02_SCREEN_BUGS_QC.md (QC Bug Fixes)
+Target Screens: B597, B598, C112, C121, C122, C131, C132, C141, C143, C151, C113, C220, C243, C321, C430, C443, C451, C460, C486, C510, C512, C530, C540, C541, C546, C560-C564, HNC321
+Target Tables: STB_MaterialQcInfo, STB_MaterialQcDetail, STB_MaterialQcSampleResult, STB_CommInspDocHistory, VVT_OQC_REFER
+Related Files:
+  - [KB_INDEX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
+  - [KB_05 Index](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05/INDEX.md)
+  - [KB_05_01_QC_AND_ELECTRODE_CORE.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md)
+-->
+
+# KB_05_02 — Quality Control Screen Bugs & Fixes
+
+> ← [Về INDEX](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md) | [Về KB_05 Index](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05/INDEX.md)
+
+---
+
 
 ## [B597] — Material Scanning & PQC Verification (Scan nguyên vật liệu đầu vào chuyền)
 

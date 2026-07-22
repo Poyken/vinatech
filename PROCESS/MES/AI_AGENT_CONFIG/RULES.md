@@ -1,3 +1,14 @@
+<!--
+AI-READY METADATA
+Purpose: Quy tắc bắt buộc không thể vi phạm cho AI Agent khi thao tác trên DB & Workspace MES
+Scope: Safety & Execution Rules
+Single Source of Truth: RULES.md
+Related Files:
+  - [BOOTSTRAP.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/AI_AGENT_CONFIG/BOOTSTRAP.md)
+  - [GEMINI.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/GEMINI.md)
+  - [db_config.json](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/db_config.json)
+-->
+
 # 🛡️ RULES — Vinatech MES Agent (Bắt buộc đọc mỗi phiên)
 
 > **Mục đích:** File này chứa TẤT CẢ quy tắc bắt buộc, nén gọn nhất.
@@ -7,11 +18,14 @@
 
 ## 1. SELECT-ONLY (TUYỆT ĐỐI)
 
-- ❌ KHÔNG INSERT/UPDATE/DELETE trực tiếp trên production DB
-- ❌ KHÔNG ALTER/CREATE/DROP bất kỳ object nào (SP, Table, View, Trigger)
-- ✅ CHỈ chạy SELECT (kèm `WITH(NOLOCK)` trên bảng giao dịch)
-- ✅ Viết script sửa đổi → hướng dẫn USER tự chạy qua SSMS
-- ✅ Mọi script IUD phải có `BEGIN TRAN ... ROLLBACK` (user đổi COMMIT sau khi xác nhận)
+> [!CAUTION]
+> **QUY TẮC AN TOÀN SẢN XUẤT NGUYÊN TẮC VÀNG:**
+> - ❌ KHÔNG INSERT/UPDATE/DELETE trực tiếp trên production DB.
+> - ❌ KHÔNG ALTER/CREATE/DROP bất kỳ object nào (SP, Table, View, Trigger).
+> - ✅ CHỈ chạy SELECT (kèm `WITH(NOLOCK)` trên bảng giao dịch).
+> - ✅ Viết script sửa đổi → hướng dẫn USER tự chạy qua SSMS hoặc `deploy_tool.ps1`.
+> - ✅ Mọi script IUD phải có `BEGIN TRAN ... ROLLBACK` (user đổi COMMIT sau khi xác nhận).
+
 
 ---
 

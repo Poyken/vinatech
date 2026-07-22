@@ -1,4 +1,22 @@
-## 🔴 Cẩm nang khắc phục lỗi theo Screen ID (Gộp từ KB_SCREEN_BUG_REF)
+<!--
+AI-READY METADATA
+Purpose: Sổ tay các kịch bản lỗi & hướng dẫn khắc phục phân hệ Hưng Yên & VinaEnesol (Dry Oven, Doping JIG, D000, D051, D100, D110)
+Scope: Hung Yen & VinaEnesol Screen Bug Fixbook
+Single Source of Truth: KB_07_03_SCREEN_BUGS.md (Hung Yen Bug Fixes)
+Target Screens: Dry Oven, Doping JIG, D000, D051, D100, D110
+Target Tables: STB_VN_DryOver, STB_VVT_DopingJIG, STB_VINAEnesolBoxLabelPrintHist, STB_MaterialCodeByCustomer
+Related Files:
+  - [KB_INDEX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
+  - [KB_07 Index](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_07/INDEX.md)
+  - [KB_07_01_OVERVIEW.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_07/KB_07_01_OVERVIEW.md)
+-->
+
+# KB_07_03 — Hung Yen & VinaEnesol Screen Bugs & Fixes
+
+> ← [Về INDEX](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md) | [Về KB_07 Index](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_07/INDEX.md)
+
+---
+
 
 ## Dry Oven — Lò sấy điện cực (Quy trình sấy V-22)
 

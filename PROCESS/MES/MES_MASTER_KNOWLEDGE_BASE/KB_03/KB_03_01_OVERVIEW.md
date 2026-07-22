@@ -1,9 +1,23 @@
+<!--
+AI-READY METADATA
+Purpose: Tổng quan luồng sản xuất (B310-B882), SetInfo & ProdRouteHist Data Schemas, JobDate update scripts & Barcode traceability
+Scope: Production System Overview & Core Data Schemas
+Single Source of Truth: KB_03_01_OVERVIEW.md (Production Overview & Core Schemas)
+Target Screens: B310, B450, B452, B523, B528, B530, B540, B597, B598, B682, B717, B726, B781, B782, B791, B802, B882
+Target Tables: STB_SetInfo, STB_ProdRouteHist, STB_DayProdPlan, STB_ProductionOrderInfo
+Related Files:
+  - [KB_INDEX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
+  - [KB_03 Index](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03/INDEX.md)
+  - [KB_03_02_CELL_LINE.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_02_CELL_LINE.md)
+-->
+
 # KB_03 — Sản Xuất & Lịch Sử Routing
 
 > **Màn hình:** B310, B450, B452, B523, B528, B530, B540, B597, B598, B682, B717, B726, B781, B782, B791, B802, B882
 > **Bảng chính:** `STB_SetInfo` (76 cols), `STB_ProdRouteHist` (23 cols), `STB_DayProdPlan`, `STB_ProductionOrderInfo`
 > **🔑 Keywords:** sản xuất, routing, barcode, scan, công đoạn, chốt sản lượng, line, chuyền, PO, kế hoạch, JobDate, NG, defect, module, cell, electrode, ANDON
-> ← [Về INDEX](../KB_INDEX.md)
+> ← [Về INDEX](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
+
 
 ---
 
