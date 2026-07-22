@@ -842,7 +842,6 @@ Mã phiếu IQC (`MaterialQcNo`) có thể được tìm thấy bằng 3 cách:
 
 ---
 
-### [HNC321] — Kịch bản sự cố khẩn cấp 3: Lỗi nhập phế báo lỗi tiếng Hàn
 
 ### 4.6 [HNC321] — LỖI NHẬP PHẾ MÀN BÁO LỖI TIẾNG HÀN (이전 공정에 실적처리 이력이 없습니다)
 

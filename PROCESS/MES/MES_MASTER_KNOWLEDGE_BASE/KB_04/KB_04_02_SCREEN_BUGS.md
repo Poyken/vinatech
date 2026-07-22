@@ -141,7 +141,6 @@ Related Files:
 
 ---
 
-### [B523] — Kịch bản sự cố khẩn cấp 1: Lỗi không gộp được Box ()
 
 ### 4.1 [B523] — LỖI KHÔNG GỘP ĐƯỢC BOX (MÀN HÌNH )
 
@@ -322,7 +321,6 @@ END CATCH;
 
 ---
 
-### [B450]/[B523]/[B756]/[A460] — Kịch bản sự cố khẩn cấp 3: Không in được tem (///)
 
 ### 4.5 [B450]/[B523]/[B756]/[A460] — LỖI KHÔNG IN ĐƯỢC TEM ( / / / )
 
