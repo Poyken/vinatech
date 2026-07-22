@@ -1,4 +1,4 @@
-﻿<!--
+<!--
 AI-READY METADATA
 Purpose: Quy tắc bắt buộc không thể vi phạm cho AI Agent khi thao tác trên DB & Workspace MES
 Scope: Safety & Execution Rules
@@ -18,13 +18,13 @@ Related Files:
 
 ## 1. SELECT-ONLY (TUYỆT ĐỐI)
 
+## 🛡️ Quy Tắc Cốt Lõi
+
 > [!CAUTION]
-> **QUY TẮC AN TOÀN SẢN XUẤT NGUYÊN TẮC VÀNG:**
-> - ❌ KHÔNG INSERT/UPDATE/DELETE trực tiếp trên production DB.
-> - ❌ KHÔNG ALTER/CREATE/DROP bất kỳ object nào (SP, Table, View, Trigger).
-> - ✅ CHỈ chạy SELECT (kèm `WITH(NOLOCK)` trên bảng giao dịch).
-> - ✅ Viết script sửa đổi → hướng dẫn USER tự chạy qua SSMS hoặc `deploy_tool.ps1`.
-> - ✅ Mọi script IUD phải có `BEGIN TRAN ... ROLLBACK` (user đổi COMMIT sau khi xác nhận).
+> **1. SELECT-ONLY** — KHÔNG INSERT/UPDATE/DELETE/ALTER/DROP trực tiếp trên production DB.
+> **2. Script → User chạy** — Viết SQL fix bọc `BEGIN TRAN...ROLLBACK` → user tự chạy qua SSMS hoặc `deploy_tool.ps1`.
+> **3. KNOWLEDGE-FIRST HARD STOP** — KHÔNG ĐƯỢC CHẠY SQL QUERY KHI CHƯA TRA KB! Khi nhận báo lỗi, AI BẮT BUỘC phải mở `KB_09_SCREEN_BUG_FIXBOOK.md` hoặc KI `vinatech_bug_fix_patterns` để đọc Root Cause + SP + Bảng trước. Chỉ thực hiện SELECT sau khi đã định vị xong trong KB.
+> **4. Hỏi trước khi làm** — Thiếu thông tin hoặc nghi ngờ → dừng hỏi user ngay.
 
 
 ---
