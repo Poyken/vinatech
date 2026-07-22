@@ -23,8 +23,10 @@ Related Files:
 > [!CAUTION]
 > **1. SELECT-ONLY** — KHÔNG INSERT/UPDATE/DELETE/ALTER/DROP trực tiếp trên production DB.
 > **2. Script → User chạy** — Viết SQL fix bọc `BEGIN TRAN...ROLLBACK` → user tự chạy qua SSMS hoặc `deploy_tool.ps1`.
-> **3. KNOWLEDGE-FIRST HARD STOP** — KHÔNG ĐƯỢC CHẠY SQL QUERY KHI CHƯA TRA KB! Khi nhận báo lỗi, AI BẮT BUỘC phải mở `KB_09_SCREEN_BUG_FIXBOOK.md` hoặc KI `vinatech_bug_fix_patterns` để đọc Root Cause + SP + Bảng trước. Chỉ thực hiện SELECT sau khi đã định vị xong trong KB.
-> **4. Hỏi trước khi làm** — Thiếu thông tin hoặc nghi ngờ → dừng hỏi user ngay.
+> **3. KNOWLEDGE-FIRST HARD STOP** — CẤM CHẠY SQL QUERY KHI CHƯA TRA KB! Khi nhận báo lỗi, AI BẮT BUỘC phải mở `KB_09_SCREEN_BUG_FIXBOOK.md` hoặc KI `vinatech_bug_fix_patterns` để đọc Root Cause + SP + Bảng trước. Chỉ thực hiện SELECT sau khi đã định vị xong trong KB.
+> **4. TOKEN OPTIMIZATION** — CẤM đọc full file >50KB hoặc `SELECT *` tràn lan! Dùng KI context / `grep_search` đọc đúng đoạn lỗi. Chỉ SELECT đúng 3-5 cột cần verify. Phản hồi chuẩn 3 khối: (1) Root Cause từ KB, (2) SELECT verify ngắn gọn, (3) SQL fix `BEGIN TRAN...ROLLBACK`.
+> **5. Hỏi trước khi làm** — Thiếu thông tin hoặc nghi ngờ → dừng hỏi user ngay.
+
 
 
 ---
