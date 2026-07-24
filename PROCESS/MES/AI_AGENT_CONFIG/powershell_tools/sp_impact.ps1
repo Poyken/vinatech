@@ -4,8 +4,8 @@ param(
     [string]$SPName
 )
 
-$toolsDir = "C:\Users\User Vinatech.DESKTOP-RJJSEQU\Desktop\PROCESS\MES\AI_AGENT_CONFIG\powershell_tools"
-$runQueryScript = "$toolsDir\run_query.ps1"
+$baseDir = "C:\Users\User Vinatech.DESKTOP-RJJSEQU\Desktop\PROCESS\MES"
+$runQueryScript = "$baseDir\run_query.ps1"
 
 $cleanSP = $SPName.Trim()
 
@@ -27,11 +27,11 @@ Write-Host "=== 1. DEPENDENT SQL OBJECTS ==="
 
 # 2. Query ScreenInfo in SmartFramework
 $sqlScreen = @"
-SELECT ScreenID, ScreenName, TCode 
+SELECT Name AS ScreenName, TCode, Caption 
 FROM SmartFramework.dbo.STB_ScreenInfo WITH(NOLOCK)
-WHERE SqlGetProcedureName LIKE '%$cleanSP%' 
-   OR SqlIudProcedureName LIKE '%$cleanSP%';
+WHERE Name LIKE '%$cleanSP%' OR TCode LIKE '%$cleanSP%';
 "@
 
 Write-Host "=== 2. MAPPED MES SCREENS ==="
 & "$runQueryScript" -Query $sqlScreen
+

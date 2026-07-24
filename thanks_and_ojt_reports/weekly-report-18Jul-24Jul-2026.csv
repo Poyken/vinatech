@@ -1,0 +1,30 @@
+NAME,DEPARTMENT,DATE GET ISSUE,NAME ISSUE,THE SOLVE,TYPE ISSUE,DATE SOLVE ISSUE,SOLVE ISSUE BY,STATUS,REMARK
+Nguyen Van Duc,EA Team,20/7/2026,Email Name Config — Anh Pham Hieu QC Manager,Hỗ trợ thay đổi và cấu hình lại tên hiển thị tài khoản email cho anh Phạm Hiếu bộ phận QC Manager.,Support,20/7/2026,Nguyen Van Duc,Done,GW
+Nguyen Van Duc,EA Team,20/7/2026,Printer Repair — Anh Huan,Hỗ trợ kiểm tra và khắc phục sự cố máy in cho anh Huân.,Support,20/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,20/7/2026,Printer Troubleshooting — Chi Dinh Thu BG1,Hỗ trợ xử lý lỗi máy in cho chị Đinh Thư bộ phận BG1.,Support,20/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,20/7/2026,Vendor Support — New Equipment Deployment,Phối hợp và hỗ trợ vendor triển khai; lắp đặt máy móc thiết bị mới.,Support,20/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,20/7/2026,Office Activation Support,Hỗ trợ người dùng kích hoạt bản quyền Microsoft Office và khắc phục lỗi phần mềm văn phòng.,Support,20/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,20/7/2026,Network Connectivity Check — Production Area,Kiểm tra độ ổn định kết nối mạng LAN/Wifi khu vực xưởng sản xuất và xử lý sự cố mạng.,Support,20/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,21/7/2026,IT Asset Relabeling Support,Tiến hành kiểm tra và dán lại tem quản lý thiết bị IT cho người dùng.,Support,21/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,21/7/2026,ECM System Support,Hỗ trợ người dùng giải đáp thắc mắc và xử lý lỗi trên hệ thống ECM.,Support,21/7/2026,Nguyen Van Duc,Done,ECM
+Nguyen Van Duc,EA Team,21/7/2026,MES User Support — Chi Lan Anh; Chi Van Oc & Anh Nguyen Quang Tai,Hỗ trợ xử lý lỗi và hướng dẫn nghiệp vụ sử dụng hệ thống MES cho chị Lan Anh; chị Vân Ốc và anh Nguyễn Quang Tài.,Support,21/7/2026,Nguyen Van Duc,Done,MES
+Nguyen Van Duc,EA Team,21/7/2026,Password Reset Support — Windows & Portal,Hỗ trợ reset mật khẩu tài khoản Windows và Portal cho các user gặp sự cố đăng nhập.,Support,21/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,21/7/2026,Printer Connection Support — Office Area,Hỗ trợ người dùng mới kết nối và chia sẻ máy in mạng khu vực văn phòng.,Support,21/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,21/7/2026,PDF Reader & Work Software Setup,Hỗ trợ cài đặt và cập nhật các phần mềm làm việc cơ bản (PDF Reader; Unikey; CAD viewer) cho người dùng.,Support,21/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,22/7/2026,Hardware Inspection — Chi May RnD,Hỗ trợ kiểm tra tình trạng phần cứng máy tính cho chị Mây bộ phận RnD.,Support,22/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,22/7/2026,Audit Guest Wifi Support,Hỗ trợ cấu hình và kết nối mạng Wifi cho đoàn khách hàng kiểm toán.,Support,22/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,22/7/2026,MES Support — Anh Nguyen Quang Tai,Hỗ trợ kiểm tra và xử lý sự cố sử dụng hệ thống MES cho anh Nguyễn Quang Tài.,Support,22/7/2026,Nguyen Van Duc,Done,MES
+Nguyen Van Duc,EA Team,22/7/2026,Hardware Check — Anh Nguyen Hai KTSP,Check và kiểm tra tình trạng hoạt động thiết bị phần cứng cho anh Nguyễn Hải bộ phận KTSP.,Support,22/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,22/7/2026,ECM Support — Anh Nguyen The Tan & Chi Nguyen May,Hỗ trợ khắc phục lỗi tài khoản và phân quyền trên hệ thống ECM cho anh Nguyễn Thế Tân và chị Nguyễn Mây.,Support,22/7/2026,Nguyen Van Duc,Done,ECM
+Nguyen Van Duc,EA Team,22/7/2026,Printer Check — Anh Ba Ha Electrode,Kiểm tra và xử lý lỗi máy in cho anh Bá Hà bộ phận Điện cực.,Support,22/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,22/7/2026,Monitor Allocation — QC Department,Cấp phát và lắp đặt màn hình cho nhân sự bộ phận QC (chị Hương; chị Hà; bác Choi; anh Đông; anh Hiếu).,Support,22/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,22/7/2026,MES Screen Troubleshooting — Production Line,Kiểm tra lỗi hiển thị và hỗ trợ cập nhật dữ liệu trên màn hình kiểm tra sản xuất MES.,Support,22/7/2026,Nguyen Van Duc,Done,MES
+Nguyen Van Duc,EA Team,23/7/2026,Server Room Construction Survey — Hung Yen,Khảo sát thực tế và kiểm tra tiến độ thi công phòng Server (IT Room) tại nhà máy Hưng Yên.,Task,23/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,23/7/2026,FortiClient Support — Chi Hop & Anh Diep,Hỗ trợ cài đặt và cấu hình phần mềm FortiClient VPN cho chị Hợp và anh Điệp.,Support,23/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,23/7/2026,ECM Support — Anh Hieu QC,Hỗ trợ xử lý lỗi và hướng dẫn sử dụng hệ thống ECM cho anh Hiếu bộ phận QC.,Support,23/7/2026,Nguyen Van Duc,Done,ECM
+Nguyen Van Duc,EA Team,23/7/2026,Printer Label Alignment — Packaging Area,Hỗ trợ căn chỉnh kích thước và vị trí in tem.,Support,23/7/2026,Nguyen Van Duc,Done,MES
+Nguyen Van Duc,EA Team,23/7/2026,Damaged IT Equipment Collection,Kiểm tra; thu hồi và phân loại các thiết bị IT hỏng đưa về kho bảo quản.,Support,23/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,23/7/2026,User Computer Maintenance & Optimization,Kiểm tra; dọn dẹp dung lượng đĩa và tối ưu hóa hệ thống máy tính cho người dùng văn phòng.,Support,23/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,24/7/2026,MES System User Support,Hỗ trợ giải đáp thắc mắc nghiệp vụ và xử lý lỗi phát sinh trên hệ thống MES cho người dùng xưởng.,Support,24/7/2026,Nguyen Van Duc,Done,MES
+Nguyen Van Duc,EA Team,24/7/2026,ECM System Access & Permission Setup,Hỗ trợ đăng nhập và kiểm tra kết nối hệ thống ECM cho người dùng bộ phận QC và Sản xuất.,Support,24/7/2026,Nguyen Van Duc,Done,ECM
+Nguyen Van Duc,EA Team,24/7/2026,Software Troubleshooting & Driver Update,Hỗ trợ xử lý xung đột phần mềm và cập nhật driver thiết bị cho máy tính người dùng.,Support,24/7/2026,Nguyen Van Duc,Done,HW
