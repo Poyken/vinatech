@@ -1,0 +1,34 @@
+NAME,DEPARTMENT,DATE GET ISSUE,NAME ISSUE,THE SOLVE,TYPE ISSUE,DATE SOLVE ISSUE,SOLVE ISSUE BY,STATUS,REMARK
+Nguyen Van Duc,EA Team,27/7/2026,Vendor Supervision & Network Deployment,Giám sát vendor thi công hạ tầng mạng và lắp đặt các thiết bị mạng tại nhà máy.,Task,27/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,27/7/2026,Network Cable Deployment — Auto Winding Machines,Tiến hành kéo và đấu nối 6 tuyến dây mạng LAN cho 3 máy winding thuộc bộ phận Auto.,Task,27/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,27/7/2026,Temporary Network Cable Deployment,Kéo dây mạng LAN ra các điểm làm việc tạm thời phục vụ thi công và vận hành.,Support,27/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,27/7/2026,FortiClient Setup — ECM System Access,Hỗ trợ cài đặt và cấu hình phần mềm FortiClient VPN cho người dùng kết nối vào hệ thống ECM.,Support,27/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,27/7/2026,FortiClient Setup — Workstation Remote Connection,Hỗ trợ cài đặt và cấu hình FortiClient VPN để kết nối truy cập vào máy trạm công ty.,Support,27/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,27/7/2026,Printer Setup & Connection — Office User,Cấu hình và kết nối máy in mạng; cài đặt driver cho người dùng văn phòng.,Support,27/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,27/7/2026,Network Diagram & Layout Review,Nghiên cứu và đọc bản vẽ sơ đồ mạng (Network Topology Diagram) nhà máy đang triển khai.,Task,27/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,27/7/2026,MES User Support — Production Line,Hỗ trợ kiểm tra lỗi hiển thị và giải đáp nghiệp vụ trên hệ thống MES cho người dùng xưởng.,Support,27/7/2026,Nguyen Van Duc,Done,MES
+Nguyen Van Duc,EA Team,28/7/2026,Vendor Supervision & Device Setup,Giám sát vendor thi công kéo cáp và lắp đặt các thiết bị mạng theo tiến độ.,Task,28/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,28/7/2026,Wifi AP Configuration — Meeting Room,Cấu hình thiết bị Wifi Access Point và lắp đặt phủ sóng Wifi tại phòng họp.,Support,28/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,28/7/2026,Temporary Network Connection Support,Kéo dây mạng kết nối tạm thời ra các vị trí làm việc phát sinh tại nhà máy.,Support,28/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,28/7/2026,FortiClient Setup — ECM System Access,Cài đặt và cấu hình FortiClient kết nối hệ thống ECM cho người dùng bộ phận QC và Sản xuất.,Support,28/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,28/7/2026,FortiClient Setup — Workstation Remote Access,Hỗ trợ cấu hình FortiClient VPN truy cập máy trạm từ xa cho người dùng.,Support,28/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,28/7/2026,Printer Driver & Setup Support,Hỗ trợ kết nối máy in văn phòng và cài đặt driver máy in cho người dùng mới.,Support,28/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,28/7/2026,IT Asset Relabeling & Management,Kiểm tra và tiến hành dán lại tem quản lý thiết bị IT cho máy tính người dùng.,Support,28/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,28/7/2026,ECM Account & Login Troubleshooting,Hỗ trợ người dùng khắc phục sự cố tài khoản và phân quyền truy cập hệ thống ECM.,Support,28/7/2026,Nguyen Van Duc,Done,ECM
+Nguyen Van Duc,EA Team,29/7/2026,Vendor Supervision & Hardware Inspection,Kiểm tra tiến độ và giám sát vendor lắp đặt các thiết bị mạng tại các khu vực.,Task,29/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,29/7/2026,Wifi Router Setup — Production Office,Lắp đặt và cấu hình hệ thống Wifi không dây cho khu vực văn phòng sản xuất.,Support,29/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,29/7/2026,Temporary Network Cable Deployment,Đi dây mạng LAN kết nối tạm thời cho các điểm thử nghiệm thiết bị xưởng.,Support,29/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,29/7/2026,FortiClient Installation — ECM & Workstation,Cài đặt FortiClient VPN kết nối ECM và máy trạm cho cán bộ nhân viên.,Support,29/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,29/7/2026,Printer Connection & Driver Setup,Hỗ trợ kết nối máy in mạng và sửa lỗi kẹt lệnh in cho người dùng.,Support,29/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,29/7/2026,Network Diagram Study & Review,Phân tích sơ đồ bản vẽ mạng nhà máy và khảo sát thực tế vị trí hạ tầng.,Task,29/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,29/7/2026,Password Reset & Login Support,Hỗ trợ khôi phục mật khẩu tài khoản Windows, Portal và Email cho user.,Support,29/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,29/7/2026,MES Printer Label Alignment,Hỗ trợ căn chỉnh kích thước con tem và vị trí in tem barcode trên máy in MES.,Support,29/7/2026,Nguyen Van Duc,Done,MES
+Nguyen Van Duc,EA Team,30/7/2026,Vendor Supervision & Acceptance Check,Giám sát vendor hoàn thiện lắp đặt thiết bị mạng và kiểm tra nghiệm thu hạ tầng.,Task,30/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,30/7/2026,Temporary Network Cable Deployment,Kéo bổ sung dây mạng tạm thời kết nối cho khu vực làm việc xưởng.,Support,30/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,30/7/2026,FortiClient Setup — ECM System Access,Hỗ trợ cài đặt FortiClient VPN và hướng dẫn người dùng kết nối hệ thống ECM.,Support,30/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,30/7/2026,FortiClient Setup — Remote Workstation Access,Cấu hình FortiClient VPN cho người dùng truy cập máy trạm làm việc từ xa.,Support,30/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,30/7/2026,Printer Setup & Configuration — Production Users,Hỗ trợ cài đặt và kết nối máy in mạng cho người dùng bộ phận Sản xuất.,Support,30/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,30/7/2026,Wifi Network Optimization — Office & Meeting Room,Kiểm tra và tối ưu hóa độ ổn định mạng Wifi phòng họp và văn phòng sản xuất.,Support,30/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,30/7/2026,User Computer Maintenance & Optimization,Kiểm tra, dọn dẹp đĩa cứng và tối ưu hóa hệ thống máy tính cho người dùng.,Support,30/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,30/7/2026,Damaged IT Equipment Collection,Tiến hành thu hồi và phân loại các thiết bị IT hỏng hóc đưa về kho bảo quản.,Support,30/7/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,30/7/2026,Groupware & ERP Account Creation,Hỗ trợ tạo tài khoản và phân quyền người dùng mới trên hệ thống Groupware/ERP.,Support,30/7/2026,Nguyen Van Duc,Done,GW
