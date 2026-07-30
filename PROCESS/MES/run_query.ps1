@@ -47,6 +47,7 @@ try {
     $conn.Open()
     $cmd = $conn.CreateCommand()
     $cmd.CommandText = $sqlText
+    $cmd.CommandTimeout = 60
     
     $adapter = New-Object System.Data.SqlClient.SqlDataAdapter($cmd)
     $dataTable = New-Object System.Data.DataTable

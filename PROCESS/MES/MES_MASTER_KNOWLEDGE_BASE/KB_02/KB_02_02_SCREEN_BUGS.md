@@ -1,4 +1,4 @@
-﻿
+
 <!--
 AI-READY METADATA
 Purpose: Sổ tay các kịch bản lỗi & hướng dẫn khắc phục theo TCode của phân hệ Kho WMS (A130, F110, F130, F330, F430, F721, F741-F748, F750, F761, HN00, HN101)
@@ -128,12 +128,12 @@ Related Files:
 *   **Chi tiết nghiệp vụ:** Xem tại [../KB_02/KB_02_01_WMS_CORE.md § 4.6](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_02/KB_02_01_WMS_CORE.md#46-sửa-ngày-xuất-kho-màn-f430).
 
 ### Lỗi 4: Ô "Mã kho hàng (Tới)" thiếu kho Hưng Yên và ô "Mã chuyền" bị trống khi xuất kho inter-factory sang Hưng Yên (VVT_F5)
-*   **Triệu chứng:** Người dùng mở popup xuất kho `VNT_MaterialWarehouseInOutHistReg` tại F430/F433 để xuất chuyển NVL sang nhà máy Hưng Yên (`VVT_F5`), nhưng ô "Mã kho hàng (Tới)" không hiển thị kho Hưng Yên. Đồng thời ô "Mã chuyền" bị trắng tinh không có dữ liệu để chọn.
+*   **Triệu chứng:** Người dùng mở popup xuất kho `VNT_MaterialWarehouseInOutHistReg` tại F430/F433 để xuất chuyển NVL sang nhà máy Hưng Yên (`VVT_F5`), nhưng ô "Mã kho hàng (Tới)" không hiển thị kho Hưng Yên. Đồng thời ô "Mã chuyền" bị trắng tinh không có dữ liệu để chọn. Nếu dùng `UNION ALL` trong SP popup sẽ bị lỗi trùng khóa chính / trùng dòng trên lưới (`Duplicate primary key`).
 *   **Nguyên nhân gốc:** 
     1. Popup `TargetMaterialWarehouse_Search` gọi SP `usp_TargetMaterialWarehouse_popup` lọc theo nhà máy hiện tại (`WorkCenterCode = 'VVT_F1'`/`'VVT_F2'`), lọc bỏ các kho của `VVT_F5`.
     2. Popup ô Mã chuyền (`LineInfo_InoutMaterial`) gọi SP `usp_LineInfo_popup_InoutMaterial` lọc `WHERE LI.MaterialWarehouseCode = @SourceMaterialWarehouse`. Mã chuyền `HY_BN`/`HY_BG` bị `MaterialWarehouseCode = NULL` hoặc khi chọn các kho Hưng Yên khác nhau (`HOLDING_HY_WH`, `ROUTE_HY_WH`...) bị so sánh sai.
 *   **Cách khắc phục:**
-    1. Bổ sung `UNION ALL` nhóm kho Hưng Yên (`WorkCenterCode = 'VVT_F5'`) vào SP `usp_TargetMaterialWarehouse_popup`.
+    1. Bổ sung `UNION` (⚠️ **BẮT BUỘC DÙNG `UNION`, KHÔNG DÙNG `UNION ALL`** để khử trùng lặp bản ghi kho, tránh lỗi trùng khóa chính Duplicate Key trên UI) nhóm kho Hưng Yên (`WorkCenterCode = 'VVT_F5'`) vào SP `usp_TargetMaterialWarehouse_popup`.
     2. Chèn 2 mã chuyền đại diện `HY_BN` (Bắc Ninh - `VVT_F1`) và `HY_BG` (Bắc Giang - `VVT_F2`) vào `STB_LineInfo` với `MaterialWarehouseCode = 'ROH_HY_WH'`.
     3. Cập nhật SP `usp_LineInfo_popup_InoutMaterial` nhận diện linh hoạt các kho Hưng Yên:
        ```sql
@@ -142,7 +142,7 @@ Related Files:
          AND (LI.MaterialWarehouseCode = @SourceMaterialWarehouse OR (LI.LineCode IN ('HY_BN', 'HY_BG') AND @SourceMaterialWarehouse LIKE '%HY%'))
          AND LI.IsUsed = 1
        ```
-*   **Chi tiết nghiệp vụ:** Xem SP `usp_TargetMaterialWarehouse_popup` và `usp_LineInfo_popup_InoutMaterial`. Updated by vanduc & Mrs.VanOc (2026-07-21).
+*   **Chi tiết nghiệp vụ:** Xem SP `usp_TargetMaterialWarehouse_popup` và `usp_LineInfo_popup_InoutMaterial`. Updated by vanduc & Mrs.VanOc (2026-07-21). Hải Triều note: dùng `UNION` khử trùng khóa chính.
 
 
 ---

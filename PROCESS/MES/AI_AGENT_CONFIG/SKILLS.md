@@ -150,3 +150,5 @@ FROM sys.dm_exec_requests WHERE blocking_session_id <> 0;
 11. **STB_VVT_ESRDATA = 398M rows / 61GB** — Luôn WHERE cụ thể + WITH(NOLOCK)
 12. **STB_MaterialMaster = 874 SPs đọc** — Sửa cột = impact rất rộng
 13. **CRLF warning** — Không mass-edit KB .md files bằng replace_file_content (risk corruption).
+14. **UNION vs UNION ALL trong Popup SP** — Khi ghép danh sách kho/chuyền trong SP popup (như `usp_TargetMaterialWarehouse_popup`), **DÙNG `UNION` THAY VÌ `UNION ALL`** để tự động khử trùng lặp bản ghi, tránh lỗi trùng khóa chính (Duplicate Primary Key / Duplicate Rows) gây văng lỗi trên lưới NAIS System.
+
