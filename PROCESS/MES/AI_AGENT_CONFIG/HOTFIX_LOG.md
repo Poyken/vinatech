@@ -34,7 +34,20 @@ Related Files:
 
 ## ⚡ Các Lỗi Đã Được Xử Lý (Resolved Bugs)
 
-*(Chưa có bản ghi mới trong phiên này. Hãy bắt đầu ghi chép khi xử lý con bug tiếp theo!)*
+### [HN544] — 📍 ID_21 Hủy gộp box / Rã box túi bóng ở màn hình HN544
+* **Ngày sửa:** `2026-07-30`
+* **Màn hình liên quan (TCode):** `[HN544] - Gộp túi bóng thành hộp nhỏ`
+* **Triệu chứng lỗi:** Cần hủy gộp mã Packing `PK20260730000000004` (hoặc rã box túi bóng) giải phóng các Lot con để đóng gói lại.
+* **Nguyên nhân gốc (Root Cause):** Gộp nhầm box hoặc thao tác hủy trên giao diện UI bị chặn/lỗi.
+* **Phương án sửa lỗi (SQL Patch / Action):**
+  ```sql
+  BEGIN TRANSACTION;
+  -- 1. Giải phóng liên kết PackingID khỏi các Lot con trong STB_MaterialLotInfo
+  UPDATE STB_MaterialLotInfo SET PackingID = NULL WHERE PackingID = 'PK20260730000000004';
+  -- 2. Xóa thông tin lịch sử gộp box trong STB_DividePackaging
+  DELETE FROM STB_DividePackaging WHERE PackingID = 'PK20260730000000004';
+  COMMIT TRANSACTION;
+  ```
 
 ### [K366] — 📍 ID_18 Cột Status trống trên Lot Tracking BG2
 * **Ngày sửa:** `2026-07-06`

@@ -1,4 +1,4 @@
-﻿<!--
+<!--
 AI-READY METADATA
 Purpose: Sổ tay cứu hộ 70+ bugs theo TCode thực tế (Tra cứu triệu chứng -> nguyên nhân -> giải pháp SQL patch)
 Scope: Troubleshooting & Hotfix Knowledge Base
@@ -461,6 +461,14 @@ COMMIT TRANSACTION;
 |---|---|---|---|
 | 1 | Gộp box lỗi Qty=0 | `STB_PackingStandard` thiếu record cho model HN | INSERT record — xem [KB_04 §6.13](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_01_CORE_PACKAGING.md) |
 | 2 | Gộp túi nilon lỗi | `STB_PackingNilonToBoxSmall_HN` config sai | Kiểm tra + update config |
+
+### [HN544]
+**Tên:** Gộp túi bóng thành hộp nhỏ (Hà Nam)
+
+| # | Triệu chứng | Nguyên nhân | Fix |
+|---|---|---|---|
+| 1 | Hủy gộp box / Rã box túi bóng ở màn hình HN544 | Gộp nhầm box hoặc nút Hủy trên UI bị chặn/lỗi | 1. Thao tác UI: Nhập PackingID → Chọn dòng → Bấm nút Hủy trên toolbar. <br> 2. SQL Fix: `UPDATE STB_MaterialLotInfo SET PackingID = NULL WHERE PackingID = 'MÃ_PACKING'` + `DELETE FROM STB_DividePackaging WHERE PackingID = 'MÃ_PACKING'` |
+| 2 | Lỗi Unique constraint khi tìm kiếm PackingID | SP `usp_GetMaterialLotInfo_Packing_VVT_F3` UNION thứ 3 JOIN thiếu điều kiện | ALTER SP thêm `AND ISNULL(DP.PackingParentID, '') <> ''` — xem [KB_02 §2.1](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_02/KB_02_01_WMS_CORE.md#21-lỗi-unique-constraint-khi-gộp-túi-bóng-hn544--pkqn2100175) |
 
 ### [HNC321]
 **Tên:** Defect Repair Hà Nam
