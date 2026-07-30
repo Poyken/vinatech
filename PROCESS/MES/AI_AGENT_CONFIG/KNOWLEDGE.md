@@ -1,4 +1,4 @@
-﻿<!--
+<!--
 AI-READY METADATA
 Purpose: Cheat sheet nén gọn cho AI Agent tra cứu nhanh bảng DB, SP pattern, factory matrix & trap columns
 Scope: Data Schemas, Active SPs & Database Rules
@@ -92,7 +92,7 @@ Related Files:
 | Bắc Giang 1 | VVT_F2 | `V-xx_BG` | `VV` | `PROD_BG_WH` |
 | Hà Nam | VNT_F3 / VVT_F3 | `VE-xx` | `VE` | `PROD_HN_WH` |
 | Bắc Giang 2 | VNT_F4 / VVT_F4 | `VP-xx`, `ND-xx` | `K` | *(chưa setup)* |
-| Hưng Yên | VNT_F5 | `D-xxx` | — | *(chưa setup)* |
+| Hưng Yên | VNT_F5 / VVT_F5 | `D-xxx` | — | `FGT_HY_WH` / `VNE_PRODUCT_WH` |
 
 ## 4. GOLDEN QUERY — Full Trace Barcode (Truy vết 360°)
 

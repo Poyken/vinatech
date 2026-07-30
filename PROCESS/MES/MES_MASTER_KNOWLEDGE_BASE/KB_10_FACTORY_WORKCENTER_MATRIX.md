@@ -1,4 +1,4 @@
-﻿<!--
+<!--
 AI-READY METADATA
 Purpose: Ma trận nhà máy (Factory WorkCenter Matrix) tra cứu WorkCenterCode, Route prefix, Barcode format & Warehouse Mapping cho 6+ nhà máy
 Scope: Factory Topology & WorkCenter Configuration
@@ -115,19 +115,20 @@ Serial: model-dependent format
 
 ---
 
-## 4. Kho Theo Nhà Máy (Warehouse Mapping)
+## 4. Kho Theo Nhà Máy (Warehouse Mapping — Verified DB)
 
-| Nhà máy | Kho NVL | Kho Hold | Kho Chuyền | Kho TP | Kho TP dự phòng |
-|---|---|---|---|---|---|
-| **BN (VVT_F1)** | `ROH_VN_WH` | `HOLDING_VN_WH` | `ROUTE_VN_WH` | `PROD_VN_WH` | `PROD_STBY_VN_WH` |
-| **BG1 (VVT_F2)** | `ROH_BG_WH` | `HOLDING_BG_WH` | `ROUTE_BG_WH` | `PROD_BG_WH` | `PROD_STBY_BG_WH` |
-| **HN (VVT_F3)** | `ROH_HN_WH` | `HOLDING_HN_WH` | `ROUTE_HN_WH` | `PROD_HN_WH` | `PROD_STBY_HN_WH` |
-| **BG2 (VVT_F4)** | *(chưa có)* | *(chưa có)* | `ROUTE_BG2_WH` | *(chưa có)* | — |
-| **HY (VNT_F5)** | `ROH_HY_WH` | `HOLDING_HY_WH` | `ROUTE_HY_WH` | *(chưa có)* | — |
-| **BN legacy (VNT_F1)** | — | — | — | `PROD_WH` | — |
+| Cơ sở / Nhà máy | WorkCenter | Kho NVL (`ROH`) | Kho Hold (`HOLDING`) | Kho Chuyền (`ROUTE`) | Kho Thành Phẩm (`FGT`/`PROD`) | Kho Phế / Slitting / Rework Khác |
+|---|---|---|---|---|---|---|
+| **Bắc Ninh** | `VVT_F1` / `VNT_F1` | `ROH_VN_WH` | `HOLDING_VN_WH` | `ROUTE_VN_WH` | `PROD_VN_WH` (VVT) / `PROD_WH` (VNT) | `PROD_STBY_VN_WH` |
+| **Bắc Giang 1** | `VVT_F2` | `ROH_BG_WH` | `HOLDING_BG_WH` | `ROUTE_BG_WH` | `PROD_BG_WH` | `PROD_STBY_BG_WH` |
+| **Hà Nam** | `VVT_F3` / `VNT_F3` | `ROH_HN_WH` | `HOLDING_HN_WH` | `ROUTE_HN_WH` | `PROD_HN_WH` / `FinishGoodMESInstock_HN` | `SLITTING_HN_WH`, `PROD_STBY_HN_WH` |
+| **Bắc Giang 2** | `VVT_F4` / `VNT_F4` | *(dùng chung)* | *(dùng chung)* | `ROUTE_BG2_WH` / `MODULE_BG2_WH_01` | *(dùng chung)* | — |
+| **Hưng Yên** | `VVT_F5` / `VNT_F5` | `ROH_HY_WH` | `HOLDING_HY_WH` | `ROUTE_HY_WH` | **`FGT_HY_WH`** (TP VVT) / `VNE_PRODUCT_WH` (Enesol) | `SLITTING_HY_WH`, `REWORK_HY_WH`, `REJECT_HY_WH`, `SCRAP_HY_WH`, `DOPING_HY_WH`, `OVEN_HY_WH`, `MIXING_HY_WH`, `COATING_HY_WH`, `PRESSING_HY_WH` |
 
-> ⚠️ **BG2 (F4) chỉ có 1 kho** — `ROUTE_BG2_WH`. Chưa setup đầy đủ ROH/HOLDING/PROD.
-> ⚠️ **HY (F5) chưa có kho TP** — chỉ có ROH + HOLDING + ROUTE.
+> 💡 **Ghi chú danh mục kho Hưng Yên (VVT_F5):**  
+> - **Kho Thành phẩm Hưng Yên**: `FGT_HY_WH` (VVT_F5 Kho thanh pham).  
+> - **Kho Thành phẩm Enesol**: `VNE_PRODUCT_WH`.  
+> - **BG2 (F4)** dùng kho công đoạn: `ROUTE_BG2_WH`.
 
 ---
 
