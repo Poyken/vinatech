@@ -300,8 +300,6 @@ BEGIN
 						'153_TRAY0825VPC',
 						'153_SABTRAYHL'
 						-- END
-
-						--END
 						)) set @tmpLotNo = @LotNo  -- update 2026-02-03 this material dont have vendor lot
 				--RAISERROR(@SourceCustomerCode,16,1)
 			    set @PackDate =  [dbo].[fn_VVT_getdatebyVendorLot_MergeCode](@materialcode,@tmpLotNo,isnull(@SourceCustomerCode,''))
