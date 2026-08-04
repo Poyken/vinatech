@@ -295,7 +295,9 @@ BEGIN
 						'VERAN16-010',
 						'153_SATRAY1325',
 						'153_SATRAY2245', -- vanduc edit 20260724: 153_SATRAY2245 khong co vendor lot, nhap Dac tinh 10 bang tay
-						'153_SACTRAYHL'  -- vanduc edit 20260804: 153_SACTRAYHL khong co vendor lot, nhap Dac tinh 10 bang tay
+						'153_SACTRAYHL', -- vanduc edit 20260804: 153_SACTRAYHL khong co vendor lot, nhap Dac tinh 10 bang tay
+						'153_TRAY0825VPC',
+						'153_SABTRAYHL' -- vanduc edit 20260804: 153_TRAY0825VPC, 153_SABTRAYHL khong co vendor lot, nhap Dac tinh 10 bang tay
 
 						--END
 						)) set @tmpLotNo = @LotNo  -- update 2026-02-03 this material dont have vendor lot
