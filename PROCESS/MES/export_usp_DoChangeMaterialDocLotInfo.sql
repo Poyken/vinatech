@@ -294,10 +294,12 @@ BEGIN
 						'VFET-001',
 						'VERAN16-010',
 						'153_SATRAY1325',
-						'153_SATRAY2245', -- vanduc edit 20260724: 153_SATRAY2245 khong co vendor lot, nhap Dac tinh 10 bang tay
-						'153_SACTRAYHL', -- vanduc edit 20260804: 153_SACTRAYHL khong co vendor lot, nhap Dac tinh 10 bang tay
+						'153_SATRAY2245',
+						-- vanduc edited by Mrs.Van Oc 20260804: Thêm 3 mã khay không có vendor lot, nhập Đặc tính 10 bằng tay START
+						'153_SACTRAYHL',
 						'153_TRAY0825VPC',
-						'153_SABTRAYHL' -- vanduc edit 20260804: 153_TRAY0825VPC, 153_SABTRAYHL khong co vendor lot, nhap Dac tinh 10 bang tay
+						'153_SABTRAYHL'
+						-- END
 
 						--END
 						)) set @tmpLotNo = @LotNo  -- update 2026-02-03 this material dont have vendor lot
