@@ -42,60 +42,60 @@ if (Test-Path $cfgPath) {
         if ($cfg.Database) { $database = $cfg.Database }
         if ($cfg.User) { $user = $cfg.User }
         if ($cfg.Password) { $password = $cfg.Password }
-    } catch {}
+    } catch {
+        # Ignore config read errors
+    }
 }
 
-$serversToTry = $serversToTry | Select-Object -Unique
-
-$connected = $false
-$workingServer = ""
-$conn = $null
-
-foreach ($srv in $serversToTry) {
-    $connStr = "Server=$srv;Database=$database;User Id=$user;Password=$password;Connect Timeout=5;Encrypt=False;"
-    $testConn = New-Object System.Data.SqlClient.SqlConnection
-    $testConn.ConnectionString = $connStr
-    
-    $success = $false
+function Connect-Server([string]$srv, [string]$db, [string]$usr, [string]$pwd) {
+    $connStr = "Server=$srv;Database=$db;User Id=$usr;Password=$pwd;Connect Timeout=3;Encrypt=False;"
+    $sqlConn = New-Object System.Data.SqlClient.SqlConnection($connStr)
     try {
-        $testConn.Open()
-        if ($testConn.State -eq 'Open') {
-            $success = $true
+        $sqlConn.Open()
+        if ($sqlConn.State -eq 'Open') {
+            return $sqlConn
         }
     } catch {
-        $success = $false
+        if ($sqlConn -ne $null -and $sqlConn.State -eq 'Open') { $sqlConn.Close() }
     }
+    return $null
+}
 
-    if ($success) {
-        $connected = $true
-        $workingServer = $srv
+$conn = $null
+$workingServer = ""
+
+foreach ($srv in $serversToTry) {
+    Write-Host "Dang thu ket noi SQL Server: $srv ..." -ForegroundColor Cyan
+    $testConn = Connect-Server -srv $srv -db $database -usr $user -pwd $password
+    if ($testConn -ne $null) {
         $conn = $testConn
-        Write-Host "KẾT NỐI THÀNH CÔNG TỚI SERVER: $srv (DB: $database)" -ForegroundColor Green
+        $workingServer = $srv
+        Write-Host "KET NOI THANH CONG TOI SERVER: $srv (DB: $database)!" -ForegroundColor Green
         break
     } else {
-        if ($testConn.State -eq 'Open') { $testConn.Close() }
+        Write-Host "   -> Khong ket noi duoc $srv" -ForegroundColor Gray
     }
 }
 
-if (-not $connected) {
-    Write-Host "LỖI: Không thể kết nối tới bất kỳ Server Database nào!" -ForegroundColor Red
+if ($conn -eq $null) {
+    Write-Host "LOI: Khong the ket noi toi bat ky Server Database nao!" -ForegroundColor Red
     exit
 }
 
-function Execute-SelectQuery([string]$sql) {
-    if ([string]::IsNullOrWhiteSpace($sql)) { return }
+function Execute-SelectQuery([string]$sqlText) {
+    if ([string]::IsNullOrWhiteSpace($sqlText)) { return }
 
     # Safety check: SELECT-ONLY rule
-    $trimmed = $sql.Trim()
+    $trimmed = $sqlText.Trim()
     if ($trimmed -notmatch "^(?i)\s*(SELECT|WITH|EXEC|EXECUTE|SHOW|DESC|SP_)") {
-        Write-Host "CẢNH BÁO: Công cụ này chỉ cho phép câu lệnh SELECT / TRA CỨU dữ liệu!" -ForegroundColor Yellow
+        Write-Host "CANH BAO: Cong cu nay chi cho phep cau lenh SELECT / TRA CUU du lieu!" -ForegroundColor Yellow
         return
     }
 
     try {
         $cmd = $conn.CreateCommand()
         $cmd.CommandTimeout = 120
-        $cmd.CommandText = $sql
+        $cmd.CommandText = $sqlText
         
         $adapter = New-Object System.Data.SqlClient.SqlDataAdapter($cmd)
         $dt = New-Object System.Data.DataTable
@@ -104,26 +104,25 @@ function Execute-SelectQuery([string]$sql) {
         if ($dt.Rows.Count -eq 0) {
             Write-Host "(0 rows returned)" -ForegroundColor Gray
         } else {
-            Write-Host "`nKết quả ($($dt.Rows.Count) dòng):" -ForegroundColor Green
-            # Format-Table width 4000 to prevent column truncation
+            Write-Host "`nKet qua ($($dt.Rows.Count) dong):" -ForegroundColor Green
             $dt | Format-Table -AutoSize | Out-String -Width 4000
         }
     } catch {
-        Write-Host "LỖI SQL: $($_.Exception.Message)" -ForegroundColor Red
+        Write-Host "LOI SQL: $($_.Exception.Message)" -ForegroundColor Red
     }
 }
 
-# 1. Chạy 1 câu lệnh truyền tham số -Query
+# 1. Chay 1 cau lenh truyen tham so -Query
 if ($Query -ne "") {
-    Execute-SelectQuery $Query
+    Execute-SelectQuery -sqlText $Query
     if ($conn.State -eq 'Open') { $conn.Close() }
     exit
 }
 
-# 2. Chế độ tương tác liên tục
+# 2. Che do tuong tac lien tuc
 Write-Host "`n----------------------------------------------------------------------" -ForegroundColor Yellow
-Write-Host "CHẾ ĐỘ TRA CỨU TƯƠNG TÁC (Gõ 'exit' hoặc 'quit' để thoát)" -ForegroundColor Yellow
-Write-Host "Ví dụ: SELECT TOP 5 MaterialCode, MaterialName FROM STB_MaterialMaster" -ForegroundColor Gray
+Write-Host "CHE DO TRA CUU TUONG TAC (Go 'exit' hoac 'quit' de thoat)" -ForegroundColor Yellow
+Write-Host "Vi du: SELECT TOP 5 MaterialCode, MaterialName FROM STB_MaterialMaster" -ForegroundColor Gray
 Write-Host "----------------------------------------------------------------------`n" -ForegroundColor Yellow
 
 while ($true) {
@@ -131,10 +130,10 @@ while ($true) {
     if ($userSql -eq "exit" -or $userSql -eq "quit" -or $userSql -eq "q") {
         break
     }
-    Execute-SelectQuery $userSql
+    Execute-SelectQuery -sqlText $userSql
 }
 
 if ($conn.State -eq 'Open') {
     $conn.Close()
 }
-Write-Host "Đã ngắt kết nối CSDL." -ForegroundColor Cyan
+Write-Host "Da ngat ket noi CSDL." -ForegroundColor Cyan
