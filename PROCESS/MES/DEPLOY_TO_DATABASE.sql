@@ -1,16 +1,15 @@
-﻿-- ==============================================================================
--- SCRIPT DEPLOY DATABASE MES VINATECH - Báº¢O TOÃ€N 100% FONT CHá»® UNICODE
--- FIX CHO 3 MÃƒ KHAY: 153_SACTRAYHL, 153_TRAY0825VPC, 153_SABTRAYHL
---
--- HÆ°á»›ng dáº«n:
---   - Má»Ÿ file nÃ y trÃªn SSMS âž” Chá»n DB SmartFactoryV2 âž” Báº¥m F5 (Execute).
---   - Hoáº·c cháº¡y qua PowerShell: .\deploy_tool_standalone.ps1
 -- ==============================================================================
+-- SCRIPT DEPLOY DATABASE MES VINATECH - BẢO TOÀN 100% FONT CHỮ UNICODE
+-- FIX CHO 3 MÃ KHAY: 153_SACTRAYHL, 153_TRAY0825VPC, 153_SABTRAYHL
+--
+-- Hướng dẫn:
+--   - Mở file này trên SSMS ➔ Chọn DB SmartFactoryV2 ➔ Bấm F5 (Execute).
+--   - Hoặc chạy qua PowerShell: .\deploy_tool_standalone.ps1
+-- =============================================================================================================================
 
 USE [SmartFactoryV2]
 GO
 
--- =============================================
 -- Author:		<Mr.Duy>
 -- Create date: <22-12-2023>
 -- Description:	<Chuyển đổi ngày tháng khi gộp code các nhà cung cấp khác nhau đọc lotno khác nhau>
