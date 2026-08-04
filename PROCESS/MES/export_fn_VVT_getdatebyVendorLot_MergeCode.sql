@@ -521,7 +521,7 @@ when @materialcode in (
 														+substring(@vendorlot,5,2)
 							end 
 	when @materialcode in ('153_TRAY1030VPC')  then '2026-07-28'
-	when @materialcode in ('153_TRAY0825VPC', '153_SABTRAYHL', '153_SACTRAYHL') then case when LEFT(@vendorlot, 1) = '2' and len(@vendorlot) >= 8 and ISDATE(substring(@vendorlot,1,4)+'-'+ substring(@vendorlot,5,2)+'-'+ substring(@vendorlot,7,2)) = 1 then substring(@vendorlot,1,4)+'-'+ substring(@vendorlot,5,2)+'-'+ substring(@vendorlot,7,2) else NULL end
+	when @materialcode in ('153_TRAY0825VPC', '153_SABTRAYHL', '153_SACTRAYHL') then case when LEFT(@vendorlot, 1) = '2' and len(@vendorlot) >= 8 and ISDATE(substring(@vendorlot,1,4)+'-'+ substring(@vendorlot,5,2)+'-'+ substring(@vendorlot,7,2)) = 1 then substring(@vendorlot,1,4)+'-'+ substring(@vendorlot,5,2)+'-'+ substring(@vendorlot,7,2) else CONVERT(VARCHAR(10), GETDATE(), 120) end
 	when @materialcode in ('GAKCCA-003','GAKCCA-002') then '20'+ substring(@vendorlot,2,2)+'-'+ substring(@vendorlot,4,2)+'-'+ substring(@vendorlot,6,2)
 	-- vanduc edited by Mrs.Van Oc 2026-06-23: GBLYAC-002 NCC P000849/VV040 format lotno 18 số, vị trí 6,8,10
 	when @materialcode in ('GBLYAC-002') and (

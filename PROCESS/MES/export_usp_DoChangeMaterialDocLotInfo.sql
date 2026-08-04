@@ -308,13 +308,6 @@ BEGIN
 				
 
 
-				IF (@materialcode IN ('153_TRAY0825VPC', '153_SABTRAYHL', '153_SACTRAYHL') AND (ISNULL(@PackDate, '') = '' OR ISDATE(@PackDate) = 0))
-				BEGIN
-					SET @errr = N'Mã hàng ' + @materialcode + N' bắt buộc phải quét Mã Vendor Lot hoặc nhập Ngày sản xuất YYYYMMDD (VD: 20260804) vào ô Đặc tính 10!';
-					RAISERROR(@errr, 16, 1);
-					RETURN '';
-				END
-
 				if(@PackDate is not null  )
 					begin try 
 
