@@ -23,7 +23,7 @@ Related Files:
 | Prefix | Màn hình | Số bug |
 |---|---|---|
 | **A** | [A230](#a230), [A310](#a310), [A410](#a410), [A418](#a418), [A460](#a460), [A510](#a510) | 6 |
-| **B** | [B210-B270](#b210-b270), [B310](#b310), [B442](#b442), [B452](#b452), [B523](#b523), [B528](#b528), [B530](#b530), [B540](#b540), [B552](#b552), [B560](#b560), [B597](#b597), [B598](#b598), [B618](#b618), [B682-B791](#b682-b791), [B754-B790](#b754-b790), [B802](#b802), [B882](#b882) | 25+ |
+| **B** | [B210-B270](#b210-b270), [B310](#b310), [B351](#b351), [B442](#b442), [B452](#b452), [B523](#b523), [B528](#b528), [B530](#b530), [B540](#b540), [B552](#b552), [B560](#b560), [B597](#b597), [B598](#b598), [B618](#b618), [B682-B791](#b682-b791), [B754-B790](#b754-b790), [B802](#b802), [B882](#b882) | 27+ |
 | **C** | [C121-C122](#c121-c122), [C220](#c220), [C243](#c243), [C321](#c321), [C443](#c443), [C451](#c451), [C486](#c486), [C512](#c512), [C530](#c530-oqc), [C546](#c546), [C560](#c560), [C585](#c585) | 16+ |
 | **D** | [D100-D110](#d100-d110) | 3 |
 | **F** | [F330](#f330), [F430](#f430), [F721](#f721), [F743-F748](#f743-f748) | 6+ |
@@ -112,6 +112,14 @@ Related Files:
 |---|---|---|---|
 | 1 | PO không tạo được Lot | BOM/Route chưa cấu hình cho PO | Kiểm tra `STB_ProductionOrderRouting`, `STB_ProductionOrderBom` |
 | 2 | ProdFinishQty lệch so với thực tế | Crash giữa SP `usp_DoProcessProdRouteHist` → dữ liệu partial | `UPDATE STB_ProductionOrderInfo SET ProdFinishQty = (SELECT SUM(ProdQty) FROM STB_ProdRouteHist WHERE PONo='mã' AND RouteCode='V-28') WHERE PONo='mã'` |
+
+### [B351]
+**Tên:** Lot Transition (Chuyển đổi Lot/NVL)
+
+| # | Triệu chứng | Nguyên nhân | Fix |
+|---|---|---|---|
+| 1 | Barcode sinh ra bị chèn ký tự dấu chấm (`.`) sai định dạng | Sai lệch logic cắt ghép chuỗi sinh barcode tự động | Sửa đồng loạt Barcode trong `STB_RawMaterialInputHist`, `STB_SetInfo`, `STB_LotChangeMaterialHistory` — xem [KB_04_02 §B351](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_02_SCREEN_BUGS.md#b351--lot-transition-chuyển-đổi-lot) |
+| 2 | Yêu cầu in tem gốc (mã cũ) sau khi B351 đã chuyển đổi mã | Đã chuyển đổi sản xuất tại B351 (lưu `STB_LotChangeMaterialHistory`), B525 tự động in tem mã mới | ⚠️ **CẦN QUẢN LÝ PHÊ DUYỆT:** Khi được phê duyệt, chạy script rollback đồng bộ 4 bảng (`STB_SetInfo`, `STB_MaterialLotInfo`, `STB_ProdRouteHist`, `STB_LotChangeMaterialHistory`) — xem [KB_04_02 §B351 Lỗi 2](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_02_SCREEN_BUGS.md#lỗi-2-user-yêu-cầu-in-lại-tem-gốc-mã-cũ-sau-khi-sản-xuất-đã-chuyển-đổi-lot-tại-b351) |
 
 ### [B442]
 **Tên:** Electrode Day Plan (Kế hoạch ngày điện cực)

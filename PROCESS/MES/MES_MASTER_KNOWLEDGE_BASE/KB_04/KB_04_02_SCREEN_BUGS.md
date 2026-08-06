@@ -35,6 +35,93 @@ Related Files:
     ```
 *   **Chi tiết nghiệp vụ:** Xem tại [../KB_04/KB_04_01_CORE_PACKAGING.md § 6.2](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_01_CORE_PACKAGING.md#62-sửa-tên-lot-sau-b351-chuyển-đổi-lot--barcode-có-dấu-chấm).
 
+### Lỗi 2: User yêu cầu in lại tem gốc (mã cũ) sau khi Sản xuất đã chuyển đổi Lot tại B351
+*   **Triệu chứng:** User thao tác tại **B525** / **B523** quét Lot cũ (Ví dụ: Lot `507` - `VVQJ303R070507`), nhưng hệ thống tự động in ra tem của mã mới (Ví dụ: Lot `511` - `VVQN263R070511`). Hoặc quét Lot cũ thì bảng phía trên hiện đúng nhưng ô **"Lịch sử quá trình sản xuất"** (góc dưới trái) lại trống rỗng. User yêu cầu IT/Admin chạy SQL rollback để in lại tem gốc.
+*   **Nguyên nhân gốc:** Sản xuất đã thực hiện chuyển đổi vật tư/mã hàng tại **B351** (ghi nhận trong `STB_LotChangeMaterialHistory`). B351 cập nhật `MaterialCode`, `DayPlanNo`, `Barcode` trong `STB_SetInfo` sang mã mới. **Tuy nhiên**, B351 **KHÔNG** tự động đồng bộ ngược lại các bảng sau, gây lệch dữ liệu khi rollback thủ công:
+    * `STB_MaterialLotInfo` — LotNo, MaterialLotNo, MaterialCode
+    * `STB_ProdRouteHist` — DayPlanNo, MaterialCode (cột `DayPlanNo` bị lệch khiến `usp_ProdRouteHist_get` trả 0 dòng)
+
+*   **⛔ NGUYÊN TẮC QUẢN LÝ:**
+    > [!CAUTION]
+    > **CẦN XÁC NHẬN NGUYÊN TẮC NGHIỆP VỤ TRƯỚC KHI THỰC THI:**
+    > 1. Lô hàng đã thực hiện chuyển đổi sản xuất thực tế tại B351, bản chất mã sản phẩm và kế hoạch sản xuất đã được thay đổi.
+    > 2. Việc tự ý xóa lịch sử `STB_LotChangeMaterialHistory` hoặc rollback `STB_SetInfo` mà không có xác nhận sẽ gây lệch Traceability và tồn kho MES.
+    > 3. **Quy trình chuẩn:** Khi có yêu cầu từ User, cần Quản lý Sản xuất & QC xác nhận. Khi được phê duyệt, thực thi script rollback đồng bộ 4 bảng chuẩn hóa.
+
+*   **🔬 Root Cause — Tại sao ô "Lịch sử quá trình sản xuất" trống sau rollback thủ công:**
+    SP `usp_ProdRouteHist_get` (được B525 gọi) có điều kiện WHERE:
+    ```sql
+    WHERE PRH.PONo = @PONo              -- ⚠️ EXACT MATCH (=), PONo phải khớp chính xác
+      AND PRH.DayPlanNo LIKE @DayPlanNo -- DayPlanNo phải khớp giữa STB_SetInfo và STB_ProdRouteHist
+      AND PRH.ControlNo LIKE @ControlNo
+    ```
+    Nếu chỉ sửa `STB_SetInfo.DayPlanNo` mà **quên** sửa `STB_ProdRouteHist.DayPlanNo`, SP sẽ trả về 0 dòng → ô lịch sử trống.
+
+*   **🛠️ Quy trình kỹ thuật Rollback đồng bộ 4 bảng (Mẫu tổng quát):**
+
+    > [!IMPORTANT]
+    > **Thay thế các giá trị mẫu** (`@ControlNo`, `@BarcodeGoc`, `@MaterialCodeGoc`, `@DayPlanNoGoc`, `@BarcodeB351`, `@CPHNo`) bằng giá trị thực tế của lô cần rollback. Tra cứu giá trị gốc từ `STB_LotChangeMaterialHistory` (cột `BefMaterialCode`, `BefDayPlanNo`, `BefBarcode`).
+
+    ```sql
+    -- ======================================================
+    -- TEMPLATE: Rollback B351 Lot Conversion — Đồng bộ 4 bảng
+    -- Tra cứu trước: SELECT * FROM STB_LotChangeMaterialHistory WHERE CPHNo = @CPHNo
+    -- ======================================================
+    BEGIN TRANSACTION;
+    BEGIN TRY
+        -- Bước 1: Sao lưu dữ liệu hiện tại (an toàn, chỉ tạo 1 lần)
+        IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'BAK_STB_SetInfo_@CPHNo')
+            SELECT * INTO BAK_STB_SetInfo_@CPHNo FROM STB_SetInfo WITH(NOLOCK) WHERE ControlNo = '@ControlNo';
+        IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'BAK_STB_MaterialLotInfo_@CPHNo')
+            SELECT * INTO BAK_STB_MaterialLotInfo_@CPHNo FROM STB_MaterialLotInfo WITH(NOLOCK) WHERE LotNo IN ('@BarcodeB351', '@BarcodeGoc');
+
+        -- Bước 2: Cập nhật STB_SetInfo (Barcode, MaterialCode, DayPlanNo)
+        UPDATE STB_SetInfo
+        SET Barcode = '@BarcodeGoc', MaterialCode = '@MaterialCodeGoc', DayPlanNo = '@DayPlanNoGoc'
+        WHERE ControlNo = '@ControlNo';
+
+        -- Bước 3: Cập nhật STB_MaterialLotInfo (MaterialCode, MaterialLotNo, LotNo)
+        UPDATE STB_MaterialLotInfo
+        SET MaterialCode = '@MaterialCodeGoc', MaterialLotNo = '@BarcodeGoc', LotNo = '@BarcodeGoc'
+        WHERE LotNo IN ('@BarcodeB351', '@BarcodeGoc') OR MaterialLotNo IN ('@BarcodeB351', '@BarcodeGoc');
+
+        -- Bước 4: ⚠️ QUAN TRỌNG — Cập nhật STB_ProdRouteHist (DayPlanNo, MaterialCode)
+        -- Nếu BỎ QUA bước này, ô "Lịch sử quá trình sản xuất" trên B525 sẽ TRỐNG!
+        UPDATE STB_ProdRouteHist
+        SET DayPlanNo = '@DayPlanNoGoc', MaterialCode = '@MaterialCodeGoc'
+        WHERE ControlNo = '@ControlNo';
+
+        -- Bước 5: Xóa nhật ký chuyển đổi B351
+        DELETE FROM STB_LotChangeMaterialHistory WHERE CPHNo = @CPHNo;
+
+        COMMIT TRANSACTION;
+        PRINT 'SUCCESS: Rollback B351 thanh cong!';
+    END TRY
+    BEGIN CATCH
+        IF @@TRANCOUNT > 0 ROLLBACK TRANSACTION;
+        PRINT 'ERROR: ' + ERROR_MESSAGE();
+        THROW;
+    END CATCH;
+    ```
+
+*   **🔍 Verification Queries (Chạy sau khi thực thi để xác nhận):**
+    ```sql
+    -- Check 1: STB_SetInfo — Barcode, MaterialCode, DayPlanNo đã về mã gốc
+    SELECT ControlNo, Barcode, MaterialCode, DayPlanNo FROM STB_SetInfo WITH(NOLOCK) WHERE ControlNo = '@ControlNo';
+
+    -- Check 2: STB_LotChangeMaterialHistory — Phải trả về 0 dòng
+    SELECT * FROM STB_LotChangeMaterialHistory WITH(NOLOCK) WHERE CPHNo = @CPHNo;
+
+    -- Check 3: STB_ProdRouteHist — DayPlanNo khớp với STB_SetInfo
+    SELECT ControlNo, RouteCode, DayPlanNo, MaterialCode, ProdQty FROM STB_ProdRouteHist WITH(NOLOCK) WHERE ControlNo = '@ControlNo';
+
+    -- Check 4: Gọi thử SP hiển thị lịch sử — Phải trả về ≥ 1 dòng
+    EXEC usp_ProdRouteHist_get @pProcessLanguage='vn', @pProcessUserID='vinaadmin', @pControlNo='@ControlNo';
+
+    -- Check 5: Bảng Backup còn nguyên (đối soát sau này)
+    SELECT * FROM BAK_STB_SetInfo_@CPHNo;
+    ```
+
 ---
 
 
