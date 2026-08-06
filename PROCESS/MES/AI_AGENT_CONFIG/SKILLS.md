@@ -151,4 +151,7 @@ FROM sys.dm_exec_requests WHERE blocking_session_id <> 0;
 12. **STB_MaterialMaster = 874 SPs đọc** — Sửa cột = impact rất rộng
 13. **CRLF warning** — Không mass-edit KB .md files bằng replace_file_content (risk corruption).
 14. **UNION vs UNION ALL trong Popup SP** — Khi ghép danh sách kho/chuyền trong SP popup (như `usp_TargetMaterialWarehouse_popup`), **DÙNG `UNION` THAY VÌ `UNION ALL`** để tự động khử trùng lặp bản ghi, tránh lỗi trùng khóa chính (Duplicate Primary Key / Duplicate Rows) gây văng lỗi trên lưới NAIS System.
+15. **STB_DefectRepairInfo Schema** — Cột chứa mã công đoạn phát hiện phế lỗi là `FindRouteCode` (KHÔNG PHẢI `RouteCode`). Cột trong `STB_ProdRouteHist` là `RouteCode`.
+16. **Quy tắc Rollback/Hủy công đoạn sản xuất** — (1) `DELETE FROM STB_DefectRepairInfo` (`FindRouteCode`), (2) `DELETE FROM STB_ProdRouteHist` (`RouteCode`), (3) `UPDATE STB_ProdRouteHist SET CompleteRoute = NULL` cho công đoạn trước. Chỉ reset `STB_SetInfo` (`DefectQty = 0, IsDefect = 0`) khi xóa TOÀN BỘ tất cả công đoạn hoặc khi công đoạn trước chưa từng có lỗi.
+
 

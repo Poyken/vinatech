@@ -97,3 +97,21 @@ Related Files:
   -- 3. Sửa SP insert lịch sử:
   ALTER PROCEDURE [dbo].[usp_SanminaIndiaLabelPrintHist_iud] ... (@pBoxSerialNo VARCHAR(50) = NULL)
   ```
+
+### [B530] — 📍 ID_22 Nút "Nhập lỗi" bị mờ (Disabled) & Rollback công đoạn chuẩn
+* **Ngày sửa:** `2026-08-06`
+* **Màn hình liên quan (TCode):** `[B530] - Nhập thực tế sản xuất sản phẩm`
+* **Triệu chứng lỗi:** Nút **"Nhập lỗi"** (`AddDefect`) trên B530 bị ẩn/mờ đi (disabled) khi muốn ghi nhận phế lỗi cho Barcode `VE260710-002` tại công đoạn `VE08`.
+* **Nguyên nhân gốc (Root Cause):** Biểu thức Expression của giao diện: `!IsHasNextProd && !IsLoss`. Do Barcode đã quét/chốt ở công đoạn tiếp theo (`VE09`), cờ `IsHasNextProd = 1` $\rightarrow$ Nút bị ẩn.
+* **Phương án sửa lỗi (SQL Patch / Action):**
+  ```sql
+  BEGIN TRANSACTION;
+  -- 1. Xóa bản ghi phế NG tại công đoạn sau (cột FindRouteCode trong STB_DefectRepairInfo)
+  DELETE FROM STB_DefectRepairInfo WHERE ControlNo = (SELECT ControlNo FROM STB_SetInfo WHERE Barcode = 'VE260710-002') AND FindRouteCode IN ('VE08', 'VE09');
+  -- 2. Xóa Routing các bước quét nhầm (cột RouteCode trong STB_ProdRouteHist)
+  DELETE FROM STB_ProdRouteHist WHERE ControlNo = (SELECT ControlNo FROM STB_SetInfo WHERE Barcode = 'VE260710-002') AND RouteCode IN ('VE08', 'VE09');
+  -- 3. Reset cờ chốt công đoạn trước: CompleteRoute = NULL (cột CompleteRoute trong STB_ProdRouteHist)
+  UPDATE STB_ProdRouteHist SET CompleteRoute = NULL WHERE ControlNo = (SELECT ControlNo FROM STB_SetInfo WHERE Barcode = 'VE260710-002') AND RouteCode = 'VE07';
+  COMMIT TRANSACTION;
+  ```
+

@@ -36,8 +36,9 @@ Related Files:
 ### 1.2 Bảng Dữ Liệu Nghiệp Vụ Trọng Tâm
 | Bảng | Mục đích | Dùng khi |
 |------|----------|----------|
-| `STB_SetInfo` | Barcode sản phẩm (ControlNo, ProdQty, LotDecisionResult, IsDefect) | Debug mọi lỗi sản xuất |
-| `STB_ProdRouteHist` | Lịch sử scan công đoạn (RouteCode, ProdQty, JobDate) | Trace routing |
+| `STB_SetInfo` | Barcode sản phẩm (ControlNo, ProdQty, LotDecisionResult, IsDefect, DefectQty) | Debug mọi lỗi sản xuất |
+| `STB_ProdRouteHist` | Lịch sử scan công đoạn (RouteCode, ProdQty, CompleteRoute, JobDate) | Trace routing & Rollback công đoạn |
+| `STB_DefectRepairInfo` | Chi tiết phế lỗi theo công đoạn (FindRouteCode, DefectQty, IsDelete) | Debug & Rollback NG B530, B791 |
 | `STB_MaterialLotInfo` | NVL + thành phẩm (LotNo, CurrentQty, PackingID) | Kho, đóng gói |
 | `STB_MaterialMaster` | Thông tin master vật tư | Check mã NVL |
 | `STB_ModelBasicInfo` | Model + Vol/Farad (MBIExtText04/05) | Lỗi in tem thiếu thông số |

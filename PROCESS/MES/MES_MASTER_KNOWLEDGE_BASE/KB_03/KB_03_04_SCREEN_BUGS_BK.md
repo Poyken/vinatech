@@ -1,4 +1,4 @@
-﻿<!--
+<!--
 AI-READY METADATA
 Purpose: Sổ tay khắc phục lỗi theo Screen ID phân hệ Sản Xuất (B220-B935, H302-H305, K109-K110) - Phần 2
 Scope: Production Execution Bug Fixbook Part 2
@@ -399,9 +399,9 @@ Related Files:
 
 ### [B530] — Kịch bản sự cố khẩn cấp 1: Hủy/Xóa sản lượng công đoạn sản xuất ()
 
-#### [B530] — 📐 KỊCH BẢN A: Hủy/Xóa sản lượng công đoạn sản xuất (Màn hình )
+#### [B530] — 📐 KỊCH BẢN A: Hủy/Xóa sản lượng công đoạn sản xuất (Màn hình [B530])
 *   **Triệu chứng:** Công nhân scan nhầm sản lượng vào công đoạn sau khi Lot chưa chạy xong công đoạn trước, hoặc nhập sai công đoạn/NG nhầm.
-*   **Quy trình xử lý chuẩn & Script Transaction:** Xem hướng dẫn chi tiết tại [file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_01_OVERVIEW.md](file:///c:/Users/User Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03/file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_01_OVERVIEW.md#L334) (§ 5.16 Quy trình 3 bước "Thám tử" truy vết và Hủy công đoạn / NG nhầm).
+*   **Quy trình xử lý chuẩn & Script Transaction:** Xem hướng dẫn chi tiết tại [KB_03_01_OVERVIEW.md § 5.16](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_01_OVERVIEW.md) (§ 5.16 Quy trình 3 bước "Thám tử" truy vết và Hủy công đoạn / NG nhầm).
 
 ---
 

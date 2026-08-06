@@ -1,4 +1,4 @@
-﻿<!--
+<!--
 AI-READY METADATA
 Purpose: Tổng quan luồng sản xuất (B310-B882), SetInfo & ProdRouteHist Data Schemas, JobDate update scripts & Barcode traceability
 Scope: Production System Overview & Core Data Schemas
@@ -171,10 +171,10 @@ DELETE FROM STB_ProductionOrderInfo WHERE PONo IN ('250303000008', '250304000011
 -- Bước 1: Tìm bản ghi
 SELECT * FROM STB_DefectRepairInfo WHERE ControlNo = '20250314000351'
 
--- Bước 2: Sửa DefectQty
+-- Bước 2: Sửa DefectQty (⚠️ Lọc theo công đoạn dùng cột FindRouteCode)
 UPDATE STB_DefectRepairInfo
 SET DefectQty = 4
-WHERE ControlNo = '20250314000351'
+WHERE ControlNo = '20250314000351' AND FindRouteCode = 'MV-04'
 
 -- Bước 3: Sửa số lượng input công đoạn sau
 -- ProdQty tại công đoạn tiếp theo = TotalQty - DefectQty
@@ -353,7 +353,7 @@ Khi cần thực hiện rollback một Lot sản phẩm (ví dụ: `VE260506-001
    ```
 2. **Bước 2: Tra cứu lịch sử di chuyển (Routing History)**
    ```sql
-   SELECT ProdRouteHistNo, RouteCode, ProdQty, CreateDateTime 
+   SELECT ProdRouteHistNo, RouteCode, ProdQty, CompleteRoute, CreateDateTime 
    FROM STB_ProdRouteHist 
    WHERE ControlNo = '20260428000408' 
    ORDER BY CreateDateTime ASC;
@@ -365,31 +365,40 @@ Khi cần thực hiện rollback một Lot sản phẩm (ví dụ: `VE260506-001
    FROM STB_DefectRepairInfo 
    WHERE ControlNo = '20260428000408' 
      AND CreateDateTime >= '2026-05-11 16:00:00'; -- Lọc các lỗi nhập nhầm
-   -- Kết quả: Tìm được các dòng lỗi với mã DefectSummaryNo.
+   -- Kết quả: Tìm được các dòng lỗi với mã DefectSummaryNo (Cột mã công đoạn lỗi là FindRouteCode).
    ```
 
-**Kịch bản xử lý (Rollback / Revert):**
+**Kịch bản xử lý chuẩn (Rollback / Revert):**
 ```sql
 BEGIN TRANSACTION;
 
--- 1. Xóa Routing các bước quét nhầm (VE08, VE09)
-DELETE FROM STB_ProdRouteHist 
-WHERE ControlNo = (SELECT ControlNo FROM STB_SetInfo WHERE Barcode = 'VE260506-001')
-  AND RouteCode IN ('VE08', 'VE09');
-
--- 2. Xóa các bản ghi lỗi (NG) nhập nhầm ở các công đoạn quét nhầm
+-- 1. Xóa các bản ghi lỗi (NG) nhập nhầm ở các công đoạn quét nhầm (⚠️ Cột là FindRouteCode)
 DELETE FROM STB_DefectRepairInfo 
 WHERE ControlNo = (SELECT ControlNo FROM STB_SetInfo WHERE Barcode = 'VE260506-001')
   AND FindRouteCode IN ('VE08', 'VE09');
 
--- 3. Reset thông số DefectQty và IsDefect trong STB_SetInfo về 0 (hoặc số lượng lỗi thực tế còn lại nếu có)
+-- 2. Xóa Routing các bước quét nhầm (VE08, VE09) trong STB_ProdRouteHist (⚠️ Cột là RouteCode)
+DELETE FROM STB_ProdRouteHist 
+WHERE ControlNo = (SELECT ControlNo FROM STB_SetInfo WHERE Barcode = 'VE260506-001')
+  AND RouteCode IN ('VE08', 'VE09');
+
+-- 3. Reset cờ hoàn thành công đoạn trước đó (VE07): Set CompleteRoute = NULL để mở lại chốt
+UPDATE STB_ProdRouteHist
+SET CompleteRoute = NULL
+WHERE ControlNo = (SELECT ControlNo FROM STB_SetInfo WHERE Barcode = 'VE260506-001')
+  AND RouteCode = 'VE07';
+
+-- 4. ⚠️ QUY TẮC CẬP NHẬT BẢNG MASTER STB_SetInfo:
+-- - Chỉ UPDATE DefectQty = 0, IsDefect = 0 khi xóa TOÀN BỘ tất cả các công đoạn hoặc khi các công đoạn trước CHƯA TỪNG CÓ LỖI.
+-- - Nếu các công đoạn trước (VE01->VE07) ĐÃ CÓ phế lỗi, KHÔNG ĐƯỢC set DefectQty = 0 (tránh làm mất dữ liệu phế hợp lệ cũ).
+-- Tùy chọn: Tự động tính lại tổng DefectQty thực tế từ STB_DefectRepairInfo:
 UPDATE STB_SetInfo
-SET DefectQty = 0,
-    IsDefect = 0
+SET DefectQty = ISNULL((SELECT SUM(DefectQty) FROM STB_DefectRepairInfo WHERE ControlNo = STB_SetInfo.ControlNo AND IsDelete = '0'), 0),
+    IsDefect = CASE WHEN ISNULL((SELECT SUM(DefectQty) FROM STB_DefectRepairInfo WHERE ControlNo = STB_SetInfo.ControlNo AND IsDelete = '0'), 0) > 0 THEN 1 ELSE 0 END
 WHERE Barcode = 'VE260506-001';
 
--- 4. Kiểm tra lại: Lot phải khôi phục về trạng thái cuối cùng ở VE07 với ProdQty = 5883
-SELECT RouteCode, ProdQty, CreateDateTime 
+-- 5. Kiểm tra lại: Lot phải khôi phục về trạng thái cuối cùng ở VE07 với CompleteRoute = NULL
+SELECT RouteCode, ProdQty, CompleteRoute, CreateDateTime 
 FROM STB_ProdRouteHist 
 WHERE ControlNo = (SELECT ControlNo FROM STB_SetInfo WHERE Barcode = 'VE260506-001')
 ORDER BY CreateDateTime ASC;
