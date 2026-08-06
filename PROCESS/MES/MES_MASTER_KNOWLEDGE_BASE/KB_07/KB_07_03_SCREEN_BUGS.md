@@ -1,138 +1,166 @@
 <!--
 AI-READY METADATA
-Purpose: Sổ tay các kịch bản lỗi & hướng dẫn khắc phục phân hệ Hưng Yên & VinaEnesol (Dry Oven, Doping JIG, D000, D051, D100, D110)
-Scope: Hung Yen & VinaEnesol Screen Bug Fixbook
+Purpose: Sổ tay cứu hộ sự cố & kịch bản fix bug phân hệ Hưng Yên & VinaEnesol (HY103, HY141-HYFG01, D000, D051, D100, D110, Dry Oven, Doping JIG)
+Scope: Hung Yen & VinaEnesol Screen Bug Fixbook & Emergency Recipes
 Single Source of Truth: KB_07_03_SCREEN_BUGS.md (Hung Yen Bug Fixes)
-Target Screens: Dry Oven, Doping JIG, D000, D051, D100, D110
-Target Tables: STB_VN_DryOver, STB_VVT_DopingJIG, STB_VINAEnesolBoxLabelPrintHist, STB_MaterialCodeByCustomer
+Target Screens: HY103, HY141, HY143, HY151, HY220, HY311, HY312, HY330, HY430, HY431, HY443, HY530, HY540, HY541, HY620, HY740, HYFG01, D000, D051, D100, D110, Dry Oven, Doping JIG
+Target Tables: STB_VN_DryOver, STB_VVT_DopingJIG, STB_DetailAgingHY, STB_VINAEnesolBoxLabelPrintHist, STB_MaterialCodeByCustomer, STB_VN_FINISHGOODS_HY
 Related Files:
   - [KB_INDEX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
   - [KB_07 Index](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_07/INDEX.md)
   - [KB_07_01_OVERVIEW.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_07/KB_07_01_OVERVIEW.md)
+  - [KB_07_02_DEPLOY_HY.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_07/KB_07_02_DEPLOY_HY.md)
 -->
 
-# KB_07_03 — Hung Yen & VinaEnesol Screen Bugs & Fixes
+# KB_07_03 — Hưng Yên & VinaEnesol Screen Bug Fixbook
 
-> ← [Về INDEX](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md) | [Về KB_07 Index](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_07/INDEX.md)
-
----
-
-
-## Dry Oven — Lò sấy điện cực (Quy trình sấy V-22)
-
-### Lỗi 1: Lỗi toán tử SQL bypass kiểm tra công đoạn sấy V-22 bắt buộc
-*   **Triệu chứng:** Công nhân có thể quét đưa Lot nguyên vật liệu vào lò sấy tự do dù Lot chưa được nhập thông tin hoàn thành công đoạn `V-22` (hoặc `V-22_BG`), phá vỡ luồng tuần tự sản xuất.
-*   **Nguyên nhân gốc:** Lỗi độ ưu tiên của toán tử logic `AND` và `OR` trong SP `usp_VN_DryOver` khiến điều kiện kiểm tra luôn đúng với mọi Lot nếu có bất kỳ Lot nào khác đã từng chạy V-22 trong lịch sử.
-*   **Cách khắc phục:** 
-    Cập nhật SP `usp_VN_DryOver`, thêm dấu ngoặc đơn để gom cụm điều kiện `OR` chính xác:
-    ```sql
-    SELECT @Stg = routecode FROM STB_ProdRouteHist WITH(NOLOCK)
-    WHERE 1=1 
-      AND (routecode='V-22' OR routecode='V-22_BG') -- Thêm ngoặc đơn
-      AND controlno = (select controlno from stb_setinfo WITH(NOLOCK) where barcode in (@BarCode,@LotNonew1,@LotNonew2,@LotNonew3,@LotNonew4,@LotNonew5,@LotNonew6))
-    ```
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_03/KB_03_02_CELL_LINE.md § 5](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_02_CELL_LINE.md#5-danh-sách-lỗi-logic-điểm-yếu--giải-pháp-bugs--troubleshooting).
+> **Mục đích:** Tra cứu và xử lý sự cố khẩn cấp trên các màn hình nhà máy Hưng Yên (`VVT_F5`) và phân hệ Enesol (`D000` Menu).  
+> ← [Về Master Index](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md) | [Về KB_07 Index](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_07/INDEX.md)
 
 ---
 
+## 1. 🏭 Sổ Tay Sửa Lỗi Các Màn Hình Hưng Yên (`HY` Prefix)
 
-## Doping JIG — Gá nạp Doping (Quy trình lão hóa)
+### [HY530] — Route Process Input HY (Chốt sản lượng công đoạn Hưng Yên)
 
-### Lỗi 1: Lỗi thời gian ghi nhận lịch sử JIG khiến mất dữ liệu log khi tự động ngắt
-*   **Triệu chứng:** Khi gá JIG chạy hết 6 giờ và tự động chuyển trạng thái thành `autoend`, thông tin lịch sử của lượt chạy biến mất hoàn toàn, không được lưu vào bảng lịch sử `Stb_VVT_DopingJIG_History`.
-*   **Nguyên nhân gốc:** Lỗi logic so sánh thời gian tương lai trong SP `usp_Vietnam_DopingJIG_uid`: điều kiện `ChangeDateTime > dateadd(second,5,getdate())` không bao giờ xảy ra vì `ChangeDateTime` vừa được gán bằng `getdate()`.
-*   **Cách khắc phục:** 
-    Sửa điều kiện thời gian thành `dateadd(second,-5,getdate())` để lấy các bản ghi vừa được cập nhật:
-    ```sql
-    insert into Stb_VVT_DopingJIG_History
-    select JigID, LotInUsed, Status, LastJig, BeginDateTime, EndDateTime, Comment1, Comment2, getdate()
-    from Stb_VVT_DopingJIG
-    where status like '%autoend%'
-      and ChangeDateTime > dateadd(second,-5,getdate()) -- Sửa dấu + thành -5 giây
-    ```
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_03/KB_03_02_CELL_LINE.md § 5](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_02_CELL_LINE.md#5-danh-sách-lỗi-logic-điểm-yếu--giải-pháp-bugs--troubleshooting).
-
----
-
-
-## [D000] — VinaEnesol Management Menu (Menu quản lý VinaEnesol)
-
-### [D000] — Lỗi 1: Không truy cập được menu VinaEnesol
-*   **Triệu chứng:** Người dùng không thấy menu VinaEnesol trên giao diện MES.
-*   **Nguyên nhân gốc:** Menu D000 chưa được phân quyền cho Role của người dùng tại Z220/Z330.
-*   **Cách khắc phục:** Vào Z220 gán Screen D000 cho Role tương ứng, vào Z330 kiểm tra đã publish.
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_07/KB_07_01_OVERVIEW.md § 2](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_07/KB_07_01_OVERVIEW.md) và [file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_10_FACTORY_WORKCENTER_MATRIX.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_10_FACTORY_WORKCENTER_MATRIX.md) § 1.
-
----
-
-
-## [D051] — Customer Part No Info (Mã vật tư khách hàng Enesol)
-
-### Lỗi 1: Mã sản phẩm khách hàng không mapping được với mã nội bộ
-*   **Triệu chứng:** Khi in tem Enesol, mã khách hàng (CustomerPartNo) hiện trống hoặc sai.
-*   **Nguyên nhân gốc:** Bảng `STB_MaterialCodeByCustomer` chưa có mapping giữa `MaterialCode` nội bộ và `MaterialCodeCustomer`.
-*   **Cách khắc phục:** Vào D051 thêm mapping mã vật tư nội bộ ↔ mã khách hàng Enesol.
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_07/KB_07_01_OVERVIEW.md § 2.2](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_07/KB_07_01_OVERVIEW.md).
-
----
-
-
-## [D100] — Enesol Box Label Print (In tem hộp Enesol)
-
-### Lỗi 1: Không in được tem hộp Enesol (Inner/Outer Box)
-*   **Triệu chứng:** Bấm in tem tại D100 nhưng máy in không chạy hoặc tem trống.
-*   **Nguyên nhân gốc:** Chưa thiết lập D051 (mapping mã khách hàng) hoặc chưa chọn đúng LabelClassCode (1=Inner, 2=Outer).
-*   **Cách khắc phục:** Kiểm tra D051 đã mapping, chọn đúng loại tem (Inner/Outer) và đảm bảo máy in kết nối.
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_07/KB_07_01_OVERVIEW.md § 4](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_07/KB_07_01_OVERVIEW.md).
-
----
-
-
-## [D110] — Enesol Box Label History (Lịch sử in tem Enesol)
-
-### Lỗi 1: Lịch sử in tem Enesol hiện thiếu hoặc trùng dữ liệu
-*   **Triệu chứng:** Bảng lịch sử D110 hiển thị thiếu bản ghi hoặc có bản ghi trùng lặp.
-*   **Nguyên nhân gốc:** Bảng `STB_VINAEnesolBoxLabelPrintHist` bị lỗi khi tạo SerialNo tự tăng hoặc trùng LotNo.
-*   **Cách khắc phục:** Kiểm tra trực tiếp DB, xóa bản ghi trùng nếu có.
-*   **Chi tiết nghiệp vụ:** Xem tại [../KB_07/KB_07_01_OVERVIEW.md § 4](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_07/KB_07_01_OVERVIEW.md).
-
----
-
-## [HY530] — Route Process Input HY (Chốt sản lượng công đoạn Hưng Yên)
-
-### Lỗi 1: Bị chặn do Gate Time Aging (`STB_DetailAgingHY`)
+#### 🔴 Lỗi 1: Bị chặn do Gate Time Aging (`STB_DetailAgingHY`)
 *   **Triệu chứng:** Khi chốt sản lượng tại `HY530`, hệ thống văng popup thông báo: *"Chưa đủ thời gian Aging lão hóa theo quy định"*.
-*   **Nguyên nhân gốc:** Stored Procedure `usp_DoProcessProdRouteHist_HY` kiểm tra bảng `STB_DetailAgingHY`. Nếu khoảng cách giữa thời gian chốt công đoạn trước và công đoạn hiện tại nhỏ hơn thời gian Aging chuẩn (ví dụ 24 giờ cho công đoạn Aging BTP Hưng Yên), SP sẽ chặn lại.
-*   **Cách khắc phục:** 
-    1. Yêu cầu công nhân chờ đủ thời gian Aging quy định.
-    2. Trong trường hợp khẩn cấp có sự đồng ý của QA, IT thực hiện lùi thời gian chốt ở công đoạn trước trong `STB_ProdRouteHist`:
+*   **Nguyên nhân gốc:** SP `usp_DoProcessProdRouteHist_HY` kiểm tra bảng `STB_DetailAgingHY`. Nếu khoảng cách giữa thời gian chốt công đoạn trước và công đoạn hiện tại nhỏ hơn thời gian Aging chuẩn (24 giờ cho công đoạn Aging BTP Hưng Yên), SP sẽ chặn lại.
+*   **Cách khắc phục:**
     ```sql
+    BEGIN TRANSACTION;
+    -- Lùi thời gian chốt công đoạn trước về 25 giờ trước để thông luồng Gate Aging
     UPDATE STB_ProdRouteHist 
     SET CreateDateTime = DATEADD(HOUR, -25, GETDATE()) 
-    WHERE ControlNo = (SELECT ControlNo FROM STB_SetInfo WHERE Barcode = 'MÃ_BARCODE')
+    WHERE ControlNo = (SELECT ControlNo FROM STB_SetInfo WHERE Barcode = 'MÃ_BARCODE_HƯNG_YÊN')
       AND RouteCode = 'MÃ_CÔNG_ĐOẠN_TRƯỚC';
+    ROLLBACK TRANSACTION; -- Đổi thành COMMIT TRANSACTION khi chạy trên SSMS
+    ```
+
+#### 🔴 Lỗi 2: Nút "Nhập lỗi" bị ẩn/mờ (Disabled) trên `HY530`
+*   **Triệu chứng:** Công nhân không bấm được nút "Nhập lỗi" tại `HY530` để khai báo phế NG ở công đoạn Hưng Yên.
+*   **Nguyên nhân gốc:** Công đoạn tiếp theo đã được quét chốt sản lượng (`IsHasNextProd = 1`). Biểu thức Expression của giao diện: `!IsHasNextProd && !IsLoss` trả về `FALSE`.
+*   **Cách khắc phục (Script Rollback công đoạn sau):**
+    ```sql
+    BEGIN TRANSACTION;
+    -- 1. Xóa phế NG công đoạn sau (FindRouteCode)
+    DELETE FROM STB_DefectRepairInfo 
+    WHERE ControlNo = (SELECT ControlNo FROM STB_SetInfo WHERE Barcode = 'MÃ_BARCODE')
+      AND FindRouteCode IN ('MÃ_CÔNG_ĐOẠN_SAU');
+
+    -- 2. Xóa lịch sử routing công đoạn sau (RouteCode)
+    DELETE FROM STB_ProdRouteHist 
+    WHERE ControlNo = (SELECT ControlNo FROM STB_SetInfo WHERE Barcode = 'MÃ_BARCODE')
+      AND RouteCode IN ('MÃ_CÔNG_ĐOẠN_SAU');
+
+    -- 3. Reset cờ hoàn thành công đoạn hiện tại: CompleteRoute = NULL
+    UPDATE STB_ProdRouteHist
+    SET CompleteRoute = NULL
+    WHERE ControlNo = (SELECT ControlNo FROM STB_SetInfo WHERE Barcode = 'MÃ_BARCODE')
+      AND RouteCode = 'MÃ_CÔNG_ĐOẠN_HIỆN_TẠI';
+    ROLLBACK TRANSACTION;
     ```
 
 ---
 
-## [HY540] — Process Material Scan HY (Quét NVL thô Assy Card Hưng Yên)
+### [HY540] — Process Material Scan HY (Quét NVL thô Assy Card Hưng Yên)
 
-### Lỗi 1: Không lưu được NVL do thiếu 4 cột thuộc tính màu
-*   **Triệu chứng:** OP quét Barcode NVL tại `HY540` nhưng không cho lưu, báo thiếu thông tin thuộc tính NVL.
-*   **Nguyên nhân gốc:** Màn hình `HY540` yêu cầu nhập đầy đủ 4 cột màu bắt buộc (nhiệt độ, thời gian, lô sản xuất) trước khi lưu.
-*   **Cách khắc phục:** Hướng dẫn OP điền đầy đủ các ô có màu nền đặc biệt trên grid trước khi nhấn Save.
+#### 🔴 Lỗi 1: Không lưu được NVL do thiếu 4 cột thuộc tính màu
+*   **Triệu chứng:** OP quét Barcode NVL tại `HY540` nhưng hệ thống báo lỗi không cho lưu.
+*   **Nguyên nhân gốc:** `HY540` yêu cầu nhập đầy đủ 4 cột thuộc tính màu bắt buộc (nhiệt độ, thời gian sấy, lô sản xuất) trước khi lưu.
+*   **Cách khắc phục:** Hướng dẫn OP điền đầy đủ các ô có màu nền đặc biệt trên lưới trước khi nhấn Save.
 
 ---
 
-## [HY311] — PO Electrode HY (Lập PO Điện cực Hưng Yên)
+### [HY311] — PO Electrode HY (Lập PO Điện cực Hưng Yên)
 
-### Lỗi 1: Không tạo được PO Điện cực do thiếu cờ Material Type
+#### 🔴 Lỗi 1: Không tạo được PO Điện cực do thiếu cờ Material Type
 *   **Triệu chứng:** Khi tạo PO tại `HY311` cho mã điện cực Hưng Yên, danh sách vật tư bị trống không chọn được.
 *   **Nguyên nhân gốc:** Mã vật tư điện cực tại `A230` chưa được phân loại `MaterialType = 'EROH'` hoặc chưa tích chọn `Internal Production`.
 *   **Cách khắc phục:** Vào `A230`, tìm mã vật tư điện cực, chọn `Material Type = EROH` và tick chọn cờ **Sản xuất nội bộ** (Internal Production).
 
 ---
 
+### [HY430]/[HY431] — Material Issue & Receive Confirm (Xuất/Nhận NVL Hưng Yên)
 
+#### 🔴 Lỗi 1: Chuyền Hưng Yên không nhận được NVL xuất từ kho `ROH_HY_WH`
+*   **Triệu chứng:** Thủ kho đã làm phiếu xuất tại `HY430` nhưng công nhân chuyền mở `HY431` không thấy lô NVL để xác nhận.
+*   **Nguyên nhân gốc:** Mã Line sản xuất `VVHYC-*` chưa được gán mã kho `MaterialWarehouseCode = 'ROH_HY_WH'` trong bảng `STB_LineInfo`.
+*   **Cách khắc phục:**
+    ```sql
+    BEGIN TRANSACTION;
+    UPDATE STB_LineInfo 
+    SET MaterialWarehouseCode = 'ROH_HY_WH' 
+    WHERE LineCode LIKE 'VVHYC%' AND (MaterialWarehouseCode IS NULL OR MaterialWarehouseCode <> 'ROH_HY_WH');
+    ROLLBACK TRANSACTION;
+    ```
 
+---
 
+### [HYFG01] — Finished Goods WH HY (Kho Thành Phẩm Hưng Yên)
+
+#### 🔴 Lỗi 1: Thùng hàng đóng gói xong không hiển thị trên kho `HYFG01`
+*   **Triệu chứng:** Công nhân đóng gói xong tại `HY523`/`B523` nhưng thủ kho mở `HYFG01` tìm không thấy barcode thùng.
+*   **Nguyên nhân gốc:** Thùng hàng chưa được lưu cờ PackingQty hoặc bảng `STB_VN_FINISHGOODS_HY` bị thiếu bản ghi nhập kho.
+*   **Cách khắc phục:**
+    ```sql
+    BEGIN TRANSACTION;
+    -- Kiểm tra và chèn bổ sung vào kho thành phẩm Hưng Yên
+    IF NOT EXISTS (SELECT 1 FROM STB_VN_FINISHGOODS_HY WHERE Barcode = 'MÃ_BARCODE_THÙNG')
+    BEGIN
+        INSERT INTO STB_VN_FINISHGOODS_HY (Barcode, MaterialCode, Quantity, LocationCode, CreateDateTime)
+        SELECT Barcode, MaterialCode, ProdQty, 'FGT_HY_WH_01', GETDATE()
+        FROM STB_SetInfo WITH(NOLOCK)
+        WHERE Barcode = 'MÃ_BARCODE_THÙNG';
+    END
+    ROLLBACK TRANSACTION;
+    ```
+
+---
+
+## 2. 📦 Sổ Tay Sửa Lỗi Phân Hệ Đóng Gói VinaEnesol (`D000` Menu)
+
+### [D051] — Customer Part No Info (Mã vật tư khách hàng Enesol)
+
+#### 🔴 Lỗi 1: Mã sản phẩm khách hàng không hiển thị khi in tem nhãn D100
+*   **Triệu chứng:** Khi in tem Enesol tại `D100`, ô Customer Part No bị trống.
+*   **Nguyên nhân gốc:** Bảng `STB_MaterialCodeByCustomer` chưa được khai báo mapping giữa mã nội bộ và mã khách hàng.
+*   **Cách khắc phục:** vào `D051` thêm dòng mapping hoặc chạy SQL:
+    ```sql
+    BEGIN TRANSACTION;
+    INSERT INTO STB_MaterialCodeByCustomer (CustomerCode, MaterialCodeCustomer, MaterialCode, ShortMaterialCode)
+    VALUES ('1125', 'VENDOR_PN_KHÁCH_HÀNG', 'MÃ_MES_NỘI_BỘ', 'SHORT_CODE');
+    ROLLBACK TRANSACTION;
+    ```
+
+---
+
+### [D100]/[D110] — Enesol Box Label Print & History (In & Lịch Sử Tem Enesol)
+
+#### 🔴 Lỗi 1: Lỗi không ghép được Hộp Nhỏ vào Hộp Lớn (Box Matching Fail)
+*   **Triệu chứng:** Khi in tem Outer Box (`LabelClassCode = '2'`), hệ thống báo lỗi không ghép được danh sách Inner Box.
+*   **Nguyên nhân gốc:** Chuỗi `SmallBoxList` chứa Barcode Inner Box chưa từng được in tem tại `D100` (`LabelClassCode = '1'`).
+*   **Cách khắc phục:** Kiểm tra bảng `STB_VINAEnesolBoxLabelPrintHist` xem các Inner Box đã có cờ `LabelClassCode = '1'` chưa trước khi thực hiện ghép vào Outer Box.
+
+---
+
+## 3. 🌡️ Sửa Lỗi Thiết Bị Sấy & Lão Hóa Hưng Yên
+
+### Dry Oven — Lò sấy điện cực
+
+#### 🔴 Lỗi 1: Lỗi toán tử SQL bypass kiểm tra V-22
+*   **Triệu chứng:** Quét đưa Lot vào lò sấy tự do dù chưa hoàn thành công đoạn `V-22`.
+*   **Cách khắc phục:** Cập nhật SP `usp_VN_DryOver`, bọc ngoặc đơn Gom điều kiện `OR`:
+    ```sql
+    SELECT @Stg = routecode FROM STB_ProdRouteHist WITH(NOLOCK)
+    WHERE 1=1 
+      AND (routecode='V-22' OR routecode='V-22_BG' OR routecode='VE01') -- Thêm ngoặc đơn
+      AND controlno = (SELECT controlno FROM stb_setinfo WITH(NOLOCK) WHERE barcode = @BarCode)
+    ```
+
+### Doping JIG — Gá nạp Doping Hưng Yên
+
+#### 🔴 Lỗi 1: Mất dữ liệu log khi tự động ngắt JIG (`autoend`)
+*   **Triệu chứng:** Khi JIG tự ngắt sau 6 giờ, thông tin lượt chạy biến mất khỏi `Stb_VVT_DopingJIG_History`.
+*   **Nguyên nhân gốc:** Lỗi so sánh thời gian `ChangeDateTime > dateadd(second,5,getdate())` trong `usp_Vietnam_DopingJIG_uid`.
+*   **Cách khắc phục:** Sửa điều kiện thành `dateadd(second,-5,getdate())`.
