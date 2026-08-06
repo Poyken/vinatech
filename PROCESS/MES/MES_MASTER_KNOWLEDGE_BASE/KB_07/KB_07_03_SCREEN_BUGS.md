@@ -1,4 +1,4 @@
-﻿<!--
+<!--
 AI-READY METADATA
 Purpose: Sổ tay các kịch bản lỗi & hướng dẫn khắc phục phân hệ Hưng Yên & VinaEnesol (Dry Oven, Doping JIG, D000, D051, D100, D110)
 Scope: Hung Yen & VinaEnesol Screen Bug Fixbook
@@ -98,6 +98,40 @@ Related Files:
 
 ---
 
+## [HY530] — Route Process Input HY (Chốt sản lượng công đoạn Hưng Yên)
+
+### Lỗi 1: Bị chặn do Gate Time Aging (`STB_DetailAgingHY`)
+*   **Triệu chứng:** Khi chốt sản lượng tại `HY530`, hệ thống văng popup thông báo: *"Chưa đủ thời gian Aging lão hóa theo quy định"*.
+*   **Nguyên nhân gốc:** Stored Procedure `usp_DoProcessProdRouteHist_HY` kiểm tra bảng `STB_DetailAgingHY`. Nếu khoảng cách giữa thời gian chốt công đoạn trước và công đoạn hiện tại nhỏ hơn thời gian Aging chuẩn (ví dụ 24 giờ cho công đoạn Aging BTP Hưng Yên), SP sẽ chặn lại.
+*   **Cách khắc phục:** 
+    1. Yêu cầu công nhân chờ đủ thời gian Aging quy định.
+    2. Trong trường hợp khẩn cấp có sự đồng ý của QA, IT thực hiện lùi thời gian chốt ở công đoạn trước trong `STB_ProdRouteHist`:
+    ```sql
+    UPDATE STB_ProdRouteHist 
+    SET CreateDateTime = DATEADD(HOUR, -25, GETDATE()) 
+    WHERE ControlNo = (SELECT ControlNo FROM STB_SetInfo WHERE Barcode = 'MÃ_BARCODE')
+      AND RouteCode = 'MÃ_CÔNG_ĐOẠN_TRƯỚC';
+    ```
+
+---
+
+## [HY540] — Process Material Scan HY (Quét NVL thô Assy Card Hưng Yên)
+
+### Lỗi 1: Không lưu được NVL do thiếu 4 cột thuộc tính màu
+*   **Triệu chứng:** OP quét Barcode NVL tại `HY540` nhưng không cho lưu, báo thiếu thông tin thuộc tính NVL.
+*   **Nguyên nhân gốc:** Màn hình `HY540` yêu cầu nhập đầy đủ 4 cột màu bắt buộc (nhiệt độ, thời gian, lô sản xuất) trước khi lưu.
+*   **Cách khắc phục:** Hướng dẫn OP điền đầy đủ các ô có màu nền đặc biệt trên grid trước khi nhấn Save.
+
+---
+
+## [HY311] — PO Electrode HY (Lập PO Điện cực Hưng Yên)
+
+### Lỗi 1: Không tạo được PO Điện cực do thiếu cờ Material Type
+*   **Triệu chứng:** Khi tạo PO tại `HY311` cho mã điện cực Hưng Yên, danh sách vật tư bị trống không chọn được.
+*   **Nguyên nhân gốc:** Mã vật tư điện cực tại `A230` chưa được phân loại `MaterialType = 'EROH'` hoặc chưa tích chọn `Internal Production`.
+*   **Cách khắc phục:** Vào `A230`, tìm mã vật tư điện cực, chọn `Material Type = EROH` và tick chọn cờ **Sản xuất nội bộ** (Internal Production).
+
+---
 
 
 
