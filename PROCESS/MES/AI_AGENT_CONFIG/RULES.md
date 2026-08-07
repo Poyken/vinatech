@@ -26,6 +26,7 @@ Related Files:
 > **4. TOKEN OPTIMIZATION** — CẤM đọc full file >50KB hoặc `SELECT *` tràn lan! Dùng KI context / `grep_search` đọc đúng đoạn lỗi. Chỉ SELECT đúng 3-5 cột cần verify. Phản hồi chuẩn 3 khối: (1) Root Cause từ KB, (2) SELECT verify ngắn gọn, (3) SQL fix `BEGIN TRAN...ROLLBACK`.
 > **5. Hỏi trước khi làm** — Thiếu thông tin hoặc nghi ngờ → dừng hỏi user ngay.
 > **6. GOLDEN QUERY FIRST** — BẮT BUỘC DÙNG GOLDEN QUERY TRUY VẾT 360° NGAY LẦN SELECT ĐẦU TIÊN! Khi user đưa mã Barcode/LotNo bất kỳ (Cell, Module, Cuộn cực Slitting, NVL kho), CẤM SELECT đơn lẻ tẻ từng bảng. Bắt buộc dùng Golden Query (Mẫu 1/2/3/4 trong KNOWLEDGE.md §4) ngay ở câu SELECT đầu tiên để quét sạch 100% PO, Routing, Kho, Slitting Stock, Packing trong 1 lần duy nhất!
+> **7. IMMEDIATE SCREEN & SP MAPPING** — CẤM CẮM ĐẦU ĐI TÌM LẠI TỪ ĐẦU! Khi user gửi ảnh thiết kế màn hình hoặc nhập Screen ID (VD: B523, B530, B351, B597, F330, C530...), AI BẮT BUỘC tra cứu ngay lập tức từ `screen_id_reference` / `KB_09` để xác định ngay 100%: (1) Tên & Phân hệ màn hình, (2) Search SP (`_get`), (3) Execute SP (`_iud`), (4) Bảng DB chính & UI Grid layout. Cấm tìm kiếm mơ hồ hay hỏi lại thông tin đã có trong KB!
 
 
 
