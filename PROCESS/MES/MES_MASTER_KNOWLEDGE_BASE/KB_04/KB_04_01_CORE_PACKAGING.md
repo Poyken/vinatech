@@ -1,4 +1,4 @@
-﻿
+
 <!--
 AI-READY METADATA
 Purpose: Quy trình đóng gói core (B523, B525), PackingStandard schema, gộp/chia box, Z530/A460 Label Template Architecture & Debugging
@@ -55,8 +55,23 @@ Related Files:
 | **PartLabel** (Tem Vật Tư Kho) | F330 | Gọi qua A460 | Tem dán trên NVL nhập kho |
 | **자재라벨** (Tem kho Hà Nam) | F721 | `STB_ModelLabelInfo` | Đặc biệt cho Hà Nam (chị Hoàng Xuân) |
 | **Phoenix Contact** | B790 | `usp_Vietnam_PhoenixContactLabelPrint_get` | Tem 5x8cm, Datecode YYMMDD |
-| **PAC Inner/Outer** | B754, B755, B756 | — | SN riêng biệt cho Inner và Outer |
-| **Digi-Key** | B757, B758 | — | Nhãn SP + Nhãn Logistic |
+| **PAC Inner/Outer** | B754, B755, B756 | `usp_VN_PACBoxLabelPrintHist_iud` | SN riêng biệt cho Inner và Outer |
+| **Digi-Key** | B757, B758 | `usp_VN_DigiKeyLabelInnerPrintHist_iud` | Nhãn SP + Nhãn Logistic |
+| **Sanmina Label** | B767 | `usp_SanminaLabelPrint_get_Vietnam` | Mở NAIS Designer set `데이터 추가` = `False` chống lặp |
+
+---
+
+### 6.0.1b [B767] Sanmina & Tem Khách Hàng Đặc Biệt — Chi Tiết Cấu Hình & Debug
+
+1. **[B767] Sanmina Label — Sửa Lỗi Lặp Dữ Liệu Grid (Search Lần 2):**
+   - **Triệu chứng:** Người dùng mở màn hình B767 bấm Tìm kiếm lần 1 ra 3 dòng. Bấm Tìm kiếm lần 2 ra 6 dòng (bị nhân đôi dữ liệu).
+   - **Nguyên nhân:** Thuộc tính `데이터 추가` (Append Data) của Search Function `usp_SanminaLabelPrint_get_Vietnam` trong NAIS Screen Designer đang để là `True`. Do số serial tự tăng (`BoxSerialNo`, `PrintSerialNo`) thay đổi sau mỗi lần thực thi, grid không đè được bản ghi cũ mà tự động nối tiếp (append).
+   - **Cách fix:** Mở NAIS Screen Designer màn B767 ➔ Chọn Search Function `usp_SanminaLabelPrint_get_Vietnam` ➔ Tại bảng Property bên phải nhóm `Group` ➔ Chuyển `데이터 추가` từ `True` sang `False` ➔ Bấm Save và Approve layout.
+
+2. **[B754]/[B756] Tem PAC (Inner/Outer Box):**
+   - Tem Inner và Outer tính Serial Number riêng biệt. Khi in Outer Box tại B756, công nhân **bắt buộc tick chọn `IsOuter = 1`** trên UI để SP `usp_PACLabelCartonWeight_get_Vietnam` gọi đúng dải serial cho thùng carton lớn.
+
+---
 
 ---
 

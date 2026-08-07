@@ -13,6 +13,7 @@ Related Files:
 
 > **📌 Mục đích:** Khi nhận được báo lỗi từ user → tra TCode tại đây → tìm ngay bug + cách fix.
 > **🔑 Keywords:** bug, fix, sổ tay, TCode, màn hình, triệu chứng, nguyên nhân, SQL fix, sửa lỗi, khắc phục
+> **⚡ DB Status:** Direct Live Connected & Verified against `dbserver.hycap.co.kr,5398` (`SmartFactoryV2` + `SmartFramework`)
 > ← [Về INDEX](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
 
 
@@ -120,6 +121,7 @@ Related Files:
 |---|---|---|---|
 | 1 | Barcode sinh ra bị chèn ký tự dấu chấm (`.`) sai định dạng | Sai lệch logic cắt ghép chuỗi sinh barcode tự động | Sửa đồng loạt Barcode trong `STB_RawMaterialInputHist`, `STB_SetInfo`, `STB_LotChangeMaterialHistory` — xem [KB_04_02 §B351](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_02_SCREEN_BUGS.md#b351--lot-transition-chuyển-đổi-lot) |
 | 2 | Yêu cầu in tem gốc (mã cũ) sau khi B351 đã chuyển đổi mã | Đã chuyển đổi sản xuất tại B351 (lưu `STB_LotChangeMaterialHistory`), B525 tự động in tem mã mới | ⚠️ **CẦN QUẢN LÝ PHÊ DUYỆT:** Khi được phê duyệt, chạy script rollback đồng bộ 4 bảng (`STB_SetInfo`, `STB_MaterialLotInfo`, `STB_ProdRouteHist`, `STB_LotChangeMaterialHistory`) — xem [KB_04_02 §B351 Lỗi 2](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_02_SCREEN_BUGS.md#lỗi-2-user-yêu-cầu-in-lại-tem-gốc-mã-cũ-sau-khi-sản-xuất-đã-chuyển-đổi-lot-tại-b351) |
+| 3 | Bấm nút "Thay đổi model" báo lỗi popup red X `No data to process` | Chưa chọn/gán Kế hoạch mục tiêu (Target Plan/Material) từ Lưới 1 xuống Lưới 2 (`SetInfoForChangeMaterial`), khiến các cột `TargetDayPlanNo` / `TargetMaterialCode` bị trống (rỗng) | Thao tác UI: (1) Tìm Kế hoạch sản xuất mục tiêu ở Lưới 1 (`DayProdPlanForChangeMaterial`), (2) Chọn các dòng Lot ở Lưới 2 và thực hiện gán Target để các cột `TargetDayPlanNo` và `TargetMaterialCode` hiển thị mã mới, (3) Nhấn lại nút "Thay đổi model" — xem [KB_04_02 §B351 Lỗi 3](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_02_SCREEN_BUGS.md#lỗi-3-bấm-nút-thay-đổi-model-xuất-hiện-thông-báo-no-data-to-process) |
 
 ### [B442]
 **Tên:** Electrode Day Plan (Kế hoạch ngày điện cực)

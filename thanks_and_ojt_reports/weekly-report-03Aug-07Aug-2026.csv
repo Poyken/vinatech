@@ -23,3 +23,20 @@ Nguyen Van Duc,EA Team,5/8/2026,Wifi Network Optimization — Factory Area,Kiể
 Nguyen Van Duc,EA Team,5/8/2026,MES Printer & Barcode Label Alignment,Hỗ trợ căn chỉnh kích thước con tem; mã vạch barcode và máy in tem trên hệ thống MES.,Support,5/8/2026,Nguyen Van Duc,Done,MES
 Nguyen Van Duc,EA Team,5/8/2026,ECM System Support — User Permission,Hỗ trợ người dùng thao tác tài liệu; kiểm tra quyền truy cập thư mục trên hệ thống ECM.,Support,5/8/2026,Nguyen Van Duc,Done,ECM
 Nguyen Van Duc,EA Team,5/8/2026,Software Installation & License Setup,Hỗ trợ cài đặt phần mềm văn phòng (Office; Unikey; PDF Reader) và kích hoạt bản quyền.,Support,5/8/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,6/8/2026,MES System Bug Fix & Support,Kiểm tra; khắc phục các sự cố lỗi phát sinh trên hệ thống MES cho người dùng; đảm bảo dữ liệu sản xuất ghi nhận chính xác.,Support,6/8/2026,Nguyen Van Duc,Done,MES
+Nguyen Van Duc,EA Team,6/8/2026,MES Incorrect Data Clearance Support,Hỗ trợ người dùng kiểm tra; xác minh và xóa các dữ liệu/thao tác nhập sai trên hệ thống MES theo quy trình.,Support,6/8/2026,Nguyen Van Duc,Done,MES
+Nguyen Van Duc,EA Team,6/8/2026,IT Equipment Handover & Setup,Tiến hành kiểm tra phần cứng; cài đặt phần mềm và bàn giao thiết bị IT (máy tính; màn hình) cho người dùng.,Task,6/8/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,6/8/2026,Vendor Supervision & Network Maintenance,Giám sát vendor kiểm tra; bảo trì hạ tầng cáp mạng và các vị trí kết nối mạng tại khu vực sản xuất.,Task,6/8/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,6/8/2026,FortiClient Setup — ECM System Access,Hỗ trợ cài đặt và cấu hình phần mềm FortiClient VPN cho người dùng kết nối hệ thống ECM.,Support,6/8/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,6/8/2026,Printer Setup & Troubleshooting,Hỗ trợ kết nối máy in mạng; cài đặt driver và khắc phục sự cố kẹt lệnh in cho người dùng.,Support,6/8/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,6/8/2026,ECM User Permission & Access Support,Hỗ trợ kiểm tra; phân quyền tài khoản và xử lý sự cố truy cập thư mục tài liệu trên hệ thống ECM.,Support,6/8/2026,Nguyen Van Duc,Done,ECM
+Nguyen Van Duc,EA Team,6/8/2026,IT Asset Relabeling & Management,Kiểm tra; cập nhật thông tin và dán tem quản lý thiết bị IT mới bàn giao cho người dùng.,Support,6/8/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,7/8/2026,MES User Operation & Bug Fixing,Xử lý triệt để lỗi chức năng trên hệ thống MES và hướng dẫn người dùng chuẩn hóa lại thao tác nhập liệu.,Task,7/8/2026,Nguyen Van Duc,Done,MES
+Nguyen Van Duc,EA Team,7/8/2026,MES Data Mistake Clearance & Verification,Hỗ trợ người dùng kiểm tra đối soát và xử lý hủy/xóa các bản ghi thao tác nhầm lẫn trên hệ thống MES.,Support,7/8/2026,Nguyen Van Duc,Done,MES
+Nguyen Van Duc,EA Team,7/8/2026,IT Asset Handover & Operational Training,Bàn giao thiết bị IT hoàn chỉnh cho người dùng và hướng dẫn chi tiết quy định sử dụng thiết bị.,Task,7/8/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,7/8/2026,FortiClient Setup & Remote Access Support,Cấu hình FortiClient VPN cho người dùng kết nối làm việc từ xa và truy cập hệ thống nội bộ.,Support,7/8/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,7/8/2026,Printer Driver & Connection Support,Hỗ trợ cài đặt driver máy in; chia sẻ máy in qua mạng LAN cho người dùng các bộ phận.,Support,7/8/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,7/8/2026,Password Reset & Account Maintenance,Hỗ trợ khôi phục mật khẩu tài khoản Windows; Portal; Email và phân quyền người dùng.,Support,7/8/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,7/8/2026,Damaged IT Equipment Collection,Thu hồi; phân loại thiết bị IT hỏng hóc và kiểm kê kho thiết bị công nghệ thông tin.,Support,7/8/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,7/8/2026,Weekly IT System Review & Maintenance,Kiểm tra tổng thể; dọn dẹp hệ thống máy tính và tối ưu hóa mạng LAN/Wifi nhà máy cuối tuần.,Task,7/8/2026,Nguyen Van Duc,Done,HW
+

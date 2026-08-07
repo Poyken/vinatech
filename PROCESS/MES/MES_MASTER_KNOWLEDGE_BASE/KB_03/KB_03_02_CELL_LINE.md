@@ -1,4 +1,4 @@
-﻿<!--
+<!--
 AI-READY METADATA
 Purpose: Chi tiết vận hành Cell Line & Module Line (B450, B530, B540, B597, B523, B717, B789, B791, B802, B598, B351, BG2 K101-K199, H301-H305)
 Scope: Cell Line & Module Production Operations
@@ -124,15 +124,50 @@ SET IsRawMaterialInputFinish = 1
 WHERE Barcode = 'VV...' AND RouteCode = 'V-23'
 ```
 
-**Lỗi thường gặp tại B530:**
+**Lỗi thường gặp & Script Khắc Phục tại B530:**
 
-| Lỗi | Nguyên nhân |
-|-----|-------------|
-| "Chưa nhập NVL cho Lắp Cao Su" | GATE 2: không tìm thấy record trong `STB_RawMaterialInputHist` cho V-23/V-24 |
-| "Chưa nhập điện cực âm/dương" | GATE 1: `usp_CheckInputElectrodeInputForCodeProduct` — check `Stb_SlittingStock_VVT` |
-| "Routing không có trong PO" | Barcode thuộc PONo không có RouteCode trong `STB_ProductionOrderRouting` |
-| "Đã hoàn thành thực tế rồi" | `AftProdQty <> 0` → công đoạn kế tiếp đã có dữ liệu → scan trùng |
-| Chữ "Making" chưa nhập ở V-25 | `MarkingLetter` rỗng → `usp_DoUpdateProdRouteHistMarkingLetter` không có data |
+| Lỗi | Nguyên nhân | Hướng khắc phục / Script SQL |
+|-----|-------------|------------------------------|
+| "Chưa nhập NVL cho Lắp Cao Su" | GATE 2: không tìm thấy record trong `STB_RawMaterialInputHist` cho V-23/V-24 | Quét NVL tại B540 hoặc bypass: `UPDATE STB_ProdRouteHist SET IsRawMaterialInputFinish=1 WHERE Barcode='...' AND RouteCode='V-23'` |
+| "Chưa nhập điện cực âm/dương" | GATE 1: `usp_CheckInputElectrodeInputForCodeProduct` — check `Stb_SlittingStock_VVT` | Nhập NVL điện cực tại B540 trước khi chốt V-22 |
+| "Routing không có trong PO" | Barcode thuộc PONo không có RouteCode trong `STB_ProductionOrderRouting` | Thêm RouteCode vào `STB_ProductionOrderRouting` cho PO tương ứng |
+| "Đã hoàn thành thực tế rồi" | `AftProdQty <> 0` → công đoạn kế tiếp đã có dữ liệu → scan trùng | Hủy sản lượng công đoạn sau trước khi scan lại công đoạn trước |
+| Chữ "Making" chưa nhập ở V-25 | `MarkingLetter` rỗng → `usp_DoUpdateProdRouteHistMarkingLetter` không có data | Nhập ký tự Marking (mã dán nhãn) trước khi qua V-25 |
+| Nút "Nhập lỗi" bị ẩn (Disabled) | Công đoạn kế tiếp đã có dữ liệu (`IsHasNextProd=1`) hoặc đã bị ghi nhận Loss (`IsLoss=1`) | Hủy công đoạn sau theo kịch bản Rollback B530 dưới đây |
+
+```sql
+-- ====================================================================
+-- SCRIPT KHẨN CẤP: Rollback / Hủy sản lượng công đoạn B530
+-- ====================================================================
+BEGIN TRANSACTION;
+BEGIN TRY
+    DECLARE @Barcode NVARCHAR(50) = 'VVQM153R025606';
+    DECLARE @RouteCode NVARCHAR(20) = 'V-25'; -- Route cần hủy
+    DECLARE @ControlNo NVARCHAR(50) = (SELECT ControlNo FROM STB_SetInfo WHERE Barcode = @Barcode);
+
+    -- 1. Xóa lỗi đã ghi nhận ở công đoạn sau nếu có
+    DELETE FROM STB_DefectRepairInfo 
+    WHERE ControlNo = @ControlNo AND FindRouteCode = @RouteCode;
+
+    -- 2. Xóa bản ghi lịch sử sản xuất của công đoạn cần hủy
+    DELETE FROM STB_ProdRouteHist 
+    WHERE ControlNo = @ControlNo AND RouteCode = @RouteCode;
+
+    -- 3. Reset cờ hoàn thành của công đoạn liền trước
+    UPDATE STB_ProdRouteHist 
+    SET CompleteRoute = NULL 
+    WHERE ControlNo = @ControlNo AND ProcSeq = (
+        SELECT ISNULL(MAX(ProcSeq), 1) FROM STB_ProdRouteHist WHERE ControlNo = @ControlNo
+    );
+
+    COMMIT TRANSACTION;
+    PRINT 'SUCCESS: Rollback cong doan B530 thanh cong!';
+END TRY
+BEGIN CATCH
+    IF @@TRANCOUNT > 0 ROLLBACK TRANSACTION;
+    PRINT 'ERROR: ' + ERROR_MESSAGE();
+END CATCH;
+```
 
 ---
 
@@ -374,24 +409,39 @@ VALUES
 
 ---
 
-### 6.9 [B351] — Lot Chuyển Đổi Nguyên Liệu
+### 6.9 [B351] — Lot Chuyển Đổi Nguyên Liệu / Thay Đổi Model
 
-**Khi nào dùng:** Cần đổi mã hàng cho Lot đã sản xuất (sản xuất nhầm model, đổi PO).
+**Khi nào dùng:** Cần đổi mã hàng/model cho Lot đã sản xuất (sản xuất nhầm model, chuyển PO, đổi kế hoạch sản xuất ngày).
 
-| SP | Chức năng |
-|----|-----------|
-| `usp_GetDayProdPlanForChangeMaterial` | Lấy danh sách kế hoạch có thể đổi sang |
-| `usp_GetSetInfoForChangeMaterial` | Lấy danh sách barcode đủ điều kiện đổi |
-| `usp_DoChangeMaterialForSetInfo` | Thực hiện đổi — cập nhật MaterialCode, DayPlanNo |
+**Cấu trúc giao diện & Stored Procedures (Master-Detail 2 Grids):**
+
+```
+Lưới 1 (Master): DayProdPlanForChangeMaterial  ──▶ usp_GetDayProdPlanForChangeMaterial (Search Kế hoạch MỚI)
+Lưới 2 (Detail): SetInfoForChangeMaterial      ──▶ usp_GetSetInfoForChangeMaterial (Search Barcode HIỆN TẠI)
+Nút [Thay đổi model] (Action: ChangeMaterial)  ──▶ usp_DoChangeMaterialForSetInfo (Execute chuyển đổi)
+```
+
+| SP | Chức năng | Dữ liệu đầu vào / đầu ra |
+|----|-----------|--------------------------|
+| `usp_GetDayProdPlanForChangeMaterial` | Lấy danh sách kế hoạch ngày khả dụng để đổi sang | `@pCompanyCode`, `@pWorkCenterCode`, `@pFromDate`, `@pToDate` |
+| `usp_GetSetInfoForChangeMaterial` | Lấy danh sách Lot/Barcode đủ điều kiện đổi | `@pCompanyCode`, `@pWorkCenterCode`, `@pBarcode` |
+| `usp_DoChangeMaterialForSetInfo` | Thực hiện đổi — cập nhật MaterialCode, DayPlanNo | Chạy khi có `TargetDayPlanNo` & `TargetMaterialCode` ở Lưới 2 |
+
+**Tác động cơ sở dữ liệu & Khoảng hẫng đồng bộ (System Synchronization Gap):**
+- `B351` tự động cập nhật: **`STB_SetInfo`** (mã mới) + Ghi nhật ký audit **`STB_LotChangeMaterialHistory`**.
+- ⚠️ **`B351` KHÔNG tự động đồng bộ:** `STB_MaterialLotInfo` (kho WMS) và `STB_ProdRouteHist` (lịch sử công đoạn). Khi cần rollback hoặc fix lệch dữ liệu ở B525/B523, phải đồng bộ thủ công cả 4 bảng.
 
 ```sql
--- Kiểm tra Lot sau khi đổi
-SELECT OldBarcode, NewBarcode, ChangeDateTime, ChangeUserID
-FROM STB_LotChangeMaterialHistory
+-- Kiểm tra nhật ký đổi Lot tại B351
+SELECT CPHNo, ControlNo, OldBarcode, NewBarcode, BefMaterialCode, AftMaterialCode, BefDayPlanNo, AftDayPlanNo, ChangeDateTime, ChangeUserID
+FROM STB_LotChangeMaterialHistory WITH(NOLOCK)
 WHERE OldBarcode = 'VV...' OR NewBarcode = 'VV...'
 ```
 
-👉 **Sửa lại Barcode nếu định dạng sai sau khi đổi (Lỗi dấu chấm):** Xem chi tiết script sửa lỗi tại [KB_04_02_SCREEN_BUGS.md](file:///c:/Users/User Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_02_SCREEN_BUGS.md#L10) (§ B351 Lỗi 1).
+👉 **Tra cứu sự cố Thường gặp & Khắc phục lỗi B351:**
+- **Lỗi 1 (Dấu chấm Barcode):** Xem [KB_04_02 §B351 Lỗi 1](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_02_SCREEN_BUGS.md#lỗi-1-barcode-sinh-ra-bị-chèn-ký-tự-dấu-chấm--sai-định-dạng).
+- **Lỗi 2 (Rollback đồng bộ 4 bảng):** Xem [KB_04_02 §B351 Lỗi 2](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_02_SCREEN_BUGS.md#lỗi-2-user-yêu-cầu-in-lại-tem-gốc-mã-cũ-sau-khi-sản-xuất-đã-chuyển-đổi-lot-tại-b351).
+- **Lỗi 3 (`No data to process` khi bấm nút):** Xem [KB_04_02 §B351 Lỗi 3](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_02_SCREEN_BUGS.md#lỗi-3-bấm-nút-thay-đổi-model-xuất-hiện-thông-báo-no-data-to-process).
 
 
 ---

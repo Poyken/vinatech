@@ -122,6 +122,50 @@ Related Files:
     SELECT * FROM BAK_STB_SetInfo_@CPHNo;
     ```
 
+### Lỗi 3: Bấm nút "Thay đổi model" xuất hiện thông báo `No data to process`
+*   **Triệu chứng:** Người dùng chọn Lot ở lưới dưới (`SetInfoForChangeMaterial`) và bấm nút **[Thay đổi model]** trên thanh công cụ góc phải lưới 2, màn hình bật hộp thoại thông báo đỏ **`No data to process`** và không thực hiện chuyển đổi.
+*   **Nguyên nhân gốc:** 
+    1. Màn hình **B351** vận hành theo cơ chế Master-Detail (2 lưới):
+       - Lưới 1 (`DayProdPlanForChangeMaterial` - Kế hoạch mục tiêu): Chứa Kế hoạch sản xuất / Model MỚI.
+       - Lưới 2 (`SetInfoForChangeMaterial` - Danh sách Lot): Chứa danh sách các Barcode Lot hiện tại.
+    2. Các cột **`TargetDayPlanNo`**, **`TargetMaterialCode`**, **`TargetMaterialName`** ở Lưới 2 đang **bỏ trống (rỗng/NULL)** do người dùng chưa gán Kế hoạch mục tiêu từ Lưới 1 xuống Lưới 2.
+    3. Khi bấm nút execute **"Thay đổi model"** (thực thi SP `usp_DoChangeMaterialForSetInfo`), NAIS Client kiểm tra mảng danh sách truyền vào nhưng không tìm thấy bản ghi nào có dữ liệu Target → ném thông báo `No data to process`.
+    4. Ngoài ra, nếu Kế hoạch ở Lưới 1 hiển thị trùng đúng Mã nguyên liệu hiện tại của Lot ở Lưới 2 (ví dụ cùng mã `ECVT30-260`), người dùng cần tìm đúng Kế hoạch của Model MỚI ở Lưới 1 trước khi gán.
+
+*   **🛠️ Quy trình thao tác chuẩn trên giao diện B351:**
+    ```
+    [Bước 1: Tìm Kế hoạch mục tiêu] 
+      -> Lưới 1 (DayProdPlanForChangeMaterial): Tìm & chọn dòng Kế hoạch của Model MỚI
+      
+    [Bước 2: Gán Target xuống Lưới 2] 
+      -> Lưới 2 (SetInfoForChangeMaterial): Chọn dòng Lot -> Gán Kế hoạch từ Lưới 1 xuống
+      -> Kiểm tra cột TargetDayPlanNo, TargetMaterialCode, TargetMaterialName ĐÃ HIỂN THỊ MÃ MỚI
+      
+    [Bước 3: Thực hiện Chuyển đổi] 
+      -> Bấm nút [Thay đổi model] -> Chạy SP usp_DoChangeMaterialForSetInfo -> Lưu log STB_LotChangeMaterialHistory
+    ```
+
+*   **🔍 SQL Debug & Đối Soát Dữ Liệu B351:**
+    ```sql
+    -- 1. Kiểm tra kế hoạch sản xuất ngày có sẵn để đổi sang (dùng cho Lưới 1)
+    EXEC usp_GetDayProdPlanForChangeMaterial 
+        @pCompanyCode = 'VT', 
+        @pWorkCenterCode = 'VT_F1', 
+        @pFromDate = '2026-07-01', 
+        @pToDate = '2026-08-07';
+
+    -- 2. Kiểm tra danh sách Lot đủ điều kiện đổi (dùng cho Lưới 2)
+    EXEC usp_GetSetInfoForChangeMaterial 
+        @pCompanyCode = 'VT', 
+        @pWorkCenterCode = 'VT_F1', 
+        @pBarcode = 'WQP313R0606QL';
+
+    -- 3. Kiểm tra nhật ký chuyển đổi Lot đã thực hiện thành công
+    SELECT CPHNo, OldBarcode, NewBarcode, BefMaterialCode, AftMaterialCode, ChangeDateTime, ChangeUserID
+    FROM STB_LotChangeMaterialHistory WITH(NOLOCK)
+    WHERE OldBarcode = 'WQP313R0606QL' OR NewBarcode = 'WQP313R0606QL';
+    ```
+
 ---
 
 
