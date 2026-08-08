@@ -13,6 +13,7 @@
 | 2 | **Dò dẫm tìm SP khi có Screen ID / Ảnh** | Không tra cứu ngay Ma Trận `screen_id_reference` trong KI context. | Làm lãng phí token, tạo cảm giác AI "học vẹt / không thuộc hệ thống". |
 | 3 | **Không check connection string khi Timeout** | Tin vào file `db_config.json` hỏng mà không check `git log` tìm Host `dbserver.hycap.co.kr`. | Trả lời lý thuyết suông thay vì SELECT trực tiếp dữ liệu Live Production. |
 | 4 | **Báo cáo bề mặt (+1/-1 dòng)** | Tóm tắt sơ sài thay vì trích xuất chi tiết SP code logic, GATES, và Table Schemas. | Không mang lại giá trị kỹ thuật sâu cho IT / DBA vận hành nhà máy. |
+| 5 | **Tự ý chèn bản ghi giả lập (Dummy/Suy đoán)** | Suy đoán ngắn hạn, không tra cứu SoT architecture (`KB_04_01_CORE_PACKAGING.md`). | Làm xuất hiện dòng thừa (348/318), sai lệch luồng UI B523. **CẤM TUYỆT ĐỐI!** |
 
 ---
 

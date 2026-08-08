@@ -472,6 +472,14 @@ COMMIT TRANSACTION;
 |---|---|---|---|
 | 1 | Gộp box lỗi Qty=0 | `STB_PackingStandard` thiếu record cho model HN | INSERT record — xem [KB_04 §6.13](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_01_CORE_PACKAGING.md) |
 | 2 | Gộp túi nilon lỗi | `STB_PackingNilonToBoxSmall_HN` config sai | Kiểm tra + update config |
+| 3 | Hủy box packing lẻ / Dòng Qty bị trống PackingID trên lưới HN523 | `STB_MaterialDocLotInfo` có PackingID nhưng `STB_MaterialLotInfo` chưa được cập nhật (`PackingID = ''`) | Hủy doc `STB_MaterialDocInfo`/`STB_MaterialDocLotInfo` + Xóa dòng lẻ `STB_MaterialLotInfo` + Update trừ ProdQty `VE10` trong `STB_ProdRouteHist` & `STB_ProductionOrderInfo` |
+
+### [HN555]
+**Tên:** Gộp Packing Hàng Lẻ (Hà Nam)
+
+| # | Triệu chứng | Nguyên nhân | Fix |
+|---|---|---|---|
+| 1 | Hủy gộp packing cuộn to mã `PKTTxxxxxxx` | SP `usp_MergePackingHN710_HN` gộp các box lẻ vào `STB_PackingHN710_HN` và cập nhật `STB_MaterialLotInfo.MergePackingId` | 1. `DELETE FROM STB_PackingHN710_HN WHERE PackingId = 'PKTTxxxxxxx'` <br> 2. `UPDATE STB_MaterialLotInfo SET MergePackingId = NULL, CurrentQtyBefMerge = NULL WHERE MergePackingId = 'PKTTxxxxxxx'` <br> 3. `UPDATE STB_DividePackaging SET MergeNilonToSmallBox = NULL WHERE MergeNilonToSmallBox = 'PKTTxxxxxxx'` |
 
 ### [HN544]
 **Tên:** Gộp túi bóng thành hộp nhỏ (Hà Nam)
