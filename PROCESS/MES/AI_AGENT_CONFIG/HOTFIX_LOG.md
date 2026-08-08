@@ -164,4 +164,12 @@ Related Files:
   COMMIT TRANSACTION;
   ```
 
-
+### [B540] — 📍 ID_26 Model Nordex ở B540/B530/K361 hoàn thành công đoạn ND08
+* **Ngày sửa:** `2026-08-08`
+* **Màn hình liên quan (TCode):** `[B540] - Nhập thẻ công đoạn & [K361] - Hoàn thành công đoạn BG2`
+* **Triệu chứng lỗi:** Model Nordex (`EDVTMD-246`) ở B540/B530/K361 không hoàn thành/không hiển thị được công đoạn `ND08`.
+* **Nguyên nhân gốc (Root Cause):** Bảng `STB_ProductionOrderRouting` của PO Nordex bị đặt `IsOutputRoute=0` cho công đoạn cuối `ND08`. Tại K361 BG2 dùng SP riêng (`usp_CompleteRouteFinalForBacGiang2`) để chốt `CompleteRoute=1` cho `ND08`.
+* **Phương án sửa lỗi (SQL Patch / Action):**
+  ```sql
+  UPDATE STB_ProductionOrderRouting SET IsOutputRoute = 1 WHERE RouteCode = 'ND08' AND MaterialCode = 'EDVTMD-246';
+  ```

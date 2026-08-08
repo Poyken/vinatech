@@ -277,6 +277,13 @@ Related Files:
 |---|---|---|---|
 | 1 | Lưới tìm kiếm lần 2 bị lặp dữ liệu (6 dòng thay vì 3 dòng) | Thuộc tính `데이터 추가` (Append Data) của hàm tìm kiếm đang set `True` | Mở NAIS screen designer B767 → Chọn SearchFunction → Chuyển `데이터 추가` từ `True` sang `False` |
 | 2 | S/N của tem Outer (tem đầu tiên) bị trống | SP `usp_SanminaLabelPrint_get_Vietnam` set PrintSerialNo trống cho Outer label | Sửa SP: gộp Inner1Serial và Inner2Serial thành danh sách phân cách bằng dấu phẩy cho BoxSerialNo và PrintSerialNo của Outer label |
+
+### [B540]
+**Tên:** Nhập thẻ công đoạn (Process Card Info)
+
+| # | Triệu chứng | Nguyên nhân | Fix |
+|---|---|---|---|
+| 1 | Model Nordex ở B540/B530/K361 không hoàn thành được công đoạn ND08 | Bảng STB_ProductionOrderRouting của PO Nordex bị đặt IsOutputRoute=0 cho công đoạn cuối ND08 thay vì 1. Tại K361 BG2 dùng SP riêng (usp_CompleteRouteFinalForBacGiang2) để chốt CompleteRoute=1. | `UPDATE STB_ProductionOrderRouting SET IsOutputRoute = 1 WHERE RouteCode = 'ND08' AND MaterialCode = 'EDVTMD-246'` |
 ## C-Series: QC & Chất Lượng
 
 ### [C121]-[C122]
