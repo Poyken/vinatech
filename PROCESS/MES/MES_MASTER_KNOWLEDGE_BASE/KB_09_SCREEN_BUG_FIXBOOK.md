@@ -557,6 +557,14 @@ COMMIT TRANSACTION;
 
 ---
 
+### [K361]
+**Tên:** Hoàn thành công đoạn cuối BG2 (Complete Final Route BG2)
+
+| # | Triệu chứng | Nguyên nhân | Fix |
+|---|---|---|---|
+| 1 | Công đoạn cuối (VD ND08) hiển thị "Chưa hoàn thành" trên K361 dù công đoạn trước đã pass | K361 gọi `usp_Vietnam_GetProdPackingForBarcodeForBacGiang2` để đọc các công đoạn `IN ('VP07','VP18','VP12','ND08','ND05')`. Khi `CompleteRoute` IS NULL thì hiển thị "Chưa hoàn thành". | Tích chọn dòng `ND08` trên K361 ➔ Bấm nút **"Hoàn thành kết quả sản xuất"** (gọi `usp_CompleteRouteFinalForBacGiang2` để `UPDATE CompleteRoute=1` và đổi `WorkerCode` thành mã người chốt thực tế) |
+| 2 | Công đoạn ND08 chưa chốt nhưng hiển thị tên công nhân vừa làm ND07 | Khi chốt PASS ND07, B530 tự động clone dòng chờ ND08 và tạm copy WorkerCode từ công đoạn ND07 sang. | Không cần sửa SQL: Tên chỉ là hiển thị tạm thời. Khi người làm thực tế chốt K361, `WorkerCode` sẽ tự động cập nhật lại thành tên người chốt thực tế. |
+
 ### [K366]
 **Tên:** Lot Tracking BG2 (Kết luận Pass/Fail)
 

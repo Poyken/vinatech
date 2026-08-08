@@ -720,6 +720,20 @@ Bảng `STB_ModuleProductionInfo`:
 | **SP back-end** | Giống nhau | Giống nhau |
 | **Khác biệt** | Client UI filter riêng BE | Client UI filter Module |
 
+##### 3.9 [K361] — Hoàn Thành Công Đoạn Cuối BG2 & Cơ Chế Auto-Pipeline WorkerCode
+
+- **Màn hình K361 (*Hoàn thành công đoạn cuối BG2*):**
+  - **Search SP:** `usp_Vietnam_GetProdPackingForBarcodeForBacGiang2`
+  - **Execute SP:** `usp_CompleteRouteFinalForBacGiang2`
+- **Khác biệt quan trọng với Cell Line thường:**
+  - K361 BG2 **KHÔNG BẮT CẦU `IsOutputRoute = 1`** trong `STB_ProductionOrderRouting` mới load/chốt được công đoạn cuối.
+  - `usp_Vietnam_GetProdPackingForBarcodeForBacGiang2` đọc trực tiếp các công đoạn đặc thù `IN ('VP07','VP18','VP12','ND08','ND05')` từ `STB_ProdRouteHist`. Nếu `CompleteRoute` IS NULL, hiển thị `Chưa hoàn thành`.
+  - Nút **"Hoàn thành kết quả sản xuất"** trên K361 gọi `usp_CompleteRouteFinalForBacGiang2` kiểm tra NVL (`usp_ChecRawMaterialWhenFinishProd`) và `UPDATE STB_ProdRouteHist SET CompleteRoute = 1, ProdDateTime = GETDATE(), WorkerCode = @pProcessUserID`.
+- **Cơ chế Auto-Pipeline & Khởi tạo WorkerCode trùng người trước:**
+  - Khi công nhân A chốt PASS công đoạn trước (VD `ND07`), SP `usp_DoProcessProdRouteHistForCalc_SmartApp_VNT` tự động nhân bản (clone) dòng chờ cho công đoạn tiếp theo (`ND08`) với `CompleteRoute = NULL`.
+  - Dòng `ND08` khởi tạo này tạm thời copy metadata (gồm `WorkerCode`) của công nhân A. Do đó, trên màn hình B540/K361 dòng `ND08` (Chưa hoàn thành) sẽ hiển thị tạm tên công nhân A.
+  - Khi công nhân B thực tế thao tác chốt `ND08` tại K361, `usp_CompleteRouteFinalForBacGiang2` sẽ tự động `UPDATE WorkerCode` và `ChangeUserID` thành mã công nhân B.
+
 ---
 
 ### 6.15 [H301]/[H302]/[H303]/[H305] — Spare Part ///
