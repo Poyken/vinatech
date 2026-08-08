@@ -283,7 +283,7 @@ Related Files:
 
 | # | Triệu chứng | Nguyên nhân | Fix |
 |---|---|---|---|
-| 1 | Model Nordex ở B540/B530/K361 không hoàn thành được công đoạn ND08 | Bảng STB_ProductionOrderRouting của PO Nordex bị đặt IsOutputRoute=0 cho công đoạn cuối ND08 thay vì 1. Tại K361 BG2 dùng SP riêng (usp_CompleteRouteFinalForBacGiang2) để chốt CompleteRoute=1. | `UPDATE STB_ProductionOrderRouting SET IsOutputRoute = 1 WHERE RouteCode = 'ND08' AND MaterialCode = 'EDVTMD-246'` |
+| 1 | Model Nordex ở B540/B530/K361 cần hoàn thành công đoạn ND08 | Chuẩn nghiệp vụ BG2 Module Line: `IsOutputRoute` giữ nguyên `NULL` (hoặc 0), không set bằng 1. Việc chốt hoàn thành công đoạn ND08 được thực hiện qua màn hình K361 (SP `usp_CompleteRouteFinalForBacGiang2`). | **CẤM sửa IsOutputRoute=1**. Giữ `IsOutputRoute = NULL` ➔ Chốt `CompleteRoute = 1` cho `ND08` bằng nút "Hoàn thành kết quả sản xuất" tại K361 hoặc chạy SQL: `UPDATE STB_ProdRouteHist SET CompleteRoute=1 WHERE RouteCode='ND08' AND MaterialCode='EDVTMD-246'` |
 ## C-Series: QC & Chất Lượng
 
 ### [C121]-[C122]

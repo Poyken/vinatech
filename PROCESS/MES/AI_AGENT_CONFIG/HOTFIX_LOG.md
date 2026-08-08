@@ -164,18 +164,21 @@ Related Files:
   COMMIT TRANSACTION;
   ```
 
-### [B540]/[K361] — 📍 ID_26 Model Nordex ở B540/B530/K361 hoàn thành công đoạn ND08 & Cơ chế Auto-Pipeline WorkerCode
+### [B540]/[K361] — 📍 ID_26 Model Nordex ở B540/B530/K361 hoàn thành công đoạn ND08 theo chuẩn K361
 * **Ngày sửa:** `2026-08-08`
 * **Màn hình liên quan (TCode):** `[B540] - Nhập thẻ công đoạn & [K361] - Hoàn thành công đoạn BG2`
-* **Triệu chứng lỗi:** Model Nordex (`EDVTMD-246`) ở B540/B530/K361 không hoàn thành được công đoạn `ND08`. Dòng `ND08` tự động sinh ra hiển thị `Chưa hoàn thành` và tạm gắn tên công nhân vừa làm `ND07`.
+* **Triệu chứng lỗi:** Model Nordex (`EDVTMD-246`) ở B540/B530/K361 cần hoàn thành công đoạn `ND08`. Dòng `ND08` hiển thị `Chưa hoàn thành` và tạm gắn tên công nhân vừa làm `ND07`.
 * **Nguyên nhân gốc (Root Cause):** 
-  1. Bảng `STB_ProductionOrderRouting` của PO Nordex bị đặt `IsOutputRoute=0` cho công đoạn cuối `ND08`.
+  1. Theo quy tắc nghiệp vụ BG2 Module Line, cờ `IsOutputRoute` trong `STB_ProductionOrderRouting` giữ nguyên `NULL` (hoặc 0), KHÔNG sửa thành 1.
   2. Màn hình K361 BG2 dùng SP riêng (`usp_Vietnam_GetProdPackingForBarcodeForBacGiang2` để đọc các công đoạn `IN ('VP07','VP18','VP12','ND08','ND05')` và `usp_CompleteRouteFinalForBacGiang2` để chốt `CompleteRoute=1`).
   3. B530 khi chốt PASS `ND07` sẽ tự động clone dòng chờ `ND08` với `CompleteRoute = NULL` và tạm thời copy `WorkerCode` từ `ND07` sang.
-* **Phương án sửa lỗi & Thao tác:**
+* **Phương án sửa lỗi & Thao tác (Giữ IsOutputRoute = NULL):**
   ```sql
-  -- 1. Sửa cờ công đoạn cuối trong PO Routing (nếu chốt tự động B530)
-  UPDATE STB_ProductionOrderRouting SET IsOutputRoute = 1 WHERE RouteCode = 'ND08' AND MaterialCode = 'EDVTMD-246';
-  -- 2. Thao tác trên UI K361: Tích dòng ND08 -> Bấm "Hoàn thành kết quả sản xuất"
-  -- SP usp_CompleteRouteFinalForBacGiang2 sẽ tự động UPDATE CompleteRoute=1 và đổi WorkerCode thành người chốt thực tế.
+  -- 1. GIỮ NGUYÊN IsOutputRoute = NULL (hoặc 0) cho ND08 trong STB_ProductionOrderRouting (Không set = 1).
+  -- 2. Thao tác trên UI K361 hoặc giả lập K361: Chốt CompleteRoute = 1 cho ND08 trong STB_ProdRouteHist
+  UPDATE PRH
+  SET PRH.CompleteRoute = 1, PRH.ProdDateTime = GETDATE(), PRH.ChangeDateTime = GETDATE(), PRH.ChangeUserID = '32606011'
+  FROM STB_ProdRouteHist PRH
+  INNER JOIN STB_SetInfo SI ON PRH.ControlNo = SI.ControlNo
+  WHERE SI.MaterialCode = 'EDVTMD-246' AND PRH.RouteCode = 'ND08' AND (PRH.CompleteRoute IS NULL OR PRH.CompleteRoute <> 1);
   ```
