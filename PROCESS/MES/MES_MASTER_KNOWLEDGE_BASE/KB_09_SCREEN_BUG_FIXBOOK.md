@@ -283,7 +283,8 @@ Related Files:
 
 | # | Triệu chứng | Nguyên nhân | Fix |
 |---|---|---|---|
-| 1 | Model Nordex ở B540/B530/K361 cần hoàn thành công đoạn ND08 | Chuẩn nghiệp vụ BG2 Module Line: `IsOutputRoute` giữ nguyên `NULL` (hoặc 0), không set bằng 1. Việc chốt hoàn thành công đoạn ND08 được thực hiện qua màn hình K361 (SP `usp_CompleteRouteFinalForBacGiang2`). | **CẤM sửa IsOutputRoute=1**. Giữ `IsOutputRoute = NULL` ➔ Chốt `CompleteRoute = 1` cho `ND08` bằng nút "Hoàn thành kết quả sản xuất" tại K361 hoặc chạy SQL: `UPDATE STB_ProdRouteHist SET CompleteRoute=1 WHERE RouteCode='ND08' AND MaterialCode='EDVTMD-246'` |
+| 1 | Model Nordex ở B540/B530/K361 cần hoàn thành công đoạn ND08 | Chuẩn nghiệp vụ BG2 Module Line: `IsOutputRoute` giữ nguyên `NULL` (hoặc 0), không set bằng 1. Việc chốt hoàn thành công đoạn ND08 được thực hiện qua màn hình K361 (SP `usp_CompleteRouteFinalForBacGiang2`). | **CẤM sửa IsOutputRoute=1**. Giữ `IsOutputRoute = NULL` ➔ Chốt `CompleteRoute = 1` cho `ND08` bằng nút "Hoàn thành kết quả sản xuất" tại K361. |
+| 2 | Lỗi PRIMARY KEY violation `PK_STB_ProdRouteHist` (Duplicate key `20260808000824`) khi chốt sản xuất trên UI | Chèn dòng ND08 bằng SQL `INSERT` trực tiếp làm lệch dải số tự động `ProdRouteHistNo` của ứng dụng MES. | **CẤM DÙNG SQL INSERT TRỰC TIẾP VÀO STB_ProdRouteHist**. Thực hiện `UPDATE STB_ProdRouteHist SET CompleteRoute = NULL WHERE RouteCode = 'ND07'` để công nhân bấm chốt lại ND07 ở B530 ➔ Ứng dụng MES sẽ tự động sinh ND08 an toàn 100%. |
 ## C-Series: QC & Chất Lượng
 
 ### [C121]-[C122]
