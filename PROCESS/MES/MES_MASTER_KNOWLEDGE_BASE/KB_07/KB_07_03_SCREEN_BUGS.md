@@ -61,6 +61,34 @@ Related Files:
     ROLLBACK TRANSACTION;
     ```
 
+#### 🔴 Lỗi 3: Hủy kết quả sản xuất Lot để gộp Lot & in lại tem (`HY530` / `B523` / `HY620`)
+*   **Triệu chứng:** Lot sản xuất (ví dụ `SP260807-003`, `SP260807-006`) lỡ chốt công đoạn sau (`VE08`, `VE09`, `VE10`), khiến công nhân không gộp được Lot hoặc không in lại được tem tại `B523` / `HY620`.
+*   **Nguyên nhân gốc:** Bản ghi routing `STB_ProdRouteHist` của các bước sau đã được sinh ra và cờ `CompleteRoute` công đoạn trước bị chốt ➔ Ứng dụng B523 kiểm tra cờ `IsHasNextProd = 1` nên chặn thao tác gộp/sửa Lot.
+*   **Cách khắc phục (Script Rollback & Reset Packing):**
+    ```sql
+    BEGIN TRANSACTION;
+    -- 1. Xóa phế NG các công đoạn thừa sau
+    DELETE FROM STB_DefectRepairInfo 
+    WHERE ControlNo = (SELECT ControlNo FROM STB_SetInfo WHERE Barcode = 'MÃ_BARCODE_HƯNG_YÊN') 
+      AND FindRouteCode IN ('MÃ_CÔNG_ĐOẠN_SAU_1', 'MÃ_CÔNG_ĐOẠN_SAU_2');
+
+    -- 2. Xóa lịch sử routing các công đoạn chốt thừa
+    DELETE FROM STB_ProdRouteHist 
+    WHERE ControlNo = (SELECT ControlNo FROM STB_SetInfo WHERE Barcode = 'MÃ_BARCODE_HƯNG_YÊN') 
+      AND RouteCode IN ('MÃ_CÔNG_ĐOẠN_SAU_1', 'MÃ_CÔNG_ĐOẠN_SAU_2');
+
+    -- 3. Reset cờ CompleteRoute công đoạn cần làm lại về NULL
+    UPDATE STB_ProdRouteHist 
+    SET CompleteRoute = NULL 
+    WHERE ControlNo = (SELECT ControlNo FROM STB_SetInfo WHERE Barcode = 'MÃ_BARCODE_HƯNG_YÊN') 
+      AND RouteCode = 'MÃ_CÔNG_ĐOẠN_HIỆN_TẠI';
+
+    -- 4. Xóa thông tin đóng gói tạm nếu có trong STB_DividePackaging & STB_SavePackingTime_VVT
+    DELETE FROM STB_DividePackaging WHERE LotNo = 'MÃ_BARCODE_HƯNG_YÊN';
+    DELETE FROM STB_SavePackingTime_VVT WHERE LotNo = 'MÃ_BARCODE_HƯNG_YÊN';
+    ROLLBACK TRANSACTION; -- Đổi thành COMMIT TRANSACTION khi chạy thực tế
+    ```
+
 ---
 
 ### [HY540] — Process Material Scan HY (Quét NVL thô Assy Card Hưng Yên)

@@ -115,3 +115,53 @@ Related Files:
   COMMIT TRANSACTION;
   ```
 
+### [B530]/[HY530]/[B523] — 📍 ID_23 Hủy kết quả sản xuất Lot để gộp Lot & in lại tem
+* **Ngày sửa:** `2026-08-08`
+* **Màn hình liên quan (TCode):** `[B530]/[HY530] - Nhập sản xuất & [B523]/[HY620] - Đóng gói in tem`
+* **Triệu chứng lỗi:** Lot sản xuất (`SP260807-003`, `SP260807-006`) đã lỡ chốt kết quả công đoạn sau (`VE08`, `VE09`, `VE10`), khiến công nhân không gộp được Lot hoặc không in lại được tem dán hộp tại B523 / HY620.
+* **Nguyên nhân gốc (Root Cause):** Cờ `CompleteRoute` và bản ghi sản lượng tại `STB_ProdRouteHist` của các công đoạn sau đã bị chốt ➔ Ứng dụng B523 kiểm tra thấy cờ `IsHasNextProd = 1` nên chặn không cho sửa/gộp Lot.
+* **Phương án sửa lỗi (SQL Rollback Template):**
+  ```sql
+  BEGIN TRANSACTION;
+  -- 1. Xóa bản ghi lỗi/phế các công đoạn chốt thừa
+  DELETE FROM STB_DefectRepairInfo WHERE ControlNo = (SELECT ControlNo FROM STB_SetInfo WHERE Barcode = 'SP260807-006') AND FindRouteCode IN ('VE08', 'VE09', 'VE10');
+  -- 2. Xóa lịch sử routing các công đoạn chốt thừa trong STB_ProdRouteHist
+  DELETE FROM STB_ProdRouteHist WHERE ControlNo = (SELECT ControlNo FROM STB_SetInfo WHERE Barcode = 'SP260807-006') AND RouteCode IN ('VE08', 'VE09', 'VE10');
+  -- 3. Reset cờ CompleteRoute của công đoạn cần làm lại về NULL
+  UPDATE STB_ProdRouteHist SET CompleteRoute = NULL WHERE ControlNo = (SELECT ControlNo FROM STB_SetInfo WHERE Barcode = 'SP260807-006') AND RouteCode = 'VE07';
+  -- 4. Xóa thông tin đóng gói tạm nếu có trong STB_DividePackaging & STB_SavePackingTime_VVT
+  DELETE FROM STB_DividePackaging WHERE LotNo = 'SP260807-006' OR ControlNo = (SELECT ControlNo FROM STB_SetInfo WHERE Barcode = 'SP260807-006');
+  DELETE FROM STB_SavePackingTime_VVT WHERE LotNo = 'SP260807-006';
+  COMMIT TRANSACTION;
+  ```
+
+### [B540]/[B530] — 📍 ID_24 Không hoàn thành được công đoạn ngoại quan / gập uốn chân V-27
+* **Ngày sửa:** `2026-08-07`
+* **Màn hình liên quan (TCode):** `[B540] - Quét NVL & [B530] - Chốt sản lượng (V-27 Bending/Tapping)`
+* **Triệu chứng lỗi:** Barcode `VVQP263R010701` không thể chốt hoàn thành công đoạn ngoại quan / gập uốn chân `V-27` tại B530.
+* **Nguyên nhân gốc (Root Cause):** Chưa nhập đủ 4 cột thuộc tính màu bắt buộc sấy Oven tại `B540` (`STB_RawMaterialInputHist`), hoặc chưa hoàn thành công đoạn trước (`V-26`), khiến autocheck Gate 3 & Gate 4 chặn chốt sản lượng.
+* **Phương án sửa lỗi (SQL Action):**
+  ```sql
+  BEGIN TRANSACTION;
+  -- Cập nhật bổ sung thuộc tính sấy Oven cho bản ghi NVL B540
+  UPDATE STB_RawMaterialInputHist 
+  SET RMIExtText01 = '120C', RMIExtText02 = '4H', RMIExtText03 = 'OVEN_01', RMIExtText04 = 'LOT_OVEN_01'
+  WHERE ControlNo = (SELECT ControlNo FROM STB_SetInfo WHERE Barcode = 'VVQP263R010701');
+  COMMIT TRANSACTION;
+  ```
+
+### [B351] — 📍 ID_25 Lỗi không chuyển đổi được LotNo tại màn hình B351
+* **Ngày sửa:** `2026-08-07`
+* **Màn hình liên quan (TCode):** `[B351] - Chuyển đổi Lot (Change Material SetInfo)`
+* **Triệu chứng lỗi:** Người dùng chọn Lot nguồn tại Lưới 1 nhưng Lưới 2 báo lỗi không cho chuyển đổi sang Lot đích.
+* **Nguyên nhân gốc (Root Cause):** SP `usp_GetDayProdPlanForChangeMaterial` yêu cầu `TargetDayPlanNo` phải thuộc Kế hoạch ngày đã fixed (`IsFixed = 1`) và Lot nguồn chưa bị khóa cờ đóng gói (`IsPacking = 0`).
+* **Phương án sửa lỗi (SQL Action):**
+  ```sql
+  BEGIN TRANSACTION;
+  -- Phê duyệt kế hoạch ngày đích và mở khóa cờ đóng gói cho Lot nguồn
+  UPDATE STB_DayProdPlan SET IsFixed = 1 WHERE DayProdPlanNo = 'MÃ_KH_ĐÍCH';
+  UPDATE STB_SetInfo SET IsPacking = 0 WHERE Barcode = 'MÃ_LOT_NGUỒN';
+  COMMIT TRANSACTION;
+  ```
+
+
