@@ -1130,7 +1130,9 @@ BEGIN
 				left outer join STB_SetInfo si WITH(NOLOCK) on t1.LotNo=si.Barcode
 	    WHERE 
 		-- Tạm đối dứng Audit ngày 27/11/2025
-		-- [CODE CU BAO LUU]: Flag = 1  --and DATEDIFF(day, ISNULL(si.InputJobDate, GETDATE()-366), GETDATE()) <= 365
+		/* [CODE CU BAO LUU]:
+		Flag = 1  --and DATEDIFF(day, ISNULL(si.InputJobDate, GETDATE()-366), GETDATE()) <= 365
+		*/
 		-- vanduc 2026-08-12: Toi uu toc do truy van tu 169s -> 7.7s bang cach day loc ngay vao WHERE
 		Flag = 1 AND (@FromDate IS NULL OR CONVERT(DATE, T1.CreateDate) >= @FromDate) AND (@ToDate IS NULL OR CONVERT(DATE, T1.CreateDate) <= @ToDate)
 				
@@ -1842,7 +1844,9 @@ BEGIN
 				STB_VN_FINISHGOODS T1 WITH(NOLOCK)
 				left outer join STB_SetInfo si WITH(NOLOCK) on t1.LotNo=si.Barcode
 	    WHERE 
-		-- [CODE CU BAO LUU]: Flag = 1 AND DateExport IS NOT NULL --and DATEDIFF(day, ISNULL(si.InputJobDate, GETDATE()-366), GETDATE()) <= 365
+		/* [CODE CU BAO LUU]:
+		Flag = 1 AND DateExport IS NOT NULL --and DATEDIFF(day, ISNULL(si.InputJobDate, GETDATE()-366), GETDATE()) <= 365
+		*/
 		-- vanduc 2026-08-12: Toi uu toc do truy van xuat kho bang cach day loc ngay vao WHERE
 		Flag = 1 AND DateExport IS NOT NULL AND (@FromDateExp IS NULL OR CONVERT(DATE, T1.DateExport) >= @FromDateExp) AND (@ToDateExp IS NULL OR CONVERT(DATE, T1.DateExport) <= @ToDateExp)
 						
@@ -2557,7 +2561,9 @@ BEGIN
 				STB_VN_FINISHGOODS T1 WITH(NOLOCK)
 				left outer join STB_SetInfo si WITH(NOLOCK) on t1.LotNo=si.Barcode
 	    WHERE 
-		-- [CODE CU BAO LUU]: Flag = 1  --and DATEDIFF(day, ISNULL(si.InputJobDate, GETDATE()-366), GETDATE()) <= 365
+		/* [CODE CU BAO LUU]:
+		Flag = 1  --and DATEDIFF(day, ISNULL(si.InputJobDate, GETDATE()-366), GETDATE()) <= 365
+		*/
 		-- vanduc 2026-08-12: Toi uu loc ngay cho truong hop ELSE
 		Flag = 1 AND (@FromDate IS NULL OR CONVERT(DATE, T1.CreateDate) >= @FromDate) AND (@ToDate IS NULL OR CONVERT(DATE, T1.CreateDate) <= @ToDate)
 						
