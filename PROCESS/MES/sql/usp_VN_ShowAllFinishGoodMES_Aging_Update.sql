@@ -1,15 +1,16 @@
-﻿-- ==============================================================================
+-- ==============================================================================
 -- STORED PROCEDURE: usp_VN_ShowAllFinishGoodMES
 -- MÀN HÌNH: [FG01] Thành phẩm Bắc Ninh
--- TÁC GIẢ TỐI ƯU & CẬP NHẬT: vanduc (2026-08-12)
+-- LỊCH SỬ THAY ĐỔI: vanduc edit 2026-08-14
+-- ĐỐI CHIẾU BAN ĐẦU: [sql/procedures/usp_VN_ShowAllFinishGoodMES_ORIGINAL.sql](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/sql/procedures/usp_VN_ShowAllFinishGoodMES_ORIGINAL.sql)
 --
 -- TÓM TẮT THAY ĐỔI:
---   1. vanduc 2026-08-12: Bổ sung cột AgingDays (Số ngày tồn kho = DATEDIFF(DAY, CreateDate, GETDATE()))
+--   1. vanduc edit 2026-08-14: Bổ sung cột AgingDays (Số ngày tồn kho = DATEDIFF(DAY, CreateDate, GETDATE()))
 --      phục vụ tính năng đổi màu cảnh báo tuổi hàng trên giao diện NAIS Client (FG01).
---   2. vanduc 2026-08-12: Tối ưu tốc độ truy vấn từ 169 giây xuống ~7.7 giây (Nhanh gấp 22 lần)
+--   2. vanduc edit 2026-08-14: Tối ưu tốc độ truy vấn từ 169 giây xuống ~7.7 giây (Nhanh gấp 22 lần)
 --      bằng cách đẩy điều kiện lọc ngày (@FromDate, @ToDate) vào mệnh đề WHERE ban đầu.
---   3. vanduc 2026-08-12: Bảo tồn 100% code cũ (hơn 2.500 dòng), bảng giá Prices và các cột cũ.
---      Tất cả lệnh cũ đều được comment bảo lưu (-- [CODE CŨ]), KHÔNG XÓA CODE CŨ.
+--   3. vanduc edit 2026-08-14: Bảo tồn 100% code cũ (hơn 2.500 dòng), bảng giá Prices và các cột cũ.
+--      Tất cả lệnh cũ bị sửa đều bọc trong /* vanduc edit 2026-08-14 [CODE CŨ BẢO LƯU]: ... */.
 -- ==============================================================================
 
 USE [SmartFactoryV2]
@@ -1120,21 +1121,20 @@ BEGIN
 			
 	,(select count(*) from dbo.fn_VVT_PartnoModel()   where partno=T1.partno and modelname=T1.MaterialName) as CheckPartno
 	,case when DATEDIFF(day,isnull(si.InputJobDate,getdate()-366),getdate()) > 365 then 1 else 0 end BackLog_Inventory
-	-- ==============================================================================
-	-- vanduc 2026-08-12: Cot AgingDays tinh so ngay ton kho phuc vu doi mau canh bao man FG01
-	-- ==============================================================================
+	-- START: vanduc edit 2026-08-14 - Bổ sung cột AgingDays phục vụ tô màu cảnh báo tuổi hàng trên FG01
 	, DATEDIFF(DAY, CONVERT(DATE, T1.CreateDate), GETDATE()) AS AgingDays
+	-- END: vanduc edit 2026-08-14 - Bổ sung cột AgingDays
 				INTO #T1
 		FROM
 				STB_VN_FINISHGOODS T1 WITH(NOLOCK)
 				left outer join STB_SetInfo si WITH(NOLOCK) on t1.LotNo=si.Barcode
 	    WHERE 
-		-- Tạm đối dứng Audit ngày 27/11/2025
-		/* [CODE CU BAO LUU]:
+		/* vanduc edit 2026-08-14 [CODE CŨ BẢO LƯU]:
 		Flag = 1  --and DATEDIFF(day, ISNULL(si.InputJobDate, GETDATE()-366), GETDATE()) <= 365
 		*/
-		-- vanduc 2026-08-12: Toi uu toc do truy van tu 169s -> 7.7s bang cach day loc ngay vao WHERE
+		-- START: vanduc edit 2026-08-14 - Tối ưu tốc độ truy vấn từ 169s -> 7.7s bằng cách đẩy lọc ngày vào WHERE
 		Flag = 1 AND (@FromDate IS NULL OR CONVERT(DATE, T1.CreateDate) >= @FromDate) AND (@ToDate IS NULL OR CONVERT(DATE, T1.CreateDate) <= @ToDate)
+		-- END: vanduc edit 2026-08-14 - Tối ưu tốc độ truy vấn
 				
 							select
 									*
@@ -1835,20 +1835,20 @@ BEGIN
 
 	,(select count(*) from dbo.fn_VVT_PartnoModel()   where partno=T1.partno and modelname=T1.MaterialName) as CheckPartno	
 	,case when DATEDIFF(day,isnull(si.InputJobDate,getdate()-366),getdate()) > 365 then 1 else 0 end BackLog_Inventory
-	-- ==============================================================================
-	-- vanduc 2026-08-12: Cot AgingDays tinh so ngay ton kho tinh den ngay xuat hang
-	-- ==============================================================================
+	-- START: vanduc edit 2026-08-14 - Bổ sung cột AgingDays tính số ngày tồn kho tính đến ngày xuất hàng
 	, DATEDIFF(DAY, CONVERT(DATE, T1.CreateDate), CONVERT(DATE, T1.DateExport)) AS AgingDays
+	-- END: vanduc edit 2026-08-14 - Bổ sung cột AgingDays
 				INTO #T2
 		FROM
 				STB_VN_FINISHGOODS T1 WITH(NOLOCK)
 				left outer join STB_SetInfo si WITH(NOLOCK) on t1.LotNo=si.Barcode
 	    WHERE 
-		/* [CODE CU BAO LUU]:
+		/* vanduc edit 2026-08-14 [CODE CŨ BẢO LƯU GỐC TỪ usp_VN_ShowAllFinishGoodMES_ORIGINAL.sql]:
 		Flag = 1 AND DateExport IS NOT NULL --and DATEDIFF(day, ISNULL(si.InputJobDate, GETDATE()-366), GETDATE()) <= 365
 		*/
-		-- vanduc 2026-08-12: Toi uu toc do truy van xuat kho bang cach day loc ngay vao WHERE
+		-- START: vanduc edit 2026-08-14 - Tối ưu tốc độ truy vấn xuất kho bằng cách đẩy lọc ngày xuất vào WHERE
 		Flag = 1 AND DateExport IS NOT NULL AND (@FromDateExp IS NULL OR CONVERT(DATE, T1.DateExport) >= @FromDateExp) AND (@ToDateExp IS NULL OR CONVERT(DATE, T1.DateExport) <= @ToDateExp)
+		-- END: vanduc edit 2026-08-14 - Tối ưu tốc độ truy vấn xuất kho
 						
 
 							select
@@ -2553,19 +2553,19 @@ BEGIN
 	
 	,(select count(*) from dbo.fn_VVT_PartnoModel()   where partno=T1.partno and modelname=T1.MaterialName) as CheckPartno
 	,case when DATEDIFF(day,isnull(si.InputJobDate,getdate()-366),getdate()) > 365 then 1 else 0 end BackLog_Inventory 
-	-- ==============================================================================
-	-- vanduc 2026-08-12: Cot AgingDays cho truong hop ELSE
-	-- ==============================================================================
+	-- START: vanduc edit 2026-08-14 - Bổ sung cột AgingDays cho trường hợp ELSE
 	, DATEDIFF(DAY, CONVERT(DATE, T1.CreateDate), GETDATE()) AS AgingDays
+	-- END: vanduc edit 2026-08-14 - Bổ sung cột AgingDays
 		FROM
 				STB_VN_FINISHGOODS T1 WITH(NOLOCK)
 				left outer join STB_SetInfo si WITH(NOLOCK) on t1.LotNo=si.Barcode
 	    WHERE 
-		/* [CODE CU BAO LUU]:
+		/* vanduc edit 2026-08-14 [CODE CŨ BẢO LƯU GỐC TỪ usp_VN_ShowAllFinishGoodMES_ORIGINAL.sql]:
 		Flag = 1  --and DATEDIFF(day, ISNULL(si.InputJobDate, GETDATE()-366), GETDATE()) <= 365
 		*/
-		-- vanduc 2026-08-12: Toi uu loc ngay cho truong hop ELSE
+		-- START: vanduc edit 2026-08-14 - Tối ưu lọc ngày cho trường hợp ELSE bằng cách đẩy lọc vào WHERE
 		Flag = 1 AND (@FromDate IS NULL OR CONVERT(DATE, T1.CreateDate) >= @FromDate) AND (@ToDate IS NULL OR CONVERT(DATE, T1.CreateDate) <= @ToDate)
+		-- END: vanduc edit 2026-08-14 - Tối ưu lọc ngày cho trường hợp ELSE
 						
 					end
 		
