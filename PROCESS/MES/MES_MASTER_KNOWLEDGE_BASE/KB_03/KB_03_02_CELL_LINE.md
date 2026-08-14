@@ -137,15 +137,15 @@ WHERE Barcode = 'VV...' AND RouteCode = 'V-23'
 
 ```sql
 -- ====================================================================
--- SCRIPT KHẨN CẤP: Rollback / Hủy sản lượng công đoạn B530 (ĐỘNG 100%)
--- (User chỉ cần nhập @Barcode và @RouteCode cần hủy)
+-- SCRIPT KHẨN CẤP: Rollback / Hủy sản lượng công đoạn B530 
+-- (Đồng bộ 100% theo Gold Standard quy trình tại KB_03_01_OVERVIEW.md)
 -- ====================================================================
 BEGIN TRANSACTION;
 BEGIN TRY
     DECLARE @Barcode NVARCHAR(50) = 'VVQM153R025606'; -- Mã Barcode / LotNo / DayPlanNo user cung cấp
-    DECLARE @RouteCode NVARCHAR(20) = 'V-25';         -- Mã công đoạn cần hủy (VD: V-25, VE-07)
+    DECLARE @RouteCode NVARCHAR(20) = 'V-25';         -- Mã công đoạn cần hủy (VD: V-25, VE08)
 
-    -- 1. Tự động truy vết tất cả ControlNo liên quan từ Barcode / LotNo / DayPlanNo
+    -- Tự động tìm danh sách ControlNo liên quan
     DECLARE @ControlNos TABLE (ControlNo NVARCHAR(50));
     INSERT INTO @ControlNos (ControlNo)
     SELECT DISTINCT ControlNo 
@@ -155,12 +155,18 @@ BEGIN TRY
        OR DayPlanNo = @Barcode 
        OR DayPlanNo LIKE '%' + @Barcode + '%';
 
-    -- 2. Xóa lỗi đã ghi nhận ở công đoạn bị hủy (@RouteCode) nếu có
+    -- 1. Xóa các bản ghi lỗi (NG) nhập nhầm ở công đoạn quét nhầm (⚠️ Cột là FindRouteCode)
     DELETE FROM STB_DefectRepairInfo 
     WHERE ControlNo IN (SELECT ControlNo FROM @ControlNos) 
       AND FindRouteCode = @RouteCode;
 
-    -- 3. TỰ ĐỘNG TÌM VÀ RESET CỜ CompleteRoute = NULL CHO CHÍNH XÁC CÔNG ĐOẠN LIỀN TRƯỚC
+    -- 2. Xóa Routing công đoạn quét nhầm trong STB_ProdRouteHist (⚠️ Cột là RouteCode)
+    DELETE FROM STB_ProdRouteHist 
+    WHERE ControlNo IN (SELECT ControlNo FROM @ControlNos) 
+      AND RouteCode = @RouteCode;
+
+    -- 3. Reset cờ hoàn thành công đoạn trước đó: Set CompleteRoute = NULL để mở lại chốt
+    -- (Tự động xác định công đoạn liền trước hoặc chỉ định theo RouteCode công đoạn trước)
     UPDATE h
     SET h.CompleteRoute = NULL
     FROM STB_ProdRouteHist h
@@ -175,17 +181,27 @@ BEGIN TRY
         GROUP BY h_p.ControlNo
     ) m ON h.ProdRouteHistNo = m.MaxPrevHistNo;
 
-    -- 4. Xóa bản ghi lịch sử sản xuất của công đoạn bị hủy (@RouteCode)
-    DELETE FROM STB_ProdRouteHist 
-    WHERE ControlNo IN (SELECT ControlNo FROM @ControlNos) 
-      AND RouteCode = @RouteCode;
+    -- 4. ⚠️ QUY TẮC CẬP NHẬT BẢNG MASTER STB_SetInfo (Theo KB_03_01_OVERVIEW.md):
+    -- Tự động tính lại tổng DefectQty và cờ IsDefect thực tế từ STB_DefectRepairInfo
+    UPDATE s
+    SET s.DefectQty = ISNULL((SELECT SUM(DefectQty) FROM STB_DefectRepairInfo WHERE ControlNo = s.ControlNo AND IsDelete = '0'), 0),
+        s.IsDefect  = CASE WHEN ISNULL((SELECT SUM(DefectQty) FROM STB_DefectRepairInfo WHERE ControlNo = s.ControlNo AND IsDelete = '0'), 0) > 0 THEN 1 ELSE 0 END
+    FROM STB_SetInfo s
+    WHERE s.ControlNo IN (SELECT ControlNo FROM @ControlNos);
 
-    COMMIT TRANSACTION;
-    PRINT 'SUCCESS: Rollback cong doan thanh cong!';
+    -- 5. Kiểm tra lại: Lot phải khôi phục về trạng thái công đoạn trước với CompleteRoute = NULL
+    SELECT ControlNo, RouteCode, CompleteRoute, JobDate 
+    FROM STB_ProdRouteHist 
+    WHERE ControlNo IN (SELECT ControlNo FROM @ControlNos)
+    ORDER BY ControlNo, ProdRouteHistNo ASC;
+
+    -- COMMIT TRANSACTION; -- Chạy dòng này khi thấy kết quả đã đúng
+    ROLLBACK TRANSACTION; -- Mặc định ROLLBACK để kiểm tra an toàn trước
+    PRINT N'SUCCESS: Rollback công đoạn B530 thành công!';
 END TRY
 BEGIN CATCH
     IF @@TRANCOUNT > 0 ROLLBACK TRANSACTION;
-    PRINT 'ERROR: ' + ERROR_MESSAGE();
+    PRINT N'LỖI: ' + ERROR_MESSAGE();
 END CATCH;
 ```
 
