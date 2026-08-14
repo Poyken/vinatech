@@ -1,4 +1,4 @@
-﻿<!--
+<!--
 AI-READY METADATA
 Purpose: Quản lý kho WMS nguyên vật liệu & thành phẩm, quy trình nhập F330, xuất F430, kiểm kê, FIFO, Hạn dùng, Holding & Hà Nam WMS
 Scope: WMS Warehouse Management Core
@@ -1010,17 +1010,32 @@ WHERE CreateDate >= DATEADD(DAY, -30, GETDATE())
 ORDER BY CreateDate DESC
 ```
 
-**Sửa ngày màn FG00:**
-```sql
--- Xem trước
-SELECT IDCODE, CreateDate, DateExport FROM STB_VN_FINISHGOODS_BG
-WHERE IDCODE = 'FGVN_BG20250211054041195484931'
+**Quy trình chuẩn điều chỉnh / lùi ngày xuất kho (DateExport / CreateDate) các Nhà Máy:**
 
--- Sửa cả 2 cột ngày
+```sql
+-- 1. Bắc Giang (Bảng STB_VN_FINISHGOODS_BG) - Màn FG00/FG02: Sửa đồng bộ CreateDate & DateExport
+BEGIN TRAN;
+SELECT IDCODE, CreateDate, DateExport FROM STB_VN_FINISHGOODS_BG WHERE IDCODE IN ('MÃ_LOTNO');
 UPDATE STB_VN_FINISHGOODS_BG
-SET CreateDate = CAST('2025-01-11' AS DATE),
-    DateExport = CAST('2025-01-11' AS DATE)
-WHERE IDCODE = 'FGVN_BG20250211054041195484931'
+SET CreateDate = CAST('2026-03-31' AS DATE), DateExport = CAST('2026-03-31' AS DATE)
+WHERE IDCODE IN ('MÃ_LOTNO');
+COMMIT TRAN; -- Hoặc ROLLBACK TRAN;
+
+-- 2. Hà Nam (Bảng STB_VN_FINISHGOODS_HN_Export & FinishGoodMESInstock_HN) - Màn HN551/HN866:
+BEGIN TRAN;
+UPDATE STB_VN_FINISHGOODS_HN_Export SET CreateDateTime = '2026-03-31 08:00:00', StatusExport = 1 WHERE PackingID IN ('MÃ_LOTNO');
+UPDATE FinishGoodMESInstock_HN SET QtyOutput = Quantity WHERE PackingID IN ('MÃ_LOTNO');
+COMMIT TRAN;
+
+-- 3. Hưng Yên (Bảng STB_VN_FINISHGOODS_HY) - Màn HY01/HYFG01:
+BEGIN TRAN;
+UPDATE STB_VN_FINISHGOODS_HY SET CreateDateTime = '2026-03-31 08:00:00' WHERE Barcode IN ('MÃ_LOTNO');
+COMMIT TRAN;
+
+-- 4. Kho NVL (Bảng STB_MaterialWarehouseInOutHist) - Màn F430:
+BEGIN TRAN;
+UPDATE STB_MaterialWarehouseInOutHist SET CreateDateTime = '2026-03-31 08:00:00' WHERE LotID IN ('MÃ_LOTNO') AND TargetMaterialWarehouseCode LIKE '%ROUTE%';
+COMMIT TRAN;
 ```
 
 **So sánh HN00 vs FG00:**

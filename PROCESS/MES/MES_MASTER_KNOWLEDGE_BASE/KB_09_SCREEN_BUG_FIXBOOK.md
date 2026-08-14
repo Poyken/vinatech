@@ -516,11 +516,12 @@ COMMIT TRANSACTION;
 > 🔗 Chi tiết: [KB_05_02_SCREEN_BUGS_QC.md](file:///c:/Users/User Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_02_SCREEN_BUGS_QC.md#L820) (§ Kịch bản sự cố khẩn cấp 3: Lỗi nhập phế HNC321)
 
 ### [HN551]
-**Tên:** FG Export Hà Nam
+**Tên:** FG Export (Xuất kho Thành Phẩm Hà Nam & Bắc Giang)
 
 | # | Triệu chứng | Nguyên nhân | Fix |
 |---|---|---|---|
 | 1 | Xuất kho TP không hiện data | SP filter WorkCenterCode không match HN | ALTER SP thêm WorkCenterCode HN |
+| 2 | Yêu cầu điều chỉnh / lùi ngày xuất kho thành phẩm (DateExport / CreateDate) về tháng trước (VD: Tháng 03/2026) | Ngày xuất kho thực tế bị quét lệch tháng so với kế toán/đối soát | Sửa cả 2 cột `CreateDate` & `DateExport` trên `STB_VN_FINISHGOODS_BG` (Bắc Giang) hoặc `STB_VN_FINISHGOODS_HN_Export` + `FinishGoodMESInstock_HN` (Hà Nam) bằng script bọc `BEGIN TRAN...COMMIT TRAN`. Chi tiết: [KB_02_01_WMS_CORE.md §8](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_02/KB_02_01_WMS_CORE.md#8-fg02--kho-th%C3%A0nh-ph%E1%BA%A9m-b%E1%BA%AFc-giang-fg00) |
 
 ---
 

@@ -1,0 +1,36 @@
+NAME,DEPARTMENT,DATE GET ISSUE,NAME ISSUE,THE SOLVE,TYPE ISSUE,DATE SOLVE ISSUE,SOLVE ISSUE BY,STATUS,REMARK
+Nguyen Van Duc,EA Team,10/8/2026,Vendor Supervision & Network Deployment,Giám sát vendor thi công hạ tầng mạng cáp và nghiệm thu tuyến cáp kết nối xưởng sản xuất.,Task,10/8/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,10/8/2026,Network Cable Deployment — Electrode Department,Kéo dây mạng LAN mới và đảm bảo kết nối mạng thông suốt cho bộ phận Điện cực.,Task,10/8/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,10/8/2026,Network Connection Setup — 2 Production Kiosks,Tiến hành kéo cáp và đấu nối mạng LAN cho 2 vị trí Kios thông tin bộ phận Sản xuất.,Task,10/8/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,10/8/2026,Printer Installation & Network Driver Setup,Cài đặt máy in mạng LAN; chia sẻ máy in và cài driver cho các máy tính người dùng.,Support,10/8/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,10/8/2026,Damaged IT Equipment Collection,Thu hồi các thiết bị IT cũ; hỏng hóc từ các bộ phận đưa về kho phân loại quản lý.,Support,10/8/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,10/8/2026,FortiClient Setup — ECM System Access,Hỗ trợ cài đặt và cấu hình phần mềm FortiClient VPN cho người dùng kết nối hệ thống ECM.,Support,10/8/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,10/8/2026,MES System Support — Label & Printer Alignment,Hỗ trợ người dùng căn chỉnh máy in tem và định dạng mã vạch barcode trên hệ thống MES.,Support,10/8/2026,Nguyen Van Duc,Done,MES
+Nguyen Van Duc,EA Team,11/8/2026,Network Cable Deployment — Outside Workshop Production,Kéo dây mạng LAN và đảm bảo kết nối mạng cho khu vực bộ phận Sản xuất ngoài xưởng.,Task,11/8/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,11/8/2026,Network Connection Setup — 1 Electrode Kiosk,Kéo dây mạng LAN và thiết lập kết nối mạng hoàn chỉnh cho 1 Kios bộ phận Điện cực.,Task,11/8/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,11/8/2026,IT Hardware Handover & Configuration,Kiểm tra phần cứng; cài phần mềm và bàn giao thiết bị IT (máy tính; màn hình) cho user.,Task,11/8/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,11/8/2026,Network Outlet Testing & Readiness Verification,Kiểm tra và đo kiểm các vị trí outlet mạng; đảm bảo đường truyền sẵn sàng cho các bộ phận.,Support,11/8/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,11/8/2026,Printer Driver Setup & Connection Support,Hỗ trợ kết nối máy in văn phòng; cài đặt driver và xử lý sự cố lệnh in cho người dùng.,Support,11/8/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,11/8/2026,Password Reset & Account Maintenance,Hỗ trợ khôi phục mật khẩu tài khoản Windows; Email và phân quyền hệ thống cho user.,Support,11/8/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,11/8/2026,MES User Support & Operation Guidance,Hỗ trợ người dùng kiểm tra lỗi hiển thị và hướng dẫn nghiệp vụ nhập liệu trên hệ thống MES.,Support,11/8/2026,Nguyen Van Duc,Done,MES
+Nguyen Van Duc,EA Team,12/8/2026,Network Cable Deployment — 3 Aging Machines (Auto Dept),Tiến hành kéo cáp mạng LAN và thiết lập kết nối mạng cho 3 máy Aging bộ phận Auto.,Task,12/8/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,12/8/2026,Vendor Supervision — Network Trunking & Wiring,Giám sát vendor thi công hệ thống máng cáp và đấu nối tủ rack mạng tại khu vực sản xuất.,Task,12/8/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,12/8/2026,Network Outlets Activation & Labeling,Kiểm tra; dán nhãn và kích hoạt tín hiệu các cổng outlet mạng sẵn sàng cho sử dụng.,Support,12/8/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,12/8/2026,IT Equipment Allocation & User Handover,Cấp phát và bàn giao thiết bị IT (bàn phím; chuột; máy tính) cho nhân viên các bộ phận.,Support,12/8/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,12/8/2026,FortiClient Setup — Remote Workstation Access,Cấu hình FortiClient VPN cho người dùng truy cập máy trạm làm việc từ xa.,Support,12/8/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,12/8/2026,Printer Installation & Troubleshooting,Cài đặt kết nối máy in mạng LAN và khắc phục lỗi không in được từ máy tính user.,Support,12/8/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,12/8/2026,MES Data Mistake Clearance Support,Hỗ trợ người dùng xác minh và xử lý hủy/xóa các bản ghi nhập sai trên MES theo quy trình.,Support,12/8/2026,Nguyen Van Duc,Done,MES
+Nguyen Van Duc,EA Team,13/8/2026,Network Infrastructure Review — Outlets & APs,Rà soát hệ thống outlet mạng và đo kiểm độ ổn định tín hiệu Wifi tại khu vực xưởng.,Task,13/8/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,13/8/2026,IT Asset Relabeling & Management,Kiểm tra; cập nhật thông tin và dán tem quản lý thiết bị IT bàn giao cho người dùng.,Support,13/8/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,13/8/2026,Damaged IT Equipment Collection & Audit,Thu hồi thiết bị IT hỏng hóc từ phòng ban; kiểm kê và cập nhật trạng thái kho IT.,Support,13/8/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,13/8/2026,Printer Setup & Driver Installation,Hỗ trợ kết nối máy in mạng và cài driver máy in cho các máy tính làm việc mới.,Support,13/8/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,13/8/2026,ECM User Permission & Access Support,Hỗ trợ phân quyền tài khoản và xử lý sự cố truy cập thư mục tài liệu trên ECM.,Support,13/8/2026,Nguyen Van Duc,Done,ECM
+Nguyen Van Duc,EA Team,13/8/2026,Groupware & ERP Account Support,Hỗ trợ khởi tạo và cập nhật thông tin tài khoản người dùng trên hệ thống Groupware/ERP.,Support,13/8/2026,Nguyen Van Duc,Done,GW
+Nguyen Van Duc,EA Team,13/8/2026,MES Printer Barcode Calibration,Kiểm tra; hiệu chuẩn máy in tem mã vạch MES tại xưởng sản xuất và điện cực.,Support,13/8/2026,Nguyen Van Duc,Done,MES
+Nguyen Van Duc,EA Team,14/8/2026,Weekly IT Network & Infrastructure Audit,Đo kiểm tổng thể hạ tầng mạng LAN/Wifi đảm bảo kết nối ổn định cho toàn nhà máy.,Task,14/8/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,14/8/2026,Final Outlet Readiness Inspection,Rà soát lần cuối toàn bộ các outlet mạng đã kéo; đảm bảo sẵn sàng 100% cho vận hành.,Task,14/8/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,14/8/2026,IT Hardware Handover & User Support,Bàn giao hoàn tất các thiết bị IT đã cấu hình và hướng dẫn quy định sử dụng cho user.,Task,14/8/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,14/8/2026,Printer Setup & Connection Support,Hỗ trợ cài đặt driver máy in và chia sẻ máy in qua mạng LAN cho các bộ phận.,Support,14/8/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,14/8/2026,Damaged IT Equipment Collection,Thu hồi; phân loại thiết bị IT hỏng hóc và kiểm kê kho thiết bị công nghệ thông tin.,Support,14/8/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,14/8/2026,FortiClient Setup & Remote Connection Support,Cấu hình VPN FortiClient cho người dùng làm việc từ xa và truy cập tài nguyên nội bộ.,Support,14/8/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,14/8/2026,Weekly IT System Review & Maintenance,Kiểm tra tổng thể; dọn dẹp hệ thống máy tính và tối ưu hóa mạng LAN/Wifi nhà máy cuối tuần.,Task,14/8/2026,Nguyen Van Duc,Done,HW
