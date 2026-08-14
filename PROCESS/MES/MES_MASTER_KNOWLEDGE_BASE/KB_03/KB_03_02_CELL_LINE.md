@@ -138,30 +138,42 @@ WHERE Barcode = 'VV...' AND RouteCode = 'V-23'
 ```sql
 -- ====================================================================
 -- SCRIPT KHẨN CẤP: Rollback / Hủy sản lượng công đoạn B530
+-- (Chỉ định rõ công đoạn bị hủy @RouteCode và công đoạn trước @PrevRouteCode)
 -- ====================================================================
 BEGIN TRANSACTION;
 BEGIN TRY
-    DECLARE @Barcode NVARCHAR(50) = 'VVQM153R025606';
-    DECLARE @RouteCode NVARCHAR(20) = 'V-25'; -- Route cần hủy
-    DECLARE @ControlNo NVARCHAR(50) = (SELECT ControlNo FROM STB_SetInfo WHERE Barcode = @Barcode);
+    DECLARE @Barcode NVARCHAR(50) = 'VVQM153R025606'; -- Mã Barcode / LotNo / DayPlanNo user cung cấp
+    DECLARE @RouteCode NVARCHAR(20) = 'VE-07';        -- Công đoạn bị hủy (VD: VE-07, V-25)
+    DECLARE @PrevRouteCode NVARCHAR(20) = 'VE-06';    -- Công đoạn liền trước cần reset cờ (VD: VE-06, V-24)
 
-    -- 1. Xóa lỗi đã ghi nhận ở công đoạn sau nếu có
+    -- Tự động truy vết tất cả ControlNo liên quan từ Barcode / LotNo / DayPlanNo
+    DECLARE @ControlNos TABLE (ControlNo NVARCHAR(50));
+    INSERT INTO @ControlNos (ControlNo)
+    SELECT DISTINCT ControlNo 
+    FROM STB_SetInfo WITH (NOLOCK)
+    WHERE Barcode = @Barcode 
+       OR ControlNo = @Barcode 
+       OR DayPlanNo = @Barcode 
+       OR DayPlanNo LIKE '%' + @Barcode + '%';
+
+    -- 1. Xóa lỗi đã ghi nhận ở công đoạn bị hủy (VE-07) nếu có
     DELETE FROM STB_DefectRepairInfo 
-    WHERE ControlNo = @ControlNo AND FindRouteCode = @RouteCode;
+    WHERE ControlNo IN (SELECT ControlNo FROM @ControlNos) 
+      AND FindRouteCode = @RouteCode;
 
-    -- 2. Xóa bản ghi lịch sử sản xuất của công đoạn cần hủy
+    -- 2. Xóa bản ghi lịch sử sản xuất của công đoạn bị hủy (VE-07)
     DELETE FROM STB_ProdRouteHist 
-    WHERE ControlNo = @ControlNo AND RouteCode = @RouteCode;
+    WHERE ControlNo IN (SELECT ControlNo FROM @ControlNos) 
+      AND RouteCode = @RouteCode;
 
-    -- 3. Reset cờ hoàn thành của công đoạn liền trước
+    -- 3. Reset cờ hoàn thành (CompleteRoute = NULL) cho chính xác công đoạn liền trước (VE-06)
     UPDATE STB_ProdRouteHist 
     SET CompleteRoute = NULL 
-    WHERE ControlNo = @ControlNo AND ProcSeq = (
-        SELECT ISNULL(MAX(ProcSeq), 1) FROM STB_ProdRouteHist WHERE ControlNo = @ControlNo
-    );
+    WHERE ControlNo IN (SELECT ControlNo FROM @ControlNos) 
+      AND RouteCode = @PrevRouteCode;
 
     COMMIT TRANSACTION;
-    PRINT 'SUCCESS: Rollback cong doan B530 thanh cong!';
+    PRINT 'SUCCESS: Rollback cong doan thanh cong!';
 END TRY
 BEGIN CATCH
     IF @@TRANCOUNT > 0 ROLLBACK TRANSACTION;
