@@ -233,7 +233,11 @@ Related Files:
   IF NOT EXISTS (SELECT 1 FROM STB_VN_FINISHGOODS_BG WHERE PackingID = 'PKQQ1500133' AND LotNo = 'VVQQ143R850605')
       INSERT INTO STB_VN_FINISHGOODS_BG (IDCODE, PackingID, LotNo, MaterialCode, MaterialName, PackQty, EmpNo, CreatDatePacked, PartNo, CreateDate)
       VALUES ('FGVN_BG' + REPLACE(CONVERT(VARCHAR(10), GETDATE(), 112), '-', ''), 'PKQQ1500133', 'VVQQ143R850605', 'LIVT38-018', 'VEL08253R8506G-B034', 2800, 'vvtworker_BG', CONVERT(VARCHAR(10), GETDATE(), 110), 'VEL08253R8506G-B034', GETDATE());
-  -- 3. Bảo toàn OldBarcode = VVPN... trong STB_LotChangeMaterialHistory & Mở cờ in tem
+  -- 3. Đăng ký ánh xạ tem in mã mới vào STB_ChangePartNoAndLotNo (Quyết định Barcode in ra tem)
+  UPDATE STB_ChangePartNoAndLotNo SET NewLotID = 'VVQQ143R850605' WHERE oldLotID = 'VVPN263R850606';
+  IF NOT EXISTS (SELECT 1 FROM STB_ChangePartNoAndLotNo WHERE oldLotID = 'VVPN263R850606' AND NewLotID = 'VVQQ143R850605')
+      INSERT INTO STB_ChangePartNoAndLotNo (oldLotID, NewLotID, isLotID, CreateDateTime, CreateUserID) VALUES ('VVPN263R850606', 'VVQQ143R850605', 1, GETDATE(), 'vanduc');
+  -- 4. Đồng bộ STB_LotChangeMaterialHistory & STB_MaterialLotInfo
   UPDATE STB_LotChangeMaterialHistory SET OldBarcode = 'VVPN263R850606' WHERE NewBarcode = 'VVQQ143R850605';
   UPDATE STB_MaterialLotInfo SET LotNo = 'VVQQ143R850605' WHERE PackingID = 'PKQQ1500133';
   UPDATE STB_PackingLabelPrintHist SET IsPrintAllow = 1, PrintCount = 0 WHERE PackingID = 'PKQQ1500133';

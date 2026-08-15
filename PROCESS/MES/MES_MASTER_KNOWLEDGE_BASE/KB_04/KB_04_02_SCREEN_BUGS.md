@@ -804,8 +804,8 @@ ROLLBACK
   2. Bấm nút **`Hủy kết quả sản xuất`** (Nút màu đỏ thứ 5 trên thanh công cụ B523, thực thi SP `usp_DoCancelProdPacking_LotNo`).
   3. Hệ thống sẽ tự động dọn dẹp sản lượng đóng gói cũ và xóa dòng thùng dở dang khỏi lưới.
 
-* **Bước 2 — Đồng bộ bản ghi cân kho thành phẩm & STB_VIETNAM_BARCODEWEIGHT:**
-  Chạy SQL bổ sung bản ghi cân kho thành phẩm và cân Barcode cho mã mới:
+* **Bước 2 — Đồng bộ bản ghi cân kho thành phẩm, STB_VIETNAM_BARCODEWEIGHT & STB_ChangePartNoAndLotNo:**
+  Chạy SQL bổ sung bản ghi cân kho thành phẩm, cân Barcode và ánh xạ tem in cho mã mới:
   ```sql
   BEGIN TRANSACTION;
 
@@ -813,7 +813,12 @@ ROLLBACK
   IF NOT EXISTS (SELECT 1 FROM STB_VIETNAM_BARCODEWEIGHT WHERE BARCODE = 'MÃ_LOT_MỚI')
       INSERT INTO STB_VIETNAM_BARCODEWEIGHT (BARCODE, WEIGHT, CREATEDATETIME) VALUES ('MÃ_LOT_MỚI', 25.5, GETDATE());
 
-  -- 2. Bổ sung cân nặng cho mã mới vào STB_VN_FINISHGOODS & STB_VN_FINISHGOODS_BG
+  -- 2. Đăng ký quy tắc in tem mã mới vào STB_ChangePartNoAndLotNo (Quyết định Barcode in ra trên tem)
+  UPDATE STB_ChangePartNoAndLotNo SET NewLotID = 'MÃ_LOT_MỚI' WHERE oldLotID = 'MÃ_LOT_CŨ';
+  IF NOT EXISTS (SELECT 1 FROM STB_ChangePartNoAndLotNo WHERE oldLotID = 'MÃ_LOT_CŨ' AND NewLotID = 'MÃ_LOT_MỚI')
+      INSERT INTO STB_ChangePartNoAndLotNo (oldLotID, NewLotID, isLotID, CreateDateTime, CreateUserID) VALUES ('MÃ_LOT_CŨ', 'MÃ_LOT_MỚI', 1, GETDATE(), 'vanduc');
+
+  -- 3. Bổ sung cân nặng cho mã mới vào STB_VN_FINISHGOODS & STB_VN_FINISHGOODS_BG
   IF NOT EXISTS (SELECT 1 FROM STB_VN_FINISHGOODS WHERE LotNo = 'MÃ_LOT_MỚI')
   BEGIN
       INSERT INTO STB_VN_FINISHGOODS (IDCODE, PackingID, LotNo, MaterialCode, MaterialName, PackQty, EmpNo, CreatDatePacked, PartNo, CreateDate)
@@ -830,9 +835,9 @@ ROLLBACK
   ```
 
 * **Bước 3 — Gộp box và In tem mã mới trên UI B523:**
-  1. Nhập/bắn mã MỚI vào ô `Mã barcode` ở B523.
-  2. Bấm nút **`Gộp box`** (Nút màu cam thứ 3) ➔ Sinh ra thùng PackingID mới hiển thị chuẩn mã MỚI.
-  3. Bấm **`In tem`** ➔ In tem mã mới thành công 100%!
+  1. Nhập/bắn mã MỚI (hoặc mã CŨ) vào ô `Mã barcode` ở B523 ➔ Bấm **Search**.
+  2. Click chọn thùng PackingID cần in.
+  3. Bấm **`In tem`** ➔ Tem nhả ra in NGUYÊN VĂN Barcode MÃ MỚI thành công 100%!
 
 
 
