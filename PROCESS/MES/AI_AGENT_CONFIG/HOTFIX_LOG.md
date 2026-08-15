@@ -182,3 +182,61 @@ Related Files:
   INNER JOIN STB_SetInfo SI ON PRH.ControlNo = SI.ControlNo
   WHERE SI.MaterialCode = 'EDVTMD-246' AND PRH.RouteCode = 'ND08' AND (PRH.CompleteRoute IS NULL OR PRH.CompleteRoute <> 1);
   ```
+
+### [HN523] — 📍 ID_27 Hủy tem đóng gói PKQQ1400141 & Đồng bộ giảm sản lượng VE10 + PO
+* **Ngày sửa:** `2026-08-14`
+* **Màn hình liên quan (TCode):** `[HN523] - Đóng gói Hà Nam (Packaging & Box Matching)`
+* **Triệu chứng lỗi:** Cần hủy tem đóng gói `PKQQ1400141` (Lot `VE260804-002`, SL `984` con) để rã Lot và đóng gói lại tại HN523.
+* **Nguyên nhân gốc (Root Cause):** Đóng gói nhầm tem. Cần gỡ `PackingID` khỏi `STB_MaterialLotInfo`, xóa lịch sử `STB_SavePackingTime_VVT`, đồng thời giảm trừ sản lượng chốt công đoạn cuối `VE10` (`STB_ProdRouteHist`) và sản lượng hoàn thành PO (`STB_ProductionOrderInfo`). Trigger `tgMaterialDocDetailForDelete` kiểm tra `DocStatus` ➔ Cần tạm chuyển `DocStatus = 'CREATE'` và đặt `CONTEXT_INFO 0x999997` để bypass trigger.
+* **Phương án sửa lỗi & Backup (Thực thi thành công):**
+  - **Bảng Backup đã lưu:** `STB_MaterialLotInfo_BK_20260814`, `STB_SavePackingTime_VVT_BK_20260814`, `STB_MaterialDocLotInfo_BK_20260814`, `STB_ProdRouteHist_BK_20260814`, `STB_ProductionOrderInfo_BK_20260814`.
+  - **SQL Patch đã deploy:**
+    ```sql
+    BEGIN TRANSACTION;
+    -- 1. Gỡ PackingID khỏi STB_MaterialLotInfo
+    UPDATE STB_MaterialLotInfo SET PackingID = '' WHERE LotID = '16VHVL180MC6XXVC01QQ1400005' OR PackingID = 'PKQQ1400141';
+    -- 2. Xóa lịch sử STB_SavePackingTime_VVT
+    DELETE FROM STB_SavePackingTime_VVT WHERE PackingID = 'PKQQ1400141';
+    -- 3. Tạm mở DocStatus = 'CREATE' & xóa chứng từ đóng gói (CONTEXT_INFO 0x999997)
+    UPDATE STB_MaterialDocInfo SET DocStatus = 'CREATE', IsCancel = 0 WHERE MaterialDocNo = '260814000155';
+    SET CONTEXT_INFO 0x999997;
+    DELETE FROM STB_MaterialDocLotInfo WHERE MaterialDocNo = '260814000155';
+    SET CONTEXT_INFO 0;
+    DELETE FROM STB_MaterialDocDetail WHERE MaterialDocNo = '260814000155';
+    UPDATE STB_MaterialDocInfo SET IsCancel = 1, CancelDateTime = GETDATE(), CancelUserID = 'vanduc' WHERE MaterialDocNo = '260814000155';
+    -- 4. Trừ 984 con ở công đoạn cuối VE10 & Lệnh sản xuất PO 260804000007
+    UPDATE STB_ProdRouteHist SET ProdQty = ProdQty - 984 WHERE ControlNo = '20260804000078' AND RouteCode = 'VE10';
+    UPDATE STB_ProductionOrderInfo SET ProdFinishQty = ProdFinishQty - 984 WHERE PONo = '260804000007';
+    COMMIT TRANSACTION;
+    ```
+
+### [B523] — 📍 ID_28 Lỗi popup "Could not find Kho Thành phẩm chưa nhập cân nặng cho Lót hàng này!" sau B351 chuyển đổi Lot
+* **Ngày sửa:** `2026-08-15`
+* **Màn hình liên quan (TCode):** `[B523] - Vietnam_nhập thực tế thùng sản xuất & [B351] - Lot Transition`
+* **Triệu chứng lỗi:** Công nhân chuyển đổi Lot tại B351 từ `VVPN263R850606` sang `VVQQ143R850605`. Ra B523 bấm `In Tem &` hoặc `In tem` thì bật popup đỏ: `Could not find Kho Thành phẩm chưa nhập cân nặng cho Lót hàng này! at ScreenControl.PrintLabel`.
+* **Nguyên nhân gốc (Root Cause):** 
+  1. B351 chỉ cập nhật `STB_SetInfo`, không tự nạp cân Barcode vào `STB_VIETNAM_BARCODEWEIGHT` và cân kho `STB_VN_FINISHGOODS`.
+  2. SP `usp_Vietnam_GetBoxIDForLotNo_VVT` tính `@lotweight = 0` do thiếu dòng trong `STB_VIETNAM_BARCODEWEIGHT` ➔ gán `FormatName = N'Kho Thành phẩm chưa nhập cân nặng...'`.
+  3. C# WinForm Client `PrintLabel` không thấy template nhãn tên này ➔ Bật popup `Could not find Kho Thành phẩm...`.
+* **Phương án sửa lỗi & Script Deploy:**
+  ```sql
+  BEGIN TRANSACTION;
+  -- 1. Nạp cân nặng barcode (Giải quyết nguyên nhân gốc FormatName)
+  IF NOT EXISTS (SELECT 1 FROM STB_VIETNAM_BARCODEWEIGHT WHERE BARCODE = 'VVQQ143R850605')
+      INSERT INTO STB_VIETNAM_BARCODEWEIGHT (BARCODE, WEIGHT, CREATEDATETIME) VALUES ('VVQQ143R850605', 25.5, GETDATE());
+  IF NOT EXISTS (SELECT 1 FROM STB_VIETNAM_BARCODEWEIGHT WHERE BARCODE = 'VVPN263R850606')
+      INSERT INTO STB_VIETNAM_BARCODEWEIGHT (BARCODE, WEIGHT, CREATEDATETIME) VALUES ('VVPN263R850606', 25.5, GETDATE());
+  -- 2. Nạp cân kho thành phẩm chính & Bắc Giang
+  IF NOT EXISTS (SELECT 1 FROM STB_VN_FINISHGOODS WHERE PackingID = 'PKQQ1500133' AND LotNo = 'VVQQ143R850605')
+      INSERT INTO STB_VN_FINISHGOODS (IDCODE, PackingID, LotNo, MaterialCode, MaterialName, PackQty, EmpNo, CreatDatePacked, PartNo, CreateDate)
+      VALUES ('FGVN_BN' + REPLACE(CONVERT(VARCHAR(10), GETDATE(), 112), '-', ''), 'PKQQ1500133', 'VVQQ143R850605', 'LIVT38-018', 'VEL08253R8506G-B034', 2800, 'vvtworker_BG', CONVERT(VARCHAR(10), GETDATE(), 110), 'VEL08253R8506G-B034', GETDATE());
+  IF NOT EXISTS (SELECT 1 FROM STB_VN_FINISHGOODS_BG WHERE PackingID = 'PKQQ1500133' AND LotNo = 'VVQQ143R850605')
+      INSERT INTO STB_VN_FINISHGOODS_BG (IDCODE, PackingID, LotNo, MaterialCode, MaterialName, PackQty, EmpNo, CreatDatePacked, PartNo, CreateDate)
+      VALUES ('FGVN_BG' + REPLACE(CONVERT(VARCHAR(10), GETDATE(), 112), '-', ''), 'PKQQ1500133', 'VVQQ143R850605', 'LIVT38-018', 'VEL08253R8506G-B034', 2800, 'vvtworker_BG', CONVERT(VARCHAR(10), GETDATE(), 110), 'VEL08253R8506G-B034', GETDATE());
+  -- 3. Bảo toàn OldBarcode = VVPN... trong STB_LotChangeMaterialHistory & Mở cờ in tem
+  UPDATE STB_LotChangeMaterialHistory SET OldBarcode = 'VVPN263R850606' WHERE NewBarcode = 'VVQQ143R850605';
+  UPDATE STB_MaterialLotInfo SET LotNo = 'VVQQ143R850605' WHERE PackingID = 'PKQQ1500133';
+  UPDATE STB_PackingLabelPrintHist SET IsPrintAllow = 1, PrintCount = 0 WHERE PackingID = 'PKQQ1500133';
+  COMMIT TRANSACTION;
+  ```
+

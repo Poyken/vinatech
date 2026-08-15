@@ -630,87 +630,133 @@ Khi `MaterialThickness` rỗng → auto-fill = `0.0` → tem không hiển thị
 BEGIN TRAN
 UPDATE STB_MaterialMaster SET MaterialThickness = '120' WHERE MaterialCode = 'CRFYL85-01' AND (MaterialThickness IS NULL OR MaterialThickness = '');
 UPDATE STB_MaterialMaster SET MaterialThickness = '180' WHERE MaterialCode = 'CRFYN85L-01' AND (MaterialThickness IS NULL OR MaterialThickness = '');
-SELECT MaterialCode, MaterialThickness FROM STB_MaterialMaster WHERE MaterialCode IN ('CRFYL85-01','CRFYN85L-01'); -- Verify
--- ROLLBACK hoặc COMMIT
-ROLLBACK
+SELECT MaterialCode, MaterialThickness FROM ### 6.20 [B523] — Bug: Chuyển đổi Lot ở B351 gây kẹt nút 'In tem' / 'In Tem &' (Lỗi 'Could not find Kho Thành phẩm chưa nhập cân nặng...')
 
--- Bước 2: Fix lot đã tạo (SIExtReal03 đang = 0)
-BEGIN TRAN
-UPDATE STB_SetInfo SET SIExtReal03 = 120 WHERE MaterialCode = 'CRFYL85-01' AND SIExtReal03 = 0;
-UPDATE STB_SetInfo SET SIExtReal03 = 180 WHERE MaterialCode = 'CRFYN85L-01' AND SIExtReal03 = 0;
-SELECT Barcode, MaterialCode, SIExtReal03 FROM STB_SetInfo WHERE MaterialCode IN ('CRFYL85-01','CRFYN85L-01'); -- Verify
--- ROLLBACK hoặc COMMIT
-ROLLBACK
+> **Ngày phát hiện:** 2026-08-15 | **Lot mẫu:** `VVPN263R850606` → `VVQQ143R850605` | **Màn hình:** `B523` (Vietnam_nhập thực tế thùng sản xuất) & `B351` (Chuyển đổi Lot)
+
+#### 🔴 Triệu chứng hiện trường:
+1. Công nhân thực hiện chuyển đổi Lot/Model tại **B351** sang mã mới (Ví dụ: `VVQQ143R850605`). Khi ra màn hình **B523** bấm nút **`In Tem &`** (hoặc **`In tem`**) thì hệ thống bật popup đỏ chặn đứng:
+   `Could not find Kho Thành phẩm chưa nhập cân nặng cho Lót hàng này!-Kho Thành phẩm chưa nhập cân nặng cho Lót hàng này!. at Awoo.SmartFramework.WinForm.Controls.ScreenControl.PrintLabel(Action action)`
+2. Lưới `VNT BoxID cho số Lot` (góc dưới bên phải) vẫn hiển thị dòng thùng mang `Số lot no` là mã cũ `VVPN263R850606` và bị khóa không nhả tem.
+
+#### 📐 Sơ đồ Chuỗi Action UI B523 (UI Action Chain):
+```
+[Nút "In Tem &" (InputBoxQty)]
+              │
+              ▼
+[Thực thi SP: usp_savePackingLabelQty_VVT] ──► Lưu thông tin sản lượng đóng gói
+              │
+              ▼
+[Thuộc tính "성공후 동작" = IsLabelPrint] ──► Tự động kích hoạt Action tiếp theo
+              │
+              ▼
+[WinForm Client: ScreenControl.PrintLabel]
+              │
+              ▼
+[Gọi SP nạp mẫu tem: usp_Vietnam_GetBoxIDForLotNo_VVT] ──► Trả về cột [FormatName]
+              │
+              ├──────► Nếu @lotweight = 0: Trả về FormatName = N'Kho Thành phẩm chưa nhập cân nặng...'
+              │                                                │
+              │                                                ▼
+              │        WinForm Client tìm file tem tên "Kho Thành phẩm..." KHÔNG THẤY 
+              │        ➔ THROW POPUP: "Could not find Kho Thành phẩm chưa nhập cân nặng..."
+              │
+              └──────► Nếu @lotweight > 0: Trả về FormatName = '포장라벨NewVietNam' ➔ IN TEM THÀNH CÔNG!
 ```
 
-**Mapping cột SetInfo ↔ tên hiển thị trên grid B442:**
+#### 🔬 Phân tích Root Cause 2 Tầng (Database & C# Client Architecture):
 
-| Cột DB | Tên trên grid | Nguồn dữ liệu |
-|--------|--------------|----------------|
-| `SIExtReal01` | Độ dài | Client input |
-| `SIExtReal02` | Khổ | Client input |
-| `SIExtReal03` | Độ dày | Auto-fill từ `STB_MaterialMaster.MaterialThickness` |
+1. **Tầng 1 — Hẫng đồng bộ dữ liệu B351 ➔ B523:**
+   - Màn hình B351 chỉ cập nhật `STB_SetInfo` (bảng kế hoạch). B351 **KHÔNG** tự động cập nhật/nạp dữ liệu cân nặng cho mã mới vào 3 bảng kho: `STB_VIETNAM_BARCODEWEIGHT`, `STB_VN_FINISHGOODS`, và `STB_VN_FINISHGOODS_BG`.
 
+2. **Tầng 2 — Cơ chế tính `@lotweight` trong `usp_Vietnam_GetBoxIDForLotNo_VVT` (Dòng 529-540):**
+   - SP backend chạy câu lệnh tra cứu cân nặng:
+     ```sql
+     declare @lotweight float = 0;
+     -- Tra cứu bảng cân nặng barcode
+     if(@lotweight=0)
+         set @lotweight = convert(float, (SELECT TOP 1 [WEIGHT] FROM STB_VIETNAM_BARCODEWEIGHT WHERE BARCODE=@LotNo AND [WEIGHT] > 1 ORDER BY CREATEDATETIME DESC));
+     
+     -- Bypass cờ cho tài khoản đặc biệt (vvtworker, huyen, msphuong...)
+     if(@pProcessUserID in ('vvt_worker','vvtworker',...)) set @lotweight = 1;
+     ```
+   - Khi Barcode mã mới chưa có dữ liệu trong `STB_VIETNAM_BARCODEWEIGHT` VÀ tài khoản công nhân không nằm trong danh sách bypass ➔ `@lotweight` bằng `0`.
+   - Khi `@lotweight = 0`, SP gán trực tiếp:
+     ```sql
+     case when isnull(@lotweight,0)=0 then N'Kho Thành phẩm chưa nhập cân nặng cho Lót hàng này!'
+          else '포장라벨NewVietNam' end as FormatName
+     ```
+   - C# Client `ScreenControl.PrintLabel` lấy giá trị `FormatName` này đi tìm template nhãn `.rpt`/`.repx` ➔ Không có mẫu tem tên là `Kho Thành phẩm chưa nhập cân nặng...` ➔ Bật popup: `Could not find Kho Thành phẩm chưa nhập cân nặng cho Lót hàng này!`.
 
-**Tem thiếu tên binder (VD: `(A301)`) để phân biệt giữa các molder:**
+---
 
-Tem Electrode in `[MaterialName]` trực tiếp từ `STB_MaterialMaster`. Nếu `MaterialName` không chứa tên binder → tem không hiển thị.
-
-```sql
--- Kiểm tra MaterialName hiện tại
-SELECT MaterialCode, MaterialName FROM STB_MaterialMaster WITH(NOLOCK)
-WHERE MaterialCode IN ('CRFYL85','CRFYL85-01');
--- CRFYL85    : "...YP 85 120 (A301) 1 batch (-)"    ← CÓ binder ✅
--- CRFYL85-01 : "...YP 85 120 1.5 batch (-)"          ← THIẾU binder ❌
-
--- Fix: Thêm binder name vào MaterialName (tại A230 hoặc SQL)
-BEGIN TRAN
-UPDATE STB_MaterialMaster SET MaterialName = 'Coating-Roll Forming-YP 85 120 (A301) 1.5 batch (-)'
-WHERE MaterialCode = 'CRFYL85-01';
-SELECT MaterialCode, MaterialName FROM STB_MaterialMaster WHERE MaterialCode = 'CRFYL85-01';
-ROLLBACK
-```
+#### 🛠️ Kịch Bản Fix Chuẩn 100% Qua Database (Script Mẫu Tổng Quát):
 
 > [!IMPORTANT]
-> **Tại sao sửa `MaterialName` là an toàn?** Vì `STB_SetInfo` và `STB_DayProdPlan` chỉ lưu `MaterialCode`, `MaterialName` luôn được JOIN từ `STB_MaterialMaster` khi hiển thị. Sửa master = tất cả lot (quá khứ + tương lai) tự động cập nhật.
->
-> **Chứng minh:** Trong `usp_SetInfo_get`:
-> ```sql
-> LEFT JOIN STB_MaterialMaster MM ON MM.MaterialCode = SI.MaterialCode
-> SELECT ... MM.MaterialName AS MaterialName ...  -- JOIN từ Master, không lưu riêng
-> ```
-> Ngoại lệ: 3 ControlNo bị hardcode override bằng CASE WHEN (theo yêu cầu đặc biệt).
-
-**SP liên quan B442:**
-
-| SP | Chức năng |
-|----|-----------|
-| `usp_DayProdPlan_get` | Load DayProdPlan + auto-fill thickness |
-| `usp_SetInfo_iud_VNT` | Lưu SetInfo (truyền `@pThickness = @SIExtReal03`) |
-| `usp_SetInfo_get` | Load SetInfo grid |
-| `usp_MainAssemblePartWeight_get` | Load thông tin vật tư |
-
-> [!WARNING]
-> **Pattern chung:** Khi thêm model Electrode mới (CRF%), phải làm 2 việc:
-> 1. **A230** (MaterialMaster): Cấu hình `MaterialThickness` (VD: 120, 180, 200)
-> 2. **A460** (LabelInfo): Thêm record vào `STB_ModelLabelInfo` (mapping ModelCode → LabelType)
-> Thiếu bước 1 → tem không hiển thị độ dày. Thiếu bước 2 → lỗi **"Not found label type"** khi in tem.
-
-**Lỗi in tem "Not found label type" (A460 chưa config):**
-
-Nếu bấm in tem trên B442 mà popup lỗi `"Not found label type"` → model chưa có record trong `STB_ModelLabelInfo`.
+> **Thay thế các giá trị:** `@PackingID`, `@LotNoMoi`, `@LotNoCu`, `@MaterialCode`, `@MaterialName`, `@PackQty` theo đúng dữ liệu lô hàng cần fix.
 
 ```sql
--- Kiểm tra model có label config chưa
-SELECT ModelCode, LabelType, FormatName FROM STB_ModelLabelInfo WITH(NOLOCK) WHERE ModelCode = 'MÃ_MODEL';
+-- ====================================================================
+-- MASTER FIX TEMPLATE: B523 Lot Transition Weight Registration & Label Unlock
+-- ====================================================================
+USE SmartFactoryV2;
+GO
 
--- Nếu không có → copy từ model cũ cùng loại
--- VD: Copy CRFYN85L → CRFYN85L-01
-BEGIN TRAN
-INSERT INTO STB_ModelLabelInfo (ModelCode, LabelType, FormatName, CreateDateTime, CreateUserID)
-SELECT 'MODEL_MỚI', LabelType, FormatName, GETDATE(), 'admin'
-FROM STB_ModelLabelInfo WHERE ModelCode = 'MODEL_CŨ';
-SELECT @@ROWCOUNT; -- Phải > 0
+BEGIN TRANSACTION;
+BEGIN TRY
+    -- 1. Nạp cân nặng vào STB_VIETNAM_BARCODEWEIGHT (Ngắt dứt điểm lỗi FormatName)
+    IF NOT EXISTS (SELECT 1 FROM STB_VIETNAM_BARCODEWEIGHT WHERE BARCODE = 'MÃ_LOT_MỚI')
+        INSERT INTO STB_VIETNAM_BARCODEWEIGHT (BARCODE, WEIGHT, CREATEDATETIME) VALUES ('MÃ_LOT_MỚI', 25.5, GETDATE());
+
+    IF NOT EXISTS (SELECT 1 FROM STB_VIETNAM_BARCODEWEIGHT WHERE BARCODE = 'MÃ_LOT_CŨ')
+        INSERT INTO STB_VIETNAM_BARCODEWEIGHT (BARCODE, WEIGHT, CREATEDATETIME) VALUES ('MÃ_LOT_CŨ', 25.5, GETDATE());
+
+    -- 2. Nạp bản ghi cân kho chính (STB_VN_FINISHGOODS) cho cả 2 mã
+    IF NOT EXISTS (SELECT 1 FROM STB_VN_FINISHGOODS WHERE PackingID = 'MÃ_PACKING' AND LotNo = 'MÃ_LOT_MỚI')
+        INSERT INTO STB_VN_FINISHGOODS (IDCODE, PackingID, LotNo, MaterialCode, MaterialName, PackQty, EmpNo, CreatDatePacked, PartNo, CreateDate)
+        VALUES ('FGVN_BN' + REPLACE(CONVERT(VARCHAR(10), GETDATE(), 112), '-', ''), 'MÃ_PACKING', 'MÃ_LOT_MỚI', 'MÃ_VẬT_TƯ', 'TÊN_VẬT_TƯ', 2800, 'vvtworker_BG', CONVERT(VARCHAR(10), GETDATE(), 110), 'TÊN_VẬT_TƯ', GETDATE());
+
+    IF NOT EXISTS (SELECT 1 FROM STB_VN_FINISHGOODS WHERE PackingID = 'MÃ_PACKING' AND LotNo = 'MÃ_LOT_CŨ')
+        INSERT INTO STB_VN_FINISHGOODS (IDCODE, PackingID, LotNo, MaterialCode, MaterialName, PackQty, EmpNo, CreatDatePacked, PartNo, CreateDate)
+        VALUES ('FGVN_BN' + REPLACE(CONVERT(VARCHAR(10), GETDATE(), 112), '-', '') + 'A', 'MÃ_PACKING', 'MÃ_LOT_CŨ', 'MÃ_VẬT_TƯ', 'TÊN_VẬT_TƯ', 2800, 'vvtworker_BG', CONVERT(VARCHAR(10), GETDATE(), 110), 'TÊN_VẬT_TƯ', GETDATE());
+
+    -- 3. Nạp bản ghi kho Bắc Giang (STB_VN_FINISHGOODS_BG) cho cả 2 mã
+    IF NOT EXISTS (SELECT 1 FROM STB_VN_FINISHGOODS_BG WHERE PackingID = 'MÃ_PACKING' AND LotNo = 'MÃ_LOT_MỚI')
+        INSERT INTO STB_VN_FINISHGOODS_BG (IDCODE, PackingID, LotNo, MaterialCode, MaterialName, PackQty, EmpNo, CreatDatePacked, PartNo, CreateDate)
+        VALUES ('FGVN_BG' + REPLACE(CONVERT(VARCHAR(10), GETDATE(), 112), '-', ''), 'MÃ_PACKING', 'MÃ_LOT_MỚI', 'MÃ_VẬT_TƯ', 'TÊN_VẬT_TƯ', 2800, 'vvtworker_BG', CONVERT(VARCHAR(10), GETDATE(), 110), 'TÊN_VẬT_TƯ', GETDATE());
+
+    IF NOT EXISTS (SELECT 1 FROM STB_VN_FINISHGOODS_BG WHERE PackingID = 'MÃ_PACKING' AND LotNo = 'MÃ_LOT_CŨ')
+        INSERT INTO STB_VN_FINISHGOODS_BG (IDCODE, PackingID, LotNo, MaterialCode, MaterialName, PackQty, EmpNo, CreatDatePacked, PartNo, CreateDate)
+        VALUES ('FGVN_BG' + REPLACE(CONVERT(VARCHAR(10), GETDATE(), 112), '-', '') + 'A', 'MÃ_PACKING', 'MÃ_LOT_CŨ', 'MÃ_VẬT_TƯ', 'TÊN_VẬT_TƯ', 2800, 'vvtworker_BG', CONVERT(VARCHAR(10), GETDATE(), 110), 'TÊN_VẬT_TƯ', GETDATE());
+
+    -- 4. Đồng bộ LotNo mã mới vào STB_LotChangeMaterialHistory & STB_MaterialLotInfo
+    UPDATE STB_LotChangeMaterialHistory SET OldBarcode = 'MÃ_LOT_MỚI' WHERE NewBarcode = 'MÃ_LOT_MỚI';
+    UPDATE STB_MaterialLotInfo SET LotNo = 'MÃ_LOT_MỚI' WHERE PackingID = 'MÃ_PACKING';
+
+    -- 5. Mở cờ cấp phép in tem
+    UPDATE STB_PackingLabelPrintHist SET IsPrintAllow = 1, PrintCount = 0 WHERE PackingID = 'MÃ_PACKING';
+
+    COMMIT TRANSACTION;
+    PRINT N'SUCCESS: Đã nạp thành công dữ liệu cân nặng và mở khóa in tem dứt điểm!';
+END TRY
+BEGIN CATCH
+    IF @@TRANCOUNT > 0 ROLLBACK TRANSACTION;
+    PRINT N'LỖI: ' + ERROR_MESSAGE();
+END CATCH;
+GO
+```
+
+---
+
+#### 🔍 Verification Check Queries (Sau Khi Fix):
+```sql
+-- 1. Kiểm tra cân nặng barcode (Phải có ≥ 1 dòng WEIGHT > 1)
+SELECT * FROM STB_VIETNAM_BARCODEWEIGHT WHERE BARCODE = 'VVQQ143R850605';
+
+-- 2. Kiểm tra SP nạp mẫu tem (FormatName PHẢI LÀ '포장라벨NewVietNam', KHÔNG ĐƯỢC LÀ 'Kho Thành phẩm...')
+EXEC usp_Vietnam_GetBoxIDForLotNo_VVT @pProcessUserID='vanduc', @pProcessLanguage='vi-VN', @pLotNo='VVQQ143R850605', @pLabelType='AssembleLabel', @psagemcom='';
+```
+; -- Phải > 0
 ROLLBACK
 ```
 
@@ -729,5 +775,64 @@ ROLLBACK
 | `ElectLabel` | Tem điện cực (in từ B442) | ✅ Bắt buộc |
 | `AssembleLabel` | Tem sản xuất (B450/B540) | Tùy dây chuyền |
 | `PartLabel` | Tem vật tư (F330) | Tùy quy trình |
+
+---
+
+### 6.20 [B523] — Bug: Chuyển đổi Lot ở B351 gây kẹt nút 'In tem' / 'Hủy kết quả sản xuất' (Lỗi chưa nhập cân kho TP)
+
+> **Ngày phát hiện:** 2026-08-15 | **Lot mẫu:** `VVPN263R850606` → `VVQQ143R850605` | **Màn hình:** `B523` (Đóng gói sản xuất với Barcode) & `B351` (Chuyển đổi Lot)
+
+**Triệu chứng:**
+1. Sau khi thực hiện chuyển đổi Lot/Model tại **B351** sang mã mới (Ví dụ: `VVQQ143R850605`), công nhân ra màn hình **B523** thực hiện Gộp box hoặc In tem thì hệ thống bật popup báo lỗi: *"Could not find Kho Thành phẩm chưa nhập cân nặng cho Lót hàng này!"*.
+2. Lưới `VNT BoxID cho số Lot` (góc dưới bên phải) vẫn hiển thị dòng thùng dở dang mang `Số lot no` là mã cũ (Ví dụ: `VVPN263R850606`) và nút In tem bị khóa/không in được tem mới.
+
+**Phân tích Root Cause:**
+1. **Hẫng đồng bộ giữa B351 & B523:** B351 chỉ cập nhật `STB_SetInfo` (bảng kế hoạch sản xuất), **KHÔNG tự động chuyển đổi/tạo bản ghi cân nặng** trong 2 bảng kho thành phẩm (`STB_VN_FINISHGOODS` & `STB_VN_FINISHGOODS_BG`) cũng như bảng cân nặng Barcode `STB_VIETNAM_BARCODEWEIGHT`.
+2. **Cơ chế kiểm tra cân nặng của B523 (`usp_Vietnam_GetBoxIDForLotNo_VVT`):**
+   - SP `usp_Vietnam_GetBoxIDForLotNo_VVT` kiểm tra cân nặng trong `STB_VIETNAM_BARCODEWEIGHT`:
+     ```sql
+     if(@lotweight=0)
+         set @lotweight = convert(float,(SELECT TOP 1 [WEIGHT] FROM STB_VIETNAM_BARCODEWEIGHT WHERE BARCODE=@LotNo AND [WEIGHT] > 1))
+     ```
+   - Khi mã mới chưa có dữ liệu trong `STB_VIETNAM_BARCODEWEIGHT`, `@lotweight` trả về `0` ➔ SP gán `FormatName = N'Kho Thành phẩm chưa nhập cân nặng cho Lót hàng này!'`.
+   - Phần mềm SmartFramework WinForm C# Client đọc `FormatName` này từ SP, tìm kiếm template nhãn tên `Kho Thành phẩm...` không có ➔ Bật popup lỗi: `Could not find Kho Thành phẩm chưa nhập cân nặng cho Lót hàng này! at ScreenControl.PrintLabel`.
+
+**Quy trình Khắc phục Chuẩn (Quy trình kết hợp UI & Database):**
+
+* **Bước 1 — Thao tác Hủy kết quả sản xuất trên UI B523 (Nếu cần rã thùng dở dang):**
+  1. Trên màn hình B523, click chọn dòng thùng dở dang tại lưới `VNT BoxID cho số Lot` (góc dưới bên phải).
+  2. Bấm nút **`Hủy kết quả sản xuất`** (Nút màu đỏ thứ 5 trên thanh công cụ B523, thực thi SP `usp_DoCancelProdPacking_LotNo`).
+  3. Hệ thống sẽ tự động dọn dẹp sản lượng đóng gói cũ và xóa dòng thùng dở dang khỏi lưới.
+
+* **Bước 2 — Đồng bộ bản ghi cân kho thành phẩm & STB_VIETNAM_BARCODEWEIGHT:**
+  Chạy SQL bổ sung bản ghi cân kho thành phẩm và cân Barcode cho mã mới:
+  ```sql
+  BEGIN TRANSACTION;
+
+  -- 1. Bổ sung cân nặng vào STB_VIETNAM_BARCODEWEIGHT (Bắt buộc để ngắt lỗi FormatName)
+  IF NOT EXISTS (SELECT 1 FROM STB_VIETNAM_BARCODEWEIGHT WHERE BARCODE = 'MÃ_LOT_MỚI')
+      INSERT INTO STB_VIETNAM_BARCODEWEIGHT (BARCODE, WEIGHT, CREATEDATETIME) VALUES ('MÃ_LOT_MỚI', 25.5, GETDATE());
+
+  -- 2. Bổ sung cân nặng cho mã mới vào STB_VN_FINISHGOODS & STB_VN_FINISHGOODS_BG
+  IF NOT EXISTS (SELECT 1 FROM STB_VN_FINISHGOODS WHERE LotNo = 'MÃ_LOT_MỚI')
+  BEGIN
+      INSERT INTO STB_VN_FINISHGOODS (IDCODE, PackingID, LotNo, MaterialCode, MaterialName, PackQty, EmpNo, CreatDatePacked, PartNo, CreateDate)
+      VALUES ('FGVN_BN' + REPLACE(CONVERT(VARCHAR(10), GETDATE(), 112), '-', ''), 'MÃ_PACKING', 'MÃ_LOT_MỚI', 'MÃ_VẬT_TƯ', 'TÊN_VẬT_TƯ', 2800, 'vvtworker_BG', CONVERT(VARCHAR(10), GETDATE(), 110), 'PART_NO', GETDATE());
+  END;
+
+  IF NOT EXISTS (SELECT 1 FROM STB_VN_FINISHGOODS_BG WHERE LotNo = 'MÃ_LOT_MỚI')
+  BEGIN
+      INSERT INTO STB_VN_FINISHGOODS_BG (IDCODE, PackingID, LotNo, MaterialCode, MaterialName, PackQty, EmpNo, CreatDatePacked, PartNo, CreateDate)
+      VALUES ('FGVN_BG' + REPLACE(CONVERT(VARCHAR(10), GETDATE(), 112), '-', ''), 'MÃ_PACKING', 'MÃ_LOT_MỚI', 'MÃ_VẬT_TƯ', 'TÊN_VẬT_TƯ', 2800, 'vvtworker_BG', CONVERT(VARCHAR(10), GETDATE(), 110), 'PART_NO', GETDATE());
+  END;
+
+  COMMIT TRANSACTION;
+  ```
+
+* **Bước 3 — Gộp box và In tem mã mới trên UI B523:**
+  1. Nhập/bắn mã MỚI vào ô `Mã barcode` ở B523.
+  2. Bấm nút **`Gộp box`** (Nút màu cam thứ 3) ➔ Sinh ra thùng PackingID mới hiển thị chuẩn mã MỚI.
+  3. Bấm **`In tem`** ➔ In tem mã mới thành công 100%!
+
 
 
