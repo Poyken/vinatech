@@ -670,21 +670,33 @@ SELECT MaterialCode, MaterialThickness FROM ### 6.20 [B523] — Bug: Chuyển đ
    - Màn hình B351 chỉ cập nhật `STB_SetInfo` (bảng kế hoạch). B351 **KHÔNG** tự động cập nhật/nạp dữ liệu cân nặng cho mã mới vào 3 bảng kho: `STB_VIETNAM_BARCODEWEIGHT`, `STB_VN_FINISHGOODS`, và `STB_VN_FINISHGOODS_BG`.
 
 2. **Tầng 2 — Cơ chế tính `@lotweight` trong `usp_Vietnam_GetBoxIDForLotNo_VVT` (Dòng 529-540):**
-   - SP backend chạy câu lệnh tra cứu cân nặng:
+   - SP backend chạy câu lệnh tra cứu cân nặng và kiểm tra whitelist tài khoản:
      ```sql
-     declare @lotweight float = 0;
-     -- Tra cứu bảng cân nặng barcode
-     if(@lotweight=0)
-         set @lotweight = convert(float, (SELECT TOP 1 [WEIGHT] FROM STB_VIETNAM_BARCODEWEIGHT WHERE BARCODE=@LotNo AND [WEIGHT] > 1 ORDER BY CREATEDATETIME DESC));
-     
-     -- Bypass cờ cho tài khoản đặc biệt (vvtworker, huyen, msphuong...)
-     if(@pProcessUserID in ('vvt_worker','vvtworker',...)) set @lotweight = 1;
+     DECLARE @lotweight FLOAT = 0;
+
+     -- 1. Tra cứu cân nặng thực tế từ bảng STB_VIETNAM_BARCODEWEIGHT
+     IF (@lotweight = 0)
+         SET @lotweight = CONVERT(FLOAT, (
+             SELECT TOP 1 [WEIGHT] 
+             FROM STB_VIETNAM_BARCODEWEIGHT WITH(NOLOCK) 
+             WHERE BARCODE = @LotNo AND [WEIGHT] > 1 
+             ORDER BY CREATEDATETIME DESC
+         ));
+
+     -- 2. ĐOẠN HARDCODE BYPASS TRONG SP:
+     -- Nếu tài khoản đăng nhập thuộc danh sách chỉ định ➔ Tự động gán @lotweight = 1 (Bypass cân nặng)
+     IF (@pProcessUserID IN ('vvt_worker', 'vvtworker', 'huyen', 'msphuong', ...))
+     BEGIN
+         SET @lotweight = 1; 
+     END
      ```
-   - Khi Barcode mã mới chưa có dữ liệu trong `STB_VIETNAM_BARCODEWEIGHT` VÀ tài khoản công nhân không nằm trong danh sách bypass ➔ `@lotweight` bằng `0`.
+   - **Cơ chế hoạt động:**
+     - Các tài khoản nằm trong danh sách `IN ('vvt_worker', 'vvtworker', ...)` **CÓ ĐƯỢC BYPASS** (dù chưa có dữ liệu cân nặng thì SP vẫn ép `@lotweight = 1` để in tem).
+     - Các tài khoản công nhân thực tế tại chuyền/nhà máy (ví dụ `vvtworker_BG`, các account theo mã nhân viên cá nhân) **KHÔNG thuộc Whitelist** -> Khi Barcode mã mới chưa có dữ liệu cân nặng trong `STB_VIETNAM_BARCODEWEIGHT`, `@lotweight` giữ nguyên `= 0`.
    - Khi `@lotweight = 0`, SP gán trực tiếp:
      ```sql
-     case when isnull(@lotweight,0)=0 then N'Kho Thành phẩm chưa nhập cân nặng cho Lót hàng này!'
-          else '포장라벨NewVietNam' end as FormatName
+     CASE WHEN ISNULL(@lotweight, 0) = 0 THEN N'Kho Thành phẩm chưa nhập cân nặng cho Lót hàng này!'
+          ELSE '포장라벨NewVietNam' END AS FormatName
      ```
    - C# Client `ScreenControl.PrintLabel` lấy giá trị `FormatName` này đi tìm template nhãn `.rpt`/`.repx` ➔ Không có mẫu tem tên là `Kho Thành phẩm chưa nhập cân nặng...` ➔ Bật popup: `Could not find Kho Thành phẩm chưa nhập cân nặng cho Lót hàng này!`.
 

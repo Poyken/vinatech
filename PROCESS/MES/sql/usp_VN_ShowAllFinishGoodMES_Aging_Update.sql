@@ -1121,9 +1121,15 @@ BEGIN
 			
 	,(select count(*) from dbo.fn_VVT_PartnoModel()   where partno=T1.partno and modelname=T1.MaterialName) as CheckPartno
 	,case when DATEDIFF(day,isnull(si.InputJobDate,getdate()-366),getdate()) > 365 then 1 else 0 end BackLog_Inventory
-	-- START: vanduc edit 2026-08-14 - Bổ sung cột AgingDays phục vụ tô màu cảnh báo tuổi hàng trên FG01
+	-- START: vanduc edit 2026-08-14 & 2026-08-15 - Bổ sung cột AgingDays & AgingCategory phục vụ phễu lọc tuổi hàng trên FG01
 	, DATEDIFF(DAY, CONVERT(DATE, T1.CreateDate), GETDATE()) AS AgingDays
-	-- END: vanduc edit 2026-08-14 - Bổ sung cột AgingDays
+	, CASE 
+		WHEN DATEDIFF(DAY, CONVERT(DATE, T1.CreateDate), GETDATE()) BETWEEN 90 AND 179 THEN N'3 - 6 Tháng'
+		WHEN DATEDIFF(DAY, CONVERT(DATE, T1.CreateDate), GETDATE()) BETWEEN 180 AND 364 THEN N'6 - 12 Tháng'
+		WHEN DATEDIFF(DAY, CONVERT(DATE, T1.CreateDate), GETDATE()) >= 365 THEN N'Trên 1 Năm'
+		ELSE N'Dưới 3 Tháng'
+	  END AS AgingCategory
+	-- END: vanduc edit 2026-08-15
 				INTO #T1
 		FROM
 				STB_VN_FINISHGOODS T1 WITH(NOLOCK)
@@ -1835,9 +1841,15 @@ BEGIN
 
 	,(select count(*) from dbo.fn_VVT_PartnoModel()   where partno=T1.partno and modelname=T1.MaterialName) as CheckPartno	
 	,case when DATEDIFF(day,isnull(si.InputJobDate,getdate()-366),getdate()) > 365 then 1 else 0 end BackLog_Inventory
-	-- START: vanduc edit 2026-08-14 - Bổ sung cột AgingDays tính số ngày tồn kho tính đến ngày xuất hàng
+	-- START: vanduc edit 2026-08-14 & 2026-08-15 - Bổ sung cột AgingDays & AgingCategory tính số ngày tồn kho tính đến ngày xuất hàng
 	, DATEDIFF(DAY, CONVERT(DATE, T1.CreateDate), CONVERT(DATE, T1.DateExport)) AS AgingDays
-	-- END: vanduc edit 2026-08-14 - Bổ sung cột AgingDays
+	, CASE 
+		WHEN DATEDIFF(DAY, CONVERT(DATE, T1.CreateDate), CONVERT(DATE, T1.DateExport)) BETWEEN 90 AND 179 THEN N'3 - 6 Tháng'
+		WHEN DATEDIFF(DAY, CONVERT(DATE, T1.CreateDate), CONVERT(DATE, T1.DateExport)) BETWEEN 180 AND 364 THEN N'6 - 12 Tháng'
+		WHEN DATEDIFF(DAY, CONVERT(DATE, T1.CreateDate), CONVERT(DATE, T1.DateExport)) >= 365 THEN N'Trên 1 Năm'
+		ELSE N'Dưới 3 Tháng'
+	  END AS AgingCategory
+	-- END: vanduc edit 2026-08-15
 				INTO #T2
 		FROM
 				STB_VN_FINISHGOODS T1 WITH(NOLOCK)
@@ -2553,9 +2565,15 @@ BEGIN
 	
 	,(select count(*) from dbo.fn_VVT_PartnoModel()   where partno=T1.partno and modelname=T1.MaterialName) as CheckPartno
 	,case when DATEDIFF(day,isnull(si.InputJobDate,getdate()-366),getdate()) > 365 then 1 else 0 end BackLog_Inventory 
-	-- START: vanduc edit 2026-08-14 - Bổ sung cột AgingDays cho trường hợp ELSE
+	-- START: vanduc edit 2026-08-14 & 2026-08-15 - Bổ sung cột AgingDays & AgingCategory cho trường hợp ELSE
 	, DATEDIFF(DAY, CONVERT(DATE, T1.CreateDate), GETDATE()) AS AgingDays
-	-- END: vanduc edit 2026-08-14 - Bổ sung cột AgingDays
+	, CASE 
+		WHEN DATEDIFF(DAY, CONVERT(DATE, T1.CreateDate), GETDATE()) BETWEEN 90 AND 179 THEN N'3 - 6 Tháng'
+		WHEN DATEDIFF(DAY, CONVERT(DATE, T1.CreateDate), GETDATE()) BETWEEN 180 AND 364 THEN N'6 - 12 Tháng'
+		WHEN DATEDIFF(DAY, CONVERT(DATE, T1.CreateDate), GETDATE()) >= 365 THEN N'Trên 1 Năm'
+		ELSE N'Dưới 3 Tháng'
+	  END AS AgingCategory
+	-- END: vanduc edit 2026-08-15
 		FROM
 				STB_VN_FINISHGOODS T1 WITH(NOLOCK)
 				left outer join STB_SetInfo si WITH(NOLOCK) on t1.LotNo=si.Barcode
