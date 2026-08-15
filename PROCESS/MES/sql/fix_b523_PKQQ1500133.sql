@@ -1,5 +1,5 @@
 -- ====================================================================
--- SCRIPT FIX DỨT ĐIỂM NGUYÊN NHÂN GỐC LỖI IN TEM B523 (STB_VIETNAM_BARCODEWEIGHT)
+-- SCRIPT FIX MẶT TEM IN B523 SANG MÃ MỚI VVQQ143R850605 (STB_ChangePartNoAndLotNo)
 -- Database: SmartFactoryV2
 -- File: sql/fix_b523_PKQQ1500133.sql
 -- ====================================================================
@@ -8,55 +8,45 @@ GO
 
 BEGIN TRANSACTION;
 BEGIN TRY
-    -- 1. Nạp cân nặng vào STB_VIETNAM_BARCODEWEIGHT (Khắc phục nguyên nhân gốc gây ra FormatName lỗi)
+    -- 1. Nạp cân nặng vào STB_VIETNAM_BARCODEWEIGHT
     IF NOT EXISTS (SELECT 1 FROM STB_VIETNAM_BARCODEWEIGHT WHERE BARCODE = 'VVQQ143R850605')
-    BEGIN
-        INSERT INTO STB_VIETNAM_BARCODEWEIGHT (BARCODE, WEIGHT, CREATEDATETIME)
-        VALUES ('VVQQ143R850605', 25.5, GETDATE());
-    END;
+        INSERT INTO STB_VIETNAM_BARCODEWEIGHT (BARCODE, WEIGHT, CREATEDATETIME) VALUES ('VVQQ143R850605', 25.5, GETDATE());
 
     IF NOT EXISTS (SELECT 1 FROM STB_VIETNAM_BARCODEWEIGHT WHERE BARCODE = 'VVPN263R850606')
-    BEGIN
-        INSERT INTO STB_VIETNAM_BARCODEWEIGHT (BARCODE, WEIGHT, CREATEDATETIME)
-        VALUES ('VVPN263R850606', 25.5, GETDATE());
-    END;
+        INSERT INTO STB_VIETNAM_BARCODEWEIGHT (BARCODE, WEIGHT, CREATEDATETIME) VALUES ('VVPN263R850606', 25.5, GETDATE());
 
-    -- 2. Nạp bản ghi cân kho cho Mã MỚI VVQQ143R850605 (Nếu chưa có)
+    -- 2. Nạp bản ghi cân kho thành phẩm
     IF NOT EXISTS (SELECT 1 FROM STB_VN_FINISHGOODS WHERE PackingID = 'PKQQ1500133' AND LotNo = 'VVQQ143R850605')
-    BEGIN
         INSERT INTO STB_VN_FINISHGOODS (IDCODE, PackingID, LotNo, MaterialCode, MaterialName, PackQty, EmpNo, CreatDatePacked, PartNo, CreateDate)
         VALUES ('FGVN_BN' + REPLACE(CONVERT(VARCHAR(10), GETDATE(), 112), '-', ''), 'PKQQ1500133', 'VVQQ143R850605', 'LIVT38-018', 'VEL08253R8506G-B034', 2800, 'vvtworker_BG', CONVERT(VARCHAR(10), GETDATE(), 110), 'VEL08253R8506G-B034', GETDATE());
-    END;
 
-    -- 3. Nạp bản ghi cân kho cho Mã CŨ VVPN263R850606 (Nếu chưa có)
     IF NOT EXISTS (SELECT 1 FROM STB_VN_FINISHGOODS WHERE PackingID = 'PKQQ1500133' AND LotNo = 'VVPN263R850606')
-    BEGIN
         INSERT INTO STB_VN_FINISHGOODS (IDCODE, PackingID, LotNo, MaterialCode, MaterialName, PackQty, EmpNo, CreatDatePacked, PartNo, CreateDate)
         VALUES ('FGVN_BN' + REPLACE(CONVERT(VARCHAR(10), GETDATE(), 112), '-', '') + 'A', 'PKQQ1500133', 'VVPN263R850606', 'LIVT38-018', 'VEL08253R8506G-B034', 2800, 'vvtworker_BG', CONVERT(VARCHAR(10), GETDATE(), 110), 'VEL08253R8506G-B034', GETDATE());
-    END;
 
-    -- 4. Nạp bản ghi kho Bắc Giang tương ứng cho cả 2 mã
+    -- 3. Nạp bản ghi kho Bắc Giang
     IF NOT EXISTS (SELECT 1 FROM STB_VN_FINISHGOODS_BG WHERE PackingID = 'PKQQ1500133' AND LotNo = 'VVQQ143R850605')
-    BEGIN
         INSERT INTO STB_VN_FINISHGOODS_BG (IDCODE, PackingID, LotNo, MaterialCode, MaterialName, PackQty, EmpNo, CreatDatePacked, PartNo, CreateDate)
         VALUES ('FGVN_BG' + REPLACE(CONVERT(VARCHAR(10), GETDATE(), 112), '-', ''), 'PKQQ1500133', 'VVQQ143R850605', 'LIVT38-018', 'VEL08253R8506G-B034', 2800, 'vvtworker_BG', CONVERT(VARCHAR(10), GETDATE(), 110), 'VEL08253R8506G-B034', GETDATE());
-    END;
 
     IF NOT EXISTS (SELECT 1 FROM STB_VN_FINISHGOODS_BG WHERE PackingID = 'PKQQ1500133' AND LotNo = 'VVPN263R850606')
-    BEGIN
         INSERT INTO STB_VN_FINISHGOODS_BG (IDCODE, PackingID, LotNo, MaterialCode, MaterialName, PackQty, EmpNo, CreatDatePacked, PartNo, CreateDate)
         VALUES ('FGVN_BG' + REPLACE(CONVERT(VARCHAR(10), GETDATE(), 112), '-', '') + 'A', 'PKQQ1500133', 'VVPN263R850606', 'LIVT38-018', 'VEL08253R8506G-B034', 2800, 'vvtworker_BG', CONVERT(VARCHAR(10), GETDATE(), 110), 'VEL08253R8506G-B034', GETDATE());
-    END;
 
-    -- 5. Giữ nguyên OldBarcode = VVPN263R850606 để gõ mã cũ VVPN... vẫn tìm ra lô hàng
+    -- 4. 🔴 QUAN TRỌNG: Cập nhật STB_ChangePartNoAndLotNo để SP trả ra LotNo = VVQQ143R850605 lên mặt tem in!
+    UPDATE STB_ChangePartNoAndLotNo SET NewLotID = 'VVQQ143R850605' WHERE oldLotID = 'VVPN263R850606';
+    IF NOT EXISTS (SELECT 1 FROM STB_ChangePartNoAndLotNo WHERE oldLotID = 'VVPN263R850606' AND NewLotID = 'VVQQ143R850605')
+        INSERT INTO STB_ChangePartNoAndLotNo (oldLotID, NewLotID, isLotID, CreateDateTime, CreateUserID) VALUES ('VVPN263R850606', 'VVQQ143R850605', 1, GETDATE(), 'vanduc');
+
+    -- 5. Đồng bộ STB_MaterialLotInfo & STB_LotChangeMaterialHistory
     UPDATE STB_LotChangeMaterialHistory SET OldBarcode = 'VVPN263R850606' WHERE NewBarcode = 'VVQQ143R850605';
     UPDATE STB_MaterialLotInfo SET LotNo = 'VVQQ143R850605' WHERE PackingID = 'PKQQ1500133';
 
-    -- 6. Đặt cờ cho phép in tem trong STB_PackingLabelPrintHist
+    -- 6. Đặt cờ cho phép in tem
     UPDATE STB_PackingLabelPrintHist SET IsPrintAllow = 1, PrintCount = 0 WHERE PackingID = 'PKQQ1500133';
 
     COMMIT TRANSACTION;
-    PRINT N'SUCCESS: Đã khôi phục OldBarcode = VVPN263R850606 để ô search gõ mã cũ hay mã mới đều nạp lô hàng!';
+    PRINT N'SUCCESS: Đã nạp thành công STB_ChangePartNoAndLotNo. Mặt tem in ra sẽ ghi NGUYÊN VĂN VVQQ143R850605!';
 END TRY
 BEGIN CATCH
     IF @@TRANCOUNT > 0 ROLLBACK TRANSACTION;
