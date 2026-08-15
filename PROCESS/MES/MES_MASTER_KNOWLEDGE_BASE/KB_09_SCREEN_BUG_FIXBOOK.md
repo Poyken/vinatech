@@ -191,7 +191,7 @@ Related Files:
 | # | Triệu chứng | Nguyên nhân | Fix |
 |---|---|---|---|
 | 1 | "Không tồn tại thiết lập Điện cực... Chưa CONFIG STB_SLITTINGLOCATIONCONFIG_VVT" | Bảng `STB_SlittingLocationConfig_VVT` thiếu record cho model | `INSERT INTO STB_SlittingLocationConfig_VVT (MaterialCode, LocationCode, ...) VALUES (...)` — xem [KB_05_02 §8.2](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_02_SCREEN_BUGS_QC.md#82-lỗi-chưa-config-trong-stb_slittinglocationconfig_vvt) |
-| 2 | Yêu cầu xóa dữ liệu kết quả cắt điện cực theo STT (ProcSeq 10-70) tại tab Slitting | Cắt dư hoặc lỗi dòng kết quả cắt điện cực cần dọn dẹp dữ liệu dở dang | Safe SQL Delete: `DELETE FROM STB_ProdRouteHist WHERE RouteCode = 'V-04' AND ProcSeq BETWEEN 10 AND 70 AND ControlNo IN (SELECT ControlNo FROM STB_RawMaterialInputHist WHERE RawMaterialBarcode = 'MÃ_LOT')` |
+| 2 | Yêu cầu xóa dữ liệu kết quả cắt điện cực theo STT (Seq 10-70) tại tab Slitting | Cắt dư hoặc lỗi dòng kết quả cắt điện cực cần dọn dẹp dữ liệu dở dang | Safe SQL Delete: `DELETE FROM STB_ElectrodeSlittingResult WHERE ElectrodeLotNumber = 'MÃ_LOT' AND Seq BETWEEN 10 AND 70` |
 
 > 🔗 Chi tiết: [KB_05_02 §7.6](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_02_SCREEN_BUGS_QC.md)
 

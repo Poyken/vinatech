@@ -1,8 +1,8 @@
 -- ====================================================================
 -- SCRIPT XÓA LỊCH SỬ CẮT ĐIỆN CỰC (STT 10-70) CHO LOT VVQO2020001E36
 -- Database: SmartFactoryV2
--- Screen: [B552] Vietnam_Kết quả đo điện cực (Tab Slitting)
--- Target Table: STB_ProdRouteHist (RouteCode = 'V-04', ProcSeq: 10 -> 70)
+-- Screen: [B552] Vietnam_Kết quả đo điện cực (Tab Slitting - Cắt điện cực)
+-- Target Table: STB_ElectrodeSlittingResult (Seq: 10 -> 70)
 -- ====================================================================
 USE SmartFactoryV2;
 GO
@@ -12,18 +12,16 @@ BEGIN TRY
     -- 1. Đếm và kiểm tra số bản ghi mục tiêu
     DECLARE @TargetCount INT;
     SELECT @TargetCount = COUNT(*) 
-    FROM STB_ProdRouteHist WITH(NOLOCK)
-    WHERE RouteCode = 'V-04' 
-      AND ControlNo IN (SELECT ControlNo FROM STB_RawMaterialInputHist WITH(NOLOCK) WHERE RawMaterialBarcode = 'VVQO2020001E36')
-      AND ProcSeq BETWEEN 10 AND 70;
+    FROM STB_ElectrodeSlittingResult WITH(NOLOCK)
+    WHERE ElectrodeLotNumber = 'VVQO2020001E36'
+      AND Seq BETWEEN 10 AND 70;
 
-    PRINT N'Số bản ghi xác nhận cần xóa (STT 10 - 70): ' + CAST(@TargetCount AS VARCHAR(10));
+    PRINT N'Số bản ghi xác nhận cần xóa trong STB_ElectrodeSlittingResult (STT 10 - 70): ' + CAST(@TargetCount AS VARCHAR(10));
 
     -- 2. Thực hiện xóa an toàn trong Transaction
-    DELETE FROM STB_ProdRouteHist
-    WHERE RouteCode = 'V-04'
-      AND ControlNo IN (SELECT ControlNo FROM STB_RawMaterialInputHist WITH(NOLOCK) WHERE RawMaterialBarcode = 'VVQO2020001E36')
-      AND ProcSeq BETWEEN 10 AND 70;
+    DELETE FROM STB_ElectrodeSlittingResult
+    WHERE ElectrodeLotNumber = 'VVQO2020001E36'
+      AND Seq BETWEEN 10 AND 70;
 
     -- 3. Xác nhận Hoàn tất
     COMMIT TRANSACTION;

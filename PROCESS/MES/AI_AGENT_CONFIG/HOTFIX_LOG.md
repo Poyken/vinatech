@@ -248,14 +248,13 @@ Related Files:
 * **Ngày sửa:** `2026-08-15`
 * **Màn hình liên quan (TCode):** `[B552] - Vietnam_Kết quả đo điện cực (Tab Slitting - Cắt điện cực)`
 * **Triệu chứng lỗi:** Cần dọn dẹp các dòng kết quả cắt điện cực dở dang từ STT 10 đến STT 70 cho Lot `VVQO2020001E36`.
-* **Nguyên nhân gốc (Root Cause):** Thao tác cắt chia cuộn dư hoặc lỗi dòng kết quả cần xóa bỏ bản ghi lịch sử trong `STB_ProdRouteHist`.
+* **Nguyên nhân gốc (Root Cause):** Thao tác cắt chia cuộn dư hoặc lỗi dòng kết quả cần xóa bỏ bản ghi lịch sử trong `STB_ElectrodeSlittingResult`.
 * **Phương án sửa lỗi & Script Deploy:**
   ```sql
   BEGIN TRANSACTION;
-  DELETE FROM STB_ProdRouteHist
-  WHERE RouteCode = 'V-04'
-    AND ControlNo IN (SELECT ControlNo FROM STB_RawMaterialInputHist WHERE RawMaterialBarcode = 'VVQO2020001E36')
-    AND ProcSeq BETWEEN 10 AND 70;
+  DELETE FROM STB_ElectrodeSlittingResult
+  WHERE ElectrodeLotNumber = 'VVQO2020001E36'
+    AND Seq BETWEEN 10 AND 70;
   COMMIT TRANSACTION;
   ```
 
