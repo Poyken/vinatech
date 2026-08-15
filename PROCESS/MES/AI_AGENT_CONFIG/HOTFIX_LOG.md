@@ -244,3 +244,18 @@ Related Files:
   COMMIT TRANSACTION;
   ```
 
+### [B552] — 📍 ID_29 Xóa 61 bản ghi kết quả cắt điện cực (STT 10-70) cho Lot VVQO2020001E36
+* **Ngày sửa:** `2026-08-15`
+* **Màn hình liên quan (TCode):** `[B552] - Vietnam_Kết quả đo điện cực (Tab Slitting - Cắt điện cực)`
+* **Triệu chứng lỗi:** Cần dọn dẹp các dòng kết quả cắt điện cực dở dang từ STT 10 đến STT 70 cho Lot `VVQO2020001E36`.
+* **Nguyên nhân gốc (Root Cause):** Thao tác cắt chia cuộn dư hoặc lỗi dòng kết quả cần xóa bỏ bản ghi lịch sử trong `STB_ProdRouteHist`.
+* **Phương án sửa lỗi & Script Deploy:**
+  ```sql
+  BEGIN TRANSACTION;
+  DELETE FROM STB_ProdRouteHist
+  WHERE RouteCode = 'V-04'
+    AND ControlNo IN (SELECT ControlNo FROM STB_RawMaterialInputHist WHERE RawMaterialBarcode = 'VVQO2020001E36')
+    AND ProcSeq BETWEEN 10 AND 70;
+  COMMIT TRANSACTION;
+  ```
+
