@@ -839,5 +839,38 @@ ROLLBACK
   2. Click chọn thùng PackingID cần in.
   3. Bấm **`In tem`** ➔ Tem nhả ra in NGUYÊN VĂN Barcode MÃ MỚI thành công 100%!
 
+---
+
+### 6.21 Chuẩn Kiến Trúc Luồng Liên Thông B351 (Lot Transition) ➔ B523 (Sản Xuất Đóng Gói & In Tem)
+
+> **📌 Ý nghĩa kiến trúc:** Tổng hợp mối quan hệ liên thông 360° giữa màn hình B351 (Đổi mã) và B523 (Đóng gói/In tem). Giúp Kỹ sư MES & AI hiểu rõ cách thức hệ thống vận hành để ngắt dứt điểm 100% lỗi kẹt tem hoặc in sai Barcode sau khi đổi mã.
+
+#### 1. Sơ đồ ma trận 6 bảng Database liên thông B351 ↔ B523:
+
+```
+[B351: Thay đổi model] ──► 1. STB_SetInfo (Barcode = Mã Mới)
+                       ──► 2. STB_LotChangeMaterialHistory (OldBarcode ➔ NewBarcode)
+                       ──► 3. STB_ChangePartNoAndLotNo (oldLotID ➔ NewLotID)
+                                     │
+                                     ▼
+[B523: Search & Pack]  ──► 4. STB_VIETNAM_BARCODEWEIGHT (WEIGHT > 1 ➔ FormatName = 포장라벨NewVietNam)
+                       ──► 5. STB_VN_FINISHGOODS / _BG (Nhập kho thành phẩm)
+                       ──► 6. STB_PackingLabelPrintHist (IsPrintAllow = 1)
+```
+
+#### 2. Quy trình 4 Bước Vận Hành & Khắc Phục Chuẩn (Standard Operating Workflow):
+
+1. **Thao tác UI B351 (Chuyển đổi Lot):**
+   - Chọn Kế hoạch mục tiêu ở Lưới 1 (`DayProdPlanForChangeMaterial`) ➔ Chọn Lot ở Lưới 2 (`SetInfoForChangeMaterial`) ➔ Bấm nút **"Thay đổi model"**.
+2. **Kích hoạt đồng bộ 6 bảng DB (Auto/Manual Script):**
+   - Đảm bảo `STB_VIETNAM_BARCODEWEIGHT` có dữ liệu cân nặng cho cả mã mới & mã cũ.
+   - Đảm bảo `STB_ChangePartNoAndLotNo` có cặp ánh xạ (`oldLotID` ➔ `NewLotID = Mã Mới`).
+   - Đảm bảo `STB_VN_FINISHGOODS` & `STB_VN_FINISHGOODS_BG` có bản ghi cân kho thành phẩm.
+3. **Thao tác UI B523 (Search & Gộp thùng):**
+   - Công nhân gõ mã CŨ hoặc mã MỚI vào ô `Mã barcode` ở B523 ➔ Bấm **Search** ➔ SP `usp_Vietnam_GetProdPackingForBarcode_VVT` tự tra B351 nạp lô hàng lên lưới.
+4. **Thao tác UI B523 (In tem nhãn):**
+   - Bấm **`In tem`** ➔ SP `usp_Vietnam_GetBoxIDForLotNo_VVT` đọc cân nặng (>0) ➔ Trả `FormatName` chuẩn.
+   - SP đọc `STB_ChangePartNoAndLotNo` ➔ Xuất mã MỚI ra cột `LotNo` ➔ Tem nhả ra in NGUYÊN VĂN Barcode MÃ MỚI 100%!
+
 
 
