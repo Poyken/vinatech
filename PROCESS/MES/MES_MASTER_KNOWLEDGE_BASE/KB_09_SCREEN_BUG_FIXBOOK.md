@@ -175,6 +175,7 @@ Related Files:
 | 6 | "PQC chưa nhập số lượng NG" | SP check DefectQty ở công đoạn trước phải > 0 khi có mã lỗi `_00` (Đạt) | Logic bug — mã `_00` = OK nhưng SP đọc COUNT lỗi = 0 → nhầm là chưa nhập. Fix: ALTER SP hoặc IT nhập 1 dòng DefectQty=0 cho mã `_00` |
 | 7 | Grid `ProdRouteBarcodeForDefect_VNT` hiển thị lỗi sai/thừa cần xóa | OP nhập nhầm defect hoặc defect tạo tự động không đúng | Xóa mềm: `UPDATE STB_DefectRepairInfo SET IsDelete='1', ChangeDateTime=GETDATE(), ChangeUserID='ducnv_fix' WHERE ControlNo=(SELECT ControlNo FROM STB_SetInfo WHERE Barcode='MÃ_BARCODE') AND IsDelete='0'`. VD: Barcode `K16418106262500772` → ControlNo `20260618000445`, DefectSummaryNo `20260619000834/835` (VP02_005, ND02_006). ducnv 2026-06-19 |
 | 8 | Nút "Nhập lỗi" bị mờ / Ẩn (Disabled) | Công đoạn tiếp theo đã có dữ liệu (`IsHasNextProd = 1`) hoặc đã bị ghi nhận Loss (`IsLoss = 1`) theo biểu thức Expression: `!IsHasNextProd && !IsLoss` | Hủy/Rollback công đoạn sau: (1) `DELETE FROM STB_DefectRepairInfo WHERE ControlNo='...' AND FindRouteCode IN ('...')`, (2) `DELETE FROM STB_ProdRouteHist WHERE ControlNo='...' AND RouteCode IN ('...')`, (3) `UPDATE STB_ProdRouteHist SET CompleteRoute = NULL WHERE ControlNo='...' AND RouteCode='...'` cho công đoạn trước — xem [KB_03_01_OVERVIEW.md § 5.16](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_01_OVERVIEW.md) |
+| 9 | Báo lỗi "Công đoạn này không có trong Routing hoặc là công đoạn cuối cùng" khi chốt sản lượng | Công đoạn liền trước bị set `CompleteRoute = 1` trong khi các công đoạn downstream đã sinh dòng dở dang | Reset `CompleteRoute = NULL` ở công đoạn trước và xóa các dòng công đoạn downstream chưa hoàn thành: (1) `DELETE FROM STB_ProdRouteHist WHERE ControlNo = '...' AND ProdRouteHistNo IN (các_id_dưới)`, (2) `UPDATE STB_ProdRouteHist SET CompleteRoute = NULL WHERE ControlNo = '...' AND RouteCode = 'công_đoạn_trước'` |
 
 > 🔗 Chi tiết: [KB_03 §B530](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_02_CELL_LINE.md), [KB_08 §2](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_08_CORE_SP_ENGINE.md) và [KB_08](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_08_CORE_SP_ENGINE.md)
 
@@ -260,17 +261,18 @@ Related Files:
 |---|---|---|---|
 | 1 | Thiếu công đoạn trên báo cáo | OP chưa nhập đủ 4 công đoạn (Mixing/Coating/Rollpress/Slitting) tại B552 | Yêu cầu OP bổ sung nhập liệu tại B552 |
 | 2 | 🔴 BY/YP 120/180 A301 1.5B: Mixing Input = 0, có Coating Output | App cân NVL Mixing trên máy CMC không gọi SP `usp_DoCreateElectrodeMixStepInfo_electron`. DB + SP + config `STB_ElectrodeStep` đều OK. Ảnh hưởng: `CREBL85L`, `CRFYL85-01`, `CRFYN85L-01`. Phát hiện 2026-06-19. | Kiểm tra phần mềm cân trên máy CMC (log, phiên bản, kết nối DB). Xem [KB_05 §8.9](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md) |
+| 3 | Số mét sản lượng Slitting (`V-11`) mã YP (`CREYO85-04`) hiển thị lệch vọt lên 698.60m/697.20m thay vì 499.00m/498.00m | SP `usp_Vietnam_ElectrodeProdRouteHist_get` bị hardcode `SUM(ProductionQty)/5` cho mã `CREYO85-04` trong khi quy cách cắt YP tạo 7 cuộn tem (Seq 1..7) | ALTER SP `usp_Vietnam_ElectrodeProdRouteHist_get` thay `SUM(ProductionQty)/5` bằng `AVG(ProductionQty)` và `AVG(GoodQtyLength)` để tính động theo số cuộn cắt thực tế. |
 
-### [B882]
-**Tên:** ANDON Display
+### [W788]
+**Tên:** GetDataSortingProgram (Tra cứu kết quả đo Sorting V2)
 
 | # | Triệu chứng | Nguyên nhân | Fix |
 |---|---|---|---|
-| 1 | ANDON không hiện real-time | WebSocket disconnect hoặc AndonDB query timeout | Kiểm tra kết nối WebSocket + `AndonDB.dbo.ANDON_*` tables |
+| 1 | Màn hình W788 bị dư nhiều cột thừa hoặc cột trắng khi tra cứu | SP `sp_GetSortingDataProgram` gộp dữ liệu cũ (Ver 1) và trả ra các cột alias dư thừa (ESR_mOhm, OCV_mV...), khiến lưới WinForms tự động sinh thêm cột | 1. Chuyển SP `sp_GetSortingDataProgram` sang đọc thuần bảng V2 `SortingDataImportExcel_V2` (bỏ UNION ALL với V1). <br> 2. Khớp 100% danh sách cột theo đúng thứ tự 3 công đoạn trong file Excel máy đo V2 (`CCCVChg`, `CCDchg`, `Rest`) và thông tin MES (`InputLineCode`, `EquipmentNumber`, `LotNo`). <br> 3. File backup SP gốc: `sp_GetSortingDataProgram_Backup_Original.sql`. |
 
 ---
 
----
+
 
 ### [B767]
 **Tên:** In tem Sanmina (Sanmina Label Print)
@@ -434,6 +436,7 @@ COMMIT TRANSACTION;
 |---|---|---|---|
 | 1 | Lot không chuyển kho được | Lot bị HOLD hoặc QC Reject | Giải phóng HOLD hoặc xử lý theo quy trình NG |
 | 2 | Khi xuất chuyển kho sang nhà máy Hưng Yên (`VVT_F5`), ô **Mã kho hàng (Tới)** không có kho Hưng Yên và ô **Mã chuyền** bị trống (hoặc dùng UNION ALL bị đúp khóa chính `Duplicate primary key`) | 1. Popup `TargetMaterialWarehouse_Search` gọi SP `usp_TargetMaterialWarehouse_popup` chỉ lọc kho thuộc `WorkCenterCode` hiện tại. 2. Popup `LineInfo_InoutMaterial` gọi SP `usp_LineInfo_popup_InoutMaterial` lọc `WHERE MaterialWarehouseCode = @SourceMaterialWarehouse`, mã chuyền `HY_BN`/`HY_BG` bị `NULL` | 1. Sửa `usp_TargetMaterialWarehouse_popup` dùng `UNION` (không dùng `UNION ALL` để tránh đúp khóa chính kho). 2. Thêm `HY_BN` (VVT_F1) & `HY_BG` (VVT_F2) vào `STB_LineInfo` set `MaterialWarehouseCode = 'ROH_HY_WH'`. 3. Sửa `usp_LineInfo_popup_InoutMaterial` thêm `OR (LI.LineCode IN ('HY_BN', 'HY_BG') AND @SourceMaterialWarehouse LIKE '%HY%')`. (vanduc & Mrs.VanOc & Hải Triều 2026-07-30) |
+| 3 | Ô `ProcessedLotID3` bị rỗng trên lưới màn hình F430 | `STB_MaterialWarehouseInOutHist.ProcessedLotID` bị NULL khi xuất NVL thô ra chuyền. Cột `ProcessedLotID3` trên F430 chính là `LotID` ở màn F721 (`STB_MaterialLotInfo.LotID`) | Sửa SP `usp_MaterialWarehouseInOutHist_get` dùng fallback `ISNULL(NULLIF(MWIOH.ProcessedLotID, ''), MWIOH.LotID) AS ProcessedLotID3` + Chạy SQL UPDATE bù cho các bản ghi đã tạo. |
 
 
 ### [F721]

@@ -1,28 +1,4 @@
--- ==============================================================================
--- STORED PROCEDURE: usp_VN_ShowAllFinishGoodMES
--- MÀN HÌNH: [FG01] Thành phẩm Bắc Ninh
--- LỊCH SỬ THAY ĐỔI: vanduc edit 2026-08-14
--- ĐỐI CHIẾU BAN ĐẦU: [sql/procedures/usp_VN_ShowAllFinishGoodMES_ORIGINAL.sql](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/sql/procedures/usp_VN_ShowAllFinishGoodMES_ORIGINAL.sql)
---
--- TÓM TẮT THAY ĐỔI:
---   1. vanduc edit 2026-08-14: Bổ sung cột AgingDays (Số ngày tồn kho = DATEDIFF(DAY, CreateDate, GETDATE()))
---      phục vụ tính năng đổi màu cảnh báo tuổi hàng trên giao diện NAIS Client (FG01).
---   2. vanduc edit 2026-08-14: Tối ưu tốc độ truy vấn từ 169 giây xuống ~7.7 giây (Nhanh gấp 22 lần)
---      bằng cách đẩy điều kiện lọc ngày (@FromDate, @ToDate) vào mệnh đề WHERE ban đầu.
---   3. vanduc edit 2026-08-14: Bảo tồn 100% code cũ (hơn 2.500 dòng), bảng giá Prices và các cột cũ.
---      Tất cả lệnh cũ bị sửa đều bọc trong /* vanduc edit 2026-08-14 [CODE CŨ BẢO LƯU]: ... */.
--- ==============================================================================
-
-USE [SmartFactoryV2]
-GO
-
-IF OBJECT_ID('dbo.usp_VN_ShowAllFinishGoodMES', 'P') IS NOT NULL
-BEGIN
-    PRINT 'Updating Stored Procedure [dbo].[usp_VN_ShowAllFinishGoodMES]...'
-END
-GO
-
-ALTER PROCEDURE [dbo].[usp_VN_ShowAllFinishGoodMES]
+﻿CREATE proc [dbo].[usp_VN_ShowAllFinishGoodMES] -- exec usp_VN_ShowAllFinishGoodMES '','','Xuất','2020-10-01','2020-10-03'
 @pFromdateinput DATE = NULL,
 @pTodateinput DATE = NULL,
 @TypeInput NVARCHAR(50) = NULL,
@@ -36,10 +12,6 @@ BEGIN
 		DECLARE @FromDateExp DATE = @pFromdateExp
 		DECLARE @ToDateExp DATE = @pTodateExp
 		DECLARE @Input NVARCHAR(50) = @TypeInput
-
-		IF OBJECT_ID('tempdb..#PartnoModel') IS NOT NULL DROP TABLE #PartnoModel;
-		SELECT DISTINCT REPLACE(RTRIM(LTRIM(partno)), ' ', '') AS partno, RTRIM(LTRIM(modelname)) AS modelname INTO #PartnoModel FROM dbo.fn_VVT_PartnoModel();
-		CREATE UNIQUE CLUSTERED INDEX IX_PartnoModel ON #PartnoModel(partno, modelname);
 	
 				if @Input = N'Nhập'
 
@@ -65,7 +37,7 @@ BEGIN
 				EmpNo,
 				CreatDatePacked AS PackedDate,
 				RIGHT(CreatDatePacked,8) AS TimePacked,
-				'' + replace(T1.PartNo, ' ', '') + '' AS PartNo,
+				'' + replace(PartNo, ' ', '') + '' AS PartNo,
 				TypeProduction,
 				StatusSystem,
 				Statusout,
@@ -1123,28 +1095,15 @@ BEGIN
 	ELSE 0.000
 	END AS Price
 			
-	, CASE WHEN pm.partno IS NOT NULL THEN 1 ELSE 0 END AS CheckPartno
-	, CASE WHEN EXISTS (SELECT 1 FROM STB_SetInfo si WITH(NOLOCK) WHERE si.Barcode = T1.LotNo AND DATEDIFF(day, ISNULL(si.InputJobDate, GETDATE()-366), GETDATE()) > 365) THEN 1 ELSE 0 END AS BackLog_Inventory
-	-- START: vanduc edit 2026-08-14 & 2026-08-15 - Bổ sung cột AgingDays & AgingCategory phục vụ phễu lọc tuổi hàng trên FG01
-	, DATEDIFF(DAY, CONVERT(DATE, T1.CreateDate), GETDATE()) AS AgingDays
-	, CASE 
-		WHEN DATEDIFF(DAY, CONVERT(DATE, T1.CreateDate), GETDATE()) BETWEEN 90 AND 179 THEN N'3 - 6 Tháng'
-		WHEN DATEDIFF(DAY, CONVERT(DATE, T1.CreateDate), GETDATE()) BETWEEN 180 AND 364 THEN N'6 - 12 Tháng'
-		WHEN DATEDIFF(DAY, CONVERT(DATE, T1.CreateDate), GETDATE()) >= 365 THEN N'Trên 1 Năm'
-		ELSE N'Dưới 3 Tháng'
-	  END AS AgingCategory
-	-- END: vanduc edit 2026-08-15
+	,(select count(*) from dbo.fn_VVT_PartnoModel()   where partno=T1.partno and modelname=T1.MaterialName) as CheckPartno
+	,case when DATEDIFF(day,isnull(si.InputJobDate,getdate()-366),getdate()) > 365 then 1 else 0 end BackLog_Inventory
 				INTO #T1
 		FROM
 				STB_VN_FINISHGOODS T1 WITH(NOLOCK)
-				LEFT JOIN #PartnoModel pm WITH(NOLOCK) ON T1.PartNo = pm.partno AND T1.MaterialName = pm.modelname
+				left outer join STB_SetInfo si WITH(NOLOCK) on t1.LotNo=si.Barcode
 	    WHERE 
-		/* vanduc edit 2026-08-14 [CODE CŨ BẢO LƯU]:
-		Flag = 1  --and DATEDIFF(day, ISNULL(si.InputJobDate, GETDATE()-366), GETDATE()) <= 365
-		*/
-		-- START: vanduc edit 2026-08-14 - Tối ưu tốc độ truy vấn từ 169s -> 7.7s bằng cách đẩy lọc ngày vào WHERE
-		Flag = 1 AND (@FromDate IS NULL OR T1.CreateDate >= @FromDate) AND (@ToDate IS NULL OR T1.CreateDate < DATEADD(DAY, 1, @ToDate))
-		-- END: vanduc edit 2026-08-14 - Tối ưu tốc độ truy vấn
+		-- Tạm đối dứng Audit ngày 27/11/2025
+				Flag = 1  --and DATEDIFF(day, ISNULL(si.InputJobDate, GETDATE()-366), GETDATE()) <= 365
 				
 							select
 									*
@@ -1185,7 +1144,7 @@ BEGIN
 				EmpNo,
 				CreatDatePacked AS PackedDate,
 				RIGHT(CreatDatePacked,8) AS TimePacked,
-				'' + replace(T1.PartNo, ' ', '') + '' AS PartNo,
+				'' + replace(PartNo, ' ', '') + '' AS PartNo,
 				TypeProduction,
 				StatusSystem,
 				Statusout,
@@ -1843,28 +1802,14 @@ BEGIN
 	ELSE 0.000
 	END AS Price
 
-	, CASE WHEN pm.partno IS NOT NULL THEN 1 ELSE 0 END AS CheckPartno	
-	, CASE WHEN EXISTS (SELECT 1 FROM STB_SetInfo si WITH(NOLOCK) WHERE si.Barcode = T1.LotNo AND DATEDIFF(day, ISNULL(si.InputJobDate, GETDATE()-366), GETDATE()) > 365) THEN 1 ELSE 0 END AS BackLog_Inventory
-	-- START: vanduc edit 2026-08-14 & 2026-08-15 - Bổ sung cột AgingDays & AgingCategory tính số ngày tồn kho tính đến ngày xuất hàng
-	, DATEDIFF(DAY, CONVERT(DATE, T1.CreateDate), CONVERT(DATE, T1.DateExport)) AS AgingDays
-	, CASE 
-		WHEN DATEDIFF(DAY, CONVERT(DATE, T1.CreateDate), CONVERT(DATE, T1.DateExport)) BETWEEN 90 AND 179 THEN N'3 - 6 Tháng'
-		WHEN DATEDIFF(DAY, CONVERT(DATE, T1.CreateDate), CONVERT(DATE, T1.DateExport)) BETWEEN 180 AND 364 THEN N'6 - 12 Tháng'
-		WHEN DATEDIFF(DAY, CONVERT(DATE, T1.CreateDate), CONVERT(DATE, T1.DateExport)) >= 365 THEN N'Trên 1 Năm'
-		ELSE N'Dưới 3 Tháng'
-	  END AS AgingCategory
-	-- END: vanduc edit 2026-08-15
+	,(select count(*) from dbo.fn_VVT_PartnoModel()   where partno=T1.partno and modelname=T1.MaterialName) as CheckPartno	
+	,case when DATEDIFF(day,isnull(si.InputJobDate,getdate()-366),getdate()) > 365 then 1 else 0 end BackLog_Inventory
 				INTO #T2
 		FROM
 				STB_VN_FINISHGOODS T1 WITH(NOLOCK)
-				LEFT JOIN #PartnoModel pm WITH(NOLOCK) ON T1.PartNo = pm.partno AND T1.MaterialName = pm.modelname
+				left outer join STB_SetInfo si WITH(NOLOCK) on t1.LotNo=si.Barcode
 	    WHERE 
-		/* vanduc edit 2026-08-14 [CODE CŨ BẢO LƯU GỐC TỪ usp_VN_ShowAllFinishGoodMES_ORIGINAL.sql]:
-		Flag = 1 AND DateExport IS NOT NULL --and DATEDIFF(day, ISNULL(si.InputJobDate, GETDATE()-366), GETDATE()) <= 365
-		*/
-		-- START: vanduc edit 2026-08-14 - Tối ưu tốc độ truy vấn xuất kho bằng cách đẩy lọc ngày xuất vào WHERE
-		Flag = 1 AND DateExport IS NOT NULL AND (@FromDateExp IS NULL OR T1.DateExport >= @FromDateExp) AND (@ToDateExp IS NULL OR T1.DateExport < DATEADD(DAY, 1, @ToDateExp))
-		-- END: vanduc edit 2026-08-14 - Tối ưu tốc độ truy vấn xuất kho
+				Flag = 1 AND DateExport IS NOT NULL --and DATEDIFF(day, ISNULL(si.InputJobDate, GETDATE()-366), GETDATE()) <= 365
 						
 
 							select
@@ -1908,7 +1853,7 @@ BEGIN
 				EmpNo,
 				CreatDatePacked AS PackedDate,
 				RIGHT(CreatDatePacked,8) AS TimePacked,
-				'' + replace(T1.PartNo, ' ', '') + '' AS PartNo,
+				'' + replace(PartNo, ' ', '') + '' AS PartNo,
 				TypeProduction,
 				StatusSystem,
 				Statusout,
@@ -2567,27 +2512,13 @@ BEGIN
 	ELSE 0.000
 	END AS Price
 	
-	, CASE WHEN pm.partno IS NOT NULL THEN 1 ELSE 0 END AS CheckPartno
-	, CASE WHEN EXISTS (SELECT 1 FROM STB_SetInfo si WITH(NOLOCK) WHERE si.Barcode = T1.LotNo AND DATEDIFF(day, ISNULL(si.InputJobDate, GETDATE()-366), GETDATE()) > 365) THEN 1 ELSE 0 END AS BackLog_Inventory 
-	-- START: vanduc edit 2026-08-14 & 2026-08-15 - Bổ sung cột AgingDays & AgingCategory cho trường hợp ELSE
-	, DATEDIFF(DAY, CONVERT(DATE, T1.CreateDate), GETDATE()) AS AgingDays
-	, CASE 
-		WHEN DATEDIFF(DAY, CONVERT(DATE, T1.CreateDate), GETDATE()) BETWEEN 90 AND 179 THEN N'3 - 6 Tháng'
-		WHEN DATEDIFF(DAY, CONVERT(DATE, T1.CreateDate), GETDATE()) BETWEEN 180 AND 364 THEN N'6 - 12 Tháng'
-		WHEN DATEDIFF(DAY, CONVERT(DATE, T1.CreateDate), GETDATE()) >= 365 THEN N'Trên 1 Năm'
-		ELSE N'Dưới 3 Tháng'
-	  END AS AgingCategory
-	-- END: vanduc edit 2026-08-15
+	,(select count(*) from dbo.fn_VVT_PartnoModel()   where partno=T1.partno and modelname=T1.MaterialName) as CheckPartno
+	,case when DATEDIFF(day,isnull(si.InputJobDate,getdate()-366),getdate()) > 365 then 1 else 0 end BackLog_Inventory 
 		FROM
 				STB_VN_FINISHGOODS T1 WITH(NOLOCK)
-				LEFT JOIN #PartnoModel pm WITH(NOLOCK) ON T1.PartNo = pm.partno AND T1.MaterialName = pm.modelname
+				left outer join STB_SetInfo si WITH(NOLOCK) on t1.LotNo=si.Barcode
 	    WHERE 
-		/* vanduc edit 2026-08-14 [CODE CŨ BẢO LƯU GỐC TỪ usp_VN_ShowAllFinishGoodMES_ORIGINAL.sql]:
-		Flag = 1  --and DATEDIFF(day, ISNULL(si.InputJobDate, GETDATE()-366), GETDATE()) <= 365
-		*/
-		-- START: vanduc edit 2026-08-14 - Tối ưu lọc ngày cho trường hợp ELSE bằng cách đẩy lọc vào WHERE
-		Flag = 1 AND (@FromDate IS NULL OR T1.CreateDate >= @FromDate) AND (@ToDate IS NULL OR T1.CreateDate < DATEADD(DAY, 1, @ToDate))
-		-- END: vanduc edit 2026-08-14 - Tối ưu lọc ngày cho trường hợp ELSE
+				Flag = 1  --and DATEDIFF(day, ISNULL(si.InputJobDate, GETDATE()-366), GETDATE()) <= 365
 						
 					end
 		
