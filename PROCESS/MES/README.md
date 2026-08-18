@@ -1,47 +1,41 @@
-<!--
-AI-READY METADATA
-Purpose: Workspace Root README — Hướng dẫn chuyển hướng, cấu trúc thư mục & AI Entry point cho hệ thống MES Vinatech
-Scope: Entire MES Workspace Directory
-Single Source of Truth: README.md (Directory Architecture)
-Related Files:
-  - [GEMINI.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/GEMINI.md)
-  - [BOOTSTRAP.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/AI_AGENT_CONFIG/BOOTSTRAP.md)
-  - [KB_INDEX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
--->
+# ⚡ Vinatech MES Workspace (Enterprise MES_V2 Architecture)
 
-# 🚀 VINATECH MES - SYSTEM INDEX
-
-> [!IMPORTANT]
-> **CẬP NHẬT QUAN TRỌNG:** Toàn bộ hệ thống tri thức, quy trình nghiệp vụ và hướng dẫn sửa lỗi tích hợp giữa Groupware và MES đã được hợp nhất thành một thư viện duy nhất để tránh trùng lặp dữ liệu và phân mảnh:
-> 
-> *   ### 🗂️ [MỤC LỤC TRUNG TÂM TRA CỨU HỆ THỐNG](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
-> 
-> Vui lòng bấm vào liên kết trên để chuyển hướng tới trang mục lục chính điều hướng 3 Volumes tri thức cốt lõi.
-
+Workspace quản trị và phát triển hệ sinh thái NAIS MES cho Vinatech.
 
 ---
 
-## 📁 Cấu Trúc Thư Mục MES Thực Tế
+## 🚀 1. Cấu Trúc Thư Mục Hiện Tại
+
 ```
 MES/
-├── README.md                              # File này - Hướng dẫn chuyển hướng & Cấu trúc thư mục
-├── GEMINI.md                              # Auto-context tối thiểu cho AI Agent
-├── db_config.json                         # File cấu hình kết nối Database (SoT)
-├── AI_AGENT_CONFIG/                       # Cấu hình tối ưu dành cho AI Agent
-│   ├── BOOTSTRAP.md                       # Khởi động (đọc đầu tiên mỗi phiên)
-│   ├── RULES.md                           # Quy tắc an toàn bắt buộc (SELECT-only)
-│   ├── KNOWLEDGE.md                       # Cheat sheet tra cứu nhanh bảng/SP
-│   ├── SKILLS.md                          # SQL/PS templates & lessons learned
-│   └── HOTFIX_LOG.md                      # Nhật ký các lỗi đã được xử lý (Hotfix logs)
-├── MES_MASTER_KNOWLEDGE_BASE/             # Cơ sở tri thức chuyên sâu
-│   ├── KB_INDEX.md                        # Chỉ mục định tuyến KB
-│   └── KB_01 ... KB_11                    # Hướng dẫn chi tiết các màn hình/nghiệp vụ
-├── sql/                                   # SQL hotfix scripts & stored procedures
-├── db_shared.ps1                          # Module chia sẻ logic DB và safety checks
-├── db_sync_tool.ps1                       # PowerShell tải SP tạm từ DB (không commit Git)
-├── deploy_tool.ps1                        # PowerShell để triển khai SQL lên DB
-├── run_query.ps1                          # PowerShell truy vấn DB an toàn (SELECT-only)
-├── validate_sql.ps1                       # PowerShell kiểm tra cú pháp SQL trước khi chạy
-├── debug_screen.ps1                       # PowerShell chẩn đoán lỗi màn hình theo TCode/ErrorMsg
-└── record_hotfix.ps1                      # PowerShell ghi nhận lỗi và tự động vá vào KB_09
+├── MES_V2/                          # HỆ THỐNG MES THẾ HỆ MỚI (MODERN & MODULAR)
+│   ├── config/                      # Cấu hình CSDL & AI Agent
+│   ├── core/                        # Động cơ PowerShell Module hướng đối tượng (Vinatech.MES.psm1)
+│   ├── cli/                         # Cổng giao diện dòng lệnh hợp nhất (mes.ps1, check, query...)
+│   ├── docs/                        # 100% Tri thức phân tầng & Sổ tay cứu hộ 70+ bugs
+│   ├── sql/                         # Templates, Patches & SP Cache
+│   └── .agent/                      # Cấu hình AI Agent tối ưu Token
+├── db_config.json                   # Cấu hình CSDL root
+├── GEMINI.md                        # Auto-context cho AI Agent
+└── README.md                        # Tài liệu hướng dẫn workspace
+```
+
+> **Lưu ý:** Các tài liệu và công cụ phiên bản cũ đã được lưu trữ an toàn tại thư mục backup `C:\Users\User Vinatech.DESKTOP-RJJSEQU\Desktop\MES_LEGACY_BACKUP`.
+
+---
+
+## 🛠️ 2. Khởi Động Nhanh Qua Cổng Lệnh
+
+```powershell
+# Kiểm tra kết nối CSDL
+.\MES_V2\cli\mes.ps1 check
+
+# Truy vấn dữ liệu SELECT siêu tốc
+.\MES_V2\cli\mes.ps1 query "SELECT TOP 5 MaterialCode, MaterialName FROM STB_MaterialMaster WITH(NOLOCK)"
+
+# Chẩn đoán 360° Barcode
+.\MES_V2\cli\mes.ps1 debug -Barcode "VVNP263R033573"
+
+# Chẩn đoán màn hình & SP Mapping
+.\MES_V2\cli\mes.ps1 debug -Screen "B523"
 ```
