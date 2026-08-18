@@ -23,24 +23,26 @@ Related Files:
 
 ## 5. 🏭 Sản xuất & Lịch Sử Routing
 
-### 5.1 Luồng Sản Xuất Đầy Đủ — Tham chiếu nhanh
+### 5.1 Luồng Sản Xuất Đầy Đủ & Kiến Trúc POP (Tham chiếu nhanh)
 
 ```
-B310 → Tạo PO (Lệnh Sản Xuất)
+[B310] Tạo PO (Lệnh sản xuất tháng)
     ↓
-B450 → Lập kế hoạch ngày + Tạo Lot + In tem
+[B450] Lập kế hoạch ngày + Tạo Lot + In tem
     ↓
-B540 → Nhập nguyên liệu theo từng công đoạn (V22→V28)
-    ↓
-B597 → Kiểm tra thường xuyên (QC inline)
-    ↓
-B530 → Nhập số lượng sản xuất (bắt buộc nhập "Making")
-    ↓
-B523 → Đóng gói & In label thùng hàng
+┌───────────────────────────────────────────────────────────────────┐
+│ 🏭 POP SẢN XUẤT HỢP NHẤT: B530 = B540 + B523 + C321               │
+│                                                                   │
+│ 1. [B540] Nhập thẻ công đoạn (Scan NVL & Thẻ từng bước V22→V28)   │
+│ 2. [B530] Nhập số lượng sản xuất & Chốt công đoạn (Set "Making")  │
+│ 3. [B523] Đóng gói & In tem label thùng hàng / khách hàng         │
+│ 4. [C321] Nhập kho thành phẩm (Finish Good Stock In)              │
+└───────────────────────────────────────────────────────────────────┘
 ```
 
-> 🏭 **Cơ sở:** Luồng trên là chuẩn **VVT_F1 (Bắc Ninh)**. Hà Nam dùng HN523 thay B523. BG2 dùng K101 thay B450, K109 thay B597. Xem [KB_INDEX § Mapping](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md#bản-đồ-cơ-sở--màn-hình-factory--screen-mapping).
+> 🏭 **Cơ sở:** Luồng trên là chuẩn **VVT_F1 (Bắc Ninh)**. Hà Nam dùng HN523 thay B523. BG2 dùng K101 thay B450, K109 thay B597. Xem [KB_INDEX § Mapping](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md).
 
+> ⚠️ **Quy tắc POP Sản xuất:** `POP sản xuất = B530 = B540 + B523 + C321`. Dữ liệu chốt sản lượng tại B530 phản ánh tổng hợp trực tiếp từ việc nhập thẻ B540, đóng gói B523 và nhập kho C321.
 > ⚠️ **Cột IsFixed ở B450 phải được tích** mới tạo được Lot.
 > ⚠️ **B530 bắt buộc nhập chữ "Making"** (chọn ở cột Status) nếu không công đoạn V25 sẽ bị chặn không cho lưu. Đây là điều kiện tiên quyết để hệ thống ghi nhận đang sản xuất.
 > ⚠️ **Màn B540:** Không thể tích chọn trực tiếp vào checkbox `ProdQtyFinishYN` vì công đoạn đó đang sản xuất. Hệ thống sẽ tự động tích chọn checkbox này khi chốt sản lượng ở màn B530.

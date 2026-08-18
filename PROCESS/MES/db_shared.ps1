@@ -210,4 +210,3 @@ function Invoke-ProactiveKbSearch {
     }
     Write-Host "======================================================================" -ForegroundColor Cyan
 }
-

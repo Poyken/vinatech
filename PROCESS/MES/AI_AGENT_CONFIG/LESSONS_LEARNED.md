@@ -58,3 +58,7 @@
 3. **DIRECT LIVE VERIFICATION:** Dùng Host `dbserver.hycap.co.kr,5398` (`SmartFactoryV2` + `SmartFramework`) với `WITH(NOLOCK)` để lấy dữ liệu thực tế.
 4. **4-TABLE SYNC INTEGRITY:** Sửa bất kỳ Lot nào phải đồng bộ đủ 4 bảng (`SetInfo`, `MaterialLotInfo`, `ProdRouteHist`, `LotChangeHistory`).
 5. **TOKEN MINIMIZATION:** Chỉ đọc line-range cần thiết, xuất kết quả 3 khối ngắn gọn.
+6. **POP PRODUCTION WORKFLOW:** 
+   - **Luồng tạo PO:** `B310` (Tạo PO Lệnh sản xuất) ➔ `B450` (Lập kế hoạch ngày & Tạo Lot).
+   - **Tương quan POP Sản xuất:** `POP sản xuất = B530 = B540 + B523 + C321` (B540: Nhập thẻ công đoạn/Scan NVL; B530: Nhập số lượng sản xuất & Chốt công đoạn; B523: Đóng gói & In tem thùng; C321: Nhập kho thành phẩm).
+

@@ -1,12 +1,12 @@
 # ==============================================================================
-# SCRIPT QUERY DATABASE MES VINATECH CHẠY TRỰC TIẾP TRÊN POWERSHELL
+# run_query.ps1 — SELECT-Only Query Tool for Vinatech MES
 # TỰ ĐỘNG DÒ SERVER - CHỈ CHO PHÉP SELECT - CHỐNG BỊ CẮT CỘT - UTF-8 UNICODE
 #
 # Cách dùng 1 (Truyền SQL trực tiếp):
-#   .\query_db.ps1 -Query "SELECT TOP 5 MaterialCode, MaterialName FROM STB_MaterialMaster"
+#   .\run_query.ps1 -Query "SELECT TOP 5 MaterialCode, MaterialName FROM STB_MaterialMaster"
 #
 # Cách dùng 2 (Chạy tương tác):
-#   .\query_db.ps1
+#   .\run_query.ps1
 # ==============================================================================
 
 param(

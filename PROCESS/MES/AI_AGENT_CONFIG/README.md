@@ -1,4 +1,4 @@
-﻿<!--
+<!--
 AI-READY METADATA
 Purpose: Hướng dẫn tổng quan cấu trúc thư mục AI_AGENT_CONFIG và thứ tự đọc file tối ưu token cho AI Agent
 Scope: Config Directory Documentation
@@ -43,7 +43,7 @@ MES/
 ├── MES_MASTER_KNOWLEDGE_BASE/  ← KB files chi tiết (đọc khi cần)
 │   ├── KB_INDEX.md            ← Mục lục tra cứu nhanh
 │   └── KB_01 → KB_11          ← Tài liệu chuyên sâu từng phân hệ
-├── sql/hotfixes/               ← 17 SQL hotfix scripts đã triển khai (lịch sử)
+├── sql/                        ← SQL hotfix scripts & stored procedures
 ├── run_query.ps1               ← Query DB nhanh
 ├── validate_sql.ps1            ← Validate SQL trước deploy
 ├── deploy_tool.ps1             ← Deploy SQL lên production

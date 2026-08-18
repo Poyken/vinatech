@@ -254,5 +254,3 @@ WHERE MLI.LotID = 'MÃ_LOT' OR MLI.MaterialLotNo = 'MÃ_BARCODE';
 | `STB_BarrelBarcodeInfo` | KHÔNG TỒN TẠI | Dùng STB_VietNam_CheckBarcode_2624 |
 | `STB_HN_AccountingPrice` | KHÔNG TỒN TẠI | Dùng STB_PublicCodeAndPrice |
 
-
-

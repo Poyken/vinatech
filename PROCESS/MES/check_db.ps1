@@ -4,8 +4,19 @@ Write-Host "====================================================================
 Write-Host " VINATECH MES -- DATABASE CONNECTION DIAGNOSTIC TOOL" -ForegroundColor Cyan
 Write-Host "======================================================================" -ForegroundColor Cyan
 
-$serverHost = "175.201.218.156"
+$serverHost = "dbserver.hycap.co.kr"
 $serverPort = 5398
+
+$configPath = Join-Path $PSScriptRoot "db_config.json"
+if (Test-Path $configPath) {
+    try {
+        $config = Get-Content -Raw -Path $configPath | ConvertFrom-Json
+        if ($config.Server -match "^([^,]+)(?:,(\d+))?$") {
+            $serverHost = $matches[1]
+            if ($matches[2]) { $serverPort = [int]$matches[2] }
+        }
+    } catch {}
+}
 
 Write-Host "1. Testing TCP Connection to DB Server (${serverHost}:${serverPort})..." -NoNewline
 $tcpTest = Test-NetConnection -ComputerName $serverHost -Port $serverPort -WarningAction SilentlyContinue

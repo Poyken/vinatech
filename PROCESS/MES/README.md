@@ -1,4 +1,4 @@
-﻿<!--
+<!--
 AI-READY METADATA
 Purpose: Workspace Root README — Hướng dẫn chuyển hướng, cấu trúc thư mục & AI Entry point cho hệ thống MES Vinatech
 Scope: Entire MES Workspace Directory
@@ -36,6 +36,7 @@ MES/
 ├── MES_MASTER_KNOWLEDGE_BASE/             # Cơ sở tri thức chuyên sâu
 │   ├── KB_INDEX.md                        # Chỉ mục định tuyến KB
 │   └── KB_01 ... KB_11                    # Hướng dẫn chi tiết các màn hình/nghiệp vụ
+├── sql/                                   # SQL hotfix scripts & stored procedures
 ├── db_shared.ps1                          # Module chia sẻ logic DB và safety checks
 ├── db_sync_tool.ps1                       # PowerShell tải SP tạm từ DB (không commit Git)
 ├── deploy_tool.ps1                        # PowerShell để triển khai SQL lên DB
@@ -44,6 +45,3 @@ MES/
 ├── debug_screen.ps1                       # PowerShell chẩn đoán lỗi màn hình theo TCode/ErrorMsg
 └── record_hotfix.ps1                      # PowerShell ghi nhận lỗi và tự động vá vào KB_09
 ```
-
-
-

@@ -29,9 +29,7 @@ Related Files:
 > **7. IMMEDIATE SCREEN & SP MAPPING** — CẤM CẮM ĐẦU ĐI TÌM LẠI TỪ ĐẦU! Khi user gửi ảnh thiết kế màn hình hoặc nhập Screen ID (VD: B523, B530, B351, B597, F330, C530...), AI BẮT BUỘC tra cứu ngay lập tức từ `screen_id_reference` / `KB_09` để xác định ngay 100%: (1) Tên & Phân hệ màn hình, (2) Search SP (`_get`), (3) Execute SP (`_iud`), (4) Bảng DB chính & UI Grid layout. Cấm tìm kiếm mơ hồ hay hỏi lại thông tin đã có trong KB!
 > **8. CẤM CHÈN BẢN GHI GIẢ LẬP (DUMMY)** — CẤM TỰ Ý INSERT/UPDATE dữ liệu suy đoán vào DB sản xuất khi chưa tra cứu chuẩn kiến trúc SoT (`KB_04_01_CORE_PACKAGING.md`). Mọi thao tác fix dữ liệu phải tuân thủ 100% quy trình từ tài liệu SoT!
 > **9. CẤM CẮM ĐẦU VÀO SELECT DATABASE** — CẤM CẮM ĐẦU VÀO SELECT DATABASE NGAY KHI NHẬN YÊU CẦU! AI BẮT BUỘC phải đọc và tra cứu tài liệu KB / SoT trước: Nếu tra RA ➔ Trình bày căn cứ KB rồi mới SELECT verify tài liệu; Nếu tra KHÔNG RA ➔ Báo cáo đã tra các tài liệu nào nhưng không có, sau đó mới đề xuất hoặc thực thi SELECT khảo sát DB.
-> **10. CẤM TẠO FILE DƯ THỪA & BẮT BUỘC DÙNG FILE CÓ SẴN** — CẤM tự ý tạo các file script test tạm, file SQL rác hay file rác dư thừa trong workspace. BẮT BUỘC chỉ sử dụng các file/công cụ sẵn có trong hệ thống (`query_db.ps1`, `deploy_tool.ps1`, `check_db.ps1`...). Dọn dẹp sạch sẽ nguyên trạng ngay sau khi hoàn thành công việc.
-
-
+> **10. CẤM TẠO FILE DƯ THỪA & BẮT BUỘC DÙNG FILE CÓ SẴN** — CẤM tự ý tạo các file script test tạm, file SQL rác hay file rác dư thừa trong workspace. BẮT BUỘC chỉ sử dụng các file/công cụ sẵn có trong hệ thống (`run_query.ps1`, `deploy_tool.ps1`, `check_db.ps1`...). Dọn dẹp sạch sẽ nguyên trạng ngay sau khi hoàn thành công việc.
 
 ---
 
@@ -67,4 +65,3 @@ Related Files:
 ## 5. KẾT NỐI DB
 
 → Xem chi tiết cấu hình và thông tin kết nối tại [`db_config.json`](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/db_config.json)
-

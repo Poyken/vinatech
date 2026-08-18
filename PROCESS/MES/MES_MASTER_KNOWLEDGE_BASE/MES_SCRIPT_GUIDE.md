@@ -1,4 +1,4 @@
-﻿<!--
+<!--
 AI-READY METADATA
 Purpose: Hướng dẫn chi tiết cách sử dụng 6+ công cụ script PowerShell (run_query, db_sync_tool, validate_sql, deploy_tool, debug_screen, record_hotfix) và quy trình DB Archaeology
 Scope: Workspace PowerShell Tools & Execution Workflows
@@ -41,10 +41,9 @@ Script này cho phép chạy các câu lệnh SQL read-only trực tiếp từ T
 
 ### 📋 Cách sử dụng & Tham số:
 ```powershell
-powershell -File .\run_query.ps1 -Query "Nội_dung_câu_lệnh_SQL" [-Format Table|JSON|CSV]
+powershell -File .\run_query.ps1 -Query "Nội_dung_câu_lệnh_SQL"
 ```
 *   `-Query` *(Bắt buộc):* Nội dung câu lệnh SQL cần chạy. Bắt buộc sử dụng `WITH(NOLOCK)` cho các bảng giao dịch lớn.
-*   `-Format` *(Tùy chọn):* Định dạng đầu ra của dữ liệu. Mặc định là `Table`.
 
 ### 💡 Ví dụ thực tế:
 ```powershell
@@ -162,6 +161,3 @@ powershell -File .\run_query.ps1 -Query "SELECT name, create_date, modify_date F
 
 ## ⚠️ Quy Tắc An Toàn
 Các script trên tương tác trực tiếp với cơ sở dữ liệu. Vui lòng tham khảo chi tiết các quy tắc an toàn dữ liệu bắt buộc tại [RULES.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/AI_AGENT_CONFIG/RULES.md).
-
-
-

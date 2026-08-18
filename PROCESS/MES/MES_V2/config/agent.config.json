@@ -1,0 +1,15 @@
+{
+  "AgentName": "Vinatech MES AI Assistant",
+  "Version": "2.0.0",
+  "MaxOutputRows": 500,
+  "DefaultTimeoutSeconds": 120,
+  "EnforceReadOnly": true,
+  "EnforceNoLock": true,
+  "ProactiveKbScan": true,
+  "Paths": {
+    "DocsRoot": "./docs",
+    "SqlPatches": "./sql/patches",
+    "SqlProcedures": "./sql/procedures",
+    "SqlTemplates": "./sql/templates"
+  }
+}

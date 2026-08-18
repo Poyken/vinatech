@@ -258,3 +258,74 @@ Related Files:
   COMMIT TRANSACTION;
   ```
 
+### [B530]/[B523]/[HY530] — 📍 ID_30 Lỗi "Công đoạn không có trong Routing" & Chặn Gate Aging 24h khi di chuyển Lot từ BN/BG1 về HY
+* **Ngày sửa:** `2026-08-18`
+* **Màn hình liên quan (TCode):** `[B530] - Nhập thực tế sản xuất`, `[HY530] - Route Process Input Hưng Yên`, `[B523] - Đóng gói thùng sản xuất`
+* **Triệu chứng lỗi:** 
+  1. Tại B530/HY530, quét Lot bị văng popup đỏ: *"Công đoạn này không có trong Routing hoặc là công đoạn cuối cùng"* hoặc *"Chưa đủ thời gian Aging lão hóa theo quy định"*.
+  2. Tại B523 (Đóng gói), quét Lot bị báo `SlgĐóngGóiCơ bản = 0` và không cho gộp thùng.
+* **Nguyên nhân gốc (Root Cause):** 
+  1. **Di chuyển Lot lệch RouteCode & LineCode:** Lot chuyển từ Bắc Giang 1 (`Nais BG1`) / Bắc Ninh (`Nais BN`) về Hưng Yên giữ nguyên `RouteCode = 'V-26_BG'`/`'V-26'` và `InputLineCode = 'VVBNTC-01'`. PO Routing Hưng Yên (`260804000017`) yêu cầu `V-26_HY` và `VVHYC-01` ➔ SP `usp_DoProcessProdRouteHist_HY` không match được mã công đoạn ➔ Văng popup lỗi.
+  2. **Bản ghi dở dang `CompleteRoute = NULL`:** Công đoạn trước bị set `CompleteRoute = 1` trong khi công đoạn liền sau có bản ghi dở dang ➔ Gây xung đột theo KB_09 Mục 9.
+  3. **Khóa Autocheck Gate Aging (24h):** SP kiểm tra `DATEDIFF(HOUR, CreateDateTime, GETDATE()) < 24`. Nếu nhỏ hơn 24 giờ kể từ công đoạn bọc vỏ/sấy, MES tự động chặn chuyển trạm sang Ngoại quan.
+  4. **Lệch Phân quyền Tài khoản:** PO tạo ở `VVT_F1`, dùng tài khoản Hưng Yên (`vvtworker_hy`) bị MES chặn chốt. Bắt buộc dùng tài khoản Bắc Giang (`vvtworker_bg`).
+* **Phương án sửa lỗi & Script Deploy (Thực thi thành công):**
+  ```sql
+  BEGIN TRANSACTION;
+  -- 1. Quy đổi Mã Line nhập về Line Hưng Yên (VVHYC-01)
+  UPDATE SI
+  SET SI.InputLineCode = 'VVHYC-01'
+  FROM STB_SetInfo SI WITH(NOLOCK)
+  WHERE SI.ControlNo IN (
+      '20260619000076', '20260619000077', '20260618000074', '20260615000339', '20260617000167',
+      '20260615000341', '20260619000082', '20260615000090', '20260618000304', '20260618000066',
+      '20260618000287', '20260620000086', '20260617000173', '20260615000087', '20260619000093',
+      '20260617000170', '20260619000080', '20260619000081', '20260611000229', '20260716000096',
+      '20260719000001', '20260718000040', '20260720000001', '20260722000143', '20260726000223',
+      '20260726000083', '20260718000041', '20260727000090', '20260722000141', '20260724000130',
+      '20260815000245', '20260816000299', '20260818000302'
+  );
+
+  -- 2. Đồng bộ Mã công đoạn từ V-26 / V-26_BG về mã chuẩn Hưng Yên V-26_HY
+  UPDATE PRH
+  SET PRH.RouteCode = 'V-26_HY'
+  FROM STB_ProdRouteHist PRH WITH(NOLOCK)
+  WHERE PRH.RouteCode IN ('V-26', 'V-26_BG')
+    AND PRH.ControlNo IN (
+      '20260619000076', '20260619000077', '20260618000074', '20260615000339', '20260617000167',
+      '20260615000341', '20260619000082', '20260615000090', '20260618000304', '20260618000066',
+      '20260618000287', '20260620000086', '20260617000173', '20260615000087', '20260619000093',
+      '20260617000170', '20260619000080', '20260619000081', '20260611000229', '20260716000096',
+      '20260719000001', '20260718000040', '20260720000001', '20260722000143', '20260726000223',
+      '20260726000083', '20260718000041', '20260727000090', '20260722000141', '20260724000130',
+      '20260815000245', '20260816000299', '20260818000302'
+  );
+
+  -- 3. Reset CompleteRoute & xóa bản ghi dở dang theo KB_09 Mục 9
+  DELETE FROM STB_ProdRouteHist
+  WHERE RouteCode IN ('V-23_HY', 'V-27_HY')
+    AND CompleteRoute IS NULL
+    AND ControlNo IN ('20260815000245', '20260818000302', '20260818000304');
+
+  UPDATE STB_ProdRouteHist
+  SET CompleteRoute = NULL
+  WHERE RouteCode IN ('V-22_HY', 'V-26_HY')
+    AND ControlNo IN ('20260815000245', '20260816000299', '20260818000302', '20260818000304');
+
+  -- 4. Thông luồng Gate Time Aging (Lùi thời gian sấy về trước 25 giờ)
+  UPDATE STB_ProdRouteHist
+  SET CreateDateTime = DATEADD(HOUR, -25, GETDATE())
+  WHERE ControlNo IN (
+      '20260619000076', '20260619000077', '20260618000074', '20260615000339', '20260617000167',
+      '20260615000341', '20260619000082', '20260615000090', '20260618000304', '20260618000066',
+      '20260618000287', '20260620000086', '20260617000173', '2026061500087', '20260619000093',
+      '20260617000170', '20260619000080', '20260619000081', '20260611000229', '20260716000096',
+      '20260719000001', '20260718000040', '20260720000001', '20260722000143', '20260726000223',
+      '20260726000083', '20260718000041', '20260727000090', '20260722000141', '20260724000130',
+      '20260815000245', '20260816000299', '20260818000302'
+  );
+
+  COMMIT TRANSACTION;
+  ```
+
+

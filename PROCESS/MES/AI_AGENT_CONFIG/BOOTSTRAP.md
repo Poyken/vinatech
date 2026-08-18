@@ -1,4 +1,4 @@
-﻿<!--
+<!--
 AI-READY METADATA
 Purpose: Tất cả trong một (All-in-one): Rules + DB + Tools + Lessons Learned cho AI Agent trong phiên làm việc mới
 Scope: Entry Point & Core Operating Procedures
@@ -100,9 +100,9 @@ Related Files:
 ```
 1. THU THẬP  → Nhận mã màn hình (TCode), LotNo/Barcode, triệu chứng từ User
 2. TRA CỨU   → TRA KB TRƯỚC (KB_09 / KI bug_fix_patterns). Nắm Root Cause + SP + Bảng DB
-3. XÁC MINH  → .\AI_AGENT_CONFIG\powershell_tools\verify_bug.ps1 -ScreenID <TCode> -Key <LotNo>
-4. FIX & AUDIT → .\AI_AGENT_CONFIG\powershell_tools\sp_impact.ps1 -SPName <SP> → Viết SQL (BEGIN TRAN...ROLLBACK)
-5. GHI CHÉP  → .\AI_AGENT_CONFIG\powershell_tools\log_hotfix.ps1 -ScreenID <TCode> ... (Lưu log & vá KI)
+3. XÁC MINH  → .\debug_screen.ps1 -TCode <TCode> -Barcode <Barcode>
+4. FIX & AUDIT → .\db_sync_tool.ps1 -SPName <SP> → Viết SQL (BEGIN TRAN...ROLLBACK)
+5. GHI CHÉP  → .\record_hotfix.ps1 -TCode <TCode> -Symptom "..." -Cause "..." -SQLPatch "..."
 6. DỌN DẸP   → Xóa SP tạm bằng .\db_sync_tool.ps1 -Clean và commit Git
 ```
 

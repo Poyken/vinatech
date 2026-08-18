@@ -1,0 +1,29 @@
+{
+  "Profiles": {
+    "Production": {
+      "Server": "dbserver.hycap.co.kr,5398",
+      "Database": "SmartFactoryV2",
+      "User": "vinaadmin",
+      "Password": "vina1234%6&8",
+      "Timeout": 60
+    },
+    "Framework": {
+      "Server": "dbserver.hycap.co.kr,5398",
+      "Database": "SmartFramework",
+      "User": "vinaadmin",
+      "Password": "vina1234%6&8",
+      "Timeout": 60
+    }
+  },
+  "DefaultProfile": "Production",
+  "FallbackServers": [
+    "dbserver.hycap.co.kr,5398",
+    "175.201.218.156,5398",
+    "192.168.112.254,5398",
+    "192.168.1.234,5398",
+    "192.168.1.200,5398",
+    "192.168.1.100,5398",
+    "localhost",
+    "127.0.0.1"
+  ]
+}

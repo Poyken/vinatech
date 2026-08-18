@@ -7,9 +7,8 @@ Related Files:
   - [BOOTSTRAP.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/AI_AGENT_CONFIG/BOOTSTRAP.md)
   - [KNOWLEDGE.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/AI_AGENT_CONFIG/KNOWLEDGE.md)
   - [run_query.ps1](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/run_query.ps1)
-  - [verify_bug.ps1](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/AI_AGENT_CONFIG/powershell_tools/verify_bug.ps1)
-  - [sp_impact.ps1](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/AI_AGENT_CONFIG/powershell_tools/sp_impact.ps1)
-  - [log_hotfix.ps1](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/AI_AGENT_CONFIG/powershell_tools/log_hotfix.ps1)
+  - [debug_screen.ps1](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/debug_screen.ps1)
+  - [record_hotfix.ps1](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/record_hotfix.ps1)
 -->
 
 # ⚡ SKILLS — Vinatech MES Agent (PowerShell & SQL Templates)
@@ -20,19 +19,18 @@ Related Files:
 
 ## 1. 🔌 KẾT NỐI DB & CÔNG CỤ TỰ ĐỘNG HÓA TỐI ƯU TOKEN
 
-Dùng trực tiếp các công cụ PowerShell trong `AI_AGENT_CONFIG/powershell_tools/`:
+Dùng trực tiếp các công cụ PowerShell tại thư mục gốc MES:
 
 ```powershell
-# 1. Auto-Verify dữ liệu lỗi theo Screen ID (Tiết kiệm 95% Token)
-.\AI_AGENT_CONFIG\powershell_tools\verify_bug.ps1 -ScreenID "B597" -Key "ML20260713000165"
+# 1. Chẩn đoán màn hình: Tìm SP, UI objects, tra KB tự động
+.\debug_screen.ps1 -TCode "B597"
+.\debug_screen.ps1 -Barcode "K16418106262500772"
+.\debug_screen.ps1 -ErrorMsg "chua duoc dua vao tuyen"
 
-# 2. Phân tích ảnh hưởng chéo của SP trước khi sửa code
-.\AI_AGENT_CONFIG\powershell_tools\sp_impact.ps1 -SPName "usp_Vietnam_RawMaterialInputHist_uid"
+# 2. Ghi nhật ký Hotfix tự động vào HOTFIX_LOG.md và KB_09
+.\record_hotfix.ps1 -TCode "B597" -Symptom "Tràn chuỗi NVL" -Cause "NVARCHAR(100)" -SQLPatch "ALTER TABLE..."
 
-# 3. Ghi nhật ký Hotfix tự động vào HOTFIX_LOG.md và KI
-.\AI_AGENT_CONFIG\powershell_tools\log_hotfix.ps1 -ScreenID "B597" -Issue "Tràn chuỗi NVL" -RootCause "NVARCHAR(100)" -FixSQL "ALTER TABLE..."
-
-# 4. Truy vấn dạng bảng tiêu chuẩn
+# 3. Truy vấn dạng bảng tiêu chuẩn
 .\run_query.ps1 -Query "SELECT TOP 10 Barcode, MaterialCode FROM STB_SetInfo WITH(NOLOCK)"
 ```
 
@@ -153,5 +151,3 @@ FROM sys.dm_exec_requests WHERE blocking_session_id <> 0;
 14. **UNION vs UNION ALL trong Popup SP** — Khi ghép danh sách kho/chuyền trong SP popup (như `usp_TargetMaterialWarehouse_popup`), **DÙNG `UNION` THAY VÌ `UNION ALL`** để tự động khử trùng lặp bản ghi, tránh lỗi trùng khóa chính (Duplicate Primary Key / Duplicate Rows) gây văng lỗi trên lưới NAIS System.
 15. **STB_DefectRepairInfo Schema** — Cột chứa mã công đoạn phát hiện phế lỗi là `FindRouteCode` (KHÔNG PHẢI `RouteCode`). Cột trong `STB_ProdRouteHist` là `RouteCode`.
 16. **Quy tắc Rollback/Hủy công đoạn sản xuất** — (1) `DELETE FROM STB_DefectRepairInfo` (`FindRouteCode`), (2) `DELETE FROM STB_ProdRouteHist` (`RouteCode`), (3) `UPDATE STB_ProdRouteHist SET CompleteRoute = NULL` cho công đoạn trước. Chỉ reset `STB_SetInfo` (`DefectQty = 0, IsDefect = 0`) khi xóa TOÀN BỘ tất cả công đoạn hoặc khi công đoạn trước chưa từng có lỗi.
-
-
