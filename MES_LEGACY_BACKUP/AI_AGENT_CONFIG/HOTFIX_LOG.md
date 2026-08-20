@@ -34,6 +34,27 @@ Related Files:
 
 ## ⚡ Các Lỗi Đã Được Xử Lý (Resolved Bugs)
 
+### [F620/F330] — 📍 ID_22 Cấu hình tự động bóc tách Ngày SX (Vendor Lot) cho dòng họ NVL GBNKSP-%
+* **Ngày sửa:** `2026-08-20`
+* **Màn hình liên quan (TCode):** `[F620] - Hoàn trả vật liệu và in tem`, `[F330] - Nhập kho NVL`
+* **Triệu chứng lỗi:** Quét/nhập mã Lot Vendor `5606N19B` cho mã NVL `GBNKSP-071` không tự động đọc được ngày sản xuất `2025-06-06` (hoặc báo lỗi/trống ngày ở F620/F330).
+* **Nguyên nhân gốc (Root Cause):** Cả 2 hàm SQL `fn_VVT_getdatebyVendorLot_MergeCode` và `fn_VVT_getdatebyVendorLot` trước đây chỉ hardcode đơn lẻ mã `GBNKSP-083` với chuỗi cố định `5Y13N36F`, chưa có quy tắc động cho toàn bộ họ `GBNKSP-%`.
+* **Phương án sửa lỗi (SQL Patch / Action):**
+  ```sql
+  -- Cập nhật cả fn_VVT_getdatebyVendorLot_MergeCode và fn_VVT_getdatebyVendorLot:
+  -- Format: 1 ký tự Năm ('5'->2025) + 1 ký tự Tháng (1..9, X/A=10, Y/B=11, Z/C=12) + 2 ký tự Ngày ('06') + Hậu tố
+  WHEN @materialcode LIKE 'GBNKSP-%' AND LEN(@vendorlot) >= 4 THEN
+      '202' + SUBSTRING(@vendorlot, 1, 1) + '-' 
+      + RIGHT('0' + CASE 
+          WHEN SUBSTRING(@vendorlot, 2, 1) IN ('X', 'A') THEN '10'
+          WHEN SUBSTRING(@vendorlot, 2, 1) IN ('Y', 'B') THEN '11'
+          WHEN SUBSTRING(@vendorlot, 2, 1) IN ('Z', 'C') THEN '12'
+          ELSE SUBSTRING(@vendorlot, 2, 1)
+        END, 2) + '-' 
+      + SUBSTRING(@vendorlot, 3, 2)
+  ```
+  *Đã kiểm thử 100% thành công trên DB: `GBNKSP-071` (`5606N19B` $\rightarrow$ `2025-06-06`), `GBNKSP-083` (`5Y13N36F` $\rightarrow$ `2025-11-13`), `GBNKSP-066` (`4510N03B` $\rightarrow$ `2024-05-10`), Tháng 10 (`5X05...` $\rightarrow$ `2025-10-05`), Tháng 12 (`5Z25...` $\rightarrow$ `2025-12-25`).*
+
 ### [HN544] — 📍 ID_21 Hủy gộp box / Rã box túi bóng ở màn hình HN544
 * **Ngày sửa:** `2026-07-30`
 * **Màn hình liên quan (TCode):** `[HN544] - Gộp túi bóng thành hộp nhỏ`
@@ -327,5 +348,34 @@ Related Files:
 
   COMMIT TRANSACTION;
   ```
+
+### [B767]/[B763] — 📍 ID_31 Hỗ trợ `StartSerial` độc lập theo Shipment Plan & Giữ nguyên Auto-Continuity
+* **Ngày sửa:** `2026-08-20`
+* **Màn hình liên quan (TCode):** `[B767] - In tem Sanmina India` & `[B763] - Cấu hình kế hoạch xuất Sanmina`
+* **Triệu chứng lỗi:** Cột `StartSerial` thiết lập trên B763 bị bỏ qua trên B767 nếu số nhập vào nhỏ hơn số Serial lớn nhất đã in trong lịch sử (`STB_SanminaIndiaLabelPrintHist`), khiến không thể chạy lại dải số Serial từ đầu (ví dụ `0`) hoặc gán dải số cố định cho PO mới.
+* **Nguyên nhân gốc (Root Cause):** Điều kiện `IF @IsPlanMode = 1 AND @ActiveStartSerial IS NOT NULL AND @ActiveStartSerial > @BaseSerial` chặn gán `@BaseSerial` khi `StartSerial <= @LatestSerial`. Đồng thời các thùng tiếp theo của cùng Plan cần tự động tịnh tiến dải số theo công thức $Base = StartSerial + (PrintedBoxCount \times 2)$.
+* **Phương án sửa lỗi (SQL Patch / Action):**
+  - **Backup:** Đã lưu `sql/backup/BAK_usp_SanminaLabelPrint_get_Vietnam_20260820.sql`.
+  - **Procedure đã cập nhật:** `sql/procedures/usp_SanminaLabelPrint_get_Vietnam.sql`.
+  - **Logic:**
+    ```sql
+    IF @IsPlanMode = 1 AND @ActiveStartSerial IS NOT NULL
+    BEGIN
+        -- TRƯỜNG HỢP 1: Plan có chỉ định StartSerial cụ thể (VD: 0, 100, 500...)
+        SET @BaseSerial = @ActiveStartSerial + (ISNULL(@ActivePrintedBoxCount, 0) * 2);
+    END
+    ELSE
+    BEGIN
+        -- TRƯỜNG HỢP 2: Giữ 100% logic cũ khi StartSerial để trống (NULL) hoặc Non-Plan
+        DECLARE @LatestSerial INT = 0;
+        SELECT TOP 1 @LatestSerial = TRY_CAST(RIGHT(BoxSerialNo, 5) AS INT)
+        FROM STB_SanminaIndiaLabelPrintHist WITH(NOLOCK)
+        WHERE LEN(BoxSerialNo) = 13 AND BoxSerialNo LIKE 'VINA%'
+        ORDER BY ID DESC;
+
+        SET @BaseSerial = ISNULL(@LatestSerial, 0);
+    END
+    ```
+
 
 

@@ -122,7 +122,28 @@ powershell -File .\deploy_tool.ps1 -SqlPath "C:\Users\User Vinatech.DESKTOP-RJJS
 
 ---
 
-## 5. 🕵️‍♂️ Database Archaeology & Change Tracking — Quy Trình Khảo Cổ & Tra Cứu Lịch Sử Đối Tượng DB
+## 5. 🔄 check_sp_sync.ps1 — Kiểm Tra Đồng Bộ SP & Function (Local vs DB)
+
+Script tự động quét toàn bộ file SQL trong workspace hoặc kiểm tra SP/Function chỉ định, kết nối trực tiếp DB để so sánh nội dung logic và ngày cập nhật nhằm tránh rủi ro thao tác trên bản code cũ.
+
+### 📋 Cách sử dụng & Tham số:
+```powershell
+# 1. Quét toàn bộ thư mục sql (báo cáo trạng thái SYNCED / OUT_OF_SYNC / NOT_IN_DB)
+powershell -File .\check_sp_sync.ps1
+
+# 2. Quét riêng thư mục sql/procedures
+powershell -File .\check_sp_sync.ps1 -Path .\sql\procedures
+
+# 3. Kiểm tra 1 SP/Function cụ thể
+powershell -File .\check_sp_sync.ps1 -SPName fn_VVT_getdatebyVendorLot
+
+# 4. Tự động kéo bản mới nhất từ DB về nếu phát hiện file local bị lệch/cũ
+powershell -File .\check_sp_sync.ps1 -Path .\sql\procedures -Pull
+```
+
+---
+
+## 6. 🕵️‍♂️ Database Archaeology & Change Tracking — Quy Trình Khảo Cổ & Tra Cứu Lịch Sử Đối Tượng DB
 
 Khi cần xác định **ai, khi nào, và nội dung gì** đã được chỉnh sửa trong một Stored Procedure hoặc Table trực tiếp trên Database Production (nơi không được Git tracking thường xuyên):
 
