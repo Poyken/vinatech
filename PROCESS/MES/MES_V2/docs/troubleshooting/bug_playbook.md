@@ -227,3 +227,57 @@
   ```sql
   UPDATE SmartFramework.dbo.STB_UserInfo SET AllowFlag = 1 WHERE UserID = 'TÊN_USER';
   ```
+
+### [B552] - CREYO85-04 model 3562 bi nhan doi dong va hien HCE/YP tren B552, san luong x2 tren B802
+- Date: 2026-08-18
+- TCode: B552
+- Symptom: CREYO85-04 model 3562 bi nhan doi dong va hien HCE/YP tren B552, san luong x2 tren B802
+- Root Cause: SP usp_ElectrodeSlittingResult_get so khop LIKE '%YP%' dinh SlittingCode HCE/YP; SP usp_Vietnam_ElectrodeProdRouteHist_get hardcode chia 5 cho CREYO85-04
+- SQL Fix:
+
+### [B552] - CREYO85-04 model 3562 bi nhan doi dong va hien HCE/YP tren B552, san luong x2 tren B802
+- Date: 2026-08-18
+- TCode: B552
+- Symptom: CREYO85-04 model 3562 bi nhan doi dong va hien HCE/YP tren B552, san luong x2 tren B802
+- Root Cause: SP usp_ElectrodeSlittingResult_get so khop LIKE '%YP%' dinh SlittingCode HCE/YP; SP usp_Vietnam_ElectrodeProdRouteHist_get hardcode chia 5 cho CREYO85-04
+- SQL Fix:
+```sql
+Chuan hoa matching logic trong usp_ElectrodeSlittingResult_get va loai CREYO85-04 khoi danh sach chia 5 trong usp_Vietnam_ElectrodeProdRouteHist_get
+```
+
+
+### [FG20] - Search failed: 실행 제한 시간을 초과했습니다 (SQL Execution Timeout)
+- Date: 2026-08-19
+- TCode: FG20
+- Symptom: Search failed: 실행 제한 시간을 초과했습니다 (SQL Execution Timeout)
+- Root Cause: SP usp_FinishGoodAllFactoryReport quet toan bo 625,000+ dong voi UDF fnPharseLotNo va nested subqueries
+- SQL Fix:
+```sql
+Chuyen sang kien truc Temp Table (#BN_Base, #BN_Aging, #BG_Base, #BG_Aging, #HY_Base, #HY_Aging) giam thoi gian tu >60s xuong <5s
+```
+
+### [FG02] - Search failed: Object reference not set to an instance of an object (Multi-tab WinForms & Temp Table Metadata)
+- Date: 2026-08-19
+- TCode: FG02 (SummaryFinshedGood)
+- Symptom: Khi bấm nút Tìm kiếm trên màn hình đa tab (hoặc tab phụ mới thêm như Tab Hưng Yên) bị văng popup lỗi `Search failed: Object reference not set to an instance of an object`.
+- Root Cause:
+  1. **Lỗi `SET FMTONLY ON` của DevExpress WinForms:** Khi Client nạp/phân tích metadata schema của SP có bảng tạm `#Temp` (`SELECT ... INTO #Temp`), SQL Server không tạo bảng tạm trong chế độ `FMTONLY ON` $\rightarrow$ sinh lỗi ngầm `Invalid object name '#Temp'` $\rightarrow$ Client nhận metadata null $\rightarrow$ văng `NullReferenceException`.
+  2. **Lỗi cấu hình Layout XML đa Tab trong `STB_ScreenLayoutInfo`:**
+     - Hàm tìm kiếm phụ mang `IsMain = true` (xung đột 2 hàm Main) hoặc thiếu tham số mapping (`DefaultValueType = Search`, `DefaultValue = FromDate`).
+     - Hàm tìm kiếm cũ (như Bắc Giang cũ) vẫn còn cờ `ExecuteWithMain = true` dù Tab giao diện đã bị gỡ $\rightarrow$ Client kích hoạt ngầm và đổ dữ liệu vào Control Grid `null`.
+- Giải Pháp Khắc Phục Chuẩn:
+  1. **Trong Stored Procedure (Bắt buộc):** Bổ sung guard `SET FMTONLY OFF` ngay sau `SET NOCOUNT ON;`:
+     ```sql
+     SET NOCOUNT ON;
+     IF 1=0 BEGIN SET FMTONLY OFF END;
+     ```
+  2. **Trong `SmartFramework.dbo.STB_ScreenLayoutInfo` (`XmlLayout`):**
+     * Hàm chính (Tab 1): `<IsMain>true</IsMain>`, `<ExecuteWithMain>false</ExecuteWithMain>`.
+     * Hàm phụ (Tab 2..n): `<IsMain>false</IsMain>`, `<ExecuteWithMain>true</ExecuteWithMain>`.
+     * Cấu hình tham số ngày của hàm phụ kế thừa từ Header:
+       ```xml
+       <DefaultValueType>Search</DefaultValueType>
+       <DefaultValue>FromDate</DefaultValue>
+       <DefaultValueSourceScreen>Self</DefaultValueSourceScreen>
+       ```
+     * Vô hiệu hóa hàm cũ: `<ExecuteWithMain>false</ExecuteWithMain>`.

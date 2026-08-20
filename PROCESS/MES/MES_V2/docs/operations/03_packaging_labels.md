@@ -28,6 +28,16 @@ SupplierName||SanminaPartNumber||PartDesc||MFR||MPN||Quantity||PONumber||LotCode
 1. **Bẫy NAIS Designer:** Thuộc tính `데이터 추가` (`Append Data`) của hàm tìm kiếm `usp_SanminaLabelPrint_get_Vietnam` bắt buộc đặt là `False`. Nếu để `True`, mỗi lần bấm Search sẽ bị nhân đôi số dòng trên lưới.
 2. **Bẫy Cột BoxSerialNo:** Khi gộp chuỗi Serial cho tem Outer, cột `BoxSerialNo` trong `STB_SanminaIndiaLabelPrintHist` bắt buộc phải là `VARCHAR(50)` để không bị lỗi cắt cụt chuỗi (Truncation Error).
 
+### 2.3 🛡️ Kiến Trúc Poka-Yoke In Tem Sanmina (B767_M + B767)
+Hệ thống hỗ trợ 2 chế độ song song, đảm bảo tương thích 100% logic cũ và tự động hóa chống lỗi theo Lô xuất:
+
+1. **Chế độ Tự Động (Poka-Yoke Lô Xuất):**
+   * **Màn hình [B767_M] (Dành cho Leader/Kế hoạch):** Thiết lập Lô xuất gồm `PONumber`, `PartNumber` (user input tùy biến linh hoạt), `TotalBox`, `QtyPerBox`. Bấm nút **Kích Hoạt (ACTIVE)**.
+   * **Màn hình [B767] (Dành cho OP tại xưởng):** OP chỉ cần quét duy nhất mã `Lot No` (Barcode). SP `usp_SanminaLabelPrint_get_Vietnam` tự động nạp `PONumber`, `PartNumber`, và tự nhảy `CartonBoxNo` (`01/Total`, `02/Total`...) theo tiến độ in thực tế.
+   * **Tự động chuyển COMPLETED:** Khi OP in thùng cuối cùng (`PrintedBoxCount >= TotalBox`), hệ thống tự động đánh dấu Lô xuất hoàn tất (`Status = 'COMPLETED'`).
+2. **Chế độ Nhập Thủ Công (Legacy / Manual Mode):**
+   * Nếu không có Lô xuất nào đang `ACTIVE` hoặc OP tự nhập tay các ô PO Number, Part Number, Total Box $\rightarrow$ Hệ thống tự động chuyển sang chế độ manual, nhận trực tiếp tham số người dùng nhập mà không khóa cố định.
+
 ---
 
 ## 3. 📦 Hủy Gộp Box Thành Phẩm (B523 / HN544)

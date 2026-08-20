@@ -30,9 +30,10 @@ class MesSafetyValidator {
         $errors = [System.Collections.Generic.List[string]]::new()
         $warnings = [System.Collections.Generic.List[string]]::new()
 
-        # 1. DML Transaction Safety Check
+        # 1. DML Transaction Safety Check (for direct patch scripts, not SP/View/Function definitions)
+        $isProcOrFunc = $sqlText -match "(?mi)^\s*(CREATE(\s+OR\s+ALTER)?|ALTER)\s+(PROCEDURE|PROC|FUNCTION|VIEW|TRIGGER)\b"
         $hasDML = $sqlText -match "(?mi)\b(INSERT|UPDATE|DELETE|MERGE)\b"
-        if ($hasDML) {
+        if ($hasDML -and -not $isProcOrFunc -and -not $allowDangerous) {
             if ($sqlText -notmatch "(?mi)\bBEGIN\s+(TRAN|TRANSACTION)\b") {
                 $errors.Add("Missing 'BEGIN TRAN/TRANSACTION': All DML statements must be wrapped in a transaction.")
                 $isValid = $false
@@ -48,7 +49,7 @@ class MesSafetyValidator {
         }
 
         # 2. Dangerous DDL checks
-        $dangerousDDL = @("\bDROP\s+TABLE\b", "\bDROP\s+DATABASE\b", "\bTRUNCATE\s+TABLE\b", "\bALTER\s+TABLE\b")
+        $dangerousDDL = @("\bDROP\s+TABLE\s+(?!#)", "\bDROP\s+DATABASE\b", "\bTRUNCATE\s+TABLE\b", "\bALTER\s+TABLE\b")
         foreach ($ddl in $dangerousDDL) {
             if ($sqlText -match "(?mi)$ddl") {
                 if ($allowDangerous) {

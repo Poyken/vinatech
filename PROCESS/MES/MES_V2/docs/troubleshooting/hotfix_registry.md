@@ -4,6 +4,24 @@
 
 ---
 
+### [B781]/[B523]/[HY530] — 📍 ID_31 Chuyển 36 Lô BTP 35105 Từ Bắc Giang Về Hưng Yên (Chia đều Line 1 & Line 2)
+* **Ngày sửa:** `2026-08-19`
+* **Màn hình liên quan (TCode):** `[B781] - Kiểm tra sản lượng hoàn thành theo Lot (Power BI Backend)`, `[B523] - Đóng gói Cell`, `[HY530] - Route Process Input Hưng Yên`
+* **Triệu chứng lỗi:** Bán thành phẩm mẫu `35105` (`ECVT30-357`) chuyển từ Bắc Giang về Hưng Yên làm Ủ $\rightarrow$ Đóng gói không hiển thị và không liên kết được với hệ thống Power BI (màn hình B781).
+* **Nguyên nhân gốc (Root Cause):** `STB_SetInfo.InputLineCode` vẫn giữ mã chuyền Bắc Giang (`VVBNTC-01`, `VVBGC-xx`) và `STB_ProdRouteHist.RouteCode` mang mã `V-28_BG`, `V-26_BG`, `V-27_BG`. Khi SP `usp_Vietnam_PackPrintTime_get` lọc theo Nhà máy Hưng Yên (`VVT_F5`), yêu cầu `c.RouteCode = 'V-28_HY'` và mã Line Hưng Yên nên trả về 0 dòng.
+* **Phương án sửa lỗi (SQL Patch / Action):**
+  ```sql
+  BEGIN TRANSACTION;
+  -- Chia đều 18 Lô nhóm 1 sang Line 1 (VVHYC-01) và 18 Lô nhóm 2 sang Line 2 (VVHYC-02)
+  UPDATE STB_SetInfo SET InputLineCode = 'VVHYC-01', ChangeDateTime = GETDATE(), ChangeUserID = 'vanduc' WHERE Barcode IN (...18 Lots...);
+  UPDATE STB_SetInfo SET InputLineCode = 'VVHYC-02', ChangeDateTime = GETDATE(), ChangeUserID = 'vanduc' WHERE Barcode IN (...18 Lots...);
+  UPDATE STB_ProdRouteHist SET RouteCode = 'V-28_HY', ChangeDateTime = GETDATE(), ChangeUserID = 'vanduc' WHERE RouteCode = 'V-28_BG' AND ControlNo IN (...36 ControlNos...);
+  UPDATE STB_ProdRouteHist SET RouteCode = 'V-26_HY', ChangeDateTime = GETDATE(), ChangeUserID = 'vanduc' WHERE RouteCode = 'V-26_BG' AND ControlNo IN (...36 ControlNos...);
+  UPDATE STB_ProdRouteHist SET RouteCode = 'V-27_HY', ChangeDateTime = GETDATE(), ChangeUserID = 'vanduc' WHERE RouteCode = 'V-27_BG' AND ControlNo IN (...36 ControlNos...);
+  COMMIT TRANSACTION;
+  ```
+
+
 ### [B530]/[B523]/[HY530] — 📍 ID_30 Lỗi "Công đoạn không có trong Routing" & Chặn Gate Aging 24h khi chuyển Lot về Hưng Yên
 * **Ngày sửa:** `2026-08-18`
 * **Màn hình liên quan (TCode):** `[B530] - Nhập thực tế sản xuất`, `[HY530] - Route Process Input Hưng Yên`, `[B523] - Đóng gói thùng sản xuất`
@@ -107,3 +125,25 @@
   DELETE FROM STB_DividePackaging WHERE PackingID = 'PK20260730000000004';
   COMMIT TRANSACTION;
   ```
+
+### [B552] - CREYO85-04 model 3562 bi nhan doi dong va hien HCE/YP tren B552, san luong x2 tren B802
+- Date: 2026-08-18
+- TCode: B552
+- Symptom: CREYO85-04 model 3562 bi nhan doi dong va hien HCE/YP tren B552, san luong x2 tren B802
+- Root Cause: SP usp_ElectrodeSlittingResult_get so khop LIKE '%YP%' dinh SlittingCode HCE/YP; SP usp_Vietnam_ElectrodeProdRouteHist_get hardcode chia 5 cho CREYO85-04
+- SQL Fix:
+```sql
+Chuan hoa matching logic trong usp_ElectrodeSlittingResult_get va loai CREYO85-04 khoi danh sach chia 5 trong usp_Vietnam_ElectrodeProdRouteHist_get
+```
+
+
+### [FG20] - Search failed: 실행 제한 시간을 초과했습니다 (SQL Execution Timeout)
+- Date: 2026-08-19
+- TCode: FG20
+- Symptom: Search failed: 실행 제한 시간을 초과했습니다 (SQL Execution Timeout)
+- Root Cause: SP usp_FinishGoodAllFactoryReport quet toan bo 625,000+ dong voi UDF fnPharseLotNo va nested subqueries
+- SQL Fix:
+```sql
+Chuyen sang kien truc Temp Table (#BN_Base, #BN_Aging, #BG_Base, #BG_Aging, #HY_Base, #HY_Aging) giam thoi gian tu >60s xuong <5s
+```
+

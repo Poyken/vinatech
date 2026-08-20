@@ -17,6 +17,7 @@
 | **Xuất kho chặn FIFO** | Tồn tại Lot cùng mã nhập trước. Bypass tại `STB_MaterialStockAttributeInfo` | F430 | [01_wms_warehouse.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_V2/docs/operations/01_wms_warehouse.md) |
 | **Lỗi vỏ nhôm không khớp** | Logic hardcode trong `usp_Vietnam_RawMaterialInputHist_uid` (không có bảng rười) | B597 | [04_qc_electrode.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_V2/docs/operations/04_qc_electrode.md) |
 | **B351 đổi Lot nhưng in mã cũ** | Lệch giữa `STB_SetInfo` và `STB_MaterialLotInfo`/`STB_ProdRouteHist` | B351 / B523 | [bug_playbook.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_V2/docs/troubleshooting/bug_playbook.md) |
+| **Tạo Popup Grid / Dropdown UI** | Quy chuẩn tạo PopupGrid trên SmartFramework Designer UI | B767 / Toàn hệ thống | [05_popup_grid_designer_sop.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_V2/docs/operations/05_popup_grid_designer_sop.md) |
 
 ---
 
@@ -44,7 +45,8 @@
 | **B540** | Assy Card Info (V22-V28) | `usp_RawMaterialInputHist_get` | `usp_Vietnam_RawMaterialInputHist_uid` | `STB_RawMaterialInputHist` |
 | **B552** | Slitting Điện cực | `usp_SlittingLocationConfig_VVT_get` | `usp_SlittingLocationConfig_VVT_iud` | `STB_SlittingStock_VVT` |
 | **B597** | Scan NVL QC Inline | `usp_RawMaterialInputHist_get` | `usp_Vietnam_RawMaterialInputHist_uid` | `STB_MaterialLotInfo` |
-| **B767** | In tem Sanmina | `usp_SanminaLabelPrint_get_Vietnam` | `usp_SanminaLabelPrint_iud_Vietnam` | `STB_SanminaIndiaLabelPrintHist` |
+| **B767** | In tem Sanmina (OP) | `usp_SanminaLabelPrint_get_Vietnam` | `usp_SanminaIndiaLabelPrintHist_iud` | `STB_SanminaIndiaLabelPrintHist`, `STB_SanminaShipmentPlan` |
+| **B767_M** | Thiết lập Lô xuất Sanmina | `usp_SanminaShipmentPlan_get` | `usp_SanminaShipmentPlan_iud` | `STB_SanminaShipmentPlan`, `STB_SanminaShipmentPlanLot` |
 
 ### 🆂 Phân Hệ Quản Lý Chất Lượng (C-Series)
 | TCode | Tên Màn Hình | Search SP (`_get`) | Execute SP (`_iud`) | Bảng DB Chính |

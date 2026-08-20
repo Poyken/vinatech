@@ -12,5 +12,6 @@
 | **B540** | Thẻ công đoạn V22-V28 | `usp_RawMaterialInputHist_get` | `usp_Vietnam_RawMaterialInputHist_uid` | `STB_RawMaterialInputHist` | V23 Lắp cao su bắt buộc phải quét NVL trước |
 | **B552** | Slitting Điện cực | `usp_SlittingLocationConfig_VVT_get` | `usp_SlittingLocationConfig_VVT_iud` | `STB_SlittingStock_VVT` | Cực dương (`BY`), Cực âm (`YP`) |
 | **B597** | Scan NVL QC Inline | `usp_RawMaterialInputHist_get` | `usp_Vietnam_RawMaterialInputHist_uid` | `STB_MaterialLotInfo` | Kiểm tra 3 lớp (HOLD, Expiry, BOM) |
-| **B767** | In tem Sanmina | `usp_SanminaLabelPrint_get_Vietnam` | `usp_SanminaLabelPrint_iud_Vietnam` | `STB_SanminaIndiaLabelPrintHist` | Mở NAIS Designer đặt `Append Data = False` |
+| **B767** | In tem Sanmina (OP) | `usp_SanminaLabelPrint_get_Vietnam` | `usp_SanminaIndiaLabelPrintHist_iud` | `STB_SanminaIndiaLabelPrintHist`, `STB_SanminaShipmentPlan` | Tự động nạp PO/PartNo/BoxNo từ Plan ACTIVE (Poka-Yoke) |
+| **B767_M** | Thiết lập Lô xuất Sanmina | `usp_SanminaShipmentPlan_get` | `usp_SanminaShipmentPlan_iud` | `STB_SanminaShipmentPlan`, `STB_SanminaShipmentPlanLot` | Quản lý Lô xuất Sanmina: Tạo mới, kích hoạt ACTIVE, theo dõi tiến độ in |
 | **B782** | Lịch sử Routing | `usp_LotTrackingInfo_VVT2_get` | — | `STB_ProdRouteHist` | Quét toàn bộ lịch sử các công đoạn của 1 Lot |
