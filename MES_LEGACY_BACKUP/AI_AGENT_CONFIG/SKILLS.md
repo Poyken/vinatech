@@ -1,14 +1,14 @@
-<!--
+﻿<!--
 AI-READY METADATA
 Purpose: PowerShell scripts, SQL templates, debug recipes, impact checks và công cụ tự động cho AI Agent
 Scope: Execution Scripts & Debug Recipes
 Single Source of Truth: SKILLS.md (SQL & Debug Scripts)
 Related Files:
-  - [BOOTSTRAP.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/AI_AGENT_CONFIG/BOOTSTRAP.md)
-  - [KNOWLEDGE.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/AI_AGENT_CONFIG/KNOWLEDGE.md)
-  - [run_query.ps1](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/run_query.ps1)
-  - [debug_screen.ps1](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/debug_screen.ps1)
-  - [record_hotfix.ps1](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/record_hotfix.ps1)
+  - [BOOTSTRAP.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/AI_AGENT_CONFIG/BOOTSTRAP.md)
+  - [KNOWLEDGE.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/AI_AGENT_CONFIG/KNOWLEDGE.md)
+  - [run_query.ps1](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/run_query.ps1)
+  - [debug_screen.ps1](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/debug_screen.ps1)
+  - [record_hotfix.ps1](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/record_hotfix.ps1)
 -->
 
 # ⚡ SKILLS — Vinatech MES Agent (PowerShell & SQL Templates)

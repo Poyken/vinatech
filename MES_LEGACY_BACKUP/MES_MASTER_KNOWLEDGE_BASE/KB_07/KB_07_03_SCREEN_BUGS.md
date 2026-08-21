@@ -1,4 +1,4 @@
-<!--
+﻿<!--
 AI-READY METADATA
 Purpose: Sổ tay cứu hộ sự cố & kịch bản fix bug phân hệ Hưng Yên & VinaEnesol (HY103, HY141-HYFG01, D000, D051, D100, D110, Dry Oven, Doping JIG)
 Scope: Hung Yen & VinaEnesol Screen Bug Fixbook & Emergency Recipes
@@ -6,16 +6,16 @@ Single Source of Truth: KB_07_03_SCREEN_BUGS.md (Hung Yen Bug Fixes)
 Target Screens: HY103, HY141, HY143, HY151, HY220, HY311, HY312, HY330, HY430, HY431, HY443, HY530, HY540, HY541, HY620, HY740, HYFG01, D000, D051, D100, D110, Dry Oven, Doping JIG
 Target Tables: STB_VN_DryOver, STB_VVT_DopingJIG, STB_DetailAgingHY, STB_VINAEnesolBoxLabelPrintHist, STB_MaterialCodeByCustomer, STB_VN_FINISHGOODS_HY
 Related Files:
-  - [KB_INDEX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
-  - [KB_07 Index](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_07/INDEX.md)
-  - [KB_07_01_OVERVIEW.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_07/KB_07_01_OVERVIEW.md)
-  - [KB_07_02_DEPLOY_HY.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_07/KB_07_02_DEPLOY_HY.md)
+  - [KB_INDEX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
+  - [KB_07 Index](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_07/INDEX.md)
+  - [KB_07_01_OVERVIEW.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_07/KB_07_01_OVERVIEW.md)
+  - [KB_07_02_DEPLOY_HY.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_07/KB_07_02_DEPLOY_HY.md)
 -->
 
 # KB_07_03 — Hưng Yên & VinaEnesol Screen Bug Fixbook
 
 > **Mục đích:** Tra cứu và xử lý sự cố khẩn cấp trên các màn hình nhà máy Hưng Yên (`VVT_F5`) và phân hệ Enesol (`D000` Menu).  
-> ← [Về Master Index](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md) | [Về KB_07 Index](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_07/INDEX.md)
+> ← [Về Master Index](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md) | [Về KB_07 Index](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_07/INDEX.md)
 
 ---
 

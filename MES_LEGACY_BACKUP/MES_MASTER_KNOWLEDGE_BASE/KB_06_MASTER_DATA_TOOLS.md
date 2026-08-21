@@ -6,8 +6,8 @@ Single Source of Truth: KB_06_MASTER_DATA_TOOLS.md (Master Data Configuration)
 Target Screens: A230, A310, A410, A418, A419, B210-B240, B250, B260, B270, C131, C430, F110, F741
 Target Tables: STB_ModelBasicInfo, STB_MaterialMaster, STB_PackingStandard, STB_LineInfo, STB_RouteInfo, STB_MachineMaster
 Related Files:
-  - [KB_INDEX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
-  - [BOOTSTRAP.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/AI_AGENT_CONFIG/BOOTSTRAP.md)
+  - [KB_INDEX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
+  - [BOOTSTRAP.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/AI_AGENT_CONFIG/BOOTSTRAP.md)
 -->
 
 # KB_06 - Master Data, SQL Tools & Manual Bypass
@@ -15,7 +15,7 @@ Related Files:
 > **Màn hình:** A230, A310, A410, A418, A419, B210-B240, B250, B260, B270, C131, C430, F110, F741
 > **Bảng chính:** `STB_ModelBasicInfo` (61 cols), `STB_MaterialMaster` (82 cols), `STB_PackingStandard` (11 cols)
 > **🔑 Keywords:** master data, model, vật tư, material, Vol, Farad, thêm mới, checklist, line, route, cell, F110, bypass
-> ← [Về INDEX](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
+> ← [Về INDEX](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
 
 
 ---
@@ -187,7 +187,7 @@ SELECT OBJECT_DEFINITION(OBJECT_ID('fn_VVT_StagePricesMODULE'))
 
 ## 4. 🛢️ Lỗi Vỏ Nhôm (Aluminum Case Mapping)
 
--> Xem [KB_05 Mục 7.4](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md#74-b597-báo-lỗi-không-tồn-tại-thiết-lập-vỏ-nhôm) để debug và fix.
+-> Xem [KB_05 Mục 7.4](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md#74-b597-báo-lỗi-không-tồn-tại-thiết-lập-vỏ-nhôm) để debug và fix.
 
 ---
 
@@ -195,7 +195,7 @@ SELECT OBJECT_DEFINITION(OBJECT_ID('fn_VVT_StagePricesMODULE'))
 
 ### 5.1 Golden Query: Kiểm tra lịch sử toàn bộ 1 Barcode
 
-👉 **Golden Query đầy đủ (3 mẫu):** Xem tại [KNOWLEDGE.md](file:///c:/Users/User Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/AI_AGENT_CONFIG/KNOWLEDGE.md#L84) (§ 4. Golden Query — Full Trace Barcode). Bao gồm mẫu cho Cell/Module, Điện cực, và NVL.
+👉 **Golden Query đầy đủ (3 mẫu):** Xem tại [KNOWLEDGE.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/AI_AGENT_CONFIG/KNOWLEDGE.md#L84) (§ 4. Golden Query — Full Trace Barcode). Bao gồm mẫu cho Cell/Module, Điện cực, và NVL.
 
 
 ---
@@ -280,7 +280,7 @@ ORDER BY CreateDateTime DESC
 ## 6. 🆘 Manual Lot Bypass (In tem khẩn khi không có Lot trên hệ thống)
 
 *   **Khi nào dùng:** Tình huống khẩn cấp cần in tem đóng gói gấp cho lô hàng thực tế đã đóng xong nhưng trên hệ thống MES bị lỗi không sinh được Lot (ví dụ: do sự cố đồng bộ PO ở B450).
-*   **Chi tiết & Giải pháp:** Xem quy trình cứu hộ 3 bước (INSERT/UPDATE SQL) chi tiết tại [KB_04/KB_04_01_CORE_PACKAGING.md#615-lỗi-không-in-được-tem-vì-không-có-lot-trên-hệ-thống-bypass-thủ-công](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_01_CORE_PACKAGING.md#615-lỗi-không-in-được-tem-vì-không-có-lot-trên-hệ-thống-bypass-thủ-công).
+*   **Chi tiết & Giải pháp:** Xem quy trình cứu hộ 3 bước (INSERT/UPDATE SQL) chi tiết tại [KB_04/KB_04_01_CORE_PACKAGING.md#615-lỗi-không-in-được-tem-vì-không-có-lot-trên-hệ-thống-bypass-thủ-công](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_01_CORE_PACKAGING.md#615-lỗi-không-in-được-tem-vì-không-có-lot-trên-hệ-thống-bypass-thủ-công).
 
 ---
 

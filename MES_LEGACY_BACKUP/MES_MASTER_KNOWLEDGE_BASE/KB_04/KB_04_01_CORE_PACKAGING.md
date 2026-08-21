@@ -1,4 +1,4 @@
-
+﻿
 <!--
 AI-READY METADATA
 Purpose: Quy trình đóng gói core (B523, B525), PackingStandard schema, gộp/chia box, Z530/A460 Label Template Architecture & Debugging
@@ -7,10 +7,10 @@ Single Source of Truth: KB_04_01_CORE_PACKAGING.md (Packaging Core & Label Archi
 Target Screens: B523, B525, B453, B560, B789, B781, B353, B442, A419, A460, B754-B758, B790, Z530, C531
 Target Tables: STB_PackingStandard, STB_DividePackaging, STB_ModelLabelInfo, STB_SavePackingTime_VVT
 Related Files:
-  - [KB_INDEX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
-  - [KB_04 Index](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_04/INDEX.md)
-  - [KB_04_02_SCREEN_BUGS.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_02_SCREEN_BUGS.md)
-  - [KB_04_03_SANMINA_LABEL_GUIDE.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_03_SANMINA_LABEL_GUIDE.md)
+  - [KB_INDEX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
+  - [KB_04 Index](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_04/INDEX.md)
+  - [KB_04_02_SCREEN_BUGS.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_02_SCREEN_BUGS.md)
+  - [KB_04_03_SANMINA_LABEL_GUIDE.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_03_SANMINA_LABEL_GUIDE.md)
 -->
 
 # KB_04 — Đóng Gói & In Tem (Packaging & Label Printing)
@@ -18,7 +18,7 @@ Related Files:
 > **Màn hình:** B523, B525, B453, B560, B789, B781, B353, B442, A419, A460, B754~B758, B790, Z530, C531
 > **Bảng chính:** `STB_PackingStandard`, `STB_DividePackaging`, `STB_ModelLabelInfo`, `STB_SavePackingTime_VVT`
 > **🔑 Keywords:** đóng gói, packing, in tem, label, gộp box, rã box, tiêu chuẩn, PackingID, BoxID, VJ, VV, Hela, PAC, DigiKey
-> ← [Về INDEX](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
+> ← [Về INDEX](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
 
 
 ---
@@ -29,8 +29,8 @@ Related Files:
 >
 > 🏭 **Cơ sở gốc:** VVT_F1 (Bắc Ninh) | **Biến thể theo cơ sở:**
 > - **Hà Nam (VVT_F3):** HN523 (đóng gói), HN542/HN543 (chia tem), HN544 (gộp túi bóng), HN553/HN711 (tem Solum)
-> - **BG2 (VVT_F4):** K130 (tem Module), K160 (lịch sử tem), K198 (tem Bloom Energy SL-7), K199 (tem Nordex) → [KB_03 §6.14](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_02_CELL_LINE.md#614-nhà-máy-bg2--cấu-hình-triển-khai-hệ-thống-mes)
-> - **Hưng Yên (VVT_F5):** D051, D100, D110 → [KB_07](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_07/KB_07_01_OVERVIEW.md)
+> - **BG2 (VVT_F4):** K130 (tem Module), K160 (lịch sử tem), K198 (tem Bloom Energy SL-7), K199 (tem Nordex) → [KB_03 §6.14](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_02_CELL_LINE.md#614-nhà-máy-bg2--cấu-hình-triển-khai-hệ-thống-mes)
+> - **Hưng Yên (VVT_F5):** D051, D100, D110 → [KB_07](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_07/KB_07_01_OVERVIEW.md)
 
 ### 6.0 Tổng Quan Kiến Trúc In Tem Nhãn (Mô hình Giá sách ➔ Danh mục ➔ Người đọc)
 Để dễ hình dung luồng xử lý in tem trong hệ thống NAIS MES, hãy tưởng tượng:
@@ -213,7 +213,7 @@ LEFT JOIN LabelInfo LBI    -- CTE từ SmartFramework.dbo.STB_LabelInfo
 > [!NOTE]
 > **Khắc phục sự cố & Lỗi thường gặp (B351, B523, B525, B789, HN523, HN544, etc.):**
 > Toàn bộ danh sách lỗi chi tiết, nguyên nhân gốc, các kịch bản sự cố khẩn cấp và SQL hotfixes đã được chuyển sang tài liệu chuyên biệt:
-> 👉 [KB_04_02_SCREEN_BUGS.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_02_SCREEN_BUGS.md) để tránh trùng lặp thông tin và dễ dàng tra cứu.
+> 👉 [KB_04_02_SCREEN_BUGS.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_02_SCREEN_BUGS.md) để tránh trùng lặp thông tin và dễ dàng tra cứu.
 
 ---
 *Cập nhật: 2026-07-10 — Loại bỏ trùng lặp nội dung lỗi, tách biệt Core Process vs Screen Bugs.*

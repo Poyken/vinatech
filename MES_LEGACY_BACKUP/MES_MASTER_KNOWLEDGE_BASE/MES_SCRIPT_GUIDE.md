@@ -1,20 +1,20 @@
-<!--
+﻿<!--
 AI-READY METADATA
 Purpose: Hướng dẫn chi tiết cách sử dụng 6+ công cụ script PowerShell (run_query, db_sync_tool, validate_sql, deploy_tool, debug_screen, record_hotfix) và quy trình DB Archaeology
 Scope: Workspace PowerShell Tools & Execution Workflows
 Single Source of Truth: MES_SCRIPT_GUIDE.md (PowerShell Tools Documentation)
 Target Scripts: run_query.ps1, db_sync_tool.ps1, validate_sql.ps1, deploy_tool.ps1, debug_screen.ps1, record_hotfix.ps1
 Related Files:
-  - [BOOTSTRAP.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/AI_AGENT_CONFIG/BOOTSTRAP.md)
-  - [RULES.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/AI_AGENT_CONFIG/RULES.md)
-  - [SKILLS.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/AI_AGENT_CONFIG/SKILLS.md)
+  - [BOOTSTRAP.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/AI_AGENT_CONFIG/BOOTSTRAP.md)
+  - [RULES.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/AI_AGENT_CONFIG/RULES.md)
+  - [SKILLS.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/AI_AGENT_CONFIG/SKILLS.md)
 -->
 
 # 🛠️ Script & Tool Guide — Hướng Dẫn Sử Dụng Script PowerShell Bổ Trợ
 
 > **Dành cho:** AI Agent (Antigravity) & Kỹ sư EA/IT vận hành dự án MES Vinatech.
 > **Vị trí các script:** Nằm trực tiếp tại thư mục gốc của dự án (`c:\Users\User Vinatech.DESKTOP-RJJSEQU\Desktop\PROCESS\MES\`).
-> ← [Về INDEX](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
+> ← [Về INDEX](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
 
 
 Tài liệu này hướng dẫn chi tiết cách sử dụng, các tham số đầu vào, logic xử lý nội bộ và cơ chế bảo mật an toàn của 4 script PowerShell hỗ trợ đắc lực cho việc tương tác cơ sở dữ liệu và mã nguồn.
@@ -181,4 +181,4 @@ powershell -File .\run_query.ps1 -Query "SELECT name, create_date, modify_date F
 ---
 
 ## ⚠️ Quy Tắc An Toàn
-Các script trên tương tác trực tiếp với cơ sở dữ liệu. Vui lòng tham khảo chi tiết các quy tắc an toàn dữ liệu bắt buộc tại [RULES.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/AI_AGENT_CONFIG/RULES.md).
+Các script trên tương tác trực tiếp với cơ sở dữ liệu. Vui lòng tham khảo chi tiết các quy tắc an toàn dữ liệu bắt buộc tại [RULES.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/AI_AGENT_CONFIG/RULES.md).

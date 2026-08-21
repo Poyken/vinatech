@@ -1,14 +1,14 @@
-<!--
+﻿<!--
 AI-READY METADATA
 Purpose: Tổng quan luồng sản xuất (B310-B882), SetInfo & ProdRouteHist Data Schemas, JobDate update scripts & Barcode traceability
 Scope: Production System Overview & Core Data Schemas
-Single Source of Truth: file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_01_OVERVIEW.md (Production Overview & Core Schemas)
+Single Source of Truth: file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_01_OVERVIEW.md (Production Overview & Core Schemas)
 Target Screens: B310, B450, B452, B523, B528, B530, B540, B597, B598, B682, B717, B726, B781, B782, B791, B802, B882
 Target Tables: STB_SetInfo, STB_ProdRouteHist, STB_DayProdPlan, STB_ProductionOrderInfo
 Related Files:
-  - [KB_INDEX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
-  - [KB_03 Index](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03/INDEX.md)
-  - [KB_03_02_CELL_LINE.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_02_CELL_LINE.md)
+  - [KB_INDEX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
+  - [KB_03 Index](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_03/INDEX.md)
+  - [KB_03_02_CELL_LINE.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_02_CELL_LINE.md)
 -->
 
 # KB_03 — Sản Xuất & Lịch Sử Routing
@@ -16,7 +16,7 @@ Related Files:
 > **Màn hình:** B310, B450, B452, B523, B528, B530, B540, B597, B598, B682, B717, B726, B781, B782, B791, B802, B882
 > **Bảng chính:** `STB_SetInfo` (76 cols), `STB_ProdRouteHist` (23 cols), `STB_DayProdPlan`, `STB_ProductionOrderInfo`
 > **🔑 Keywords:** sản xuất, routing, barcode, scan, công đoạn, chốt sản lượng, line, chuyền, PO, kế hoạch, JobDate, NG, defect, module, cell, electrode, ANDON
-> ← [Về INDEX](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
+> ← [Về INDEX](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
 
 
 ---
@@ -40,7 +40,7 @@ Related Files:
 └───────────────────────────────────────────────────────────────────┘
 ```
 
-> 🏭 **Cơ sở:** Luồng trên là chuẩn **VVT_F1 (Bắc Ninh)**. Hà Nam dùng HN523 thay B523. BG2 dùng K101 thay B450, K109 thay B597. Xem [KB_INDEX § Mapping](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md).
+> 🏭 **Cơ sở:** Luồng trên là chuẩn **VVT_F1 (Bắc Ninh)**. Hà Nam dùng HN523 thay B523. BG2 dùng K101 thay B450, K109 thay B597. Xem [KB_INDEX § Mapping](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md).
 
 > ⚠️ **Quy tắc POP Sản xuất:** `POP sản xuất = B530 = B540 + B523 + C321`. Dữ liệu chốt sản lượng tại B530 phản ánh tổng hợp trực tiếp từ việc nhập thẻ B540, đóng gói B523 và nhập kho C321.
 > ⚠️ **Cột IsFixed ở B450 phải được tích** mới tạo được Lot.
@@ -137,7 +137,7 @@ WHERE ID IN (6030, 6032, 6027, 6025, 6026, 6031)
 
 ### 5.6 Sửa ngày màn FG00 (Kho Thành Phẩm BG)
 
-👉 **Chi tiết Script Fix:** Xem tại [../KB_02/KB_02_01_WMS_CORE.md § 8](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_02/KB_02_01_WMS_CORE.md)
+👉 **Chi tiết Script Fix:** Xem tại [../KB_02/KB_02_01_WMS_CORE.md § 8](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_02/KB_02_01_WMS_CORE.md)
 
 ---
 
@@ -314,7 +314,7 @@ ORDER BY RouteIndex ASC;
 
 **Mục đích:** Khi cần lấy mã Part No rút gọn (VD: `VEC3R0606QG`) từ chuỗi Model Name đầy đủ (VD: `HY-CAP VEC3R0606QG (1840)`).
 
-👉 **SQL lấy PartNo/Size:** Xem tại [KB_06_MASTER_DATA_TOOLS.md](file:///c:/Users/User Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_06_MASTER_DATA_TOOLS.md#L209) (§ 5.2 Lấy PartNo & Size từ tên Model).
+👉 **SQL lấy PartNo/Size:** Xem tại [KB_06_MASTER_DATA_TOOLS.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_06_MASTER_DATA_TOOLS.md#L209) (§ 5.2 Lấy PartNo & Size từ tên Model).
 
 
 ---

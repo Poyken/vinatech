@@ -1,4 +1,4 @@
-<!--
+﻿<!--
 AI-READY METADATA
 Purpose: Chi tiết vận hành Cell Line & Module Line (B450, B530, B540, B597, B523, B717, B789, B791, B802, B598, B351, BG2 K101-K199, H301-H305)
 Scope: Cell Line & Module Production Operations
@@ -6,16 +6,16 @@ Single Source of Truth: KB_03_02_CELL_LINE.md (Cell Line Execution & Module Oper
 Target Screens: B450, B530, B540, B597, B523, B717, B789, B791, B802, B598, B351, K101-K199, H301-H305
 Target Tables: STB_SetInfo, STB_ProdRouteHist, STB_DayProdPlan, STB_SingleCellModuleMappingHist, STB_VN_MASTERMODULES
 Related Files:
-  - [KB_INDEX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
-  - [KB_03 Index](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03/INDEX.md)
-  - [file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_01_OVERVIEW.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_01_OVERVIEW.md)
-  - [KB_08_CORE_SP_ENGINE.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_08_CORE_SP_ENGINE.md)
+  - [KB_INDEX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
+  - [KB_03 Index](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_03/INDEX.md)
+  - [file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_01_OVERVIEW.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_01_OVERVIEW.md)
+  - [KB_08_CORE_SP_ENGINE.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_08_CORE_SP_ENGINE.md)
 -->
 
 ## 6. 🏭 Cell Line — Vận Hành Chi Tiết Từng Màn Hình
 
 > **Nguồn:** Phân tích 41 SP + ảnh màn hình (2026-04-13)
-> ← [Về INDEX](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md) | [Về KB_03 Index](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03/INDEX.md)
+> ← [Về INDEX](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md) | [Về KB_03 Index](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_03/INDEX.md)
 
 
 ### 6.1 Bản đồ tổng quan Cell Line (V22 → V28)
@@ -56,7 +56,7 @@ Related Files:
 | `usp_DoFixDayProdPlan` | Đánh dấu kế hoạch đã Fixed (IsFixed=1) |
 | `usp_DoCancelDayProdPlan` | Hủy kế hoạch |
 | `usp_DoFinishDayProdPlan` | Đóng kế hoạch ngày |
-| `usp_DoCreateSetInfoForProdQty_VNT` | **★ CORE — Tạo barcode (YearCode+MonthCode+Serial)** → [KB_08](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_08_CORE_SP_ENGINE.md) |
+| `usp_DoCreateSetInfoForProdQty_VNT` | **★ CORE — Tạo barcode (YearCode+MonthCode+Serial)** → [KB_08](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_08_CORE_SP_ENGINE.md) |
 | `usp_SetInfo_iud` | IUD thông tin SetInfo (barcode metadata) |
 
 **Lỗi thường gặp:**
@@ -107,7 +107,7 @@ Related Files:
 [GATE 7] PO không có Route: PONo IS NULL → RAISERROR 'Routing này không có trong PO'
 ```
 
-> 🚦 **Tham chiếu mở rộng:** Chi tiết logic, mã SQL debug cho 7 cổng chặn B530 trên được tích hợp trực tiếp trong SP [usp_DoProcessProdRouteHistForCalc_SmartApp_VNT](file:///c:/Users/User Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_08_CORE_SP_ENGINE.md#L290).
+> 🚦 **Tham chiếu mở rộng:** Chi tiết logic, mã SQL debug cho 7 cổng chặn B530 trên được tích hợp trực tiếp trong SP [usp_DoProcessProdRouteHistForCalc_SmartApp_VNT](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_08_CORE_SP_ENGINE.md#L290).
 
 
 **Cột IsRawMaterialInputFinish — Gate quan trọng nhất:**
@@ -260,7 +260,7 @@ WHERE MaterialCode = 'mã_hàng'
 
 ### 6.5 [B523] — Đóng Gói (Gộp Box) — Quy Trình Mới
 
-> 🏭 **Cơ sở gốc:** VVT_F1 | 🔀 **Biến thể:** **HN523** (Hà Nam), **HN544** (gộp túi bóng) → [KB_04 §6.5, §6.13](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_01_CORE_PACKAGING.md)
+> 🏭 **Cơ sở gốc:** VVT_F1 | 🔀 **Biến thể:** **HN523** (Hà Nam), **HN544** (gộp túi bóng) → [KB_04 §6.5, §6.13](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_01_CORE_PACKAGING.md)
 
 **Quy trình mới (thay đổi so với cũ):**
 
@@ -294,7 +294,7 @@ IF @pProcessUserID NOT IN ('vvt_worker','vvtworker',...)
     RAISERROR('Chưa cân — không được in label')
 ```
 
-> 🚦 **Tham chiếu mở rộng:** Chi tiết các cổng chặn đóng gói (cân hàng, tiêu chuẩn đóng gói, in tem giới hạn) được thực hiện tại màn hình đóng gói [B523](file:///c:/Users/User Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_01_CORE_PACKAGING.md#L11).
+> 🚦 **Tham chiếu mở rộng:** Chi tiết các cổng chặn đóng gói (cân hàng, tiêu chuẩn đóng gói, in tem giới hạn) được thực hiện tại màn hình đóng gói [B523](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_01_CORE_PACKAGING.md#L11).
 
 ---
 
@@ -351,35 +351,35 @@ B310 (POType=MODULE) → B450 (Module Line Code) → B540 (Không check điện 
 #### 6.8.1 Các Bảng Cơ Sở Dữ Liệu Module & Cấu Trúc Schema
 Hệ thống quản lý Module sử dụng một tập hợp các bảng cơ sở dữ liệu chuyên biệt để liên kết, theo dõi chất lượng, và lưu trữ lịch sử cấu hình lắp ráp:
 
-1. **[STB_SingleCellModuleMappingHist](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_02_CELL_LINE.md) (Lịch sử mapping Single Cell ↔ Module Lot):**
+1. **[STB_SingleCellModuleMappingHist](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_02_CELL_LINE.md) (Lịch sử mapping Single Cell ↔ Module Lot):**
    * Lưu thông tin mapping giữa Single Cell và Module Lot.
    * *Schema:* `ModuleLotNo` (varchar(20)), `Seq` (int), `SingleCellLotNo` (varchar(20)), `CreateDateTime` (datetime), `CreateUserID` (varchar(20)).
 
-2. **[STB_ModuleProductionInfo](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_02_CELL_LINE.md) & [STB_ModuleProductionHist](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_02_CELL_LINE.md) (Thông tin & Lịch sử sản xuất module):**
+2. **[STB_ModuleProductionInfo](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_02_CELL_LINE.md) & [STB_ModuleProductionHist](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_02_CELL_LINE.md) (Thông tin & Lịch sử sản xuất module):**
    * Theo dõi tiến độ sản xuất, lượng pinhole, thay cell lỗi, thông số kiểm đo ESR/Farad của module.
    * *Schema chính:* `ModuleProductionNo` (varchar(20)), `JobStartDate` (date), `SemiProdLotNo1` (varchar(20)), `SemiProdLotNo2` (varchar(20)), `PinHoleQty` (numeric), `ChangeCellQty` (numeric), `Farad` (numeric), `ESR` (numeric), `FinishedProdLotNo` (varchar(20)), `ShipmentDate` (date), `ShipmentQty` (numeric).
 
-3. **[STB_ModuleSemiProductionInfo](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_02_CELL_LINE.md) (Thông tin bán thành phẩm Module):**
+3. **[STB_ModuleSemiProductionInfo](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_02_CELL_LINE.md) (Thông tin bán thành phẩm Module):**
    * Liên kết bản mạch PCB và các Single Cell cấu thành bán thành phẩm.
    * *Schema:* `ModuleSemiProductionNo` (varchar(20)), `ProdDate` (date), `Grade` (varchar(10)), `PCBLotNo` (varchar(20)), `SemiProdLotNo` (varchar(20)), `SingleCellLotNo1` (varchar(20)), `SingleCellLotNo2` (varchar(20)), `SingleCellLotNo3` (varchar(20)).
 
-4. **[STB_SubAssemblyInfoForBE](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_02_CELL_LINE.md) (Mapping bán thành phẩm BE):**
+4. **[STB_SubAssemblyInfoForBE](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_02_CELL_LINE.md) (Mapping bán thành phẩm BE):**
    * Bản ghi liên kết thùng và mạch PCB cho công đoạn lắp ráp BE.
    * *Schema:* `SubAssemblyNo` (varchar(20)), `BoxBarcode` (varchar(20)), `PcbBarcode` (varchar(20)).
 
-5. **[STB_ModuleLabelInfo](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_02_CELL_LINE.md) (Thông tin Serial Label Module):**
+5. **[STB_ModuleLabelInfo](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_02_CELL_LINE.md) (Thông tin Serial Label Module):**
    * Liên kết mã serial nhãn in với Single Cell tương ứng.
    * *Schema:* `ModuleSerialNo` (varchar(20)), `ProductNo` (varchar(20)), `RevisionNo` (varchar(20)), `SingleLotNo` (varchar(20)).
 
-6. **[STB_ModuleAssemblyLabelInfo](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_02_CELL_LINE.md) (Lịch sử tách/phát hành Lot con cho ráp Module):**
+6. **[STB_ModuleAssemblyLabelInfo](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_02_CELL_LINE.md) (Lịch sử tách/phát hành Lot con cho ráp Module):**
    * Lưu thông tin quan hệ giữa Lot ráp con (Assembly Lot) và Lot mẹ (Parent Lot).
    * *Schema:* `ModuleAssemblyLotNo` (varchar(20)), `ModuleParentLotNo` (varchar(20)), `IsPacking` (bit), `IsShipment` (bit).
 
-7. **[STB_AssemblyCellWeightInfo](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_02_CELL_LINE.md) (Cân nặng Cell lắp ráp):**
+7. **[STB_AssemblyCellWeightInfo](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_02_CELL_LINE.md) (Cân nặng Cell lắp ráp):**
    * Lưu dữ liệu cân nặng ghi nhận tại công đoạn lắp ráp.
    * *Schema:* `LineCode` (varchar(20)), `CellWeight` (numeric), `CreateDateTime` (datetime).
 
-8. **[STB_VN_MASTERMODULES](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_02_CELL_LINE.md) & [STB_VN_DETAILMODULES](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_02_CELL_LINE.md) (Đóng gói gộp box module Việt Nam):**
+8. **[STB_VN_MASTERMODULES](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_02_CELL_LINE.md) & [STB_VN_DETAILMODULES](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_02_CELL_LINE.md) (Đóng gói gộp box module Việt Nam):**
    * *Master:* Lưu thông tin thùng (`GROUPID`, `LOTNO`, `QTY`, `TOTALQTY`, `VOL`, `FWAR`, `PARTNO`, `SIZE`, `PackingID` dạng `MVKQ[Month]...`).
    * *Detail:* Lưu chi tiết của từng Lot trong thùng (`GROUPID`, `LOTNO`, `QTYACT`, `LineCode`, `RouteCode`, `ProdQty`).
 
@@ -475,9 +475,9 @@ WHERE OldBarcode = 'VV...' OR NewBarcode = 'VV...'
 ```
 
 👉 **Tra cứu sự cố Thường gặp & Khắc phục lỗi B351:**
-- **Lỗi 1 (Dấu chấm Barcode):** Xem [KB_04_02 §B351 Lỗi 1](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_02_SCREEN_BUGS.md#lỗi-1-barcode-sinh-ra-bị-chèn-ký-tự-dấu-chấm--sai-định-dạng).
-- **Lỗi 2 (Rollback đồng bộ 4 bảng):** Xem [KB_04_02 §B351 Lỗi 2](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_02_SCREEN_BUGS.md#lỗi-2-user-yêu-cầu-in-lại-tem-gốc-mã-cũ-sau-khi-sản-xuất-đã-chuyển-đổi-lot-tại-b351).
-- **Lỗi 3 (`No data to process` khi bấm nút):** Xem [KB_04_02 §B351 Lỗi 3](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_02_SCREEN_BUGS.md#lỗi-3-bấm-nút-thay-đổi-model-xuất-hiện-thông-báo-no-data-to-process).
+- **Lỗi 1 (Dấu chấm Barcode):** Xem [KB_04_02 §B351 Lỗi 1](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_02_SCREEN_BUGS.md#lỗi-1-barcode-sinh-ra-bị-chèn-ký-tự-dấu-chấm--sai-định-dạng).
+- **Lỗi 2 (Rollback đồng bộ 4 bảng):** Xem [KB_04_02 §B351 Lỗi 2](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_02_SCREEN_BUGS.md#lỗi-2-user-yêu-cầu-in-lại-tem-gốc-mã-cũ-sau-khi-sản-xuất-đã-chuyển-đổi-lot-tại-b351).
+- **Lỗi 3 (`No data to process` khi bấm nút):** Xem [KB_04_02 §B351 Lỗi 3](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_02_SCREEN_BUGS.md#lỗi-3-bấm-nút-thay-đổi-model-xuất-hiện-thông-báo-no-data-to-process).
 
 
 ---
@@ -1243,7 +1243,7 @@ WHERE MaterialLotNo = @NewLotNo;
 ##### 🔴 Bug #3: Mismatch logic tuổi thọ dao và Hardcode địa lý Bắc Giang (`usp_DoCreateSlittingResult`)
 *   **Triệu chứng:** Nhà máy Hà Nam/Hưng Yên không cảnh báo thay dao. Dao bị khóa sớm do tính sai tuổi thọ.
 *   **Nguyên nhân:** (1) Hardcode `RouteCode = 'V-11_BG'`, (2) Đếm số cuộn thay vì tổng số mét cắt.
-*   **Fix:** Sửa điều kiện `RouteCode LIKE 'V-11%'` + đổi cơ chế sang `SUM(GoodQtyLength)`. Xem [KB_02/KB_02_02_SCREEN_BUGS.md §F742/F746 Lỗi 2](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_02/KB_02_02_SCREEN_BUGS.md).
+*   **Fix:** Sửa điều kiện `RouteCode LIKE 'V-11%'` + đổi cơ chế sang `SUM(GoodQtyLength)`. Xem [KB_02/KB_02_02_SCREEN_BUGS.md §F742/F746 Lỗi 2](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_02/KB_02_02_SCREEN_BUGS.md).
 
 
 ---

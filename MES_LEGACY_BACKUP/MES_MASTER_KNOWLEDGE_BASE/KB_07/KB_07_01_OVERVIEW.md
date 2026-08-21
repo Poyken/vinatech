@@ -1,4 +1,4 @@
-<!--
+﻿<!--
 AI-READY METADATA
 Purpose: Kiến trúc tổng thể & Cẩm nang vận hành Master nhà máy Hưng Yên (VVT_F5) & VinaEnesol Ecosystem
 Scope: Hung Yen VVT_F5 Architecture, 17 HY Screens, VinaEnesol Box Matching & Master Data
@@ -6,11 +6,11 @@ Single Source of Truth: KB_07_01_OVERVIEW.md (Hung Yen Architecture & Master Dat
 Target Screens: HY103, HY141, HY143, HY151, HY220, HY311, HY312, HY330, HY430, HY431, HY443, HY530, HY540, HY541, HY620, HY740, HYFG01, D000, D051, D100, D110
 Target Tables: STB_CustomerInfoEnesol, STB_MaterialCodeByCustomer, STB_VINAEnesolBoxLabelPrintHist, STB_VINAEnesolBoxMatchingHist, STB_DetailAgingHY, STB_LineInfo, STB_VN_FINISHGOODS_HY
 Related Files:
-  - [KB_INDEX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
-  - [KB_07 Index](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_07/INDEX.md)
-  - [KB_07_02_DEPLOY_HY.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_07/KB_07_02_DEPLOY_HY.md)
-  - [KB_07_03_SCREEN_BUGS.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_07/KB_07_03_SCREEN_BUGS.md)
-  - [KB_07_04_HUNG_YEN_WBS_MAPPING.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_07/KB_07_04_HUNG_YEN_WBS_MAPPING.md)
+  - [KB_INDEX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
+  - [KB_07 Index](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_07/INDEX.md)
+  - [KB_07_02_DEPLOY_HY.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_07/KB_07_02_DEPLOY_HY.md)
+  - [KB_07_03_SCREEN_BUGS.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_07/KB_07_03_SCREEN_BUGS.md)
+  - [KB_07_04_HUNG_YEN_WBS_MAPPING.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_07/KB_07_04_HUNG_YEN_WBS_MAPPING.md)
 -->
 
 # KB_07 — VinaEnesol & Hưng Yên Factory Master Knowledge Base
@@ -19,7 +19,7 @@ Related Files:
 > **Mã Công Ty (CompanyCode):** `VVT` / `VNT` (Legacy: `VNT_F5`)  
 > **Màn hình chính:** `D000` Menu (`D051`, `D100`, `D110`), `HY103` $\rightarrow$ `HYFG01` (17 màn hình tùy biến Hưng Yên)  
 > **🔑 Keywords:** Hưng Yên, VinaEnesol, VVT_F5, D-series, HY-series, Box Matching, Inner Box, Outer Box, Enesol Vendor P/N, STB_DetailAgingHY  
-> ← [Về Master Index](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md) | [Về KB_07 Index](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_07/INDEX.md)
+> ← [Về Master Index](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md) | [Về KB_07 Index](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_07/INDEX.md)
 
 ---
 

@@ -5,16 +5,16 @@ Scope: Core Database SP Engine & Live Execution Map
 Single Source of Truth: KB_08_CORE_SP_ENGINE.md (Core SP Execution & Logic)
 Target SPs: usp_DoProcessProdRouteHist, usp_DoProcessProdGIMaterialByBOM, usp_DoProcessProdRouteHistForCalc_SmartApp_VNT, usp_Vietnam_DoProcessProdPacking_VVT, usp_DoCreateSetInfoForProdQty_VNT
 Related Files:
-  - [KB_INDEX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
-  - [BOOTSTRAP.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/AI_AGENT_CONFIG/BOOTSTRAP.md)
-  - [KNOWLEDGE.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/AI_AGENT_CONFIG/KNOWLEDGE.md)
+  - [KB_INDEX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
+  - [BOOTSTRAP.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/AI_AGENT_CONFIG/BOOTSTRAP.md)
+  - [KNOWLEDGE.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/AI_AGENT_CONFIG/KNOWLEDGE.md)
 -->
 
 # KB_08: Core SP Engine — Trái Tim Hệ Thống MES
 
 > **File tính năng:** Chứa phân tích chi tiết các Stored Procedure cốt lõi nhất của hệ thống MES.
 > **🔑 Keywords:** SP engine, DoProcess, Backflush, ForCalc, Packing, OPENXML, stored procedure, core logic
-> ← [Về INDEX](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
+> ← [Về INDEX](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
 
 
 ---
@@ -321,7 +321,7 @@ EXEC usp_DoFixMaterialDoc @MaterialDocNo
 > IF @SIExtInt01 = Null  -- ← BUG! SQL không bao giờ TRUE khi so sánh = Null
 > -- Phải sửa thành: IF @SIExtInt01 IS NULL
 > ```
-> → Xem chi tiết tại [KB_03/KB_03_03_SCREEN_BUGS_B.md#lỗi-1-lỗi-cấm-scan-nhanh-dưới-20-phút-gate-20-phút-bị-lỗikhông-chặn-được](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_03_SCREEN_BUGS_B.md#lỗi-1-lỗi-cấm-scan-nhanh-dưới-20-phút-gate-20-phút-bị-lỗikhông-chặn-được).
+> → Xem chi tiết tại [KB_03/KB_03_03_SCREEN_BUGS_B.md#lỗi-1-lỗi-cấm-scan-nhanh-dưới-20-phút-gate-20-phút-bị-lỗikhông-chặn-được](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_03_SCREEN_BUGS_B.md#lỗi-1-lỗi-cấm-scan-nhanh-dưới-20-phút-gate-20-phút-bị-lỗikhông-chặn-được).
 
 ---
 

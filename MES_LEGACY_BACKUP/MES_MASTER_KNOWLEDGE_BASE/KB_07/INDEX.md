@@ -1,19 +1,19 @@
-<!--
+﻿<!--
 AI-READY METADATA
 Purpose: Master Index & Định tuyến phân hệ Hưng Yên Factory (VVT_F5) & VinaEnesol
 Scope: Hung Yen Factory Master Directory & Screen Routing Matrix
 Single Source of Truth: KB_07/INDEX.md (Hung Yen Module Index) & KB_07_01_OVERVIEW.md
 Related Files:
-  - [KB_INDEX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
-  - [KB_07_01_OVERVIEW.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_07/KB_07_01_OVERVIEW.md)
-  - [KB_07_02_DEPLOY_HY.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_07/KB_07_02_DEPLOY_HY.md)
-  - [KB_07_03_SCREEN_BUGS.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_07/KB_07_03_SCREEN_BUGS.md)
+  - [KB_INDEX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
+  - [KB_07_01_OVERVIEW.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_07/KB_07_01_OVERVIEW.md)
+  - [KB_07_02_DEPLOY_HY.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_07/KB_07_02_DEPLOY_HY.md)
+  - [KB_07_03_SCREEN_BUGS.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_07/KB_07_03_SCREEN_BUGS.md)
 -->
 
 # KB_07 — VinaEnesol & Hưng Yên Factory Master Index
 
 > **WorkCenterCode:** `VVT_F5` (Nhà máy Hưng Yên)  
-> ← [Về Master Index](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
+> ← [Về Master Index](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
 
 ---
 
@@ -21,10 +21,10 @@ Related Files:
 
 | # | File | Nội dung chính | Single Source of Truth (SoT) |
 |---|------|----------|------------------------------|
-| 01 | [KB_07_01_OVERVIEW](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_07/KB_07_01_OVERVIEW.md) | Kiến trúc VVT_F5, bản đồ 17 màn hình HY, Menu Enesol D000, thuật toán LotNo/Barcode & Box Matching | Hung Yen Architecture & Overview |
-| 02 | [KB_07_02_DEPLOY_HY](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_07/KB_07_02_DEPLOY_HY.md) | Danh mục 93 SPs cô lập `_HY`, bảng FG/VPC, Server-Side Layout Cloning & UTF-8 BOM rules | Hung Yen VVT_F5 Technical SP Reference |
-| 03 | [KB_07_03_SCREEN_BUGS](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_07/KB_07_03_SCREEN_BUGS.md) | Sổ tay cứu hộ sự cố 15+ màn hình HY, Gate time Aging `HY530`, Assy Card `HY540`, In tem Enesol `D100` | Hung Yen Screen Bug Fixbook |
-| 04 | [KB_07_04_HUNG_YEN_WBS_MAPPING](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_07/KB_07_04_HUNG_YEN_WBS_MAPPING.md) | Ma trận tra cứu & ánh xạ 65 màn hình, TCode, SP chính & Bảng DB theo WBS triển khai MES Hưng Yên | Hung Yen WBS Screen Mapping Master |
+| 01 | [KB_07_01_OVERVIEW](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_07/KB_07_01_OVERVIEW.md) | Kiến trúc VVT_F5, bản đồ 17 màn hình HY, Menu Enesol D000, thuật toán LotNo/Barcode & Box Matching | Hung Yen Architecture & Overview |
+| 02 | [KB_07_02_DEPLOY_HY](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_07/KB_07_02_DEPLOY_HY.md) | Danh mục 93 SPs cô lập `_HY`, bảng FG/VPC, Server-Side Layout Cloning & UTF-8 BOM rules | Hung Yen VVT_F5 Technical SP Reference |
+| 03 | [KB_07_03_SCREEN_BUGS](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_07/KB_07_03_SCREEN_BUGS.md) | Sổ tay cứu hộ sự cố 15+ màn hình HY, Gate time Aging `HY530`, Assy Card `HY540`, In tem Enesol `D100` | Hung Yen Screen Bug Fixbook |
+| 04 | [KB_07_04_HUNG_YEN_WBS_MAPPING](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_07/KB_07_04_HUNG_YEN_WBS_MAPPING.md) | Ma trận tra cứu & ánh xạ 65 màn hình, TCode, SP chính & Bảng DB theo WBS triển khai MES Hưng Yên | Hung Yen WBS Screen Mapping Master |
 
 ---
 

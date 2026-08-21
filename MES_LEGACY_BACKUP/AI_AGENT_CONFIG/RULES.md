@@ -1,12 +1,12 @@
-<!--
+﻿<!--
 AI-READY METADATA
 Purpose: Quy tắc bắt buộc không thể vi phạm cho AI Agent khi thao tác trên DB & Workspace MES
 Scope: Safety & Execution Rules
 Single Source of Truth: RULES.md
 Related Files:
-  - [BOOTSTRAP.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/AI_AGENT_CONFIG/BOOTSTRAP.md)
-  - [GEMINI.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/GEMINI.md)
-  - [db_config.json](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/db_config.json)
+  - [BOOTSTRAP.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/AI_AGENT_CONFIG/BOOTSTRAP.md)
+  - [GEMINI.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/GEMINI.md)
+  - [db_config.json](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/db_config.json)
 -->
 
 # 🛡️ RULES — Vinatech MES Agent (Bắt buộc đọc mỗi phiên)
@@ -47,7 +47,7 @@ Related Files:
 
 ## 3. WORKFLOW XỬ LÝ BUG
 
-→ Quy trình 7 bước chi tiết: Xem [`BOOTSTRAP.md`](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/AI_AGENT_CONFIG/BOOTSTRAP.md) § WORKFLOW XỬ LÝ BUG
+→ Quy trình 7 bước chi tiết: Xem [`BOOTSTRAP.md`](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/AI_AGENT_CONFIG/BOOTSTRAP.md) § WORKFLOW XỬ LÝ BUG
 
 ---
 
@@ -64,4 +64,4 @@ Related Files:
 
 ## 5. KẾT NỐI DB
 
-→ Xem chi tiết cấu hình và thông tin kết nối tại [`db_config.json`](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/db_config.json)
+→ Xem chi tiết cấu hình và thông tin kết nối tại [`db_config.json`](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/db_config.json)
