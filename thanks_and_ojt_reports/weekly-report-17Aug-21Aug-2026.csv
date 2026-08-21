@@ -1,0 +1,32 @@
+NAME,DEPARTMENT,DATE GET ISSUE,NAME ISSUE,THE SOLVE,TYPE ISSUE,DATE SOLVE ISSUE,SOLVE ISSUE BY,STATUS,REMARK
+Nguyen Van Duc,EA Team,17/8/2026,IT Hardware Handover — Mr. Ha (Electrode Dept),Bàn giao thiết bị Laptop và máy in; cài đặt cấu hình ban đầu cho anh Hà - bộ phận Điện cực.,Task,17/8/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,17/8/2026,Network Maintenance & Factory Connection Assurance,Kiểm tra hệ thống đường truyền mạng cáp LAN và Wifi; đảm bảo kết nối mạng thông suốt cho các bộ phận xưởng.,Task,17/8/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,17/8/2026,Printer Setup — Production Department,Hỗ trợ cài đặt; kết nối mạng và thiết lập driver máy in cho bộ phận Sản xuất.,Support,17/8/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,17/8/2026,FortiClient Setup & Remote Connection Support,Hỗ trợ cài đặt và cấu hình phần mềm FortiClient VPN truy cập tài nguyên nội bộ.,Support,17/8/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,17/8/2026,MES User Support — Hung Yen Factory,Hỗ trợ người dùng trên hệ thống MES nhà máy Hưng Yên; xử lý lỗi thao tác và tra cứu dữ liệu.,Support,17/8/2026,Nguyen Van Duc,Done,MES
+Nguyen Van Duc,EA Team,17/8/2026,Damaged IT Equipment Collection,Thu hồi các thiết bị IT cũ; hỏng hóc từ các bộ phận đưa về kho phân loại quản lý.,Support,17/8/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,18/8/2026,IT Monitor Handover — Mr. Diep (Production Dept),Bàn giao; lắp đặt và cân chỉnh màn hình làm việc mới cho anh Điệp - bộ phận Sản xuất.,Task,18/8/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,18/8/2026,Sanmina Label Format Update — Customer Request,Cập nhật thiết kế và định dạng con tem Sanmina trên hệ thống MES theo yêu cầu đặc tả của khách hàng.,Task,18/8/2026,Nguyen Van Duc,Done,MES
+Nguyen Van Duc,EA Team,18/8/2026,Office & Excel License Renewal Support,Hỗ trợ kiểm tra bản quyền; gia hạn và kích hoạt license Microsoft Office / Excel cho người dùng.,Support,18/8/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,18/8/2026,Meeting Room Equipment Setup,Hỗ trợ setup thiết bị cuộc họp (kết nối máy chiếu; TV hiển thị; microphone và hệ thống âm thanh).,Support,18/8/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,18/8/2026,Network Connection Support — Production Outlets,Đo kiểm tín hiệu và khắc phục sự cố chập chờn đường truyền mạng tại khu vực sản xuất.,Support,18/8/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,18/8/2026,Password Reset & Account Maintenance,Hỗ trợ khôi phục mật khẩu tài khoản Windows; phân quyền hệ thống máy tính cho user.,Support,18/8/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,18/8/2026,MES Label Printing & Test Verification,Test in thử nghiệm con tem Sanmina mới; căn chỉnh máy in mã vạch đảm bảo độ sắc nét.,Support,18/8/2026,Nguyen Van Duc,Done,MES
+Nguyen Van Duc,EA Team,19/8/2026,MES Hung Yen — User Data & Workflow Support,Tiếp tục hỗ trợ người dùng MES Hưng Yên kiểm tra luồng quy trình công đoạn và xác thực dữ liệu sản xuất.,Task,19/8/2026,Nguyen Van Duc,Done,MES
+Nguyen Van Duc,EA Team,19/8/2026,Network Cable Deployment & Maintenance,Kéo bổ sung dây mạng LAN và bảo trì các điểm kết nối mạng cho các bộ phận xưởng.,Task,19/8/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,19/8/2026,Printer Troubleshooting & Driver Setup,Hỗ trợ cài đặt driver máy in văn phòng; xử lý sự cố kẹt lệnh in và chia sẻ máy in nội bộ.,Support,19/8/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,19/8/2026,Software Installation & PC Maintenance,Cài đặt phần mềm văn phòng chuyên dụng; dọn dẹp và tối ưu hóa hệ thống máy tính người dùng.,Support,19/8/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,19/8/2026,Damaged IT Equipment Audit & Storage,Kiểm kê; phân loại và cập nhật danh sách thiết bị IT hỏng hóc vào kho quản lý.,Support,19/8/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,19/8/2026,IT Hardware Support & Peripheral Setup,Hỗ trợ cấp phát; đấu nối thiết bị ngoại vi (chuột; phím; cáp chuyển đổi) cho người dùng.,Support,19/8/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,20/8/2026,Meeting Room AV & Online Conference Setup,Setup thiết bị phòng họp trực tuyến; kiểm tra chất lượng đường truyền mạng và thiết bị hội nghị truyền hình.,Task,20/8/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,20/8/2026,MES Label Template Maintenance & Support,Hỗ trợ các tổ sản xuất căn chỉnh mẫu in tem MES; đảm bảo mã QR/Barcode đạt tiêu chuẩn quét.,Support,20/8/2026,Nguyen Van Duc,Done,MES
+Nguyen Van Duc,EA Team,20/8/2026,Network Infrastructure & Wifi Health Check,Rà soát các bộ phát Wifi AP và switch mạng; đảm bảo băng thông ổn định cho toàn nhà máy.,Support,20/8/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,20/8/2026,Office & Application Support for Users,Hỗ trợ xử lý lỗi ứng dụng văn phòng Excel/Word và cập nhật các bản vá bảo mật.,Support,20/8/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,20/8/2026,FortiClient & Remote Access Maintenance,Hỗ trợ cấu hình kết nối làm việc từ xa FortiClient VPN cho nhân sự các bộ phận.,Support,20/8/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,20/8/2026,PC Hardware Diagnostic & Performance Tuning,Kiểm tra tình trạng phần cứng; dọn dẹp file rác và tăng tốc hiệu năng máy tính làm việc.,Support,20/8/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,21/8/2026,Weekly IT Network & Infrastructure Audit,Đo kiểm tổng thể hạ tầng mạng LAN/Wifi; đảm bảo kết nối thông suốt và bảo mật cho toàn nhà máy.,Task,21/8/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,21/8/2026,Weekly IT Equipment Inventory & Relabeling,Rà soát; dán tem tài sản và cập nhật nhật ký bàn giao thiết bị IT trong tuần.,Task,21/8/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,21/8/2026,MES Hung Yen & Factory Line Support Summary,Tổng hợp và xử lý dứt điểm các vướng mắc của User trên hệ thống MES Hưng Yên trong tuần.,Support,21/8/2026,Nguyen Van Duc,Done,MES
+Nguyen Van Duc,EA Team,21/8/2026,Printer Maintenance & Setup Review,Kiểm tra; vệ sinh và bảo dưỡng hệ thống máy in văn phòng cùng máy in tem mã vạch xưởng.,Support,21/8/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,21/8/2026,Damaged IT Equipment Final Collection,Thu hồi; đóng gói thiết bị hư hỏng chuẩn bị chuyển bảo hành/thanh lý theo quy định.,Support,21/8/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,21/8/2026,Weekly IT System Maintenance & Backup,Kiểm tra định kỳ; dọn dẹp hệ thống máy trạm và tối ưu hóa hạ tầng IT nhà máy cuối tuần.,Task,21/8/2026,Nguyen Van Duc,Done,HW
