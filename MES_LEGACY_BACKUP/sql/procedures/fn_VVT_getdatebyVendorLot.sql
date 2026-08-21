@@ -1,4 +1,4 @@
-﻿CREATE FUNCTION [dbo].[fn_VVT_getdatebyVendorLot] (
+ALTER FUNCTION [dbo].[fn_VVT_getdatebyVendorLot] (
 		@materialcode varchar(20) = null,
 		@vendorlot    nvarchar(1000) = null
 	)
@@ -31,6 +31,16 @@ begin
 
 	set @date = 
 	 case 
+	-- 2026-08-20: Mở rộng đọc ngày SX từ Vendor Lot cho toàn bộ họ vỏ nhôm AOXING GBAXAC-% (GBAXAC-007, GBAXAC-009...)
+	-- Format 18 số: 5 ký tự đầu mã NCC + 2 ký tự Năm + 2 ký tự Tháng + 2 ký tự Ngày + Hậu tố (VD: 072812608060749905 -> 2026-08-06)
+	WHEN @materialcode LIKE 'GBAXAC-%'
+		AND LEN(@vendorlot) >= 11
+		AND ISNUMERIC(SUBSTRING(@vendorlot, 6, 6)) = 1
+	THEN
+		'20' + SUBSTRING(@vendorlot, 6, 2) + '-' +
+		SUBSTRING(@vendorlot, 8, 2) + '-' +
+		SUBSTRING(@vendorlot, 10, 2)
+
 	when @materialcode in ('GCSAAT-001') then 
 							 '2'+right('00'+convert(varchar(3), (DATEPART(year,@datetest )-2000)/26*26 +charindex(substring(@vendorlot,2,1),@YEARstrElectrode)-1),3)
 							 +'-'+ substring(@vendorlot,3,2)

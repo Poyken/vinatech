@@ -34,6 +34,25 @@ Related Files:
 
 ## ⚡ Các Lỗi Đã Được Xử Lý (Resolved Bugs)
 
+### [F620/F330] — 📍 ID_23 Cấu hình tự động bóc tách Ngày SX (Vendor Lot) cho toàn bộ dòng họ vỏ nhôm AOXING GBAXAC-%
+* **Ngày sửa:** `2026-08-20`
+* **Màn hình liên quan (TCode):** `[F620] - Hoàn trả vật liệu và in tem`, `[F330] - Nhập kho NVL`, `[F311] - Quản lý nguyên vật liệu`
+* **Triệu chứng lỗi:** Quét/nhập mã Lot Vendor `072812608060749905` cho mã NVL `GBAXAC-007` không tự động đọc được ngày sản xuất `2026-08-06` (trả về rỗng / 1900-01-01).
+* **Nguyên nhân gốc (Root Cause):** Hàm `fn_VVT_getdatebyVendorLot_MergeCode` và `fn_VVT_getdatebyVendorLot` trước đây hardcode đơn lẻ `WHEN @materialcode = 'GBAXAC-009'` thay vì dùng wildcard `GBAXAC-%`.
+* **Phương án sửa lỗi (SQL Patch / Action):**
+  ```sql
+  -- Cập nhật cả fn_VVT_getdatebyVendorLot_MergeCode và fn_VVT_getdatebyVendorLot:
+  -- Format 18 số AOXING: 5 ký tự đầu mã NCC + 2 ký tự Năm + 2 ký tự Tháng + 2 ký tự Ngày + Hậu tố
+  WHEN @materialcode LIKE 'GBAXAC-%'
+      AND LEN(@vendorlot) >= 11
+      AND ISNUMERIC(SUBSTRING(@vendorlot, 6, 6)) = 1
+  THEN
+      '20' + SUBSTRING(@vendorlot, 6, 2) + '-' +
+      SUBSTRING(@vendorlot, 8, 2) + '-' +
+      SUBSTRING(@vendorlot, 10, 2)
+  ```
+  *Đã deploy lên DB SmartFactoryV2 và kiểm thử 100% thành công: `GBAXAC-007` (`072812608060749905` $\rightarrow$ `2026-08-06`), `GBAXAC-009` (`072812608060749905` $\rightarrow$ `2026-08-06`), `GBAXAC-003` (`150222607110832811` $\rightarrow$ `2026-07-11`).*
+
 ### [F620/F330] — 📍 ID_22 Cấu hình tự động bóc tách Ngày SX (Vendor Lot) cho dòng họ NVL GBNKSP-%
 * **Ngày sửa:** `2026-08-20`
 * **Màn hình liên quan (TCode):** `[F620] - Hoàn trả vật liệu và in tem`, `[F330] - Nhập kho NVL`
@@ -377,5 +396,29 @@ Related Files:
     END
     ```
 
+### [B530]/[B310] — 📍 ID_32 Lỗi chốt sản lượng công đoạn Aging ("Công đoạn không có trong Routing hoặc là công đoạn cuối cùng") do lệch tài khoản phân quyền nhà máy (BG1 vs HY) & thiếu Routing Index trên B310
+* **Ngày ghi nhận:** `2026-08-21`
+* **Màn hình liên quan (TCode):** `[B530] - Nhập thực tế sản xuất` / `ProdRouteBarcodeForDefect_VNT` & `[B310] - Quản lý Lệnh sản xuất (PO)`
+* **Triệu chứng lỗi:** Khi công nhân quét mã barcode (ví dụ `VVQ0163R072710`, PO `26052900013`, Kế hoạch ngày `2026061300044`, mã Route `V-26`, công đoạn `에이징 (Aging)`) để hoàn thành kết quả sản xuất / chốt sản lượng, hệ thống văng popup đỏ: *"Công đoạn này không có trong Routing hoặc là công đoạn cuối cùng."*
+* **Nguyên nhân gốc (Root Cause):**
+  1. **TH1 - Lệch phân quyền tài khoản nhà máy:** Mã Lot này được tạo PO và Kế hoạch ngày ở nhà máy Bắc Giang 1 (`BG1 cũ` - `VVT_F2`) nhưng người dùng đăng nhập bằng tài khoản Hưng Yên (`vvtworker_hy`) hoặc Bắc Ninh (`vvtworker_bn`) để chốt. Hệ thống MES/NAIS yêu cầu bắt buộc phải sử dụng tài khoản đăng nhập nhà máy Bắc Giang (`vvtworker_bg`) để chốt sản lượng công đoạn.
+  2. **TH2 - Thiếu công đoạn Aging hoặc sai Index trong Routing PO:** Khi tạo PO trên màn hình `B310` hoặc khi thay đổi kế hoạch sản xuất, PO có thể chưa được cấu hình công đoạn Aging (`V-26` / `V-26_BG`), hoặc thứ tự Routing (`RouteIndex`) chưa được đánh lại đầy đủ.
+* **Quy trình kiểm tra & Phương án khắc phục (Troubleshooting Protocol):**
+  1. **Bước 1 - Xem tem cáp thư (Lot Tag):** Kiểm tra mã Lot/Barcode được tạo ở nhà máy nào (`VVT_F1` Bắc Ninh, `VVT_F2` Bắc Giang 1, hay `VVT_F5` Hưng Yên).
+  2. **Bước 2 - Kiểm tra tài khoản đăng nhập NAIS:** Đăng nhập đúng tài khoản tương ứng với nhà máy tạo PO (ví dụ: PO tạo ở BG1 ➔ dùng tài khoản `vvtworker_bg` để chốt sản lượng; PO tạo ở Hưng Yên ➔ dùng `vvtworker_hy`).
+  3. **Bước 3 - Kiểm tra Routing trên B310:** Vào màn hình `B310`, tìm mã PO, kiểm tra danh sách công đoạn trong Routing. Nếu chưa có công đoạn Aging (`V-26` / `V-26_BG`) thì thêm vào và đánh lại thứ tự `RouteIndex` cho chuẩn xác.
 
+---
 
+### [HYFG01]/[F430] — 📍 ID_33 Màn hình xuất kho thành phẩm HYFG01 không thấy ProcessedLotID3, xuất toàn bộ số lượng & kiểm tra điều chuyển kho BN sang HY (ROH-HY-WH)
+* **Ngày ghi nhận:** `2026-08-21`
+* **Màn hình liên quan (TCode):** `[HYFG01] - Kho Thành Phẩm Hưng Yên (Xuất kho TP)` & `[F430] - Chuyển kho / Xuất kho NVL Bắc Ninh`
+* **Triệu chứng lỗi:**
+  1. Khi thực hiện xuất kho tại màn hình `HYFG01`, chương trình báo xuất thành công (OK) nhưng trên hệ thống lại không thấy dữ liệu xuất hoặc không check được đã xuất ID nào do giao diện không hiển thị cột `ProcessedLotID3`.
+  2. Khi thao tác xuất kho tại `HYFG01`, hệ thống có bao nhiêu lại xuất hết toàn bộ số lượng (Full batch export) thay vì chỉ xuất một phần (Partial export).
+  3. Trên hệ thống NAIS không kiểm tra/theo dõi được hàng từ Bắc Ninh (BN) xuất điều chuyển sang Hưng Yên (HY).
+* **Nguyên nhân gốc & Phương án xử lý (Root Cause & Actions):**
+  1. **Hiển thị cột ProcessedLotID3:** Cần cấu hình giao diện `HYFG01` hiển thị cột `ProcessedLotID3` và setup nguồn link giống như màn hình `F430` ở Bắc Ninh (`ISNULL(NULLIF(ProcessedLotID, ''), LotID)`). Gửi lại list `ProcessedLotID3` tương ứng để update dữ liệu lịch sử.
+  2. **Thêm kho Hưng Yên vào hệ thống:** Đã cấu hình thêm kho Hưng Yên để có thể nhập và ghi nhận mã `ProcessedLotID3` chuẩn hóa.
+  3. **Mã kho đích điều chuyển BN ➔ HY:** Khi xuất hàng điều chuyển từ Bắc Ninh sang Hưng Yên, mã kho hàng tới (Target Warehouse) bắt buộc phải chọn đúng là `ROH-HY-WH` (Kho NVL Hưng Yên) thì hệ thống NAIS mới nhận diện và tra cứu được dữ liệu luân chuyển.
+  4. **Lưu ý nghiệp vụ xuất kho:** Chú ý cơ chế xuất kho theo cả lô/toàn bộ số lượng của hệ thống so với nhu cầu xuất từng phần để phân chia Lot hoặc chia phiếu phù hợp trước khi xuất.

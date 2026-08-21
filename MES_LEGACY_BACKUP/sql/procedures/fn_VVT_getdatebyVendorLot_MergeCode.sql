@@ -1,4 +1,4 @@
-﻿-- =============================================
+-- =============================================
 -- Author:		<Mr.Duy>
 -- Create date: <22-12-2023>
 -- Description:	<Chuyển đổi ngày tháng khi gộp code các nhà cung cấp khác nhau đọc lotno khác nhau>
@@ -8,7 +8,7 @@
 --declare @duy varchar(20)=  [dbo].[fn_VVT_getdatebyVendorLot_MergeCode]('153_TRAY1325','20260603','VV026')
 --print @duy
 -- =============================================
-CREATE FUNCTION [dbo].[fn_VVT_getdatebyVendorLot_MergeCode] (
+ALTER FUNCTION [dbo].[fn_VVT_getdatebyVendorLot_MergeCode] (
 		@materialcode varchar(20) = null,
 		@vendorlot    nvarchar(1000) = null,
 		@sourceCustomerCode nvarchar(100) = null
@@ -139,7 +139,9 @@ declare @test varchar(200)=@materialcode +'--'+@vendorlot+'--'+@sourceCustomerCo
 					)
 				),
 			120)
-			WHEN @materialcode = 'GBAXAC-009'
+			-- 2026-08-20: Mở rộng đọc ngày SX từ Vendor Lot cho toàn bộ họ vỏ nhôm AOXING GBAXAC-% (GBAXAC-007, GBAXAC-009...)
+			-- Format 18 số: 5 ký tự đầu mã NCC + 2 ký tự Năm + 2 ký tự Tháng + 2 ký tự Ngày + Hậu tố (VD: 072812608060749905 -> 2026-08-06)
+			WHEN @materialcode LIKE 'GBAXAC-%'
 		AND LEN(@vendorlot) >= 11
 		AND ISNUMERIC(SUBSTRING(@vendorlot, 6, 6)) = 1
 	THEN

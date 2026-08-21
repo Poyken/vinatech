@@ -1,4 +1,4 @@
-﻿<!--
+<!--
 AI-READY METADATA
 Purpose: Sổ tay khắc phục lỗi theo Screen ID phân hệ Sản Xuất (B210-B802, H301-H305, HN523-HN866, K101-K110) - Phần 1
 Scope: Production Execution Bug Fixbook Part 1
@@ -96,6 +96,15 @@ Related Files:
     2. Nếu đã duyệt nhưng vẫn lệch, IT kiểm tra trạng thái Windows Service ESM, hoặc chạy query cưỡng bức đồng bộ thủ công qua ESM Bridge Tables.
 *   **Chi tiết nghiệp vụ:** Xem tại ../KB_07/KB_07_01_OVERVIEW_FLOWS.md § 6.
 
+### Lỗi 2: PO chưa có công đoạn Aging hoặc sai Routing Index trên B310 khiến trạm sản xuất không thể chốt sản lượng
+*   **Triệu chứng:** Khi công nhân chốt sản lượng công đoạn Aging (`V-26` / `V-26_BG`), màn hình văng popup đỏ *"Công đoạn này không có trong Routing hoặc là công đoạn cuối cùng"*.
+*   **Nguyên nhân gốc:** Khi tạo PO trên màn hình **B310** hoặc khi có thay đổi kế hoạch sản xuất giữa các nhà máy, PO chưa được gắn công đoạn Aging vào danh sách Routing (`STB_ProductionOrderRouting`), hoặc các bước Routing chưa được đánh lại số thứ tự `RouteIndex` liên tục.
+*   **Cách khắc phục:**
+    1. Truy cập màn hình **B310**, tìm kiếm mã PO tương ứng.
+    2. Kiểm tra danh mục các công đoạn trong Routing của PO.
+    3. Nếu thiếu công đoạn Aging, bổ sung mã công đoạn (`V-26` hoặc `V-26_BG`) vào PO và đánh lại thứ tự `RouteIndex` tuần tự từ đầu vào đến đóng gói (`V-22` ➔ `V-28`).
+    4. Nhấn Lưu và thông báo công nhân quét lại.
+
 ---
 
 
@@ -169,6 +178,16 @@ Related Files:
        - `V-24_NE7_BG`: Curling_Xước chân tancha (Curling_Lead terminal scrash)
        - `V-24_NE8_BG`: Curling_Lỗi mẻ miệng curling (Curling_Deformation around mouth)
 *   **Chi tiết nghiệp vụ:** Xem tại **fix_b530_disable_defects_BG.sql** và **fix_b530_add_defects_BG.sql**.
+
+### Lỗi 4: Không chốt được sản lượng công đoạn Aging (Popup: "Công đoạn này không có trong Routing hoặc là công đoạn cuối cùng")
+*   **Triệu chứng:** Tại màn hình B530 / `ProdRouteBarcodeForDefect_VNT`, OP quét barcode mã Lot (ví dụ `VVQ0163R072710`, PO `26052900013`, Kế hoạch ngày `2026061300044`, công đoạn Aging `V-26`) và bấm "Hoàn thành kết quả sản xuất" thì văng popup đỏ: *"Công đoạn này không có trong Routing hoặc là công đoạn cuối cùng."*
+*   **Nguyên nhân gốc:**
+    1. **Lệch tài khoản đăng nhập nhà máy:** Mã Lot này được tạo PO và kế hoạch ngày ở nhà máy Bắc Giang 1 (`VVT_F2`) nhưng người dùng đăng nhập bằng tài khoản Hưng Yên (`vvtworker_hy`) hoặc Bắc Ninh (`vvtworker_bn`). Hệ thống MES kiểm soát phân quyền theo nhà máy tạo PO nên bắt buộc phải dùng tài khoản nhà máy Bắc Giang `vvtworker_bg` để chốt.
+    2. **Thiếu công đoạn Aging trong Routing PO trên B310:** Khi tạo PO hoặc khi thay đổi kế hoạch sản xuất chưa thêm công đoạn Aging hoặc chưa đánh lại thứ tự `RouteIndex`.
+*   **Quy trình 3 bước xử lý & khắc phục sự cố:**
+    - **Bước 1 (Xem tem cáp thư):** Kiểm tra lại tem cáp thư xem mã Lot được tạo ở nhà máy nào (BN, BG1, HY).
+    - **Bước 2 (Kiểm tra tài khoản đăng nhập):** Thoát ra và đăng nhập đúng tài khoản NAIS tương ứng (PO tạo ở BG1 ➔ đăng nhập tài khoản `vvtworker_bg`; PO tạo ở Hưng Yên ➔ đăng nhập `vvtworker_hy`).
+    - **Bước 3 (Kiểm tra Routing trên B310):** Nếu đã dùng đúng tài khoản mà vẫn bị chặn, vào màn hình **B310** kiểm tra routing của PO: nếu thiếu công đoạn Aging thì thêm vào và đánh lại `RouteIndex`.
 
 ### 🔬 Phân Tích Core Engine: `usp_DoProcessProdRouteHist` (406 dòng)
 

@@ -144,6 +144,12 @@ Related Files:
        ```
 *   **Chi tiết nghiệp vụ:** Xem SP `usp_TargetMaterialWarehouse_popup` và `usp_LineInfo_popup_InoutMaterial`. Updated by vanduc & Mrs.VanOc (2026-07-21). Hải Triều note: dùng `UNION` khử trùng khóa chính.
 
+### Lỗi 5: Kiểm tra và theo dõi hàng xuất điều chuyển từ Bắc Ninh (BN) sang Hưng Yên (HY)
+*   **Triệu chứng:** Người dùng tại Bắc Ninh xuất kho điều chuyển vật tư/bán thành phẩm sang nhà máy Hưng Yên nhưng hệ thống NAIS bên Hưng Yên không tìm thấy hoặc không kiểm tra được dữ liệu nhận hàng.
+*   **Nguyên nhân gốc:** Khi tạo giao dịch xuất kho tại F430/F433 ở Bắc Ninh, người dùng chọn sai mã kho đích (Target Warehouse) hoặc không chọn mã kho chuẩn của Hưng Yên.
+*   **Cách khắc phục:**
+    1. Khi xuất chuyển từ Bắc Ninh sang Hưng Yên, bắt buộc chọn **Mã kho hàng (Tới)** là `ROH-HY-WH` (Kho nguyên vật liệu / linh kiện Hưng Yên).
+    2. Đảm bảo mã Line tương ứng đã được thiết lập `MaterialWarehouseCode = 'ROH_HY_WH'`.
 
 ---
 
@@ -409,6 +415,23 @@ Related Files:
 *   **Nguyên nhân gốc:** Số lượng tách vượt quá `CurrentQty` còn lại của Lot gốc.
 *   **Cách khắc phục:** Kiểm tra `CurrentQty` trong `STB_MaterialLotInfo` của Lot gốc, đảm bảo số lượng tách hợp lệ.
 *   **Chi tiết nghiệp vụ:** Xem tại [../KB_02/KB_02_01_WMS_CORE.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_02/KB_02_01_WMS_CORE.md) và [../KB_03/KB_03_02_CELL_LINE.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_02_CELL_LINE.md).
+
+## [HYFG01] — Finished Goods WH HY (Kho & Xuất kho Thành Phẩm Hưng Yên)
+
+### Lỗi 1: Báo xuất kho OK nhưng không thấy dữ liệu xuất / Không check được ProcessedLotID3 đã xuất
+*   **Triệu chứng:** Khi thực hiện xuất kho tại màn hình **HYFG01**, hệ thống hiển thị thông báo xuất thành công (OK) nhưng trên danh sách không có dữ liệu hoặc không hiển thị cột `ProcessedLotID3` để kiểm tra đã xuất các mã ID nào.
+*   **Nguyên nhân gốc:** Giao diện màn hình **HYFG01** chưa được cấu hình cột `ProcessedLotID3` và chưa thiết lập liên kết nguồn link dữ liệu tương tự như màn hình **F430** ở Bắc Ninh.
+*   **Cách khắc phục:**
+    1. Cấu hình giao diện **HYFG01** hiển thị cột `ProcessedLotID3` và thiết lập nguồn link dữ liệu (`ISNULL(NULLIF(ProcessedLotID, ''), LotID)`) tương tự như **F430**.
+    2. Cung cấp danh sách các `ProcessedLotID3` tương ứng để IT cập nhật lại dữ liệu lịch sử xuất kho trên DB.
+    3. Bổ sung cấu hình kho Hưng Yên vào hệ thống để quy trình nhập và xuất ghi nhận đầy đủ `ProcessedLotID3`.
+
+### Lỗi 2: Xuất kho tại HYFG01 bị xuất hết toàn bộ số lượng trong hệ thống (Full Batch Export)
+*   **Triệu chứng:** Người dùng chỉ có nhu cầu xuất 1 phần số lượng của lô hàng nhưng khi bấm xuất kho tại **HYFG01**, hệ thống tự động xuất sạch toàn bộ số lượng hiện có.
+*   **Nguyên nhân gốc:** Logic màn hình xuất kho thành phẩm mặc định xử lý xuất theo toàn bộ số lượng của kiện hàng/Lot đang chọn nếu không chia tách số lượng hoặc không có tính năng Partial Quantity.
+*   **Cách khắc phục:** 
+    1. Hướng dẫn người dùng thực hiện chia tách Lot hoặc lập phiếu điều chuyển/xuất kho đúng số lượng mong muốn trước khi bấm xác nhận xuất.
+    2. IT rà soát SP xử lý xuất kho thành phẩm tại Hưng Yên để hỗ trợ tham số số lượng xuất linh hoạt theo yêu cầu.
 
 ---
 

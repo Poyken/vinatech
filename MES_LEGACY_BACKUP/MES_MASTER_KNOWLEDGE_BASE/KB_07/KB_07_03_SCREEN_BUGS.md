@@ -125,7 +125,7 @@ Related Files:
 
 ---
 
-### [HYFG01] — Finished Goods WH HY (Kho Thành Phẩm Hưng Yên)
+### [HYFG01] — Finished Goods WH HY (Kho & Xuất kho Thành Phẩm Hưng Yên)
 
 #### 🔴 Lỗi 1: Thùng hàng đóng gói xong không hiển thị trên kho `HYFG01`
 *   **Triệu chứng:** Công nhân đóng gói xong tại `HY523`/`B523` nhưng thủ kho mở `HYFG01` tìm không thấy barcode thùng.
@@ -143,6 +143,24 @@ Related Files:
     END
     ROLLBACK TRANSACTION;
     ```
+
+#### 🔴 Lỗi 2: Xuất kho báo OK nhưng không có dữ liệu / Thiếu cột `ProcessedLotID3`
+*   **Triệu chứng:** Thủ kho thực hiện xuất kho tại `HYFG01`, hệ thống báo xuất thành công nhưng không thấy dữ liệu xuất hoặc không kiểm tra được mã Lot nào đã xuất do thiếu cột `ProcessedLotID3`.
+*   **Nguyên nhân gốc:** Giao diện `HYFG01` chưa bật hiển thị cột `ProcessedLotID3` và chưa setup nguồn link giống như màn hình `F430` ở Bắc Ninh.
+*   **Cách khắc phục:**
+    1. Cấu hình hiển thị cột `ProcessedLotID3` trên lưới `HYFG01` và setup link nguồn từ bảng lịch sử xuất kho giống như màn hình `F430` ở Bắc Ninh (`ISNULL(NULLIF(ProcessedLotID, ''), LotID)`).
+    2. Cung cấp danh sách `ProcessedLotID3` tương ứng để IT cập nhật lại dữ liệu.
+    3. Thêm cấu hình kho Hưng Yên vào hệ thống để khi nhập kho có đầy đủ thông tin `ProcessedLotID3`.
+
+#### 🔴 Lỗi 3: Xuất kho tại `HYFG01` bị xuất toàn bộ số lượng (Full Batch Export)
+*   **Triệu chứng:** Người dùng chỉ muốn xuất một phần số lượng nhưng hệ thống tự động xuất sạch toàn bộ số lượng hiện có trong kho.
+*   **Nguyên nhân gốc:** Màn hình xuất kho thành phẩm chưa hỗ trợ chia tách số lượng xuất lẻ trực tiếp khi xuất kho.
+*   **Cách khắc phục:** Hướng dẫn thủ kho tách Lot hoặc lập phiếu xuất theo đúng số lượng cần trước khi thực hiện bấm xuất trên màn hình `HYFG01`.
+
+#### 🔴 Lỗi 4: Không kiểm tra được hàng điều chuyển từ Bắc Ninh (BN) sang Hưng Yên (HY) trên NAIS
+*   **Triệu chứng:** Hàng xuất từ Bắc Ninh điều chuyển sang Hưng Yên nhưng phía Hưng Yên mở NAIS không thấy dữ liệu nhận hàng.
+*   **Nguyên nhân gốc:** Khi tạo giao dịch xuất kho tại Bắc Ninh (`F430`), chọn sai mã kho đích.
+*   **Cách khắc phục:** Khi xuất chuyển kho từ Bắc Ninh sang Hưng Yên, bắt buộc chọn **Mã kho hàng (Tới)** là `ROH-HY-WH` (Kho nguyên vật liệu Hưng Yên).
 
 ---
 

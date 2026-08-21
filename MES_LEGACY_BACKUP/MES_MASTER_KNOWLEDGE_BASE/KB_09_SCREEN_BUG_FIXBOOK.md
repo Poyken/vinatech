@@ -113,6 +113,7 @@ Related Files:
 |---|---|---|---|
 | 1 | PO không tạo được Lot | BOM/Route chưa cấu hình cho PO | Kiểm tra `STB_ProductionOrderRouting`, `STB_ProductionOrderBom` |
 | 2 | ProdFinishQty lệch so với thực tế | Crash giữa SP `usp_DoProcessProdRouteHist` → dữ liệu partial | `UPDATE STB_ProductionOrderInfo SET ProdFinishQty = (SELECT SUM(ProdQty) FROM STB_ProdRouteHist WHERE PONo='mã' AND RouteCode='V-28') WHERE PONo='mã'` |
+| 3 | PO thiếu công đoạn Aging hoặc sai thứ tự Index khiến không chốt được sản lượng | Cấu hình Routing của PO trên B310 chưa thêm công đoạn Aging (`V-26`) hoặc chưa đánh lại Index khi đổi kế hoạch | Vào B310 → Tìm PO → Kiểm tra danh sách Routing → Thêm công đoạn Aging (`V-26` / `V-26_BG`) và cập nhật lại `RouteIndex`. |
 
 ### [B351]
 **Tên:** Lot Transition (Chuyển đổi Lot/NVL)
@@ -176,6 +177,8 @@ Related Files:
 | 7 | Grid `ProdRouteBarcodeForDefect_VNT` hiển thị lỗi sai/thừa cần xóa | OP nhập nhầm defect hoặc defect tạo tự động không đúng | Xóa mềm: `UPDATE STB_DefectRepairInfo SET IsDelete='1', ChangeDateTime=GETDATE(), ChangeUserID='ducnv_fix' WHERE ControlNo=(SELECT ControlNo FROM STB_SetInfo WHERE Barcode='MÃ_BARCODE') AND IsDelete='0'`. VD: Barcode `K16418106262500772` → ControlNo `20260618000445`, DefectSummaryNo `20260619000834/835` (VP02_005, ND02_006). ducnv 2026-06-19 |
 | 8 | Nút "Nhập lỗi" bị mờ / Ẩn (Disabled) | Công đoạn tiếp theo đã có dữ liệu (`IsHasNextProd = 1`) hoặc đã bị ghi nhận Loss (`IsLoss = 1`) theo biểu thức Expression: `!IsHasNextProd && !IsLoss` | Hủy/Rollback công đoạn sau: (1) `DELETE FROM STB_DefectRepairInfo WHERE ControlNo='...' AND FindRouteCode IN ('...')`, (2) `DELETE FROM STB_ProdRouteHist WHERE ControlNo='...' AND RouteCode IN ('...')`, (3) `UPDATE STB_ProdRouteHist SET CompleteRoute = NULL WHERE ControlNo='...' AND RouteCode='...'` cho công đoạn trước — xem [KB_03_01_OVERVIEW.md § 5.16](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_01_OVERVIEW.md) |
 | 9 | Báo lỗi "Công đoạn này không có trong Routing hoặc là công đoạn cuối cùng" khi chốt sản lượng | Công đoạn liền trước bị set `CompleteRoute = 1` trong khi các công đoạn downstream đã sinh dòng dở dang | Reset `CompleteRoute = NULL` ở công đoạn trước và xóa các dòng công đoạn downstream chưa hoàn thành: (1) `DELETE FROM STB_ProdRouteHist WHERE ControlNo = '...' AND ProdRouteHistNo IN (các_id_dưới)`, (2) `UPDATE STB_ProdRouteHist SET CompleteRoute = NULL WHERE ControlNo = '...' AND RouteCode = 'công_đoạn_trước'` |
+| 10 | Báo lỗi popup "Công đoạn này không có trong Routing hoặc là công đoạn cuối cùng" khi chốt công đoạn Aging | Mã Lot/PO tạo ở nhà máy cũ (Bắc Giang 1 `VVT_F2`) nhưng người dùng đăng nhập bằng tài khoản Hưng Yên (`vvtworker_hy`) hoặc Bắc Ninh (`vvtworker_bn`) | Đổi tài khoản đăng nhập NAIS sang tài khoản nhà máy Bắc Giang (`vvtworker_bg`). Kiểm tra tem cáp thư xem Lot tạo ở nhà máy nào và đối chiếu với tài khoản tương ứng; kiểm tra lại Routing PO trên B310. |
+
 
 > 🔗 Chi tiết: [KB_03 §B530](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_02_CELL_LINE.md), [KB_08 §2](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_08_CORE_SP_ENGINE.md) và [KB_08](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_08_CORE_SP_ENGINE.md)
 
@@ -527,6 +530,16 @@ COMMIT TRANSACTION;
 |---|---|---|---|
 | 1 | Xuất kho TP không hiện data | SP filter WorkCenterCode không match HN | ALTER SP thêm WorkCenterCode HN |
 | 2 | Yêu cầu điều chỉnh / lùi ngày xuất kho thành phẩm (DateExport / CreateDate) về tháng trước (VD: Tháng 03/2026) | Ngày xuất kho thực tế bị quét lệch tháng so với kế toán/đối soát | Sửa cả 2 cột `CreateDate` & `DateExport` trên `STB_VN_FINISHGOODS_BG` (Bắc Giang) hoặc `STB_VN_FINISHGOODS_HN_Export` + `FinishGoodMESInstock_HN` (Hà Nam) bằng script bọc `BEGIN TRAN...COMMIT TRAN`. Chi tiết: [KB_02_01_WMS_CORE.md §8](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_02/KB_02_01_WMS_CORE.md#8-fg02--kho-th%C3%A0nh-ph%E1%BA%A9m-b%E1%BA%AFc-giang-fg00) |
+
+### [HYFG01]
+**Tên:** Finished Goods WH HY (Kho & Xuất kho Thành Phẩm Hưng Yên)
+
+| # | Triệu chứng | Nguyên nhân | Fix |
+|---|---|---|---|
+| 1 | Thùng hàng đóng gói xong không hiển thị trên kho HYFG01 | Thùng hàng chưa được lưu cờ PackingQty hoặc bảng `STB_VN_FINISHGOODS_HY` bị thiếu bản ghi nhập kho | Chèn bổ sung bản ghi vào `STB_VN_FINISHGOODS_HY` — xem [KB_07_03 §1](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_MASTER_KNOWLEDGE_BASE/KB_07/KB_07_03_SCREEN_BUGS.md#hyfg01--finished-goods-wh-hy-kho-thành-phẩm-hưng-yên) |
+| 2 | Báo xuất kho OK nhưng trên hệ thống không thấy dữ liệu xuất / Không check được Lot đã xuất do thiếu cột `ProcessedLotID3` | Giao diện `HYFG01` chưa cấu hình hiển thị cột `ProcessedLotID3` và chưa setup link nguồn từ phiếu xuất tương tự màn hình F430 | 1. Cấu hình hiển thị cột `ProcessedLotID3` trên lưới HYFG01 và setup link nguồn giống như F430 ở Bắc Ninh. 2. Cung cấp list `ProcessedLotID3` để update lại DB. 3. Thêm cấu hình kho Hưng Yên để nhập và có `ProcessedLotID3`. |
+| 3 | Xuất kho bị tình trạng "hệ thống có bao nhiêu lại xuất hết từng đó" (Full Batch Export) | Cơ chế mặc định của phiếu xuất quét toàn bộ tồn kho của Lot/Box thay vì chia tách số lượng nhỏ | Lưu ý chia tách Lot hoặc lập phiếu xuất theo số lượng mong muốn trước khi thực hiện xuất kho. |
+| 4 | Không kiểm tra được hàng xuất điều chuyển từ BN sang HY trên NAIS | Khi xuất điều chuyển từ BN sang HY, chưa chọn đúng mã kho đích | Chọn đúng mã kho hàng tới là `ROH-HY-WH` (Kho NVL Hưng Yên) khi làm thủ tục xuất chuyển từ Bắc Ninh. |
 
 ---
 
