@@ -34,7 +34,8 @@ desktop.ini
 /CAI NAIS TU DONG (2).7z
 /CAI NAIS TU DONG/
 
-# Ignore MES scratch and temporary procedure sync files
+# Ignore MES scratch, sql, and temporary procedure sync files
 **/scratch/
+**/sql/
 **/sql/procedures/
 **/%USERP~1/
