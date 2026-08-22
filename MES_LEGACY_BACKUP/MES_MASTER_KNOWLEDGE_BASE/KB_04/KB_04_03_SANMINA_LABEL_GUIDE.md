@@ -89,12 +89,12 @@ flowchart TD
       END + '/' + @TotalBoxString;
   ```
 
-### 2.2 Thuật toán Serial liên tục xuyên suốt (Continuous Serial Across Multiple Lots)
+### 2.2 Thuật toán Serial đếm độc lập & tự động Reset theo Tuần/Mã ngày (Weekly Serial Reset Algorithm)
 > [!IMPORTANT]
 > **Quy tắc nghiệp vụ cốt lõi:**
-> Trong 1 Pallet xuất hàng (ví dụ 196 thùng), các thùng có thể được gom từ **nhiều mã Lot sản xuất khác nhau** (tuần 23, tuần 24, tuần 25, tuần 31...).
-> * **Tiền tố Năm/Tuần (`VINA + WWYY`):** Tự động đổi theo ngày sản xuất của từng mã Lot.
-> * **Dải 5 chữ số Serial đằng sau (`00001` - `99999`):** **Bắt buộc phải tăng tịnh tiến liên tục xuyên suốt**, tuyệt đối không được reset hay nhảy lùi khi công nhân đổi sang mã Lot mới!
+> Tem Sanmina India sử dụng cấu trúc Serial Number: `VINA + [Mã ngày (WWYY)] + [5 chữ số Serial]`.
+> * **Tiền tố Mã ngày / Tuần (`VINA + WWYY`):** Tự động đổi theo ngày sản xuất của mã Lot (ví dụ `VINA2526`, `VINA2626`...). Bản thân tiền tố này đã đảm bảo tính duy nhất (`unique`) giữa các tuần.
+> * **Dải 5 chữ số Serial đằng sau (`00001` - `99999`):** **Chạy độc lập theo từng Mã ngày**. Khi mã Lot chuyển sang một tuần sản xuất mới (chưa từng in), Serial Number **bắt buộc nhảy về 1 (`00001, 00002`)** để đếm từ đầu cho tuần đó. Nếu tiếp tục in trong cùng tuần thì tiếp tục tăng tịnh tiến (`+1, +2`).
 
 * **Logic xác định số Serial cơ sở (`BaseSerial`):**
   ```sql
@@ -109,12 +109,14 @@ flowchart TD
   END
   ELSE
   BEGIN
-      -- TRƯỜNG HỢP 2: Giữ 100% logic cũ khi StartSerial để trống (NULL) hoặc Non-Plan
-      -- Lấy số serial 5 chữ số lớn nhất gần đây nhất trong lịch sử in hệ thống
+      -- TRƯỜNG HỢP 2: Tự động theo lịch sử in của đúng Mã ngày / Tuần hiện tại (@SerialPrefix)
+      -- Lấy số serial 5 chữ số lớn nhất trong lịch sử in của đúng tuần hiện tại
+      -- Nếu sang tuần mới (chưa từng in), @LatestSerial sẽ là NULL -> BaseSerial = 0 -> Serial bắt đầu từ 00001, 00002
       DECLARE @LatestSerial INT = 0;
       SELECT TOP 1 @LatestSerial = TRY_CAST(RIGHT(BoxSerialNo, 5) AS INT)
       FROM STB_SanminaIndiaLabelPrintHist WITH(NOLOCK)
-      WHERE LEN(BoxSerialNo) = 13 AND BoxSerialNo LIKE 'VINA%'
+      WHERE LEN(BoxSerialNo) = 13 
+        AND BoxSerialNo LIKE @SerialPrefix + '%'
       ORDER BY ID DESC;
 
       SET @BaseSerial = ISNULL(@LatestSerial, 0);
@@ -126,13 +128,14 @@ flowchart TD
   -- Outer   = Inner1Serial + ', ' + Inner2Serial
   ```
 
-* **Bảng minh họa kết quả in khi đổi mã Lot liên tục giữa các thùng:**
-  | Thứ tự thùng | Mã Lot quét vào | Tuần sản xuất | Số Serial tem sinh ra (Tăng liên tục $+1, +2$) |
-  | :---: | :--- | :---: | :--- |
-  | **Thùng 84** | `VVQO033R072703` | Tuần 23 (`2326`) | `VINA232600427, VINA232600428` |
-  | **Thùng 85** | `VVQO033R072738` | Tuần 23 (`2326`) | `VINA232600429, VINA232600430` |
-  | **Thùng 86** | 👉 **Đổi sang** `VVQO173R072735` | Tuần 25 (`2526`) | `VINA252600431, VINA252600432` |
-  | **Thùng 87** | 👉 **Đổi sang** `VVQP283R072710` | Tuần 31 (`3126`) | `VINA312600433, VINA312600434` |
+* **Bảng minh họa kết quả in khi đổi mã Lot giữa các tuần:**
+  | Thứ tự thùng | Mã Lot quét vào | Tuần sản xuất | Số Serial tem sinh ra | Ghi chú vận hành |
+  | :---: | :--- | :---: | :--- | :--- |
+  | **Thùng 84** | `VVQO033R072703` | Tuần 23 (`2326`) | `VINA232600427, VINA232600428` | Đang in tuần 23 |
+  | **Thùng 85** | `VVQO033R072738` | Tuần 23 (`2326`) | `VINA232600429, VINA232600430` | Tăng tiếp tuần 23 |
+  | **Thùng 86** | 👉 **Đổi sang** `VVQO173R072735` | Tuần 25 (`2526`) | `VINA252600001, VINA252600002` | **Tuần 25 mới $\rightarrow$ Reset về 1** |
+  | **Thùng 87** | Quét tiếp `VVQO173R072740` | Tuần 25 (`2526`) | `VINA252600003, VINA252600004` | Tăng tiếp tuần 25 |
+  | **Thùng 88** | 👉 **Đổi sang** `VVQP283R072710` | Tuần 31 (`3126`) | `VINA312600001, VINA312600002` | **Tuần 31 mới $\rightarrow$ Reset về 1** |
 
 ---
 

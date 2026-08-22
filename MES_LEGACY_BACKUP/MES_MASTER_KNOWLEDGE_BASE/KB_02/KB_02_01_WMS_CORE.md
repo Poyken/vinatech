@@ -1,4 +1,4 @@
-﻿<!--
+<!--
 AI-READY METADATA
 Purpose: Quản lý kho WMS nguyên vật liệu & thành phẩm, quy trình nhập F330, xuất F430, kiểm kê, FIFO, Hạn dùng, Holding & Hà Nam WMS
 Scope: WMS Warehouse Management Core
@@ -403,6 +403,27 @@ Khi nhà cung cấp thay đổi định dạng mã Lot Vendor, hệ thống sẽ
 * **Mẫu 4: Định dạng cứng ngày 15 hàng tháng (khi mã Lot chỉ có Năm-Tháng)**
   ```sql
   when @materialcode='GADPCB-002' then '20'+ substring(@vendorlot,1,2)+'-'+ substring(@vendorlot,3,2) + '-15'
+  ```
+
+* **Mẫu 5: Định dạng 18 số vỏ nhôm AOXING họ `GBAXAC-%` (Hotfix ID_23)**
+  ```sql
+  -- Format 18 số: 5 ký tự đầu mã NCC + 2 ký tự Năm + 2 ký tự Tháng + 2 ký tự Ngày + Hậu tố
+  when @materialcode like 'GBAXAC-%' and len(@vendorlot) >= 11 and isnumeric(substring(@vendorlot, 6, 6)) = 1 then
+      '20' + substring(@vendorlot, 6, 2) + '-' + substring(@vendorlot, 8, 2) + '-' + substring(@vendorlot, 10, 2)
+  ```
+
+* **Mẫu 6: Định dạng dòng họ NVL `GBNKSP-%` với Tháng mã hóa chữ cái (Hotfix ID_22)**
+  ```sql
+  -- Format: 1 ký tự Năm ('5'->2025) + 1 ký tự Tháng (1..9, X/A=10, Y/B=11, Z/C=12) + 2 ký tự Ngày ('06') + Hậu tố
+  when @materialcode like 'GBNKSP-%' and len(@vendorlot) >= 4 then
+      '202' + substring(@vendorlot, 1, 1) + '-' 
+      + right('0' + case 
+          when substring(@vendorlot, 2, 1) in ('X', 'A') then '10'
+          when substring(@vendorlot, 2, 1) in ('Y', 'B') then '11'
+          when substring(@vendorlot, 2, 1) in ('Z', 'C') then '12'
+          else substring(@vendorlot, 2, 1)
+        end, 2) + '-' 
+      + substring(@vendorlot, 3, 2)
   ```
 
 ##### 4. Nguyên tắc kiểm tra sau khi sửa:

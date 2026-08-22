@@ -1,4 +1,4 @@
-﻿<!--
+<!--
 AI-READY METADATA
 Purpose: Sổ tay cứu hộ 70+ bugs theo TCode thực tế (Tra cứu triệu chứng -> nguyên nhân -> giải pháp SQL patch)
 Scope: Troubleshooting & Hotfix Knowledge Base
@@ -292,6 +292,13 @@ Related Files:
 |---|---|---|---|
 | 1 | Model Nordex ở B540/B530/K361 cần hoàn thành công đoạn ND08 | Chuẩn nghiệp vụ BG2 Module Line: `IsOutputRoute` giữ nguyên `NULL` (hoặc 0), không set bằng 1. Việc chốt hoàn thành công đoạn ND08 được thực hiện qua màn hình K361 (SP `usp_CompleteRouteFinalForBacGiang2`). | **CẤM sửa IsOutputRoute=1**. Giữ `IsOutputRoute = NULL` ➔ Chốt `CompleteRoute = 1` cho `ND08` bằng nút "Hoàn thành kết quả sản xuất" tại K361. |
 | 2 | Lỗi PRIMARY KEY violation `PK_STB_ProdRouteHist` (Duplicate key `20260808000824`) khi chốt sản xuất trên UI | Chèn dòng ND08 bằng SQL `INSERT` trực tiếp làm lệch dải số tự động `ProdRouteHistNo` của ứng dụng MES. | **CẤM DÙNG SQL INSERT TRỰC TIẾP VÀO STB_ProdRouteHist**. Thực hiện `UPDATE STB_ProdRouteHist SET CompleteRoute = NULL WHERE RouteCode = 'ND07'` để công nhân bấm chốt lại ND07 ở B530 ➔ Ứng dụng MES sẽ tự động sinh ND08 an toàn 100%. |
+
+### B767
+**Ten:** In tem KH Sanmina India
+
+| # | Trieu chung | Nguyen nhan | Fix |
+|---|---|---|---|
+| 1 | So Serial tem Sanmina khong reset ve 00001 khi Ma ngay (Tuan san xuat) doi sang tuan moi | SP usp_SanminaLabelPrint_get_Vietnam lay serial lon nhat toan bang voi LIKE 'VINA%' khong filter theo @SerialPrefix | `WHERE LEN(BoxSerialNo) = 13 AND BoxSerialNo LIKE @SerialPrefix + '%'` |
 ## C-Series: QC & Chất Lượng
 
 ### [C121]-[C122]
@@ -429,6 +436,7 @@ COMMIT TRANSACTION;
 | 1 | Bị chặn "Receiving Confirmation" | IQC chưa PASS tại C220 | QC hoàn thành IQC PASS trước |
 | 2 | NVL không tìm thấy trong popup chọn | Chưa khai báo NVL tại A230 | Vào A230 thêm MaterialCode |
 | 3 | Đổi mã vật tư tự động lỗi | `STB_ChangeMaterialCode_HN` thiếu mapping | INSERT mapping mã cũ→mới — xem [KB_02 §3.1](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_02/KB_02_01_WMS_CORE.md) |
+| 4 | Quét/nhập mã Lot Vendor họ vỏ nhôm AOXING `GBAXAC-%` hoặc họ `GBNKSP-%` không tự động đọc được ngày sản xuất (trả về rỗng / 1900-01-01) ở F330/F620 | Hàm `fn_VVT_getdatebyVendorLot_MergeCode` và `fn_VVT_getdatebyVendorLot` bị hardcode mã đơn lẻ thay vì wildcard `LIKE 'GBAXAC-%'` (18 số) và `LIKE 'GBNKSP-%'` (Tháng mã hóa ký tự) | Cập nhật hàm `fn_VVT_getdatebyVendorLot_MergeCode` & `fn_VVT_getdatebyVendorLot` bổ sung wildcard parse tự động — xem chi tiết [KB_02_01 §4.11 Mẫu 5, Mẫu 6](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_02/KB_02_01_WMS_CORE.md#3-các-mẫu-viết-logic-parse-ngày-thông-dụng) |
 
 > 🔗 Chi tiết: [KB_02 §4.15](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_02/KB_02_01_WMS_CORE.md)
 
@@ -488,7 +496,7 @@ COMMIT TRANSACTION;
 |---|---|---|---|
 | 1 | Gộp box lỗi Qty=0 | `STB_PackingStandard` thiếu record cho model HN | INSERT record — xem [KB_04 §6.13](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_01_CORE_PACKAGING.md) |
 | 2 | Gộp túi nilon lỗi | `STB_PackingNilonToBoxSmall_HN` config sai | Kiểm tra + update config |
-| 3 | Hủy box packing lẻ / Dòng Qty bị trống PackingID trên lưới HN523 | `STB_MaterialDocLotInfo` có PackingID nhưng `STB_MaterialLotInfo` chưa được cập nhật (`PackingID = ''`) | Hủy doc `STB_MaterialDocInfo`/`STB_MaterialDocLotInfo` + Xóa dòng lẻ `STB_MaterialLotInfo` + Update trừ ProdQty `VE10` trong `STB_ProdRouteHist` & `STB_ProductionOrderInfo` |
+| 3 | Hủy box packing lẻ / Dòng Qty bị trống PackingID trên lưới HN523 | Đóng gói box lẻ cần rã để đóng lại hoặc `STB_MaterialDocLotInfo` có PackingID nhưng `STB_MaterialLotInfo` chưa được cập nhật (`PackingID = ''`) | 1. Tạo 7 bảng BACKUP snapshot (`STB_MaterialLotInfo_BK`, `STB_MaterialDocInfo_BK`, `STB_MaterialDocDetail_BK`, `STB_MaterialDocLotInfo_BK`, `STB_ProdRouteHist_BK`, `STB_ProdRouteSummary_BK`, `STB_ProductionOrderInfo_BK`) <br> 2. `DELETE FROM STB_MaterialLotInfo WHERE MaterialLotNo IN (...) AND PackingID IN (...)` <br> 3. Hủy chứng từ: `UPDATE STB_MaterialDocInfo SET DocStatus='CREATE'` ➔ `SET CONTEXT_INFO 0x999997` ➔ `DELETE FROM STB_MaterialDocLotInfo` ➔ `SET CONTEXT_INFO 0` ➔ `DELETE FROM STB_MaterialDocDetail` ➔ `UPDATE STB_MaterialDocInfo SET IsCancel=1` <br> 4. Giảm trừ sản lượng: `UPDATE STB_ProdRouteHist SET ProdQty=ProdQty-SL WHERE RouteCode='VE10'`, `UPDATE STB_ProdRouteSummary SET OutputQty=OutputQty-SL`, `UPDATE STB_ProductionOrderInfo SET ProdFinishQty=ProdFinishQty-SL` — Xem chi tiết script [KB_04_02 § [HN523]](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_02_SCREEN_BUGS.md#hn523--kịch-bản-sự-cố-khẩn-cấp-hủy-tem-đóng-gói--rã-box-tại-hà-nam-đồng-bộ-giảm-sản-lượng-ve10--po) |
 
 ### [HN555]
 **Tên:** Gộp Packing Hàng Lẻ (Hà Nam)

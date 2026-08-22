@@ -112,7 +112,7 @@ Related Files:
 ## 📋 TRẠNG THÁI DỰ ÁN
 
 - **Hotfixes deployed:** 17 scripts (01-05: Bug fix SX, 06-17: Clone SP Hưng Yên)
-- **Hotfix tiếp theo:** ID = **22**
+- **Hotfix tiếp theo:** ID = **23**
 - **Nhà máy (SoT: KB_10):** VNT_F1/VVT_F1=Bắc Ninh, VNT_F2=Electrode/MEA, VVT_F2=BG1, VVT_F3=Hà Nam, VVT_F4=BG2, VNT_F5=Hưng Yên
 
 ---

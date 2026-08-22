@@ -1,4 +1,4 @@
-﻿<!--
+<!--
 AI-READY METADATA
 Purpose: Nhật ký ghi chép lịch sử xử lý bug & hotfix đã được AI triển khai thành công
 Scope: Hotfix History Registry
@@ -422,3 +422,28 @@ Related Files:
   2. **Thêm kho Hưng Yên vào hệ thống:** Đã cấu hình thêm kho Hưng Yên để có thể nhập và ghi nhận mã `ProcessedLotID3` chuẩn hóa.
   3. **Mã kho đích điều chuyển BN ➔ HY:** Khi xuất hàng điều chuyển từ Bắc Ninh sang Hưng Yên, mã kho hàng tới (Target Warehouse) bắt buộc phải chọn đúng là `ROH-HY-WH` (Kho NVL Hưng Yên) thì hệ thống NAIS mới nhận diện và tra cứu được dữ liệu luân chuyển.
   4. **Lưu ý nghiệp vụ xuất kho:** Chú ý cơ chế xuất kho theo cả lô/toàn bộ số lượng của hệ thống so với nhu cầu xuất từng phần để phân chia Lot hoặc chia phiếu phù hợp trước khi xuất.
+
+### 📍 ID_22 - B767 - So Serial tem Sanmina khong reset ve 00001 khi Ma ngay (Tuan...
+* **Ngay sua:** `2026-08-22`
+* **Man hinh lien quan (TCode):** `B767 - In tem KH Sanmina India`
+* **Trieu chung loi:** So Serial tem Sanmina khong reset ve 00001 khi Ma ngay (Tuan san xuat) doi sang tuan moi
+* **Nguyen nhan goc (Root Cause):** SP usp_SanminaLabelPrint_get_Vietnam lay serial lon nhat toan bang voi LIKE 'VINA%' khong filter theo @SerialPrefix
+* **Phuong an sua loi (SQL Patch / Action):**
+  ```sql
+WHERE LEN(BoxSerialNo) = 13 AND BoxSerialNo LIKE @SerialPrefix + '%'
+  ```
+* **Tham chieu KB:** KB_04_03_SANMINA_LABEL_GUIDE.md
+
+---
+
+### [HN523] — 📍 ID_34 Hủy 2 box đóng gói PKQQ2000244 & PKQQ2000250 (Lot VE260813-004) & Đồng bộ giảm sản lượng VE10 + PO
+* **Ngày sửa:** `2026-08-22`
+* **Màn hình liên quan (TCode):** `[HN523] - Đóng gói Hà Nam (Packaging & Box Matching)`
+* **Triệu chứng lỗi:** Cần hủy 2 tem đóng gói `PKQQ2000244` (376 con) và `PKQQ2000250` (342 con) thuộc Lot `VE260813-004` (tổng 718 con) để trả lại sản lượng chưa đóng gói tại HN523.
+* **Nguyên nhân gốc & Thao tác:**
+  1. Đóng gói box lẻ cần rã để đóng lại. Đã tạo bảng backup: `STB_MaterialLotInfo_BK_20260822_HN523`, `STB_MaterialDocInfo_BK_20260822_HN523`, `STB_MaterialDocDetail_BK_20260822_HN523`, `STB_MaterialDocLotInfo_BK_20260822_HN523`, `STB_ProdRouteHist_BK_20260822_HN523`, `STB_ProdRouteSummary_BK_20260822_HN523`, `STB_ProductionOrderInfo_BK_20260822_HN523`.
+  2. Xóa 2 sub-lot `MaterialLotNo` `20260820000403` và `20260820000409` trong `STB_MaterialLotInfo`.
+  3. Hủy và xóa chứng từ `260820000261` & `260820000267` trong `STB_MaterialDocInfo`, `STB_MaterialDocLotInfo`, `STB_MaterialDocDetail` (dùng `CONTEXT_INFO 0x999997` bypass trigger `tgMaterialDocDetailForDelete`).
+  4. Giảm trừ 718 con ở công đoạn cuối `VE10` (`STB_ProdRouteHist`), bảng tổng hợp ngày `STB_ProdRouteSummary` và sản lượng hoàn thành PO `260813000005` (`STB_ProductionOrderInfo`).
+* **File script deploy:** `sql/fix_hn523_cancel_packing_PKQQ2000244_250.sql` (Deploy qua `deploy_tool.ps1` thành công 100%).
+

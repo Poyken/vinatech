@@ -1,9 +1,9 @@
 -- ==============================================================================
--- 03_rollback_script.sql — KHÔI PHỤC DỮ LIỆU VỀ 100% NGUYÊN TRẠNG GỐC BAN ĐẦU
+-- 03_rollback_final_execution.sql — KHÔI PHỤC DỮ LIỆU NGUYÊN TRẠNG TỪ SNAPSHOT FINAL
 -- ==============================================================================
 BEGIN TRANSACTION;
 BEGIN TRY
-    -- 1. Khôi phục toàn bộ STB_ProdRouteHist từ bảng snapshot gốc ban đầu
+    -- 1. Khôi phục STB_ProdRouteHist theo đúng khóa chính ProdRouteHistNo
     UPDATE PRH
     SET 
         PRH.WorkCenterCode = BK.WorkCenterCode,
@@ -14,13 +14,14 @@ BEGIN TRY
         PRH.ShiftCode      = BK.ShiftCode,
         PRH.WorkerCode     = BK.WorkerCode,
         PRH.MachineCode    = BK.MachineCode,
-        PRH.ProdQty        = BK.ProdQty
+        PRH.ProdQty        = BK.ProdQty,
+        PRH.CompleteRoute  = BK.CompleteRoute
     FROM dbo.STB_ProdRouteHist PRH WITH (UPDLOCK)
-    INNER JOIN dbo.BK_20260821_HY_STB_ProdRouteHist BK WITH (NOLOCK)
-        ON PRH.ControlNo = BK.ControlNo AND PRH.RouteCode = BK.RouteCode
-    WHERE PRH.ChangeUserID = 'ADMIN_HY_FIX';
+    INNER JOIN dbo.BK_FINAL_20260821_STB_ProdRouteHist BK WITH (NOLOCK)
+        ON PRH.ProdRouteHistNo = BK.ProdRouteHistNo
+    WHERE PRH.ProdRouteHistNo IN (SELECT ProdRouteHistNo FROM dbo.BK_FINAL_20260821_STB_ProdRouteHist);
 
-    -- 2. Khôi phục toàn bộ STB_SavePackingTime_VVT từ bảng snapshot gốc ban đầu
+    -- 2. Khôi phục STB_SavePackingTime_VVT theo khóa chính id
     UPDATE SPT
     SET 
         SPT.PrintTime   = BK.PrintTime,
@@ -29,19 +30,12 @@ BEGIN TRY
         SPT.PackQty     = BK.PackQty,
         SPT.isPrinted   = BK.isPrinted
     FROM dbo.STB_SavePackingTime_VVT SPT WITH (UPDLOCK)
-    INNER JOIN dbo.BK_20260821_HY_STB_SavePackingTime_VVT BK WITH (NOLOCK)
+    INNER JOIN dbo.BK_FINAL_20260821_STB_SavePackingTime_VVT BK WITH (NOLOCK)
         ON SPT.id = BK.id
-    WHERE SPT.id IN (SELECT id FROM dbo.BK_20260821_HY_STB_SavePackingTime_VVT);
-
-    -- 3. Xóa cờ ChangeUserID ADMIN_HY_FIX nếu có bản ghi sót
-    UPDATE PRH
-    SET 
-        PRH.ChangeUserID = NULL
-    FROM dbo.STB_ProdRouteHist PRH WITH (UPDLOCK)
-    WHERE PRH.ChangeUserID = 'ADMIN_HY_FIX';
+    WHERE SPT.id IN (SELECT id FROM dbo.BK_FINAL_20260821_STB_SavePackingTime_VVT);
 
     COMMIT TRANSACTION;
-    PRINT 'DA KHOI PHUC 100% DU LIEU VE TRANG THAI GOC TRUOC KHI THUC HIEN CUOC TRO CHUYEN!';
+    PRINT 'ROLLBACK VE NGUYEN TRANG HOAN TAT THANH CONG!';
 END TRY
 BEGIN CATCH
     ROLLBACK TRANSACTION;

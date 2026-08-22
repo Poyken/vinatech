@@ -120,7 +120,8 @@ Related Files:
 *   **Không in được tem (Not found label type):** Chưa map mẫu tem với Model trong `STB_ModelLabelInfo` tại A460 → Chi tiết: **KB_01 §1.2**
 *   **B353 đổi lot nhưng B523 in lot cũ:** Lỗi prefix VJ/VV trong SP `usp_Vietnam_GetBoxIDForLotNo_VVT` → Chi tiết: **KB_04 §6.18**
 *   **In tem Sanmina theo Plan (B763 & B767):** Tự động sinh CartonBoxNo, Serial tịnh tiến liên tục qua nhiều Lot, sửa tiến độ thùng → Chi tiết: **KB_04_03**
-*   **Hủy gộp box thành phẩm:** Trình tự xóa bản ghi kho thành phẩm, gọi `usp_DoCancelMaterialDoc` và trừ sản lượng PO → Chi tiết: **KB_04 Kịch bản C**
+*   **Hủy gộp box thành phẩm (B523):** Trình tự xóa bản ghi kho thành phẩm, gọi `usp_DoCancelMaterialDoc` và trừ sản lượng PO → Chi tiết: **KB_04 Kịch bản C**
+*   **Hủy tem đóng gói HN523 (Hà Nam):** Xóa sub-lot `STB_MaterialLotInfo`, hủy chứng từ `MaterialDoc` (bypass trigger `0x999997`), giảm trừ sản lượng công đoạn cuối `VE10` và PO → Chi tiết: **[KB_04_02 § [HN523]](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_02_SCREEN_BUGS.md#hn523--kịch-bản-sự-cố-khẩn-cấp-hủy-tem-đóng-gói--rã-box-tại-hà-nam-đồng-bộ-giảm-sản-lượng-ve10--po)**
 
 ### 🟡 Sản Xuất (Xem KB_03)
 *   **Sửa ngày JobDate B782:** Sửa ngày ghi nhận sản xuất của Lot → Chi tiết: **KB_03 §5.2**

@@ -1,4 +1,4 @@
-﻿<!--
+<!--
 AI-READY METADATA
 Purpose: Sổ tay các kịch bản lỗi & hướng dẫn khắc phục phân hệ Đóng Gói (B351, B523, B525, B717, B781, B789, B353, C531)
 Scope: Packaging Screen Bug Fixbook & Emergency Response
@@ -352,19 +352,6 @@ Xem script `BEGIN TRAN` rã box tại [KB_04_01_CORE_PACKAGING.md](file:///c:/Us
 
 #### [B523] — 🛠️ KỊCH BẢN C: Hủy gộp box khi Lot/Packing đã được nhập kho thành phẩm (Finish Goods)/Hủy Packing
 *   **Triệu chứng:** Khi cần hủy/rã box để đóng gói lại nhưng hệ thống chặn không cho hủy trên giao diện UI (báo lỗi: *"Lot này đã được nhập kho, không thể huỷ gộp box..."*).
-    UPDATE STB_ProductionOrderInfo
-    SET ProdFinishQty = ProdFinishQty - 800
-    WHERE PONo = '260515000004';
-    -- THỬ NGHIỆM AN TOÀN: Mặc định Rollback. Hãy đổi thành COMMIT TRANSACTION khi muốn lưu thay đổi.
-    ROLLBACK TRANSACTION;
-    PRINT 'Kiểm tra thành công! (Dữ liệu đã rollback an toàn)';
-END TRY
-BEGIN CATCH
-    IF @@TRANCOUNT > 0 ROLLBACK TRANSACTION;
-    PRINT 'Lỗi: ' + ERROR_MESSAGE();
-    THROW;
-END CATCH;
-
 *   **Quy trình xử lý bằng Transaction:**
     ```sql
     BEGIN TRANSACTION;
@@ -412,6 +399,124 @@ END CATCH;
     ```
 
 ---
+
+### [HN523] — Kịch bản sự cố khẩn cấp: Hủy tem đóng gói / Rã box tại Hà Nam (Đồng bộ giảm sản lượng VE10 + PO)
+
+#### 📌 Tổng quan nghiệp vụ:
+*   **Màn hình:** `[HN523] - Đóng gói Hà Nam (Vietnam_Donggoi_Hnam)` (VVT_F3 / VNT_F3).
+*   **Đặc thù Hà Nam:** Công đoạn đóng gói chốt sản lượng cuối là **`VE10`** (tương đương `V-10`/`V-29` ở Bắc Ninh). Mỗi lần in tem đóng gói tại HN523 sinh ra 1 sub-lot trong `STB_MaterialLotInfo` và 1 chứng từ nhập xuất trong `STB_MaterialDocInfo` / `STB_MaterialDocDetail` / `STB_MaterialDocLotInfo`.
+*   **Nguyên nhân hủy:** Đóng gói sai quy cách, box lẻ cần gộp lại hoặc in nhầm tem.
+*   **Bắt buộc tuân thủ:** (1) SELECT tiền kiểm, (2) Tạo bảng BACKUP đầy đủ, (3) Dùng `SET CONTEXT_INFO 0x999997` để bypass trigger `tgMaterialDocDetailForDelete` khi xóa chứng từ, (4) Đồng bộ giảm trừ 5 bảng: `MaterialLotInfo`, `MaterialDoc`, `ProdRouteHist` (VE10), `ProdRouteSummary`, `ProductionOrderInfo`.
+
+#### 🛠️ Script mẫu thực tế (Case study Hotfix ID_34: Lot `VE260813-004`, hủy 2 box `PKQQ2000244` & `PKQQ2000250`, SL = 718 con):
+
+```sql
+-- ==============================================================================
+-- FIX SCRIPT: HỦY 2 BOX ĐÓNG GÓI TẠI MÀN HÌNH HN523 (PKQQ2000244 & PKQQ2000250)
+-- LOT NO: VE260813-004 | CONTROL_NO: 20260813000295 | PO NO: 260813000005
+-- SỐ LƯỢNG HỦY: 376 + 342 = 718 CON (TRẢ LẠI SẢN LƯỢNG CHƯA ĐÓNG GÓI)
+-- DATABASE: SmartFactoryV2
+-- ==============================================================================
+USE SmartFactoryV2;
+GO
+
+-- ------------------------------------------------------------------------------
+-- BƯỚC 1: TẠO BẢNG BACKUP DỮ LIỆU ĐẦY ĐỦ TRƯỚC KHI XỬ LÝ
+-- ------------------------------------------------------------------------------
+IF OBJECT_ID('dbo.STB_MaterialLotInfo_BK_20260822_HN523', 'U') IS NULL
+    SELECT * INTO dbo.STB_MaterialLotInfo_BK_20260822_HN523 
+    FROM dbo.STB_MaterialLotInfo WITH(NOLOCK) 
+    WHERE MaterialLotNo IN ('20260820000403', '20260820000409')
+       OR PackingID IN ('PKQQ2000244', 'PKQQ2000250');
+
+IF OBJECT_ID('dbo.STB_MaterialDocInfo_BK_20260822_HN523', 'U') IS NULL
+    SELECT * INTO dbo.STB_MaterialDocInfo_BK_20260822_HN523 
+    FROM dbo.STB_MaterialDocInfo WITH(NOLOCK) 
+    WHERE MaterialDocNo IN ('260820000261', '260820000267');
+
+IF OBJECT_ID('dbo.STB_MaterialDocDetail_BK_20260822_HN523', 'U') IS NULL
+    SELECT * INTO dbo.STB_MaterialDocDetail_BK_20260822_HN523 
+    FROM dbo.STB_MaterialDocDetail WITH(NOLOCK) 
+    WHERE MaterialDocNo IN ('260820000261', '260820000267');
+
+IF OBJECT_ID('dbo.STB_MaterialDocLotInfo_BK_20260822_HN523', 'U') IS NULL
+    SELECT * INTO dbo.STB_MaterialDocLotInfo_BK_20260822_HN523 
+    FROM dbo.STB_MaterialDocLotInfo WITH(NOLOCK) 
+    WHERE MaterialDocNo IN ('260820000261', '260820000267');
+
+IF OBJECT_ID('dbo.STB_ProdRouteHist_BK_20260822_HN523', 'U') IS NULL
+    SELECT * INTO dbo.STB_ProdRouteHist_BK_20260822_HN523 
+    FROM dbo.STB_ProdRouteHist WITH(NOLOCK) 
+    WHERE ControlNo = '20260813000295' AND RouteCode = 'VE10';
+
+IF OBJECT_ID('dbo.STB_ProdRouteSummary_BK_20260822_HN523', 'U') IS NULL
+    SELECT * INTO dbo.STB_ProdRouteSummary_BK_20260822_HN523 
+    FROM dbo.STB_ProdRouteSummary WITH(NOLOCK) 
+    WHERE ProductSummaryID = '20260820000301';
+
+IF OBJECT_ID('dbo.STB_ProductionOrderInfo_BK_20260822_HN523', 'U') IS NULL
+    SELECT * INTO dbo.STB_ProductionOrderInfo_BK_20260822_HN523 
+    FROM dbo.STB_ProductionOrderInfo WITH(NOLOCK) 
+    WHERE PONo = '260813000005';
+GO
+
+-- ------------------------------------------------------------------------------
+-- BƯỚC 2: THỰC THI SỬA ĐỔI TRONG TRANSACTION VÀ COMMIT
+-- ------------------------------------------------------------------------------
+BEGIN TRANSACTION;
+BEGIN TRY
+
+    -- 1. Xóa các bản ghi sub-lot đóng gói trong STB_MaterialLotInfo
+    DELETE FROM dbo.STB_MaterialLotInfo
+    WHERE MaterialLotNo IN ('20260820000403', '20260820000409')
+      AND PackingID IN ('PKQQ2000244', 'PKQQ2000250')
+      AND LotNo = 'VE260813-004';
+
+    -- 2. Hủy các chứng từ xuất nhập đóng gói trong MaterialDoc
+    UPDATE dbo.STB_MaterialDocInfo 
+    SET DocStatus = 'CREATE', IsCancel = 0 
+    WHERE MaterialDocNo IN ('260820000261', '260820000267');
+
+    SET CONTEXT_INFO 0x999997;
+    DELETE FROM dbo.STB_MaterialDocLotInfo 
+    WHERE MaterialDocNo IN ('260820000261', '260820000267');
+    SET CONTEXT_INFO 0;
+
+    DELETE FROM dbo.STB_MaterialDocDetail 
+    WHERE MaterialDocNo IN ('260820000261', '260820000267');
+
+    UPDATE dbo.STB_MaterialDocInfo 
+    SET IsCancel = 1, CancelDateTime = GETDATE(), CancelUserID = 'vanduc' 
+    WHERE MaterialDocNo IN ('260820000261', '260820000267');
+
+    -- 3. Giảm trừ sản lượng công đoạn đóng gói VE10 (-718 con, từ 5,718 -> 5,000)
+    UPDATE dbo.STB_ProdRouteHist
+    SET ProdQty = ProdQty - 718
+    WHERE ControlNo = '20260813000295' AND RouteCode = 'VE10';
+
+    -- 4. Giảm trừ bảng tổng hợp sản lượng ngày & lệnh sản xuất PO (-718 con, từ 31,242 -> 30,524)
+    UPDATE dbo.STB_ProdRouteSummary
+    SET OutputQty = OutputQty - 718
+    WHERE ProductSummaryID = '20260820000301';
+
+    UPDATE dbo.STB_ProductionOrderInfo
+    SET ProdFinishQty = ProdFinishQty - 718
+    WHERE PONo = '260813000005';
+
+    COMMIT TRANSACTION;
+    PRINT N'SUCCESS: Đã hủy thành công 2 packing PKQQ2000244 & PKQQ2000250!';
+
+END TRY
+BEGIN CATCH
+    IF @@TRANCOUNT > 0 ROLLBACK TRANSACTION;
+    PRINT N'LỖI: ' + ERROR_MESSAGE();
+    THROW;
+END CATCH;
+GO
+```
+
+---
+
 
 
 ### 4.5 [B450]/[B523]/[B756]/[A460] — LỖI KHÔNG IN ĐƯỢC TEM ( / / / )

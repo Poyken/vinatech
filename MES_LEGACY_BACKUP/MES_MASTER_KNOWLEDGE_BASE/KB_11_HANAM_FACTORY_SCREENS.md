@@ -1,4 +1,4 @@
-﻿<!--
+<!--
 AI-READY METADATA
 Purpose: Bản đồ 83 màn hình đặc thù nhà máy Hà Nam (F3/VVT_F3), H-series equipment/calibration/spare parts & 63 HN-isolated Stored Procedures
 Scope: Hà Nam Factory Specific Screens & Subsystems
@@ -48,7 +48,7 @@ Related Files:
 | `HN06` | Nhập kho tem nhỏ thành phẩm HN | Nhập kho small label |
 | `HN12` | Thay đổi mã NVL để in tem đóng gói | Sửa material code cho label |
 | `HN15` | Thay đổi mã NVL để in tem HN | Sửa material code HN |
-| `HN523` | **Vietnam_Donggoi_Hnam** | **★ Đóng gói Hà Nam** (tương tự B523) |
+| `HN523` | **Vietnam_Donggoi_Hnam** | **★ Đóng gói Hà Nam** (tương tự B523 — xem [KB_04_02 § [HN523]](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_02_SCREEN_BUGS.md#hn523--kịch-bản-sự-cố-khẩn-cấp-hủy-tem-đóng-gói--rã-box-tại-hà-nam-đồng-bộ-giảm-sản-lượng-ve10--po) cho kịch bản hủy box/giảm sản lượng VE10) |
 | `HN541` | Thêm chữ Marking cho sản phẩm | Marking text config |
 | `HN542` | Chia tem và in tem đóng gói | **Split & print packing labels** |
 | `HN543` | Chia tem với mã tùy chỉnh NCC | Custom vendor code labels |
