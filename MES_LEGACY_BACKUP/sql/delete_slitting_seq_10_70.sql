@@ -1,4 +1,4 @@
--- ====================================================================
+﻿-- ====================================================================
 -- SCRIPT XÓA LỊCH SỬ CẮT ĐIỆN CỰC (STT 10-70) CHO LOT VVQO2020001E36
 -- Database: SmartFactoryV2
 -- Screen: [B552] Vietnam_Kết quả đo điện cực (Tab Slitting - Cắt điện cực)

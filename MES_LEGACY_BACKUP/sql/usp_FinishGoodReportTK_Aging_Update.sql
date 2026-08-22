@@ -1,4 +1,4 @@
--- ==============================================================================
+﻿-- ==============================================================================
 -- SCRIPT CẬP NHẬT STORED PROCEDURE: usp_FinishGoodReportTK
 -- MÀN HÌNH: [FG02] Tổng hợp kho thành phẩm Bắc Ninh & [F512] VietNamMaterialCustomReport
 -- LỊCH SỬ THAY ĐỔI: vanduc edit 2026-08-14

@@ -1,4 +1,4 @@
--- ====================================================================
+﻿-- ====================================================================
 -- SCRIPT FIX MẶT TEM IN B523 SANG MÃ MỚI VVQQ143R850605 (STB_ChangePartNoAndLotNo)
 -- Database: SmartFactoryV2
 -- File: sql/fix_b523_PKQQ1500133.sql

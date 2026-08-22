@@ -1,5 +1,0 @@
-UPDATE PRH
-SET PRH.ProdQty = 1182.0
-FROM dbo.STB_ProdRouteHist PRH WITH (UPDLOCK)
-INNER JOIN dbo.STB_SetInfo SI WITH (NOLOCK) ON PRH.ControlNo = SI.ControlNo
-WHERE SI.Barcode = 'VVQO153R072712' AND PRH.RouteCode LIKE 'V-26%' AND PRH.WorkCenterCode = 'VVT_F5';

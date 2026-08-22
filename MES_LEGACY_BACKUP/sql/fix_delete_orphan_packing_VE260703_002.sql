@@ -1,4 +1,4 @@
--- ==============================================================================
+﻿-- ==============================================================================
 -- FIX SCRIPT: DELETE ORPHAN SUB-LOT RECORD FOR B523 / HN523 PACKING RECOVERY
 -- LOT NO: VE260703-002
 -- TARGET MATERIAL LOT NO: 20260814000278 (Qty = 705, PackingID IS NULL/EMPTY)

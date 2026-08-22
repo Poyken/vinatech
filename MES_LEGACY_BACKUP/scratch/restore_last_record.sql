@@ -1,4 +1,0 @@
-UPDATE PRH
-SET PRH.WorkCenterCode = 'VVT_F2'
-FROM dbo.STB_ProdRouteHist PRH WITH (UPDLOCK)
-WHERE PRH.ProdRouteHistNo = '20260819000570';

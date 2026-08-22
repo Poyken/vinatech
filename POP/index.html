@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>POP Kiosk User Manual — Vinatech MES</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="app-layout">
+    
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="brand-badge">
+          <div class="brand-logo">P</div>
+          <div class="brand-title">
+            <h1 id="brand-title-text">POP KIOSK MES</h1>
+            <span id="brand-sub-text">Vinatech Point of Production</span>
+          </div>
+        </div>
+        <div class="version-tag">
+          <span>●</span>
+          <span id="version-text">v1.1 (2026-06)</span>
+        </div>
+      </div>
+
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="search-input" class="search-input" placeholder="Tìm kiếm nhanh chủ đề...">
+      </div>
+
+      <nav class="sidebar-nav" id="sidebar-nav">
+        <!-- Injected via JavaScript -->
+      </nav>
+
+      <div class="sidebar-footer">
+        <select id="lang-select" class="lang-select" aria-label="Select Language">
+          <option value="vi" selected>🇻🇳 Tiếng Việt</option>
+          <option value="en">🇬🇧 English</option>
+          <option value="ko">🇰🇷 한국어</option>
+        </select>
+        <button id="theme-toggle-btn" class="icon-btn" title="Chuyển đổi giao diện Sáng/Tối">
+          🌓
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="main-wrapper">
+      
+      <!-- Top Navigation Bar -->
+      <header class="top-nav">
+        <div class="nav-breadcrumbs" id="breadcrumbs">
+          <span>POP Manual</span>
+          <span>/</span>
+          <span class="active" id="current-crumb">Tổng quan</span>
+        </div>
+
+        <div class="nav-actions">
+          <button id="view-mode-toggle" class="btn btn-secondary">
+            <span>📺</span>
+            <span id="view-mode-text">Chế độ Trình chiếu</span>
+          </button>
+          <a href="#simulators-section" class="btn btn-primary">
+            <span>⚡</span>
+            <span id="quick-tool-text">Công cụ Mô phỏng</span>
+          </a>
+        </div>
+      </header>
+
+      <!-- Content Body -->
+      <main class="content-body" id="main-content">
+        
+        <!-- Hero Section -->
+        <section class="hero-banner" id="hero-banner">
+          <div class="hero-tag" id="hero-tag-text">Sổ tay Vận hành Kiosk MES</div>
+          <h2 class="hero-title" id="hero-title-text">Hướng Dẫn Vận Hành Hệ Thống POP</h2>
+          <p class="hero-desc" id="hero-desc-text">
+            Tài liệu số hóa tương tác đa phương tiện dành cho công nhân và kỹ sư vận hành tại các dây chuyền sản xuất Vinatech. Hỗ trợ tra cứu nhanh quy trình, đối soát hình ảnh thực tế và mô phỏng tính toán.
+          </p>
+
+          <div class="hero-stats">
+            <div class="stat-card">
+              <div class="stat-value">46</div>
+              <div class="stat-label" id="stat-slides-label">Slide Hướng Dẫn</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value">6</div>
+              <div class="stat-label" id="stat-parts-label">Mô-đun Chức Năng</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value">v1.1</div>
+              <div class="stat-label" id="stat-version-label">Phiên Bản Mới Nhất</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value">100%</div>
+              <div class="stat-label" id="stat-visual-label">Giao Diện Thực Tế</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Quick Jump Matrix Cards -->
+        <div class="matrix-grid" id="matrix-grid">
+          <!-- Injected via JavaScript -->
+        </div>
+
+        <!-- Manual Sections Container -->
+        <div id="sections-container">
+          <!-- Injected via JavaScript -->
+        </div>
+
+        <!-- Interactive Simulators Section -->
+        <section class="manual-section" id="simulators-section">
+          <div class="section-header">
+            <div class="section-title-wrap">
+              <div class="section-number">⚡</div>
+              <h3 class="section-title">Công Cụ Mô Phỏng Tương Tác Kiosk</h3>
+            </div>
+          </div>
+
+          <!-- Simulator 1: FIFO Merge Packing -->
+          <div class="topic-card">
+            <div class="topic-header">
+              <div class="topic-title">
+                <span>📦</span>
+                <span>Mô Phỏng Trừ Số Lượng Đóng Gói Gộp (FIFO)</span>
+              </div>
+              <span class="slide-tag">Thao tác Slide 34</span>
+            </div>
+            <p class="overview-text">
+              Thử nghiệm cơ chế trừ lùi số lượng tuần tự từ trên xuống dưới theo nguyên tắc FIFO khi gom nhiều LOT vào 1 Box.
+            </p>
+
+            <div class="interactive-demo">
+              <div class="demo-title">Nhập số lượng khả dụng của các LOT & Số lượng cần đóng Box:</div>
+              <div class="demo-grid">
+                <div class="demo-input-group">
+                  <label>LOT 1 (Có sẵn):</label>
+                  <input type="number" id="sim-lot1" class="demo-input" value="20" min="0">
+                </div>
+                <div class="demo-input-group">
+                  <label>LOT 2 (Có sẵn):</label>
+                  <input type="number" id="sim-lot2" class="demo-input" value="20" min="0">
+                </div>
+                <div class="demo-input-group">
+                  <label>LOT 3 (Có sẵn):</label>
+                  <input type="number" id="sim-lot3" class="demo-input" value="20" min="0">
+                </div>
+                <div class="demo-input-group">
+                  <label style="color: var(--kiosk-orange);">Số lượng đóng Box (Target):</label>
+                  <input type="number" id="sim-target" class="demo-input" value="50" min="1" style="border-color: var(--kiosk-orange);">
+                </div>
+              </div>
+              <button id="btn-calc-fifo" class="btn btn-primary" style="margin-bottom: 14px;">Chạy Mô Phỏng Trừ Số Lượng</button>
+
+              <div class="demo-result-box" id="fifo-result-box">
+                <!-- Calculated Result -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Simulator 2: Re-sorting Ratio -->
+          <div class="topic-card">
+            <div class="topic-header">
+              <div class="topic-title">
+                <span>🔄</span>
+                <span>Mô Phỏng Tái Phân Loại Theo Tỷ Lệ Lỗi (Re-sorting)</span>
+              </div>
+              <span class="slide-tag">Thao tác Slide 40</span>
+            </div>
+            <p class="overview-text">
+              Hệ thống tự động tính toán phân chia số lượng trích xuất đạt tỷ lệ thuận với số lượng phế phẩm của từng LOT.
+            </p>
+
+            <div class="interactive-demo">
+              <div class="demo-grid">
+                <div class="demo-input-group">
+                  <label>LOT A (Số lỗi hiện có):</label>
+                  <input type="number" id="resort-lot-a" class="demo-input" value="20" min="0">
+                </div>
+                <div class="demo-input-group">
+                  <label>LOT B (Số lỗi hiện có):</label>
+                  <input type="number" id="resort-lot-b" class="demo-input" value="10" min="0">
+                </div>
+                <div class="demo-input-group">
+                  <label style="color: var(--accent-success);">Tổng SL Tái Phân Loại Cần Rút:</label>
+                  <input type="number" id="resort-target" class="demo-input" value="25" min="1" style="border-color: var(--accent-success);">
+                </div>
+              </div>
+              <button id="btn-calc-resort" class="btn btn-secondary" style="margin-bottom: 14px;">Tính Tỷ Lệ Phân Bổ</button>
+
+              <div class="demo-result-box" id="resort-result-box">
+                <!-- Calculated Result -->
+              </div>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- Summary Rules Table -->
+        <section class="manual-section" id="rules-section">
+          <div class="section-header">
+            <div class="section-title-wrap">
+              <div class="section-number">⚠️</div>
+              <h3 class="section-title">Bảng Quy Tắc & Xử Lý Sự Cố Nhanh</h3>
+            </div>
+          </div>
+
+          <div class="topic-card">
+            <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
+              <thead>
+                <tr style="border-bottom: 2px solid var(--border-subtle); text-align: left; color: var(--accent-primary);">
+                  <th style="padding: 12px;">Tình huống / Thao tác</th>
+                  <th style="padding: 12px;">Quy tắc vận hành</th>
+                  <th style="padding: 12px;">Hướng xử lý trên hệ thống</th>
+                </tr>
+              </thead>
+              <tbody id="rules-table-body">
+                <tr style="border-bottom: 1px solid var(--border-subtle);">
+                  <td style="padding: 12px; font-weight: 700;">Đổi Dây Chuyền (Line)</td>
+                  <td style="padding: 12px; color: var(--accent-warning);">Làm mới phiên làm việc</td>
+                  <td style="padding: 12px;">Đổi dây chuyền sau khi đã nạp lệnh sẽ <strong>đặt lại (reset) toàn bộ dữ liệu</strong> hiện tại.</td>
+                </tr>
+                <tr style="border-bottom: 1px solid var(--border-subtle);">
+                  <td style="padding: 12px; font-weight: 700;">Khóa Nút Hoàn Thành</td>
+                  <td style="padding: 12px; color: var(--accent-danger);">Bắt buộc nhập BOM</td>
+                  <td style="padding: 12px;">Công nhân phải <strong>nhập đầy đủ vật liệu đầu vào</strong> thì nút <em>Hoàn thành sản xuất</em> mới mở khóa.</td>
+                </tr>
+                <tr style="border-bottom: 1px solid var(--border-subtle);">
+                  <td style="padding: 12px; font-weight: 700;">Đăng Ký Lỗi (Defect)</td>
+                  <td style="padding: 12px; color: var(--accent-info);">Điều kiện hợp lệ</td>
+                  <td style="padding: 12px;">Phải <strong>chọn Loại lỗi</strong> trước và <strong>nhập số lượng > 0</strong> thì nút Đăng ký mới có tác dụng.</td>
+                </tr>
+                <tr style="border-bottom: 1px solid var(--border-subtle);">
+                  <td style="padding: 12px; font-weight: 700;">Điều Kiện Đóng Gói</td>
+                  <td style="padding: 12px; color: var(--accent-purple);">100% Hoàn thành</td>
+                  <td style="padding: 12px;">Chỉ những LOT đã <strong>hoàn thành tất cả các công đoạn trước</strong> mới hiển thị để đóng thùng.</td>
+                </tr>
+                <tr style="border-bottom: 1px solid var(--border-subtle);">
+                  <td style="padding: 12px; font-weight: 700;">Đóng Gói Gộp (Merge)</td>
+                  <td style="padding: 12px; color: var(--accent-success);">Tối thiểu 2 LOT & FIFO</td>
+                  <td style="padding: 12px;">Bắt buộc chọn từ 2 LOT trở lên. Hệ thống tự động trừ tuần tự từ trên xuống dưới.</td>
+                </tr>
+                <tr style="border-bottom: 1px solid var(--border-subtle);">
+                  <td style="padding: 12px; font-weight: 700;">Đóng Gói Khác Nhà Máy</td>
+                  <td style="padding: 12px; color: var(--kiosk-orange);">Chọn Kho đích</td>
+                  <td style="padding: 12px;">Hệ thống tự động bật popup yêu cầu chọn kho tiếp nhận khi phát hiện LOT từ nhà máy khác.</td>
+                </tr>
+                <tr>
+                  <td style="padding: 12px; font-weight: 700;">Hủy Đóng Gói (Cancel Box)</td>
+                  <td style="padding: 12px; color: var(--accent-success);">Khôi phục số lượng</td>
+                  <td style="padding: 12px;">Vào Lịch sử bấm Hủy Box, số lượng sản phẩm sẽ <strong>tự động hoàn trả</strong> về lại LOT gốc.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- Fullscreen Image Lightbox Modal -->
+  <div class="lightbox" id="lightbox">
+    <div class="lightbox-content">
+      <button class="lightbox-close" id="lightbox-close">&times;</button>
+      <img src="" alt="Zoomed Slide" class="lightbox-img" id="lightbox-img">
+    </div>
+  </div>
+
+  <!-- JavaScript Application -->
+  <script src="app.js"></script>
+</body>
+</html>

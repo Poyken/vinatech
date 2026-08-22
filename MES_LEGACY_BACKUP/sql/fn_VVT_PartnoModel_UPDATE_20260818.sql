@@ -1,4 +1,4 @@
--- ==============================================================================
+﻿-- ==============================================================================
 -- STORED FUNCTION: fn_VVT_PartnoModel
 -- SCREEN: [FG01] Finish Goods PartNo Color Warning Mapping
 -- UPDATE LOG: 2026-08-18 - Added complete mapping pairs from Excel and FG Stock Survey

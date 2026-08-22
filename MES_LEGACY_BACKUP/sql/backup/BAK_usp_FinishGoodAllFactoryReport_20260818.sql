@@ -1,4 +1,4 @@
--- ==============================================================================
+﻿-- ==============================================================================
 -- FILE BACKUP NGUYÊN BẢN: usp_FinishGoodAllFactoryReport (Bắc Ninh - Bắc Giang)
 -- NGÀY BACKUP: 2026-08-18
 -- GHI CHÚ: Bản sao lưu gốc bảo tồn 100% mã nguồn trước khi tích hợp Kho Hưng Yên &

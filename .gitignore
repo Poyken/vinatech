@@ -33,3 +33,8 @@ desktop.ini
 # Ignore heavy custom files
 /CAI NAIS TU DONG (2).7z
 /CAI NAIS TU DONG/
+
+# Ignore MES scratch and temporary procedure sync files
+**/scratch/
+**/sql/procedures/
+**/%USERP~1/

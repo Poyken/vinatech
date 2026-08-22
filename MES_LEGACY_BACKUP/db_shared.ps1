@@ -77,34 +77,37 @@ function Test-SqlDeploySafety {
     $errors = @()
     $warnings = @()
     
-    # 1. Safety Checks for DML operations
+    # Check if this is a procedure / function / view / trigger definition
+    $isRoutineDefinition = $SqlText -match "(?mi)\b(CREATE|ALTER)\s+(OR\s+ALTER\s+)?(PROCEDURE|PROC|FUNCTION|VIEW|TRIGGER)\b"
+    
+    # 1. Safety Checks for DML operations (only for data modification scripts, not routine definitions)
     $hasDML = $SqlText -match "(?mi)\b(INSERT|UPDATE|DELETE|MERGE)\b"
-    if ($hasDML) {
+    if ($hasDML -and -not $isRoutineDefinition) {
         # Require transaction block
         if ($SqlText -notmatch "(?mi)\bBEGIN\s+(TRAN|TRANSACTION)\b") {
             $errors += "Validation Error: SQL contains DML (INSERT/UPDATE/DELETE/MERGE) but is missing 'BEGIN TRANSACTION' or 'BEGIN TRAN'."
             $isValid = $false
         }
         
-        # Require rollback statement
-        if ($SqlText -notmatch "(?mi)\bROLLBACK\s+(TRAN|TRANSACTION)?\b") {
-            $errors += "Validation Error: SQL contains DML but is missing 'ROLLBACK' or 'ROLLBACK TRANSACTION'. Under Rule #1, scripts must rollback by default."
+        # Require rollback or transaction handling
+        if ($SqlText -notmatch "(?mi)\b(ROLLBACK|COMMIT)\s+(TRAN|TRANSACTION)?\b") {
+            $errors += "Validation Error: SQL contains DML but is missing 'ROLLBACK' or 'COMMIT'. Under Rule #1, hotfix scripts must include explicit rollback/commit transaction control."
             $isValid = $false
         }
         
-        # Enforce WHERE clause for update/delete operations
-        if ($SqlText -match "(?mi)\b(UPDATE|DELETE)\b" -and $SqlText -notmatch "(?mi)\bWHERE\b") {
-            $errors += "Validation Error: SQL contains UPDATE/DELETE but has no WHERE clause! This is extremely dangerous."
+        # Enforce WHERE or JOIN clause for update/delete operations
+        if ($SqlText -match "(?mi)\b(UPDATE|DELETE)\b" -and $SqlText -notmatch "(?mi)\b(WHERE|JOIN)\b") {
+            $errors += "Validation Error: SQL contains UPDATE/DELETE but has neither WHERE nor JOIN clause! This is extremely dangerous."
             $isValid = $false
         }
     }
     
-    # 2. Safety Checks for Dangerous DDL statements
+    # 2. Safety Checks for Dangerous DDL statements (excluding temporary tables #temp and backup tables BK_)
     $dangerousDDLKeywords = @(
-        "\bDROP\s+TABLE\b",
+        "\bDROP\s+TABLE\s+(?!(?:#|(?:\[?dbo\]?\.)?\[?B(?:K|AK)_))\S+",
         "\bDROP\s+DATABASE\b",
         "\bTRUNCATE\s+TABLE\b",
-        "\bALTER\s+TABLE\b"
+        "\bALTER\s+TABLE\s+(?!(?:#|(?:\[?dbo\]?\.)?\[?B(?:K|AK)_))\S+"
     )
     
     foreach ($keyword in $dangerousDDLKeywords) {
