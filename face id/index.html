@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vinatech Face ID & HikCentral Access Control Portal</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%236366f1'/><text x='50%25' y='55%25' dominant-baseline='central' text-anchor='middle' font-size='55' font-family='sans-serif' font-weight='800' fill='white'>FID</text></svg>">
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="app-container">
+    
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="brand-wrapper">
+          <div class="brand-icon">🛡️</div>
+          <div class="brand-info">
+            <h1 id="brand-title">VINATECH FACE ID</h1>
+            <span id="brand-sub">HikCentral Pro Portal</span>
+          </div>
+        </div>
+      </div>
+
+      <nav class="nav-menu">
+        <div class="nav-item active" data-view="dashboard">
+          <span class="icon">📊</span>
+          <span data-i18n="nav_dashboard">Bảng Điều Khiển</span>
+          <span class="nav-badge" id="badge-live-events">Live</span>
+        </div>
+        <div class="nav-item" data-view="floorplans">
+          <span class="icon">🗺️</span>
+          <span data-i18n="nav_map">Mặt Bằng & Vị Trí</span>
+        </div>
+        <div class="nav-item" data-view="attendance">
+          <span class="icon">⏱️</span>
+          <span data-i18n="nav_attendance">Báo Cáo Chấm Công</span>
+        </div>
+        <div class="nav-item" data-view="devices">
+          <span class="icon">🚪</span>
+          <span data-i18n="nav_devices">Danh Mục Thiết Bị</span>
+          <span class="nav-badge" style="background: rgba(99,102,241,0.2); color:#818cf8;">22 TB</span>
+        </div>
+        <div class="nav-item" data-view="personnel">
+          <span class="icon">👥</span>
+          <span data-i18n="nav_personnel">Nhân Sự & Phân Quyền</span>
+        </div>
+        <div class="nav-item" data-view="sql">
+          <span class="icon">🗄️</span>
+          <span data-i18n="nav_sql">Tra Cứu Database</span>
+        </div>
+        <div class="nav-item" data-view="manual">
+          <span class="icon">📖</span>
+          <span data-i18n="nav_manual">Sổ Tay Vận Hành (SOP)</span>
+        </div>
+      </nav>
+
+      <div class="sidebar-footer">
+        <select id="lang-select" class="select-custom" aria-label="Select Language">
+          <option value="vi" selected>🇻🇳 Tiếng Việt</option>
+          <option value="en">🇬🇧 English</option>
+          <option value="ko">🇰🇷 한국어</option>
+        </select>
+        <button id="theme-toggle-btn" class="btn-icon" title="Chuyển đổi giao diện Sáng/Tối">
+          🌓
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="main-wrapper">
+      
+      <!-- Top Navigation Bar -->
+      <header class="top-navbar">
+        <div class="breadcrumbs">
+          <span>HikCentral Pro</span>
+          <span>/</span>
+          <span class="active" id="current-view-name">Bảng Điều Khiển</span>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 14px;">
+          <div class="db-live-status" id="db-status-badge">
+            <span class="status-dot"></span>
+            <span id="db-status-text">HCP_DATA: Đã kết nối (192.168.184.250)</span>
+          </div>
+          <button id="btn-refresh" class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px;">
+            🔄 <span data-i18n="btn_refresh">Làm mới</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Main Scrollable Body -->
+      <main class="content-body">
+        
+        <!-- ================= VIEW 1: DASHBOARD ================= -->
+        <section id="view-dashboard" class="view-section active">
+          
+          <!-- Hero Banner -->
+          <div class="hero-card">
+            <div class="hero-tag">
+              <span>⚡</span> <span id="hero-tag">Hệ Thống Kiểm Soát An Ninh & Chấm Công Tự Động</span>
+            </div>
+            <h2 class="hero-title" id="hero-title">Trung Tâm Giám Sát Face ID & Cửa Vinatech Hưng Yên</h2>
+            <p class="hero-subtitle" id="hero-desc">
+              Giám sát thời gian thực toàn bộ luồng người vào/ra qua 22 điểm nhận diện Face ID & Chấm công, tự động đồng bộ sự kiện vào CSDL HCP_DATA và liên kết hệ thống MES / ERP.
+            </p>
+
+            <div class="stats-grid">
+              <div class="stat-box">
+                <div class="stat-header">
+                  <span data-i18n="stat_total_scans">Tổng Lượt Sự Kiện</span>
+                  <span>📊</span>
+                </div>
+                <div class="stat-number" id="stat-total-scans">136+</div>
+                <div class="stat-footer positive">● <span data-i18n="stat_realtime_synced">Đồng bộ thời gian thực</span></div>
+              </div>
+
+              <div class="stat-box">
+                <div class="stat-header">
+                  <span data-i18n="stat_face_rate">Tỷ Lệ Quẹt Face ID</span>
+                  <span>👤</span>
+                </div>
+                <div class="stat-number" id="stat-face-rate">92.0%</div>
+                <div class="stat-footer positive">▲ <span data-i18n="stat_primary_method">Phương thức chính</span></div>
+              </div>
+
+              <div class="stat-box">
+                <div class="stat-header">
+                  <span data-i18n="stat_total_devices">Tổng Số Thiết Bị</span>
+                  <span>🚪</span>
+                </div>
+                <div class="stat-number">22</div>
+                <div class="stat-footer">6 AC Cửa + 10 Barrier + 5 TA + 1 USB</div>
+              </div>
+
+              <div class="stat-box">
+                <div class="stat-header">
+                  <span data-i18n="stat_active_shift">Ca Làm Việc Chuẩn</span>
+                  <span>⏰</span>
+                </div>
+                <div class="stat-number" style="font-size: 24px;">08:00 - 17:30</div>
+                <div class="stat-footer">Ca HC (Tự động tính công 04:00 AM)</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Live Event Feed Table -->
+          <div class="section-header">
+            <h3 class="section-title">
+              <span>⚡</span> <span data-i18n="title_live_events">Nhật Ký Quẹt Face ID & Cửa Thời Gian Thực</span>
+            </h3>
+            <span style="font-size: 13px; color: var(--text-muted);" id="live-event-count">Đang tải dữ liệu...</span>
+          </div>
+
+          <div class="table-card">
+            <div class="table-header-bar">
+              <div class="search-input-wrap">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="dashboard-search" placeholder="Tìm kiếm theo tên nhân viên, mã NV hoặc thiết bị...">
+              </div>
+              <div style="display: flex; gap: 10px;">
+                <select id="filter-device" class="select-custom">
+                  <option value="">Tất cả thiết bị</option>
+                  <option value="AC-05">AC-05 (Cửa P. IT Tầng 2)</option>
+                  <option value="AC-06">AC-06 (Cửa Văn Phòng Tầng 2)</option>
+                  <option value="TA-03">TA-03 (Chấm Công Locker Nữ)</option>
+                  <option value="Device 01">Device 01 (Cửa Door 01)</option>
+                </select>
+              </div>
+            </div>
+
+            <div style="overflow-x: auto;">
+              <table class="custom-table">
+                <thead>
+                  <tr>
+                    <th>Mã NV</th>
+                    <th>Họ và Tên</th>
+                    <th>Phòng Ban</th>
+                    <th>Thời Gian Quẹt</th>
+                    <th>Thiết Bị / Điểm Quẹt</th>
+                    <th>Hình Thức</th>
+                    <th>Kết Quả</th>
+                  </tr>
+                </thead>
+                <tbody id="dashboard-events-tbody">
+                  <!-- Injected via JavaScript -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= VIEW 2: INTERACTIVE FLOOR PLANS ================= -->
+        <section id="view-floorplans" class="view-section">
+          
+          <div class="section-header">
+            <div>
+              <h3 class="section-title">
+                <span>🗺️</span> <span data-i18n="title_floorplans">Mặt Bằng & Bản Đồ Phân Bổ Thiết Bị Face ID</span>
+              </h3>
+              <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">
+                Căn cứ theo bản vẽ thiết kế điện nhẹ ELV System (VINATECH VINA). Click vào từng điểm thiết bị để xem chi tiết thông số khóa & chức năng.
+              </p>
+            </div>
+          </div>
+
+          <!-- Floor Switcher Tabs -->
+          <div class="floor-tabs">
+            <button class="floor-tab active" data-floor="1F">Tầng 1 Nhà Xưởng (3 AC + 5 TA)</button>
+            <button class="floor-tab" data-floor="1.5F">Tầng 1.5 Nhà Xưởng (1 AC)</button>
+            <button class="floor-tab" data-floor="2F">Tầng 2 Nhà Xưởng (2 AC: IT & Office)</button>
+            <button class="floor-tab" data-floor="PARKING">Nhà Xe & Cổng (10 Flap Barrier)</button>
+          </div>
+
+          <!-- Map Container -->
+          <div class="map-container">
+            <div id="floor-blueprint-wrap">
+              <!-- SVG Blueprint injected via JavaScript -->
+            </div>
+          </div>
+
+          <!-- Legend Bar -->
+          <div style="margin-top: 16px; display: flex; gap: 24px; flex-wrap: wrap; background-color: var(--bg-card); padding: 14px 20px; border-radius: var(--radius-md); border: 1px solid var(--border-color); font-size: 13px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="width: 14px; height: 14px; border-radius: 50%; background: #6366f1; border: 2px solid #a5b4fc; display: inline-block;"></span>
+              <strong>Access Control (AC):</strong> Kiểm Soát Mở Khóa Cửa Phòng
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="width: 14px; height: 14px; border-radius: 50%; background: #06b6d4; border: 2px solid #67e8f9; display: inline-block;"></span>
+              <strong>Time Attendance (TA):</strong> Máy Chấm Công Chuyên Dụng (Không Gắn Khóa)
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="width: 14px; height: 14px; border-radius: 50%; background: #f59e0b; border: 2px solid #fde68a; display: inline-block;"></span>
+              <strong>Flap Barrier:</strong> Cổng Phân Làn Tự Động Nhà Xe / Cổng Chính
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= VIEW 3: TIME & ATTENDANCE ================= -->
+        <section id="view-attendance" class="view-section">
+          <div class="section-header">
+            <div>
+              <h3 class="section-title">
+                <span>⏱️</span> <span data-i18n="title_attendance">Báo Cáo Chấm Công Hàng Ngày (First In / Last Out)</span>
+              </h3>
+              <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">
+                Tự động tổng hợp giờ quẹt Face ID đầu tiên (Check-In) và cuối cùng (Check-Out) trong ngày theo quy tắc ca HC (08:00 - 17:30).
+              </p>
+            </div>
+            <button id="btn-export-attendance" class="btn btn-primary">
+              📥 <span data-i18n="btn_export_csv">Xuất File CSV</span>
+            </button>
+          </div>
+
+          <div class="table-card">
+            <div class="table-header-bar">
+              <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+                <label style="font-size: 13px; font-weight: 600;">Chọn Ngày:</label>
+                <input type="date" id="att-date-picker" class="select-custom" style="width: auto;">
+                <select id="att-dept-filter" class="select-custom">
+                  <option value="">Tất cả phòng ban</option>
+                  <option value="WSI">WSI</option>
+                  <option value="HS Team">HS Team</option>
+                </select>
+              </div>
+            </div>
+
+            <div style="overflow-x: auto;">
+              <table class="custom-table">
+                <thead>
+                  <tr>
+                    <th>Mã NV</th>
+                    <th>Họ và Tên</th>
+                    <th>Phòng Ban</th>
+                    <th>Ngày</th>
+                    <th>Giờ Đến (In)</th>
+                    <th>Cửa Đến</th>
+                    <th>Giờ Về (Out)</th>
+                    <th>Cửa Về</th>
+                    <th>Tổng Lượt</th>
+                    <th>Trạng Thái</th>
+                  </tr>
+                </thead>
+                <tbody id="attendance-tbody">
+                  <!-- Injected via JavaScript -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= VIEW 4: DEVICE INVENTORY ================= -->
+        <section id="view-devices" class="view-section">
+          <div class="section-header">
+            <div>
+              <h3 class="section-title">
+                <span>🚪</span> <span data-i18n="title_devices">Danh Mục Toàn Bộ 22 Thiết Bị Face ID & Cửa</span>
+              </h3>
+              <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">
+                Bảng tra cứu kỹ thuật chi tiết: Vị trí lắp đặt, cơ cấu khóa điện, phụ kiện an toàn và địa chỉ IP / Serial phần cứng.
+              </p>
+            </div>
+          </div>
+
+          <div class="table-card">
+            <div class="table-header-bar">
+              <div class="search-input-wrap">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="device-search" placeholder="Tìm kiếm theo mã TB (AC-01..), tên phòng, loại khóa...">
+              </div>
+              <select id="device-type-filter" class="select-custom">
+                <option value="">Tất cả loại thiết bị</option>
+                <option value="AC">Kiểm Soát Mở Cửa (AC-01..06)</option>
+                <option value="TA">Chấm Công Chuyên Dụng (TA-01..05)</option>
+                <option value="BARRIER">Cổng Flap Barrier (AC-10..19)</option>
+              </select>
+            </div>
+
+            <div style="overflow-x: auto;">
+              <table class="custom-table">
+                <thead>
+                  <tr>
+                    <th>Mã TB</th>
+                    <th>Tên Thiết Bị & Vị Trí Phòng</th>
+                    <th>Tầng</th>
+                    <th>Chức Năng</th>
+                    <th>Loại Khóa / Cơ Cấu</th>
+                    <th>Phụ Kiện Đi Kèm</th>
+                    <th>Tủ RACK Quản Lý</th>
+                    <th>Serial No</th>
+                  </tr>
+                </thead>
+                <tbody id="devices-tbody">
+                  <!-- Injected via JavaScript -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= VIEW 5: PERSONNEL DIRECTORY ================= -->
+        <section id="view-personnel" class="view-section">
+          <div class="section-header">
+            <div>
+              <h3 class="section-title">
+                <span>👥</span> <span data-i18n="title_personnel">Danh Bạ Nhân Sự & Phân Quyền Mở Cửa</span>
+              </h3>
+              <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">
+                Quản lý 14 nhân sự đã đăng ký mẫu khuôn mặt Face ID trên hệ thống HikCentral Pro và nhóm chấm công.
+              </p>
+            </div>
+          </div>
+
+          <div class="table-card">
+            <div class="table-header-bar">
+              <div class="search-input-wrap">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="emp-search" placeholder="Tìm theo tên nhân viên, mã NV hoặc phòng ban...">
+              </div>
+            </div>
+
+            <div style="overflow-x: auto;">
+              <table class="custom-table">
+                <thead>
+                  <tr>
+                    <th>Mã Nhân Viên</th>
+                    <th>Họ và Tên</th>
+                    <th>Phòng Ban</th>
+                    <th>Chức Danh</th>
+                    <th>Mẫu Face ID</th>
+                    <th>Quyền Mở Cửa (Access Level)</th>
+                    <th>Nhóm Chấm Công</th>
+                  </tr>
+                </thead>
+                <tbody id="personnel-tbody">
+                  <!-- Injected via JavaScript -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= VIEW 6: DATABASE QUERY STUDIO ================= -->
+        <section id="view-sql" class="view-section">
+          <div class="section-header">
+            <div>
+              <h3 class="section-title">
+                <span>🗄️</span> <span>Database Query Studio (HCP_DATA @ 192.168.184.250)</span>
+              </h3>
+              <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">
+                Tra cứu trực tiếp cơ sở dữ liệu HikCentral SQL Server phục vụ đối soát, kiểm toán an ninh và trích xuất dữ liệu tích hợp MES / ERP.
+              </p>
+            </div>
+          </div>
+
+          <!-- Quick Query Buttons -->
+          <div style="display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap;">
+            <button class="btn btn-secondary quick-sql-btn" data-sql="SELECT TOP 50 * FROM dbo.HCP_AccessRecord ORDER BY AccessDateTime DESC">
+              ⚡ 50 Sự Kiện Mới Nhất
+            </button>
+            <button class="btn btn-secondary quick-sql-btn" data-sql="SELECT DeviceName, COUNT(*) as TotalScans FROM dbo.HCP_AccessRecord GROUP BY DeviceName">
+              📊 Thống Kê Theo Thiết Bị
+            </button>
+            <button class="btn btn-secondary quick-sql-btn" data-sql="SELECT AuthenticationType, COUNT(*) as Total FROM dbo.HCP_AccessRecord GROUP BY AuthenticationType">
+              👤 Thống Kê Loại Xác Thực (Face ID vs Khác)
+            </button>
+            <button class="btn btn-secondary quick-sql-btn" data-sql="SELECT DISTINCT EmployeeID, PersonName, Department FROM dbo.HCP_AccessRecord ORDER BY PersonName">
+              👥 Danh Sách Nhân Sự Đã Quẹt
+            </button>
+          </div>
+
+          <div class="table-card">
+            <div style="padding: 16px 20px; border-bottom: 1px solid var(--border-color); background-color: var(--bg-sidebar);">
+              <div style="display: flex; gap: 10px;">
+                <input type="text" id="sql-input" class="select-custom" style="flex: 1; font-family: var(--font-mono); font-size: 13px;" value="SELECT TOP 50 * FROM dbo.HCP_AccessRecord ORDER BY AccessDateTime DESC">
+                <button id="btn-run-sql" class="btn btn-primary">
+                  ▶️ Chạy Query
+                </button>
+              </div>
+            </div>
+
+            <div style="overflow-x: auto; max-height: 480px;">
+              <table class="custom-table">
+                <thead id="sql-results-thead">
+                  <!-- Injected via JS -->
+                </thead>
+                <tbody id="sql-results-tbody">
+                  <!-- Injected via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= VIEW 7: SOP TRAINING MANUAL ================= -->
+        <section id="view-manual" class="view-section">
+          <div class="section-header">
+            <div>
+              <h3 class="section-title">
+                <span>📖</span> <span data-i18n="title_manual">Sổ Tay Vận Hành & Đào Tạo Chuẩn Hóa (Training SOP)</span>
+              </h3>
+              <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">
+                Tổng hợp 9 bước quy trình vận hành hệ thống HikCentral Professional trích xuất từ tài liệu đào tạo chính thức.
+              </p>
+            </div>
+          </div>
+
+          <div class="sop-grid" id="sop-cards-container">
+            <!-- Injected via JavaScript -->
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- Device Inspector Modal -->
+  <div class="modal-overlay" id="device-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 24px;" id="modal-icon">🚪</span>
+          <div>
+            <h3 style="font-size: 18px; font-weight: 800;" id="modal-device-name">Chi Tiết Thiết Bị</h3>
+            <span style="font-size: 12px; color: var(--text-muted);" id="modal-device-code">Mã TB: AC-01</span>
+          </div>
+        </div>
+        <button id="modal-close-btn" class="btn-icon">✕</button>
+      </div>
+      <div id="modal-body" style="display: flex; flex-direction: column; gap: 14px; font-size: 13px;">
+        <!-- Injected via JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Application Logic Scripts -->
+  <script src="app.js"></script>
+</body>
+</html>

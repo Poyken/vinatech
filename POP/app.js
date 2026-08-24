@@ -481,6 +481,8 @@ document.addEventListener('DOMContentLoaded', () => {
   setupSearch();
   setupThemeToggle();
   setupLightbox();
+  setupPresentationMode();
+  setupLanguageSwitch();
 });
 
 // Render Sidebar Navigation Links
@@ -802,3 +804,178 @@ function setupInteractions() {
     });
   });
 }
+
+// Presentation Mode Controller
+let ALL_SLIDES = [];
+let currentSlideIndex = 0;
+
+function setupPresentationMode() {
+  // Collect all slides in sequential order
+  ALL_SLIDES = [];
+  MANUAL_DATA.forEach(section => {
+    section.topics.forEach(topic => {
+      ALL_SLIDES.push({
+        part: section.part,
+        partTitle: section.partTitle,
+        ...topic
+      });
+    });
+  });
+
+  const toggleBtn = document.getElementById('view-mode-toggle');
+  const presModal = document.getElementById('presentation-modal');
+  const closeBtn = document.getElementById('pres-close-btn');
+  const prevBtn = document.getElementById('pres-prev-btn');
+  const nextBtn = document.getElementById('pres-next-btn');
+
+  if (toggleBtn && presModal) {
+    toggleBtn.addEventListener('click', () => {
+      openPresentation(0);
+    });
+
+    if (closeBtn) closeBtn.addEventListener('click', closePresentation);
+    if (prevBtn) prevBtn.addEventListener('click', () => navigateSlide(-1));
+    if (nextBtn) nextBtn.addEventListener('click', () => navigateSlide(1));
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (!presModal.classList.contains('active')) return;
+      if (e.key === 'Escape') closePresentation();
+      if (e.key === 'ArrowRight' || e.key === ' ') {
+        e.preventDefault();
+        navigateSlide(1);
+      }
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        navigateSlide(-1);
+      }
+    });
+  }
+}
+
+function openPresentation(index = 0) {
+  const presModal = document.getElementById('presentation-modal');
+  if (!presModal || ALL_SLIDES.length === 0) return;
+  currentSlideIndex = Math.max(0, Math.min(index, ALL_SLIDES.length - 1));
+  renderCurrentSlide();
+  presModal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closePresentation() {
+  const presModal = document.getElementById('presentation-modal');
+  if (presModal) presModal.classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+function navigateSlide(direction) {
+  const targetIndex = currentSlideIndex + direction;
+  if (targetIndex >= 0 && targetIndex < ALL_SLIDES.length) {
+    currentSlideIndex = targetIndex;
+    renderCurrentSlide();
+  }
+}
+
+function renderCurrentSlide() {
+  if (ALL_SLIDES.length === 0) return;
+  const slide = ALL_SLIDES[currentSlideIndex];
+
+  document.getElementById('pres-slide-tag').textContent = `Slide ${slide.slide} • ${slide.tag || slide.part}`;
+  document.getElementById('pres-title').textContent = slide.title;
+  document.getElementById('pres-counter').textContent = `${currentSlideIndex + 1} / ${ALL_SLIDES.length}`;
+
+  const imgEl = document.getElementById('pres-img');
+  imgEl.src = slide.image;
+  imgEl.alt = slide.title;
+
+  let calloutClass = 'callout-note';
+  let calloutIcon = 'ℹ️';
+  if (slide.calloutType === 'tip') {
+    calloutClass = 'callout-tip';
+    calloutIcon = '💡';
+  } else if (slide.calloutType === 'warning') {
+    calloutClass = 'callout-warning';
+    calloutIcon = '⚠️';
+  } else if (slide.calloutType === 'danger') {
+    calloutClass = 'callout-danger';
+    calloutIcon = '🛑';
+  }
+
+  const infoEl = document.getElementById('pres-info');
+  infoEl.innerHTML = `
+    <p class="overview-text" style="font-size: 1.05rem;">${slide.overview}</p>
+    <div class="steps-list">
+      ${slide.steps.map(step => `
+        <div class="step-item">
+          <div class="step-num">${step.num}</div>
+          <div class="step-content">
+            <div class="step-title">${step.title}</div>
+            <div>${step.desc}</div>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+    ${slide.notes ? `
+      <div class="callout ${calloutClass}">
+        <span class="callout-icon">${calloutIcon}</span>
+        <div>${slide.notes}</div>
+      </div>
+    ` : ''}
+  `;
+
+  const prevBtn = document.getElementById('pres-prev-btn');
+  const nextBtn = document.getElementById('pres-next-btn');
+  if (prevBtn) prevBtn.disabled = currentSlideIndex === 0;
+  if (nextBtn) nextBtn.disabled = currentSlideIndex === ALL_SLIDES.length - 1;
+}
+
+// Multilingual Switcher Support
+function setupLanguageSwitch() {
+  const langSelect = document.getElementById('lang-select');
+  if (!langSelect) return;
+
+  langSelect.addEventListener('change', (e) => {
+    const lang = e.target.value;
+    if (lang === 'en') {
+      document.getElementById('brand-title-text').textContent = 'POP KIOSK MES';
+      document.getElementById('brand-sub-text').textContent = 'Vinatech Point of Production';
+      document.getElementById('search-input').placeholder = 'Quick search topics...';
+      document.getElementById('view-mode-text').textContent = 'Presentation Mode';
+      document.getElementById('quick-tool-text').textContent = 'Simulators';
+      document.getElementById('hero-tag-text').textContent = 'MES Kiosk Operation Manual';
+      document.getElementById('hero-title-text').textContent = 'POP System User Manual';
+      document.getElementById('hero-desc-text').textContent = 'Digital interactive multimedia manual for operators and engineers at Vinatech production lines. Fast reference, real interface visuals, and interactive calculation tools.';
+      document.getElementById('stat-slides-label').textContent = 'Guide Slides';
+      document.getElementById('stat-parts-label').textContent = 'Functional Modules';
+      document.getElementById('stat-version-label').textContent = 'Latest Version';
+      document.getElementById('stat-visual-label').textContent = 'Real UI Screens';
+    } else if (lang === 'ko') {
+      document.getElementById('brand-title-text').textContent = 'POP 키오스크 MES';
+      document.getElementById('brand-sub-text').textContent = '비나텍 생산 시점 관리';
+      document.getElementById('search-input').placeholder = '주제 빠른 검색...';
+      document.getElementById('view-mode-text').textContent = '프레젠테이션 모드';
+      document.getElementById('quick-tool-text').textContent = '시뮬레이터';
+      document.getElementById('hero-tag-text').textContent = 'MES 키오스크 운용 매뉴얼';
+      document.getElementById('hero-title-text').textContent = 'POP 시스템 사용자 매뉴얼';
+      document.getElementById('hero-desc-text').textContent = '비나텍 생산 라인 작업자 및 엔지니어를 위한 대화형 디지털 매뉴얼. 빠른 절차 조회, 실제 UI 화면 확인 및 계산 시뮬레이션 지원.';
+      document.getElementById('stat-slides-label').textContent = '가이드 슬라이드';
+      document.getElementById('stat-parts-label').textContent = '기능 모듈';
+      document.getElementById('stat-version-label').textContent = '최신 버전';
+      document.getElementById('stat-visual-label').textContent = '실제 UI 캡처';
+    } else {
+      document.getElementById('brand-title-text').textContent = 'POP KIOSK MES';
+      document.getElementById('brand-sub-text').textContent = 'Vinatech Point of Production';
+      document.getElementById('search-input').placeholder = 'Tìm kiếm nhanh chủ đề...';
+      document.getElementById('view-mode-text').textContent = 'Chế độ Trình chiếu';
+      document.getElementById('quick-tool-text').textContent = 'Công cụ Mô phỏng';
+      document.getElementById('hero-tag-text').textContent = 'Sổ tay Vận hành Kiosk MES';
+      document.getElementById('hero-title-text').textContent = 'Hướng Dẫn Vận Hành Hệ Thống POP';
+      document.getElementById('hero-desc-text').textContent = 'Tài liệu số hóa tương tác đa phương tiện dành cho công nhân và kỹ sư vận hành tại các dây chuyền sản xuất Vinatech. Hỗ trợ tra cứu nhanh quy trình, đối soát hình ảnh thực tế và mô phỏng tính toán.';
+      document.getElementById('stat-slides-label').textContent = 'Slide Hướng Dẫn';
+      document.getElementById('stat-parts-label').textContent = 'Mô-đun Chức Năng';
+      document.getElementById('stat-version-label').textContent = 'Phiên Bản Mới Nhất';
+      document.getElementById('stat-visual-label').textContent = 'Giao Diện Thực Tế';
+    }
+  });
+}
+

@@ -10,6 +10,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%236366f1'/><text x='50%25' y='54%25' dominant-baseline='central' text-anchor='middle' font-size='60' font-family='sans-serif' font-weight='800' fill='white'>P</text></svg>">
+
   <!-- Stylesheet -->
   <link rel="stylesheet" href="style.css">
 </head>
@@ -266,6 +269,33 @@
         </section>
 
       </main>
+    </div>
+  </div>
+
+  <!-- Fullscreen Presentation Mode Modal -->
+  <div class="presentation-modal" id="presentation-modal">
+    <div class="pres-header">
+      <div class="pres-title-wrap">
+        <span class="pres-badge" id="pres-slide-tag">Slide 7 • Layout Overview</span>
+        <h3 class="pres-title" id="pres-title">Bố Cục Màn Hình POP Kiosk</h3>
+      </div>
+      <div class="pres-actions">
+        <span class="pres-counter" id="pres-counter">1 / 23</span>
+        <button class="pres-close-btn" id="pres-close-btn" title="Đóng chế độ trình chiếu (Esc)">✕</button>
+      </div>
+    </div>
+    <div class="pres-body">
+      <div class="pres-media">
+        <img src="" alt="" id="pres-img" class="pres-img">
+      </div>
+      <div class="pres-info" id="pres-info">
+        <!-- Steps and notes rendered dynamically -->
+      </div>
+    </div>
+    <div class="pres-footer">
+      <button class="btn btn-secondary" id="pres-prev-btn">◀ Trang Trước</button>
+      <div class="pres-hint">Dùng phím <strong>←</strong> / <strong>→</strong> để chuyển slide, <strong>Esc</strong> để đóng</div>
+      <button class="btn btn-primary" id="pres-next-btn">Trang Sau ▶</button>
     </div>
   </div>
 
