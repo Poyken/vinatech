@@ -447,3 +447,51 @@ WHERE LEN(BoxSerialNo) = 13 AND BoxSerialNo LIKE @SerialPrefix + '%'
   4. Giảm trừ 718 con ở công đoạn cuối `VE10` (`STB_ProdRouteHist`), bảng tổng hợp ngày `STB_ProdRouteSummary` và sản lượng hoàn thành PO `260813000005` (`STB_ProductionOrderInfo`).
 * **File script deploy:** `sql/fix_hn523_cancel_packing_PKQQ2000244_250.sql` (Deploy qua `deploy_tool.ps1` thành công 100%).
 
+---
+
+### [B310] — 📍 ID_35 Lỗi Tạo PO thủ công "공정 라우팅 정보가 없습니다" do BasicRoutingCode không khớp WorkCenterCode (Hưng Yên VVT_F5)
+* **Ngày ghi nhận:** `2026-08-24`
+* **Màn hình liên quan (TCode):** `[B310] - Quản lý PO (ProductionOrderInfo)` / Popup "Tạo PO thủ công"
+* **Triệu chứng lỗi:** Khi tạo PO thủ công cho mã nguyên liệu/thành phẩm (ví dụ `ECVT30-260`) tại nhà máy Hưng Yên (`VVT_F5`), hệ thống văng popup lỗi `Failed to save`:
+  ```text
+  공정 라우팅 정보가 없습니다.
+  ECVT30-260 / 1.00000
+  10000.00000
+  @PONo :::: 260824000029
+  ```
+* **Nguyên nhân gốc (Root Cause):**
+  * Trong Stored Procedure `usp_DoCreateProductionOrder` (dòng 183 - 213), lệnh `INSERT INTO STB_ProductionOrderRouting` lọc theo:
+    ```sql
+    WHERE BRD.BasicRoutingCode = @BasicRoutingCode 
+      AND BRD.CompanyCode = @CompanyCode 
+      AND BRD.WorkCenterCode = @WorkCenterCode
+    ```
+  * Mã `ECVT30-260` đang được gán `BasicRoutingCode = 'D60_3400F'`. Tuy nhiên, trong `STB_BasicRoutingDetail`, mã `D60_3400F` chỉ được cấu hình cho `VVT_F1` (Bắc Ninh) và `VNT_F4` (Bắc Giang 2), hoàn toàn **không có bản ghi nào cho `VVT_F5` (Hưng Yên)** ➔ `@@ROWCOUNT = 0` ➔ Kích hoạt lỗi localized error.
+* **Script truy vết (Trace Script):**
+  ```sql
+  -- 1. Xem Routing hiện tại của Model
+  SELECT MaterialCode, MaterialName, BasicRoutingCode, MaterialTypeCode, ProductGroupCode 
+  FROM STB_MaterialMaster 
+  WHERE MaterialCode = 'ECVT30-260';
+
+  -- 2. Kiểm tra WorkCenterCode trong BasicRoutingDetail
+  SELECT BasicRoutingCode, RouteCode, RouteIndex, CompanyCode, WorkCenterCode, IsInputRoute, IsOutputRoute
+  FROM STB_BasicRoutingDetail 
+  WHERE BasicRoutingCode = 'D60_3400F'
+  ORDER BY RouteIndex;
+
+  -- 3. Kiểm tra các mã BasicRoutingCode chuẩn của Hưng Yên (VVT_F5)
+  SELECT DISTINCT BasicRoutingCode, CompanyCode, WorkCenterCode 
+  FROM STB_BasicRoutingDetail 
+  WHERE WorkCenterCode = 'VVT_F5';
+  ```
+* **Phương án xử lý (SQL Fix Patch):**
+  ```sql
+  -- Phương án 1: Cập nhật lại BasicRoutingCode chuẩn của Hưng Yên cho Model
+  UPDATE STB_MaterialMaster 
+  SET BasicRoutingCode = 'HY_MainRoutingBigSiz'
+  WHERE MaterialCode = 'ECVT30-260';
+  ```
+* **Tham chiếu KB:** [KB_03_03_SCREEN_BUGS_B.md § B310 Lỗi 3](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_03_SCREEN_BUGS_B.md#lỗi-3-공정-라우팅-정보가-없습니다-không-có-thông-tin-routing-công-đoạn-khi-tạo-po-thủ-công-tại-b310), [KB_09_SCREEN_BUG_FIXBOOK.md § B310 #4](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md#b310)
+
+

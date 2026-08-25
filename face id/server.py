@@ -25,34 +25,16 @@ def fetch_sql_events():
     if cached_events and (now - last_fetch_time < 5):
         return cached_events
 
-    ps_code = f'''
-$connStr = "Server={SQL_SERVER};Database={SQL_DB};User Id={SQL_USER};Password={SQL_PASS};Connect Timeout=4;TrustServerCertificate=True;"
-try {{
-    $conn = New-Object System.Data.SqlClient.SqlConnection($connStr)
-    $conn.Open()
-    $cmd = $conn.CreateCommand()
-    $cmd.CommandTimeout = 10
-    $cmd.CommandText = "SELECT TOP 500 RecordID, EmployeeID, PersonName, Department, AccessDateTime, AccessDate, AccessTime, AuthenticationType, AuthenticationResult, DeviceName, DeviceSerialNo, ResourceName, ReaderName, CardNumber, Direction, CreatedAt FROM dbo.HCP_AccessRecord ORDER BY AccessDateTime DESC"
-    $adapter = New-Object System.Data.SqlClient.SqlDataAdapter($cmd)
-    $dt = New-Object System.Data.DataTable
-    $null = $adapter.Fill($dt)
-    $conn.Close()
-    
-    $rows = @()
-    foreach ($r in $dt.Rows) {{
-        $obj = [ordered]@{{}}
-        foreach ($col in $dt.Columns) {{
-            $obj[$col.ColumnName] = [string]$r[$col.ColumnName]
-        }}
-        $rows += $obj
-    }}
-    $rows | ConvertTo-Json -Compress
-}} catch {{
-    Write-Output "[]"
-}}
-'''
+    script_path = os.path.join(DIR, "get_events_json.ps1")
     try:
-        p = subprocess.run(["powershell", "-ExecutionPolicy", "Bypass", "-Command", ps_code], capture_output=True, text=True, timeout=8)
+        p = subprocess.run(
+            ["powershell", "-ExecutionPolicy", "Bypass", "-File", script_path, "-Top", "500"],
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            timeout=10
+        )
         out = p.stdout.strip()
         if out.startswith("[") or out.startswith("{"):
             data = json.loads(out)
@@ -65,6 +47,7 @@ try {{
         print(f"[SQL Fetch Error]: {e}")
     
     return cached_events
+
 
 class FaceIdHandler(http.server.SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):

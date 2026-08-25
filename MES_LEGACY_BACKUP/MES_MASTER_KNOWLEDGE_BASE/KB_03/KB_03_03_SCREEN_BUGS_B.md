@@ -1,4 +1,4 @@
-﻿<!--
+<!--
 AI-READY METADATA
 Purpose: Sổ tay khắc phục lỗi theo Screen ID phân hệ Sản Xuất (B210-B802, H301-H305, HN523-HN866, K101-K110) - Phần 1
 Scope: Production Execution Bug Fixbook Part 1
@@ -104,6 +104,73 @@ Related Files:
     2. Kiểm tra danh mục các công đoạn trong Routing của PO.
     3. Nếu thiếu công đoạn Aging, bổ sung mã công đoạn (`V-26` hoặc `V-26_BG`) vào PO và đánh lại thứ tự `RouteIndex` tuần tự từ đầu vào đến đóng gói (`V-22` ➔ `V-28`).
     4. Nhấn Lưu và thông báo công nhân quét lại.
+
+### Lỗi 3: "공정 라우팅 정보가 없습니다" (Không có thông tin routing công đoạn) khi Tạo PO thủ công tại B310
+*   **Triệu chứng:** Khi mở popup "Tạo PO thủ công" trên màn hình **B310**, chọn Nhà máy (ví dụ `VVT_F5` - Hưng Yên), chọn mã vật tư (ví dụ `ECVT30-260`), nhập số lượng và nhấn Lưu, hệ thống văng popup lỗi `Failed to save`:
+    ```text
+    공정 라우팅 정보가 없습니다.
+    ECVT30-260 / 1.00000
+    10000.00000
+    @PONo :::: 260824000029
+    ```
+*   **Nguyên nhân gốc (Root Cause):**
+    * Stored Procedure tạo PO `usp_DoCreateProductionOrder` thực hiện sao chép routing sang bảng `STB_ProductionOrderRouting` theo câu lệnh:
+      ```sql
+      INSERT INTO STB_ProductionOrderRouting (PONo, RouteCode, RouteIndex, IsInputRoute, IsOutputRoute, CreateDateTime, CreateUserID)
+      SELECT @PONo, BRD.RouteCode, BRD.RouteIndex, BRD.IsInputRoute, BRD.IsOutputRoute, GETDATE(), @ProcessUserID
+      FROM STB_BasicRoutingDetail BRD
+      WHERE BRD.BasicRoutingCode = @BasicRoutingCode 
+        AND BRD.CompanyCode = @CompanyCode 
+        AND BRD.WorkCenterCode = @WorkCenterCode
+      
+      IF @@ROWCOUNT = 0
+      BEGIN
+          EXEC usp_RaiseLocalizedError @ProcessLanguage, '공정라우팅정보가 없습니다.'
+          RETURN
+      END
+      ```
+    * Lỗi xảy ra do mã `BasicRoutingCode` được gán cho Model trong `STB_MaterialMaster` (ví dụ `D60_3400F`) chỉ có cấu hình cho nhà máy khác (`VVT_F1` Bắc Ninh hoặc `VNT_F4` Bắc Giang 2) mà **không có bất kỳ dòng nào khớp với `WorkCenterCode` của nhà máy đang tạo PO (`VVT_F5` Hưng Yên)**. Khiến `@@ROWCOUNT = 0` và kích hoạt lỗi.
+*   **Script truy vết (Trace Script):**
+    ```sql
+    -- 1. Kiểm tra BasicRoutingCode đang gán cho Model
+    SELECT MaterialCode, MaterialName, BasicRoutingCode, MaterialTypeCode, ProductGroupCode 
+    FROM STB_MaterialMaster 
+    WHERE MaterialCode = 'ECVT30-260';
+
+    -- 2. Kiểm tra xem BasicRoutingCode đó có cấu hình cho WorkCenter cần tạo PO không
+    SELECT BasicRoutingCode, RouteCode, RouteIndex, CompanyCode, WorkCenterCode, IsInputRoute, IsOutputRoute
+    FROM STB_BasicRoutingDetail 
+    WHERE BasicRoutingCode = 'D60_3400F' -- Thay bằng BasicRoutingCode tìm được ở bước 1
+    ORDER BY RouteIndex;
+
+    -- 3. Xem danh sách các Routing hợp lệ đã cấu hình cho nhà máy hiện tại (ví dụ VVT_F5)
+    SELECT DISTINCT BasicRoutingCode, CompanyCode, WorkCenterCode 
+    FROM STB_BasicRoutingDetail 
+    WHERE WorkCenterCode = 'VVT_F5';
+    ```
+*   **Phương án xử lý & Script sửa (Fix Script):**
+    * **Phương án 1 (Khuyên dùng nếu model chạy theo routing chuẩn của nhà máy):** Gán lại `BasicRoutingCode` chuẩn cho Model trong `STB_MaterialMaster` (hoặc cấu hình tại màn hình `[A230]`):
+      ```sql
+      UPDATE STB_MaterialMaster 
+      SET BasicRoutingCode = 'HY_MainRoutingBigSiz' -- Thay bằng routing chuẩn của nhà máy, ví dụ HY_MainRoutingBigSiz
+      WHERE MaterialCode = 'ECVT30-260';
+      ```
+    * **Phương án 2 (Nếu muốn giữ nguyên mã routing và bổ sung công đoạn cho nhà máy mới):** Insert bổ sung các bước công đoạn vào `STB_BasicRoutingDetail` cho `CompanyCode` và `WorkCenterCode` tương ứng:
+      ```sql
+      INSERT INTO STB_BasicRoutingDetail (
+          BasicRoutingDetailNo, BasicRoutingCode, RouteCode, RouteIndex, 
+          CompanyCode, WorkCenterCode, IsInputRoute, IsOutputRoute, 
+          CreateDateTime, CreateUserID
+      )
+      SELECT 
+          CONVERT(VARCHAR(8), GETDATE(), 112) + RIGHT('00000' + CAST(ROW_NUMBER() OVER (ORDER BY RouteIndex) AS VARCHAR(5)), 5),
+          'D60_3400F', RouteCode, RouteIndex, 
+          'VVT', 'VVT_F5', IsInputRoute, IsOutputRoute, 
+          GETDATE(), 'vinaadmin'
+      FROM STB_BasicRoutingDetail
+      WHERE BasicRoutingCode = 'HY_MainRoutingBigSiz' AND WorkCenterCode = 'VVT_F5';
+      ```
+    * Sau khi sửa xong, đóng popup trên B310 và thực hiện "Tạo PO thủ công" lại.
 
 ---
 

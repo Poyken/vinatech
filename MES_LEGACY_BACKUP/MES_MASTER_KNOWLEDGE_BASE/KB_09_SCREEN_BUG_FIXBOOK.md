@@ -114,6 +114,7 @@ Related Files:
 | 1 | PO không tạo được Lot | BOM/Route chưa cấu hình cho PO | Kiểm tra `STB_ProductionOrderRouting`, `STB_ProductionOrderBom` |
 | 2 | ProdFinishQty lệch so với thực tế | Crash giữa SP `usp_DoProcessProdRouteHist` → dữ liệu partial | `UPDATE STB_ProductionOrderInfo SET ProdFinishQty = (SELECT SUM(ProdQty) FROM STB_ProdRouteHist WHERE PONo='mã' AND RouteCode='V-28') WHERE PONo='mã'` |
 | 3 | PO thiếu công đoạn Aging hoặc sai thứ tự Index khiến không chốt được sản lượng | Cấu hình Routing của PO trên B310 chưa thêm công đoạn Aging (`V-26`) hoặc chưa đánh lại Index khi đổi kế hoạch | Vào B310 → Tìm PO → Kiểm tra danh sách Routing → Thêm công đoạn Aging (`V-26` / `V-26_BG`) và cập nhật lại `RouteIndex`. |
+| 4 | Tạo PO thủ công báo lỗi "공정 라우팅 정보가 없습니다" | Mã `BasicRoutingCode` gán cho Model trong `STB_MaterialMaster` không có record nào khớp với `WorkCenterCode` của nhà máy đang tạo PO trong `STB_BasicRoutingDetail` | Gán lại `BasicRoutingCode` chuẩn của nhà máy (ví dụ `HY_MainRoutingBigSiz` cho Hưng Yên `VVT_F5`) trong `STB_MaterialMaster` (hoặc A230) — xem [KB_03_03 §B310 Lỗi 3](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_03_SCREEN_BUGS_B.md#lỗi-3-공정-라우팅-정보가-없습니다-không-có-thông-tin-routing-công-đoạn-khi-tạo-po-thủ-công-tại-b310) |
 
 ### [B351]
 **Tên:** Lot Transition (Chuyển đổi Lot/NVL)
