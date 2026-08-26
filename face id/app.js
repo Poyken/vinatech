@@ -184,6 +184,34 @@ function setupNavigation() {
     });
   });
 
+  // Setup Sidebar Collapse Toggle
+  const appContainer = document.querySelector('.app-container');
+  const btnSidebarCollapse = document.getElementById('btn-sidebar-collapse');
+  const btnNavToggle = document.getElementById('btn-nav-toggle-sidebar');
+
+  // Load saved state
+  const isCollapsed = localStorage.getItem('vinatech_sidebar_collapsed') === 'true';
+  if (isCollapsed && appContainer) {
+    appContainer.classList.add('sidebar-collapsed');
+  }
+
+  function toggleSidebar() {
+    if (!appContainer) return;
+    appContainer.classList.toggle('sidebar-collapsed');
+    const collapsedNow = appContainer.classList.contains('sidebar-collapsed');
+    localStorage.setItem('vinatech_sidebar_collapsed', collapsedNow);
+
+    // Trigger smooth resize on 3D viewport
+    trigger3DResize();
+  }
+
+  if (btnSidebarCollapse) {
+    btnSidebarCollapse.addEventListener('click', toggleSidebar);
+  }
+  if (btnNavToggle) {
+    btnNavToggle.addEventListener('click', toggleSidebar);
+  }
+
   document.getElementById('btn-refresh').addEventListener('click', async () => {
     const btn = document.getElementById('btn-refresh');
     btn.style.opacity = '0.6';
@@ -198,6 +226,14 @@ function setupNavigation() {
       updateLanguage(currentLang);
     }, 400);
   });
+}
+
+function trigger3DResize() {
+  if (factory3d) {
+    [50, 150, 300, 450].forEach(delay => {
+      setTimeout(() => factory3d.onWindowResize(), delay);
+    });
+  }
 }
 
 function showView(viewId) {
@@ -697,12 +733,40 @@ function setupModeSwitcher() {
   }
 }
 
-// Setup 3D HUD Controls (Rotate, Exploded, X-Ray, Reset)
+// Setup 3D HUD Controls (Rotate, Exploded, X-Ray, Reset, Fullscreen)
 function setup3DControls() {
+  const btnFullscreen = document.getElementById('btn-3d-fullscreen');
   const btnRotate = document.getElementById('btn-3d-rotate');
   const btnExploded = document.getElementById('btn-3d-exploded');
   const btnXray = document.getElementById('btn-3d-xray');
   const btnReset = document.getElementById('btn-3d-reset');
+  const cont3DWrapper = document.getElementById('container-3d-wrapper');
+
+  if (btnFullscreen && cont3DWrapper) {
+    btnFullscreen.addEventListener('click', () => {
+      cont3DWrapper.classList.toggle('fullscreen-mode');
+      const isFull = cont3DWrapper.classList.contains('fullscreen-mode');
+      
+      const icon = btnFullscreen.querySelector('.hud-icon');
+      const text = btnFullscreen.querySelector('.hud-text');
+      if (icon) icon.textContent = isFull ? '✕' : '⛶';
+      if (text) text.textContent = isFull ? 'Thu Nhỏ' : 'Toàn Màn Hình';
+      
+      trigger3DResize();
+    });
+
+    // Escape key to exit fullscreen mode
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && cont3DWrapper.classList.contains('fullscreen-mode')) {
+        cont3DWrapper.classList.remove('fullscreen-mode');
+        const icon = btnFullscreen.querySelector('.hud-icon');
+        const text = btnFullscreen.querySelector('.hud-text');
+        if (icon) icon.textContent = '⛶';
+        if (text) text.textContent = 'Toàn Màn Hình';
+        trigger3DResize();
+      }
+    });
+  }
 
   if (btnRotate) {
     btnRotate.addEventListener('click', () => {

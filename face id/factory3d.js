@@ -86,13 +86,18 @@ class Factory3DEngine {
     this.camera = new THREE.PerspectiveCamera(40, width / height, 1, 1500);
     this.camera.position.copy(this.defaultCameraPos);
 
-    this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: 'high-performance' });
+    this.renderer = new THREE.WebGLRenderer({
+      antialias: true,
+      alpha: false,
+      powerPreference: 'high-performance',
+      precision: 'mediump'
+    });
     this.renderer.setSize(width, height);
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
     this.renderer.shadowMap.enabled = true;
-    this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    this.renderer.shadowMap.type = THREE.PCFShadowMap;
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    this.renderer.toneMappingExposure = 1.25;
+    this.renderer.toneMappingExposure = 1.2;
 
     this.container.innerHTML = '';
     this.container.appendChild(this.renderer.domElement);
@@ -100,7 +105,7 @@ class Factory3DEngine {
     if (typeof THREE.OrbitControls !== 'undefined') {
       this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
       this.controls.enableDamping = true;
-      this.controls.dampingFactor = 0.05;
+      this.controls.dampingFactor = 0.08;
       this.controls.maxPolarAngle = Math.PI / 2 - 0.02;
       this.controls.minDistance = 20;
       this.controls.maxDistance = 550;
@@ -112,14 +117,14 @@ class Factory3DEngine {
   }
 
   initLights() {
-    const ambientLight = new THREE.AmbientLight(0xdce7ff, 0.85);
+    const ambientLight = new THREE.AmbientLight(0xdce7ff, 0.95);
     this.scene.add(ambientLight);
 
-    const dirLight = new THREE.DirectionalLight(0xffffff, 1.2);
+    const dirLight = new THREE.DirectionalLight(0xffffff, 1.15);
     dirLight.position.set(120, 180, 90);
     dirLight.castShadow = true;
-    dirLight.shadow.mapSize.width = 2048;
-    dirLight.shadow.mapSize.height = 2048;
+    dirLight.shadow.mapSize.width = 1024;
+    dirLight.shadow.mapSize.height = 1024;
     dirLight.shadow.camera.near = 10;
     dirLight.shadow.camera.far = 450;
     const d = 130;
@@ -130,23 +135,23 @@ class Factory3DEngine {
     this.scene.add(dirLight);
 
     // Accent Lights
-    const itLight = new THREE.PointLight(0x10b981, 3.8, 90);
+    const itLight = new THREE.PointLight(0x10b981, 2.5, 80);
     itLight.position.set(45, 30, -25);
     this.scene.add(itLight);
 
-    const officeLight = new THREE.PointLight(0x6366f1, 2.5, 100);
+    const officeLight = new THREE.PointLight(0x6366f1, 2.0, 90);
     officeLight.position.set(73, 30, -10);
     this.scene.add(officeLight);
 
-    const prodLight = new THREE.PointLight(0x06b6d4, 2.8, 140);
+    const prodLight = new THREE.PointLight(0x06b6d4, 2.2, 110);
     prodLight.position.set(0, 20, -10);
     this.scene.add(prodLight);
 
-    const whLight = new THREE.PointLight(0xf59e0b, 2.2, 100);
+    const whLight = new THREE.PointLight(0xf59e0b, 1.8, 80);
     whLight.position.set(-55, 18, -10);
     this.scene.add(whLight);
 
-    const parkLight = new THREE.PointLight(0x38bdf8, 2.5, 110);
+    const parkLight = new THREE.PointLight(0x38bdf8, 2.0, 90);
     parkLight.position.set(-25, 15, 72);
     this.scene.add(parkLight);
   }
@@ -264,41 +269,63 @@ class Factory3DEngine {
   }
 
   createFloatingTextSprite(text, colorHex) {
+    if (!text) text = '';
+
+    // Dynamic text measurement for zero clipping on long titles (Guardhouses, Substation, etc.)
+    const measureCanvas = document.createElement('canvas');
+    const mCtx = measureCanvas.getContext('2d');
+
+    let fontSize = 32;
+    if (text.length > 25) fontSize = 26;
+    if (text.length > 36) fontSize = 21;
+
+    mCtx.font = `bold ${fontSize}px "Plus Jakarta Sans", -apple-system, sans-serif`;
+    const textWidth = mCtx.measureText(text).width;
+
+    const padX = 36;
+    const canvasWidth = Math.max(260, Math.ceil(textWidth + padX * 2));
+    const canvasHeight = 100;
+
     const canvas = document.createElement('canvas');
-    canvas.width = 512;
-    canvas.height = 128;
+    canvas.width = canvasWidth;
+    canvas.height = canvasHeight;
     const ctx = canvas.getContext('2d');
 
-    ctx.fillStyle = 'rgba(15, 23, 42, 0.88)';
-    ctx.strokeStyle = typeof colorHex === 'number' ? '#' + colorHex.toString(16).padStart(6, '0') : '#6366f1';
-    ctx.lineWidth = 6;
-    
-    const r = 32;
+    const strokeCol = typeof colorHex === 'number' ? '#' + colorHex.toString(16).padStart(6, '0') : (colorHex || '#6366f1');
+    ctx.fillStyle = 'rgba(15, 23, 42, 0.94)';
+    ctx.strokeStyle = strokeCol;
+    ctx.lineWidth = 5;
+
+    const r = 24;
     ctx.beginPath();
-    ctx.moveTo(r, 14);
-    ctx.lineTo(512 - r, 14);
-    ctx.quadraticCurveTo(512, 14, 512, 14 + r);
-    ctx.lineTo(512, 128 - r);
-    ctx.quadraticCurveTo(512, 128, 512 - r, 128);
-    ctx.lineTo(r, 128);
-    ctx.quadraticCurveTo(0, 128, 0, 128 - r);
-    ctx.lineTo(0, 14 + r);
-    ctx.quadraticCurveTo(0, 14, r, 14);
+    ctx.moveTo(r, 6);
+    ctx.lineTo(canvasWidth - r, 6);
+    ctx.quadraticCurveTo(canvasWidth, 6, canvasWidth, 6 + r);
+    ctx.lineTo(canvasWidth, canvasHeight - 6 - r);
+    ctx.quadraticCurveTo(canvasWidth, canvasHeight - 6, canvasWidth - r, canvasHeight - 6);
+    ctx.lineTo(r, canvasHeight - 6);
+    ctx.quadraticCurveTo(0, canvasHeight - 6, 0, canvasHeight - 6 - r);
+    ctx.lineTo(0, 6 + r);
+    ctx.quadraticCurveTo(0, 6, r, 6);
     ctx.closePath();
     ctx.fill();
     ctx.stroke();
 
     ctx.fillStyle = '#ffffff';
-    ctx.font = 'bold 34px "Plus Jakarta Sans", sans-serif';
+    ctx.font = `bold ${fontSize}px "Plus Jakarta Sans", -apple-system, sans-serif`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText(text, 256, 70);
+    ctx.fillText(text, canvasWidth / 2, canvasHeight / 2 + 1);
 
     const texture = new THREE.CanvasTexture(canvas);
     texture.minFilter = THREE.LinearFilter;
     const spriteMat = new THREE.SpriteMaterial({ map: texture, transparent: true, depthTest: false });
     const sprite = new THREE.Sprite(spriteMat);
-    sprite.scale.set(16, 4, 1);
+
+    // Scale proportionally to maintain natural aspect ratio without distortion
+    const baseH = 3.6;
+    const baseW = baseH * (canvasWidth / canvasHeight);
+    sprite.scale.set(baseW, baseH, 1);
     return sprite;
   }
 
@@ -1374,24 +1401,31 @@ class Factory3DEngine {
   animate() {
     this.animationId = requestAnimationFrame(() => this.animate());
 
+    // Skip heavy calculations if viewport is hidden
+    if (this.container && this.container.offsetParent === null) return;
+
     const delta = this.clock.getDelta();
     const time = this.clock.getElapsedTime();
 
+    // Fast device animation loop
+    const sinT3 = Math.sin(time * 3);
+    const sinT4 = Math.sin(time * 4);
+    
     this.allDevices.forEach(item => {
+      if (!item.group || !item.group.visible) return;
       if (item.orb) {
         item.orb.rotation.y += delta * 1.5;
-        item.orb.position.y = 1.4 + Math.sin(time * 3 + item.pos3D.x) * 0.25;
+        item.orb.position.y = 1.4 + sinT3 * 0.18;
       }
       if (item.ring) {
-        const ringScale = 1.0 + Math.sin(time * 4 + item.pos3D.z) * 0.25;
+        const ringScale = 1.0 + sinT4 * 0.18;
         item.ring.scale.set(ringScale, ringScale, 1);
       }
     });
 
     this.pulsingObjects.forEach(p => {
-      if (p.mesh && p.mesh.material) {
-        const intensity = 0.35 + Math.sin(time * p.speed) * 0.65;
-        p.mesh.material.opacity = intensity;
+      if (p.mesh && p.mesh.material && p.mesh.visible) {
+        p.mesh.material.opacity = 0.35 + Math.sin(time * p.speed) * 0.55;
       }
     });
 
