@@ -1,54 +1,38 @@
-# 🌐 VINATECH - CORE SYSTEMS ARCHITECTURE & OPERATION INDEX
+# 🌐 VINATECH - CORE SYSTEMS ARCHITECTURE & OPERATION PORTAL
 
-> **Cập nhật:** 14/06/2026
-> **Bối cảnh vận hành:** Hệ thống quản trị của Vinatech liên kết chặt chẽ giữa 3 nền tảng chính:
-> 1. **Groupware (gw.vinatech.com):** Cổng phê duyệt tờ trình hành chính, nhân sự, mua sắm và kế hoạch ở thượng nguồn.
-> 2. **ERP Douzone (NEOE):** Hệ thống quản trị tài chính, nhân sự gốc và lưu trữ Master Data trung tâm.
-> 3. **NAIS MES (http://mes.hycap.co.kr:9952):** Hệ thống thực thi sản xuất tại hiện trường nhà xưởng (quét barcode, routing, QC và kho vật lý).
-
----
-
-## 🗂️ THƯ VIỆN TRI THỨC VẬN HÀNH TRUNG TÂM (SYSTEM MASTER KNOWLEDGE BASE)
-
-Toàn bộ hệ thống tri thức, quy trình nghiệp vụ và cẩm nang sửa lỗi tích hợp giữa Groupware và MES đã được dọn dẹp và hợp nhất thành một cấu trúc 3 Volumes tinh gọn:
-
-*   ### 🗂️ [MỤC LỤC TRUNG TÂM TRA CỨU HỆ THỐNG](SYSTEM_MASTER_KNOWLEDGE_BASE/README.md)
-
-Vui lòng bấm vào liên kết trên để vào trang điều hướng chính.
+> **Cập nhật:** 2026-08-26
+> **Bối cảnh vận hành:** Hệ sinh thái quản trị và điều hành sản xuất Vinatech liên kết chặt chẽ giữa 3 nền tảng chính:
+> 1. **Groupware (`https://gw.vinatech.com`):** Cổng phê duyệt tờ trình hành chính, nhân sự, mua sắm (PO) và kế hoạch sản xuất ở thượng nguồn.
+> 2. **ERP Douzone iU (`NEOE`):** Sổ cái trung tâm lưu trữ dữ liệu tài chính, hạch toán kế toán và Master Data gốc.
+> 3. **NAIS MES (`http://mes.hycap.co.kr:9952`) & POP (`https://pop.vinatech.com`):** Hệ thống thực thi sản xuất tại hiện trường nhà xưởng (quét barcode, routing, QC, Kiosk và kho vật lý).
 
 ---
 
-## 📁 BẢN ĐỒ CẤU TRÚC THƯ MỤC DỰ ÁN (WORKSPACE STRUCTURE)
+## 🗂️ TRANG CHỦ TRA CỨU TRI THỨC HỆ THỐNG
 
-Sau khi tái cấu trúc và tối ưu hóa hệ thống, thư mục dự án được tổ chức như sau:
+Toàn bộ hệ thống tri thức, quy trình nghiệp vụ, cẩm nang sửa lỗi 70+ bugs và tài liệu 15 cơ sở dữ liệu đã được hợp nhất và chuẩn hóa tại:
+
+👉 **[MỤC LỤC TRUNG TÂM TRA CỨU HỆ THỐNG (MASTER_INDEX.md)](MES_LEGACY_BACKUP/MASTER_INDEX.md)**
+👉 **[BẢN ĐỒ LIÊN KẾT 3 NỀN TẢNG & 15 CƠ SỞ DỮ LIỆU (SYSTEM_INTEGRATION_MAP.md)](MES_LEGACY_BACKUP/SYSTEM_INTEGRATION_MAP.md)**
+
+---
+
+## 📁 CẤU TRÚC THƯ MỤC CHUẨN HÓA (`MES_LEGACY_BACKUP/`)
 
 ```
-PROCESS/ (Thư mục gốc)
+MES_LEGACY_BACKUP/
 │
-├── 📂 SYSTEM_MASTER_KNOWLEDGE_BASE/             # HỆ THỐNG TRI THỨC VẬN HÀNH TÍCH HỢP
-│   ├── README.md                                 # ← BẮT ĐẦU TRA CỨU TỪ ĐÂY (Master Index)
-│   ├── VOL_01_SYSTEM_ARCHITECTURE.md             # Tập 1: Kiến trúc, Schema CSDL, Matrix & Golden Queries
-│   ├── VOL_02_BUSINESS_WORKFLOWS_AND_FORMS.md     # Tập 2: Quy trình Nghiệp vụ & Cẩm nang 17 Form Groupware
-│   ├── VOL_03_SCREEN_OPERATIONS_AND_TROUBLESHOOTING.md # Tập 3: Quy trình Trace Bug, Screen Catalog & Hotfixes
-│   ├── MES_DAILY_PLAYBOOK.md                     # Sổ tay giám sát hệ thống hàng ngày
-│   ├── MES_OPERATIONAL_LOG.md                    # Nhật ký sự cố vận hành
-│   ├── 📂 attachments/                           # Tài liệu đính kèm gốc (.xlsx, .pdf, .docx)
-│   └── 📂 scripts/                               # Các script PowerShell tự phát triển
+├── 📄 MASTER_INDEX.md                          # Mục lục tra cứu toàn hệ thống (Navigation Portal)
+├── 📄 SYSTEM_INTEGRATION_MAP.md                # Bản đồ liên kết 3 nền tảng (GW - ERP - MES) & 15 CSDL
 │
-├── 📂 DATABASE/                                  # Cơ sở dữ liệu của hệ thống
-│   └── 📂 VINATECH_GROUP/
-│       └── README.md                             # Hướng dẫn chuyển hướng CSDL Groupware
-│
-├── 📂 GROUPWARE/                                 # Phân hệ Groupware (Chỉ chứa tài liệu phụ)
-│
-└── 📂 MES/                                       # Phân hệ sản xuất hiện trường
-    ├── README.md                                 # Hướng dẫn chuyển hướng MES
-    ├── 📂 AI_AGENT_CONFIG/                       # Cấu hình tối ưu cho AI Agent
-    └── 📂 sql/                                   # Mã nguồn SQL và Hotfixes
+├── 📂 AI_AGENT_CONFIG/                         # Cấu hình & Quy tắc vàng vận hành AI Agent (RULES.md, KNOWLEDGE.md)
+├── 📂 MES_MASTER_KNOWLEDGE_BASE/               # Tri thức MES, Routing, Core SP Engine, Sổ tay 70+ bugs (KB_09)
+├── 📂 DATABASE_KNOWLEDGE_BASE/                 # Cẩm nang chi tiết 15 Cơ sở Dữ liệu & 9 chuyên đề tích hợp
+├── 📂 GROUPWARE_KNOWLEDGE_BASE/                # Quy trình 17 biểu mẫu & Hướng dẫn Groupware (GW_01 → GW_08)
+├── 📂 POP_KNOWLEDGE_BASE/                      # Hướng dẫn vận hành trạm Kiosk POP & Cấu hình PLC
+├── 📂 SYSTEM_ARCHITECTURE/                     # Bộ 3 Volumes Kiến trúc & Sổ tay vận hành hàng ngày
+├── 📂 sql/                                     # Mã nguồn Stored Procedures & Scripts
+└── 📄 *.ps1, db_config.json                    # Bộ công cụ PowerShell chẩn đoán & truy vấn DB
 ```
 
----
-
-## 🔒 NGUYÊN TẮC AN TOÀN HỆ THỐNG (SECURITY RULES)
-*   **Không trực tiếp can thiệp CSDL thực:** Mọi hoạt động cập nhật/sửa lỗi phải được viết dưới dạng kịch bản SQL an toàn (`BEGIN TRANSACTION ... ROLLBACK`), bàn giao cho đội ngũ vận hành hệ thống chạy kiểm tra trước trên môi trường Staging/Dev.
-*   **Tuyệt đối không sử dụng tài khoản cứng (Hardcoded User ID):** Tuân thủ quy định phân quyền tự động từ màn hình **Z410** liên kết với nhân sự ERP qua thuộc tính `Appendix8`.
+> 🔒 **Ghi chú an toàn:** Các file gốc và tài liệu tham khảo bổ trợ đã được lưu trữ an toàn tại `C:\Users\User Vinatech.DESKTOP-RJJSEQU\Desktop\PROCESS_ARCHIVE_BACKUP`.
