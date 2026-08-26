@@ -3,17 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vinatech Face ID & HikCentral Access Control Portal</title>
+  <title>Vinatech Face ID & Access Control Command Center</title>
   
-  <!-- Fonts -->
+  <!-- Modern Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   
   <!-- Favicon -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%236366f1'/><text x='50%25' y='55%25' dominant-baseline='central' text-anchor='middle' font-size='55' font-family='sans-serif' font-weight='800' fill='white'>FID</text></svg>">
 
-  <!-- Stylesheet -->
+  <!-- Core Stylesheet -->
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -26,17 +26,18 @@
         <div class="brand-wrapper">
           <div class="brand-icon">🛡️</div>
           <div class="brand-info">
-            <h1 id="brand-title">VINATECH FACE ID</h1>
-            <span id="brand-sub">HikCentral Pro Portal</span>
+            <h1 id="brand-title">VINATECH HƯNG YÊN</h1>
+            <span id="brand-sub">Smart Access & Face ID</span>
           </div>
         </div>
       </div>
 
       <nav class="nav-menu">
+        <div class="nav-section-title">GIÁM SÁT VẬN HÀNH</div>
         <div class="nav-item active" data-view="dashboard">
           <span class="icon">📊</span>
           <span data-i18n="nav_dashboard">Bảng Điều Khiển</span>
-          <span class="nav-badge" id="badge-live-events">Live</span>
+          <span class="nav-badge badge-live" id="badge-live-events">LIVE</span>
         </div>
         <div class="nav-item" data-view="floorplans">
           <span class="icon">🗺️</span>
@@ -46,10 +47,17 @@
           <span class="icon">⏱️</span>
           <span data-i18n="nav_attendance">Báo Cáo Chấm Công</span>
         </div>
+
+        <div class="nav-section-title" style="margin-top: 10px;">QUẢN TRỊ HỆ THỐNG</div>
+        <div class="nav-item" data-view="boq">
+          <span class="icon">📑</span>
+          <span data-i18n="nav_boq">Thống Kê Bản Vẽ ELV</span>
+          <span class="nav-badge" style="background: rgba(16,185,129,0.18); color:#34d399; border: 1px solid rgba(16,185,129,0.3);">42/03</span>
+        </div>
         <div class="nav-item" data-view="devices">
           <span class="icon">🚪</span>
           <span data-i18n="nav_devices">Danh Mục Thiết Bị</span>
-          <span class="nav-badge" style="background: rgba(99,102,241,0.2); color:#818cf8;">22 TB</span>
+          <span class="nav-badge" style="background: rgba(99,102,241,0.18); color:#818cf8; border: 1px solid rgba(99,102,241,0.3);">22 TB</span>
         </div>
         <div class="nav-item" data-view="personnel">
           <span class="icon">👥</span>
@@ -71,8 +79,9 @@
           <option value="en">🇬🇧 English</option>
           <option value="ko">🇰🇷 한국어</option>
         </select>
-        <button id="theme-toggle-btn" class="btn-icon" title="Chuyển đổi giao diện Sáng/Tối">
-          🌓
+        <button id="theme-toggle-btn" class="theme-pill-btn" title="Chuyển đổi giao diện Ngày (Sáng) / Đêm (Tối)">
+          <span id="theme-icon">🌙</span>
+          <span id="theme-label">Tối</span>
         </button>
       </div>
     </aside>
@@ -83,17 +92,23 @@
       <!-- Top Navigation Bar -->
       <header class="top-navbar">
         <div class="breadcrumbs">
-          <span>HikCentral Pro</span>
-          <span>/</span>
+          <span>HikCentral Pro Portal</span>
+          <span class="separator">/</span>
           <span class="active" id="current-view-name">Bảng Điều Khiển</span>
         </div>
 
-        <div style="display: flex; align-items: center; gap: 14px;">
+        <div class="nav-actions">
+          <div class="clock-badge" id="live-clock">
+            <span>🕒</span>
+            <span id="clock-time">--:--:--</span>
+          </div>
+
           <div class="db-live-status" id="db-status-badge">
             <span class="status-dot"></span>
-            <span id="db-status-text">HCP_DATA: Đã kết nối (192.168.184.250)</span>
+            <span id="db-status-text">HCP_DATA: Đang kết nối...</span>
           </div>
-          <button id="btn-refresh" class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px;">
+          
+          <button id="btn-refresh" class="btn btn-secondary" style="padding: 8px 16px; font-size: 12.5px;">
             🔄 <span data-i18n="btn_refresh">Làm mới</span>
           </button>
         </div>
@@ -108,36 +123,36 @@
           <!-- Hero Banner -->
           <div class="hero-card">
             <div class="hero-tag">
-              <span>⚡</span> <span id="hero-tag">Hệ Thống Kiểm Soát An Ninh & Chấm Công Tự Động</span>
+              <span>⚡</span> <span id="hero-tag">Smart Factory Access & Time Attendance System</span>
             </div>
             <h2 class="hero-title" id="hero-title">Trung Tâm Giám Sát Face ID & Cửa Vinatech Hưng Yên</h2>
             <p class="hero-subtitle" id="hero-desc">
-              Giám sát thời gian thực toàn bộ luồng người vào/ra qua 22 điểm nhận diện Face ID & Chấm công, tự động đồng bộ sự kiện vào CSDL HCP_DATA và liên kết hệ thống MES / ERP.
+              Giám sát thời gian thực luồng người vào/ra qua 22 điểm nhận diện Face ID & Chấm công, tự động đồng bộ sự kiện vào CSDL HCP_DATA và liên kết hệ thống MES / ERP.
             </p>
 
             <div class="stats-grid">
               <div class="stat-box">
                 <div class="stat-header">
                   <span data-i18n="stat_total_scans">Tổng Lượt Sự Kiện</span>
-                  <span>📊</span>
+                  <span class="stat-icon">📊</span>
                 </div>
-                <div class="stat-number" id="stat-total-scans">136+</div>
-                <div class="stat-footer positive">● <span data-i18n="stat_realtime_synced">Đồng bộ thời gian thực</span></div>
+                <div class="stat-number" id="stat-total-scans">181+</div>
+                <div class="stat-footer positive">● <span data-i18n="stat_realtime_synced">Đồng bộ tự động SQL</span></div>
               </div>
 
               <div class="stat-box">
                 <div class="stat-header">
-                  <span data-i18n="stat_face_rate">Tỷ Lệ Quẹt Face ID</span>
-                  <span>👤</span>
+                  <span data-i18n="stat_face_rate">Tỷ Lệ Nhận Diện Face ID</span>
+                  <span class="stat-icon">👤</span>
                 </div>
-                <div class="stat-number" id="stat-face-rate">92.0%</div>
-                <div class="stat-footer positive">▲ <span data-i18n="stat_primary_method">Phương thức chính</span></div>
+                <div class="stat-number" id="stat-face-rate" style="color: var(--primary);">93.9%</div>
+                <div class="stat-footer positive">▲ <span data-i18n="stat_primary_method">Phương thức sinh trắc chính</span></div>
               </div>
 
               <div class="stat-box">
                 <div class="stat-header">
                   <span data-i18n="stat_total_devices">Tổng Số Thiết Bị</span>
-                  <span>🚪</span>
+                  <span class="stat-icon">🚪</span>
                 </div>
                 <div class="stat-number">22</div>
                 <div class="stat-footer">6 AC Cửa + 10 Barrier + 5 TA + 1 USB</div>
@@ -146,11 +161,31 @@
               <div class="stat-box">
                 <div class="stat-header">
                   <span data-i18n="stat_active_shift">Ca Làm Việc Chuẩn</span>
-                  <span>⏰</span>
+                  <span class="stat-icon">⏰</span>
                 </div>
-                <div class="stat-number" style="font-size: 24px;">08:00 - 17:30</div>
-                <div class="stat-footer">Ca HC (Tự động tính công 04:00 AM)</div>
+                <div class="stat-number" style="font-size: 26px; color: var(--emerald);">08:00 - 17:30</div>
+                <div class="stat-footer">Ca HC (Tính công tự động 04:00 AM)</div>
               </div>
+            </div>
+          </div>
+
+          <!-- Auth Breakdown Visual Bar -->
+          <div class="auth-breakdown-card">
+            <div class="breakdown-title">
+              <span>🎯</span>
+              <span>Cơ Cấu Phương Thức Xác Thực</span>
+            </div>
+            <div class="breakdown-bars">
+              <div class="progress-track">
+                <div class="progress-segment face" id="bar-face" style="width: 93.9%;" title="Face ID: 93.9%"></div>
+                <div class="progress-segment finger" id="bar-finger" style="width: 4.5%;" title="Vân tay: 4.5%"></div>
+                <div class="progress-segment card" id="bar-card" style="width: 1.6%;" title="Thẻ từ: 1.6%"></div>
+              </div>
+            </div>
+            <div class="breakdown-legend">
+              <span style="color: #818cf8;">● Face ID: <strong id="val-face-count">170</strong> lượt</span>
+              <span style="color: #22d3ee;">● Vân Tay: <strong id="val-finger-count">11</strong> lượt</span>
+              <span style="color: #fbbf24;">● Thẻ Từ: <strong id="val-card-count">6</strong> lượt</span>
             </div>
           </div>
 
@@ -159,22 +194,28 @@
             <h3 class="section-title">
               <span>⚡</span> <span data-i18n="title_live_events">Nhật Ký Quẹt Face ID & Cửa Thời Gian Thực</span>
             </h3>
-            <span style="font-size: 13px; color: var(--text-muted);" id="live-event-count">Đang tải dữ liệu...</span>
+            <span style="font-size: 13px; color: var(--text-faint); font-weight: 700;" id="live-event-count">Đang tải dữ liệu...</span>
           </div>
 
           <div class="table-card">
             <div class="table-header-bar">
               <div class="search-input-wrap">
                 <span class="search-icon">🔍</span>
-                <input type="text" id="dashboard-search" placeholder="Tìm kiếm theo tên nhân viên, mã NV hoặc thiết bị...">
+                <input type="text" id="dashboard-search" placeholder="Tìm nhanh theo tên nhân viên, mã NV hoặc thiết bị...">
               </div>
-              <div style="display: flex; gap: 10px;">
+              <div style="display: flex; gap: 10px; flex-wrap: wrap;">
                 <select id="filter-device" class="select-custom">
                   <option value="">Tất cả thiết bị</option>
                   <option value="AC-05">AC-05 (Cửa P. IT Tầng 2)</option>
                   <option value="AC-06">AC-06 (Cửa Văn Phòng Tầng 2)</option>
                   <option value="TA-03">TA-03 (Chấm Công Locker Nữ)</option>
                   <option value="Device 01">Device 01 (Cửa Door 01)</option>
+                </select>
+                <select id="filter-auth" class="select-custom">
+                  <option value="">Tất cả hình thức</option>
+                  <option value="face">Face ID (Khuôn Mặt)</option>
+                  <option value="finger">Vân Tay</option>
+                  <option value="card">Thẻ Từ</option>
                 </select>
               </div>
             </div>
@@ -200,49 +241,201 @@
           </div>
         </section>
 
-        <!-- ================= VIEW 2: INTERACTIVE FLOOR PLANS ================= -->
+        <!-- ================= VIEW 2: INTERACTIVE 3D DIGITAL TWIN & 2D CAD ================= -->
         <section id="view-floorplans" class="view-section">
           
-          <div class="section-header">
+          <div class="section-header" style="flex-wrap: wrap; gap: 14px;">
             <div>
               <h3 class="section-title">
-                <span>🗺️</span> <span data-i18n="title_floorplans">Mặt Bằng & Bản Đồ Phân Bổ Thiết Bị Face ID</span>
+                <span>🏢</span> <span data-i18n="title_floorplans">Mặt Bằng & Mô Hình 3D Digital Twin Nhà Xưởng</span>
               </h3>
-              <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">
-                Căn cứ theo bản vẽ thiết kế điện nhẹ ELV System (VINATECH VINA). Click vào từng điểm thiết bị để xem chi tiết thông số khóa & chức năng.
+              <p style="font-size: 13px; color: var(--text-faint); margin-top: 4px;">
+                Bóc tách chi tiết theo bản vẽ điện nhẹ ELV: 22 Face ID/Cửa, 10 Tủ RACK IT, 81 Camera CCTV, 8 Wi-Fi 6 AP, 96 Loa PA & 3 Nhà Bảo Vệ + Khu tiện ích.
               </p>
+            </div>
+
+            <!-- 3D / 2D Mode Switcher -->
+            <div class="view-mode-pills">
+              <button class="mode-pill active" id="btn-mode-3d">
+                <span>🏢</span> <span>Mô Hình 3D Không Gian</span>
+              </button>
+              <button class="mode-pill" id="btn-mode-2d">
+                <span>🗺️</span> <span>Bản Vẽ 2D Chuẩn CAD</span>
+              </button>
             </div>
           </div>
 
-          <!-- Floor Switcher Tabs -->
-          <div class="floor-tabs">
-            <button class="floor-tab active" data-floor="1F">Tầng 1 Nhà Xưởng (3 AC + 5 TA)</button>
-            <button class="floor-tab" data-floor="1.5F">Tầng 1.5 Nhà Xưởng (1 AC)</button>
-            <button class="floor-tab" data-floor="2F">Tầng 2 Nhà Xưởng (2 AC: IT & Office)</button>
-            <button class="floor-tab" data-floor="PARKING">Nhà Xe & Cổng (10 Flap Barrier)</button>
+          <!-- Floor Switcher & Search Bar Row -->
+          <div style="display: flex; gap: 12px; align-items: center; justify-content: space-between; flex-wrap: wrap; margin-bottom: 12px;">
+            <div class="floor-tabs" style="margin-bottom: 0;">
+              <button class="floor-tab active" data-floor="ALL">🌐 Toàn Cảnh Nhà Máy</button>
+              <button class="floor-tab" data-floor="1F">Tầng 1 Nhà Xưởng</button>
+              <button class="floor-tab" data-floor="1.5F">Tầng 1.5 Nhà Xưởng</button>
+              <button class="floor-tab" data-floor="2F">Tầng 2 (Văn Phòng & IT Server)</button>
+              <button class="floor-tab" data-floor="PARKING">🅿️ Nhà Xe & Khuôn Viên (3 Cổng BV)</button>
+            </div>
+
+            <!-- Quick Search on 3D Map -->
+            <div class="search-input-wrap" style="width: 320px;">
+              <span class="search-icon">🔍</span>
+              <input type="text" id="map-asset-search" placeholder="Tìm nhanh Tủ Rack, Camera, Cửa, Phòng...">
+            </div>
           </div>
 
-          <!-- Map Container -->
-          <div class="map-container">
+          <!-- ELV Layer Filter Toolbar -->
+          <div class="layer-filter-bar">
+            <span class="layer-title">Hệ Thống ELV:</span>
+            <button class="layer-chip active" data-layer="ALL">
+              <span>🔘</span> <span>Toàn Bộ ELV (All Systems)</span>
+            </button>
+            <button class="layer-chip" data-layer="TA_AC">
+              <span>🚪</span> <span>Face ID & Cửa (16 AC + 5 TA)</span>
+            </button>
+            <button class="layer-chip" data-layer="CCTV">
+              <span>📹</span> <span>Camera CCTV (81 Cam)</span>
+            </button>
+            <button class="layer-chip" data-layer="WIFI">
+              <span>📶</span> <span>Wi-Fi 6 & Mạng IT (8 AP + 96 Outlets)</span>
+            </button>
+            <button class="layer-chip" data-layer="PA">
+              <span>📢</span> <span>Âm Thanh Thông Báo (96 Loa PA)</span>
+            </button>
+            <button class="layer-chip" data-layer="IT_RACK">
+              <span>🖥️</span> <span>Tủ RACK & Cáp Trục (10 Tủ RACK)</span>
+            </button>
+            <button class="layer-chip" data-layer="BARRIER">
+              <span>🚧</span> <span>Cổng Flap Barrier (10 Làn)</span>
+            </button>
+          </div>
+
+          <!-- 3D Digital Twin Viewport Container -->
+          <div id="container-3d-wrapper" class="digital-twin-container">
+            <!-- 3D Canvas Target -->
+            <div id="factory-3d-viewport" class="factory-3d-viewport"></div>
+
+            <!-- Floating 3D Control HUD (Top-Right) -->
+            <div class="hud-controls-overlay">
+              <button class="hud-btn" id="btn-3d-rotate" title="Bật/Tắt xoay tự động 360°">
+                <span class="hud-icon">🔄</span> <span class="hud-text">Xoay 360°</span>
+              </button>
+              <button class="hud-btn" id="btn-3d-exploded" title="Bóc tách nâng từng tầng không gian">
+                <span class="hud-icon">💥</span> <span class="hud-text">Tách Tầng</span>
+              </button>
+              <button class="hud-btn" id="btn-3d-xray" title="Chuyển chế độ tường trong suốt X-Ray">
+                <span class="hud-icon">✨</span> <span class="hud-text">X-Ray Kính</span>
+              </button>
+              <button class="hud-btn" id="btn-3d-reset" title="Khôi phục góc nhìn chuẩn">
+                <span class="hud-icon">🎥</span> <span class="hud-text">Reset Góc</span>
+              </button>
+            </div>
+
+            <!-- 3D Live Quick Stats Badge (Top-Left) -->
+            <div class="hud-stats-overlay">
+              <div class="hud-stat-item">
+                <span class="dot-live"></span>
+                <span><strong>22</strong> Face ID + <strong>7</strong> Tủ Rack + <strong>12</strong> CCTV Online</span>
+              </div>
+              <div class="hud-stat-item">
+                <span>⚡ Trục mạng cáp quang: <strong>RACK_MAIN 42U Server Room 304</strong></span>
+              </div>
+              <div class="hud-stat-item">
+                <span style="color: var(--primary);">💡 Nhấp vào bất kỳ thiết bị nào trên mô hình để xem bảng điều khiển</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- 2D CAD Blueprint Viewport (Hidden in 3D Mode) -->
+          <div id="container-2d-wrapper" class="map-container" style="display: none;">
             <div id="floor-blueprint-wrap">
               <!-- SVG Blueprint injected via JavaScript -->
             </div>
           </div>
 
+          <!-- In-Viewport Interactive Device Drawer (Slide-In for both 3D & 2D) -->
+          <div id="drawer-device-inspector" class="viewport-drawer">
+            <div class="drawer-header">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <span id="drawer-icon" style="font-size: 24px;">🚪</span>
+                <div>
+                  <h4 id="drawer-title" style="margin: 0; font-size: 15px; font-weight: 800; font-family: var(--font-display);">Tên Thiết Bị</h4>
+                  <span id="drawer-code" style="font-size: 11.5px; color: var(--text-faint); font-family: var(--font-mono);">AC-01</span>
+                </div>
+              </div>
+              <button id="drawer-close-btn" class="theme-pill-btn" style="padding: 4px 10px; font-size: 12px;">✕</button>
+            </div>
+            <div id="drawer-body" class="drawer-content">
+              <!-- Injected via JavaScript -->
+            </div>
+          </div>
+
           <!-- Legend Bar -->
-          <div style="margin-top: 16px; display: flex; gap: 24px; flex-wrap: wrap; background-color: var(--bg-card); padding: 14px 20px; border-radius: var(--radius-md); border: 1px solid var(--border-color); font-size: 13px;">
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <span style="width: 14px; height: 14px; border-radius: 50%; background: #6366f1; border: 2px solid #a5b4fc; display: inline-block;"></span>
-              <strong>Access Control (AC):</strong> Kiểm Soát Mở Khóa Cửa Phòng
+          <div class="legend-bar-card">
+            <div class="legend-item">
+              <span class="legend-dot" style="background: #10b981; box-shadow: 0 0 10px #10b981;"></span>
+              <strong>Tủ RACK IT & Server:</strong> 7 Tủ Phân Phối (RACK_MAIN 42U, RACK 01..05, Guardhouse)
             </div>
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <span style="width: 14px; height: 14px; border-radius: 50%; background: #06b6d4; border: 2px solid #67e8f9; display: inline-block;"></span>
-              <strong>Time Attendance (TA):</strong> Máy Chấm Công Chuyên Dụng (Không Gắn Khóa)
+            <div class="legend-item">
+              <span class="legend-dot" style="background: #06b6d4; box-shadow: 0 0 10px #06b6d4;"></span>
+              <strong>Camera CCTV:</strong> 12 Camera Giám Sát (Dome 360°, Bullet Ngoài Trời, Speed Dome PTZ)
             </div>
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <span style="width: 14px; height: 14px; border-radius: 50%; background: #f59e0b; border: 2px solid #fde68a; display: inline-block;"></span>
-              <strong>Flap Barrier:</strong> Cổng Phân Làn Tự Động Nhà Xe / Cổng Chính
+            <div class="legend-item">
+              <span class="legend-dot ac"></span>
+              <strong>Access Control (AC):</strong> 6 Khóa Cửa Face ID (Phòng IT, Mixer 128, Showroom, Mezzanine)
             </div>
+            <div class="legend-item">
+              <span class="legend-dot ta"></span>
+              <strong>Time Attendance (TA):</strong> 5 Máy Chấm Công (Sảnh Chính, Căn Tin, Locker Nữ, Kho 1, Dock)
+            </div>
+            <div class="legend-item">
+              <span class="legend-dot barrier"></span>
+              <strong>Flap Barrier:</strong> 10 Cổng Phân Làn Tự Động Nhà Xe E-Parking (5 Làn Vào + 5 Làn Ra)
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= VIEW: OFFICIAL ELV BILL OF QUANTITIES (SHEET 42/03) ================= -->
+        <section id="view-boq" class="view-section">
+          <div class="section-header" style="flex-wrap: wrap; gap: 14px;">
+            <div>
+              <h3 class="section-title">
+                <span>📑</span> <span data-i18n="title_boq">Bảng Thống Kê Tổng Hợp Khối Lượng Thiết Bị ELV (Sheet 42/03)</span>
+              </h3>
+              <p style="font-size: 13px; color: var(--text-faint); margin-top: 4px;">
+                Trích xuất 100% nguyên gốc từ Bản vẽ Kỹ thuật Điện Nhẹ: <strong>Drawing_ELV System_VINATECH_260615_v5.2.pdf</strong> (Hồ sơ bản vẽ số 42/03).
+              </p>
+            </div>
+            <div style="display: flex; gap: 10px; align-items: center;">
+              <span class="badge badge-success" style="padding: 6px 12px; font-size: 12.5px;">✓ Phiên bản: v5.2</span>
+              <span class="badge" style="background: rgba(99,102,241,0.15); color: var(--primary); border: 1px solid var(--card-border); padding: 6px 12px; font-size: 12.5px;">Doul Asia / Worldstar</span>
+            </div>
+          </div>
+
+          <!-- Drawing Metadata Banner -->
+          <div class="boq-header-card">
+            <div class="boq-meta-grid">
+              <div>
+                <span class="meta-label">DỰ ÁN:</span>
+                <strong class="meta-val">VINATECH VINA HƯNG YÊN (LÔ CN7.4-5 KCN SẠCH)</strong>
+              </div>
+              <div>
+                <span class="meta-label">HẠNG MỤC:</span>
+                <strong class="meta-val">HỆ THỐNG ĐIỆN NHẸ (ELV & COMMUNICATE)</strong>
+              </div>
+              <div>
+                <span class="meta-label">BẢN VẼ SỐ:</span>
+                <strong class="meta-val" style="font-family: var(--font-mono); color: var(--primary);">42/03 (PRODUCT QUANTITY SUMMARY)</strong>
+              </div>
+              <div>
+                <span class="meta-label">TỔNG HỆ THỐNG:</span>
+                <strong class="meta-val" style="color: var(--emerald);">05 HỆ THỐNG CON + 10 TỦ RACK</strong>
+              </div>
+            </div>
+          </div>
+
+          <!-- System BOQ Tables Container (Injected via JS) -->
+          <div id="boq-tables-container" class="boq-container-grid">
+            <!-- Dynamic BOQ Tables -->
           </div>
         </section>
 
@@ -253,24 +446,30 @@
               <h3 class="section-title">
                 <span>⏱️</span> <span data-i18n="title_attendance">Báo Cáo Chấm Công Hàng Ngày (First In / Last Out)</span>
               </h3>
-              <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">
+              <p style="font-size: 13px; color: var(--text-faint); margin-top: 4px;">
                 Tự động tổng hợp giờ quẹt Face ID đầu tiên (Check-In) và cuối cùng (Check-Out) trong ngày theo quy tắc ca HC (08:00 - 17:30).
               </p>
             </div>
             <button id="btn-export-attendance" class="btn btn-primary">
-              📥 <span data-i18n="btn_export_csv">Xuất File CSV</span>
+              📥 <span data-i18n="btn_export_csv">Xuất File CSV (Excel Chuẩn)</span>
             </button>
           </div>
 
           <div class="table-card">
             <div class="table-header-bar">
               <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
-                <label style="font-size: 13px; font-weight: 600;">Chọn Ngày:</label>
+                <label style="font-size: 13px; font-weight: 800;">Chọn Ngày:</label>
                 <input type="date" id="att-date-picker" class="select-custom" style="width: auto;">
                 <select id="att-dept-filter" class="select-custom">
                   <option value="">Tất cả phòng ban</option>
                   <option value="WSI">WSI</option>
                   <option value="HS Team">HS Team</option>
+                </select>
+                <select id="att-status-filter" class="select-custom">
+                  <option value="">Tất cả trạng thái</option>
+                  <option value="Normal">Đúng Giờ</option>
+                  <option value="Late Arrival">Đi Muộn</option>
+                  <option value="Early Departure">Về Sớm</option>
                 </select>
               </div>
             </div>
@@ -306,7 +505,7 @@
               <h3 class="section-title">
                 <span>🚪</span> <span data-i18n="title_devices">Danh Mục Toàn Bộ 22 Thiết Bị Face ID & Cửa</span>
               </h3>
-              <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">
+              <p style="font-size: 13px; color: var(--text-faint); margin-top: 4px;">
                 Bảng tra cứu kỹ thuật chi tiết: Vị trí lắp đặt, cơ cấu khóa điện, phụ kiện an toàn và địa chỉ IP / Serial phần cứng.
               </p>
             </div>
@@ -355,7 +554,7 @@
               <h3 class="section-title">
                 <span>👥</span> <span data-i18n="title_personnel">Danh Bạ Nhân Sự & Phân Quyền Mở Cửa</span>
               </h3>
-              <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">
+              <p style="font-size: 13px; color: var(--text-faint); margin-top: 4px;">
                 Quản lý 14 nhân sự đã đăng ký mẫu khuôn mặt Face ID trên hệ thống HikCentral Pro và nhóm chấm công.
               </p>
             </div>
@@ -367,6 +566,11 @@
                 <span class="search-icon">🔍</span>
                 <input type="text" id="emp-search" placeholder="Tìm theo tên nhân viên, mã NV hoặc phòng ban...">
               </div>
+              <select id="emp-dept-filter" class="select-custom">
+                <option value="">Tất cả phòng ban</option>
+                <option value="WSI">WSI</option>
+                <option value="HS Team">HS Team</option>
+              </select>
             </div>
 
             <div style="overflow-x: auto;">
@@ -397,7 +601,7 @@
               <h3 class="section-title">
                 <span>🗄️</span> <span>Database Query Studio (HCP_DATA @ 192.168.184.250)</span>
               </h3>
-              <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">
+              <p style="font-size: 13px; color: var(--text-faint); margin-top: 4px;">
                 Tra cứu trực tiếp cơ sở dữ liệu HikCentral SQL Server phục vụ đối soát, kiểm toán an ninh và trích xuất dữ liệu tích hợp MES / ERP.
               </p>
             </div>
@@ -408,11 +612,11 @@
             <button class="btn btn-secondary quick-sql-btn" data-sql="SELECT TOP 50 * FROM dbo.HCP_AccessRecord ORDER BY AccessDateTime DESC">
               ⚡ 50 Sự Kiện Mới Nhất
             </button>
-            <button class="btn btn-secondary quick-sql-btn" data-sql="SELECT DeviceName, COUNT(*) as TotalScans FROM dbo.HCP_AccessRecord GROUP BY DeviceName">
+            <button class="btn btn-secondary quick-sql-btn" data-sql="SELECT DeviceName, COUNT(*) as TotalScans FROM dbo.HCP_AccessRecord GROUP BY DeviceName ORDER BY TotalScans DESC">
               📊 Thống Kê Theo Thiết Bị
             </button>
             <button class="btn btn-secondary quick-sql-btn" data-sql="SELECT AuthenticationType, COUNT(*) as Total FROM dbo.HCP_AccessRecord GROUP BY AuthenticationType">
-              👤 Thống Kê Loại Xác Thực (Face ID vs Khác)
+              👤 Thống Kê Loại Xác Thực
             </button>
             <button class="btn btn-secondary quick-sql-btn" data-sql="SELECT DISTINCT EmployeeID, PersonName, Department FROM dbo.HCP_AccessRecord ORDER BY PersonName">
               👥 Danh Sách Nhân Sự Đã Quẹt
@@ -420,9 +624,9 @@
           </div>
 
           <div class="table-card">
-            <div style="padding: 16px 20px; border-bottom: 1px solid var(--border-color); background-color: var(--bg-sidebar);">
-              <div style="display: flex; gap: 10px;">
-                <input type="text" id="sql-input" class="select-custom" style="flex: 1; font-family: var(--font-mono); font-size: 13px;" value="SELECT TOP 50 * FROM dbo.HCP_AccessRecord ORDER BY AccessDateTime DESC">
+            <div style="padding: 18px 24px; border-bottom: 1px solid var(--card-border); background-color: var(--bg-subtle);">
+              <div style="display: flex; gap: 12px;">
+                <input type="text" id="sql-input" class="select-custom" style="flex: 1; font-family: var(--font-mono); font-size: 13.5px;" value="SELECT TOP 50 * FROM dbo.HCP_AccessRecord ORDER BY AccessDateTime DESC">
                 <button id="btn-run-sql" class="btn btn-primary">
                   ▶️ Chạy Query
                 </button>
@@ -449,7 +653,7 @@
               <h3 class="section-title">
                 <span>📖</span> <span data-i18n="title_manual">Sổ Tay Vận Hành & Đào Tạo Chuẩn Hóa (Training SOP)</span>
               </h3>
-              <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">
+              <p style="font-size: 13px; color: var(--text-faint); margin-top: 4px;">
                 Tổng hợp 9 bước quy trình vận hành hệ thống HikCentral Professional trích xuất từ tài liệu đào tạo chính thức.
               </p>
             </div>
@@ -468,22 +672,25 @@
   <div class="modal-overlay" id="device-modal">
     <div class="modal-content">
       <div class="modal-header">
-        <div style="display: flex; align-items: center; gap: 10px;">
-          <span style="font-size: 24px;" id="modal-icon">🚪</span>
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <span style="font-size: 28px;" id="modal-icon">🚪</span>
           <div>
-            <h3 style="font-size: 18px; font-weight: 800;" id="modal-device-name">Chi Tiết Thiết Bị</h3>
-            <span style="font-size: 12px; color: var(--text-muted);" id="modal-device-code">Mã TB: AC-01</span>
+            <h3 style="font-size: 19px; font-weight: 800; font-family: var(--font-display);" id="modal-device-name">Chi Tiết Thiết Bị</h3>
+            <span style="font-size: 12px; color: var(--text-faint); font-weight: 600;" id="modal-device-code">Mã TB: AC-01</span>
           </div>
         </div>
-        <button id="modal-close-btn" class="btn-icon">✕</button>
+        <button id="modal-close-btn" class="theme-pill-btn" style="padding: 6px 12px;">✕ Đóng</button>
       </div>
-      <div id="modal-body" style="display: flex; flex-direction: column; gap: 14px; font-size: 13px;">
+      <div id="modal-body" style="display: flex; flex-direction: column; gap: 14px; font-size: 13.5px;">
         <!-- Injected via JS -->
       </div>
     </div>
   </div>
 
-  <!-- Application Logic Scripts -->
+  <!-- 3D Graphics & Application Logic Scripts -->
+  <script src="libs/three.min.js"></script>
+  <script src="libs/OrbitControls.js"></script>
+  <script src="factory3d.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

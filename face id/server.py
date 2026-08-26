@@ -18,13 +18,11 @@ SQL_PASS = "vinatech@2026"
 
 cached_events = []
 last_fetch_time = 0
+fetch_lock = threading.Lock()
+db_connected = False
 
-def fetch_sql_events():
-    global cached_events, last_fetch_time
-    now = time.time()
-    if cached_events and (now - last_fetch_time < 5):
-        return cached_events
-
+def do_fetch():
+    global cached_events, last_fetch_time, db_connected
     script_path = os.path.join(DIR, "get_events_json.ps1")
     try:
         p = subprocess.run(
@@ -33,21 +31,48 @@ def fetch_sql_events():
             text=True,
             encoding="utf-8",
             errors="replace",
-            timeout=10
+            timeout=12
         )
         out = p.stdout.strip()
         if out.startswith("[") or out.startswith("{"):
             data = json.loads(out)
             if isinstance(data, dict):
                 data = [data]
-            cached_events = data
-            last_fetch_time = now
-            return cached_events
+            with fetch_lock:
+                cached_events = data
+                last_fetch_time = time.time()
+                db_connected = True
+            return True
     except Exception as e:
         print(f"[SQL Fetch Error]: {e}")
     
-    return cached_events
+    # Fallback to local json if db offline
+    if not cached_events:
+        try:
+            data_json_path = os.path.join(DIR, "data.json")
+            if os.path.exists(data_json_path):
+                with open(data_json_path, "r", encoding="utf-8") as f:
+                    dj = json.load(f)
+                    with fetch_lock:
+                        cached_events = dj.get("recentLogs", [])
+                        last_fetch_time = time.time()
+        except Exception:
+            pass
+    return False
 
+def background_sync_worker():
+    """Continuously poll database in background every 6 seconds."""
+    while True:
+        do_fetch()
+        time.sleep(6)
+
+def get_events():
+    with fetch_lock:
+        return list(cached_events)
+
+class ThreadingHTTPServer(socketserver.ThreadingMixIn, http.server.HTTPServer):
+    daemon_threads = True
+    allow_reuse_address = True
 
 class FaceIdHandler(http.server.SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
@@ -72,13 +97,13 @@ class FaceIdHandler(http.server.SimpleHTTPRequestHandler):
             self.send_response(200)
             self.send_header("Content-Type", "application/json; charset=utf-8")
             self.end_headers()
-            events = fetch_sql_events()
+            events = get_events()
             res = {
-                "status": "connected" if events else "offline",
+                "status": "connected" if db_connected else "cached",
                 "server": SQL_SERVER,
                 "database": SQL_DB,
                 "totalEvents": len(events),
-                "lastUpdated": time.strftime("%Y-%m-%d %H:%M:%S")
+                "lastUpdated": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(last_fetch_time)) if last_fetch_time else "N/A"
             }
             self.wfile.write(json.dumps(res).encode('utf-8'))
             return
@@ -88,7 +113,7 @@ class FaceIdHandler(http.server.SimpleHTTPRequestHandler):
             self.send_header("Content-Type", "application/json; charset=utf-8")
             self.end_headers()
             
-            events = fetch_sql_events()
+            events = get_events()
             limit = int(query.get("limit", [100])[0])
             date_filter = query.get("date", [None])[0]
             device_filter = query.get("device", [None])[0]
@@ -114,7 +139,7 @@ class FaceIdHandler(http.server.SimpleHTTPRequestHandler):
             self.send_header("Content-Type", "application/json; charset=utf-8")
             self.end_headers()
 
-            events = fetch_sql_events()
+            events = get_events()
             date_filter = query.get("date", [time.strftime("%Y-%m-%d")])[0]
             
             day_events = [e for e in events if e.get("AccessDate") == date_filter] if date_filter else events
@@ -134,7 +159,7 @@ class FaceIdHandler(http.server.SimpleHTTPRequestHandler):
                         "checkOutDevice": e.get("DeviceName", ""),
                         "totalScans": 0,
                         "authType": e.get("AuthenticationType", ""),
-                        "status": "On Time"
+                        "status": "Normal"
                     }
                 item = emp_map[eid]
                 item["totalScans"] += 1
@@ -146,7 +171,7 @@ class FaceIdHandler(http.server.SimpleHTTPRequestHandler):
                     item["lastCheckOut"] = t
                     item["checkOutDevice"] = e.get("DeviceName", "")
 
-            # Determine status
+            # Determine status (HC Shift: 08:00 - 17:30)
             for eid, item in emp_map.items():
                 if item["firstCheckIn"] > "08:15:00":
                     item["status"] = "Late Arrival"
@@ -164,7 +189,7 @@ class FaceIdHandler(http.server.SimpleHTTPRequestHandler):
             self.send_header("Content-Type", "application/json; charset=utf-8")
             self.end_headers()
 
-            events = fetch_sql_events()
+            events = get_events()
             total = len(events)
             face_count = sum(1 for e in events if "face" in e.get("AuthenticationType", "").lower())
             finger_count = sum(1 for e in events if "finger" in e.get("AuthenticationType", "").lower())
@@ -189,9 +214,14 @@ class FaceIdHandler(http.server.SimpleHTTPRequestHandler):
         super().do_GET()
 
 def start_server():
-    with socketserver.TCPServer(("", PORT), FaceIdHandler) as httpd:
+    # Start background polling thread
+    t = threading.Thread(target=background_sync_worker, daemon=True)
+    t.start()
+    
+    server_address = ("", PORT)
+    with ThreadingHTTPServer(server_address, FaceIdHandler) as httpd:
         print(f"===============================================================")
-        print(f"  FACE ID & HIKCENTRAL PORTAL WEB SERVER RUNNING")
+        print(f"  FACE ID & HIKCENTRAL PORTAL WEB SERVER RUNNING (MULTI-THREADED)")
         print(f"  URL: http://localhost:{PORT}/")
         print(f"  Database: {SQL_DB} @ {SQL_SERVER}")
         print(f"===============================================================")
@@ -201,5 +231,4 @@ def start_server():
             print("\nShutting down server.")
 
 if __name__ == "__main__":
-    fetch_sql_events()
     start_server()
