@@ -106,7 +106,7 @@ class Factory3DEngine {
       this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
       this.controls.enableDamping = true;
       this.controls.dampingFactor = 0.08;
-      this.controls.rotateSpeed = -0.85; // Thuận chiều kéo chuột (Grab & Drag natural direction)
+      this.controls.rotateSpeed = 0.85; // Standard Orbit Camera Rotation
       this.controls.panSpeed = 0.9;
       this.controls.screenSpacePanning = true;
       this.controls.maxPolarAngle = Math.PI / 2 - 0.02;
