@@ -377,6 +377,71 @@ class Factory3DEngine {
       color: 0x6366f1, floorColor: 0x1e1b4b,
       group: g, floorLevel: 0
     });
+
+    // === KHU PHỤ TRỢ SẢN XUẤT — BẢN VẼ ELV v5.2 ===
+
+    // Khu Pha Trộn Mixer / Slurry (bên trong xưởng SX)
+    this.createRoom({
+      name: "Khu Pha Trộn Mixer",
+      labelTag: "🔬 Mixer/Slurry",
+      x: -5, z: -42, width: 28, depth: 14, height: h,
+      color: 0x0891b2, floorColor: 0x164e63,
+      group: g, floorLevel: 0
+    });
+
+    // Khu Sấy & Cuộn Electrode (Drying/Winding)
+    this.createRoom({
+      name: "Khu Sấy & Cuộn",
+      labelTag: "🌀 Drying/Winding",
+      x: 22, z: -42, width: 24, depth: 14, height: h,
+      color: 0x0e7490, floorColor: 0x155e75,
+      group: g, floorLevel: 0
+    });
+
+    // P.136 Locker Nữ & QC Room
+    this.createRoom({
+      name: "P.136 Locker & QC",
+      labelTag: "🧪 P.136 QC/Locker",
+      x: 30, z: 16, width: 14, depth: 16, height: h,
+      color: 0x14b8a6, floorColor: 0x134e4a,
+      group: g, floorLevel: 0
+    });
+
+    // Khu Đóng Gói & Kiểm Tra (Packing/Testing)
+    this.createRoom({
+      name: "Khu Đóng Gói",
+      labelTag: "📦 Packing/Testing",
+      x: -30, z: 16, width: 20, depth: 16, height: h,
+      color: 0x0284c7, floorColor: 0x0c4a6e,
+      group: g, floorLevel: 0
+    });
+
+    // Hành Lang Kỹ Thuật (Technical Corridor)
+    this.createRoom({
+      name: "Hành Lang Kỹ Thuật",
+      labelTag: "🔧 Hành Lang KT",
+      x: 33, z: -10, width: 4, depth: 55, height: h,
+      color: 0x475569, floorColor: 0x1e293b,
+      group: g, floorLevel: 0
+    });
+
+    // P. Nghỉ Ca Nam/Nữ
+    this.createRoom({
+      name: "P. Nghỉ Ca",
+      labelTag: "😴 P.Nghỉ Ca",
+      x: 46, z: 24, width: 28, depth: 12, height: h,
+      color: 0x059669, floorColor: 0x065f46,
+      group: g, floorLevel: 0
+    });
+
+    // WC Tầng 1
+    this.createRoom({
+      name: "WC Tầng 1",
+      labelTag: "🚻 WC 137",
+      x: 74, z: -5, width: 12, depth: 10, height: h,
+      color: 0x64748b, floorColor: 0x334155,
+      group: g, floorLevel: 0
+    });
   }
 
   // TẦNG 1.5 NHÀ XƯỞNG
@@ -390,6 +455,24 @@ class Factory3DEngine {
       labelTag: "🏢 Văn Phòng 1.5F (P. 201/202)",
       x: 60, z: -10, width: 50, depth: 72, height: h,
       color: 0xa855f7, floorColor: 0x2e1065,
+      group: g, floorLevel: yBase
+    });
+
+    // P. Giám Đốc 202 (bên trong VP 1.5F)
+    this.createRoom({
+      name: "P. Giám Đốc 202",
+      labelTag: "👤 P.GĐ 202",
+      x: 78, z: -25, width: 16, depth: 22, height: h,
+      color: 0x9333ea, floorColor: 0x3b0764,
+      group: g, floorLevel: yBase
+    });
+
+    // P. Họp Nhỏ 1.5F
+    this.createRoom({
+      name: "P. Họp Nhỏ 1.5F",
+      labelTag: "💬 P.Họp 1.5F",
+      x: 78, z: 10, width: 16, depth: 20, height: h,
+      color: 0x7c3aed, floorColor: 0x4c1d95,
       group: g, floorLevel: yBase
     });
   }
@@ -421,6 +504,42 @@ class Factory3DEngine {
       labelTag: "🤝 Phòng Họp Lớn 2F",
       x: 45, z: 12, width: 26, depth: 32, height: h,
       color: 0x06b6d4, floorColor: 0x083344,
+      group: g, floorLevel: yBase
+    });
+
+    // P. Giám Đốc 303
+    this.createRoom({
+      name: "P. Giám Đốc 303",
+      labelTag: "👤 P.GĐ 303",
+      x: 86, z: -25, width: 14, depth: 18, height: h,
+      color: 0x4f46e5, floorColor: 0x312e81,
+      group: g, floorLevel: yBase
+    });
+
+    // P. Họp Nhỏ 2F
+    this.createRoom({
+      name: "P. Họp Nhỏ 2F",
+      labelTag: "💬 P.Họp Nhỏ",
+      x: 45, z: 28, width: 14, depth: 10, height: h,
+      color: 0x0284c7, floorColor: 0x0c4a6e,
+      group: g, floorLevel: yBase
+    });
+
+    // Pantry & Break Room
+    this.createRoom({
+      name: "Pantry 2F",
+      labelTag: "☕ Pantry",
+      x: 60, z: 28, width: 14, depth: 10, height: h,
+      color: 0xf59e0b, floorColor: 0x78350f,
+      group: g, floorLevel: yBase
+    });
+
+    // WC Tầng 2
+    this.createRoom({
+      name: "WC 2F",
+      labelTag: "🚻 WC 2F",
+      x: 86, z: 10, width: 10, depth: 16, height: h,
+      color: 0x64748b, floorColor: 0x334155,
       group: g, floorLevel: yBase
     });
   }
@@ -526,21 +645,91 @@ class Factory3DEngine {
     const fenceMat = new THREE.MeshStandardMaterial({ color: 0x475569, metalness: 0.7, roughness: 0.4 });
     const gatePoleGeo = new THREE.CylinderGeometry(0.8, 0.8, 8, 16);
     
-    // Cổng Chính (Main Gate Poles)
-    const gate1Left = new THREE.Mesh(gatePoleGeo, fenceMat);
-    gate1Left.position.set(40, 4, 98);
-    const gate1Right = new THREE.Mesh(gatePoleGeo, fenceMat);
-    gate1Right.position.set(70, 4, 98);
-    g.add(gate1Left);
-    g.add(gate1Right);
+    // =============================================
+    // HÀNG RÀO CHU VI NHÀ MÁY (PERIMETER FENCE)
+    // =============================================
 
-    // Cổng Phụ Logistics (Logistics Gate Poles)
-    const gate2Left = new THREE.Mesh(gatePoleGeo, fenceMat);
-    gate2Left.position.set(-115, 4, -22);
-    const gate2Right = new THREE.Mesh(gatePoleGeo, fenceMat);
-    gate2Right.position.set(-115, 4, 5);
-    g.add(gate2Left);
-    g.add(gate2Right);
+    // Fence panels — North (split for main gate x:38~72)
+    const nf1 = new THREE.Mesh(new THREE.BoxGeometry(78, 4, 0.3), fenceMat);
+    nf1.position.set(-80, 2, 103); g.add(nf1);
+    const nf2 = new THREE.Mesh(new THREE.BoxGeometry(28, 4, 0.3), fenceMat);
+    nf2.position.set(84, 2, 103); g.add(nf2);
+    // South fence
+    const sf = new THREE.Mesh(new THREE.BoxGeometry(218, 4, 0.3), fenceMat);
+    sf.position.set(-10, 2, -58); g.add(sf);
+    // East fence
+    const ef = new THREE.Mesh(new THREE.BoxGeometry(0.3, 4, 161), fenceMat);
+    ef.position.set(98, 2, 22.5); g.add(ef);
+    // West fence (split for logistics gate z:-22~7)
+    const wf1 = new THREE.Mesh(new THREE.BoxGeometry(0.3, 4, 36), fenceMat);
+    wf1.position.set(-118, 2, -40); g.add(wf1);
+    const wf2 = new THREE.Mesh(new THREE.BoxGeometry(0.3, 4, 96), fenceMat);
+    wf2.position.set(-118, 2, 55); g.add(wf2);
+
+    // Fence posts along perimeter
+    const fpGeo = new THREE.CylinderGeometry(0.35, 0.35, 5, 8);
+    for (let x = -118; x <= 98; x += 10) {
+      if (x > 35 && x < 75) continue;
+      const pn = new THREE.Mesh(fpGeo, fenceMat); pn.position.set(x, 2.5, 103); g.add(pn);
+      const ps = new THREE.Mesh(fpGeo, fenceMat); ps.position.set(x, 2.5, -58); g.add(ps);
+    }
+    for (let z = -58; z <= 103; z += 10) {
+      const pe = new THREE.Mesh(fpGeo, fenceMat); pe.position.set(98, 2.5, z); g.add(pe);
+      if (z > -25 && z < 10) continue;
+      const pw = new THREE.Mesh(fpGeo, fenceMat); pw.position.set(-118, 2.5, z); g.add(pw);
+    }
+
+    // Gate poles — Cổng Chính & Cổng Phụ Logistics
+    [{x:38,z:103},{x:72,z:103},{x:-118,z:-22},{x:-118,z:7}].forEach(p => {
+      const pole = new THREE.Mesh(gatePoleGeo, fenceMat);
+      pole.position.set(p.x, 4, p.z); g.add(pole);
+    });
+
+    // =============================================
+    // ĐƯỜNG NỘI BỘ (INTERNAL RING ROADS)
+    // =============================================
+    const roadMat3 = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.9 });
+    // Main entry road from north gate
+    const mr = new THREE.Mesh(new THREE.BoxGeometry(18, 0.25, 35), roadMat3);
+    mr.position.set(55, 0.05, 88); g.add(mr);
+    // West ring road
+    const rww = new THREE.Mesh(new THREE.BoxGeometry(10, 0.25, 140), roadMat3);
+    rww.position.set(-102, 0.05, 20); g.add(rww);
+    // South ring road
+    const rss = new THREE.Mesh(new THREE.BoxGeometry(190, 0.25, 8), roadMat3);
+    rss.position.set(-8, 0.05, -52); g.add(rss);
+    // East ring road
+    const ree = new THREE.Mesh(new THREE.BoxGeometry(8, 0.25, 140), roadMat3);
+    ree.position.set(92, 0.05, 20); g.add(ree);
+    // Connection road to logistics gate
+    const rlg = new THREE.Mesh(new THREE.BoxGeometry(18, 0.25, 10), roadMat3);
+    rlg.position.set(-108, 0.05, -8); g.add(rlg);
+
+    // =============================================
+    // CÂY XANH CẢNH QUAN (LANDSCAPING TREES)
+    // =============================================
+    const trunkMat = new THREE.MeshStandardMaterial({ color: 0x78350f });
+    const leafMat = new THREE.MeshStandardMaterial({ color: 0x16a34a });
+    const trGeo = new THREE.CylinderGeometry(0.4, 0.5, 5, 8);
+    const lfGeo = new THREE.SphereGeometry(3, 8, 8);
+    [[-105,95],[-90,95],[-75,95],[-60,95],[-45,95],[85,95],
+     [92,80],[92,60],[92,40],[92,20],[92,0],
+     [-105,-50],[-90,-50],[-75,-50],[-60,-50],
+     [25,95],[10,95],[-5,95],[-20,95]].forEach(([tx,tz]) => {
+      const tr = new THREE.Mesh(trGeo, trunkMat);
+      tr.position.set(tx, 2.5, tz); g.add(tr);
+      const lf = new THREE.Mesh(lfGeo, leafMat);
+      lf.position.set(tx, 6.5, tz); g.add(lf);
+    });
+
+    // BÃI ĐỖ XE Ô TÔ (CAR PARKING near main gate)
+    const bayMat2 = new THREE.MeshBasicMaterial({ color: 0xffffff });
+    for (let i = 0; i < 8; i++) {
+      const bay = new THREE.Mesh(new THREE.PlaneGeometry(0.15, 4.5), bayMat2);
+      bay.rotation.x = -Math.PI / 2;
+      bay.position.set(78 + i * 2.8, 0.15, 92);
+      g.add(bay);
+    }
   }
 
   buildRoof() {
@@ -682,6 +871,7 @@ class Factory3DEngine {
     if (rack.id === 'RACK_04') return new THREE.Vector3(73, 24.5, -10);
     if (rack.id === 'RACK_05') return new THREE.Vector3(46, 0.5, 20);
     if (rack.id === 'RACK_06') return new THREE.Vector3(35, 0.5, 72);
+    if (rack.id === 'RACK_07') return new THREE.Vector3(-95, 0.5, -10);
     if (rack.id === 'RACK_08') return new THREE.Vector3(-25, 0.5, 60);
     if (rack.id === 'BOX_OUTSIDE') return new THREE.Vector3(85, 0.5, 40);
     return new THREE.Vector3(0, 1, 0);
