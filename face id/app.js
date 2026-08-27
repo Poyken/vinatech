@@ -1,96 +1,231 @@
 /**
- * VINATECH FACE ID & ACCESS CONTROL WEB APPLICATION
- * Core Client Controller & Interactive Blueprint Engine
- * Author: Vinatech IT & Automation Team
+ * VINATECH HƯNG YÊN — SMART FACTORY ELV PORTAL
+ * 100% Verified against Drawing_ELV System_VINATECH_260615_v5.2.pdf
+ * Interactive CAD Blueprint & Layer Viewer
  */
 
-// Multi-Language Translation Dictionary
+let appData = null;
+let liveEvents = [];
+let currentLang = 'vi';
+let currentFloor = '1F';
+let currentLayerId = '1f_taac';
+
+// Pan & Zoom Engine State
+let cadState = {
+  scale: 1.0,
+  panX: 0,
+  panY: 0,
+  isDragging: false,
+  startX: 0,
+  startY: 0
+};
+
+// Official CAD Drawing Layers
+const CAD_LAYERS = {
+  '1F': [
+    {
+      id: '1f_taac',
+      title: '🚪 Mặt Bằng TA/AC (Kiểm Soát Cửa AC_1..3 & Chấm Công TA_1..5)',
+      sheetNo: '42/30 (1ST FLOOR FACTORY TA/AC SYSTEM)',
+      img: 'rendered_drawings/31_1F_FACTORY_TA_AC.png',
+      devices: ['AC-01', 'AC-02', 'AC-03', 'TA-01', 'TA-02', 'TA-03', 'TA-04', 'TA-05', 'RACK_01', 'RACK_02', 'RACK_03']
+    },
+    {
+      id: '1f_network',
+      title: '📶 Mặt Bằng Mạng & Tổng Đài (Network & PBX — 58 Floor Outlets, 22 Wall Outlets, AP)',
+      sheetNo: '42/12 (1ST FLOOR FACTORY NETWORK & PBX)',
+      img: 'rendered_drawings/13_1F_FACTORY_NETWORK_PBX.png',
+      devices: ['AP-01', 'AP-02', 'OUT-FL-1F-1', 'OUT-WL-1F-1', 'OUT-WL-1F-2', 'RACK_01', 'RACK_02', 'RACK_03']
+    },
+    {
+      id: '1f_grounding',
+      title: '⚡ Mặt Bằng Tiếp Địa An Toàn (1F Grounding System)',
+      sheetNo: '42/41 (1ST FLOOR FACTORY GROUNDING)',
+      img: 'rendered_drawings/42_1F_GROUNDING.png',
+      devices: []
+    }
+  ],
+  '1.5F': [
+    {
+      id: '15f_taac',
+      title: '🚪 Mặt Bằng TA/AC (Cửa AC_4 P. Giám Đốc 202 & VP 201)',
+      sheetNo: '42/31 (1.5 FLOOR FACTORY TA/AC SYSTEM)',
+      img: 'rendered_drawings/32_1.5F_FACTORY_TA_AC.png',
+      devices: ['AC-04', 'RACK_MAIN']
+    },
+    {
+      id: '15f_network',
+      title: '📶 Mặt Bằng Mạng & PBX (AP-03..05 & Cụm Ổ Cắm Bàn 4-Port)',
+      sheetNo: '42/13 (1.5 FLOOR FACTORY NETWORK & PBX)',
+      img: 'rendered_drawings/14_1.5F_FACTORY_NETWORK_PBX.png',
+      devices: ['AP-03', 'AP-04', 'AP-05', 'OUT-15F-1', 'OUT-15F-2']
+    }
+  ],
+  '2F': [
+    {
+      id: '2f_taac',
+      title: '🚪 Mặt Bằng TA/AC (Cửa AC_5 P. IT 304 & AC_6 VP 302)',
+      sheetNo: '42/32 (2ND FLOOR FACTORY TA/AC SYSTEM)',
+      img: 'rendered_drawings/33_2F_FACTORY_TA_AC.png',
+      devices: ['AC-05', 'AC-06', 'USB-01', 'RACK_MAIN', 'RACK_04']
+    },
+    {
+      id: '2f_network',
+      title: '📶 Mặt Bằng Mạng & PBX (Server Room 304, RACK MAIN 42U, AP-06..07, Bàn Họp 6P)',
+      sheetNo: '42/14 (2ND FLOOR FACTORY NETWORK & PBX)',
+      img: 'rendered_drawings/15_2F_FACTORY_NETWORK_PBX.png',
+      devices: ['AP-06', 'AP-07', 'RACK_MAIN', 'RACK_04', 'OUT-2F-1', 'OUT-2F-2', 'OUT-2F-3']
+    }
+  ],
+  'PARKING': [
+    {
+      id: 'park_barrier',
+      title: '🚧 Mặt Bằng Flap Barrier E-Parking (10 Làn AC_10..AC_19 & 6 Bộ Barrier)',
+      sheetNo: '42/35 (FLAP BARIE E-PARKING)',
+      img: 'rendered_drawings/36_FLAP_BARIE_EPARKING.png',
+      devices: ['AC-10', 'AC-11', 'AC-12', 'AC-13', 'AC-14', 'AC-15', 'AC-16', 'AC-17', 'AC-18', 'AC-19', 'RACK_05']
+    },
+    {
+      id: 'park_guardhouse',
+      title: '🛡️ Mặt Bằng Mạng 3 Nhà Bảo Vệ & Nhà Xe (GH1, GH2, GH3)',
+      sheetNo: '42/17 (NETWORK & PBX GUARDHOUSE)',
+      img: 'rendered_drawings/18_NETWORK_PBX_GUARDHOUSE.png',
+      devices: ['RACK_06', 'RACK_07', 'RACK_08', 'OUT-GH-1', 'OUT-GH-2', 'OUT-GH-3']
+    },
+    {
+      id: 'park_backbone',
+      title: '🌐 Tuyến Cáp Quang Trục Backbone & Tuyến Ngầm ISP',
+      sheetNo: '42/36 (BACKBONE MASTER PLAN NETWORK)',
+      img: 'rendered_drawings/37_BACKBONE_MASTER_PLAN.png',
+      devices: ['RACK_09']
+    }
+  ],
+  'SCHEMATICS': [
+    {
+      id: 'sch_net',
+      title: '📊 Sơ Đồ Nguyên Lý Mạng IT & Tổng Đài (Network & PBX Riser)',
+      sheetNo: '42/06 (DIAGRAM NETWORK & PBX)',
+      img: 'rendered_drawings/07_DIAGRAM_NETWORK_PBX.png',
+      devices: ['RACK_MAIN', 'RACK_01', 'RACK_02', 'RACK_03', 'RACK_04', 'RACK_05', 'RACK_06', 'RACK_07', 'RACK_08', 'RACK_09']
+    },
+    {
+      id: 'sch_taac',
+      title: '🔐 Sơ Đồ Nguyên Lý Kiểm Soát Ra Vào & Chấm Công (TA/AC Riser)',
+      sheetNo: '42/08 (DIAGRAM TA/AC)',
+      img: 'rendered_drawings/09_DIAGRAM_TA_AC.png',
+      devices: ['AC-01', 'AC-02', 'AC-03', 'AC-04', 'AC-05', 'AC-06', 'AC-10', 'TA-01', 'TA-02', 'TA-03', 'TA-04', 'TA-05']
+    },
+    {
+      id: 'sch_rack',
+      title: '🖥️ Sơ Đồ Chi Tiết Thiết Bị 10 Tủ RACK (Rack Elevation Diagrams)',
+      sheetNo: '42/11 (DIAGRAM RACK)',
+      img: 'rendered_drawings/12_DIAGRAM_RACK.png',
+      devices: ['RACK_MAIN', 'RACK_PA', 'RACK_01', 'RACK_02', 'RACK_03', 'RACK_04', 'RACK_05', 'RACK_06', 'RACK_07', 'RACK_08', 'RACK_09']
+    },
+    {
+      id: 'sch_grounding',
+      title: '⚡ Tổng Mặt Bằng Hệ Thống Tiếp Địa An Toàn Chống Sét',
+      sheetNo: '42/40 (GROUNDING MASTER PLAN)',
+      img: 'rendered_drawings/41_GROUNDING_MASTER_PLAN.png',
+      devices: []
+    },
+    {
+      id: 'sch_isp',
+      title: '🌐 Tổng Mặt Bằng Tuyến Cáp Quang Đầu Vào Nhà Mạng ISP',
+      sheetNo: '42/42 (ISP MASTER PLAN)',
+      img: 'rendered_drawings/43_ISP_MASTER_PLAN.png',
+      devices: []
+    }
+  ]
+};
+
+// Multilingual Dictionary
 const I18N = {
   vi: {
-    nav_dashboard: "Bảng Điều Khiển",
+    nav_dashboard: "Bảng Điều Khiển Live",
+    nav_floorplans: "Mặt Bằng & Vị Trí",
     nav_map: "Mặt Bằng & Vị Trí",
     nav_boq: "Thống Kê Bản Vẽ ELV",
+    nav_devices: "Danh Sách Thiết Bị",
+    nav_personnel: "Quản Lý Nhân Sự",
     nav_attendance: "Báo Cáo Chấm Công",
-    nav_devices: "Danh Mục Thiết Bị",
-    nav_personnel: "Nhân Sự & Phân Quyền",
-    nav_sql: "Tra Cứu Database",
-    nav_manual: "Sổ Tay Vận Hành (SOP)",
-    btn_refresh: "Làm mới",
-    stat_total_scans: "Tổng Lượt Sự Kiện",
-    stat_realtime_synced: "Đồng bộ tự động SQL",
+    nav_sql: "Truy Vấn HCP_DATA",
+    nav_manual: "Sổ Tay Vận Hành",
+    title_dashboard: "Trung Tâm Giám Sát Cửa & Face ID Trực Tuyến",
+    title_floorplans: "Hồ Sơ Bản Vẽ & Phân Lớp Kỹ Thuật (CAD Blueprint Viewer)",
+    title_boq: "Bảng Thống Kê Khối Lượng Thiết Bị ELV (Sheet 42/03)",
+    title_devices: "Danh Mục Thiết Bị Cửa & Chấm Công",
+    title_personnel: "Danh Sách Nhân Viên & Dữ Liệu Khuôn Mặt Face ID",
+    title_attendance: "Báo Cáo Chấm Công Hàng Ngày (First In / Last Out)",
+    title_sql: "Truy Vấn Cơ Sở Dữ Liệu SQL Trực Tiếp (HCP_DATA)",
+    title_manual: "Sổ Tay Vận Hành & Đào Tạo Chuẩn Hóa",
     stat_face_rate: "Tỷ Lệ Nhận Diện Face ID",
-    stat_primary_method: "Phương thức sinh trắc chính",
     stat_total_devices: "Tổng Số Thiết Bị",
     stat_active_shift: "Ca Làm Việc Chuẩn",
+    stat_total_scans: "Tổng Lượt Sự Kiện",
+    stat_realtime_synced: "Đồng Bộ Tự Động SQL",
+    stat_primary_method: "Phương thức sinh trắc chính",
     title_live_events: "Nhật Ký Quẹt Face ID & Cửa Thời Gian Thực",
-    title_floorplans: "Mặt Bằng & Bản Đồ Phân Bổ Thiết Bị Face ID",
-    title_boq: "Bảng Thống Kê Tổng Hợp Khối Lượng Thiết Bị ELV (Sheet 42/03)",
-    title_attendance: "Báo Cáo Chấm Công Hàng Ngày (First In / Last Out)",
     btn_export_csv: "Xuất File CSV (Excel Chuẩn)",
-    title_devices: "Danh Mục Toàn Bộ 22 Thiết Bị Face ID & Cửa",
-    title_personnel: "Danh Bạ Nhân Sự & Phân Quyền Mở Cửa",
-    title_manual: "Sổ Tay Vận Hành & Đào Tạo Chuẩn Hóa (Training SOP)"
+    btn_refresh: "Làm Mới"
   },
   en: {
-    nav_dashboard: "Dashboard",
-    nav_map: "Floor Plans & Devices",
-    nav_attendance: "Attendance Reports",
-    nav_devices: "Device Inventory",
-    nav_personnel: "Personnel & Access",
-    nav_sql: "Database Query",
-    nav_manual: "Operations Manual (SOP)",
-    btn_refresh: "Refresh",
-    stat_total_scans: "Total Event Scans",
-    stat_realtime_synced: "Auto SQL Synced",
-    stat_face_rate: "Face ID Match Rate",
-    stat_primary_method: "Primary Biometric Method",
+    nav_dashboard: "Live Dashboard",
+    nav_floorplans: "CAD Floorplans & Layers",
+    nav_map: "CAD Floorplans & Layers",
+    nav_boq: "ELV BOQ Summary",
+    nav_devices: "Device Directory",
+    nav_personnel: "Personnel Directory",
+    nav_attendance: "Attendance Report",
+    nav_sql: "HCP_DATA SQL Studio",
+    nav_manual: "Operation Manual",
+    title_dashboard: "Live Face ID & Access Control Monitoring Center",
+    title_floorplans: "CAD Blueprint & Technical Layer Viewer",
+    title_boq: "ELV Equipment Bill of Quantities (Sheet 42/03)",
+    title_devices: "Access Control & Time Attendance Devices",
+    title_personnel: "Personnel List & Face ID Registration",
+    title_attendance: "Daily Attendance Report (First In / Last Out)",
+    title_sql: "Direct SQL Database Query (HCP_DATA)",
+    title_manual: "Standard Operation Procedure (SOP)",
+    stat_face_rate: "Face ID Recognition Rate",
     stat_total_devices: "Total Devices",
     stat_active_shift: "Standard Work Shift",
-    title_live_events: "Real-Time Face ID & Door Access Log",
-    title_floorplans: "Interactive Floor Plans & Device Placement Map",
-    title_attendance: "Daily Attendance Summary (First In / Last Out)",
-    btn_export_csv: "Export CSV (Excel UTF-8)",
-    title_devices: "Complete Inventory of 22 Face ID & Door Devices",
-    title_personnel: "Personnel Directory & Access Privileges",
-    title_manual: "Standard Operating Procedures & Training (SOP)"
+    stat_total_scans: "Total Event Scans",
+    stat_realtime_synced: "Realtime SQL Sync",
+    stat_primary_method: "Primary Biometric Method",
+    title_live_events: "Real-time Access & Face ID Event Log",
+    btn_export_csv: "Export CSV (Excel Standard)",
+    btn_refresh: "Refresh"
   },
   ko: {
-    nav_dashboard: "대시보드",
-    nav_map: "도면 및 기기 위치",
-    nav_attendance: "근태 집계 보고서",
-    nav_devices: "전체 장비 목록",
-    nav_personnel: "인사 및 출입 권한",
-    nav_sql: "데이터베이스 조회",
-    nav_manual: "운영 매뉴얼 (SOP)",
-    btn_refresh: "새로고침",
-    stat_total_scans: "총 출입/근태 로그",
-    stat_realtime_synced: "SQL 실시간 동기화",
-    stat_face_rate: "Face ID 인증 비율",
-    stat_primary_method: "주요 생체 인증",
-    stat_total_devices: "총 설치 기기",
-    stat_active_shift: "표준 근무조",
-    title_live_events: "실시간 Face ID 및 출입문 로그",
-    title_floorplans: "도면 기반 대화형 기기 배치도",
-    title_attendance: "일일 근태 집계 (첫 출근 / 최종 퇴근)",
-    btn_export_csv: "CSV 내보내기 (Excel)",
-    title_devices: "22개 전체 Face ID 및 도어 기기 제원",
-    title_personnel: "임직원 명부 및 출입 권한",
-    title_manual: "표준 운영 지침 및 교육 매뉴얼 (SOP)"
+    nav_dashboard: "실시간 대시보드",
+    nav_floorplans: "도면 및 레이어 뷰어",
+    nav_map: "도면 및 레이어 뷰어",
+    nav_boq: "ELV 물량 집계표",
+    nav_devices: "장비 목록",
+    nav_personnel: "인사 및 얼굴 관리",
+    nav_attendance: "근태 리포트",
+    nav_sql: "HCP_DATA SQL 조회",
+    nav_manual: "운영 매뉴얼",
+    title_dashboard: "Face ID 및 출입통제 실시간 모니터링",
+    title_floorplans: "도면 및 기술 레이어 뷰어",
+    title_boq: "ELV 장비 수량 집계표 (Sheet 42/03)",
+    title_devices: "출입 통제 및 근태 장비 목록",
+    title_personnel: "임직원 명단 및 얼굴 등록 데이터",
+    title_attendance: "일일 근태 집계 (First In / Last Out)",
+    title_sql: "HCP_DATA 데이터베이스 직접 조회",
+    title_manual: "표준 운영 지침서 (SOP)",
+    stat_face_rate: "Face ID 인식률",
+    stat_total_devices: "총 장비 수",
+    stat_active_shift: "기본 근무 교대",
+    stat_total_scans: "총 출입 이벤트 수",
+    stat_realtime_synced: "실시간 SQL 자동 동기화",
+    stat_primary_method: "주요 생체 인증 수단",
+    title_live_events: "실시간 출입 및 Face ID 이벤트 로그",
+    btn_export_csv: "CSV 내보내기 (Excel 표준)",
+    btn_refresh: "새로고침"
   }
 };
-
-let appData = {
-  systemInfo: {},
-  devices: [],
-  employees: [],
-  sopSteps: []
-};
-
-let currentLang = 'vi';
-let liveEvents = [];
-let currentFloor = 'ALL';
-let factory3d = null;
-let currentViewMode = '3d';
 
 // Initialize Application
 document.addEventListener('DOMContentLoaded', async () => {
@@ -139,104 +274,47 @@ function setupTheme() {
   const icon = document.getElementById('theme-icon');
   const label = document.getElementById('theme-label');
   
-  const saved = localStorage.getItem('vnt_theme') || 'dark';
+  const saved = localStorage.getItem('theme') || 'dark';
   applyTheme(saved);
 
-  btn.addEventListener('click', () => {
-    const curr = document.documentElement.getAttribute('data-theme');
-    const next = curr === 'dark' ? 'light' : 'dark';
-    applyTheme(next);
-    localStorage.setItem('vnt_theme', next);
-  });
+  if (btn) {
+    btn.addEventListener('click', () => {
+      const cur = document.documentElement.getAttribute('data-theme') || 'dark';
+      const next = cur === 'dark' ? 'light' : 'dark';
+      applyTheme(next);
+      localStorage.setItem('theme', next);
+    });
+  }
 
-  function applyTheme(theme) {
-    document.documentElement.setAttribute('data-theme', theme);
-    if (theme === 'light') {
-      if (icon) icon.textContent = '☀️';
-      if (label) label.textContent = 'Sáng';
-      btn.setAttribute('title', 'Đang ở chế độ Sáng (Ngày). Bấm để chuyển sang Tối (Đêm)');
-    } else {
-      if (icon) icon.textContent = '🌙';
-      if (label) label.textContent = 'Tối';
-      btn.setAttribute('title', 'Đang ở chế độ Tối (Đêm). Bấm để chuyển sang Sáng (Ngày)');
-    }
-
-    // Sync 3D Digital Twin background & fog
-    if (factory3d && typeof factory3d.setTheme === 'function') {
-      factory3d.setTheme(theme);
-    }
-
-    // Re-render floor map if visible to update SVG styling
-    renderFloorMap(currentFloor);
+  function applyTheme(t) {
+    document.documentElement.setAttribute('data-theme', t);
+    if (icon) icon.textContent = t === 'dark' ? '🌙' : '☀️';
+    if (label) label.textContent = t === 'dark' ? 'Giao diện Tối' : 'Giao diện Sáng';
   }
 }
 
-// Setup Navigation
+// Setup Navigation & Sidebar Collapsible Mode
 function setupNavigation() {
-  const items = document.querySelectorAll('.nav-item');
-  items.forEach(item => {
+  const navItems = document.querySelectorAll('.nav-item');
+  navItems.forEach(item => {
     item.addEventListener('click', () => {
-      items.forEach(i => i.classList.remove('active'));
+      navItems.forEach(i => i.classList.remove('active'));
       item.classList.add('active');
-
       const viewId = item.getAttribute('data-view');
-      showView(viewId);
+      switchView(viewId);
     });
   });
 
-  // Setup Sidebar Collapse Toggle
+  const collapseBtn = document.getElementById('btn-collapse-sidebar');
   const appContainer = document.querySelector('.app-container');
-  const btnSidebarCollapse = document.getElementById('btn-sidebar-collapse');
-  const btnNavToggle = document.getElementById('btn-nav-toggle-sidebar');
-
-  // Load saved state
-  const isCollapsed = localStorage.getItem('vinatech_sidebar_collapsed') === 'true';
-  if (isCollapsed && appContainer) {
-    appContainer.classList.add('sidebar-collapsed');
-  }
-
-  function toggleSidebar() {
-    if (!appContainer) return;
-    appContainer.classList.toggle('sidebar-collapsed');
-    const collapsedNow = appContainer.classList.contains('sidebar-collapsed');
-    localStorage.setItem('vinatech_sidebar_collapsed', collapsedNow);
-
-    // Trigger smooth resize on 3D viewport
-    trigger3DResize();
-  }
-
-  if (btnSidebarCollapse) {
-    btnSidebarCollapse.addEventListener('click', toggleSidebar);
-  }
-  if (btnNavToggle) {
-    btnNavToggle.addEventListener('click', toggleSidebar);
-  }
-
-  document.getElementById('btn-refresh').addEventListener('click', async () => {
-    const btn = document.getElementById('btn-refresh');
-    btn.style.opacity = '0.6';
-    btn.innerHTML = '⏳ Đang tải...';
-    await refreshLiveStatus();
-    if (document.getElementById('view-attendance').classList.contains('active')) {
-      await loadAttendanceData();
-    }
-    setTimeout(() => {
-      btn.style.opacity = '1';
-      btn.innerHTML = '🔄 <span data-i18n="btn_refresh">Làm mới</span>';
-      updateLanguage(currentLang);
-    }, 400);
-  });
-}
-
-function trigger3DResize() {
-  if (factory3d) {
-    [50, 150, 300, 450].forEach(delay => {
-      setTimeout(() => factory3d.onWindowResize(), delay);
+  if (collapseBtn && appContainer) {
+    collapseBtn.addEventListener('click', () => {
+      appContainer.classList.toggle('sidebar-collapsed');
     });
   }
 }
 
-function showView(viewId) {
+function switchView(viewId) {
   document.querySelectorAll('.view-section').forEach(sec => {
     sec.classList.remove('active');
   });
@@ -254,12 +332,7 @@ function showView(viewId) {
   }
 
   // View specific triggers
-  if (viewId === 'floorplans') {
-    if (factory3d) {
-      setTimeout(() => factory3d.onWindowResize(), 60);
-    }
-    renderFloorMap(currentFloor === 'ALL' ? '1F' : currentFloor);
-  } else if (viewId === 'attendance') {
+  if (viewId === 'attendance') {
     loadAttendanceData();
   }
 }
@@ -298,74 +371,45 @@ async function refreshLiveStatus() {
       const statusData = await statusRes.json();
       const dot = document.querySelector('.status-dot');
       const text = document.getElementById('db-status-text');
-      if (statusData.status === 'connected') {
-        if (dot) {
-          dot.style.background = 'var(--emerald)';
-          dot.style.boxShadow = '0 0 10px var(--emerald)';
+      if (dot && text) {
+        if (statusData.dbConnected) {
+          dot.className = 'status-dot online';
+          text.textContent = 'HCP_DATA Online';
+        } else {
+          dot.className = 'status-dot warning';
+          text.textContent = 'CSDL Cục Bộ (Fallback)';
         }
-        if (text) text.textContent = `HCP_DATA: Đã kết nối (${statusData.server}) — ${statusData.totalEvents} Sự kiện`;
-      } else {
-        if (dot) {
-          dot.style.background = 'var(--amber)';
-          dot.style.boxShadow = '0 0 10px var(--amber)';
-        }
-        if (text) text.textContent = `HCP_DATA: Bộ đệm (${statusData.totalEvents} sự kiện)`;
       }
     }
 
     if (eventsRes && eventsRes.ok) {
       liveEvents = await eventsRes.json();
       filterAndRenderDashboardEvents();
-      const countEl = document.getElementById('live-event-count');
-      if (countEl) countEl.textContent = `Hiển thị ${liveEvents.length} bản ghi gần nhất`;
-
-      if (factory3d && liveEvents.length > 0) {
-        const topEv = liveEvents[0];
-        const matchDev = (appData.devices || []).find(d => 
-          (topEv.DeviceName && (topEv.DeviceName.includes(d.id) || topEv.DeviceName.includes(d.code))) ||
-          (topEv.ResourceName && (topEv.ResourceName.includes(d.id) || topEv.ResourceName.includes(d.code)))
-        );
-        if (matchDev) {
-          factory3d.triggerEventAlert(matchDev.id, topEv);
-        }
-      }
     }
 
     if (statsRes && statsRes.ok) {
       const stats = await statsRes.json();
-      const totalEl = document.getElementById('stat-total-scans');
-      const rateEl = document.getElementById('stat-face-rate');
-      if (totalEl) totalEl.textContent = stats.totalEvents + "+";
-      if (rateEl) rateEl.textContent = stats.faceIdPercentage + "%";
-
-      // Update Breakdown bars
-      const total = stats.totalEvents || 1;
-      const facePct = (stats.faceIdCount / total * 100).toFixed(1);
-      const fingerPct = (stats.fingerCount / total * 100).toFixed(1);
-      const cardPct = (stats.cardCount / total * 100).toFixed(1);
+      const total = stats.totalScans || 1;
+      const facePct = ((stats.faceCount / total) * 100).toFixed(1);
+      const fingerPct = ((stats.fingerCount / total) * 100).toFixed(1);
+      const cardPct = ((stats.cardCount / total) * 100).toFixed(1);
 
       const barFace = document.getElementById('bar-face');
       const barFinger = document.getElementById('bar-finger');
       const barCard = document.getElementById('bar-card');
 
-      if (barFace) {
-        barFace.style.width = facePct + "%";
-        barFace.title = `Face ID: ${facePct}% (${stats.faceIdCount} lượt)`;
-      }
-      if (barFinger) {
-        barFinger.style.width = fingerPct + "%";
-        barFinger.title = `Vân tay: ${fingerPct}% (${stats.fingerCount} lượt)`;
-      }
-      if (barCard) {
-        barCard.style.width = cardPct + "%";
-        barCard.title = `Thẻ từ: ${cardPct}% (${stats.cardCount} lượt)`;
-      }
+      if (barFace) barFace.style.width = `${facePct}%`;
+      if (barFinger) barFinger.style.width = `${fingerPct}%`;
+      if (barCard) barCard.style.width = `${cardPct}%`;
+
+      const statFaceRate = document.getElementById('stat-face-rate');
+      if (statFaceRate) statFaceRate.textContent = `${facePct}%`;
 
       const valFace = document.getElementById('val-face-count');
       const valFinger = document.getElementById('val-finger-count');
       const valCard = document.getElementById('val-card-count');
 
-      if (valFace) valFace.textContent = `${stats.faceIdCount} (${facePct}%)`;
+      if (valFace) valFace.textContent = `${stats.faceCount} (${facePct}%)`;
       if (valFinger) valFinger.textContent = `${stats.fingerCount} (${fingerPct}%)`;
       if (valCard) valCard.textContent = `${stats.cardCount} (${cardPct}%)`;
     }
@@ -380,14 +424,6 @@ function renderAllViews() {
   renderPersonnelTable();
   renderSopCards();
   renderBoqTables();
-  init3DEngine();
-  setupModeSwitcher();
-  setup3DControls();
-  setupLayerFilters();
-  setupAssetSearch();
-  setupDrawerInspector();
-  renderFloorTabs();
-  renderFloorMap('ALL');
   setupDashboardFilters();
   setupAttendanceFilters();
   setupPersonnelFilters();
@@ -402,9 +438,9 @@ function renderBoqTables() {
 
   const sections = [
     { key: 'networkPbx', title: 'I. HỆ THỐNG MẠNG IT & TỔNG ĐÀI (NETWORK & PBX SYSTEM)', icon: '📶', items: summary.networkPbx || [] },
-    { key: 'cctv', title: 'II. HỆ THỐNG CAMERA GIÁM SÁT (CCTV SYSTEM — 81 CAM)', icon: '📹', items: summary.cctv || [] },
-    { key: 'taAc', title: 'III. HỆ THỐNG KIỂM SOÁT CỬA & CHẤM CÔNG (TA/AC SYSTEM)', icon: '🚪', items: summary.taAc || [] },
-    { key: 'pa', title: 'IV. HỆ THỐNG ÂM THANH THÔNG BÁO (PA SOUND SYSTEM — 96 LOA)', icon: '📢', items: summary.pa || [] }
+    { key: 'taAc', title: 'II. HỆ THỐNG KIỂM SOÁT CỬA & CHẤM CÔNG (TA/AC SYSTEM)', icon: '🚪', items: summary.taAc || [] },
+    { key: 'grounding', title: 'III. HỆ THỐNG TIẾP ĐỊA AN TOÀN (GROUNDING SYSTEM)', icon: '⚡', items: summary.grounding || [] },
+    { key: 'isp', title: 'IV. HỆ THỐNG ĐƯỜNG TRUYỀN NHÀ MẠNG (ISP LINE SYSTEM)', icon: '🌐', items: summary.isp || [] }
   ];
 
   let html = '';
@@ -453,73 +489,6 @@ function renderBoqTables() {
   container.innerHTML = html;
 }
 
-// Initialize 3D Digital Twin Engine with All ELV Assets
-function init3DEngine() {
-  if (typeof Factory3DEngine !== 'undefined' && !factory3d) {
-    const viewport = document.getElementById('factory-3d-viewport');
-    if (viewport) {
-      factory3d = new Factory3DEngine('factory-3d-viewport', {
-        onDeviceClick: (item) => {
-          openDeviceInspector(item);
-        }
-      });
-      if (appData) {
-        factory3d.syncAllAssets(appData);
-      }
-      const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
-      factory3d.setTheme(currentTheme);
-    }
-  }
-}
-
-// Setup ELV Layer Filters (All, IT Racks, CCTV, Wi-Fi, PA, AC, TA, Barrier)
-function setupLayerFilters() {
-  const chips = document.querySelectorAll('.layer-chip');
-  chips.forEach(chip => {
-    chip.addEventListener('click', () => {
-      chips.forEach(c => c.classList.remove('active'));
-      chip.classList.add('active');
-      const layer = chip.getAttribute('data-layer');
-      if (factory3d) {
-        factory3d.setDeviceLayerFilter(layer);
-      }
-      renderFloorMap(currentFloor === 'ALL' ? '1F' : currentFloor);
-    });
-  });
-}
-
-// Setup Quick Asset Search on 3D Map
-function setupAssetSearch() {
-  const searchInput = document.getElementById('map-asset-search');
-  if (!searchInput) return;
-
-  searchInput.addEventListener('input', (e) => {
-    const query = e.target.value.toLowerCase().trim();
-    if (!query) return;
-
-    const allPool = [
-      ...(appData.devices || []),
-      ...(appData.itRacks || []),
-      ...(appData.cctvCameras || []),
-      ...(appData.wifiAccessPoints || []),
-      ...(appData.paSpeakers || [])
-    ];
-
-    const match = allPool.find(item => 
-      (item.name && item.name.toLowerCase().includes(query)) ||
-      (item.code && item.code.toLowerCase().includes(query)) ||
-      (item.room && item.room.toLowerCase().includes(query)) ||
-      (item.zone && item.zone.toLowerCase().includes(query)) ||
-      (item.id && item.id.toLowerCase().includes(query))
-    );
-
-    if (match && factory3d) {
-      factory3d.focusOnDevice(match.id);
-      openDeviceInspector(match);
-    }
-  });
-}
-
 // Setup In-Viewport Quick Inspector Drawer
 function setupDrawerInspector() {
   const closeBtn = document.getElementById('drawer-close-btn');
@@ -531,7 +500,7 @@ function setupDrawerInspector() {
   }
 }
 
-// Open In-Viewport Inspector Drawer (Supports AC, TA, Barrier, IT Rack, CCTV, Wi-Fi, PA)
+// Open In-Viewport Inspector Drawer (Supports AC, TA, Barrier, IT Rack, Wi-Fi, Outlets)
 window.openDeviceInspector = function(item) {
   const drawer = document.getElementById('drawer-device-inspector');
   const icon = document.getElementById('drawer-icon');
@@ -541,7 +510,7 @@ window.openDeviceInspector = function(item) {
 
   if (!drawer || !item) return;
 
-  icon.textContent = item.icon || (item.type === 'WIFI' ? '📶' : (item.type === 'PA' ? '📢' : '🚪'));
+  icon.textContent = item.icon || (item.type === 'WIFI' ? '📶' : (item.type && item.type.includes('OUTLET') ? '🔌' : '🚪'));
   title.textContent = item.name || 'Thiết bị ELV';
   code.textContent = `${item.code || item.id} • ${item.typeLabel || item.type || ''}`;
 
@@ -560,8 +529,8 @@ window.openDeviceInspector = function(item) {
           <strong style="font-family: var(--font-mono); color: var(--emerald);">${item.ipAddress}</strong>
         </div>
         <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
-          <span style="color: var(--text-faint);">Nguồn Điện:</span>
-          <span>${item.power || '220V UPS'}</span>
+          <span style="color: var(--text-faint);">Quy Cách:</span>
+          <span>${item.dimensions || 'Tủ Tiêu Chuẩn 19 inch'}</span>
         </div>
         <div style="display: flex; justify-content: space-between;">
           <span style="color: var(--text-faint);">Nhiệt Độ RACK:</span>
@@ -581,38 +550,34 @@ window.openDeviceInspector = function(item) {
         <span class="badge" style="background: rgba(6,182,212,0.15); color: #22d3ee; border: 1px solid rgba(6,182,212,0.3);">Fiber Backbone</span>
       </div>
     `;
-  } else if (item.type === 'CCTV') {
+  } else if (item.type && (item.type.includes('OUTLET') || item.type === 'OUTLET')) {
     contentHtml = `
-      <div style="background: rgba(6,182,212,0.1); border: 1px solid rgba(6,182,212,0.3); border-radius: var(--radius-md); padding: 12px;">
+      <div style="background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); border-radius: var(--radius-md); padding: 12px;">
         <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
-          <span style="color: var(--text-faint);">Vị trí:</span>
-          <strong>${item.floor} — ${item.name}</strong>
+          <span style="color: var(--text-faint);">Vị trí lắp:</span>
+          <strong>${item.floor} — ${item.room}</strong>
         </div>
         <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
-          <span style="color: var(--text-faint);">IP Camera:</span>
-          <strong style="font-family: var(--font-mono); color: #22d3ee;">${item.ipAddress}</strong>
+          <span style="color: var(--text-faint);">Loại Ổ Cắm:</span>
+          <strong style="color: #fbbf24;">${item.typeLabel || 'Ổ Cắm Mạng / Thoại'}</strong>
         </div>
         <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
-          <span style="color: var(--text-faint);">Độ Phân Giải:</span>
-          <strong>4.0 Megapixel (2560x1440) @ 30fps</strong>
+          <span style="color: var(--text-faint);">Cấu Hình Port:</span>
+          <strong style="font-family: var(--font-mono); color: #22d3ee;">${item.ports || 'RJ45 Cat6 UTP'}</strong>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+          <span style="color: var(--text-faint);">Kiểu Lắp Đặt:</span>
+          <span>${item.mountType || 'Âm Sàn / Âm Tường'}</span>
         </div>
         <div style="display: flex; justify-content: space-between;">
-          <span style="color: var(--text-faint);">Giao Thức:</span>
-          <span>ONVIF Profile S / HikCentral NVR</span>
-        </div>
-      </div>
-
-      <div style="position: relative; height: 130px; background: #0b1120; border-radius: var(--radius-sm); border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; overflow: hidden;">
-        <span style="position: absolute; top: 8px; left: 8px; font-size: 11px; background: rgba(244,63,94,0.85); color: #fff; padding: 2px 6px; border-radius: 4px; font-weight: 800;">● LIVE CAM</span>
-        <div style="text-align: center; color: var(--text-faint);">
-          <span style="font-size: 28px;">📹</span>
-          <div style="font-size: 11.5px; margin-top: 4px;">Kênh luồng RTSP / HikCentral Stream</div>
+          <span style="color: var(--text-faint);">Tủ RACK Cung Cấp:</span>
+          <strong style="color: var(--emerald); font-family: var(--font-mono);">${item.rack || 'RACK_MAIN'}</strong>
         </div>
       </div>
 
       <div style="display: flex; gap: 8px;">
-        <span class="badge badge-success">● Đang Ghi Hình (Recording)</span>
-        <span class="badge badge-face">AI Motion Ready</span>
+        <span class="badge badge-success">● Cáp Cat6 UTP Sẵn Sàng</span>
+        <span class="badge" style="background: rgba(6,182,212,0.15); color: #22d3ee;">1000BASE-T GbE</span>
       </div>
     `;
   } else if (item.type === 'WIFI') {
@@ -639,32 +604,6 @@ window.openDeviceInspector = function(item) {
       <div style="display: flex; gap: 8px;">
         <span class="badge badge-success">● Wi-Fi 6 Active</span>
         <span class="badge" style="background: rgba(59,130,246,0.15); color: #60a5fa;">SSID: VINATECH_CORP</span>
-      </div>
-    `;
-  } else if (item.type === 'PA') {
-    contentHtml = `
-      <div style="background: rgba(168,85,247,0.1); border: 1px solid rgba(168,85,247,0.3); border-radius: var(--radius-md); padding: 12px;">
-        <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
-          <span style="color: var(--text-faint);">Vùng Phát Thanh:</span>
-          <strong>${item.zone}</strong>
-        </div>
-        <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
-          <span style="color: var(--text-faint);">Số Lượng Loa:</span>
-          <strong style="color: #c084fc;">${item.qty} Loa (${item.type})</strong>
-        </div>
-        <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
-          <span style="color: var(--text-faint);">Tuyến Cáp:</span>
-          <span>100V Line từ Tủ RACK PA (2F)</span>
-        </div>
-        <div style="display: flex; justify-content: space-between;">
-          <span style="color: var(--text-faint);">Trạng Thái:</span>
-          <strong style="color: var(--emerald);">Sẵn Sàng Phát Nhạc & Chuông Ca</strong>
-        </div>
-      </div>
-
-      <div style="display: flex; gap: 8px;">
-        <span class="badge badge-success">● Zone Ready</span>
-        <span class="badge" style="background: rgba(168,85,247,0.15); color: #c084fc;">BGM & Paging</span>
       </div>
     `;
   } else {
@@ -702,103 +641,6 @@ window.openDeviceInspector = function(item) {
   body.innerHTML = contentHtml;
   drawer.classList.add('active');
 };
-
-// Setup 3D / 2D Hybrid Mode Switcher
-function setupModeSwitcher() {
-  const btn3D = document.getElementById('btn-mode-3d');
-  const btn2D = document.getElementById('btn-mode-2d');
-  const cont3D = document.getElementById('container-3d-wrapper');
-  const cont2D = document.getElementById('container-2d-wrapper');
-
-  if (btn3D && btn2D && cont3D && cont2D) {
-    btn3D.addEventListener('click', () => {
-      btn3D.classList.add('active');
-      btn2D.classList.remove('active');
-      cont3D.style.display = 'block';
-      cont2D.style.display = 'none';
-      currentViewMode = '3d';
-      if (factory3d) {
-        setTimeout(() => factory3d.onWindowResize(), 50);
-      }
-    });
-
-    btn2D.addEventListener('click', () => {
-      btn2D.classList.add('active');
-      btn3D.classList.remove('active');
-      cont3D.style.display = 'none';
-      cont2D.style.display = 'block';
-      currentViewMode = '2d';
-      renderFloorMap(currentFloor === 'ALL' ? '1F' : currentFloor);
-    });
-  }
-}
-
-// Setup 3D HUD Controls (Rotate, Exploded, X-Ray, Reset, Fullscreen)
-function setup3DControls() {
-  const btnFullscreen = document.getElementById('btn-3d-fullscreen');
-  const btnRotate = document.getElementById('btn-3d-rotate');
-  const btnExploded = document.getElementById('btn-3d-exploded');
-  const btnXray = document.getElementById('btn-3d-xray');
-  const btnReset = document.getElementById('btn-3d-reset');
-  const cont3DWrapper = document.getElementById('container-3d-wrapper');
-
-  if (btnFullscreen && cont3DWrapper) {
-    btnFullscreen.addEventListener('click', () => {
-      cont3DWrapper.classList.toggle('fullscreen-mode');
-      const isFull = cont3DWrapper.classList.contains('fullscreen-mode');
-      
-      const icon = btnFullscreen.querySelector('.hud-icon');
-      const text = btnFullscreen.querySelector('.hud-text');
-      if (icon) icon.textContent = isFull ? '✕' : '⛶';
-      if (text) text.textContent = isFull ? 'Thu Nhỏ' : 'Toàn Màn Hình';
-      
-      trigger3DResize();
-    });
-
-    // Escape key to exit fullscreen mode
-    window.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && cont3DWrapper.classList.contains('fullscreen-mode')) {
-        cont3DWrapper.classList.remove('fullscreen-mode');
-        const icon = btnFullscreen.querySelector('.hud-icon');
-        const text = btnFullscreen.querySelector('.hud-text');
-        if (icon) icon.textContent = '⛶';
-        if (text) text.textContent = 'Toàn Màn Hình';
-        trigger3DResize();
-      }
-    });
-  }
-
-  if (btnRotate) {
-    btnRotate.addEventListener('click', () => {
-      if (!factory3d) return;
-      const isRotating = factory3d.toggleAutoRotate();
-      btnRotate.classList.toggle('active', isRotating);
-    });
-  }
-
-  if (btnExploded) {
-    btnExploded.addEventListener('click', () => {
-      if (!factory3d) return;
-      const isExp = factory3d.toggleExplodedView();
-      btnExploded.classList.toggle('active', isExp);
-    });
-  }
-
-  if (btnXray) {
-    btnXray.addEventListener('click', () => {
-      if (!factory3d) return;
-      const isX = factory3d.toggleXRay();
-      btnXray.classList.toggle('active', isX);
-    });
-  }
-
-  if (btnReset) {
-    btnReset.addEventListener('click', () => {
-      if (!factory3d) return;
-      factory3d.resetCamera();
-    });
-  }
-}
 
 // Filter and Render Dashboard Events Table
 function filterAndRenderDashboardEvents() {
@@ -851,15 +693,18 @@ function renderDashboardEvents(events) {
 
     tr.innerHTML = `
       <td><span style="font-family: var(--font-mono); font-weight: 800; color: var(--primary);">${e.EmployeeID || '—'}</span></td>
-      <td><strong>${e.PersonName || 'Chưa định danh'}</strong></td>
-      <td><span class="badge" style="background: rgba(99,102,241,0.1); border: 1px solid var(--card-border); color: var(--text-muted);">${e.Department || 'Chung'}</span></td>
-      <td><span style="font-family: var(--font-mono); color: var(--text-muted); font-size: 12.5px;">${e.AccessDate || ''} ${e.AccessTime || ''}</span></td>
-      <td><strong>${e.DeviceName || 'Device'}</strong> <span style="font-size: 11px; color: var(--text-faint);">(${e.ResourceName || ''})</span></td>
+      <td><strong>${e.PersonName || 'Khách / Chưa định danh'}</strong></td>
+      <td><span class="badge" style="background: rgba(99,102,241,0.12); border: 1px solid var(--card-border); color: var(--text-muted);">${e.Department || 'Chung'}</span></td>
+      <td><span style="font-family: var(--font-mono);">${e.EventTime ? e.EventTime.replace('T', ' ') : '—'}</span></td>
+      <td><strong>${e.DeviceName || 'Cổng Kiểm Soát'}</strong></td>
       <td><span class="badge ${badgeClass}">${authLabel}</span></td>
       <td><span class="badge badge-success">✓ Hợp Lệ</span></td>
     `;
     tbody.appendChild(tr);
   });
+
+  const countEl = document.getElementById('live-event-count');
+  if (countEl) countEl.textContent = `Hiển thị ${events.length} sự kiện gần nhất`;
 }
 
 function setupDashboardFilters() {
@@ -870,195 +715,6 @@ function setupDashboardFilters() {
   if (search) search.addEventListener('input', filterAndRenderDashboardEvents);
   if (devSelect) devSelect.addEventListener('change', filterAndRenderDashboardEvents);
   if (authSelect) authSelect.addEventListener('change', filterAndRenderDashboardEvents);
-}
-
-// Floor Plans Map & 3D Synchronization
-function renderFloorTabs() {
-  const tabs = document.querySelectorAll('.floor-tab');
-  tabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      tabs.forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
-      currentFloor = tab.getAttribute('data-floor');
-      
-      // Update 3D Digital Twin
-      if (factory3d) {
-        factory3d.setFloorView(currentFloor);
-      }
-      // Update 2D CAD Blueprint
-      renderFloorMap(currentFloor === 'ALL' ? '1F' : currentFloor);
-    });
-  });
-}
-
-function renderFloorMap(floor) {
-  const container = document.getElementById('floor-blueprint-wrap');
-  if (!container) return;
-
-  const actualFloor = floor === 'ALL' ? '1F' : floor;
-  const devicesOnFloor = (appData.devices || []).filter(d => d.floor === actualFloor);
-  const racksOnFloor = (appData.itRacks || []).filter(r => r.floor === actualFloor);
-  const camsOnFloor = (appData.cctvCameras || []).filter(c => c.floor === actualFloor);
-  const wifisOnFloor = (appData.wifiAccessPoints || []).filter(w => w.floor === actualFloor);
-  const paOnFloor = (appData.paSpeakers || []).filter(p => p.floor === actualFloor);
-
-  let floorBgBoxes = '';
-  
-  if (actualFloor === '1F') {
-    floorBgBoxes = `
-      <!-- Tầng 1 Rooms with dedicated top header pills -->
-      <!-- Room 1: Kho & Dock -->
-      <rect x="40" y="45" width="220" height="350" class="room-box" rx="14"/>
-      <rect x="52" y="55" width="196" height="28" class="room-header-badge" rx="6"/>
-      <text x="150" y="70" class="room-label">📦 Kho 1 (104) & Dock 105</text>
-
-      <!-- Room 2: Locker Nữ -->
-      <rect x="280" y="45" width="250" height="160" class="room-box" rx="14"/>
-      <rect x="292" y="55" width="226" height="28" class="room-header-badge" rx="6"/>
-      <text x="405" y="70" class="room-label">🧪 Locker Nữ (136) / QC Room</text>
-
-      <!-- Room 3: Căn Tin -->
-      <rect x="280" y="235" width="250" height="160" class="room-box" rx="14"/>
-      <rect x="292" y="245" width="226" height="28" class="room-header-badge" rx="6"/>
-      <text x="405" y="260" class="room-label">🍽️ Căn Tin & P. Nghỉ Ca (115A)</text>
-
-      <!-- Room 4: Điều Khiển -->
-      <rect x="550" y="45" width="190" height="350" class="room-box" rx="14"/>
-      <rect x="560" y="55" width="170" height="28" class="room-header-badge" rx="6"/>
-      <text x="645" y="70" class="room-label">🎛️ P. Điều Khiển (128)</text>
-
-      <!-- Room 5: Sảnh Chính -->
-      <rect x="760" y="45" width="200" height="350" class="room-box" rx="14"/>
-      <rect x="770" y="55" width="180" height="28" class="room-header-badge" rx="6"/>
-      <text x="860" y="70" class="room-label">🏛️ Sảnh Chính & Showroom (101)</text>
-    `;
-  } else if (actualFloor === '1.5F') {
-    floorBgBoxes = `
-      <rect x="180" y="50" width="640" height="340" class="room-box" rx="16"/>
-      <rect x="200" y="65" width="600" height="34" class="room-header-badge" rx="8"/>
-      <text x="500" y="83" class="room-label">🏢 Khối Văn Phòng 1.5F (P. 201 & P. Giám Đốc 202)</text>
-    `;
-  } else if (actualFloor === '2F') {
-    floorBgBoxes = `
-      <!-- IT Room -->
-      <rect x="100" y="50" width="370" height="340" class="room-box" rx="16"/>
-      <rect x="120" y="65" width="330" height="34" class="room-header-badge" rx="8"/>
-      <text x="285" y="83" class="room-label">💻 P. IT & Server Room (304) [Rack Main 42U + PA 27U]</text>
-
-      <!-- Văn Phòng 2F -->
-      <rect x="495" y="50" width="405" height="340" class="room-box" rx="16"/>
-      <rect x="515" y="65" width="365" height="34" class="room-header-badge" rx="8"/>
-      <text x="697" y="83" class="room-label">👔 Văn Phòng 2F (302: HR, Kế toán, Mua hàng, Giám đốc 303)</text>
-    `;
-  } else if (actualFloor === 'PARKING') {
-    floorBgBoxes = `
-      <!-- Nhà Bảo Vệ 1 (Cổng Chính) -->
-      <rect x="760" y="45" width="200" height="150" class="room-box" rx="14"/>
-      <rect x="772" y="55" width="176" height="26" class="room-header-badge" rx="6"/>
-      <text x="860" y="68" class="room-label">🛡️ Nhà Bảo Vệ 1 [Cổng Chính - RACK_06]</text>
-
-      <!-- Nhà Bảo Vệ 2 (Cổng Logistics) -->
-      <rect x="40" y="45" width="200" height="150" class="room-box" rx="14"/>
-      <rect x="52" y="55" width="176" height="26" class="room-header-badge" rx="6"/>
-      <text x="140" y="68" class="room-label">🚛 Nhà Bảo Vệ 2 [Cổng Phụ - RACK_07]</text>
-
-      <!-- Nhà Bảo Vệ 3 & Cổng Nhà Xe -->
-      <rect x="40" y="240" width="200" height="150" class="room-box" rx="14"/>
-      <rect x="52" y="250" width="176" height="26" class="room-header-badge" rx="6"/>
-      <text x="140" y="263" class="room-label">🅿️ Nhà Bảo Vệ 3 [Nhà Xe - RACK_08]</text>
-
-      <!-- Flap Barrier Vào -->
-      <rect x="260" y="45" width="480" height="150" class="room-box" rx="14"/>
-      <rect x="272" y="55" width="456" height="26" class="room-header-badge" rx="6"/>
-      <text x="500" y="68" class="room-label">🟢 5 Làn Flap Barrier CHIỀU VÀO Nhà Xưởng (AC-10 -> AC-14)</text>
-
-      <!-- Flap Barrier Ra -->
-      <rect x="260" y="240" width="480" height="150" class="room-box" rx="14"/>
-      <rect x="272" y="250" width="456" height="26" class="room-header-badge" rx="6"/>
-      <text x="500" y="263" class="room-label">🔴 5 Làn Flap Barrier CHIỀU RA Nhà Xe (AC-15 -> AC-19)</text>
-
-      <!-- Tiện ích Khuôn Viên: Trạm Biến Áp / PCCC / Xử Lý Nước Thải -->
-      <rect x="760" y="240" width="200" height="150" class="room-box" rx="14"/>
-      <rect x="772" y="250" width="176" height="26" class="room-header-badge" rx="6"/>
-      <text x="860" y="263" class="room-label">⚡ Trạm Biến Áp & Bể PCCC & Utility</text>
-    `;
-  }
-
-  // Generate Pins for Devices (AC, TA, Barrier)
-  let pinsSvg = '';
-  devicesOnFloor.forEach(d => {
-    const isAc = d.type === 'AC';
-    const isBarrier = d.type === 'BARRIER';
-    let pinClass = isAc ? 'pin-ac' : (isBarrier ? 'pin-barrier' : 'pin-ta');
-
-    pinsSvg += `
-      <g class="device-pin" onclick="openDeviceInspector(appData.devices.find(x => x.id === '${d.id}'))" transform="translate(${d.x * 10}, ${d.y * 4.4})">
-        <rect x="-28" y="-14" width="56" height="28" rx="14" class="pin-pill ${pinClass}"></rect>
-        <text x="0" y="4" text-anchor="middle" font-size="11" font-family="'JetBrains Mono', monospace" font-weight="800" fill="#ffffff" pointer-events="none" letter-spacing="0.2px">${d.code}</text>
-        <title>${d.code}: ${d.name} (${d.typeLabel})</title>
-      </g>
-    `;
-  });
-
-  // Generate Pins for IT Racks
-  racksOnFloor.forEach(r => {
-    pinsSvg += `
-      <g class="device-pin" onclick="openDeviceInspector(appData.itRacks.find(x => x.id === '${r.id}'))" transform="translate(${r.x * 10}, ${r.y * 4.4})">
-        <rect x="-38" y="-14" width="76" height="28" rx="14" class="pin-pill pin-rack"></rect>
-        <text x="0" y="4" text-anchor="middle" font-size="10" font-family="'JetBrains Mono', monospace" font-weight="800" fill="#ffffff" pointer-events="none">🖥️ ${r.code}</text>
-        <title>${r.name} (${r.ipAddress})</title>
-      </g>
-    `;
-  });
-
-  // Generate Pins for CCTV Cameras
-  camsOnFloor.forEach(c => {
-    pinsSvg += `
-      <g class="device-pin" onclick="openDeviceInspector(appData.cctvCameras.find(x => x.id === '${c.id}'))" transform="translate(${c.x * 10}, ${c.y * 4.4})">
-        <circle cx="0" cy="0" r="14" class="pin-cctv"></circle>
-        <text x="0" y="4" text-anchor="middle" font-size="11" pointer-events="none">📹</text>
-        <title>${c.code}: ${c.name}</title>
-      </g>
-    `;
-  });
-
-  // Generate Pins for Wi-Fi APs
-  wifisOnFloor.forEach(w => {
-    pinsSvg += `
-      <g class="device-pin" onclick="openDeviceInspector(appData.wifiAccessPoints.find(x => x.id === '${w.id}'))" transform="translate(${w.x * 10}, ${w.y * 4.4})">
-        <circle cx="0" cy="0" r="14" class="pin-wifi"></circle>
-        <text x="0" y="4" text-anchor="middle" font-size="11" pointer-events="none">📶</text>
-        <title>${w.code}: ${w.name}</title>
-      </g>
-    `;
-  });
-
-  // Generate Pins for PA Speakers
-  paOnFloor.forEach(p => {
-    pinsSvg += `
-      <g class="device-pin" onclick="openDeviceInspector(appData.paSpeakers.find(x => x.id === '${p.id}'))" transform="translate(${p.x * 10}, ${p.y * 4.4})">
-        <circle cx="0" cy="0" r="14" class="pin-pa"></circle>
-        <text x="0" y="4" text-anchor="middle" font-size="11" pointer-events="none">📢</text>
-        <title>${p.code}: ${p.name} (${p.qty} Loa)</title>
-      </g>
-    `;
-  });
-
-  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-  const gridStroke = isDark ? 'rgba(99,102,241,0.07)' : 'rgba(99,102,241,0.06)';
-
-  container.innerHTML = `
-    <svg class="blueprint-svg" viewBox="0 0 1000 440" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <pattern id="grid-pattern" width="40" height="40" patternUnits="userSpaceOnUse">
-          <path d="M 40 0 L 0 0 0 40" fill="none" stroke="${gridStroke}" stroke-width="1"/>
-        </pattern>
-      </defs>
-      <rect width="100%" height="100%" fill="url(#grid-pattern)" />
-      ${floorBgBoxes}
-      ${pinsSvg}
-    </svg>
-  `;
 }
 
 // Modal inspection
@@ -1251,7 +907,9 @@ async function loadAttendanceData() {
       renderAttendanceTable();
     }
   } catch (e) {
-    console.warn("Attendance load error:", e);
+    if (tbody) {
+      tbody.innerHTML = `<tr><td colspan="10" style="text-align: center; color: var(--rose); padding: 28px;">Không thể kết nối máy chủ chấm công: ${e.message}</td></tr>`;
+    }
   }
 }
 
@@ -1366,7 +1024,6 @@ function renderSopCards() {
           <div class="sop-step-badge">${s.step}</div>
           <span style="font-size: 22px;">${s.icon}</span>
         </div>
-        <span class="badge" style="background: rgba(99,102,241,0.15); color: var(--primary); border: 1px solid rgba(99,102,241,0.3); font-size: 11px;">${s.slides}</span>
       </div>
       <div class="sop-title">${s.title}</div>
       <div class="sop-desc">${s.desc}</div>

@@ -42,10 +42,7 @@
           <span class="nav-label" data-i18n="nav_dashboard">Bảng Điều Khiển</span>
           <span class="nav-badge badge-live" id="badge-live-events">LIVE</span>
         </div>
-        <div class="nav-item" data-view="floorplans" title="Mặt Bằng & Vị Trí 3D">
-          <span class="icon">🗺️</span>
-          <span class="nav-label" data-i18n="nav_map">Mặt Bằng & Vị Trí</span>
-        </div>
+
         <div class="nav-item" data-view="attendance" title="Báo Cáo Chấm Công">
           <span class="icon">⏱️</span>
           <span class="nav-label" data-i18n="nav_attendance">Báo Cáo Chấm Công</span>
@@ -247,161 +244,6 @@
           </div>
         </section>
 
-        <!-- ================= VIEW 2: INTERACTIVE 3D DIGITAL TWIN & 2D CAD ================= -->
-        <section id="view-floorplans" class="view-section">
-          
-          <div class="section-header" style="flex-wrap: wrap; gap: 14px;">
-            <div>
-              <h3 class="section-title">
-                <span>🏢</span> <span data-i18n="title_floorplans">Mặt Bằng & Mô Hình 3D Digital Twin Nhà Xưởng</span>
-              </h3>
-              <p style="font-size: 13px; color: var(--text-faint); margin-top: 4px;">
-                Bóc tách chi tiết theo bản vẽ điện nhẹ ELV: 22 Face ID/Cửa, 10 Tủ RACK IT, 81 Camera CCTV, 8 Wi-Fi 6 AP, 96 Loa PA & 3 Nhà Bảo Vệ + Khu tiện ích.
-              </p>
-            </div>
-
-            <!-- 3D / 2D Mode Switcher -->
-            <div class="view-mode-pills">
-              <button class="mode-pill active" id="btn-mode-3d">
-                <span>🏢</span> <span>Mô Hình 3D Không Gian</span>
-              </button>
-              <button class="mode-pill" id="btn-mode-2d">
-                <span>🗺️</span> <span>Bản Vẽ 2D Chuẩn CAD</span>
-              </button>
-            </div>
-          </div>
-
-          <!-- Floor Switcher & Search Bar Row -->
-          <div style="display: flex; gap: 12px; align-items: center; justify-content: space-between; flex-wrap: wrap; margin-bottom: 12px;">
-            <div class="floor-tabs" style="margin-bottom: 0;">
-              <button class="floor-tab active" data-floor="ALL">🌐 Toàn Cảnh Nhà Máy</button>
-              <button class="floor-tab" data-floor="1F">Tầng 1 Nhà Xưởng</button>
-              <button class="floor-tab" data-floor="1.5F">Tầng 1.5 Nhà Xưởng</button>
-              <button class="floor-tab" data-floor="2F">Tầng 2 (Văn Phòng & IT Server)</button>
-              <button class="floor-tab" data-floor="PARKING">🅿️ Nhà Xe & Khuôn Viên (3 Cổng BV)</button>
-            </div>
-
-            <!-- Quick Search on 3D Map -->
-            <div class="search-input-wrap" style="width: 320px;">
-              <span class="search-icon">🔍</span>
-              <input type="text" id="map-asset-search" placeholder="Tìm nhanh Tủ Rack, Camera, Cửa, Phòng...">
-            </div>
-          </div>
-
-          <!-- ELV Layer Filter Toolbar -->
-          <div class="layer-filter-bar">
-            <span class="layer-title">Hệ Thống ELV:</span>
-            <button class="layer-chip active" data-layer="ALL">
-              <span>🔘</span> <span>Toàn Bộ ELV (All Systems)</span>
-            </button>
-            <button class="layer-chip" data-layer="TA_AC">
-              <span>🚪</span> <span>Face ID & Cửa (16 AC + 5 TA)</span>
-            </button>
-            <button class="layer-chip" data-layer="CCTV">
-              <span>📹</span> <span>Camera CCTV (81 Cam)</span>
-            </button>
-            <button class="layer-chip" data-layer="WIFI">
-              <span>📶</span> <span>Wi-Fi 6 & Mạng IT (8 AP + 96 Outlets)</span>
-            </button>
-            <button class="layer-chip" data-layer="PA">
-              <span>📢</span> <span>Âm Thanh Thông Báo (96 Loa PA)</span>
-            </button>
-            <button class="layer-chip" data-layer="IT_RACK">
-              <span>🖥️</span> <span>Tủ RACK & Cáp Trục (10 Tủ RACK)</span>
-            </button>
-            <button class="layer-chip" data-layer="BARRIER">
-              <span>🚧</span> <span>Cổng Flap Barrier (10 Làn)</span>
-            </button>
-          </div>
-
-          <!-- 3D Digital Twin Viewport Container -->
-          <div id="container-3d-wrapper" class="digital-twin-container">
-            <!-- 3D Canvas Target -->
-            <div id="factory-3d-viewport" class="factory-3d-viewport"></div>
-
-            <!-- Floating 3D Control HUD (Top-Right) -->
-            <div class="hud-controls-overlay">
-              <button class="hud-btn" id="btn-3d-fullscreen" title="Mở rộng toàn màn hình 3D (Phím Esc để thoát)">
-                <span class="hud-icon">⛶</span> <span class="hud-text">Toàn Màn Hình</span>
-              </button>
-              <button class="hud-btn" id="btn-3d-rotate" title="Bật/Tắt xoay tự động 360°">
-                <span class="hud-icon">🔄</span> <span class="hud-text">Xoay 360°</span>
-              </button>
-              <button class="hud-btn" id="btn-3d-exploded" title="Bóc tách nâng từng tầng không gian">
-                <span class="hud-icon">💥</span> <span class="hud-text">Tách Tầng</span>
-              </button>
-              <button class="hud-btn" id="btn-3d-xray" title="Chuyển chế độ tường trong suốt X-Ray">
-                <span class="hud-icon">✨</span> <span class="hud-text">X-Ray Kính</span>
-              </button>
-              <button class="hud-btn" id="btn-3d-reset" title="Khôi phục góc nhìn chuẩn">
-                <span class="hud-icon">🎥</span> <span class="hud-text">Reset Góc</span>
-              </button>
-            </div>
-
-            <!-- 3D Live Quick Stats Badge (Top-Left) -->
-            <div class="hud-stats-overlay">
-              <div class="hud-stat-item">
-                <span class="dot-live"></span>
-                <span><strong>22</strong> Face ID + <strong>7</strong> Tủ Rack + <strong>12</strong> CCTV Online</span>
-              </div>
-              <div class="hud-stat-item">
-                <span>⚡ Trục mạng cáp quang: <strong>RACK_MAIN 42U Server Room 304</strong></span>
-              </div>
-              <div class="hud-stat-item">
-                <span style="color: var(--primary);">💡 Nhấp vào bất kỳ thiết bị nào trên mô hình để xem bảng điều khiển</span>
-              </div>
-            </div>
-
-          </div>
-
-          <!-- 2D CAD Blueprint Viewport (Hidden in 3D Mode) -->
-          <div id="container-2d-wrapper" class="map-container" style="display: none;">
-            <div id="floor-blueprint-wrap">
-              <!-- SVG Blueprint injected via JavaScript -->
-            </div>
-          </div>
-
-          <!-- In-Viewport Interactive Device Drawer (Slide-In for both 3D & 2D) -->
-          <div id="drawer-device-inspector" class="viewport-drawer">
-            <div class="drawer-header">
-              <div style="display: flex; align-items: center; gap: 10px;">
-                <span id="drawer-icon" style="font-size: 24px;">🚪</span>
-                <div>
-                  <h4 id="drawer-title" style="margin: 0; font-size: 15px; font-weight: 800; font-family: var(--font-display);">Tên Thiết Bị</h4>
-                  <span id="drawer-code" style="font-size: 11.5px; color: var(--text-faint); font-family: var(--font-mono);">AC-01</span>
-                </div>
-              </div>
-              <button id="drawer-close-btn" class="theme-pill-btn" style="padding: 4px 10px; font-size: 12px;">✕</button>
-            </div>
-            <div id="drawer-body" class="drawer-content">
-              <!-- Injected via JavaScript -->
-            </div>
-          </div>
-
-          <!-- Legend Bar -->
-          <div class="legend-bar-card">
-            <div class="legend-item">
-              <span class="legend-dot" style="background: #10b981; box-shadow: 0 0 10px #10b981;"></span>
-              <strong>Tủ RACK IT & Server:</strong> 7 Tủ Phân Phối (RACK_MAIN 42U, RACK 01..05, Guardhouse)
-            </div>
-            <div class="legend-item">
-              <span class="legend-dot" style="background: #06b6d4; box-shadow: 0 0 10px #06b6d4;"></span>
-              <strong>Camera CCTV:</strong> 12 Camera Giám Sát (Dome 360°, Bullet Ngoài Trời, Speed Dome PTZ)
-            </div>
-            <div class="legend-item">
-              <span class="legend-dot ac"></span>
-              <strong>Access Control (AC):</strong> 6 Khóa Cửa Face ID (Phòng IT, Mixer 128, Showroom, Mezzanine)
-            </div>
-            <div class="legend-item">
-              <span class="legend-dot ta"></span>
-              <strong>Time Attendance (TA):</strong> 5 Máy Chấm Công (Sảnh Chính, Căn Tin, Locker Nữ, Kho 1, Dock)
-            </div>
-            <div class="legend-item">
-              <span class="legend-dot barrier"></span>
-              <strong>Flap Barrier:</strong> 10 Cổng Phân Làn Tự Động Nhà Xe E-Parking (5 Làn Vào + 5 Làn Ra)
-            </div>
-          </div>
-        </section>
 
         <!-- ================= VIEW: OFFICIAL ELV BILL OF QUANTITIES (SHEET 42/03) ================= -->
         <section id="view-boq" class="view-section">
@@ -696,10 +538,7 @@
     </div>
   </div>
 
-  <!-- 3D Graphics & Application Logic Scripts -->
-  <script src="libs/three.min.js"></script>
-  <script src="libs/OrbitControls.js"></script>
-  <script src="factory3d.js"></script>
+  <!-- Application Logic Scripts -->
   <script src="app.js"></script>
 </body>
 </html>

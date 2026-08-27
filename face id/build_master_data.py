@@ -1,4 +1,6 @@
-{
+import json
+
+master_data = {
   "systemInfo": {
     "name": "HikCentral Professional — Vinatech ELV Infrastructure Portal",
     "factory": "VINATECH VINA (Hưng Yên Factory)",
@@ -16,6 +18,7 @@
     "defaultShift": "HC (08:00 - 17:30)"
   },
   "devices": [
+    # 1F FACTORY TA/AC (Sheet 42/30)
     {
       "id": "AC-01",
       "code": "AC_1",
@@ -28,11 +31,7 @@
       "typeLabel": "Kiểm Soát Cửa (Access Control)",
       "icon": "🚪",
       "lockType": "Khóa Hút Từ (Magnetic Lock 280kg)",
-      "accessories": [
-        "Nút Exit Cảm Ứng",
-        "Cảm Biến Cửa",
-        "Nút Khẩn Cấp Break Glass"
-      ],
+      "accessories": ["Nút Exit Cảm Ứng", "Cảm Biến Cửa", "Nút Khẩn Cấp Break Glass"],
       "controller": "RACK Rack_1 (VP Xưởng 3)",
       "serialNo": "GS8090991",
       "ipAddress": "192.168.184.101",
@@ -52,11 +51,7 @@
       "typeLabel": "Kiểm Soát Cửa (Access Control)",
       "icon": "🎛️",
       "lockType": "Khóa Thả Chốt (Drop Bolt Lock)",
-      "accessories": [
-        "Nút Exit",
-        "Cảm Biến Cửa",
-        "Nút Đập Khẩn Cấp"
-      ],
+      "accessories": ["Nút Exit", "Cảm Biến Cửa", "Nút Đập Khẩn Cấp"],
       "controller": "RACK_02 (P. Điều Khiển)",
       "serialNo": "GS8090992",
       "ipAddress": "192.168.184.102",
@@ -76,10 +71,7 @@
       "typeLabel": "Kiểm Soát Cửa (Access Control)",
       "icon": "🧯",
       "lockType": "Khóa Hút Từ (Magnetic Lock)",
-      "accessories": [
-        "Nút Exit",
-        "Cảm Biến Trạng Thái Cửa"
-      ],
+      "accessories": ["Nút Exit", "Cảm Biến Trạng Thái Cửa"],
       "controller": "RACK Rack_3 (Khu QC/PCCC)",
       "serialNo": "GS8090995",
       "ipAddress": "192.168.184.103",
@@ -99,10 +91,7 @@
       "typeLabel": "Chấm Công Chuyên Dụng (Time Attendance)",
       "icon": "⏱️",
       "lockType": "Không gắn khóa (Ghi nhận chấm công)",
-      "accessories": [
-        "Chân đế treo tường 1.2m",
-        "Nguồn dự phòng UPS"
-      ],
+      "accessories": ["Chân đế treo tường 1.2m", "Nguồn dự phòng UPS"],
       "controller": "RACK Rack_1",
       "serialNo": "GS8090998",
       "ipAddress": "192.168.184.121",
@@ -122,10 +111,7 @@
       "typeLabel": "Chấm Công Chuyên Dụng (Time Attendance)",
       "icon": "🍽️",
       "lockType": "Không gắn khóa",
-      "accessories": [
-        "Treo tường 1.2m",
-        "Cáp UTP Cat6"
-      ],
+      "accessories": ["Treo tường 1.2m", "Cáp UTP Cat6"],
       "controller": "RACK_02",
       "serialNo": "GS8090999",
       "ipAddress": "192.168.184.122",
@@ -145,9 +131,7 @@
       "typeLabel": "Chấm Công Chuyên Dụng (Time Attendance)",
       "icon": "🧪",
       "lockType": "Không gắn khóa",
-      "accessories": [
-        "Treo tường 1.2m"
-      ],
+      "accessories": ["Treo tường 1.2m"],
       "controller": "RACK_02",
       "serialNo": "GS8091000",
       "ipAddress": "192.168.184.123",
@@ -167,9 +151,7 @@
       "typeLabel": "Chấm Công Chuyên Dụng (Time Attendance)",
       "icon": "📦",
       "lockType": "Không gắn khóa",
-      "accessories": [
-        "Treo tường 1.2m"
-      ],
+      "accessories": ["Treo tường 1.2m"],
       "controller": "RACK Rack_3",
       "serialNo": "GS8091001",
       "ipAddress": "192.168.184.124",
@@ -189,9 +171,7 @@
       "typeLabel": "Chấm Công Chuyên Dụng (Time Attendance)",
       "icon": "🚚",
       "lockType": "Không gắn khóa",
-      "accessories": [
-        "Treo tường 1.2m chống bụi IP54"
-      ],
+      "accessories": ["Treo tường 1.2m chống bụi IP54"],
       "controller": "RACK Rack_3",
       "serialNo": "GS8091003",
       "ipAddress": "192.168.184.125",
@@ -199,6 +179,8 @@
       "x": 15,
       "y": 38
     },
+
+    # 1.5F FACTORY TA/AC (Sheet 42/31)
     {
       "id": "AC-04",
       "code": "AC_4",
@@ -211,11 +193,7 @@
       "typeLabel": "Kiểm Soát Cửa (Access Control)",
       "icon": "🏢",
       "lockType": "Khóa Hút Từ (Magnetic Lock)",
-      "accessories": [
-        "Nút Exit Cảm Ứng",
-        "Cảm Biến Cửa",
-        "Nút Khẩn Cấp"
-      ],
+      "accessories": ["Nút Exit Cảm Ứng", "Cảm Biến Cửa", "Nút Khẩn Cấp"],
       "controller": "RACK Rack_Main (Tầng 2 via Riser)",
       "serialNo": "GS8090994",
       "ipAddress": "192.168.184.104",
@@ -223,6 +201,8 @@
       "x": 50,
       "y": 55
     },
+
+    # 2F FACTORY TA/AC (Sheet 42/32)
     {
       "id": "AC-05",
       "code": "AC_5",
@@ -235,11 +215,7 @@
       "typeLabel": "Kiểm Soát Cửa (Access Control)",
       "icon": "💻",
       "lockType": "Khóa Thả Chốt An Ninh Cao (High-Security Drop Bolt)",
-      "accessories": [
-        "Nút Exit",
-        "Cảm Biến Báo Động",
-        "Nút Khẩn Cấp"
-      ],
+      "accessories": ["Nút Exit", "Cảm Biến Báo Động", "Nút Khẩn Cấp"],
       "controller": "RACK Rack_Main (Local 42U)",
       "serialNo": "GS8090993",
       "ipAddress": "192.168.184.105",
@@ -259,10 +235,7 @@
       "typeLabel": "Kiểm Soát Cửa (Access Control)",
       "icon": "👔",
       "lockType": "Khóa Hút Từ (Magnetic Lock 280kg)",
-      "accessories": [
-        "Nút Exit Cảm Ứng",
-        "Cảm Biến Trạng Thái Cửa"
-      ],
+      "accessories": ["Nút Exit Cảm Ứng", "Cảm Biến Trạng Thái Cửa"],
       "controller": "RACK Rack_Main (Local 42U)",
       "serialNo": "GS8091002",
       "ipAddress": "192.168.184.106",
@@ -270,6 +243,8 @@
       "x": 69,
       "y": 55
     },
+
+    # FLAP BARRIER E-PARKING (Sheet 42/35)
     {
       "id": "AC-10",
       "code": "AC_10",
@@ -281,10 +256,7 @@
       "typeLabel": "Mở Cổng Flap Barrier",
       "icon": "🚧",
       "lockType": "Cơ cấu Barrier mở tự động (Motor Servo)",
-      "accessories": [
-        "Cảm biến hồng ngoại",
-        "Đèn LED chỉ hướng"
-      ],
+      "accessories": ["Cảm biến hồng ngoại", "Đèn LED chỉ hướng"],
       "controller": "RACK Rack_5 (E-Parking)",
       "serialNo": "GS8091010",
       "ipAddress": "192.168.184.150",
@@ -303,9 +275,7 @@
       "typeLabel": "Mở Cổng Flap Barrier",
       "icon": "🚧",
       "lockType": "Cơ cấu Barrier mở tự động",
-      "accessories": [
-        "Cảm biến hồng ngoại"
-      ],
+      "accessories": ["Cảm biến hồng ngoại"],
       "controller": "RACK Rack_5 (E-Parking)",
       "serialNo": "GS8091011",
       "ipAddress": "192.168.184.151",
@@ -324,9 +294,7 @@
       "typeLabel": "Mở Cổng Flap Barrier",
       "icon": "🚧",
       "lockType": "Cơ cấu Barrier mở tự động",
-      "accessories": [
-        "Cảm biến hồng ngoại"
-      ],
+      "accessories": ["Cảm biến hồng ngoại"],
       "controller": "RACK Rack_5 (E-Parking)",
       "serialNo": "GS8091012",
       "ipAddress": "192.168.184.152",
@@ -345,9 +313,7 @@
       "typeLabel": "Mở Cổng Flap Barrier",
       "icon": "🚧",
       "lockType": "Cơ cấu Barrier mở tự động",
-      "accessories": [
-        "Cảm biến hồng ngoại"
-      ],
+      "accessories": ["Cảm biến hồng ngoại"],
       "controller": "RACK Rack_5 (E-Parking)",
       "serialNo": "GS8091013",
       "ipAddress": "192.168.184.153",
@@ -366,9 +332,7 @@
       "typeLabel": "Mở Cổng Flap Barrier",
       "icon": "⭐",
       "lockType": "Cơ cấu Barrier mở tự động",
-      "accessories": [
-        "Cảm biến hồng ngoại"
-      ],
+      "accessories": ["Cảm biến hồng ngoại"],
       "controller": "RACK Rack_5 (E-Parking)",
       "serialNo": "GS8091014",
       "ipAddress": "192.168.184.154",
@@ -387,9 +351,7 @@
       "typeLabel": "Mở Cổng Flap Barrier",
       "icon": "🚧",
       "lockType": "Cơ cấu Barrier mở tự động",
-      "accessories": [
-        "Cảm biến hồng ngoại"
-      ],
+      "accessories": ["Cảm biến hồng ngoại"],
       "controller": "RACK Rack_5 (E-Parking)",
       "serialNo": "GS8091015",
       "ipAddress": "192.168.184.155",
@@ -408,9 +370,7 @@
       "typeLabel": "Mở Cổng Flap Barrier",
       "icon": "🚧",
       "lockType": "Cơ cấu Barrier mở tự động",
-      "accessories": [
-        "Cảm biến hồng ngoại"
-      ],
+      "accessories": ["Cảm biến hồng ngoại"],
       "controller": "RACK Rack_5 (E-Parking)",
       "serialNo": "GS8091016",
       "ipAddress": "192.168.184.156",
@@ -429,9 +389,7 @@
       "typeLabel": "Mở Cổng Flap Barrier",
       "icon": "🚧",
       "lockType": "Cơ cấu Barrier mở tự động",
-      "accessories": [
-        "Cảm biến hồng ngoại"
-      ],
+      "accessories": ["Cảm biến hồng ngoại"],
       "controller": "RACK Rack_5 (E-Parking)",
       "serialNo": "GS8091017",
       "ipAddress": "192.168.184.157",
@@ -450,9 +408,7 @@
       "typeLabel": "Mở Cổng Flap Barrier",
       "icon": "🚧",
       "lockType": "Cơ cấu Barrier mở tự động",
-      "accessories": [
-        "Cảm biến hồng ngoại"
-      ],
+      "accessories": ["Cảm biến hồng ngoại"],
       "controller": "RACK Rack_5 (E-Parking)",
       "serialNo": "GS8091018",
       "ipAddress": "192.168.184.158",
@@ -471,9 +427,7 @@
       "typeLabel": "Mở Cổng Flap Barrier",
       "icon": "⭐",
       "lockType": "Cơ cấu Barrier mở tự động",
-      "accessories": [
-        "Cảm biến hồng ngoại"
-      ],
+      "accessories": ["Cảm biến hồng ngoại"],
       "controller": "RACK Rack_5 (E-Parking)",
       "serialNo": "GS8091019",
       "ipAddress": "192.168.184.159",
@@ -492,10 +446,7 @@
       "typeLabel": "Đầu Đọc Đăng Ký USB (Enrollment)",
       "icon": "🔌",
       "lockType": "Đầu đọc cắm bàn làm việc USB 3.0",
-      "accessories": [
-        "Cáp kết nối USB",
-        "Chân đế bàn"
-      ],
+      "accessories": ["Cáp kết nối USB", "Chân đế bàn"],
       "controller": "Workstation IT Client",
       "serialNo": "GS8091099",
       "ipAddress": "Local USB (192.168.184.250)",
@@ -774,11 +725,7 @@
       "status": "online",
       "x": 86,
       "y": 25,
-      "clients": 18,
-      "type": "WIFI",
-      "typeLabel": "Wi-Fi 6 Access Point Doanh Nghiệp",
-      "icon": "📶",
-      "controller": "RACK_MAIN"
+      "clients": 18
     },
     {
       "id": "AP-02",
@@ -790,11 +737,7 @@
       "status": "online",
       "x": 55,
       "y": 80,
-      "clients": 42,
-      "type": "WIFI",
-      "typeLabel": "Wi-Fi 6 Access Point Doanh Nghiệp",
-      "icon": "📶",
-      "controller": "RACK_MAIN"
+      "clients": 42
     },
     {
       "id": "AP-03",
@@ -806,11 +749,7 @@
       "status": "online",
       "x": 50,
       "y": 45,
-      "clients": 24,
-      "type": "WIFI",
-      "typeLabel": "Wi-Fi 6 Access Point Doanh Nghiệp",
-      "icon": "📶",
-      "controller": "RACK_MAIN"
+      "clients": 24
     },
     {
       "id": "AP-04",
@@ -822,11 +761,7 @@
       "status": "online",
       "x": 75,
       "y": 35,
-      "clients": 8,
-      "type": "WIFI",
-      "typeLabel": "Wi-Fi 6 Access Point Doanh Nghiệp",
-      "icon": "📶",
-      "controller": "RACK_MAIN"
+      "clients": 8
     },
     {
       "id": "AP-05",
@@ -838,11 +773,7 @@
       "status": "online",
       "x": 35,
       "y": 60,
-      "clients": 16,
-      "type": "WIFI",
-      "typeLabel": "Wi-Fi 6 Access Point Doanh Nghiệp",
-      "icon": "📶",
-      "controller": "RACK_MAIN"
+      "clients": 16
     },
     {
       "id": "AP-06",
@@ -854,11 +785,7 @@
       "status": "online",
       "x": 70,
       "y": 35,
-      "clients": 36,
-      "type": "WIFI",
-      "typeLabel": "Wi-Fi 6 Access Point Doanh Nghiệp",
-      "icon": "📶",
-      "controller": "RACK_MAIN"
+      "clients": 36
     },
     {
       "id": "AP-07",
@@ -870,11 +797,7 @@
       "status": "online",
       "x": 80,
       "y": 70,
-      "clients": 28,
-      "type": "WIFI",
-      "typeLabel": "Wi-Fi 6 Access Point Doanh Nghiệp",
-      "icon": "📶",
-      "controller": "RACK_MAIN"
+      "clients": 28
     },
     {
       "id": "AP-08",
@@ -886,21 +809,18 @@
       "status": "online",
       "x": 40,
       "y": 50,
-      "clients": 19,
-      "type": "WIFI",
-      "typeLabel": "Wi-Fi 6 Access Point Doanh Nghiệp",
-      "icon": "📶",
-      "controller": "RACK_MAIN"
+      "clients": 19
     }
   ],
   "networkOutlets": [
+    # 1F Floor Outlets (58 SET total, Sheet 42/06)
     {
       "id": "OUT-FL-1F-1",
       "code": "58x OUTLET_FL",
       "name": "58 Cụm Ổ Cắm Mạng Âm Sàn (Floor Outlets Tầng 1)",
       "floor": "1F",
       "room": "Xưởng Sản Xuất (Lắp Ráp 1, 2, Định Hình 1 & QC)",
-      "type": "OUTLET",
+      "type": "OUTLET_FLOOR",
       "typeLabel": "Ổ Cắm Âm Sàn (58 SET Floor Outlet 01 LAN)",
       "icon": "🔌",
       "qty": 58,
@@ -909,26 +829,25 @@
       "rack": "Cấp từ RACK_01 (43 port) & RACK_04 (15 port)",
       "x": 50,
       "y": 50,
-      "status": "active",
-      "controller": "Cấp từ RACK_01 (43 port) & RACK_04 (15 port)"
+      "status": "active"
     },
+    # 1F Wall Outlets (Sheet 42/06)
     {
       "id": "OUT-WL-1F-1",
       "code": "4x OUTLET_2L",
       "name": "4 Cụm Ổ Cắm Đôi Âm Tường (Outlet 02 LAN)",
       "floor": "1F",
       "room": "Phòng Điều Khiển 128 & PCCC 151",
-      "type": "OUTLET",
+      "type": "OUTLET_WALL",
       "typeLabel": "Ổ Cắm Âm Tường Đôi (02 LAN)",
-      "icon": "🔌",
+      "icon": "🖧",
       "qty": 4,
       "ports": "8x RJ45 Cat6 UTP",
       "mountType": "Mặt Nạ 2 Port Âm Tường",
       "rack": "RACK_02 & RACK_03",
       "x": 64.5,
       "y": 30,
-      "status": "active",
-      "controller": "RACK_02 & RACK_03"
+      "status": "active"
     },
     {
       "id": "OUT-WL-1F-2",
@@ -936,35 +855,34 @@
       "name": "22 Ổ Cắm Mạng Đơn Âm Tường (Outlet 01 LAN)",
       "floor": "1F",
       "room": "Kho 104, Dock 105, Showroom 101, VP Xưởng 1, 2, 3, 4",
-      "type": "OUTLET",
+      "type": "OUTLET_WALL",
       "typeLabel": "Ổ Cắm Âm Tường Đơn (01 LAN)",
-      "icon": "🔌",
+      "icon": "🖧",
       "qty": 22,
       "ports": "22x RJ45 Cat6 UTP",
       "mountType": "Mặt Nạ 1 Port Âm Tường",
       "rack": "RACK_01, RACK_02, RACK_03",
       "x": 30,
       "y": 60,
-      "status": "active",
-      "controller": "RACK_01, RACK_02, RACK_03"
+      "status": "active"
     },
+    # 1.5F Outlets (Sheet 42/06)
     {
       "id": "OUT-15F-1",
       "code": "4x OUTLET_4L",
       "name": "4 Cụm Ổ Cắm 4 Port Bàn Làm Việc 1.5F (P. 201)",
       "floor": "1.5F",
       "room": "201 OFFICE (Khối Văn Phòng 1.5F)",
-      "type": "OUTLET",
+      "type": "OUTLET_WALL",
       "typeLabel": "Cụm Ổ Cắm 4 Port (04 LAN)",
-      "icon": "🔌",
+      "icon": "🖧",
       "qty": 4,
       "ports": "16x RJ45 Cat6 UTP",
       "mountType": "Hộp Bàn Làm Việc 4 Port",
       "rack": "RACK_MAIN via Riser",
       "x": 50,
       "y": 50,
-      "status": "active",
-      "controller": "RACK_MAIN via Riser"
+      "status": "active"
     },
     {
       "id": "OUT-15F-2",
@@ -972,35 +890,34 @@
       "name": "6 Ổ Cắm Mạng Âm Tường 1.5F (P. 202 Giám Đốc)",
       "floor": "1.5F",
       "room": "202 DIRECTOR & P. Họp 1.5F",
-      "type": "OUTLET",
+      "type": "OUTLET_WALL",
       "typeLabel": "Ổ Cắm Âm Tường (01 LAN)",
-      "icon": "🔌",
+      "icon": "🖧",
       "qty": 6,
       "ports": "6x RJ45 Cat6 UTP",
       "mountType": "Mặt Nạ 1 Port Âm Tường",
       "rack": "RACK_MAIN via Riser",
       "x": 75,
       "y": 35,
-      "status": "active",
-      "controller": "RACK_MAIN via Riser"
+      "status": "active"
     },
+    # 2F Outlets (Sheet 42/06)
     {
       "id": "OUT-2F-1",
       "code": "2x OUTLET_4L",
       "name": "2 Cụm Ổ Cắm 4 Port Bàn Làm Việc 2F (P. 302)",
       "floor": "2F",
       "room": "302 OFFICE (Khối Văn Phòng Chính 2F)",
-      "type": "OUTLET",
+      "type": "OUTLET_WALL",
       "typeLabel": "Cụm Ổ Cắm 4 Port (04 LAN)",
-      "icon": "🔌",
+      "icon": "🖧",
       "qty": 2,
       "ports": "8x RJ45 Cat6 UTP",
       "mountType": "Hộp Bàn Làm Việc 4 Port",
       "rack": "RACK_MAIN 42U",
       "x": 70,
       "y": 55,
-      "status": "active",
-      "controller": "RACK_MAIN 42U"
+      "status": "active"
     },
     {
       "id": "OUT-2F-2",
@@ -1008,17 +925,16 @@
       "name": "1 Cụm Ổ Cắm 6 Port Bàn Họp Chính 2F",
       "floor": "2F",
       "room": "Phòng Họp Lớn 2F (P. 305)",
-      "type": "OUTLET",
+      "type": "OUTLET_WALL",
       "typeLabel": "Cụm Ổ Cắm Bàn Họp (06 LAN)",
-      "icon": "🔌",
+      "icon": "🖧",
       "qty": 1,
       "ports": "6x RJ45 Cat6 UTP",
       "mountType": "Hộp Đa Năng Bàn Họp 6 Port",
       "rack": "RACK_MAIN 42U",
       "x": 45,
       "y": 62,
-      "status": "active",
-      "controller": "RACK_MAIN 42U"
+      "status": "active"
     },
     {
       "id": "OUT-2F-3",
@@ -1026,35 +942,34 @@
       "name": "15 Ổ Cắm Mạng Âm Tường P. IT 304 & P. Giám Đốc 303",
       "floor": "2F",
       "room": "304 IT ROOM & 303 DIRECTOR",
-      "type": "OUTLET",
+      "type": "OUTLET_WALL",
       "typeLabel": "Ổ Cắm Âm Tường (01 LAN)",
-      "icon": "🔌",
+      "icon": "🖧",
       "qty": 15,
       "ports": "15x RJ45 Cat6 UTP",
       "mountType": "Mặt Nạ 1 Port Âm Tường",
       "rack": "RACK_MAIN 42U",
       "x": 28,
       "y": 55,
-      "status": "active",
-      "controller": "RACK_MAIN 42U"
+      "status": "active"
     },
+    # Guardhouse Outlets (3 SET Outlet 01 LAN - 01 TEL, Sheet 42/06)
     {
       "id": "OUT-GH-1",
       "code": "1x LAN+TEL (GH1)",
       "name": "Ổ Cắm Mạng & Thoại IP Phone Nhà Bảo Vệ 1 (Cổng Chính)",
       "floor": "PARKING",
       "room": "Nhà Bảo Vệ 1 (Cổng Chính Đường KCN)",
-      "type": "OUTLET",
+      "type": "OUTLET_TEL",
       "typeLabel": "Ổ Cắm Mạng + Thoại (01 LAN + 01 TEL)",
-      "icon": "🔌",
+      "icon": "☎️",
       "qty": 1,
       "ports": "1x LAN RJ45 + 1x TEL RJ11",
       "mountType": "Mặt Nạ 2 Port Âm Tường",
       "rack": "RACK_06 (Guardhouse 1)",
       "x": 20,
       "y": 75,
-      "status": "active",
-      "controller": "RACK_06 (Guardhouse 1)"
+      "status": "active"
     },
     {
       "id": "OUT-GH-2",
@@ -1062,17 +977,16 @@
       "name": "Ổ Cắm Mạng & Thoại IP Phone Nhà Bảo Vệ 2 (Cổng Logistics)",
       "floor": "PARKING",
       "room": "Nhà Bảo Vệ 2 (Cổng Xe Tải Kho 104)",
-      "type": "OUTLET",
+      "type": "OUTLET_TEL",
       "typeLabel": "Ổ Cắm Mạng + Thoại (01 LAN + 01 TEL)",
-      "icon": "🔌",
+      "icon": "☎️",
       "qty": 1,
       "ports": "1x LAN RJ45 + 1x TEL RJ11",
       "mountType": "Mặt Nạ 2 Port Âm Tường",
       "rack": "RACK_07 (Guardhouse 2)",
       "x": 5,
       "y": 50,
-      "status": "active",
-      "controller": "RACK_07 (Guardhouse 2)"
+      "status": "active"
     },
     {
       "id": "OUT-GH-3",
@@ -1080,414 +994,43 @@
       "name": "Ổ Cắm Mạng & Thoại IP Phone Nhà Bảo Vệ 3 (Cổng Xe Máy)",
       "floor": "PARKING",
       "room": "Nhà Bảo Vệ 3 (Lối vào Nhà Xe E-Parking)",
-      "type": "OUTLET",
+      "type": "OUTLET_TEL",
       "typeLabel": "Ổ Cắm Mạng + Thoại (01 LAN + 01 TEL)",
-      "icon": "🔌",
+      "icon": "☎️",
       "qty": 1,
       "ports": "1x LAN RJ45 + 1x TEL RJ11",
       "mountType": "Mặt Nạ 2 Port Âm Tường",
       "rack": "RACK_08 (Guardhouse 3)",
       "x": 80,
       "y": 75,
-      "status": "active",
-      "controller": "RACK_08 (Guardhouse 3)"
+      "status": "active"
     }
   ],
   "employees": [
-    {
-      "id": "12",
-      "name": "Đức_Vinatech",
-      "dept": "WSI",
-      "role": "Kỹ Sư Hệ Thống / Admin",
-      "face": true,
-      "access": "Door_2F, All Door",
-      "attGroup": "OFFICE"
-    },
-    {
-      "id": "31904003",
-      "name": "Hợp Nguyễn Thị",
-      "dept": "HS Team",
-      "role": "Nhân Viên Vận Hành",
-      "face": true,
-      "access": "Door_2F",
-      "attGroup": "OFFICE"
-    },
-    {
-      "id": "5908432579",
-      "name": "Huy Khang_Vinatech",
-      "dept": "WSI",
-      "role": "Kỹ Sư Phát Triển",
-      "face": true,
-      "access": "Door_2F, All Door",
-      "attGroup": "OFFICE"
-    },
-    {
-      "id": "1",
-      "name": "binhwsi",
-      "dept": "WSI",
-      "role": "Kỹ Thuật Viên",
-      "face": true,
-      "access": "Door_2F",
-      "attGroup": "WSI Standard"
-    },
-    {
-      "id": "4",
-      "name": "cao cuong wsi",
-      "dept": "WSI",
-      "role": "Kỹ Thuật Viên",
-      "face": true,
-      "access": "Door_2F",
-      "attGroup": "WSI Standard"
-    },
-    {
-      "id": "6",
-      "name": "hieu.wsi",
-      "dept": "WSI",
-      "role": "Kỹ Thuật Viên",
-      "face": true,
-      "access": "Door_2F",
-      "attGroup": "WSI Standard"
-    },
-    {
-      "id": "5",
-      "name": "quan.wsi",
-      "dept": "WSI",
-      "role": "Kỹ Thuật Viên",
-      "face": true,
-      "access": "Door_2F",
-      "attGroup": "WSI Standard"
-    },
-    {
-      "id": "8",
-      "name": "tibh.wsi",
-      "dept": "WSI",
-      "role": "Kỹ Thuật Viên",
-      "face": true,
-      "access": "Door_2F",
-      "attGroup": "WSI Standard"
-    },
-    {
-      "id": "11",
-      "name": "chuc",
-      "dept": "WSI",
-      "role": "Kỹ Thuật Viên",
-      "face": true,
-      "access": "Door_2F",
-      "attGroup": "WSI Standard"
-    },
-    {
-      "id": "3",
-      "name": "hung",
-      "dept": "WSI",
-      "role": "Kỹ Thuật Viên",
-      "face": true,
-      "access": "Door_2F",
-      "attGroup": "WSI Standard"
-    },
-    {
-      "id": "10",
-      "name": "tuobg",
-      "dept": "WSI",
-      "role": "Kỹ Thuật Viên",
-      "face": true,
-      "access": "Door_2F",
-      "attGroup": "WSI Standard"
-    },
-    {
-      "id": "4027883121",
-      "name": "hhhh",
-      "dept": "WSI",
-      "role": "Nhân Viên Thử Nghiệm",
-      "face": true,
-      "access": "Door_2F",
-      "attGroup": "WSI Standard"
-    },
-    {
-      "id": "1234567890",
-      "name": "Jack Dawson",
-      "dept": "All Department",
-      "role": "Chuyên Viên Quốc Tế",
-      "face": false,
-      "access": "All Door",
-      "attGroup": "General"
-    }
+    {"id": "12", "name": "Đức_Vinatech", "dept": "WSI", "role": "Kỹ Sư Hệ Thống / Admin", "face": True, "access": "Door_2F, All Door", "attGroup": "OFFICE"},
+    {"id": "31904003", "name": "Hợp Nguyễn Thị", "dept": "HS Team", "role": "Nhân Viên Vận Hành", "face": True, "access": "Door_2F", "attGroup": "OFFICE"},
+    {"id": "5908432579", "name": "Huy Khang_Vinatech", "dept": "WSI", "role": "Kỹ Sư Phát Triển", "face": True, "access": "Door_2F, All Door", "attGroup": "OFFICE"},
+    {"id": "1", "name": "binhwsi", "dept": "WSI", "role": "Kỹ Thuật Viên", "face": True, "access": "Door_2F", "attGroup": "WSI Standard"},
+    {"id": "4", "name": "cao cuong wsi", "dept": "WSI", "role": "Kỹ Thuật Viên", "face": True, "access": "Door_2F", "attGroup": "WSI Standard"},
+    {"id": "6", "name": "hieu.wsi", "dept": "WSI", "role": "Kỹ Thuật Viên", "face": True, "access": "Door_2F", "attGroup": "WSI Standard"},
+    {"id": "5", "name": "quan.wsi", "dept": "WSI", "role": "Kỹ Thuật Viên", "face": True, "access": "Door_2F", "attGroup": "WSI Standard"},
+    {"id": "8", "name": "tibh.wsi", "dept": "WSI", "role": "Kỹ Thuật Viên", "face": True, "access": "Door_2F", "attGroup": "WSI Standard"},
+    {"id": "11", "name": "chuc", "dept": "WSI", "role": "Kỹ Thuật Viên", "face": True, "access": "Door_2F", "attGroup": "WSI Standard"},
+    {"id": "3", "name": "hung", "dept": "WSI", "role": "Kỹ Thuật Viên", "face": True, "access": "Door_2F", "attGroup": "WSI Standard"},
+    {"id": "10", "name": "tuobg", "dept": "WSI", "role": "Kỹ Thuật Viên", "face": True, "access": "Door_2F", "attGroup": "WSI Standard"},
+    {"id": "4027883121", "name": "hhhh", "dept": "WSI", "role": "Nhân Viên Thử Nghiệm", "face": True, "access": "Door_2F", "attGroup": "WSI Standard"},
+    {"id": "1234567890", "name": "Jack Dawson", "dept": "All Department", "role": "Chuyên Viên Quốc Tế", "face": False, "access": "All Door", "attGroup": "General"}
   ],
   "sopSteps": [
-    {
-      "step": 1,
-      "title": "Đăng nhập Hệ thống Quản trị",
-      "titleEn": "System Login",
-      "icon": "🔐",
-      "desc": "Truy cập giao diện Web Client (https://192.168.184.250/#/portal) bằng tài khoản quản trị (admin / vinatech@2026)."
-    },
-    {
-      "step": 2,
-      "title": "Khai báo Nhân sự & Sinh trắc học",
-      "titleEn": "Personnel Registration",
-      "icon": "👤",
-      "desc": "Vào mục Con người (Person) -> Thêm nhân viên -> Nhập Mã NV, Họ tên, Phòng ban, nạp ảnh Face ID hoặc quẹt thẻ qua đầu đọc USB (USB_1)."
-    },
-    {
-      "step": 3,
-      "title": "Cấu hình Phân quyền Cửa (Access Level)",
-      "titleEn": "Access Level Configuration",
-      "icon": "🚪",
-      "desc": "Gán quyền mở cửa theo vị trí làm việc (ví dụ: Door_2F gồm AC_5 và AC_6). Hệ thống tự đồng bộ xuống các bộ điều khiển RACK_MAIN, Rack_1, Rack_2, Rack_3, Rack_5."
-    },
-    {
-      "step": 4,
-      "title": "Khởi tạo Nhóm Chấm công & Lịch trình",
-      "titleEn": "Attendance Group & Schedule",
-      "icon": "⏰",
-      "desc": "Khai báo ca Hành chính (HC: 08:00 - 17:30) kèm thời gian giải lao trưa và chọn các máy chấm công có hiệu lực (TA_1..TA_5)."
-    },
-    {
-      "step": 5,
-      "title": "Cơ chế Tự động Tính công 04:00 AM",
-      "titleEn": "Auto Calculation",
-      "icon": "🤖",
-      "desc": "HikCentral tự động tính toán tổng giờ công và giờ OT vào 04:00 AM mỗi ngày, cho phép xuất file báo cáo Excel/CSV."
-    }
-  ],
-  "drawingInfo": {
-    "project": "VINATECH VINA HƯNG YÊN FACTORY",
-    "drawingNo": "ELV-42/01 to 42/43",
-    "version": "v5.2 (2026.06.15)",
-    "designer": "DOUL ASIA CO., LTD",
-    "contractor": "WORLDSTAR INTERNATIONAL J.S.C",
-    "summary": {
-      "networkPbx": [
-        {
-          "no": 1,
-          "item": "Firewall (Fortinet FortiGate 100E HA Ready)",
-          "unit": "EA",
-          "qty": 1,
-          "model": "Fortinet FortiGate 100E"
-        },
-        {
-          "no": 2,
-          "item": "L3 Switch 24 Port (Core Switch Trung Tâm)",
-          "unit": "EA",
-          "qty": 1,
-          "model": "24-Port GbE + 4 SFP+ Uplink"
-        },
-        {
-          "no": 3,
-          "item": "L2 Switch 48 Port (Switch Phân Phối Tầng Cisco)",
-          "unit": "EA",
-          "qty": 3,
-          "model": "Cisco 48-Port Managed GbE"
-        },
-        {
-          "no": 4,
-          "item": "L2 Switch 24 Port",
-          "unit": "EA",
-          "qty": 2,
-          "model": "24-Port Gigabit Managed"
-        },
-        {
-          "no": 5,
-          "item": "L2 Switch 08 Port",
-          "unit": "EA",
-          "qty": 5,
-          "model": "8-Port Gigabit Desktop/Rack"
-        },
-        {
-          "no": 6,
-          "item": "Access Point (Wi-Fi 6 AP Doanh Nghiệp)",
-          "unit": "EA",
-          "qty": 8,
-          "model": "Dual-Band Gigabit Wi-Fi 6 AX3000"
-        },
-        {
-          "no": 7,
-          "item": "Cable Management 1U (Thanh Quản Lý Cáp)",
-          "unit": "EA",
-          "qty": 14,
-          "model": "19 inch 1U Cable Organizer"
-        },
-        {
-          "no": 8,
-          "item": "02 LAN, Wall Outlet (Ổ Cắm Mạng Đôi Âm Tường)",
-          "unit": "SET",
-          "qty": 4,
-          "model": "Mặt Nạ 2 Port + Nhân Cat6 RJ45"
-        },
-        {
-          "no": 9,
-          "item": "01 LAN, 01 TEL, Wall Outlet (Ổ Mạng + Thoại IP Phone)",
-          "unit": "SET",
-          "qty": 3,
-          "model": "Mặt Nạ RJ45 + RJ11 (3 Nhà Bảo Vệ)"
-        },
-        {
-          "no": 10,
-          "item": "06 LAN, Wall Outlet (Cụm Bàn Họp 6 Port)",
-          "unit": "SET",
-          "qty": 1,
-          "model": "Hộp Đa Năng Bàn Họp 6 Port Cat6"
-        },
-        {
-          "no": 11,
-          "item": "04 LAN, Wall Outlet (Cụm Bàn Làm Việc 4 Port)",
-          "unit": "SET",
-          "qty": 6,
-          "model": "Hộp 4 Port Gắn Bàn Làm Việc Cat6"
-        },
-        {
-          "no": 12,
-          "item": "01 LAN, Wall Outlet (Ổ Cắm Mạng Đơn Âm Tường)",
-          "unit": "SET",
-          "qty": 22,
-          "model": "Mặt Nạ 1 Port RJ45 Cat6"
-        },
-        {
-          "no": 13,
-          "item": "01 LAN, Floor Outlet (Ổ Cắm Mạng Âm Sàn Nhà Xưởng)",
-          "unit": "SET",
-          "qty": 58,
-          "model": "Hộp Đồng Âm Sàn Nắp Mở Brass Box"
-        },
-        {
-          "no": 14,
-          "item": "Media Converter (Bộ Chuyển Đổi Quang - Điện)",
-          "unit": "EA",
-          "qty": 2,
-          "model": "1000Base-SX to 1000Base-T (18 SET tổng)"
-        },
-        {
-          "no": 15,
-          "item": "ODF Hộp Phối Quang (Fiber Patch Panel)",
-          "unit": "EA",
-          "qty": 9,
-          "model": "ODF 52P, 16P, 12P, 8P, 4P SC/LC"
-        },
-        {
-          "no": 16,
-          "item": "UPS Bộ Lưu Điện Dự Phòng (Online UPS 10kVA)",
-          "unit": "EA",
-          "qty": 1,
-          "model": "Online UPS 10kVA Pure Sine Wave"
-        },
-        {
-          "no": 17,
-          "item": "Rack Cabinet (Hệ Thống Tủ RACK IT)",
-          "unit": "EA",
-          "qty": 9,
-          "model": "42U D1000, 10U D600, Outside IP66"
-        },
-        {
-          "no": 18,
-          "item": "Tổng Đài IP PBX Server",
-          "unit": "EA",
-          "qty": 1,
-          "model": "IP PBX Server 100 Extensions"
-        },
-        {
-          "no": 19,
-          "item": "Điện Thoại IP Phone (Bàn Văn Phòng & Bảo Vệ)",
-          "unit": "EA",
-          "qty": 23,
-          "model": "HD Voice IP Phone PoE"
-        }
-      ],
-      "taAc": [
-        {
-          "no": 1,
-          "item": "Time Attendance (Máy Chấm Công Khuôn Mặt)",
-          "unit": "EA",
-          "qty": 5,
-          "model": "TA_1, TA_2, TA_3, TA_4, TA_5 (Treo tường 1.2m)"
-        },
-        {
-          "no": 2,
-          "item": "Access Control (Đầu Đọc Kiểm Soát Mở Cửa & Barrier)",
-          "unit": "EA",
-          "qty": 16,
-          "model": "AC_1..AC_6 (Cửa) + AC_10..AC_19 (10 Làn Barrier)"
-        },
-        {
-          "no": 3,
-          "item": "Flapgate (Cổng Phân Làn Tự Động Nhà Xe)",
-          "unit": "EA",
-          "qty": 6,
-          "model": "02 Thân Biên Left/Right + 04 Thân Giữa Center"
-        },
-        {
-          "no": 4,
-          "item": "Doorlock (Khóa Từ & Khóa Chốt Rơi)",
-          "unit": "EA",
-          "qty": 6,
-          "model": "Khóa Hút Từ 280kg (AC_1,3,4,6) + Khóa Chốt (AC_2,5)"
-        },
-        {
-          "no": 5,
-          "item": "Exit Button (Nút Nhấn / Cảm Ứng Mở Cửa)",
-          "unit": "EA",
-          "qty": 6,
-          "model": "Nút Cảm Ứng Không Chạm + Đập Kính Khẩn Cấp"
-        },
-        {
-          "no": 6,
-          "item": "Faces sample device (Trạm Đăng Ký Khuôn Mặt USB)",
-          "unit": "EA",
-          "qty": 1,
-          "model": "USB 3.0 Desktop Enrollment Reader (P. IT)"
-        },
-        {
-          "no": 7,
-          "item": "Inox Fence (Hàng Rào Inox Dẫn Làn)",
-          "unit": "SET",
-          "qty": 2,
-          "model": "Hàng Rào Inox 304 Phân Luồng Nhà Xe"
-        },
-        {
-          "no": 8,
-          "item": "PC Server Quản Trị Hệ Thống HikCentral",
-          "unit": "EA",
-          "qty": 1,
-          "model": "Dell Server Management Workstation Client"
-        },
-        {
-          "no": 9,
-          "item": "L2 Switch 16 Port (Switch Chuyên Dụng Flap Barrier)",
-          "unit": "EA",
-          "qty": 1,
-          "model": "16-Port Gigabit Managed (RACK_MAIN/RACK_05)"
-        },
-        {
-          "no": 10,
-          "item": "L2 Switch 08 Port (Switch Chuyên Dụng Access Control)",
-          "unit": "EA",
-          "qty": 2,
-          "model": "8-Port Gigabit Switch (RACK_MAIN & RACK_03)"
-        },
-        {
-          "no": 11,
-          "item": "Cable Management 1U (Thanh Quản Lý Cáp)",
-          "unit": "EA",
-          "qty": 3,
-          "model": "19 inch 1U Cable Organizer"
-        }
-      ],
-      "grounding": [
-        {
-          "no": 1,
-          "item": "Testing Box (Hộp Kiểm Tra Điện Trở Tiếp Địa)",
-          "unit": "EA",
-          "qty": 1,
-          "model": "Hộp đo điện trở tiếp địa chống sét & an toàn ELV"
-        }
-      ],
-      "isp": [
-        {
-          "no": 1,
-          "item": "ISP ODF (Hộp Phối Quang Đầu Vào Nhà Mạng)",
-          "unit": "EA",
-          "qty": 1,
-          "model": "ODF 08-Port SC/APC kết nối tuyến cáp quang ngầm KCN"
-        }
-      ]
-    }
-  }
+    {"step": 1, "title": "Đăng nhập Hệ thống Quản trị", "titleEn": "System Login", "icon": "🔐", "desc": "Truy cập giao diện Web Client (https://192.168.184.250/#/portal) bằng tài khoản quản trị (admin / vinatech@2026)."},
+    {"step": 2, "title": "Khai báo Nhân sự & Sinh trắc học", "titleEn": "Personnel Registration", "icon": "👤", "desc": "Vào mục Con người (Person) -> Thêm nhân viên -> Nhập Mã NV, Họ tên, Phòng ban, nạp ảnh Face ID hoặc quẹt thẻ qua đầu đọc USB (USB_1)."},
+    {"step": 3, "title": "Cấu hình Phân quyền Cửa (Access Level)", "titleEn": "Access Level Configuration", "icon": "🚪", "desc": "Gán quyền mở cửa theo vị trí làm việc (ví dụ: Door_2F gồm AC_5 và AC_6). Hệ thống tự đồng bộ xuống các bộ điều khiển RACK_MAIN, Rack_1, Rack_2, Rack_3, Rack_5."},
+    {"step": 4, "title": "Khởi tạo Nhóm Chấm công & Lịch trình", "titleEn": "Attendance Group & Schedule", "icon": "⏰", "desc": "Khai báo ca Hành chính (HC: 08:00 - 17:30) kèm thời gian giải lao trưa và chọn các máy chấm công có hiệu lực (TA_1..TA_5)."},
+    {"step": 5, "title": "Cơ chế Tự động Tính công 04:00 AM", "titleEn": "Auto Calculation", "icon": "🤖", "desc": "HikCentral tự động tính toán tổng giờ công và giờ OT vào 04:00 AM mỗi ngày, cho phép xuất file báo cáo Excel/CSV."}
+  ]
 }
+
+with open("data.json", "w", encoding="utf-8") as f:
+    json.dump(master_data, f, ensure_ascii=False, indent=2)
+
+print("Saved 100% verified master data to data.json")

@@ -1,0 +1,915 @@
+[
+  {
+    "page": 1,
+    "rooms_sample": [],
+    "equip_sample": []
+  },
+  {
+    "page": 2,
+    "rooms_sample": [
+      "GIÁM ĐỐC - DIRECTOR",
+      "NETWORK & PBX GUARDHOUSE"
+    ],
+    "equip_sample": [
+      "DIAGRAM RACK"
+    ]
+  },
+  {
+    "page": 3,
+    "rooms_sample": [
+      "GIÁM ĐỐC - DIRECTOR",
+      "PA GUARDHOUSE"
+    ],
+    "equip_sample": []
+  },
+  {
+    "page": 4,
+    "rooms_sample": [
+      "GIÁM ĐỐC - DIRECTOR"
+    ],
+    "equip_sample": [
+      "L3 Switch 24 Port",
+      "L2 Switch 48 Port",
+      "L2 Switch 24 Port",
+      "L2 Switch 08 Port",
+      "Rack Cabinet",
+      "L2 Switch PoE 16 Port",
+      "L2 Switch PoE 08 Port",
+      "IP Bullet Outdoor Camera",
+      "IP Dome Indoor Camera",
+      "L2 Main Switch 24 Port",
+      "Camera Pole",
+      "Time Attendance",
+      "Access Control",
+      "Flapgate",
+      "Doorlock"
+    ]
+  },
+  {
+    "page": 5,
+    "rooms_sample": [
+      "GIÁM ĐỐC - DIRECTOR"
+    ],
+    "equip_sample": []
+  },
+  {
+    "page": 6,
+    "rooms_sample": [
+      "GIÁM ĐỐC - DIRECTOR"
+    ],
+    "equip_sample": [
+      "CHI TIẾT LẮP ĐẶT TỦ RACK ĐẶT SÀN",
+      "RACK CABINET",
+      "TỦ RACK",
+      "Rack 10U",
+      "RACK CABINET INTALLATION DETAIL ON WALL",
+      "CHI TIẾT LẮP ĐẶT TỦ RACK TREO TƯỜNG",
+      "Rack 42U"
+    ]
+  },
+  {
+    "page": 7,
+    "rooms_sample": [
+      "GIÁM ĐỐC - DIRECTOR",
+      "RACK 06 - GUARDHOUSE - 01",
+      "RACK 07 - GUARDHOUSE - 02",
+      "RACK 08 - GUARDHOUSE - 03"
+    ],
+    "equip_sample": [
+      "L3 Switch 24 Port",
+      "RACK 01 - 1F - FACTORY",
+      "L2 Switch 48 Port",
+      "RACK 02 - 1F - FACTORY",
+      "RACK 04 - 2F - FACTORY",
+      "L2 Switch 08 Port",
+      "RACK 03 - 1F - FACTORY",
+      "L2 Switch 24 Port",
+      "RACK 05 - E-PARKING",
+      "RACK 06 - GUARDHOUSE - 01",
+      "RACK 07 - GUARDHOUSE - 02",
+      "RACK 08 - GUARDHOUSE - 03"
+    ]
+  },
+  {
+    "page": 8,
+    "rooms_sample": [
+      "GIÁM ĐỐC - DIRECTOR",
+      "RACK 06 - GUARDHOUSE - 01",
+      "RACK 07 - GUARDHOUSE - 02",
+      "IT ROOM - 2F - FACTORY",
+      "GUARDHOUSE 1",
+      "RACK 08 - GUARDHOUSE - 03"
+    ],
+    "equip_sample": [
+      "L2 Switch PoE 08 Port",
+      "RACK 06 - GUARDHOUSE - 01",
+      "RACK 07 - GUARDHOUSE - 02",
+      "x03 IP Bullet Camera",
+      "Main Switch 24 Port",
+      "L2 Switch PoE 16 Port",
+      "RACK 01 - 1F - FACTORY",
+      "x11 IP Dome Camera",
+      "RACK 02 - 1F - FACTORY",
+      "x08 IP Dome Camera",
+      "RACK 03 - 2F - FACTORY",
+      "RACK 05 - E-PARKING",
+      "x09 IP Dome Camera",
+      "x06 IP Dome Camera",
+      "IP Bullet Camera"
+    ]
+  },
+  {
+    "page": 9,
+    "rooms_sample": [
+      "GIÁM ĐỐC - DIRECTOR",
+      "RACK 06 - GUARDHOUSE - 01",
+      "RACK 07 - GUARDHOUSE - 02",
+      "IT ROOM - 2F - FACTORY",
+      "GUARDHOUSE 1",
+      "RACK 08 - GUARDHOUSE - 03"
+    ],
+    "equip_sample": [
+      "Access Control",
+      "Time Attendance",
+      "L2 Switch 08 port",
+      "Access Control (for Flap Barie)",
+      "L2 Switch PoE 08 Port",
+      "RACK 06 - GUARDHOUSE - 01",
+      "RACK 07 - GUARDHOUSE - 02",
+      "x03 IP Bullet Camera",
+      "Main Switch 24 Port",
+      "L2 Switch PoE 16 Port",
+      "RACK 01 - 1F - FACTORY",
+      "x11 IP Dome Camera",
+      "RACK 02 - 1F - FACTORY",
+      "x03 IP Bullet Camera x08 IP Dome Camera",
+      "RACK 03 - 2F - FACTORY"
+    ]
+  },
+  {
+    "page": 10,
+    "rooms_sample": [
+      "GIÁM ĐỐC - DIRECTOR",
+      "ZONE 2 - OFFICE",
+      "RACK PA- IT ROOM - 2ND FLOOR - OFFICE"
+    ],
+    "equip_sample": [
+      "Speaker Cable",
+      "RACK PA- IT ROOM - 2ND FLOOR - OFFICE"
+    ]
+  },
+  {
+    "page": 11,
+    "rooms_sample": [
+      "RACK 06 - GUARDHOUSE - 01",
+      "RACK 07 - GUARDHOUSE - 02",
+      "RACK 08 - GUARDHOUSE - 03",
+      "GIÁM ĐỐC - DIRECTOR"
+    ],
+    "equip_sample": [
+      "L3 Switch 24 Port",
+      "RACK 01 - 1F - FACTORY",
+      "L2 Switch 48 Port",
+      "RACK 02 - 1F - FACTORY",
+      "RACK 04 - 2F - FACTORY",
+      "L2 Switch 08 Port",
+      "RACK 03 - 1F - FACTORY",
+      "RACK 05 - E-PARKING",
+      "RACK 06 - GUARDHOUSE - 01",
+      "RACK 07 - GUARDHOUSE - 02",
+      "RACK 08 - GUARDHOUSE - 03",
+      "L2 Switch PoE 08 Port",
+      "Main Switch 24 Port",
+      "L2 Switch PoE 16 Port",
+      "AC L2 Switch 08 Port"
+    ]
+  },
+  {
+    "page": 12,
+    "rooms_sample": [
+      "2ND FLOOR - OFFICE",
+      "RACK PA - IT ROOM",
+      "GIÁM ĐỐC - DIRECTOR",
+      "RACK MAIN - IT ROOM",
+      "RACK_06 (GUARDHOUSE 1)",
+      "RACK_08 (GUARDHOUSE 3)",
+      "RACK_07 (GUARDHOUSE 2)",
+      "IT ROOM",
+      "1F GUARDHOUSE"
+    ],
+    "equip_sample": [
+      "RACK PA - IT ROOM",
+      "RACK-27U D800",
+      "L2 Switch PoE 08 Port",
+      "DIAGRAM_RACK",
+      "SƠ ĐỒ TỦ RACK",
+      "DIAGRAM RACK",
+      "SƠ ĐỒ NGUYÊN LÝ TỦ RACK",
+      "RACK MAIN - IT ROOM",
+      "RACK-42U D1000",
+      "L2 Switch 48 Port",
+      "NW L3 Switch 24 Port",
+      "RACK-10U D600",
+      "RACK_01_1F",
+      "Main Switch 24 Port",
+      "L2 Switch  PoE 16 Port"
+    ]
+  },
+  {
+    "page": 13,
+    "rooms_sample": [
+      "MIXER",
+      "KHO 1",
+      "P. THAY ĐỒ",
+      "LOCKER",
+      "P. Y TẾ",
+      "VP XƯỞNG 4",
+      "W.S OFFICE 4",
+      "P.THAY ĐỒ",
+      "(P. NGHỈ CA NAM)",
+      "CORRIDOR 1",
+      "P. LẮP RÁP 2",
+      "P. LẮP RÁP 1"
+    ],
+    "equip_sample": [
+      "PIPE RACK",
+      "Rack Cabinet",
+      "RACK",
+      "RACK 1",
+      "RACK_03_1F",
+      "RACK_02_1F"
+    ]
+  },
+  {
+    "page": 14,
+    "rooms_sample": [
+      "P. HOP 2",
+      "MEETING 2",
+      "P. HOP 1",
+      "MEETING 1",
+      "P. GIÁM ĐỐC",
+      "DIRECTOR",
+      "P. PHỤ TRỢ",
+      "PANTRY ROOM",
+      "WC-1",
+      "P.KỸ THUẬT",
+      "EPS ROOM",
+      "STAIR - 3"
+    ],
+    "equip_sample": [
+      "RACK_MAIN_2F",
+      "RACK OLM_47~48"
+    ]
+  },
+  {
+    "page": 15,
+    "rooms_sample": [
+      "STAIR - 7",
+      "STAIR - 6",
+      "P. THAY ĐỒ",
+      "LOCKER",
+      "P. NGHỈ CA 2",
+      "REST ROOM -2",
+      "P. NGHỈ CA 1",
+      "REST ROOM -1",
+      "CORRIDOR -2",
+      "P. GIÁM ĐỐC",
+      "DIRECTOR",
+      "P. IT"
+    ],
+    "equip_sample": [
+      "Rack Cabinet",
+      "RACK",
+      "RACK RACK_04_2F",
+      "RACK_MAIN_2F"
+    ]
+  },
+  {
+    "page": 16,
+    "rooms_sample": [
+      "STAIR - 8",
+      "P. LỌC NƯỚC",
+      "STAIR - 4",
+      "STAIR - 2",
+      "ELEVATOR -1",
+      "MIXER 3",
+      "MẠNG VÀ TỔNG ĐÀI TẦNG 3 NHÀ XƯỞNG",
+      "GIÁM ĐỐC - DIRECTOR"
+    ],
+    "equip_sample": [
+      "RACK",
+      "RACK_MAIN_2F"
+    ]
+  },
+  {
+    "page": 17,
+    "rooms_sample": [
+      "PUMP& FF PUMP,RO/DI",
+      "GIÁM ĐỐC - DIRECTOR"
+    ],
+    "equip_sample": [
+      "Rack Cabinet",
+      "RACK",
+      "RACK_05"
+    ]
+  },
+  {
+    "page": 18,
+    "rooms_sample": [
+      "MẠNG VÀ TỔNG ĐÀI NHÀ BẢO VỆ",
+      "NETWORK & PBX GUARDHOUSE",
+      "NETWORK &PBX GUARDHUOSE",
+      "GIÁM ĐỐC - DIRECTOR",
+      "MIXER",
+      "P. LẮP RÁP 2",
+      "P. LẮP RÁP 1",
+      "P. ĐỊNH HÌNH 1",
+      "P. ĐÓNG GÓI",
+      "ELEVATOR 6 Ton",
+      "PUMP& FF PUMP,RO/DI",
+      "RACK_06 GUARD_01"
+    ],
+    "equip_sample": [
+      "PIPE RACK",
+      "RACK",
+      "RACK_06 GUARD_01",
+      "RACK_07 GUARD_02",
+      "RACK_08 GUARD_03",
+      "Rack Cabinet"
+    ]
+  },
+  {
+    "page": 19,
+    "rooms_sample": [
+      "MIXER",
+      "P. LẮP RÁP 2",
+      "P. LẮP RÁP 1",
+      "P. ĐỊNH HÌNH 1",
+      "P. ĐÓNG GÓI",
+      "ELEVATOR 6 Ton",
+      "PUMP& FF PUMP,RO/DI",
+      "GIÁM ĐỐC - DIRECTOR"
+    ],
+    "equip_sample": [
+      "PIPE RACK",
+      "IP Bullet Camera",
+      "RACK",
+      "Camera Pole",
+      "Rack_1",
+      "Rack_3",
+      "Rack_5",
+      "Rack_GH1",
+      "Rack_GH2",
+      "Rack_GH3",
+      "Rack_2",
+      "IP Bullet Camera - Flame",
+      "IP Dome Camera",
+      "Rack_ULTILITY",
+      "Rack Cabinet"
+    ]
+  },
+  {
+    "page": 20,
+    "rooms_sample": [
+      "MIXER",
+      "KHO 1",
+      "P. THAY ĐỒ",
+      "LOCKER",
+      "P. Y TẾ",
+      "VP XƯỞNG 4",
+      "W.S OFFICE 4",
+      "P.THAY ĐỒ",
+      "(P. NGHỈ CA NAM)",
+      "CORRIDOR 1",
+      "P. LẮP RÁP 2",
+      "P. LẮP RÁP 1"
+    ],
+    "equip_sample": [
+      "PIPE RACK",
+      "IP Dome Camera",
+      "RACK",
+      "Rack_1",
+      "Rack_3",
+      "RACK_02"
+    ]
+  },
+  {
+    "page": 21,
+    "rooms_sample": [
+      "P. HOP 2",
+      "MEETING 2",
+      "P. HOP 1",
+      "MEETING 1",
+      "P. GIÁM ĐỐC",
+      "DIRECTOR",
+      "P. PHỤ TRỢ",
+      "PANTRY ROOM",
+      "WC-1",
+      "P.KỸ THUẬT",
+      "EPS ROOM",
+      "STAIR - 3"
+    ],
+    "equip_sample": [
+      "IP Dome Camera",
+      "RACK",
+      "Rack Main (2F)"
+    ]
+  },
+  {
+    "page": 22,
+    "rooms_sample": [
+      "STAIR - 7",
+      "STAIR - 6",
+      "P. THAY ĐỒ",
+      "LOCKER",
+      "P. NGHỈ CA 2",
+      "REST ROOM -2",
+      "P. NGHỈ CA 1",
+      "REST ROOM -1",
+      "CORRIDOR -2",
+      "P. GIÁM ĐỐC",
+      "DIRECTOR",
+      "P. IT"
+    ],
+    "equip_sample": [
+      "IP Dome Camera",
+      "RACK",
+      "Rack Main",
+      "Rack_4"
+    ]
+  },
+  {
+    "page": 23,
+    "rooms_sample": [
+      "STAIR - 8",
+      "P. LỌC NƯỚC",
+      "STAIR - 4",
+      "STAIR - 2",
+      "ELEVATOR -1",
+      "MIXER 3",
+      "CAMERA TẦNG 3 NHÀ XƯỞNG",
+      "GIÁM ĐỐC - DIRECTOR"
+    ],
+    "equip_sample": [
+      "IP Dome Camera",
+      "Rack Main",
+      "RACK"
+    ]
+  },
+  {
+    "page": 24,
+    "rooms_sample": [
+      "GIÁM ĐỐC - DIRECTOR",
+      "STAIR-1",
+      "STAIR-2",
+      "PUMP & FF PUMP, RO/DI",
+      "BẢO VỆ"
+    ],
+    "equip_sample": [
+      "IP Bullet Camera",
+      "RACK",
+      "Rack_5",
+      "Rack_5 (1F)"
+    ]
+  },
+  {
+    "page": 25,
+    "rooms_sample": [
+      "MIXER",
+      "KHO 1",
+      "P. THAY ĐỒ",
+      "LOCKER",
+      "P. Y TẾ",
+      "VP XƯỞNG 4",
+      "W.S OFFICE 4",
+      "P.THAY ĐỒ",
+      "(P. NGHỈ CA NAM)",
+      "CORRIDOR 1",
+      "P. LẮP RÁP 2",
+      "P. LẮP RÁP 1"
+    ],
+    "equip_sample": [
+      "PIPE RACK",
+      "Celling Speaker",
+      "Wall Speaker",
+      "Z2_25",
+      "RACK",
+      "Z3_1",
+      "Z3_2",
+      "Z2_1",
+      "Z2_2",
+      "Z2_3",
+      "Z2_4",
+      "Z2_5",
+      "Z2_6",
+      "Z2_7",
+      "Z2_8"
+    ]
+  },
+  {
+    "page": 26,
+    "rooms_sample": [
+      "P. HOP 2",
+      "MEETING 2",
+      "P. HOP 1",
+      "MEETING 1",
+      "P. GIÁM ĐỐC",
+      "DIRECTOR",
+      "P. PHỤ TRỢ",
+      "PANTRY ROOM",
+      "WC-1",
+      "P.KỸ THUẬT",
+      "EPS ROOM",
+      "STAIR - 3"
+    ],
+    "equip_sample": [
+      "RACK",
+      "Z2_37",
+      "Z2_38",
+      "Z2_40",
+      "Z2_41",
+      "Celling Speaker",
+      "Rack_Main",
+      "Z2_39"
+    ]
+  },
+  {
+    "page": 27,
+    "rooms_sample": [
+      "STAIR - 7",
+      "STAIR - 6",
+      "P. THAY ĐỒ",
+      "LOCKER",
+      "P. NGHỈ CA 2",
+      "REST ROOM -2",
+      "P. NGHỈ CA 1",
+      "REST ROOM -1",
+      "CORRIDOR -2",
+      "P. GIÁM ĐỐC",
+      "DIRECTOR",
+      "P. IT"
+    ],
+    "equip_sample": [
+      "Celling Speaker",
+      "Wall Speaker",
+      "RACK",
+      "Z2_42",
+      "Z2_43",
+      "Z2_44",
+      "Z2_45",
+      "Z2_46",
+      "Z2_47",
+      "Z2_48",
+      "Z2_49",
+      "Z2_50",
+      "Z2_51",
+      "Z5_1",
+      "Z5_2"
+    ]
+  },
+  {
+    "page": 28,
+    "rooms_sample": [
+      "STAIR - 8",
+      "P. LỌC NƯỚC",
+      "STAIR - 4",
+      "STAIR - 2",
+      "ELEVATOR -1",
+      "MIXER 3",
+      "ÂM THANH TẦNG 3 NHÀ XƯỞNG",
+      "GIÁM ĐỐC - DIRECTOR"
+    ],
+    "equip_sample": [
+      "Wall Speaker",
+      "Z5_9",
+      "Z5_10"
+    ]
+  },
+  {
+    "page": 29,
+    "rooms_sample": [
+      "GIÁM ĐỐC - DIRECTOR",
+      "STAIR-1",
+      "STAIR-2",
+      "PUMP & FF PUMP, RO/DI",
+      "BẢO VỆ"
+    ],
+    "equip_sample": [
+      "Wall Speaker",
+      "Outdoor Speaker",
+      "Z1_3",
+      "Z1_5",
+      "Z1_2",
+      "Z1_1",
+      "Z1_4"
+    ]
+  },
+  {
+    "page": 30,
+    "rooms_sample": [
+      "ÂM THANH NHÀ BẢO VỆ",
+      "SPEAKER GUARDHOUSE",
+      "SPEAKER GUARDHUOSE",
+      "GIÁM ĐỐC - DIRECTOR",
+      "MIXER",
+      "P. LẮP RÁP 2",
+      "P. LẮP RÁP 1",
+      "P. ĐỊNH HÌNH 1",
+      "P. ĐÓNG GÓI",
+      "ELEVATOR 6 Ton",
+      "PUMP& FF PUMP,RO/DI"
+    ],
+    "equip_sample": [
+      "Celling Speaker",
+      "PIPE RACK",
+      "Z1_5",
+      "Z1_6",
+      "Z1_7"
+    ]
+  },
+  {
+    "page": 31,
+    "rooms_sample": [
+      "MIXER",
+      "KHO 1",
+      "P. THAY ĐỒ",
+      "LOCKER",
+      "P. Y TẾ",
+      "VP XƯỞNG 4",
+      "W.S OFFICE 4",
+      "P.THAY ĐỒ",
+      "(P. NGHỈ CA NAM)",
+      "CORRIDOR 1",
+      "P. LẮP RÁP 2",
+      "P. LẮP RÁP 1"
+    ],
+    "equip_sample": [
+      "PIPE RACK",
+      "Time Attendance",
+      "Access Control",
+      "RACK",
+      "Rack_3",
+      "RACK_02",
+      "Rack_1"
+    ]
+  },
+  {
+    "page": 32,
+    "rooms_sample": [
+      "P. HOP 2",
+      "MEETING 2",
+      "P. HOP 1",
+      "MEETING 1",
+      "P. GIÁM ĐỐC",
+      "DIRECTOR",
+      "P. PHỤ TRỢ",
+      "PANTRY ROOM",
+      "WC-1",
+      "P.KỸ THUẬT",
+      "EPS ROOM",
+      "STAIR - 3"
+    ],
+    "equip_sample": [
+      "RACK",
+      "Rack_Main",
+      "Access Control"
+    ]
+  },
+  {
+    "page": 33,
+    "rooms_sample": [
+      "STAIR - 7",
+      "STAIR - 6",
+      "P. THAY ĐỒ",
+      "LOCKER",
+      "P. NGHỈ CA 2",
+      "REST ROOM -2",
+      "P. NGHỈ CA 1",
+      "REST ROOM -1",
+      "CORRIDOR -2",
+      "P. GIÁM ĐỐC",
+      "DIRECTOR",
+      "P. IT"
+    ],
+    "equip_sample": [
+      "RACK",
+      "Rack_Main",
+      "Rack_4",
+      "Access Control"
+    ]
+  },
+  {
+    "page": 34,
+    "rooms_sample": [
+      "MIXER",
+      "KHO 1",
+      "P. THAY ĐỒ",
+      "LOCKER",
+      "P. Y TẾ",
+      "VP XƯỞNG 4",
+      "W.S OFFICE 4",
+      "P.THAY ĐỒ",
+      "(P. NGHỈ CA NAM)",
+      "CORRIDOR 1",
+      "P. LẮP RÁP 2",
+      "P. LẮP RÁP 1"
+    ],
+    "equip_sample": [
+      "PIPE RACK"
+    ]
+  },
+  {
+    "page": 35,
+    "rooms_sample": [
+      "STAIR - 7",
+      "STAIR - 6",
+      "P. THAY ĐỒ",
+      "LOCKER",
+      "P. NGHỈ CA 2",
+      "REST ROOM -2",
+      "P. NGHỈ CA 1",
+      "REST ROOM -1",
+      "CORRIDOR -2",
+      "P. GIÁM ĐỐC",
+      "DIRECTOR",
+      "P. IT"
+    ],
+    "equip_sample": []
+  },
+  {
+    "page": 36,
+    "rooms_sample": [
+      "PUMP& FF PUMP,RO/DI",
+      "MD X-RAY NHÀ XƯỞNG",
+      "GIÁM ĐỐC - DIRECTOR"
+    ],
+    "equip_sample": [
+      "Flap Barrier (Left & Right)",
+      "Flap Barrier (Center)",
+      "Access Control",
+      "RACK",
+      "Rack_5"
+    ]
+  },
+  {
+    "page": 37,
+    "rooms_sample": [
+      "MIXER",
+      "KHO 1",
+      "P. THAY ĐỒ",
+      "LOCKER",
+      "P. Y TẾ",
+      "VP XƯỞNG 4",
+      "W.S OFFICE 4",
+      "P.THAY ĐỒ",
+      "(P. NGHỈ CA NAM)",
+      "CORRIDOR 1",
+      "P. LẮP RÁP 2",
+      "P. LẮP RÁP 1"
+    ],
+    "equip_sample": [
+      "PIPE RACK"
+    ]
+  },
+  {
+    "page": 38,
+    "rooms_sample": [
+      "MIXER",
+      "P. LẮP RÁP 2",
+      "P. LẮP RÁP 1",
+      "P. ĐỊNH HÌNH 1",
+      "P. ĐÓNG GÓI",
+      "ELEVATOR 6 Ton",
+      "PUMP& FF PUMP,RO/DI",
+      "GIÁM ĐỐC - DIRECTOR"
+    ],
+    "equip_sample": [
+      "PIPE RACK",
+      "RACK",
+      "Rack_IT(2F)"
+    ]
+  },
+  {
+    "page": 39,
+    "rooms_sample": [
+      "MIXER",
+      "P. LẮP RÁP 2",
+      "P. LẮP RÁP 1",
+      "P. ĐỊNH HÌNH 1",
+      "P. ĐÓNG GÓI",
+      "ELEVATOR 6 Ton",
+      "PUMP& FF PUMP,RO/DI",
+      "GIÁM ĐỐC - DIRECTOR"
+    ],
+    "equip_sample": [
+      "PIPE RACK",
+      "RACK",
+      "Rack_1",
+      "Rack_5",
+      "Rack_6-GH1",
+      "Rack_7-GH2",
+      "Rack_8-GH3",
+      "Rack_IT(2F)",
+      "Rack_3",
+      "Rack_4(2F)",
+      "Rack_2"
+    ]
+  },
+  {
+    "page": 40,
+    "rooms_sample": [
+      "MIXER",
+      "P. LẮP RÁP 2",
+      "P. LẮP RÁP 1",
+      "P. ĐỊNH HÌNH 1",
+      "P. ĐÓNG GÓI",
+      "ELEVATOR 6 Ton",
+      "PUMP& FF PUMP,RO/DI",
+      "GIÁM ĐỐC - DIRECTOR"
+    ],
+    "equip_sample": [
+      "PIPE RACK",
+      "RACK",
+      "Rack_1",
+      "Rack_5",
+      "Rack_6-GH1",
+      "Rack_7-GH2",
+      "Rack_8-GH3",
+      "Rack_IT(2F)",
+      "Rack_3",
+      "Rack_4(2F)",
+      "Rack_2",
+      "Rack_9-ULTILITY"
+    ]
+  },
+  {
+    "page": 41,
+    "rooms_sample": [
+      "MIXER",
+      "P. LẮP RÁP 2",
+      "P. LẮP RÁP 1",
+      "P. ĐỊNH HÌNH 1",
+      "P. ĐÓNG GÓI",
+      "ELEVATOR 6 Ton",
+      "PUMP& FF PUMP,RO/DI",
+      "GIÁM ĐỐC - DIRECTOR"
+    ],
+    "equip_sample": [
+      "PIPE RACK"
+    ]
+  },
+  {
+    "page": 42,
+    "rooms_sample": [
+      "MIXER",
+      "P. LẮP RÁP 2",
+      "P. LẮP RÁP 1",
+      "P. ĐỊNH HÌNH 1",
+      "P. ĐÓNG GÓI",
+      "ELEVATOR 6 Ton",
+      "PUMP& FF PUMP,RO/DI",
+      "GIÁM ĐỐC - DIRECTOR"
+    ],
+    "equip_sample": [
+      "PIPE RACK",
+      "RACK",
+      "Rack_1",
+      "Rack_5",
+      "Rack_6-GH1",
+      "Rack_7-GH2",
+      "Rack_8-GH3",
+      "Rack_IT(2F)",
+      "Rack_3",
+      "Rack_4(2F)",
+      "Rack_2",
+      "Rack_9-ULTILITY"
+    ]
+  },
+  {
+    "page": 43,
+    "rooms_sample": [
+      "MIXER",
+      "P. LẮP RÁP 2",
+      "P. LẮP RÁP 1",
+      "P. ĐỊNH HÌNH 1",
+      "P. ĐÓNG GÓI",
+      "ELEVATOR 6 Ton",
+      "PUMP& FF PUMP,RO/DI",
+      "GIÁM ĐỐC - DIRECTOR"
+    ],
+    "equip_sample": [
+      "PIPE RACK",
+      "RACK",
+      "Rack_1",
+      "Rack_5",
+      "Rack_6-GH1",
+      "Rack_7-GH2",
+      "Rack_8-GH3",
+      "Rack_IT(2F)",
+      "Rack_3",
+      "Rack_4(2F)",
+      "Rack_2",
+      "Rack_9-ULTILITY"
+    ]
+  }
+]

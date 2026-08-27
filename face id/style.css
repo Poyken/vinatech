@@ -960,100 +960,192 @@ body::after {
   box-shadow: 0 4px 14px var(--primary-glow);
 }
 
-.map-container {
-  background: var(--blueprint-bg);
+.cad-blueprint-container {
+  position: relative;
+  width: 100%;
+  height: 640px;
+  min-height: 520px;
+  background: #060a14;
   border: 1px solid var(--card-border);
   border-radius: var(--radius-lg);
-  padding: 26px;
-  position: relative;
-  min-height: 490px;
   overflow: hidden;
-  box-shadow: var(--card-glow);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45), 0 0 30px rgba(99, 102, 241, 0.12);
+  cursor: grab;
+  user-select: none;
 }
 
-.blueprint-svg {
-  width: 100%;
-  height: 440px;
+[data-theme="light"] .cad-blueprint-container {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
 }
 
-.room-box {
-  fill: var(--blueprint-room-fill);
-  stroke: var(--blueprint-room-stroke);
-  stroke-width: 1.5;
-  transition: var(--transition-smooth);
+.cad-blueprint-container:active {
+  cursor: grabbing;
 }
 
-.room-box:hover {
-  fill: var(--blueprint-room-hover-fill);
-  stroke: var(--blueprint-room-hover-stroke);
-  filter: drop-shadow(0 0 12px var(--cyan-glow));
+.cad-blueprint-container.fullscreen-mode {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: none !important;
+  max-height: none !important;
+  z-index: 99999 !important;
+  border-radius: 0 !important;
+  border: none !important;
 }
 
-.room-header-badge {
-  fill: rgba(14, 22, 38, 0.75);
-  stroke: rgba(255, 255, 255, 0.08);
-  stroke-width: 1;
+.cad-pan-stage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: 0 0;
+  will-change: transform;
+  transition: transform 0.04s ease-out;
+}
+
+.cad-drawing-img {
+  display: block;
+  max-width: none;
+  width: 1800px;
+  height: auto;
+  pointer-events: none;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  border-radius: 4px;
+}
+
+.cad-pins-overlay {
+  position: absolute;
+  inset: 0;
   pointer-events: none;
 }
 
-[data-theme="light"] .room-header-badge {
-  fill: #eef2ff;
-  stroke: #c7d2fe;
-}
-
-.room-label {
-  fill: var(--blueprint-label);
-  font-size: 11.5px;
-  font-family: var(--font-main);
-  font-weight: 800;
-  text-anchor: middle;
-  dominant-baseline: middle;
-  pointer-events: none;
-  letter-spacing: -0.2px;
-}
-
-.device-pin {
+.cad-pin-hotspot {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  pointer-events: auto;
   cursor: pointer;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.pin-pill {
-  stroke-width: 2.5px;
-  stroke: #ffffff;
-  transition: stroke-width var(--transition-fast), fill var(--transition-fast), filter var(--transition-fast);
+.cad-pin-hotspot:hover {
+  transform: translate(-50%, -50%) scale(1.25);
+  z-index: 10;
 }
 
-.pin-ac {
-  fill: #6366f1;
-  filter: drop-shadow(0 3px 6px rgba(99, 102, 241, 0.45));
+.cad-pin-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 800;
+  font-family: var(--font-mono);
+  color: #ffffff;
+  border: 1.5px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  white-space: nowrap;
 }
 
-.pin-ta {
-  fill: #06b6d4;
-  filter: drop-shadow(0 3px 6px rgba(6, 182, 212, 0.45));
+.cad-pin-hotspot.type-ac .cad-pin-pill {
+  background: linear-gradient(135deg, #6366f1, #4f46e5);
+  box-shadow: 0 0 14px rgba(99, 102, 241, 0.7);
 }
 
-.pin-barrier {
-  fill: #f59e0b;
-  filter: drop-shadow(0 3px 6px rgba(245, 158, 11, 0.45));
+.cad-pin-hotspot.type-ta .cad-pin-pill {
+  background: linear-gradient(135deg, #06b6d4, #0891b2);
+  box-shadow: 0 0 14px rgba(6, 182, 212, 0.7);
 }
 
-.device-pin:hover .pin-pill {
-  stroke-width: 3.5px;
+.cad-pin-hotspot.type-rack .cad-pin-pill {
+  background: linear-gradient(135deg, #10b981, #059669);
+  box-shadow: 0 0 14px rgba(16, 185, 129, 0.7);
 }
 
-.device-pin:hover .pin-ac {
-  fill: #4338ca;
-  filter: drop-shadow(0 0 16px rgba(99, 102, 241, 0.95));
+.cad-pin-hotspot.type-wifi .cad-pin-pill {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  box-shadow: 0 0 14px rgba(59, 130, 246, 0.7);
 }
 
-.device-pin:hover .pin-ta {
-  fill: #0891b2;
-  filter: drop-shadow(0 0 16px rgba(6, 182, 212, 0.95));
+.cad-pin-hotspot.type-barrier .cad-pin-pill {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  box-shadow: 0 0 14px rgba(245, 158, 11, 0.7);
 }
 
-.device-pin:hover .pin-barrier {
-  fill: #d97706;
-  filter: drop-shadow(0 0 16px rgba(245, 158, 11, 0.95));
+.cad-zoom-indicator {
+  position: absolute;
+  bottom: 14px;
+  left: 16px;
+  z-index: 10;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-full);
+  padding: 6px 16px;
+  font-size: 12px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  pointer-events: none;
+}
+
+[data-theme="light"] .cad-zoom-indicator {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: #cbd5e1;
+  color: #475569;
+}
+
+.cad-zoom-indicator strong {
+  color: var(--primary);
+  font-family: var(--font-mono);
+}
+
+.drawing-quickjump-card {
+  margin-top: 14px;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-md);
+  padding: 12px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.device-pills-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  flex: 1;
+}
+
+.device-quick-chip {
+  padding: 5px 12px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--card-border);
+  background: var(--card-bg-solid);
+  color: var(--text-main);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.device-quick-chip:hover {
+  border-color: var(--primary);
+  background: rgba(99, 102, 241, 0.12);
+  color: var(--primary);
+  transform: translateY(-1px);
 }
 
 /* ==============================================================================
