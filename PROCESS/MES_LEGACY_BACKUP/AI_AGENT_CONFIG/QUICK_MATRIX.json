@@ -1,0 +1,128 @@
+{
+  "version": "2.0.0",
+  "updated_at": "2026-08-28",
+  "description": "L1 In-Memory Pre-compiled Knowledge Matrix for Vinatech MES (Ultra-fast, minimal token)",
+  "screens": {
+    "B530": {
+      "name": "Nhập sản lượng công đoạn (Cell Line)",
+      "module": "Production",
+      "sp_get": "usp_GetProdRouteHist",
+      "sp_iud": "usp_DoProcessProdRouteHist",
+      "tables": ["STB_ProdRouteHist", "STB_SetInfo", "STB_RouteEqpInfo", "STB_WorkerInfo"],
+      "common_bugs": {
+        "khong_chon_duoc_may": "Thiếu cấu hình quan hệ giữa Mã Công Đoạn và Máy trong STB_RouteEqpInfo (A410)",
+        "khong_hien_ten_tho": "User chưa được cấp quyền công đoạn trong STB_WorkerInfo hoặc tài khoản SF_UserInfo bị vô hiệu hóa",
+        "sai_san_luong": "Kiểm tra tổng sản lượng chốt tại STB_ProdRouteHist so với STB_ProductionOrderInfo",
+        "chot_nham_chuyen_truoc": "Cần reset CompleteRoute=NULL ở công đoạn trước để MES tự sinh bản ghi tiếp theo, KHÔNG INSERT trực tiếp vào STB_ProdRouteHist"
+      },
+      "fix_template": "UPDATE STB_ProdRouteHist SET CompleteRoute = NULL WHERE ControlNo = @ControlNo AND RouteCode = @PrevRoute"
+    },
+    "B540": {
+      "name": "Chốt sản lượng hoàn thành Cell Line (Finish Route)",
+      "module": "Production",
+      "sp_get": "usp_GetProdRouteHist",
+      "sp_iud": "usp_DoProcessProdRouteHist",
+      "tables": ["STB_ProdRouteHist", "STB_SetInfo", "STB_ProdRouteSummary"],
+      "common_bugs": {
+        "khong_chot_duoc_thanh_pham": "IsProdFinish trong STB_SetInfo chưa bật 1 hoặc công đoạn trước chưa hoàn thành",
+        "lech_san_luong_tong": "Kiểm tra bảng tổng hợp STB_ProdRouteSummary qua PO"
+      },
+      "fix_template": "UPDATE STB_SetInfo SET IsProdFinish = 1 WHERE ControlNo = @ControlNo"
+    },
+    "B523": {
+      "name": "Gộp / Chia Box Cell (Divide & Packaging)",
+      "module": "Packaging",
+      "sp_get": "usp_GetDividePackaging",
+      "sp_iud": "usp_DoProcessDividePackaging",
+      "tables": ["STB_DividePackaging", "STB_MaterialLotInfo", "STB_SetInfo"],
+      "common_bugs": {
+        "khong_tach_duoc_box": "Box con đã bị khóa kho hoặc CurrentQty = 0",
+        "thua_ban_ghi_dummy": "Xóa bản ghi giả lập sinh nhầm trong STB_DividePackaging"
+      },
+      "fix_template": "UPDATE STB_MaterialLotInfo SET CurrentQty = @Qty, MaterialWarehouseCode = @WH WHERE MaterialLotNo = @LotNo"
+    },
+    "B351": {
+      "name": "Chuyển đổi Lot / Model (Lot Change)",
+      "module": "Production",
+      "sp_get": "usp_GetLotChangeHistory",
+      "sp_iud": "usp_DoProcessLotChange",
+      "tables": ["STB_LotChangeMaterialHistory", "STB_SetInfo", "STB_MaterialLotInfo"],
+      "common_bugs": {
+        "khong_doi_duoc_model": "Model đích chưa được cấu hình BOM trong A410 hoặc mã Lot mới bị trùng",
+        "mat_dau_vj": "Cột oldLotID phải giữ nguyên tiền tố VJ theo chuẩn packaging"
+      },
+      "fix_template": "UPDATE STB_SetInfo SET ModelCode = @NewModel WHERE ControlNo = @ControlNo"
+    },
+    "A460": {
+      "name": "Cấu hình Mẫu Tem & Định Dạng In (Model Label Info)",
+      "module": "MasterData",
+      "sp_get": "usp_GetModelLabelInfo",
+      "sp_iud": "usp_DoProcessModelLabelInfo",
+      "tables": ["STB_ModelLabelInfo", "STB_ModelMaster"],
+      "common_bugs": {
+        "khong_in_duoc_tem": "Chưa khai báo FormatName hoặc LabelType trong STB_ModelLabelInfo",
+        "khong_hien_vol_farad": "ModelMaster (A410) chưa điền Capacity / Voltage"
+      },
+      "fix_template": "INSERT INTO STB_ModelLabelInfo (ModelCode, LabelType, FormatName, CreateDateTime) VALUES (@Model, @Type, @Format, GETDATE())"
+    },
+    "A418": {
+      "name": "Quy Cách Đóng Gói (Packing Standard)",
+      "module": "MasterData",
+      "sp_get": "usp_GetPackingStandard",
+      "sp_iud": "usp_DoProcessPackingStandard",
+      "tables": ["STB_PackingStandard", "STB_ModelMaster"],
+      "common_bugs": {
+        "sai_so_luong_thung": "Khai báo BoxQty / CartonQty / PalletQty không khớp với kích thước Size sản phẩm"
+      },
+      "fix_template": "UPDATE STB_PackingStandard SET BoxQty = @BoxQty WHERE ModelCode = @ModelCode"
+    },
+    "F330": {
+      "name": "Quản lý Xuất Kho NVL (Material Issue)",
+      "module": "WMS",
+      "sp_get": "usp_GetMaterialDocInfo",
+      "sp_iud": "usp_DoProcessMaterialDoc",
+      "tables": ["STB_MaterialDocInfo", "STB_MaterialDocDetail", "STB_MaterialLotInfo"],
+      "common_bugs": {
+        "loi_fifo": "Lot bị chặn do còn Lot cũ hơn chưa xuất (kiểm tra ExpireDate / CreateDateTime)",
+        "lot_bi_hold": "MaterialWarehouseCode đang là HOLDING_WH ➔ Cần xác nhận QC trước khi chuyển kho WH01"
+      },
+      "fix_template": "UPDATE STB_MaterialLotInfo SET MaterialWarehouseCode = 'WH01' WHERE MaterialLotNo = @LotNo"
+    },
+    "HN523": {
+      "name": "Đóng Gói Chi Nhánh Hà Nam (Ha Nam Packaging)",
+      "module": "HaNam",
+      "sp_get": "usp_GetHN_Packaging",
+      "sp_iud": "usp_DoProcessHN_Packaging",
+      "tables": ["STB_MaterialLotInfo", "STB_SetInfo", "STB_PackingHist"],
+      "common_bugs": {
+        "khong_quet_duoc_tem_hanam": "Mã vạch tem Hà Nam có định dạng tiền tố riêng (HN), cần kiểm tra quy tắc cắt chuỗi"
+      },
+      "fix_template": "UPDATE STB_SetInfo SET Barcode = @NewBarcode WHERE ControlNo = @ControlNo"
+    }
+  },
+  "core_tables": {
+    "STB_SetInfo": {
+      "role": "Bảng trung tâm quản lý Set / Thùng sản phẩm",
+      "key_columns": ["ControlNo", "PONo", "Barcode", "ModelCode", "IsProdFinish", "IsLineInput", "CreateDateTime"]
+    },
+    "STB_ProdRouteHist": {
+      "role": "Bảng lưu lịch sử công đoạn sản xuất & chốt sản lượng",
+      "key_columns": ["ProdRouteHistNo", "ControlNo", "RouteCode", "WorkCenterCode", "ProdQty", "CompleteRoute", "CreateDateTime"]
+    },
+    "STB_MaterialLotInfo": {
+      "role": "Bảng quản lý Lot nguyên vật liệu & thành phẩm kho",
+      "key_columns": ["MaterialLotNo", "MaterialCode", "CurrentQty", "MaterialWarehouseCode", "ExpireDate", "CreateDateTime"]
+    },
+    "STB_MaterialDocDetail": {
+      "role": "Bảng chứng từ liên kết xuất/nhập/chia cuộn Slitting",
+      "key_columns": ["DocNo", "DocSeq", "MaterialCode", "MaterialLotNo", "TargetMaterialLotNo", "DocQty", "CreateDateTime"]
+    }
+  },
+  "golden_rules": [
+    "Rule 0: Tra L1 QUICK_MATRIX.json trước khi query DB",
+    "Rule 1: SELECT-Only trên Production DB, cấm chạy DML trực tiếp không có Transaction",
+    "Rule 4: Surgical Retrieval - không load cả file markdown >50KB",
+    "Rule 6: Golden Query 360 độ (mes.ps1 trace) trong lần đọc đầu tiên khi tra Lot",
+    "Rule 10: Standard Tooling (mes.ps1, find_kb.ps1, deploy_tool.ps1)"
+  ]
+}
