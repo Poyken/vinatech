@@ -1,7 +1,7 @@
 ﻿# BAO CAO DO TIN CAY TAI LIEU & SCHEMA DRIFT AUDIT
 
-> **Cap nhat:** 2026-08-28 16:58:17
-> **Tong quan he thong:** **79.8%** doi tuong khop chinh xac voi Live DB (1236 / 1548 doi tuong).
+> **Cap nhat:** 2026-08-28 17:47:59
+> **Tong quan he thong:** **71.7%** doi tuong khop chinh xac voi Live DB (1241 / 1730 doi tuong).
 > **Muc dich:** Huong dan AI va Ky su xac dinh chinh xac muc do tin cay cua tung tai lieu truoc khi van hanh.
 
 ---
@@ -22,7 +22,7 @@
 | [./DATABASE_KNOWLEDGE_BASE/DB_09_VINATECH_WEBSOCKET.md](file:///./DATABASE_KNOWLEDGE_BASE/DB_09_VINATECH_WEBSOCKET.md) | 1/1 | 0/0 | **100%** | [HIGH] |
 | [./SYSTEM_ARCHITECTURE/MES_OPERATIONAL_LOG.md](file:///./SYSTEM_ARCHITECTURE/MES_OPERATIONAL_LOG.md) | 1/1 | 1/1 | **100%** | [HIGH] |
 | [./SYSTEM_ARCHITECTURE/VOL_02_BUSINESS_WORKFLOWS_AND_FORMS.md](file:///./SYSTEM_ARCHITECTURE/VOL_02_BUSINESS_WORKFLOWS_AND_FORMS.md) | 2/2 | 0/0 | **100%** | [HIGH] |
-| [./AI_AGENT_CONFIG/LESSONS_LEARNED.md](file:///./AI_AGENT_CONFIG/LESSONS_LEARNED.md) | 1/1 | 0/0 | **100%** | [HIGH] |
+| [./AI_AGENT_CONFIG/LESSONS_LEARNED.md](file:///./AI_AGENT_CONFIG/LESSONS_LEARNED.md) | 3/3 | 0/0 | **100%** | [HIGH] |
 | [./AI_AGENT_CONFIG/RULES.md](file:///./AI_AGENT_CONFIG/RULES.md) | 4/4 | 0/0 | **100%** | [HIGH] |
 | [./SYSTEM_ARCHITECTURE/VOL_03_SCREEN_OPERATIONS_AND_TROUBLESHOOTING.md](file:///./SYSTEM_ARCHITECTURE/VOL_03_SCREEN_OPERATIONS_AND_TROUBLESHOOTING.md) | 28/28 | 5/5 | **100%** | [HIGH] |
 | [./MES_MASTER_KNOWLEDGE_BASE/MES_SCRIPT_GUIDE.md](file:///./MES_MASTER_KNOWLEDGE_BASE/MES_SCRIPT_GUIDE.md) | 2/2 | 2/2 | **100%** | [HIGH] |
@@ -59,22 +59,23 @@
 | [./MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_03_SANMINA_LABEL_GUIDE.md](file:///./MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_03_SANMINA_LABEL_GUIDE.md) | 5/10 | 4/8 | **50%** | [LOW] |
 | [./DATABASE_KNOWLEDGE_BASE/DB_03_INTEGRATION_WAREHOUSE.md](file:///./DATABASE_KNOWLEDGE_BASE/DB_03_INTEGRATION_WAREHOUSE.md) | 4/9 | 0/0 | **44.4%** | [LOW] |
 | [./SYSTEM_INTEGRATION_MAP.md](file:///./SYSTEM_INTEGRATION_MAP.md) | 7/16 | 0/0 | **43.8%** | [LOW] |
+| [./AI_AGENT_CONFIG/BOOTSTRAP.md](file:///./AI_AGENT_CONFIG/BOOTSTRAP.md) | 4/10 | 1/2 | **41.7%** | [LOW] |
 | [./DATABASE_KNOWLEDGE_BASE/DB_03_INTEGRATION_MASTER_DATA.md](file:///./DATABASE_KNOWLEDGE_BASE/DB_03_INTEGRATION_MASTER_DATA.md) | 3/10 | 0/0 | **30%** | [LOW] |
 | [./DATABASE_KNOWLEDGE_BASE/DB_03_INTEGRATION_SALES_SHIPMENT.md](file:///./DATABASE_KNOWLEDGE_BASE/DB_03_INTEGRATION_SALES_SHIPMENT.md) | 1/4 | 0/0 | **25%** | [LOW] |
-| [./AI_AGENT_CONFIG/BOOTSTRAP.md](file:///./AI_AGENT_CONFIG/BOOTSTRAP.md) | 1/7 | 1/3 | **20%** | [LOW] |
 | [./DATABASE_KNOWLEDGE_BASE/DB_03_INTEGRATION_SSO_SECURITY.md](file:///./DATABASE_KNOWLEDGE_BASE/DB_03_INTEGRATION_SSO_SECURITY.md) | 0/1 | 0/0 | **0%** | [LOW] |
 | [./DATABASE_KNOWLEDGE_BASE/DB_03_INTEGRATION_ORGANIZATION_WORKFLOW.md](file:///./DATABASE_KNOWLEDGE_BASE/DB_03_INTEGRATION_ORGANIZATION_WORKFLOW.md) | 0/3 | 0/0 | **0%** | [LOW] |
+| [./KB_RELIABILITY_REPORT.md](file:///./KB_RELIABILITY_REPORT.md) | 0/99 | 0/79 | **0%** | [LOW] |
 | [./MASTER_INDEX.md](file:///./MASTER_INDEX.md) | 0/11 | 0/0 | **0%** | [LOW] |
-| [./GROUPWARE_KNOWLEDGE_BASE/GW_03_KE_HOACH_SX.md](file:///./GROUPWARE_KNOWLEDGE_BASE/GW_03_KE_HOACH_SX.md) | 0/5 | 0/0 | **0%** | [LOW] |
 | [./MES_MASTER_KNOWLEDGE_BASE/KB_07/INDEX.md](file:///./MES_MASTER_KNOWLEDGE_BASE/KB_07/INDEX.md) | 0/1 | 0/0 | **0%** | [LOW] |
 | [./DATABASE_KNOWLEDGE_BASE/DB_03_INTEGRATION_HR_ADMIN.md](file:///./DATABASE_KNOWLEDGE_BASE/DB_03_INTEGRATION_HR_ADMIN.md) | 0/6 | 0/0 | **0%** | [LOW] |
 | [./DATABASE_KNOWLEDGE_BASE/DB_03_INTEGRATION_DISBURSEMENT.md](file:///./DATABASE_KNOWLEDGE_BASE/DB_03_INTEGRATION_DISBURSEMENT.md) | 0/3 | 0/0 | **0%** | [LOW] |
 | [./DATABASE_KNOWLEDGE_BASE/DB_03_VINATECH_GROUP.md](file:///./DATABASE_KNOWLEDGE_BASE/DB_03_VINATECH_GROUP.md) | 0/1 | 0/0 | **0%** | [LOW] |
-| [./GROUPWARE_KNOWLEDGE_BASE/GW_07_KHO_THANH_PHAM.md](file:///./GROUPWARE_KNOWLEDGE_BASE/GW_07_KHO_THANH_PHAM.md) | 0/7 | 0/0 | **0%** | [LOW] |
-| [./GROUPWARE_KNOWLEDGE_BASE/GW_08_BAN_HANG.md](file:///./GROUPWARE_KNOWLEDGE_BASE/GW_08_BAN_HANG.md) | 0/3 | 0/0 | **0%** | [LOW] |
 | [./GROUPWARE_KNOWLEDGE_BASE/GW_06_THANH_TOAN.md](file:///./GROUPWARE_KNOWLEDGE_BASE/GW_06_THANH_TOAN.md) | 0/2 | 0/0 | **0%** | [LOW] |
-| [./GROUPWARE_KNOWLEDGE_BASE/GW_04_MASTER_DATA.md](file:///./GROUPWARE_KNOWLEDGE_BASE/GW_04_MASTER_DATA.md) | 0/2 | 0/0 | **0%** | [LOW] |
+| [./GROUPWARE_KNOWLEDGE_BASE/GW_07_KHO_THANH_PHAM.md](file:///./GROUPWARE_KNOWLEDGE_BASE/GW_07_KHO_THANH_PHAM.md) | 0/7 | 0/0 | **0%** | [LOW] |
 | [./GROUPWARE_KNOWLEDGE_BASE/GW_05_HANH_CHINH.md](file:///./GROUPWARE_KNOWLEDGE_BASE/GW_05_HANH_CHINH.md) | 0/2 | 0/0 | **0%** | [LOW] |
+| [./GROUPWARE_KNOWLEDGE_BASE/GW_03_KE_HOACH_SX.md](file:///./GROUPWARE_KNOWLEDGE_BASE/GW_03_KE_HOACH_SX.md) | 0/5 | 0/0 | **0%** | [LOW] |
+| [./GROUPWARE_KNOWLEDGE_BASE/GW_04_MASTER_DATA.md](file:///./GROUPWARE_KNOWLEDGE_BASE/GW_04_MASTER_DATA.md) | 0/2 | 0/0 | **0%** | [LOW] |
+| [./GROUPWARE_KNOWLEDGE_BASE/GW_08_BAN_HANG.md](file:///./GROUPWARE_KNOWLEDGE_BASE/GW_08_BAN_HANG.md) | 0/3 | 0/0 | **0%** | [LOW] |
 | [./DATABASE_KNOWLEDGE_BASE/DB_INDEX.md](file:///./DATABASE_KNOWLEDGE_BASE/DB_INDEX.md) | 0/1 | 0/0 | **0%** | [LOW] |
 | [./DATABASE_KNOWLEDGE_BASE/DB_12_SmartFactoryIncubator.md](file:///./DATABASE_KNOWLEDGE_BASE/DB_12_SmartFactoryIncubator.md) | 0/3 | 0/0 | **0%** | [LOW] |
 | [./GROUPWARE_KNOWLEDGE_BASE/GW_01_DANG_NHAP.md](file:///./GROUPWARE_KNOWLEDGE_BASE/GW_01_DANG_NHAP.md) | 0/2 | 0/0 | **0%** | [LOW] |
@@ -234,7 +235,7 @@
 
 ### File: ./AI_AGENT_CONFIG/BOOTSTRAP.md
 - **Bang chua tim thay trong Live DB:** STB_MaterialHoldInfo, STB_BarrelBarcodeInfo, VVT_F1, VVT_F2, VVT_F3, VVT_F4
-- **SP chua tim thay trong Live DB:** usp_xxx, usp_De
+- **SP chua tim thay trong Live DB:** usp_De
 
 ### File: ./AI_AGENT_CONFIG/HOTFIX_LOG.md
 - **Bang chua tim thay trong Live DB:** VVT_F1, VVT_F2, VVT_F5
@@ -247,6 +248,10 @@
 ### File: ./AI_AGENT_CONFIG/SKILLS.md
 - **Bang chua tim thay trong Live DB:** STB_MaterialHoldInfo, STB_BarrelBarcodeInfo, STB_AluCaseMapping_VVT
 - **SP chua tim thay trong Live DB:** usp_TenSP, usp_ElectrodeStep_Vietnam, usp_DeProcessProdPacking_VVT
+
+### File: ./KB_RELIABILITY_REPORT.md
+- **Bang chua tim thay trong Live DB:** GW_03_KE_HOACH_SX, GW_07_KHO_THANH_PHAM, GW_08_BAN_HANG, GW_06_THANH_TOAN, GW_04_MASTER_DATA, GW_05_HANH_CHINH, GW_01_DANG_NHAP, GW_INDEX, GW_02_MUA_HANG, STB_AluCaseMapping_VVT, VVT_F3, VVT_F2, VVT_F1, STB_ProdRoute, STB_Material, STB_SerialRules, VVT_F5, STB_PhoenixContactLabelInfo, STB_MaterialDocInfo_BK, STB_MaterialDocDetail_BK, STB_MaterialDocLotInfo_BK, STB_ProdRouteHist_BK, STB_ProdRouteSummary_BK, STB_ProductionOrderInfo_BK, VVT_F4, STB_VN_STAGEMACHINES_, VVT_Xem, STB_WarehouseLocation, STB_BarrelBarcodeInfo, STB_BarrelBarcodeDetail, STB_ElectrodeProdRouteHist, VVT_BG2, VVT_MeasurementControlList, STB_BomInfo, VVT_CAPA, VVT_SanminaShipmentPlan, VVT_SanminaLabelPrint, STB_YShipmentPlan, STB_YShipmentPlanLot, STB_YLabelPrintHist, STB_VVT_SortingErrorData_ALCase_NEW, STB_AttachedFileMaster, VVT_DoCreateQC4MChange, VVT_ViewDetailQC4MChange, VVT_View4MChange, VVT_CAPAInputSeparateLot, STB_DetailAgingHY, STB_LineStructureInfo, STB_RoutingInfo, STB_RoutingDetailInfo, STB_MaterialWarehouseInfo, STB_LocationInfo, STB_EmployeeInfo, STB_MachineInfo, STB_DeviceInfo, STB_SupplierInfo, STB_VendorMappingByMaterialInfo, STB_MaterialMappingByCustomer, VVT_MaterialStockList, STB_StagePrices, STB_VNT_ElectrodeSlittingCutterUsageHist, STB_VNSparePartInHistory, STB_VNSparePartOutHistory, GW_PO, GW_Pay, GW_HR, GW_Trip, GW_Report, GW_Leave, GW_Retire, GW_Item, GW_BOM, GW_Vendor, GW_Price, GW_H, GW_L, GW_03, STB_CellTestResult, STB_CellTestResultMax, STB_CellTestResultRT, GW_Core, GW_01, GW_02, GW_07, GW_04, GW_05, GW_06, GW_08, STB_UserInfo_MES, STB_ESM_WO_HEADER, STB_MaterialBOM, STB_MaterialHoldInfo, STB_HN_AccountingPrice, POP_KNOWLEDGE_BASE, POP_USER_MANUAL, GW_Plan, GW_Suju, POP_DB, GW_DBs
+- **SP chua tim thay trong Live DB:** usp_Vietnam_NewScreenData_get, usp_Vietnam_NewScreenData_iud, usp_DoProcessProdRouteHistForCalc_VNT, usp_DoProcessProdRouteHistForBarcode2, usp_DoProcessProdRouteHistForBarcode1, usp_DoProcessProdGI, usp_DoProcessProdGR, usp_VNE_BoxLabelPrintHist_, usp_GetProdRouteHistForBarcode_PS_get, usp_Vietnam_ChangeProductionOrderRoutingLine_VNT, usp_Vietnam_GetLotInfoForRework_VNT, usp_YShipmentPlan_get, usp_YShipmentPlan_iud, usp_YLabelPrint_get, usp_YLabelPrintHist_iud, usp_Vietnam_ScrapInput_HN, usp_ProductionOrderInfo_HY_HY_get, usp_DoProcessProdRouteHist_HY, usp_LineStructureInfo_get, usp_LineStructureInfo_iud, usp_RoutingInfo_get, usp_RoutingInfo_iud, usp_MaterialWarehouseInfo_get, usp_MaterialWarehouseInfo_iud, usp_EmployeeInfo_get, usp_EmployeeInfo_iud, usp_MachineInfo_get, usp_MachineInfo_iud, usp_DeviceInfo_get, usp_DeviceInfo_iud, usp_SupplierInfo_get, usp_SupplierInfo_iud, usp_VendorMappingByMaterialInfo_get, usp_VendorMappingByMaterialInfo_iud, usp_MaterialMappingByCustomer_get, usp_MaterialMappingByCustomer_iud, usp_MaterialDocDetail_HY_iud, usp_MaterialWarehouseInOutHist_HY_iud, usp_MaterialReturnAndPrintLabel_get, usp_DoReturnMaterialDoc, usp_DoSplitRawMaterialAndMove_HY, usp_MaterialLotInfo_HY_get, usp_MaterialDocDetailHistory_get, usp_ProductionOrderInfo_iud, usp_vn_showproductionerror_get, usp_CellLineFaultReport_get, usp_MonthEndInventoryReport_get, usp_PostProductionScrapReport_get, usp_StagePrices_get, usp_StagePrices_iud, usp_ModuleCheckStatus_get, usp_VNT_ProdInspectionHist_get, usp_RouteInspectionMeasureFullHist_get, usp_ElectrodeInspectionHistoryForBarcode_get, usp_ReportSparePartInfo_get, usp_VNT_ElectrodeSlittingCutterUsageHist_get, usp_ReportSparePartDetail_get, usp_SyncPurchaseRequest, usp_GetPurchaseOrderList, usp_DoApplyIncomingQty, usp_DoCreateAccountingSlip, usp_SyncSalesOrder, usp_GetShipmentRequestList, usp_DoApplyRealShipment, usp_SyncDailyProductionPlan, usp_DoFinishRouteOperation, usp_SyncMaterialMaster, usp_xxx, usp_De, usp_Get, usp_Do, usp_Vietnam_, usp_VN_, usp_VVT_, usp_HN_, usp_DoCreatePackingLabelInfo, usp_TenSP, usp_ElectrodeStep_Vietnam, usp_DeProcessProdPacking_VVT
 
 ### File: ./MASTER_INDEX.md
 - **Bang chua tim thay trong Live DB:** GW_INDEX, GW_01_DANG_NHAP, GW_02_MUA_HANG, GW_03_KE_HOACH_SX, GW_04_MASTER_DATA, GW_05_HANH_CHINH, GW_06_THANH_TOAN, GW_07_KHO_THANH_PHAM, GW_08_BAN_HANG, POP_KNOWLEDGE_BASE, POP_USER_MANUAL
