@@ -1,4 +1,4 @@
-﻿<!--
+<!--
 AI-READY METADATA
 Purpose: Quy tắc bắt buộc không thể vi phạm cho AI Agent khi thao tác trên DB & Workspace MES
 Scope: Safety & Execution Rules
@@ -20,16 +20,24 @@ Related Files:
 
 
 > [!CAUTION]
+> **0. ZERO SELECT WITHOUT PRIOR KB CONSULTATION (BẤT BIẾN - LỖI NGHIÊM TRỌNG NẾU VI PHẠM)**
+> - **CẤM TUYỆT ĐỐI** việc cắm đầu chạy lệnh `SELECT` ngay khi vừa nhận Screen ID, mã lỗi, mã Lot hay câu hỏi nghiệp vụ từ người dùng!
+> - **QUY TRÌNH 4 BƯỚC BẮT BUỘC TRONG MỌI PHẢN HỒI:**
+>   1. **Bước 1 (Tra cứu KB):** Luôn dùng `.\find_kb.ps1 "<Keyword>"` hoặc tra cứu trực tiếp trong `MES_MASTER_KNOWLEDGE_BASE` / `KB_09_SCREEN_BUG_FIXBOOK.md` / `DATABASE_KNOWLEDGE_BASE` trước.
+>   2. **Bước 2 (Trích dẫn căn cứ):** Nêu rõ tên file tài liệu, vị trí dòng, Root Cause và giải pháp tiêu chuẩn đã được tài liệu ghi nhận.
+>   3. **Bước 3 (Kiểm chứng có mục đích):** CHỈ chạy câu lệnh `SELECT` (giới hạn 3-5 cột) để KIỂM CHỨNG LẠI kết quả đã tìm thấy trong tài liệu trên DB thực tế.
+>   4. **Bước 4 (Trường hợp KB chưa có):** Nếu tra cứu tài liệu KHÔNG THẤY ➔ AI BẮT BUỘC phải báo cáo rõ danh sách các file KB đã tra cứu nhưng chưa có, sau đó mới được đề xuất câu SELECT khảo sát DB để truy vết.
+>
 > **1. SELECT-ONLY** — KHÔNG INSERT/UPDATE/DELETE/ALTER/DROP trực tiếp trên production DB.
 > **2. Script → User chạy** — Viết SQL fix bọc `BEGIN TRAN...ROLLBACK` → user tự chạy qua SSMS hoặc `deploy_tool.ps1`.
-> **3. KNOWLEDGE-FIRST HARD STOP** — CẤM CHẠY SQL QUERY KHI CHƯA TRA KB! Khi nhận báo lỗi, AI BẮT BUỘC phải mở `KB_09_SCREEN_BUG_FIXBOOK.md` hoặc KI `vinatech_bug_fix_patterns` để tra cứu trước. (1) Tra tài liệu RA ➔ Trình bày căn cứ KB & thực hiện SELECT verify tài liệu. (2) Tra tài liệu KHÔNG RA ➔ Báo cáo rõ đã tra KB nhưng chưa thấy & đề xuất câu SELECT khảo sát DB để truy vết.
-> **4. TOKEN OPTIMIZATION** — CẤM đọc full file >50KB hoặc `SELECT *` tràn lan! Dùng KI context / `grep_search` đọc đúng đoạn lỗi. Chỉ SELECT đúng 3-5 cột cần verify. Phản hồi chuẩn 3 khối: (1) Root Cause từ KB, (2) SELECT verify ngắn gọn, (3) SQL fix `BEGIN TRAN...ROLLBACK`.
+> **3. KNOWLEDGE-FIRST HARD STOP** — CẤM CHẠY SQL QUERY KHI CHƯA TRA KB! Tuân thủ nghiêm ngặt Quy tắc số 0 ở trên.
+> **4. TOKEN OPTIMIZATION** — CẤM đọc full file >50KB hoặc `SELECT *` tràn lan! Dùng `find_kb.ps1` hoặc `grep_search` đọc đúng đoạn lỗi. Chỉ SELECT đúng 3-5 cột cần verify. Phản hồi chuẩn 3 khối: (1) Root Cause từ KB, (2) SELECT verify ngắn gọn, (3) SQL fix `BEGIN TRAN...ROLLBACK`.
 > **5. Hỏi trước khi làm** — Thiếu thông tin hoặc nghi ngờ → dừng hỏi user ngay.
-> **6. GOLDEN QUERY FIRST** — BẮT BUỘC DÙNG GOLDEN QUERY TRUY VẾT 360° NGAY LẦN SELECT ĐẦU TIÊN! Khi user đưa mã Barcode/LotNo bất kỳ (Cell, Module, Cuộn cực Slitting, NVL kho), CẤM SELECT đơn lẻ tẻ từng bảng. Bắt buộc dùng Golden Query (Mẫu 1/2/3/4 trong KNOWLEDGE.md §4) ngay ở câu SELECT đầu tiên để quét sạch 100% PO, Routing, Kho, Slitting Stock, Packing trong 1 lần duy nhất!
+> **6. GOLDEN QUERY FIRST** — BẮT BUỘC DÙNG GOLDEN QUERY TRUY VẾT 360° NGAY LẦN SELECT ĐẦU TIÊN! Khi user đưa mã Barcode/LotNo bất kỳ (Cell, Module, Cuộn cực Slitting, NVL kho), CẤM SELECT đơn lẻ tẻ từng bảng. Bắt buộc dùng `.\mes.ps1 trace` (hoặc mẫu Golden Query trong KNOWLEDGE.md §4) ngay ở câu SELECT đầu tiên để quét sạch 100% PO, Routing, Kho, Slitting Stock, Packing trong 1 lần duy nhất!
 > **7. IMMEDIATE SCREEN & SP MAPPING** — CẤM CẮM ĐẦU ĐI TÌM LẠI TỪ ĐẦU! Khi user gửi ảnh thiết kế màn hình hoặc nhập Screen ID (VD: B523, B530, B351, B597, F330, C530...), AI BẮT BUỘC tra cứu ngay lập tức từ `screen_id_reference` / `KB_09` để xác định ngay 100%: (1) Tên & Phân hệ màn hình, (2) Search SP (`_get`), (3) Execute SP (`_iud`), (4) Bảng DB chính & UI Grid layout. Cấm tìm kiếm mơ hồ hay hỏi lại thông tin đã có trong KB!
 > **8. CẤM CHÈN BẢN GHI GIẢ LẬP (DUMMY)** — CẤM TỰ Ý INSERT/UPDATE dữ liệu suy đoán vào DB sản xuất khi chưa tra cứu chuẩn kiến trúc SoT (`KB_04_01_CORE_PACKAGING.md`). Mọi thao tác fix dữ liệu phải tuân thủ 100% quy trình từ tài liệu SoT!
 > **9. CẤM CẮM ĐẦU VÀO SELECT DATABASE** — CẤM CẮM ĐẦU VÀO SELECT DATABASE NGAY KHI NHẬN YÊU CẦU! AI BẮT BUỘC phải đọc và tra cứu tài liệu KB / SoT trước: Nếu tra RA ➔ Trình bày căn cứ KB rồi mới SELECT verify tài liệu; Nếu tra KHÔNG RA ➔ Báo cáo đã tra các tài liệu nào nhưng không có, sau đó mới đề xuất hoặc thực thi SELECT khảo sát DB.
-> **10. CẤM TẠO FILE DƯ THỪA & BẮT BUỘC DÙNG FILE CÓ SẴN** — CẤM tự ý tạo các file script test tạm, file SQL rác hay file rác dư thừa trong workspace. BẮT BUỘC chỉ sử dụng các file/công cụ sẵn có trong hệ thống (`run_query.ps1`, `deploy_tool.ps1`, `check_db.ps1`...). Dọn dẹp sạch sẽ nguyên trạng ngay sau khi hoàn thành công việc.
+> **10. CẤM TẠO FILE DƯ THỪA & BẮT BUỘC DÙNG FILE CÓ SẴN** — CẤM tự ý tạo các file script test tạm, file SQL rác hay file rác dư thừa trong workspace. BẮT BUỘC chỉ sử dụng các file/công cụ sẵn có trong hệ thống (Ưu tiên CLI Hub: `.\mes.ps1` kết hợp `find_kb.ps1`, `health_check.ps1`, `run_query.ps1`, `deploy_tool.ps1`, `check_db.ps1`...). Dọn dẹp sạch sẽ nguyên trạng ngay sau khi hoàn thành công việc.
 
 ---
 

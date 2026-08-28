@@ -80,34 +80,43 @@ MES_LEGACY_BACKUP/
 │   └── GROUPWARE_MES_INTEGRATION_ANALYSIS.md   # Phân tích tích hợp GW-MES
 │
 ├── 📂 sql/                                     # SQL scripts & procedures
-│   └── procedures/                             # Stored Procedures
+│   ├── procedures/                             # Stored Procedures
+│   └── template_hotfix.sql                     # Template Hotfix chuẩn UTF-8-BOM
 │
+├── 📄 mes.ps1                                  # ⚡ TRUNG TÂM ĐIỀU PHỐI LỆNH VẬN HÀNH (V2.0)
+├── 📄 find_kb.ps1                              # 🔍 Tra cứu siêu tốc 12+ KB & 90+ Screens
+├── 📄 health_check.ps1                         # 📊 Morning Health Check & Giám sát CSDL
 ├── 📄 check_db.ps1                             # Kiểm tra kết nối DB
 ├── 📄 check_sp_sync.ps1                        # Kiểm tra SP đồng bộ
-├── 📄 db_config.json                           # Cấu hình kết nối DB
-├── 📄 db_shared.ps1                            # Module PS dùng chung
+├── 📄 db_config.json                           # Cấu hình kết nối 15 Database (Multi-Profile)
+├── 📄 db_shared.ps1                            # Module PS dùng chung (Failover & Pre-flight)
 ├── 📄 db_sync_tool.ps1                         # Công cụ đồng bộ SP
 ├── 📄 debug_screen.ps1                         # Debug màn hình MES
-├── 📄 deploy_tool.ps1                          # Deploy SQL an toàn
+├── 📄 deploy_tool.ps1                          # Deploy SQL an toàn (Auto Snapshot)
 ├── 📄 record_hotfix.ps1                        # Ghi nhận hotfix
-├── 📄 run_query.ps1                            # Chạy SQL query
+├── 📄 run_query.ps1                            # Chạy SQL query an toàn (Multi-DB)
 └── 📄 validate_sql.ps1                         # Validate SQL syntax
 ```
 
 ---
 
-## 🧭 Hướng Dẫn Tra Cứu Nhanh
+## 🧭 Hướng Dẫn Tra Cứu & Vận Hành Nhanh
 
-| Bạn cần gì? | Vào đâu? |
-|-------------|----------|
+| Bạn cần gì? | Lệnh hoặc Tài liệu |
+|-------------|--------------------|
+| **Truy vết 360° Lot/Barcode** | `.\mes.ps1 trace "<LotID>"` |
+| **Debug màn hình MES** | `.\mes.ps1 screen "<ScreenID>"` (VD: `B530`) |
+| **Tra cứu tri thức nhanh** | `.\mes.ps1 find "<Keyword>"` (VD: `.\mes.ps1 find "Sanmina"`) |
+| **Kiểm tra sức khỏe hệ thống**| `.\mes.ps1 health -Detail` |
+| **Sinh template Hotfix an toàn** | `.\mes.ps1 new-fix "<Tên_Lỗi>"` |
 | **Tổng quan toàn hệ thống** | → [SYSTEM_INTEGRATION_MAP.md](SYSTEM_INTEGRATION_MAP.md) |
-| **Debug lỗi MES** | → [MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md](MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md) |
+| **Debug lỗi MES chi tiết** | → [MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md](MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md) |
 | **Tra cứu Database** | → [DATABASE_KNOWLEDGE_BASE/DB_INDEX.md](DATABASE_KNOWLEDGE_BASE/DB_INDEX.md) |
 | **Vận hành Groupware** | → [GROUPWARE_KNOWLEDGE_BASE/GW_INDEX.md](GROUPWARE_KNOWLEDGE_BASE/GW_INDEX.md) |
 | **Hướng dẫn POP Kiosk** | → [POP_KNOWLEDGE_BASE/POP_USER_MANUAL.md](POP_KNOWLEDGE_BASE/POP_USER_MANUAL.md) |
 | **Kiến trúc hệ thống** | → [SYSTEM_ARCHITECTURE/SYSTEM_INDEX.md](SYSTEM_ARCHITECTURE/SYSTEM_INDEX.md) |
 | **Quy tắc Agent AI** | → [AI_AGENT_CONFIG/RULES.md](AI_AGENT_CONFIG/RULES.md) |
-| **Script PowerShell** | → [MES_MASTER_KNOWLEDGE_BASE/MES_SCRIPT_GUIDE.md](MES_MASTER_KNOWLEDGE_BASE/MES_SCRIPT_GUIDE.md) |
+| **Hướng dẫn Script Tools** | → [MES_MASTER_KNOWLEDGE_BASE/MES_SCRIPT_GUIDE.md](MES_MASTER_KNOWLEDGE_BASE/MES_SCRIPT_GUIDE.md) |
 
 ---
 

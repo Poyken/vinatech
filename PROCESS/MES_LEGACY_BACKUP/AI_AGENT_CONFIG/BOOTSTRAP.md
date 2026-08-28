@@ -20,38 +20,38 @@ Related Files:
 
 ---
 
-## 🔒 QUY TẮC VÀNG
+## 🔒 QUY TẮC VÀNG BẮT BUỘC
 
 > [!IMPORTANT]
-> Chi tiết đầy đủ quy tắc → [RULES.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/AI_AGENT_CONFIG/RULES.md)
+> Chi tiết đầy đủ quy tắc → [RULES.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/AI_AGENT_CONFIG/RULES.md) | Bài học kinh nghiệm → [LESSONS_LEARNED.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/AI_AGENT_CONFIG/LESSONS_LEARNED.md)
 
-1. **SELECT-ONLY** — Tuyệt đối KHÔNG INSERT/UPDATE/DELETE/ALTER/CREATE/DROP trực tiếp trên production DB
-2. **Script → User chạy** — Viết script fix (bọc `BEGIN TRAN...ROLLBACK`) → user tự chạy SSMS hoặc qua [deploy_tool.ps1](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/deploy_tool.ps1)
-3. **Fetch trước khi sửa** — Query SP mới nhất từ `sys.sql_modules` qua [db_sync_tool.ps1](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/db_sync_tool.ps1)
-4. **Surgical changes** — Chỉ sửa đúng chỗ cần sửa, KHÔNG reformat toàn bộ SP
-5. **Không commit SP lên Git** — Dùng `db_sync_tool.ps1` tải tạm, xong `db_sync_tool.ps1 -Clean`
-6. **Hỏi trước khi làm** — Thiếu thông tin → dừng và hỏi user
-7. **NOLOCK** — Luôn dùng `WITH(NOLOCK)` trên bảng giao dịch lớn
+0. **ZERO SELECT WITHOUT PRIOR KB (BẤT BIẾN)** — CẤM chạy `SELECT` khi chưa chạy `.\find_kb.ps1` hoặc tra cứu tài liệu KB và trích dẫn căn cứ.
+1. **SELECT-ONLY** — Tuyệt đối KHÔNG INSERT/UPDATE/DELETE/ALTER/CREATE/DROP trực tiếp trên production DB.
+2. **Script → User chạy** — Viết script fix (bọc `BEGIN TRAN...ROLLBACK`) → user tự chạy SSMS hoặc qua `.\mes.ps1 deploy <file.sql>`.
+3. **Golden Query 360° First** — Dùng `.\mes.ps1 trace <Lot>` quét sạch 4 bảng trong 1 lần gọi duy nhất khi truy vết Lot/Barcode.
+4. **Surgical Changes & Retrieval** — Chỉ tra cứu và đọc đúng 20-40 dòng cần thiết (không đọc full file >50KB làm ngợp context).
+5. **Không commit SP lên Git** — Dùng `.\mes.ps1 sp <Name>` tải tạm, xong chạy `.\mes.ps1 sp -Clean`.
+6. **Hỏi trước khi làm** — Thiếu thông tin hoặc nghi ngờ → dừng và hỏi user.
+7. **NOLOCK** — Luôn dùng `WITH(NOLOCK)` trên bảng giao dịch lớn (`STB_ProdRouteHist`, `STB_MaterialLotInfo`, `STB_SetInfo`).
 
 ---
 
-## 🔌 KẾT NỐI & TOOLS
+## 🔌 BỘ CÔNG CỤ ĐIỀU PHỐI VẬN HÀNH (V2.0)
 
 > [!NOTE]
-> Thông tin kết nối chi tiết → [db_config.json](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/db_config.json) | Hướng dẫn tool chi tiết → [MES_SCRIPT_GUIDE.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/MES_SCRIPT_GUIDE.md)
-
-| DB chính | `SmartFactoryV2` | DB framework | `SmartFramework` |
-|----------|-------------------|--------------|-------------------|
+> Trung tâm điều phối duy nhất: [mes.ps1](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/mes.ps1) | Cấu hình 15 DB: [db_config.json](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/db_config.json)
 
 ```powershell
-.\run_query.ps1 -Query "SELECT ..."   # Query nhanh (tự động hiển thị KB tham chiếu)
-.\validate_sql.ps1 <file.sql>          # Validate trước deploy
-.\deploy_tool.ps1 <file.sql>           # Deploy SQL
-.\db_sync_tool.ps1 -SPName "usp_xxx"   # Tải SP tạm (tự động hiển thị KB tham chiếu)
-.\db_sync_tool.ps1 -Clean              # Xóa SP tạm
-.\record_hotfix.ps1 -TCode "B523" ...  # Tự động hóa ghi chép lỗi vào HOTFIX_LOG.md và KB_09
-.\debug_screen.ps1 -TCode "B523"       # Chẩn đoán màn hình (Menu, SP, Grid) & đề xuất KB
-.\debug_screen.ps1 -ErrorMsg "loi"     # Tìm SP ném lỗi qua chuỗi dịch nghĩa tiếng Việt/tiếng Anh
+.\mes.ps1 help                         # Xem toàn bộ cú pháp & hướng dẫn
+.\mes.ps1 find "<Keyword>"             # Tra cứu siêu tốc trong 78+ file KB & 90+ Screens
+.\mes.ps1 trace "<LotID/Barcode>"      # Golden Query 360° quét Lot, PO, Routing, NVL, Thùng
+.\mes.ps1 screen "<ScreenID>"          # Debug màn hình MES (Menu, SP, Grid layout: B530, B540...)
+.\mes.ps1 health [-Detail]             # Morning Health Check quét Lot HOLD, WIP 24h, DB Lock
+.\mes.ps1 audit                        # Audit đối soát độ tin cậy tài liệu vs Live DB
+.\mes.ps1 query "<SELECT>" [-Profile]  # Chạy SELECT an toàn đa Database (MES, GW, ERP, POP...)
+.\mes.ps1 new-fix "<IssueCode>"        # Sinh template SQL Hotfix chuẩn UTF-8-BOM có BEGIN TRAN
+.\mes.ps1 deploy <file.sql> [-Force]   # Deploy SQL an toàn (Tự động Pre-flight Snapshot backup)
+.\mes.ps1 sp "<SP_Name>"               # Tải SP tạm từ DB / Xóa sạch: .\mes.ps1 sp -Clean
 ```
 
 

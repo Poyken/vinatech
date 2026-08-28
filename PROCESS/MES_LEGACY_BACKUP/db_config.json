@@ -3,5 +3,77 @@
   "Database": "SmartFactoryV2",
   "User": "vinaadmin",
   "Password": "vina1234%6&8",
-  "Timeout": 30
+  "Timeout": 30,
+  "FailoverServers": [
+    "dbserver.hycap.co.kr,5398",
+    "175.201.218.156,5398",
+    "192.168.112.254,5398",
+    "192.168.1.234,5398",
+    "192.168.1.200,5398",
+    "192.168.1.100,5398",
+    "localhost",
+    "127.0.0.1"
+  ],
+  "Profiles": {
+    "SmartFactoryV2": {
+      "Database": "SmartFactoryV2",
+      "Description": "MES Production Database (Ha Nam & Hung Yen Core)"
+    },
+    "SmartFramework": {
+      "Database": "SmartFramework",
+      "Description": "MES Authentication, Users & Common Framework"
+    },
+    "Groupware": {
+      "Database": "VINATECH_GROUP",
+      "Description": "Groupware Main Database (PO, Approval, HR, Sales)"
+    },
+    "ERP": {
+      "Database": "NEOE_ERP",
+      "Description": "Douzone iU ERP Database"
+    },
+    "Bizbox": {
+      "Database": "DZICUBE",
+      "Description": "Bizbox Accounting & Expense Database"
+    },
+    "POP": {
+      "Database": "VINATECH_POP",
+      "Description": "POP Kiosk Production Touchscreen DB"
+    },
+    "Andon": {
+      "Database": "AndonDB",
+      "Description": "Andon Factory Alert & Status System"
+    },
+    "SSO": {
+      "Database": "VINATECH_RESTFUL",
+      "Description": "RESTful API & SSO Token DB"
+    },
+    "WebSocket": {
+      "Database": "VINATECH_WEBSOCKET",
+      "Description": "Real-time Machine Monitoring DB"
+    },
+    "Spreadsheet": {
+      "Database": "VINATECH_SPREADSHEET",
+      "Description": "Excel Online Calculation DB"
+    },
+    "WCMS": {
+      "Database": "WCMS",
+      "Description": "Banking CMS Database"
+    },
+    "Incubator": {
+      "Database": "SmartFactoryIncubator",
+      "Description": "R&D Testing & Sandbox DB"
+    },
+    "KSOX": {
+      "Database": "VINATECH_DATA_KSOX",
+      "Description": "K-SOX Internal Audit & Compliance DB"
+    },
+    "LegacyERP": {
+      "Database": "erpdb_Legacy",
+      "Description": "Old ERP Database (Archive)"
+    },
+    "StreamDocs": {
+      "Database": "streamdocs",
+      "Description": "PDF & Drawing Viewer Database"
+    }
+  }
 }
