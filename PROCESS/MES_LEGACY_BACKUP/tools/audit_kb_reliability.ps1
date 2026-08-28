@@ -10,8 +10,9 @@ param(
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 $OutputEncoding = [System.Text.Encoding]::UTF8
 
-$scriptDir = $PSScriptRoot
-. (Join-Path $scriptDir 'db_shared.ps1')
+$rootDir = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
+$scriptDir = $rootDir
+. (Join-Path $PSScriptRoot 'db_shared.ps1')
 
 Write-Host ''
 Write-Host '======================================================================' -ForegroundColor Cyan

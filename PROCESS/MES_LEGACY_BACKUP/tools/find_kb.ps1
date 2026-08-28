@@ -16,7 +16,8 @@ param(
 $OutputEncoding = [System.Text.Encoding]::UTF8
 
 # 1. TIER 1: KIEM TRA L1 QUICK MATRIX TRUOC
-$matrixFile = Join-Path $PSScriptRoot 'AI_AGENT_CONFIG\QUICK_MATRIX.json'
+$rootDir = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
+$matrixFile = Join-Path $rootDir 'AI_AGENT_CONFIG\QUICK_MATRIX.json'
 $foundInL1 = $false
 
 if (Test-Path $matrixFile) {
@@ -98,19 +99,19 @@ if (Test-Path $matrixFile) {
 # 2. TIER 2: QUET DEEP MARKDOWN ARCHIVE
 $targetDirs = @()
 switch ($Category) {
-    'MES'    { $targetDirs += Join-Path $PSScriptRoot 'MES_MASTER_KNOWLEDGE_BASE' }
-    'DB'     { $targetDirs += Join-Path $PSScriptRoot 'DATABASE_KNOWLEDGE_BASE' }
-    'GW'     { $targetDirs += Join-Path $PSScriptRoot 'GROUPWARE_KNOWLEDGE_BASE' }
-    'POP'    { $targetDirs += Join-Path $PSScriptRoot 'POP_KNOWLEDGE_BASE' }
-    'SYS'    { $targetDirs += Join-Path $PSScriptRoot 'SYSTEM_ARCHITECTURE' }
-    'CONFIG' { $targetDirs += Join-Path $PSScriptRoot 'AI_AGENT_CONFIG' }
+    'MES'    { $targetDirs += Join-Path $rootDir 'MES_MASTER_KNOWLEDGE_BASE' }
+    'DB'     { $targetDirs += Join-Path $rootDir 'DATABASE_KNOWLEDGE_BASE' }
+    'GW'     { $targetDirs += Join-Path $rootDir 'GROUPWARE_KNOWLEDGE_BASE' }
+    'POP'    { $targetDirs += Join-Path $rootDir 'POP_KNOWLEDGE_BASE' }
+    'SYS'    { $targetDirs += Join-Path $rootDir 'SYSTEM_ARCHITECTURE' }
+    'CONFIG' { $targetDirs += Join-Path $rootDir 'AI_AGENT_CONFIG' }
     default  {
-        $targetDirs += Join-Path $PSScriptRoot 'MES_MASTER_KNOWLEDGE_BASE'
-        $targetDirs += Join-Path $PSScriptRoot 'DATABASE_KNOWLEDGE_BASE'
-        $targetDirs += Join-Path $PSScriptRoot 'GROUPWARE_KNOWLEDGE_BASE'
-        $targetDirs += Join-Path $PSScriptRoot 'POP_KNOWLEDGE_BASE'
-        $targetDirs += Join-Path $PSScriptRoot 'SYSTEM_ARCHITECTURE'
-        $targetDirs += Join-Path $PSScriptRoot 'AI_AGENT_CONFIG'
+        $targetDirs += Join-Path $rootDir 'MES_MASTER_KNOWLEDGE_BASE'
+        $targetDirs += Join-Path $rootDir 'DATABASE_KNOWLEDGE_BASE'
+        $targetDirs += Join-Path $rootDir 'GROUPWARE_KNOWLEDGE_BASE'
+        $targetDirs += Join-Path $rootDir 'POP_KNOWLEDGE_BASE'
+        $targetDirs += Join-Path $rootDir 'SYSTEM_ARCHITECTURE'
+        $targetDirs += Join-Path $rootDir 'AI_AGENT_CONFIG'
     }
 }
 
@@ -122,7 +123,7 @@ foreach ($dir in $targetDirs) {
 }
 
 if ($Category -eq 'ALL') {
-    $files += Get-ChildItem -Path $PSScriptRoot -Filter '*.md' -File
+    $files += Get-ChildItem -Path $rootDir -Filter '*.md' -File
 }
 
 if (-not $foundInL1) {

@@ -5,6 +5,9 @@
 $OutputEncoding = [System.Text.Encoding]::UTF8
 
 $configPath = Join-Path $PSScriptRoot "db_config.json"
+if (-not (Test-Path $configPath)) {
+    $configPath = Join-Path $PSScriptRoot "..\db_config.json"
+}
 if (!(Test-Path $configPath)) {
     Write-Error "Configuration file not found at: $configPath"
     exit 1

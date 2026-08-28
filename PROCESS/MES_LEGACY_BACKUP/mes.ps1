@@ -17,14 +17,14 @@ param(
 
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 $OutputEncoding = [System.Text.Encoding]::UTF8
-
 $scriptDir = $PSScriptRoot
-. (Join-Path $scriptDir 'db_shared.ps1')
+$toolsDir = Join-Path $scriptDir 'tools'
+. (Join-Path $toolsDir 'db_shared.ps1')
 
 function Show-MesBanner {
     Write-Host ''
     Write-Host '======================================================================' -ForegroundColor Cyan
-    Write-Host '             VINATECH MES UNIFIED CLI HUB (v2.0)' -ForegroundColor Yellow
+    Write-Host '             VINATECH MES UNIFIED CLI HUB (v2.1)' -ForegroundColor Yellow
     Write-Host '    Trung Tam Dieu Phoi Van Hanh, Chan Doan & Khac Phuc Su Co MES' -ForegroundColor White
     Write-Host '======================================================================' -ForegroundColor Cyan
 }
@@ -42,7 +42,7 @@ function Show-Help {
     Write-Host '     .\mes.ps1 sp <SP_Name>              ' -NoNewline -ForegroundColor Green
     Write-Host '-> Tai SP goc moi nhat tu DB ve local de phan tich' -ForegroundColor Gray
     Write-Host '     .\mes.ps1 find <Keyword>            ' -NoNewline -ForegroundColor Green
-    Write-Host '-> Tra cuu giai phap trong 12+ KB files va 90+ Screens' -ForegroundColor Gray
+    Write-Host '-> Tra cuu L1 Quick Matrix (<0.001s) va 78+ file Markdown' -ForegroundColor Gray
 
     Write-Host ''
     Write-Host '  2. TRUY VAN & KIEM TRA HE THONG (SYSTEM & QUERY):' -ForegroundColor Cyan
@@ -98,87 +98,66 @@ elseif ($cmdLower -eq 'trace') {
     $conn = Get-DbConnection -Profile 'SmartFactoryV2' -Silent
     if ($conn -eq $null) { exit 1 }
 
-    try {
-        Write-Host ''
-        Write-Host '=== 1. THONG TIN LOT & TON KHO (STB_MaterialLotInfo) ===' -ForegroundColor Yellow
-        $cmd = $conn.CreateCommand()
-        $cmd.CommandTimeout = 30
-        $cmd.CommandText = 'SELECT TOP 5 MaterialLotNo, MaterialCode, MaterialName, FactoryCode, PlantCode, CurrentQty, MaterialWarehouseCode, ExpireDate, InDate, CreateDateTime FROM STB_MaterialLotInfo WITH(NOLOCK) WHERE MaterialLotNo = @Lot OR Barcode = @Lot OR PackingID = @Lot'
-        $cmd.Parameters.AddWithValue('@Lot', $Target) | Out-Null
-        $adp = New-Object System.Data.SqlClient.SqlDataAdapter($cmd)
-        $dtLot = New-Object System.Data.DataTable
-        $null = $adp.Fill($dtLot)
-        if ($dtLot.Rows.Count -gt 0) {
-            $dtLot | Format-Table -AutoSize | Out-String -Width 4000 | Write-Host -ForegroundColor White
-        } else {
-            Write-Host '  (Khong tim thay ban ghi trong STB_MaterialLotInfo)' -ForegroundColor Gray
-        }
+    $q1 = "SELECT TOP 1 MaterialLotNo, MaterialCode, CurrentQty, MaterialWarehouseCode, ExpireDate, CreateDateTime FROM STB_MaterialLotInfo WITH(NOLOCK) WHERE MaterialLotNo LIKE '%$Target%'"
+    $q2 = "SELECT TOP 1 ControlNo, PONo, Barcode, ModelCode, IsProdFinish, IsLineInput, CreateDateTime FROM STB_SetInfo WITH(NOLOCK) WHERE ControlNo LIKE '%$Target%' OR Barcode LIKE '%$Target%'"
+    $q3 = "SELECT TOP 5 ProdRouteHistNo, ControlNo, RouteCode, WorkCenterCode, ProdQty, CreateDateTime FROM STB_ProdRouteHist WITH(NOLOCK) WHERE ControlNo LIKE '%$Target%' ORDER BY CreateDateTime DESC"
+    $q4 = "SELECT TOP 5 DocNo, DocSeq, MaterialCode, MaterialLotNo, TargetMaterialLotNo, DocQty FROM STB_MaterialDocDetail WITH(NOLOCK) WHERE MaterialLotNo LIKE '%$Target%' OR TargetMaterialLotNo LIKE '%$Target%'"
 
-        Write-Host ''
-        Write-Host '=== 2. THONG TIN SAN XUAT & SET (STB_SetInfo) ===' -ForegroundColor Yellow
-        $cmd.CommandText = 'SELECT TOP 5 ControlNo, PONo, MaterialCode, Barcode, SetSeq, IsLineInput, IsLoss, IsDefect, CreateDateTime FROM STB_SetInfo WITH(NOLOCK) WHERE ControlNo = @Lot OR PONo = @Lot OR Barcode = @Lot'
-        $dtBox = New-Object System.Data.DataTable
-        $null = $adp.Fill($dtBox)
-        if ($dtBox.Rows.Count -gt 0) {
-            $dtBox | Format-Table -AutoSize | Out-String -Width 4000 | Write-Host -ForegroundColor White
-        } else {
-            Write-Host '  (Khong co thong tin trong STB_SetInfo)' -ForegroundColor Gray
-        }
+    Write-Host ''
+    Write-Host '1. THONG TIN KHO & VAT TU (STB_MaterialLotInfo):' -ForegroundColor Yellow
+    Execute-SqlQuery -Connection $conn -Query $q1
 
-        Write-Host ''
-        Write-Host '=== 3. LICH SU CONG DOAN SAN XUAT (STB_ProdRouteHist) ===' -ForegroundColor Yellow
-        $cmd.CommandText = 'SELECT TOP 15 ProdRouteHistNo, ControlNo, PONo, WorkCenterCode, RouteCode, ProdQty, DefectQty, CreateDateTime FROM STB_ProdRouteHist WITH(NOLOCK) WHERE ControlNo = @Lot OR PONo = @Lot OR ProdRouteHistNo = @Lot ORDER BY CreateDateTime DESC'
-        $dtRoute = New-Object System.Data.DataTable
-        $null = $adp.Fill($dtRoute)
-        if ($dtRoute.Rows.Count -gt 0) {
-            $dtRoute | Format-Table -AutoSize | Out-String -Width 4000 | Write-Host -ForegroundColor White
-        } else {
-            Write-Host '  (Khong co lich su cong doan trong STB_ProdRouteHist)' -ForegroundColor Gray
-        }
+    Write-Host ''
+    Write-Host '2. THONG TIN SET / THUNG SAN PHAM (STB_SetInfo):' -ForegroundColor Yellow
+    Execute-SqlQuery -Connection $conn -Query $q2
 
-        Write-Host ''
-        Write-Host '=== 4. LIEN KET NGUYEN VAT LIEU / CHUNG TU (STB_MaterialDocDetail) ===' -ForegroundColor Yellow
-        $cmd.CommandText = 'SELECT TOP 5 DocNo, DocSeq, MaterialCode, MaterialLotNo, TargetMaterialLotNo, DocQty, CreateDateTime FROM STB_MaterialDocDetail WITH(NOLOCK) WHERE MaterialLotNo = @Lot OR TargetMaterialLotNo = @Lot OR DocNo = @Lot'
-        $dtDoc = New-Object System.Data.DataTable
-        $null = $adp.Fill($dtDoc)
-        if ($dtDoc.Rows.Count -gt 0) {
-            $dtDoc | Format-Table -AutoSize | Out-String -Width 4000 | Write-Host -ForegroundColor White
-        } else {
-            Write-Host '  (Khong co chung tu lien ket NVL trong STB_MaterialDocDetail)' -ForegroundColor Gray
-        }
+    Write-Host ''
+    Write-Host '3. LICH SU CONG DOAN SAN XUAT (STB_ProdRouteHist - Top 5):' -ForegroundColor Yellow
+    Execute-SqlQuery -Connection $conn -Query $q3
 
-    } catch {
-        Write-Host "Loi khi truy vet: $_" -ForegroundColor Red
-    } finally {
-        if ($conn.State -eq 'Open') { $conn.Close() }
-    }
+    Write-Host ''
+    Write-Host '4. CHUNG TU LIEN KET NVL / SLITTING (STB_MaterialDocDetail - Top 5):' -ForegroundColor Yellow
+    Execute-SqlQuery -Connection $conn -Query $q4
+
+    $conn.Close()
+    Write-Host ''
+    Write-Host '-> Hoan thanh truy vet 360 do.' -ForegroundColor Green
 }
 elseif ($cmdLower -eq 'screen') {
-    $dbgScript = Join-Path $scriptDir 'debug_screen.ps1'
+    $dbgScript = Join-Path $toolsDir 'debug_screen.ps1'
     if (Test-Path $dbgScript) {
-        & $dbgScript -TCode $Target
+        if ($Target -match '^[A-Za-z0-9_]+$') {
+            & $dbgScript -TCode $Target
+        } else {
+            & $dbgScript -ErrorMsg $Target
+        }
     } else {
-        Write-Error 'debug_screen.ps1 not found.'
+        Write-Error 'tools/debug_screen.ps1 not found.'
     }
 }
 elseif ($cmdLower -eq 'sp') {
-    $spScript = Join-Path $scriptDir 'db_sync_tool.ps1'
+    $spScript = Join-Path $toolsDir 'db_sync_tool.ps1'
     if (Test-Path $spScript) {
         if ($Clean) {
             & $spScript -Clean
         } else {
-            & $spScript -SP $Target
+            if ([string]::IsNullOrWhiteSpace($Target)) {
+                Write-Host 'Loi: Vui long nhap ten Stored Procedure can tai!' -ForegroundColor Red
+                Write-Host 'Vi du: .\mes.ps1 sp "usp_DoProcessProdRouteHist"' -ForegroundColor Yellow
+                exit 1
+            }
+            & $spScript -SPName $Target
         }
     } else {
-        Write-Error 'db_sync_tool.ps1 not found.'
+        Write-Error 'tools/db_sync_tool.ps1 not found.'
     }
 }
 elseif ($cmdLower -eq 'query') {
-    $qScript = Join-Path $scriptDir 'run_query.ps1'
+    $qScript = Join-Path $toolsDir 'run_query.ps1'
     if (Test-Path $qScript) {
         & $qScript -Query $Target -Profile $Profile
     } else {
-        Write-Error 'run_query.ps1 not found.'
+        Write-Error 'tools/run_query.ps1 not found.'
     }
 }
 elseif ($cmdLower -eq 'new-fix') {
@@ -218,7 +197,7 @@ elseif ($cmdLower -eq 'new-fix') {
     Write-Host "  2. Chay thu nghiem an toan: .\mes.ps1 deploy $filePath" -ForegroundColor Gray
 }
 elseif ($cmdLower -eq 'deploy') {
-    $depScript = Join-Path $scriptDir 'deploy_tool.ps1'
+    $depScript = Join-Path $toolsDir 'deploy_tool.ps1'
     if (Test-Path $depScript) {
         if ($Force) {
             & $depScript -SqlPath $Target -Profile $Profile -Force
@@ -226,19 +205,19 @@ elseif ($cmdLower -eq 'deploy') {
             & $depScript -SqlPath $Target -Profile $Profile
         }
     } else {
-        Write-Error 'deploy_tool.ps1 not found.'
+        Write-Error 'tools/deploy_tool.ps1 not found.'
     }
 }
 elseif ($cmdLower -eq 'find') {
-    $findScript = Join-Path $scriptDir 'find_kb.ps1'
+    $findScript = Join-Path $toolsDir 'find_kb.ps1'
     if (Test-Path $findScript) {
         & $findScript -Query $Target
     } else {
-        Write-Error 'find_kb.ps1 not found.'
+        Write-Error 'tools/find_kb.ps1 not found.'
     }
 }
 elseif ($cmdLower -eq 'health') {
-    $healthScript = Join-Path $scriptDir 'health_check.ps1'
+    $healthScript = Join-Path $toolsDir 'health_check.ps1'
     if (Test-Path $healthScript) {
         if ($Detail) {
             & $healthScript -Detail
@@ -246,15 +225,15 @@ elseif ($cmdLower -eq 'health') {
             & $healthScript
         }
     } else {
-        Write-Error 'health_check.ps1 not found.'
+        Write-Error 'tools/health_check.ps1 not found.'
     }
 }
 elseif ($cmdLower -eq 'audit' -or $cmdLower -eq 'verify-kb') {
-    $auditScript = Join-Path $scriptDir 'audit_kb_reliability.ps1'
+    $auditScript = Join-Path $toolsDir 'audit_kb_reliability.ps1'
     if (Test-Path $auditScript) {
         & $auditScript
     } else {
-        Write-Error 'audit_kb_reliability.ps1 not found.'
+        Write-Error 'tools/audit_kb_reliability.ps1 not found.'
     }
 }
 else {
