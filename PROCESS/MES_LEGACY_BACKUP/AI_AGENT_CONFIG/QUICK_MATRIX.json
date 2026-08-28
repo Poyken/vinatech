@@ -1,128 +1,940 @@
-{
-  "version": "2.0.0",
-  "updated_at": "2026-08-28",
-  "description": "L1 In-Memory Pre-compiled Knowledge Matrix for Vinatech MES (Ultra-fast, minimal token)",
-  "screens": {
-    "B530": {
-      "name": "Nhập sản lượng công đoạn (Cell Line)",
-      "module": "Production",
-      "sp_get": "usp_GetProdRouteHist",
-      "sp_iud": "usp_DoProcessProdRouteHist",
-      "tables": ["STB_ProdRouteHist", "STB_SetInfo", "STB_RouteEqpInfo", "STB_WorkerInfo"],
-      "common_bugs": {
-        "khong_chon_duoc_may": "Thiếu cấu hình quan hệ giữa Mã Công Đoạn và Máy trong STB_RouteEqpInfo (A410)",
-        "khong_hien_ten_tho": "User chưa được cấp quyền công đoạn trong STB_WorkerInfo hoặc tài khoản SF_UserInfo bị vô hiệu hóa",
-        "sai_san_luong": "Kiểm tra tổng sản lượng chốt tại STB_ProdRouteHist so với STB_ProductionOrderInfo",
-        "chot_nham_chuyen_truoc": "Cần reset CompleteRoute=NULL ở công đoạn trước để MES tự sinh bản ghi tiếp theo, KHÔNG INSERT trực tiếp vào STB_ProdRouteHist"
-      },
-      "fix_template": "UPDATE STB_ProdRouteHist SET CompleteRoute = NULL WHERE ControlNo = @ControlNo AND RouteCode = @PrevRoute"
-    },
-    "B540": {
-      "name": "Chốt sản lượng hoàn thành Cell Line (Finish Route)",
-      "module": "Production",
-      "sp_get": "usp_GetProdRouteHist",
-      "sp_iud": "usp_DoProcessProdRouteHist",
-      "tables": ["STB_ProdRouteHist", "STB_SetInfo", "STB_ProdRouteSummary"],
-      "common_bugs": {
-        "khong_chot_duoc_thanh_pham": "IsProdFinish trong STB_SetInfo chưa bật 1 hoặc công đoạn trước chưa hoàn thành",
-        "lech_san_luong_tong": "Kiểm tra bảng tổng hợp STB_ProdRouteSummary qua PO"
-      },
-      "fix_template": "UPDATE STB_SetInfo SET IsProdFinish = 1 WHERE ControlNo = @ControlNo"
-    },
-    "B523": {
-      "name": "Gộp / Chia Box Cell (Divide & Packaging)",
-      "module": "Packaging",
-      "sp_get": "usp_GetDividePackaging",
-      "sp_iud": "usp_DoProcessDividePackaging",
-      "tables": ["STB_DividePackaging", "STB_MaterialLotInfo", "STB_SetInfo"],
-      "common_bugs": {
-        "khong_tach_duoc_box": "Box con đã bị khóa kho hoặc CurrentQty = 0",
-        "thua_ban_ghi_dummy": "Xóa bản ghi giả lập sinh nhầm trong STB_DividePackaging"
-      },
-      "fix_template": "UPDATE STB_MaterialLotInfo SET CurrentQty = @Qty, MaterialWarehouseCode = @WH WHERE MaterialLotNo = @LotNo"
-    },
-    "B351": {
-      "name": "Chuyển đổi Lot / Model (Lot Change)",
-      "module": "Production",
-      "sp_get": "usp_GetLotChangeHistory",
-      "sp_iud": "usp_DoProcessLotChange",
-      "tables": ["STB_LotChangeMaterialHistory", "STB_SetInfo", "STB_MaterialLotInfo"],
-      "common_bugs": {
-        "khong_doi_duoc_model": "Model đích chưa được cấu hình BOM trong A410 hoặc mã Lot mới bị trùng",
-        "mat_dau_vj": "Cột oldLotID phải giữ nguyên tiền tố VJ theo chuẩn packaging"
-      },
-      "fix_template": "UPDATE STB_SetInfo SET ModelCode = @NewModel WHERE ControlNo = @ControlNo"
-    },
-    "A460": {
-      "name": "Cấu hình Mẫu Tem & Định Dạng In (Model Label Info)",
-      "module": "MasterData",
-      "sp_get": "usp_GetModelLabelInfo",
-      "sp_iud": "usp_DoProcessModelLabelInfo",
-      "tables": ["STB_ModelLabelInfo", "STB_ModelMaster"],
-      "common_bugs": {
-        "khong_in_duoc_tem": "Chưa khai báo FormatName hoặc LabelType trong STB_ModelLabelInfo",
-        "khong_hien_vol_farad": "ModelMaster (A410) chưa điền Capacity / Voltage"
-      },
-      "fix_template": "INSERT INTO STB_ModelLabelInfo (ModelCode, LabelType, FormatName, CreateDateTime) VALUES (@Model, @Type, @Format, GETDATE())"
-    },
-    "A418": {
-      "name": "Quy Cách Đóng Gói (Packing Standard)",
-      "module": "MasterData",
-      "sp_get": "usp_GetPackingStandard",
-      "sp_iud": "usp_DoProcessPackingStandard",
-      "tables": ["STB_PackingStandard", "STB_ModelMaster"],
-      "common_bugs": {
-        "sai_so_luong_thung": "Khai báo BoxQty / CartonQty / PalletQty không khớp với kích thước Size sản phẩm"
-      },
-      "fix_template": "UPDATE STB_PackingStandard SET BoxQty = @BoxQty WHERE ModelCode = @ModelCode"
-    },
-    "F330": {
-      "name": "Quản lý Xuất Kho NVL (Material Issue)",
-      "module": "WMS",
-      "sp_get": "usp_GetMaterialDocInfo",
-      "sp_iud": "usp_DoProcessMaterialDoc",
-      "tables": ["STB_MaterialDocInfo", "STB_MaterialDocDetail", "STB_MaterialLotInfo"],
-      "common_bugs": {
-        "loi_fifo": "Lot bị chặn do còn Lot cũ hơn chưa xuất (kiểm tra ExpireDate / CreateDateTime)",
-        "lot_bi_hold": "MaterialWarehouseCode đang là HOLDING_WH ➔ Cần xác nhận QC trước khi chuyển kho WH01"
-      },
-      "fix_template": "UPDATE STB_MaterialLotInfo SET MaterialWarehouseCode = 'WH01' WHERE MaterialLotNo = @LotNo"
-    },
-    "HN523": {
-      "name": "Đóng Gói Chi Nhánh Hà Nam (Ha Nam Packaging)",
-      "module": "HaNam",
-      "sp_get": "usp_GetHN_Packaging",
-      "sp_iud": "usp_DoProcessHN_Packaging",
-      "tables": ["STB_MaterialLotInfo", "STB_SetInfo", "STB_PackingHist"],
-      "common_bugs": {
-        "khong_quet_duoc_tem_hanam": "Mã vạch tem Hà Nam có định dạng tiền tố riêng (HN), cần kiểm tra quy tắc cắt chuỗi"
-      },
-      "fix_template": "UPDATE STB_SetInfo SET Barcode = @NewBarcode WHERE ControlNo = @ControlNo"
-    }
-  },
-  "core_tables": {
-    "STB_SetInfo": {
-      "role": "Bảng trung tâm quản lý Set / Thùng sản phẩm",
-      "key_columns": ["ControlNo", "PONo", "Barcode", "ModelCode", "IsProdFinish", "IsLineInput", "CreateDateTime"]
-    },
-    "STB_ProdRouteHist": {
-      "role": "Bảng lưu lịch sử công đoạn sản xuất & chốt sản lượng",
-      "key_columns": ["ProdRouteHistNo", "ControlNo", "RouteCode", "WorkCenterCode", "ProdQty", "CompleteRoute", "CreateDateTime"]
-    },
-    "STB_MaterialLotInfo": {
-      "role": "Bảng quản lý Lot nguyên vật liệu & thành phẩm kho",
-      "key_columns": ["MaterialLotNo", "MaterialCode", "CurrentQty", "MaterialWarehouseCode", "ExpireDate", "CreateDateTime"]
-    },
-    "STB_MaterialDocDetail": {
-      "role": "Bảng chứng từ liên kết xuất/nhập/chia cuộn Slitting",
-      "key_columns": ["DocNo", "DocSeq", "MaterialCode", "MaterialLotNo", "TargetMaterialLotNo", "DocQty", "CreateDateTime"]
-    }
-  },
-  "golden_rules": [
-    "Rule 0: Tra L1 QUICK_MATRIX.json trước khi query DB",
-    "Rule 1: SELECT-Only trên Production DB, cấm chạy DML trực tiếp không có Transaction",
-    "Rule 4: Surgical Retrieval - không load cả file markdown >50KB",
-    "Rule 6: Golden Query 360 độ (mes.ps1 trace) trong lần đọc đầu tiên khi tra Lot",
-    "Rule 10: Standard Tooling (mes.ps1, find_kb.ps1, deploy_tool.ps1)"
-  ]
+﻿{
+    "version":  "2.1.0",
+    "updated_at":  "2026-08-28 17:34:34",
+    "description":  "Full 90+ Screens \u0026 Bugs L1 In-Memory Pre-compiled Matrix for Vinatech MES",
+    "screens":  {
+                    "A230":  {
+                                 "name":  "",
+                                 "module":  "MasterData",
+                                 "sp_get":  "usp_GetA230",
+                                 "sp_iud":  "usp_DoProcessA230",
+                                 "tables":  [
+                                                "STB_SetInfo",
+                                                "STB_ProdRouteHist"
+                                            ],
+                                 "common_bugs":  {
+                                                     "model_mới_không_hiện_vol_farad_trên_chuy":  "Chưa khai báo A230 hoặc thiếu cấu hình Vol/Farad -\u003e Vào A230 → tab Thông số kỹ thuật → nhập Vol, Farad, kích thước. SQL: `SELECT ModelCode, Voltage, Farad FROM STB_ModelBasicInfo WHERE ModelCode = \u0027mã\u0027`",
+                                                     "cột_\"độ_dày\"_bị_trống_trên_b442_(kế_hoạc":  "Chưa set MaterialThickness tại A230 tab \"Mã nguyên liệu\" -\u003e `UPDATE STB_MaterialMaster SET MaterialThickness = \u0027120\u0027 WHERE MaterialCode = \u0027mã_nvl\u0027`"
+                                                 },
+                                 "fix_template":  "Chưa khai báo A230 hoặc thiếu cấu hình Vol/Farad -\u003e Vào A230 → tab Thông số kỹ thuật → nhập Vol, Farad, kích thước. SQL: `SELECT ModelCode, Voltage, Farad FROM STB_ModelBasicInfo WHERE ModelCode = \u0027mã\u0027`"
+                             },
+                    "A310":  {
+                                 "name":  "",
+                                 "module":  "MasterData",
+                                 "sp_get":  "usp_GetA310",
+                                 "sp_iud":  "usp_DoProcessA310",
+                                 "tables":  [
+                                                "STB_SetInfo",
+                                                "STB_ProdRouteHist"
+                                            ],
+                                 "common_bugs":  {
+                                                     "op_không_thấy_công_đoạn_mới_trong_danh_s":  "Chưa tạo Route tại A310 hoặc chưa map vào PO -\u003e Vào A310 → Thêm RouteCode → Map vào B210 (Line)"
+                                                 },
+                                 "fix_template":  "Chưa tạo Route tại A310 hoặc chưa map vào PO -\u003e Vào A310 → Thêm RouteCode → Map vào B210 (Line)"
+                             },
+                    "A410":  {
+                                 "name":  "",
+                                 "module":  "MasterData",
+                                 "sp_get":  "usp_GetA410",
+                                 "sp_iud":  "usp_DoProcessA410",
+                                 "tables":  [
+                                                "STB_SetInfo",
+                                                "STB_ProdRouteHist"
+                                            ],
+                                 "common_bugs":  {
+                                                     "c512_không_tìm_thấy_lot_oqc":  "Chưa config OqcType, InspectionLevel tại A410 -\u003e `UPDATE STB_ModelBasicInfo SET OqcType=\u0027MANUAL\u0027, OqcInspectionRuleType=\u0027BY_MODEL\u0027, InspectionType=\u0027SAMPLE\u0027, InspectionLevel=\u0027SAMPLE\u0027 WHERE ModelCode = \u0027mã\u0027`"
+                                                 },
+                                 "fix_template":  "Chưa config OqcType, InspectionLevel tại A410 -\u003e `UPDATE STB_ModelBasicInfo SET OqcType=\u0027MANUAL\u0027, OqcInspectionRuleType=\u0027BY_MODEL\u0027, InspectionType=\u0027SAMPLE\u0027, InspectionLevel=\u0027SAMPLE\u0027 WHERE ModelCode = \u0027mã\u0027`"
+                             },
+                    "A418":  {
+                                 "name":  "",
+                                 "module":  "MasterData",
+                                 "sp_get":  "usp_GetA418",
+                                 "sp_iud":  "usp_DoProcessA418",
+                                 "tables":  [
+                                                "STB_SetInfo",
+                                                "STB_ProdRouteHist"
+                                            ],
+                                 "common_bugs":  {
+                                                     "b523_không_cho_gộp_box,_báo_chưa_có_tiêu":  "Chưa khai báo A418 cho Size mới -\u003e Vào A418 → Thêm Size + PackingQty. SQL: `INSERT INTO STB_PackingQtyPerSize (SizeCode, PackingQty, ...) VALUES (...)`"
+                                                 },
+                                 "fix_template":  "Chưa khai báo A418 cho Size mới -\u003e Vào A418 → Thêm Size + PackingQty. SQL: `INSERT INTO STB_PackingQtyPerSize (SizeCode, PackingQty, ...) VALUES (...)`"
+                             },
+                    "A460":  {
+                                 "name":  "",
+                                 "module":  "MasterData",
+                                 "sp_get":  "usp_GetA460",
+                                 "sp_iud":  "usp_DoProcessA460",
+                                 "tables":  [
+                                                "STB_SetInfo",
+                                                "STB_ProdRouteHist"
+                                            ],
+                                 "common_bugs":  {
+                                                     "in_tem_bị_lỗi_\"not_found_label_type\"":  "Chưa có record trong `STB_ModelLabelInfo` cho model -\u003e Copy từ model cũ cùng loại: `INSERT INTO STB_ModelLabelInfo SELECT \u0027MODEL_MỚI\u0027, LabelType, ... FROM STB_ModelLabelInfo WHERE ModelCode = \u0027MODEL_CŨ\u0027`"
+                                                 },
+                                 "fix_template":  "Chưa có record trong `STB_ModelLabelInfo` cho model -\u003e Copy từ model cũ cùng loại: `INSERT INTO STB_ModelLabelInfo SELECT \u0027MODEL_MỚI\u0027, LabelType, ... FROM STB_ModelLabelInfo WHERE ModelCode = \u0027MODEL_CŨ\u0027`"
+                             },
+                    "A510":  {
+                                 "name":  "",
+                                 "module":  "MasterData",
+                                 "sp_get":  "usp_GetA510",
+                                 "sp_iud":  "usp_DoProcessA510",
+                                 "tables":  [
+                                                "STB_SetInfo",
+                                                "STB_ProdRouteHist"
+                                            ],
+                                 "common_bugs":  {
+                                                     "chuyền_sản_xuất_nhưng_không_trừ_kho_nvl":  "PO thiếu BOM hoặc Route chưa map NVL -\u003e Kiểm tra: `SELECT * FROM STB_ProductionOrderBom WHERE PONo = \u0027mã_PO\u0027`. Nếu trống → tạo BOM"
+                                                 },
+                                 "fix_template":  "PO thiếu BOM hoặc Route chưa map NVL -\u003e Kiểm tra: `SELECT * FROM STB_ProductionOrderBom WHERE PONo = \u0027mã_PO\u0027`. Nếu trống → tạo BOM"
+                             },
+                    "B210":  {
+                                 "name":  "",
+                                 "module":  "Production",
+                                 "sp_get":  "usp_GetB210",
+                                 "sp_iud":  "usp_DoProcessB210",
+                                 "tables":  [
+                                                "STB_SetInfo",
+                                                "STB_ProdRouteHist"
+                                            ],
+                                 "common_bugs":  {
+                                                     "b270_popup_không_hiện_dữ_liệu":  "Popup bị cache session cũ -\u003e Tắt MES → xóa cache → mở lại. Hoặc kiểm tra `STB_ScreenObjects`",
+                                                     "line_mới_không_hiện_trên_b460":  "Chưa map Line→WorkCenter tại B210 -\u003e Vào B210 → Thêm mapping",
+                                                     "machine_mới_scan_không_được":  "Chưa khai báo tại B240 -\u003e Vào B240 → Thêm MachineCode"
+                                                 },
+                                 "fix_template":  "Popup bị cache session cũ -\u003e Tắt MES → xóa cache → mở lại. Hoặc kiểm tra `STB_ScreenObjects`"
+                             },
+                    "B310":  {
+                                 "name":  "",
+                                 "module":  "Production",
+                                 "sp_get":  "usp_GetB310",
+                                 "sp_iud":  "usp_DoProcessB310",
+                                 "tables":  [
+                                                "STB_SetInfo",
+                                                "STB_ProdRouteHist"
+                                            ],
+                                 "common_bugs":  {
+                                                     "po_không_tạo_được_lot":  "BOM/Route chưa cấu hình cho PO -\u003e Kiểm tra `STB_ProductionOrderRouting`, `STB_ProductionOrderBom`",
+                                                     "prodfinishqty_lệch_so_với_thực_tế":  "Crash giữa SP `usp_DoProcessProdRouteHist` → dữ liệu partial -\u003e `UPDATE STB_ProductionOrderInfo SET ProdFinishQty = (SELECT SUM(ProdQty) FROM STB_ProdRouteHist WHERE PONo=\u0027mã\u0027 AND RouteCode=\u0027V-28\u0027) WHERE PONo=\u0027mã\u0027`",
+                                                     "po_thiếu_công_đoạn_aging_hoặc_sai_thứ_tự":  "Cấu hình Routing của PO trên B310 chưa thêm công đoạn Aging (`V-26`) hoặc chưa đánh lại Index khi đổi kế hoạch -\u003e Vào B310 → Tìm PO → Kiểm tra danh sách Routing → Thêm công đoạn Aging (`V-26` / `V-26_BG`) và cập nhật lại `RouteIndex`.",
+                                                     "tạo_po_thủ_công_báo_lỗi_\"공정_라우팅_정보가_없습니다":  "Mã `BasicRoutingCode` gán cho Model trong `STB_MaterialMaster` không có record nào khớp với `WorkCenterCode` của nhà máy đang tạo PO trong `STB_BasicRoutingDetail` -\u003e Gán lại `BasicRoutingCode` chuẩn của nhà máy (ví dụ `HY_MainRoutingBigSiz` cho Hưng Yên `VVT_F5`) trong `STB_MaterialMaster` (hoặc A230) — xem [KB_03_03 §B310 Lỗi 3](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_03_SCREEN_BUGS_B.md#lỗi-3-공정-라우팅-정보가-없습니다-không-có-thông-tin-routing-công-đoạn-khi-tạo-po-thủ-công-tại-b310)"
+                                                 },
+                                 "fix_template":  "BOM/Route chưa cấu hình cho PO -\u003e Kiểm tra `STB_ProductionOrderRouting`, `STB_ProductionOrderBom`"
+                             },
+                    "B351":  {
+                                 "name":  "",
+                                 "module":  "Production",
+                                 "sp_get":  "usp_GetB351",
+                                 "sp_iud":  "usp_DoProcessB351",
+                                 "tables":  [
+                                                "STB_SetInfo",
+                                                "STB_ProdRouteHist"
+                                            ],
+                                 "common_bugs":  {
+                                                     "barcode_sinh_ra_bị_chèn_ký_tự_dấu_chấm_(":  "Sai lệch logic cắt ghép chuỗi sinh barcode tự động -\u003e Sửa đồng loạt Barcode trong `STB_RawMaterialInputHist`, `STB_SetInfo`, `STB_LotChangeMaterialHistory` — xem [KB_04_02 §B351](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_02_SCREEN_BUGS.md#b351--lot-transition-chuyển-đổi-lot)",
+                                                     "yêu_cầu_in_tem_gốc_(mã_cũ)_sau_khi_b351_":  "Đã chuyển đổi sản xuất tại B351 (lưu `STB_LotChangeMaterialHistory`), B525 tự động in tem mã mới -\u003e ⚠️ **CẦN QUẢN LÝ PHÊ DUYỆT:** Khi được phê duyệt, chạy script rollback đồng bộ 4 bảng (`STB_SetInfo`, `STB_MaterialLotInfo`, `STB_ProdRouteHist`, `STB_LotChangeMaterialHistory`) — xem [KB_04_02 §B351 Lỗi 2](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_02_SCREEN_BUGS.md#lỗi-2-user-yêu-cầu-in-lại-tem-gốc-mã-cũ-sau-khi-sản-xuất-đã-chuyển-đổi-lot-tại-b351)",
+                                                     "bấm_nút_\"thay_đổi_model\"_báo_lỗi_popup_r":  "Chưa chọn/gán Kế hoạch mục tiêu (Target Plan/Material) từ Lưới 1 xuống Lưới 2 (`SetInfoForChangeMaterial`), khiến các cột `TargetDayPlanNo` / `TargetMaterialCode` bị trống (rỗng) -\u003e Thao tác UI: (1) Tìm Kế hoạch sản xuất mục tiêu ở Lưới 1 (`DayProdPlanForChangeMaterial`), (2) Chọn các dòng Lot ở Lưới 2 và thực hiện gán Target để các cột `TargetDayPlanNo` và `TargetMaterialCode` hiển thị mã mới, (3) Nhấn lại nút \"Thay đổi model\" — xem [KB_04_02 §B351 Lỗi 3](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_02_SCREEN_BUGS.md#lỗi-3-bấm-nút-thay-đổi-model-xuất-hiện-thông-báo-no-data-to-process)"
+                                                 },
+                                 "fix_template":  "Sai lệch logic cắt ghép chuỗi sinh barcode tự động -\u003e Sửa đồng loạt Barcode trong `STB_RawMaterialInputHist`, `STB_SetInfo`, `STB_LotChangeMaterialHistory` — xem [KB_04_02 §B351](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_02_SCREEN_BUGS.md#b351--lot-transition-chuyển-đổi-lot)"
+                             },
+                    "B442":  {
+                                 "name":  "",
+                                 "module":  "Production",
+                                 "sp_get":  "usp_GetB442",
+                                 "sp_iud":  "usp_DoProcessB442",
+                                 "tables":  [
+                                                "STB_SetInfo",
+                                                "STB_ProdRouteHist"
+                                            ],
+                                 "common_bugs":  {
+                                                     "in_tem_điện_cực_lỗi_\"not_found_label_typ":  "Model chưa có record `STB_ModelLabelInfo` (LabelType=\u0027ElectLabel\u0027) -\u003e Xem A460 ở trên",
+                                                     "cột_\"độ_dày\"_trống":  "A230 chưa set MaterialThickness -\u003e Xem A230 ở trên"
+                                                 },
+                                 "fix_template":  "Model chưa có record `STB_ModelLabelInfo` (LabelType=\u0027ElectLabel\u0027) -\u003e Xem A460 ở trên"
+                             },
+                    "B452":  {
+                                 "name":  "",
+                                 "module":  "Production",
+                                 "sp_get":  "usp_GetB452",
+                                 "sp_iud":  "usp_DoProcessB452",
+                                 "tables":  [
+                                                "STB_SetInfo",
+                                                "STB_ProdRouteHist"
+                                            ],
+                                 "common_bugs":  {
+                                                     "chuyển_line_lỗi_\"barcode_đã_tồn_tại_trên":  "Barcode chưa được `IsLineInput=0` ở Line cũ -\u003e `UPDATE STB_SetInfo SET IsLineInput=0, InputLineCode=\u0027\u0027 WHERE Barcode=\u0027mã\u0027 AND InputLineCode=\u0027LINE_CŨ\u0027`"
+                                                 },
+                                 "fix_template":  "Barcode chưa được `IsLineInput=0` ở Line cũ -\u003e `UPDATE STB_SetInfo SET IsLineInput=0, InputLineCode=\u0027\u0027 WHERE Barcode=\u0027mã\u0027 AND InputLineCode=\u0027LINE_CŨ\u0027`"
+                             },
+                    "B523":  {
+                                 "name":  "",
+                                 "module":  "Production",
+                                 "sp_get":  "usp_GetB523",
+                                 "sp_iud":  "usp_DoProcessB523",
+                                 "tables":  [
+                                                "STB_SetInfo",
+                                                "STB_ProdRouteHist"
+                                            ],
+                                 "common_bugs":  {
+                                                     "gộp_box_bị_lỗi_\"chưa_có_tiêu_chuẩn_đóng_":  "Thiếu config `STB_PackingQtyPerSize` cho Size sản phẩm -\u003e Xem A418",
+                                                     "gộp_box_bị_lỗi_\"isoutputroute_chưa_thiết":  "PO Routing thiếu cờ `IsOutputRoute=1` ở công đoạn cuối -\u003e `UPDATE STB_ProductionOrderRouting SET IsOutputRoute=1 WHERE PONo=\u0027mã\u0027 AND RouteCode=\u0027V-28\u0027`",
+                                                     "gộp_box_hn523_lỗi_qty=0":  "`STB_PackingStandard` thiếu record cho model Hà Nam -\u003e INSERT record vào `STB_PackingStandard` — xem [KB_04 §6.13](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_01_CORE_PACKAGING.md)",
+                                                     "gộp_box_lỗi_do_po_có_công_đoạn_hậu_đóng_":  "Thiếu lịch sử Route `V-28_BG` -\u003e Chèn dòng ProdRouteHist giả lập — xem [KB_04 §6.13.2](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_01_CORE_PACKAGING.md)",
+                                                     "mergeqty_không_chia_đúng_khi_gộp_nhiều_l":  "Logic `@pMergeQty \u003c @total + @InProdQty` bị edge case -\u003e Kiểm tra số lượng Lot trước khi gộp, đảm bảo tổng = MergeQty",
+                                                     "sanmina_qr_code_has_redundant_quantities":  "Stored procedure usp_SanminaLabelPrint_get_Vietnam did not return a filtered list of serials and quantities for inner labels. -\u003e `-- ============================================= -- Author:\t\tMr.Manh -- Create date: 2025-12-26 -- Description:\tGet Sanmina label -- =================...`",
+                                                     "popup_đỏ_`\"could_not_find_kho_thành_phẩm":  "Mã Lot mới chưa có dữ liệu cân trong `STB_VIETNAM_BARCODEWEIGHT` (SP `usp_Vietnam_GetBoxIDForLotNo_VVT` tính `@lotweight=0`). Lưu ý: SP hardcode Whitelist `IF (@pProcessUserID IN (\u0027vvt_worker\u0027, \u0027vvtworker\u0027, ...))` ép `@lotweight=1` bypass cho account test/admin, còn account công nhân sản xuất (vd: `vvtworker_BG`) không thuộc Whitelist nên bị kẹt `@lotweight=0` ➔ SP trả `FormatName = N\u0027Kho Thành phẩm chưa nhập cân nặng...\u0027` ➔ WinForm Client C# tìm file mẫu tem tên này KHÔNG THẤY ➔ Throw popup -\u003e Run master SQL fix: Nạp `WEIGHT` vào `STB_VIETNAM_BARCODEWEIGHT` + `STB_VN_FINISHGOODS` + `STB_VN_FINISHGOODS_BG` + đồng bộ `STB_LotChangeMaterialHistory` \u0026 `STB_PackingLabelPrintHist`. Xem mẫu SQL chuẩn tại [KB_04_02 §6.20](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_02_SCREEN_BUGS.md#620-b523--bug-chuyển-đổi-lot-ở-b351-gây-kẹt-nút-in-tem--in-tem--lỗi-could-not-find-kho-thành-phẩm-chưa-nhập-cân-nặng)"
+                                                 },
+                                 "fix_template":  "Thiếu config `STB_PackingQtyPerSize` cho Size sản phẩm -\u003e Xem A418"
+                             },
+                    "B528":  {
+                                 "name":  "",
+                                 "module":  "Production",
+                                 "sp_get":  "usp_GetB528",
+                                 "sp_iud":  "usp_DoProcessB528",
+                                 "tables":  [
+                                                "STB_SetInfo",
+                                                "STB_ProdRouteHist"
+                                            ],
+                                 "common_bugs":  {
+                                                     "tem_barrel_in_trống_hoặc_thiếu_thông_tin":  "Label config chưa set cho model dạng Barrel -\u003e Kiểm tra `STB_ModelLabelInfo` → LabelType=\u0027BarrelLabel\u0027"
+                                                 },
+                                 "fix_template":  "Label config chưa set cho model dạng Barrel -\u003e Kiểm tra `STB_ModelLabelInfo` → LabelType=\u0027BarrelLabel\u0027"
+                             },
+                    "B530":  {
+                                 "name":  "",
+                                 "module":  "Production",
+                                 "sp_get":  "usp_GetB530",
+                                 "sp_iud":  "usp_DoProcessB530",
+                                 "tables":  [
+                                                "STB_SetInfo",
+                                                "STB_ProdRouteHist"
+                                            ],
+                                 "common_bugs":  {
+                                                     "gate_20_phút_không_hoạt_động_—_op_scan_l":  "BUG: `IF @SIExtInt01 = Null` (phải là `IS NULL`) trong SP `usp_DoProcessProdRouteHistForCalc_SmartApp_VNT` -\u003e ALTER SP sửa `= Null` → `IS NULL` — xem [KB_08 §4.2](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_08_CORE_SP_ENGINE.md#42-bug-đã-phát-hiện)",
+                                                     "\"routing_không_có_trong_po\"_hoặc_\"đã_hoà":  "Bỏ qua công đoạn trước chưa scan, hoặc PO config sai RouteIndex -\u003e Dùng Golden Query trace: `SELECT * FROM STB_ProdRouteHist WHERE ControlNo=(SELECT ControlNo FROM STB_SetInfo WHERE Barcode=\u0027mã\u0027) ORDER BY ProdDateTime`",
+                                                     "lỗi_\"vượt_sl_công_đoạn_trước\"_(전공정의_수량을_":  "CurrentRouteQty + ProdQty \u003e BefRouteQty -\u003e Kiểm tra SL Route trước: nếu đúng → chốt thêm ở Route trước. Nếu sai → sửa ProdQty",
+                                                     "thiếu_dư_danh_mục_lỗi_(defect_code)_trên":  "`STB_DefectInfo` chưa cập nhật -\u003e `UPDATE STB_DefectInfo SET IsUsed=0 WHERE DefectCode IN (\u0027cũ\u0027)` + `INSERT INTO STB_DefectInfo (...) VALUES (...)` — xem [KB_03 §B530 Lỗi 3](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_02_CELL_LINE.md)",
+                                                     "\"barcode_chưa_được_đưa_vào_tuyến\"_(투입처리_":  "Barcode chưa qua công đoạn đầu (IsLineInput=0) -\u003e Scan lại từ công đoạn đầu (IsInputRoute=1), hoặc IT chạy: `UPDATE STB_SetInfo SET IsLineInput=1 WHERE ControlNo=\u0027mã\u0027`",
+                                                     "\"pqc_chưa_nhập_số_lượng_ng\"":  "SP check DefectQty ở công đoạn trước phải \u003e 0 khi có mã lỗi `_00` (Đạt) -\u003e Logic bug — mã `_00` = OK nhưng SP đọc COUNT lỗi = 0 → nhầm là chưa nhập. Fix: ALTER SP hoặc IT nhập 1 dòng DefectQty=0 cho mã `_00`",
+                                                     "grid_`prodroutebarcodefordefect_vnt`_hiể":  "OP nhập nhầm defect hoặc defect tạo tự động không đúng -\u003e Xóa mềm: `UPDATE STB_DefectRepairInfo SET IsDelete=\u00271\u0027, ChangeDateTime=GETDATE(), ChangeUserID=\u0027ducnv_fix\u0027 WHERE ControlNo=(SELECT ControlNo FROM STB_SetInfo WHERE Barcode=\u0027MÃ_BARCODE\u0027) AND IsDelete=\u00270\u0027`. VD: Barcode `K16418106262500772` → ControlNo `20260618000445`, DefectSummaryNo `20260619000834/835` (VP02_005, ND02_006). ducnv 2026-06-19",
+                                                     "nút_\"nhập_lỗi\"_bị_mờ___ẩn_(disabled)":  "Công đoạn tiếp theo đã có dữ liệu (`IsHasNextProd = 1`) hoặc đã bị ghi nhận Loss (`IsLoss = 1`) theo biểu thức Expression: `!IsHasNextProd \u0026\u0026 !IsLoss` -\u003e Hủy/Rollback công đoạn sau: (1) `DELETE FROM STB_DefectRepairInfo WHERE ControlNo=\u0027...\u0027 AND FindRouteCode IN (\u0027...\u0027)`, (2) `DELETE FROM STB_ProdRouteHist WHERE ControlNo=\u0027...\u0027 AND RouteCode IN (\u0027...\u0027)`, (3) `UPDATE STB_ProdRouteHist SET CompleteRoute = NULL WHERE ControlNo=\u0027...\u0027 AND RouteCode=\u0027...\u0027` cho công đoạn trước — xem [KB_03_01_OVERVIEW.md § 5.16](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_01_OVERVIEW.md)",
+                                                     "báo_lỗi_\"công_đoạn_này_không_có_trong_ro":  "Công đoạn liền trước bị set `CompleteRoute = 1` trong khi các công đoạn downstream đã sinh dòng dở dang -\u003e Reset `CompleteRoute = NULL` ở công đoạn trước và xóa các dòng công đoạn downstream chưa hoàn thành: (1) `DELETE FROM STB_ProdRouteHist WHERE ControlNo = \u0027...\u0027 AND ProdRouteHistNo IN (các_id_dưới)`, (2) `UPDATE STB_ProdRouteHist SET CompleteRoute = NULL WHERE ControlNo = \u0027...\u0027 AND RouteCode = \u0027công_đoạn_trước\u0027`",
+                                                     "báo_lỗi_popup_\"công_đoạn_này_không_có_tr":  "Mã Lot/PO tạo ở nhà máy cũ (Bắc Giang 1 `VVT_F2`) nhưng người dùng đăng nhập bằng tài khoản Hưng Yên (`vvtworker_hy`) hoặc Bắc Ninh (`vvtworker_bn`) -\u003e Đổi tài khoản đăng nhập NAIS sang tài khoản nhà máy Bắc Giang (`vvtworker_bg`). Kiểm tra tem cáp thư xem Lot tạo ở nhà máy nào và đối chiếu với tài khoản tương ứng; kiểm tra lại Routing PO trên B310."
+                                                 },
+                                 "fix_template":  "BUG: `IF @SIExtInt01 = Null` (phải là `IS NULL`) trong SP `usp_DoProcessProdRouteHistForCalc_SmartApp_VNT` -\u003e ALTER SP sửa `= Null` → `IS NULL` — xem [KB_08 §4.2](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_08_CORE_SP_ENGINE.md#42-bug-đã-phát-hiện)"
+                             },
+                    "B540":  {
+                                 "name":  "In tem KH Sanmina India",
+                                 "module":  "Production",
+                                 "sp_get":  "usp_GetB540",
+                                 "sp_iud":  "usp_DoProcessB540",
+                                 "tables":  [
+                                                "STB_SetInfo",
+                                                "STB_ProdRouteHist"
+                                            ],
+                                 "common_bugs":  {
+                                                     "model_nordex_ở_b540_b530_k361_cần_hoàn_t":  "Chuẩn nghiệp vụ BG2 Module Line: `IsOutputRoute` giữ nguyên `NULL` (hoặc 0), không set bằng 1. Việc chốt hoàn thành công đoạn ND08 được thực hiện qua màn hình K361 (SP `usp_CompleteRouteFinalForBacGiang2`). -\u003e **CẤM sửa IsOutputRoute=1**. Giữ `IsOutputRoute = NULL` ➔ Chốt `CompleteRoute = 1` cho `ND08` bằng nút \"Hoàn thành kết quả sản xuất\" tại K361.",
+                                                     "lỗi_primary_key_violation_`pk_stb_prodro":  "Chèn dòng ND08 bằng SQL `INSERT` trực tiếp làm lệch dải số tự động `ProdRouteHistNo` của ứng dụng MES. -\u003e **CẤM DÙNG SQL INSERT TRỰC TIẾP VÀO STB_ProdRouteHist**. Thực hiện `UPDATE STB_ProdRouteHist SET CompleteRoute = NULL WHERE RouteCode = \u0027ND07\u0027` để công nhân bấm chốt lại ND07 ở B530 ➔ Ứng dụng MES sẽ tự động sinh ND08 an toàn 100%.",
+                                                     "so_serial_tem_sanmina_khong_reset_ve_000":  "SP usp_SanminaLabelPrint_get_Vietnam lay serial lon nhat toan bang voi LIKE \u0027VINA%\u0027 khong filter theo @SerialPrefix -\u003e `WHERE LEN(BoxSerialNo) = 13 AND BoxSerialNo LIKE @SerialPrefix + \u0027%\u0027`"
+                                                 },
+                                 "fix_template":  "Chuẩn nghiệp vụ BG2 Module Line: `IsOutputRoute` giữ nguyên `NULL` (hoặc 0), không set bằng 1. Việc chốt hoàn thành công đoạn ND08 được thực hiện qua màn hình K361 (SP `usp_CompleteRouteFinalForBacGiang2`). -\u003e **CẤM sửa IsOutputRoute=1**. Giữ `IsOutputRoute = NULL` ➔ Chốt `CompleteRoute = 1` cho `ND08` bằng nút \"Hoàn thành kết quả sản xuất\" tại K361."
+                             },
+                    "B552":  {
+                                 "name":  "",
+                                 "module":  "Production",
+                                 "sp_get":  "usp_GetB552",
+                                 "sp_iud":  "usp_DoProcessB552",
+                                 "tables":  [
+                                                "STB_SetInfo",
+                                                "STB_ProdRouteHist"
+                                            ],
+                                 "common_bugs":  {
+                                                     "\"không_tồn_tại_thiết_lập_điện_cực..._chư":  "Bảng `STB_SlittingLocationConfig_VVT` thiếu record cho model -\u003e `INSERT INTO STB_SlittingLocationConfig_VVT (MaterialCode, LocationCode, ...) VALUES (...)` — xem [KB_05_02 §8.2](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_02_SCREEN_BUGS_QC.md#82-lỗi-chưa-config-trong-stb_slittinglocationconfig_vvt)",
+                                                     "yêu_cầu_xóa_dữ_liệu_kết_quả_cắt_điện_cực":  "Cắt dư hoặc lỗi dòng kết quả cắt điện cực cần dọn dẹp dữ liệu dở dang -\u003e Safe SQL Delete: `DELETE FROM STB_ElectrodeSlittingResult WHERE ElectrodeLotNumber = \u0027MÃ_LOT\u0027 AND Seq BETWEEN 10 AND 70`"
+                                                 },
+                                 "fix_template":  "Bảng `STB_SlittingLocationConfig_VVT` thiếu record cho model -\u003e `INSERT INTO STB_SlittingLocationConfig_VVT (MaterialCode, LocationCode, ...) VALUES (...)` — xem [KB_05_02 §8.2](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_02_SCREEN_BUGS_QC.md#82-lỗi-chưa-config-trong-stb_slittinglocationconfig_vvt)"
+                             },
+                    "B560":  {
+                                 "name":  "",
+                                 "module":  "Production",
+                                 "sp_get":  "usp_GetB560",
+                                 "sp_iud":  "usp_DoProcessB560",
+                                 "tables":  [
+                                                "STB_SetInfo",
+                                                "STB_ProdRouteHist"
+                                            ],
+                                 "common_bugs":  {
+                                                     "in_tem_hela_trống_hoặc_sai_format":  "Config label Hela chưa map đúng model -\u003e Kiểm tra `STB_HelaPackingCheckHist` + Label config"
+                                                 },
+                                 "fix_template":  "Config label Hela chưa map đúng model -\u003e Kiểm tra `STB_HelaPackingCheckHist` + Label config"
+                             },
+                    "B597":  {
+                                 "name":  "",
+                                 "module":  "Production",
+                                 "sp_get":  "usp_GetB597",
+                                 "sp_iud":  "usp_DoProcessB597",
+                                 "tables":  [
+                                                "STB_SetInfo",
+                                                "STB_ProdRouteHist"
+                                            ],
+                                 "common_bugs":  {
+                                                     "cảnh_báo_đỏ_hold_—_\"lot_chưa_qc\"":  "Lot nằm kho `HOLDING_WH` -\u003e QC hoàn thành IQC hoặc chuyển kho: `UPDATE STB_MaterialLotInfo SET MaterialWarehouseCode=\u0027ROH_WH\u0027 WHERE LotID=\u0027mã\u0027` (⚠️ Cột là `MaterialWarehouseCode`, KHÔNG phải `WarehouseCode`)",
+                                                     "cảnh_báo_\"hết_hạn_sử_dụng\"":  "Lot vi phạm FIFO/Expiry -\u003e Gia hạn: `UPDATE STB_MaterialLotInfo SET CreateDateTime = DATEADD(DAY,-30,GETDATE()) WHERE LotID=\u0027mã\u0027`",
+                                                     "\"sai_chủng_loại\"_—_nvl_không_trong_bom":  "NVL scan không match BOM config PO -\u003e Kiểm tra BOM tại B310 hoặc SQL",
+                                                     "vỏ_nhôm_(alucase)_mới_báo_sai_chủng_loại":  "Mã vỏ nhôm bị **hardcode** trong SP `usp_Vietnam_RawMaterialInputHist_uid` -\u003e ALTER SP bổ sung mã mới vào `IF / NOT IN` — xem [KB_05_02 §7.4](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_02_SCREEN_BUGS_QC.md)",
+                                                     "\"string_or_binary_data_truncated\"_khi_qu":  "Cột `RawMaterialBarcode NVARCHAR(100)` quá ngắn -\u003e `ALTER TABLE STB_InputMaterialHistory ALTER COLUMN RawMaterialBarcode NVARCHAR(1000)` + sửa SP tương ứng — xem [KB_05_02 §7.5](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_02_SCREEN_BUGS_QC.md)",
+                                                     "\"mã_electrolyte_dung_dịch_được_thiết_lập":  "Quét mã dung dịch sai chủng loại → SP check bảng config -\u003e Kiểm tra đúng mã NVL dung dịch, hoặc thêm vào config",
+                                                     "op_nhập_nvl_module_(wire_pcb_chip)_bằng_":  "SP `usp_Vietnam_RawMaterialInputHist_uid` dòng 318 exclude `MODULE%` khỏi validation → OP gõ tự do `40`, `dm`, `0` -\u003e Thêm block chặn sau `END -- end chặn chemical`: check `@mmmaterialcode` (lookup sẵn từ `stb_materialdoclotinfo` line 264). ModuleWire→WRHI00-007, ModuleChip→VRE-009, ModulePCB→PBDM00-004. Nếu `@mmmaterialcode=\u0027\u0027` (gõ tay) → RAISERROR. ducnv 2026-06-19",
+                                                     "quét_điện_cực_báo_\"lỗi_bom_creyo85b_02_k":  "Quét mã Coating-Roll (CREYO85B-02/CRFYO85B-02) trong khi BOM PO 260601000001 chỉ chứa mã Slitting-Roll (SREYO85A/SRFYO85A), đồng thời Lot chưa có tồn kho slitting -\u003e Cách 1: Sửa SP `usp_Vietnam_RawMaterialInputHist_uid` map mã tráng sang mã slitting tại L1279 và bypass slitting stock check tại L2124. Cách 2: Chuyển Lot sang chạy dưới PO `260623000007` (Model `ECVT30-367`) để bypass BOM check (nếu đã khai báo slitting stock)."
+                                                 },
+                                 "fix_template":  "Lot nằm kho `HOLDING_WH` -\u003e QC hoàn thành IQC hoặc chuyển kho: `UPDATE STB_MaterialLotInfo SET MaterialWarehouseCode=\u0027ROH_WH\u0027 WHERE LotID=\u0027mã\u0027` (⚠️ Cột là `MaterialWarehouseCode`, KHÔNG phải `WarehouseCode`)"
+                             },
+                    "B598":  {
+                                 "name":  "",
+                                 "module":  "Production",
+                                 "sp_get":  "usp_GetB598",
+                                 "sp_iud":  "usp_DoProcessB598",
+                                 "tables":  [
+                                                "STB_SetInfo",
+                                                "STB_ProdRouteHist"
+                                            ],
+                                 "common_bugs":  {
+                                                     "báo_phế_nvl_bị_chặn_không_đồng_bộ":  "Lệch `JobDate` giữa ca thực tế và kế hoạch -\u003e Sửa JobDate: `UPDATE STB_ProdRouteHist SET JobDate = CAST(GETDATE() AS DATE) WHERE ...`"
+                                                 },
+                                 "fix_template":  "Lệch `JobDate` giữa ca thực tế và kế hoạch -\u003e Sửa JobDate: `UPDATE STB_ProdRouteHist SET JobDate = CAST(GETDATE() AS DATE) WHERE ...`"
+                             },
+                    "B618":  {
+                                 "name":  "",
+                                 "module":  "Production",
+                                 "sp_get":  "usp_GetB618",
+                                 "sp_iud":  "usp_DoProcessB618",
+                                 "tables":  [
+                                                "STB_SetInfo",
+                                                "STB_ProdRouteHist"
+                                            ],
+                                 "common_bugs":  {
+                                                     "\"bạn_không_có_quyền_vui_lòng_liên_hệ_ea_":  "SP `usp_GetInforLotReworkHaNamFactory_uid` hardcode check UserID -\u003e Thêm UserID vào whitelist trong SP hoặc tạo record permission"
+                                                 },
+                                 "fix_template":  "SP `usp_GetInforLotReworkHaNamFactory_uid` hardcode check UserID -\u003e Thêm UserID vào whitelist trong SP hoặc tạo record permission"
+                             },
+                    "B682":  {
+                                 "name":  "",
+                                 "module":  "Production",
+                                 "sp_get":  "usp_GetB682",
+                                 "sp_iud":  "usp_DoProcessB682",
+                                 "tables":  [
+                                                "STB_SetInfo",
+                                                "STB_ProdRouteHist"
+                                            ],
+                                 "common_bugs":  {
+                                                     "b786_esr_không_hiện_data":  "ESR data chưa upload hoặc Lot chưa match -\u003e Kiểm tra `STB_VVT_ESRDATA` WHERE Barcode=\u0027mã\u0027",
+                                                     "b791_ng_defect_repair_—_sl_ng_lệch":  "`DefectQty` trong `STB_ProdRouteHist` không khớp `STB_DefectRepairInfo` -\u003e Đồng bộ lại: xem [KB_03 §5.8](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_02_CELL_LINE.md)"
+                                                 },
+                                 "fix_template":  "ESR data chưa upload hoặc Lot chưa match -\u003e Kiểm tra `STB_VVT_ESRDATA` WHERE Barcode=\u0027mã\u0027"
+                             },
+                    "B754":  {
+                                 "name":  "",
+                                 "module":  "Production",
+                                 "sp_get":  "usp_GetB754",
+                                 "sp_iud":  "usp_DoProcessB754",
+                                 "tables":  [
+                                                "STB_SetInfo",
+                                                "STB_ProdRouteHist"
+                                            ],
+                                 "common_bugs":  {
+                                                     "in_tem_pac_digikey_phoenix_trống":  "Label spec chưa config hoặc LabelType sai -\u003e Kiểm tra `STB_ModelLabelInfo` + `STB_PackingLabelSpec`",
+                                                     "tem_phoenix_contact_sai_mã_khách_hàng":  "Config customer mapping thiếu -\u003e Kiểm tra `STB_PackingLabelSpec` (⚠️ `STB_PhoenixContactLabelInfo` KHÔNG tồn tại trong DB — data lưu trong PackingLabelSpec hoặc hardcode SP)",
+                                                     "**[b767]**_tìm_kiếm_lần_2_bị_lặp_dữ_liệu":  "Thuộc tính `데이터 추가` (Append Data) của hàm tìm kiếm `usp_SanminaLabelPrint_get_Vietnam` đang set là `True`. Khi search lần 2, do số Serial (`BoxSerialNo`, `PrintSerialNo` tự tăng dựa trên `@MaxSerial`) thay đổi, hệ thống không tìm thấy dòng trùng lặp và tự động append tiếp vào cuối grid. -\u003e Mở NAIS screen designer B767 → Chọn `Search Function` `usp_SanminaLabelPrint_get_Vietnam` → Tại bảng Property bên phải, nhóm `Group` → Chuyển `데이터 추가` từ `True` sang `False`. Save layout và Approve."
+                                                 },
+                                 "fix_template":  "Label spec chưa config hoặc LabelType sai -\u003e Kiểm tra `STB_ModelLabelInfo` + `STB_PackingLabelSpec`"
+                             },
+                    "B802":  {
+                                 "name":  "",
+                                 "module":  "Production",
+                                 "sp_get":  "usp_GetB802",
+                                 "sp_iud":  "usp_DoProcessB802",
+                                 "tables":  [
+                                                "STB_SetInfo",
+                                                "STB_ProdRouteHist"
+                                            ],
+                                 "common_bugs":  {
+                                                     "thiếu_công_đoạn_trên_báo_cáo":  "OP chưa nhập đủ 4 công đoạn (Mixing/Coating/Rollpress/Slitting) tại B552 -\u003e Yêu cầu OP bổ sung nhập liệu tại B552",
+                                                     "🔴_by_yp_120_180_a301_1.5b:_mixing_input":  "App cân NVL Mixing trên máy CMC không gọi SP `usp_DoCreateElectrodeMixStepInfo_electron`. DB + SP + config `STB_ElectrodeStep` đều OK. Ảnh hưởng: `CREBL85L`, `CRFYL85-01`, `CRFYN85L-01`. Phát hiện 2026-06-19. -\u003e Kiểm tra phần mềm cân trên máy CMC (log, phiên bản, kết nối DB). Xem [KB_05 §8.9](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md)",
+                                                     "số_mét_sản_lượng_slitting_(`v_11`)_mã_yp":  "SP `usp_Vietnam_ElectrodeProdRouteHist_get` bị hardcode `SUM(ProductionQty)/5` cho mã `CREYO85-04` trong khi quy cách cắt YP tạo 7 cuộn tem (Seq 1..7) -\u003e ALTER SP `usp_Vietnam_ElectrodeProdRouteHist_get` thay `SUM(ProductionQty)/5` bằng `AVG(ProductionQty)` và `AVG(GoodQtyLength)` để tính động theo số cuộn cắt thực tế."
+                                                 },
+                                 "fix_template":  "OP chưa nhập đủ 4 công đoạn (Mixing/Coating/Rollpress/Slitting) tại B552 -\u003e Yêu cầu OP bổ sung nhập liệu tại B552"
+                             },
+                    "W788":  {
+                                 "name":  "",
+                                 "module":  "MES",
+                                 "sp_get":  "usp_GetW788",
+                                 "sp_iud":  "usp_DoProcessW788",
+                                 "tables":  [
+                                                "STB_SetInfo",
+                                                "STB_ProdRouteHist"
+                                            ],
+                                 "common_bugs":  {
+                                                     "màn_hình_w788_bị_dư_nhiều_cột_thừa_hoặc_":  "SP `sp_GetSortingDataProgram` gộp dữ liệu cũ (Ver 1) và trả ra các cột alias dư thừa (ESR_mOhm, OCV_mV...), khiến lưới WinForms tự động sinh thêm cột -\u003e 1. Chuyển SP `sp_GetSortingDataProgram` sang đọc thuần bảng V2 `SortingDataImportExcel_V2` (bỏ UNION ALL với V1). \u003cbr\u003e 2. Khớp 100% danh sách cột theo đúng thứ tự 3 công đoạn trong file Excel máy đo V2 (`CCCVChg`, `CCDchg`, `Rest`) và thông tin MES (`InputLineCode`, `EquipmentNumber`, `LotNo`). \u003cbr\u003e 3. File backup SP gốc: `sp_GetSortingDataProgram_Backup_Original.sql`."
+                                                 },
+                                 "fix_template":  "SP `sp_GetSortingDataProgram` gộp dữ liệu cũ (Ver 1) và trả ra các cột alias dư thừa (ESR_mOhm, OCV_mV...), khiến lưới WinForms tự động sinh thêm cột -\u003e 1. Chuyển SP `sp_GetSortingDataProgram` sang đọc thuần bảng V2 `SortingDataImportExcel_V2` (bỏ UNION ALL với V1). \u003cbr\u003e 2. Khớp 100% danh sách cột theo đúng thứ tự 3 công đoạn trong file Excel máy đo V2 (`CCCVChg`, `CCDchg`, `Rest`) và thông tin MES (`InputLineCode`, `EquipmentNumber`, `LotNo`). \u003cbr\u003e 3. File backup SP gốc: `sp_GetSortingDataProgram_Backup_Original.sql`."
+                             },
+                    "B767":  {
+                                 "name":  "",
+                                 "module":  "Production",
+                                 "sp_get":  "usp_GetB767",
+                                 "sp_iud":  "usp_DoProcessB767",
+                                 "tables":  [
+                                                "STB_SetInfo",
+                                                "STB_ProdRouteHist"
+                                            ],
+                                 "common_bugs":  {
+                                                     "lưới_tìm_kiếm_lần_2_bị_lặp_dữ_liệu_(6_dò":  "Thuộc tính `데이터 추가` (Append Data) của hàm tìm kiếm đang set `True` -\u003e Mở NAIS screen designer B767 → Chọn SearchFunction → Chuyển `데이터 추가` từ `True` sang `False`",
+                                                     "s_n_của_tem_outer_(tem_đầu_tiên)_bị_trốn":  "SP `usp_SanminaLabelPrint_get_Vietnam` set PrintSerialNo trống cho Outer label -\u003e Sửa SP: gộp Inner1Serial và Inner2Serial thành danh sách phân cách bằng dấu phẩy cho BoxSerialNo và PrintSerialNo của Outer label"
+                                                 },
+                                 "fix_template":  "Thuộc tính `데이터 추가` (Append Data) của hàm tìm kiếm đang set `True` -\u003e Mở NAIS screen designer B767 → Chọn SearchFunction → Chuyển `데이터 추가` từ `True` sang `False`"
+                             },
+                    "C121":  {
+                                 "name":  "",
+                                 "module":  "QC",
+                                 "sp_get":  "usp_GetC121",
+                                 "sp_iud":  "usp_DoProcessC121",
+                                 "tables":  [
+                                                "STB_SetInfo",
+                                                "STB_ProdRouteHist"
+                                            ],
+                                 "common_bugs":  {
+                                                     "lot_nvl_không_có_hạng_mục_kiểm_tra":  "Chưa gán NVL vào nhóm kiểm tra tại C122 -\u003e Vào C121 thêm nhóm → C122 map NVL → nhóm"
+                                                 },
+                                 "fix_template":  "Chưa gán NVL vào nhóm kiểm tra tại C122 -\u003e Vào C121 thêm nhóm → C122 map NVL → nhóm"
+                             },
+                    "C220":  {
+                                 "name":  "",
+                                 "module":  "QC",
+                                 "sp_get":  "usp_GetC220",
+                                 "sp_iud":  "usp_DoProcessC220",
+                                 "tables":  [
+                                                "STB_SetInfo",
+                                                "STB_ProdRouteHist"
+                                            ],
+                                 "common_bugs":  {
+                                                     "f330_bị_chặn_\"receiving_confirmation\"":  "IQC chưa PASS Lot tại C220 -\u003e QC hoàn thành nhập kết quả + xác nhận PASS",
+                                                     "hàng_mới_nhập_ở_f330_không_hiển_thị_trên":  "Thủ kho mới bấm Arrival ở F330 nhưng **chưa bấm nút \"Tạo tem\"** (bảng `STB_MaterialDocLotInfo` chưa có dòng). SP `usp_MaterialQcInfo_get` INNER JOIN với `STB_MaterialDocLotInfo` nên lọc bỏ các phiếu chưa sinh Lot. -\u003e Mở lại F330 → chọn phiếu nhập → nhập thông tin đóng gói / Lot Vendor → bấm **\"Tạo tem\"** → F5 lại C220. (2026-07-21)"
+                                                 },
+                                 "fix_template":  "IQC chưa PASS Lot tại C220 -\u003e QC hoàn thành nhập kết quả + xác nhận PASS"
+                             },
+                    "C243":  {
+                                 "name":  "",
+                                 "module":  "QC",
+                                 "sp_get":  "usp_GetC243",
+                                 "sp_iud":  "usp_DoProcessC243",
+                                 "tables":  [
+                                                "STB_SetInfo",
+                                                "STB_ProdRouteHist"
+                                            ],
+                                 "common_bugs":  {
+                                                     "lot_slitting_không_chuyển_về_kho_được":  "QC đánh Reject → không thể chuyển -\u003e Xử lý theo quy trình NG — không bypass"
+                                                 },
+                                 "fix_template":  "QC đánh Reject → không thể chuyển -\u003e Xử lý theo quy trình NG — không bypass"
+                             },
+                    "C321":  {
+                                 "name":  "",
+                                 "module":  "QC",
+                                 "sp_get":  "usp_GetC321",
+                                 "sp_iud":  "usp_DoProcessC321",
+                                 "tables":  [
+                                                "STB_SetInfo",
+                                                "STB_ProdRouteHist"
+                                            ],
+                                 "common_bugs":  {
+                                                     "lưu_sửa_chữa_lỗi_→_sai_lệch_defectqty_ở_":  "Đồng bộ giữa `STB_DefectRepairInfo` và `STB_ProdRouteHist` bị lệch -\u003e IT chỉnh sửa DefectQty/ProdQty trực tiếp DB"
+                                                 },
+                                 "fix_template":  "Đồng bộ giữa `STB_DefectRepairInfo` và `STB_ProdRouteHist` bị lệch -\u003e IT chỉnh sửa DefectQty/ProdQty trực tiếp DB"
+                             },
+                    "C443":  {
+                                 "name":  "",
+                                 "module":  "QC",
+                                 "sp_get":  "usp_GetC443",
+                                 "sp_iud":  "usp_DoProcessC443",
+                                 "tables":  [
+                                                "STB_SetInfo",
+                                                "STB_ProdRouteHist"
+                                            ],
+                                 "common_bugs":  {
+                                                     "cần_hủy_kết_quả_qc_(nhập_nhầm)":  "Data đã ghi vào `STB_CommInspDocHistory` + `STB_CommInspDocItem` -\u003e Xóa để QC làm lại:"
+                                                 },
+                                 "fix_template":  "Data đã ghi vào `STB_CommInspDocHistory` + `STB_CommInspDocItem` -\u003e Xóa để QC làm lại:"
+                             },
+                    "C451":  {
+                                 "name":  "",
+                                 "module":  "QC",
+                                 "sp_get":  "usp_GetC451",
+                                 "sp_iud":  "usp_DoProcessC451",
+                                 "tables":  [
+                                                "STB_SetInfo",
+                                                "STB_ProdRouteHist"
+                                            ],
+                                 "common_bugs":  {
+                                                     "load_lại_hạng_mục_cũ,_không_cho_sửa":  "Cache QC document từ lần trước -\u003e Xóa CommInspDoc cũ rồi tạo lại — xem C443"
+                                                 },
+                                 "fix_template":  "Cache QC document từ lần trước -\u003e Xóa CommInspDoc cũ rồi tạo lại — xem C443"
+                             },
+                    "C486":  {
+                                 "name":  "",
+                                 "module":  "QC",
+                                 "sp_get":  "usp_GetC486",
+                                 "sp_iud":  "usp_DoProcessC486",
+                                 "tables":  [
+                                                "STB_SetInfo",
+                                                "STB_ProdRouteHist"
+                                            ],
+                                 "common_bugs":  {
+                                                     "cột_note1_thừa_trên_grid___cột_bị_xáo":  "Lỗi metadata grid trong SmartFramework -\u003e Rebuild bảng + ALTER bảng tương ứng — xem [KB_05_02 §7.8](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_02_SCREEN_BUGS_QC.md)"
+                                                 },
+                                 "fix_template":  "Lỗi metadata grid trong SmartFramework -\u003e Rebuild bảng + ALTER bảng tương ứng — xem [KB_05_02 §7.8](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_02_SCREEN_BUGS_QC.md)"
+                             },
+                    "C512":  {
+                                 "name":  "",
+                                 "module":  "QC",
+                                 "sp_get":  "usp_GetC512",
+                                 "sp_iud":  "usp_DoProcessC512",
+                                 "tables":  [
+                                                "STB_SetInfo",
+                                                "STB_ProdRouteHist"
+                                            ],
+                                 "common_bugs":  {
+                                                     "không_tìm_thấy_lot_khi_tạo_oqc":  "Lot chưa gộp box B523 HOẶC PO thiếu `IsOutputRoute=1` -\u003e Kiểm tra B523 + sửa `STB_ProductionOrderRouting`",
+                                                     "model_mới_không_hiện_khi_chọn":  "A410 chưa config OqcType -\u003e Xem A410 ở trên"
+                                                 },
+                                 "fix_template":  "Lot chưa gộp box B523 HOẶC PO thiếu `IsOutputRoute=1` -\u003e Kiểm tra B523 + sửa `STB_ProductionOrderRouting`"
+                             },
+                    "C530":  {
+                                 "name":  "",
+                                 "module":  "QC",
+                                 "sp_get":  "usp_GetC530",
+                                 "sp_iud":  "usp_DoProcessC530",
+                                 "tables":  [
+                                                "STB_SetInfo",
+                                                "STB_ProdRouteHist"
+                                            ],
+                                 "common_bugs":  {
+                                                     "sửa_hạng_mục_ở_c151_nhưng_c530_không_hiệ":  "Chưa ấn \"Tổng hợp hạng mục\" -\u003e Vào C530 → ấn nút \"Tổng hợp hạng mục\" để reset",
+                                                     "oqc_bị_lỗi_khi_bấm_reject_nhưng_muốn_pas":  "Nút Pass bị disable sau Reject -\u003e ⚠️ `CommInspResult` KHÔNG phải cột trong DB — OQC Pass/Fail được xử lý qua SP `usp_DoUpdateMaterialQcInfo_Success/Fail`. Cách fix: (1) Xóa MaterialQcInfo cũ bằng `usp_DoDeleteMaterialQcInfo`, (2) Tạo lại OQC mới tại C512, (3) Nhập lại kết quả QC"
+                                                 },
+                                 "fix_template":  "Chưa ấn \"Tổng hợp hạng mục\" -\u003e Vào C530 → ấn nút \"Tổng hợp hạng mục\" để reset"
+                             },
+                    "C546":  {
+                                 "name":  "",
+                                 "module":  "QC",
+                                 "sp_get":  "usp_GetC546",
+                                 "sp_iud":  "usp_DoProcessC546",
+                                 "tables":  [
+                                                "STB_SetInfo",
+                                                "STB_ProdRouteHist"
+                                            ],
+                                 "common_bugs":  {
+                                                     "ocv_chỉ_hiện_20_dòng_thay_vì_50":  "SP `usp_Vietnam_MaterialFOQcDetail_get` thiếu block WHILE cho DetailNo=2 (OCV) -\u003e Thêm block WHILE cho OCV — xem [KB_05_02 §9.6](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_02_SCREEN_BUGS_QC.md)"
+                                                 },
+                                 "fix_template":  "SP `usp_Vietnam_MaterialFOQcDetail_get` thiếu block WHILE cho DetailNo=2 (OCV) -\u003e Thêm block WHILE cho OCV — xem [KB_05_02 §9.6](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_02_SCREEN_BUGS_QC.md)"
+                             },
+                    "C560":  {
+                                 "name":  "",
+                                 "module":  "QC",
+                                 "sp_get":  "usp_GetC560",
+                                 "sp_iud":  "usp_DoProcessC560",
+                                 "tables":  [
+                                                "STB_SetInfo",
+                                                "STB_ProdRouteHist"
+                                            ],
+                                 "common_bugs":  {
+                                                     "không_hiện_dữ_liệu_hàng_chờ_qc_audit":  "SP filter theo `WorkCenterCode` không match nhà máy HN/HY -\u003e ALTER SP thêm WorkCenterCode mới",
+                                                     "báo_\"chưa_kiểm_tra_qc\"_dù_carton_mới_đã_":  "Bug logic `AND @Statusout IS NULL` trong SP -\u003e Sửa logic AND → OR hoặc check đúng carton mới"
+                                                 },
+                                 "fix_template":  "SP filter theo `WorkCenterCode` không match nhà máy HN/HY -\u003e ALTER SP thêm WorkCenterCode mới"
+                             },
+                    "C585":  {
+                                 "name":  "",
+                                 "module":  "QC",
+                                 "sp_get":  "usp_GetC585",
+                                 "sp_iud":  "usp_DoProcessC585",
+                                 "tables":  [
+                                                "STB_SetInfo",
+                                                "STB_ProdRouteHist"
+                                            ],
+                                 "common_bugs":  {
+                                                     "dropdown_\"tên_phân_loại_lỗi\"_có_mã_05,_0":  "`SmartFramework.STB_BaseCode` (CodeGroup=\u0027DefectDivisionCode\u0027) chứa entries trùng: 05=제품검사(베트남) trùng 03=제품검사, 06=출하검사(베트남) trùng 07=FOQC -\u003e Cập nhật bản ghi giao dịch: `UPDATE STB_QCDefectDetailsRecord SET DefectDivisionCode=\u002703\u0027 WHERE DefectDivisionCode=\u002705\u0027`, tương tự 06→07. Sau đó xóa: `DELETE FROM SmartFramework.dbo.STB_BaseCode WHERE CodeGroup=\u0027DefectDivisionCode\u0027 AND ItemCode IN (\u002705\u0027,\u002706\u0027)`. Script: `sql/data_fixes/C585_delete_defect_division_05_06.sql`"
+                                                 },
+                                 "fix_template":  "`SmartFramework.STB_BaseCode` (CodeGroup=\u0027DefectDivisionCode\u0027) chứa entries trùng: 05=제품검사(베트남) trùng 03=제품검사, 06=출하검사(베트남) trùng 07=FOQC -\u003e Cập nhật bản ghi giao dịch: `UPDATE STB_QCDefectDetailsRecord SET DefectDivisionCode=\u002703\u0027 WHERE DefectDivisionCode=\u002705\u0027`, tương tự 06→07. Sau đó xóa: `DELETE FROM SmartFramework.dbo.STB_BaseCode WHERE CodeGroup=\u0027DefectDivisionCode\u0027 AND ItemCode IN (\u002705\u0027,\u002706\u0027)`. Script: `sql/data_fixes/C585_delete_defect_division_05_06.sql`"
+                             },
+                    "D100":  {
+                                 "name":  "",
+                                 "module":  "MES",
+                                 "sp_get":  "usp_GetD100",
+                                 "sp_iud":  "usp_DoProcessD100",
+                                 "tables":  [
+                                                "STB_SetInfo",
+                                                "STB_ProdRouteHist"
+                                            ],
+                                 "common_bugs":  {
+                                                     "customerpartno_trống_khi_in_tem":  "`STB_CustomerPartNoInfo` thiếu mapping model→customer -\u003e INSERT mapping: xem [KB_07 §5.4](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_07/KB_07_01_OVERVIEW.md)",
+                                                     "máy_in_không_chạy_hoặc_tem_trống":  "Cấu hình printer hoặc label template lỗi -\u003e Kiểm tra kết nối printer + template trong Z530",
+                                                     "d110_thiếu_trùng_bản_ghi":  "Insert duplicate hoặc filter sai -\u003e Kiểm tra SP `usp_VNE_BoxLabelPrintHist_*`"
+                                                 },
+                                 "fix_template":  "`STB_CustomerPartNoInfo` thiếu mapping model→customer -\u003e INSERT mapping: xem [KB_07 §5.4](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_07/KB_07_01_OVERVIEW.md)"
+                             },
+                    "F330":  {
+                                 "name":  "",
+                                 "module":  "WMS",
+                                 "sp_get":  "usp_GetF330",
+                                 "sp_iud":  "usp_DoProcessF330",
+                                 "tables":  [
+                                                "STB_SetInfo",
+                                                "STB_ProdRouteHist"
+                                            ],
+                                 "common_bugs":  {
+                                                     "bị_chặn_\"receiving_confirmation\"":  "IQC chưa PASS tại C220 -\u003e QC hoàn thành IQC PASS trước",
+                                                     "nvl_không_tìm_thấy_trong_popup_chọn":  "Chưa khai báo NVL tại A230 -\u003e Vào A230 thêm MaterialCode",
+                                                     "đổi_mã_vật_tư_tự_động_lỗi":  "`STB_ChangeMaterialCode_HN` thiếu mapping -\u003e INSERT mapping mã cũ→mới — xem [KB_02 §3.1](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_02/KB_02_01_WMS_CORE.md)",
+                                                     "quét_nhập_mã_lot_vendor_họ_vỏ_nhôm_aoxin":  "Hàm `fn_VVT_getdatebyVendorLot_MergeCode` và `fn_VVT_getdatebyVendorLot` bị hardcode mã đơn lẻ thay vì wildcard `LIKE \u0027GBAXAC-%\u0027` (18 số) và `LIKE \u0027GBNKSP-%\u0027` (Tháng mã hóa ký tự) -\u003e Cập nhật hàm `fn_VVT_getdatebyVendorLot_MergeCode` \u0026 `fn_VVT_getdatebyVendorLot` bổ sung wildcard parse tự động — xem chi tiết [KB_02_01 §4.11 Mẫu 5, Mẫu 6](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_02/KB_02_01_WMS_CORE.md#3-các-mẫu-viết-logic-parse-ngày-thông-dụng)"
+                                                 },
+                                 "fix_template":  "IQC chưa PASS tại C220 -\u003e QC hoàn thành IQC PASS trước"
+                             },
+                    "F430":  {
+                                 "name":  "",
+                                 "module":  "WMS",
+                                 "sp_get":  "usp_GetF430",
+                                 "sp_iud":  "usp_DoProcessF430",
+                                 "tables":  [
+                                                "STB_SetInfo",
+                                                "STB_ProdRouteHist"
+                                            ],
+                                 "common_bugs":  {
+                                                     "lot_không_chuyển_kho_được":  "Lot bị HOLD hoặc QC Reject -\u003e Giải phóng HOLD hoặc xử lý theo quy trình NG",
+                                                     "khi_xuất_chuyển_kho_sang_nhà_máy_hưng_yê":  "1. Popup `TargetMaterialWarehouse_Search` gọi SP `usp_TargetMaterialWarehouse_popup` chỉ lọc kho thuộc `WorkCenterCode` hiện tại. 2. Popup `LineInfo_InoutMaterial` gọi SP `usp_LineInfo_popup_InoutMaterial` lọc `WHERE MaterialWarehouseCode = @SourceMaterialWarehouse`, mã chuyền `HY_BN`/`HY_BG` bị `NULL` -\u003e 1. Sửa `usp_TargetMaterialWarehouse_popup` dùng `UNION` (không dùng `UNION ALL` để tránh đúp khóa chính kho). 2. Thêm `HY_BN` (VVT_F1) \u0026 `HY_BG` (VVT_F2) vào `STB_LineInfo` set `MaterialWarehouseCode = \u0027ROH_HY_WH\u0027`. 3. Sửa `usp_LineInfo_popup_InoutMaterial` thêm `OR (LI.LineCode IN (\u0027HY_BN\u0027, \u0027HY_BG\u0027) AND @SourceMaterialWarehouse LIKE \u0027%HY%\u0027)`. (vanduc \u0026 Mrs.VanOc \u0026 Hải Triều 2026-07-30)",
+                                                     "ô_`processedlotid3`_bị_rỗng_trên_lưới_mà":  "`STB_MaterialWarehouseInOutHist.ProcessedLotID` bị NULL khi xuất NVL thô ra chuyền. Cột `ProcessedLotID3` trên F430 chính là `LotID` ở màn F721 (`STB_MaterialLotInfo.LotID`) -\u003e Sửa SP `usp_MaterialWarehouseInOutHist_get` dùng fallback `ISNULL(NULLIF(MWIOH.ProcessedLotID, \u0027\u0027), MWIOH.LotID) AS ProcessedLotID3` + Chạy SQL UPDATE bù cho các bản ghi đã tạo."
+                                                 },
+                                 "fix_template":  "Lot bị HOLD hoặc QC Reject -\u003e Giải phóng HOLD hoặc xử lý theo quy trình NG"
+                             },
+                    "F721":  {
+                                 "name":  "",
+                                 "module":  "WMS",
+                                 "sp_get":  "usp_GetF721",
+                                 "sp_iud":  "usp_DoProcessF721",
+                                 "tables":  [
+                                                "STB_SetInfo",
+                                                "STB_ProdRouteHist"
+                                            ],
+                                 "common_bugs":  {
+                                                     "tồn_kho_âm":  "Backflush trừ quá hoặc phiếu xuất kho tạo sai -\u003e Kiểm tra `STB_MaterialStock` + `STB_MaterialDocInfo` type=\u0027GI\u0027"
+                                                 },
+                                 "fix_template":  "Backflush trừ quá hoặc phiếu xuất kho tạo sai -\u003e Kiểm tra `STB_MaterialStock` + `STB_MaterialDocInfo` type=\u0027GI\u0027"
+                             },
+                    "F743":  {
+                                 "name":  "",
+                                 "module":  "WMS",
+                                 "sp_get":  "usp_GetF743",
+                                 "sp_iud":  "usp_DoProcessF743",
+                                 "tables":  [
+                                                "STB_SetInfo",
+                                                "STB_ProdRouteHist"
+                                            ],
+                                 "common_bugs":  {
+                                                     "\"trùng_mã_nguyên_liệu\"_khi_slitting":  "F744 đã có record cho MaterialCode -\u003e Kiểm tra + sửa record cũ trong F744",
+                                                     "lot_không_tồn_tại_khi_chuyển_f430":  "Lot chưa QC check ở C243 -\u003e Vào C243 check trước",
+                                                     "hủy_rollback_slitting_bị_lỗi":  "Chưa xóa lịch sử F746 trước -\u003e Xóa F746 trước rồi mới rollback F742",
+                                                     "không_tìm_thấy_foil_mới_trong_popup_hoặc":  "Mã foil con chưa đăng ký trong STB_MaterialMaster hoặc thiếu dòng trong STB_WidthSlitting -\u003e (1) Đăng ký foil vào STB_MaterialMaster nhóm ANODE-FOIL, (2) Set F110 stock attributes, (3) Thêm cấu hình width vào STB_WidthSlitting. Script mẫu: **add_foil_f744_5.5mm.sql**",
+                                                     "tạo_tem_ng_bị_quá_số_lượng_(ví_dụ:_cần_t":  "SP `usp_CreateLotSlitting_NG_HN_uid` tính số lượng NG bằng `InitialQty` (dài cuộn thô ban đầu) trừ tổng tem chia, thay vì dùng `ActualExportQuantity` từ `STB_MaterialWarehouseInOutHist` (SL thực tế xuất sang kho Slitting) -\u003e ALTER SP `usp_CreateLotSlitting_NG_HN_uid` đọc `ActualExportQuantity` từ `STB_MaterialWarehouseInOutHist` trước khi tính `@TemCurrentQtyNG`.",
+                                                     "cuộn_nguyên_liệu_(lot_cha)_không_hiển_th":  "Lot mẹ có cờ `IsSlitting = 1` (true) và số lượng `CurrentQty = 0.00` do giao dịch chia cuộn trước đó. SP `usp_ListInputNeedSlitting_HN` lọc: `IsSlitting = 0` hoặc `NULL`, `IsParrent = \u00271\u0027`. -\u003e Chạy SQL Update reset `IsSlitting = 0` và gán lại `CurrentQty = số_mét_cần_cắt` (lấy từ cột `ActualExportQuantity` của giao dịch chuyển kho gần nhất). Xem chi tiết tại [KB_02_02 §Lỗi 6](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_02/KB_02_02_SCREEN_BUGS.md#f742--lỗi-6-cuộn-nguyên-liệu-lot-cha-không-hiển-thị-trên-danh-sách-chờ-cắt-màn-hình-f742)."
+                                                 },
+                                 "fix_template":  "F744 đã có record cho MaterialCode -\u003e Kiểm tra + sửa record cũ trong F744"
+                             },
+                    "G660":  {
+                                 "name":  "",
+                                 "module":  "MES",
+                                 "sp_get":  "usp_GetG660",
+                                 "sp_iud":  "usp_DoProcessG660",
+                                 "tables":  [
+                                                "STB_SetInfo",
+                                                "STB_ProdRouteHist"
+                                            ],
+                                 "common_bugs":  {
+                                                     "robot_không_nhận_lệnh_nhập_xuất":  "Kết nối Daifuku interface bị mất hoặc slot đầy -\u003e Kiểm tra `usp_DaifukuWarehouse_iud` + trạng thái slot"
+                                                 },
+                                 "fix_template":  "Kết nối Daifuku interface bị mất hoặc slot đầy -\u003e Kiểm tra `usp_DaifukuWarehouse_iud` + trạng thái slot"
+                             },
+                    "HN523":  {
+                                  "name":  "",
+                                  "module":  "MES",
+                                  "sp_get":  "usp_GetHN523",
+                                  "sp_iud":  "usp_DoProcessHN523",
+                                  "tables":  [
+                                                 "STB_SetInfo",
+                                                 "STB_ProdRouteHist"
+                                             ],
+                                  "common_bugs":  {
+                                                      "gộp_box_lỗi_qty=0":  "`STB_PackingStandard` thiếu record cho model HN -\u003e INSERT record — xem [KB_04 §6.13](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_01_CORE_PACKAGING.md)",
+                                                      "gộp_túi_nilon_lỗi":  "`STB_PackingNilonToBoxSmall_HN` config sai -\u003e Kiểm tra + update config",
+                                                      "hủy_box_packing_lẻ___dòng_qty_bị_trống_p":  "Đóng gói box lẻ cần rã để đóng lại hoặc `STB_MaterialDocLotInfo` có PackingID nhưng `STB_MaterialLotInfo` chưa được cập nhật (`PackingID = \u0027\u0027`) -\u003e 1. Tạo 7 bảng BACKUP snapshot (`STB_MaterialLotInfo_BK`, `STB_MaterialDocInfo_BK`, `STB_MaterialDocDetail_BK`, `STB_MaterialDocLotInfo_BK`, `STB_ProdRouteHist_BK`, `STB_ProdRouteSummary_BK`, `STB_ProductionOrderInfo_BK`) \u003cbr\u003e 2. `DELETE FROM STB_MaterialLotInfo WHERE MaterialLotNo IN (...) AND PackingID IN (...)` \u003cbr\u003e 3. Hủy chứng từ: `UPDATE STB_MaterialDocInfo SET DocStatus=\u0027CREATE\u0027` ➔ `SET CONTEXT_INFO 0x999997` ➔ `DELETE FROM STB_MaterialDocLotInfo` ➔ `SET CONTEXT_INFO 0` ➔ `DELETE FROM STB_MaterialDocDetail` ➔ `UPDATE STB_MaterialDocInfo SET IsCancel=1` \u003cbr\u003e 4. Giảm trừ sản lượng: `UPDATE STB_ProdRouteHist SET ProdQty=ProdQty-SL WHERE RouteCode=\u0027VE10\u0027`, `UPDATE STB_ProdRouteSummary SET OutputQty=OutputQty-SL`, `UPDATE STB_ProductionOrderInfo SET ProdFinishQty=ProdFinishQty-SL` — Xem chi tiết script [KB_04_02 § [HN523]](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_02_SCREEN_BUGS.md#hn523--kịch-bản-sự-cố-khẩn-cấp-hủy-tem-đóng-gói--rã-box-tại-hà-nam-đồng-bộ-giảm-sản-lượng-ve10--po)"
+                                                  },
+                                  "fix_template":  "`STB_PackingStandard` thiếu record cho model HN -\u003e INSERT record — xem [KB_04 §6.13](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_01_CORE_PACKAGING.md)"
+                              },
+                    "HN555":  {
+                                  "name":  "",
+                                  "module":  "MES",
+                                  "sp_get":  "usp_GetHN555",
+                                  "sp_iud":  "usp_DoProcessHN555",
+                                  "tables":  [
+                                                 "STB_SetInfo",
+                                                 "STB_ProdRouteHist"
+                                             ],
+                                  "common_bugs":  {
+                                                      "hủy_gộp_packing_cuộn_to_mã_`pkttxxxxxxx`":  "SP `usp_MergePackingHN710_HN` gộp các box lẻ vào `STB_PackingHN710_HN` và cập nhật `STB_MaterialLotInfo.MergePackingId` -\u003e 1. `DELETE FROM STB_PackingHN710_HN WHERE PackingId = \u0027PKTTxxxxxxx\u0027` \u003cbr\u003e 2. `UPDATE STB_MaterialLotInfo SET MergePackingId = NULL, CurrentQtyBefMerge = NULL WHERE MergePackingId = \u0027PKTTxxxxxxx\u0027` \u003cbr\u003e 3. `UPDATE STB_DividePackaging SET MergeNilonToSmallBox = NULL WHERE MergeNilonToSmallBox = \u0027PKTTxxxxxxx\u0027`"
+                                                  },
+                                  "fix_template":  "SP `usp_MergePackingHN710_HN` gộp các box lẻ vào `STB_PackingHN710_HN` và cập nhật `STB_MaterialLotInfo.MergePackingId` -\u003e 1. `DELETE FROM STB_PackingHN710_HN WHERE PackingId = \u0027PKTTxxxxxxx\u0027` \u003cbr\u003e 2. `UPDATE STB_MaterialLotInfo SET MergePackingId = NULL, CurrentQtyBefMerge = NULL WHERE MergePackingId = \u0027PKTTxxxxxxx\u0027` \u003cbr\u003e 3. `UPDATE STB_DividePackaging SET MergeNilonToSmallBox = NULL WHERE MergeNilonToSmallBox = \u0027PKTTxxxxxxx\u0027`"
+                              },
+                    "HN544":  {
+                                  "name":  "",
+                                  "module":  "MES",
+                                  "sp_get":  "usp_GetHN544",
+                                  "sp_iud":  "usp_DoProcessHN544",
+                                  "tables":  [
+                                                 "STB_SetInfo",
+                                                 "STB_ProdRouteHist"
+                                             ],
+                                  "common_bugs":  {
+                                                      "hủy_gộp_box___rã_box_túi_bóng_ở_màn_hình":  "Gộp nhầm box hoặc nút Hủy trên UI bị chặn/lỗi -\u003e 1. Thao tác UI: Nhập PackingID → Chọn dòng → Bấm nút Hủy trên toolbar. \u003cbr\u003e 2. SQL Fix: `UPDATE STB_MaterialLotInfo SET PackingID = NULL WHERE PackingID = \u0027MÃ_PACKING\u0027` + `DELETE FROM STB_DividePackaging WHERE PackingID = \u0027MÃ_PACKING\u0027`",
+                                                      "lỗi_unique_constraint_khi_tìm_kiếm_packi":  "SP `usp_GetMaterialLotInfo_Packing_VVT_F3` UNION thứ 3 JOIN thiếu điều kiện -\u003e ALTER SP thêm `AND ISNULL(DP.PackingParentID, \u0027\u0027) \u003c\u003e \u0027\u0027` — xem [KB_02 §2.1](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_02/KB_02_01_WMS_CORE.md#21-lỗi-unique-constraint-khi-gộp-túi-bóng-hn544--pkqn2100175)"
+                                                  },
+                                  "fix_template":  "Gộp nhầm box hoặc nút Hủy trên UI bị chặn/lỗi -\u003e 1. Thao tác UI: Nhập PackingID → Chọn dòng → Bấm nút Hủy trên toolbar. \u003cbr\u003e 2. SQL Fix: `UPDATE STB_MaterialLotInfo SET PackingID = NULL WHERE PackingID = \u0027MÃ_PACKING\u0027` + `DELETE FROM STB_DividePackaging WHERE PackingID = \u0027MÃ_PACKING\u0027`"
+                              },
+                    "HNC321":  {
+                                   "name":  "",
+                                   "module":  "MES",
+                                   "sp_get":  "usp_GetHNC321",
+                                   "sp_iud":  "usp_DoProcessHNC321",
+                                   "tables":  [
+                                                  "STB_SetInfo",
+                                                  "STB_ProdRouteHist"
+                                              ],
+                                   "common_bugs":  {
+                                                       "\"이전_공정에_실적처리_이력이_없습니다\"_(không_có_lịch_sử":  "SP chặn vì chưa có ProdRouteHist ở Route trước -\u003e Chèn dòng ProdRouteHist giả lập:"
+                                                   },
+                                   "fix_template":  "SP chặn vì chưa có ProdRouteHist ở Route trước -\u003e Chèn dòng ProdRouteHist giả lập:"
+                               },
+                    "HN551":  {
+                                  "name":  "",
+                                  "module":  "MES",
+                                  "sp_get":  "usp_GetHN551",
+                                  "sp_iud":  "usp_DoProcessHN551",
+                                  "tables":  [
+                                                 "STB_SetInfo",
+                                                 "STB_ProdRouteHist"
+                                             ],
+                                  "common_bugs":  {
+                                                      "xuất_kho_tp_không_hiện_data":  "SP filter WorkCenterCode không match HN -\u003e ALTER SP thêm WorkCenterCode HN",
+                                                      "yêu_cầu_điều_chỉnh___lùi_ngày_xuất_kho_t":  "Ngày xuất kho thực tế bị quét lệch tháng so với kế toán/đối soát -\u003e Sửa cả 2 cột `CreateDate` \u0026 `DateExport` trên `STB_VN_FINISHGOODS_BG` (Bắc Giang) hoặc `STB_VN_FINISHGOODS_HN_Export` + `FinishGoodMESInstock_HN` (Hà Nam) bằng script bọc `BEGIN TRAN...COMMIT TRAN`. Chi tiết: [KB_02_01_WMS_CORE.md §8](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_02/KB_02_01_WMS_CORE.md#8-fg02--kho-th%C3%A0nh-ph%E1%BA%A9m-b%E1%BA%AFc-giang-fg00)"
+                                                  },
+                                  "fix_template":  "SP filter WorkCenterCode không match HN -\u003e ALTER SP thêm WorkCenterCode HN"
+                              },
+                    "HYFG01":  {
+                                   "name":  "",
+                                   "module":  "MES",
+                                   "sp_get":  "usp_GetHYFG01",
+                                   "sp_iud":  "usp_DoProcessHYFG01",
+                                   "tables":  [
+                                                  "STB_SetInfo",
+                                                  "STB_ProdRouteHist"
+                                              ],
+                                   "common_bugs":  {
+                                                       "thùng_hàng_đóng_gói_xong_không_hiển_thị_":  "Thùng hàng chưa được lưu cờ PackingQty hoặc bảng `STB_VN_FINISHGOODS_HY` bị thiếu bản ghi nhập kho -\u003e Chèn bổ sung bản ghi vào `STB_VN_FINISHGOODS_HY` — xem [KB_07_03 §1](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_07/KB_07_03_SCREEN_BUGS.md#hyfg01--finished-goods-wh-hy-kho-thành-phẩm-hưng-yên)",
+                                                       "báo_xuất_kho_ok_nhưng_trên_hệ_thống_khôn":  "Giao diện `HYFG01` chưa cấu hình hiển thị cột `ProcessedLotID3` và chưa setup link nguồn từ phiếu xuất tương tự màn hình F430 -\u003e 1. Cấu hình hiển thị cột `ProcessedLotID3` trên lưới HYFG01 và setup link nguồn giống như F430 ở Bắc Ninh. 2. Cung cấp list `ProcessedLotID3` để update lại DB. 3. Thêm cấu hình kho Hưng Yên để nhập và có `ProcessedLotID3`.",
+                                                       "xuất_kho_bị_tình_trạng_\"hệ_thống_có_bao_":  "Cơ chế mặc định của phiếu xuất quét toàn bộ tồn kho của Lot/Box thay vì chia tách số lượng nhỏ -\u003e Lưu ý chia tách Lot hoặc lập phiếu xuất theo số lượng mong muốn trước khi thực hiện xuất kho.",
+                                                       "không_kiểm_tra_được_hàng_xuất_điều_chuyể":  "Khi xuất điều chuyển từ BN sang HY, chưa chọn đúng mã kho đích -\u003e Chọn đúng mã kho hàng tới là `ROH-HY-WH` (Kho NVL Hưng Yên) khi làm thủ tục xuất chuyển từ Bắc Ninh."
+                                                   },
+                                   "fix_template":  "Thùng hàng chưa được lưu cờ PackingQty hoặc bảng `STB_VN_FINISHGOODS_HY` bị thiếu bản ghi nhập kho -\u003e Chèn bổ sung bản ghi vào `STB_VN_FINISHGOODS_HY` — xem [KB_07_03 §1](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_07/KB_07_03_SCREEN_BUGS.md#hyfg01--finished-goods-wh-hy-kho-thành-phẩm-hưng-yên)"
+                               },
+                    "K101":  {
+                                 "name":  "",
+                                 "module":  "MES",
+                                 "sp_get":  "usp_GetK101",
+                                 "sp_iud":  "usp_DoProcessK101",
+                                 "tables":  [
+                                                "STB_SetInfo",
+                                                "STB_ProdRouteHist"
+                                            ],
+                                 "common_bugs":  {
+                                                     "lot_tracking_trống_cho_po_bg2":  "PO chưa config Route cho BG2 (V-22_BG, V-28_BG) -\u003e Thêm Route BG2 vào PO"
+                                                 },
+                                 "fix_template":  "PO chưa config Route cho BG2 (V-22_BG, V-28_BG) -\u003e Thêm Route BG2 vào PO"
+                             },
+                    "K109":  {
+                                 "name":  "",
+                                 "module":  "MES",
+                                 "sp_get":  "usp_GetK109",
+                                 "sp_iud":  "usp_DoProcessK109",
+                                 "tables":  [
+                                                "STB_SetInfo",
+                                                "STB_ProdRouteHist"
+                                            ],
+                                 "common_bugs":  {
+                                                     "không_tạo_được_kế_hoạch_ngày_bg2":  "DayPlan table thiếu config WorkCenterCode=\u0027VVT_F4\u0027 -\u003e Kiểm tra `STB_DayProdPlan` + config"
+                                                 },
+                                 "fix_template":  "DayPlan table thiếu config WorkCenterCode=\u0027VVT_F4\u0027 -\u003e Kiểm tra `STB_DayProdPlan` + config"
+                             },
+                    "K110":  {
+                                 "name":  "",
+                                 "module":  "MES",
+                                 "sp_get":  "usp_GetK110",
+                                 "sp_iud":  "usp_DoProcessK110",
+                                 "tables":  [
+                                                "STB_SetInfo",
+                                                "STB_ProdRouteHist"
+                                            ],
+                                 "common_bugs":  {
+                                                     "scan_nvl_bg2_bị_chặn":  "NVL kho BG2 chưa config WarehouseCode -\u003e Map kho BG2 trong `STB_LineRouteMapping`"
+                                                 },
+                                 "fix_template":  "NVL kho BG2 chưa config WarehouseCode -\u003e Map kho BG2 trong `STB_LineRouteMapping`"
+                             },
+                    "K198":  {
+                                 "name":  "",
+                                 "module":  "MES",
+                                 "sp_get":  "usp_GetK198",
+                                 "sp_iud":  "usp_DoProcessK198",
+                                 "tables":  [
+                                                "STB_SetInfo",
+                                                "STB_ProdRouteHist"
+                                            ],
+                                 "common_bugs":  {
+                                                     "tem_bloom_nordex_in_sai_format":  "Label template không match model mới -\u003e Kiểm tra `usp_VN_BloomBoxLabelPrintHist_iud` / `usp_NordexPackingLabelPrintingHist_get`"
+                                                 },
+                                 "fix_template":  "Label template không match model mới -\u003e Kiểm tra `usp_VN_BloomBoxLabelPrintHist_iud` / `usp_NordexPackingLabelPrintingHist_get`"
+                             },
+                    "K361":  {
+                                 "name":  "",
+                                 "module":  "MES",
+                                 "sp_get":  "usp_GetK361",
+                                 "sp_iud":  "usp_DoProcessK361",
+                                 "tables":  [
+                                                "STB_SetInfo",
+                                                "STB_ProdRouteHist"
+                                            ],
+                                 "common_bugs":  {
+                                                     "công_đoạn_cuối_(vd_nd08)_hiển_thị_\"chưa_":  "K361 gọi `usp_Vietnam_GetProdPackingForBarcodeForBacGiang2` để đọc các công đoạn `IN (\u0027VP07\u0027,\u0027VP18\u0027,\u0027VP12\u0027,\u0027ND08\u0027,\u0027ND05\u0027)`. Khi `CompleteRoute` IS NULL thì hiển thị \"Chưa hoàn thành\". -\u003e Tích chọn dòng `ND08` trên K361 ➔ Bấm nút **\"Hoàn thành kết quả sản xuất\"** (gọi `usp_CompleteRouteFinalForBacGiang2` để `UPDATE CompleteRoute=1` và đổi `WorkerCode` thành mã người chốt thực tế)",
+                                                     "công_đoạn_nd08_chưa_chốt_nhưng_hiển_thị_":  "Khi chốt PASS ND07, B530 tự động clone dòng chờ ND08 và tạm copy WorkerCode từ công đoạn ND07 sang. -\u003e Không cần sửa SQL: Tên chỉ là hiển thị tạm thời. Khi người làm thực tế chốt K361, `WorkerCode` sẽ tự động cập nhật lại thành tên người chốt thực tế."
+                                                 },
+                                 "fix_template":  "K361 gọi `usp_Vietnam_GetProdPackingForBarcodeForBacGiang2` để đọc các công đoạn `IN (\u0027VP07\u0027,\u0027VP18\u0027,\u0027VP12\u0027,\u0027ND08\u0027,\u0027ND05\u0027)`. Khi `CompleteRoute` IS NULL thì hiển thị \"Chưa hoàn thành\". -\u003e Tích chọn dòng `ND08` trên K361 ➔ Bấm nút **\"Hoàn thành kết quả sản xuất\"** (gọi `usp_CompleteRouteFinalForBacGiang2` để `UPDATE CompleteRoute=1` và đổi `WorkerCode` thành mã người chốt thực tế)"
+                             },
+                    "K366":  {
+                                 "name":  "",
+                                 "module":  "MES",
+                                 "sp_get":  "usp_GetK366",
+                                 "sp_iud":  "usp_DoProcessK366",
+                                 "tables":  [
+                                                "STB_SetInfo",
+                                                "STB_ProdRouteHist"
+                                            ],
+                                 "common_bugs":  {
+                                                     "cột_status_(kết_luận_cuối_cùng_pass_fail":  "SP `usp_LotTrackingInfo_VVTF4_get` không trả về cột Status -\u003e Sửa SP: thêm logic `CASE WHEN df.ControlNo IS NULL THEN \u0027PASS\u0027 WHEN rp.Barcode IS NOT NULL THEN \u0027PASS\u0027 ELSE \u0027FAIL\u0027 END AS Status`"
+                                                 },
+                                 "fix_template":  "SP `usp_LotTrackingInfo_VVTF4_get` không trả về cột Status -\u003e Sửa SP: thêm logic `CASE WHEN df.ControlNo IS NULL THEN \u0027PASS\u0027 WHEN rp.Barcode IS NOT NULL THEN \u0027PASS\u0027 ELSE \u0027FAIL\u0027 END AS Status`"
+                             },
+                    "P111":  {
+                                 "name":  "",
+                                 "module":  "MES",
+                                 "sp_get":  "usp_GetP111",
+                                 "sp_iud":  "usp_DoProcessP111",
+                                 "tables":  [
+                                                "STB_SetInfo",
+                                                "STB_ProdRouteHist"
+                                            ],
+                                 "common_bugs":  {
+                                                     "bảng_chấm_công_thiếu_sai_giờ_vào_ra":  "Dữ liệu vân tay (Z711) chưa đồng bộ hoặc lỗi máy chấm -\u003e Kiểm tra `STB_VN_Shift` + data máy vân tay"
+                                                 },
+                                 "fix_template":  "Dữ liệu vân tay (Z711) chưa đồng bộ hoặc lỗi máy chấm -\u003e Kiểm tra `STB_VN_Shift` + data máy vân tay"
+                             },
+                    "Z410":  {
+                                 "name":  "",
+                                 "module":  "MES",
+                                 "sp_get":  "usp_GetZ410",
+                                 "sp_iud":  "usp_DoProcessZ410",
+                                 "tables":  [
+                                                "STB_SetInfo",
+                                                "STB_ProdRouteHist"
+                                            ],
+                                 "common_bugs":  {
+                                                     "tài_khoản_bị_khóa":  "Nhập sai mật khẩu quá số lần cho phép -\u003e Reset tại Z410 hoặc SQL: `UPDATE SmartFramework.dbo.STB_UserInfo SET AllowFlag=1 WHERE UserID=\u0027mã\u0027` (⚠️ Cột là `AllowFlag`, KHÔNG có `IsLocked`)",
+                                                     "user_không_thấy_menu":  "Chưa gán quyền tại Z220 (UserTypePermission) -\u003e Vào Z220 → tick quyền cho UserType"
+                                                 },
+                                 "fix_template":  "Nhập sai mật khẩu quá số lần cho phép -\u003e Reset tại Z410 hoặc SQL: `UPDATE SmartFramework.dbo.STB_UserInfo SET AllowFlag=1 WHERE UserID=\u0027mã\u0027` (⚠️ Cột là `AllowFlag`, KHÔNG có `IsLocked`)"
+                             },
+                    "Z530":  {
+                                 "name":  "",
+                                 "module":  "MES",
+                                 "sp_get":  "usp_GetZ530",
+                                 "sp_iud":  "usp_DoProcessZ530",
+                                 "tables":  [
+                                                "STB_SetInfo",
+                                                "STB_ProdRouteHist"
+                                            ],
+                                 "common_bugs":  {
+                                                     "tem_in_không_đúng_format":  "Template label bị sai layout -\u003e Vào Z530 → sửa label template → deploy lại"
+                                                 },
+                                 "fix_template":  "Template label bị sai layout -\u003e Vào Z530 → sửa label template → deploy lại"
+                             }
+                },
+    "core_tables":  {
+                        "STB_SetInfo":  {
+                                            "key_columns":  [
+                                                                "ControlNo",
+                                                                "PONo",
+                                                                "Barcode",
+                                                                "ModelCode",
+                                                                "IsProdFinish",
+                                                                "IsLineInput",
+                                                                "CreateDateTime"
+                                                            ],
+                                            "role":  "Bang trung tam quan ly Set / Thung san pham"
+                                        },
+                        "STB_ProdRouteHist":  {
+                                                  "key_columns":  [
+                                                                      "ProdRouteHistNo",
+                                                                      "ControlNo",
+                                                                      "RouteCode",
+                                                                      "WorkCenterCode",
+                                                                      "ProdQty",
+                                                                      "CompleteRoute",
+                                                                      "CreateDateTime"
+                                                                  ],
+                                                  "role":  "Bang luu lich su cong doan san xuat \u0026 chot san luong"
+                                              },
+                        "STB_MaterialLotInfo":  {
+                                                    "key_columns":  [
+                                                                        "MaterialLotNo",
+                                                                        "MaterialCode",
+                                                                        "CurrentQty",
+                                                                        "MaterialWarehouseCode",
+                                                                        "ExpireDate",
+                                                                        "CreateDateTime"
+                                                                    ],
+                                                    "role":  "Bang quan ly Lot nguyen vat lieu \u0026 thanh pham kho"
+                                                },
+                        "STB_MaterialDocDetail":  {
+                                                      "key_columns":  [
+                                                                          "DocNo",
+                                                                          "DocSeq",
+                                                                          "MaterialCode",
+                                                                          "MaterialLotNo",
+                                                                          "TargetMaterialLotNo",
+                                                                          "DocQty",
+                                                                          "CreateDateTime"
+                                                                      ],
+                                                      "role":  "Bang chung tu lien ket xuat/nhap/chia cuon Slitting"
+                                                  }
+                    },
+    "golden_rules":  [
+                         "Rule 0: Tra L1 QUICK_MATRIX.json truoc khi query DB",
+                         "Rule 1: SELECT-Only tren Production DB, cam chay DML truc tiep khong co Transaction",
+                         "Rule 4: Surgical Retrieval - khong load ca file markdown \u003e50KB",
+                         "Rule 6: Golden Query 360 do (mes.ps1 trace) trong lan doc dau tien khi tra Lot",
+                         "Rule 10: Standard Tooling (mes.ps1, find_kb.ps1, deploy_tool.ps1)"
+                     ]
 }
