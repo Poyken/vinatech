@@ -457,6 +457,7 @@ COMMIT TRANSACTION;
 | # | Triệu chứng | Nguyên nhân | Fix |
 |---|---|---|---|
 | 1 | Tồn kho âm | Backflush trừ quá hoặc phiếu xuất kho tạo sai | Kiểm tra `STB_MaterialStock` + `STB_MaterialDocInfo` type='GI' |
+| 2 | Danh sách mã Lot kho Hưng Yên (`ROH_HY_WH`) bị hiển thị lặp lại 2 lần trên lưới | SP `usp_vvt_MaterialLotInfo_get` thiếu mã kho `'ROH_HY_WH'`, `'ROUTE_HY_WH'` trong danh sách `NOT IN (...)` ở nhánh UNION ALL thứ 2 (`STB_MaterialLotInfo`), khiến mỗi Lot NVL thường bị truy vấn 2 lần (1 từ `STB_MaterialDocLotInfo` và 1 từ `STB_MaterialLotInfo`). | Chạy script hotfix ALTER SP `usp_vvt_MaterialLotInfo_get` bổ sung `'ROH_HY_WH'`, `'ROUTE_HY_WH'`, `'HOLDING_HY_WH'` vào danh sách loại trừ và cập nhật `LotAttr10` cho kho HY. File: `sql_hotfixes/fix_f721_hung_yen_duplicate_lots.sql`. (vanduc 2026-08-29) |
 
 ### [F743]-[F748]
 **Tên:** Electrode Slitting
