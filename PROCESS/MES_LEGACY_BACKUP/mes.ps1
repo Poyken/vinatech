@@ -98,10 +98,10 @@ elseif ($cmdLower -eq 'trace') {
     $conn = Get-DbConnection -Profile 'SmartFactoryV2' -Silent
     if ($conn -eq $null) { exit 1 }
 
-    $q1 = "SELECT TOP 1 MaterialLotNo, MaterialCode, CurrentQty, MaterialWarehouseCode, ExpireDate, CreateDateTime FROM STB_MaterialLotInfo WITH(NOLOCK) WHERE MaterialLotNo LIKE '%$Target%'"
-    $q2 = "SELECT TOP 1 ControlNo, PONo, Barcode, ModelCode, IsProdFinish, IsLineInput, CreateDateTime FROM STB_SetInfo WITH(NOLOCK) WHERE ControlNo LIKE '%$Target%' OR Barcode LIKE '%$Target%'"
+    $q1 = "SELECT TOP 1 MaterialLotNo, MaterialCode, CurrentQty, MaterialWarehouseCode, EndOfLifeDate, CreateDateTime FROM STB_MaterialLotInfo WITH(NOLOCK) WHERE MaterialLotNo LIKE '%$Target%'"
+    $q2 = "SELECT TOP 1 ControlNo, PONo, Barcode, MaterialCode, IsProdFinish, IsLineInput, CreateDateTime FROM STB_SetInfo WITH(NOLOCK) WHERE ControlNo LIKE '%$Target%' OR Barcode LIKE '%$Target%'"
     $q3 = "SELECT TOP 5 ProdRouteHistNo, ControlNo, RouteCode, WorkCenterCode, ProdQty, CreateDateTime FROM STB_ProdRouteHist WITH(NOLOCK) WHERE ControlNo LIKE '%$Target%' ORDER BY CreateDateTime DESC"
-    $q4 = "SELECT TOP 5 DocNo, DocSeq, MaterialCode, MaterialLotNo, TargetMaterialLotNo, DocQty FROM STB_MaterialDocDetail WITH(NOLOCK) WHERE MaterialLotNo LIKE '%$Target%' OR TargetMaterialLotNo LIKE '%$Target%'"
+    $q4 = "SELECT TOP 5 MaterialCode, MaterialWarehouseCode, CurrentQty, CreateDateTime FROM STB_MaterialStock WITH(NOLOCK) WHERE MaterialCode LIKE '%$Target%'"
 
     Write-Host ''
     Write-Host '1. THONG TIN KHO & VAT TU (STB_MaterialLotInfo):' -ForegroundColor Yellow
@@ -116,7 +116,7 @@ elseif ($cmdLower -eq 'trace') {
     Execute-SqlQuery -Connection $conn -Query $q3
 
     Write-Host ''
-    Write-Host '4. CHUNG TU LIEN KET NVL / SLITTING (STB_MaterialDocDetail - Top 5):' -ForegroundColor Yellow
+    Write-Host '4. TON KHO VAT TU THEO MA (STB_MaterialStock - Top 5):' -ForegroundColor Yellow
     Execute-SqlQuery -Connection $conn -Query $q4
 
     $conn.Close()

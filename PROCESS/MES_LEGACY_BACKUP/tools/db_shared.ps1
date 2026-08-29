@@ -118,7 +118,7 @@ function Get-DbConnection {
     param(
         [string]$Profile = "",
         [switch]$Silent,
-        [int]$ConnectTimeoutSeconds = 3
+        [int]$ConnectTimeoutSeconds = 15
     )
 
     $p = Get-DbProfileConfig -Profile $Profile
@@ -139,6 +139,9 @@ function Get-DbConnection {
                 return $conn
             }
         } catch {
+            if (-not $Silent) {
+                Write-Host "  -> Failed on $($srv) : $($_.Exception.Message)" -ForegroundColor DarkGray
+            }
             if ($conn -ne $null -and $conn.State -eq 'Open') { $conn.Close() }
         }
     }
@@ -147,6 +150,30 @@ function Get-DbConnection {
         Write-Error "Failed to connect to any SQL Server for DB '$($p.Database)'"
     }
     return $null
+}
+
+# Execute Read-Only SQL Query on an open connection and format results
+function Execute-SqlQuery {
+    param(
+        [System.Data.SqlClient.SqlConnection]$Connection,
+        [string]$Query
+    )
+    if ($Connection -eq $null -or [string]::IsNullOrWhiteSpace($Query)) { return }
+    try {
+        $cmd = $Connection.CreateCommand()
+        $cmd.CommandTimeout = 60
+        $cmd.CommandText = $Query
+        $adapter = New-Object System.Data.SqlClient.SqlDataAdapter($cmd)
+        $dt = New-Object System.Data.DataTable
+        $null = $adapter.Fill($dt)
+        if ($dt.Rows.Count -eq 0) {
+            Write-Host "  (0 rows returned)" -ForegroundColor Gray
+        } else {
+            $dt | Format-Table -AutoSize | Out-String -Width 4000 | Write-Host -ForegroundColor White
+        }
+    } catch {
+        Write-Host "  LOI SQL: $($_.Exception.Message)" -ForegroundColor Red
+    }
 }
 
 # Pre-flight Data Backup: Export snapshot before data modification
