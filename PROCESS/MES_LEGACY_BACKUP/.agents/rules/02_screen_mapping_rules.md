@@ -6,6 +6,9 @@ Khi nhận Screen ID hoặc ảnh chụp giao diện từ User:
 - **B540 (Chốt sản lượng Cell Line):** SP chính `usp_DoProcessProdRouteHist`, chốt công đoạn cuối.
 - **B523 (Gộp/Chia Box Cell):** Bảng `STB_DividePackaging`, `STB_MaterialLotInfo`.
 - **B351 (Chuyển đổi Lot/Model):** Bảng `STB_LotChangeMaterialHistory`, `STB_SetInfo`.
+- **A230 (Thông tin vật liệu / Master Data):** Bảng `STB_MaterialMaster` (Cấu hình `BasicRoutingCode`).
+- **B240 (Thông tin routing):** SP `usp_BasicRoutingInfo_get`, `usp_GetBasicRouteingDetailForRoute`, Bảng `STB_BasicRoutingInfo`, `STB_BasicRoutingDetail` (Cấu hình công đoạn `RouteCode` theo `WorkCenterCode`).
+- **B310 (Tạo/Quản lý PO tháng):** SP `usp_DoCreateProductionOrder`, Bảng `STB_ProductionOrderInfo`, `STB_ProductionOrderRouting`, `STB_ProductionOrderBom`.
 - **HN523 / HN544 / HN555 (Hà Nam Packaging):** Tra cứu trực tiếp tại `KB_11_HANAM_FACTORY_SCREENS.md`.
 - **F330 / F721 (Kho & Tồn kho WMS):** Bảng `STB_MaterialDocInfo`, `STB_MaterialLotInfo`.
 

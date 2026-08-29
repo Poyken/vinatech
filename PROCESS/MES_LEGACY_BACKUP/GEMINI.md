@@ -10,6 +10,13 @@
   3. **Bước 3 (Kiểm chứng có mục đích):** CHỈ chạy câu lệnh `SELECT` (giới hạn 3-5 cột hoặc dùng `.\mes.ps1 trace <Lot>`) để KIỂM CHỨNG LẠI kết quả đã tìm thấy trong tài liệu trên DB thực tế.
   4. **Bước 4 (Trường hợp KB chưa có):** Nếu tra cứu tài liệu KHÔNG THẤY ➔ AI BẮT BUỘC phải báo cáo rõ danh sách các file KB đã tra cứu nhưng chưa có, sau đó mới được đề xuất câu SELECT khảo sát DB để truy vết.
 
+## 🤖 TỰ ĐỘNG KÍCH HOẠT HỆ SINH THÁI .AGENTS CHO MỌI YÊU CẦU:
+- **Tự động áp dụng:** Trong mọi câu hỏi/yêu cầu từ người dùng, Agent tự động ngầm hiểu và tuân thủ tuyệt đối toàn bộ cấu trúc tại [c:\Users\User Vinatech.DESKTOP-RJJSEQU\Desktop\PROCESS\MES_LEGACY_BACKUP\.agents](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/.agents) bao gồm:
+  - Tất cả các Rules: `00_vinatech_rules.md`, `01_sql_safety_rules.md`, `02_screen_mapping_rules.md`.
+  - Tất cả các Skills: `vinatech-mes-troubleshoot`, `vinatech-db-operations`, `vinatech-new-model-setup`.
+  - Tất cả các Subagents chuyên trách: `investigator-agent`, `auditor-agent`, `hotfix-deployer`.
+  - Kết nối DB duy nhất qua `dbserver.hycap.co.kr,5398` (Single Host, không fallback).
+
 ## ⚡ BỘ CÔNG CỤ ĐIỀU PHỐI VẬN HÀNH HỢP NHẤT:
 - `.\mes.ps1 help` : Xem hướng dẫn
 - `.\mes.ps1 find "<Keyword>"` : Tra cứu nhanh trong 78+ file KB

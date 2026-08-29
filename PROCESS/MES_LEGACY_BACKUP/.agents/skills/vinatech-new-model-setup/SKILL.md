@@ -12,6 +12,7 @@ Kích hoạt khi nhà máy chuẩn bị sản xuất mã hàng mới, thêm Mode
 
 1. **Bước 1: Khai báo Master Nguyên Vật Liệu (A230 - `STB_MaterialMaster`)**
    - Kiểm tra `MaterialCode`, `MaterialName`, `MaterialThickness`.
+   - **Bắt buộc:** Gán cột `BasicRoutingCode` khớp với bộ Routing đã cấu hình cho nhà máy sản xuất tại **B240** (ví dụ Hưng Yên `VVT_F5` là `HY_MainRoutingMedium` hoặc `HY_MainRoutingBigSiz`).
 2. **Bước 2: Khai báo Master Sản Phẩm / Model (A410 - `STB_ModelMaster`)**
    - Kiểm tra `ModelCode`, `ModelName`, `ModelType`, `Capacity`, `Voltage`.
 3. **Bước 3: Khai báo Quy Cách Đóng Gói (A418 - `STB_PackingStandard`)**
@@ -19,6 +20,7 @@ Kích hoạt khi nhà máy chuẩn bị sản xuất mã hàng mới, thêm Mode
 4. **Bước 4: Cấu hình Mẫu Tem & Định dạng In (A460 - `STB_ModelLabelInfo`)**
    - Cấu hình `LabelType`, `FormatName`, tem Barcode, tem Sanmina.
 5. **Bước 5: Thiết lập Quy Trình Sản Xuất / Line Route (B210/B220/B230/B240)**
+   - **B240 (`STB_BasicRoutingInfo` + `STB_BasicRoutingDetail`):** Thiết lập và tick chọn danh sách các công đoạn (`RouteCode`) cho nhà máy (`WorkCenterCode`).
    - Phân bổ danh sách Máy (`STB_RouteEqpInfo`) và Nhân viên (`STB_WorkerInfo`).
 6. **Bước 6: Cấu hình Tự Động Sinh Số Lô (A416 / `STB_Vietnam_PackingPrinting`)**
    - Kiểm tra tiền tố VJ hoặc prefix Lot cho từng khách hàng.

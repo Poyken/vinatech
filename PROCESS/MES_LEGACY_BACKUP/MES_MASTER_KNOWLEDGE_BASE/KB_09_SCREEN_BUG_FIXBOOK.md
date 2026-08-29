@@ -45,8 +45,9 @@ Related Files:
 |---|---|---|---|
 | 1 | Model mới không hiện Vol/Farad trên chuyền | Chưa khai báo A230 hoặc thiếu cấu hình Vol/Farad | Vào A230 → tab Thông số kỹ thuật → nhập Vol, Farad, kích thước. SQL: `SELECT ModelCode, Voltage, Farad FROM STB_ModelBasicInfo WHERE ModelCode = 'mã'` |
 | 2 | Cột "Độ dày" bị trống trên B442 (Kế hoạch Electrode) | Chưa set MaterialThickness tại A230 tab "Mã nguyên liệu" | `UPDATE STB_MaterialMaster SET MaterialThickness = '120' WHERE MaterialCode = 'mã_nvl'` |
+| 3 | Tạo PO tại B310 báo "공정라우팅정보가 없습니다" | Cột `BasicRoutingCode` tại A230 bị gán sai mã quy trình hoặc chưa khớp với bộ Routing nhà máy đã cấu hình ở B240 | Mở **A230** → Tìm `MaterialCode` → Sửa `BasicRoutingCode` thành mã Routing chuẩn của nhà máy (ví dụ `HY_MainRoutingMedium` cho Hưng Yên `VVT_F5` đã cấu hình tại **B240**) → Nhấn Lưu. |
 
-> 🔗 Chi tiết: [KB_06 §9.1](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_06_MASTER_DATA_TOOLS.md)
+> 🔗 Chi tiết: [KB_06 §9.1](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_06_MASTER_DATA_TOOLS.md), [KB_03_03 §B310](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_03_SCREEN_BUGS_B.md#lỗi-3-공정-라우팅-정보가-없습니다-không-có-thông-tin-routing-công-đoạn-khi-tạo-po-thủ-công-tại-b310)
 
 ### [A310]
 **Tên:** Route Info (Định nghĩa công đoạn)
@@ -95,26 +96,36 @@ Related Files:
 
 ## B-Series: Sản Xuất (Production)
 
-### [B210]-[B270]
-**Tên:** Line/Route/Machine Setup
+### [B210]-[B230]
+**Tên:** Line/Route Setup
 
 | # | Triệu chứng | Nguyên nhân | Fix |
 |---|---|---|---|
 | 1 | B270 popup không hiện dữ liệu | Popup bị cache session cũ | Tắt MES → xóa cache → mở lại. Hoặc kiểm tra `STB_ScreenObjects` |
 | 2 | Line mới không hiện trên B460 | Chưa map Line→WorkCenter tại B210 | Vào B210 → Thêm mapping |
-| 3 | Machine mới scan không được | Chưa khai báo tại B240 | Vào B240 → Thêm MachineCode |
+
+### [B240]
+**Tên:** Thông tin routing (Basic Routing Info & Detail)
+**DB Tables:** `STB_BasicRoutingInfo`, `STB_BasicRoutingDetail`
+**SPs:** `usp_BasicRoutingInfo_get`, `usp_GetBasicRouteingDetailForRoute`, `usp_BasicRoutingInfo_jud`, `usp_BasicRoutingDetail_jud`
+
+| # | Triệu chứng | Nguyên nhân | Fix |
+|---|---|---|---|
+| 1 | Tạo PO tại B310 báo lỗi "공정라우팅정보가 없습니다" | Nhà máy (ví dụ `VVT_F5`) chưa được định nghĩa bộ `BasicRoutingCode` hoặc các bước công đoạn (`RouteCode`) chưa được tick chọn sử dụng | Vào **B240** → Chọn `CompanyCode` (`VVT`) và `WorkCenterCode` (`VVT_F5`) → Kiểm tra danh sách Routing ở lưới trái (`HY_MainRoutingMedium`, `HY_MainRoutingBigSiz`...) → Ở lưới phải, tick chọn `Sử dụng` cho các công đoạn từ Cuộn đến Đóng gói (`V-22_HY` ➔ `V-28_HY`) → Nhấn Lưu. Sau đó sang **A230** gán mã này cho NVL. |
 
 > 🔗 Chi tiết: [KB_03 §B210-B270](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_02_CELL_LINE.md), [KB_01 §1.3](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_01_UI_AND_SCREENS.md)
 
 ### [B310]
 **Tên:** Production Order Info (Quản lý PO)
+**DB Tables:** `STB_ProductionOrderInfo`, `STB_ProductionOrderRouting`, `STB_ProductionOrderBom`
+**SPs:** `usp_GetProductionOrderList`, `usp_DoCreateProductionOrder`
 
-| # | Triệu chứng | Nguyên nhân | Fix |
-|---|---|---|---|
-| 1 | PO không tạo được Lot | BOM/Route chưa cấu hình cho PO | Kiểm tra `STB_ProductionOrderRouting`, `STB_ProductionOrderBom` |
-| 2 | ProdFinishQty lệch so với thực tế | Crash giữa SP `usp_DoProcessProdRouteHist` → dữ liệu partial | `UPDATE STB_ProductionOrderInfo SET ProdFinishQty = (SELECT SUM(ProdQty) FROM STB_ProdRouteHist WHERE PONo='mã' AND RouteCode='V-28') WHERE PONo='mã'` |
-| 3 | PO thiếu công đoạn Aging hoặc sai thứ tự Index khiến không chốt được sản lượng | Cấu hình Routing của PO trên B310 chưa thêm công đoạn Aging (`V-26`) hoặc chưa đánh lại Index khi đổi kế hoạch | Vào B310 → Tìm PO → Kiểm tra danh sách Routing → Thêm công đoạn Aging (`V-26` / `V-26_BG`) và cập nhật lại `RouteIndex`. |
-| 4 | Tạo PO thủ công báo lỗi "공정 라우팅 정보가 없습니다" | Mã `BasicRoutingCode` gán cho Model trong `STB_MaterialMaster` không có record nào khớp với `WorkCenterCode` của nhà máy đang tạo PO trong `STB_BasicRoutingDetail` | Gán lại `BasicRoutingCode` chuẩn của nhà máy (ví dụ `HY_MainRoutingBigSiz` cho Hưng Yên `VVT_F5`) trong `STB_MaterialMaster` (hoặc A230) — xem [KB_03_03 §B310 Lỗi 3](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_03_SCREEN_BUGS_B.md#lỗi-3-공정-라우팅-정보가-없습니다-không-có-thông-tin-routing-công-đoạn-khi-tạo-po-thủ-công-tại-b310) |
+| # | Triệu chứng | Nguyên nhân | Liên quan 2 Màn Hình | Fix |
+|---|---|---|---|---|
+| 1 | PO không tạo được Lot | BOM/Route chưa cấu hình cho PO | — | Kiểm tra `STB_ProductionOrderRouting`, `STB_ProductionOrderBom` |
+| 2 | ProdFinishQty lệch so với thực tế | Crash giữa SP `usp_DoProcessProdRouteHist` → dữ liệu partial | — | `UPDATE STB_ProductionOrderInfo SET ProdFinishQty = (SELECT SUM(ProdQty) FROM STB_ProdRouteHist WHERE PONo='mã' AND RouteCode='V-28') WHERE PONo='mã'` |
+| 3 | PO thiếu công đoạn Aging hoặc sai thứ tự Index khiến không chốt được sản lượng | Cấu hình Routing của PO trên B310 chưa thêm công đoạn Aging (`V-26`) hoặc chưa đánh lại Index khi đổi kế hoạch | — | Vào B310 → Tìm PO → Kiểm tra danh sách Routing → Thêm công đoạn Aging (`V-26` / `V-26_BG`) và cập nhật lại `RouteIndex`. |
+| 4 | Tạo PO thủ công báo lỗi "공정 라우팅 정보가 없습니다" | Lỗi xảy ra do sự không đồng bộ giữa 2 màn hình: (1) Tại **B240**, mã Routing gán cho Model không có cấu hình công đoạn cho nhà máy hiện tại (`VVT_F5`), hoặc (2) Tại **A230**, mã vật tư đang bị gán sai `BasicRoutingCode` | **[B240]** + **[A230]** | **Quy trình 2 bước:**<br>1. Vào **B240**: Kiểm tra bộ Routing chuẩn đã có ở nhà máy chưa (ví dụ `HY_MainRoutingMedium` có 7 bước `V-22_HY` ➔ `V-28_HY`).<br>2. Vào **A230**: Tìm mã vật tư (`ECVT30-261`) ➔ Gán cột `BasicRoutingCode` sang mã Routing đã kiểm tra ở B240 ➔ Nhấn Lưu. |
 
 ### [B351]
 **Tên:** Lot Transition (Chuyển đổi Lot/NVL)
