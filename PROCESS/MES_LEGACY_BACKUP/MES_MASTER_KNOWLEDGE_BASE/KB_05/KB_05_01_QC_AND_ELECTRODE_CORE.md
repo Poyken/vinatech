@@ -1,4 +1,4 @@
-﻿<!--
+<!--
 AI-READY METADATA
 Purpose: Tổng quan quy trình QC (IQC, PQC, OQC, FOQC) & Vận hành sản xuất Điện cực (Mixing, Coating, Rollpress, Slitting)
 Scope: Quality Control Inspection & Electrode Core Operations
@@ -510,6 +510,89 @@ FROM STB_SetInfo SI WITH(NOLOCK)
 WHERE SI.MaterialCode IN ('CREBL85L', 'CRFYL85-01', 'CRFYN85L-01')
     AND SI.CreateDateTime >= '2026-05-20'
 ORDER BY SI.CreateDateTime DESC
+```
+
+---
+
+### 8.10 🗑️ Quy trình Dọn dẹp & Xóa Mẻ Trộn Điện Cực Thừa (Electrode Mixing Cancellation SOP)
+
+#### 1. Bối cảnh Nghiệp vụ:
+* Khi ca sản xuất tạo mẻ trộn điện cực (Mixing) trên phần mềm cân hoặc màn hình **B470 / B552**, nhưng do thay đổi kế hoạch sản xuất / ca đêm không chạy đến, mẻ trộn **chưa đi qua công đoạn tráng (Coating)**.
+* Nếu để nguyên mẻ trộn thừa: Sẽ phát sinh mã Lot rác trên hệ thống, gây lệch tồn kho và cản trở việc cấp phát NVL cho các ca sau.
+
+#### 2. Điều kiện Tiên quyết (Pre-flight Gate):
+* ⚠️ **BẮT BUỘC:** Lot điện cực **chưa được tráng (Coating Output = 0)**. Nếu `STB_ElectrodeCoatingInfo` đã có dữ liệu $\rightarrow$ **CẤM XÓA** (Phải xử lý theo luồng báo phế hoặc sửa chữa).
+
+#### 3. Thứ tự Xóa Chuẩn Cascade (3 Bảng Core):
+1. **`STB_ElectrodeMixStepInfo`**: Xóa chi tiết các bước cân nguyên vật liệu (7-9 bước cân D, G, K, S).
+2. **`STB_ElectrodeMixInfo`**: Xóa thông tin tổng quan của mẻ trộn điện cực.
+3. **`STB_SetInfo`**: Xóa bản ghi khởi tạo mã Lot thùng / Barcode gốc.
+
+#### 4. Kịch bản SQL Hotfix Chuẩn An Toàn (Transaction + Pre-flight Backup Snapshot + Post-flight Verification):
+```sql
+USE SmartFactoryV2;
+GO
+
+SET NOCOUNT ON;
+
+-- [BƯỚC 1] PRE-FLIGHT CHECK
+SELECT 'STB_ElectrodeMixStepInfo' AS TableName, COUNT(*) AS RecordCount 
+FROM STB_ElectrodeMixStepInfo WITH(NOLOCK) WHERE ElectrodeLotNumber = 'MÃ_LOT'
+UNION ALL
+SELECT 'STB_ElectrodeMixInfo', COUNT(*) 
+FROM STB_ElectrodeMixInfo WITH(NOLOCK) WHERE ElectrodeLotNumber = 'MÃ_LOT'
+UNION ALL
+SELECT 'STB_SetInfo', COUNT(*) 
+FROM STB_SetInfo WITH(NOLOCK) WHERE Barcode = 'MÃ_LOT'
+UNION ALL
+SELECT 'STB_ElectrodeCoatingInfo (Must be 0)', COUNT(*) 
+FROM STB_ElectrodeCoatingInfo WITH(NOLOCK) WHERE ElectrodeLotNumber = 'MÃ_LOT';
+
+-- [BƯỚC 2] THỰC HIỆN XÓA AN TOÀN TRONG GIAO DỊCH
+BEGIN TRANSACTION;
+BEGIN TRY
+    -- 2.1 Snapshot backup vào tempdb
+    IF OBJECT_ID('tempdb..#BAK_ElectrodeMixStepInfo') IS NOT NULL DROP TABLE #BAK_ElectrodeMixStepInfo;
+    SELECT * INTO #BAK_ElectrodeMixStepInfo FROM STB_ElectrodeMixStepInfo WITH(NOLOCK) WHERE ElectrodeLotNumber = 'MÃ_LOT';
+
+    IF OBJECT_ID('tempdb..#BAK_ElectrodeMixInfo') IS NOT NULL DROP TABLE #BAK_ElectrodeMixInfo;
+    SELECT * INTO #BAK_ElectrodeMixInfo FROM STB_ElectrodeMixInfo WITH(NOLOCK) WHERE ElectrodeLotNumber = 'MÃ_LOT';
+
+    IF OBJECT_ID('tempdb..#BAK_SetInfo') IS NOT NULL DROP TABLE #BAK_SetInfo;
+    SELECT * INTO #BAK_SetInfo FROM STB_SetInfo WITH(NOLOCK) WHERE Barcode = 'MÃ_LOT';
+
+    -- 2.2 Xóa bước cân
+    DELETE FROM STB_ElectrodeMixStepInfo WHERE ElectrodeLotNumber = 'MÃ_LOT';
+
+    -- 2.3 Xóa mẻ trộn
+    DELETE FROM STB_ElectrodeMixInfo WHERE ElectrodeLotNumber = 'MÃ_LOT';
+
+    -- 2.4 Xóa mã Lot SetInfo
+    DELETE FROM STB_SetInfo WHERE Barcode = 'MÃ_LOT';
+
+    -- 2.5 POST-FLIGHT VERIFICATION
+    DECLARE @RemainCount INT = 0;
+    SELECT @RemainCount = 
+        (SELECT COUNT(*) FROM STB_ElectrodeMixStepInfo WHERE ElectrodeLotNumber = 'MÃ_LOT') +
+        (SELECT COUNT(*) FROM STB_ElectrodeMixInfo WHERE ElectrodeLotNumber = 'MÃ_LOT') +
+        (SELECT COUNT(*) FROM STB_SetInfo WHERE Barcode = 'MÃ_LOT');
+
+    IF @RemainCount = 0
+    BEGIN
+        COMMIT TRANSACTION;
+        PRINT '==> [SUCCESS] ĐÃ XÓA SẠCH DỮ LIỆU VÀ COMMIT VÀO DB.';
+    END
+    ELSE
+    BEGIN
+        ROLLBACK TRANSACTION;
+        PRINT '==> [WARNING] CÒN DỮ LIỆU TỒN ĐỌNG -> ĐÃ ROLLBACK AN TOÀN!';
+    END
+END TRY
+BEGIN CATCH
+    IF @@TRANCOUNT > 0 ROLLBACK TRANSACTION;
+    PRINT '==> [ERROR] LỖI PHÁT SINH: ' + ERROR_MESSAGE();
+END CATCH;
+GO
 ```
 
 ---
