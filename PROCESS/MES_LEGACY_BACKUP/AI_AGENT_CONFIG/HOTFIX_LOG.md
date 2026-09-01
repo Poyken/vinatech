@@ -494,4 +494,28 @@ WHERE LEN(BoxSerialNo) = 13 AND BoxSerialNo LIKE @SerialPrefix + '%'
   ```
 * **Tham chiếu KB:** [KB_03_03_SCREEN_BUGS_B.md § B310 Lỗi 3](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_03_SCREEN_BUGS_B.md#lỗi-3-공정-라우팅-정보가-없습니다-không-có-thông-tin-routing-công-đoạn-khi-tạo-po-thủ-công-tại-b310), [KB_09_SCREEN_BUG_FIXBOOK.md § B310 #4](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md#b310)
 
+---
 
+### [B552] — 📍 ID_36 Xóa 25 bản ghi kết quả cắt điện cực thừa (STT 6-30) cho Lot VVQO3020001E17
+* **Ngày sửa:** `2026-08-31`
+* **Màn hình liên quan (TCode):** `[B552] - Vietnam_Kết quả đo điện cực (Tab Slitting - Cắt điện cực)`
+* **Triệu chứng lỗi:** OP bấm tạo chia cuộn nhiều lần khiến lưới kết quả cắt sinh ra 30 cuộn (Seq 1 ➔ 30). Cần xóa bỏ các cuộn thừa từ Seq 6 đến Seq 30, giữ lại đúng 5 cuộn hợp lệ (Seq 1 ➔ 5).
+* **Nguyên nhân gốc (Root Cause):** Thao tác lặp tại màn hình tạo nhiều mẻ cắt trùng nhau cho cùng một cuộn Lot mẹ `VVQO3020001E17`.
+* **Cơ chế sao lưu (Pre-flight Backup):**
+  - Snapshot file: `tools/backups/preflight_20260831_171127_STB_ElectrodeSlittingResult_deploy_preflight.json`
+  - Audit history table: `SmartFactoryV2.dbo.STB_ElectrodeSlittingResultHist` (25 bản ghi, Flag = `DELETE`).
+* **Phương án sửa lỗi & Script Deploy:**
+  ```sql
+  USE SmartFactoryV2;
+  GO
+  BEGIN TRANSACTION;
+  INSERT INTO STB_ElectrodeSlittingResultHist (ElectrodeLotNumber, Seq, Flag, CreateDateTime, CreateUserID)
+  SELECT ElectrodeLotNumber, Seq, 'DELETE', GETDATE(), N'SYSTEM_AI_FIX'
+  FROM STB_ElectrodeSlittingResult WITH(NOLOCK)
+  WHERE ElectrodeLotNumber = 'VVQO3020001E17' AND Seq BETWEEN 6 AND 30;
+
+  DELETE FROM STB_ElectrodeSlittingResult
+  WHERE ElectrodeLotNumber = 'VVQO3020001E17' AND Seq BETWEEN 6 AND 30;
+  COMMIT TRANSACTION;
+  ```
+* **Tham chiếu KB:** [KB_09_SCREEN_BUG_FIXBOOK.md § [B552] #2](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md#L210), [HOTFIX_LOG.md § ID_29](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/AI_AGENT_CONFIG/HOTFIX_LOG.md#L287)
