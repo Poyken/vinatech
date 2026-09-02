@@ -1,4 +1,4 @@
-﻿<!--
+<!--
 AI-READY METADATA
 Purpose: Chi tiết vận hành Cell Line & Module Line (B450, B530, B540, B597, B523, B717, B789, B791, B802, B598, B351, BG2 K101-K199, H301-H305)
 Scope: Cell Line & Module Production Operations
@@ -549,9 +549,13 @@ B552 (Electrode Measure Result) — NHẬP dữ liệu:
   (⚠️ "XxxInfo" ở đây là ký hiệu placeholder, SP thực tế: usp_ElectrodeStep_iud)
 
 B802 (Electrode Prod Route Hist) — XEM TỔNG HỢP:
-  → usp_Vietnam_ElectrodeProdRouteHist_get → đọc từ nhiều bảng
-  → Hiển thị giá thành + phế tổng hợp theo Lot
+  → usp_Vietnam_ElectrodeProdRouteHist_get → đọc từ STB_ElectrodePriceB802 & CTE electrode2price (Hiển thị đơn giá thành phẩm, PriceGood, PriceNG)
+  → usp_Vietnam_ElectrodeDefectHist_get → đọc từ Function fn_VVT_ElecErrorPriceMeter2KG (Hiển thị đơn giá phế upricem, upricekg và quy đổi Defect(KG) sang Defect(Meter))
   → Có thể "Making-Stop" để dừng sản xuất
+
+**Cơ chế tính giá và lưu ý quan trọng khi thêm Model / Cập nhật giá phế:**
+1. **Giá thành phẩm (Bảng trên):** Khai báo vào bảng `STB_ElectrodePriceB802` (`MaterialCode`, `Price`). Lưu ý phải khai báo cả mã gốc và mã chi tiết (ví dụ: cả `CRFYN85` và `CRFYN85L-01`).
+2. **Giá phế & Quy đổi Mét phế (Bảng dưới):** Đang nằm hardcode trong Function `[dbo].[fn_VVT_ElecErrorPriceMeter2KG]()`. Khi thêm độ dày mới (như size `180`) hoặc mã có quy cách tên đặc thù (như đuôi `A301`), bắt buộc phải ALTER Function này bổ sung các dòng `SELECT '<Mã_Lỗi>', '<Tên_Cực_Size>', '<Đơn_Giá_USD>'` tương ứng.
 ```
 
 ---

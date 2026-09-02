@@ -278,6 +278,7 @@ Related Files:
 | 1 | Thiếu công đoạn trên báo cáo | OP chưa nhập đủ 4 công đoạn (Mixing/Coating/Rollpress/Slitting) tại B552 | Yêu cầu OP bổ sung nhập liệu tại B552 |
 | 2 | 🔴 BY/YP 120/180 A301 1.5B: Mixing Input = 0, có Coating Output | App cân NVL Mixing trên máy CMC không gọi SP `usp_DoCreateElectrodeMixStepInfo_electron`. DB + SP + config `STB_ElectrodeStep` đều OK. Ảnh hưởng: `CREBL85L`, `CRFYL85-01`, `CRFYN85L-01`. Phát hiện 2026-06-19. | Kiểm tra phần mềm cân trên máy CMC (log, phiên bản, kết nối DB). Xem [KB_05 §8.9](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md) |
 | 3 | Số mét sản lượng Slitting (`V-11`) mã YP (`CREYO85-04`) hiển thị lệch vọt lên 698.60m/697.20m thay vì 499.00m/498.00m | SP `usp_Vietnam_ElectrodeProdRouteHist_get` bị hardcode `SUM(ProductionQty)/5` cho mã `CREYO85-04` trong khi quy cách cắt YP tạo 7 cuộn tem (Seq 1..7) | ALTER SP `usp_Vietnam_ElectrodeProdRouteHist_get` thay `SUM(ProductionQty)/5` bằng `AVG(ProductionQty)` và `AVG(GoodQtyLength)` để tính động theo số cuộn cắt thực tế. |
+| 4 | Mã điện cực không hiển thị đơn giá, phế không lên tiền (Waste Price) và không tự quy đổi ra mét (Defect Meter = 0) | 1. Bảng trên thiếu mã chi tiết trong `STB_ElectrodePriceB802`. <br> 2. Bảng dưới chưa khai báo size độ dày (như size `180`) hoặc lệch hậu tố tên (`A301`) trong Function `fn_VVT_ElecErrorPriceMeter2KG`. | 1. Bổ sung `MaterialCode` vào `STB_ElectrodePriceB802`. <br> 2. ALTER Function `fn_VVT_ElecErrorPriceMeter2KG` bổ sung các dòng SELECT cho size `180` và quy cách tương ứng. |
 
 ### [W788]
 **Tên:** GetDataSortingProgram (Tra cứu kết quả đo Sorting V2)
@@ -306,12 +307,24 @@ Related Files:
 | 1 | Model Nordex ở B540/B530/K361 cần hoàn thành công đoạn ND08 | Chuẩn nghiệp vụ BG2 Module Line: `IsOutputRoute` giữ nguyên `NULL` (hoặc 0), không set bằng 1. Việc chốt hoàn thành công đoạn ND08 được thực hiện qua màn hình K361 (SP `usp_CompleteRouteFinalForBacGiang2`). | **CẤM sửa IsOutputRoute=1**. Giữ `IsOutputRoute = NULL` ➔ Chốt `CompleteRoute = 1` cho `ND08` bằng nút "Hoàn thành kết quả sản xuất" tại K361. |
 | 2 | Lỗi PRIMARY KEY violation `PK_STB_ProdRouteHist` (Duplicate key `20260808000824`) khi chốt sản xuất trên UI | Chèn dòng ND08 bằng SQL `INSERT` trực tiếp làm lệch dải số tự động `ProdRouteHistNo` của ứng dụng MES. | **CẤM DÙNG SQL INSERT TRỰC TIẾP VÀO STB_ProdRouteHist**. Thực hiện `UPDATE STB_ProdRouteHist SET CompleteRoute = NULL WHERE RouteCode = 'ND07'` để công nhân bấm chốt lại ND07 ở B530 ➔ Ứng dụng MES sẽ tự động sinh ND08 an toàn 100%. |
 
-### B767
-**Ten:** In tem KH Sanmina India
+### [B723]
+**Tên:** Hạng mục kiểm kê (CheckItems - Vietnam_Measuring)
 
-| # | Trieu chung | Nguyen nhan | Fix |
+| # | Triệu chứng | Nguyên nhân | Fix |
 |---|---|---|---|
-| 1 | So Serial tem Sanmina khong reset ve 00001 khi Ma ngay (Tuan san xuat) doi sang tuan moi | SP usp_SanminaLabelPrint_get_Vietnam lay serial lon nhat toan bang voi LIKE 'VINA%' khong filter theo @SerialPrefix | `WHERE LEN(BoxSerialNo) = 13 AND BoxSerialNo LIKE @SerialPrefix + '%'` |
+| 1 | Model 0820-low hiển thị sai độ dày trên hạng mục kiểm kê (cuộn dương 200, cuộn âm 180 thay vì 120) | Cột `CODENAME` và `INPUT` trong bảng `STB_VN_ITEM_CHECK` bị nạp nhầm mã độ dày cũ (`SREBO85`/`SRFYO85`) | Sửa `STB_VN_ITEM_CHECK`: `UPDATE STB_VN_ITEM_CHECK SET CODENAME='SREBL85L', INPUT=N'BY85 120(A301) (độ rộng 13.7 -0820-low)(+)' WHERE CODENAME='SREBO85' AND INPUT LIKE N'%0820-low%(+)%';` và tương tự cho cuộn âm (`SRFYL85`, `YP 85 120(A301)(độ rộng 13.7 -0820-low)(-)`). |
+| 2 | Danh mục kiểm kê NVL của Chuyền Điện cực Bắc Ninh (`ElectrodeBN`) và Chuyền Điện cực VN (`VVC-ELECTRODE-LINE`) thiếu mã điện cực mới | Khi phát triển sản phẩm mới chưa insert cấu hình vào `STB_VN_ITEM_CHECK` | Nạp bổ sung danh sách 9 mã mới (`SRFYL85`, `SREBL85L`, `CREYO85B`, `SRFYN85L`, `SREBO85L`, `CRECO85A`, `CREBK85L`, `CRFBO83`, `CRNCM85-001`) bằng câu lệnh `INSERT INTO STB_VN_ITEM_CHECK` có kiểm tra `WHERE NOT EXISTS`. |
+| 3 | Bản ghi kiểm kê bị trống đơn vị tính (`UNIT`) | Thiếu giá trị cột `UNIT` khi insert | `UPDATE STB_VN_ITEM_CHECK SET UNIT = 'M' WHERE ID = [ID_BẢN_GHI];` |
+
+### [B725]
+**Tên:** Kiểm kê cuối tháng (ViewCategorieInventory - Vietnam_Measuring)
+
+| # | Triệu chứng | Nguyên nhân | Fix |
+|---|---|---|---|
+| 1 | Bản ghi số liệu kiểm kê thực tế nhập nhầm ngày hoặc nhầm chuyền cần xóa / hủy | Người vận hành nhập sai số lượng, ngày kiểm kê hoặc chọn nhầm Line trên giao diện B725 | **Safe Backup & Delete SOP:**<br>1. Backup vào bảng lưu trữ: `SELECT * INTO BAK_STB_VN_ITEM_CHECK_YYYYMMDD_B725 FROM STB_VN_ITEM_CHECK WITH(NOLOCK) WHERE ID BETWEEN [MIN_ID] AND [MAX_ID];`<br>2. Snapshot JSON Preflight backup qua `.\mes.ps1 deploy`.<br>3. Xóa bản ghi lỗi trong Transaction: `DELETE FROM STB_VN_ITEM_CHECK WHERE ID BETWEEN [MIN_ID] AND [MAX_ID]; COMMIT;` |
+
+---
+
 ## C-Series: QC & Chất Lượng
 
 ### [C121]-[C122]

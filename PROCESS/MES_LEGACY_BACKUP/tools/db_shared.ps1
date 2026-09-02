@@ -375,11 +375,12 @@ function Invoke-ProactiveKbSearch {
     Write-Host "(!) [KB SUGGESTION] Detected keywords: $($keywords -join ', ')" -ForegroundColor Cyan
     Write-Host "----------------------------------------------------------------------" -ForegroundColor Cyan
 
+    $rootDir = Split-Path $PSScriptRoot -Parent
     $dirs = @(
-        (Join-Path $PSScriptRoot "MES_MASTER_KNOWLEDGE_BASE"),
-        (Join-Path $PSScriptRoot "DATABASE_KNOWLEDGE_BASE"),
-        (Join-Path $PSScriptRoot "GROUPWARE_KNOWLEDGE_BASE"),
-        (Join-Path $PSScriptRoot "AI_AGENT_CONFIG")
+        (Join-Path $rootDir "MES_MASTER_KNOWLEDGE_BASE"),
+        (Join-Path $rootDir "DATABASE_KNOWLEDGE_BASE"),
+        (Join-Path $rootDir "GROUPWARE_KNOWLEDGE_BASE"),
+        (Join-Path $rootDir "AI_AGENT_CONFIG")
     )
     
     $files = @()
@@ -392,7 +393,7 @@ function Invoke-ProactiveKbSearch {
         Write-Host "--> Keyword: $keyword" -ForegroundColor Yellow
         
         foreach ($file in $files) {
-            $relative = $file.FullName.Replace($PSScriptRoot, ".").Replace("\", "/")
+            $relative = $file.FullName.Replace($rootDir, ".").Replace("\", "/")
             $content = Get-Content -Path $file.FullName -Encoding UTF8 -ErrorAction SilentlyContinue
             if (-not $content) { continue }
             

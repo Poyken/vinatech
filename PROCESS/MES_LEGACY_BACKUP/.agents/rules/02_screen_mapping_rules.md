@@ -11,6 +11,8 @@ Khi nhận Screen ID hoặc ảnh chụp giao diện từ User:
 - **B310 (Tạo/Quản lý PO tháng):** SP `usp_DoCreateProductionOrder`, Bảng `STB_ProductionOrderInfo`, `STB_ProductionOrderRouting`, `STB_ProductionOrderBom`.
 - **HN523 / HN544 / HN555 (Hà Nam Packaging):** Tra cứu trực tiếp tại `KB_11_HANAM_FACTORY_SCREENS.md`.
 - **F330 / F721 (Kho & Tồn kho WMS):** Bảng `STB_MaterialDocInfo`, `STB_MaterialLotInfo`.
+- **B723 (Hạng mục kiểm kê - CheckItems):** Bảng `STB_VN_ITEM_CHECK` (Độ dày, quy cách điện cực, danh mục kiểm kê Line).
+- **B725 (Kiểm kê cuối tháng - ViewCategorieInventory):** SP `usp_VN_show_InvetoryEndmonths`, Bảng `STB_VN_ITEM_CHECK`.
 
 ## 2. QUY TẮC PULL & ĐỒNG BỘ SP
 - Cấm sửa SP dựa trên trí nhớ cũ; luôn dùng `.\mes.ps1 sp <SP_Name>` để lấy định nghĩa mới nhất từ SQL Server.

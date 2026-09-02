@@ -94,7 +94,9 @@ if ([string]::IsNullOrEmpty($TCode) -and [string]::IsNullOrEmpty($ErrorMsg) -and
 }
 
 $conn = Get-DbConnection
-$conn.Open()
+if ($conn -ne $null -and $conn.State -ne [System.Data.ConnectionState]::Open) {
+    $conn.Open()
+}
 
 # Case 1: TCode diagnostics
 if ($TCode) {

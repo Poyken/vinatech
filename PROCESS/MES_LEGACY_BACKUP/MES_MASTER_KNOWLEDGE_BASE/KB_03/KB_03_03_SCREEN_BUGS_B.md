@@ -499,6 +499,18 @@ Bước 7: Xác nhận phiếu → EXEC usp_DoFixMaterialDoc
 *   **Cách khắc phục:** IT tiến hành đối soát thông tin qua bảng lịch sử điện cực `STB_ElectrodeProdRouteHist` và điều chỉnh lại sản lượng thực tế khớp với số mét cuộn.
 *   **Chi tiết nghiệp vụ:** Xem tại [../KB_03/KB_03_02_CELL_LINE.md § 6.11](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_02_CELL_LINE.md#611-b802---vietnam-electrode-prod-route-hist-lịch-sử-sx-điện-cực) và [../KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md § 3](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md#3-báo-cáo--đối-soát-điện-cực-b802).
 
+### [B802] — Lỗi 2: Mã điện cực không hiển thị đơn giá thành phẩm, phế không lên tiền (Waste Price) và không tự đổi ra mét (Defect Meter = 0)
+*   **Triệu chứng:**
+    - Lưới trên (`ElectrodeProdRouteHist`): Các cột `Đơn giá`, `Price Good`, `PriceNG` hiển thị `0.000000` cho một số mã (ví dụ: `CREHCO85`, `CRFYN85L-01`...).
+    - Lưới dưới (`Vietnam Electrode Defect Hist`): Dù có nhập số lượng phế `Defect(KG)` nhưng các cột `Waste Price(USD)`, `Price Kg` bị trống (hoặc = 0) và `Defect(Meter)` hiển thị `0.000000`.
+*   **Nguyên nhân gốc:**
+    1. **Bảng trên (Đơn giá thành phẩm):** SP `usp_Vietnam_ElectrodeProdRouteHist_get` lấy giá từ bảng Master `STB_ElectrodePriceB802` theo `MaterialCode`. Nếu chỉ khai báo mã gốc (ví dụ `CRFYN85`) mà thiếu mã chi tiết phát sinh (`CRFYN85L-01`, `CRFBO83-01`) hoặc thiếu mã mới (`CREHCO85`) thì đơn giá sẽ bằng 0.
+    2. **Bảng dưới (Giá phế & Tỷ lệ Kg ↔ Mét):** SP `usp_Vietnam_ElectrodeDefectHist_get` lấy `upricem`, `upricekg`, `kg2m` từ Function `[dbo].[fn_VVT_ElecErrorPriceMeter2KG]()`. Function này chỉ mới khai báo các size `116, 120, 200`, **chưa có size `180`** (như `Forming-YP 85 180`) cho các mã lỗi phế (`V-03_W02`, `V-03_W05`, `V-03_W13`...). Ngoài ra các mã có hậu tố đuôi đặc thù (`A301`) khiến điều kiện `RIGHT(MaterialName, 3)` không khớp cực âm `(-)` / dương `(+)`.
+*   **Cách khắc phục:**
+    1. Bổ sung `MaterialCode` và `Price` vào bảng `STB_ElectrodePriceB802`.
+    2. Bổ sung khai báo size `180` và các quy cách tương ứng vào Inline Table Function `fn_VVT_ElecErrorPriceMeter2KG`.
+*   **Chi tiết nghiệp vụ:** Xem tại [../KB_03/KB_03_02_CELL_LINE.md § 6.11](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_02_CELL_LINE.md#611-b802---vietnam-electrode-prod-route-hist-lịch-sử-sx-điện-cực).
+
 ---
 
 

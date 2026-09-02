@@ -27,3 +27,6 @@ Kích hoạt khi nhà máy chuẩn bị sản xuất mã hàng mới, thêm Mode
 7. **Bước 7: Kiểm thử Tạo Thử Lot & Scan Thử Nghiệm**
    - Dùng `.\mes.ps1 trace "<TestLot>"` để xác nhận dữ liệu đã liên kết đầy đủ 4 bảng.
 8. **Bước 8: Xác nhận QC IQC/PQC đã cấu hình Tiêu Chuẩn Đánh Giá (A510)**
+9. **Bước 9 (Đặc thù Điện cực - Electrode): Khai báo giá thành phẩm & Đơn giá phế trên B802**
+   - **Giá bán thành phẩm:** Khai báo mã mới vào bảng `STB_ElectrodePriceB802` (cả mã gốc và mã chi tiết như `CRFYN85L-01`).
+   - **Đơn giá phế & Tỷ lệ Kg ↔ Mét:** Nếu model có độ dày mới (như size `180`) hoặc hậu tố tên đặc thù (`A301`), cần kiểm tra và bổ sung khai báo trong Function `[dbo].[fn_VVT_ElecErrorPriceMeter2KG]()` để tránh lỗi B802 không nhảy giá phế (Waste Price = 0) và không tự đổi ra mét (Defect Meter = 0).

@@ -519,3 +519,101 @@ WHERE LEN(BoxSerialNo) = 13 AND BoxSerialNo LIKE @SerialPrefix + '%'
   COMMIT TRANSACTION;
   ```
 * **Tham chiếu KB:** [KB_09_SCREEN_BUG_FIXBOOK.md § [B552] #2](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md#L210), [HOTFIX_LOG.md § ID_29](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/AI_AGENT_CONFIG/HOTFIX_LOG.md#L287)
+
+---
+
+### [B725] — 📍 ID_37 Xóa 10 bản ghi kiểm kê nhập nhầm cho chuyền Điện cực Bắc Ninh (ElectrodeBN)
+* **Ngày sửa:** `2026-09-02`
+* **Màn hình liên quan (TCode):** `[B725] - Kiểm kê cuối tháng (ViewCategorieInventory)`
+* **Bảng liên quan:** `SmartFactoryV2.dbo.STB_VN_ITEM_CHECK`
+* **Triệu chứng lỗi:** Người dùng gửi ảnh chụp màn hình kiểm kê B725 của chuyền `ElectrodeBN` có 14 dòng, yêu cầu xóa chính xác **10 dòng khoanh đỏ** và giữ nguyên 4 dòng còn lại (STT 2, 3, 12, 13).
+* **Nguyên nhân gốc (Root Cause):** Người vận hành nhập nhầm số liệu kiểm kê thực tế tại màn hình B725.
+* **Cơ chế sao lưu (Backup & Pre-flight):**
+  - Snapshot file preflight: `tools/backups/preflight_20260902_102816_STB_VN_ITEM_CHECK_deploy_preflight.json` (Lưu trọn vẹn 10 dòng trước khi xóa).
+* **Phương án sửa lỗi & Script Deploy:**
+  ```sql
+  USE SmartFactoryV2;
+  GO
+  BEGIN TRANSACTION;
+
+  -- 1. [BEFORE] Khảo sát chính xác 10 bản ghi cần xóa
+  SELECT 
+      ID, CODELINE, NAMELINE, CATEGORIESCHECK, QTY, TYPEINPUT, INPUT, CODENAME, REMARK, CreateDateTime, CreateUserID
+  FROM STB_VN_ITEM_CHECK WITH(NOLOCK)
+  WHERE ID IN (47692, 47638, 47680, 47704, 47703, 47702, 47713, 47679, 47672, 47664)
+  ORDER BY ID ASC;
+
+  -- 2. [EXECUTION] Xóa chính xác 10 bản ghi theo ID
+  DELETE FROM STB_VN_ITEM_CHECK
+  WHERE ID IN (47692, 47638, 47680, 47704, 47703, 47702, 47713, 47679, 47672, 47664);
+
+  -- 3. [AFTER] Kiểm tra lại kết quả (Kỳ vọng: 0 dòng)
+  SELECT 
+      ID, CODELINE, NAMELINE, CATEGORIESCHECK, QTY, TYPEINPUT, INPUT, CODENAME, REMARK, CreateDateTime, CreateUserID
+  FROM STB_VN_ITEM_CHECK WITH(NOLOCK)
+  WHERE ID IN (47692, 47638, 47680, 47704, 47703, 47702, 47713, 47679, 47672, 47664);
+
+  COMMIT TRANSACTION;
+  GO
+  ```
+* **Tham chiếu KB:** [KB_09_SCREEN_BUG_FIXBOOK.md § B725](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md#b725)
+
+---
+
+### [B723] — 📍 ID_38 Cập nhật độ dày Model 0820-low và bổ sung 9 mã NVL điện cực vào danh mục kiểm kê
+* **Ngày sửa:** `2026-09-02`
+* **Màn hình liên quan (TCode):** `[B723] - Hạng mục kiểm kê (CheckItems)`
+* **Bảng liên quan:** `SmartFactoryV2.dbo.STB_VN_ITEM_CHECK`
+* **Triệu chứng lỗi:**
+  1. Hạng mục kiểm kê cho Model 0820-low bị sai độ dày: Cuộn dương đang để `SREBO85` (200) thay vì `SREBL85L` (120), Cuộn âm đang để `SRFYO85` (180) thay vì `SRFYL85` (120).
+  2. Thiếu 9 mã điện cực mới trong danh mục kiểm kê của chuyền `ElectrodeBN` (Bắc Ninh) và `VVC-ELECTRODE-LINE` (Việt Nam).
+  3. Bản ghi ID `47831` bị thiếu đơn vị tính `UNIT`.
+* **Nguyên nhân gốc (Root Cause):** Master data kiểm kê `STB_VN_ITEM_CHECK` chưa được cập nhật khi có quy cách sản phẩm mới và thay đổi thông số kỹ thuật NVL điện cực.
+* **Cơ chế sao lưu (Backup & Pre-flight):**
+  - Snapshot file preflight: `tools/backups/preflight_20260902_102816_STB_VN_ITEM_CHECK_deploy_preflight.json`
+* **Phương án sửa lỗi & Script Deploy:**
+  ```sql
+  USE SmartFactoryV2;
+  GO
+  BEGIN TRANSACTION;
+
+  -- 1. Sửa độ dày model 0820-low
+  UPDATE STB_VN_ITEM_CHECK
+  SET CODENAME = N'SREBL85L', INPUT = N'BY85 120(A301) (độ rộng 13.7 -0820-low)(+)', ChangeDateTime = GETDATE(), ChangeUserID = N'ADMIN'
+  WHERE CODENAME = N'SREBO85' AND INPUT LIKE N'%0820-low%(+)%';
+
+  UPDATE STB_VN_ITEM_CHECK
+  SET CODENAME = N'SRFYL85', INPUT = N'YP 85 120(A301)(độ rộng 13.7 -0820-low)(-)', ChangeDateTime = GETDATE(), ChangeUserID = N'ADMIN'
+  WHERE CODENAME = N'SRFYO85' AND INPUT LIKE N'%0820-low%(-)%';
+
+  -- 2. Bổ sung 9 mã điện cực mới cho 2 chuyền (ElectrodeBN & VVC-ELECTRODE-LINE)
+  DECLARE @NewItems TABLE (CODENAME NVARCHAR(50), INPUT NVARCHAR(500), UNIT NVARCHAR(20));
+  INSERT INTO @NewItems (CODENAME, INPUT, UNIT) VALUES
+  (N'SRFYL85', N'YP 85 120(A301)(độ rộng 13.7 -0820-low)(-)', N'M'),
+  (N'SREBL85L', N'BY85 120(A301) (độ rộng 13.7 -0820-low)(+)', N'M'),
+  (N'CREYO85B', N'Coating-Roll Etching -YP 85 200(A-401D) (+)', N'M'),
+  (N'SRFYN85L', N'YP 180 (Độ rộng 23.7 -1030-10F LOW) cuộn âm', N'M'),
+  (N'SREBO85L', N'BY 85 200 (Độ rộng 23.7 -1030-10F LOW) cuộn dương', N'M'),
+  (N'CRECO85A', N'Coating - Roll Etching - CY85 200 (+) A301', N'M'),
+  (N'CREBK85L', N'Điện cực BY 116 (A301) Cuộn Dương', N'M'),
+  (N'CRFBO83', N'Điện cực BA21E-200 Cuộn âm', N'M'),
+  (N'CRNCM85-001', N'Coatingroll-NCM 85 (VPC) (+)', N'M');
+
+  -- Insert nếu chưa tồn tại
+  INSERT INTO STB_VN_ITEM_CHECK (DEPARTMENT, CODELINE, NAMELINE, CATEGORIESCHECK, TYPES, REMARK, CODENAME, INPUT, UNIT, CreateDateTime, CreateUserID)
+  SELECT N'SẢN XUẤT', N'ElectrodeBN', N'Điện cực Bắc Ninh', N'Điện cực Việt Nam', N'NVL', N'', n.CODENAME, n.INPUT, n.UNIT, GETDATE(), N'ADMIN'
+  FROM @NewItems n
+  WHERE NOT EXISTS (SELECT 1 FROM STB_VN_ITEM_CHECK c WITH(NOLOCK) WHERE c.CODELINE = N'ElectrodeBN' AND c.CODENAME = n.CODENAME AND c.INPUT = n.INPUT);
+
+  INSERT INTO STB_VN_ITEM_CHECK (DEPARTMENT, CODELINE, NAMELINE, CATEGORIESCHECK, TYPES, REMARK, CODENAME, INPUT, UNIT, CreateDateTime, CreateUserID)
+  SELECT N'SẢN XUẤT', N'VVC-ELECTRODE-LINE', N'베트남 전극라인 Line điện cực Việt Nam', N'Điện cực Việt Nam', N'NVL', N'', n.CODENAME, n.INPUT, n.UNIT, GETDATE(), N'ADMIN'
+  FROM @NewItems n
+  WHERE NOT EXISTS (SELECT 1 FROM STB_VN_ITEM_CHECK c WITH(NOLOCK) WHERE c.CODELINE = N'VVC-ELECTRODE-LINE' AND c.CODENAME = n.CODENAME AND c.INPUT = n.INPUT);
+
+  -- 3. Cập nhật Unit cho ID 47831
+  UPDATE STB_VN_ITEM_CHECK SET UNIT = 'M' WHERE ID = 47831;
+
+  COMMIT TRANSACTION;
+  ```
+* **Tham chiếu KB:** [KB_09_SCREEN_BUG_FIXBOOK.md § B723](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md#b723)
+
