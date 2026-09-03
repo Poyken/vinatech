@@ -522,11 +522,12 @@ ORDER BY SI.CreateDateTime DESC
 
 #### 2. Điều kiện Tiên quyết (Pre-flight Gate):
 * ⚠️ **BẮT BUỘC:** Lot điện cực **chưa được tráng (Coating Output = 0)**. Nếu `STB_ElectrodeCoatingInfo` đã có dữ liệu $\rightarrow$ **CẤM XÓA** (Phải xử lý theo luồng báo phế hoặc sửa chữa).
+* ⚠️ **LƯU Ý BẪY FONT CHỮ TRÊN GIAO DIỆN MES:** Font hiển thị NAIS MES render `VV` khít nhau nhìn y như chữ `W` (VD: `VVQR...` nhìn như `WQRD...`), `01` nhìn như `D1`. Khi tra cứu DB, luôn dùng `LIKE '%...%'` hoặc đổi `W -> VV` để tránh truy vấn 0 rows.
 
-#### 3. Thứ tự Xóa Chuẩn Cascade (3 Bảng Core):
-1. **`STB_ElectrodeMixStepInfo`**: Xóa chi tiết các bước cân nguyên vật liệu (7-9 bước cân D, G, K, S).
-2. **`STB_ElectrodeMixInfo`**: Xóa thông tin tổng quan của mẻ trộn điện cực.
-3. **`STB_SetInfo`**: Xóa bản ghi khởi tạo mã Lot thùng / Barcode gốc.
+#### 3. Thứ tự Xóa Chuẩn Cascade (3 Bảng Core) & Schema:
+1. **`STB_ElectrodeMixStepInfo`**: Xóa chi tiết các bước cân NVL (`ElectrodeLotNumber, ElectrodeStep, Seq, ElectrodeMaterialCode, InputQty1, InputQty2, MaterialLotNumber...`).
+2. **`STB_ElectrodeMixInfo`**: Xóa thông tin tổng quan của mẻ trộn điện cực (`ElectrodeLotNumber, MachineCode, WorkDate, WorkerCode, ProductionQty, TankInsideTemp...`).
+3. **`STB_SetInfo`**: Xóa bản ghi khởi tạo mã Lot thùng / Barcode gốc (`ControlNo, Barcode, MaterialCode...`).
 
 #### 4. Kịch bản SQL Hotfix Chuẩn An Toàn (Transaction + Pre-flight Backup Snapshot + Post-flight Verification):
 ```sql

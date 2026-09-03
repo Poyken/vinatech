@@ -1,0 +1,29 @@
+﻿{
+    "Timestamp":  "2026-09-03 08:54:36",
+    "Database":  "SmartFactoryV2",
+    "Table":  "STB_ElectrodeMixInfo",
+    "Where":  "ElectrodeLotNumber = \u0027VVQR0120001E38\u0027",
+    "RowCount":  1,
+    "Data":  [
+                 {
+                     "ElectrodeLotNumber":  "VVQR0120001E38",
+                     "MachineCode":  null,
+                     "WorkDate":  null,
+                     "WorkerCode":  null,
+                     "Temperature":  null,
+                     "Humidity":  null,
+                     "ProductionQty":  null,
+                     "TankInsideTemp":  null,
+                     "ViscosityValue":  null,
+                     "SpecificGravityValue":  null,
+                     "MixingTemperature":  null,
+                     "SpecificComment":  null,
+                     "CreateDateTime":  "\/Date(1788280350910)\/",
+                     "CreateUserID":  null,
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null,
+                     "CoolantTemperature":  null,
+                     "ViscosityResult":  "NG"
+                 }
+             ]
+}

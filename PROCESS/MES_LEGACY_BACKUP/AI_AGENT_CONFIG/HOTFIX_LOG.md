@@ -617,3 +617,77 @@ WHERE LEN(BoxSerialNo) = 13 AND BoxSerialNo LIKE @SerialPrefix + '%'
   ```
 * **Tham chiếu KB:** [KB_09_SCREEN_BUG_FIXBOOK.md § B723](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md#b723)
 
+---
+
+### [B552] — 📍 ID_39 Xóa 10 bản ghi kết quả cắt điện cực thừa (STT 16-25) cho Lot VVQP0920001E11
+* **Ngày sửa:** `2026-09-03`
+* **Màn hình liên quan (TCode):** `[B552] - Vietnam_Kết quả đo điện cực (Tab Slitting - Cắt điện cực)`
+* **Bảng liên quan:** `SmartFactoryV2.dbo.STB_ElectrodeSlittingResult`, `SmartFactoryV2.dbo.STB_ElectrodeSlittingResultHist`
+* **Triệu chứng lỗi:** OP tại máy cắt điện cực VVEP016 yêu cầu xóa 10 dòng kết quả chia cuộn thừa (STT 16 đến 25), giữ lại đúng 15 cuộn hợp lệ (Seq 1 ➔ 15).
+* **Nguyên nhân gốc (Root Cause):** Thao tác cắt chia cuộn dư hoặc lỗi dòng kết quả cần dọn dẹp. Giao diện B552 không có nút xóa dòng kết quả cắt nên yêu cầu IT/MES xử lý qua DB.
+* **Cơ chế sao lưu (Backup & Pre-flight):**
+  - Snapshot file preflight: `tools/backups/preflight_20260903_084109_STB_ElectrodeSlittingResult_deploy_preflight.json` (10 bản ghi đầy đủ trước khi xóa).
+  - Bảng Audit history: `SmartFactoryV2.dbo.STB_ElectrodeSlittingResultHist` (10 bản ghi, Flag = `DELETE`, User = `SYSTEM_AI_FIX`).
+* **Phương án sửa lỗi & Script Deploy (Thực thi thành công):**
+  ```sql
+  USE SmartFactoryV2;
+  GO
+  BEGIN TRANSACTION;
+
+  -- 1. [AUDIT LOG] Ghi lưu vết lịch sử trước khi xóa (Chuẩn SOP KB_09 § B552)
+  INSERT INTO STB_ElectrodeSlittingResultHist (ElectrodeLotNumber, Seq, Flag, CreateDateTime, CreateUserID)
+  SELECT ElectrodeLotNumber, Seq, 'DELETE', GETDATE(), N'SYSTEM_AI_FIX'
+  FROM STB_ElectrodeSlittingResult WITH(NOLOCK)
+  WHERE ElectrodeLotNumber = 'VVQP0920001E11' AND Seq BETWEEN 16 AND 25;
+
+  -- 2. [EXECUTION] Xóa 10 bản ghi cắt thừa
+  DELETE FROM STB_ElectrodeSlittingResult
+  WHERE ElectrodeLotNumber = 'VVQP0920001E11' AND Seq BETWEEN 16 AND 25;
+
+  COMMIT TRANSACTION;
+  GO
+  ```
+* **Kết quả nghiệm thu:**
+  - `STB_ElectrodeSlittingResult`: Còn lại chính xác **15 bản ghi** (`Seq` từ 1 đến 15).
+  - Không có bất kỳ lỗi phát sinh nào, dữ liệu hạ nguồn an toàn 100%.
+* **Tham chiếu KB:** [KB_09_SCREEN_BUG_FIXBOOK.md § [B552] #2](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md#L210), [HOTFIX_LOG.md § ID_36](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/AI_AGENT_CONFIG/HOTFIX_LOG.md#L499)
+
+---
+
+### [B552] — 📍 ID_40 Hủy / Xóa mẻ trộn điện cực thừa (Mixing) cho Lot VVQR0120001E38
+* **Ngày sửa:** `2026-09-03`
+* **Màn hình liên quan (TCode):** `[B552] - Vietnam_Kết quả đo điện cực (Tab Mixing - Trộn điện cực)`
+* **Bảng liên quan:** `SmartFactoryV2.dbo.STB_ElectrodeMixStepInfo`, `SmartFactoryV2.dbo.STB_ElectrodeMixInfo`, `SmartFactoryV2.dbo.STB_SetInfo`
+* **Triệu chứng lỗi:** OP tại công đoạn cân trộn điện cực yêu cầu xóa mẻ trộn điện cực thừa của Lot `VVQR0120001E38` (Model `CREHCO85`, 181.41 kg, gồm 10 bước cân) để hủy mẻ hoặc cân lại.
+* **Nguyên nhân gốc (Root Cause):** Mẻ trộn cân đêm 01/09/2026 không chạy đến hoặc đổi kế hoạch sản xuất, chưa tráng Coating (`STB_ElectrodeCoatingInfo = 0`).
+* **Cơ chế sao lưu (Backup & Pre-flight):**
+  - Snapshot file preflight:
+    - `tools/backups/preflight_20260903_085431_STB_ElectrodeMixStepInfo_deploy_preflight.json` (10 bản ghi).
+    - `tools/backups/preflight_20260903_085436_STB_ElectrodeMixInfo_deploy_preflight.json` (1 bản ghi).
+    - `tools/backups/preflight_20260903_085436_STB_SetInfo_deploy_preflight.json` (1 bản ghi).
+  - Rollback script chuẩn bị sẵn: `sql/rollback_20260903_B552_DELETE_MIXING_VVQR0120001E38.sql`.
+* **Phương án sửa lỗi & Script Deploy (Thực thi thành công):**
+  ```sql
+  USE SmartFactoryV2;
+  GO
+  BEGIN TRANSACTION;
+
+  -- 1. Xóa chi tiết các bước cân nguyên vật liệu (10 bước cân)
+  DELETE FROM STB_ElectrodeMixStepInfo WHERE ElectrodeLotNumber = 'VVQR0120001E38';
+
+  -- 2. Xóa header mẻ trộn điện cực (1 bản ghi)
+  DELETE FROM STB_ElectrodeMixInfo WHERE ElectrodeLotNumber = 'VVQR0120001E38';
+
+  -- 3. Xóa mã khởi tạo Lot thùng / SetInfo (1 bản ghi)
+  DELETE FROM STB_SetInfo WHERE Barcode = 'VVQR0120001E38';
+
+  COMMIT TRANSACTION;
+  GO
+  ```
+* **Kết quả nghiệm thu:**
+  - `STB_ElectrodeMixStepInfo`: Còn lại **0 bản ghi**.
+  - `STB_ElectrodeMixInfo`: Còn lại **0 bản ghi**.
+  - `STB_SetInfo`: Còn lại **0 bản ghi**.
+  - Không có bất kỳ lỗi phát sinh nào, dữ liệu hạ nguồn an toàn 100%.
+* **Tham chiếu KB:** [KB_09_SCREEN_BUG_FIXBOOK.md § [B552] #3](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md#L211), [KB_05_01 § 8.10](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md#810-quy-trình-dọn-dẹp--xóa-mẻ-trộn-điện-cực-thừa-electrode-mixing-cancellation-sop)
+

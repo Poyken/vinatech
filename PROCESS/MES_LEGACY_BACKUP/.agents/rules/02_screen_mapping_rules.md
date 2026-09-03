@@ -13,6 +13,11 @@ Khi nhận Screen ID hoặc ảnh chụp giao diện từ User:
 - **F330 / F721 (Kho & Tồn kho WMS):** Bảng `STB_MaterialDocInfo`, `STB_MaterialLotInfo`.
 - **B723 (Hạng mục kiểm kê - CheckItems):** Bảng `STB_VN_ITEM_CHECK` (Độ dày, quy cách điện cực, danh mục kiểm kê Line).
 - **B725 (Kiểm kê cuối tháng - ViewCategorieInventory):** SP `usp_VN_show_InvetoryEndmonths`, Bảng `STB_VN_ITEM_CHECK`.
+- **B552 (Kết quả đo điện cực - Mixing/Coating/Rollpress/Slitting):**
+  - **SP chính:** `usp_ElectrodeMixInfo_get/iud`, `usp_ElectrodeMixStepInfo_get/iud`, `usp_ElectrodeSlittingInfo_get/iud`, `usp_ElectrodeSlittingResult_get/iud`.
+  - **Bảng Mixing:** `STB_ElectrodeMixInfo` (`ElectrodeLotNumber, ProductionQty, WorkDate...`), `STB_ElectrodeMixStepInfo` (`ElectrodeLotNumber, ElectrodeStep, Seq, ElectrodeMaterialCode, InputQty1, MaterialLotNumber...`).
+  - **Bảng Slitting:** `STB_ElectrodeSlittingInfo` (`ElectrodeLotNumber, MachineCode, WorkerCode...`), `STB_ElectrodeSlittingResult` (`ElectrodeLotNumber, Seq, Barcode, SlittingWidth, GoodQtyLength...`), `STB_ElectrodeSlittingResultHist`.
+  - ⚠️ **BẪY FONT CHỮ TRÊN GIAO DIỆN MES:** Ký tự `VV` đứng liền hiển thị giống chữ `W` (VD: `VVQP...` nhìn như `WQP...`), `01` nhìn như `D1`. Khi tra cứu DB, **BẮT BUỘC dùng LIKE '%...%'** hoặc quy đổi `W -> VV` để tránh truy vấn 0 rows!
 
 ## 2. QUY TẮC PULL & ĐỒNG BỘ SP
 - Cấm sửa SP dựa trên trí nhớ cũ; luôn dùng `.\mes.ps1 sp <SP_Name>` để lấy định nghĩa mới nhất từ SQL Server.

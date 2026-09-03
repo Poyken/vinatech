@@ -207,8 +207,28 @@ Related Files:
 | # | Triệu chứng | Nguyên nhân | Fix |
 |---|---|---|---|
 | 1 | "Không tồn tại thiết lập Điện cực... Chưa CONFIG STB_SLITTINGLOCATIONCONFIG_VVT" | Bảng `STB_SlittingLocationConfig_VVT` thiếu record cho model | `INSERT INTO STB_SlittingLocationConfig_VVT (MaterialCode, LocationCode, ...) VALUES (...)` — xem [KB_05_02 §8.2](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_02_SCREEN_BUGS_QC.md#82-lỗi-chưa-config-trong-stb_slittinglocationconfig_vvt) |
-| 2 | Yêu cầu xóa dữ liệu kết quả cắt điện cực theo STT (Seq) hoặc Model (Width) tại tab Slitting | Cắt dư, chia cuộn nhầm kích thước hoặc lỗi dữ liệu chia cuộn cần dọn dẹp | **Safe SQL Delete (Audit Log + Delete):**<br>1. Ghi log: `INSERT INTO STB_ElectrodeSlittingResultHist (ElectrodeLotNumber, Seq, Flag, CreateDateTime, CreateUserID) SELECT ElectrodeLotNumber, Seq, 'DELETE', GETDATE(), N'SYSTEM_AI_FIX' FROM STB_ElectrodeSlittingResult WHERE ElectrodeLotNumber='MÃ_LOT' AND Seq BETWEEN 1 AND 31;`<br>2. Xóa: `DELETE FROM STB_ElectrodeSlittingResult WHERE ElectrodeLotNumber='MÃ_LOT' AND Seq BETWEEN 1 AND 31;` |
+| 2 | Yêu cầu xóa dữ liệu kết quả cắt điện cực theo STT (Seq) hoặc Model (Width) tại tab Slitting | Cắt dư, chia cuộn nhầm kích thước hoặc lỗi dữ liệu chia cuộn cần dọn dẹp | **Safe SQL Delete (Audit Log + Delete):**<br>1. Ghi log: `INSERT INTO STB_ElectrodeSlittingResultHist (ElectrodeLotNumber, Seq, Flag, CreateDateTime, CreateUserID) SELECT ElectrodeLotNumber, Seq, 'DELETE', GETDATE(), N'SYSTEM_AI_FIX' FROM STB_ElectrodeSlittingResult WHERE ElectrodeLotNumber='MÃ_LOT' AND Seq BETWEEN ...;`<br>2. Xóa: `DELETE FROM STB_ElectrodeSlittingResult WHERE ElectrodeLotNumber='MÃ_LOT' AND Seq BETWEEN ...;` |
 | 3 | Hủy / Xóa mẻ trộn điện cực thừa ([B470/B552]) do ca đêm không chạy đến hoặc đổi kế hoạch | Đã cân Mixing nhưng chưa tráng Coating | **Cascade Delete SOP (3 Bảng Core + Pre-flight Check):**<br>Kiểm tra `STB_ElectrodeCoatingInfo` = 0 $\rightarrow$ Snapshot tempdb $\rightarrow$ Xóa `STB_ElectrodeMixStepInfo` $\rightarrow$ Xóa `STB_ElectrodeMixInfo` $\rightarrow$ Xóa `STB_SetInfo`. Xem chi tiết tại [KB_05_01 §8.10](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md#810-quy-trình-dọn-dẹp--xóa-mẻ-trộn-điện-cực-thừa-electrode-mixing-cancellation-sop). |
+
+#### 📋 Cẩm Nang Schema Chuẩn & Quy Tắc Khảo Sát B552 (Chống Dò Dẫm Query):
+1. **⚠️ BẪY FONT CHỮ TRÊN UI (BẮT BUỘC NHỚ):**
+   * Font hiển thị MES NAIS render `VV` khít nhau nhìn y hệt chữ `W` (VD: `VVQP...` nhìn như `WQP...`, `VVQR...` nhìn như `WQRD...`), `01` nhìn như `D1`.
+   * **Quy tắc:** Khi khảo sát Lot từ ảnh chụp màn hình, **luôn dùng `LIKE '%...%'`** (VD: `LIKE '%0920001E11%'`) hoặc thay thế `W` thành `VV` để tránh truy vấn 0 rows.
+2. **Schema Bảng Slitting:**
+   * `STB_ElectrodeSlittingResult`: `ElectrodeLotNumber, Seq, Barcode, SlittingWidth, GoodQtyLength, ProductionQty, ElectrodeThick, CreateDateTime, CreateUserID`. *(KHÔNG có cột SlittingCode, SlittingLength!)*
+   * `STB_ElectrodeSlittingInfo`: `ElectrodeLotNumber, MachineCode, WorkerCode, WorkDate, Temperature, Humidity, SlittingLength, Remark...`
+   * `STB_ElectrodeSlittingResultHist`: `ID, ElectrodeLotNumber, Seq, Flag, CreateDateTime, CreateUserID`.
+3. **Schema Bảng Mixing:**
+   * `STB_ElectrodeMixStepInfo`: `ElectrodeLotNumber, ElectrodeStep, Seq, ElectrodeMaterialCode, InputQty1, InputQty2, MaterialLotNumber, CreateDateTime, CreateUserID`. *(KHÔNG có cột MaterialCode, Weight!)*
+   * `STB_ElectrodeMixInfo`: `ElectrodeLotNumber, MachineCode, WorkDate, WorkerCode, ProductionQty, TankInsideTemp, ViscosityValue...`
+4. **⚡ Câu Lệnh Kiểm Chứng 1-Shot Surgical Verification (Chỉ chạy đúng 1 lần):**
+   ```sql
+   -- Khảo sát mẻ Mixing + Pre-flight Gate chỉ trong 1 lần chạy
+   SELECT 'STB_ElectrodeMixStepInfo' AS Tbl, COUNT(*) AS Qty FROM STB_ElectrodeMixStepInfo WITH(NOLOCK) WHERE ElectrodeLotNumber = 'MÃ_LOT'
+   UNION ALL SELECT 'STB_ElectrodeMixInfo', COUNT(*) FROM STB_ElectrodeMixInfo WITH(NOLOCK) WHERE ElectrodeLotNumber = 'MÃ_LOT'
+   UNION ALL SELECT 'STB_SetInfo', COUNT(*) FROM STB_SetInfo WITH(NOLOCK) WHERE Barcode = 'MÃ_LOT'
+   UNION ALL SELECT 'STB_ElectrodeCoatingInfo (Must 0)', COUNT(*) FROM STB_ElectrodeCoatingInfo WITH(NOLOCK) WHERE ElectrodeLotNumber = 'MÃ_LOT';
+   ```
 
 > 🔗 Chi tiết: [KB_05_01 §8.10](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md#810-quy-trình-dọn-dẹp--xóa-mẻ-trộn-điện-cực-thừa-electrode-mixing-cancellation-sop), [KB_05_02 §7.6](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_02_SCREEN_BUGS_QC.md)
 
