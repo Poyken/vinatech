@@ -113,6 +113,15 @@ Related Files:
 |---|---|---|---|
 | 1 | Tạo PO tại B310 báo lỗi "공정라우팅정보가 없습니다" | Nhà máy (ví dụ `VVT_F5`) chưa được định nghĩa bộ `BasicRoutingCode` hoặc các bước công đoạn (`RouteCode`) chưa được tick chọn sử dụng | Vào **B240** → Chọn `CompanyCode` (`VVT`) và `WorkCenterCode` (`VVT_F5`) → Kiểm tra danh sách Routing ở lưới trái (`HY_MainRoutingMedium`, `HY_MainRoutingBigSiz`...) → Ở lưới phải, tick chọn `Sử dụng` cho các công đoạn từ Cuộn đến Đóng gói (`V-22_HY` ➔ `V-28_HY`) → Nhấn Lưu. Sau đó sang **A230** gán mã này cho NVL. |
 
+### [B260]
+**Tên:** Prod Worker Info (Thông tin nhân viên sản xuất)
+**DB Tables:** `STB_ProdWorkerInfo`
+**SPs:** `usp_ProdWorkerInfo_get`, `usp_ProdWorkerInfo_iud`, `usp_ProdWorkerInfo_Popup`
+
+| # | Triệu chứng | Nguyên nhân | Fix |
+|---|---|---|---|
+| 1 | Đã đăng ký nhân viên tại B260 nhưng tìm kiếm trên popup tại B552, B530, B540 không ra kết quả (trắng tinh) | 1. Chọn nhầm `WorkCenterCode` tại ô tìm kiếm đầu trang khi tạo (VD: chọn `VVT_F5` Hưng Yên trong khi trạm tác nghiệp chạy `VVT_F1` Bắc Ninh).<br>2. Cột `WorkerGroupCode` bị trống (rỗng).<br>3. Chưa tick chọn `Sử dụng` (`IsUsed=1`) hoặc `IsProdWorker=1`. | Vào **B260** chuyển đúng xưởng (`WorkCenterCode`) và gán nhóm `WorkerGroupCode` (`V-21` cho điện cực, `VE-01` cho lắp ráp) rồi tick đủ 2 ô `Sử dụng` + `IsProdWorker`. Hoặc chạy SQL: `UPDATE STB_ProdWorkerInfo SET WorkCenterCode='VVT_F1', WorkerGroupCode='V-21', IsUsed=1, IsProdWorker=1 WHERE WorkerCode='mã'` — xem [KB_06 §12](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_06_MASTER_DATA_TOOLS.md#b260--12--thông-tin-nhân-viên-sản-xuất-master-data-worker) |
+
 > 🔗 Chi tiết: [KB_03 §B210-B270](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_02_CELL_LINE.md), [KB_01 §1.3](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_01_UI_AND_SCREENS.md)
 
 ### [B310]
@@ -209,6 +218,7 @@ Related Files:
 | 1 | "Không tồn tại thiết lập Điện cực... Chưa CONFIG STB_SLITTINGLOCATIONCONFIG_VVT" | Bảng `STB_SlittingLocationConfig_VVT` thiếu record cho model | `INSERT INTO STB_SlittingLocationConfig_VVT (MaterialCode, LocationCode, ...) VALUES (...)` — xem [KB_05_02 §8.2](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_02_SCREEN_BUGS_QC.md#82-lỗi-chưa-config-trong-stb_slittinglocationconfig_vvt) |
 | 2 | Yêu cầu xóa dữ liệu kết quả cắt điện cực theo STT (Seq) hoặc Model (Width) tại tab Slitting | Cắt dư, chia cuộn nhầm kích thước hoặc lỗi dữ liệu chia cuộn cần dọn dẹp | **Safe SQL Delete (Audit Log + Delete):**<br>1. Ghi log: `INSERT INTO STB_ElectrodeSlittingResultHist (ElectrodeLotNumber, Seq, Flag, CreateDateTime, CreateUserID) SELECT ElectrodeLotNumber, Seq, 'DELETE', GETDATE(), N'SYSTEM_AI_FIX' FROM STB_ElectrodeSlittingResult WHERE ElectrodeLotNumber='MÃ_LOT' AND Seq BETWEEN ...;`<br>2. Xóa: `DELETE FROM STB_ElectrodeSlittingResult WHERE ElectrodeLotNumber='MÃ_LOT' AND Seq BETWEEN ...;` |
 | 3 | Hủy / Xóa mẻ trộn điện cực thừa ([B470/B552]) do ca đêm không chạy đến hoặc đổi kế hoạch | Đã cân Mixing nhưng chưa tráng Coating | **Cascade Delete SOP (3 Bảng Core + Pre-flight Check):**<br>Kiểm tra `STB_ElectrodeCoatingInfo` = 0 $\rightarrow$ Snapshot tempdb $\rightarrow$ Xóa `STB_ElectrodeMixStepInfo` $\rightarrow$ Xóa `STB_ElectrodeMixInfo` $\rightarrow$ Xóa `STB_SetInfo`. Xem chi tiết tại [KB_05_01 §8.10](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md#810-quy-trình-dọn-dẹp--xóa-mẻ-trộn-điện-cực-thừa-electrode-mixing-cancellation-sop). |
+| 4 | Popup tìm kiếm/nhập Mã nhân viên tại tab Mixing/Coating/Slitting không hiển thị kết quả (trắng tinh) | 1. Nhân viên khai báo tại B260 bị lệch xưởng (`WorkCenterCode` = `VVT_F5` thay vì `VVT_F1`).<br>2. Cột `WorkerGroupCode` bị để trống.<br>3. Chưa tick `IsUsed=1` hoặc `IsProdWorker=1`. | Vào **B260** sửa lại đúng `WorkCenterCode` (`VVT_F1`), gán `WorkerGroupCode` = `V-21`, tick đủ `Sử dụng` + `IsProdWorker` và bấm Lưu. Chi tiết tại [KB_06 §12](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_06_MASTER_DATA_TOOLS.md#b260--12--thông-tin-nhân-viên-sản-xuất-master-data-worker). |
 
 #### 📋 Cẩm Nang Schema Chuẩn & Quy Tắc Khảo Sát B552 (Chống Dò Dẫm Query):
 1. **⚠️ BẪY FONT CHỮ TRÊN UI (BẮT BUỘC NHỚ):**

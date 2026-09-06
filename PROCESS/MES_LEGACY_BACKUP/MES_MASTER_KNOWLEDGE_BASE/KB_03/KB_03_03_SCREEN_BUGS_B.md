@@ -77,11 +77,26 @@ Related Files:
 
 ## [B260] — Worker Management (Nhân sự sản xuất)
 
-### [B530]/[B540] — Lỗi 1: Tên nhân viên mới không hiển thị trong dropdown chọn nhân viên tại hoặc
-*   **Triệu chứng:** Nhân viên đã đăng ký thành công trên MES nhưng OP không tìm thấy tên khi chốt sản lượng.
-*   **Nguyên nhân gốc:** Khi khai báo nhân viên, cột mã nhóm nhân viên (`WorkerGroupCode`) bị điền sai (không phải nhóm `VE-01` của nhà máy).
-*   **Cách khắc phục:** Vào màn hình **B260**, tìm mã nhân viên, cập nhật lại cột `WorkerGroupCode` chính xác thành `VE-01` rồi nhấn Lưu.
-*   **Chi tiết nghiệp vụ:** Xem tại [KB_06_MASTER_DATA_TOOLS.md § 12](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_06_MASTER_DATA_TOOLS.md#12-b260---thông-tin-nhân-viên-sản-xuất).
+### [B552]/[B530]/[B540] — Lỗi 1: Tên/Mã nhân viên mới đăng ký không hiển thị trong popup/dropdown chọn nhân viên
+*   **Triệu chứng:** Nhân viên đã đăng ký thành công trên màn hình **B260** nhưng khi sang màn hình **B552** (tab Mixing/Coating/Slitting) hoặc **B530/B540/K361**, gõ mã tìm kiếm hoặc mở popup chọn nhân viên thì danh sách trống trơn (không hiển thị dòng nào).
+*   **Nguyên nhân gốc (3 nguyên nhân chính):**
+    1.  **Lệch Mã xưởng (`WorkCenterCode`):** Khi tạo mới trên B260, ô lọc/tìm kiếm phía trên đang chọn nhà máy khác (ví dụ: `VVT_F5` - Hưng Yên), khiến bản ghi lưu vào `STB_ProdWorkerInfo` mang `WorkCenterCode = 'VVT_F5'`. Khi sang màn hình B552/B530 đang tác nghiệp ở xưởng `VVT_F1` (Bắc Ninh), SP popup **`usp_ProdWorkerInfo_Popup`** lọc theo xưởng hiện tại nên loại bỏ nhân viên này.
+    2.  **Trống Mã nhóm (`WorkerGroupCode`):** Màn hình tác nghiệp truyền tham số nhóm công đoạn/chi phí (`@pCostGroupString`), SP lọc theo điều kiện `WorkerGroupCode IN (...)`. Do cột này bị NULL/rỗng nên nhân viên bị lọc mất.
+    3.  **Chưa tích chọn `Sử dụng` (`IsUsed = 1`) hoặc `IsProdWorker = 1`:** Cột `IsProc...` ngoài cùng bên phải chưa được tick.
+*   **Cách khắc phục:**
+    *   **Trên UI:** Vào lại màn hình **B260**, đổi Mã địa điểm thành `VVT_F1` (hoặc đúng xưởng đang chạy Lot), tìm mã nhân viên và chuyển `WorkCenterCode` về `VVT_F1`, điền cột `WorkerGroupCode` (`V-21` cho điện cực, `VE-01` cho lắp ráp cell), đảm bảo tích cả 2 ô `Sử dụng` và `IsProdWorker` ➔ Bấm Lưu.
+    *   **Bằng SQL:**
+        ```sql
+        UPDATE SmartFactoryV2.dbo.STB_ProdWorkerInfo
+        SET WorkCenterCode = 'VVT_F1',
+            WorkerGroupCode = 'V-21',
+            IsUsed = 1,
+            IsProdWorker = 1,
+            ChangeDateTime = GETDATE(),
+            ChangeUserID = 'FIX_B260'
+        WHERE WorkerCode = 'MÃ_NHÂN_VIÊN';
+        ```
+*   **Chi tiết nghiệp vụ:** Xem tại [KB_06_MASTER_DATA_TOOLS.md § 12](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_06_MASTER_DATA_TOOLS.md#b260--12--thông-tin-nhân-viên-sản-xuất-master-data-worker).
 
 ---
 

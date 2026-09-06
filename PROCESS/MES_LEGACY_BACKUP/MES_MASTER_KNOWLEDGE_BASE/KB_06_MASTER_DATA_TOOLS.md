@@ -1,4 +1,4 @@
-﻿<!--
+<!--
 AI-READY METADATA
 Purpose: Hướng dẫn master data (A230/A410/A419), thiết lập line/route (B210-B240), bypass thủ công, checklist thêm model mới & schema chi tiết
 Scope: Master Data & System Setup
@@ -494,17 +494,48 @@ SELECT * FROM STB_PackingStandard WHERE ProdSize = 'MBISizeD_của_model'
 
 ---
 
-## [B260] — 12. 👥 Thông Tin Nhân Viên Sản Xuất
+## [B260] — 12. 👥 Thông Tin Nhân Viên Sản Xuất (Master Data Worker)
 
-> ⚠️ **WorkerGroupCode PHẢI là `VE-01`** - Nếu điền sai -> nhân viên không hiển thị trong dropdown tại B530, B540
+> ⚠️ **Quy Tắc 4 Điều Kiện Bắt Buộc Để Nhân Viên Hiển Thị Trên Popup Chọn Nhân Viên (B552, B530, B540, K361...):**
+> 
+> Popup chọn nhân viên trên các màn hình tác nghiệp gọi Stored Procedure **`usp_ProdWorkerInfo_Popup`**. Để nhân sự tìm thấy và chọn được vào form, bản ghi trong `STB_ProdWorkerInfo` bắt buộc phải thỏa mãn:
+> 1. **Mã địa điểm (`WorkCenterCode`) PHẢI TRÙNG KHỚP với xưởng của trạm tác nghiệp:**
+>    - `VVT_F1`: Bắc Ninh (Dành cho các trạm chạy Lot `VV...`, `123456`).
+>    - `VVT_F3`: Hà Nam (Lưu ý: User thuộc Hà Nam sẽ bị SP tự động cưỡng bức `@WorkCenterCode = 'VVT_F3'`).
+>    - `VVT_F5`: Hưng Yên.
+>    - 💥 **Bẫy thường gặp:** Khi vào **B260**, ô tìm kiếm/lọc trên đầu đang chọn `VVT_F5` (Hưng Yên), người dùng bấm (+) tạo mới thì nhân viên đó sẽ mang `WorkCenterCode = 'VVT_F5'`. Khi sang màn hình **B552** hoặc **B530** đang chạy ở `VVT_F1` tìm kiếm sẽ **hoàn toàn trắng tinh (0 dòng)**!
+> 2. **Cột `WorkerGroupCode` (Mã nhóm công nhân) KHÔNG ĐƯỢC ĐỂ TRỐNG:**
+>    - Nhóm công đoạn Điện cực (Mixing / Coating / Slitting trên B552): Điền **`V-21`** (hoặc mã tổ tương ứng).
+>    - Nhóm Lắp ráp / Cell Line (B530 / B540): Điền **`VE-01`**.
+>    - *Cơ chế (#210719):* Từ ngày 2021-07-19, MES đã bỏ bảng trung gian `STB_CostGroupWorkerMapping` và lọc trực tiếp qua `STB_ProdWorkerInfo.WorkerGroupCode IN (SELECT Item FROM dbo.fnSplitToTable(',', @pCostGroupString))`. Nếu để trống cột này, khi trạm tác nghiệp truyền `@pCostGroupString`, nhân viên sẽ bị loại khỏi popup.
+> 3. **Tích chọn `Sử dụng` (`IsUsed = 1`)**: Bắt buộc tick chọn.
+> 4. **Tích chọn `IsProdWorker = 1`**: Trên giao diện B260 là cột `IsProc...` ở ngoài cùng bên phải, bắt buộc tick chọn.
 
 | Thao tác | Bước thực hiện |
 |----------|---------------|
-| Thêm | (+) -> Điền thông tin -> WorkerGroupCode='VE-01' -> Lưu |
-| Sửa | Click vào field -> Sửa -> Lưu |
-| Xóa | Chọn dòng -> (-) -> Yes -> Lưu |
+| Thêm mới | Chọn đúng Mã công ty (`VVT`) & Mã địa điểm xưởng (`VVT_F1`/`VVT_F3`/`VVT_F5`) ➔ Bấm (+) ➔ Điền `Mã nhân viên`, `Tên nhân viên` ➔ Gán `WorkerGroupCode` (`V-21` hoặc `VE-01`) ➔ Tick `Sử dụng` và `IsProdWorker` ➔ Bấm Lưu |
+| Sửa xưởng/nhóm | Click trực tiếp vào ô trên lưới ➔ Sửa thông tin ➔ Bấm Lưu |
+| Xóa | Chọn dòng ➔ Bấm (-) ➔ Yes ➔ Bấm Lưu |
 
-**Filter tìm kiếm:** Mã công ty `VVT`, Mã địa điểm `VVT_F1`, `VVT_F2`, `VVT_F3` (Hà Nam)
+```sql
+-- Quick Fix: Cập nhật nhanh nhân viên về đúng xưởng và nhóm công nhân (Safe Update)
+BEGIN TRAN;
+UPDATE SmartFactoryV2.dbo.STB_ProdWorkerInfo
+SET WorkCenterCode = 'VVT_F1',         -- Chuyển về đúng xưởng thao tác (VD: VVT_F1 Bắc Ninh)
+    WorkerGroupCode = 'V-21',         -- Gán nhóm công đoạn (V-21: Điện cực, VE-01: Lắp ráp)
+    IsUsed = 1,
+    IsProdWorker = 1,
+    ChangeDateTime = GETDATE(),
+    ChangeUserID = 'SYSTEM_FIX'
+WHERE WorkerCode = '32603087';        -- Thay mã nhân viên cần sửa
+
+-- Kiểm tra lại:
+SELECT WorkerCode, WorkerName, WorkCenterCode, WorkerGroupCode, IsUsed, IsProdWorker
+FROM SmartFactoryV2.dbo.STB_ProdWorkerInfo WITH(NOLOCK)
+WHERE WorkerCode = '32603087';
+
+-- ROLLBACK; -- COMMIT TRAN;
+```
 
 ---
 
