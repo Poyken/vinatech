@@ -6,12 +6,22 @@
 # Ignore archive/binary/executable files
 *.rar
 *.zip
+*.7z
+*.tar
+*.gz
 *.exe
 *.dll
 *.msi
 *.mdb
 *.pdf
 *.pptx
+*.mp4
+*.mkv
+*.avi
+*.mov
+*.wmv
+*.flv
+*.iso
 
 # Ignore node_modules
 node_modules/
