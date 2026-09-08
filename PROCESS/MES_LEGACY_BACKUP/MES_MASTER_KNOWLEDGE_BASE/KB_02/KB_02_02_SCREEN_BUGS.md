@@ -1,4 +1,4 @@
-﻿
+
 <!--
 AI-READY METADATA
 Purpose: Sổ tay các kịch bản lỗi & hướng dẫn khắc phục theo TCode của phân hệ Kho WMS (A130, F110, F130, F330, F430, F721, F741-F748, F750, F761, HN00, HN101)
@@ -156,7 +156,23 @@ Related Files:
     1. Khi xuất chuyển từ Bắc Ninh sang Hưng Yên, bắt buộc chọn **Mã kho hàng (Tới)** là `ROH-HY-WH` (Kho nguyên vật liệu / linh kiện Hưng Yên).
     2. Đảm bảo mã Line tương ứng đã được thiết lập `MaterialWarehouseCode = 'ROH_HY_WH'`.
 
+### Lỗi 6: Xuất điều chuyển nguyên vật liệu từ Hưng Yên (VVT_F5) về Bắc Ninh (VVT_F1) qua màn hình [F430]
+*   **Triệu chứng:** Người dùng tại nhà máy Hưng Yên (`VVT_F5`) mở popup `VNT_MaterialWarehouseInOutHistReg` tại màn hình **F430** để xuất chuyển NVL về Bắc Ninh, nhưng ô "Mã chuyền" bị trắng tinh không có dữ liệu chọn, hoặc chỉ hiện các line sản xuất nội bộ Hưng Yên (`VVHYC-*`), hoặc hiện nhầm dòng `HY_BN - Xuất NVL sang Hưng Yên`.
+*   **Nguyên nhân gốc:**
+    1. Bảng `STB_LineInfo` chưa tạo mã chuyền đại diện cho tuyến Hưng Yên xuất về Bắc Ninh (`BN_HY`) với `WorkCenterCode = 'VVT_F5'`, `MaterialWarehouseCode = 'ROH_VN_WH'`.
+    2. Nếu cấu hình nhầm `WorkCenterCode` của `BN_HY` thành `VVT_F1`, hệ thống NAIS sẽ không hiển thị mã chuyền này khi người dùng đăng nhập tại xưởng Hưng Yên (`VVT_F5`).
+    3. Tránh đảo ngược xưởng giữa 2 mã tuyến: `HY_BN` (thuộc Bắc Ninh `VVT_F1` xuất đi Hưng Yên) và `BN_HY` (thuộc Hưng Yên `VVT_F5` xuất về Bắc Ninh).
+*   **Cách khắc phục chuẩn hóa:**
+    1. Vào màn hình **[B210] Thông tin line (`LineInfo`)**:
+       - Khai báo mã chuyền: `LineCode = 'BN_HY'`, `WorkCenterCode = 'VVT_F5'`, `LineName = N'Bắc Ninh'`, `LineDesc = N'Xuất NVL sang Bắc Ninh'`, `MaterialWarehouseCode = 'ROH_VN_WH'`, `IsUsed = 1`.
+       - Đảm bảo mã chuyền ngược lại: `LineCode = 'HY_BN'` phải giữ đúng `WorkCenterCode = 'VVT_F1'` *(Bắc Ninh)*, `LineDesc = N'Xuất NVL sang Hưng Yên'`, `MaterialWarehouseCode = 'ROH_HY_WH'`.
+    2. Quy trình thao tác 2 đầu tại **[F430]**:
+       - **Tại Hưng Yên (VVT_F5):** Vào [F430] ➔ Bấm **"Nguyên liệu đầu ra"** ➔ Chọn Kho từ `ROH_HY_WH`, Kho tới `ROH_VN_WH`, Mã chuyền `BN_HY` ➔ Quét mã LotID để xuất kho.
+       - **Tại Bắc Ninh (VVT_F1):** Khi hàng tới nơi, thủ kho Bắc Ninh vào [F430] ➔ Nhấn nút **"Xác nhận cấp NVL"** (`ConfirmGetMaterials`) để xác nhận nhập kho chính thức vào `ROH_VN_WH`.
+*   **Cập nhật:** vanduc (2026-09-07). Tested & verified trên Live DB `SmartFactoryV2`.
+
 ---
+
 
 
 ## [F721] — WMS Material Stock (Tồn kho nguyên vật liệu)

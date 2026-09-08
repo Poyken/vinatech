@@ -21,3 +21,7 @@
 ## 3. UNICODE & FILE ENCODING
 - Luôn thêm tiền tố `N` cho chuỗi tiếng Việt/tiếng Hàn (ví dụ: `N'Tiếng Việt'`, `N'한글'`).
 - Mọi file SQL phải lưu dưới dạng mã hóa **UTF-8 with BOM** (UTF-8-BOM).
+
+## 4. AUDIT TRAIL & USER ID CONVENTION
+- Mọi thao tác UPDATE có cột `ChangeUserID` hoặc `UpdateUserID` **BẮT BUỘC** gán giá trị: `'vanduc'` (theo chỉ đạo của Quản trị viên).
+

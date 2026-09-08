@@ -423,6 +423,22 @@ Related Files:
   3. **Mã kho đích điều chuyển BN ➔ HY:** Khi xuất hàng điều chuyển từ Bắc Ninh sang Hưng Yên, mã kho hàng tới (Target Warehouse) bắt buộc phải chọn đúng là `ROH-HY-WH` (Kho NVL Hưng Yên) thì hệ thống NAIS mới nhận diện và tra cứu được dữ liệu luân chuyển.
   4. **Lưu ý nghiệp vụ xuất kho:** Chú ý cơ chế xuất kho theo cả lô/toàn bộ số lượng của hệ thống so với nhu cầu xuất từng phần để phân chia Lot hoặc chia phiếu phù hợp trước khi xuất.
 
+### [F430]/[B210] — 📍 ID_35 Khai báo Line BN_HY và chuẩn hóa điều chuyển xuất kho NVL từ Hưng Yên (VVT_F5) về Bắc Ninh (VVT_F1)
+* **Ngày ghi nhận & xử lý:** `2026-09-07`
+* **Màn hình liên quan (TCode):** `[F430] - Lịch sử đầu vào/đầu ra NVL` & `[B210] - Thông tin Line (LineInfo)`
+* **Triệu chứng lỗi:** Thủ kho tại nhà máy Hưng Yên (`VVT_F5`) mở popup `VNT_MaterialWarehouseInOutHistReg` tại màn hình F430 không có danh mục xuất NVL về Bắc Ninh; ô Mã chuyền bị trống hoặc hiện nhầm `HY_BN - Xuất NVL sang Hưng Yên`.
+* **Nguyên nhân gốc (Root Cause):**
+  1. Thiếu mã chuyền đại diện `BN_HY` thuộc xưởng Hưng Yên (`VVT_F5`) liên kết với kho đích Bắc Ninh (`ROH_VN_WH`) trong bảng `STB_LineInfo`.
+  2. Sự nhầm lẫn gán đảo ngược xưởng giữa `HY_BN` (Bắc Ninh ➔ Hưng Yên) và `BN_HY` (Hưng Yên ➔ Bắc Ninh).
+* **Phương án xử lý (Action & Hotfix):**
+  1. Cập nhật Master Data trên `[B210]` / `STB_LineInfo`:
+     - Line `BN_HY`: `WorkCenterCode = 'VVT_F5'`, `LineName = N'Bắc Ninh'`, `LineDesc = N'Xuất NVL sang Bắc Ninh'`, `MaterialWarehouseCode = 'ROH_VN_WH'`, `IsUsed = 1`.
+     - Line `HY_BN`: `WorkCenterCode = 'VVT_F1'`, `LineName = N'Hưng Yên'`, `LineDesc = N'Xuất NVL sang Hưng Yên'`, `MaterialWarehouseCode = 'ROH_HY_WH'`, `IsUsed = 1`.
+  2. Quy trình 2 đầu: Hưng Yên quét xuất `BN_HY` ➔ Hàng về Bắc Ninh bấm nút `Xác nhận cấp NVL` (`ConfirmGetMaterials`) tại [F430] để hoàn tất nhập kho `ROH_VN_WH`.
+* **Thực hiện bởi:** `vanduc` (2026-09-07). Verified trên Live DB `SmartFactoryV2`.
+
+---
+
 ### 📍 ID_22 - B767 - So Serial tem Sanmina khong reset ve 00001 khi Ma ngay (Tuan...
 * **Ngay sua:** `2026-08-22`
 * **Man hinh lien quan (TCode):** `B767 - In tem KH Sanmina India`
@@ -690,4 +706,46 @@ WHERE LEN(BoxSerialNo) = 13 AND BoxSerialNo LIKE @SerialPrefix + '%'
   - `STB_SetInfo`: Còn lại **0 bản ghi**.
   - Không có bất kỳ lỗi phát sinh nào, dữ liệu hạ nguồn an toàn 100%.
 * **Tham chiếu KB:** [KB_09_SCREEN_BUG_FIXBOOK.md § [B552] #3](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md#L211), [KB_05_01 § 8.10](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md#810-quy-trình-dọn-dẹp--xóa-mẻ-trộn-điện-cực-thừa-electrode-mixing-cancellation-sop)
+
+---
+
+### [B552] — 📍 ID_41 Xóa 45 bản ghi kết quả cắt điện cực thừa cho Lot VVQR0720001E66 (STT 11-50) & VVQP0720001E11 (STT 16-20)
+* **Ngày sửa:** `2026-09-08`
+* **Màn hình liên quan (TCode):** `[B552] - Vietnam_Kết quả đo điện cực (Tab Slitting - Cắt điện cực)`
+* **Bảng liên quan:** `SmartFactoryV2.dbo.STB_ElectrodeSlittingResult`, `SmartFactoryV2.dbo.STB_ElectrodeSlittingResultHist`
+* **Triệu chứng lỗi:** OP tại máy chia cuộn điện cực yêu cầu xóa các cuộn cắt thừa/lỗi:
+  1. Lot `VVQR0720001E66` (Model 35105 / Slitting Code `CY`): Xóa STT từ 11 đến 50 (40 bản ghi).
+  2. Lot `VVQP0720001E11` (Model 35105 / Slitting Code `HC`): Xóa STT từ 16 đến 20 (5 bản ghi).
+* **Nguyên nhân gốc (Root Cause):** Thao tác cắt chia cuộn dư/lỗi dòng kết quả cần dọn dẹp để chạy lại hoặc chuẩn hóa dữ liệu. Giao diện B552 không có nút xóa dòng kết quả cắt nên cần xử lý qua DB.
+* **Cơ chế sao lưu (Backup & Pre-flight):**
+  - Snapshot file preflight: `tools/backups/preflight_20260908_131509_STB_ElectrodeSlittingResult_deploy_preflight.json` (40 bản ghi đầy đủ trước khi xóa).
+  - Bảng Audit history: `SmartFactoryV2.dbo.STB_ElectrodeSlittingResultHist` (45 bản ghi, Flag = `DELETE`, User = `SYSTEM_AI_FIX`).
+* **Phương án sửa lỗi & Script Deploy:** `sql/hotfix_20260908_131431_FIX_B552_SLITTING_DEL_SEQ.sql`
+  ```sql
+  USE SmartFactoryV2;
+  GO
+
+  BEGIN TRANSACTION;
+
+  -- 1. [AUDIT LOG] Ghi lưu vết lịch sử trước khi xóa (Chuẩn SOP KB_09 § B552)
+  INSERT INTO STB_ElectrodeSlittingResultHist (ElectrodeLotNumber, Seq, Flag, CreateDateTime, CreateUserID)
+  SELECT ElectrodeLotNumber, Seq, 'DELETE', GETDATE(), N'SYSTEM_AI_FIX'
+  FROM STB_ElectrodeSlittingResult WITH(NOLOCK)
+  WHERE (ElectrodeLotNumber = 'VVQR0720001E66' AND Seq BETWEEN 11 AND 50)
+     OR (ElectrodeLotNumber = 'VVQP0720001E11' AND Seq BETWEEN 16 AND 20);
+
+  -- 2. [EXECUTION] Xóa 45 bản ghi cắt thừa theo yêu cầu người dùng
+  DELETE FROM STB_ElectrodeSlittingResult
+  WHERE (ElectrodeLotNumber = 'VVQR0720001E66' AND Seq BETWEEN 11 AND 50)
+     OR (ElectrodeLotNumber = 'VVQP0720001E11' AND Seq BETWEEN 16 AND 20);
+
+  COMMIT TRANSACTION;
+  GO
+  ```
+* **Kết quả nghiệm thu:**
+  - `VVQR0720001E66`: Đã xóa thành công 40 bản ghi (Seq 11 ➔ 50). Còn lại chính xác **12 bản ghi** (Seq 1 ➔ 10 và Seq 51, 52).
+  - `VVQP0720001E11`: Đã xóa thành công 5 bản ghi (Seq 16 ➔ 20). Còn lại chính xác **15 bản ghi** (Seq 1 ➔ 15).
+  - `STB_ElectrodeSlittingResultHist`: Đã ghi nhận đầy đủ 45 dòng audit log.
+* **Tham chiếu KB:** [KB_09_SCREEN_BUG_FIXBOOK.md § [B552] #2](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md#L210), [HOTFIX_LOG.md § ID_36](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/AI_AGENT_CONFIG/HOTFIX_LOG.md#L515), [HOTFIX_LOG.md § ID_39](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/AI_AGENT_CONFIG/HOTFIX_LOG.md#L638)
+
 
