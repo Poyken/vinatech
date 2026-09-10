@@ -150,49 +150,59 @@ ORDER BY CreateDate DESC;
 
 ---
 
-### 2.5 ✅ Đóng Gói (Packing) — CÓ THỂ ROLLBACK TRÊN UI
+### 2.5 ✅ Đóng Gói (Packing) — CÓ THỂ ROLLBACK TRÊN UI (HỦY TỪNG BOX & HỦY TẤT CẢ)
+*(Xác minh 100% theo Slide 39 — `image28.png` trong tài liệu đào tạo chuẩn 2026-09 của DX Team)*
 
-**Đây là thao tác DUY NHẤT có chức năng rollback hoàn chỉnh trên POP Web UI.**
+**Đây là thao tác có chức năng rollback hoàn chỉnh và tiện lợi nhất trên POP Web UI.**
 
-**Cách rollback đóng gói trên UI:**
-
-1. Vào công đoạn **Đóng gói (Packing)** trên menu bên trái
-2. Bấm nút **"Lịch sử đóng gói"** (History) — thường là icon 📋 hoặc nút ở thanh công cụ
-3. Tìm bản ghi đóng gói cần hủy trong danh sách
-4. Bấm nút **"Hủy đóng gói"** (Cancel Packing / 취소)
-5. Xác nhận hủy → Hệ thống tự động:
+**Quy trình rollback đóng gói chính thức trên Kiosk UI:**
+1. Vào công đoạn **Đóng gói (Packing)** trên Menu quy trình bên trái.
+2. Chạm vào nút **"Lịch sử"** ở thanh công cụ phía dưới -> Hộp thoại danh sách Box hiển thị chi tiết: Mã Box, Số lượng, Ngày/giờ, Tên công nhân.
+3. **Cấp độ 1: HỦY ĐÓNG GÓI TỪNG BOX (Cancel Single Box):**
+   - Chạm vào nút **`[HỦY]`** trên dòng Box cần hủy.
+   - Hộp thoại xác nhận số lượng hiển thị -> Bấm xác nhận.
+   - Hệ thống tự động xóa mã Box trong `STB_PackingInfo` và **KHÔI PHỤC NGAY LẬP TỨC** số lượng của Box đó về lại LOT gốc (trạng thái *Đang Chờ*).
+4. **Cấp độ 2: HỦY TẤT CẢ (Cancel All Boxes):**
+   - Chạm vào nút **`[HỦY TẤT CẢ]`** ở góc trên hộp thoại để hoàn tác toàn bộ các Box đã đóng của Lệnh sản xuất chỉ với 1 thao tác.
+5. **In lại nhãn (Reprint):**
+   - Chạm vào nút **"In"** trên bất kỳ Box nào để in lại tem dán (in được cả nhãn Box và nhãn LOT).
 
 ```
-Khi bấm "Hủy Đóng Gói":
+Khi bấm "HỦY" hoặc "HỦY TẤT CẢ":
 1. STB_PackingInfo → DELETE hoặc UPDATE Status = 'Cancelled'
-2. STB_SetInfo → REVERT: PackedQty, PackingStatus về trạng thái trước
-3. VINA_PACKING_LOG → INSERT: Log hủy đóng gói
-4. BoxID → Released (có thể dùng lại)
+2. STB_SetInfo → REVERT: PackedQty -= BoxQty, Trạng thái LOT quay về 'Đang Chờ'
+3. VINA_PACKING_LOG → INSERT: Log hủy đóng gói kèm WorkerID
+4. BoxID → Thu hồi và giải phóng
 ```
-
-**Điều kiện để hủy được:**
-- ✅ Đóng gói chưa in tem (PrintFlag = 0)
-- ✅ Box chưa xuất kho (ShipFlag = 0)  
-- ❌ Nếu đã in tem → Cần hủy tem trước rồi mới hủy đóng gói
-- ❌ Nếu đã xuất kho → Không thể hủy trên UI
 
 > [!TIP]
-> **Best Practice:** Nếu đóng gói sai, hủy NGAY trước khi in tem. Sau khi in tem, quy trình 
-> hủy phức tạp hơn nhiều và có thể cần can thiệp IT.
+> **Đính chính nhận định cũ:** Công nhân hoàn toàn có thể bấm nút **`[HỦY]`** trực tiếp trên Kiosk ngay cả khi đã bấm in tem nhãn, miễn là thùng hàng chưa làm thủ tục quét mã xuất kho vật lý sang kho thành phẩm (`ShipFlag = 0`).
 
 ---
 
-### 2.6 ✅ In Nhãn (Label Print) — AN TOÀN
+### 2.6 ✅ In Nhãn (Label Print) — AN TOÀN TUYỆT ĐỐI
+*(Tham chiếu Slide 38, 45, 46, 47)*
 
-**Bản chất:** In nhãn là thao tác **read + print**, không thay đổi state dữ liệu chính.
-
-- Chỉ UPDATE cờ `PrintFlag = 1` và `PrintDate`
-- In lại nhãn bất kỳ lúc nào qua nút "In lại" trong Lịch sử đóng gói
-- Không gây side-effect nào trên kho/sản lượng
+**Bản chất:** In nhãn là thao tác **read + print**, không làm biến động số lượng tồn kho hay routing của LOT.
+- Đề xuất nhãn phù hợp có gắn Sao ⭐.
+- Cho phép chỉnh sửa `MaterialNo` (Tên vật tư) trực tiếp trên giao diện trước khi xuất lệnh in.
+- In lại nhãn bất kỳ lúc nào qua nút "In lại" trong Lịch sử đóng gói hoặc màn hình In nhãn.
+- Không gây side-effect nào trên kho/sản lượng.
 
 ---
 
-### 2.7 ⚠️ Quality Inspection — HẠN CHẾ
+### 2.7 ⚠️ Hạng Mục Tự Kiểm Tại Chuyền (In-Line QC Auto-Save)
+*(Tham chiếu Slide 49, 50 — `image46.png`, `image47.png`)*
+
+- **Cơ chế Auto-save on blur:** Khi nhập giá trị đo vào ô dữ liệu tại `/pop/quality/self`, chỉ cần click chuột ra ngoài ô nhập là hệ thống tự động lưu vào DB và đồng bộ tức thì về NAIS MES.
+- **Cách Rollback / Sửa sai số đo:**
+  - Nếu công nhân gõ nhầm số đo (ví dụ: `12.5` thay vì `12.0`): Chỉ cần click lại vào ô đó, gõ lại số đúng và click ra ngoài -> Hệ thống tự động ghi đè giá trị đo mới nhất.
+  - Nếu cần tăng mẫu đo: Bấm nút `[+]` để thêm lần đo mẫu.
+  - Nếu cần giải trình bất thường: Bấm nút thêm ghi chú hiện trường.
+
+---
+
+### 2.8 ⚠️ Quality Inspection (/pop/quality: IQC / PQC / OQC) — HẠN CHẾ
 
 **Trước Submit Final:**
 - ✅ Sửa kết quả kiểm tra (Pass/Fail, giá trị đo)

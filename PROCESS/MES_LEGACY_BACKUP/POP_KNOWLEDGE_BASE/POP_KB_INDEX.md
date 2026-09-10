@@ -16,8 +16,8 @@ Related Files:
 > **URL:** `https://pop.vinatech.com/`  
 > **Backend DB:** `VINATECH_POP` (riêng) + `SmartFactoryV2` (shared với MES)  
 > **API Server:** `https://pop.vinatech.com/api/` (RESTful, JSON)  
-> **Phiên bản KB:** v1.0 (Khởi tạo 2026-09-09 — Xác minh bằng Live UI + DB Audit)  
-> **🔑 Keywords:** POP, kiosk, sản xuất, đóng gói, nhập NVL, packing, merge pack, label, quality, IQC, PQC, OQC
+> **Phiên bản KB:** v2.0 (Khởi tạo 2026-09-09 — Đồng bộ 100% Bộ Slide Đào Tạo POP.pptx của Hanbit Kang & Vietnam DX Team)  
+> **🔑 Keywords:** POP, kiosk, sản xuất, đóng gói, nhập NVL, packing, merge pack, label, quality, IQC, PQC, OQC, slide mapping, marking, self inspection, auto-save
 
 ---
 
@@ -27,11 +27,12 @@ Related Files:
 |---|------|----------|--------------|
 | INDEX | [POP_KB_INDEX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_INDEX.md) | Master Index + Routing Map | Điểm bắt đầu mọi tra cứu POP |
 | 01 | [POP_KB_01_ARCHITECTURE_AND_API.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_01_ARCHITECTURE_AND_API.md) | Kiến trúc hệ thống, API endpoints, DB schema mapping | Debug API, hiểu data flow |
-| 02 | [POP_KB_02_SCREEN_OPERATIONS.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_02_SCREEN_OPERATIONS.md) | Hướng dẫn vận hành từng màn hình + DB impact | Thao tác sản xuất, đóng gói |
+| 02 | [POP_KB_02_SCREEN_OPERATIONS.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_02_SCREEN_OPERATIONS.md) | Hướng dẫn vận hành từng màn hình + DB impact (v2.0) | Thao tác sản xuất, đóng gói, marking |
 | 03 | [POP_KB_03_TROUBLESHOOTING.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_03_TROUBLESHOOTING.md) | Lỗi thường gặp + Root cause + Fix | Xử lý sự cố khẩn cấp |
-| 04 | [POP_KB_04_ROLLBACK_AND_SAFETY.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_04_ROLLBACK_AND_SAFETY.md) | Phân tích khả năng Rollback trên UI + DB safety | Hoàn tác thao tác, an toàn dữ liệu |
+| 04 | [POP_KB_04_ROLLBACK_AND_SAFETY.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_04_ROLLBACK_AND_SAFETY.md) | Phân tích khả năng Rollback trên UI + DB safety (v2.0) | Hủy đóng gói Box, an toàn dữ liệu |
 | 05 | [POP_KB_05_DB_VERIFICATION_AUDIT.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_05_DB_VERIFICATION_AUDIT.md) | Kết quả đối chiếu UI vs DB thực tế | Kiểm toán, xác minh tính chính xác |
-| REF | [POP_USER_MANUAL.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_USER_MANUAL.md) | Hướng dẫn sử dụng chi tiết cho end-user | Training công nhân |
+| MAP | [POP_SLIDE_DECK_MAPPING_AND_ANALYSIS.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_SLIDE_DECK_MAPPING_AND_ANALYSIS.md) | Phân tích 51 slides POP.pptx & 50 ảnh trích xuất | Đối chiếu tài liệu đào tạo DX Team |
+| REF | [POP_USER_MANUAL.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_USER_MANUAL.md) | Cẩm nang vận hành chi tiết 6 phần cho end-user (v2.0) | Training công nhân, thao tác Kiosk |
 | REF | [POP_SYSTEM_INTEGRATION_GUIDE.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_SYSTEM_INTEGRATION_GUIDE.md) | Tích hợp POP ⇄ MES ⇄ Groupware ⇄ ERP | Hiểu luồng dữ liệu liên hệ thống |
 | REF | [POP_QUALITY_AND_SCREEN_REFERENCE.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_QUALITY_AND_SCREEN_REFERENCE.md) | Tham chiếu Quality screens + mapping | QC operations |
 | REF | [POP_TRAINING_SCREEN_QUALITY.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_TRAINING_SCREEN_QUALITY.md) | Tài liệu training Quality screens | Đào tạo QC |
@@ -43,12 +44,17 @@ Related Files:
 | Tình huống | File chính | File phụ |
 |-----------|-----------|---------|
 | Lỗi đăng nhập POP, không load được trang | KB_01 §1.1 | KB_03 §1 |
-| Không thấy Work Order / DayPlan | KB_02 §1.4 | KB_03 §2 |
-| Lỗi nhập NVL (Material Input) | KB_02 §2.3 | KB_01 §3.2, KB_03 §3 |
-| Lỗi đóng gói / Merge Pack | KB_02 §3 | KB_03 §4 |
-| Lỗi in tem / label print | KB_02 §5 | KB_03 §5 |
-| Muốn hủy/rollback thao tác | **KB_04** (SoT) | KB_02 §3.8 |
-| Quality: IQC/PQC/OQC/FOQC | KB_02 §6 | POP_QUALITY_REF |
+| Không thấy Work Order / DayPlan | KB_02 §1.4 | KB_03 §2, Slide 13 |
+| Lỗi nhập NVL (Material Input) | KB_02 §6 | KB_01 §3.2, Slide 21-23 |
+| Nạp nhanh NVL theo BOM | KB_02 §6.2 ("Lượng kiến cấp") | USER_MANUAL §2.3.1 |
+| Tra cứu đích danh LOT NVL trong kho | KB_02 §6.2 ("Tồn kho") | USER_MANUAL §2.3.2 |
+| Nhập mã Marking công đoạn Bọc Vỏ | KB_02 §7.2 | USER_MANUAL §2.7, Slide 29 |
+| Lỗi đóng gói / Merge Pack / Chia Box | KB_02 §9 | KB_03 §4, Slide 33-37 |
+| Muốn hủy đóng gói Box (Rollback) | **KB_04 §2.5** (SoT) | KB_02 §9.2, Slide 39 |
+| Lỗi in tem / label print | KB_02 §10 | KB_03 §5, Slide 38, 45-47 |
+| Tự kiểm In-Line QC tại chuyền | KB_02 §12.1 | USER_MANUAL §6, Slide 49, 50 |
+| Tra cứu ảnh slide gốc theo số slide | **SLIDE_MAPPING** (SoT) | assets/slides_images/ |
+| Quality: IQC/PQC/OQC/FOQC | KB_02 §12 | POP_QUALITY_REF |
 | API endpoint không phản hồi | KB_01 §2 | KB_03 §6 |
 | Kiểm toán UI vs DB | **KB_05** (SoT) | KB_01 §3 |
 | Hiểu kiến trúc tổng thể | KB_01 §1 | POP_SYSTEM_INTEGRATION |
