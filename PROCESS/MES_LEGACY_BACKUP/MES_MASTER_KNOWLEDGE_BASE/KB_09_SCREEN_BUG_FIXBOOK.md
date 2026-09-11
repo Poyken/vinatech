@@ -711,6 +711,11 @@ COMMIT TRANSACTION;
 |---|---|---|
 | Update ngày SX hàng loạt → chỉ Lot cuối cùng được đồng bộ | SP dùng `MAX(LotID)` thay vì loop qua tất cả | ALTER SP sửa logic loop |
 
+### [F430] / WMS FIFO — Lỗi Chặn Xuất Kho Vi Phạm FIFO (Ngày vs Tháng)
+| Triệu chứng | Nguyên nhân | Fix |
+|---|---|---|
+| Quét xuất Lot NVL tại [F430] báo lỗi: *"Trước tiên hãy lấy nguyên liệu nhập trước... Tồn tại mã vạch này được nhập trước (/ Sản Xuất trước)..."* dù 2 Lot cùng tháng sản xuất | SP lõi `usp_DoValidateFIFO` đang cấu hình so sánh theo ngày `yyyy-MM-dd` (Audit mode) nên chặn Lot có ngày SX sau, kể cả cùng tháng | **Cách 1 (Chuyển sang FIFO theo tháng):** `ALTER PROCEDURE usp_DoValidateFIFO` sửa 4 vị trí từ `'yyyy-MM-dd'` $\rightarrow$ `'yyyy-MM'` (xem [KB_02 §4.9.1](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_02/KB_02_01_WMS_CORE.md#491-cơ-chế-fifo-theo-ngày-vs-theo-tháng-usp_dovalidatefifo)).<br>**Cách 2 (Bypass riêng mã):** Thêm mã NVL vào danh sách `@MaterialCode not in (...)` trong SP wrapper `usp_VVTMaterialWarehouse_validFIFO`. |
+
 ### [G400] — Customer Return () Reject
 | Triệu chứng | Nguyên nhân | Fix |
 |---|---|---|

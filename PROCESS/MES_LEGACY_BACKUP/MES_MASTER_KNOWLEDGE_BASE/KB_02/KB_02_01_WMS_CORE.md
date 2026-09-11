@@ -253,7 +253,32 @@ UPDATE STB_MaterialLotInfo SET MaterialLocationCode = 'Vị_Trí_Mới' WHERE Lo
 ### 4.9 FIFO & Validation NVL (Tắt/Bật chặn)
 
 - **Tắt FIFO cho toàn bộ:** SP `usp_MaterialWarehouseInOutHist_iud` -> Comment out dòng FIFO check
-- **Tắt FIFO cho NVL cụ thể:** SP `usp_VVTMaterialWarehouse_validFIFO`
+- **Tắt FIFO cho NVL cụ thể (Bypass list):** SP `usp_VVTMaterialWarehouse_validFIFO` (thêm mã vào danh sách `@MaterialCode not in ('...', '...')` tại dòng 152-220).
+- **SP lõi kiểm tra & chặn FIFO:** `usp_DoValidateFIFO` (được gọi từ `usp_VVTMaterialWarehouse_validFIFO`).
+
+#### 4.9.1 Cơ Chế FIFO Theo Ngày vs Theo Tháng (`usp_DoValidateFIFO`)
+> 📌 **Bản chất nghiệp vụ Vinatech (`@CompanyCode = 'VVT'`):** Hệ thống KHÔNG kiểm tra ngày nhập kho `GRDate` hay `CreateDateTime` mà đối soát theo **`LotAttr10`** (Ngày sản xuất của Vendor/Nhà cung cấp được nhập từ màn hình [F330]).
+
+* **Hai chế độ vận hành FIFO:**
+  1. **FIFO theo NGÀY (`yyyy-MM-dd`):** Kích hoạt khi có yêu cầu Audit nghiêm ngặt (như Audit nhà máy Bắc Ninh). Bắt buộc Lot sản xuất ngày trước phải xuất trước ngày sau, kể cả khi cùng chung một tháng.
+  2. **FIFO theo THÁNG (`yyyy-MM`):** Áp dụng khi sản xuất thực tế cần độ linh hoạt. Các Lot có ngày sản xuất trong cùng một tháng (ví dụ Lot ngày 04/03/2026 và 20/03/2026) được coi là cùng kỳ hạn và **cho phép xuất tự do**.
+
+* **Quy trình chuyển đổi giữa Ngày và Tháng trong SP `usp_DoValidateFIFO`:**
+  Khi cần chuyển đổi giữa `yyyy-MM-dd` (Ngày) và `yyyy-MM` (Tháng), phải sửa đồng bộ tại **4 vị trí** trong SP `usp_DoValidateFIFO`:
+  - **Vị trí 1 (Dòng ~83):** Trong khối `TRY...CATCH` lấy ngày SX của Lot ưu tiên (`@Lotattr10fifo`).
+  - **Vị trí 2 (Dòng ~93):** Gán biến `@CreateDateTime`.
+  - **Vị trí 3 (Dòng ~123):** Lấy thông tin Lot cũ `@A1` và số lượng tồn `@B1` để in ra câu cảnh báo lỗi.
+  - **Vị trí 4 (Dòng ~154):** Đoạn `IF EXISTS (...)` quyết định có bung `RAISERROR` chặn thủ kho xuất hàng tại màn hình [F430] hay không.
+
+```sql
+-- Ví dụ: Chuyển sang FIFO THEO THÁNG (yyyy-MM):
+or ( FORMAT(convert(date,MLI.Lotattr10,120), 'yyyy-MM') < ( FORMAT(convert(date,@Lotattr10,120), 'yyyy-MM')) and @CompanyCode='VVT'
+     and Year(convert(date,MLI.Lotattr10,120)) <= Year(convert(date,@Lotattr10,120)))
+
+-- Ví dụ: Chuyển về FIFO THEO NGÀY (yyyy-MM-dd) khi Audit:
+or ( FORMAT(convert(date,MLI.Lotattr10,120), 'yyyy-MM-dd') < ( FORMAT(convert(date,@Lotattr10,120), 'yyyy-MM-dd')) and @CompanyCode='VVT'
+     and Year(convert(date,MLI.Lotattr10,120)) <= Year(convert(date,@Lotattr10,120)))
+```
 
 > ⚠️ **Nordex Audit (từ 2026-02-05):** Logic chặn quét sai BOM trong SP `usp_RawMaterialInputHist_iud` đang bị **Comment Out tạm thời**. Hệ thống hiện chấp nhận NVL không có trong BOM - cần bật lại sau khi audit xong.
 
@@ -713,8 +738,9 @@ Thủ kho quét mã Lot của nguyên vật liệu tại F430 để xác nhận 
 
 #### 2. Logic xử lý chi tiết trong database
 1.  **Kiểm tra FIFO bắt buộc:**
-    *   Đối với các kho nguyên liệu chính như `ROH_WH` hoặc `ROH_VN_WH`, hệ thống gọi SP `usp_VVTMaterialWarehouse_validFIFO` với tham số `@pKindCheck = 'FIFO'`.
-    *   SP này đối soát ngày nhập kho (`GRDate`) của Lot đang quét với các Lot cùng mã hàng đang tồn trong kho. Nếu phát hiện có Lot nhập trước nhưng chưa được xuất, hệ thống sẽ chặn giao dịch và báo lỗi vi phạm nguyên tắc FIFO.
+    *   Đối với các kho nguyên liệu chính như `ROH_WH`, `ROH_VN_WH`, `ROH_HY_WH`, hệ thống gọi SP `usp_VVTMaterialWarehouse_validFIFO` với tham số `@pKindCheck = 'FIFO'`.
+    *   SP này kiểm tra danh sách ngoại lệ `@MaterialCode not in (...)`. Nếu không thuộc ngoại lệ, SP tiếp tục gọi SP lõi **`usp_DoValidateFIFO`**.
+    *   Tại `usp_DoValidateFIFO` với `@CompanyCode = 'VVT'`, hệ thống đối soát theo **ngày sản xuất Vendor (`LotAttr10`)** (theo chế độ Ngày `yyyy-MM-dd` hoặc Tháng `yyyy-MM`). Nếu phát hiện có Lot khác cùng mã có ngày sản xuất cũ hơn đang còn tồn kho (`CurrentQty - PickingQty > 0`), hệ thống sẽ kích hoạt `RAISERROR` chặn thủ kho xuất hàng và thông báo mã Lot cần xuất trước.
 2.  **Khấu trừ & Di chuyển vị trí:**
     *   Hệ thống cập nhật thông tin kho và vị trí mới cho Lot trong bảng `STB_MaterialLotInfo` (Chuyển `MaterialWarehouseCode` sang kho ảo cạnh chuyền tương ứng với Line sản xuất được chọn).
     *   Ghi log lịch sử xuất kho chi tiết vào bảng `STB_MaterialWarehouseInOutHist` để phục vụ đối soát và báo cáo xuất nhập tồn cuối tháng.

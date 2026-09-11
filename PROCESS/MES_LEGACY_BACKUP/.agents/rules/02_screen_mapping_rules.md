@@ -11,6 +11,7 @@ Khi nhận Screen ID hoặc ảnh chụp giao diện từ User:
 - **B310 (Tạo/Quản lý PO tháng):** SP `usp_DoCreateProductionOrder`, Bảng `STB_ProductionOrderInfo`, `STB_ProductionOrderRouting`, `STB_ProductionOrderBom`.
 - **HN523 / HN544 / HN555 (Hà Nam Packaging):** Tra cứu trực tiếp tại `KB_11_HANAM_FACTORY_SCREENS.md`.
 - **F330 / F721 (Kho & Tồn kho WMS):** Bảng `STB_MaterialDocInfo`, `STB_MaterialLotInfo`.
+- **F430 (Xuất kho NVL WMS):** SP chính `usp_MaterialWarehouseInOutHist_iud_ConfirmExportNVL`, SP kiểm tra wrapper `usp_VVTMaterialWarehouse_validFIFO`, SP lõi chặn FIFO `usp_DoValidateFIFO` (so sánh ngày sản xuất vendor `LotAttr10` theo ngày `yyyy-MM-dd` hoặc tháng `yyyy-MM`).
 - **B723 (Hạng mục kiểm kê - CheckItems):** Bảng `STB_VN_ITEM_CHECK` (Độ dày, quy cách điện cực, danh mục kiểm kê Line).
 - **B725 (Kiểm kê cuối tháng - ViewCategorieInventory):** SP `usp_VN_show_InvetoryEndmonths`, Bảng `STB_VN_ITEM_CHECK`.
 - **B552 (Kết quả đo điện cực - Mixing/Coating/Rollpress/Slitting):**

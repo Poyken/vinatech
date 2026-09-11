@@ -34,6 +34,19 @@ Related Files:
 
 ## ⚡ Các Lỗi Đã Được Xử Lý (Resolved Bugs)
 
+### [F430] — 📍 ID_24 Chuyển đổi cơ chế kiểm tra FIFO từ NGÀY sang THÁNG (usp_DoValidateFIFO)
+* **Ngày sửa:** `2026-09-11`
+* **Màn hình liên quan (TCode):** `[F430] - Xuất kho nguyên vật liệu WMS`, `[F721] - Danh mục tồn kho NVL`
+* **Triệu chứng lỗi:** Quét xuất Lot NVL (ví dụ `ML20260507002369` mã `GCSN00-002`) báo lỗi vi phạm FIFO: *"Trước tiên hãy lấy nguyên liệu nhập trước... Tồn tại mã vạch này được nhập trước (/ Sản Xuất trước): 20260522000148 ~ ML20260402000402"*, mặc dù cả 2 Lot đều sản xuất trong cùng tháng 03/2026.
+* **Nguyên nhân gốc (Root Cause):** SP lõi `[dbo].[usp_DoValidateFIFO]` trên DB `SmartFactoryV2` đang so sánh ngày sản xuất vendor (`LotAttr10`) theo định dạng ngày `'yyyy-MM-dd'` (chế độ Audit Bắc Ninh của Mr Mạnh kích hoạt từ 2025-11-20), khiến hệ thống so sánh ngày 04 < ngày 20 và chặn xuất kho.
+* **Phương án sửa lỗi (SQL Patch / Action):**
+  - Chuyển định dạng so sánh tại cả 4 vị trí trong `usp_DoValidateFIFO` từ `'yyyy-MM-dd'` sang `'yyyy-MM'`:
+    + Vị trí 1 (Dòng 83): `@Lotattr10fifo` (Lấy ngày SX của Lot cũ).
+    + Vị trí 2 (Dòng 93): `set @CreateDateTime`.
+    + Vị trí 3 (Dòng 123): `@A1` & `@B1` (Lấy thông tin Lot cũ để in ra thông báo lỗi).
+    + Vị trí 4 (Dòng 154): Điều kiện `IF EXISTS` chặn xuất kho.
+  - *Đã deploy trực tiếp lên Live DB SmartFactoryV2 vào lúc 14:22:22 ngày 2026-09-11. Hệ thống F430 hiện đã cho phép xuất tự do giữa các Lot sản xuất trong cùng một tháng.*
+
 ### [F620/F330] — 📍 ID_23 Cấu hình tự động bóc tách Ngày SX (Vendor Lot) cho toàn bộ dòng họ vỏ nhôm AOXING GBAXAC-%
 * **Ngày sửa:** `2026-08-20`
 * **Màn hình liên quan (TCode):** `[F620] - Hoàn trả vật liệu và in tem`, `[F330] - Nhập kho NVL`, `[F311] - Quản lý nguyên vật liệu`
