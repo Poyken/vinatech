@@ -56,7 +56,9 @@ graph TD
 | # | File | Database | Vai trò | Quy mô |
 |---|------|----------|---------|--------|
 | 01 | *Đã có trong KB_INDEX* | **SmartFactoryV2** | DB nghiệp vụ MES chính | ~500+ bảng |
-| 02 | *Đã có trong KB_01* | **SmartFramework** | UI Metadata & Phân quyền | ~50+ bảng |
+| 02 | [DB_02_MES_MANUFACTURING_PROCESS_PIPELINE.md](DB_02_MES_MANUFACTURING_PROCESS_PIPELINE.md) | **SmartFactoryV2** | Chuỗi công đoạn SX: Mixing → Slitting → Winding → Packing | Toàn bộ chuỗi MES |
+| 02-DETAIL | [BAN_DO_CHI_TIET_CONG_DOAN_SAN_XUAT_MES_VINATECH.md](BAN_DO_CHI_TIET_CONG_DOAN_SAN_XUAT_MES_VINATECH.md) | **SmartFactoryV2** | Bản đồ chi tiết từng trạm công đoạn, RouteCode, SP, Bảng, 7 Gates | Chi tiết sâu 16 công đoạn |
+| 02.1 | *Đã có trong KB_01* | **SmartFramework** | UI Metadata & Phân quyền | ~50+ bảng |
 | 03 | [DB_03_VINATECH_GROUP.md](DB_03_VINATECH_GROUP.md) | **VINATECH_GROUP** | Groupware phê duyệt điện tử | ~200+ bảng |
 | 04 | [DB_04_NEOE_ERP.md](DB_04_NEOE_ERP.md) | **NEOE** | ERP Douzone iU (Sổ cái trung tâm) | 4876 bảng |
 | 05 | [DB_05_DZICUBE.md](DB_05_DZICUBE.md) | **DZICUBE** | Bizbox Kế toán Douzone | 3300+ bảng |

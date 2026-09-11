@@ -1,0 +1,27 @@
+NAME,DEPARTMENT,DATE GET ISSUE,NAME ISSUE,THE SOLVE,TYPE ISSUE,DATE SOLVE ISSUE,SOLVE ISSUE BY,STATUS,REMARK
+Nguyen Van Duc,EA Team,7/9/2026,IT Hardware Setup & Handover — Production User,Hỗ trợ lắp đặt; cài đặt phần mềm và bàn giao thiết bị máy tính cho người dùng tại bộ phận Sản xuất.,Task,7/9/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,7/9/2026,Time Attendance Machine Support — BG1 Area,Hỗ trợ kiểm tra nguồn; đường truyền mạng và tình trạng kết nối của máy chấm công cửa ra khu vực BG1 khi không nhận tín hiệu trên hệ thống.,Support,7/9/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,7/9/2026,MES User Support — Operational Error Correction,Hỗ trợ người dùng xử lý các lỗi thao tác; điều chỉnh trạng thái lệnh và quét nhầm barcode công đoạn trên hệ thống MES.,Support,7/9/2026,Nguyen Van Duc,Done,MES
+Nguyen Van Duc,EA Team,7/9/2026,Office Application & License Activation Support,Hỗ trợ người dùng kiểm tra; kích hoạt bản quyền Microsoft Office và cài đặt các phần mềm văn phòng cơ bản.,Support,7/9/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,7/9/2026,Damaged IT Equipment Collection,Thu hồi bàn phím; chuột; thiết bị IT cũ hỏng từ các bộ phận sản xuất đưa về kho IT.,Support,7/9/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,7/9/2026,Password Reset & User Account Support,Hỗ trợ khôi phục mật khẩu tài khoản Windows; mở khóa tài khoản cho người dùng.,Support,7/9/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,8/9/2026,Time Attendance Software Support — HR & Team,Hỗ trợ phòng Nhân sự và các thành viên trong team kiểm tra; thao tác trên phần mềm chấm công khuôn mặt.,Support,8/9/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,8/9/2026,Printer Setup & Troubleshooting — OQC Area,Hỗ trợ cài đặt driver; kết nối mạng và cân chỉnh máy in tem tại khu vực OQC.,Support,8/9/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,8/9/2026,ECM Login & Account Support,Hỗ trợ người dùng xử lý lỗi đăng nhập; đăng xuất, lỗi vận hành khi sử dụng hệ thống ECM.,Support,8/9/2026,Nguyen Van Duc,Done,ECM
+Nguyen Van Duc,EA Team,8/9/2026,Meeting Room AV & Equipment Setup,Hỗ trợ kết nối máy chiếu; micro và chuẩn bị thiết bị phòng họp phục vụ các cuộc họp nội bộ.,Support,8/9/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,8/9/2026,Network Connection Check — Production Area,Kiểm tra các điểm mạng LAN; hỗ trợ xử lý sự cố chập chờn kết nối mạng tại khu vực xưởng sản xuất.,Support,8/9/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,8/9/2026,IT Peripherals Replacement & Support,Cấp phát và thay thế bàn phím; chuột; phụ kiện máy tính cho người dùng tại các chuyền sản xuất.,Support,8/9/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,9/9/2026,Printer Setup & Troubleshooting — Packaging Area,Hỗ trợ xử lý sự cố kẹt giấy; cài đặt và cân chỉnh máy in tem tại khu vực Đóng gói.,Support,9/9/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,9/9/2026,MES User Support — Production Workflow,Tiếp tục hỗ trợ công nhân giải đáp thắc mắc và sửa các lỗi thao tác phát sinh khi nhập liệu trên MES.,Support,9/9/2026,Nguyen Van Duc,Done,MES
+Nguyen Van Duc,EA Team,9/9/2026,Network Cable & Outlet Maintenance — Factory Floor,Kiểm tra các điểm kết nối mạng LAN tại khu vực xưởng, speedtest các thiết bị sử dụng wifi.,Support,9/9/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,9/9/2026,IT Hardware Handover — Production Dept,Bàn giao máy tính làm việc và thiết bị ngoại vi cho nhân sự bộ phận Sản xuất.,Task,9/9/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,9/9/2026,FortiClient VPN & Remote Access Support,Hỗ trợ cài đặt phần mềm FortiClient VPN và hướng dẫn người dùng kết nối làm việc từ xa.,Support,9/9/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,9/9/2026,IT Equipment Relabeling & Information Update,Dán tem quản lý tài sản IT và cập nhật thông tin thiết bị máy tính của người dùng.,Support,9/9/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,10/9/2026,Barcode Scanner & Peripheral Setup — Production Line,Hỗ trợ kiểm tra; kết nối đầu đọc mã vạch và thiết bị ngoại vi tại khu vực sản xuất.,Support,10/9/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,10/9/2026,Office Application Support & Error Correction,Hỗ trợ khắc phục lỗi ứng dụng văn phòng Word; Excel và tối ưu hóa hệ thống máy tính người dùng.,Support,10/9/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,10/9/2026,Printer Maintenance & Check — OQC & Packaging,Kiểm tra và hỗ trợ kỹ thuật cho máy in tại khu vực OQC và Đóng gói.,Support,10/9/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,10/9/2026,MES User Support — Hung Yen Factory,Hỗ trợ người dùng tại nhà máy Hưng Yên kiểm tra; xử lý các lỗi thao tác trên hệ thống MES.,Support,10/9/2026,Nguyen Van Duc,Done,MES
+Nguyen Van Duc,EA Team,11/9/2026,Weekly IT Network & Wifi Health Check,Kiểm tra hoạt động các bộ phát Wifi AP và switch mạng,Task,11/9/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,11/9/2026,Weekly MES User Support Summary,Tổng hợp và hỗ trợ giải quyết các yêu cầu phát sinh của người dùng trên hệ thống MES trong tuần.,Task,11/9/2026,Nguyen Van Duc,Done,MES
+Nguyen Van Duc,EA Team,11/9/2026,Weekly Damaged IT Hardware Summary,Kiểm kê; phân loại các thiết bị IT cũ hỏng thu hồi trong tuần đưa về kho IT quản lý.,Support,11/9/2026,Nguyen Van Duc,Done,HW
+Nguyen Van Duc,EA Team,11/9/2026,Weekly IT Ticket Resolution Review,Rà soát toàn bộ các yêu cầu hỗ trợ người dùng; máy in; tài khoản và thiết bị IT trong tuần.,Task,11/9/2026,Nguyen Van Duc,Done,HW

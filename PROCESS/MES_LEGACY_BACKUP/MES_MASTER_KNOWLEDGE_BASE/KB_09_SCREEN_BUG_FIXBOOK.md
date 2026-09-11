@@ -353,6 +353,13 @@ Related Files:
 |---|---|---|---|
 | 1 | Bản ghi số liệu kiểm kê thực tế nhập nhầm ngày hoặc nhầm chuyền cần xóa / hủy | Người vận hành nhập sai số lượng, ngày kiểm kê hoặc chọn nhầm Line trên giao diện B725 | **Safe Backup & Delete SOP:**<br>1. Backup vào bảng lưu trữ: `SELECT * INTO BAK_STB_VN_ITEM_CHECK_YYYYMMDD_B725 FROM STB_VN_ITEM_CHECK WITH(NOLOCK) WHERE ID BETWEEN [MIN_ID] AND [MAX_ID];`<br>2. Snapshot JSON Preflight backup qua `.\mes.ps1 deploy`.<br>3. Xóa bản ghi lỗi trong Transaction: `DELETE FROM STB_VN_ITEM_CHECK WHERE ID BETWEEN [MIN_ID] AND [MAX_ID]; COMMIT;` |
 
+### [B782]
+**Tên:** LotTrackingInfo_VVT2 (Lịch sử Routing theo Lot toàn nhà máy)
+
+| # | Triệu chứng | Nguyên nhân | Fix |
+|---|---|---|---|
+| 1 | B782 hiển thị kết quả chốt nhầm sản lượng Winding (Cuốn `V-22_HY`), chặn công nhân chốt lại trên B530 | OP chốt nhầm ở Winding (công đoạn đầu `IsInputRoute=1`), hệ thống gán `CompleteRoute='1'` ở `V-22_HY` và tự sinh dòng `V-23_HY` chờ chốt tiếp | **Rollback công đoạn đầu Winding (SOP Chuẩn):**<br>1. Xóa phế NG: `DELETE FROM STB_DefectRepairInfo WHERE ControlNo='...' AND FindRouteCode='V-22_HY';`<br>2. Xóa công đoạn sau tự sinh: `DELETE FROM STB_ProdRouteHist WHERE ControlNo='...' AND RouteCode='V-23_HY';`<br>3. Reset cờ: `UPDATE STB_ProdRouteHist SET CompleteRoute = NULL WHERE ControlNo='...' AND RouteCode='V-22_HY';`<br>⚠️ **Nguyên tắc vàng:** KHÔNG xóa dòng `V-22_HY` để bảo toàn thông tin Lot trên B530. BẮT BUỘC xóa `V-23_HY` để giải phóng cổng chặn downstream `@AftProdQty <> 0`. Toàn bộ dữ liệu scan NVL ở B540 giữ nguyên. |
+
 ---
 
 ## C-Series: QC & Chất Lượng

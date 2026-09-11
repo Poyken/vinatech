@@ -21,3 +21,7 @@
 
 6. **RULE 10 - STANDARD TOOLING & ZERO JUNK FILES:**
    - Sử dụng thống nhất CLI Hub `.\mes.ps1` và dọn dẹp sạch sẽ sau khi hoàn thành.
+
+7. **RULE 11 - CẤM ĐỘNG VÀO STB_SetInfo KHI ROLLBACK SẢN XUẤT:**
+   - Khi rollback / hủy chốt sản lượng các công đoạn sản xuất (Winding, Riveting, Curling... B530/B782): CHỈ thao tác trên `STB_DefectRepairInfo` (xóa phế NG) và `STB_ProdRouteHist` (xóa downstream, update `CompleteRoute = NULL` công đoạn cần chốt lại).
+   - TUYỆT ĐỐI CẤM UPDATE hoặc DELETE trên `STB_SetInfo` (để bảo toàn định danh Lot, mã vạch Barcode và dữ liệu khởi tạo chuyền ban đầu).

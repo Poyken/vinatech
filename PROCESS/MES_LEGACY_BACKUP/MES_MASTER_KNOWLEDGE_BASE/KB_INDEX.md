@@ -54,6 +54,8 @@ Related Files:
 | [KB_09_SCREEN_BUG_FIXBOOK.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md) | **Sổ tay Fix Bug** | **Sổ tay cứu hộ 70+ bugs theo TCode thực tế (Đọc khi nhận bug)** |
 | [KB_10_FACTORY_WORKCENTER_MATRIX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_10_FACTORY_WORKCENTER_MATRIX.md) | **Factory Matrix** | Các nhà máy, LineCode, WorkCenter, định dạng Barcode đầu mã |
 | [KB_11_HANAM_FACTORY_SCREENS.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_11_HANAM_FACTORY_SCREENS.md) | **Hà Nam Screens** | Danh sách 83 màn hình và 63 SP đặc thù của nhà máy Hà Nam |
+| [BAN_DO_CHI_TIET_CONG_DOAN_SAN_XUAT_MES_VINATECH.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/DATABASE_KNOWLEDGE_BASE/BAN_DO_CHI_TIET_CONG_DOAN_SAN_XUAT_MES_VINATECH.md) | **Bản Đồ 16 Công Đoạn** | Bản đồ 16 công đoạn khép kín từ NVL đến đóng gói, SP, Bảng CSDL, Cổng chặn Gates |
+| [DB_02_MES_MANUFACTURING_PROCESS_PIPELINE.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/DATABASE_KNOWLEDGE_BASE/DB_02_MES_MANUFACTURING_PROCESS_PIPELINE.md) | **Manufacturing Pipeline** | Dòng chảy dữ liệu End-to-End quy trình sản xuất & cấu trúc bảng |
 | [MES_SCRIPT_GUIDE.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/MES_SCRIPT_GUIDE.md) | **Script Tools** | Hướng dẫn sử dụng run_query, validate_sql, deploy_tool, db_sync_tool |
 
 ---
@@ -74,15 +76,15 @@ Related Files:
 | B530 | Chốt sản lượng | KB_03 | KB_08 |
 | B540 | Quét NVL vào Line | KB_03 | KB_05 |
 | B552 | Slitting | KB_05 | — |
-| B597 | **Quét NVL QC** | **KB_05** | KB_03 |
-| B598 | Báo phế NVL | KB_03 | — |
-| B682 | Stage Prices | KB_01 | KB_06 |
+| B597 | Quét NVL B597 | KB_03 | KB_05 |
+| B598 | Quét NVL B598 | KB_03 | KB_05 |
+| B682 | Nhập công đoạn | KB_03 | — |
 | B717 | Bending/Tapping | KB_03 | — |
 | B754-B758 | Tem PAC/DigiKey | KB_04 | — |
 | B763 | **Thiết lập KH xuất Sanmina** | **KB_04 (03)** | KB_01 |
 | B767 | **In tem KH Sanmina India** | **KB_04 (03)** | — |
 | B781 | SL đóng gói | KB_03 | KB_01 |
-| B782 | Lịch sử SX | KB_03 | — |
+| B782 | **Lịch sử Routing (Lot Tracking)** | **KB_03, KB_09** | **HOTFIX_LOG ID_44** |
 
 ### QC (C-series)
 
@@ -124,6 +126,8 @@ Related Files:
 *   **Hủy tem đóng gói HN523 (Hà Nam):** Xóa sub-lot `STB_MaterialLotInfo`, hủy chứng từ `MaterialDoc` (bypass trigger `0x999997`), giảm trừ sản lượng công đoạn cuối `VE10` và PO → Chi tiết: **[KB_04_02 § [HN523]](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_02_SCREEN_BUGS.md#hn523--kịch-bản-sự-cố-khẩn-cấp-hủy-tem-đóng-gói--rã-box-tại-hà-nam-đồng-bộ-giảm-sản-lượng-ve10--po)**
 
 ### 🟡 Sản Xuất (Xem KB_03)
+*   **Hủy chốt nhầm Winding B782 / B530:** Xóa phế `STB_DefectRepairInfo`, xóa công đoạn downstream `V-23_HY` trong `STB_ProdRouteHist`, update `CompleteRoute = NULL` trên `V-22_HY` để OP chốt lại → Chi tiết: **KB_09 §B782**, **KB_03 §5.16**, **HOTFIX_LOG ID_44**
+*   **Hủy mẻ trộn điện cực thừa B470/B552:** Xóa sạch `STB_ElectrodeMixStepInfo`, `STB_ElectrodeMixInfo`, `STB_SetInfo` khi chưa tráng Coating → Chi tiết: **KB_09 §B552 #3**, **KB_05_01 §8.10**, **HOTFIX_LOG ID_42 & ID_43**
 *   **Sửa ngày JobDate B782:** Sửa ngày ghi nhận sản xuất của Lot → Chi tiết: **KB_03 §5.2**
 *   **Chuyển Line sản xuất:** Chuyển Lot đang chạy sang Line khác → Chi tiết: **KB_03 §5.9**
 *   **B530 báo "Routing không có trong PO":** Lỗi lệch cấu hình định tuyến → Chi tiết: **KB_03 §6.3**

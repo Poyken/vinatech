@@ -748,4 +748,93 @@ WHERE LEN(BoxSerialNo) = 13 AND BoxSerialNo LIKE @SerialPrefix + '%'
   - `STB_ElectrodeSlittingResultHist`: Đã ghi nhận đầy đủ 45 dòng audit log.
 * **Tham chiếu KB:** [KB_09_SCREEN_BUG_FIXBOOK.md § [B552] #2](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md#L210), [HOTFIX_LOG.md § ID_36](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/AI_AGENT_CONFIG/HOTFIX_LOG.md#L515), [HOTFIX_LOG.md § ID_39](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/AI_AGENT_CONFIG/HOTFIX_LOG.md#L638)
 
+---
+
+### [B470]/[B552] — 📍 ID_42 Hủy / Xóa mẻ trộn điện cực thừa Lot VVQR0720001E40
+* **Ngày sửa:** `2026-09-10`
+* **Màn hình liên quan (TCode):** `[B470] - Mixing Info & [B552] - Kết quả đo điện cực`
+* **Bảng liên quan:** `STB_ElectrodeMixStepInfo`, `STB_ElectrodeMixInfo`, `STB_SetInfo`
+* **Triệu chứng lỗi:** Mẻ trộn điện cực `VVQR0720001E40` đã cân trộn nhưng không chạy tiếp tráng phủ Coating do đổi kế hoạch sản xuất. Cần xóa sạch mẻ trộn để tránh rác hệ thống.
+* **Cơ chế sao lưu (Pre-flight Backup):**
+  - Snapshot file: `tools/backups/backup_VVQR0720001E40_20260910_085658.json` & `preflight_20260910_085809_STB_ElectrodeMixStepInfo_deploy_preflight.json`.
+* **Phương án sửa lỗi & Script Deploy:**
+  ```sql
+  USE SmartFactoryV2;
+  GO
+  BEGIN TRANSACTION;
+  DELETE FROM STB_ElectrodeMixStepInfo WHERE ElectrodeLotNumber = 'VVQR0720001E40';
+  DELETE FROM STB_ElectrodeMixInfo WHERE ElectrodeLotNumber = 'VVQR0720001E40';
+  DELETE FROM STB_SetInfo WHERE Barcode = 'VVQR0720001E40';
+  COMMIT TRANSACTION;
+  GO
+  ```
+* **Kết quả nghiệm thu:** Xóa thành công 8 dòng MixStep, 1 dòng MixInfo, 1 dòng SetInfo. Đã kiểm tra `STB_ElectrodeCoatingInfo = 0`.
+* **Tham chiếu KB:** [KB_09_SCREEN_BUG_FIXBOOK.md § [B552] #3](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md#L211), [KB_05_01 § 8.10](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md#810-quy-trình-dọn-dẹp--xóa-mẻ-trộn-điện-cực-thừa-electrode-mixing-cancellation-sop)
+
+---
+
+### [B470]/[B552] — 📍 ID_43 Hủy / Xóa mẻ trộn điện cực thừa Lot VVQQ2520001E79
+* **Ngày sửa:** `2026-09-11`
+* **Màn hình liên quan (TCode):** `[B470] - Mixing Info & [B552] - Kết quả đo điện cực`
+* **Bảng liên quan:** `STB_ElectrodeMixStepInfo`, `STB_ElectrodeMixInfo`, `STB_SetInfo`
+* **Triệu chứng lỗi:** Mẻ trộn điện cực âm `VVQQ2520001E79` thừa cần dọn dẹp theo SOP Mixing Cancellation.
+* **Cơ chế sao lưu (Pre-flight Backup):**
+  - Snapshot file: `tools/backups/backup_VVQQ2520001E79_20260911_083440.json`.
+* **Phương án sửa lỗi & Script Deploy:**
+  ```sql
+  USE SmartFactoryV2;
+  GO
+  BEGIN TRANSACTION;
+  DELETE FROM STB_ElectrodeMixStepInfo WHERE ElectrodeLotNumber = 'VVQQ2520001E79';
+  DELETE FROM STB_ElectrodeMixInfo WHERE ElectrodeLotNumber = 'VVQQ2520001E79';
+  DELETE FROM STB_SetInfo WHERE Barcode = 'VVQQ2520001E79';
+  COMMIT TRANSACTION;
+  GO
+  ```
+* **Kết quả nghiệm thu:** Xóa thành công mẻ trộn, khôi phục trạng thái sạch cho phân xưởng điện cực.
+* **Tham chiếu KB:** [KB_09_SCREEN_BUG_FIXBOOK.md § [B552] #3](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md#L211)
+
+---
+
+### [B782]/[B530] — 📍 ID_44 Rollback chốt nhầm sản lượng Winding (V-22_HY) cho Lot VVQR103R072760 & VVQR103R072761
+* **Ngày sửa:** `2026-09-11`
+* **Màn hình liên quan (TCode):** `[B782] - LotTrackingInfo_VVT2 & [B530] - Nhập sản xuất`
+* **Bảng liên quan:** `STB_ProdRouteHist`, `STB_DefectRepairInfo`
+* **Triệu chứng lỗi:** OP chốt nhầm sản lượng công đoạn Quấn cuộn Winding (`V-22_HY`), khiến màn hình B782 hiển thị kết quả chốt nhầm và công đoạn kế tiếp `V-23_HY` tự động sinh ra chặn không cho OP chốt lại.
+* **Nguyên nhân gốc (Root Cause):**
+  - Winding là công đoạn đầu vào (`IsInputRoute = 1`). Khi chốt, hệ thống set `CompleteRoute = '1'` ở `V-22_HY` và tự sinh `V-23_HY` với số lượng còn lại sau khi trừ phế NG (`STB_DefectRepairInfo`).
+  - Màn hình B782 lọc `CompleteRoute = 1` nên hiển thị kết quả.
+  - Màn hình B530 check nếu công đoạn tiếp theo (`V-23_HY`) có số lượng (`@AftProdQty <> 0`) thì báo lỗi chặn `이미 실적처리 완료한 공정입니다`.
+* **Cơ chế sao lưu (Pre-flight Backup):**
+  - `tools/backups/preflight_20260911_083313_STB_DefectRepairInfo_deploy_preflight.json` (4 dòng phế NG).
+  - `tools/backups/preflight_20260911_083314_STB_ProdRouteHist_deploy_preflight.json` (4 dòng routing V-22 và V-23).
+* **Phương án sửa lỗi & Script Deploy:** `sql/hotfix_20260911_082405_B782_ROLLBACK_WINDING_20260911.sql`
+  ```sql
+  USE SmartFactoryV2;
+  GO
+  BEGIN TRANSACTION;
+  -- 1. Xóa phế NG nhập nhầm ở Winding
+  DELETE FROM STB_DefectRepairInfo 
+  WHERE ControlNo IN ('20260910000423', '20260910000424') AND FindRouteCode = 'V-22_HY';
+
+  -- 2. Xóa công đoạn downstream tự sinh (V-23_HY)
+  DELETE FROM STB_ProdRouteHist 
+  WHERE ControlNo IN ('20260910000423', '20260910000424') AND RouteCode = 'V-23_HY';
+
+  -- 3. Reset CompleteRoute = NULL ở Winding (V-22_HY) để mở lại chốt
+  UPDATE STB_ProdRouteHist 
+  SET CompleteRoute = NULL 
+  WHERE ControlNo IN ('20260910000423', '20260910000424') AND RouteCode = 'V-22_HY';
+
+  COMMIT TRANSACTION;
+  GO
+  ```
+* **Quy tắc vàng:** Ở công đoạn đầu vào (Winding `V-22`): KHÔNG xóa dòng `V-22_HY` mà chỉ đưa `CompleteRoute = NULL` để bảo toàn thông tin Lot trên B530. BẮT BUỘC xóa `V-23_HY` để giải phóng cổng chặn downstream.
+* **Kết quả nghiệm thu:**
+  - B782: 0 dòng hiển thị (ẩn hoàn toàn 2 Lot).
+  - B530: Mở lại Winding `V-22_HY` để OP chốt lại số lượng chuẩn.
+  - Toàn bộ dữ liệu NVL quét tại B540 được giữ nguyên vẹn.
+* **Tham chiếu KB:** [KB_09_SCREEN_BUG_FIXBOOK.md § [B782]](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md), [KB_03_01_OVERVIEW.md § 5.16](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_01_OVERVIEW.md#L345)
+
+
 

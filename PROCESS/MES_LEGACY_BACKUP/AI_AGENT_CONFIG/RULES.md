@@ -38,6 +38,7 @@ Related Files:
 > **8. CẤM CHÈN BẢN GHI GIẢ LẬP (DUMMY)** — CẤM TỰ Ý INSERT/UPDATE dữ liệu suy đoán vào DB sản xuất khi chưa tra cứu chuẩn kiến trúc SoT (`KB_04_01_CORE_PACKAGING.md`). Mọi thao tác fix dữ liệu phải tuân thủ 100% quy trình từ tài liệu SoT!
 > **9. CẤM CẮM ĐẦU VÀO SELECT DATABASE** — CẤM CẮM ĐẦU VÀO SELECT DATABASE NGAY KHI NHẬN YÊU CẦU! AI BẮT BUỘC phải đọc và tra cứu tài liệu KB / SoT trước: Nếu tra RA ➔ Trình bày căn cứ KB rồi mới SELECT verify tài liệu; Nếu tra KHÔNG RA ➔ Báo cáo đã tra các tài liệu nào nhưng không có, sau đó mới đề xuất hoặc thực thi SELECT khảo sát DB.
 > **10. CẤM TẠO FILE DƯ THỪA & BẮT BUỘC DÙNG FILE CÓ SẴN** — CẤM tự ý tạo các file script test tạm, file SQL rác hay file rác dư thừa trong workspace. BẮT BUỘC chỉ sử dụng các file/công cụ sẵn có trong hệ thống (Ưu tiên CLI Hub: `.\mes.ps1` kết hợp `find_kb.ps1`, `health_check.ps1`, `run_query.ps1`, `deploy_tool.ps1`, `check_db.ps1`...). Dọn dẹp sạch sẽ nguyên trạng ngay sau khi hoàn thành công việc.
+> **11. CẤM ĐỘNG VÀO STB_SetInfo KHI ROLLBACK SẢN XUẤT** — Khi rollback / hủy chốt sản lượng các công đoạn sản xuất (Winding, Riveting, Curling... B530/B782): CHỈ thao tác trên `STB_DefectRepairInfo` (xóa phế NG) và `STB_ProdRouteHist` (xóa downstream, update `CompleteRoute = NULL` công đoạn cần chốt lại). TUYỆT ĐỐI CẤM UPDATE hoặc DELETE trên `STB_SetInfo` (để bảo toàn định danh Lot, mã vạch Barcode và dữ liệu khởi tạo chuyền ban đầu).
 
 ---
 
