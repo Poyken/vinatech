@@ -849,5 +849,69 @@ WHERE LEN(BoxSerialNo) = 13 AND BoxSerialNo LIKE @SerialPrefix + '%'
   - Toàn bộ dữ liệu NVL quét tại B540 được giữ nguyên vẹn.
 * **Tham chiếu KB:** [KB_09_SCREEN_BUG_FIXBOOK.md § [B782]](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md), [KB_03_01_OVERVIEW.md § 5.16](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_01_OVERVIEW.md#L345)
 
+---
+
+### [B782]/[B530] — 📍 ID_45 Rollback Cascade chốt nhầm sản lượng Winding (V-22_HY) cho 6 Lot (Hưng Yên)
+* **Ngày sửa:** `2026-09-12`
+* **Màn hình liên quan (TCode):** `[B782] - LotTrackingInfo_VVT2 & [B530] - Nhập sản xuất`
+* **Bảng liên quan:** `STB_ProdRouteHist`, `STB_DefectRepairInfo`, `STB_SetInfo`
+* **Danh sách Lot:** `VVQQ203R072720`, `VVQQ213R072726`, `VVQR103R072760`, `VVQR103R072761`, `VVQR113R072731`, `VVQR113R072734`
+* **ControlNo:** `20260820000244`, `20260821000637`, `20260910000423`, `20260910000424`, `20260911000196`, `20260911000199`
+* **Triệu chứng lỗi:** OP chốt nhầm ở công đoạn Winding (`V-22_HY`), sau đó các ca tiếp tục chốt downstream xuống các công đoạn sau (V-23 đến V-28), thậm chí 2 Lot đã hoàn thành sản phẩm (`IsProdFinish = True`). Cần rollback toàn bộ về lại công đoạn Winding để OP nhập lại sản lượng chuẩn.
+* **Cơ chế sao lưu (Pre-flight Backup):**
+  - `tools/backups/preflight_20260912_083037_STB_DefectRepairInfo_deploy_preflight.json` (21 dòng phế NG).
+  - `tools/backups/preflight_20260912_083038_STB_ProdRouteHist_deploy_preflight.json` (32 dòng routing).
+* **Phương án sửa lỗi & Script Deploy:** `sql/hotfix_20260912_082956_B782_ROLLBACK_CASCADE_WINDING_6LOTS.sql`
+  ```sql
+  USE SmartFactoryV2;
+  GO
+  BEGIN TRANSACTION;
+  -- 1. Xóa phế NG trên toàn bộ các công đoạn
+  DELETE FROM STB_DefectRepairInfo WHERE ControlNo IN (...);
+  -- 2. Xóa toàn bộ công đoạn downstream phát sinh sau Winding (V-23 -> V-28)
+  DELETE FROM STB_ProdRouteHist WHERE ControlNo IN (...) AND RouteCode <> 'V-22_HY';
+  -- 3. Reset CompleteRoute = NULL ở Winding (V-22_HY) để mở lại chốt B530
+  UPDATE STB_ProdRouteHist SET CompleteRoute = NULL WHERE ControlNo IN (...) AND RouteCode = 'V-22_HY';
+  -- 4. Reset trạng thái hoàn thành sản phẩm trên STB_SetInfo
+  UPDATE STB_SetInfo SET IsProdFinish = 0, ProdFinishDateTime = NULL, ProdFinishJobDate = NULL WHERE ControlNo IN (...);
+  COMMIT TRANSACTION;
+  GO
+  ```
+* **Kết quả nghiệm thu:**
+  - `STB_ProdRouteHist`: Đúng 6 dòng (chỉ còn lại `V-22_HY`, `CompleteRoute = NULL`).
+  - `STB_DefectRepairInfo`: Đã xóa sạch 21 bản ghi phế NG.
+  - `STB_SetInfo`: 6 Lot đều có `IsProdFinish = False`.
+  - B530: Đã mở lại công đoạn Winding `V-22_HY` để OP chốt lại số lượng chuẩn.
+  - Dữ liệu NVL scan tại B540 giữ nguyên 100%.
+* **Tham chiếu KB:** [KB_09_SCREEN_BUG_FIXBOOK.md § [B782]](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md#L356-L363)
+
+---
+
+### [B470]/[B552]/[electrode.weighing] — 📍 ID_46 Hủy / Xóa mẻ trộn điện cực thừa (Mixing) cho 4 Lot (VVQR1120001E44, E45, E48, E49)
+* **Ngày sửa:** `2026-09-12`
+* **Màn hình liên quan (TCode):** `[B470], [B552] - Tab Mixing, Ứng dụng cân điện cực (electrode.weighing)`
+* **Bảng liên quan:** `STB_ElectrodeMixStepInfo`, `STB_ElectrodeMixInfo`, `STB_SetInfo`, `STB_ElectrodeCoatingInfo`
+* **Danh sách Lot:** `VVQR1120001E49`, `VVQR1120001E48`, `VVQR1120001E44`, `VVQR1120001E45`
+* **Triệu chứng lỗi:** OP ca đêm cân dang dở các bước mẻ trộn điện cực trên phần mềm cân, nhưng hiện tại không dùng đến / đổi kế hoạch, các mã Lot thừa hiển thị trên giao diện làm cản trở cấp phát NVL.
+* **Cơ chế sao lưu (Pre-flight Backup):**
+  - `tools/backups/preflight_20260912_083636_STB_ElectrodeMixStepInfo_deploy_preflight.json` (17 dòng bước cân).
+* **Phương án sửa lỗi & Script Deploy:** `sql/hotfix_20260912_083621_ELECTRODE_MIXING_CANCEL_4LOTS.sql`
+  ```sql
+  USE SmartFactoryV2;
+  GO
+  BEGIN TRANSACTION;
+  -- 1. Xóa các bước cân tạm của 4 Lot điện cực thừa
+  DELETE FROM STB_ElectrodeMixStepInfo
+  WHERE ElectrodeLotNumber IN ('VVQR1120001E49', 'VVQR1120001E48', 'VVQR1120001E44', 'VVQR1120001E45');
+  COMMIT TRANSACTION;
+  GO
+  ```
+* **Kết quả nghiệm thu:**
+  - `STB_ElectrodeMixStepInfo`: 0 dòng (đã dọn sạch toàn bộ 17 bản ghi bước cân).
+  - Giao diện lưới cân điện cực / B552 / B470: Không còn hiển thị 4 mã Lot thừa này nữa.
+* **Tham chiếu KB:** [KB_09_SCREEN_BUG_FIXBOOK.md § [B552] #3](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md#L220), [KB_05_01 §8.10](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md#810-quy-trình-dọn-dẹp--xóa-mẻ-trộn-điện-cực-thừa-electrode-mixing-cancellation-sop)
+
+
+
 
 
