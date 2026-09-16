@@ -34,6 +34,35 @@ Related Files:
 
 ## ⚡ Các Lỗi Đã Được Xử Lý (Resolved Bugs)
 
+### [C443] — 📍 ID_26 Xóa dữ liệu kết quả đo C443 công đoạn Cuốn (VE01) Lot VE260914-001
+* **Ngày sửa:** `2026-09-16`
+* **Màn hình liên quan (TCode):** `[C443] - Vietnam_inspectionPQC`
+* **Triệu chứng lỗi:** Lot `VE260914-001` (ControlNo `20260914000296`) bị khóa công đoạn Cuốn (Winding `VE01`) trên màn hình C443, cần xóa để QC đo lại từ đầu.
+* **Nguyên nhân gốc (Root Cause):** 
+  - Tại C443: Đã ghi nhận 123 dòng đo trong `STB_CommInspMeasureHist` và `ItemQty > 0` trong `STB_CommInspDocItem` (Phiếu `20260914000208`) làm khóa ô nhập liệu C443.
+  - Tại HNC321: Kiểm tra không có bản ghi phế nào trong `STB_DefectRepairInfo` (0 rows).
+* **Phương án sửa lỗi & Backup (Thực thi thành công):**
+  - **Snapshot Backup:** Đã sao lưu toàn bộ tại `tools/backups/backup_VE260914-001_pre_fix_20260916.json` (15 rows DocItem, 123 rows MeasureHist).
+  - **SQL Patch đã deploy:**
+    1. Xóa 123 dòng đo công đoạn `VE01` trong `STB_CommInspMeasureHist`.
+    2. Reset `ItemQty = 0` cho 15 hạng mục `VE01` trong `STB_CommInspDocItem`.
+    - Script: `sql/hotfix_20260916_080000_CLEAR_WINDING_C443_VE260914-001.sql`.
+
+### [C443]/[HNC321] — 📍 ID_25 Xóa dữ liệu kết quả đo C443 và lỗi phế HNC321 công đoạn Cuốn (VE01) Lot VE260914-002
+* **Ngày sửa:** `2026-09-15`
+* **Màn hình liên quan (TCode):** `[C443] - Vietnam_inspectionPQC`, `[HNC321] - QC_InputQtyForProductCheck (Hà Nam)`
+* **Triệu chứng lỗi:** Người dùng yêu cầu xóa Lot `VE260914-002` (ControlNo `20260914000299`) ở màn hình HNC321 và màn hình C443 công đoạn cuốn (Winding `VE01`) để làm lại kết quả kiểm tra chất lượng & sửa lỗi phế.
+* **Nguyên nhân gốc (Root Cause):** 
+  - Tại C443: Đã ghi nhận 123 dòng đo trong `STB_CommInspMeasureHist` và `ItemQty = 9` trong `STB_CommInspDocItem` (Phiếu `20260915000294`) làm khóa lưới C443.
+  - Tại HNC321: Đang tồn tại 3 bản ghi phế công đoạn cuốn (`VE01_11`, `VE01_12`, `VE01_30`) trong `STB_DefectRepairInfo`.
+* **Phương án sửa lỗi & Backup (Thực thi thành công):**
+  - **Snapshot Backup:** Đã sao lưu toàn bộ trước khi xóa tại `tools/backups/backup_VE260914-002_pre_fix_20260915.json` (3 rows Defect, 15 rows DocItem, 123 rows MeasureHist).
+  - **SQL Patch đã deploy:**
+    1. Xóa 123 dòng đo công đoạn `VE01` trong `STB_CommInspMeasureHist`.
+    2. Reset `ItemQty = 0` cho 15 hạng mục `VE01` trong `STB_CommInspDocItem`.
+    3. Xóa 3 dòng phế `VE01` trong `STB_DefectRepairInfo` (giữ nguyên lỗi `VE03`).
+    - Script: `sql/hotfix_20260915_174900_CLEAR_WINDING_C443_HNC321_VE260914-002.sql`.
+
 ### [F430] — 📍 ID_24 Chuyển đổi cơ chế kiểm tra FIFO từ NGÀY sang THÁNG (usp_DoValidateFIFO)
 * **Ngày sửa:** `2026-09-11`
 * **Màn hình liên quan (TCode):** `[F430] - Xuất kho nguyên vật liệu WMS`, `[F721] - Danh mục tồn kho NVL`
