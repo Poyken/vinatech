@@ -36,6 +36,7 @@ Related Files:
 | **POP-ERR-10: Lỗi chốt sớm Đóng gói V-28_HY** | Chốt đóng gói trước khi hoàn tất BTP/Lot lẻ, kẹt `VINA_PACKING_REMAIN_QTY` | Rollback đồng bộ 3 bảng (`MaterialLotInfo`, `ProdRouteHist`, `VINA_PACKING_REMAIN_QTY`) | **CÓ (SQL Hotfix)** |
 | **POP-ERR-11: Lỗi "Số mẫu mục tiêu là 0" (Quality PQC)** | Sample Size = 0 ở khung quy cách hoặc Master Data, không hiện ô nhập `#1, #2` | Chạm ô số mẫu ở khung tiêu chuẩn để tăng >0, hoặc cấu hình `STB_MaterialQcInspectionItem_HY` | Không (trừ khi sửa Master) |
 | **POP-ERR-12: Khóa kết quả đo sau khi bấm "Hoàn thành"** | Phiên PQC đã đóng (`STB_CommInspDocHistory.IsFinished=1`), nút đổi thành "Hoàn tác" | Bấm Hoàn tác gửi yêu cầu (Admin duyệt `VINA_REOPEN_REQUEST`) hoặc IT reset `IsFinished=0` | Cần duyệt / SQL |
+| **POP-ERR-13: Lệch / Không đồng nhất công đoạn giữa Kiosk POP và MES** | Chốt chéo WinForm trước Kiosk, nhảy cóc công đoạn V-27_HY sang V-28_HY, hoặc kẹt dở dang V-26_HY | Dùng Golden Query `.\mes.ps1 trace '<Lot>'`. Xóa bản ghi kẹt cũ qua Template 3 hoặc rollback Đóng gói qua Template 4 | **CÓ (SQL Hotfix)** |
 
 ---
 
@@ -188,6 +189,24 @@ ROLLBACK;
 - **Cách mở lại:**
   - *Cách 1 (Chuẩn UI):* Gõ lý do bấm **"Gửi yêu cầu"**, Quản lý QC hoặc IT vào bảng `VINA_REOPEN_REQUEST` duyệt `STATUS = 'APPROVED'`.
   - *Cách 2 (SQL khẩn cấp):* IT reset cờ hoàn thành qua Template 5.
+
+---
+
+### 2.9 POP-ERR-13: Hiện Tượng Không Đồng Nhất Công Đoạn Giữa POP Kiosk và MES WinForm
+**Hiện tượng:** 
+1. Cùng 1 mã Lot nhưng xem trên POP Kiosk hiển thị công đoạn khác so với MES WinForm Desktop (B530/HY530).
+2. Tại POP Kiosk, bấm "Hoàn thành sản xuất" bị chặn báo *"This route is already completed in MES"*, hoặc sang Đóng gói Kiosk bị báo *"Vượt quá số lượng còn lại (0 EA)"*.
+3. Tại MES WinForm (B530), quét Lot thì bị popup chặn: *"Search failed: Vui lòng sử dụng hệ thống POP để nhập sản lượng"*.
+
+**Nguyên nhân gốc (Root Cause):**
+- **Xung đột chốt chéo (Dual-entry):** Dữ liệu công đoạn đã được chốt trước trên WinForm, DB đã ghi nhận bản ghi trong `STB_ProdRouteHist`. Kiosk POP đối chiếu thấy đã có bản ghi nên chặn ghi đè để bảo vệ số liệu.
+- **Nhảy cóc công đoạn (Skip Route):** Bỏ qua công đoạn trung gian (như `V-27_HY` Ngoại quan) nhảy thẳng từ `V-26_HY` sang `V-28_HY` Đóng gói, hoặc công đoạn liền trước bị treo dở dang `CompleteRoute = NULL`.
+- **Chốt sớm công đoạn đóng gói:** Chốt `V-28_HY` trên WinForm làm sinh BTP trong `STB_MaterialLotInfo` và tiêu thụ hết sản lượng khả dụng của Lot trên Kiosk.
+
+**Quy trình chuẩn đoán & Khắc phục:**
+1. Chạy Golden Query 360: `.\mes.ps1 trace '<LotID>'` để lấy `ControlNo`, đối soát trạng thái `STB_SetInfo` và các dòng trong `STB_ProdRouteHist`.
+2. Nếu kẹt bản ghi công đoạn cũ ở giữa (Aging `V-26_HY`): Áp dụng **Template 3** xóa bản ghi kẹt cũ trong `STB_ProdRouteWorkerHist` và `STB_ProdRouteHist`.
+3. Nếu chốt sớm công đoạn đóng gói (`V-28_HY`): Áp dụng **Template 4** rollback đồng bộ 3 bảng (`STB_MaterialLotInfo`, `STB_ProdRouteHist`, `VINA_PACKING_REMAIN_QTY`).
 
 ---
 

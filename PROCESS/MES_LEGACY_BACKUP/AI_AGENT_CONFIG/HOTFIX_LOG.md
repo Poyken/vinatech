@@ -982,8 +982,50 @@ WHERE LEN(BoxSerialNo) = 13 AND BoxSerialNo LIKE @SerialPrefix + '%'
   - Giao diện POP Kiosk Web: Khôi phục hạn mức còn lại 1046 EA, cho phép công nhân chia Box và bấm Đóng gói bình thường.
 * **Tham chiếu KB:** [POP_KB_04_ROLLBACK_AND_SAFETY.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_04_ROLLBACK_AND_SAFETY.md), [KB_07_03_SCREEN_BUGS.md § Lỗi 3](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_07/KB_07_03_SCREEN_BUGS.md#hy530--route-process-input-hy-chốt-sản-lượng-công-đoạn-hưng-yên)
 
+---
 
+### [POP/B530/V-26_HY] — 📍 ID_48 Giải phóng lượt chốt tồn cũ V-26_HY cho Lot VVQQ073R072736
+* **Ngày sửa:** `2026-09-17` (13:37:00)
+* **Màn hình liên quan (TCode):** `POP Web Kiosk (pop.vinatech.com/pop/screen) - Công đoạn Aging (Lão hóa)` & `[B530] - Nhập thực tế sản xuất`
+* **Bảng liên quan:** `SmartFactoryV2.dbo.STB_ProdRouteHist`, `SmartFactoryV2.dbo.STB_ProdRouteWorkerHist`
+* **Danh sách Lot:** `VVQQ073R072736` (ControlNo `20260807000462`, PO `260804000017`, Model `ECVT30-357`, Chuyền `HY Cell Line #1`)
+* **Triệu chứng lỗi:** Công nhân chọn công đoạn Aging `V-26_HY` và bấm "HOÀN THÀNH SẢN XUẤT" trên POP Kiosk, hệ thống báo popup đỏ: *"Thất bại: This route is already completed in MES."*. Sang MES WinForm (B530) chốt thì MES chặn: *"Search failed: Vui lòng sử dụng hệ thống POP để nhập sản lượng"*.
+* **Nguyên nhân gốc (Root Cause):** Trong `STB_ProdRouteHist` đã tồn tại bản ghi cũ `ProdRouteHistNo = 20260830000798` (từ ngày 30/08/2026) của công đoạn `V-26_HY` do chạy thử hoặc thao tác dở ca cũ, làm API POP chặn chốt đè sản lượng.
+* **Cơ chế sao lưu (Pre-flight Backup):**
+  - Snapshot Tables: `SmartFactoryV2.dbo.BAK_STB_ProdRouteHist_20260917_VVQQ073R072736` & `BAK_STB_ProdRouteWorkerHist_20260917_VVQQ073R072736`.
+* **Phương án sửa lỗi & Script Deploy:** `sql/hotfix_20260917_133700_ROLLBACK_V26_VVQQ073R072736.sql`
+  ```sql
+  USE SmartFactoryV2;
+  GO
+  BEGIN TRANSACTION;
+  BEGIN TRY
+      -- 1. Xóa worker mapping
+      DELETE FROM STB_ProdRouteWorkerHist WHERE ProdRouteHistNo = '20260830000798';
+      -- 2. Xóa bản ghi kẹt cũ V-26_HY
+      DELETE FROM STB_ProdRouteHist 
+      WHERE ProdRouteHistNo = '20260830000798' AND ControlNo = '20260807000462' AND RouteCode = 'V-26_HY';
+      COMMIT TRANSACTION;
+  END TRY
+  BEGIN CATCH
+      ROLLBACK TRANSACTION;
+      THROW;
+  END CATCH;
+  GO
+  ```
+* **Kết quả nghiệm thu:** Xóa thành công bản ghi kẹt cũ, mở lại trạng thái để công nhân F5 Kiosk và bấm Hoàn thành sản xuất trên POP Kiosk bình thường.
+* **Tham chiếu KB:** [POP_KB_03 § 2.6](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_03_TROUBLESHOOTING.md#26-pop-err-09-lỗi-this-route-is-already-completed-in-mes-khi-chốt-công-đoạn), [KB_09_SCREEN_BUG_FIXBOOK.md § [B530] #11](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md#L202)
 
+---
 
-
-
+### [POP/MES] — 📍 ID_49 Chuẩn hóa SOP xử lý hiện tượng "Không đồng nhất công đoạn khi view trên POP và MES"
+* **Ngày ghi nhận & chuẩn hóa:** `2026-09-17`
+* **Phạm vi:** Toàn bộ các chuyền sản xuất đã chuyển giao quyền vận hành sang Web Kiosk (`HY Cell Line #1`, `HY Cell Line #2`, `Electrode Line`)
+* **Triệu chứng:** Cùng 1 mã Lot nhưng trên màn hình POP Kiosk hiển thị công đoạn khác so với MES WinForm Desktop (B530/HY530), hoặc POP Kiosk báo kẹt không chốt được sản lượng / không đóng gói được trong khi MES đã hiển thị công đoạn tiếp theo.
+* **Tổng hợp 3 nguyên nhân cốt lõi:**
+  1. **Dual-Entry / Chốt chéo:** Người dùng dùng WinForm chốt trước sản lượng, DB sinh bản ghi trong `STB_ProdRouteHist`, Kiosk POP kiểm tra thấy bản ghi cũ nên chặn `This route is already completed in MES`.
+  2. **Nhảy cóc công đoạn (Skip Route):** Bỏ qua công đoạn trung gian (như `V-27_HY` Ngoại quan) nhảy thẳng từ `V-26_HY` sang `V-28_HY` Đóng gói, hoặc công đoạn trước bị treo dở dang `CompleteRoute = NULL`.
+  3. **Chốt sớm công đoạn đóng gói:** Chốt `V-28_HY` trên WinForm làm tiêu thụ hết số lượng khả dụng của Lot, Kiosk báo `"Vượt quá số lượng còn lại (0 EA)"`.
+* **SOP Khắc phục 3 bước chuẩn:**
+  1. Chạy Golden Query 360: `.\mes.ps1 trace '<LotID>'` để soi chiếu trạng thái tại `STB_SetInfo` và `STB_ProdRouteHist`.
+  2. Nếu kẹt bản ghi cũ ở công đoạn giữa: Áp dụng Template 3 (`POP_KB_03 § 2.6`) xóa bản ghi `STB_ProdRouteWorkerHist` và `STB_ProdRouteHist` tương ứng.
+  3. Nếu chốt sớm công đoạn đóng gói: Áp dụng Template 4 (`POP_KB_03 § 2.7`) rollback đồng bộ 3 bảng (`STB_MaterialLotInfo`, `STB_ProdRouteHist`, `VINATECH_POP.dbo.VINA_PACKING_REMAIN_QTY`).
