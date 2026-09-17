@@ -125,6 +125,37 @@ https://pop.vinatech.com/
 2. **Line Search Modal:** Cho phép chuyển đổi linh hoạt giữa các pháp nhân (VINATech VINA / Hàn Quốc) và từng xưởng/chuyền sản xuất mà không cần đăng xuất.
 3. **Cơ chế tải Lệnh sản xuất & DayPlan:** Đồng bộ tự động theo thời gian thực với cơ sở dữ liệu MES trung tâm.
 
+### 4.3 Phân Hệ Tự Kiểm Tra Chuyền (/pop/quality/self) & Cơ Chế Khóa Phiên Đo Kiểm
+1. **Trạng thái chưa hoàn thành:**
+   - Nút góc dưới bên phải hiển thị màu xanh dương: **`Hoàn thành`**.
+   - Công nhân chạm từng hạng mục đo kiểm, quan sát tiêu chuẩn (USL / LSL / Tiêu chuẩn) và nhập số liệu theo các mẫu đo `#1, #2, #3...`.
+2. **Hiện tượng "Số mẫu mục tiêu là 0":**
+   - Nếu hạng mục hiện thông báo *"Số mẫu mục tiêu là 0 — tăng số mẫu mục tiêu ở khung quy cách để hiện ô nhập"*, công nhân chạm vào ô số mẫu `0/0` ở khung quy cách bên phải (dưới ô Tiêu chuẩn) để tăng số lượng mẫu đo lên (>0).
+3. **Khóa kết quả sau khi bấm "Hoàn thành":**
+   - Khi công nhân bấm nút **`Hoàn thành`**, hệ thống gửi lệnh `MANUAL_COMPLETE` và cập nhật phiếu kiểm tra trong `SmartFactoryV2.dbo.STB_CommInspDocHistory` thành `IsFinished = True` (Pass).
+   - Ngay lập tức phiên làm việc bị khóa ở chế độ Read-only để tránh sửa đổi dữ liệu đã chốt.
+   - Nút màu xanh tự động chuyển thành nút màu xám: **`Hoàn tác`**.
+
+### 4.4 Cơ Chế Mở Lại Phiên Đo Kiểm (Quality Reopen Request Policy)
+Khi công nhân lỡ tay bấm "Hoàn thành" nhưng vẫn cần đo bổ sung hoặc sửa đổi số liệu:
+1. **Quy trình chuẩn Kiosk Web:**
+   - Bấm nút **`Hoàn tác`** ➔ Xuất hiện khung *"Lý do mở lại (tối đa 500 ký tự)"*.
+   - Nhập lý do (ví dụ: *"Bấm nhầm hoàn thành cần nhập tiếp"*) ➔ Bấm **`Gửi yêu cầu`**.
+   - Dữ liệu được ghi vào `VINATECH_POP.dbo.VINA_REOPEN_REQUEST`. Cấp Quản lý QC hoặc IT phê duyệt `STATUS = 'APPROVED'`, màn hình Kiosk sẽ tự động mở khóa trở lại bình thường.
+2. **Xử lý kỹ thuật khẩn cấp (Emergency IT Reopen):**
+   - IT có thể duyệt tức thì bản ghi request qua SQL:
+     ```sql
+     UPDATE VINATECH_POP.dbo.VINA_REOPEN_REQUEST 
+     SET STATUS = 'APPROVED', APPROVER_EMP_NO = N'ADMIN_IT', APPROVE_DATETIME = GETDATE()
+     WHERE BARCODE = N'<MÃ_LOT>' AND STATUS = 'REQUEST';
+     ```
+   - Hoặc reset trực tiếp cờ hoàn thành của phiếu kiểm tra:
+     ```sql
+     UPDATE SmartFactoryV2.dbo.STB_CommInspDocHistory 
+     SET IsFinished = 0, ChangeDateTime = GETDATE() 
+     WHERE CommInspDocNo = N'<COMM_INSP_DOC_NO>';
+     ```
+
 ---
 
 ## 🚀 5. QUY CHUẨN ĐỒNG HÀNH VÀ CẬP NHẬT KHI ĐÀO TẠO
@@ -133,4 +164,5 @@ Trong suốt quá trình tham gia đào tạo qua Google Meet:
 1. **Khi có màn hình mới:** Chụp ảnh màn hình hoặc gửi mô tả màn hình (`Screen ID` / `Tên màn hình`).
 2. **Khi có quy tắc nghiệp vụ mới:** AI sẽ ghi chú vào tài liệu này và đối chiếu với Live Database qua các script an toàn `mes.ps1`.
 3. **Khi có thắc mắc kỹ thuật từ giảng viên:** AI hỗ trợ tra cứu nguyên nhân gốc (Root Cause) và câu lệnh kiểm tra ngay trong ca học.
+
 

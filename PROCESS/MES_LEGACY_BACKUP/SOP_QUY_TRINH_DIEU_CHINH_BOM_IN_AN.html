@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOP_VNT_MES_POP_008_Phe_Duyet_NVL_Thay_The_BOM</title>
+    <style>
+        @page {
+            size: A4 portrait;
+            margin: 12mm 15mm 12mm 15mm;
+        }
+
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            line-height: 1.45;
+            color: #1a1a1a;
+            background-color: #fff;
+            margin: 0;
+            padding: 20px;
+            font-size: 10.5pt;
+        }
+
+        .document-container {
+            max-width: 210mm;
+            margin: 0 auto;
+            background: #fff;
+        }
+
+        /* Header phong cách doanh nghiệp */
+        .header-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+            border: 2px solid #003366;
+        }
+
+        .header-table td {
+            border: 1px solid #003366;
+            padding: 8px 12px;
+            vertical-align: middle;
+        }
+
+        .company-name {
+            font-size: 13pt;
+            font-weight: bold;
+            color: #003366;
+            text-transform: uppercase;
+        }
+
+        .doc-title {
+            font-size: 12pt;
+            font-weight: bold;
+            color: #c00000;
+            text-align: center;
+            line-height: 1.3;
+        }
+
+        .doc-subtitle {
+            font-size: 9.5pt;
+            color: #333;
+            text-align: center;
+            font-weight: 600;
+            margin-top: 4px;
+        }
+
+        .doc-meta {
+            font-size: 8.5pt;
+            line-height: 1.4;
+        }
+
+        /* Bảng ký duyệt */
+        .approval-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+        }
+
+        .approval-table th, .approval-table td {
+            border: 1px solid #777;
+            padding: 5px 6px;
+            text-align: center;
+            font-size: 9pt;
+        }
+
+        .approval-table th {
+            background-color: #f0f4f8;
+            font-weight: bold;
+            color: #003366;
+        }
+
+        /* Headings */
+        h2 {
+            font-size: 11pt;
+            color: #003366;
+            border-left: 5px solid #003366;
+            padding-left: 8px;
+            margin-top: 14px;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Table chung */
+        table.content-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 8px 0 12px 0;
+            font-size: 9pt;
+        }
+
+        table.content-table th, table.content-table td {
+            border: 1px solid #888;
+            padding: 5px 7px;
+            vertical-align: top;
+        }
+
+        table.content-table th {
+            background-color: #e9eef4;
+            color: #003366;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        /* Box so sánh */
+        .compare-box {
+            display: flex;
+            gap: 12px;
+            margin: 10px 0;
+        }
+
+        .compare-item {
+            flex: 1;
+            padding: 8px 10px;
+            border-radius: 4px;
+            font-size: 9pt;
+            line-height: 1.4;
+        }
+
+        .compare-old {
+            background-color: #fff2f2;
+            border: 1px solid #ffcccc;
+            border-left: 4px solid #cc0000;
+        }
+
+        .compare-new {
+            background-color: #f2f9f2;
+            border: 1px solid #ccffcc;
+            border-left: 4px solid #008800;
+        }
+
+        .compare-title {
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        /* Highlight bản chất nghiệp vụ */
+        .highlight-principle {
+            background-color: #eef7ff;
+            border: 1px solid #b8daff;
+            border-left: 5px solid #0056b3;
+            padding: 8px 12px;
+            margin: 8px 0;
+            font-size: 9.5pt;
+        }
+
+        /* Quy trình các bước */
+        .step-box {
+            border: 1px solid #d0d7de;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            background: #fafbfc;
+            padding: 8px 10px;
+            font-size: 9pt;
+        }
+
+        .step-header {
+            font-weight: bold;
+            color: #003366;
+            margin-bottom: 3px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .step-tag {
+            background: #003366;
+            color: #fff;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 8pt;
+        }
+
+        .path-badge {
+            background-color: #fff3cd;
+            color: #856404;
+            padding: 3px 6px;
+            border: 1px dashed #ffeeba;
+            border-radius: 4px;
+            font-family: monospace;
+            font-weight: bold;
+            display: inline-block;
+            margin: 4px 0;
+            font-size: 8.5pt;
+        }
+
+        .note-alert {
+            background-color: #e7f3fe;
+            border-left: 4px solid #2196F3;
+            padding: 6px 10px;
+            margin: 8px 0;
+            font-size: 8.5pt;
+        }
+
+        /* In ấn */
+        @media print {
+            body {
+                padding: 0;
+            }
+            .no-print {
+                display: none;
+            }
+            .page-break {
+                page-break-before: always;
+            }
+            .step-box, table {
+                break-inside: avoid;
+            }
+        }
+
+        .btn-print {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            background: #003366;
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            font-size: 10.5pt;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+            transition: 0.2s;
+        }
+        .btn-print:hover {
+            background: #002244;
+        }
+    </style>
+</head>
+<body>
+
+    <button class="btn-print no-print" onclick="window.print()">🖨️ Bấm In Tài Liệu (Ctrl + P)</button>
+
+    <div class="document-container">
+        <!-- HEADER DOANH NGHIỆP -->
+        <table class="header-table">
+            <tr>
+                <td style="width: 25%; text-align: center;">
+                    <div class="company-name">VINATECH VINA</div>
+                    <div style="font-size: 8pt; color: #555;">HỆ THỐNG MES / POP</div>
+                </td>
+                <td style="width: 50%;">
+                    <div class="doc-title">QUY TRÌNH VẬN HÀNH TIÊU CHUẨN (SOP)</div>
+                    <div class="doc-subtitle">QUẢN LÝ & PHÊ DUYỆT NGUYÊN VẬT LIỆU THAY THẾ ĐƯỢC CHẤP NHẬN TRONG BOM<br>(SUBSTITUTE RAW MATERIALS APPROVAL PROCESS)</div>
+                </td>
+                <td style="width: 25%;" class="doc-meta">
+                    <b>Mã hiệu:</b> SOP-VNT-MES-008<br>
+                    <b>Phiên bản:</b> 2.0 (Chuẩn hóa)<br>
+                    <b>Ngày ban hành:</b> 16/09/2026<br>
+                    <b>Phạm vi:</b> Toàn nhà máy
+                </td>
+            </tr>
+        </table>
+
+        <!-- BẢNG KÝ DUYỆT -->
+        <table class="approval-table">
+            <tr>
+                <th style="width: 20%;">Người soạn thảo</th>
+                <th style="width: 20%;">Kỹ thuật (PE / R&D)</th>
+                <th style="width: 20%;">Quản lý Chất lượng (QC)</th>
+                <th style="width: 20%;">Khối Sản xuất (Prod)</th>
+                <th style="width: 20%;">Ban Giám Đốc Phê Duyệt</th>
+            </tr>
+            <tr style="height: 45px;">
+                <td><i>(Đã ký)</i><br><b>IT Systems Team</b></td>
+                <td><i>(Đã ký)</i><br><b>Trưởng phòng PE</b></td>
+                <td><i>(Đã ký)</i><br><b>Trưởng phòng QC</b></td>
+                <td><i>(Đã ký)</i><br><b>Trưởng phòng SX</b></td>
+                <td><i>(Đã phê duyệt)</i><br><b>Giám đốc Nhà máy</b></td>
+            </tr>
+        </table>
+
+        <!-- NGUYÊN TẮC BẢN CHẤT NGHIỆP VỤ -->
+        <div class="highlight-principle">
+            <b>📌 NGUYÊN TẮC CỐT LÕI VỀ MẶT NGHIỆP VỤ:</b><br>
+            • <b>KHÔNG PHẢI ĐIỀU CHỈNH BOM GỐC:</b> Cấu trúc kỹ thuật và định mức chuẩn của Model được giữ nguyên 100% (Không sửa BOM Header / Base Consumption).<br>
+            • <b>LÀ CẤP PHÉP NGUYÊN VẬT LIỆU THAY THẾ (SUBSTITUTE MATERIALS):</b> Quy trình này dùng để <b>bổ sung / cấp phép danh mục các mã NVL tương đương được chấp nhận nạp vào trạm máy POP</b> khi vật tư chính tạm thiếu, chuyển đổi nhà cung cấp tương đương hoặc tận dụng lô tồn kho đã kiểm định đạt tiêu chuẩn.
+        </div>
+
+        <!-- 1. MỤC ĐÍCH & PHẠM VI -->
+        <h2>1. MỤC ĐÍCH VÀ Ý NGHĨA</h2>
+        <div style="margin-left: 5px; font-size: 9pt;">
+            <ul>
+                <li><b>Chấm dứt hoàn toàn bypass ngầm:</b> Loại bỏ triệt để việc IT phải sửa code hoặc nới lỏng Stored Procedure trên DB để bỏ qua lỗi không khớp NVL ở hiện trường.</li>
+                <li><b>Chuẩn hóa kiểm soát tại trạm POP:</b> Đảm bảo trạm POP kiểm soát chính xác 100% đầu vào NVL — Chỉ mở khóa cho phép chốt sản lượng khi quét đúng mã vật tư chính hoặc mã vật tư thay thế đã được phê duyệt hợp lệ.</li>
+                <li><b>Linh hoạt cung ứng (Operational Agility):</b> Không làm dừng chuyền khi nhà cung cấp A thiếu hàng, cho phép xưởng sử dụng mã tương đương từ nhà cung cấp B đã qua thẩm định.</li>
+                <li><b>Bảo toàn truy vết 360° (Traceability):</b> Lưu vết chính xác Lot thành phẩm đã nạp cuộn NVL thay thế nào, kèm mã phiếu Groupware nào đã phê duyệt để sẵn sàng cho khách hàng audit.</li>
+            </ul>
+        </div>
+
+        <!-- 2. BỐI CẢNH VẬN HÀNH -->
+        <h2>2. BỐI CẢNH VẬN HÀNH: TRƯỚC ĐÂY VS HIỆN NAY</h2>
+        <div class="compare-box">
+            <div class="compare-item compare-old">
+                <div class="compare-title" style="color: #c00000;">❌ TRƯỚC ĐÂY (BYPASS NGẦM)</div>
+                <div>• BOM chỉ có 1 mã vật tư duy nhất, khi đổi NCC thì máy quét báo lỗi.<br>
+                • Các bên ngại cập nhật ➔ <b>IT can thiệp sửa code ngầm bypass</b> để chuyền chạy tiếp.<br>
+                • <b>Hậu quả:</b> Tồn kho ảo lệch lớn; mất dấu vết thực tế khi khách hàng audit chất lượng.</div>
+            </div>
+            <div class="compare-item compare-new">
+                <div class="compare-title" style="color: #008800;">✅ HIỆN NAY (POP + PHÊ DUYỆT NVL THAY THẾ)</div>
+                <div>• BOM gốc giữ nguyên, mở rộng <b>Danh mục NVL thay thế được chấp nhận</b>.<br>
+                • Phê duyệt minh bạch qua phiếu <b>E-Approval trên Groupware</b>.<br>
+                • <b>Lợi ích:</b> Chuyền chạy thông suốt, POP kiểm soát chặt chẽ, dữ liệu minh bạch 100%.</div>
+            </div>
+        </div>
+
+        <!-- 3. QUY TRÌNH THAO TÁC GROUPWARE -->
+        <h2>3. QUY TRÌNH 5 BƯỚC PHÊ DUYỆT NVL THAY THẾ TRÊN GROUPWARE</h2>
+        <p style="font-size: 9pt; margin-bottom: 6px;">
+            Đường dẫn hệ thống: <span class="path-badge">Groupware ➔ Electronic Document ➔ Production/Development ➔ Raw Material Input Adjustment Document</span>
+        </p>
+
+        <div class="step-box">
+            <div class="step-header"><span class="step-tag">BƯỚC 1</span> Khởi Tạo & Đặt Tiêu Đề Phiếu</div>
+            <div>Vào đúng biểu mẫu, đặt tiêu đề chuẩn: <code>[NVL THAY THẾ] - [MÃ MODEL/LOT] - [TÊN VẬT TƯ THAY THẾ] - [NGÀY TẠO]</code>. Chọn đúng nhà máy (VVT_F1, VVT_F2, VVT_F5) và công đoạn áp dụng.</div>
+        </div>
+
+        <div class="step-box">
+            <div class="step-header"><span class="step-tag">BƯỚC 2</span> Thiết Lập Dòng Phê Duyệt (Approval Line)</div>
+            <div>Nhấn <b>"Chọn dòng phê duyệt +"</b> góc phải màn hình để phân quyền thẩm định:
+                <ul style="margin: 2px 0 0 15px;">
+                    <li><b>Người duyệt chính (Approver):</b> Quản lý Sản xuất (xác nhận nhu cầu) ➔ Trưởng phòng PE/R&D (thẩm tra Spec kỹ thuật tương đương) ➔ Trưởng phòng QC (thẩm định mẫu IQC) ➔ Giám đốc Nhà máy (phê duyệt cấp phép).</li>
+                    <li><b>Người nhận tham chiếu (CC):</b> Thủ kho WMS (chuẩn bị xuất đúng mã thay thế), Thu mua (tiến độ mua hàng), Kế toán (giá thành), IT MES (giám sát đồng bộ).</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="step-box">
+            <div class="step-header"><span class="step-tag">BƯỚC 3</span> Áp Dụng Tuyến Duyệt (Apply Approval Line)</div>
+            <div>Nhấn nút <b>"Áp dụng dòng phê duyệt"</b> để hệ thống khóa danh sách người duyệt và đưa danh sách chữ ký vào biểu mẫu.</div>
+        </div>
+
+        <div class="step-box">
+            <div class="step-header"><span class="step-tag">BƯỚC 4</span> Khai Báo Chi Tiết Cặp Mã Thay Thế & Đính Kèm Hồ Sơ</div>
+            <div>
+                <table class="content-table" style="margin: 4px 0;">
+                    <tr>
+                        <th style="width: 25%;">Thông tin khai báo</th>
+                        <th>Chi tiết trên biểu mẫu</th>
+                    </tr>
+                    <tr>
+                        <td><b>Mã Model / Lot No</b></td>
+                        <td>Mã thành phẩm (BOM gốc không đổi) và chỉ định số PO/Lot được áp dụng vật tư thay thế.</td>
+                    </tr>
+                    <tr>
+                        <td><b>Mã NVL gốc vs Mã Thay thế</b></td>
+                        <td>Điền mã vật tư chính đang tạm thiếu và <b>mã vật tư tương đương được cấp phép thay thế</b>.</td>
+                    </tr>
+                    <tr>
+                        <td><b>Lý do & Hồ sơ đính kèm</b></td>
+                        <td>Ghi rõ lý do thay thế. Bắt buộc đính kèm <b>IQC Test Report</b> và <b>Bảng so sánh thông số kỹ thuật (Spec)</b>.</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="step-box">
+            <div class="step-header"><span class="step-tag">BƯỚC 5</span> Ký Duyệt & Tự Động Kích Hoạt Quyền Quét Mã Tại POP</div>
+            <div>Sau khi cấp cuối cùng nhấn <b>Approve</b>: Hệ thống tự động bổ sung mã mới vào <b>Danh mục NVL được chấp nhận</b> của Model trên MES (<code>STB_BomDetail</code> / Mapping thay thế). Công nhân quét Barcode vật tư thay thế ➔ <b>POP bật đèn xanh và mở nút "Hoàn thành sản xuất"</b>.</div>
+        </div>
+
+        <div class="page-break"></div>
+
+        <!-- 4. MA TRẬN PHỐI HỢP LIÊN PHÒNG BAN -->
+        <h2>4. MA TRẬN PHỐI HỢP TRÁCH NHIỆM LIÊN PHÒNG BAN (RACI)</h2>
+        <table class="content-table">
+            <thead>
+                <tr>
+                    <th style="width: 35%;">Nội dung công việc</th>
+                    <th style="width: 10%;">Sản xuất</th>
+                    <th style="width: 11%;">Kỹ thuật PE</th>
+                    <th style="width: 11%;">Chất lượng QC</th>
+                    <th style="width: 11%;">Kho WMS</th>
+                    <th style="width: 11%;">Mua hàng</th>
+                    <th style="width: 11%;">IT / MES</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1. Phát hiện thiếu NVL chính & khởi tạo phiếu Groupware</td>
+                    <td style="text-align: center; font-weight: bold; background: #d9edf7;">R</td>
+                    <td style="text-align: center;">C</td>
+                    <td style="text-align: center;">C</td>
+                    <td style="text-align: center;">I</td>
+                    <td style="text-align: center;">C</td>
+                    <td style="text-align: center;">I</td>
+                </tr>
+                <tr>
+                    <td>2. Thẩm tra thông số kỹ thuật tương đương (Spec/Datasheet)</td>
+                    <td style="text-align: center;">-</td>
+                    <td style="text-align: center; font-weight: bold; background: #d9edf7;">R / A</td>
+                    <td style="text-align: center;">C</td>
+                    <td style="text-align: center;">-</td>
+                    <td style="text-align: center;">I</td>
+                    <td style="text-align: center;">-</td>
+                </tr>
+                <tr>
+                    <td>3. Kiểm định chất lượng mẫu NVL thay thế (IQC / Test)</td>
+                    <td style="text-align: center;">-</td>
+                    <td style="text-align: center;">C</td>
+                    <td style="text-align: center; font-weight: bold; background: #d9edf7;">R / A</td>
+                    <td style="text-align: center;">-</td>
+                    <td style="text-align: center;">-</td>
+                    <td style="text-align: center;">-</td>
+                </tr>
+                <tr>
+                    <td>4. Phê duyệt chính thức cấp phép dùng NVL thay thế</td>
+                    <td style="text-align: center;">I</td>
+                    <td style="text-align: center; font-weight: bold;">A</td>
+                    <td style="text-align: center; font-weight: bold;">A</td>
+                    <td style="text-align: center;">I</td>
+                    <td style="text-align: center;">I</td>
+                    <td style="text-align: center;">I</td>
+                </tr>
+                <tr>
+                    <td>5. Xuất kho đúng cuộn/lô vật tư thay thế sang chuyền</td>
+                    <td style="text-align: center;">I</td>
+                    <td style="text-align: center;">-</td>
+                    <td style="text-align: center;">-</td>
+                    <td style="text-align: center; font-weight: bold; background: #d9edf7;">R</td>
+                    <td style="text-align: center;">-</td>
+                    <td style="text-align: center;">-</td>
+                </tr>
+                <tr>
+                    <td>6. Giám sát tự động nạp mã thay thế xuống danh mục ở POP</td>
+                    <td style="text-align: center;">I</td>
+                    <td style="text-align: center;">-</td>
+                    <td style="text-align: center;">-</td>
+                    <td style="text-align: center;">-</td>
+                    <td style="text-align: center;">-</td>
+                    <td style="text-align: center; font-weight: bold; background: #d9edf7;">R</td>
+                </tr>
+                <tr>
+                    <td>7. Quét Barcode nạp máy và chốt sản lượng tại trạm POP</td>
+                    <td style="text-align: center; font-weight: bold; background: #d9edf7;">R</td>
+                    <td style="text-align: center;">-</td>
+                    <td style="text-align: center;">I</td>
+                    <td style="text-align: center;">-</td>
+                    <td style="text-align: center;">-</td>
+                    <td style="text-align: center;">I</td>
+                </tr>
+            </tbody>
+        </table>
+        <div style="font-size: 8pt; color: #555; margin-top: -6px; margin-bottom: 12px;">
+            <i>* Chú thích: <b>R (Responsible)</b>: Trực tiếp làm; <b>A (Accountable)</b>: Chịu trách nhiệm phê duyệt; <b>C (Consulted)</b>: Được tham vấn chuyên môn; <b>I (Informed)</b>: Nhận thông tin tham chiếu (CC).</i>
+        </div>
+
+        <!-- 5. HƯỚNG DẪN XỬ LÝ SỰ CỐ HIỆN TRƯỜNG -->
+        <h2>5. XỬ LÝ SỰ CỐ THƯỜNG GẶP TẠI TRẠM POP (TROUBLESHOOTING)</h2>
+        <table class="content-table">
+            <thead>
+                <tr>
+                    <th style="width: 30%;">Hiện tượng lỗi tại máy POP</th>
+                    <th style="width: 30%;">Nguyên nhân cốt lõi</th>
+                    <th style="width: 40%;">Hành động khắc phục chuẩn</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><b>POP báo đỏ: "Vật tư không nằm trong danh mục chấp nhận"</b></td>
+                    <td>Quét tem cuộn NVL chưa được cấp phép trong danh mục thay thế của Model.</td>
+                    <td>1. Dừng quét ngay lập tức.<br>2. Kiểm tra phiếu Groupware xem đã được <code>Approved</code> chưa.<br>3. Nếu chưa có phiếu, tiến hành tạo phiếu theo Mục 3.</td>
+                </tr>
+                <tr>
+                    <td><b>Phiếu đã Approved nhưng POP vẫn không nhận mã</b></td>
+                    <td>Bộ nhớ đệm (cache) của máy trạm POP chưa cập nhật hoặc tiến trình đồng bộ DB bị nghẽn.</td>
+                    <td>1. Đăng xuất tài khoản POP, tắt trình duyệt và mở lại.<br>2. Báo IT MES kiểm tra bảng mapping vật tư thay thế xem mã đã đồng bộ sang chưa.</td>
+                </tr>
+                <tr>
+                    <td><b>Nút "Hoàn thành sản xuất" bị mờ (Disabled)</b></td>
+                    <td>Chưa quét đủ 100% số lượng hoặc vị trí vật tư quy định tại công đoạn đó.</td>
+                    <td>Xem chỉ số danh mục trên màn hình POP (VD: <code>2/3</code>), quét bổ sung cuộn NVL còn thiếu để nút chuyển sang màu xanh.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- 6. KỶ LUẬT TUÂN THỦ -->
+        <h2>6. ĐIỀU KHOẢN THI HÀNH & KỶ LUẬT TUÂN THỦ</h2>
+        <div class="note-alert">
+            <b>⛔ QUY ĐỊNH BẮT BUỘC:</b>
+            <ol style="margin: 3px 0 0 15px;">
+                <li>Nghiêm cấm tuyệt đối mọi hành vi yêu cầu IT "bypass ngầm" trong source code hoặc can thiệp database ngoài quy trình.</li>
+                <li>Mọi trường hợp đưa NVL thay thế vào sản xuất mà không có phiếu phê duyệt điện tử trên Groupware đều bị coi là vi phạm nghiêm trọng quy chuẩn quản trị chất lượng sản phẩm (Non-conformance).</li>
+            </ol>
+        </div>
+
+        <div style="margin-top: 25px; display: flex; justify-content: space-between; text-align: center; font-size: 9.5pt;">
+            <div style="width: 40%;">
+                <b>ĐẠI DIỆN KHỐI KỸ THUẬT & SẢN XUẤT</b><br>
+                <i>(Ký và ghi rõ họ tên)</i>
+                <div style="height: 50px;"></div>
+            </div>
+            <div style="width: 40%;">
+                <b>TỔNG GIÁM ĐỐC / GIÁM ĐỐC NHÀ MÁY</b><br>
+                <i>(Ký duyệt và đóng dấu)</i>
+                <div style="height: 50px;"></div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

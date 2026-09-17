@@ -32,6 +32,10 @@ Related Files:
 | **POP-ERR-06: Không Merge được các Lot lẻ** | Khác chủng loại (Model mismatch) hoặc khác quy cách | Chỉ gộp các Lot cùng chung Model Code | Không |
 | **POP-ERR-07: Lỗi in tem (Zebra Printer Fail)** | Máy in offline, kẹt giấy, mất IP LAN, hoặc ZPL format lỗi | Bật máy in, check đèn đỏ, kiểm tra Print Spooler | Không |
 | **POP-ERR-08: Kẹt nút "Hoàn thành sản xuất"** | Thiếu bước nạp NVL bắt buộc (IsLineInput = 0) | Hoàn thành nạp NVL theo định mức trước khi Save | Không |
+| **POP-ERR-09: Lỗi "This route is already completed in MES"** | Công đoạn đã có lượt chốt cũ/thử trong `STB_ProdRouteHist`, WinForm chặn POP | Xóa lượt chốt kẹt cũ trong `STB_ProdRouteHist` & `STB_ProdRouteWorkerHist` | **CÓ (SQL Hotfix)** |
+| **POP-ERR-10: Lỗi chốt sớm Đóng gói V-28_HY** | Chốt đóng gói trước khi hoàn tất BTP/Lot lẻ, kẹt `VINA_PACKING_REMAIN_QTY` | Rollback đồng bộ 3 bảng (`MaterialLotInfo`, `ProdRouteHist`, `VINA_PACKING_REMAIN_QTY`) | **CÓ (SQL Hotfix)** |
+| **POP-ERR-11: Lỗi "Số mẫu mục tiêu là 0" (Quality PQC)** | Sample Size = 0 ở khung quy cách hoặc Master Data, không hiện ô nhập `#1, #2` | Chạm ô số mẫu ở khung tiêu chuẩn để tăng >0, hoặc cấu hình `STB_MaterialQcInspectionItem_HY` | Không (trừ khi sửa Master) |
+| **POP-ERR-12: Khóa kết quả đo sau khi bấm "Hoàn thành"** | Phiên PQC đã đóng (`STB_CommInspDocHistory.IsFinished=1`), nút đổi thành "Hoàn tác" | Bấm Hoàn tác gửi yêu cầu (Admin duyệt `VINA_REOPEN_REQUEST`) hoặc IT reset `IsFinished=0` | Cần duyệt / SQL |
 
 ---
 
@@ -147,6 +151,82 @@ ROLLBACK;
 
 ---
 
+### 2.6 POP-ERR-09: Lỗi "This route is already completed in MES" Khi Chốt Công Đoạn
+**Hiện tượng:** Công nhân chọn công đoạn (ví dụ Aging `V-26_HY`) và bấm **"HOÀN THÀNH SẢN XUẤT"** trên POP Kiosk, hệ thống văng popup đỏ: *"Thất bại: This route is already completed in MES."*. Quay sang mở MES WinForm (B530/B540) để chốt thủ công thì MES chặn: *"Vui lòng sử dụng hệ thống POP để nhập sản lượng"*.
+
+**Nguyên nhân gốc (Root Cause):**
+- Trong bảng `SmartFactoryV2.dbo.STB_ProdRouteHist`, công đoạn đó của Lot đã tồn tại sẵn một bản ghi chốt cũ (do chốt nhầm, chốt thử hoặc chạy dở từ các ca trước).
+- API POP kiểm tra thấy công đoạn đã tồn tại nên chặn không cho chốt đè để tránh nhân đôi sản lượng. Đồng thời MES WinForm đã cấu hình chuyển giao quyền sang Kiosk nên từ chối nhập liệu.
+
+**Quy trình khắc phục:**
+1. Tra cứu `ProdRouteHistNo` của bản ghi kẹt cũ:
+   ```sql
+   SELECT ProdRouteHistNo, ControlNo, RouteCode, ProdQty, JobDate, CreateDateTime
+   FROM SmartFactoryV2.dbo.STB_ProdRouteHist WITH(NOLOCK)
+   WHERE ControlNo = (SELECT ControlNo FROM SmartFactoryV2.dbo.STB_SetInfo WITH(NOLOCK) WHERE Barcode = N'<LOT_NO>')
+     AND RouteCode = N'<MÃ_ROUTE>';
+   ```
+2. Thực hiện xóa bản ghi kẹt cũ trong `STB_ProdRouteWorkerHist` và `STB_ProdRouteHist` qua Template 3.
+3. Hướng dẫn công nhân F5 Kiosk, chọn lại Lot và bấm **"HOÀN THÀNH SẢN XUẤT"** bình thường.
+
+---
+
+### 2.7 POP-ERR-10: Kẹt Đóng Gói Do Chốt Sớm Công Đoạn V-28_HY
+**Hiện tượng:** Lot không thể đóng gói gộp hoặc in tem thùng tại trạm đóng gói POP Kiosk.
+
+**Nguyên nhân gốc:** Công đoạn `V-28_HY` bị chốt trước khi hoàn tất đóng gói thực tế, làm sinh bản ghi mồ côi trong `STB_MaterialLotInfo` và `VINATECH_POP.dbo.VINA_PACKING_REMAIN_QTY`.
+**Khắc phục:** Rollback đồng bộ 3 bảng qua Template 4.
+
+---
+
+### 2.8 POP-ERR-11 & 12: Sự Cố Phân Hệ Chất Lượng Quality (`/pop/quality/self`)
+**Hiện tượng 1:** Màn hình đo PQC hiện thông báo *"Số mẫu mục tiêu là 0 — tăng số mẫu mục tiêu ở khung quy cách để hiện ô nhập"*, không có ô gõ số liệu.
+- **Xử lý:** Chạm vào ô số mẫu `0/0` ở khung quy cách bên phải (bên dưới ô Tiêu chuẩn) để tăng số lượng mẫu đo lên (>0). Nếu là hạng mục đo định kỳ không bắt buộc theo Lot thì bỏ qua.
+
+**Hiện tượng 2:** Nút "Hoàn thành" biến mất, thay bằng nút **`Hoàn tác`** và popup *"Lý do mở lại"*.
+- **Nguyên nhân:** Phiên đo kiểm đã bấm `Hoàn thành` (`STB_CommInspDocHistory.IsFinished = 1` - Pass). Hệ thống khóa Read-only theo chính sách `VINA_REOPEN_POLICY`.
+- **Cách mở lại:**
+  - *Cách 1 (Chuẩn UI):* Gõ lý do bấm **"Gửi yêu cầu"**, Quản lý QC hoặc IT vào bảng `VINA_REOPEN_REQUEST` duyệt `STATUS = 'APPROVED'`.
+  - *Cách 2 (SQL khẩn cấp):* IT reset cờ hoàn thành qua Template 5.
+
+---
+
+## 3. 🛠️ TEMPLATE SQL CỨU HỘ VẬN HÀNH (SAFETY HOTFIX TEMPLATES)
+
+> [!CAUTION]
+> Tuân thủ tuyệt đối **RULE 1 (SELECT-Only)**. Chỉ chạy lệnh ghi khi có sự đồng ý bằng văn bản của Quản lý MES.
+> Luôn sử dụng cú pháp an toàn `BEGIN TRAN ... ROLLBACK` để kiểm tra số dòng ảnh hưởng trước khi Commit!
+
+### Template 1: Hoàn Trả Kho Khi Quét Nhầm NVL Trên POP
+```sql
+BEGIN TRAN;
+
+DECLARE @LotNo NVARCHAR(50) = N'VNCELL260908001';
+DECLARE @MatLotNo NVARCHAR(50) = N'RAW-MAT-2026-09-0012';
+DECLARE @RefundQty DECIMAL(18,4) = 50.0;
+
+-- 1. Hoàn trả số lượng tồn kho NVL
+UPDATE SmartFactoryV2.dbo.STB_MaterialLotInfo
+SET Qty = Qty + @RefundQty,
+    ModifyDate = GETDATE()
+WHERE MaterialLotNo = @MatLotNo;
+
+-- 2. Ghi chú điều chỉnh vào nhật ký POP
+INSERT INTO VINATECH_POP.dbo.VINA_MATERIAL_INPUT_HIST (
+    LOT_NO, MATERIAL_LOT_NO, INPUT_QTY, INPUT_DATE_TIME, WORKER_ID, STATUS
+) VALUES (
+    @LotNo, @MatLotNo, -@RefundQty, GETDATE(), N'ADMIN_FIX', N'CANCEL'
+);
+
+-- Kiểm tra kết quả
+SELECT MaterialLotNo, Qty FROM SmartFactoryV2.dbo.STB_MaterialLotInfo WITH(NOLOCK) WHERE MaterialLotNo = @MatLotNo;
+
+-- Nếu đúng số lượng mong muốn: Thay ROLLBACK bằng COMMIT
+ROLLBACK;
+```
+
+---
+
 ### Template 2: Giải Tỏa Lot Bị Treo Trạng Thái Khóa (HOLD Release)
 ```sql
 BEGIN TRAN;
@@ -164,3 +244,80 @@ SELECT LotNo, IsHold, CurrentRouteCode FROM SmartFactoryV2.dbo.STB_SetInfo WITH(
 
 ROLLBACK; -- Thay bằng COMMIT sau khi verify
 ```
+
+---
+
+### Template 3: Giải Phóng Lượt Chốt Công Đoạn Kẹt (This route is already completed in MES)
+```sql
+-- Áp dụng khi POP chặn chốt công đoạn do có bản ghi cũ trong MES
+BEGIN TRANSACTION;
+BEGIN TRY
+    DECLARE @TargetHistNo VARCHAR(20) = '20260830000798';
+    DECLARE @TargetControlNo VARCHAR(20) = '20260807000462';
+    DECLARE @TargetRoute VARCHAR(20) = 'V-26_HY';
+
+    -- 1. Snapshot backup an toàn
+    -- SELECT * INTO BAK_STB_ProdRouteHist_<Date> FROM STB_ProdRouteHist WHERE ProdRouteHistNo = @TargetHistNo;
+    -- SELECT * INTO BAK_STB_ProdRouteWorkerHist_<Date> FROM STB_ProdRouteWorkerHist WHERE ProdRouteHistNo = @TargetHistNo;
+
+    -- 2. Xóa bản ghi worker mapping
+    DELETE FROM SmartFactoryV2.dbo.STB_ProdRouteWorkerHist WHERE ProdRouteHistNo = @TargetHistNo;
+
+    -- 3. Xóa bản ghi routing kẹt
+    DELETE FROM SmartFactoryV2.dbo.STB_ProdRouteHist 
+    WHERE ProdRouteHistNo = @TargetHistNo AND ControlNo = @TargetControlNo AND RouteCode = @TargetRoute;
+
+    IF @@ROWCOUNT = 1
+        COMMIT TRANSACTION;
+    ELSE
+    BEGIN
+        ROLLBACK TRANSACTION;
+        RAISERROR('Số dòng ảnh hưởng khác 1, đã rollback!', 16, 1);
+    END
+END TRY
+BEGIN CATCH
+    ROLLBACK TRANSACTION;
+    THROW;
+END CATCH;
+```
+
+---
+
+### Template 4: Rollback Lượt Chốt Sớm Đóng Gói V-28_HY
+```sql
+BEGIN TRANSACTION;
+BEGIN TRY
+    DECLARE @MatLotNo VARCHAR(50) = '20260917000404';
+    DECLARE @LotNo VARCHAR(50) = 'VVQR013R072727';
+    DECLARE @HistNo VARCHAR(20) = '20260917000709';
+    DECLARE @ControlNo VARCHAR(20) = '20260901000137';
+
+    -- 1. Xóa bán thành phẩm sinh sớm
+    DELETE FROM SmartFactoryV2.dbo.STB_MaterialLotInfo WHERE MaterialLotNo = @MatLotNo AND LotNo = @LotNo;
+
+    -- 2. Xóa lượt chốt công đoạn V-28_HY
+    DELETE FROM SmartFactoryV2.dbo.STB_ProdRouteHist WHERE ProdRouteHistNo = @HistNo AND ControlNo = @ControlNo AND RouteCode = 'V-28_HY';
+
+    -- 3. Xóa tồn dư tạm trong POP
+    DELETE FROM VINATECH_POP.dbo.VINA_PACKING_REMAIN_QTY WHERE BARCODE = @LotNo AND ROUTE_CODE = 'V-28_HY';
+
+    COMMIT TRANSACTION;
+END TRY
+BEGIN CATCH
+    ROLLBACK TRANSACTION;
+    THROW;
+END CATCH;
+```
+
+---
+
+### Template 5: Mở Lại Phiếu Đo Kiểm PQC Đã Đóng (Reopen Inspection)
+```sql
+-- Reset trạng thái phiếu đo kiểm đã đóng để mở lại ô nhập liệu trên Kiosk
+UPDATE SmartFactoryV2.dbo.STB_CommInspDocHistory
+SET IsFinished = 0,
+    ChangeDateTime = GETDATE(),
+    ChangeUserID = N'ADMIN_REOPEN'
+WHERE CommInspDocNo = N'<COMM_INSP_DOC_NO>';
+```
+

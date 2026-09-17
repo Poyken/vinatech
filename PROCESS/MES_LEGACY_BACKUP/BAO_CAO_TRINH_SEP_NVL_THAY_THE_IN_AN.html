@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bao_Cao_Thuc_Trang_Va_Phuong_An_POP</title>
+    <style>
+        @page {
+            size: A4 portrait;
+            margin: 12mm 15mm 12mm 15mm;
+        }
+
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            line-height: 1.45;
+            color: #1a1a1a;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 15px;
+            font-size: 10pt;
+        }
+
+        .container {
+            max-width: 210mm;
+            margin: 0 auto;
+            background: #fff;
+            padding: 24px 30px;
+            box-sizing: border-box;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            border-bottom: 2px solid #003366;
+            padding-bottom: 6px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .company {
+            font-weight: bold;
+            color: #003366;
+            font-size: 11pt;
+        }
+
+        .title {
+            text-align: center;
+            margin: 12px 0 16px 0;
+        }
+
+        .title h1 {
+            color: #c00000;
+            font-size: 13.5pt;
+            margin: 0;
+            text-transform: uppercase;
+        }
+
+        .title .sub {
+            color: #003366;
+            font-size: 10pt;
+            font-weight: bold;
+            margin-top: 3px;
+        }
+
+        .part-title {
+            font-size: 11pt;
+            font-weight: bold;
+            color: #003366;
+            background-color: #eef4fa;
+            border-left: 5px solid #003366;
+            padding: 6px 10px;
+            margin-top: 14px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .box {
+            padding: 2px 6px;
+            font-size: 9.6pt;
+        }
+
+        .box p, .box ul {
+            margin: 4px 0 6px 0;
+        }
+
+        ul {
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 3px;
+        }
+
+        .alert-danger {
+            background-color: #fff5f5;
+            border: 1px solid #fed7d7;
+            border-left: 4px solid #e53e3e;
+            padding: 8px 12px;
+            border-radius: 4px;
+            margin: 6px 0;
+        }
+
+        .alert-success {
+            background-color: #f0fff4;
+            border: 1px solid #c6f6d5;
+            border-left: 4px solid #38a169;
+            padding: 8px 12px;
+            border-radius: 4px;
+            margin: 6px 0;
+        }
+
+        .path-badge {
+            background-color: #fff3cd;
+            border: 1px dashed #ffeeba;
+            padding: 4px 8px;
+            font-family: monospace;
+            font-size: 9pt;
+            font-weight: bold;
+            color: #856404;
+            display: inline-block;
+            margin: 4px 0;
+            border-radius: 4px;
+        }
+
+        table.step-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 8px 0;
+            font-size: 9pt;
+        }
+
+        table.step-table th, table.step-table td {
+            border: 1px solid #cbd5e1;
+            padding: 5px 8px;
+            vertical-align: middle;
+        }
+
+        table.step-table th {
+            background-color: #f8fafc;
+            color: #0f172a;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .signatures {
+            margin-top: 30px;
+            display: flex;
+            justify-content: space-between;
+            text-align: center;
+            font-size: 9.5pt;
+        }
+
+        .btn-print {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            background: #003366;
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            font-size: 10pt;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+
+        @media print {
+            body { background: #fff; padding: 0; }
+            .container { box-shadow: none; padding: 0; max-width: 100%; }
+            .no-print { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <button class="btn-print no-print" onclick="window.print()">🖨️ In Báo Cáo (Ctrl + P)</button>
+
+    <div class="container">
+        <!-- HEADER -->
+        <div class="header">
+            <div class="company">VINATECH VINA — HỆ THỐNG MES/POP</div>
+            <div style="font-size: 8.5pt; color: #555;">Ngày lập: 16/09/2026</div>
+        </div>
+
+        <!-- TITLE -->
+        <div class="title">
+            <h1>BÁO CÁO ĐỀ XUẤT BAN GIÁM ĐỐC</h1>
+            <div class="sub">V/v: Giải pháp Quản lý Nguyên vật liệu Thay thế trên Hệ thống POP</div>
+        </div>
+
+        <!-- PHẦN I: THỰC TRẠNG -->
+        <div class="part-title">I. THỰC TRẠNG (VẤN ĐỀ HIỆN TẠI)</div>
+        <div class="box">
+            <ul>
+                <li><b>BOM cũ không cập nhật:</b> Cấu hình BOM sản phẩm đã thiết lập từ 4–5 năm trước. Khi thực tế có sự thay đổi về nhà cung cấp hoặc quy cách vật tư, các bộ phận không cập nhật kịp thời vào BOM hệ thống.</li>
+                <li><b>Cơ chế xử lý cũ (IT Bypass ngầm):</b> Khi công nhân quét Barcode NVL bị báo lỗi sai BOM, <b>IT phải sửa code ngầm để bypass</b> cho công nhân chốt sản lượng để cứu chuyền.</li>
+            </ul>
+
+            <div class="alert-danger">
+                <b>⚠️ HẬU QUẢ VÀ NGUY CƠ:</b>
+                <ul style="margin: 2px 0 0 0;">
+                    <li><b>Lệch tồn kho ảo trên ERP:</b> Hệ thống trừ kho mã cũ trên giấy tờ trong khi thực tế dùng mã mới.</li>
+                    <li><b>Mất dấu vết truy xuất (Break Traceability):</b> Không thể truy vết chính xác mã Lot dùng cuộn linh kiện nào, tạo rủi ro rất lớn khi khách hàng quốc tế (Sanmina, Bloom Energy...) audit chất lượng.</li>
+                </ul>
+            </div>
+
+            <ul>
+                <li><b>Nút thắt khi triển khai hệ thống POP:</b> Hiện nay máy trạm POP kiểm soát cứng tại từng máy, <b>bắt buộc 100% khớp BOM</b> mới cho chốt sản lượng. Nếu thiếu hàng từ NCC chính mà hệ thống không cho phép dùng vật tư tương đương ➔ <b>DÂY CHUYỀN SẼ BỊ DỪNG SẢN XUẤT NGAY LẬP TỨC (STOP LINE)</b>.</li>
+            </ul>
+        </div>
+
+        <!-- PHẦN II: PHƯƠNG ÁN -->
+        <div class="part-title">II. PHƯƠNG ÁN ĐỀ XUẤT (GIẢI PHÁP THỰC HIỆN)</div>
+        <div class="box">
+            <div class="alert-success">
+                <b>✅ NGUYÊN TẮC PHƯƠNG ÁN:</b><br>
+                • <b>BOM gốc và định mức giữ nguyên 100%:</b> Không làm xáo trộn thiết kế kỹ thuật hay sửa đổi cấu trúc BOM trên ERP.<br>
+                • <b>Cấp phép danh mục NVL thay thế linh hoạt:</b> Cho phép trạm POP chấp nhận quét Barcode của các mã NVL tương đương đã qua các phòng ban thẩm định ➔ <b>Chuyền chạy liên tục (Zero Line Stop), trừ kho chuẩn xác, dữ liệu minh bạch</b>.
+            </div>
+
+            <p><b>Quy trình phê duyệt trên Groupware E-Approval:</b></p>
+            <div class="path-badge">
+                Groupware ➔ Electronic Document ➔ Production/Development ➔ Raw Material Input Adjustment Document
+            </div>
+
+            <table class="step-table">
+                <thead>
+                    <tr>
+                        <th style="width: 20%;">Cấp duyệt</th>
+                        <th style="width: 28%;">Bộ phận đảm nhiệm</th>
+                        <th>Nội dung kiểm soát & Trách nhiệm</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="text-align: center; font-weight: bold;">Cấp 1: Khởi tạo</td>
+                        <td><b>Sản xuất (Prod)</b></td>
+                        <td>Lập phiếu: Điền Model, mã NVL gốc và mã NVL tương đương xin thay thế.</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: center; font-weight: bold;">Cấp 2: Thẩm tra Spec</td>
+                        <td><b>Kỹ thuật PE / R&D</b></td>
+                        <td>Thẩm tra Spec/Datasheet: Xác nhận vật tư thay thế tương đương kích thước, cơ lý tính.</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: center; font-weight: bold;">Cấp 3: Chất lượng</td>
+                        <td><b>Quản lý Chất lượng QC</b></td>
+                        <td>Kiểm tra mẫu IQC Test Report: Đảm bảo không phát sinh rủi ro chất lượng.</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: center; font-weight: bold; background: #eef2ff;">Cấp 4: Phê duyệt</td>
+                        <td style="background: #eef2ff;"><b>Giám Đốc Nhà Máy</b></td>
+                        <td>Ký duyệt ➔ Hệ thống <b>tự động nạp mã mới xuống POP</b> cho công nhân quét chạy hàng.</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div style="font-size: 8.5pt; color: #555;">
+                <i>* Người tham chiếu (CC): Thủ kho WMS (xuất đúng mã), Mua hàng (tiến độ NCC), Kế toán giá thành, IT MES.</i>
+            </div>
+        </div>
+
+        <!-- CHỮ KÝ -->
+        <div class="signatures">
+            <div style="width: 40%;">
+                <b>BỘ PHẬN ĐỀ XUẤT</b><br>
+                <i>(IT / Sản xuất / PE / QC)</i>
+                <div style="height: 45px;"></div>
+                <b>(Đã ký xác nhận)</b>
+            </div>
+            <div style="width: 40%;">
+                <b>BAN GIÁM ĐỐC PHÊ DUYỆT</b><br>
+                <i>(Ký và ghi rõ họ tên)</i>
+                <div style="height: 45px;"></div>
+                <b>....................................................</b>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
