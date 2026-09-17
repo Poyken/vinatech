@@ -940,6 +940,49 @@ WHERE LEN(BoxSerialNo) = 13 AND BoxSerialNo LIKE @SerialPrefix + '%'
   - Giao diện lưới cân điện cực / B552 / B470: Không còn hiển thị 4 mã Lot thừa này nữa.
 * **Tham chiếu KB:** [KB_09_SCREEN_BUG_FIXBOOK.md § [B552] #3](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md#L220), [KB_05_01 §8.10](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md#810-quy-trình-dọn-dẹp--xóa-mẻ-trộn-điện-cực-thừa-electrode-mixing-cancellation-sop)
 
+---
+
+### [POP/B523/V-28_HY] — 📍 ID_47 Rollback chốt sớm công đoạn đóng gói V-28_HY cho Lot VVQR013R072727 trên POP Kiosk
+* **Ngày sửa:** `2026-09-17`
+* **Màn hình liên quan (TCode):** `POP Web Kiosk (pop.vinatech.com/pop/screen) - Tab Đóng gói chia / Đóng gói đơn`
+* **Bảng liên quan:** `SmartFactoryV2.dbo.STB_MaterialLotInfo`, `SmartFactoryV2.dbo.STB_ProdRouteHist`, `VINATECH_POP.dbo.VINA_PACKING_REMAIN_QTY`
+* **Danh sách Lot:** `VVQR013R072727` (ControlNo `20260901000137`, PO `260828000020`, Model `ECVT30-357`, Chuyền `HY Cell Line #2`)
+* **Triệu chứng lỗi:** Trên giao diện Kiosk Web `pop.vinatech.com/pop/screen`, khi công nhân chuyển sang tab "Đóng gói chia" và bấm Đóng gói, hệ thống báo lỗi popup: `"Vượt quá số lượng còn lại. (Có thể đóng gói thêm: 0 EA)"` và hiển thị Còn lại: 0 EA.
+* **Nguyên nhân gốc (Root Cause):** Vào lúc 12:05:12 trưa 17/09/2026, tài khoản `92603003` đã chốt sản lượng toàn bộ 1046 pcs ở công đoạn cuối V-28_HY trên MES WinForm (B530), làm phát sinh bản ghi BTP `20260917000404` trong `STB_MaterialLotInfo` và tiêu thụ hết hạn mức khả dụng của Lot trên POP Web.
+* **Cơ chế sao lưu (Pre-flight Backup):**
+  - Snapshot JSON files:
+    - `tools/backups/preflight_20260917_131551_STB_MaterialLotInfo_deploy_preflight.json`
+    - `tools/backups/preflight_20260917_131551_STB_ProdRouteHist_deploy_preflight.json`
+    - `tools/backups/preflight_20260917_131551_VINATECH_POPdboVINA_PACKING_REMAIN_QTY_deploy_preflight.json`
+  - Snapshot Database Tables:
+    - `SmartFactoryV2.dbo.BAK_STB_MaterialLotInfo_20260917_VVQR013R072727` (1 row)
+    - `SmartFactoryV2.dbo.BAK_STB_ProdRouteHist_20260917_VVQR013R072727` (1 row)
+    - `VINATECH_POP.dbo.BAK_VINA_PACKING_REMAIN_QTY_20260917_VVQR013R072727` (1 row)
+* **Phương án sửa lỗi & Script Deploy:** `sql/hotfix_20260917_131511_ROLLBACK_V28_VVQR013R072727.sql`
+  ```sql
+  USE SmartFactoryV2;
+  GO
+  BEGIN TRANSACTION;
+  -- 1. Xóa bản ghi BTP sinh sớm ở kho tuyến
+  DELETE FROM STB_MaterialLotInfo 
+  WHERE MaterialLotNo = '20260917000404' AND LotNo = 'VVQR013R072727';
+  -- 2. Xóa lượt chốt công đoạn đóng gói V-28_HY
+  DELETE FROM STB_ProdRouteHist 
+  WHERE ProdRouteHistNo = '20260917000709' AND ControlNo = '20260901000137' AND RouteCode = 'V-28_HY';
+  -- 3. Xóa bản ghi tạm trong VINATECH_POP
+  DELETE FROM VINATECH_POP.dbo.VINA_PACKING_REMAIN_QTY 
+  WHERE BARCODE = 'VVQR013R072727' AND ROUTE_CODE = 'V-28_HY';
+  COMMIT TRANSACTION;
+  GO
+  ```
+* **Kết quả nghiệm thu:**
+  - `STB_MaterialLotInfo`: 0 dòng (đã xóa bản ghi 20260917000404).
+  - `STB_ProdRouteHist`: 5 dòng (công đoạn cuối trả về V-26_HY 1053 pcs, công đoạn V-28_HY đã được giải phóng).
+  - `VINATECH_POP.dbo.VINA_PACKING_REMAIN_QTY`: Đã xóa bản ghi tạm.
+  - Giao diện POP Kiosk Web: Khôi phục hạn mức còn lại 1046 EA, cho phép công nhân chia Box và bấm Đóng gói bình thường.
+* **Tham chiếu KB:** [POP_KB_04_ROLLBACK_AND_SAFETY.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_04_ROLLBACK_AND_SAFETY.md), [KB_07_03_SCREEN_BUGS.md § Lỗi 3](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_07/KB_07_03_SCREEN_BUGS.md#hy530--route-process-input-hy-chốt-sản-lượng-công-đoạn-hưng-yên)
+
+
 
 
 

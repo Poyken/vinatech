@@ -49,7 +49,7 @@
       "Description": "Excel Online Calculation DB"
     },
     "WCMS": {
-      "Database": "WCMS",
+      "Database": "WCMS_STANDARD_NEW",
       "Description": "Banking CMS Database"
     },
     "Incubator": {

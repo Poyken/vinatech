@@ -28,7 +28,9 @@ if (!(Test-Path $procDir)) {
 }
 
 $conn = Get-DbConnection
-$conn.Open()
+if ($conn.State -ne [System.Data.ConnectionState]::Open) {
+    $conn.Open()
+}
 
 function Export-SP([string]$name) {
     $cmd = $conn.CreateCommand()

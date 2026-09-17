@@ -1,0 +1,34 @@
+﻿{
+    "Timestamp":  "2026-09-17 13:15:51",
+    "Database":  "SmartFactoryV2",
+    "Table":  "STB_ProdRouteHist",
+    "Where":  "ProdRouteHistNo = \u002720260917000709\u0027",
+    "RowCount":  1,
+    "Data":  [
+                 {
+                     "ProdRouteHistNo":  "20260917000709",
+                     "CompanyCode":  "VVT",
+                     "WorkCenterCode":  "VVT_F5",
+                     "PONo":  "260828000020",
+                     "DayPlanNo":  "2026083100037",
+                     "ControlNo":  "20260901000137",
+                     "MaterialCode":  "ECVT30-357",
+                     "BomVersion":  "2001",
+                     "JobDate":  "\/Date(1789578000000)\/",
+                     "ShiftCode":  "D",
+                     "TimeCode":  "*",
+                     "LineCode":  "VVHYC-01",
+                     "RouteCode":  "V-28_HY",
+                     "WorkerCode":  null,
+                     "MachineCode":  "",
+                     "ProdQty":  1046.00000,
+                     "ProdDateTime":  "\/Date(1789623334533)\/",
+                     "CreateDateTime":  "\/Date(1789621512550)\/",
+                     "CreateUserID":  "92603003",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null,
+                     "DelayCode":  null,
+                     "CompleteRoute":  null
+                 }
+             ]
+}
