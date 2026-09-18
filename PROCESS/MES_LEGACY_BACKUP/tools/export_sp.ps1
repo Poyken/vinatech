@@ -1,0 +1,11 @@
+param()
+$shared = Join-Path $PSScriptRoot "db_shared.ps1"
+. $shared
+$conn = Get-DbConnection -Profile "SmartFactoryV2"
+$cmd = $conn.CreateCommand()
+$cmd.CommandText = "SELECT OBJECT_DEFINITION(OBJECT_ID('usp_Vietnam_RawMaterialInputHist_uid'))"
+$result = $cmd.ExecuteScalar()
+$conn.Close()
+$outPath = Join-Path $PSScriptRoot "sp_rawmat_input.sql"
+$result | Out-File -FilePath $outPath -Encoding UTF8
+Write-Host "Saved SP to $outPath (Length: $($result.Length) chars)"

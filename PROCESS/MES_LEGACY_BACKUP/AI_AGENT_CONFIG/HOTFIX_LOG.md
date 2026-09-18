@@ -1053,3 +1053,29 @@ WHERE LEN(BoxSerialNo) = 13 AND BoxSerialNo LIKE @SerialPrefix + '%'
   - `usp_LotTrackingInfo_VVT2_get` ngày 18/09: Trả về đầy đủ tất cả công đoạn (`V-23_HY`, `V-24_HY`, `V-25_HY`, `V-27_HY`, `V-28_HY`, `V-29_HY`), hiển thị liền mạch trên màn hình B782.
 * **Tham chiếu KB:** [KB_03_01_OVERVIEW.md § 5.2](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_01_OVERVIEW.md#L53-L79), [KB_09_SCREEN_BUG_FIXBOOK.md § [B782]](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md#L357)
 
+---
+
+### [B782] — 📍 ID_51 Chuyển ngày ghi nhận sản xuất của 6 Lot (VVQR173R825701 -> 706) từ ngày 18 về ngày 17 trên màn B782
+* **Ngày sửa:** `2026-09-19` (03:15:00)
+* **Màn hình liên quan (TCode):** `[B782] - VNT_LotTrackingInfo_vvt22`
+* **Bảng liên quan:** `SmartFactoryV2.dbo.STB_ProdRouteHist`, `SmartFactoryV2.dbo.STB_DefectRepairInfo`, `SmartFactoryV2.dbo.STB_SetInfo`
+* **Danh sách Lot:** `VVQR173R825701`, `VVQR173R825702`, `VVQR173R825703`, `VVQR173R825704`, `VVQR173R825705`, `VVQR173R825706` (Chuyền `VVHYC-13`, Xưởng Hưng Yên `VVT_F5`, mã NVL `LIVT38-009`)
+* **Triệu chứng & Yêu cầu:** Người dùng yêu cầu chuyển ngày ghi nhận của 6 Lot trên màn hình B782 từ ngày 18 về ngày 17.
+* **Nguyên nhân gốc (Root Cause):**
+  - Màn hình B782 (`usp_LotTrackingInfo_VVT2_get`) quy định ca làm việc từ 10:00:00 sáng hôm trước đến 10:00:00 sáng hôm sau. Cột hiển thị `JobDate` được tính toán tự động dựa theo `ProdDateTime`.
+  - 6 Lot trên chỉ mới hoàn thành công đoạn đầu `V-22_HY` (Winding - Quấn cuộn) lúc 12:56 - 12:58 PM ngày 18/09 (sau 10:00 AM ngày 18), do đó B782 tự động xếp vào ca ngày 18/09.
+* **Cơ chế sao lưu (Pre-flight Backup):**
+  - `tools/backups/preflight_20260919_031122_STB_ProdRouteHist_backup_b782_move_date_18_to_17.json` (6 bản ghi routing)
+  - `tools/backups/preflight_20260919_031123_STB_DefectRepairInfo_backup_b782_move_date_18_to_17.json` (12 bản ghi phế NG)
+  - `tools/backups/preflight_20260919_031123_STB_SetInfo_backup_b782_move_date_18_to_17.json` (6 bản ghi SetInfo)
+* **Phương án sửa lỗi & Script Deploy:** `sql_hotfixes/hotfix_20260919_031500_B782_MOVE_6LOTS_DATE_18_TO_17.sql`
+  - Dời `ProdDateTime` của `V-22_HY` lùi 1 ngày về `2026-09-17 12:56 - 12:58` và cập nhật `JobDate = '2026-09-17'`.
+  - Đồng bộ `CreateDateTime` của 12 bản ghi phế NG trong `STB_DefectRepairInfo` về `2026-09-17 12:56 - 12:58`.
+  - Đồng bộ `InputDateTime` và `InputJobDate` trong `STB_SetInfo` về `2026-09-17`.
+* **Script Rollback chuẩn bị sẵn:** `sql_hotfixes/rollback_20260919_031500_B782_MOVE_6LOTS_DATE_18_TO_17.sql`
+* **Kết quả nghiệm thu:**
+  - `usp_LotTrackingInfo_VVT2_get` ngày 17/09: Trả về **đầy đủ 6 Lot** ở công đoạn `V-22_HY` (sản lượng 988 PCS sau trừ 12 phế NG).
+  - `usp_LotTrackingInfo_VVT2_get` ngày 18/09: Trả về **0 dòng** (đã ẩn sạch khỏi ngày 18).
+* **Tham chiếu KB:** [KB_03_01_OVERVIEW.md § 5.2](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_01_OVERVIEW.md#L53-L79), [KB_09_SCREEN_BUG_FIXBOOK.md § [B782]](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md#L357)
+
+

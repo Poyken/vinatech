@@ -1,0 +1,91 @@
+﻿﻿<?xml version="1.0" encoding="utf-8"?>
+<XtraReportsLayoutSerializer SerializerVersion="19.2.3.0" Ref="0" ControlType="DevExpress.XtraReports.UI.XtraReport, DevExpress.XtraReports.v19.2, Version=19.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Name="XtraReport" DisplayName="포장라벨NewVietNam" SnapGridSize="25" ReportUnit="TenthsOfAMillimeter" Margins="10, 20, 0, 0" PaperKind="Custom" PageWidth="680" PageHeight="950" Version="19.2" RequestParameters="false" ShowPrintStatusDialog="false" ShowPrintMarginsWarning="false" Dpi="254">
+  <Parameters>
+    <Item1 Ref="2" Description="PartNo" Name="PartNo" />
+    <Item2 Ref="3" Name="LotNo" />
+    <Item3 Ref="4" Name="Voltage" />
+    <Item4 Ref="6" ValueInfo="0" Name="LotQty" Type="#Ref-5" />
+    <Item5 Ref="7" Name="Farad" />
+    <Item6 Ref="8" Name="Rating" />
+    <Item7 Ref="9" Description="PackingID" ValueInfo="PKJP1700001" Name="PackingID" />
+    <Item8 Ref="11" Description="IsModule" ValueInfo="False" Name="IsModule" Type="#Ref-10" />
+  </Parameters>
+  <Bands>
+    <Item1 Ref="12" ControlType="TopMarginBand" Name="topMarginBand1" HeightF="0" Dpi="254" />
+    <Item2 Ref="13" ControlType="DetailBand" Name="detailBand1" HeightF="941.9167" Dpi="254">
+      <Controls>
+        <Item1 Ref="14" ControlType="XRBarCode" Name="barCode4" Module="2.54" AutoModule="true" BarCodeOrientation="RotateLeft" TextAlignment="BottomRight" ShowText="false" KeepTogether="false" SizeF="92.33333,398.354156" LocationFloat="42, 83.20834" Dpi="254" Font="Tahoma, 6pt" Padding="5,5,5,5,254">
+          <Symbology Ref="15" Name="Code128" />
+          <ExpressionBindings>
+            <Item1 Ref="16" EventName="BeforePrint" PropertyName="Text" Expression="?PackingID" />
+          </ExpressionBindings>
+          <StylePriority Ref="17" UseFont="false" UsePadding="false" UseTextAlignment="false" />
+        </Item1>
+        <Item2 Ref="18" ControlType="XRBarCode" Name="barCode1" Module="2.54" BarCodeOrientation="RotateLeft" ShowText="false" SizeF="60.8541565,742.2501" LocationFloat="172.916443, 4.99997759" Dpi="254" Font="Times New Roman, 9pt" Padding="5,5,5,5,254">
+          <Symbology Ref="19" Name="Code128" />
+          <ExpressionBindings>
+            <Item1 Ref="20" EventName="BeforePrint" PropertyName="Text" Expression="[Parameters].[PartNo]" />
+          </ExpressionBindings>
+          <StylePriority Ref="21" UseFont="false" UsePadding="false" />
+        </Item2>
+        <Item3 Ref="22" ControlType="XRLabel" Name="label2" Multiline="true" Angle="90" Text="tableCell5" TextAlignment="BottomCenter" SizeF="41.47914,742.25" LocationFloat="134.333527, 5.00001764" Dpi="254" Font="Tahoma, 10pt, style=Bold" Padding="5,5,0,0,254">
+          <Summary Ref="23" TreatStringsAsNumerics="false" />
+          <ExpressionBindings>
+            <Item1 Ref="24" EventName="BeforePrint" PropertyName="Text" Expression="[Parameters].[PartNo]" />
+          </ExpressionBindings>
+          <StylePriority Ref="25" UseFont="false" UsePadding="false" UseTextAlignment="false" />
+        </Item3>
+        <Item4 Ref="26" ControlType="XRLabel" Name="label3" Multiline="true" Angle="90" Text="tableCell6" TextAlignment="BottomCenter" SizeF="54.70836,742.25" LocationFloat="232.770676, 5.00001764" Dpi="254" Font="Tahoma, 10pt, style=Bold" Padding="5,5,0,0,254">
+          <Summary Ref="27" TreatStringsAsNumerics="false" />
+          <ExpressionBindings>
+            <Item1 Ref="28" EventName="BeforePrint" PropertyName="Text" Expression="Iif(?IsModule == True,'M'+[Parameters].[LotNo],[Parameters].[LotNo])" />
+          </ExpressionBindings>
+          <StylePriority Ref="29" UseFont="false" UsePadding="false" UseTextAlignment="false" />
+        </Item4>
+        <Item5 Ref="30" ControlType="XRBarCode" Name="barCode2" Module="2.54" BarCodeOrientation="RotateLeft" ShowText="false" SizeF="60.8541565,742.2501" LocationFloat="278.479126, 5.00001764" Dpi="254" Padding="5,5,5,5,254">
+          <Symbology Ref="31" Name="Code128" />
+          <ExpressionBindings>
+            <Item1 Ref="32" EventName="BeforePrint" PropertyName="Text" Expression="Iif(?IsModule == True,'M'+[Parameters].[LotNo],[Parameters].[LotNo])" />
+          </ExpressionBindings>
+          <StylePriority Ref="33" UsePadding="false" />
+        </Item5>
+        <Item6 Ref="34" ControlType="XRLabel" Name="label1" TextFormatString="{0} V" Multiline="true" Angle="90" Text="tableCell5" TextAlignment="BottomCenter" SizeF="54.708313,162.8125" LocationFloat="362.2085, 584.4375" Dpi="254" Font="Tahoma, 10pt, style=Bold" Padding="5,5,0,0,254">
+          <ExpressionBindings>
+            <Item1 Ref="35" EventName="BeforePrint" PropertyName="Text" Expression="[Parameters].[Voltage]" />
+          </ExpressionBindings>
+          <StylePriority Ref="36" UseFont="false" UsePadding="false" UseTextAlignment="false" />
+        </Item6>
+        <Item7 Ref="37" ControlType="XRLabel" Name="label4" TextFormatString="{0} F" Multiline="true" Angle="90" Text="tableCell5" TextAlignment="BottomCenter" SizeF="54.7082825,157.520844" LocationFloat="362.208282, 390.7083" Dpi="254" Font="Tahoma, 10pt, style=Bold" Padding="5,5,0,0,254">
+          <ExpressionBindings>
+            <Item1 Ref="38" EventName="BeforePrint" PropertyName="Text" Expression="[Parameters].[Farad]" />
+          </ExpressionBindings>
+          <StylePriority Ref="39" UseFont="false" UsePadding="false" UseTextAlignment="false" />
+        </Item7>
+        <Item8 Ref="40" ControlType="XRLabel" Name="label6" Multiline="true" Angle="90" Text="tableCell5" TextAlignment="BottomCenter" SizeF="54.7082825,157.520813" LocationFloat="362.208282, 173.75" Dpi="254" Font="Tahoma, 10pt, style=Bold" Padding="5,5,0,0,254">
+          <ExpressionBindings>
+            <Item1 Ref="41" EventName="BeforePrint" PropertyName="Text" Expression="[Parameters].[Rating]" />
+          </ExpressionBindings>
+          <StylePriority Ref="42" UseFont="false" UsePadding="false" UseTextAlignment="false" />
+        </Item8>
+        <Item9 Ref="43" ControlType="XRLabel" Name="label5" TextFormatString="{0:#,#} PCS" Multiline="true" Angle="90" Text="tableCell5" TextAlignment="BottomCenter" SizeF="60.854187,271.291656" LocationFloat="456.520569, 475.958344" Dpi="254" Font="Tahoma, 10pt, style=Bold" Padding="5,5,0,0,254">
+          <ExpressionBindings>
+            <Item1 Ref="44" EventName="BeforePrint" PropertyName="Text" Expression="[Parameters].[LotQty]" />
+          </ExpressionBindings>
+          <StylePriority Ref="45" UseFont="false" UsePadding="false" UseTextAlignment="false" />
+        </Item9>
+        <Item10 Ref="46" ControlType="XRBarCode" Name="barCode3" Module="5.08" AutoModule="true" BarCodeOrientation="RotateLeft" ShowText="false" SizeF="60.8541565,329.2708" LocationFloat="456.520844, 110.833328" Dpi="254" Padding="5,5,5,5,254">
+          <Symbology Ref="47" Name="Code128" CharacterSet="CharsetAuto" />
+          <ExpressionBindings>
+            <Item1 Ref="48" EventName="BeforePrint" PropertyName="Text" Expression="[Parameters].[LotQty]" />
+          </ExpressionBindings>
+          <StylePriority Ref="49" UsePadding="false" />
+        </Item10>
+      </Controls>
+    </Item2>
+    <Item3 Ref="50" ControlType="BottomMarginBand" Name="bottomMarginBand1" HeightF="0" Dpi="254" />
+  </Bands>
+  <ObjectStorage>
+    <Item1 ObjectType="DevExpress.XtraReports.Serialization.ObjectStorageInfo, DevExpress.XtraReports.v19.2" Ref="5" Content="System.Int32" Type="System.Type" />
+    <Item2 ObjectType="DevExpress.XtraReports.Serialization.ObjectStorageInfo, DevExpress.XtraReports.v19.2" Ref="10" Content="System.Boolean" Type="System.Type" />
+  </ObjectStorage>
+</XtraReportsLayoutSerializer>

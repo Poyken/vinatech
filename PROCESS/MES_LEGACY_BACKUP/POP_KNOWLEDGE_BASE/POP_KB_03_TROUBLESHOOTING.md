@@ -37,6 +37,7 @@ Related Files:
 | **POP-ERR-11: Lỗi "Số mẫu mục tiêu là 0" (Quality PQC)** | Sample Size = 0 ở khung quy cách hoặc Master Data, không hiện ô nhập `#1, #2` | Chạm ô số mẫu ở khung tiêu chuẩn để tăng >0, hoặc cấu hình `STB_MaterialQcInspectionItem_HY` | Không (trừ khi sửa Master) |
 | **POP-ERR-12: Khóa kết quả đo sau khi bấm "Hoàn thành"** | Phiên PQC đã đóng (`STB_CommInspDocHistory.IsFinished=1`), nút đổi thành "Hoàn tác" | Bấm Hoàn tác gửi yêu cầu (Admin duyệt `VINA_REOPEN_REQUEST`) hoặc IT reset `IsFinished=0` | Cần duyệt / SQL |
 | **POP-ERR-13: Lệch / Không đồng nhất công đoạn giữa Kiosk POP và MES** | Chốt chéo WinForm trước Kiosk, nhảy cóc công đoạn V-27_HY sang V-28_HY, hoặc kẹt dở dang V-26_HY | Dùng Golden Query `.\mes.ps1 trace '<Lot>'`. Xóa bản ghi kẹt cũ qua Template 3 hoặc rollback Đóng gói qua Template 4 | **CÓ (SQL Hotfix)** |
+| **POP-ERR-14: Thùng Dung Dịch Về 0 KG / Hết Hàng (VN ➔ HY)** | Xung đột chuyển vùng kho (Hà Nam sang Hưng Yên) hoặc cơ chế tự động đóng thùng cũ khi quét Lot mới | Phục hồi lại toàn bộ số lượng ban đầu (150 KG theo InitialQty) tại `ROUTE_HY_WH` và reload Kiosk POP | **CÓ (SQL Hotfix)** |
 
 ---
 
@@ -210,6 +211,38 @@ ROLLBACK;
 
 ---
 
+### 2.14 POP-ERR-14: Xung Đột Chuyển Vùng Kho (VN ➔ HY) & Thùng Dung Dịch (Electrolyte) Bị Trừ Hết 0 KG
+
+**Hiện tượng:** 
+- Trên màn hình POP Kiosk tại các chuyền lắp ráp Cell Hưng Yên (ví dụ: `HY Cell Line #13`, URL `https://pop.vinatech.com/pop/screen`), tại mục nạp NVL BOM, dòng Dung dịch điện phân (`전해액`, ví dụ `GBEC00-008` hoặc `GBCP00-004`) báo chữ đỏ **`Tồn kho: Hết hàng`** (0 KG).
+- Nút **[NHẬP]** bị mờ/vô hiệu hóa, không cho công nhân nạp dung dịch vào Lot hiện tại (như `VVQR163R825715`).
+- Mặc dù thực tế dưới chuyền, thùng dung dịch mới 150 KG vừa đưa lên máy chạy chưa được bao lâu (thực tế 150 KG dùng cho cả chuyền phải 2 ngày mới hết).
+
+**Nguyên nhân gốc (Root Cause):**
+1. **Xung đột chuyển vùng kho (Inter-Plant Warehouse Conflict):**
+   - Thùng dung dịch được phòng ban kho xuất ban đầu tại nhà máy Hà Nam (`ROUTE_VN_WH`).
+   - Khi chuyển sang nhà máy Hưng Yên để đưa lên chuyền Cell (`HY Cell Line`), màn hình POP Kiosk lọc tồn kho theo kho cục bộ **`ROUTE_HY_WH`**.
+   - Khi công nhân quét Lot tại Hưng Yên, hệ thống tự động sinh 1 bản ghi mới ở `ROUTE_HY_WH` và đưa bản ghi cũ ở `ROUTE_VN_WH` về `0 KG`.
+2. **Cơ chế chốt thùng tự động khi quét Lot mới (Auto-exhaust):**
+   - Logic cấp liệu dung dịch trên chuyền coi mỗi máy chỉ gắn 1 thùng cấp liệu duy nhất.
+   - Khi có công nhân quét một mã Lot dung dịch mới (hoặc quét lại Lot khi đổi ca/đổi line), hệ thống xem thùng cũ trước đó đã cạn và tự động cập nhật `CurrentQty = 0` cho bản ghi của thùng cũ ở `ROUTE_HY_WH`.
+   - Kết quả: Thùng 150 KG thực tế dưới xưởng vẫn còn đầy, nhưng toàn bộ bản ghi trên CSDL MES đều bị đưa về 0 KG ➔ Kiosk POP báo "Hết hàng".
+
+**Quy trình chuẩn đoán & Khắc phục:**
+1. Tra cứu tồn kho thực tế của mã dung dịch trên live DB:
+   ```sql
+   SELECT LotID, MaterialWarehouseCode, InitialQty, CurrentQty, CreateDateTime, ChangeDateTime
+   FROM SmartFactoryV2.dbo.STB_MaterialLotInfo WITH(NOLOCK)
+   WHERE MaterialCode = 'MÃ_NVL_DUNG_DỊCH' -- ví dụ: 'GBEC00-008'
+   ORDER BY CreateDateTime DESC;
+   ```
+2. Xác định LotID của thùng đang đặt tại máy ở Hưng Yên (ví dụ `ML20260331000035`).
+3. **Phục hồi hoàn toàn đủ số lượng:** Bắt buộc phải phục hồi **100% số lượng ban đầu (`InitialQty = 150 KG`)**, KHÔNG phục hồi số lượng nhỏ lẻ, vì thùng còn gần như nguyên vẹn và cần dung sai lớn để chuyền chạy liên tục 2 ngày mà không bị ngắt quãng hệ thống giữa ca.
+4. Áp dụng **Template 6** để UPDATE trả lại `CurrentQty = InitialQty` (hoặc 150 KG) tại `ROUTE_HY_WH`.
+5. Yêu cầu công nhân trên Kiosk bấm nút **`Danh sách NVL BOM 🔄` (Reload)** ➔ Cột Tồn kho lập tức chuyển sang xanh (150 KG) và bấm **[NHẬP]** thành công.
+
+---
+
 ## 3. 🛠️ TEMPLATE SQL CỨU HỘ VẬN HÀNH (SAFETY HOTFIX TEMPLATES)
 
 > [!CAUTION]
@@ -340,3 +373,54 @@ SET IsFinished = 0,
 WHERE CommInspDocNo = N'<COMM_INSP_DOC_NO>';
 ```
 
+---
+
+### Template 6: Phục Hồi Tồn Kho Thùng Dung Dịch Bị Về 0 KG (POP-ERR-14)
+
+> **Ngữ cảnh:** Thùng dung dịch (Electrolyte) 150 KG bị xung đột chuyển vùng kho VN ➔ HY, hoặc bị cơ chế auto-exhaust khi quét Lot mới, dẫn đến `CurrentQty = 0` trên cả 2 bản ghi (ROUTE_VN_WH + ROUTE_HY_WH). Cần phục hồi **100% InitialQty** (thùng 150 KG thực tế chạy 2 ngày mới hết).
+> 
+> **Incident thực tế (19/9/2026):** Lot `ML20260331000035` (GBEC00-008) và `ML20260625000450` (GBCP00-004) bị về 0 KG chỉ sau 1 lần quét. Chuyền HY Cell Line #13 báo "Hết hàng" trên Kiosk POP.
+
+```sql
+BEGIN TRAN;
+BEGIN TRY
+
+    -- ===== BƯỚC 1: Xác minh trạng thái hiện tại =====
+    SELECT LotID, MaterialCode, MaterialWarehouseCode, InitialQty, CurrentQty, 
+           CreateDateTime, ChangeDateTime, ChangeUserID
+    FROM SmartFactoryV2.dbo.STB_MaterialLotInfo WITH(NOLOCK)
+    WHERE LotID = '<LOT_ID>'  -- VD: 'ML20260331000035'
+    ORDER BY CreateDateTime;
+
+    -- ===== BƯỚC 2: Phục hồi hoàn toàn số lượng tại ROUTE_HY_WH =====
+    -- Phục hồi 100% InitialQty (150 KG) — KHÔNG phục hồi số lẻ
+    DECLARE @LotID NVARCHAR(50) = N'<LOT_ID>';
+    DECLARE @RestoreQty DECIMAL(18,10) = 150.0000000000;  -- = InitialQty gốc
+
+    UPDATE SmartFactoryV2.dbo.STB_MaterialLotInfo
+    SET CurrentQty = @RestoreQty,
+        ChangeDateTime = GETDATE(),
+        ChangeUserID = N'IT_RESTORE_ELECTROLYTE'
+    WHERE LotID = @LotID
+      AND MaterialWarehouseCode = 'ROUTE_HY_WH';
+
+    -- ===== BƯỚC 3: Kiểm tra kết quả =====
+    SELECT LotID, MaterialWarehouseCode, InitialQty, CurrentQty
+    FROM SmartFactoryV2.dbo.STB_MaterialLotInfo WITH(NOLOCK)
+    WHERE LotID = @LotID;
+
+    -- ⚠️ Xác nhận CurrentQty = 150 KG tại ROUTE_HY_WH rồi mới COMMIT
+    -- Nếu đúng: Thay ROLLBACK bằng COMMIT
+    ROLLBACK;
+
+END TRY
+BEGIN CATCH
+    ROLLBACK;
+    THROW;
+END CATCH;
+```
+
+> [!IMPORTANT]
+> **Sau khi COMMIT:** Yêu cầu công nhân trên Kiosk POP bấm nút **`Danh sách NVL BOM 🔄` (Reload)**. Cột Tồn kho sẽ chuyển từ **Hết hàng (Đỏ)** sang **150 KG (Xanh)** và bấm **[NHẬP]** thành công ngay.
+> 
+> **Lưu ý đặc biệt cho dung dịch điện phân:** Mỗi thùng 150 KG thực tế dùng cho **2 ngày liên tục** trên chuyền Cell. Hệ thống MES không trừ dần theo lần quét mà chỉ ghi nhận "đã nạp". Do đó khi phục hồi, phải phục hồi **đủ 150 KG** (hoặc đúng `InitialQty` của Lot) để tránh bị ngắt quãng báo Hết hàng giữa ca.

@@ -1,0 +1,242 @@
+﻿{
+  "displayName" : "포장라벨NewVietNam",
+  "width" : 680,
+  "height" : 950,
+  "dpi" : 254,
+  "unit" : "0.1mm",
+  "margins" : {
+    "left" : 10,
+    "right" : 20,
+    "top" : 0,
+    "bottom" : 0
+  },
+  "parameters" : [ {
+    "name" : "PartNo",
+    "description" : "PartNo"
+  }, {
+    "name" : "LotNo"
+  }, {
+    "name" : "Voltage"
+  }, {
+    "name" : "LotQty",
+    "defaultValue" : "0"
+  }, {
+    "name" : "Farad"
+  }, {
+    "name" : "Rating"
+  }, {
+    "name" : "PackingID",
+    "description" : "PackingID",
+    "defaultValue" : "PKJP1700001"
+  }, {
+    "name" : "IsModule",
+    "description" : "IsModule",
+    "defaultValue" : "False"
+  } ],
+  "elements" : [ {
+    "type" : "barcode",
+    "name" : "barCode4",
+    "x" : 42,
+    "y" : 83,
+    "w" : 92,
+    "h" : 398,
+    "symbology" : "Code128",
+    "module" : 2.54,
+    "autoModule" : true,
+    "rotation" : 270,
+    "showText" : false,
+    "bind" : "PackingID",
+    "padding" : {
+      "left" : 5,
+      "right" : 5,
+      "top" : 5,
+      "bottom" : 5
+    }
+  }, {
+    "type" : "barcode",
+    "name" : "barCode1",
+    "x" : 173,
+    "y" : 5,
+    "w" : 61,
+    "h" : 742,
+    "symbology" : "Code128",
+    "module" : 2.54,
+    "autoModule" : false,
+    "rotation" : 270,
+    "showText" : false,
+    "bind" : "PartNo",
+    "padding" : {
+      "left" : 5,
+      "right" : 5,
+      "top" : 5,
+      "bottom" : 5
+    }
+  }, {
+    "type" : "text",
+    "name" : "label2",
+    "x" : 134,
+    "y" : 5,
+    "w" : 41,
+    "h" : 742,
+    "text" : "tableCell5",
+    "font" : "Tahoma",
+    "fontSize" : 10.0,
+    "bold" : true,
+    "textAlignment" : "BottomCenter",
+    "rotation" : 270,
+    "bind" : "PartNo",
+    "multiline" : true,
+    "padding" : {
+      "left" : 5,
+      "right" : 5,
+      "top" : 0,
+      "bottom" : 0
+    }
+  }, {
+    "type" : "text",
+    "name" : "label3",
+    "x" : 233,
+    "y" : 5,
+    "w" : 55,
+    "h" : 742,
+    "text" : "tableCell6",
+    "font" : "Tahoma",
+    "fontSize" : 10.0,
+    "bold" : true,
+    "textAlignment" : "BottomCenter",
+    "rotation" : 270,
+    "bind" : "LotNo",
+    "multiline" : true,
+    "padding" : {
+      "left" : 5,
+      "right" : 5,
+      "top" : 0,
+      "bottom" : 0
+    }
+  }, {
+    "type" : "barcode",
+    "name" : "barCode2",
+    "x" : 278,
+    "y" : 5,
+    "w" : 61,
+    "h" : 742,
+    "symbology" : "Code128",
+    "module" : 2.54,
+    "autoModule" : false,
+    "rotation" : 270,
+    "showText" : false,
+    "bind" : "LotNo",
+    "padding" : {
+      "left" : 5,
+      "right" : 5,
+      "top" : 5,
+      "bottom" : 5
+    }
+  }, {
+    "type" : "text",
+    "name" : "label1",
+    "x" : 362,
+    "y" : 584,
+    "w" : 55,
+    "h" : 163,
+    "text" : "tableCell5",
+    "font" : "Tahoma",
+    "fontSize" : 10.0,
+    "bold" : true,
+    "textAlignment" : "BottomCenter",
+    "textFormatString" : "{0} V",
+    "rotation" : 270,
+    "bind" : "Voltage",
+    "multiline" : true,
+    "padding" : {
+      "left" : 5,
+      "right" : 5,
+      "top" : 0,
+      "bottom" : 0
+    }
+  }, {
+    "type" : "text",
+    "name" : "label4",
+    "x" : 362,
+    "y" : 391,
+    "w" : 55,
+    "h" : 158,
+    "text" : "tableCell5",
+    "font" : "Tahoma",
+    "fontSize" : 10.0,
+    "bold" : true,
+    "textAlignment" : "BottomCenter",
+    "textFormatString" : "{0} F",
+    "rotation" : 270,
+    "bind" : "Farad",
+    "multiline" : true,
+    "padding" : {
+      "left" : 5,
+      "right" : 5,
+      "top" : 0,
+      "bottom" : 0
+    }
+  }, {
+    "type" : "text",
+    "name" : "label6",
+    "x" : 362,
+    "y" : 174,
+    "w" : 55,
+    "h" : 158,
+    "text" : "tableCell5",
+    "font" : "Tahoma",
+    "fontSize" : 10.0,
+    "bold" : true,
+    "textAlignment" : "BottomCenter",
+    "rotation" : 270,
+    "bind" : "Rating",
+    "multiline" : true,
+    "padding" : {
+      "left" : 5,
+      "right" : 5,
+      "top" : 0,
+      "bottom" : 0
+    }
+  }, {
+    "type" : "text",
+    "name" : "label5",
+    "x" : 457,
+    "y" : 476,
+    "w" : 61,
+    "h" : 271,
+    "text" : "tableCell5",
+    "font" : "Tahoma",
+    "fontSize" : 10.0,
+    "bold" : true,
+    "textAlignment" : "BottomCenter",
+    "textFormatString" : "{0:#,#} PCS",
+    "rotation" : 270,
+    "bind" : "LotQty",
+    "multiline" : true,
+    "padding" : {
+      "left" : 5,
+      "right" : 5,
+      "top" : 0,
+      "bottom" : 0
+    }
+  }, {
+    "type" : "barcode",
+    "name" : "barCode3",
+    "x" : 457,
+    "y" : 111,
+    "w" : 61,
+    "h" : 329,
+    "symbology" : "Code128",
+    "module" : 5.08,
+    "autoModule" : true,
+    "rotation" : 270,
+    "showText" : false,
+    "bind" : "LotQty",
+    "padding" : {
+      "left" : 5,
+      "right" : 5,
+      "top" : 5,
+      "bottom" : 5
+    }
+  } ]
+}
