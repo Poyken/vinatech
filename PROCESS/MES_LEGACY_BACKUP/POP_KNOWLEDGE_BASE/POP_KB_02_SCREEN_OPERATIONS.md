@@ -268,6 +268,14 @@ Chỉ những LOT đã hoàn thành 100% tất cả các công đoạn sản xu�
   - **Xem trước kích thước thực (Preview):** Hiển thị trực quan mã QR vector 2D và các thông số trước khi xuất lệnh in.
   - **In lại không giới hạn:** Công nhân có thể in lại cùng một nhãn bất kỳ lúc nào nếu tem bị rách hoặc mờ.
 
+> [!WARNING]
+> ### ⚠️ CẢNH BÁO KỸ THUẬT: HẠN CHẾ IN TEM THÙNG (BOX PACKING LABEL) TRÊN POP KIOSK
+> - **Đặc điểm mã vạch Box Label:** Mẫu tem dán thùng quy chuẩn (`포장라벨NewVietNam`) chứa đối tượng `barCode4` (chuẩn Code 128, cấu hình DevExpress `AutoModule = true`, nhận biểu thức `?PackingID`).
+> - **Khác biệt cốt lõi:**
+>   - **MES WinForm (B523):** Gọi chuỗi SP `usp_Vietnam_DoProcessProdPacking_VVT` ➔ tự động sinh chuỗi `PackingID` chuẩn **11 ký tự** (`PK` + Tháng `QR` + Ngày `19` + Serial `00142` ➔ `PKQR1900142`). Chuỗi 11 ký tự này giúp Code 128 bung rộng toàn bộ chiều ngang khung in, máy quét barcode đọc được ngay 100%.
+>   - **POP Kiosk:** Không gọi SP sinh mã `PackingID` lưu vào `STB_MaterialLotInfo`, nên khi bấm in trên POP, tham số `?PackingID` bị thiếu hoặc rút gọn ➔ DevExpress `AutoModule = true` co rúm các vạch lại rất hẹp, khiến máy quét không bắt được tiêu cự!
+> - **Quy định vận hành:** Đối với các Box thành phẩm chia theo thùng quy cách chuẩn bị qua OQC xuất xưởng, **BẮT BUỘC dùng màn hình WinForm B523 / B528 để in lại tem chuẩn**, không dùng tem in từ Kiosk POP.
+
 ---
 
 ## 11. ⚙️ TÁC VỤ NÂNG CAO (MENU PHỤ ⋮ — TÁI PHÂN LOẠI RE-SORTING)

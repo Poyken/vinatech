@@ -1,4 +1,4 @@
-﻿
+
 <!--
 AI-READY METADATA
 Purpose: Quy trình đóng gói core (B523, B525), PackingStandard schema, gộp/chia box, Z530/A460 Label Template Architecture & Debugging
@@ -58,8 +58,29 @@ Related Files:
 | **PAC Inner/Outer** | B754, B755, B756 | `usp_VN_PACBoxLabelPrintHist_iud` | SN riêng biệt cho Inner và Outer |
 | **Digi-Key** | B757, B758 | `usp_VN_DigiKeyLabelInnerPrintHist_iud` | Nhãn SP + Nhãn Logistic |
 | **Sanmina Label** | B767 | `usp_SanminaLabelPrint_get_Vietnam` | Mở NAIS Designer set `데이터 추가` = `False` chống lặp |
+| **포장라벨NewVietNam** (Tem Box Đóng Thùng) | B523, B528 | `usp_Vietnam_DoProcessProdPacking_VVT` | Sinh `PackingID` chuẩn 11 ký tự (`PK...`), mã Code 128 `barCode4` |
 
 ---
+
+### 6.0.1c [B523/B528] Tem Box Đóng Thùng (`포장라벨NewVietNam`) — Cấu Trúc `PackingID` & Gotchas Kiosk POP
+
+1. **Cấu trúc mã định danh `PackingID`:**
+   - Chuỗi chuẩn gồm **11 ký tự**: `PK` + Năm/Tháng `YYMM` (vd: `QR`) + Ngày `DD` (vd: `19`) + Serial 5 số (vd: `00142`) ➔ `PKQR1900142`.
+   - Sinh tự động qua chuỗi Stored Procedure:
+     $$\text{B523} \longrightarrow \text{usp\_Vietnam\_DoProcessProdPacking\_VVT} \longrightarrow \text{usp\_DoProcessProdPackingByOne\_VNT}$$
+   - Lưu trữ tại: Cột `PackingID` bảng `STB_MaterialLotInfo` và `STB_SavePackingTime_VVT`.
+2. **Cấu hình XRBarCode DevExpress trong XML mẫu tem:**
+   ```xml
+   <Item1 ControlType="XRBarCode" Name="barCode4" Module="2.54" AutoModule="true" 
+          BarCodeOrientation="RotateLeft" Expression="?PackingID">
+       <Symbology Name="Code128" />
+   </Item1>
+   ```
+3. **⚠️ Bẫy lỗi in tem thùng từ Kiosk POP Web:**
+   - Khi in từ Kiosk POP, do Kiosk không gọi SP sinh mã `PackingID` chia thùng chuẩn vào `STB_MaterialLotInfo`, tham số `?PackingID` bị rỗng hoặc rút gọn.
+   - Do `AutoModule = true`, Code 128 co rúm các nét vạch lại rất hẹp, khiến Barcode Scanner không đọc được tiêu cự.
+   - **Xử lý:** Mở WinForm **B523 / B528** trên máy tính ➔ Tìm mã Lot cha ➔ Chọn các Box con `PK...` ➔ Bấm **In lại tem** để lấy tem chuẩn dán đè.
+
 
 ### 6.0.1b [B767] Sanmina & Tem Khách Hàng Đặc Biệt — Chi Tiết Cấu Hình & Debug
 

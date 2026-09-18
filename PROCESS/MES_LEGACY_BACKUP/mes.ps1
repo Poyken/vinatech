@@ -46,6 +46,8 @@ function Show-Help {
 
     Write-Host ''
     Write-Host '  2. TRUY VAN & KIEM TRA HE THONG (SYSTEM & QUERY):' -ForegroundColor Cyan
+    Write-Host '     .\mes.ps1 pop-audit                 ' -NoNewline -ForegroundColor Green
+    Write-Host '-> Kiem toan & doi soat lech du lieu POP Kiosk vs MES (IsTransferred=0)' -ForegroundColor Gray
     Write-Host '     .\mes.ps1 check [-Profile <Name>]   ' -NoNewline -ForegroundColor Green
     Write-Host '-> Kiem tra ket noi toi 15 Database (MES, GW, ERP, POP...)' -ForegroundColor Gray
     Write-Host '     .\mes.ps1 health [-Detail]          ' -NoNewline -ForegroundColor Green
@@ -107,6 +109,7 @@ elseif ($cmdLower -eq 'trace') {
     $q2 = "SELECT TOP 1 ControlNo, PONo, Barcode, MaterialCode, IsProdFinish, IsLineInput, CreateDateTime FROM STB_SetInfo WITH(NOLOCK) WHERE ControlNo LIKE '%$Target%' OR Barcode LIKE '%$Target%'"
     $q3 = "SELECT TOP 10 ProdRouteHistNo, ControlNo, RouteCode, WorkCenterCode, ProdQty, CreateDateTime FROM STB_ProdRouteHist WITH(NOLOCK) WHERE ControlNo = '$Target' OR ControlNo IN (SELECT ControlNo FROM STB_SetInfo WITH(NOLOCK) WHERE Barcode = '$Target') ORDER BY CreateDateTime DESC"
     $q4 = "SELECT TOP 5 MaterialCode, MaterialWarehouseCode, StockQty FROM STB_MaterialStock WITH(NOLOCK) WHERE MaterialCode LIKE '%$Target%'"
+    $q5 = "SELECT TOP 10 DayPlanNo, Barcode, RouteCode, LineCode, TotalProdQty, IsDone, IsTransferred, ModifyDateTime FROM MongoToMesPerformance WITH(NOLOCK) WHERE Barcode = '$Target' OR Barcode IN (SELECT Barcode FROM STB_SetInfo WITH(NOLOCK) WHERE ControlNo = '$Target') ORDER BY ModifyDateTime DESC"
 
     Write-Host ''
     Write-Host '1. THONG TIN KHO & VAT TU (STB_MaterialLotInfo):' -ForegroundColor Yellow
@@ -117,12 +120,16 @@ elseif ($cmdLower -eq 'trace') {
     Execute-SqlQuery -Connection $conn -Query $q2
 
     Write-Host ''
-    Write-Host '3. LICH SU CONG DOAN SAN XUAT (STB_ProdRouteHist - Top 5):' -ForegroundColor Yellow
+    Write-Host '3. LICH SU CONG DOAN SAN XUAT (STB_ProdRouteHist - Top 10):' -ForegroundColor Yellow
     Execute-SqlQuery -Connection $conn -Query $q3
 
     Write-Host ''
     Write-Host '4. TON KHO VAT TU THEO MA (STB_MaterialStock - Top 5):' -ForegroundColor Yellow
     Execute-SqlQuery -Connection $conn -Query $q4
+
+    Write-Host ''
+    Write-Host '5. TRANG THAI POP KIOSK & DONG BO (MongoToMesPerformance):' -ForegroundColor Yellow
+    Execute-SqlQuery -Connection $conn -Query $q5
 
     $conn.Close()
     Write-Host ''
@@ -240,6 +247,30 @@ elseif ($cmdLower -eq 'audit' -or $cmdLower -eq 'verify-kb') {
     } else {
         Write-Error 'tools/audit_kb_reliability.ps1 not found.'
     }
+}
+elseif ($cmdLower -eq 'pop-audit' -or $cmdLower -eq 'pop-sync' -or $cmdLower -eq 'reconcile') {
+    Write-Host "(*) [POP-AUDIT] Dang kiem toan doi soat du lieu POP Kiosk vs MES..." -ForegroundColor Cyan
+    $conn = Get-DbConnection -Profile 'SmartFactoryV2' -Silent
+    if ($conn -eq $null) { exit 1 }
+
+    Write-Host ''
+    Write-Host '1. DANH SACH CONG DOAN POP BI KET CHUA CHUYEN SANG MES (IsTransferred = 0):' -ForegroundColor Yellow
+    $qPending = "SELECT LineCode, COUNT(*) AS SoLuongKet, MIN(ModifyDateTime) AS TuNgay, MAX(ModifyDateTime) AS DenNgay FROM MongoToMesPerformance WITH(NOLOCK) WHERE IsDone = 1 AND IsTransferred = 0 GROUP BY LineCode"
+    Execute-SqlQuery -Connection $conn -Query $qPending
+
+    Write-Host ''
+    Write-Host '2. TOP 10 BAN GHI KET CAN XU LY (IsTransferred = 0):' -ForegroundColor Yellow
+    $qTopPending = "SELECT TOP 10 DayPlanNo, Barcode, RouteCode, LineCode, TotalProdQty, ModifyDateTime FROM MongoToMesPerformance WITH(NOLOCK) WHERE IsDone = 1 AND IsTransferred = 0 ORDER BY ModifyDateTime DESC"
+    Execute-SqlQuery -Connection $conn -Query $qTopPending
+
+    Write-Host ''
+    Write-Host '3. DOI SOAT LECH DU LIEU HOM NAY (POP vs MES):' -ForegroundColor Yellow
+    $qMismatched = "SELECT TOP 10 MMP.DayPlanNo, MMP.Barcode, MMP.RouteCode, MMP.TotalProdQty AS POP_Qty, PRH.ProdQty AS MES_Qty, CASE WHEN PRH.ProdRouteHistNo IS NULL THEN 'CHUA_SANG_MES' WHEN MMP.TotalProdQty <> PRH.ProdQty THEN 'LECH_SO_LUONG' ELSE 'KHOP' END AS SyncStatus, MMP.ModifyDateTime FROM MongoToMesPerformance MMP WITH (NOLOCK) LEFT JOIN STB_SetInfo SETI WITH (NOLOCK) ON MMP.Barcode = SETI.Barcode LEFT JOIN STB_ProdRouteHist PRH WITH (NOLOCK) ON PRH.ControlNo = SETI.ControlNo AND PRH.RouteCode = MMP.RouteCode WHERE MMP.IsDone = 1 AND (PRH.ProdRouteHistNo IS NULL OR MMP.TotalProdQty <> PRH.ProdQty) AND MMP.ModifyDateTime >= CAST(GETDATE() AS DATE) ORDER BY MMP.ModifyDateTime DESC"
+    Execute-SqlQuery -Connection $conn -Query $qMismatched
+
+    $conn.Close()
+    Write-Host ''
+    Write-Host '-> Hoan thanh kiem toan doi soat POP vs MES.' -ForegroundColor Green
 }
 elseif ($cmdLower -eq 'bot' -or $cmdLower -eq 'telegram') {
     $botScript = Join-Path $toolsDir 'mes_telegram_bot.py'

@@ -1,4 +1,4 @@
-﻿<!--
+<!--
 AI-READY METADATA
 Purpose: Tổng quan luồng sản xuất (B310-B882), SetInfo & ProdRouteHist Data Schemas, JobDate update scripts & Barcode traceability
 Scope: Production System Overview & Core Data Schemas
@@ -76,6 +76,20 @@ AND RouteCode = 'V-22_BG'  -- Chỉ sửa công đoạn cụ thể, không sửa
 ```
 
 > **SP dùng để xác minh:** `usp_LotTrackingInfo_VVT2_get`
+> 
+> [!WARNING]
+> #### ⚠️ LƯU Ý BẮT BUỘC VỀ MỐC CẮT CA 10:00:00 AM CỦA MÀN HÌNH B782
+> - SP `usp_LotTrackingInfo_VVT2_get` lọc dữ liệu ngày làm việc `D` theo điều kiện:
+>   $$\text{ProdDateTime} \ge \text{'D 10:00:00'} \quad \text{VÀ} \quad \text{ProdDateTime} < \text{'D+1 10:00:00'}$$
+> - Nếu Lot thực tế dập vào **ca đêm / rạng sáng** (`00:00:00` đến `09:59:59` AM), dù bạn có `UPDATE JobDate = 'YYYYMMDD'` nhưng vì `ProdDateTime < 10:00:00 AM`, màn hình B782 **vẫn tự động gom Lot đó về ngày hôm trước `D-1`!**
+> - **Giải pháp chuẩn hóa (Hotfix ID_50, ID_52, ID_54):** Dùng kỹ thuật cộng giờ:
+>   ```sql
+>   UPDATE STB_ProdRouteHist
+>   SET ProdDateTime = DATEADD(HOUR, 10, ProdDateTime),
+>       JobDate = 'YYYY-MM-DD'
+>   WHERE ControlNo IN (...) AND RouteCode = 'V-24_HY';
+>   ```
+>   Cách này đẩy thời điểm dập thực tế sang buổi chiều (`10:32 - 18:22`), vừa vượt qua ngưỡng 10:00 AM để B782 nhận đủ 100%, vừa bảo toàn trật tự thời gian và khoảng cách ca giữa các Lot.
 
 ---
 

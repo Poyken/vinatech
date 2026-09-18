@@ -55,6 +55,7 @@ Related Files:
 | Tự kiểm In-Line QC tại chuyền | KB_02 §12.1 | USER_MANUAL §6, Slide 49, 50 |
 | Tra cứu ảnh slide gốc theo số slide | **SLIDE_MAPPING** (SoT) | assets/slides_images/ |
 | Quality: IQC/PQC/OQC/FOQC | KB_02 §12 | POP_QUALITY_REF |
+| Kẹt đồng bộ POP ➔ MES / Lệch số lượng | **KB_01 §3.5** | **KB_03 §2.15 (Template 7, 8, 9)** |
 | API endpoint không phản hồi | KB_01 §2 | KB_03 §6 |
 | Kiểm toán UI vs DB | **KB_05** (SoT) | KB_01 §3 |
 | Hiểu kiến trúc tổng thể | KB_01 §1 | POP_SYSTEM_INTEGRATION |

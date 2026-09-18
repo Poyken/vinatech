@@ -132,6 +132,7 @@ Internet/Intranet
 | `STB_LineInfo` | Master data dây chuyền | Read only |
 | `STB_WorkerInfo` | Master data công nhân | Read only |
 | `STB_EquipmentInfo` | Master data thiết bị | Read only |
+| `MongoToMesPerformance` | **Bảng đồng bộ trung gian giữa MongoDB (Kiosk UI) & MES** | **Read + Write** (SoT cho tiến độ Kiosk: `IsDone`, `TotalProdQty`) |
 
 ### 3.3 Sơ Đồ Data Flow — Nhập NVL (Material Input)
 
@@ -172,6 +173,34 @@ API: POST /api/pop/screen/savePacking
           Gọi SP in tem → Push to Printer
 ```
 
+### 3.5 🔄 Cơ Chế Data Pipeline Đồng Bộ 3 Tầng Giữa POP Kiosk & MES
+
+Hệ thống có cơ chế đồng bộ tự động chạy ngầm liên tục giữa giao diện Kiosk POP và CSDL MES:
+
+```
+[Kiosk POP Web Client] 
+      │ (Công nhân bấm chốt sản lượng / hoàn thành)
+      ▼
+[MongoDB / Cache Layer Kiosk]
+      │
+      ▼ (Ghi nhận tức thì)
+[SmartFactoryV2.dbo.MongoToMesPerformance] ─── (SoT hiển thị Kiosk: IsDone=1, IsTransferred=0)
+      │
+      │ ⚡ Scheduled Polling Worker (pop.vinatech.com IIS, chu kỳ 1 - 2 phút)
+      │    1. Quét: SELECT * FROM MongoToMesPerformance WHERE IsDone=1 AND IsTransferred=0 AND IsSkipped=0
+      │    2. Sinh số ProdRouteHistNo: SmartFramework.dbo.usp_DoCreateSerial
+      │    3. INSERT: SmartFactoryV2.dbo.STB_ProdRouteHist
+      │    4. UPDATE: MongoToMesPerformance SET IsTransferred = 1, ModifyDateTime = GETDATE()
+      ▼
+[SmartFactoryV2.dbo.STB_ProdRouteHist] ─── (SoT báo cáo MES WinForm: B782, B530, B540)
+```
+
+#### 📌 Đặc điểm kỹ thuật & Bẫy vận hành (Gotchas):
+1. **Background Polling Worker:** Không phải SQL Server Agent Job mà là tiến trình Worker ngầm trên IIS API Server (`pop.vinatech.com`), do kỹ sư Hàn Quốc Kim Hyung Jin (`[김형진]`) lập trình.
+2. **Kiosk hiển thị tiến độ từ `MongoToMesPerformance`:** Nếu IT dùng SQL xóa bản ghi trong `STB_ProdRouteHist` để công nhân chốt lại, nhưng **chưa xóa bản ghi tương ứng trong `MongoToMesPerformance`**, thì Kiosk POP vẫn hiển thị dấu tích xanh `[✓]` và báo *"■ Công đoạn này đã hoàn thành"*, nút ghi nhận bị mờ! (Xem chi tiết lỗi tại [POP_KB_03 § 2.15](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_03_TROUBLESHOOTING.md#215-pop-err-15-%C4%91%C3%A3-x%C3%B3a-stb_prodroutehist-nh%C6%B0ng-tr%C3%AAn-kiosk-pop-v%E1%BA%ABn-hi%E1%BB%87n-c%C3%B4ng-%C4%91o%E1%BA%A1n-n%C3%A0y-%C4%91%C3%A3-ho%C3%A0n-th%C3%A0nh)).
+3. **Điểm nghẽn kẹt `IsTransferred = 0`:** Đã từng ghi nhận riêng dây chuyền **`VVC-11`** bị kẹt nhiều bản ghi `IsTransferred = 0` kéo dài từ 27/08 đến 19/09, trong khi các chuyền khác (`VVT_HY`, `VVT_F2`, `VVT_BN`) đồng bộ chỉ sau 30-60 giây. Cần chạy truy vấn kiểm toán định kỳ để giải tỏa.
+```
+
 ---
 
 ## 4. 🔐 XÁC THỰC & PHIÊN LÀM VIỆC
@@ -206,10 +235,11 @@ API: POST /api/pop/screen/savePacking
 | **Offline** | ❌ Không hỗ trợ | ✅ Partial (cache) |
 | **Master Data** | Read only | Full admin |
 | **Rollback** | ✅ Hủy đóng gói trên UI | ✅ Nhiều tùy chọn hơn |
+| **In Tem Thùng (Box Label)** | ⚠️ Không tự sinh `PackingID` 11 ký tự (`PK...`) ➔ Mã vạch Code 128 bị co ngắn | ✅ Sinh `PackingID` chuẩn qua chuỗi SP ➔ Mã vạch đủ độ rộng, quét chuẩn 100% |
 
 ---
 
-## 6. 🔧 CÂU SQL KIỂM CHỨNG KIẾN TRÚC
+## 6. 🔧 CÂU SQL KIỂM CHỨNG & KIỂM TOÁN ĐỒNG BỘ POP ➔ MES
 
 ### 6.1 Kiểm tra POP DB tồn tại
 ```sql
@@ -238,3 +268,76 @@ FROM SmartFactoryV2.dbo.STB_SetInfo WITH(NOLOCK)
 WHERE CreateDate >= DATEADD(DAY, -1, GETDATE())
 ORDER BY CreateDate DESC;
 ```
+
+### 6.5 Kiểm toán các bản ghi POP đã chốt nhưng CHƯA chuyển sang MES (Bị treo `IsTransferred = 0`)
+```sql
+-- Tìm tất cả bản ghi công nhân đã bấm hoàn thành trên Kiosk nhưng chưa vào STB_ProdRouteHist
+SELECT 
+    MMP.DayPlanNo,
+    MMP.Barcode,
+    MMP.RouteCode,
+    MMP.TotalProdQty,
+    MMP.IsDone,
+    MMP.IsTransferred,
+    MMP.ModifyDateTime,
+    DATEDIFF(MINUTE, MMP.ModifyDateTime, GETDATE()) AS [MinutesPending]
+FROM SmartFactoryV2.dbo.MongoToMesPerformance MMP WITH (NOLOCK)
+WHERE MMP.IsDone = 1 
+  AND MMP.IsTransferred = 0 
+  AND MMP.IsSkipped = 0
+ORDER BY MMP.ModifyDateTime ASC;
+```
+
+### 6.6 Đối soát toàn diện từng Lot giữa POP (`MongoToMesPerformance`) và MES (`STB_ProdRouteHist`)
+```sql
+-- Chạy đối soát khi nghi ngờ số liệu báo cáo B782/B530 bị lệch so với sản lượng bấm trên Kiosk
+SELECT 
+    MMP.Barcode,
+    SETI.ControlNo,
+    MMP.RouteCode,
+    MMP.TotalProdQty AS [SL_Chot_POP],
+    ISNULL(PRH.ProdQty, 0) AS [SL_Nhan_MES],
+    CASE 
+        WHEN PRH.ProdRouteHistNo IS NULL THEN N'❌ CHƯA SANG MES'
+        WHEN MMP.TotalProdQty <> PRH.ProdQty THEN N'⚠️ LỆCH SỐ LƯỢNG'
+        ELSE N'✅ KHỚP 100%'
+    END AS [TrangThaiDongBo],
+    MMP.ModifyDateTime AS [ThoiDiemChotPOP],
+    PRH.ProdDateTime   AS [ThoiDiemNhanMES]
+FROM SmartFactoryV2.dbo.MongoToMesPerformance MMP WITH (NOLOCK)
+LEFT JOIN SmartFactoryV2.dbo.STB_SetInfo SETI WITH (NOLOCK) 
+    ON MMP.Barcode = SETI.Barcode
+LEFT JOIN SmartFactoryV2.dbo.STB_ProdRouteHist PRH WITH (NOLOCK) 
+    ON PRH.ControlNo = SETI.ControlNo 
+   AND PRH.RouteCode = MMP.RouteCode
+WHERE MMP.IsDone = 1
+  -- Lọc ngày cần đối soát:
+  AND MMP.ModifyDateTime >= CAST(GETDATE() AS DATE)
+ORDER BY MMP.ModifyDateTime DESC;
+```
+
+### 6.7 Thống kê nhanh tỷ lệ khớp dữ liệu POP vs MES trong ca/ngày
+```sql
+SELECT 
+    CASE 
+        WHEN PRH.ProdRouteHistNo IS NULL THEN N'CHƯA SANG MES / MẤT BẢN GHI'
+        WHEN MMP.TotalProdQty <> PRH.ProdQty THEN N'LỆCH SỐ LƯỢNG'
+        ELSE N'KHỚP 100%'
+    END AS [Trạng Thái],
+    COUNT(*) AS [Số Lượng Bản Ghi]
+FROM SmartFactoryV2.dbo.MongoToMesPerformance MMP WITH (NOLOCK)
+LEFT JOIN SmartFactoryV2.dbo.STB_SetInfo SETI WITH (NOLOCK) 
+    ON MMP.Barcode = SETI.Barcode
+LEFT JOIN SmartFactoryV2.dbo.STB_ProdRouteHist PRH WITH (NOLOCK) 
+    ON PRH.ControlNo = SETI.ControlNo 
+   AND PRH.RouteCode = MMP.RouteCode
+WHERE MMP.IsDone = 1 
+  AND MMP.ModifyDateTime >= CAST(GETDATE() AS DATE)
+GROUP BY 
+    CASE 
+        WHEN PRH.ProdRouteHistNo IS NULL THEN N'CHƯA SANG MES / MẤT BẢN GHI'
+        WHEN MMP.TotalProdQty <> PRH.ProdQty THEN N'LỆCH SỐ LƯỢNG'
+        ELSE N'KHỚP 100%'
+    END;
+```
+

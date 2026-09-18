@@ -243,6 +243,106 @@ ROLLBACK;
 
 ---
 
+### 2.15 POP-ERR-15: Đã Xóa `STB_ProdRouteHist` Nhưng Trên Kiosk POP Vẫn Hiện "Công Đoạn Này Đã Hoàn Thành"
+
+**Hiện tượng:** 
+- Đã chạy SQL xóa lượt chốt công đoạn downstream (ví dụ: `V-26_HY Aging` hoặc `V-24_HY`, `V-25_HY`) trong `STB_ProdRouteHist` và `STB_ProdRouteWorkerHist`.
+- Đã UPDATE `STB_SetInfo.CurrentRouteCode = 'V-24_HY'`.
+- Nhưng khi mở Kiosk POP Web (`pop.vinatech.com/pop/screen`), các công đoạn 24, 25, 26 vẫn hiển thị **dấu tích xanh `[✓]`**, số lượng **`987/987`**, thẻ Lot vẫn mang nhãn công đoạn sau (`[Visual Inspection (Ngoại quan)]`), và khi bấm vào công đoạn thì nút **`GHI NHẬN SẢN XUẤT`** vẫn bị mờ kèm dòng chữ: **`■ Công đoạn này đã hoàn thành`**.
+
+**Nguyên nhân gốc (Root Cause):**
+- Kiosk POP Web KHÔNG đọc trực tiếp từ `STB_ProdRouteHist` để vẽ trạng thái tiến độ tuần tự của Lot trên giao diện.
+- Hệ thống POP Kiosk đọc từ bảng đồng bộ trung gian: **`SmartFactoryV2.dbo.MongoToMesPerformance`**.
+- Bảng `MongoToMesPerformance` lưu trạng thái chốt công đoạn từ Kiosk (`IsDone = 1`, `TotalProdQty`, `SourceType = 'MANUAL'`).
+- Dù đã xóa ở `STB_ProdRouteHist`, nhưng bản ghi trong `MongoToMesPerformance` vẫn còn `IsDone = 1`, khiến Kiosk POP tiếp tục hiểu là công đoạn đó đã được hoàn thành.
+
+**Quy trình chuẩn đoán & Khắc phục:**
+1. Tra cứu trực tiếp bảng `MongoToMesPerformance` theo mã Barcode của Lot:
+   ```sql
+   SELECT DayPlanNo, Barcode, RouteCode, TotalProdQty, IsDone, IsTransferred, SourceType, ModifyDateTime
+   FROM SmartFactoryV2.dbo.MongoToMesPerformance WITH(NOLOCK)
+   WHERE Barcode = 'MÃ_BARCODE'
+   ORDER BY RouteCode;
+   ```
+2. Nếu thấy các công đoạn cần rollback có `IsDone = 1` (True):
+   * Áp dụng **Template 7** để snapshot backup và xóa các dòng công đoạn đó khỏi `MongoToMesPerformance`.
+3. Đồng bộ lại `STB_SetInfo.CurrentRouteCode` về công đoạn mong muốn.
+4. Yêu cầu công nhân nhấn **F5** trên Kiosk POP ➔ Giao diện sẽ lập tức cập nhật lại trạng thái chưa hoàn thành và mở lại nút Ghi nhận sản xuất.
+
+---
+
+### 2.16 POP-ERR-16: Tem Thùng (Box Packing Label) In Từ POP Kiosk Bị Co Ngắn Mã Vạch & Máy Quét Không Đọc Được
+
+**Hiện tượng:**
+- Công nhân in tem dán thùng Box (`포장라벨NewVietNam`) từ màn hình Đóng gói Kiosk POP.
+- Tờ tem in ra có mã vạch ở góc trên bên phải (`barCode4` - `PackingID`) bị co rúm lại bất thường, thanh vạch rất hẹp, ít nét hơn bình thường.
+- Máy quét mã vạch (Barcode Scanner) tại chuyền hoàn toàn không đọc được mã này.
+
+**Nguyên nhân gốc (Root Cause):**
+1. **Thiết kế tem DevExpress:** Đối tượng `barCode4` dùng chuẩn **Code 128**, xoay 90° `RotateLeft`, nhận tham số `Expression = ?PackingID` với thuộc tính `AutoModule = true`. Độ rộng toàn dải mã vạch phụ thuộc trực tiếp vào **độ dài ký tự** của `PackingID`.
+2. **Khác biệt luồng sinh mã:**
+   - Trên **MES WinForm (B523)**: Gọi Stored Procedure `usp_Vietnam_DoProcessProdPacking_VVT` ➔ `usp_DoProcessProdPackingByOne_VNT`, tự động sinh mã `PackingID` chuẩn **11 ký tự** (`PK` + Năm/Tháng + Ngày + Serial 5 số, vd: `PKQR1900142`). Chuỗi 11 ký tự này tạo ra hệ vạch trải rộng hết chiều ngang của khung tem, scanner đọc ăn ngay 100%.
+   - Trên **POP Kiosk**: Thiết kế cho thao tác chốt sản lượng nhanh, **không chạy engine sinh `PackingID` chuẩn vào bảng `STB_MaterialLotInfo`**. Khi bấm in trên POP, tham số `?PackingID` bị thiếu hoặc rút gọn ít ký tự ➔ `AutoModule = true` co cụm thanh vạch lại cực ngắn.
+3. **Phần cứng máy in:** Đầu in nhiệt (thermal printhead) bị bẩn, trục lăn cao su hoặc ribbon mực bị chùng tạo bóng mờ kép (ghosting/double print) làm nhòe các vạch mảnh.
+
+**Quy trình chuẩn đoán & Khắc phục:**
+1. **Dưới xưởng (In lại tem chuẩn ngay):**
+   - Mở MES WinForm trên máy tính ➔ Vào màn hình **B523** hoặc **B528**.
+   - Quét mã Lot cha ➔ Chọn đúng Box con tương ứng (đã có sẵn mã `PKQR19001xx` 11 ký tự trong `STB_MaterialLotInfo`).
+   - Bấm **"In lại tem"** ➔ Dán đè tem mới in từ WinForm lên thùng hàng.
+2. **Bảo dưỡng phần cứng:** Vệ sinh ngay đầu in nhiệt bằng cồn chuyên dụng; căng lại cuộn ribbon mực tại Line.
+
+---
+
+### 2.17 POP-ERR-17: POP Kiosk Hiển Thị Bước Kế Tiếp (Slot Chờ Chốt) Dù Chuyền Mới Chốt Bước Trước
+
+**Hiện tượng:**
+- Công nhân mới chốt xong công đoạn Cuốn (`V-22_HY`), nhưng trên Kiosk POP đã hiển thị công đoạn tiếp theo là Lắp cao su (`V-23_HY`) với số lượng sản xuất, khiến tổ trưởng hiểu nhầm là hệ thống bị nhảy cóc hoặc đã chốt trước.
+
+**Nguyên nhân gốc (Root Cause):**
+- **Đây là hành vi ĐÚNG theo thiết kế của hệ thống MES, không phải lỗi:**
+  - Khi chốt sản lượng tại `V-22_HY`, SP `usp_DoProcessProdRouteHist` tự động:
+    1. Cập nhật `CompleteRoute = 1` cho `V-22_HY`.
+    2. Tự động `INSERT` dòng công đoạn kế tiếp `V-23_HY` vào `STB_ProdRouteHist` với **`CompleteRoute = NULL`**.
+  - Dòng có `CompleteRoute = NULL` này là **"slot chờ chốt" (pre-allocated slot)**, cho phép công nhân ở trạm tiếp theo quét barcode và bắt đầu thực hiện thao tác.
+  - Kiosk POP đọc toàn bộ các dòng routing trong `STB_ProdRouteHist` nên hiển thị công đoạn này.
+
+**Cách kiểm chứng:**
+```sql
+SELECT ControlNo, RouteCode, CompleteRoute, ProdQty, ProdDateTime 
+FROM SmartFactoryV2.dbo.STB_ProdRouteHist WITH (NOLOCK) 
+WHERE ControlNo = 'MÃ_CONTROL_NO' 
+ORDER BY ProdDateTime ASC;
+```
+- Nếu dòng công đoạn tiếp theo có `CompleteRoute IS NULL` ➔ Hoàn toàn bình thường, chưa chốt thực tế.
+- Nếu dòng đó có `CompleteRoute = '1'` hoặc `'Y'` ➔ Đã chốt thực tế.
+
+---
+
+### 2.18 POP-ERR-18: Sự Cố Kẹt Pipeline Đồng Bộ POP ➔ MES (Worker `getPendingTransferList` Bị Treo / `IsTransferred = 0`)
+
+**Hiện tượng:**
+- Công nhân đã bấm chốt sản lượng hoàn thành trên Kiosk POP (đã trừ NVL, đã hiện dấu tích xanh trên POP).
+- Nhưng trên MES WinForm (màn hình B782, B530, B540) hoặc các báo cáo tiến độ không hề thấy sản lượng đâu.
+
+**Nguyên nhân gốc (Root Cause):**
+- Background Polling Worker trên IIS Server (`pop.vinatech.com`) gặp sự cố gián đoạn kết nối tới SQL Server, hoặc logic xử lý bị lock bởi một bản ghi lỗi trên dây chuyền cụ thể (điển hình từng kẹt trên Line `VVC-11`).
+- Dữ liệu bị ứ đọng trong `SmartFactoryV2.dbo.MongoToMesPerformance` với trạng thái `IsDone = 1` nhưng `IsTransferred = 0`.
+
+**Quy trình khắc phục:**
+1. Chạy câu truy vấn kiểm tra danh sách các bản ghi bị nghẽn:
+   ```sql
+   SELECT DayPlanNo, Barcode, RouteCode, TotalProdQty, IsDone, IsTransferred, ModifyDateTime 
+   FROM SmartFactoryV2.dbo.MongoToMesPerformance WITH(NOLOCK) 
+   WHERE IsDone = 1 AND IsTransferred = 0 AND IsSkipped = 0 
+   ORDER BY ModifyDateTime ASC;
+   ```
+2. Nếu số lượng nghẽn tăng dần:
+   - Báo bộ phận Server Admin restart lại Application Pool của Web POP trên IIS.
+   - Hoặc nếu chỉ kẹt riêng 1 Line (như `VVC-11`), kiểm tra xem Line đó có bị exclude trong cấu hình Worker hay không.
+
+---
+
 ## 3. 🛠️ TEMPLATE SQL CỨU HỘ VẬN HÀNH (SAFETY HOTFIX TEMPLATES)
 
 > [!CAUTION]
@@ -424,3 +524,159 @@ END CATCH;
 > **Sau khi COMMIT:** Yêu cầu công nhân trên Kiosk POP bấm nút **`Danh sách NVL BOM 🔄` (Reload)**. Cột Tồn kho sẽ chuyển từ **Hết hàng (Đỏ)** sang **150 KG (Xanh)** và bấm **[NHẬP]** thành công ngay.
 > 
 > **Lưu ý đặc biệt cho dung dịch điện phân:** Mỗi thùng 150 KG thực tế dùng cho **2 ngày liên tục** trên chuyền Cell. Hệ thống MES không trừ dần theo lần quét mà chỉ ghi nhận "đã nạp". Do đó khi phục hồi, phải phục hồi **đủ 150 KG** (hoặc đúng `InitialQty` của Lot) để tránh bị ngắt quãng báo Hết hàng giữa ca.
+
+---
+
+### Template 7: Xóa Trạng Thái Chốt Kẹt Trên Kiosk POP (MongoToMesPerformance)
+```sql
+-- Áp dụng khi POP vẫn hiện công đoạn đã chốt dù đã xóa STB_ProdRouteHist
+BEGIN TRANSACTION;
+BEGIN TRY
+    DECLARE @TargetBarcode VARCHAR(50) = 'VVQR023R060672';
+    DECLARE @TargetControlNo VARCHAR(20) = '20260902000418';
+
+    -- 1. Snapshot backup an toàn bảng MongoToMesPerformance
+    -- SELECT * INTO BAK_MongoToMesPerformance_<Date>_<Barcode> 
+    -- FROM SmartFactoryV2.dbo.MongoToMesPerformance 
+    -- WHERE Barcode = @TargetBarcode;
+
+    -- 2. Xóa các công đoạn kẹt hoàn thành trong MongoToMesPerformance
+    DELETE FROM SmartFactoryV2.dbo.MongoToMesPerformance 
+    WHERE Barcode = @TargetBarcode 
+      AND RouteCode IN ('V-24_HY', 'V-25_HY', 'V-26_HY', 'V-27_HY');
+
+    -- 3. Đồng bộ lại công đoạn hiện tại trên STB_SetInfo
+    UPDATE SmartFactoryV2.dbo.STB_SetInfo
+    SET CurrentRouteCode = 'V-24_HY',
+        ChangeDateTime = GETDATE()
+    WHERE ControlNo = @TargetControlNo;
+
+    -- 4. Kiểm tra lại kết quả
+    SELECT Barcode, RouteCode, TotalProdQty, IsDone 
+    FROM SmartFactoryV2.dbo.MongoToMesPerformance WITH(NOLOCK)
+    WHERE Barcode = @TargetBarcode;
+
+    -- Nếu kết quả đúng: Đổi ROLLBACK thành COMMIT
+    ROLLBACK TRANSACTION;
+END TRY
+BEGIN CATCH
+    ROLLBACK TRANSACTION;
+    THROW;
+END CATCH;
+```
+
+---
+
+### Template 8: Đối Soát Toàn Diện & Giải Tỏa Kẹt Pipeline Đồng Bộ POP ➔ MES
+```sql
+-- 1. Kiểm tra nhanh các bản ghi bị kẹt IsTransferred = 0
+SELECT 
+    MMP.DayPlanNo,
+    MMP.Barcode,
+    MMP.RouteCode,
+    MMP.TotalProdQty,
+    MMP.IsDone,
+    MMP.IsTransferred,
+    MMP.ModifyDateTime,
+    DATEDIFF(MINUTE, MMP.ModifyDateTime, GETDATE()) AS [MinutesPending]
+FROM SmartFactoryV2.dbo.MongoToMesPerformance MMP WITH (NOLOCK)
+WHERE MMP.IsDone = 1 
+  AND MMP.IsTransferred = 0 
+  AND MMP.IsSkipped = 0
+ORDER BY MMP.ModifyDateTime ASC;
+
+-- 2. Đối soát từng Lot giữa POP và MES trong ngày
+SELECT 
+    MMP.Barcode,
+    SETI.ControlNo,
+    MMP.RouteCode,
+    MMP.TotalProdQty AS [SL_Chot_POP],
+    ISNULL(PRH.ProdQty, 0) AS [SL_Nhan_MES],
+    CASE 
+        WHEN PRH.ProdRouteHistNo IS NULL THEN N'❌ CHƯA SANG MES'
+        WHEN MMP.TotalProdQty <> PRH.ProdQty THEN N'⚠️ LỆCH SỐ LƯỢNG'
+        ELSE N'✅ KHỚP 100%'
+    END AS [TrangThaiDongBo],
+    MMP.ModifyDateTime AS [ThoiDiemChotPOP],
+    PRH.ProdDateTime   AS [ThoiDiemNhanMES]
+FROM SmartFactoryV2.dbo.MongoToMesPerformance MMP WITH (NOLOCK)
+LEFT JOIN SmartFactoryV2.dbo.STB_SetInfo SETI WITH (NOLOCK) 
+    ON MMP.Barcode = SETI.Barcode
+LEFT JOIN SmartFactoryV2.dbo.STB_ProdRouteHist PRH WITH (NOLOCK) 
+    ON PRH.ControlNo = SETI.ControlNo 
+   AND PRH.RouteCode = MMP.RouteCode
+WHERE MMP.IsDone = 1
+  AND MMP.ModifyDateTime >= CAST(GETDATE() AS DATE)
+ORDER BY MMP.ModifyDateTime DESC;
+```
+
+---
+
+### Template 9: Chốt Bù Sang MES Thủ Công Khi Job Đồng Bộ Bị Treo (IsTransferred = 0)
+> **Ngữ cảnh:** Một số Line (như `VVC-11`) bị kẹt `IsTransferred = 0` không tự đẩy sang `STB_ProdRouteHist`, khiến báo cáo B782/B530 bị thiếu hụt sản lượng. Áp dụng template an toàn sau để chốt bù từng Lot:
+
+```sql
+BEGIN TRANSACTION;
+BEGIN TRY
+    DECLARE @TargetBarcode VARCHAR(50) = '<TARGET_BARCODE>'; -- VD: 'VVQR173R050520'
+    DECLARE @TargetRoute VARCHAR(20) = '<TARGET_ROUTE>';     -- VD: 'V-23'
+    DECLARE @ControlNo VARCHAR(20);
+    DECLARE @DayPlanNo VARCHAR(20);
+    DECLARE @WorkCenterCode VARCHAR(20);
+    DECLARE @ProdQty DECIMAL(18,5);
+    DECLARE @NewHistNo VARCHAR(20);
+
+    -- 1. Lấy thông tin từ bảng trung gian và SetInfo
+    SELECT 
+        @ControlNo = SI.ControlNo,
+        @DayPlanNo = MMP.DayPlanNo,
+        @WorkCenterCode = SI.WorkCenterCode,
+        @ProdQty = CAST(MMP.TotalProdQty AS DECIMAL(18,5))
+    FROM SmartFactoryV2.dbo.MongoToMesPerformance MMP WITH(NOLOCK)
+    JOIN SmartFactoryV2.dbo.STB_SetInfo SI WITH(NOLOCK) ON MMP.Barcode = SI.Barcode
+    WHERE MMP.Barcode = @TargetBarcode 
+      AND MMP.RouteCode = @TargetRoute 
+      AND MMP.IsDone = 1;
+
+    IF @ControlNo IS NULL
+    BEGIN
+        RAISERROR(N'Không tìm thấy bản ghi cần chốt bù trên MongoToMesPerformance!', 16, 1);
+    END
+
+    -- 2. Sinh số Serial ProdRouteHistNo chuẩn hệ thống
+    EXEC SmartFramework.dbo.usp_DoCreateSerial 'STB_ProdRouteHist', @NewHistNo OUTPUT;
+
+    -- 3. INSERT vào STB_ProdRouteHist
+    INSERT INTO SmartFactoryV2.dbo.STB_ProdRouteHist (
+        ProdRouteHistNo, CompanyCode, FactoryCode, ControlNo, DayPlanNo,
+        RouteCode, WorkCenterCode, ProdQty, LossQty, ProdDateTime,
+        CreateUserID, CreateDateTime
+    )
+    VALUES (
+        @NewHistNo, 'VNT', 'VVT_F5', @ControlNo, @DayPlanNo,
+        @TargetRoute, @WorkCenterCode, @ProdQty, 0, GETDATE(),
+        N'IT_MANUAL_SYNC', GETDATE()
+    );
+
+    -- 4. Đánh dấu đã chuyển giao trên bảng đệm POP
+    UPDATE SmartFactoryV2.dbo.MongoToMesPerformance
+    SET IsTransferred = 1,
+        ModifyDateTime = GETDATE()
+    WHERE Barcode = @TargetBarcode AND RouteCode = @TargetRoute;
+
+    -- 5. Kiểm tra kết quả
+    SELECT ProdRouteHistNo, ControlNo, RouteCode, ProdQty, ProdDateTime, CreateUserID 
+    FROM SmartFactoryV2.dbo.STB_ProdRouteHist WITH(NOLOCK) 
+    WHERE ProdRouteHistNo = @NewHistNo;
+
+    -- Nếu chính xác: Đổi ROLLBACK thành COMMIT
+    ROLLBACK TRANSACTION;
+END TRY
+BEGIN CATCH
+    ROLLBACK TRANSACTION;
+    THROW;
+END CATCH;
+```
+
+
+

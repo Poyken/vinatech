@@ -1,4 +1,4 @@
-﻿<!--
+<!--
 AI-READY METADATA
 Purpose: Cheat sheet nén gọn cho AI Agent tra cứu nhanh bảng DB, SP pattern, factory matrix & trap columns
 Scope: Data Schemas, Active SPs & Database Rules
@@ -192,6 +192,38 @@ WHERE MLI.LotID = 'MÃ_LOT' OR MLI.MaterialLotNo = 'MÃ_BARCODE';
 -- 3. IsSlitting = 0 (hoặc NULL - chưa bị chốt chia cuộn)
 -- 4. CurrentQty > 0 (Số lượng tồn kho phải còn)
 -- 5. ProductGroupCode IN ('CON-PAPER','ANODE-FOIL','CATHODE-FOIL')
+```
+
+### Mẫu 5: Đối Soát Đồng Bộ POP Kiosk ➔ MES Core (MongoToMesPerformance & STB_ProdRouteHist)
+Dùng để kiểm tra sai lệch tiến độ, kẹt chốt hoặc lệch số lượng giữa giao diện Kiosk POP và Báo cáo MES (B782/B530/B540):
+```sql
+-- 1. Truy vết trạng thái 360° kết hợp POP Kiosk cho 1 mã Barcode/Lot:
+SELECT 
+    SI.Barcode,
+    SI.ControlNo,
+    SI.CurrentRouteCode AS MES_CurrentRoute,
+    MMP.RouteCode       AS POP_Route,
+    MMP.TotalProdQty    AS POP_Qty,
+    PRH.ProdQty         AS MES_Qty,
+    MMP.IsDone          AS POP_IsDone,
+    MMP.IsTransferred   AS POP_IsTransferred,
+    CASE 
+        WHEN PRH.ProdRouteHistNo IS NULL THEN N'⚠️ CHƯA SANG MES'
+        WHEN MMP.TotalProdQty <> PRH.ProdQty THEN N'⚠️ LỆCH SẢN LƯỢNG'
+        ELSE N'✅ KHỚP 100%'
+    END AS SyncStatus,
+    MMP.ModifyDateTime  AS POP_Time,
+    PRH.ProdDateTime    AS MES_Time
+FROM STB_SetInfo SI WITH(NOLOCK)
+LEFT JOIN MongoToMesPerformance MMP WITH(NOLOCK) ON SI.Barcode = MMP.Barcode
+LEFT JOIN STB_ProdRouteHist PRH WITH(NOLOCK) 
+    ON SI.ControlNo = PRH.ControlNo AND MMP.RouteCode = PRH.RouteCode
+WHERE SI.Barcode = 'MÃ_BARCODE' OR SI.ControlNo = 'MÃ_BARCODE'
+ORDER BY MMP.ModifyDateTime DESC;
+
+-- Hoặc dùng nhanh công cụ CLI điều phối:
+-- .\mes.ps1 trace <Lot>        -> Tự động quét luôn mục (5) MongoToMesPerformance
+-- .\mes.ps1 pop-audit          -> Tự động quét toàn bộ chuyền xem Lot nào kẹt IsTransferred=0
 ```
 
 
