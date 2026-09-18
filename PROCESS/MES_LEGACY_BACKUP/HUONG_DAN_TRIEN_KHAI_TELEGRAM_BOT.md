@@ -61,18 +61,24 @@
 ### 🔹 BƯỚC 2: Cập Nhật File Cấu Hình Trên Laptop
 
 1. Mở file cấu hình: [`tools\telegram_config.json`](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/tools/telegram_config.json)
-2. Thay thế `YOUR_TELEGRAM_BOT_TOKEN_HERE` và `YOUR_TELEGRAM_CHAT_ID_HERE` bằng thông tin vừa lấy ở Bước 1:
+2. Điền thông tin gồm Token, Chat ID và **Gemini API Key** (để kích hoạt Não AI trả lời tự nhiên):
 
 ```json
 {
-    "bot_token": "7123456789:AAHk123456789abcdefghiklmnop-qrstuv",
+    "bot_token": "8876322501:AAFjKlblHAzEJj_GnFK2fkxKMNlewQnmIcs",
     "allowed_chat_ids": [
-        "123456789"
+        "8876615407"
     ],
+    "gemini_api_key": "AIzaSy...",
     "poll_interval_seconds": 2
 }
 ```
-*(Lưu ý: Nếu muốn cấp quyền cho thêm đồng nghiệp, chỉ cần thêm ID vào mảng: `["123456789", "987654321"]`)*.
+
+> 🔑 **Cách lấy Gemini API Key miễn phí trong 1 phút:**
+> 1. Truy cập [aistudio.google.com/app/apikey](https://aistudio.google.com/app/apikey).
+> 2. Bấm nút **"Create API key"**.
+> 3. Copy chuỗi khóa và dán vào mục `"gemini_api_key"` ở trên.
+> *(Bot có tính năng tự động nạp cấu hình mới ngay lập tức mà không cần khởi động lại!)*
 
 ---
 

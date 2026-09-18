@@ -49,3 +49,4 @@ desktop.ini
 **/sql/
 **/sql/procedures/
 **/%USERP~1/
+*.local.json

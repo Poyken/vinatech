@@ -210,6 +210,8 @@ Related Files:
 | # | Triệu chứng | Nguyên nhân | Fix |
 |---|---|---|---|
 | 1 | Scan NVL bị lỗi "Sai chủng loại" | Mã NVL không nằm trong BOM config của PO cho Route | Kiểm tra BOM: `SELECT * FROM STB_ProductionOrderBom WHERE PONo='mã' AND RouteCode='V-22'` |
+| 2 | Đã hoàn thành công đoạn trên POP (`Complete=1` tại `STB_ProdRouteHist`), nhưng checkbox "Hoàn thành SLG sản xuất" trên B540 vẫn chưa được tích | Cột checkbox trên B540 hiển thị cờ `IsProdFinish` từ `STB_SetInfo`. Theo kiến trúc lõi MES (`usp_DoProcessProdRouteHist`), cờ này CHỈ được bật (`IsProdFinish=1`) khi Lot hoàn thành công đoạn cuối cùng có `IsOutputRoute=1` (ví dụ `V-28_HY` Đóng gói) để phát sinh phiếu nhập kho thành phẩm. Tại các công đoạn trung gian (`V-22_HY` đến `V-27_HY`), việc chưa tích là **hoàn toàn chuẩn xác theo logic hệ thống**, không phải lỗi! | Giải thích cho User/OP hiểu: Cho Lot chạy tiếp qua các công đoạn downstream (`V-25_HY` ➔ `V-26_HY` ➔ `V-27_HY` ➔ `V-28_HY`). Khi trạm cuối `V-28_HY` hoàn thành, hệ thống sẽ tự động bật `IsProdFinish=1` và tích ô này. Chi tiết: xem [KB_08 § Bước 10](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_08_CORE_SP_ENGINE.md). |
+
 
 ### [B552]
 **Tên:** Slitting Configurations & Electrode Measure Result (Chia cuộn & Kết quả đo điện cực)
@@ -360,6 +362,9 @@ Related Files:
 | # | Triệu chứng | Nguyên nhân | Fix |
 |---|---|---|---|
 | 1 | B782 hiển thị kết quả chốt nhầm sản lượng Winding (Cuốn `V-22_HY`), chặn công nhân chốt lại trên B530 | OP chốt nhầm ở Winding (công đoạn đầu `IsInputRoute=1`), hệ thống gán `CompleteRoute='1'` ở `V-22_HY` và tự sinh dòng `V-23_HY` chờ chốt tiếp | **Rollback công đoạn đầu Winding (SOP Chuẩn):**<br>1. Xóa phế NG: `DELETE FROM STB_DefectRepairInfo WHERE ControlNo='...' AND FindRouteCode='V-22_HY';`<br>2. Xóa công đoạn sau tự sinh: `DELETE FROM STB_ProdRouteHist WHERE ControlNo='...' AND RouteCode='V-23_HY';`<br>3. Reset cờ: `UPDATE STB_ProdRouteHist SET CompleteRoute = NULL WHERE ControlNo='...' AND RouteCode='V-22_HY';`<br>⚠️ **Nguyên tắc vàng:** KHÔNG xóa dòng `V-22_HY` để bảo toàn thông tin Lot trên B530. BẮT BUỘC xóa `V-23_HY` để giải phóng cổng chặn downstream `@AftProdQty <> 0`. Toàn bộ dữ liệu scan NVL ở B540 giữ nguyên. |
+| 2 | Lot không hiển thị trên B782 hoặc hiển thị lệch sang ngày hôm trước | **Cơ chế cắt ca B782 (`usp_LotTrackingInfo_VVT2_get`):** Chu kỳ ca tính từ `10:00:00` sáng hôm nay đến `10:00:00` sáng hôm sau. Nếu công đoạn chốt vào ca đêm/rạng sáng (trước 10:00 AM), B782 tự động quy về ngày hôm trước! Ngoài ra, nếu ngày tra cứu chưa chốt công đoạn nào trên DB (`ProdDateTime`) thì B782 sẽ trả về trắng tinh (0 dòng). | Kiểm tra `ProdDateTime` thực tế trong `STB_ProdRouteHist`: Nếu thao tác trước 10:00 AM, chọn dải ngày lùi lại 1 ngày trên B782 sẽ thấy dữ liệu. Nếu chưa chốt, yêu cầu OP quét barcode hoàn thành trên POP Kiosk/B530. |
+| 3 | Chuyển ngày ghi nhận sản xuất của Lot từ ngày trước sang ngày sau trên màn B782 | Yêu cầu nghiệp vụ chuyển báo cáo sản lượng giữa các ngày, nhưng B782 lọc theo `ProdDateTime` (mốc 10h00 sáng) chứ không chỉ nhìn cột `JobDate` | **SOP Chuyển ngày B782 (Chuẩn Hotfix ID_50):**<br>1. Snapshot JSON Pre-flight: `.\mes.ps1 deploy` tự động lưu.<br>2. Dời `ProdDateTime` vượt qua mốc `10:00:00` sáng của ngày đích (đảm bảo nhỏ hơn thời điểm công đoạn kế tiếp để giữ đúng thứ tự thời gian) và cập nhật `JobDate = 'YYYY-MM-DD'`.<br>3. Đồng bộ `CreateDateTime` trong `STB_DefectRepairInfo` nếu có phế NG tại công đoạn.<br>4. Xác minh qua SP: `EXEC usp_LotTrackingInfo_VVT2_get ...` ngày cũ = 0 dòng, ngày mới = đủ dòng. |
+
 
 ---
 

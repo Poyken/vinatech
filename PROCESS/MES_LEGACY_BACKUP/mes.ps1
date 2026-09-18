@@ -105,8 +105,8 @@ elseif ($cmdLower -eq 'trace') {
 
     $q1 = "SELECT TOP 1 MaterialLotNo, MaterialCode, CurrentQty, MaterialWarehouseCode, EndOfLifeDate, CreateDateTime FROM STB_MaterialLotInfo WITH(NOLOCK) WHERE MaterialLotNo LIKE '%$Target%'"
     $q2 = "SELECT TOP 1 ControlNo, PONo, Barcode, MaterialCode, IsProdFinish, IsLineInput, CreateDateTime FROM STB_SetInfo WITH(NOLOCK) WHERE ControlNo LIKE '%$Target%' OR Barcode LIKE '%$Target%'"
-    $q3 = "SELECT TOP 5 ProdRouteHistNo, ControlNo, RouteCode, WorkCenterCode, ProdQty, CreateDateTime FROM STB_ProdRouteHist WITH(NOLOCK) WHERE ControlNo LIKE '%$Target%' ORDER BY CreateDateTime DESC"
-    $q4 = "SELECT TOP 5 MaterialCode, MaterialWarehouseCode, CurrentQty, CreateDateTime FROM STB_MaterialStock WITH(NOLOCK) WHERE MaterialCode LIKE '%$Target%'"
+    $q3 = "SELECT TOP 10 ProdRouteHistNo, ControlNo, RouteCode, WorkCenterCode, ProdQty, CreateDateTime FROM STB_ProdRouteHist WITH(NOLOCK) WHERE ControlNo = '$Target' OR ControlNo IN (SELECT ControlNo FROM STB_SetInfo WITH(NOLOCK) WHERE Barcode = '$Target') ORDER BY CreateDateTime DESC"
+    $q4 = "SELECT TOP 5 MaterialCode, MaterialWarehouseCode, StockQty FROM STB_MaterialStock WITH(NOLOCK) WHERE MaterialCode LIKE '%$Target%'"
 
     Write-Host ''
     Write-Host '1. THONG TIN KHO & VAT TU (STB_MaterialLotInfo):' -ForegroundColor Yellow
@@ -244,7 +244,7 @@ elseif ($cmdLower -eq 'audit' -or $cmdLower -eq 'verify-kb') {
 elseif ($cmdLower -eq 'bot' -or $cmdLower -eq 'telegram') {
     $botScript = Join-Path $toolsDir 'mes_telegram_bot.py'
     if (Test-Path $botScript) {
-        python $botScript
+        python -u $botScript
     } else {
         Write-Error 'tools/mes_telegram_bot.py not found.'
     }

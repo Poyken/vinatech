@@ -84,7 +84,7 @@ Related Files:
 | B763 | **Thiết lập KH xuất Sanmina** | **KB_04 (03)** | KB_01 |
 | B767 | **In tem KH Sanmina India** | **KB_04 (03)** | — |
 | B781 | SL đóng gói | KB_03 | KB_01 |
-| B782 | **Lịch sử Routing (Lot Tracking)** | **KB_03, KB_09** | **HOTFIX_LOG ID_44** |
+| B782 | **Lịch sử Routing (Lot Tracking)** | **KB_03, KB_09** | **HOTFIX_LOG ID_44 & ID_50** |
 
 ### QC (C-series)
 
@@ -128,7 +128,7 @@ Related Files:
 ### 🟡 Sản Xuất (Xem KB_03)
 *   **Hủy chốt nhầm Winding B782 / B530:** Xóa phế `STB_DefectRepairInfo`, xóa công đoạn downstream `V-23_HY` trong `STB_ProdRouteHist`, update `CompleteRoute = NULL` trên `V-22_HY` để OP chốt lại → Chi tiết: **KB_09 §B782**, **KB_03 §5.16**, **HOTFIX_LOG ID_44**
 *   **Hủy mẻ trộn điện cực thừa B470/B552:** Xóa sạch `STB_ElectrodeMixStepInfo`, `STB_ElectrodeMixInfo`, `STB_SetInfo` khi chưa tráng Coating → Chi tiết: **KB_09 §B552 #3**, **KB_05_01 §8.10**, **HOTFIX_LOG ID_42 & ID_43**
-*   **Sửa ngày JobDate B782:** Sửa ngày ghi nhận sản xuất của Lot → Chi tiết: **KB_03 §5.2**
+*   **Sửa ngày JobDate B782:** Sửa ngày ghi nhận sản xuất của Lot, điều chỉnh `ProdDateTime` theo chu kỳ ca 10:00 sáng hôm nay đến 10:00 sáng hôm sau → Chi tiết: **KB_03 §5.2**, **KB_09 §B782 #2 & #3**, **HOTFIX_LOG ID_50**
 *   **Chuyển Line sản xuất:** Chuyển Lot đang chạy sang Line khác → Chi tiết: **KB_03 §5.9**
 *   **B530 báo "Routing không có trong PO":** Lỗi lệch cấu hình định tuyến → Chi tiết: **KB_03 §6.3**
 *   **B442 không hiển thị Độ dày:** Model mới chưa được khai báo `MaterialThickness` trong `STB_MaterialMaster` → Chi tiết: **KB_04 §6.20**
