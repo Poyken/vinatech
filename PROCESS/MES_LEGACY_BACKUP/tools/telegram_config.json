@@ -1,0 +1,7 @@
+{
+    "bot_token": "YOUR_TELEGRAM_BOT_TOKEN_HERE",
+    "allowed_chat_ids": [
+        "YOUR_TELEGRAM_CHAT_ID_HERE"
+    ],
+    "poll_interval_seconds": 2
+}

@@ -63,6 +63,11 @@ function Show-Help {
     Write-Host '-> Deploy SQL an toan (Tu dong Snapshot Pre-flight backup)' -ForegroundColor Gray
 
     Write-Host ''
+    Write-Host '  4. TRO LY DI DONG (TELEGRAM BOT):' -ForegroundColor Cyan
+    Write-Host '     .\mes.ps1 bot                       ' -NoNewline -ForegroundColor Green
+    Write-Host '-> Khoi dong Telegram Assistant de dieu khien tu dien thoai' -ForegroundColor Gray
+
+    Write-Host ''
     Write-Host 'Cac Profile CSDL ho tro:' -ForegroundColor Yellow
     Write-Host '  SmartFactoryV2 (Mac dinh), SmartFramework, Groupware, ERP, Bizbox, POP, Andon...' -ForegroundColor Gray
     Write-Host ''
@@ -234,6 +239,14 @@ elseif ($cmdLower -eq 'audit' -or $cmdLower -eq 'verify-kb') {
         & $auditScript
     } else {
         Write-Error 'tools/audit_kb_reliability.ps1 not found.'
+    }
+}
+elseif ($cmdLower -eq 'bot' -or $cmdLower -eq 'telegram') {
+    $botScript = Join-Path $toolsDir 'mes_telegram_bot.py'
+    if (Test-Path $botScript) {
+        python $botScript
+    } else {
+        Write-Error 'tools/mes_telegram_bot.py not found.'
     }
 }
 else {
