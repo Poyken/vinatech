@@ -19,9 +19,20 @@
    - **Trường hợp User chỉ gửi mã Lot nhưng không nêu hiện tượng lỗi:** Chạy ngay `.\mes.ps1 trace "<LotID>"`, xuất bảng tóm tắt 4 trạng thái cốt lõi và hỏi rõ hành động mong muốn (Mở HOLD, Hủy sản lượng, Đổi Model, hay In tem).
    - **Trường hợp User hỏi về phân hệ mở rộng (POP, Sorting, Kế hoạch):** Tự động điều hướng đúng Database Profile (`POP`, `Groupware`, `AndonDB`, `ERP`) qua tham số `-Profile`.
 
-6. **RULE 10 - STANDARD TOOLING & ZERO JUNK FILES:**
-   - Sử dụng thống nhất CLI Hub `.\mes.ps1` và dọn dẹp sạch sẽ sau khi hoàn thành.
+6. **RULE 10 - STANDARD TOOLING & ZERO JUNK FILES (BẢO VỆ WORKSPACE):**
+   - Tuyệt đối CẤM tạo các file script `.ps1` rời rạc (`check_*.ps1`, `find_*.ps1`, `inspect_*.ps1`...) trực tiếp tại thư mục gốc hoặc trong `tools/`.
+   - BẮT BUỘC sử dụng CLI Hub `.\mes.ps1` (`.\mes.ps1 query`, `.\mes.ps1 trace`, `.\mes.ps1 screen`, `.\mes.ps1 find`).
+   - Nếu trong trường hợp đặc biệt bắt buộc phải tạo scratch script để test: BẮT BUỘC đặt trong `tools/scratch/` (thư mục này đã được `.gitignore` bảo vệ) và phải dọn dẹp sau ca làm việc.
 
 7. **RULE 11 - CẤM ĐỘNG VÀO STB_SetInfo KHI ROLLBACK SẢN XUẤT:**
    - Khi rollback / hủy chốt sản lượng các công đoạn sản xuất (Winding, Riveting, Curling... B530/B782): CHỈ thao tác trên `STB_DefectRepairInfo` (xóa phế NG) và `STB_ProdRouteHist` (xóa downstream, update `CompleteRoute = NULL` công đoạn cần chốt lại).
    - TUYỆT ĐỐI CẤM UPDATE hoặc DELETE trên `STB_SetInfo` (để bảo toàn định danh Lot, mã vạch Barcode và dữ liệu khởi tạo chuyền ban đầu).
+
+8. **RULE 12 - BẢO MẬT CREDENTIAL & TÁCH BIỆT TOKEN (ZERO KEY LEAKAGE):**
+   - File `tools/telegram_config.json` chỉ được chứa giá trị PLACEHOLDER mẫu (`YOUR_TELEGRAM_BOT_TOKEN_HERE`, `YOUR_GEMINI_API_KEY_HERE`).
+   - Mọi Token Telegram và API Key thật của Production BẮT BUỘC lưu vào `tools/telegram_config.local.json` (được bảo vệ bởi `.gitignore` qua `*.local.json`). Tuyệt đối CẤM commit key thật lên GitHub repository.
+
+9. **RULE 13 - ĐỒNG BỘ HAI CHIỀU POP KIOSK & NAIS MES (DUAL-SYNC INTEGRITY):**
+   - Kiosk POP Web (`pop.vinatech.com/pop/screen`) đọc tiến độ và trạng thái hoàn thành từ bảng trung gian `SmartFactoryV2.dbo.MongoToMesPerformance`, không đọc trực tiếp từ `STB_ProdRouteHist`.
+   - Khi kiểm tra, hủy chốt hoặc mở khóa công đoạn cho Kiosk: BẮT BUỘC kiểm tra và xử lý đồng thời cả `MongoToMesPerformance` và `STB_ProdRouteHist`.
+   - Khi khai báo hoặc gán thiết bị cho Kế hoạch mới: BẮT BUỘC kiểm tra `VINATECH_POP.dbo.VINA_EQUIPMENT_MAPPING` để đảm bảo máy không bị kẹt trạng thái `ACTIVE` từ các DayPlan cũ.

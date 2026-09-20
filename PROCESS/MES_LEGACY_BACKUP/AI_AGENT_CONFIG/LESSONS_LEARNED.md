@@ -16,6 +16,7 @@
 | **`7900588b`** | **Script PowerShell bị crash do Emoji 4-byte & lồng chuỗi `"`** | Parser của PowerShell 5.1 trên Windows không xử lý được emoji 4-byte trong mã nguồn và bị cắt chuỗi khi lồng ngoặc kép. | **BẮT BUỘC:** 100% script lưu UTF-8 with BOM, tuyệt đối không dùng Emoji trong code, sử dụng chuỗi đơn `'...'`. |
 | **`a3b62f34`** | **Lỗi phế không link sang MES và báo không tìm thấy Lot NVL trong kho** | 1. Phép tính phế trong SP B782 `DefectQty - RepairQty` không bọc `ISNULL`, gặp RepairQty là NULL thì toàn bộ ra NULL.<br>2. POP Kiosk kiểm tra khớp BOM chính xác giữa cuộn điện cực và PO, nếu xuất kho mang mã rev mới khác mã trong PO thì Kiosk chặn. | **BẮT BUỘC:** Mọi phép tính số học trên SQL phải bọc `ISNULL(col, 0)`. Khi xuất NVL điện cực phải đối chiếu mã BOM trong PO trước. |
 | **`25ce539c`** | **Kiosk thiếu thiết bị và lỗi độ dài chuỗi SQL khi giải phóng máy** | 1. POP Kiosk ẩn máy nếu máy bị kẹt `MAPPING_STATUS = 'ACTIVE'` ở DayPlan cũ trong `VINA_EQUIPMENT_MAPPING`.<br>2. Cột `RELEASE_REASON` chỉ có độ dài `NVARCHAR(50)`, nếu truyền lý do dài hơn 50 ký tự sẽ gây lỗi `String or binary data would be truncated`. | **BẮT BUỘC:** Khi thêm máy cho Model mới phải kiểm tra giải phóng lock cũ. Luôn kiểm tra schema độ dài cột trước khi UPDATE chuỗi. |
+| **`7fee40d0`** | **Ô nhiễm Workspace (103 scripts rác trong `tools/`) & Nguy cơ lộ Token** | 1. AI liên tục sinh hàng trăm script `.ps1` rời rạc để trace trực tiếp trong `tools/` thay vì dùng `.\mes.ps1 trace` hoặc `.\mes.ps1 query`.<br>2. Ghi đè token và API key thật vào file `tools/telegram_config.json` thay vì dùng file local gitignored `telegram_config.local.json`. | **BẮT BUỘC:** 1. Tuyệt đối không tạo file trong `tools/`; mọi scratch script phải nằm trong `tools/scratch/`.<br>2. File `telegram_config.json` chỉ giữ placeholder mẫu, secrets thật 100% nằm trong `*.local.json`. |
 
 ---
 
@@ -66,4 +67,6 @@
 2. **RULE 1 - SELECT-ONLY ON PROD:** Không tự ý chạy lệnh ghi trực tiếp. Mọi hotfix phải bọc `BEGIN TRAN...ROLLBACK` và chạy qua `deploy_tool.ps1`.
 3. **RULE 4 - SURGICAL RETRIEVAL:** Không đọc tràn lan file >50KB. Chỉ đọc đoạn dòng cần thiết để tránh loãng context.
 4. **RULE 6 - GOLDEN QUERY 360° FIRST:** Quét toàn diện Lot qua `mes.ps1 trace` trong lần kiểm tra đầu tiên.
-5. **RULE 10 - NO JUNK SCRIPTS:** Dùng đúng bộ công cụ chuẩn hóa (`mes.ps1`, `find_kb.ps1`, `health_check.ps1`, `deploy_tool.ps1`), dọn dẹp sạch sẽ sau khi hoàn thành.
+5. **RULE 10 - NO JUNK SCRIPTS:** Dùng đúng bộ công cụ chuẩn hóa (`mes.ps1`, `find_kb.ps1`, `health_check.ps1`, `deploy_tool.ps1`). Mọi script test tạm bắt buộc đặt trong `tools/scratch/` và dọn dẹp sạch sẽ sau khi hoàn thành.
+6. **RULE 12 - ZERO KEY LEAKAGE:** Tuyệt đối không commit key thật lên GitHub repository. File `telegram_config.json` chỉ giữ placeholder mẫu, secrets thật 100% nằm trong `*.local.json`.
+7. **RULE 13 - DUAL-SYNC POP & MES:** Luôn đối chiếu `MongoToMesPerformance` song song với `STB_ProdRouteHist` khi xử lý sự cố tiến độ trên POP Kiosk.

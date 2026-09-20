@@ -8,7 +8,7 @@
 ## 🏛️ 1. Cấu Trúc Toàn Diện Hệ Sinh Thái (.agents)
 
 - **`rules/` (Quy tắc bất biến nạp tự động vào System Prompt):**
-  - [`00_vinatech_rules.md`](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/.agents/rules/00_vinatech_rules.md): Rule 0 (Knowledge-First), Rule 1 (SELECT-Only), Rule 6 (Golden Query 360° First).
+  - [`00_vinatech_rules.md`](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/.agents/rules/00_vinatech_rules.md): Rule 0 (Knowledge-First), Rule 1 (SELECT-Only), Rule 6 (Golden Query 360° First), Rule 10 (Zero Junk Scripts), Rule 12 (Credential Isolation), Rule 13 (POP-MES Dual-Sync).
   - [`01_sql_safety_rules.md`](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/.agents/rules/01_sql_safety_rules.md): Chuẩn `BEGIN TRAN...ROLLBACK`, `WITH(NOLOCK)`, UTF-8 BOM, chuỗi `N''`.
   - [`02_screen_mapping_rules.md`](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/.agents/rules/02_screen_mapping_rules.md): Bản đồ định vị nhanh Screen ID ➔ SP + Bảng.
 
