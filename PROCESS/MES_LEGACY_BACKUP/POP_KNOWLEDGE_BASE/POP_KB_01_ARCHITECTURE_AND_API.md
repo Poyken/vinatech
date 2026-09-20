@@ -332,32 +332,182 @@ API: POST /api/pop/screen/savePacking
           Gọi SP in tem → Push to Printer
 ```
 
-### 3.5 🔄 Cơ Chế Data Pipeline Đồng Bộ 3 Tầng Giữa POP Kiosk & MES
+### 3.5 🔄 Cơ Chế Data Pipeline & Các Bảng Đệm Đồng Bộ (Staging & Queue Architecture)
 
-Hệ thống có cơ chế đồng bộ tự động chạy ngầm liên tục giữa giao diện Kiosk POP và CSDL MES:
+#### 3.5.1 Bảng Trung Gian Cốt Lõi: `MongoToMesPerformance` (Tiến Độ & Sản Lượng Hoàn Thành)
+- **Vị trí CSDL:** `SmartFactoryV2.dbo.MongoToMesPerformance`
+- **Quy mô dữ liệu thực tế (Audit Live DB 2026-09-21):** **13,372** bản ghi (tích lũy từ 21/01/2026 đến nay).
+- **Khóa chính (PK):** Composite Primary Key 3 trường: `PK_MongoToMesPerformance` trên `(DayPlanNo, Barcode, RouteCode)`.
+- **Index phụ trợ:** `IX_MTP_Barcode` trên `(Barcode, RouteCode)` tối ưu hóa truy vấn tra cứu theo mã Barcode của Lot.
+- **Chi tiết Schema & Ý nghĩa các trường:**
+  | Tên Cột | Kiểu Dữ Liệu | Nullable | Ý Nghĩa Kỹ Thuật & Nghiệp Vụ Vận Hành |
+  |---------|--------------|:--------:|---------------------------------------|
+  | `DayPlanNo` | `varchar(20)` | **NO (PK)** | Mã kế hoạch sản xuất trong ngày (`STB_DayProdPlan.DayPlanNo`). |
+  | `Barcode` | `varchar(50)` | **NO (PK)** | Mã Barcode định danh duy nhất của Lot bán thành phẩm / thành phẩm (`STB_SetInfo.Barcode`). |
+  | `RouteCode` | `varchar(20)` | **NO (PK)** | Mã công đoạn sản xuất (VD: `V-22`, `V-23`, `V-24`, `V-25`, `V-22_HY`...). |
+  | `LineCode` | `varchar(20)` | YES | Mã chuyền sản xuất thực hiện (VD: `VVC-01` .. `VVC-23`, `VVHYC-01` .. `TCX2`). |
+  | `MachineCode` | `varchar(200)` | YES | Mã máy/thiết bị gán cho công đoạn (lấy từ `VINA_EQUIPMENT_MAPPING` hoặc gán tự động). |
+  | `TotalProdQty` | `int` | YES | Sản lượng đạt (OK) hoàn thành của công đoạn (VD: 1060, 987, 740...). |
+  | `TotalDefectQty`| `int` | YES | Tổng sản lượng phế phẩm phát sinh tại công đoạn (= $\sum$ `DefectQty` từ `MongoToMesDefect`). |
+  | `CreateUserId` | `varchar(20)` | YES | Mã thẻ công nhân / OP thực hiện chốt công đoạn trên Kiosk (VD: `32507021`, `32607047`). |
+  | `IsDone` | `bit` | YES | **Trạng thái hoàn thành công đoạn trên Kiosk Web**: `1` = Đã chốt xong; `0` = Đang sản xuất dở dang. <br>⚠️ **Single Source of Truth để Kiosk Web render dấu tích xanh `[✓]` và khóa nút chốt!** |
+  | `IsTransferred`| `bit` | YES | **Trạng thái chuyển giao sang MES Core (`STB_ProdRouteHist`)**: `1` = Đã nạp thành công vào MES; `0` = Đang chờ trong hàng đợi đệm. |
+  | `IsSkipped` | `int` | **NO** | Đánh dấu bỏ qua đồng bộ: `0` = Xử lý bình thường; `1` = Đã được xử lý thủ công hoặc bypass, Worker ngầm sẽ bỏ qua không quét. |
+  | `SourceType` | `varchar(10)` | **NO** | Phân loại nguồn gốc phát sinh: <br>• `MANUAL` (92.8%): Công nhân bấm chốt thủ công trên màn hình cảm ứng Kiosk.<br>• `AUTO` (7.2%): Tự động ghi nhận từ thiết bị kết nối PLC/máy móc. |
+  | `InsertDateTime`| `datetime` | YES | Dấu thời gian bản ghi được tạo ra từ phía POP Kiosk Web. |
+  | `ModifyDateTime`| `datetime` | YES | Dấu thời gian Worker cập nhật trạng thái chuyển giao `IsTransferred = 1`. |
+
+#### 3.5.2 Bảng Trung Gian Chi Tiết Phế Phẩm: `MongoToMesDefect` (Lỗi Phế Phẩm In-line)
+- **Vị trí CSDL:** `SmartFactoryV2.dbo.MongoToMesDefect`
+- **Quy mô dữ liệu thực tế (Audit Live DB 2026-09-21):** **6,861** bản ghi (tích lũy từ 30/04/2026 đến nay; 100% `SourceType = 'AUTO'`).
+- **Khóa chính (PK):** Composite Primary Key 4 trường: `PK_MongoToMesDefect` trên `(DayPlanNo, Barcode, RouteCode, DefectCode)`.
+- **Chi tiết Schema & Ý nghĩa các trường:**
+  | Tên Cột | Kiểu Dữ Liệu | Nullable | Ý Nghĩa Kỹ Thuật & Nghiệp Vụ Vận Hành |
+  |---------|--------------|:--------:|---------------------------------------|
+  | `DayPlanNo` | `varchar(20)` | **NO (PK)** | Kế hoạch sản xuất phát sinh lỗi. |
+  | `Barcode` | `varchar(50)` | **NO (PK)** | Mã Barcode của Lot bị lỗi phế. |
+  | `RouteCode` | `varchar(20)` | **NO (PK)** | Mã công đoạn phát sinh lỗi phế (VD: `V-22`, `V-23`...). |
+  | `DefectCode` | `varchar(20)` | **NO (PK)** | Mã phân loại lỗi phế phẩm quy chuẩn (VD: `V-22_YY_HY` = Lỗi cuộn lệch mép, `V-22_QQ_HY` = Lỗi phế đầu cuộn, `V-23_NE6` = Lỗi chân cực ngắn...). |
+  | `LineCode` | `varchar(20)` | YES | Chuyền sản xuất ghi nhận lỗi. |
+  | `MachineCode` | `varchar(20)` | YES | Thiết bị/máy móc phát sinh lỗi. |
+  | `DefectQty` | `int` | YES | Số lượng phế phẩm cụ thể của riêng mã lỗi `DefectCode` này. |
+  | `CreateUserId` | `varchar(20)` | YES | Mã nhân viên khai báo lỗi trên Kiosk. |
+  | `IsDone` | `bit` | YES | Trạng thái chốt lỗi trên Kiosk (`1` = Hoàn thành). |
+  | `IsTransferred`| `bit` | YES | Trạng thái đồng bộ sang MES Core (`STB_DefectRepairInfo` và cộng dồn `STB_SetInfo.DefectQty`). |
+  | `SourceType` | `varchar(10)` | **NO** | Định danh nguồn: `AUTO` (mặc định do Kiosk đẩy qua API). |
+  | `InsertDateTime`| `datetime` | YES | Thời điểm ghi nhận lỗi phế. |
+  | `ModifyDateTime`| `datetime` | YES | Thời điểm Worker hoàn tất chuyển phế sang MES Core. |
+- **Ràng buộc toàn vẹn giữa hai bảng:**
+  $$\sum_{\text{DefectCode}} \text{MongoToMesDefect.DefectQty} = \text{MongoToMesPerformance.TotalDefectQty}$$
+  *(Cùng bộ khóa `DayPlanNo` + `Barcode` + `RouteCode`)*.
+
+#### 3.5.3 Vòng Đời Dữ Liệu & Cơ Chế Đồng Bộ Hai Chiều (Data Lifecycle)
 
 ```
-[Kiosk POP Web Client] 
-      │ (Công nhân bấm chốt sản lượng / hoàn thành)
+[Kiosk POP Web Client (pop.vinatech.com)]
+      │
+      │ 1. Công nhân bấm "Hoàn thành công đoạn" & khai báo phế (hoặc Sensor/PLC kích hoạt)
       ▼
 [MongoDB / Cache Layer Kiosk]
       │
-      ▼ (Ghi nhận tức thì)
-[SmartFactoryV2.dbo.MongoToMesPerformance] ─── (SoT hiển thị Kiosk: IsDone=1, IsTransferred=0)
-      │
-      │ ⚡ Scheduled Polling Worker (pop.vinatech.com IIS, chu kỳ 1 - 2 phút)
-      │    1. Quét: SELECT * FROM MongoToMesPerformance WHERE IsDone=1 AND IsTransferred=0 AND IsSkipped=0
-      │    2. Sinh số ProdRouteHistNo: SmartFramework.dbo.usp_DoCreateSerial
-      │    3. INSERT: SmartFactoryV2.dbo.STB_ProdRouteHist
-      │    4. UPDATE: MongoToMesPerformance SET IsTransferred = 1, ModifyDateTime = GETDATE()
+      │ 2. Backend NodeJS ghi tức thì vào CSDL SQL Server (SmartFactoryV2)
       ▼
-[SmartFactoryV2.dbo.STB_ProdRouteHist] ─── (SoT báo cáo MES WinForm: B782, B530, B540)
+┌──────────────────────────────────────────────┐       ┌──────────────────────────────────────────────┐
+│ SmartFactoryV2.dbo.MongoToMesPerformance     │       │ SmartFactoryV2.dbo.MongoToMesDefect          │
+│ • IsDone = 1, IsTransferred = 0, IsSkipped = 0│       │ • IsDone = 1, IsTransferred = 0              │
+│ • TotalProdQty = 1060, TotalDefectQty = 14   │       │ • DefectCode: V-22_YY (11), V-22_QQ (3)      │
+└──────────────────────┬───────────────────────┘       └──────────────────────┬───────────────────────┘
+                       │                                                      │
+                       │ 3. UI Kiosk ĐỌC TRỰC TIẾP từ bảng này:               │
+                       │    - Nếu IsDone=1 ➔ Hiện dấu tích xanh [✓]           │
+                       │    - Nút "Ghi nhận" bị mờ (Disable)                  │
+                       │                                                      │
+                       ▼                                                      ▼
+  ⚡ Scheduled Polling Worker (pop.vinatech.com IIS Service ngầm, chu kỳ 1–2 phút)
+      ├─► Quét: SELECT * FROM MongoToMesPerformance WHERE IsDone=1 AND IsTransferred=0 AND IsSkipped=0
+      ├─► Sinh mã: EXEC SmartFramework.dbo.usp_DoCreateSerial 'STB_ProdRouteHist', @NewHistNo OUTPUT
+      ├─► Nạp MES Routing: INSERT INTO SmartFactoryV2.dbo.STB_ProdRouteHist (...)
+      ├─► Nạp MES Defect:  INSERT INTO SmartFactoryV2.dbo.STB_DefectRepairInfo (...)
+      ├─► Cập nhật tiến độ: UPDATE SmartFactoryV2.dbo.STB_SetInfo SET CurrentRouteCode = @RouteCode
+      └─► Đóng cờ hoàn tất: UPDATE MongoToMesPerformance SET IsTransferred = 1, ModifyDateTime = GETDATE()
+                       │
+                       ▼
+[SmartFactoryV2.dbo.STB_ProdRouteHist] ─── (Single Source of Truth cho Báo cáo MES WinForm B782, B530, B540)
 ```
 
-#### 📌 Đặc điểm kỹ thuật & Bẫy vận hành (Gotchas):
-1. **Background Polling Worker:** Không phải SQL Server Agent Job mà là tiến trình Worker ngầm trên IIS API Server (`pop.vinatech.com`), do kỹ sư Hàn Quốc Kim Hyung Jin (`[김형진]`) lập trình.
-2. **Kiosk hiển thị tiến độ từ `MongoToMesPerformance`:** Nếu IT dùng SQL xóa bản ghi trong `STB_ProdRouteHist` để công nhân chốt lại, nhưng **chưa xóa bản ghi tương ứng trong `MongoToMesPerformance`**, thì Kiosk POP vẫn hiển thị dấu tích xanh `[✓]` và báo *"■ Công đoạn này đã hoàn thành"*, nút ghi nhận bị mờ! (Xem chi tiết lỗi tại [POP_KB_03 § 2.15](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_03_TROUBLESHOOTING.md#215-pop-err-15-%C4%91%C3%A3-x%C3%B3a-stb_prodroutehist-nh%C6%B0ng-tr%C3%AAn-kiosk-pop-v%E1%BA%ABn-hi%E1%BB%87n-c%C3%B4ng-%C4%91o%E1%BA%A1n-n%C3%A0y-%C4%91%C3%A3-ho%C3%A0n-th%C3%A0nh)).
-3. **Điểm nghẽn kẹt `IsTransferred = 0`:** Đã từng ghi nhận riêng dây chuyền **`VVC-11`** bị kẹt nhiều bản ghi `IsTransferred = 0` kéo dài từ 27/08 đến 19/09, trong khi các chuyền khác (`VVT_HY`, `VVT_F2`, `VVT_BN`) đồng bộ chỉ sau 30-60 giây. Cần chạy truy vấn kiểm toán định kỳ để giải tỏa.
+##### 🚨 Cơ Chế Cứu Hộ Đồng Bộ Cưỡng Bức Tức Thì (<0.05s)
+Khi Scheduled Worker trên IIS gặp lỗi hoặc độ trễ mạng khiến dữ liệu ứ đọng, IT sử dụng Stored Procedure cứu hộ chuyên dụng:
+- **Tên thủ tục:** `SmartFactoryV2.dbo.usp_VINA_SyncPopToMes_SingleLot`
+- **Nguyên tắc an toàn (Idempotent):**
+  1. Kiểm tra công đoạn đã tồn tại trong `STB_ProdRouteHist` chưa: Nếu đã có ➔ **Tự động bỏ qua (Skip)**, tuyệt đối không nhân đôi sản lượng.
+  2. Tính toán chu kỳ ca sản xuất chuẩn mực: Lấy mốc cắt ca `10:00:00` sáng để xác định `JobDate` (ngày sản xuất kế toán) và `ShiftCode` (`1` = Ca ngày 10:00-20:30; `2` = Ca đêm).
+  3. Cấp phát số serial chuẩn qua `SmartFramework.dbo.usp_DoCreateSerial` và đóng cờ `IsTransferred = 1` an toàn trong Transaction (`BEGIN TRAN... COMMIT TRAN`).
+  4. Lệnh kích hoạt nhanh:
+     ```sql
+     -- Đồng bộ tức thì toàn bộ các công đoạn đã hoàn thành của Lot
+     EXEC SmartFactoryV2.dbo.usp_VINA_SyncPopToMes_SingleLot 
+          @pBarcode = 'VVQR203R072760', 
+          @pRouteCode = NULL, 
+          @pProcessUserID = 'vanduc';
+     ```
+
+#### 3.5.4 Phân Tích Hiện Trạng Dữ Liệu Thực Tế & Điểm Nghẽn Kẹt Đồng Bộ (Telemetry Live DB)
+
+Kết quả kiểm toán phân bổ trạng thái trên live database tại thời điểm **2026-09-21**:
+
+##### 1. Thống kê trạng thái `MongoToMesPerformance` (13,372 dòng)
+| Nguồn (`SourceType`) | Đã Xong (`IsDone`) | Đã Sang MES (`IsTransferred`) | Bỏ Qua (`IsSkipped`) | Số Dòng | Tỷ Lệ | Trạng Thái Vận Hành |
+|----------------------|:------------------:|:----------------------------:|:-------------------:|--------:|------:|---------------------|
+| `MANUAL` | **True (1)** | **True (1)** | 0 | **8,693** | 65.0% | ✅ Hoàn thành & đồng bộ chuẩn xác sang MES |
+| `MANUAL` | False (0) | True (1) | 0 | **2,174** | 16.3% | ℹ️ Công đoạn dở dang đã khởi tạo trạng thái |
+| `MANUAL` | False (0) | False (0) | 0 | **1,210** | 9.0% | 🔄 Công đoạn đang mở trên chuyền chưa chốt |
+| `AUTO` | False (0) | False (0) | 0 | **632** | 4.7% | 📡 Dữ liệu máy móc/PLC đang tích lũy |
+| `MANUAL` | **True (1)** | **True (1)** | 1 | **596** | 4.5% | 🛠️ Các lượt chốt được IT bypass / sync thủ công |
+| `AUTO` | **True (1)** | **False (0)** | 0 | **37** | **0.3%** | ⚠️ **ĐIỂM NGHẼN KẸT ĐỒNG BỘ HIỆN TẠI!** |
+| `AUTO` | True (1) | True (1) | 0 | **25** | 0.2% | ✅ Chốt tự động đã sang MES thành công |
+| `AUTO` | True (1) | True (1) | 1 | **5** | <0.1% | 🛠️ Chốt tự động được bypass thủ công |
+
+##### 2. Thống kê trạng thái `MongoToMesDefect` (6,861 dòng)
+| Nguồn (`SourceType`) | Đã Xong (`IsDone`) | Đã Sang MES (`IsTransferred`) | Số Dòng | Tỷ Lệ | Trạng Thái Vận Hành |
+|----------------------|:------------------:|:----------------------------:|--------:|------:|---------------------|
+| `AUTO` | **True (1)** | **True (1)** | **6,570** | 95.8% | ✅ Đã đồng bộ chi tiết lỗi sang `STB_DefectRepairInfo` |
+| `AUTO` | False (0) | False (0) | **269** | 3.9% | 🔄 Lỗi đang ghi nhận dở dang trên chuyền |
+| `AUTO` | **True (1)** | **False (0)** | **22** | **0.3%** | ⚠️ **ĐIỂM NGHẼN KẸT PHẾ CÙNG THỜI ĐIỂM!** |
+
+##### 3. Chi tiết điểm nghẽn kẹt đồng bộ tại dây chuyền `VVC-11` (Hà Nam)
+Toàn bộ **37** bản ghi kẹt trong `MongoToMesPerformance` và **22** bản ghi kẹt trong `MongoToMesDefect` tập trung 100% tại:
+- **Chuyền sản xuất:** `VVC-11` (Cell Line 11 — Nhà máy Hà Nam).
+- **Công đoạn ảnh hưởng:** `V-22` (Cuốn - 18 bản ghi), `V-23` (Lắp cao su - 16 bản ghi), `V-24` (Curling - 2 bản ghi), `V-25` (Bọc vỏ - 1 bản ghi).
+- **Thời gian kẹt:** Từ ngày `2026-08-27 12:00:17` đến `2026-09-19 00:09:26`.
+- **Nguyên nhân:** Các bản ghi này có `SourceType = 'AUTO'` do máy tự động ghi nhận nhưng Worker IIS gặp lỗi thiếu thông tin máy móc hoặc không thể ánh xạ mã công nhân `WorkerCode` cho nguồn tự động, dẫn tới việc Worker bỏ qua và để lại ở trạng thái `IsTransferred = 0`.
+- **Cách xử lý triệt để:** Dùng lệnh `.\mes.ps1 pop-audit` để rà quét và chạy SP `usp_VINA_SyncPopToMes_SingleLot` cho từng Lot bị kẹt.
+
+---
+
+#### 3.5.5 Đào Sâu Các Bảng Trung Gian & Hàng Đợi Tương Tự Trong Toàn Bộ Hệ Thống MES
+
+Hệ sinh thái MES Vinatech là kiến trúc phân tán đa tầng kết nối giữa: Web Kiosk (NodeJS/MongoDB), MES Core (C# WinForm/SQL Server), Douzone iU ERP, máy in Zebra và hệ thống IoT thiết bị. Toàn bộ các bảng đóng vai trò **Staging Buffer / Async Queue / Interface Table** tương tự được hệ thống hóa thành 4 nhóm kiến trúc:
+
+```
+┌────────────────────────────────────────────────────────────────────────────────────────┐
+│                        HỆ SINH THÁI BẢNG ĐỆM TRUNG GIAN VINATECH                       │
+├──────────────────────────┬──────────────────────────┬──────────────────────────────────┤
+│ 1. POP KIOSK BUFFERS     │ 2. DOUZONE ERP ESB       │ 3. PERIPHERAL & MACHINE QUEUES   │
+│ • MongoToMesPerformance  │ • STB_ERP_INTERFACE      │ • STB_RFIDPrintQueue             │
+│ • MongoToMesDefect       │ • STB_VN_EMPLOYEESTRANS. │ • STB_InterfaceMachineInfo       │
+│ • VINA_PACKING_REMAIN_QTY│ • STB_VN_STAGES_TRANSFER │ • STB_SerialCommunicationInterf. │
+│ • VINA_POP_ACTION_LOG    │                          │ 4. DISTRIBUTED SYNC / TOMBSTONES │
+│                          │                          │ • ESM_SyncDeleteTarget           │
+└──────────────────────────┴──────────────────────────┴──────────────────────────────────┘
+```
+
+##### Bảng Tổng Hợp Chi Tiết Các Bảng Đệm Tương Tự:
+
+| Nhóm Kiến Trúc | Tên Bảng | CSDL | Số Dòng | Chiều Tích Hợp | Vai Trò & Cơ Chế Hoạt Động Kỹ Thuật | Rủi Ro & Bẫy Vận Hành |
+|----------------|----------|------|--------:|----------------|--------------------------------------|-----------------------|
+| **1. POP Kiosk Buffers** | `MongoToMesPerformance` | `SmartFactoryV2` | 13,372 | POP ➔ MES Core | **Buffer tiến độ & sản lượng chốt routing**: Worker IIS quét chu kỳ 1-2 phút đẩy sang `STB_ProdRouteHist`. | Kẹt `IsTransferred=0` (chuyền VVC-11); Kẹt giao diện Kiosk nếu xóa `STB_ProdRouteHist` mà quên xóa bảng này (POP-ERR-15). |
+| | `MongoToMesDefect` | `SmartFactoryV2` | 6,861 | POP ➔ MES Core | **Buffer chi tiết mã lỗi phế phẩm in-line**: Tự động chuyển vào `STB_DefectRepairInfo` và cộng dồn `STB_SetInfo.DefectQty`. | Lệch tổng phế giữa bảng lỗi và tổng sản lượng phế trên `STB_SetInfo`. |
+| | `VINA_PACKING_REMAIN_QTY` | `VINATECH_POP` | 2,165 | POP Internal | **Buffer lưu trữ Lot lẻ dở dang sau đóng gói**: Đóng vai trò vùng đệm phục vụ tính năng "Tìm Lot còn lại" và Merge Pack gộp thùng. | Tồn dư ảo do không cập nhật `REMAIN_QTY = 0` sau khi gộp thùng thành công. |
+| | `VINA_POP_ACTION_LOG` | `VINATECH_POP` | 202,986 | Kiosk ➔ DB | **Staging buffer ghi vết hành vi tương tác 24/7**: Lưu trữ 104 loại sự kiện runtime (Nạp NVL, đo kiểm, chốt công đoạn, lỗi hệ thống) để phục vụ đối soát. | Bảng phình to nhanh chóng (100K+ dòng/tháng), cần chiến lược purge/archive định kỳ. |
+| **2. Douzone ERP ESB Staging** | `STB_ERP_INTERFACE` | `SmartFactoryV2` | 26,080 | ERP ⇄ MES Core | **Enterprise Service Bus (ESB) Generic Staging**: Thiết kế theo mô hình Generic Payload (`EIInfText01..10`, `EIInfInt01..10`, `EIInfReal01..10`, `EIInfDate01..10`). Quản lý đồng bộ 2 chiều các nghiệp vụ Goods Receipt (GR: 19K dòng), MaterialMaster (5.1K dòng), Stock Move (1.9K dòng) giữa MES và Douzone iU ERP. Quản lý trạng thái qua cờ `InterfaceFinYn` ('Y'/'N'). | Lỗi parse payload khiến `InterfaceFinYn = 'N'` treo đơn hàng hoặc lệch kho giữa MES và ERP. |
+| | `STB_VN_EMPLOYEESTRANSFER` & `...LINE` | `SmartFactoryV2` | 590+ | ERP/HR ➔ MES | **Buffer điều chuyển nhân sự giữa các chuyền**: Ánh xạ việc chuyển công nhân từ chuyền gốc (`CODELINECURRENTLY`) sang chuyền tiếp nhận (`CODELINETRANSFER`) kèm khung thời gian `START_DATES` - `END_DATES`. | Quét thẻ nhân viên trên Kiosk báo lỗi "Không thuộc chuyền" do chưa kích hoạt bản ghi transfer. |
+| | `STB_VN_STAGES_TRANSFER` | `SmartFactoryV2` | 6 | MES ➔ ERP Plan | **Staging chuyển tiếp giai đoạn công đoạn**: Ánh xạ lệnh sản xuất của từng Barcode qua các công đoạn (`V-22`, `V-23`, `V-24`, `V-25`) gắn với lệnh PO kế toán. | Treo lệnh đóng Lot nếu kế hoạch PO bị hủy trên ERP. |
+| **3. Peripheral & Machine Queues** | `STB_RFIDPrintQueue` | `SmartFactoryV2` | 38 | MES Core ➔ Máy in Zebra | **Hàng đợi in tem RFID / Barcode bất đồng bộ**: Lưu trữ cấu hình socket (`PrinterIP`, `PrinterPort`), chuỗi lệnh in `ZPLText`, cờ `QueueStatus` ('READY', 'SENT', 'FAILED') và `RetryCount`. Background Print Service quét để bắn lệnh in trực tiếp qua TCP Socket. | Máy in mất mạng hoặc kẹt giấy khiến queue bị dồn ứ, `RetryCount` vượt ngưỡng làm dừng luồng in tự động. |
+| | `STB_InterfaceMachineInfo` | `SmartFactoryV2` | 3 | Máy Coater ➔ MES | **Bảng đệm cấu hình API máy tráng phủ điện cực**: Quản lý xác thực kết nối bảo mật bằng `APIKey` và mật khẩu cho các máy tráng phủ trực tiếp (Direct Coater #1, Direct Coater XRF #1, Direct Coater Vision #1). | Máy tráng phủ ngắt kết nối đẩy dữ liệu độ dày/màng do sai lệch chu kỳ cập nhật APIKey. |
+| | `STB_SerialCommunicationInterface` | `SmartFactoryV2` | 0 | Cổng COM ➔ MES | **Cổng đệm giao tiếp RS232/Serial**: Vùng nhớ đệm đọc tham số đo kiểm điện trở (IR) và điện áp (OCV) từ cổng nối tiếp. | Xung đột chiếm dụng cổng COM vật lý khi mở nhiều ứng dụng đo cùng lúc. |
+| **4. Distributed Sync & Tombstones** | `ESM_SyncDeleteTarget` | `SmartFactoryV2` | 155 | Master ➔ Edge Nodes | **Tombstone Deletion Queue**: Bảng ghi nhận danh sách các khóa nghiệp vụ đã bị xóa trên Server mẹ (như `WarehouseInOutHistNo`, `DayPlanNo`) để đồng bộ lệnh xóa xuống các CSDL phân tán / Client trạm con, ngăn ngừa hiện tượng phục hồi dữ liệu ma (Ghost Records). | Nếu trạm con mất mạng lâu ngày, bản ghi xóa có thể bị bỏ lọt khiến dữ liệu cũ bị đồng bộ ngược trở lại. |
+| | `STB_InterimProdQtyInfo` | `SmartFactoryV2` | 11 | MES WorkCenter | **Bảng đệm sản lượng dở dang thử nghiệm**: Lưu sản lượng tạm giữa các ca trước khi kiến trúc POP Kiosk ra đời (2022). Hiện đã ngừng sử dụng. | Dữ liệu di sản (Legacy), không sử dụng cho luồng sản xuất hiện hành. |
+
+#### 3.5.6 Ma Trận So Sánh Mẫu Thiết Kế (Design Pattern Matrix)
+
+| Tiêu Chí So Sánh | Nhóm `MongoToMes*` (POP Buffers) | Nhóm `STB_ERP_INTERFACE` (ERP ESB) | Nhóm `STB_RFIDPrintQueue` (Print Queue) |
+|------------------|-----------------------------------|-----------------------------------|----------------------------------------|
+| **Mẫu Thiết Kế (Pattern)** | **Domain-Specific Staging Table** (Bảng đệm thiết kế riêng theo nghiệp vụ) | **Generic ESB Payload Staging** (Bảng đệm tổng quát với các cột động Text/Int/Real) | **Asynchronous Job Queue** (Hàng đợi công việc bất đồng bộ có Retry) |
+| **Cơ Chế Tiêu Thụ (Consumer)** | Scheduled Polling Worker ngầm trên IIS (`pop.vinatech.com`) chu kỳ 1-2 phút | Douzone ERP Batch Sync Agent / EAI Service chạy theo lịch trình | Windows Background Print Service kết nối Socket TCP/IP port 9100 |
+| **Cơ Chế Xử Lý Lũy Đẳng (Idempotency)** | Bắt buộc kiểm tra `STB_ProdRouteHist` trước khi chèn; Có SP cứu hộ `usp_VINA_SyncPopToMes_SingleLot` | Cờ `InterfaceFinYn` = 'Y' đánh dấu bản ghi đã xử lý | Cờ `QueueStatus` ('READY' ➔ 'SENT' ➔ 'FAILED') + Giới hạn `RetryCount` |
+| **Cơ Chế Rollback Khi Hủy Chốt** | **Bắt buộc DUAL-DELETE**: Xóa `STB_ProdRouteHist` kèm xóa `MongoToMesPerformance` (Template 7) | Cập nhật `IUD_FLAG = 'D'` để ERP nhận biết giao dịch hủy | Đánh dấu `QueueStatus = 'CANCELLED'` |
+
+---
 
 ### 3.6 📚 Danh Mục Đầy Đủ 66 Bảng CSDL VINATECH_POP (Kiểm Toán Thực Tế 2026-09-21)
 

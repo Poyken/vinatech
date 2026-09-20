@@ -554,6 +554,16 @@ Hệ thống POP tích hợp trực tiếp với tầng tự động hóa xưở
   - File cài đặt: `vinatechEquipmentDataSetup.exe` (Link tải trực tiếp trên Header: `/download/vinatechEquipmentDataSetup.exe`).
   - Dịch vụ Windows Service chạy ngầm tại máy tính điều khiển PLC, đọc dữ liệu qua giao thức OPC-UA, Modbus TCP, MC Protocol (Mitsubishi) hoặc Serial RS-232/RS-485, đóng gói JSON và bắn về Webhook của POP Server qua API `/api/equipment/data/push`.
 
+### 18.4 Bảng CSDL Cấu Hình Thiết Bị & Baseline PLC (`VINATECH_POP`)
+Dữ liệu kết nối và chỉ số thu thập máy được quản trị qua 4 bảng cốt lõi trong CSDL `VINATECH_POP`:
+
+| Bảng CSDL | Các cột chính | Chức năng nghiệp vụ |
+|-----------|--------------|---------------------|
+| `VINA_EQUIPMENT_SETTING` | `EQUIPMENT_SETTING_ID`, `MODEL_ID`, `EQUIPMENT_SETTING_NAME`, `EQUIPMENT_SETTING_ROUTE_TYPE`, `EQUIPMENT_SETTING_DEFAULT`, `EQUIPMENT_SETTING_BACKUP`, `EQUIPMENT_SETTING_DATA_COLLECTION_TIME` | Khai báo cổng kết nối Socket máy (IP:Port, vd: `192.168.112.154:5002`) hoặc đường dẫn Folder kết quả đo (AOI inspection file path), chu kỳ thu thập (10s-15s) và ngày tự động dọn dẹp log cũ. |
+| `VINA_PLC_BASELINE` | `EQUIPMENT_ID`, `PROD_BASELINE`, `DEF_BASELINE`, `REG_DATE`, `MODIFY_DATE` | Lưu điểm mốc xuất phát của bộ đếm Counter PLC (sản lượng đạt và phế phẩm) để tính toán độ tăng trưởng tức thời mà không bị lỗi tràn số counter máy. |
+| `VINA_EQUIPMENT_REMAINDER` | `SEQ`, `EQUIPMENT_ID`, `DAY_PLAN_NO`, `LOT_NUMBER`, `ROUTE_CODE`, `PROD_REMAIN`, `DEF_REMAIN`, `REMAIN_STATUS` (`ACTIVE`/`EXPIRED`), `REG_DATE` | Ghi nhận số dư counter còn lại khi kết thúc hoặc chuyển giao ca sản xuất, ngăn ngừa việc nhân đôi số lượng khi máy tiếp tục chạy ở DayPlan mới. |
+| `VINA_EQUIPMENT_MAPPING` | `MAPPING_ID`, `DAY_PLAN_NO`, `LINE_CODE`, `ROUTE_CODE`, `EQUIPMENT_ID`, `MAPPING_STATUS` (`ACTIVE`/`RELEASED`), `MAPPED_AT`, `RELEASED_AT` | Quản trị phiên gắn máy vào Kiosk Kế hoạch sản xuất. Nếu máy bị treo `ACTIVE` từ ca cũ, sử dụng `.\mes.ps1 release-machines` hoặc SQL Template 10 (`POP_KB_03`) để giải phóng. |
+
 ---
 
 ## 19. 🛡️ PHÂN HỆ DASHBOARD BÁO CÁO & CƠ CHẾ PHÂN QUYỀN RBAC (`/dashboard/*`)

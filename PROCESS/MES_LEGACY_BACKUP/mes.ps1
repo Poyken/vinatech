@@ -49,6 +49,8 @@ function Show-Help {
     Write-Host '  2. TRUY VAN & KIEM TRA HE THONG (SYSTEM & QUERY):' -ForegroundColor Cyan
     Write-Host '     .\mes.ps1 pop-readiness [-Target <Line>]' -ForegroundColor Green
     Write-Host '-> Kiem toan 8 buoc san sang cat WinForm & chay 100% POP Web theo Line' -ForegroundColor Gray
+    Write-Host '     .\mes.ps1 release-machines [-Target <Line>] [-Force]' -ForegroundColor Green
+    Write-Host '-> Giai phong thiet bi bi treo khoa ACTIVE o ke hoach (DayPlan) cu tren Kiosk POP' -ForegroundColor Gray
     Write-Host '     .\mes.ps1 pop-audit                 ' -NoNewline -ForegroundColor Green
     Write-Host '-> Kiem toan & doi soat lech du lieu POP Kiosk vs MES (IsTransferred=0)' -ForegroundColor Gray
     Write-Host '     .\mes.ps1 check [-Profile <Name>]   ' -NoNewline -ForegroundColor Green
@@ -300,6 +302,17 @@ elseif ($cmdLower -eq 'pop-readiness' -or $cmdLower -eq 'readiness') {
         & $popReadinessScript -Line $Target
     } else {
         Write-Error 'tools/pop_readiness.ps1 not found.'
+    }
+}
+elseif ($cmdLower -eq 'release-machines' -or $cmdLower -eq 'release-orphan-machines') {
+    $relScript = Join-Path $toolsDir 'release_orphan_machines.ps1'
+    if (Test-Path $relScript) {
+        $params = @{}
+        if ($Target) { $params['Target'] = $Target }
+        if ($Force) { $params['Force'] = $true }
+        & $relScript @params
+    } else {
+        Write-Error 'tools/release_orphan_machines.ps1 not found.'
     }
 }
 elseif ($cmdLower -eq 'bot' -or $cmdLower -eq 'telegram') {

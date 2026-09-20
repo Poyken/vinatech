@@ -32,7 +32,7 @@ Related Files:
 | # | File | Nội dung | Khi nào dùng | Trạng thái |
 |---|------|----------|--------------|------------|
 | INDEX | [POP_KB_INDEX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_INDEX.md) | Master Index + Routing Map | Điểm bắt đầu mọi tra cứu POP | ✅ Active |
-| 01 | [POP_KB_01_ARCHITECTURE_AND_API.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_01_ARCHITECTURE_AND_API.md) | Kiến trúc hệ thống, API endpoints, DB schema mapping **66 bảng** (§3.6), Thiết bị & Vòng đời Mapping (§3.3) | Debug API, hiểu data flow, logic chọn máy Kiosk | ✅ Active |
+| 01 | [POP_KB_01_ARCHITECTURE_AND_API.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_01_ARCHITECTURE_AND_API.md) | Kiến trúc hệ thống, API endpoints, **Data Pipeline & Hệ sinh thái Bảng đệm Trung gian** (MongoToMes*, STB_ERP_INTERFACE, STB_RFIDPrintQueue §3.5), DB schema mapping **66 bảng** (§3.6) | Debug API, hiểu data flow, kiến trúc staging, logic chọn máy Kiosk | ✅ Active |
 | 02 | [POP_KB_02_SCREEN_OPERATIONS.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_02_SCREEN_OPERATIONS.md) | Hướng dẫn vận hành từng màn hình + DB impact, Modal "Xác nhận Kết thúc?" | Thao tác sản xuất, đóng gói, marking, chọn máy | ✅ Active |
 | 03 | [POP_KB_03_TROUBLESHOOTING.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_03_TROUBLESHOOTING.md) | Lỗi thường gặp + Root cause + Fix (POP-ERR-01 đến POP-ERR-20) | Xử lý sự cố khẩn cấp, kẹt máy, nạp NVL BOM | ✅ Active |
 | 04 | [POP_KB_04_ROLLBACK_AND_SAFETY.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_04_ROLLBACK_AND_SAFETY.md) | Phân tích khả năng Rollback trên UI + DB safety (v2.0) | Hủy đóng gói Box, an toàn dữ liệu | ✅ Active |
@@ -64,7 +64,8 @@ Related Files:
 | Lỗi in tem / label print | KB_02 §10 | KB_03 §5 |
 | Tự kiểm In-Line QC tại chuyền | KB_02 §12.1 | KB_02 §12 |
 | Quality: IQC/PQC/OQC/FOQC | KB_02 §12 | KB_03 §2.8 |
-| Kẹt đồng bộ POP ➔ MES / Lệch số lượng | **KB_01 §3.5** | **KB_03 §2.18 (Template 7, 8, 9)** |
+| Tra cứu bảng tiền tố `MongoToMes*` & Bảng đệm tương tự (`STB_ERP_INTERFACE`, `STB_RFIDPrintQueue`) | **KB_01 §3.5 (SoT)** | **KB_03 §2.15, §2.18** |
+| Kẹt đồng bộ POP ➔ MES / Lệch số lượng (`IsTransferred = 0`) | **KB_01 §3.5.4** | **KB_03 §2.18 (Template 7, 8, 9)** |
 | API endpoint không phản hồi | KB_01 §2 | KB_03 §6 |
 | Kiểm toán UI vs DB | **KB_05** (SoT) | KB_01 §3 |
 | Hiểu kiến trúc tổng thể | KB_01 §1 | KB_01 §5 |
@@ -76,6 +77,8 @@ Related Files:
 | **Bảng ánh xạ 1:1 màn hình WinForm ➔ Web POP** | **KB_06 §1** (SoT) | KB_02 |
 | **Checklist 8 bước sẵn sàng cắt WinForm cho Line** | **KB_06 §3** (SoT) | `.\mes.ps1 pop-readiness` |
 | **Chuẩn hóa lỗi phế ẩn (Three-Valued Logic NULL)** | **KB_03 §3 (Template 11)** | HOTFIX_LOG ID_56 |
+| **Giải phóng máy kẹt ACTIVE ở DayPlan cũ** | **`.\mes.ps1 release-machines`** | KB_03 Template 10, `routine_RELEASE_ORPHAN_MACHINE_LOCKS.sql` |
+| **Sinh mã PackingID 11 ký tự (in tem thùng)** | **`template_GENERATE_POP_PACKING_ID.sql`** | KB_02 §10, KB_06 §2.1 |
 | **Tra cứu chức năng, Button, View & Ma trận CRUD (Xem, Thêm, Sửa, Xóa)** | **KB_02 §17 (SoT)** | KB_01 §2 |
 | **Phân hệ quản lý dữ liệu thiết bị IoT & Log PLC (`/equipmentData/*`)** | **KB_02 §18 (SoT)** | KB_01 §1.1, §1.2 |
 | **Phân quyền Dashboard RBAC & Giải thích lỗi 403 Forbidden** | **KB_02 §19 (SoT)** | KB_01 §1.1 |

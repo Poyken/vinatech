@@ -1,4 +1,4 @@
-﻿<!--
+<!--
 AI-READY METADATA
 Purpose: Nhật ký ghi chép lịch sử xử lý bug & hotfix đã được AI triển khai thành công
 Scope: Hotfix History Registry
@@ -741,3 +741,18 @@ Related Files:
 UPDATE STB_DefectRepairInfo SET IsDelete=0, RepairQty=0 WHERE DefectSummaryNo=20260919000550; UPDATE STB_SetInfo SET DefectQty=9 WHERE Barcode=VVQR153R060615;
   ```
 * **Tham chieu KB:** KB_09, POP_KB_03
+
+---
+
+### [POP Cutover] — 📍 ID_59 Bộ công cụ quy hoạch và kiểm toán chuyển đổi 100% sang POP Web (Tắt MES WinForm)
+* **Ngày tạo:** `2026-09-21`
+* **Màn hình liên quan:** Toàn bộ hệ thống MES WinForm (B530, B540, B523, B520, B782, B552, B310...) và POP Web (`/pop/screen`, `/pop/quality`, `/equipmentData/*`)
+* **Nhiệm vụ:** Chuẩn bị hạ tầng, tài liệu đặc tả và công cụ tự động để phục vụ chuyển đổi 100% sang Web POP mà không gây gián đoạn dây chuyền.
+* **Các thành phần đã triển khai:**
+  1. `POP_KB_06_MIGRATION_SPEC.md`: Bảng ánh xạ 1:1 màn hình, giải pháp 4 Gaps kỹ thuật (PackingID, Machine lock, Defect sync, Line slots), 8 bước checklist Line Readiness và 4 giai đoạn Cutover.
+  2. `tools/pop_readiness.ps1` & lệnh `.\mes.ps1 pop-readiness [-Target <Line>]`: Tự động kiểm toán kết nối, 10 slot NVL, chế độ SUBTRACT, máy kẹt, và tắc nghẽn đồng bộ `MongoToMesPerformance` cho toàn bộ 31 dây chuyền.
+  3. `tools/release_orphan_machines.ps1` & lệnh `.\mes.ps1 release-machines [-Target <Line>] [-Force]` kèm SQL routine `sql/routine_RELEASE_ORPHAN_MACHINE_LOCKS.sql`: Tự động quét và giải phóng 52 thiết bị bị kẹt `ACTIVE` ở DayPlan cũ.
+  4. `sql/template_GENERATE_POP_PACKING_ID.sql`: Thuật toán sinh mã `PackingID` chuẩn 11 ký tự (`PK...`) cập nhật `STB_MaterialLotInfo` và `STB_SavePackingTime_VVT`.
+  5. Bổ sung chi tiết 4 bảng CSDL thiết bị & PLC baseline (`VINA_EQUIPMENT_SETTING`, `VINA_PLC_BASELINE`, `VINA_EQUIPMENT_REMAINDER`, `VINA_EQUIPMENT_MAPPING`) vào `POP_KB_02 § 18.4`.
+* **Tham chiếu KB:** [POP_KB_06_MIGRATION_SPEC.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_06_MIGRATION_SPEC.md), [POP_KB_02 § 18.4](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_02_SCREEN_OPERATIONS.md), [POP_KB_INDEX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_INDEX.md)
+
