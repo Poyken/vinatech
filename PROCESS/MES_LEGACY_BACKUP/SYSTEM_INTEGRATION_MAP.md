@@ -53,6 +53,12 @@ Hệ thống quản trị của Vinatech liên kết chặt chẽ giữa 3 nền
 - **POP System (pop.vinatech.com):** Giao diện Kiosk cảm ứng cho công nhân tại dây chuyền
 - **Tài khoản POP mẫu:** Company `VINATech VINA Co.,Ltd` / Employee ID `92603003` / Pass `123456`
 
+### ④ YoungLimWon K-System Ace ERP (evn.vinatech.com)
+- **URL:** `https://evn.vinatech.com`
+- **Nền tảng:** YoungLimWon SoftLab K-System Ace Web ERP v6.1.8 (WCF Services + AngularJS SPA)
+- **Vai trò:** Hệ thống Web ERP quản trị thế hệ mới cho Vinatech Việt Nam (17 phân hệ, 213 process menus, 4.473 sub-programs) bao gồm: Quản lý Lệnh sản xuất, MRP, Quản lý kho theo LOT (`FrmWPDLotList`), Kế toán, Mua hàng, Bán hàng và phân hệ cầu nối Smart Factory (`K-스마트`).
+- **Chi tiết kỹ thuật:** Xem tài liệu đặc tả [KSYSTEM_ACE_ERP_MASTER_SPECIFICATION.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/SYSTEM_ARCHITECTURE/KSYSTEM_ACE_ERP_MASTER_SPECIFICATION.md)
+
 ---
 
 ## 🔗 2. Ma Trận Liên Kết Dữ Liệu Giữa 3 Nền Tảng
@@ -263,6 +269,7 @@ Người dùng → Đăng nhập Portal (GW/POP) → VINATECH_RESTFUL cấp Toke
 | **POP** | `pop.vinatech.com/login` | VINATech VINA Co.,Ltd | 92603003 | 123456 |
 | **Groupware** | `gw.vinatech.com/login` | VINATech VINA Co.,Ltd | 92603003 | 123456 |
 | **MES** | `mes.hycap.co.kr:9952` | — | Phân quyền qua Z410 | — |
+| **K-System Ace ERP** | `evn.vinatech.com` | 비나텍(베트남법인) | ylw@ksystem.vn | (Quản trị YoungLimWon) |
 
 ---
 

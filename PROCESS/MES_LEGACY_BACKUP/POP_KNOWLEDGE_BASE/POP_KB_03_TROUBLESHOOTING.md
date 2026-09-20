@@ -38,6 +38,9 @@ Related Files:
 | **POP-ERR-12: Khóa kết quả đo sau khi bấm "Hoàn thành"** | Phiên PQC đã đóng (`STB_CommInspDocHistory.IsFinished=1`), nút đổi thành "Hoàn tác" | Bấm Hoàn tác gửi yêu cầu (Admin duyệt `VINA_REOPEN_REQUEST`) hoặc IT reset `IsFinished=0` | Cần duyệt / SQL |
 | **POP-ERR-13: Lệch / Không đồng nhất công đoạn giữa Kiosk POP và MES** | Chốt chéo WinForm trước Kiosk, nhảy cóc công đoạn V-27_HY sang V-28_HY, hoặc kẹt dở dang V-26_HY | Dùng Golden Query `.\mes.ps1 trace '<Lot>'`. Xóa bản ghi kẹt cũ qua Template 3 hoặc rollback Đóng gói qua Template 4 | **CÓ (SQL Hotfix)** |
 | **POP-ERR-14: Thùng Dung Dịch Về 0 KG / Hết Hàng (VN ➔ HY)** | Xung đột chuyển vùng kho (Hà Nam sang Hưng Yên) hoặc cơ chế tự động đóng thùng cũ khi quét Lot mới | Phục hồi lại toàn bộ số lượng ban đầu (150 KG theo InitialQty) tại `ROUTE_HY_WH` và reload Kiosk POP | **CÓ (SQL Hotfix)** |
+| **POP-ERR-19: Lỗi "Không Tìm Thấy LOT Trong Kho" Khi Nạp Cuộn Điện Cực / NVL BOM** | Bên Điện cực đã xuất vào kho `ROUTE_VN_WH` nhưng cuộn mang mã BTP mới (vd: `SRECYK0-900`) trong khi BOM của Lệnh SX (PO) lại khai báo mã quy cách cũ (`SRFCO85 / SREYO85`), hoặc mã cũ trong kho có tồn = 0 | Map bổ sung mã NVL mới vào BOM của PO (`STB_ProductionOrderBom`) hoặc sửa `MaterialCode` cuộn khớp BOM, sau đó bấm `Danh sách NVL BOM 🔄` (Reload) trên Kiosk POP | **CÓ (BOM Map / Master)** |
+| **POP-ERR-20: POP Kiosk Thiếu Thiết Bị / Ẩn Máy Tại Modal "Xác Nhận Kết Thúc" (Winding/Curling/Sleeving)** | Máy bị kẹt trạng thái `MAPPING_STATUS = 'ACTIVE'` trong `VINATECH_POP.dbo.VINA_EQUIPMENT_MAPPING` từ Kế hoạch sản xuất (`DAY_PLAN_NO`) cũ do OP không bấm "Hủy gán / Release" khi xong ca và POP thiếu Auto-Release | Giải phóng máy: chạy script UPDATE `VINA_EQUIPMENT_MAPPING SET MAPPING_STATUS = 'RELEASED', RELEASED_AT = GETDATE(), NO_EMP_MODIFYER = 'vanduc'` cho các Plan cũ | **CÓ (SQL Hotfix)** |
+
 
 ---
 
@@ -89,6 +92,10 @@ WHERE LotNo = N'<LOT_NO>';
 1. **Sai BOM:** Kiểm tra cấu trúc BOM của sản phẩm. Cuộn NVL quét vào phải có mã vật tư (`MaterialCode`) trùng khớp với BOM đã phê duyệt của Model hiện hành.
 2. **Hết tồn kho trên hệ thống:** Dù thực tế cuộn vật liệu còn trên tay, nhưng trong hệ thống `SmartFactoryV2.dbo.STB_MaterialLotInfo`, cột `Qty` đã bằng 0 (do ca trước đã quét trừ hết).
    - *Khắc phục:* Yêu cầu thủ kho MES nhập phiếu bổ sung NVL hoặc đổi sang cuộn tem khác có tồn kho hợp lệ.
+3. **⭐ Không hiển thị ô (Slot) quét NVL trên Kiosk (Dù trong BOM có đầy đủ):**
+   - *Hiện tượng:* Mở công đoạn trên POP Kiosk (ví dụ Winding, Curling) nhưng không tìm thấy ô quét NVL (như Đế dán `BOTTOM-PLATE`, Terminal plate `TERMINAL-PLATE`, Cao su, Màng co...).
+   - *Nguyên nhân:* Line đó đã được bật chế độ nạp theo nhóm (`VINA_ASSEMBLY_GROUP_MODE.INPUT_MODE = 'GROUP'`), nhưng chưa được cấu hình (thiếu slot) cho nhóm vật tư đó trong bảng `VINATECH_POP.dbo.VINA_GROUP_INPUT_ROUTE`.
+   - *Khắc phục trên Web UI:* Vào **POP Setting ➔ Assembly Group Mapping (`/popSetting/assemblyGroupMapping`)**, chọn Line cần sửa ➔ Bấm **Thêm Slot** hoặc dùng nút **Copy cấu hình** từ Line mẫu đã chuẩn ➔ Công nhân bấm **F5** lại Kiosk là sẽ hiện ô quét.
 
 ---
 
@@ -174,10 +181,12 @@ ROLLBACK;
 ---
 
 ### 2.7 POP-ERR-10: Kẹt Đóng Gói Do Chốt Sớm Công Đoạn V-28_HY
-**Hiện tượng:** Lot không thể đóng gói gộp hoặc in tem thùng tại trạm đóng gói POP Kiosk.
+**Hiện tượng:** Lot không thể đóng gói gộp hoặc in tem thùng tại trạm đóng gói POP Kiosk, hoặc người dùng muốn hủy các Box đã đóng gói (kể cả Box đơn lẻ hay Box đóng gộp Merge Pack).
 
 **Nguyên nhân gốc:** Công đoạn `V-28_HY` bị chốt trước khi hoàn tất đóng gói thực tế, làm sinh bản ghi mồ côi trong `STB_MaterialLotInfo` và `VINATECH_POP.dbo.VINA_PACKING_REMAIN_QTY`.
-**Khắc phục:** Rollback đồng bộ 3 bảng qua Template 4.
+**Khắc phục:** 
+- *Cách 1 (UI Kiosk):* Vào menu Đóng gói -> Chạm nút **"Lịch sử"** -> Bấm **`[HỦY]`** trên từng Box hoặc **`[HỦY TẤT CẢ]`** (Slide 39).
+- *Cách 2 (SQL Rollback đồng bộ):* Áp dụng **Template 4** (Case 1: chốt đơn lẻ, Case 2: đóng gói chia nhiều Box & Box gộp Merge Pack như incident `VVQR113R060640`).
 
 ---
 
@@ -343,6 +352,101 @@ ORDER BY ProdDateTime ASC;
 
 ---
 
+### 2.19 POP-ERR-19: Lỗi "Không Tìm Thấy LOT Trong Kho / Không Còn Tồn Kho" Khi Nạp Cuộn Điện Cực (Winding)
+
+**Hiện tượng:**
+- Tại chuyền Quấn (Winding / Thu công xưởng 1), công nhân mở nạp NVL BOM trên Kiosk POP cho Lot (ví dụ: `VVQR203R072749`, Model 35105 / `ECVT30-357`).
+- Dòng cuộn điện cực hiển thị **`SL Kho: 0`** hoặc chữ đỏ **`Hết hàng`** (ví dụ: `SREY085 - ELECTRODE ROLL YP85-200`, `SRFC085 - ELECTRODE ROLL CY85-200F`).
+- Khi quét tem barcode cuộn điện cực thực tế (ví dụ: `VWQO2220001E13-003 CY`, `VWQO2620001E04-015 CY`) hoặc bấm nút Tồn kho, Kiosk POP bật popup cảnh báo:
+  > *"Không tìm thấy LOT trong kho"*  
+  > *"Không tìm thấy LOT vật liệu hoặc không còn tồn kho."*
+- Bộ phận xưởng Điện cực khẳng định: *"Đã xuất trên hệ thống ra SX rồi"*.
+
+**Nguyên nhân gốc (Root Cause):**
+1. **Xưởng Điện cực đã xuất kho thành công:** Kiểm tra trong `SmartFactoryV2.dbo.STB_MaterialLotInfo`, các cuộn điện cực `VWQO...` đã nằm trong kho công đoạn **`ROUTE_VN_WH`** với đầy đủ số lượng (251m, 290m).
+2. **Lệch mã BOM giữa Lệnh SX (PO) và Bán thành phẩm (BTP) xuất kho:**
+   - Xưởng Điện cực chia cuộn Slitting và in tem theo mã BTP mới: **`SRECYK0-900`** (*Slitting-Roll Etching-CY 203 900*).
+   - Trong khi đó, Lệnh sản xuất (PO `260829000045`) được duyệt theo Master BOM cũ chứa mã: **`SRFCO85`** (cực âm CY) và **`SREYO85`** (cực dương YP).
+   - Hai mã cũ `SRFCO85 / SREYO85` trong kho `ROUTE_VN_WH` có tồn kho = 0.
+   - Khi công nhân quét cuộn mã `SRECYK0-900`: Kiosk POP đối soát thấy mã này **KHÔNG CÓ trong bảng `STB_ProductionOrderBom`** của PO hiện hành, đồng thời các mã trong BOM thì hết tồn kho ➔ Chặn không cho nạp và báo lỗi.
+
+**Quy trình chuẩn đoán & Khắc phục nhanh (SOP 3 Bước):**
+1. **Truy vết đối soát Live DB (SELECT-Only):**
+   ```sql
+   -- 1. Kiểm tra BOM của Lệnh sản xuất đang chạy:
+   SELECT ChildMaterialCode, UsedQty, RouteCode 
+   FROM SmartFactoryV2.dbo.STB_ProductionOrderBom WITH(NOLOCK) 
+   WHERE PONo = '<MÃ_PO_CỦA_LOT>';
+
+   -- 2. Kiểm tra mã NVL, kho và tồn kho của cuộn điện cực thực tế:
+   SELECT LotID, MaterialCode, MaterialWarehouseCode, CurrentQty 
+   FROM SmartFactoryV2.dbo.STB_MaterialLotInfo WITH(NOLOCK) 
+   WHERE LotID IN ('<MÃ_BARCODE_CUỘN_1>', '<MÃ_BARCODE_CUỘN_2>');
+   ```
+2. **Cứu chuyền khẩn cấp (Hotfix):**
+   - *Cách A (Chuẩn BOM):* Bổ sung mã `SRECYK0-900` vào `STB_ProductionOrderBom` cho PO đó qua WinForm **B310** (hoặc SQL Hotfix).
+   - *Cách B (Chuẩn hóa mã kho theo cuộn):* Cập nhật `MaterialCode = 'SRFCO85'` cho các cuộn đó trong `STB_MaterialLotInfo` tại `ROUTE_VN_WH` nếu thực chất cùng quy cách kỹ thuật.
+   - *Thao tác Kiosk:* Yêu cầu công nhân bấm nút **`Danh sách NVL BOM 🔄` (Reload)** trên màn hình Kiosk POP ➔ Cột Tồn kho sẽ hiển thị xanh và quét cuộn nạp bình thường.
+3. **Chuẩn hóa Master Data:**
+   - Báo bộ phận Kế hoạch / BOM Master (Anh Huy) cập nhật mã điện cực chuẩn vào Model tại màn hình **A310** để các PO sau tự động thừa kế.
+
+---
+
+### 2.20 POP-ERR-20: POP Kiosk Thiếu Thiết Bị / Ẩn Máy Tại Modal "Xác Nhận Kết Thúc" (Winding/Curling/Sleeving)
+
+**Triệu chứng:**
+Khi công nhân bấm nút **"GHI NHẬN SẢN XUẤT"** để mở modal popup *"Xác nhận Kết thúc?"*, danh sách thiết bị hiển thị thiếu máy (ví dụ: chỉ hiện 16 máy Cuộn từ C#3 đến C#10, thiếu hoàn toàn 4 máy đầu chuyền: `Winding C#1 -1`, `Winding C#1 -2`, `Winding C#2 -1`, `Winding C#2 -2`, cùng các máy Curling/Sleeving C#1, C#2). Dù trong `SmartFactoryV2.dbo.STB_ProductMachine` các máy đều đã được khai báo cho Model và Line.
+
+**Nguyên nhân gốc rễ (Root Cause):**
+1. **Cơ chế lọc xung đột độc quyền của POP Kiosk:**
+   - Khi render danh sách máy trên modal, Backend POP Kiosk truy vấn từ `STB_ProductMachine` + `STB_MachineMaster`, đồng thời áp dụng điều kiện loại trừ các máy đang bị chiếm dụng:
+     ```sql
+     WHERE NOT EXISTS (
+         SELECT 1 FROM VINATECH_POP.dbo.VINA_EQUIPMENT_MAPPING M
+         WHERE M.EQUIPMENT_ID = E.EQUIPMENT_ID
+           AND M.MAPPING_STATUS IN ('ACTIVE', 'AUTO_MAPPED')
+           AND M.DAY_PLAN_NO <> @CurrentDayPlanNo
+     )
+     ```
+2. **Kẹt khóa mồ côi (Orphan Lock):**
+   - Các máy bị thiếu đã từng được gán vào Kế hoạch sản xuất cũ (`DAY_PLAN_NO` của các ngày trước) nhưng khi kết thúc kế hoạch không được giải phóng (`MAPPING_STATUS` vẫn giữ nguyên là `'ACTIVE'`).
+   - Kiosk POP hiện tại chưa có cron job Auto-Release khi hết ca hoặc sang ngày mới, khiến trạng thái `ACTIVE` cũ tồn lưu vĩnh viễn và chặn không cho Lệnh sản xuất mới nhìn thấy máy.
+
+**Quy trình chuẩn đoán & Khắc phục chuẩn (3 Bước):**
+1. **Kiểm tra các máy đang bị kẹt lock:**
+   ```sql
+   SELECT MAPPING_ID, DAY_PLAN_NO, LINE_CODE, ROUTE_CODE, EQUIPMENT_ID, EQUIPMENT_NAME, MAPPING_STATUS, MAPPED_AT
+   FROM VINATECH_POP.dbo.VINA_EQUIPMENT_MAPPING WITH(NOLOCK)
+   WHERE EQUIPMENT_ID IN ('MÃ_MÁY_BỊ_ẨN_1', 'MÃ_MÁY_BỊ_ẨN_2')
+     AND MAPPING_STATUS IN ('ACTIVE', 'AUTO_MAPPED');
+   ```
+2. **Xuất Backup Snapshot trước khi can thiệp (Pre-flight Backup):**
+   - Dùng script PowerShell xuất JSON các dòng sẽ tác động và lưu vào `tools/backups/`.
+3. **Thực thi Hotfix giải phóng thiết bị (Lưu ý: `RELEASE_REASON` tối đa 50 ký tự):**
+   ```sql
+   USE VINATECH_POP;
+   BEGIN TRANSACTION;
+   
+      UPDATE VINA_EQUIPMENT_MAPPING
+    SET MAPPING_STATUS      = 'RELEASED',
+        RELEASED_AT         = GETDATE(),
+        RELEASE_REASON      = N'Release cho Model 35105',
+        NO_EMP_MODIFYER     = 'vanduc',
+        CD_COMPANY_MODIFYER = 'VINA'
+    WHERE MAPPING_ID IN (DANH_SÁCH_MAPPING_ID)
+      AND MAPPING_STATUS IN ('ACTIVE', 'AUTO_MAPPED');
+   
+   -- Kiểm tra đúng số dòng trước khi COMMIT
+   IF @@ROWCOUNT = SO_DONG_DU_KIEN
+       COMMIT TRANSACTION;
+   ELSE
+       ROLLBACK TRANSACTION;
+   ```
+4. **Kiểm tra sau Hotfix:**
+   - OP đóng modal và bấm lại nút "GHI NHẬN SẢN XUẤT" (hoặc F5 Kiosk). Toàn bộ danh mục máy sẽ xuất hiện đầy đủ 100%.
+
+---
+
 ## 3. 🛠️ TEMPLATE SQL CỨU HỘ VẬN HÀNH (SAFETY HOTFIX TEMPLATES)
 
 > [!CAUTION]
@@ -435,7 +539,9 @@ END CATCH;
 
 ---
 
-### Template 4: Rollback Lượt Chốt Sớm Đóng Gói V-28_HY
+### Template 4: Rollback Lượt Chốt Sớm / Hủy Đóng Gói V-28_HY
+
+#### Case 1: Chốt đơn lẻ (Incident 17/09/2026 - Lot VVQR013R072727)
 ```sql
 BEGIN TRANSACTION;
 BEGIN TRY
@@ -459,6 +565,65 @@ BEGIN CATCH
     ROLLBACK TRANSACTION;
     THROW;
 END CATCH;
+```
+
+#### Case 2: Đóng gói chia nhiều Box & Box gộp Merge Pack (Incident 19/09/2026 - Lot VVQR113R060640)
+> **Ngữ cảnh:** Lot `VVQR113R060640` (985 EA) đóng vào 2 Box: Box lẻ 500 EA (`PKQR1800400`) và Box gộp 1,477 EA (`PKQR1800401`). Đã chốt `V-28_HY` lúc 17:45:51 ngày 18/09/2026. Cần rollback đồng bộ để xưởng đóng gói lại hoặc hủy Box sai.
+
+```sql
+BEGIN TRANSACTION;
+BEGIN TRY
+    DECLARE @LotNo VARCHAR(50) = 'VVQR113R060640';
+    DECLARE @ControlNo VARCHAR(20) = '20260911000618';
+    DECLARE @HistNo VARCHAR(20) = '20260918001335';
+
+    -- 1. Thu hồi các bản ghi Box đã sinh trong STB_MaterialLotInfo
+    DELETE FROM SmartFactoryV2.dbo.STB_MaterialLotInfo 
+    WHERE LotNo = @LotNo 
+      AND MaterialLotNo IN ('20260918001377', '20260918001378', '20260918001379');
+
+    -- 2. Xóa lượt chốt công đoạn đóng gói V-28_HY
+    DELETE FROM SmartFactoryV2.dbo.STB_ProdRouteHist 
+    WHERE ProdRouteHistNo = @HistNo 
+      AND ControlNo = @ControlNo 
+      AND RouteCode = 'V-28_HY';
+
+    -- 3. Phục hồi trạng thái tồn dư trên POP Kiosk (trả lại 985 EA cho công nhân đóng gói lại)
+    UPDATE VINATECH_POP.dbo.VINA_PACKING_REMAIN_QTY
+    SET PACKED_QTY = 0,
+        REMAIN_QTY = TOTAL_PROD_QTY
+    WHERE BARCODE = @LotNo 
+      AND ROUTE_CODE = 'V-28_HY';
+
+    -- 4. Trả trạng thái IsProdFinish về False trong STB_SetInfo
+    UPDATE SmartFactoryV2.dbo.STB_SetInfo
+    SET IsProdFinish = 0,
+        ModifyDateTime = GETDATE()
+    WHERE ControlNo = @ControlNo;
+
+    COMMIT TRANSACTION;
+    PRINT N'>> Rollback hoan tat dong goi thanh cong cho Lot ' + @LotNo;
+END TRY
+BEGIN CATCH
+    ROLLBACK TRANSACTION;
+    THROW;
+END CATCH;
+```
+
+#### Case 3: Chạy Stored Procedure Chuẩn Của Hệ Thống (Khuyên dùng nhất - Auto-sync 6 bảng)
+> **Ngữ cảnh:** Thay vì viết các câu lệnh `DELETE`/`UPDATE` thủ công nhiều bảng có nguy cơ sót dữ liệu, kỹ sư MES / DBA có thể gọi trực tiếp Stored Procedure chính thức được POP Web và WinForm [B520] sử dụng:
+
+```sql
+USE SmartFactoryV2;
+GO
+
+-- Chạy hủy đóng gói tự động đồng bộ (Ghi audit, xóa BTP, xóa V-28, trừ PO, hủy chứng từ kho, mở SetInfo)
+EXEC dbo.usp_DoCancelProdPacking_LotNo
+     @pProcessUserID   = '92603003',       -- Mã tài khoản quản trị duyệt hủy
+     @pProcessLanguage = 'VIETNAMESE',    -- 'VIETNAMESE' hoặc 'KOREAN'
+     @pRouteCode       = 'V-28',           -- V-28 (Bắc Ninh), V-28_HY (Hưng Yên), VE10 (Hà Nam)
+     @pBarcode         = 'VVQQ253R072701'; -- Mã Lot cần hủy
+GO
 ```
 
 ---
@@ -678,5 +843,48 @@ BEGIN CATCH
 END CATCH;
 ```
 
+---
 
+### Template 10: Giải Phóng Thiết Bị Bị Kẹt Khóa ACTIVE Trên Kiosk POP (Equipment Release)
 
+> **Ngữ cảnh:** Thiết bị Winding / Curling / Sleeving bị ẩn trên giao diện modal "Xác nhận Kết thúc?" do bản ghi `VINA_EQUIPMENT_MAPPING` bị treo trạng thái `ACTIVE` ở Kế hoạch sản xuất cũ (`DAY_PLAN_NO`).
+> **Lưu ý quan trọng:** Cột `RELEASE_REASON` có kiểu dữ liệu `NVARCHAR(50)`, tuyệt đối không truyền chuỗi quá 50 ký tự để tránh lỗi `String or binary data would be truncated`.
+
+```sql
+USE VINATECH_POP;
+BEGIN TRANSACTION;
+BEGIN TRY
+    -- 1. Kiểm tra danh sách bản ghi trước khi cập nhật
+    SELECT MAPPING_ID, DAY_PLAN_NO, LINE_CODE, ROUTE_CODE, EQUIPMENT_ID, EQUIPMENT_NAME, MAPPING_STATUS, MAPPED_AT
+    FROM VINATECH_POP.dbo.VINA_EQUIPMENT_MAPPING WITH (NOLOCK)
+    WHERE MAPPING_ID IN (<DANH_SÁCH_MAPPING_ID>)
+      AND MAPPING_STATUS IN ('ACTIVE', 'AUTO_MAPPED');
+
+    -- 2. Thực hiện giải phóng thiết bị
+    UPDATE VINATECH_POP.dbo.VINA_EQUIPMENT_MAPPING
+    SET MAPPING_STATUS      = 'RELEASED',
+        RELEASED_AT         = GETDATE(),
+        RELEASE_REASON      = N'Release cho Model 35105', -- Rút ngắn <= 50 ký tự
+        NO_EMP_MODIFYER     = 'vanduc',
+        CD_COMPANY_MODIFYER = 'VINA'
+    WHERE MAPPING_ID IN (<DANH_SÁCH_MAPPING_ID>)
+      AND MAPPING_STATUS IN ('ACTIVE', 'AUTO_MAPPED');
+
+    -- 3. Kiểm tra số dòng tác động
+    DECLARE @AffectedRows INT = @@ROWCOUNT;
+    IF @AffectedRows = <SO_DONG_DU_KIEN>
+    BEGIN
+        PRINT N'Thành công giải phóng ' + CAST(@AffectedRows AS NVARCHAR(10)) + N' thiết bị.';
+        COMMIT TRANSACTION;
+    END
+    ELSE
+    BEGIN
+        PRINT N'Số dòng thực tế (' + CAST(@AffectedRows AS NVARCHAR(10)) + N') khác dự kiến! Thực hiện ROLLBACK.';
+        ROLLBACK TRANSACTION;
+    END
+END TRY
+BEGIN CATCH
+    ROLLBACK TRANSACTION;
+    THROW;
+END CATCH;
+```

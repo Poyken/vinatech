@@ -1,0 +1,3209 @@
+﻿{
+    "Timestamp":  "2026-09-20 11:10:41",
+    "Database":  "SmartFactoryV2",
+    "Table":  "STB_ProductMachine",
+    "Where":  "CreateDateTime \u003e= CAST(GETDATE() AS DATE)",
+    "RowCount":  320,
+    "Data":  [
+                 {
+                     "MachineCode":  "VVMHY104",
+                     "LineCode":  "VVHYC-01",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY104",
+                     "LineCode":  "VVHYC-02",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY104",
+                     "LineCode":  "VVHYC-03",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY104",
+                     "LineCode":  "VVHYC-04",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY104",
+                     "LineCode":  "VVHYC-05",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY104",
+                     "LineCode":  "VVHYC-06",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY104",
+                     "LineCode":  "VVHYC-09",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY104",
+                     "LineCode":  "VVHYC-10",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY105",
+                     "LineCode":  "VVHYC-01",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY105",
+                     "LineCode":  "VVHYC-02",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY105",
+                     "LineCode":  "VVHYC-03",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY105",
+                     "LineCode":  "VVHYC-04",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY105",
+                     "LineCode":  "VVHYC-05",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY105",
+                     "LineCode":  "VVHYC-06",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY105",
+                     "LineCode":  "VVHYC-09",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY105",
+                     "LineCode":  "VVHYC-10",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY108",
+                     "LineCode":  "VVHYC-01",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY108",
+                     "LineCode":  "VVHYC-02",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY108",
+                     "LineCode":  "VVHYC-03",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY108",
+                     "LineCode":  "VVHYC-04",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY108",
+                     "LineCode":  "VVHYC-05",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY108",
+                     "LineCode":  "VVHYC-06",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY108",
+                     "LineCode":  "VVHYC-09",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY108",
+                     "LineCode":  "VVHYC-10",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY109",
+                     "LineCode":  "VVHYC-01",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY109",
+                     "LineCode":  "VVHYC-02",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY109",
+                     "LineCode":  "VVHYC-03",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY109",
+                     "LineCode":  "VVHYC-04",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY109",
+                     "LineCode":  "VVHYC-05",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY109",
+                     "LineCode":  "VVHYC-06",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY109",
+                     "LineCode":  "VVHYC-09",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY109",
+                     "LineCode":  "VVHYC-10",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY117",
+                     "LineCode":  "VVHYC-01",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY117",
+                     "LineCode":  "VVHYC-02",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY117",
+                     "LineCode":  "VVHYC-03",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY117",
+                     "LineCode":  "VVHYC-04",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY117",
+                     "LineCode":  "VVHYC-05",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY117",
+                     "LineCode":  "VVHYC-06",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY117",
+                     "LineCode":  "VVHYC-09",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY117",
+                     "LineCode":  "VVHYC-10",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY118",
+                     "LineCode":  "VVHYC-01",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY118",
+                     "LineCode":  "VVHYC-02",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY118",
+                     "LineCode":  "VVHYC-03",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY118",
+                     "LineCode":  "VVHYC-04",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY118",
+                     "LineCode":  "VVHYC-05",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY118",
+                     "LineCode":  "VVHYC-06",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY118",
+                     "LineCode":  "VVHYC-09",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY118",
+                     "LineCode":  "VVHYC-10",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY121",
+                     "LineCode":  "VVHYC-01",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY121",
+                     "LineCode":  "VVHYC-02",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY121",
+                     "LineCode":  "VVHYC-03",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY121",
+                     "LineCode":  "VVHYC-04",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY121",
+                     "LineCode":  "VVHYC-05",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY121",
+                     "LineCode":  "VVHYC-06",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY121",
+                     "LineCode":  "VVHYC-09",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY121",
+                     "LineCode":  "VVHYC-10",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY122",
+                     "LineCode":  "VVHYC-01",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY122",
+                     "LineCode":  "VVHYC-02",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY122",
+                     "LineCode":  "VVHYC-03",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY122",
+                     "LineCode":  "VVHYC-04",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY122",
+                     "LineCode":  "VVHYC-05",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY122",
+                     "LineCode":  "VVHYC-06",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY122",
+                     "LineCode":  "VVHYC-09",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY122",
+                     "LineCode":  "VVHYC-10",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY130",
+                     "LineCode":  "VVHYC-01",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY130",
+                     "LineCode":  "VVHYC-02",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY130",
+                     "LineCode":  "VVHYC-03",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY130",
+                     "LineCode":  "VVHYC-04",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY130",
+                     "LineCode":  "VVHYC-05",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY130",
+                     "LineCode":  "VVHYC-06",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY130",
+                     "LineCode":  "VVHYC-07",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY130",
+                     "LineCode":  "VVHYC-10",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY131",
+                     "LineCode":  "VVHYC-01",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY131",
+                     "LineCode":  "VVHYC-02",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY131",
+                     "LineCode":  "VVHYC-03",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY131",
+                     "LineCode":  "VVHYC-04",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY131",
+                     "LineCode":  "VVHYC-05",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY131",
+                     "LineCode":  "VVHYC-06",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY131",
+                     "LineCode":  "VVHYC-07",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY131",
+                     "LineCode":  "VVHYC-10",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY134",
+                     "LineCode":  "VVHYC-01",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY134",
+                     "LineCode":  "VVHYC-02",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY134",
+                     "LineCode":  "VVHYC-03",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY134",
+                     "LineCode":  "VVHYC-04",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY134",
+                     "LineCode":  "VVHYC-05",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY134",
+                     "LineCode":  "VVHYC-06",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY134",
+                     "LineCode":  "VVHYC-07",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY134",
+                     "LineCode":  "VVHYC-10",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY135",
+                     "LineCode":  "VVHYC-01",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY135",
+                     "LineCode":  "VVHYC-02",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY135",
+                     "LineCode":  "VVHYC-03",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY135",
+                     "LineCode":  "VVHYC-04",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY135",
+                     "LineCode":  "VVHYC-05",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY135",
+                     "LineCode":  "VVHYC-06",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY135",
+                     "LineCode":  "VVHYC-07",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY135",
+                     "LineCode":  "VVHYC-10",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY143",
+                     "LineCode":  "VVHYC-01",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY143",
+                     "LineCode":  "VVHYC-02",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY143",
+                     "LineCode":  "VVHYC-03",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY143",
+                     "LineCode":  "VVHYC-04",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY143",
+                     "LineCode":  "VVHYC-05",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY143",
+                     "LineCode":  "VVHYC-06",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY143",
+                     "LineCode":  "VVHYC-07",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY143",
+                     "LineCode":  "VVHYC-09",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY144",
+                     "LineCode":  "VVHYC-01",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY144",
+                     "LineCode":  "VVHYC-02",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY144",
+                     "LineCode":  "VVHYC-03",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY144",
+                     "LineCode":  "VVHYC-04",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY144",
+                     "LineCode":  "VVHYC-05",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY144",
+                     "LineCode":  "VVHYC-06",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY144",
+                     "LineCode":  "VVHYC-07",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY144",
+                     "LineCode":  "VVHYC-09",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY147",
+                     "LineCode":  "VVHYC-01",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY147",
+                     "LineCode":  "VVHYC-02",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY147",
+                     "LineCode":  "VVHYC-03",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY147",
+                     "LineCode":  "VVHYC-04",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY147",
+                     "LineCode":  "VVHYC-05",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY147",
+                     "LineCode":  "VVHYC-06",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY147",
+                     "LineCode":  "VVHYC-07",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY147",
+                     "LineCode":  "VVHYC-09",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY148",
+                     "LineCode":  "VVHYC-01",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY148",
+                     "LineCode":  "VVHYC-02",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY148",
+                     "LineCode":  "VVHYC-03",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY148",
+                     "LineCode":  "VVHYC-04",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY148",
+                     "LineCode":  "VVHYC-05",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY148",
+                     "LineCode":  "VVHYC-06",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY148",
+                     "LineCode":  "VVHYC-07",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY148",
+                     "LineCode":  "VVHYC-09",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY21",
+                     "LineCode":  "VVHYC-02",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY21",
+                     "LineCode":  "VVHYC-03",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY21",
+                     "LineCode":  "VVHYC-04",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY21",
+                     "LineCode":  "VVHYC-05",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY21",
+                     "LineCode":  "VVHYC-06",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY21",
+                     "LineCode":  "VVHYC-07",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY21",
+                     "LineCode":  "VVHYC-09",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY21",
+                     "LineCode":  "VVHYC-10",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY22",
+                     "LineCode":  "VVHYC-02",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY22",
+                     "LineCode":  "VVHYC-03",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY22",
+                     "LineCode":  "VVHYC-04",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY22",
+                     "LineCode":  "VVHYC-05",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY22",
+                     "LineCode":  "VVHYC-06",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY22",
+                     "LineCode":  "VVHYC-07",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY22",
+                     "LineCode":  "VVHYC-09",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY22",
+                     "LineCode":  "VVHYC-10",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY25",
+                     "LineCode":  "VVHYC-02",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY25",
+                     "LineCode":  "VVHYC-03",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY25",
+                     "LineCode":  "VVHYC-04",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY25",
+                     "LineCode":  "VVHYC-05",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY25",
+                     "LineCode":  "VVHYC-06",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY25",
+                     "LineCode":  "VVHYC-07",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY25",
+                     "LineCode":  "VVHYC-09",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY25",
+                     "LineCode":  "VVHYC-10",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY26",
+                     "LineCode":  "VVHYC-02",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY26",
+                     "LineCode":  "VVHYC-03",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY26",
+                     "LineCode":  "VVHYC-04",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY26",
+                     "LineCode":  "VVHYC-05",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY26",
+                     "LineCode":  "VVHYC-06",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY26",
+                     "LineCode":  "VVHYC-07",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY26",
+                     "LineCode":  "VVHYC-09",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY26",
+                     "LineCode":  "VVHYC-10",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY39",
+                     "LineCode":  "VVHYC-01",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY39",
+                     "LineCode":  "VVHYC-03",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY39",
+                     "LineCode":  "VVHYC-04",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY39",
+                     "LineCode":  "VVHYC-05",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY39",
+                     "LineCode":  "VVHYC-06",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY39",
+                     "LineCode":  "VVHYC-07",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY39",
+                     "LineCode":  "VVHYC-09",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY39",
+                     "LineCode":  "VVHYC-10",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY40",
+                     "LineCode":  "VVHYC-01",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY40",
+                     "LineCode":  "VVHYC-03",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY40",
+                     "LineCode":  "VVHYC-04",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY40",
+                     "LineCode":  "VVHYC-05",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY40",
+                     "LineCode":  "VVHYC-06",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY40",
+                     "LineCode":  "VVHYC-07",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY40",
+                     "LineCode":  "VVHYC-09",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY40",
+                     "LineCode":  "VVHYC-10",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY43",
+                     "LineCode":  "VVHYC-01",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY43",
+                     "LineCode":  "VVHYC-03",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY43",
+                     "LineCode":  "VVHYC-04",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY43",
+                     "LineCode":  "VVHYC-05",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY43",
+                     "LineCode":  "VVHYC-06",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY43",
+                     "LineCode":  "VVHYC-07",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY43",
+                     "LineCode":  "VVHYC-09",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY43",
+                     "LineCode":  "VVHYC-10",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY44",
+                     "LineCode":  "VVHYC-01",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY44",
+                     "LineCode":  "VVHYC-03",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY44",
+                     "LineCode":  "VVHYC-04",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY44",
+                     "LineCode":  "VVHYC-05",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY44",
+                     "LineCode":  "VVHYC-06",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY44",
+                     "LineCode":  "VVHYC-07",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY44",
+                     "LineCode":  "VVHYC-09",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY44",
+                     "LineCode":  "VVHYC-10",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY52",
+                     "LineCode":  "VVHYC-01",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY52",
+                     "LineCode":  "VVHYC-02",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY52",
+                     "LineCode":  "VVHYC-04",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY52",
+                     "LineCode":  "VVHYC-05",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY52",
+                     "LineCode":  "VVHYC-06",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY52",
+                     "LineCode":  "VVHYC-07",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY52",
+                     "LineCode":  "VVHYC-09",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY52",
+                     "LineCode":  "VVHYC-10",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY53",
+                     "LineCode":  "VVHYC-01",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY53",
+                     "LineCode":  "VVHYC-02",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY53",
+                     "LineCode":  "VVHYC-04",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY53",
+                     "LineCode":  "VVHYC-05",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY53",
+                     "LineCode":  "VVHYC-06",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY53",
+                     "LineCode":  "VVHYC-07",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY53",
+                     "LineCode":  "VVHYC-09",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY53",
+                     "LineCode":  "VVHYC-10",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY56",
+                     "LineCode":  "VVHYC-01",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY56",
+                     "LineCode":  "VVHYC-02",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY56",
+                     "LineCode":  "VVHYC-04",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY56",
+                     "LineCode":  "VVHYC-05",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY56",
+                     "LineCode":  "VVHYC-06",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY56",
+                     "LineCode":  "VVHYC-07",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY56",
+                     "LineCode":  "VVHYC-09",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY56",
+                     "LineCode":  "VVHYC-10",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY57",
+                     "LineCode":  "VVHYC-01",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY57",
+                     "LineCode":  "VVHYC-02",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY57",
+                     "LineCode":  "VVHYC-04",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY57",
+                     "LineCode":  "VVHYC-05",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY57",
+                     "LineCode":  "VVHYC-06",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY57",
+                     "LineCode":  "VVHYC-07",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY57",
+                     "LineCode":  "VVHYC-09",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY57",
+                     "LineCode":  "VVHYC-10",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY65",
+                     "LineCode":  "VVHYC-01",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY65",
+                     "LineCode":  "VVHYC-02",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY65",
+                     "LineCode":  "VVHYC-03",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY65",
+                     "LineCode":  "VVHYC-05",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY65",
+                     "LineCode":  "VVHYC-06",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY65",
+                     "LineCode":  "VVHYC-07",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY65",
+                     "LineCode":  "VVHYC-09",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY65",
+                     "LineCode":  "VVHYC-10",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY66",
+                     "LineCode":  "VVHYC-01",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY66",
+                     "LineCode":  "VVHYC-02",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY66",
+                     "LineCode":  "VVHYC-03",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY66",
+                     "LineCode":  "VVHYC-05",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY66",
+                     "LineCode":  "VVHYC-06",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY66",
+                     "LineCode":  "VVHYC-07",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY66",
+                     "LineCode":  "VVHYC-09",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY66",
+                     "LineCode":  "VVHYC-10",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY69",
+                     "LineCode":  "VVHYC-01",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY69",
+                     "LineCode":  "VVHYC-02",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY69",
+                     "LineCode":  "VVHYC-03",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY69",
+                     "LineCode":  "VVHYC-05",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY69",
+                     "LineCode":  "VVHYC-06",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY69",
+                     "LineCode":  "VVHYC-07",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY69",
+                     "LineCode":  "VVHYC-09",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY69",
+                     "LineCode":  "VVHYC-10",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY70",
+                     "LineCode":  "VVHYC-01",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY70",
+                     "LineCode":  "VVHYC-02",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY70",
+                     "LineCode":  "VVHYC-03",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY70",
+                     "LineCode":  "VVHYC-05",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY70",
+                     "LineCode":  "VVHYC-06",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY70",
+                     "LineCode":  "VVHYC-07",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY70",
+                     "LineCode":  "VVHYC-09",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY70",
+                     "LineCode":  "VVHYC-10",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY78",
+                     "LineCode":  "VVHYC-01",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY78",
+                     "LineCode":  "VVHYC-02",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY78",
+                     "LineCode":  "VVHYC-03",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY78",
+                     "LineCode":  "VVHYC-04",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY78",
+                     "LineCode":  "VVHYC-06",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY78",
+                     "LineCode":  "VVHYC-07",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY78",
+                     "LineCode":  "VVHYC-09",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY78",
+                     "LineCode":  "VVHYC-10",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY79",
+                     "LineCode":  "VVHYC-01",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY79",
+                     "LineCode":  "VVHYC-02",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY79",
+                     "LineCode":  "VVHYC-03",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY79",
+                     "LineCode":  "VVHYC-04",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY79",
+                     "LineCode":  "VVHYC-06",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY79",
+                     "LineCode":  "VVHYC-07",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY79",
+                     "LineCode":  "VVHYC-09",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY79",
+                     "LineCode":  "VVHYC-10",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY82",
+                     "LineCode":  "VVHYC-01",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY82",
+                     "LineCode":  "VVHYC-02",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY82",
+                     "LineCode":  "VVHYC-03",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY82",
+                     "LineCode":  "VVHYC-04",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY82",
+                     "LineCode":  "VVHYC-06",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY82",
+                     "LineCode":  "VVHYC-07",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY82",
+                     "LineCode":  "VVHYC-09",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY82",
+                     "LineCode":  "VVHYC-10",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY83",
+                     "LineCode":  "VVHYC-01",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY83",
+                     "LineCode":  "VVHYC-02",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY83",
+                     "LineCode":  "VVHYC-03",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY83",
+                     "LineCode":  "VVHYC-04",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY83",
+                     "LineCode":  "VVHYC-06",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY83",
+                     "LineCode":  "VVHYC-07",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY83",
+                     "LineCode":  "VVHYC-09",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY83",
+                     "LineCode":  "VVHYC-10",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY91",
+                     "LineCode":  "VVHYC-01",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY91",
+                     "LineCode":  "VVHYC-02",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY91",
+                     "LineCode":  "VVHYC-03",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY91",
+                     "LineCode":  "VVHYC-04",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY91",
+                     "LineCode":  "VVHYC-05",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY91",
+                     "LineCode":  "VVHYC-07",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY91",
+                     "LineCode":  "VVHYC-09",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY91",
+                     "LineCode":  "VVHYC-10",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY92",
+                     "LineCode":  "VVHYC-01",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY92",
+                     "LineCode":  "VVHYC-02",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY92",
+                     "LineCode":  "VVHYC-03",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY92",
+                     "LineCode":  "VVHYC-04",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY92",
+                     "LineCode":  "VVHYC-05",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY92",
+                     "LineCode":  "VVHYC-07",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY92",
+                     "LineCode":  "VVHYC-09",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY92",
+                     "LineCode":  "VVHYC-10",
+                     "RouteCode":  "V-22_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519847)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY95",
+                     "LineCode":  "VVHYC-01",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY95",
+                     "LineCode":  "VVHYC-02",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY95",
+                     "LineCode":  "VVHYC-03",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY95",
+                     "LineCode":  "VVHYC-04",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY95",
+                     "LineCode":  "VVHYC-05",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY95",
+                     "LineCode":  "VVHYC-07",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY95",
+                     "LineCode":  "VVHYC-09",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY95",
+                     "LineCode":  "VVHYC-10",
+                     "RouteCode":  "V-24_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY96",
+                     "LineCode":  "VVHYC-01",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY96",
+                     "LineCode":  "VVHYC-02",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY96",
+                     "LineCode":  "VVHYC-03",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY96",
+                     "LineCode":  "VVHYC-04",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY96",
+                     "LineCode":  "VVHYC-05",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY96",
+                     "LineCode":  "VVHYC-07",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY96",
+                     "LineCode":  "VVHYC-09",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 },
+                 {
+                     "MachineCode":  "VVMHY96",
+                     "LineCode":  "VVHYC-10",
+                     "RouteCode":  "V-25_HY",
+                     "DisplayIndex":  null,
+                     "CreateDateTime":  "\/Date(1789884519857)\/",
+                     "CreateUserID":  "vinaadmin",
+                     "ChangeDateTime":  null,
+                     "ChangeUserID":  null
+                 }
+             ]
+}

@@ -1159,7 +1159,90 @@ WHERE LEN(BoxSerialNo) = 13 AND BoxSerialNo LIKE @SerialPrefix + '%'
   - **Ngày 17/09/2026:** Trả về **0 Lot** tại công đoạn `V-24_HY` (đã dọn sạch hoàn toàn khỏi ngày 17).
 * **Tham chiếu KB:** [KB_03_01_OVERVIEW.md § 5.2](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_01_OVERVIEW.md#L53-L79), [KB_09_SCREEN_BUG_FIXBOOK.md § [B782]](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md#L366-L368), [HOTFIX_LOG.md § ID_50](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/AI_AGENT_CONFIG/HOTFIX_LOG.md#L1034-L1055)
 
+---
 
+### [POP Screen]/[Electrode] — 📍 ID_55 Reset công đoạn cho Lot điện cực VVQQ2520001E34 phục vụ thực hành Kiosk
+* **Ngày sửa:** `2026-09-19` (13:50:44)
+* **Màn hình liên quan (URL / TCode):** `POP Web Kiosk (pop.vinatech.com/pop/screen) - Chuyền Điện cực Bắc Ninh`
+* **Bảng liên quan:** `SmartFactoryV2.dbo.STB_ElectrodeMixInfo`
+* **Mã Lot:** `VVQQ2520001E34` (PO `260825000020`, DayPlan `2026082500040`, Model `CREHCO85`)
+* **Triệu chứng & Yêu cầu:** Người dùng yêu cầu chuẩn bị 1 Lot test mới tinh cùng Lệnh sản xuất với `VVQQ2520001E76` để tự tay thực hành quy trình sản xuất điện cực từ đầu trên POP Kiosk.
+* **Cơ chế sao lưu (Pre-flight Backup):**
+  - Snapshot file: `tools/backups/preflight_20260919_135044_STB_ElectrodeMixInfo_deploy_preflight.json` (1 bản ghi)
+* **Phương án sửa lỗi & Script Deploy:** `sql/hotfix_reset_VVQQ2520001E34.sql`
+  - Thực hiện xóa 1 dòng khởi tạo mẻ trộn dở dang tại `STB_ElectrodeMixInfo`.
+* **Kết quả nghiệm thu Live DB:**
+  - `STB_ElectrodeMixInfo`: **0 records**
+  - `STB_ElectrodeMixStepInfo`: **0 records**
+  - `STB_ElectrodeCoatingInfo`: **0 records**
+  - `STB_ElectrodeRollPressingInfo`: **0 records**
+  - `STB_ElectrodeSlittingResult`: **0 records**
+  - `STB_SetInfo`: **1 record** (Trạng thái Lot mới tinh 100%, sẵn sàng thực hành từ công đoạn Trộn).
+* **Tham chiếu KB:** [KB_05_01_QC_AND_ELECTRODE_CORE.md § 8.11](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md#L601), [POP_KB_02_SCREEN_OPERATIONS.md § 16](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_02_SCREEN_OPERATIONS.md#L377)
 
+---
+
+### [B782] — 📍 ID_56 Sửa lỗi hiển thị phế tính toán âm / NULL trên màn hình B782 (Lot Tracking)
+* **Ngày sửa:** `2026-09-20` (09:58:00)
+* **Người thực hiện / Duyệt:** `vanduc` (IT MES)
+* **Màn hình liên quan (TCode):** `[B782] - VNT_LotTrackingInfo_vvt22`
+* **Đối tượng CSDL:** Stored Procedure `SmartFactoryV2.dbo.usp_LotTrackingInfo_VVT2_get`
+* **Triệu chứng lỗi:**
+  - Trên màn hình B782 (Lot Tracking), cột số lượng NG (Defect Qty) từ công đoạn Cuộn (`V-22_HY`) đến Ngoại quan (`V-27_HY`) của Model 35105 (`ECVT30-357`, Chuyền `VVHYC-02`) không hiển thị/không link được số lượng NG từ POP Kiosk xuống NAIS MES dù công nhân trên Kiosk đã nhập phế và dữ liệu đã ghi vào `STB_DefectRepairInfo`.
+* **Nguyên nhân gốc (Root Cause):**
+  - Trong SP `usp_LotTrackingInfo_VVT2_get` (dài 699 dòng), tác giả gốc sử dụng công thức tính phế thuần: `sum(a.DefectQty) - sum(a.RepairQty)`.
+  - Khi một công đoạn phát sinh phế (`DefectQty > 0`) nhưng chưa từng có số lượng sửa chữa/rework (`RepairQty IS NULL`), theo quy tắc SQL ANSI: `DefectQty - NULL = NULL`.
+  - Toàn bộ kết quả tính toán NG trả về `NULL`, làm giao diện WinForm B782 hiển thị trống trơn hoặc tính toán sai lệch tổng phế.
+* **Phương án sửa lỗi & Patch SQL:**
+  - Bọc hàm `ISNULL` bảo vệ tại toàn bộ 12 vị trí (cả 2 nhánh: lọc theo từng Nhà máy và nhánh Tổng 2 nhà máy):
+    ```sql
+    sum(ISNULL(a.DefectQty, 0)) - sum(ISNULL(a.RepairQty, 0)) /*vanduc update 20260920*/
+    ```
+  - Cập nhật trực tiếp trên Live DB với định danh user `vanduc`.
+* **Kết quả nghiệm thu Live DB:**
+  - Cột NG trên màn hình B782 đã hiển thị chính xác 100% số lượng phế thực tế theo thời gian thực từ POP Kiosk.
+* **Tham chiếu KB:** [KB_09_SCREEN_BUG_FIXBOOK.md § [B782] Bug #5](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md), [KB_03_01_OVERVIEW.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_01_OVERVIEW.md)
+
+---
+
+### [POP Kiosk] — 📍 ID_57 Giải phóng kẹt trạng thái ACTIVE của 7 thiết bị Cell Line Hưng Yên trên POP Kiosk
+* **Ngày sửa:** `2026-09-20` (11:32:00)
+* **Người thực hiện:** `vanduc` (IT MES)
+* **Màn hình liên quan (URL / TCode):** POP Web Kiosk (`pop.vinatech.com/pop/screen`) — Modal "Xác nhận Kết thúc?" (Modal chọn máy khi chốt sản lượng)
+* **Đối tượng CSDL:** Bảng `VINATECH_POP.dbo.VINA_EQUIPMENT_MAPPING` (Profile `VINATECH_POP`, Server `dbserver.hycap.co.kr,5398`)
+* **Triệu chứng lỗi:**
+  - Khi công nhân thao tác chốt sản lượng cho Model 35105 (`ECVT30-357`, PO `260918000008`, DayPlan `2026091800021`) tại xưởng Hưng Yên `VVT_F5`, modal "Xác nhận Kết thúc?" chỉ hiển thị 16 máy Cuộn (Winding C#3 đến C#10), hoàn toàn thiếu 4 máy đầu chuyền: `Winding C#1 -1`, `Winding C#1 -2`, `Winding C#2 -1`, `Winding C#2 -2`, cùng các máy Curling C#1, Curling C#2, Sleeving C#1.
+* **Nguyên nhân gốc (Root Cause):**
+  - Màn hình Kiosk truy vấn danh mục máy khả dụng bằng cách lấy cấu hình từ `SmartFactoryV2.dbo.STB_ProductMachine` kết hợp `STB_MachineMaster`, nhưng có bộ lọc kiểm tra xung đột độc quyền thiết bị:
+    ```sql
+    WHERE NOT EXISTS (
+        SELECT 1 FROM VINATECH_POP.dbo.VINA_EQUIPMENT_MAPPING M
+        WHERE M.EQUIPMENT_ID = E.EQUIPMENT_ID
+          AND M.MAPPING_STATUS IN ('ACTIVE', 'AUTO_MAPPED')
+          AND M.DAY_PLAN_NO <> @CurrentDayPlanNo
+    )
+    ```
+  - 7 máy trên đã từng được gán vào Kế hoạch sản xuất cũ (`2026091500008`, `2026091400010`) từ các ngày 14-17/09/2026 nhưng khi kết thúc kế hoạch không được giải phóng (`RELEASED`).
+  - Trạng thái `ACTIVE` tồn lưu vĩnh viễn khóa các máy này, khiến Kiosk ẩn hoàn toàn khỏi danh sách lựa chọn của Kế hoạch ngày hôm nay.
+* **Cơ chế sao lưu (Pre-flight Backup):**
+  - Snapshot file: `tools/backups/preflight_20260920_113219_VINA_EQUIPMENT_MAPPING_release_locked_machines.json` (7 bản ghi)
+* **Phương án sửa lỗi & Script Deploy:**
+  - Script triển khai: [`sql_hotfixes/hotfix_20260920_release_locked_equipment_mappings.sql`](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/sql_hotfixes/hotfix_20260920_release_locked_equipment_mappings.sql)
+  - Cập nhật:
+    ```sql
+    UPDATE VINATECH_POP.dbo.VINA_EQUIPMENT_MAPPING
+    SET MAPPING_STATUS      = 'RELEASED',
+        RELEASED_AT         = GETDATE(),
+        RELEASE_REASON      = N'Release cho Model 35105',
+        NO_EMP_MODIFYER     = 'vanduc',
+        CD_COMPANY_MODIFYER = 'VINA'
+    WHERE MAPPING_ID IN (2298, 2416, 2239, 2240, 2346, 2360, 2352)
+      AND MAPPING_STATUS IN ('ACTIVE', 'AUTO_MAPPED');
+    ```
+  - Script Rollback dự phòng: [`sql_hotfixes/rollback_20260920_release_locked_equipment_mappings.sql`](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/sql_hotfixes/rollback_20260920_release_locked_equipment_mappings.sql)
+* **Kết quả nghiệm thu Live DB:**
+  - 7/7 bản ghi đã chuyển sang `MAPPING_STATUS = 'RELEASED'`, `NO_EMP_MODIFYER = 'vanduc'`.
+  - Trên Kiosk POP, toàn bộ 20 máy Winding, 10 máy Curling, 10 máy Sleeving hiển thị đầy đủ 100%, công nhân chọn máy và chốt sản lượng thành công.
+* **Tham chiếu KB:** [POP_KB_01_ARCHITECTURE_AND_API.md § 3.3](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_01_ARCHITECTURE_AND_API.md), [POP_KB_03_TROUBLESHOOTING.md § 2.20](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_03_TROUBLESHOOTING.md), [KB_09_SCREEN_BUG_FIXBOOK.md § [POP Kiosk]](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md)
 
 

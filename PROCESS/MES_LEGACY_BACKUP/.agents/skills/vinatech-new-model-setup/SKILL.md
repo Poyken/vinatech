@@ -19,8 +19,10 @@ Kích hoạt khi nhà máy chuẩn bị sản xuất mã hàng mới, thêm Mode
    - Cấu hình số lượng chiếc/box, chiếc/carton, chiếc/pallet theo kích thước Size.
 4. **Bước 4: Cấu hình Mẫu Tem & Định dạng In (A460 - `STB_ModelLabelInfo`)**
    - Cấu hình `LabelType`, `FormatName`, tem Barcode, tem Sanmina.
-5. **Bước 5: Thiết lập Quy Trình Sản Xuất / Line Route (B210/B220/B230/B240)**
+5. **Bước 5: Thiết lập Quy Trình Sản Xuất / Line Route (B210/B220/B230/B240/B270)**
    - **B240 (`STB_BasicRoutingInfo` + `STB_BasicRoutingDetail`):** Thiết lập và tick chọn danh sách các công đoạn (`RouteCode`) cho nhà máy (`WorkCenterCode`).
+   - **B270 (`STB_ProductMachine`):** Bắt buộc gán danh mục Máy móc cho Dây chuyền & Công đoạn (`LineCode` + `RouteCode` + `MachineCode`), đặc biệt là Winding, Curling, Sleeving để trên Kiosk POP hiển thị danh sách máy cho công nhân chọn.
+   - ⚠️ **Kiểm tra POP Kiosk:** Đảm bảo các máy trong `VINATECH_POP.dbo.VINA_EQUIPMENT_MAPPING` không bị kẹt trạng thái `ACTIVE` ở Kế hoạch cũ làm ẩn máy trên Kiosk.
    - Phân bổ danh sách Máy (`STB_RouteEqpInfo`) và Nhân viên (`STB_WorkerInfo`).
 6. **Bước 6: Cấu hình Tự Động Sinh Số Lô (A416 / `STB_Vietnam_PackingPrinting`)**
    - Kiểm tra tiền tố VJ hoặc prefix Lot cho từng khách hàng.

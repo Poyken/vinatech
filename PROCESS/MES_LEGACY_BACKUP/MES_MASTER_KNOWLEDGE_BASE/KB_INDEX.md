@@ -124,8 +124,12 @@ Related Files:
 *   **In tem Sanmina theo Plan (B763 & B767):** Tự động sinh CartonBoxNo, Serial tịnh tiến liên tục qua nhiều Lot, sửa tiến độ thùng → Chi tiết: **KB_04_03**
 *   **Hủy gộp box thành phẩm (B523):** Trình tự xóa bản ghi kho thành phẩm, gọi `usp_DoCancelMaterialDoc` và trừ sản lượng PO → Chi tiết: **KB_04 Kịch bản C**
 *   **Hủy tem đóng gói HN523 (Hà Nam):** Xóa sub-lot `STB_MaterialLotInfo`, hủy chứng từ `MaterialDoc` (bypass trigger `0x999997`), giảm trừ sản lượng công đoạn cuối `VE10` và PO → Chi tiết: **[KB_04_02 § [HN523]](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_02_SCREEN_BUGS.md#hn523--kịch-bản-sự-cố-khẩn-cấp-hủy-tem-đóng-gói--rã-box-tại-hà-nam-đồng-bộ-giảm-sản-lượng-ve10--po)**
+*   **Hủy đóng gói Box trên POP Kiosk (Web):** Hướng dẫn công nhân hủy đóng gói box, rã thùng và hoàn trả số lượng an toàn → Chi tiết: **[POP_KB_04 § 2.5](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_04_ROLLBACK_AND_SAFETY.md#25-quy-trình-hủy-đóng-gói-box-trên-pop-kiosk-sot)**
 
-### 🟡 Sản Xuất (Xem KB_03)
+### 🟡 Sản Xuất & POP Kiosk (Xem KB_03 & POP_KB)
+*   **Lỗi tính phế âm / NULL B782 (Lot Tracking):** Sửa công thức trừ phế bọc `ISNULL(a.DefectQty, 0) - ISNULL(a.RepairQty, 0)` tại 12 vị trí trong SP `usp_LotTrackingInfo_VVT2_get` → Chi tiết: **KB_09 [B782] Bug #5**, **HOTFIX_LOG ID_56**
+*   **POP Kiosk thiếu máy Winding / Curling / Sleeving:** Khai báo cấu hình `STB_ProductMachine` cho Model và giải phóng khóa `ACTIVE` trong `VINATECH_POP.dbo.VINA_EQUIPMENT_MAPPING` sang `RELEASED` → Chi tiết: **POP_KB_01 §3.3**, **POP_KB_03 §2.20**, **KB_09 [POP Kiosk]**, **HOTFIX_LOG ID_57**
+*   **Lỗi "Không tìm thấy LOT trong kho" khi nạp cuộn điện cực POP:** Lệch mã BOM giữa cuộn điện cực xuất kho thực tế và mã BOM định nghĩa trong PO → Chi tiết: **POP_KB_03 §2.19 (POP-ERR-19)**
 *   **Hủy chốt nhầm Winding B782 / B530:** Xóa phế `STB_DefectRepairInfo`, xóa công đoạn downstream `V-23_HY` trong `STB_ProdRouteHist`, update `CompleteRoute = NULL` trên `V-22_HY` để OP chốt lại → Chi tiết: **KB_09 §B782**, **KB_03 §5.16**, **HOTFIX_LOG ID_44**
 *   **Hủy mẻ trộn điện cực thừa B470/B552:** Xóa sạch `STB_ElectrodeMixStepInfo`, `STB_ElectrodeMixInfo`, `STB_SetInfo` khi chưa tráng Coating → Chi tiết: **KB_09 §B552 #3**, **KB_05_01 §8.10**, **HOTFIX_LOG ID_42 & ID_43**
 *   **Sửa ngày JobDate B782:** Sửa ngày ghi nhận sản xuất của Lot, điều chỉnh `ProdDateTime` theo chu kỳ ca 10:00 sáng hôm nay đến 10:00 sáng hôm sau → Chi tiết: **KB_03 §5.2**, **KB_09 §B782 #2 & #3**, **HOTFIX_LOG ID_50**
@@ -137,3 +141,4 @@ Related Files:
 *   **Kho nhập sai Warehouse (F330):** Phiếu nhập kho gán sai mã kho → Chi tiết: **KB_02 §4.3**
 *   **NVL báo lỗi Hết hạn sử dụng:** Cách kiểm tra hạn dùng và ân xá Lot qua bảng `stb_vvt_OpenExpiredMaterial` → Chi tiết: **KB_02 §4.10**
 *   **Chuyển Lot bị HOLD sang kho chính:** Sửa `MaterialWarehouseCode` từ `HOLDING_*` sang `ROH_*` → Chi tiết: **KB_02 §4.7**
+

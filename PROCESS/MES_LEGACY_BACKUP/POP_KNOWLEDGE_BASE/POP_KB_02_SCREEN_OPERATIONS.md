@@ -221,7 +221,12 @@ WHERE LotNo = @LotNo;
 
 - Sau khi kiểm tra đủ số lượng thành phẩm và phế phẩm:
   1. Công nhân bấm nút lớn **`HOÀN THÀNH SẢN XUẤT`** (Save Production).
-  2. Kiosk hiển thị hộp thoại xác nhận: Lot No, Công đoạn, Công nhân, Số lượng Đạt (Good Qty), Số lượng Lỗi (Defect Qty), Thời gian gia công, Danh sách thiết bị kết nối.
+  2. Kiosk hiển thị hộp thoại xác nhận **"Xác nhận Kết thúc?"** gồm 2 cột:
+     - **Cột trái:** Tên Công đoạn, Người thực hiện, SL Đạt (Good Qty), SL Lỗi (Defect Qty), Thời gian gia công, Mã LOT.
+     - **Cột phải:** Danh sách thiết bị kết nối (**`Thiết Bị: N máy`**).
+       - Tải toàn bộ máy từ `STB_ProductMachine` theo `LineCode` + `RouteCode`.
+       - Lọc bỏ các máy đang bị chiếm dụng (`MAPPING_STATUS = 'ACTIVE'`) ở các Kế hoạch (`DAY_PLAN_NO`) khác trong `VINA_EQUIPMENT_MAPPING`.
+       - Nếu thiếu máy do OP ca trước quên bấm Release: IT chạy script chuyển `MAPPING_STATUS = 'RELEASED'` cho các Plan cũ.
   3. Bấm **"Đồng ý"** (Xác nhận kết thúc).
 - **Tác động Database:**
   - Gọi SP `SmartFactoryV2.dbo.USP_POP_SET_ROUTE_COMPLETE`.
@@ -248,13 +253,40 @@ Chỉ những LOT đã hoàn thành 100% tất cả các công đoạn sản xu�
    - Nhập số lượng đóng gói quy cách (VD: 6,000 EA) -> Hệ thống trừ tuần tự theo **nguyên tắc FIFO từ trên xuống**.
    - **Gộp LOT khác ngày (Slide 37):** Nếu các LOT trong ngày đã hết, bấm nút **"Lệnh SX"** để chọn Kế hoạch của ngày khác. **Yêu cầu bắt buộc: Phải cùng Model sản phẩm!**
 
-### 9.2 ⭐ Lịch Sử Đóng Gói & HỦY ĐÓNG GÓI TRỰC TIẾP TRÊN UI (Slide 39 — `image28.png`)
-- Chạm vào nút **"Lịch sử"** ở góc dưới màn hình Đóng gói -> Hộp thoại danh sách Box hiển thị chi tiết: Mã Box, Số lượng, Ngày/giờ, Tên công nhân.
-- **In lại nhãn:** Bấm nút **"In"** trên từng Box để in lại tem dán.
-- **HỦY ĐÓNG GÓI TỪNG BOX:** Bấm nút **"Hủy"** trên từng Box -> Popup xác nhận số lượng hiển thị -> Bấm đồng ý:
-  - Hệ thống hủy mã Box trong `STB_PackingInfo`.
-  - **TỰ ĐỘNG HOÀN TRẢ VÀ KHÔI PHỤC NGAY LẬP TỨC** số lượng sản phẩm về lại LOT gốc (trạng thái *Đang Chờ*).
-- **HỦY TẤT CẢ (Cancel All Boxes):** Bấm nút **"Hủy tất cả"** ở góc trên để hoàn tác toàn bộ các Box của lệnh sản xuất cùng lúc!
+### 9.2 ⭐ Lịch Sử Đóng Gói & HỦY ĐÓNG GÓI TRỰC TIẾP TRÊN UI (Slide 39 — `image28.png` & Live POP UI)
+
+**Thao tác hủy đóng gói trên giao diện POP Kiosk có thể thực hiện theo 2 cách:**
+
+1. **Cách 1: Chạm trực tiếp thẻ Lot đã đóng trong "Tiến độ LOT" (Nhanh nhất):**
+   - Khi Lot đã có hộp (thẻ hiển thị icon Hộp màu cam hoặc tick xanh kèm mã hộp bên dưới, ví dụ `ECVT30-357QR1800379`), chạm thẳng vào thẻ đó.
+   - Hệ thống hiển thị hộp thoại cảnh báo:
+     > **Xác nhận quản trị viên**  
+     > *Hủy hộp này?*  
+     > `ECVT30-357QR1800379`  
+     > **Nhập mã nhân viên quản trị**  
+     > `[ Ô nhập mã NV ]`  
+     > `[ Có ]`  `[ Không ]`
+   - Bắt buộc nhập mã nhân viên có quyền quản trị (ví dụ: `92603003`). Bấm **[Có]** ➔ Kích hoạt ngay Stored Procedure `usp_DoCancelProdPacking_LotNo`.
+2. **Cách 2: Vào popup "Lịch sử" đóng gói:**
+   - Chạm vào nút **"Lịch sử"** ở góc dưới màn hình Đóng gói -> Hộp thoại danh sách Box hiển thị chi tiết: Mã Box, Số lượng, Ngày/giờ, Tên công nhân.
+   - **In lại nhãn:** Bấm nút **"In"** trên từng Box để in lại tem dán.
+   - **HỦY ĐÓNG GÓI TỪNG BOX:** Bấm nút **"Hủy"** trên từng Box -> Nhập xác nhận quản trị viên -> Bấm đồng ý.
+   - **HỦY TẤT CẢ (Cancel All Boxes):** Bấm nút **"Hủy tất cả"** ở góc trên để hoàn tác toàn bộ các Box của lệnh sản xuất cùng lúc.
+
+- **Dưới Database hệ thống chạy gì:**
+  - Gọi duy nhất SP: `SmartFactoryV2.dbo.usp_DoCancelProdPacking_LotNo`.
+  - Ghi Audit Trail vào `STB_ProdRouteHistCancelHist`.
+  - Xóa toàn bộ bản ghi lượt chốt công đoạn đóng gói trong `STB_ProdRouteHist` (`V-28` / `V-28_HY`).
+  - Xóa toàn bộ bản ghi Box BTP tương ứng trong `STB_MaterialLotInfo` (xóa `PackingID`).
+  - Giảm lũy kế hoàn thành `ProdFinishQty` trong `STB_ProductionOrderInfo` và `OutputQty` trong `STB_ProdRouteSummary`.
+  - Hủy chứng từ kho trong `STB_MaterialDocInfo` (`IsCancel = 1`).
+  - Cập nhật `STB_SetInfo.IsProdFinish = 0`, khôi phục số lượng sẵn sàng trên Kiosk POP về 100%.
+  - *Xem chi tiết tại SoT:* [POP_KB_04_ROLLBACK_AND_SAFETY.md §2.5](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_04_ROLLBACK_AND_SAFETY.md#25--đóng-gói-packing--cơ-chế-hủy-hộp--rollback-đóng-gói-trên-pop-web-kiosk).
+
+- **📌 Nghiệp vụ thực tế với Đóng gói gộp (Merge Pack):**
+  - Khi một Lot được chia làm nhiều Box hoặc gộp chung với Lot khác (ví dụ Lot `VVQR113R060640` chia Box đơn 500 EA mã `PKQR1800400` và Box gộp 1,477 EA mã `PKQR1800401`):
+  - Công nhân có thể chọn hủy riêng lẻ từng Box mà không ảnh hưởng tới Box còn lại. Số lượng của Box bị hủy sẽ ngay lập tức xuất hiện trở lại ở danh sách chờ đóng gói của chính Lot đó.
+  - **Điều kiện tiên quyết:** Thùng hàng chưa quét xuất kho vật lý sang kho thành phẩm / FGS (`ShipFlag = 0`). Với nhà máy Hà Nam, nếu đã nhập kho `STB_VN_FINISHGOODS_HN_New` thì SP sẽ chặn không cho hủy.
 
 ---
 
@@ -342,3 +374,99 @@ Chỉ những LOT đã hoàn thành 100% tất cả các công đoạn sản xu�
 5. **Cơ chế Hủy Đóng Gói (Rollback) kịp thời:** Nếu đóng gói nhầm hoặc cần dán lại tem, bấm nút "Lịch sử" -> bấm nút **[HỦY]** từng Box hoặc **[HỦY TẤT CẢ]** để khôi phục số lượng LOT về trạng thái Đang Chờ ngay trên Kiosk.
 6. **Auto-save tại màn hình Tự kiểm:** Chỉ cần click chuột ra ngoài ô nhập liệu là kết quả đo đã được lưu vào cơ sở dữ liệu và đồng bộ NAIS. Không cần tìm nút Save.
 7. **Không tự ý chuyển đổi Line khi đang dở ca:** Đổi Line sẽ giải phóng phiên làm việc Kiosk Session hiện hành và đặt lại toàn bộ dữ liệu đang tải dở.
+
+---
+
+## 15. ⚙️ HƯỚNG DẪN CẤU HÌNH MAPPING SLOT NVL TRÊN WEB UI (`/popSetting/assemblyGroupMapping`)
+
+### 15.1 Mục đích & Nghiệp vụ
+Khi dây chuyền áp dụng chế độ nạp theo cụm/nhóm (`INPUT_MODE = 'GROUP'` trong bảng `VINA_ASSEMBLY_GROUP_MODE`), màn hình POP (`/pop/screen`) **KHÔNG** lấy danh sách NVL trực tiếp từ BOM phẳng mà dựa vào cấu hình slot trong bảng `VINATECH_POP.dbo.VINA_GROUP_INPUT_ROUTE`.
+Nếu một nhóm vật tư (như `BOTTOM-PLATE`, `TERMINAL-PLATE`, `WASHER`...) có trong BOM nhưng chưa được khai báo slot cho Chuyền/Line đó, công nhân mở POP lên sẽ **không thấy ô quét NVL**.
+
+### 15.2 Thao tác trên Web UI POP Setting
+- **Đường dẫn Web:** `https://pop.vinatech.com/popSetting/assemblyGroupMapping`
+- **Menu điều hướng:** `POP Setting` ➔ `조립 그룹 투입 매핑` *(Assembly Group Input Mapping)*
+
+#### Các bước cấu hình:
+1. **Chọn Chuyền (Line):** Chọn Công ty (`VVT`) và mã Dây chuyền cần cấu hình (ví dụ `TCX1`, `TCX2`).
+2. **Cách 1 — Thêm thủ công từng Slot:**
+   - Bấm **Thêm Slot (슬롯 추가)**.
+   - **Mã Slot (`SLOT_CODE`):** Ví dụ `BOTTOM-PLATE`, `TERMINAL-PLATE`.
+   - **Tên Slot (`SLOT_NAME`):** Ví dụ `BOTTOM-PLATE` (Đế dán), `TERMINAL-PLATE` (Terminal plate).
+   - **Công đoạn bắt buộc quét (`ROUTE_CODE`):** Chọn công đoạn thực tế cần quét (ví dụ: `V-22` Cuốn hoặc `V-24` Cuốn mép).
+   - **Nhóm Master MES (`MASTER_GROUP_CODES`):** Chọn đúng mã `ProductGroupCode` từ Master MES (`BOTTOM-PLATE`, `TERMINAL-PLATE`...). Có thể map nhiều mã cách nhau bằng dấu chấm phẩy `;`.
+   - **Bắt buộc quét (`IS_REQUIRED`):** Chọn `Y` (bắt buộc) hoặc `N`.
+   - **Thứ tự hiển thị (`DISPLAY_ORDER`):** Nhập số thứ tự hiển thị trên Kiosk.
+   - Bấm **Lưu (저장)** (`/popSetting/saveGroupInputRouteProcess`).
+3. **Cách 2 — Sao chép cấu hình từ Chuyền mẫu (Copy Mapping):**
+   - Sử dụng tính năng **Copy cấu hình (`/popSetting/copyGroupInputRouteProcess`)**: Chọn Line nguồn đã cấu hình chuẩn (ví dụ các line `VVHYC-04`, `VVHYC-13`) ➔ Chọn Line đích cần áp dụng (`TCX1`, `TCX2`) ➔ Bấm **Sao chép**.
+4. **Kiểm tra sau cấu hình:**
+
+---
+
+## 16. ⚡ VẬN HÀNH DÂY CHUYỀN ĐIỆN CỰC & SLITTING LINE TRÊN POP KIOSK (`/pop/screen`)
+
+> **Hệ sinh thái:** POP Web Single Page Application (SPA) chuyên biệt  
+> **Chuyền phụ trách:** `Điện cực Bắc Ninh` (`ElectrodeBN`) & `SLITTING LINE`  
+> **Tài khoản kiểm chứng:** `92603003` (Nguyễn Văn Đức)  
+> **Mã Lot mẫu:** `VVQQ2520001E76` (Cuộn Mẹ `CREHCO85`), `VVQQ2520001E79` (Đã xẻ 21 cuộn con `SRFHCEK0-xxx`)  
+
+### 16.1 Bản đồ Module Frontend POP Điện Cực
+Khác với giao diện Cell Line lắp ráp thông thường (nạp BOM phẳng theo con EA), giao diện Điện cực được điều phối bởi 6 module JavaScript chuyên trách:
+- `popMixing.js`: Giao diện & quy trình Trộn (Pha khô, Tạo hạt, Nhào trộn), tích hợp kết nối cân điện tử qua RS232 và in nhãn mẻ Slurry.
+- `popCoating.js`: Giao diện Mạ điện cực, ma trận đo độ dày phủ 1 mặt / 2 mặt (`First/Middle/Last` x `Trái/Giữa/Phải` theo µm) và bảng thông số buồng mạ (Nhiệt độ, độ ẩm, khe đầu, khổ mạ).
+- `popRolling.js`: Giao diện Ép cuộn (Roll Pressing), ma trận đo nén sau cán, kiểm soát nhiệt độ trục cán 130°C, tốc độ đường cán 30 m/min và mật độ nén g/cc.
+- `popSlitting.js`: Giao diện Xẻ băng điện cực, cấu hình dao xẻ theo khổ mm x EA, nhận diện khổ còn lại và phân bổ cuộn con.
+- `slitHandoffLineMap`: Bản đồ điều hướng chuyển chuyền tự động từ `ElectrodeBN` sang `SLITTING LINE`.
+- `popElectrodeInfoConfig.js` & `popElectrodeProcess.js`: Khởi tạo và đồng bộ trạng thái công nghệ điện cực.
+
+---
+
+### 16.2 Quy trình Thao tác Thực tế 4 Công Đoạn trên POP Kiosk
+
+#### Bước 1: Chọn Chuyền & Nạp Thẻ Lot Điện Cực (Cuộn Mẹ)
+1. Trên thanh header POP Kiosk, nhấn **CHUYỀN** ➔ Chọn: **`Điện cực Bắc Ninh`** (`ElectrodeBN`).
+2. Nhấn vào khu vực **LOT / Lệnh sản xuất** ➔ Mở modal tìm kiếm.
+3. Nhập mã Lot Cuộn Mẹ (ví dụ: `VVQQ2520001E76`) hoặc chọn Lịch tháng tương ứng (ví dụ: Tháng 8/2026, DayPlan `2026082500040`).
+4. Nhấn dòng kết quả ➔ Bấm **[+ Thêm]** để nạp dữ liệu Lot lên giao diện chính.
+
+#### Bước 2: Thao tác Công đoạn 01 — Trộn (Mixing / Route V-01)
+- **Gán máy:** Chọn từ Mixer #1 (`VVEP284`) đến Mixer #7 (`VVEP426`).
+- **Nạp BOM 3 Pha:**
+  1. *Pha 1 (Trộn khô):* Than hoạt tính HCE (`GAHCCA-001`), Super P Carbon (`GATCCC-001`), PVP (`GAADCB-001`).
+  2. *Pha 2 (Tạo hạt):* CMC Binder (`GADACB-001`), Nước cất (`WTRN01-001`).
+  3. *Pha 3 (Nhào trộn Slurry):* Nước cất cân bù độ nhớt.
+- **Tính năng mở rộng:** Bấm nút **[⚖ Kết nối cân]** để đọc trực tiếp số cân từ cổng COM cân điện tử, bấm **[🖨️ In Nhãn]** để in tem mẻ trộn dán lên thùng Slurry trung gian.
+- **Dữ liệu ngầm:** Lưu vào `SmartFactoryV2.dbo.STB_ElectrodeMixInfo` và `STB_ElectrodeMixStepInfo` (13 bước cân).
+
+#### Bước 3: Thao tác Công đoạn 02 — Mạ (Coating / Route V-02)
+- **Gán máy:** Coater #1 (`VVEP287`).
+- **Chọn chế độ mạ:** Chọn mạ **Một mặt (One Side)** hoặc **Hai mặt (Both Side)**.
+- **Nhập ma trận độ dày:** Nhập số đo kiểm thực tế tại các điểm `FIRST1..3`, `MIDDLE1..3`, `LAST1..3` tại 3 vị trí ngang màng (`Trái`, `Giữa`, `Phải`) với đơn vị micron (µm) (ví dụ: 202 µm, 201 µm).
+- **Kiểm tra thông số môi trường:** Xác nhận Nhiệt độ phòng phủ (`20 °C`), Độ ẩm (`10 %`), Khe hở gạt hồ (100 µm / 200 µm), Khổ phủ (485 mm).
+- **Dữ liệu ngầm:** Lưu vào `STB_ElectrodeCoatingInfo` (Sản lượng Kế hoạch, Thực tế, Đạt, Lỗi).
+
+#### Bước 4: Thao tác Công đoạn 03 — Ép cuộn (Roll Pressing / Route V-03)
+- **Gán máy:** Roll Pressing #1 (`VVEP427`).
+- **Nhập thông số cán ép:** Xác nhận Nhiệt độ kiểm soát SX (`130 °C`), Tốc độ đường cán (`30 m/min`), Khe đầu ban đầu (`10 µm`).
+- **Nhập ma trận đo sau ép:** Đo và nhập độ dày sau nén tại First/Middle/Last để đảm bảo cuộn foil đạt độ dày danh định (ví dụ: 200 µm). Nhập mật độ cán (`g/cc`).
+- **Dữ liệu ngầm:** Lưu vào `STB_ElectrodeRollPressingInfo` và cập nhật độ dày cuộn mẹ tại `STB_SetInfo.SIExtReal03`.
+
+#### Bước 5: Chuyển Line sang Chuyền Cắt (Slitting Handoff)
+- Trên thanh tab công đoạn của `ElectrodeBN`, bấm vào tab **`↳ Cắt (Slitting) (Chuyển line)`**.
+- Hệ thống hiển thị hộp thoại xác nhận chuyển chuyền:
+  > *"Bạn có muốn chuyển sang Dây chuyền Cắt (SLITTING LINE) không?"*
+- Bấm **[Chuyển line]** ➔ POP Kiosk tự động nạp cấu hình và chuyển phiên làm việc sang **`CHUYỀN: SLITTING LINE`**.
+
+#### Bước 6: Thao tác trên Giao diện SLITTING LINE
+1. **Nạp Cuộn Mẹ (Mother Roll):** Nhấn **[Chọn LOT]** ➔ Tìm và nạp cuộn mẹ `VVQQ2520001E76`.
+2. **Cấu hình thông số cuộn:**
+   - Chọn loại lá cực: **`Lá ăn mòn`** hoặc **`Lá hóa thành`**.
+   - Chọn loại than hoạt tính: **`HCE`**, **`CY`**, **`YP`**, **`BY`**, **`BA`**.
+   - Hệ thống tự động đọc và hiển thị *Khổ còn lại* (ví dụ 485 mm).
+3. **Cài đặt dao xẻ (`+ Thêm khổ`):**
+   - Bấm **[+ Thêm khổ]** để tạo cấu hình dải cắt: Nhập `Chiều rộng xẻ (mm)` và `Số lượng cuộn (EA)`.
+   - Có thể cấu hình đa khổ xẻ trên cùng 1 cuộn mẹ (ví dụ: 17.7mm x 10 cuộn, 90mm x 5 cuộn...).
+4. **Thực hiện xẻ & In tem cuộn con:**
+   - Bấm **[Chạy xẻ]**: Hệ thống ghi nhận kết quả vào `STB_ElectrodeSlittingResult`, tự động sinh mã Barcode cho từng cuộn con (`<LotMẹ>-001`, `<LotMẹ>-002`... như `VVQQ2520001E79-001` đến `-021`), sinh record trong `STB_SetInfo` với mã `SRF%` tương ứng, in tem barcode dán lên từng cuộn và nhập kho `Stb_SlittingStock_VVT` sẵn sàng cấp cho chuyền Cell Line.
+

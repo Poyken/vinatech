@@ -68,7 +68,7 @@ Internet/Intranet
 | POST | `/api/common/login` | Đăng nhập SSO | READ `VINA_SSO_LOGIN` → INSERT `VINA_SSO_TOKEN` |
 | GET | `/api/common/getLineList` | Danh sách dây chuyền | READ `SmartFactoryV2.STB_LineInfo` |
 | GET | `/api/common/getWorkerList` | Danh sách công nhân | READ `SmartFactoryV2.STB_WorkerInfo` |
-| GET | `/api/common/getEquipmentList` | Thiết bị theo Line | READ `SmartFactoryV2.STB_EquipmentInfo` |
+| GET | `/api/common/getEquipmentList` | Thiết bị theo Line & Route | READ `SmartFactoryV2.dbo.STB_ProductMachine` + `STB_MachineMaster` (JOIN `VINATECH_POP.dbo.VINA_EQUIPMENT_SETTING`) |
 
 ### 2.2 Screen Module — Sản Xuất (`/api/pop/screen/`)
 
@@ -131,10 +131,59 @@ Internet/Intranet
 | `STB_QualityIQC/PQC/OQC/FOQC` | Kết quả QC | **Read + Write** |
 | `STB_LineInfo` | Master data dây chuyền | Read only |
 | `STB_WorkerInfo` | Master data công nhân | Read only |
-| `STB_EquipmentInfo` | Master data thiết bị | Read only |
+| `STB_ProductMachine` | Mapping máy móc với Dây chuyền & Công đoạn (`LineCode` + `RouteCode` + `MachineCode`) | Read only |
+| `STB_MachineMaster` | Master data máy móc thiết bị (`MachineCode`, `MachineName`, `WorkCenterCode`, `IsProdMachine`, `IsUsed`) | Read only |
 | `MongoToMesPerformance` | **Bảng đồng bộ trung gian giữa MongoDB (Kiosk UI) & MES** | **Read + Write** (SoT cho tiến độ Kiosk: `IsDone`, `TotalProdQty`) |
 
-### 3.3 Sơ Đồ Data Flow — Nhập NVL (Material Input)
+### 3.3 🏭 Kiến Trúc Quản Lý Thiết Bị POP Kiosk & Vòng Đời Mapping
+
+#### A. Hai Câu Truy Vấn Cốt Lõi Khi Load Danh Sách Máy Trên Modal
+Khi Kiosk mở modal chốt sản xuất hoặc modal gán máy, Backend thực thi 2 câu query kết hợp:
+
+1. **Query 1 — Lấy danh mục máy cấu hình theo Line & Route:**
+   ```sql
+   /* 2026-02-19 [POP 화면] - 공정별 설비 목록 조회 */
+   SELECT
+       MM.MachineCode,
+       MM.MachineName,
+       MM.CompanyCode,
+       CASE 
+           WHEN ES.EQUIPMENT_SETTING_PROCESS_MODE = 'CONTINUOUS' THEN 'Y'
+           WHEN ES.EQUIPMENT_SETTING_PROCESS_MODE = 'BATCH' THEN 'N'
+           WHEN ES.EQUIPMENT_SETTING_PROCESS_MODE = 'MANUAL' THEN NULL
+           ELSE ISNULL(ES.EQUIPMENT_SETTING_CONTINUOUS, 'Y')
+       END AS Continuous,
+       CASE 
+           WHEN ES.EQUIPMENT_SETTING_ID IS NULL THEN 1
+           WHEN ES.EQUIPMENT_SETTING_PROCESS_MODE = 'MANUAL' THEN 1
+           ELSE 0 
+       END AS Manual
+   FROM SmartFactoryV2.dbo.STB_ProductMachine PM WITH(NOLOCK)
+   INNER JOIN SmartFactoryV2.dbo.STB_MachineMaster MM WITH(NOLOCK) ON MM.MachineCode = PM.MachineCode
+   LEFT JOIN VINATECH_POP.dbo.VINA_EQUIPMENT_SETTING ES WITH(NOLOCK)
+       ON ES.EQUIPMENT_SETTING_ID = PM.MachineCode
+       AND ES.EQUIPMENT_SETTING_TYPE = 'STATIC_DATA_000069'
+   WHERE PM.LineCode = @LineCode
+     AND PM.RouteCode = @RouteCode
+   ORDER BY MM.MachineName;
+   ```
+
+2. **Query 2 — Kiểm tra trạng thái máy bận (`VINA_EQUIPMENT_MAPPING`):**
+   ```sql
+   /* 2026-05-14 [김형진] - [설비별 활성 매핑 조회] */
+   SELECT MAPPING_ID, DAY_PLAN_NO, LINE_CODE, ROUTE_CODE, EQUIPMENT_ID, EQUIPMENT_NAME, MAPPING_STATUS
+   FROM VINATECH_POP.dbo.VINA_EQUIPMENT_MAPPING WITH(NOLOCK)
+   WHERE EQUIPMENT_ID = @MachineCode
+     AND MAPPING_STATUS IN ('ACTIVE', 'AUTO_MAPPED');
+   ```
+
+#### B. Cơ Chế Filter (Chống Xung Đột Thiết Bị)
+- **Logic:** Tại 1 thời điểm, 1 máy vật lý chỉ được phục vụ 1 Kế hoạch sản xuất (`DAY_PLAN_NO`).
+- Nếu máy có `MAPPING_STATUS = 'ACTIVE'` ở một `DAY_PLAN_NO` khác Kế hoạch đang mở ➔ Backend/UI tự động **loại bỏ (ẩn)** máy đó khỏi danh sách chọn.
+- **Sự cố "Khóa mồ côi" (Orphan Lock):** Nếu OP ca trước / ngày trước làm xong Lot nhưng không bấm "Hủy gán / Release", bản ghi `ACTIVE` sẽ tồn tại vĩnh viễn khiến ca sau mở Plan mới không thấy máy.
+- **Cách xử lý cứu hộ:** Cập nhật `MAPPING_STATUS = 'RELEASED', RELEASED_AT = GETDATE(), NO_EMP_MODIFYER = 'vanduc'` cho các `MAPPING_ID` bị kẹt của các Plan cũ.
+
+### 3.4 Sơ Đồ Data Flow — Nhập NVL (Material Input)
 
 ```
 Công nhân chọn LOT → Bấm "Nhập NVL"

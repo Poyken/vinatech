@@ -150,33 +150,227 @@ ORDER BY CreateDate DESC;
 
 ---
 
-### 2.5 ✅ Đóng Gói (Packing) — CÓ THỂ ROLLBACK TRÊN UI (HỦY TỪNG BOX & HỦY TẤT CẢ)
-*(Xác minh 100% theo Slide 39 — `image28.png` trong tài liệu đào tạo chuẩn 2026-09 của DX Team)*
+### 2.5 ✅ Đóng Gói (Packing) — CƠ CHẾ HỦY HỘP & ROLLBACK ĐÓNG GÓI TRÊN POP WEB KIOSK
+*(Xác minh thực tế 100% trên Live DB ngày 20/09/2026 với Lot `VVQQ253R072701` & `VVQR033R072774`)*
 
-**Đây là thao tác có chức năng rollback hoàn chỉnh và tiện lợi nhất trên POP Web UI.**
+**Đây là chức năng rollback hoàn chỉnh và an toàn nhất trên POP Web UI, được bảo vệ bằng lớp xác thực Quản Trị Viên (Supervisor Mode).**
 
-**Quy trình rollback đóng gói chính thức trên Kiosk UI:**
-1. Vào công đoạn **Đóng gói (Packing)** trên Menu quy trình bên trái.
-2. Chạm vào nút **"Lịch sử"** ở thanh công cụ phía dưới -> Hộp thoại danh sách Box hiển thị chi tiết: Mã Box, Số lượng, Ngày/giờ, Tên công nhân.
-3. **Cấp độ 1: HỦY ĐÓNG GÓI TỪNG BOX (Cancel Single Box):**
-   - Chạm vào nút **`[HỦY]`** trên dòng Box cần hủy.
-   - Hộp thoại xác nhận số lượng hiển thị -> Bấm xác nhận.
-   - Hệ thống tự động xóa mã Box trong `STB_PackingInfo` và **KHÔI PHỤC NGAY LẬP TỨC** số lượng của Box đó về lại LOT gốc (trạng thái *Đang Chờ*).
-4. **Cấp độ 2: HỦY TẤT CẢ (Cancel All Boxes):**
-   - Chạm vào nút **`[HỦY TẤT CẢ]`** ở góc trên hộp thoại để hoàn tác toàn bộ các Box đã đóng của Lệnh sản xuất chỉ với 1 thao tác.
-5. **In lại nhãn (Reprint):**
-   - Chạm vào nút **"In"** trên bất kỳ Box nào để in lại tem dán (in được cả nhãn Box và nhãn LOT).
+#### A. Giao Diện & Điều Kiện Kích Hoạt (UI Trigger):
+1. **Cách 1 — Chạm trực tiếp vào Thẻ Lot đã đóng trong danh sách "Tiến độ LOT":**
+   - Khi Lot đã có hộp (icon Thùng hàng màu cam/xanh kèm mã hộp, ví dụ: `ECVT30-357QR1800379`), công nhân chạm vào thẻ đó.
+   - Hệ thống hiển thị Modal cảnh báo màu cam:
+     ```
+     [ ! ] Xác nhận quản trị viên
+           Hủy hộp này?
+           ECVT30-357QR1800379
+           Nhập mã nhân viên quản trị
+           [ ____________________ ]
+           [ Có (Đỏ) ]  [ Không (Xám) ]
+     ```
+   - **Bảo mật:** Bắt buộc nhập mã nhân viên có thẩm quyền quản trị (ví dụ: `92603003`). Công nhân vận hành bình thường không thể tự ý bấm hủy nếu không có sự giám sát của quản lý.
+2. **Cách 2 — Vào popup "Lịch sử" đóng gói:**
+   - Chạm vào nút **"Lịch sử"** ở thanh dưới -> Bấm nút **`[HỦY]`** từng Box hoặc **`[HỦY TẤT CẢ]`**.
 
+---
+
+#### B. Thực Tế Dưới Hệ Thống & CSDL Sẽ Run Gì (End-to-End Execution Flow):
+
+Khi người dùng nhập mã nhân viên quản lý và bấm **[Có]**, backend API của POP Web kích hoạt trực tiếp Stored Procedure duy nhất phụ trách hủy đóng gói:
+```sql
+EXEC SmartFactoryV2.dbo.usp_DoCancelProdPacking_LotNo
+     @pProcessUserID   = '92603003',      -- Mã nhân viên quản trị vừa nhập
+     @pProcessLanguage = 'VIETNAMESE',   -- Ngôn ngữ giao diện
+     @pRouteCode       = 'V-28',          -- Công đoạn đóng gói (V-28 hoặc V-28_HY)
+     @pBarcode         = 'VVQQ253R072701' -- Mã Lot gốc cần hủy hộp
 ```
-Khi bấm "HỦY" hoặc "HỦY TẤT CẢ":
-1. STB_PackingInfo → DELETE hoặc UPDATE Status = 'Cancelled'
-2. STB_SetInfo → REVERT: PackedQty -= BoxQty, Trạng thái LOT quay về 'Đang Chờ'
-3. VINA_PACKING_LOG → INSERT: Log hủy đóng gói kèm WorkerID
-4. BoxID → Thu hồi và giải phóng
+
+**Chi tiết 6 bước xử lý tuần tự bên trong Stored Procedure:**
+
+1. **Ghi nhận Audit Trail (Bắt buộc kiểm toán):**
+   - Ghi nhật ký vào bảng `STB_ProdRouteHistCancelHist`:
+     ```sql
+     INSERT INTO STB_ProdRouteHistCancelHist (LotNo, CreateUserID, CreateDateTime)
+     VALUES (@LotNo, @pProcessUserID, GETDATE())
+     ```
+   - *Kiểm chứng thực tế:* Ghi nhận bản ghi `Idx = 87327`, `LotNo = VVQQ253R072701`, `CreateUserID = 92603003` lúc 12:51:33 ngày 20/09/2026.
+
+2. **Kiểm tra nghiệp vụ xuất nhập kho (Chặn hủy nếu đã nhập kho):**
+   - Nếu Lot thuộc nhà máy Hà Nam (`VE%`, `SP%`, `RW%`), kiểm tra bảng `STB_VN_FINISHGOODS_HN_New`.
+   - Nếu hàng đã nhập kho thành phẩm ➔ Báo lỗi chặn ngay:
+     `'Lot này đã được nhập kho, không thể huỷ gộp box. Nếu muốn huỷ liên hệ Chị Xuân kho thành phẩm'` (HTTP 500 / Error Alert).
+
+3. **Dọn dẹp lượt chốt công đoạn đóng gói (`STB_ProdRouteHist`):**
+   - Đối với model Việt Nam (`V%`, `MV%`), xóa sạch các bản ghi chốt sản lượng tại các Route đóng gói (`V-28`, `V-28_HY`, `VE10`, `E-28`, `MV-05`) trong `STB_ProdRouteHist` nếu Lot chưa phân bổ bán thành phẩm:
+     ```sql
+     DELETE STB_ProdRouteHist 
+     WHERE RouteCode IN ('V-28','V-28_BG','VE10','E-28','MV-05','V-28_HY')
+       AND ControlNo IN (SELECT ControlNo FROM STB_SetInfo WHERE Barcode = @Barcode)
+     ```
+   - *Kiểm chứng thực tế:* 20 bản ghi chốt V-28 (51 pcs mỗi box) của Lot `VVQQ253R072701` được xóa sạch hoàn toàn (Count về 0).
+
+4. **Thu hồi toàn bộ Box BTP trong `STB_MaterialLotInfo`:**
+   - Xóa các bản ghi mang mã `PackingID` (`PK...`) tương ứng đã tạo ra trong lượt đóng gói đó.
+   - *Kiểm chứng thực tế:* 20 bản ghi Box (`PKQR1800557` ~ `PKQR1800576`) trong `STB_MaterialLotInfo` đã bị xóa sạch, giải phóng hoàn toàn mã thùng.
+
+5. **Hoàn tác số lượng Lệnh sản xuất & Tồn kho thành phẩm:**
+   - **PO Finish Qty:** Giảm trừ `ProdFinishQty` trên `STB_ProductionOrderInfo`:
+     `ProdFinishQty = ProdFinishQty - @ProdQty`
+   - **Tóm tắt công đoạn:** Giảm trừ `OutputQty` trên `STB_ProdRouteSummary`.
+   - **Chứng từ kho:** Gọi `usp_DoCancelMaterialDoc` để chuyển trạng thái hủy (`IsCancel = 1`) cho chứng từ nhập/xuất trong `STB_MaterialDocInfo` và xóa chi tiết trong `STB_MaterialDocLotInfo`.
+   - **Xóa vết nhân công:** Xóa bản ghi thợ đóng gói tương ứng trong `STB_ProdRouteWorkerHist`.
+
+6. **Khôi phục trạng thái LOT về đang chờ đóng gói:**
+   - Cập nhật bảng `STB_SetInfo`:
+     ```sql
+     UPDATE STB_SetInfo
+     SET IsProdFinish = 0,
+         ProdFinishDateTime = NULL,
+         ProdFinishJobDate = NULL,
+         ProdFinishShiftCode = NULL
+     WHERE ControlNo = @ControlNo AND IsProdFinish = 1
+     ```
+   - Đưa thẻ Lot trên giao diện POP Kiosk quay trở lại danh sách chờ đóng gói (icon Đồng hồ cát màu vàng), số lượng sẵn sàng được hoàn trả nguyên vẹn (1072 EA).
+
+---
+
+#### C. Bảng So Sánh Trước vs Sau Khi Bấm Hủy (Live Verified Matrix):
+
+| Bảng CSDL / Chỉ Số | Trước Khi Hủy (12:45) | Sau Khi Quản Trị Viên Bấm Hủy (12:51) | Cơ Chế Tác Động |
+| :--- | :--- | :--- | :--- |
+| **`STB_ProdRouteHistCancelHist`** | Chưa có | **Có bản ghi Idx 87327** (`92603003`) | Ghi nhận Audit Log quản trị |
+| **`STB_MaterialLotInfo`** | 20 bản ghi Box (`PKQR1800557`..576) | **0 bản ghi** (Đã xóa sạch) | Thu hồi mã Box BTP |
+| **`STB_ProdRouteHist` (V-28)** | 20 bản ghi (51 EA × 20 = 1020 EA) | **0 bản ghi** (Đã xóa) | Xóa lượt chốt sản lượng đóng gói |
+| **`STB_SetInfo.IsProdFinish`** | 0 (hoặc 1 nếu chốt xong) | **0 (`False`)** | Mở lại Lot cho phép đóng gói lại |
+| **`STB_ProductionOrderInfo`** | Tính gộp 1020 EA vào `ProdFinishQty` | **Trừ 1020 EA** ra khỏi lũy kế PO | Trả lại hạn mức Lệnh sản xuất |
+| **Giao diện POP Kiosk** | Đã đóng gói: 1,020 EA, Còn lại: 0 EA | **Sẵn sàng: 1,072 EA, Đã đóng gói: 0 EA** | Khôi phục 100% trên màn hình chuyền |
+
+---
+
+#### D. Hướng Dẫn Hủy Đóng Gói Thủ Công (Manual Override Guide):
+
+Khi Kiosk POP bị treo, lỗi mất mạng, không hiển thị được popup "Xác nhận quản trị viên" hoặc cần xử lý cưỡng bức cho sản xuất gấp, IT/DBA/Quản lý có thể thực hiện theo 3 phương án thủ công sau:
+
+##### 🌟 Phương Án 1 (Khuyên Dùng Nhất) — Gọi Trực Tiếp Stored Procedure Qua SQL / PowerShell
+Đây là cách an toàn và chuẩn hóa nhất vì tái sử dụng đúng 100% logic của hệ thống, không sợ bỏ sót bảng hoặc lệch tồn kho kế toán:
+
+- **Chạy qua SQL Server Management Studio / DBeaver:**
+```sql
+USE SmartFactoryV2;
+GO
+
+EXEC dbo.usp_DoCancelProdPacking_LotNo
+     @pProcessUserID   = '92603003',       -- Mã quản trị viên / IT
+     @pProcessLanguage = 'VIETNAMESE',    -- Ngôn ngữ ('VIETNAMESE' hoặc 'KOREAN')
+     @pRouteCode       = 'V-28',           -- V-28 (Bắc Ninh), V-28_HY (Hưng Yên), VE10 (Hà Nam)
+     @pBarcode         = 'VVQQ253R072701'; -- Mã Lot cần hủy đóng gói
+GO
 ```
 
-> [!TIP]
-> **Đính chính nhận định cũ:** Công nhân hoàn toàn có thể bấm nút **`[HỦY]`** trực tiếp trên Kiosk ngay cả khi đã bấm in tem nhãn, miễn là thùng hàng chưa làm thủ tục quét mã xuất kho vật lý sang kho thành phẩm (`ShipFlag = 0`).
+- **Hoặc chạy nhanh qua PowerShell CLI tại trạm MES:**
+```powershell
+.\mes.ps1 -Command "EXEC SmartFactoryV2.dbo.usp_DoCancelProdPacking_LotNo '92603003', 'VIETNAMESE', 'V-28', 'VVQQ253R072701'"
+```
+
+---
+
+##### 🖥️ Phương Án 2 (Dành Cho Quản Lý Xưởng / Leader) — Hủy Trên MES WinForm Desktop
+Nếu không tiện mở tool SQL, Quản lý sản xuất có thể dùng ứng dụng WinForm MES:
+1. Mở phần mềm **MES WinForm (Awoo SmartFramework)**.
+2. Vào menu: **생산관리 (Quản lý sản xuất) ➔ [B520] 제품 박스실적입력 (Nhập thực tích Box sản phẩm)** hoặc **[B523] / [HN523]**.
+3. Tại ô tìm kiếm `Lot No` / `Barcode`: Quét hoặc nhập mã Lot (ví dụ: `VVQQ253R072701`) ➔ Bấm **[조회] (Tìm kiếm)**.
+4. Lưới dữ liệu bên dưới sẽ liệt kê toàn bộ các Box BTP (`PK...`) đã đóng.
+5. Chọn dòng Box cần hủy (hoặc chọn tất cả) ➔ Bấm nút **[실적취소] (Hủy thực tích / Cancel Result)** trên thanh công cụ.
+6. Xác nhận đồng ý ➔ Phần mềm WinForm sẽ tự động gọi `usp_DoCancelProdPacking_LotNo` để dọn dẹp và khôi phục trạng thái.
+
+---
+
+##### 🔧 Phương Án 3 (Dành Cho DBA / Cứu Hộ Khẩn Cấp) — Transaction SQL Script Can Thiệp Đa Bảng
+Sử dụng khi SP hệ thống bị kẹt (ví dụ vướng điều kiện khóa kho hoặc cần can thiệp ngoại lệ riêng cho 1 Box lẻ). **BẮT BUỘC** tuân thủ quy tắc an toàn `BEGIN TRAN ... ROLLBACK`:
+
+```sql
+-- ==============================================================================
+-- HOTFIX THỦ CÔNG: ROLLBACK HỦY ĐÓNG GÓI CHO LOT [VVQQ253R072701]
+-- Tuân thủ Rule 1: BEGIN TRAN ... ROLLBACK -> Kiểm tra @@ROWCOUNT -> Đổi COMMIT
+-- ==============================================================================
+USE SmartFactoryV2;
+GO
+
+BEGIN TRANSACTION;
+BEGIN TRY
+    DECLARE @LotNo VARCHAR(50) = 'VVQQ253R072701';
+    DECLARE @RouteCode VARCHAR(20) = 'V-28';           -- V-28 hoặc V-28_HY
+    DECLARE @BoxQty NUMERIC(20,5) = 1020.00000;       -- Tổng SL hủy (51 EA x 20 Box)
+    DECLARE @UserID VARCHAR(20) = '92603003';
+
+    -- 1. Lấy thông tin điều phối ControlNo & PONo
+    DECLARE @ControlNo VARCHAR(20), @PONo VARCHAR(20);
+    SELECT @ControlNo = ControlNo, @PONo = PONo 
+    FROM SmartFactoryV2.dbo.STB_SetInfo WITH(NOLOCK) 
+    WHERE Barcode = @LotNo;
+
+    IF @ControlNo IS NULL
+    BEGIN
+        RAISERROR(N'Không tìm thấy thông tin Lot trong STB_SetInfo!', 16, 1);
+        RETURN;
+    END
+
+    -- 2. Ghi nhật ký kiểm toán Audit Trail
+    INSERT INTO SmartFactoryV2.dbo.STB_ProdRouteHistCancelHist (LotNo, CreateUserID, CreateDateTime)
+    VALUES (@LotNo, @UserID, GETDATE());
+    PRINT N'>> 1. Ghi log Audit STB_ProdRouteHistCancelHist thành công.';
+
+    -- 3. Xóa các Box BTP trong STB_MaterialLotInfo
+    DELETE FROM SmartFactoryV2.dbo.STB_MaterialLotInfo 
+    WHERE LotNo = @LotNo;
+    PRINT N'>> 2. Đã xóa STB_MaterialLotInfo: ' + CAST(@@ROWCOUNT AS VARCHAR) + N' bản ghi Box.';
+
+    -- 4. Xóa lượt chốt công đoạn đóng gói trong STB_ProdRouteHist
+    DELETE FROM SmartFactoryV2.dbo.STB_ProdRouteHist 
+    WHERE ControlNo = @ControlNo AND RouteCode = @RouteCode;
+    PRINT N'>> 3. Đã xóa STB_ProdRouteHist: ' + CAST(@@ROWCOUNT AS VARCHAR) + N' lượt chốt.';
+
+    -- 5. Giảm trừ sản lượng hoàn thành trên Lệnh sản xuất (PO)
+    UPDATE SmartFactoryV2.dbo.STB_ProductionOrderInfo 
+    SET ProdFinishQty = CASE WHEN ProdFinishQty >= @BoxQty THEN ProdFinishQty - @BoxQty ELSE 0 END
+    WHERE PONo = @PONo;
+    PRINT N'>> 4. Đã giảm trừ ProdFinishQty trên PO: ' + @PONo;
+
+    -- 6. Giảm trừ sản lượng tóm tắt công đoạn STB_ProdRouteSummary
+    UPDATE SmartFactoryV2.dbo.STB_ProdRouteSummary
+    SET OutputQty = CASE WHEN OutputQty >= @BoxQty THEN OutputQty - @BoxQty ELSE 0 END
+    WHERE PONo = @PONo AND RouteCode = @RouteCode;
+    PRINT N'>> 5. Đã giảm trừ OutputQty trong STB_ProdRouteSummary.';
+
+    -- 7. Xóa vết phân công thợ đóng gói
+    DELETE FROM SmartFactoryV2.dbo.STB_ProdRouteWorkerHist 
+    WHERE ProdRouteHistNo IN (SELECT ProdRouteHistNo FROM SmartFactoryV2.dbo.STB_ProdRouteHist WITH(NOLOCK) WHERE ControlNo = @ControlNo);
+
+    -- 8. Khôi phục trạng thái Lot trong STB_SetInfo về WIP
+    UPDATE SmartFactoryV2.dbo.STB_SetInfo 
+    SET IsProdFinish = 0,
+        ProdFinishDateTime = NULL,
+        ProdFinishJobDate = NULL,
+        ProdFinishShiftCode = NULL,
+        ChangeDateTime = GETDATE()
+    WHERE ControlNo = @ControlNo;
+    PRINT N'>> 6. Đã khôi phục trạng thái IsProdFinish = 0 trong STB_SetInfo.';
+
+    -- 9. Dọn dẹp tồn dư tạm trên POP Kiosk (nếu có)
+    DELETE FROM VINATECH_POP.dbo.VINA_PACKING_REMAIN_QTY 
+    WHERE BARCODE = @LotNo AND ROUTE_CODE = @RouteCode;
+    PRINT N'>> 7. Đã dọn dẹp bảng tạm VINA_PACKING_REMAIN_QTY trên POP.';
+
+    -- [BẢO VỆ]: Mặc định để ROLLBACK khi chạy khảo sát, đổi thành COMMIT sau khi kiểm tra @@ROWCOUNT chuẩn
+    ROLLBACK TRANSACTION;
+    PRINT N'>> [AN TOÀN] Giao dịch đã được ROLLBACK để kiểm tra. Hãy đổi sang COMMIT khi xác nhận chính xác!';
+END TRY
+BEGIN CATCH
+    ROLLBACK TRANSACTION;
+    PRINT N'>> LỖI PHÁT SINH: ' + ERROR_MESSAGE();
+    THROW;
+END CATCH;
+GO
+```
 
 ---
 

@@ -995,13 +995,23 @@ FROM STB_MachineMaster
 WHERE IsUsed = 1
 ORDER BY LineCode, MachineCode;
 
--- Xem cấu hình máy ↔ Route cho model cụ thể
-SELECT PM.MachineCode, PM.RouteCode, MM.MachineName, MM.LineCode
-FROM STB_ProductMachine PM
-JOIN STB_MachineMaster MM ON PM.MachineCode = MM.MachineCode
-WHERE PM.MaterialCode = 'ECVT30-367' -- Model cần kiểm tra
-ORDER BY PM.RouteCode;
+-- Xem cấu hình máy ↔ Route theo Line và Công đoạn (STB_ProductMachine không có cột MaterialCode)
+SELECT PM.MachineCode, PM.RouteCode, MM.MachineName, PM.LineCode
+FROM STB_ProductMachine PM WITH(NOLOCK)
+JOIN STB_MachineMaster MM WITH(NOLOCK) ON PM.MachineCode = MM.MachineCode
+WHERE PM.LineCode = 'VVHYC-02' AND PM.RouteCode IN ('V-22_HY', 'V-24_HY', 'V-25_HY')
+ORDER BY PM.RouteCode, MM.MachineName;
 ```
+
+##### 6.21.1.1 Danh Mục Máy Cell Line Hưng Yên (VVT_F5) Chuẩn Hóa
+Áp dụng cho các Line Cell `VVHYC-01` ~ `VVHYC-10` (trừ `VVHYC-08` không tồn tại):
+
+| Công Đoạn | RouteCode | Số Lượng | Danh Sách Máy | Ghi Chú |
+|---|---|---|---|---|
+| **Winding (Cuốn)** | `V-22_HY` | 20 máy Cuốn + Lò sấy | `VVMHY21` (`C#1-01`), `VVMHY22` (`C#1-02`), `VVMHY39` (`C#2-01`), `VVMHY40` (`C#2-02`), `VVMHY52` (`C#3-01`), `VVMHY53` (`C#3-02`), `VVMHY65` (`C#4-01`), `VVMHY66` (`C#4-02`), `VVMHY78` (`C#5-01`), `VVMHY79` (`C#5-02`), `VVMHY91` (`C#6-01`), `VVMHY92` (`C#6-02`), `VVMHY104` (`C#7-01`), `VVMHY105` (`C#7-02`), `VVMHY117` (`C#8-01`), `VVMHY118` (`C#8-02`), `VVMHY130` (`C#9-01`), `VVMHY131` (`C#9-02`), `VVMHY143` (`C#10-01`), `VVMHY144` (`C#10-02`) | Kèm 7 lò sấy chân không `Dry Vacuum Oven C#2-01` ~ `07` |
+| **Curling (Cuốn mép)** | `V-24_HY` | 10 máy | `Curling C#1` (`VVMHY25`), `C#2` (`VVMHY43`), `C#3` (`VVMHY56`), `C#4` (`VVMHY69`), `C#5` (`VVMHY82`), `C#6` (`VVMHY95`), `C#7` (`VVMHY108`), `C#8` (`VVMHY121`), `C#9` (`VVMHY134`), `C#10` (`VVMHY147`) | Line 02 có thêm `Washing C#2` |
+| **Sleeving (Bọc vỏ)** | `V-25_HY` | 10 máy | `Sleeving C#1` (`VVMHY26`), `C#2` (`VVMHY44`), `C#3` (`VVMHY57`), `C#4` (`VVMHY70`), `C#5` (`VVMHY83`), `C#6` (`VVMHY96`), `C#7` (`VVMHY109`), `C#8` (`VVMHY122`), `C#9` (`VVMHY135`), `C#10` (`VVMHY148`) | Đã đổi tên chuẩn `VVMHY96` thành `Sleeving C#6` (trước bị đặt trùng Sleeving C#7) |
+
 
 #### 6.21.2 Bảo Trì & Sửa Chữa Thiết Bị
 Khi máy móc hỏng, thông tin sự cố được ghi nhận vào `STB_MachineRepairHistory`. Chi tiết kỹ thuật viên sửa và linh kiện thay thế được lưu tương ứng trong `STB_MachineRepairWorker` và `STB_MachineRepairMaterialHist`.

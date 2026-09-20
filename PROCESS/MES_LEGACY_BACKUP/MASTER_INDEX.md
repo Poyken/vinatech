@@ -67,7 +67,13 @@ MES_LEGACY_BACKUP/
 │   └── GW_08_BAN_HANG.md                       # Bán hàng
 │
 ├── 📂 POP_KNOWLEDGE_BASE/                      # 🖥️ TRI THỨC POP KIOSK (MỚI)
-│   └── POP_USER_MANUAL.md                      # Hướng dẫn vận hành POP
+│   ├── POP_KB_INDEX.md                         # ← Mục lục tra cứu POP Kiosk & API
+│   ├── POP_KB_01_ARCHITECTURE_AND_API.md       # Kiến trúc POP, REST API, DB Schema & Thiết bị (§3.3)
+│   ├── POP_KB_02_SCREEN_OPERATIONS.md          # Thao tác từng màn hình & Modal chọn máy
+│   ├── POP_KB_03_TROUBLESHOOTING.md            # Sổ tay cứu hộ 20 mã lỗi POP (POP-ERR-01 → 20)
+│   ├── POP_KB_04_ROLLBACK_AND_SAFETY.md        # Hủy đóng gói Box, Rollback & An toàn dữ liệu
+│   ├── POP_KB_05_DB_VERIFICATION_AUDIT.md      # Kiểm toán UI Kiosk vs Live DB
+│   └── POP_USER_MANUAL.md                      # Hướng dẫn vận hành POP cho công nhân & QC
 │
 ├── 📂 SYSTEM_ARCHITECTURE/                     # 🏛️ KIẾN TRÚC HỆ THỐNG (MỚI)
 │   ├── SYSTEM_INDEX.md                         # ← Mục lục kiến trúc
@@ -113,7 +119,7 @@ MES_LEGACY_BACKUP/
 | **Debug lỗi MES chi tiết** | → [MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md](MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md) |
 | **Tra cứu Database** | → [DATABASE_KNOWLEDGE_BASE/DB_INDEX.md](DATABASE_KNOWLEDGE_BASE/DB_INDEX.md) |
 | **Vận hành Groupware** | → [GROUPWARE_KNOWLEDGE_BASE/GW_INDEX.md](GROUPWARE_KNOWLEDGE_BASE/GW_INDEX.md) |
-| **Hướng dẫn POP Kiosk** | → [POP_KNOWLEDGE_BASE/POP_USER_MANUAL.md](POP_KNOWLEDGE_BASE/POP_USER_MANUAL.md) |
+| **POP Kiosk & API Server** | → [POP_KNOWLEDGE_BASE/POP_KB_INDEX.md](POP_KNOWLEDGE_BASE/POP_KB_INDEX.md) & [POP_USER_MANUAL.md](POP_KNOWLEDGE_BASE/POP_USER_MANUAL.md) |
 | **Kiến trúc hệ thống** | → [SYSTEM_ARCHITECTURE/SYSTEM_INDEX.md](SYSTEM_ARCHITECTURE/SYSTEM_INDEX.md) |
 | **Quy tắc Agent AI** | → [AI_AGENT_CONFIG/RULES.md](AI_AGENT_CONFIG/RULES.md) |
 | **Hướng dẫn Script Tools** | → [MES_MASTER_KNOWLEDGE_BASE/MES_SCRIPT_GUIDE.md](MES_MASTER_KNOWLEDGE_BASE/MES_SCRIPT_GUIDE.md) |

@@ -596,9 +596,105 @@ END CATCH;
 GO
 ```
 
+
 ---
 
+### 8.11 ⚡ Phân Tích Bản Chất Thâm Sâu Vận Hành Lot Điện Cực Trên POP Web Kiosk (`pop.vinatech.com/pop/screen`) & Cơ Chế Handoff Sang Slitting Line
 
+> **Ngày khảo sát thực tế:** 2026-09-19 | **Môi trường:** Live Web POP Kiosk (`https://pop.vinatech.com/pop/screen`)  
+> **Tài khoản xác thực:** `92603003` (Nguyễn Văn Đức)  
+> **Lot khảo sát trực tiếp:** `VVQQ2520001E76` (Kế hoạch ngày `2026082500040`, PO `260825000020`, Model mẹ `CREHCO85` - Coatingroll- HCE 200 (SuperP 6%))  
+> **Lot đối chứng hoàn chỉnh:** `VVQQ2520001E79` (Đã xẻ 21 cuộn con `VVQQ2520001E79-001` .. `-021`)  
+
+#### 1. Bản Chất Khác Biệt Cốt Lõi Giữa Lot Điện Cực (Electrode) vs Lot Lắp Ráp (Cell/Module):
+
+| Tiêu Chí So Sánh | Lot Cell / Module Lắp Ráp | Lot Điện Cực (Electrode) |
+| :--- | :--- | :--- |
+| **Đơn vị quản lý** | Từng con thành phẩm (EA, Pieces). | Chiều dài (Mét), Khổ rộng (mm), Độ dày (µm), Khối lượng (kg). |
+| **Quy ước mã Lot** | `VVPP...`, `VVPR...`, `VVQQ...`, `MVV...` (Không có hậu tố phân cấp cuộn). | **Cuộn mẹ (Mother Roll):** Mang hậu tố `E` (VD: `VVQQ2520001E76`).<br>**Cuộn con (Slit Child Roll):** Mang hậu tố STT xẻ băng `-001`, `-002`... (VD: `VVQQ2520001E79-021`). |
+| **Mã Model Sản Phẩm** | Mã Cell/Module (VD: `WEC3R0507QG`, `VEC3R0106QG`). | **Cuộn mẹ:** Tiền tố `CRE%` (Coating Roll, VD: `CREHCO85`).<br>**Cuộn con:** Tiền tố `SRF%` (Slit Roll Foil, VD: `SRFHCEK0-900`, `SRFHCEK0-177`). |
+| **Bảng Lịch Sử Công Đoạn** | Lưu tuần tự từng bước trong **`STB_ProdRouteHist`** (`VE01`, `VE02`...). | **HOÀN TOÀN KHÔNG DÙNG `STB_ProdRouteHist`** (Query 0 rows). Toàn bộ dữ liệu được quản lý ở hệ thống bảng chuyên biệt theo công nghệ hóa lý điện cực. |
+| **Môi trường nhập liệu** | POP Screen thông thường (Winding $\rightarrow$ Assembly $\rightarrow$ Aging $\rightarrow$ Packing). | Ứng dụng Electron cân CMC (`electrode.weighing`) + POP Screen SPA đa module (`popMixing.js`, `popCoating.js`, `popRolling.js`, `popSlitting.js`). |
+
+---
+
+#### 2. Kiến Trúc 4 Công Đoạn Khép Kín Trên Giao Diện POP Web (`pop.vinatech.com/pop/screen`):
+
+Dây chuyền điện cực vận hành trên **2 Chuyền Kiosk riêng biệt** được kết nối qua cơ chế Handoff tự động (`slitHandoffLineMap`):
+
+```mermaid
+graph LR
+    subgraph "CHUYỀN: Điện cực Bắc Ninh (ElectrodeBN)"
+        S1["01 Trộn (Mixing)<br/>Route V-01<br/>Mixer #1 ~ #7<br/>BOM 3 pha cân"] --> S2["02 Mạ (Coating)<br/>Route V-02<br/>Coater #1 (VVEP287)<br/>Độ dày 1 mặt / 2 mặt"]
+        S2 --> S3["03 Ép cuộn (Roll Pressing)<br/>Route V-03<br/>Roll Pressing #1 (VVEP427)<br/>Độ dày nén & Mật độ g/cc"]
+        S3 --> Handoff{"↳ Cắt (Slitting)<br/>(Chuyển line)<br/>Handoff Modal"}
+    end
+
+    subgraph "CHUYỀN: SLITTING LINE"
+        Handoff -->|Chuyển line| S4["Cắt xẻ băng (Slitting)<br/>Nạp Cuộn Mẹ (Mother Roll)<br/>Cài đặt khổ dao xẻ (mm x EA)<br/>Chạy xẻ ➔ Sinh Cuộn Con (-001, -002)"]
+    end
+
+    S4 --> WMS["Kho Điện Cực Slitting<br/>(Stb_SlittingStock_VVT)"]
+    WMS --> LineCell["Cấp sang Chuyền Cell Quấn Cuộn (Winding B597/B540)"]
+```
+
+##### Chi tiết từng công đoạn:
+
+1. **Công đoạn 01: Trộn (Mixing) — Module `popMixing.js` (Route `V-01`):**
+   - **Thiết bị:** Máy trộn Mixer #1 (`VVEP284`) đến Mixer #7 (`VVEP426`).
+   - **BOM 3 pha cấp liệu:**
+     + *Pha 1 (Trộn khô - Dry Mixing):* Than hoạt tính `HCE- activated carbon` (`GAHCCA-001`), Carbon dẫn điện `Super P carbon C` (`GATCCC-001`), Phân tán `PVP` (`GAADCB-001`).
+     + *Pha 2 (Tạo hạt - Granulation):* Chất kết dính `WS-C(CMC)carbon binder B2` (`GADACB-001`), Nước cất `WTRN01-001`.
+     + *Pha 3 (Nhào trộn - Kneading/Slurry):* Nước cất cân bù độ nhớt.
+   - **Bảng CSDL:** `STB_ElectrodeMixInfo` (Tổng quan mẻ trộn), `STB_ElectrodeMixStepInfo` (Chi tiết các bước nạp liệu, dung sai `StdMinVal` - `StdMaxVal`).
+   - **Điều khiển tích hợp:** Kết nối cân điện tử trực tiếp qua RS232, In nhãn mẻ trộn Slurry.
+
+2. **Công đoạn 02: Mạ (Coating) — Module `popCoating.js` (Route `V-02`):**
+   - **Thiết bị:** Coater #1 (`VVEP287`).
+   - **Ma trận đo độ dày phủ:** Đo theo thời gian cuộn (`FIRST1..3`, `MIDDLE1..3`, `LAST1..3`) tại 3 vị trí ngang mặt màng (`Trái`, `Giữa`, `Phải`) với đơn vị micron (µm) cho cả chế độ **Một mặt (One Side)** và **Hai mặt (Both Side)**.
+   - **Thông số buồng mạ:** Nhiệt độ phòng phủ (`20 °C`), Độ ẩm (`10 %`), Khe hở gạt hồ 1 mặt / 2 mặt (Left/Right gap µm), Chiều rộng vệt phủ màng than (Left/Right coating width mm).
+   - **Bảng CSDL:** `STB_ElectrodeCoatingInfo`, `STB_ElectrodeCoaterDataRecord`, `STB_ElectrodeCoatingVisualInspectionInfo`.
+
+3. **Công đoạn 03: Ép cuộn (Roll Pressing) — Module `popRolling.js` (Route `V-03`):**
+   - **Thiết bị:** Máy cán ép Roll Pressing #1 (`VVEP427`).
+   - **Kiểm soát độ nén:** Đo lại ma trận độ dày sau ép tại các điểm First/Middle/Last (Trái/Giữa/Phải) để ép lớp than đạt độ dày danh định (lưu tại `STB_SetInfo.SIExtReal03 = 200.00000`).
+   - **Thông số kỹ thuật:** Nhiệt độ trục cán nóng (`130 °C`), Tốc độ đường cán (`30 m/min`), Khe hở ban đầu, Mật độ nén màng than (`g/cc`).
+   - **Bảng CSDL:** `STB_ElectrodeRollPressingInfo`, `STB_ElectrodeRollPressingVisualInspectionInfo`.
+
+4. **Công đoạn 04: Cắt xẻ cuộn (Slitting Line) — Module `popSlitting.js`:**
+   - **Cơ chế Handoff:** Trên chuyền `ElectrodeBN`, tab `↳ Cắt (Slitting) (Chuyển line)` mở modal xác nhận chuyển sang `CHUYỀN: SLITTING LINE` (dùng hàm `slitHandoffLineMap`).
+   - **Nạp Cuộn Mẹ:** Chọn loại lá cực (`Lá ăn mòn` / `Lá hóa thành`), chủng loại than (`HCE`, `CY`, `YP`, `BY`, `BA`). Hệ thống tự tính khổ còn lại (VD: 485 mm).
+   - **Cài đặt dao xẻ (`+ Thêm khổ`):** OP thiết lập từng khổ xẻ theo yêu cầu của lệnh quấn cuộn (VD: 17.7mm, 46.0mm, 50.0mm, 90.0mm x số cuộn EA).
+   - **Bấm "Chạy xẻ":** Hệ thống tự động cắt chia cuộn, sinh mã Lot cuộn con (`VVQQ2520001E79-001` .. `-021`), in tem nhãn barcode dán từng cuộn, ghi nhận vào `STB_ElectrodeSlittingResult` và đồng bộ tồn kho vào `Stb_SlittingStock_VVT`.
+
+---
+
+#### 3. Báo Cáo Khám Nghiệm Thực Tế Lot Test `VVQQ2520001E76` vs Lot Đối Chứng `VVQQ2520001E79`:
+
+```sql
+-- Query kiểm tra trạng thái khép kín của Lot điện cực:
+SELECT 'STB_ElectrodeMixInfo' AS Tbl, COUNT(*) AS Qty FROM STB_ElectrodeMixInfo WITH(NOLOCK) WHERE ElectrodeLotNumber = 'VVQQ2520001E76'
+UNION ALL SELECT 'STB_ElectrodeMixStepInfo', COUNT(*) FROM STB_ElectrodeMixStepInfo WITH(NOLOCK) WHERE ElectrodeLotNumber = 'VVQQ2520001E76'
+UNION ALL SELECT 'STB_ElectrodeCoatingInfo', COUNT(*) FROM STB_ElectrodeCoatingInfo WITH(NOLOCK) WHERE ElectrodeLotNumber = 'VVQQ2520001E76'
+UNION ALL SELECT 'STB_ElectrodeRollPressingInfo', COUNT(*) FROM STB_ElectrodeRollPressingInfo WITH(NOLOCK) WHERE ElectrodeLotNumber = 'VVQQ2520001E76'
+UNION ALL SELECT 'STB_ElectrodeSlittingInfo', COUNT(*) FROM STB_ElectrodeSlittingInfo WITH(NOLOCK) WHERE ElectrodeLotNumber = 'VVQQ2520001E76'
+UNION ALL SELECT 'STB_ElectrodeSlittingResult', COUNT(*) FROM STB_ElectrodeSlittingResult WITH(NOLOCK) WHERE ElectrodeLotNumber = 'VVQQ2520001E76';
+```
+
+**Kết quả khám nghiệm Live DB & POP Screen cho `VVQQ2520001E76`:**
+- `STB_ElectrodeMixInfo`: **1 record** $\rightarrow$ Đã hoàn thành mẻ trộn Mixing.
+- `STB_ElectrodeMixStepInfo`: **13 records** $\rightarrow$ Đã nạp đủ 100% NVL và cân chính xác 3 pha vật tư.
+- `STB_ElectrodeCoatingInfo`: **1 record** $\rightarrow$ Đã mạ Coater #1 hoàn tất (Kế hoạch: 1230m, Thực tế: 1220m, Đạt: 1120m, Lỗi: 100m).
+- `STB_ElectrodeRollPressingInfo`: **1 record** $\rightarrow$ Đã cán ép nhiệt 130°C hoàn tất (Thực tế: 1120m, Đạt: 1070m, Lỗi: 50m, Độ dày: 200 µm).
+- `STB_ElectrodeSlittingInfo`: **0 record** $\rightarrow$ Chưa thực hiện xẻ băng.
+- `STB_ElectrodeSlittingResult`: **0 record** $\rightarrow$ Chưa sinh cuộn con.
+- **Kết luận hiện trạng:** Lot `VVQQ2520001E76` hiện là một **Cuộn Mẹ đã hoàn thành cán ép hoàn hảo (Roll-pressed Mother Roll)**, đang chờ tại trạm chờ xẻ của `SLITTING LINE` để nạp dao và chia khổ.
+
+**Đối chứng với Lot `VVQQ2520001E79` cùng PO `260825000020`:**
+- Lot `VVQQ2520001E79` đã thực hiện xong toàn bộ và xẻ thành **21 cuộn con** (`VVQQ2520001E79-001` đến `-021`) với các khổ xẻ 17.7mm, 46mm, 50mm, 90mm.
+- Mỗi cuộn con được sinh 1 bản ghi riêng trong `STB_SetInfo` với mã vật tư dải xẻ tương ứng (VD: `SRFHCEK0-900`, `SRFHCEK0-485`, `SRFHCEK0-177`).
+
+---
 
 ## 9. 🔬 QC Flow Đầy Đủ — IQC → PQC → OQC → Bending/Cutting
 
