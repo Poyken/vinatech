@@ -96,6 +96,61 @@ if (Test-Path $matrixFile) {
     } catch {}
 }
 
+# 1.3 KIEM TRA L1 POP MATRIX (Line, Route, Top Error)
+$popMatrixFile = Join-Path $rootDir 'AI_AGENT_CONFIG\POP_MATRIX.json'
+if (Test-Path $popMatrixFile) {
+    try {
+        $popJson = Get-Content -Path $popMatrixFile -Encoding UTF8 -Raw | ConvertFrom-Json
+        $qUpper = $Query.ToUpper().Trim()
+
+        # Match Line Code
+        if ($popJson.lines.$qUpper) {
+            $ln = $popJson.lines.$qUpper
+            Write-Host ''
+            Write-Host '======================================================================' -ForegroundColor Green
+            Write-Host ('  [L1 POP HIT] DAY CHUYEN: ' + $qUpper + ' (' + $ln.factory + ') - TRANG THAI: ' + $ln.status) -ForegroundColor Yellow
+            Write-Host '======================================================================' -ForegroundColor Green
+            Write-Host ('  * Che Do Nap  : ' + $ln.input_mode + ' | Che Do SX: ' + $ln.prod_mode) -ForegroundColor White
+            Write-Host ('  * So Slot NVL : ' + $ln.total_slots + ' slots (W:' + $ln.winding_slots + ' A:' + $ln.assembly_slots + ' S:' + $ln.sleeving_slots + ')') -ForegroundColor Cyan
+            Write-Host ('  * Ghi Chu     : ' + $ln.note) -ForegroundColor (if ($ln.status -eq 'PASS') { 'Green' } else { 'Yellow' })
+            Write-Host ('  * CLI Hub     : .\mes.ps1 pop-readiness -Target ' + $qUpper) -ForegroundColor Gray
+            Write-Host '======================================================================' -ForegroundColor Green
+            $foundInL1 = $true
+        }
+        # Match Top Error
+        elseif ($popJson.top_errors.$qUpper) {
+            $err = $popJson.top_errors.$qUpper
+            Write-Host ''
+            Write-Host '======================================================================' -ForegroundColor Red
+            Write-Host ('  [L1 POP ERROR HIT] ' + $qUpper + ': ' + $err.title) -ForegroundColor Yellow
+            Write-Host '======================================================================' -ForegroundColor Red
+            Write-Host ('  * Nguyen Nhan : ' + $err.root_cause) -ForegroundColor White
+            Write-Host ('  * Cach Xu Ly  : ' + $err.fast_fix) -ForegroundColor Green
+            Write-Host '======================================================================' -ForegroundColor Red
+            $foundInL1 = $true
+        }
+        # Match Route
+        else {
+            foreach ($prop in $popJson.routes.PSObject.Properties) {
+                $rPath = $prop.Name
+                $rObj = $prop.Value
+                if ($rPath -like "*$Query*" -or $rObj.name -match "(?i)$([regex]::Escape($Query))") {
+                    Write-Host ''
+                    Write-Host '======================================================================' -ForegroundColor Green
+                    Write-Host ('  [L1 POP ROUTE HIT] ' + $rPath + ' - ' + $rObj.name) -ForegroundColor Yellow
+                    Write-Host '======================================================================' -ForegroundColor Green
+                    Write-Host ('  * Mo ta       : ' + $rObj.description) -ForegroundColor White
+                    Write-Host ('  * Bang CSDL   : ' + ($rObj.tables -join ', ')) -ForegroundColor Cyan
+                    Write-Host ('  * Tuong duong : ' + ($rObj.equivalent_winform -join ', ')) -ForegroundColor Gray
+                    Write-Host '======================================================================' -ForegroundColor Green
+                    $foundInL1 = $true
+                    break
+                }
+            }
+        }
+    } catch {}
+}
+
 # 2. TIER 2: QUET DEEP MARKDOWN ARCHIVE
 $targetDirs = @()
 switch ($Category) {

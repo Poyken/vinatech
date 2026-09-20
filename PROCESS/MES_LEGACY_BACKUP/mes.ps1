@@ -36,8 +36,10 @@ function Show-Help {
     Write-Host 'CAC LENH VAN HANH CHINH:' -ForegroundColor Yellow
     Write-Host ''
     Write-Host '  1. TRUY VET DU LIEU & SU CO (INVESTIGATION):' -ForegroundColor Cyan
-    Write-Host '     .\mes.ps1 trace <Lot/Barcode>       ' -NoNewline -ForegroundColor Green
-    Write-Host '-> Golden Query 360 do quet sach Lot, Routing, Kho, Thung' -ForegroundColor Gray
+    Write-Host '     .\mes.ps1 trace <Lot/Line/Machine/Box>' -NoNewline -ForegroundColor Green
+    Write-Host '-> Golden Query 360 sieu toc (Single Round-Trip) tu dong nhan dien Lot, Line, Thiet bi, Thung' -ForegroundColor Gray
+    Write-Host '     .\mes.ps1 pop-trace <Keyword>       ' -NoNewline -ForegroundColor Green
+    Write-Host '-> Truy vet chuyen sau he sinh thai POP Kiosk (Sync, Phe, May ket, Kiosk logs)' -ForegroundColor Gray
     Write-Host '     .\mes.ps1 screen <ScreenID>         ' -NoNewline -ForegroundColor Green
     Write-Host '-> Debug man hinh MES (Grid, SP, Bang lien quan: B530, B540...)' -ForegroundColor Gray
     Write-Host '     .\mes.ps1 sp <SP_Name>              ' -NoNewline -ForegroundColor Green
@@ -99,48 +101,22 @@ elseif ($cmdLower -eq 'check') {
         Write-Host "-> Khong the ket noi toi profile: $Profile" -ForegroundColor Red
     }
 }
-elseif ($cmdLower -eq 'trace') {
-    Show-MesBanner
+elseif ($cmdLower -eq 'trace' -or $cmdLower -eq 'pop-trace') {
     if ([string]::IsNullOrWhiteSpace($Target)) {
-        Write-Host 'Loi: Vui long nhap ma LotID hoac Barcode can truy vet!' -ForegroundColor Red
-        Write-Host 'Vi du: .\mes.ps1 trace "VN-2026-LOT001"' -ForegroundColor Yellow
+        Show-MesBanner
+        Write-Host 'Loi: Vui long nhap ma can truy vet (Lot, Line, Thiet bi, hoac Thung PackingID)!' -ForegroundColor Red
+        Write-Host 'Vi du: .\mes.ps1 trace "VVQR153R060615"' -ForegroundColor Yellow
+        Write-Host '       .\mes.ps1 trace "VVC-10"' -ForegroundColor Yellow
+        Write-Host '       .\mes.ps1 trace "PKQR1900142"' -ForegroundColor Yellow
         exit 1
     }
 
-    Write-Host "(*) [GOLDEN QUERY 360] Dang truy vet toan dien ma: $Target..." -ForegroundColor Cyan
-    
-    $conn = Get-DbConnection -Profile 'SmartFactoryV2' -Silent
-    if ($conn -eq $null) { exit 1 }
-
-    $q1 = "SELECT TOP 1 MaterialLotNo, MaterialCode, CurrentQty, MaterialWarehouseCode, EndOfLifeDate, CreateDateTime FROM STB_MaterialLotInfo WITH(NOLOCK) WHERE MaterialLotNo LIKE '%$Target%'"
-    $q2 = "SELECT TOP 1 ControlNo, PONo, Barcode, MaterialCode, IsProdFinish, IsLineInput, CreateDateTime FROM STB_SetInfo WITH(NOLOCK) WHERE ControlNo LIKE '%$Target%' OR Barcode LIKE '%$Target%'"
-    $q3 = "SELECT TOP 10 ProdRouteHistNo, ControlNo, RouteCode, WorkCenterCode, ProdQty, CreateDateTime FROM STB_ProdRouteHist WITH(NOLOCK) WHERE ControlNo = '$Target' OR ControlNo IN (SELECT ControlNo FROM STB_SetInfo WITH(NOLOCK) WHERE Barcode = '$Target') ORDER BY CreateDateTime DESC"
-    $q4 = "SELECT TOP 5 MaterialCode, MaterialWarehouseCode, StockQty FROM STB_MaterialStock WITH(NOLOCK) WHERE MaterialCode LIKE '%$Target%'"
-    $q5 = "SELECT TOP 10 DayPlanNo, Barcode, RouteCode, LineCode, TotalProdQty, IsDone, IsTransferred, ModifyDateTime FROM MongoToMesPerformance WITH(NOLOCK) WHERE Barcode = '$Target' OR Barcode IN (SELECT Barcode FROM STB_SetInfo WITH(NOLOCK) WHERE ControlNo = '$Target') ORDER BY ModifyDateTime DESC"
-
-    Write-Host ''
-    Write-Host '1. THONG TIN KHO & VAT TU (STB_MaterialLotInfo):' -ForegroundColor Yellow
-    Execute-SqlQuery -Connection $conn -Query $q1
-
-    Write-Host ''
-    Write-Host '2. THONG TIN SET / THUNG SAN PHAM (STB_SetInfo):' -ForegroundColor Yellow
-    Execute-SqlQuery -Connection $conn -Query $q2
-
-    Write-Host ''
-    Write-Host '3. LICH SU CONG DOAN SAN XUAT (STB_ProdRouteHist - Top 10):' -ForegroundColor Yellow
-    Execute-SqlQuery -Connection $conn -Query $q3
-
-    Write-Host ''
-    Write-Host '4. TON KHO VAT TU THEO MA (STB_MaterialStock - Top 5):' -ForegroundColor Yellow
-    Execute-SqlQuery -Connection $conn -Query $q4
-
-    Write-Host ''
-    Write-Host '5. TRANG THAI POP KIOSK & DONG BO (MongoToMesPerformance):' -ForegroundColor Yellow
-    Execute-SqlQuery -Connection $conn -Query $q5
-
-    $conn.Close()
-    Write-Host ''
-    Write-Host '-> Hoan thanh truy vet 360 do.' -ForegroundColor Green
+    $popTraceScript = Join-Path $toolsDir 'pop_trace.ps1'
+    if (Test-Path $popTraceScript) {
+        & $popTraceScript -Target $Target
+    } else {
+        Write-Error 'tools/pop_trace.ps1 not found.'
+    }
 }
 elseif ($cmdLower -eq 'screen') {
     $dbgScript = Join-Path $toolsDir 'debug_screen.ps1'
