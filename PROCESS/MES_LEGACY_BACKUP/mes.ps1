@@ -63,6 +63,8 @@ function Show-Help {
     Write-Host '-> Sinh template SQL Fix chuan UTF-8-BOM co BEGIN TRAN...ROLLBACK' -ForegroundColor Gray
     Write-Host '     .\mes.ps1 deploy <Path.sql> [-Force]' -NoNewline -ForegroundColor Green
     Write-Host '-> Deploy SQL an toan (Tu dong Snapshot Pre-flight backup)' -ForegroundColor Gray
+    Write-Host '     .\mes.ps1 clean                     ' -NoNewline -ForegroundColor Green
+    Write-Host '-> Don dep scratch workspace, kiem tra an toan token & git status' -ForegroundColor Gray
 
     Write-Host ''
     Write-Host '  4. TRO LY DI DONG (TELEGRAM BOT):' -ForegroundColor Cyan
@@ -279,6 +281,43 @@ elseif ($cmdLower -eq 'bot' -or $cmdLower -eq 'telegram') {
     } else {
         Write-Error 'tools/mes_telegram_bot.py not found.'
     }
+}
+elseif ($cmdLower -eq 'clean') {
+    Show-MesBanner
+    Write-Host '(*) Dang tien hanh kiem tra va don dep Workspace...' -ForegroundColor Cyan
+    
+    # 1. Don dep tools/scratch
+    $scratchDir = Join-Path $toolsDir 'scratch'
+    if (Test-Path $scratchDir) {
+        $subDirs = Get-ChildItem -Path $scratchDir -Directory
+        $files = Get-ChildItem -Path $scratchDir -File -Exclude 'README.md'
+        $count = $subDirs.Count + $files.Count
+        if ($count -gt 0) {
+            $subDirs | Remove-Item -Recurse -Force
+            $files | Remove-Item -Force
+            Write-Host "-> Da don dep $count muc trong $scratchDir." -ForegroundColor Green
+        } else {
+            Write-Host "-> Thu muc $scratchDir da sach se." -ForegroundColor Green
+        }
+    }
+    
+    # 2. Kiem tra bao mat telegram_config.json
+    $cfgPath = Join-Path $toolsDir 'telegram_config.json'
+    if (Test-Path $cfgPath) {
+        $content = Get-Content $cfgPath -Raw
+        if ($content -match 'YOUR_TELEGRAM_BOT_TOKEN_HERE') {
+            Write-Host "-> telegram_config.json: AN TOAN (Su dung Placeholder mẫu)." -ForegroundColor Green
+        } else {
+            Write-Host "-> CANH BAO: telegram_config.json co the chua Token that! Vui long kiem tra." -ForegroundColor Red
+        }
+    }
+
+    # 3. Kiem tra Git Working Tree
+    Write-Host ''
+    Write-Host '(*) Trang thai Git Working Tree:' -ForegroundColor Cyan
+    git status --short
+    Write-Host ''
+    Write-Host '-> Hoan tat kiem tra & don dep Workspace.' -ForegroundColor Green
 }
 else {
     Write-Host "Lenh khong hop le: $Command" -ForegroundColor Red

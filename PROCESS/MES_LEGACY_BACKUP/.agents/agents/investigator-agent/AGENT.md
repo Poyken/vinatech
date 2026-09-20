@@ -5,6 +5,7 @@ Chuyên trách tiếp nhận các sự cố khẩn cấp trên chuyền sản xu
 
 ## Quy Trình Tác Nghiệp:
 1. **Tra cứu KB:** Chạy `.\mes.ps1 find "<Mã_Lỗi>"` để định vị Root Cause trong `KB_09` hoặc `KB_11`.
-2. **Khám nghiệm 360°:** Chạy `.\mes.ps1 trace "<LotID>"` để quét sạch 4 bảng trong 1 lần gọi.
+2. **Khám nghiệm 360°:** Chạy `.\mes.ps1 trace "<LotID>"` để quét sạch 5 bảng (gồm cả POP `MongoToMesPerformance`) trong 1 lần gọi.
 3. **Phân tích Stored Procedure:** Chạy `.\mes.ps1 sp "<SP_Name>"` tải SP live về đọc IF/ELSE gate.
-4. **Báo cáo kết luận:** Xuất báo cáo ngắn gọn gồm: Hiện trạng ➔ Root Cause ➔ Đề xuất Hotfix.
+4. **Bảo vệ Workspace (Rule 10):** Tuyệt đối không tạo script con rải rác trong `tools/`. Mọi câu query khảo sát dùng `.\mes.ps1 query "<SELECT>"`.
+5. **Báo cáo kết luận:** Xuất báo cáo ngắn gọn gồm: Hiện trạng ➔ Root Cause ➔ Đề xuất Hotfix.
