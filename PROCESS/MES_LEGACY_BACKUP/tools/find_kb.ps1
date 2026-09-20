@@ -7,7 +7,7 @@
 param(
     [Parameter(Position = 0, Mandatory = $true)]
     [string]$Query,
-    [ValidateSet('ALL', 'MES', 'DB', 'GW', 'POP', 'SYS', 'CONFIG')]
+    [ValidateSet('ALL', 'MES', 'POP', 'CONFIG', 'ARCHIVE')]
     [string]$Category = 'ALL',
     [int]$Limit = 15
 )
@@ -99,18 +99,21 @@ if (Test-Path $matrixFile) {
 # 2. TIER 2: QUET DEEP MARKDOWN ARCHIVE
 $targetDirs = @()
 switch ($Category) {
-    'MES'    { $targetDirs += Join-Path $rootDir 'MES_MASTER_KNOWLEDGE_BASE' }
-    'DB'     { $targetDirs += Join-Path $rootDir 'DATABASE_KNOWLEDGE_BASE' }
-    'GW'     { $targetDirs += Join-Path $rootDir 'GROUPWARE_KNOWLEDGE_BASE' }
-    'POP'    { $targetDirs += Join-Path $rootDir 'POP_KNOWLEDGE_BASE' }
-    'SYS'    { $targetDirs += Join-Path $rootDir 'SYSTEM_ARCHITECTURE' }
-    'CONFIG' { $targetDirs += Join-Path $rootDir 'AI_AGENT_CONFIG' }
-    default  {
+    'MES'     { $targetDirs += Join-Path $rootDir 'MES_MASTER_KNOWLEDGE_BASE' }
+    'POP'     { $targetDirs += Join-Path $rootDir 'POP_KNOWLEDGE_BASE' }
+    'CONFIG'  { $targetDirs += Join-Path $rootDir 'AI_AGENT_CONFIG' }
+    'ARCHIVE' { 
+        $ext = 'C:\Users\User Vinatech.DESKTOP-RJJSEQU\Desktop\PROCESS_ARCHIVE_BACKUP'
+        if (Test-Path $ext) { $targetDirs += $ext }
+    }
+    'ALL'     { 
         $targetDirs += Join-Path $rootDir 'MES_MASTER_KNOWLEDGE_BASE'
-        $targetDirs += Join-Path $rootDir 'DATABASE_KNOWLEDGE_BASE'
-        $targetDirs += Join-Path $rootDir 'GROUPWARE_KNOWLEDGE_BASE'
         $targetDirs += Join-Path $rootDir 'POP_KNOWLEDGE_BASE'
-        $targetDirs += Join-Path $rootDir 'SYSTEM_ARCHITECTURE'
+        $targetDirs += Join-Path $rootDir 'AI_AGENT_CONFIG'
+    }
+    default   {
+        $targetDirs += Join-Path $rootDir 'MES_MASTER_KNOWLEDGE_BASE'
+        $targetDirs += Join-Path $rootDir 'POP_KNOWLEDGE_BASE'
         $targetDirs += Join-Path $rootDir 'AI_AGENT_CONFIG'
     }
 }
@@ -120,10 +123,6 @@ foreach ($dir in $targetDirs) {
     if (Test-Path $dir) {
         $files += Get-ChildItem -Path $dir -Filter '*.md' -Recurse
     }
-}
-
-if ($Category -eq 'ALL') {
-    $files += Get-ChildItem -Path $rootDir -Filter '*.md' -File
 }
 
 if (-not $foundInL1) {

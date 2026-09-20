@@ -1,65 +1,26 @@
-﻿<!--
+<!--
 AI-READY METADATA
-Purpose: Hướng dẫn tổng quan cấu trúc thư mục AI_AGENT_CONFIG và thứ tự đọc file tối ưu token cho AI Agent
+Purpose: Hướng dẫn tổng quan cấu trúc thư mục AI_AGENT_CONFIG tinh gọn
 Scope: Config Directory Documentation
 Single Source of Truth: AI_AGENT_CONFIG/README.md
-Related Files:
-  - [BOOTSTRAP.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/AI_AGENT_CONFIG/BOOTSTRAP.md)
-  - [RULES.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/AI_AGENT_CONFIG/RULES.md)
-  - [KNOWLEDGE.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/AI_AGENT_CONFIG/KNOWLEDGE.md)
-  - [SKILLS.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/AI_AGENT_CONFIG/SKILLS.md)
 -->
 
-# 🚀 AI Agent Config — Vinatech MES
+# 🚀 AI Agent Config — Vinatech MES (Lean v2.1)
 
-> **Bạn là AI agent đang làm việc trên dự án MES Vinatech.**
-> **Mỗi session mới: User sẽ nói "Đọc BOOTSTRAP.md" → AI đọc 1 file và sẵn sàng ngay.**
+> Thư mục chứa cấu hình và bộ nhớ dài hạn tinh gọn cho AI Agent vận hành hệ thống MES Vinatech.
 
+## 📂 Cấu Trúc Thư Mục
 
-## ⚡ Thứ tự đọc file
+| File / Thư mục | Chức năng | Cơ chế sử dụng |
+|---|---|---|
+| **`QUICK_MATRIX.json`** | **L1 Cache (95 màn hình MES)** | Truy xuất siêu tốc (<0.001s) qua `.\mes.ps1 find "<TCode>"` hoặc `.\mes.ps1 screen "<TCode>"` |
+| **`HOTFIX_LOG.md`** | **Nhật ký Hotfix (Active 30 ngày)** | Lưu vết các sự cố & SQL patch gần nhất. Script `record_hotfix.ps1` tự động tăng ID từ file này |
+| **`LESSONS_LEARNED.md`** | **Bài học kinh nghiệm vận hành** | Tổng hợp các bẫy, nguyên nhân gốc rễ và quy chuẩn thao tác an toàn từ các phiên trước |
+| **`archive/`** | **Kho lưu trữ Hotfix cũ** | Chứa các hotfix cũ hơn 30 ngày (Tháng 07-08/2026...) để giữ file active luôn nhẹ và nhanh |
 
-| # | File | Khi nào đọc | Nội dung | Token ~est |
-|---|------|-------------|----------|-----------|
-| **0** | **[BOOTSTRAP.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/AI_AGENT_CONFIG/BOOTSTRAP.md)** | **LUÔN LUÔN — Mỗi session mới** | **All-in-one: rules + DB + tools + bẫy + trạng thái dự án** | **~1500** |
-| 1 | [RULES.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/AI_AGENT_CONFIG/RULES.md) | Khi cần chi tiết quy tắc | Quy tắc an toàn DB, workflow bug fix | ~500 |
-| 2 | [KNOWLEDGE.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/AI_AGENT_CONFIG/KNOWLEDGE.md) | Khi cần tra cứu bảng/SP/KB | Cheat sheet bảng/SP/factory matrix | ~800 |
-| 3 | [SKILLS.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/AI_AGENT_CONFIG/SKILLS.md) | Khi cần SQL template cụ thể | SQL/PS templates + debug recipes | ~600 |
-
-### Quy trình đề xuất:
-1. **Session mới** → Đọc `BOOTSTRAP.md` (đã đủ 90% context)
-2. **Cần thêm chi tiết** → Đọc `RULES.md` / `KNOWLEDGE.md` / `SKILLS.md` tùy nhu cầu
-3. **Cần KB chuyên sâu** → Tra `KB_INDEX.md` → đọc đúng 1 KB file
-
-## Cấu trúc dự án
-
-```
-MES/
-├── AI_AGENT_CONFIG/           ← Config cho AI agent
-│   ├── BOOTSTRAP.md           ← ⚡ FILE DUY NHẤT CẦN ĐỌC mỗi session mới
-│   ├── README.md              ← File này — Hướng dẫn sử dụng
-│   ├── RULES.md               ← Quy tắc chi tiết (tham chiếu bổ sung)
-│   ├── KNOWLEDGE.md           ← Cheat sheet bảng/SP (tham chiếu bổ sung)
-│   └── SKILLS.md              ← SQL/PS templates (tham chiếu bổ sung)
-├── MES_MASTER_KNOWLEDGE_BASE/  ← KB files chi tiết (đọc khi cần)
-│   ├── KB_INDEX.md            ← Mục lục tra cứu nhanh
-│   └── KB_01 → KB_11          ← Tài liệu chuyên sâu từng phân hệ
-├── sql/                        ← SQL hotfix scripts & stored procedures
-├── run_query.ps1               ← Query DB nhanh
-├── validate_sql.ps1            ← Validate SQL trước deploy
-├── deploy_tool.ps1             ← Deploy SQL lên production
-├── db_sync_tool.ps1            ← Tải/xóa SP tạm từ DB
-└── README.md                   ← Tổng quan dự án
-```
-
-## FAQ
-
-**Q: Tôi có nên đọc tất cả 4 file config không?**
-A: Không — chỉ cần đọc `BOOTSTRAP.md` là đủ. Các file `RULES`, `KNOWLEDGE`, `SKILLS` là tham chiếu chi tiết khi cần.
-
-**Q: Token budget thấp, tôi nên ưu tiên đọc file nào?**
-A: Đọc `BOOTSTRAP.md` — file này chứa tất cả quy tắc, kết nối DB, bẫy đã gặp, và trạng thái dự án.
-
-**Q: Khi nào cần đọc KB files?**
-A: Chỉ khi BOOTSTRAP chưa đủ. Tra `KB_INDEX.md` theo triệu chứng → đọc đúng 1 KB file liên quan.
-
-
+## ⚡ Nguyên Tắc Vận Hành Nhanh
+1. **Không nạp toàn bộ file:** Dùng `.\mes.ps1 find` để tra cứu theo nhu cầu thay vì đọc toàn bộ file cấu hình.
+2. **Hotfix Registry:** Khi ghi nhận lỗi mới qua `record_hotfix.ps1`, mã ID tự động sinh dựa trên max ID hiện tại.
+3. **Single Source of Truth:**
+   - Quy tắc ứng xử: `.agents/rules/00_vinatech_rules.md`
+   - Điều phối lệnh: `.\mes.ps1`

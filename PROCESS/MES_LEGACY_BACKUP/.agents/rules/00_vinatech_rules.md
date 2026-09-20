@@ -36,3 +36,12 @@
    - Kiosk POP Web (`pop.vinatech.com/pop/screen`) đọc tiến độ và trạng thái hoàn thành từ bảng trung gian `SmartFactoryV2.dbo.MongoToMesPerformance`, không đọc trực tiếp từ `STB_ProdRouteHist`.
    - Khi kiểm tra, hủy chốt hoặc mở khóa công đoạn cho Kiosk: BẮT BUỘC kiểm tra và xử lý đồng thời cả `MongoToMesPerformance` và `STB_ProdRouteHist`.
    - Khi khai báo hoặc gán thiết bị cho Kế hoạch mới: BẮT BUỘC kiểm tra `VINATECH_POP.dbo.VINA_EQUIPMENT_MAPPING` để đảm bảo máy không bị kẹt trạng thái `ACTIVE` từ các DayPlan cũ.
+
+10. **RULE 14 - 1-SHOT SURGICAL TOOLING & TỐC ĐỘ PHẢN HỒI (<5-10s):**
+   - CẤM chạy chuỗi 10-30 tool calls tuần tự cho một câu hỏi tra cứu/kiểm tra.
+   - Mỗi câu hỏi: CHỈ ĐƯỢC PHÉP gọi tối đa 1-2 công cụ trúng đích (`.\mes.ps1 trace` cho Lot, `.\mes.ps1 find` cho lỗi/màn hình).
+   - Lấy xong thông tin cốt lõi là DỪNG NGAY LẬP TỨC và phản hồi trực tiếp cho người dùng.
+
+11. **RULE 15 - CẤM TỰ Ý TẠO HOTFIX / PLAN KHI CHƯA ĐƯỢC YÊU CẦU:**
+   - Khi User hỏi "check", "tại sao", "xem giúp": CHỈ phân tích nguyên nhân và báo cáo hiện trạng.
+   - TUYỆT ĐỐI CẤM tự ý tạo file `.sql` hotfix, tự ý tạo plan hay sửa đổi CSDL khi người dùng chưa yêu cầu sửa lỗi.

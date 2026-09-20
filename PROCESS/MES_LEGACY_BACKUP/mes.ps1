@@ -289,8 +289,8 @@ elseif ($cmdLower -eq 'clean') {
     # 1. Don dep tools/scratch
     $scratchDir = Join-Path $toolsDir 'scratch'
     if (Test-Path $scratchDir) {
-        $subDirs = Get-ChildItem -Path $scratchDir -Directory
-        $files = Get-ChildItem -Path $scratchDir -File -Exclude 'README.md'
+        $subDirs = Get-ChildItem -Path (Join-Path $scratchDir '*') -Directory
+        $files = Get-ChildItem -Path (Join-Path $scratchDir '*') -File | Where-Object { $_.Name -ne 'README.md' }
         $count = $subDirs.Count + $files.Count
         if ($count -gt 0) {
             $subDirs | Remove-Item -Recurse -Force

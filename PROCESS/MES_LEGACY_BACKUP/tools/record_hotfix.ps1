@@ -11,27 +11,23 @@ param (
 )
 
 # 1. Get workspace paths
-$mesRoot = $PSScriptRoot
-$bootstrapPath = Join-Path $mesRoot "AI_AGENT_CONFIG\BOOTSTRAP.md"
+$mesRoot = Split-Path $PSScriptRoot -Parent
 $hotfixLogPath = Join-Path $mesRoot "AI_AGENT_CONFIG\HOTFIX_LOG.md"
 $fixbookPath = Join-Path $mesRoot "MES_MASTER_KNOWLEDGE_BASE\KB_09_SCREEN_BUG_FIXBOOK.md"
 $kbIndexPath = Join-Path $mesRoot "MES_MASTER_KNOWLEDGE_BASE\KB_INDEX.md"
 
-# 2. Get Next Hotfix ID and update BOOTSTRAP.md
-$hotfixId = "UNKNOWN"
-if (Test-Path $bootstrapPath) {
-    $bootstrapContent = [System.IO.File]::ReadAllText($bootstrapPath, [System.Text.Encoding]::UTF8)
-    if ($bootstrapContent -match '-\s+\*\*Hotfix\s+ti.p\s+theo:\*\*\s+ID\s+=\s+\*\*(\d+)\*\*') {
-        $hotfixId = $Matches[1]
-        $nextId = [int]$hotfixId + 1
-        $oldLine = $Matches[0]
-        $newLine = $oldLine -replace '\d+', $nextId
-        $updatedBootstrap = $bootstrapContent.Replace($oldLine, $newLine)
-        [System.IO.File]::WriteAllText($bootstrapPath, $updatedBootstrap, [System.Text.Encoding]::UTF8)
-        Write-Host "[OK] Incremented Next Hotfix ID to $nextId in BOOTSTRAP.md" -ForegroundColor Green
-    } else {
-        Write-Host "[WARNING] Could not find 'Hotfix ti.p theo' pattern in BOOTSTRAP.md" -ForegroundColor Yellow
+# 2. Get Next Hotfix ID directly from HOTFIX_LOG.md
+$hotfixId = "1"
+if (Test-Path $hotfixLogPath) {
+    $logText = [System.IO.File]::ReadAllText($hotfixLogPath, [System.Text.Encoding]::UTF8)
+    $matches = [regex]::Matches($logText, 'ID_(\d+)')
+    if ($matches.Count -gt 0) {
+        $maxId = ($matches | ForEach-Object { [int]$_.Groups[1].Value } | Measure-Object -Maximum).Maximum
+        $hotfixId = [string]($maxId + 1)
     }
+    Write-Host "[OK] Auto-calculated Next Hotfix ID: $hotfixId from HOTFIX_LOG.md" -ForegroundColor Green
+} else {
+    Write-Host "[WARNING] HOTFIX_LOG.md not found at $hotfixLogPath, defaulting to ID: 1" -ForegroundColor Yellow
 }
 
 # 3. Retrieve Screen Name

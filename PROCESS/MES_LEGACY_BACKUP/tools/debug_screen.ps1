@@ -93,6 +93,31 @@ if ([string]::IsNullOrEmpty($TCode) -and [string]::IsNullOrEmpty($ErrorMsg) -and
     exit 1
 }
 
+# 0. Check L1 In-Memory Quick Matrix first (<0.001s)
+$matrixFile = Join-Path (Resolve-Path (Join-Path $PSScriptRoot '..')).Path 'AI_AGENT_CONFIG\QUICK_MATRIX.json'
+if (Test-Path $matrixFile) {
+    try {
+        $matrixJson = Get-Content -Path $matrixFile -Encoding UTF8 -Raw | ConvertFrom-Json
+        $tUpper = if ($TCode) { $TCode.ToUpper().Trim() } else { '' }
+        if ($tUpper -and $matrixJson.screens.$tUpper) {
+            $sc = $matrixJson.screens.$tUpper
+            Write-Host ''
+            Write-Host "======================================================================" -ForegroundColor Green
+            Write-Host "  [L1 CACHE HIT] MAN HINH: $tUpper - $($sc.name)" -ForegroundColor Yellow
+            Write-Host "======================================================================" -ForegroundColor Green
+            Write-Host "  * Module      : $($sc.module)" -ForegroundColor White
+            Write-Host "  * SP Search   : $($sc.sp_get)" -ForegroundColor Cyan
+            Write-Host "  * SP Process  : $($sc.sp_iud)" -ForegroundColor Cyan
+            Write-Host "  * Bang CSDL   : $($sc.tables -join ', ')" -ForegroundColor Yellow
+            if ($sc.fix_template) {
+                Write-Host "  * Giai phap   : $($sc.fix_template)" -ForegroundColor Green
+            }
+            Write-Host "======================================================================" -ForegroundColor Green
+            Write-Host ''
+        }
+    } catch {}
+}
+
 $conn = Get-DbConnection
 if ($conn -ne $null -and $conn.State -ne [System.Data.ConnectionState]::Open) {
     $conn.Open()
@@ -100,7 +125,7 @@ if ($conn -ne $null -and $conn.State -ne [System.Data.ConnectionState]::Open) {
 
 # Case 1: TCode diagnostics
 if ($TCode) {
-    Write-Host "=== [DIAGNOSTIC] Retrieving Screen Info for TCode: $TCode ===" -ForegroundColor Cyan
+    Write-Host "=== [LIVE DB DIAGNOSTIC] Retrieving Screen Info for TCode: $TCode ===" -ForegroundColor Cyan
     
     # 1. Screen general info
     $cmd = $conn.CreateCommand()
