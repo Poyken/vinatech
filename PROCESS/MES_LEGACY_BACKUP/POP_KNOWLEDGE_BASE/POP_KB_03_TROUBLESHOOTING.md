@@ -38,6 +38,10 @@ Related Files:
 | **POP-ERR-12: Khóa kết quả đo sau khi bấm "Hoàn thành"** | Phiên PQC đã đóng (`STB_CommInspDocHistory.IsFinished=1`), nút đổi thành "Hoàn tác" | Bấm Hoàn tác gửi yêu cầu (Admin duyệt `VINA_REOPEN_REQUEST`) hoặc IT reset `IsFinished=0` | Cần duyệt / SQL |
 | **POP-ERR-13: Lệch / Không đồng nhất công đoạn giữa Kiosk POP và MES** | Chốt chéo WinForm trước Kiosk, nhảy cóc công đoạn V-27_HY sang V-28_HY, hoặc kẹt dở dang V-26_HY | Dùng Golden Query `.\mes.ps1 trace '<Lot>'`. Xóa bản ghi kẹt cũ qua Template 3 hoặc rollback Đóng gói qua Template 4 | **CÓ (SQL Hotfix)** |
 | **POP-ERR-14: Thùng Dung Dịch Về 0 KG / Hết Hàng (VN ➔ HY)** | Xung đột chuyển vùng kho (Hà Nam sang Hưng Yên) hoặc cơ chế tự động đóng thùng cũ khi quét Lot mới | Phục hồi lại toàn bộ số lượng ban đầu (150 KG theo InitialQty) tại `ROUTE_HY_WH` và reload Kiosk POP | **CÓ (SQL Hotfix)** |
+| **POP-ERR-15: Đã xóa STB_ProdRouteHist nhưng Kiosk vẫn hiện "Công đoạn đã hoàn thành"** | Chưa xóa bản ghi tương ứng trong `MongoToMesPerformance` (`IsDone = 1`) | Dùng Template 7 xóa dòng công đoạn kẹt trong `MongoToMesPerformance` và F5 Kiosk | **CÓ (SQL Hotfix)** |
+| **POP-ERR-16: Tem Thùng In Từ Kiosk POP Bị Co Ngắn Mã Vạch (Scanner không đọc được)** | Kiosk POP thiếu engine sinh `PackingID` chuẩn 11 ký tự (`PK...`), `AutoModule` làm co vạch | In lại tem chuẩn từ MES WinForm (màn hình B523/B528) hoặc vệ sinh đầu in | Không (In WinForm) |
+| **POP-ERR-17: Kiosk Hiển Thị Bước Kế Tiếp Dù Chuyền Mới Chốt Bước Trước** | Hành vi chuẩn: MES tự động tạo pre-allocated slot với `CompleteRoute = NULL` | Kiểm tra query `CompleteRoute IS NULL` là bình thường, không phải lỗi | Không |
+| **POP-ERR-18: Kẹt Pipeline Đồng Bộ POP ➔ MES (Worker bị treo / `IsTransferred = 0`)** | Background Polling Worker IIS bị treo hoặc đứt kết nối SQL (Line `VVC-11`) | Dùng Template 8 kiểm tra, restart AppPool IIS, hoặc dùng Template 9 chốt bù thủ công | **CÓ (SQL Hotfix)** |
 | **POP-ERR-19: Lỗi "Không Tìm Thấy LOT Trong Kho" Khi Nạp Cuộn Điện Cực / NVL BOM** | Bên Điện cực đã xuất vào kho `ROUTE_VN_WH` nhưng cuộn mang mã BTP mới (vd: `SRECYK0-900`) trong khi BOM của Lệnh SX (PO) lại khai báo mã quy cách cũ (`SRFCO85 / SREYO85`), hoặc mã cũ trong kho có tồn = 0 | Map bổ sung mã NVL mới vào BOM của PO (`STB_ProductionOrderBom`) hoặc sửa `MaterialCode` cuộn khớp BOM, sau đó bấm `Danh sách NVL BOM 🔄` (Reload) trên Kiosk POP | **CÓ (BOM Map / Master)** |
 | **POP-ERR-20: POP Kiosk Thiếu Thiết Bị / Ẩn Máy Tại Modal "Xác Nhận Kết Thúc" (Winding/Curling/Sleeving)** | Máy bị kẹt trạng thái `MAPPING_STATUS = 'ACTIVE'` trong `VINATECH_POP.dbo.VINA_EQUIPMENT_MAPPING` từ Kế hoạch sản xuất (`DAY_PLAN_NO`) cũ do OP không bấm "Hủy gán / Release" khi xong ca và POP thiếu Auto-Release | Giải phóng máy: chạy script UPDATE `VINA_EQUIPMENT_MAPPING SET MAPPING_STATUS = 'RELEASED', RELEASED_AT = GETDATE(), NO_EMP_MODIFYER = 'vanduc'` cho các Plan cũ | **CÓ (SQL Hotfix)** |
 
@@ -124,43 +128,21 @@ WHERE LotNo = N'<LOT_NO>';
 
 ---
 
-## 3. 🛠️ TEMPLATE SQL CỨU HỘ VẬN HÀNH (SAFETY HOTFIX TEMPLATES)
+### 2.6 POP-ERR-08: Kẹt Nút "Hoàn Thành Sản Xuất" (Thiếu Bước Nạp NVL)
+**Hiện tượng:** Công nhân chọn công đoạn và bấm **"HOÀN THÀNH SẢN XUẤT"** hoặc **"Ghi nhận sản lượng"** nhưng nút bị mờ (disabled), hệ thống không cho lưu hoặc báo thiếu điều kiện nạp vật liệu.
 
-> [!CAUTION]
-> Tuân thủ tuyệt đối **RULE 1 (SELECT-Only)**. Chỉ chạy lệnh ghi khi có sự đồng ý bằng văn bản của Quản lý MES.
-> Luôn sử dụng cú pháp an toàn `BEGIN TRAN ... ROLLBACK` để kiểm tra số dòng ảnh hưởng trước khi Commit!
+**Nguyên nhân gốc (Root Cause):**
+- Công đoạn đang làm việc có cấu hình bắt buộc nạp NVL theo định mức BOM (`VINA_BOM_INPUT_ROUTE` hoặc `STB_BomDetail`).
+- Lot chưa được ghi nhận hoàn tất nạp NVL (`STB_SetInfo.IsLineInput = 0`), hoặc các cuộn NVL bắt buộc chưa được quét đủ số lượng tối thiểu.
 
-### Template 1: Hoàn Trả Kho Khi Quét Nhầm NVL Trên POP
-```sql
-BEGIN TRAN;
-
-DECLARE @LotNo NVARCHAR(50) = N'VNCELL260908001';
-DECLARE @MatLotNo NVARCHAR(50) = N'RAW-MAT-2026-09-0012';
-DECLARE @RefundQty DECIMAL(18,4) = 50.0;
-
--- 1. Hoàn trả số lượng tồn kho NVL
-UPDATE SmartFactoryV2.dbo.STB_MaterialLotInfo
-SET Qty = Qty + @RefundQty,
-    ModifyDate = GETDATE()
-WHERE MaterialLotNo = @MatLotNo;
-
--- 2. Ghi chú điều chỉnh vào nhật ký POP
-INSERT INTO VINATECH_POP.dbo.VINA_MATERIAL_INPUT_HIST (
-    LOT_NO, MATERIAL_LOT_NO, INPUT_QTY, INPUT_DATE_TIME, WORKER_ID, STATUS
-) VALUES (
-    @LotNo, @MatLotNo, -@RefundQty, GETDATE(), N'ADMIN_FIX', N'CANCEL'
-);
-
--- Kiểm tra kết quả
-SELECT MaterialLotNo, Qty FROM SmartFactoryV2.dbo.STB_MaterialLotInfo WITH(NOLOCK) WHERE MaterialLotNo = @MatLotNo;
-
--- Nếu đúng số lượng mong muốn: Thay ROLLBACK bằng COMMIT
-ROLLBACK;
-```
+**Khắc phục nhanh:**
+1. Chuyển sang tab/modal **[Nhập NVL]** (Material Input).
+2. Quét đầy đủ các cuộn NVL theo danh sách định mức BOM (Điện cực dương, Điện cực âm, Vỏ nhôm, Dung dịch...).
+3. Sau khi cột trạng thái NVL chuyển sang xanh lá hoặc `IsLineInput` chuyển thành 1, quay lại màn hình chính bấm **"HOÀN THÀNH SẢN XUẤT"**.
 
 ---
 
-### 2.6 POP-ERR-09: Lỗi "This route is already completed in MES" Khi Chốt Công Đoạn
+### 2.7 POP-ERR-09: Lỗi "This route is already completed in MES" Khi Chốt Công Đoạn
 **Hiện tượng:** Công nhân chọn công đoạn (ví dụ Aging `V-26_HY`) và bấm **"HOÀN THÀNH SẢN XUẤT"** trên POP Kiosk, hệ thống văng popup đỏ: *"Thất bại: This route is already completed in MES."*. Quay sang mở MES WinForm (B530/B540) để chốt thủ công thì MES chặn: *"Vui lòng sử dụng hệ thống POP để nhập sản lượng"*.
 
 **Nguyên nhân gốc (Root Cause):**
@@ -180,7 +162,7 @@ ROLLBACK;
 
 ---
 
-### 2.7 POP-ERR-10: Kẹt Đóng Gói Do Chốt Sớm Công Đoạn V-28_HY
+### 2.8 POP-ERR-10: Kẹt Đóng Gói Do Chốt Sớm Công Đoạn V-28_HY
 **Hiện tượng:** Lot không thể đóng gói gộp hoặc in tem thùng tại trạm đóng gói POP Kiosk, hoặc người dùng muốn hủy các Box đã đóng gói (kể cả Box đơn lẻ hay Box đóng gộp Merge Pack).
 
 **Nguyên nhân gốc:** Công đoạn `V-28_HY` bị chốt trước khi hoàn tất đóng gói thực tế, làm sinh bản ghi mồ côi trong `STB_MaterialLotInfo` và `VINATECH_POP.dbo.VINA_PACKING_REMAIN_QTY`.
@@ -190,7 +172,7 @@ ROLLBACK;
 
 ---
 
-### 2.8 POP-ERR-11 & 12: Sự Cố Phân Hệ Chất Lượng Quality (`/pop/quality/self`)
+### 2.9 POP-ERR-11 & 12: Sự Cố Phân Hệ Chất Lượng Quality (`/pop/quality/self`)
 **Hiện tượng 1:** Màn hình đo PQC hiện thông báo *"Số mẫu mục tiêu là 0 — tăng số mẫu mục tiêu ở khung quy cách để hiện ô nhập"*, không có ô gõ số liệu.
 - **Xử lý:** Chạm vào ô số mẫu `0/0` ở khung quy cách bên phải (bên dưới ô Tiêu chuẩn) để tăng số lượng mẫu đo lên (>0). Nếu là hạng mục đo định kỳ không bắt buộc theo Lot thì bỏ qua.
 
@@ -202,7 +184,7 @@ ROLLBACK;
 
 ---
 
-### 2.9 POP-ERR-13: Hiện Tượng Không Đồng Nhất Công Đoạn Giữa POP Kiosk và MES WinForm
+### 2.10 POP-ERR-13: Hiện Tượng Không Đồng Nhất Công Đoạn Giữa POP Kiosk và MES WinForm
 **Hiện tượng:** 
 1. Cùng 1 mã Lot nhưng xem trên POP Kiosk hiển thị công đoạn khác so với MES WinForm Desktop (B530/HY530).
 2. Tại POP Kiosk, bấm "Hoàn thành sản xuất" bị chặn báo *"This route is already completed in MES"*, hoặc sang Đóng gói Kiosk bị báo *"Vượt quá số lượng còn lại (0 EA)"*.
@@ -217,6 +199,9 @@ ROLLBACK;
 1. Chạy Golden Query 360: `.\mes.ps1 trace '<LotID>'` để lấy `ControlNo`, đối soát trạng thái `STB_SetInfo` và các dòng trong `STB_ProdRouteHist`.
 2. Nếu kẹt bản ghi công đoạn cũ ở giữa (Aging `V-26_HY`): Áp dụng **Template 3** xóa bản ghi kẹt cũ trong `STB_ProdRouteWorkerHist` và `STB_ProdRouteHist`.
 3. Nếu chốt sớm công đoạn đóng gói (`V-28_HY`): Áp dụng **Template 4** rollback đồng bộ 3 bảng (`STB_MaterialLotInfo`, `STB_ProdRouteHist`, `VINA_PACKING_REMAIN_QTY`).
+
+> [!NOTE]
+> **Quy ước đánh số mục:** Các mục từ §2.14 trở đi được đánh số trực tiếp tương ứng với mã định danh lỗi `POP-ERR-14` đến `POP-ERR-20` để đồng bộ tuyệt đối với bảng chẩn đoán sự cố khẩn cấp (§1 Quick Diagnostic Matrix) và đảm bảo các liên kết tra cứu chéo không bị đứt gãy.
 
 ---
 

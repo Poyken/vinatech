@@ -1,41 +1,46 @@
 <!--
 AI-READY METADATA
 Purpose: Master Index — Bộ KB toàn diện cho hệ thống POP (Point of Production) Vinatech
-Scope: POP Web Kiosk (pop.vinatech.com), VINATECH_POP DB, SmartFactoryV2 Integration
+Scope: POP Web Kiosk (pop.vinatech.com), VINATECH_POP DB (66 bảng), SmartFactoryV2 Integration
 Single Source of Truth: POP_KNOWLEDGE_BASE/POP_KB_INDEX.md
 Target Systems: POP Web UI, VINATECH_POP DB, SmartFactoryV2 DB, VINATECH_RESTFUL API
+Last Updated: 2026-09-21 (Audit DB schema 66 bảng, đánh dấu 5 file archived)
 Related Files:
   - [MES KB_INDEX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
-  - [POP_USER_MANUAL.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_USER_MANUAL.md)
-  - [POP_SYSTEM_INTEGRATION_GUIDE.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_SYSTEM_INTEGRATION_GUIDE.md)
+  - [POP_KB_01_ARCHITECTURE_AND_API.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_01_ARCHITECTURE_AND_API.md)
+  - [POP_KB_02_SCREEN_OPERATIONS.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_02_SCREEN_OPERATIONS.md)
+  - [POP_KB_03_TROUBLESHOOTING.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_03_TROUBLESHOOTING.md)
 -->
 
 # 📋 POP KNOWLEDGE BASE — MASTER INDEX
 
 > **Hệ thống:** POP (Point of Production) — Web Kiosk Sản xuất Vinatech  
 > **URL:** `https://pop.vinatech.com/`  
-> **Backend DB:** `VINATECH_POP` (riêng) + `SmartFactoryV2` (shared với MES)  
+> **Backend DB:** `VINATECH_POP` (**66 bảng** — audit 2026-09-21) + `SmartFactoryV2` (shared với MES)  
 > **API Server:** `https://pop.vinatech.com/api/` (RESTful, JSON)  
-> **Phiên bản KB:** v2.0 (Khởi tạo 2026-09-09 — Đồng bộ 100% Bộ Slide Đào Tạo POP.pptx của Hanbit Kang & Vietnam DX Team)  
+> **Phiên bản KB:** v2.1 (Cập nhật 2026-09-21 — Audit DB schema 66 bảng, đánh dấu 5 file archived)  
 > **🔑 Keywords:** POP, kiosk, sản xuất, đóng gói, nhập NVL, packing, merge pack, label, quality, IQC, PQC, OQC, slide mapping, marking, self inspection, auto-save, VINA_EQUIPMENT_MAPPING, STB_ProductMachine, locked ACTIVE machine, lệch BOM điện cực, POP-ERR-19, POP-ERR-20
 
 ---
 
 ## 📚 BẢN ĐỒ TÀI LIỆU (KB FILE MAP)
 
-| # | File | Nội dung | Khi nào dùng |
-|---|------|----------|--------------|
-| INDEX | [POP_KB_INDEX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_INDEX.md) | Master Index + Routing Map | Điểm bắt đầu mọi tra cứu POP |
-| 01 | [POP_KB_01_ARCHITECTURE_AND_API.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_01_ARCHITECTURE_AND_API.md) | Kiến trúc hệ thống, API endpoints, DB schema mapping, Thiết bị & Vòng đời Mapping (§3.3) | Debug API, hiểu data flow, logic chọn máy Kiosk |
-| 02 | [POP_KB_02_SCREEN_OPERATIONS.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_02_SCREEN_OPERATIONS.md) | Hướng dẫn vận hành từng màn hình + DB impact, Modal "Xác nhận Kết thúc?" | Thao tác sản xuất, đóng gói, marking, chọn máy |
-| 03 | [POP_KB_03_TROUBLESHOOTING.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_03_TROUBLESHOOTING.md) | Lỗi thường gặp + Root cause + Fix (POP-ERR-01 đến POP-ERR-20) | Xử lý sự cố khẩn cấp, kẹt máy, nạp NVL BOM |
-| 04 | [POP_KB_04_ROLLBACK_AND_SAFETY.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_04_ROLLBACK_AND_SAFETY.md) | Phân tích khả năng Rollback trên UI + DB safety (v2.0) | Hủy đóng gói Box, an toàn dữ liệu |
-| 05 | [POP_KB_05_DB_VERIFICATION_AUDIT.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_05_DB_VERIFICATION_AUDIT.md) | Kết quả đối chiếu UI vs DB thực tế | Kiểm toán, xác minh tính chính xác |
-| MAP | [POP_SLIDE_DECK_MAPPING_AND_ANALYSIS.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_SLIDE_DECK_MAPPING_AND_ANALYSIS.md) | Phân tích 51 slides POP.pptx & 50 ảnh trích xuất | Đối chiếu tài liệu đào tạo DX Team |
-| REF | [POP_USER_MANUAL.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_USER_MANUAL.md) | Cẩm nang vận hành chi tiết 6 phần cho end-user (v2.0) | Training công nhân, thao tác Kiosk |
-| REF | [POP_SYSTEM_INTEGRATION_GUIDE.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_SYSTEM_INTEGRATION_GUIDE.md) | Tích hợp POP ⇄ MES ⇄ Groupware ⇄ ERP | Hiểu luồng dữ liệu liên hệ thống |
-| REF | [POP_QUALITY_AND_SCREEN_REFERENCE.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_QUALITY_AND_SCREEN_REFERENCE.md) | Tham chiếu Quality screens + mapping | QC operations |
-| REF | [POP_TRAINING_SCREEN_QUALITY.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_TRAINING_SCREEN_QUALITY.md) | Tài liệu training Quality screens | Đào tạo QC |
+> [!NOTE]
+> **Cập nhật 2026-09-21:** 5 file phụ trợ (MAP, REF) đã bị xóa khỏi thư mục. Nội dung chính đã được tích hợp vào KB_01–KB_05. Các file bị đánh dấu `[ARCHIVED]` bên dưới.
+
+| # | File | Nội dung | Khi nào dùng | Trạng thái |
+|---|------|----------|--------------|------------|
+| INDEX | [POP_KB_INDEX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_INDEX.md) | Master Index + Routing Map | Điểm bắt đầu mọi tra cứu POP | ✅ Active |
+| 01 | [POP_KB_01_ARCHITECTURE_AND_API.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_01_ARCHITECTURE_AND_API.md) | Kiến trúc hệ thống, API endpoints, DB schema mapping **66 bảng** (§3.6), Thiết bị & Vòng đời Mapping (§3.3) | Debug API, hiểu data flow, logic chọn máy Kiosk | ✅ Active |
+| 02 | [POP_KB_02_SCREEN_OPERATIONS.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_02_SCREEN_OPERATIONS.md) | Hướng dẫn vận hành từng màn hình + DB impact, Modal "Xác nhận Kết thúc?" | Thao tác sản xuất, đóng gói, marking, chọn máy | ✅ Active |
+| 03 | [POP_KB_03_TROUBLESHOOTING.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_03_TROUBLESHOOTING.md) | Lỗi thường gặp + Root cause + Fix (POP-ERR-01 đến POP-ERR-20) | Xử lý sự cố khẩn cấp, kẹt máy, nạp NVL BOM | ✅ Active |
+| 04 | [POP_KB_04_ROLLBACK_AND_SAFETY.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_04_ROLLBACK_AND_SAFETY.md) | Phân tích khả năng Rollback trên UI + DB safety (v2.0) | Hủy đóng gói Box, an toàn dữ liệu | ✅ Active |
+| 05 | [POP_KB_05_DB_VERIFICATION_AUDIT.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_05_DB_VERIFICATION_AUDIT.md) | Kết quả đối chiếu UI vs DB thực tế | Kiểm toán, xác minh tính chính xác | ✅ Active |
+| ~~MAP~~ | ~~POP_SLIDE_DECK_MAPPING_AND_ANALYSIS.md~~ | ~~Phân tích 51 slides POP.pptx & 50 ảnh trích xuất~~ | ~~Đối chiếu tài liệu đào tạo DX Team~~ | ❌ **[ARCHIVED]** |
+| ~~REF~~ | ~~POP_USER_MANUAL.md~~ | ~~Cẩm nang vận hành chi tiết 6 phần cho end-user~~ | ~~Training công nhân, thao tác Kiosk~~ | ❌ **[ARCHIVED]** |
+| ~~REF~~ | ~~POP_SYSTEM_INTEGRATION_GUIDE.md~~ | ~~Tích hợp POP ⇄ MES ⇄ Groupware ⇄ ERP~~ | ~~Hiểu luồng dữ liệu liên hệ thống~~ | ❌ **[ARCHIVED]** |
+| ~~REF~~ | ~~POP_QUALITY_AND_SCREEN_REFERENCE.md~~ | ~~Tham chiếu Quality screens + mapping~~ | ~~QC operations~~ | ❌ **[ARCHIVED]** |
+| ~~REF~~ | ~~POP_TRAINING_SCREEN_QUALITY.md~~ | ~~Tài liệu training Quality screens~~ | ~~Đào tạo QC~~ | ❌ **[ARCHIVED]** |
 
 ---
 
@@ -44,25 +49,25 @@ Related Files:
 | Tình huống | File chính | File phụ |
 |-----------|-----------|---------|
 | Lỗi đăng nhập POP, không load được trang | KB_01 §1.1 | KB_03 §1 |
-| Không thấy Work Order / DayPlan | KB_02 §1.4 | KB_03 §2, Slide 13 |
-| Lỗi nhập NVL (Material Input) | KB_02 §6 | KB_01 §3.2, Slide 21-23 |
-| Nạp nhanh NVL theo BOM | KB_02 §6.2 ("Lượng kiến cấp") | USER_MANUAL §2.3.1 |
-| Tra cứu đích danh LOT NVL trong kho | KB_02 §6.2 ("Tồn kho") | USER_MANUAL §2.3.2 |
-| Lỗi "Không tìm thấy LOT trong kho" khi nạp cuộn điện cực / BOM | **KB_03 §2.19 (POP-ERR-19)** | KB_02 §6, USER_MANUAL §2.3 |
+| Không thấy Work Order / DayPlan | KB_02 §1.4 | KB_03 §2 |
+| Lỗi nhập NVL (Material Input) | KB_02 §6 | KB_01 §3.2 |
+| Nạp nhanh NVL theo BOM | KB_02 §6.2 ("Lượng kiến cấp") | KB_02 §6 |
+| Tra cứu đích danh LOT NVL trong kho | KB_02 §6.2 ("Tồn kho") | KB_01 §3.1 |
+| Lỗi "Không tìm thấy LOT trong kho" khi nạp cuộn điện cực / BOM | **KB_03 §2.19 (POP-ERR-19)** | KB_02 §6 |
 | POP Kiosk thiếu thiết bị / Ẩn máy tại modal "Xác nhận Kết thúc?" | **KB_03 §2.20 (POP-ERR-20)** | **KB_01 §3.3**, KB_02 §5, HOTFIX_LOG ID_57 |
 | Lỗi không link số lượng NG từ POP Kiosk xuống NAIS MES (B782) | **MES KB_09 § [B782] Bug #5** | HOTFIX_LOG ID_56 |
-| Nhập mã Marking công đoạn Bọc Vỏ | KB_02 §7.2 | USER_MANUAL §2.7, Slide 29 |
-| Lỗi đóng gói / Merge Pack / Chia Box | KB_02 §9 | KB_03 §4, Slide 33-37 |
-| Muốn hủy đóng gói Box (Rollback) | **KB_04 §2.5** (SoT) | KB_02 §9.2, Slide 39 |
-| Lỗi in tem / label print | KB_02 §10 | KB_03 §5, Slide 38, 45-47 |
-| Tự kiểm In-Line QC tại chuyền | KB_02 §12.1 | USER_MANUAL §6, Slide 49, 50 |
-| Tra cứu ảnh slide gốc theo số slide | **SLIDE_MAPPING** (SoT) | assets/slides_images/ |
-| Quality: IQC/PQC/OQC/FOQC | KB_02 §12 | POP_QUALITY_REF |
-| Kẹt đồng bộ POP ➔ MES / Lệch số lượng | **KB_01 §3.5** | **KB_03 §2.15 (Template 7, 8, 9)** |
+| Nhập mã Marking công đoạn Bọc Vỏ | KB_02 §7.2 | KB_02 §7 |
+| Lỗi đóng gói / Merge Pack / Chia Box | KB_02 §9 | KB_03 §4 |
+| Muốn hủy đóng gói Box (Rollback) | **KB_04 §2.5** (SoT) | KB_02 §9.2 |
+| Lỗi in tem / label print | KB_02 §10 | KB_03 §5 |
+| Tự kiểm In-Line QC tại chuyền | KB_02 §12.1 | KB_02 §12 |
+| Quality: IQC/PQC/OQC/FOQC | KB_02 §12 | KB_03 §2.8 |
+| Kẹt đồng bộ POP ➔ MES / Lệch số lượng | **KB_01 §3.5** | **KB_03 §2.18 (Template 7, 8, 9)** |
 | API endpoint không phản hồi | KB_01 §2 | KB_03 §6 |
 | Kiểm toán UI vs DB | **KB_05** (SoT) | KB_01 §3 |
-| Hiểu kiến trúc tổng thể | KB_01 §1 | POP_SYSTEM_INTEGRATION |
-| Training / Hướng dẫn end-user | POP_USER_MANUAL | KB_02 |
+| Hiểu kiến trúc tổng thể | KB_01 §1 | KB_01 §5 |
+| Training / Hướng dẫn end-user | KB_02 (Toàn bộ) | KB_04 §3 |
+| Tra cứu danh mục đầy đủ 66 bảng VINATECH_POP | **KB_01 §3.6** (SoT) | KB_05 |
 
 ---
 
@@ -99,10 +104,10 @@ Related Files:
 │           ▼                     ▼                            │
 │  ┌─────────────────┐  ┌──────────────────┐                  │
 │  │  VINATECH_POP   │  │ SmartFactoryV2   │                  │
-│  │  (POP-specific) │  │  (MES Core DB)   │                  │
-│  │ VINA_MATERIAL_  │  │ STB_SetInfo      │                  │
-│  │ INPUT_HIST      │  │ STB_ProdRouteHist│                  │
-│  │ VINA_SSO_*      │  │ STB_MaterialLot  │                  │
+│  │ (66 bảng riêng) │  │  (MES Core DB)   │                  │
+│  │ VINA_KIOSK_LOG  │  │ STB_SetInfo      │                  │
+│  │ VINA_EMP        │  │ STB_ProdRouteHist│                  │
+│  │ VINA_EQUIP_*    │  │ STB_MaterialLot  │                  │
 │  └─────────────────┘  └──────────────────┘                  │
 └─────────────────────────────────────────────────────────────┘
 ```
@@ -115,4 +120,8 @@ Related Files:
 2. **Chỉ đọc đoạn cần thiết** (20-40 dòng) — Surgical Retrieval.
 3. **Cross-ref với MES KB** khi liên quan đến SP hoặc bảng chung trong SmartFactoryV2.
 4. **POP Web ≠ MES WinForm** — Cùng DB backend nhưng UI/UX khác hoàn toàn.
-5. **Mọi thao tác POP đều ghi log** — Kiểm chứng qua `VINATECH_POP.dbo.VINA_MATERIAL_INPUT_HIST`.
+5. **Mọi thao tác POP đều ghi log** — Kiểm chứng qua `VINATECH_POP.dbo.VINA_POP_ACTION_LOG` (202K+ rows) hoặc `VINA_KIOSK_LOG` (27K+ rows).
+6. **Danh mục đầy đủ 66 bảng VINATECH_POP** → Xem chi tiết tại KB_01 §3.6.
+
+> [!WARNING]
+> **Lưu ý (2026-09-21):** Bảng `VINA_MATERIAL_INPUT_HIST` (mô tả trong KB_01 §3.1 là SoT cho nhập NVL) hiện có **0 rows** trên production DB. Có khả năng dữ liệu nhập NVL POP hiện ghi trực tiếp vào `SmartFactoryV2.dbo.STB_MaterialLotInfo` mà không dùng bảng trung gian này. Cần xác minh với DX Team.

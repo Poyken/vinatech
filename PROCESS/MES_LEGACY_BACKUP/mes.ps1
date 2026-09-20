@@ -10,6 +10,7 @@ param(
     [string]$Target = '',
     
     [string]$Profile = 'SmartFactoryV2',
+    [string]$Template = '',
     [switch]$Force,
     [switch]$Detail,
     [switch]$Clean
@@ -59,8 +60,8 @@ function Show-Help {
 
     Write-Host ''
     Write-Host '  3. KHAC PHUC SU CO & TRIEN KHAI (HOTFIX & DEPLOY):' -ForegroundColor Cyan
-    Write-Host '     .\mes.ps1 new-fix <IssueCode>       ' -NoNewline -ForegroundColor Green
-    Write-Host '-> Sinh template SQL Fix chuan UTF-8-BOM co BEGIN TRAN...ROLLBACK' -ForegroundColor Gray
+    Write-Host '     .\mes.ps1 new-fix <Name> [-Template <b552|b782|rollback>]' -ForegroundColor Green
+    Write-Host '-> Sinh template SQL Fix chuan (ho tro B552 dien cuc, B782 chuyen ngay, Rollback chot)' -ForegroundColor Gray
     Write-Host '     .\mes.ps1 deploy <Path.sql> [-Force]' -NoNewline -ForegroundColor Green
     Write-Host '-> Deploy SQL an toan (Tu dong Snapshot Pre-flight backup)' -ForegroundColor Gray
     Write-Host '     .\mes.ps1 clean                     ' -NoNewline -ForegroundColor Green
@@ -191,12 +192,28 @@ elseif ($cmdLower -eq 'new-fix') {
     $fileName = "hotfix_${timestamp}_${Target}.sql"
     $filePath = Join-Path $sqlDir $fileName
 
-    $templatePath = Join-Path $sqlDir 'template_hotfix.sql'
+    # Chon template phu hop
+    $tplName = 'template_hotfix.sql'
+    $targetLower = $Target.ToLower()
+    $tplParamLower = $Template.ToLower()
+
+    if ($tplParamLower -eq 'b552' -or $tplParamLower -eq 'electrode' -or $targetLower -match 'b552|electrode|mixing|slitting') {
+        $tplName = 'template_B552_ELECTRODE_CLEANUP.sql'
+    }
+    elseif ($tplParamLower -eq 'b782' -or $tplParamLower -eq 'movedate' -or $targetLower -match 'b782|movedate|move_date') {
+        $tplName = 'template_B782_MOVE_JOBDATE.sql'
+    }
+    elseif ($tplParamLower -eq 'rollback' -or $targetLower -match 'rollback') {
+        $tplName = 'template_B782_B530_ROLLBACK_CHOT.sql'
+    }
+
+    $templatePath = Join-Path $sqlDir $tplName
     $content = ''
     if (Test-Path $templatePath) {
         $content = [System.IO.File]::ReadAllText($templatePath, [System.Text.Encoding]::UTF8)
         $content = $content.Replace('{{ISSUE_CODE}}', $Target)
         $content = $content.Replace('{{DATE_CREATED}}', (Get-Date -Format 'yyyy-MM-dd HH:mm:ss'))
+        $content = $content.Replace('{{DATE_TAG}}', (Get-Date -Format 'yyyyMMdd'))
     } else {
         $content = "-- HOTFIX: $Target`nUSE SmartFactoryV2;`nGO`nBEGIN TRAN;`n-- Add your SQL here`nROLLBACK TRAN;`nGO"
     }
@@ -205,9 +222,10 @@ elseif ($cmdLower -eq 'new-fix') {
     [System.IO.File]::WriteAllText($filePath, $content, $utf8WithBom)
 
     Write-Host '-> Da tao thanh cong template Hotfix chuan UTF-8-BOM:' -ForegroundColor Green
+    Write-Host "  Template su dung: $tplName" -ForegroundColor Yellow
     Write-Host "  Path: $filePath" -ForegroundColor Cyan
     Write-Host 'Huong dan tiep theo:' -ForegroundColor Yellow
-    Write-Host '  1. Mo file chinh sua cau lenh UPDATE/WHERE chinh xac.' -ForegroundColor Gray
+    Write-Host '  1. Mo file dien thong so/bien can thiet ({{...}}).' -ForegroundColor Gray
     Write-Host "  2. Chay thu nghiem an toan: .\mes.ps1 deploy $filePath" -ForegroundColor Gray
 }
 elseif ($cmdLower -eq 'deploy') {
