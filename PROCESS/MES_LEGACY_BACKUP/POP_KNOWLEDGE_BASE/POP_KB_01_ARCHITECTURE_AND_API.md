@@ -78,7 +78,7 @@ Internet/Intranet
 | GET | `/api/pop/screen/getLotList` | LOT theo DayPlan | READ `STB_SetInfo` |
 | GET | `/api/pop/screen/getProcessList` | Công đoạn theo Routing | READ `STB_ProdRoute` |
 | GET | `/api/pop/screen/getMaterialList` | NVL theo BOM + LOT | READ `STB_BomDetail`, `STB_MaterialLotInfo` |
-| POST | `/api/pop/screen/saveMaterialInput` | **Nhập NVL** — trừ kho | **WRITE** `VINA_MATERIAL_INPUT_HIST` + UPDATE `STB_MaterialLotInfo` |
+| POST | `/api/pop/screen/saveMaterialInput` | **Nhập NVL** — trừ kho | **WRITE** `SmartFactoryV2.dbo.STB_RawMaterialInputHist` + UPDATE `STB_MaterialLotInfo` |
 | POST | `/api/pop/screen/saveDefect` | Đăng ký phế phẩm | **WRITE** `STB_ProdRouteHist` (DefectQty) |
 | POST | `/api/pop/screen/saveProduction` | Hoàn thành sản xuất | **WRITE** `STB_ProdRouteHist`, UPDATE `STB_SetInfo` |
 | POST | `/api/pop/screen/savePacking` | Đóng gói (single/merge) | **WRITE** `STB_PackingInfo`, UPDATE `STB_SetInfo` |
@@ -95,6 +95,48 @@ Internet/Intranet
 | GET | `/api/pop/quality/getFOQCList` | Danh sách FOQC | READ `STB_QualityFOQC` |
 | POST | `/api/pop/quality/saveInspection` | Lưu kết quả kiểm tra | **WRITE** Quality tables |
 | GET | `/api/pop/quality/getRouteJudgeList` | Phán định Route | READ `STB_RouteJudge` |
+
+### 2.4 🗺️ Bản Đồ Điều Hướng Giao Diện Web POP (Frontend UI Routes)
+
+Dựa trên cấu hình Master Menu (`VINATECH_POP.dbo.VINA_MENU`), hệ thống POP Web phân bổ thành 4 phân hệ chính:
+
+```
+                                  pop.vinatech.com
+                                         │
+     ┌───────────────────┬───────────────┴───────────────┬───────────────────┐
+     ▼                   ▼                               ▼                   ▼
+[1. Kiosk Thao Tác]  [2. Dashboard Vận Hành]    [3. Debug & Giám Sát]   [4. Cấu Hình Master]
+  /pop/screen           /dashboard/production     /systemAdmin/popDebug/    /popSetting/
+  /pop/quality          /dashboard/report           dashboard                 wipRouteMapping
+                        /dashboard/electrodeStatus  flow                      lineProdMode
+                        /dashboard/assemblyTrace    quality-flow              lotPlanQty
+                        /dashboard/kiosk/           equipmentTracking/        interlockSetting
+                          dashboard                   dashboard               assemblyGroupMapping
+```
+
+| Phân hệ | Route URL | Tên màn hình / Chức năng | Đối tượng sử dụng |
+|---------|-----------|---------------------------|-------------------|
+| **Kiosk Thao Tác** | `/pop/screen` | POP Sản Xuất (Chọn Plan, nạp NVL, chốt sản lượng, đóng gói, in tem) | Công nhân tại chuyền |
+| | `/pop/quality` | POP Chất Lượng (Tự kiểm tra In-Line PQC, phán định chất lượng) | Công nhân / QC Line |
+| **Dashboard Vận Hành** | `/dashboard/production` | Bảng điều khiển tích hợp tiến độ sản xuất toàn xưởng | Quản lý sản xuất |
+| | `/dashboard/report` | Báo cáo tra cứu sản lượng theo ca/ngày/Line | Thống kê / Kế hoạch |
+| | `/dashboard/electrodeStatus` | Bảng theo dõi tiến độ công đoạn Điện Cực (Coating, Slitting) | Tổ trưởng xưởng 1 |
+| | `/dashboard/assemblyTrace` | Bảng truy vết tiến độ lắp ráp Module & Cell | Kỹ sư chuyền |
+| | `/dashboard/kiosk/dashboard` | Dashboard giám sát trạng thái kết nối các Kiosk | IT / Admin |
+| **Debug & Giám Sát** | `/systemAdmin/popDebug/dashboard` | Debug Dashboard tổng thể POP | Kỹ sư MES / IT |
+| | `/systemAdmin/popDebug/flow` | Giám sát luồng dữ liệu Kiosk ➔ CSDL | Kỹ sư MES / IT |
+| | `/systemAdmin/popDebug/quality-flow` | Giám sát luồng dữ liệu tự kiểm QC | Kỹ sư QC / IT |
+| | `/systemAdmin/equipmentTracking/dashboard` | Giám sát trạng thái vận hành thiết bị & máy móc | Kỹ sư bảo trì |
+| | `/systemAdmin/labelManager` | Quản lý định dạng mẫu tem nhãn tùy biến | Kỹ sư tem nhãn |
+| | `/admin/pop/workerQrPrint` | In nhãn mã vạch QR nhân viên | Nhân sự / Tổ trưởng |
+| **Cấu Hình Master** | `/popSetting/assemblyGroupMapping` | **Cấu hình 10 Slot nạp NVL theo Line** (`VINA_GROUP_INPUT_ROUTE`) | Quản lý Line / IT |
+| | `/popSetting/lineProdMode` | Cấu hình chế độ sản xuất theo Line (`SUBTRACT` vs `ADD`) | Quản lý Line / IT |
+| | `/popSetting/wipRouteMapping` | Cấu hình ánh xạ bán thành phẩm luân chuyển công đoạn | Kỹ sư quy trình |
+| | `/popSetting/interlockSetting` | Cài đặt điều kiện khóa chặn liên công đoạn | Kỹ sư chất lượng |
+| | `/popSetting/lotPlanQty` | Điều chỉnh số lượng kế hoạch của Lot | Kế hoạch sản xuất |
+| | `/systemAdmin/qualityEquipment` | Quản trị thiết bị đo kiểm chất lượng | Kỹ sư đo lường |
+| | `/dataCollection/modelSetting` | Cấu hình Model thu thập dữ liệu máy tự động | Kỹ sư tự động hóa |
+| | `/dataCollection/pcMacList` | Whitelist địa chỉ MAC máy Kiosk | IT Hệ thống |
 
 ---
 
@@ -195,14 +237,17 @@ Công nhân chọn LOT → Bấm "Nhập NVL"
 API: POST /api/pop/screen/saveMaterialInput
      │
      ├─→ SmartFactoryV2.STB_MaterialLotInfo
-     │    UPDATE: Qty = Qty - InputQty (trừ kho)
+     │    UPDATE: CurrentQty = CurrentQty - InputQty (trừ kho thực tế)
      │
-     ├─→ VINATECH_POP.VINA_MATERIAL_INPUT_HIST
-     │    INSERT: Log chi tiết nhập NVL
+     ├─→ SmartFactoryV2.STB_RawMaterialInputHist (SoT THỰC TẾ GHI NHẬN 24/7)
+     │    INSERT: Bản ghi lịch sử nạp NVL (Barcode, RawMaterialBarcode, CreateDateTime)
      │
      └─→ SmartFactoryV2.STB_SetInfo
-          UPDATE: IsLineInput = 1 (đánh dấu đã nhập NVL)
+          UPDATE: IsLineInput = 1 (đánh dấu đã hoàn thành nạp NVL vào chuyền)
 ```
+
+> [!IMPORTANT]
+> **Điểm mấu chốt kiến trúc:** Bảng `VINATECH_POP.dbo.VINA_MATERIAL_INPUT_HIST` là bảng thiết kế trung gian cũ hiện **không sử dụng (0 rows)**. Hệ thống POP Web gọi trực tiếp Stored Procedure ghi nhận vào `SmartFactoryV2.dbo.STB_RawMaterialInputHist` để bảo đảm tính thống nhất dữ liệu thời gian thực với toàn bộ phân hệ MES WinForm.
 
 ### 3.4 Sơ Đồ Data Flow — Đóng Gói (Packing)
 
@@ -259,23 +304,23 @@ Toàn bộ 66 bảng vật lý trong database `VINATECH_POP` trên server `dbser
 #### Nhóm 1: Core Operations & Kiosk Logs (Vận Hành & Nhật Ký Thao Tác)
 | Tên bảng | Số dòng (Rows) | Vai trò vận hành & Ghi chú |
 |----------|---------------:|---------------------------|
-| `VINA_POP_ACTION_LOG` | 202,986 | **Nhật ký hành vi Kiosk cốt lõi**: Ghi nhận từng cú click, chuyển màn hình, quét barcode, thay đổi Line. Chạy liên tục 24/7. |
+| `VINA_POP_ACTION_LOG` | 202,986 | **Nhật ký hành vi Kiosk cốt lõi**: Ghi nhận 104 loại `ACTION_TYPE` 24/7 (Top: Tự kiểm đo `AUTO_INSPECTION_ADDPROCESS` 117K, Nạp NVL `AUTO_MATERIAL_INPUT` 16K, Cân mẻ `AUTO_MIX_WEIGHING_INPUT` 15K, Hoàn thành `MANUAL_COMPLETE` 7.4K, Phế `MANUAL_DEFECT` 7.3K, Đo màng điện cực `AUTO_ELECTRODE_THICKNESS` 2.6K, Gán ép máy `AUTO_MAPPING_FORCEADD` 2.1K). Lưu giữ toàn bộ lỗi runtime (`ERROR_MESSAGE`). |
 | `VINA_KIOSK_LOG` | 27,922 | Log kết nối Kiosk, IP client, trình duyệt, thời gian phiên làm việc. |
 | `VINA_WIP_STOCK_HIST` | 1,720 | Lịch sử biến động bán thành phẩm (WIP) luân chuyển qua các công đoạn trên Kiosk. |
 | `VINA_PACKING_REMAIN_QTY` | 2,165 | **Bảng quản lý tồn dư Lot lẻ khi đóng gói**: Phục vụ tính năng "Tìm Lot còn lại" & Merge Pack gộp thùng. |
 | `VINA_KIOSK_SESSION` | 106 | Quản lý phiên làm việc active của từng máy trạm Kiosk. |
-| `VINA_ASSEMBLY_GROUP_MODE` | 31 | Cấu hình chế độ làm việc theo nhóm lắp ráp. |
-| `VINA_LINE_PROD_MODE` | 36 | Cấu hình chế độ sản xuất riêng của từng chuyền (VVT_HY, VVT_F2, VVC-11...). |
+| `VINA_ASSEMBLY_GROUP_MODE` | 31 | **Chế độ nạp nhóm lắp ráp**: 100% chuyền Cell (31/31 line tại HN & HY như VVC-01..23, VVHYC-01..17, TCX1, TCX2) đều kích hoạt `INPUT_MODE = 'GROUP'`, bắt buộc nạp NVL qua cơ chế 10 Slot của `VINA_GROUP_INPUT_ROUTE`. |
+| `VINA_LINE_PROD_MODE` | 36 | **Chế độ chốt sản lượng theo chuyền**: Phân chia 2 chế độ `PROD_MODE`: <br>• `SUBTRACT` (34 cấu hình — chuẩn chung Cell Line): Bắt đầu từ quy mô Lot kế hoạch và trừ dần phế/dư.<br>• `ADD` (2 cấu hình — riêng SPT_LINE S-01, S-05): Cộng dồn lũy kế sản lượng từng mẻ. |
 | `VINA_ROUTE_DOC` | 2 | Tài liệu / SOP hướng dẫn thao tác gắn với từng công đoạn trên UI Kiosk. |
 | `VINA_PATH_SETTTING` | 1 | Đường dẫn lưu trữ tài liệu, file đính kèm, ảnh chụp QC của hệ thống. |
-| `VINA_MATERIAL_INPUT_HIST` | 0 | *Bảng lịch sử nạp NVL POP*: Hiện 0 rows (thực tế nạp NVL được cập nhật thẳng vào `SmartFactoryV2.dbo.STB_MaterialLotInfo`). |
+| `VINA_MATERIAL_INPUT_HIST` | 0 | *Bảng lịch sử nạp NVL POP*: Hiện 0 rows (thực tế nạp NVL được ghi trực tiếp vào `SmartFactoryV2.dbo.STB_RawMaterialInputHist` và trừ kho tại `STB_MaterialLotInfo`). |
 
 #### Nhóm 2: BOM & Material Route Mapping (Định Mức & Ánh Xạ NVL)
 | Tên bảng | Số dòng (Rows) | Vai trò vận hành & Ghi chú |
 |----------|---------------:|---------------------------|
-| `VINA_BOM_INPUT_ROUTE` | 894 | Quy định công đoạn nào bắt buộc phải nạp NVL tương ứng theo BOM. |
+| `VINA_BOM_INPUT_ROUTE` | 894 | Quy định chi tiết mã vật tư phụ (`SUB_MATERIAL_CODE`) phải nạp tại công đoạn nào (`INPUT_ROUTE_CODE`) theo từng Version BOM của Module/MEA. |
 | `VINA_MATERIAL_ROUTE_MAP` | 435 | Ánh xạ chi tiết danh mục vật tư NVL với Route Code thực tế tại xưởng. |
-| `VINA_GROUP_INPUT_ROUTE` | 306 | Cấu hình nạp nhóm NVL theo tổ hợp công đoạn. |
+| `VINA_GROUP_INPUT_ROUTE` | 306 | **Cấu hình 10 Slot nạp NVL chuẩn cho Kiosk**: <br>• `V-22` (Cuốn/Winding): 6 slot (`ElectrodeP`, `ElectrodeM`, `Separator`, `PiTape`, `TerminalP`, `TerminalM`).<br>• `V-24` (Lắp ráp/Assembly): 3 slot (`RubberPad`, `Case`, `Electrolyte`).<br>• `V-25` (Bọc vỏ/Sleeving): 1 slot (`Sleeve`).<br>Nếu slot có `IS_REQUIRED = Y` mà chưa nạp đủ, Kiosk sẽ khóa nút hoàn thành. |
 
 #### Nhóm 3: Equipment & PLC Management (Máy Móc Thiết Bị & PLC)
 | Tên bảng | Số dòng (Rows) | Vai trò vận hành & Ghi chú |
@@ -289,8 +334,8 @@ Toàn bộ 66 bảng vật lý trong database `VINATECH_POP` trên server `dbser
 | Tên bảng | Số dòng (Rows) | Vai trò vận hành & Ghi chú |
 |----------|---------------:|---------------------------|
 | `VINA_INSP_MASTER_HIST` | 27,111 | **Lịch sử tự kiểm tra Master mẫu**: Ghi nhận kiểm tra đầu ca của công nhân trước khi bắt đầu sản xuất hàng loạt. |
-| `VINA_INSP_MASTER_HIST_LOCK` | 1 | Khóa chặn sản xuất nếu bài test Master đầu ca chưa Pass hoặc đã hết hiệu lực. |
-| `VINA_BLOOM_JUDGE_POLICY` | 258 | Chính sách phán định chất lượng hiện tượng Bloom (phồng rộp bọt khí) trên sản phẩm. |
+| `VINA_INSP_MASTER_HIST_LOCK` | 1 | Khóa phân tán (Distributed Mutex `INSP_MASTER_HIST_COLLECT`) chống xung đột giữa các background collector jobs khi đồng bộ kết quả kiểm tra. |
+| `VINA_BLOOM_JUDGE_POLICY` | 258 | **Chính sách đánh giá hiện tượng Bloom (phồng/rộp bọt khí)**: Quy định theo từng mã NVL (`MATERIAL_CODE`), nếu `APPROVAL_REQUIRED_YN = Y` thì bắt buộc phải có phê duyệt của cấp quản lý mới được thông qua. |
 | `VINA_QC_DECISION_HIST` | 188 | Nhật ký phán định kết quả kiểm tra chất lượng trên giao diện POP Quality. |
 | `VINA_OQC_SAMPLE_RULE` | 102 | Bảng quy tắc lấy mẫu kiểm tra xuất xưởng OQC theo cỡ lô. |
 | `VINA_ROUTE_TEST_SETTING` | 66 | Thiết lập các bài kiểm tra chất lượng bắt buộc theo từng công đoạn. |

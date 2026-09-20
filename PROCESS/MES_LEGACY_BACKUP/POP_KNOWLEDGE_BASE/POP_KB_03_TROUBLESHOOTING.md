@@ -432,6 +432,25 @@ Khi công nhân bấm nút **"GHI NHẬN SẢN XUẤT"** để mở modal popup 
 
 ---
 
+### 2.21 📊 Bảng Phân Tích & Giải Mã Top 10 Thông Báo Lỗi Runtime Thực Tế (Production Telemetry)
+
+Dựa trên kiểm toán thực tế hơn 200,000 bản ghi thao tác trong `VINATECH_POP.dbo.VINA_POP_ACTION_LOG`, dưới đây là 10 thông báo lỗi xuất hiện thường xuyên nhất tại các xưởng sản xuất kèm nguyên nhân và cách xử lý tức thì:
+
+| # | Thông báo lỗi trên màn hình Kiosk POP | `ACTION_TYPE` | Số lần ghi nhận | Nguyên nhân kỹ thuật & Cách xử lý |
+|---|---------------------------------------|---------------|----------------:|-----------------------------------|
+| 1 | **"Already transferred to MES. Cannot modify."** | `MANUAL_DEFECT` | 151 | **Đã đồng bộ sang MES, khóa sửa**: Bản ghi sản lượng/phế của công đoạn đã được Worker đồng bộ sang `STB_ProdRouteHist` (`IsTransferred = 1`). Kiosk POP khóa cứng không cho OP tự sửa. <br>➔ **Xử lý:** Kỹ sư MES can thiệp sửa trực tiếp trên WinForm (B530/B540) hoặc dùng Template 7 để rollback. |
+| 2 | **"실적이 없는 공정입니다. 실적 등록 후 추가하세요."**<br>*(Công đoạn chưa có sản lượng. Hãy đăng ký sản lượng trước)* | `WORKER_HIST_ADD` | 107 | **Thao tác ngược trình tự**: OP bấm thêm/chỉnh sửa công nhân thao tác tại trạm khi công đoạn đó chưa hề được bấm "Ghi nhận sản lượng". <br>➔ **Xử lý:** Nhập số lượng sản xuất/phế phẩm trước, sau đó hệ thống mới cho phép ghi nhận công nhân. |
+| 3 | **"코팅 생산수량 등록 후 불량등록이 가능합니다."**<br>*(Chỉ đăng ký phế sau khi đã nhập sản lượng Coating)* | `AUTO_ELECTRODE_WASTE` | 73 | **Ràng buộc Xưởng Điện Cực**: Bắt buộc phải có sản lượng màng Coating hợp lệ (`Coating ProdQty > 0`) thì mới được phép khai báo phế phẩm cuộn. |
+| 4 | **"작업자를 먼저 지정해 주세요. (검사자 미기록 저장 불가)"**<br>*(Vui lòng chỉ định công nhân trước khi lưu)* | `AUTO_INSPECTION_ADDPROCESS` | 60 | **Thiếu mã người kiểm tra**: Khi lưu kết quả đo tự kiểm PQC In-Line, ô công nhân (`WorkerID`) bị để trống. Kiosk chặn lưu để tránh dữ liệu mồ côi không quy được trách nhiệm. <br>➔ **Xử lý:** Quét mã QR thẻ nhân viên trước khi bấm lưu. |
+| 5 | **"믹싱 공정이 완료되지 않았습니다. 전 자재 투입 완료 후 코팅 실적 등록이 가능합니다. (미투입 자재 ...건)"**<br>*(Mixing chưa hoàn thành. Cần nạp đủ NVL trước khi chốt Coating)* | `MANUAL_PROD` | 52 | **Khóa liên động (Interlock) công đoạn**: Công đoạn Trộn keo/Dung môi (Mixing) chưa quét nạp đủ danh mục NVL định mức BOM. Kiosk khóa không cho chuyển sang công đoạn Tráng phủ (Coating). <br>➔ **Xử lý:** Kiểm tra tab Nạp NVL của mẻ Mixing, quét nạp nốt các vật tư còn thiếu. |
+| 6 | **"Same material input is already in progress. Please wait."** | `AUTO_MATERIAL_INPUT` | 44 | **Xung đột bấm đúp (Double click)**: Công nhân bấm quét barcode NVL liên tiếp 2 lần nhanh hơn thời gian API xử lý xong giao dịch trừ kho. <br>➔ **Xử lý:** Đợi 2-3 giây để popup hoàn tất, không bấm liên thanh. |
+| 7 | **"equipment.mapping.preempted"** | `AUTO_MAPPING_ADD` | 35 | **Xung đột chiếm dụng máy**: Máy móc đã được một Kiosk khác hoặc ca làm việc trước đó gán ở trạng thái `ACTIVE` (chính là sự cố [POP-ERR-20](#220-pop-kiosk-thiếu-thiết-bị--ẩn-máy-tại-modal-xác-nhận-kết-thúc-windingcurlingsleeving)). <br>➔ **Xử lý:** Dùng Template 10 giải phóng máy. |
+| 8 | **"코팅 공정이 완료되지 않았습니다. 코팅 양품수량 등록 후 롤프레싱 실적 등록이 가능합니다."**<br>*(Coating chưa chốt. Cần nhập sản lượng OK trước khi cán Roll Press)* | `MANUAL_PROD` | 26 | **Tuần tự công đoạn Điện Cực**: Cấm nhảy cóc từ Coating sang Roll Pressing khi chưa có sản lượng đạt (Yield OK). |
+| 9 | **"Material input is required before packing."** | `AUTO_PACKING_EXECUTE_MULTI` | 24 | **Thiếu nạp NVL đóng gói**: Thùng hoặc Lot chưa hoàn tất bước nạp vỏ/nhãn/hạt hút ẩm theo quy cách đóng gói. <br>➔ **Xử lý:** Thực hiện nạp NVL đóng gói trước khi chốt chia Box / Merge Pack. |
+| 10 | **"이미 완료된 검사 문서입니다. 추가 측정이 불가합니다."**<br>*(Phiếu đo đã hoàn thành. Không thể đo thêm)* | `AUTO_INSPECTION_ADDPROCESS` | 21 | **Phiếu kiểm tra đã chốt đóng**: Tài liệu đo PQC đã bấm Hoàn thành (`IsFinished = 1`) (sự cố [POP-ERR-12](#28-pop-err-11--12-sự-cố-phân-hệ-chất-lượng-quality-popqualityself)). <br>➔ **Xử lý:** Bấm "Hoàn tác" để gửi yêu cầu mở lại hoặc dùng Template 5. |
+
+---
+
 ## 3. 🛠️ TEMPLATE SQL CỨU HỘ VẬN HÀNH (SAFETY HOTFIX TEMPLATES)
 
 > [!CAUTION]

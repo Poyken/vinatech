@@ -66,8 +66,10 @@ Related Files:
 | API endpoint không phản hồi | KB_01 §2 | KB_03 §6 |
 | Kiểm toán UI vs DB | **KB_05** (SoT) | KB_01 §3 |
 | Hiểu kiến trúc tổng thể | KB_01 §1 | KB_01 §5 |
-| Training / Hướng dẫn end-user | KB_02 (Toàn bộ) | KB_04 §3 |
 | Tra cứu danh mục đầy đủ 66 bảng VINATECH_POP | **KB_01 §3.6** (SoT) | KB_05 |
+| Tra cứu Top 10 lỗi runtime thực tế Kiosk | **KB_03 §2.21** (SoT) | KB_03 §1 |
+| Bản đồ điều hướng 4 phân hệ UI Web POP | **KB_01 §2.4** (SoT) | KB_02 |
+| Cấu hình 10 Slot nạp NVL chuẩn theo Line | **KB_01 §3.6 (Nhóm 2)** | KB_02 §6 |
 
 ---
 
