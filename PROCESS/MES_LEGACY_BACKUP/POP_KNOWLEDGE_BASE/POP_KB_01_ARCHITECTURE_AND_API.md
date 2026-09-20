@@ -25,37 +25,99 @@ Related Files:
 
 | Layer | Công nghệ | Chi tiết |
 |-------|-----------|----------|
-| **Frontend** | Vue.js 2.x + Vuetify | SPA, responsive cho Kiosk touch |
-| **API Server** | ASP.NET Core / Node.js | RESTful JSON, hosted IIS |
-| **Database 1** | `VINATECH_POP` (MSSQL) | Bảng riêng POP: SSO token, material input hist, quality |
-| **Database 2** | `SmartFactoryV2` (MSSQL) | Shared với MES: Lot, Routing, Kho, Master Data |
-| **Auth** | SSO Token-based | `VINATECH_POP.dbo.VINA_SSO_LOGIN` + `VINA_SSO_TOKEN` |
-| **Print** | Label printing via API | Gọi SP → Generate template → Push to printer |
+| **Frontend** | Vue.js 2.x + Vuetify + Vanilla JS | SPA cho Kiosk touch (`/pop/screen`, `/pop/quality`), MPA cho Dashboard & Data Collection |
+| **Thư viện Giao diện** | ECharts, JsBarcode, QRCode, bwip-js, Select2 | Trực quan hóa tiến độ, render tem mã vạch vector 2D, bộ chọn tìm kiếm máy móc |
+| **Giao thức Thời gian thực** | WebSocket / STOMP (`SockJS` + `stomp.js`) | Thu thập dữ liệu cảm biến máy tự động (PLC), Heartbeat Kiosk 24/7 và thông báo đẩy |
+| **Client Thu Thập IoT** | `vinatechEquipmentDataSetup.exe` | Windows Service cài tại máy trạm xưởng kết nối PLC (OPC-UA, Modbus TCP, MC Protocol, RS232) |
+| **API Server** | ASP.NET Core / Node.js | RESTful JSON, hosted IIS (`pop.vinatech.com/api/`) |
+| **Database Nghiệp Vụ 1** | `VINATECH_POP` (MSSQL) | CSDL riêng POP: 66 bảng (SSO token, Kiosk sessions, Action logs, Mapping máy, Quality) |
+| **Database Nghiệp Vụ 2** | `SmartFactoryV2` (MSSQL) | Shared với MES: Lot, Routing, Kho, Master Data, `MongoToMesPerformance` |
+| **Database IoT & Log** | MongoDB (Time-Series) | Lưu trữ chuỗi thời gian áp suất, nhiệt độ, điện áp, tốc độ máy và log đường truyền PLC |
+| **Auth** | SSO Token-based + RBAC | `VINATECH_POP.dbo.VINA_SSO_LOGIN` + `VINA_SSO_TOKEN` (Phân quyền Worker vs Manager) |
+| **Print** | In tem đa phương thức | Web Spooler / ZPL Socket đẩy trực tiếp về máy in Zebra/TSC tại xưởng qua API |
 
 ### 1.2 Mô Hình Triển Khai
 
 ```
-Internet/Intranet
-     │
-     ▼
-┌─────────────────────────────────┐
-│  IIS Web Server                  │
-│  pop.vinatech.com               │
-│  ├── /pop/screen  (SX Module)   │
-│  ├── /pop/quality (QC Module)   │
-│  └── /api/*       (REST API)    │
-├─────────────────────────────────┤
-│  DB Server: dbserver.hycap.co.kr│
-│  Port: 5398                     │
-│  ├── VINATECH_POP               │
-│  ├── SmartFactoryV2             │
-│  ├── SmartFramework             │
-│  └── VINATECH_RESTFUL           │
-└─────────────────────────────────┘
+Thiết Bị Xưởng (PLC/Cân/Scanner)          Trình Duyệt Kiosk / Tablet
+      │ (RS232 / Modbus / OPC-UA)                    │
+      ▼                                              ▼
+┌──────────────────────────────┐        ┌───────────────────────────────────┐
+│ vinatechEquipmentDataSetup   │        │ POP Web Application               │
+│ (Windows Service trên PC máy)│        │ pop.vinatech.com                  │
+│   └── WebSocket / REST Push  │        │ ├── /pop/screen   (Sản xuất SPA)  │
+└──────────────┬───────────────┘        │ ├── /pop/quality  (Chất lượng SPA)│
+               │                        │ ├── /equipmentData (Dữ liệu IoT)  │
+               │                        │ └── /dashboard    (Quản lý RBAC)  │
+               ▼                        └─────────────────┬─────────────────┘
+┌─────────────────────────────────────────────────────────┴─────────────────┐
+│ IIS Web Server & API Gateway (pop.vinatech.com:443)                       │
+│ ├── WebSocket / STOMP Broker (/ws-equipment, /ws-kiosk)                   │
+│ └── RESTful APIs (/api/common/*, /api/dayplan/*, /api/material/*...)      │
+├────────────────────────────────┬──────────────────────────────────────────┤
+│ CSDL Quan Hệ (MSSQL 5398)       │ CSDL Chuỗi Thời Gian (MongoDB)           │
+│ ├── VINATECH_POP (66 bảng)     │ ├── EquipmentData_TimeSeries (Cảm biến)  │
+│ ├── SmartFactoryV2 (MES Core)  │ └── EquipmentLog_Stream (Nhật ký PLC)    │
+│ └── SmartFramework (Hệ thống)  │                                          │
+└────────────────────────────────┴──────────────────────────────────────────┘
 ```
 
 > **⚠️ QUAN TRỌNG:** POP Web và MES WinForm **chia sẻ cùng DB backend** (`SmartFactoryV2`).
-> Mọi thay đổi trên POP sẽ **tức thì hiển thị** trên MES Desktop và ngược lại.
+> Mọi thao tác chốt sản lượng, trừ kho, hủy hộp trên POP đều tác động trực tiếp và hiển thị tức thì trên MES WinForm và ngược lại.
+
+---
+
+### 1.3 📦 Danh Mục 38 Module JavaScript Frontend (`resources/js/`)
+
+Hệ thống Frontend của POP được module hóa thành 38 tệp JavaScript chuyên biệt, phối hợp điều khiển các nghiệp vụ trên Kiosk:
+
+#### A. Nhóm Quản Trị Hệ Thống, Kiosk Core & Phiên Làm Việc
+1. `popCommon.js`: Các hàm tiện ích dùng chung, định dạng ngày giờ, chuỗi, bộ lọc ngôn ngữ (VI/KO/EN).
+2. `popScreen.js`: Module điều phối chính của màn hình `/pop/screen`, quản lý State toàn cục `window.POP`.
+3. `popLineModal.js`: Điều khiển Modal chọn Dây chuyền, phân cấp Nhà máy VN/KR, bộ nhớ đệm `LINE_HISTORY_KEY`.
+4. `popLotSearch.js`: Điều khiển Modal tra cứu Kế hoạch, Lịch biểu tháng, tìm kiếm Lot theo Barcode (>= 4 ký tự).
+5. `popWorker.js`: Điều khiển Modal chọn Công nhân ca kíp, cây phòng ban, chỉ định Người đại diện chính.
+6. `popEquipment.js`: Quản lý danh sách máy, gán thiết bị Kiosk, kiểm tra tình trạng chiếm dụng máy.
+7. `popEquipDataPopup.js`: Cửa sổ Popup xem nhanh thông số tức thời của thiết bị ngoại vi gắn Kiosk.
+8. `popKeypad.js`: Bàn phím số cảm ứng ảo Numpad, cơ chế toggle chế độ tính toán `ADD` / `SUB`.
+9. `popKioskHeartbeat.js`: Bộ phát nhịp tim định kỳ giữ phiên làm việc và cập nhật `VINA_KIOSK_SESSION`.
+10. `popRealtime.js`: Lắng nghe sự kiện đồng bộ trạng thái giữa các trạm Kiosk trong cùng một xưởng.
+
+#### B. Nhóm Nguyên Vật Liệu, Chốt Sản Lượng & Đóng Gói
+11. `popMaterialInput.js`: Quy trình nạp NVL, quét barcode cuộn/thùng, trừ tồn kho và ghi nhận lịch sử nạp.
+12. `popMaterialBadge.js`: Hiển thị huy hiệu tỷ lệ cấp phát NVL (ví dụ `0/13` -> `13/13`) và mở khóa nút hoàn thành.
+13. `popBomModal.js`: Bảng chi tiết định mức BOM, tính toán số lượng dự kiến (`Lượng kiến cấp`).
+14. `popScaleSerial.js`: Giao tiếp cổng Serial/RS232 đọc khối lượng cân điện tử thời gian thực.
+15. `popRouteMapping.js`: Quản lý quy trình nhảy bước công đoạn và ánh xạ tuyến sản xuất.
+16. `popDefect.js`: Quản lý danh mục mã lỗi theo công đoạn, nhập số lượng phế phẩm và trừ lùi lỗi (SUB mode).
+17. `popManualPackModal.js`: Giao diện đóng gói thùng (Single Pack, Split Pack, Merge Pack) và thuật toán FIFO.
+18. `popKilnCondition.js`: Điều khiển và ghi nhận thông số lò nung/lò sấy nhiệt độ cao.
+19. `popMarkingCode.js`: Hộp thoại quét và lưu mã Marking thân vỏ tại công đoạn Bọc Vỏ.
+
+#### C. Nhóm Tem Nhãn & Đồ Họa Mã Vạch
+20. `popLabelRenderer.js`: Động cơ dựng tem nhãn vector 2D, hiển thị preview trước khi xuất lệnh in.
+21. `popLabelPrint.js`: Giao tiếp hệ thống in ấn, gửi lệnh Spooler tới máy in Zebra/TSC.
+
+#### D. Nhóm Dây Chuyền Điện Cực & Slitting
+22. `popMixing.js`: Quy trình Trộn điện cực 3 pha (Trộn khô, Tạo hạt, Nhào Slurry), liên kết cân điện tử.
+23. `popCoating.js`: Giao diện Mạ điện cực 1 mặt/2 mặt, ma trận đo độ dày 9 điểm ngang màng (µm).
+24. `popRolling.js`: Giao diện Ép cán cuộn (Roll Pressing), kiểm soát nhiệt độ 130°C và mật độ cán (g/cc).
+25. `popSlitting.js`: Giao diện Cắt xẻ băng điện cực, cấu hình đa dao xẻ, nhận diện khổ còn lại và sinh Lot con.
+26. `popElectrodeBase.js`: Lớp cơ sở chứa các công thức quy đổi thông số công nghệ điện cực.
+27. `popElectrodeInfo.js` & `popElectrodeInfoConfig.js`: Cấu hình thông tin cuộn mẹ và thuộc tính lá cực.
+28. `popElectrodeProcess.js`: Điều phối vòng đời trạng thái của mẻ điện cực.
+29. `popThicknessGrid.js`: Lưới nhập ma trận độ dày đa điểm First/Middle/Last.
+
+#### E. Nhóm Quản Lý Chất Lượng (Quality) & Thống Kê
+30. `popQualityMain.js`: Điều khiển khung giao diện chính `/pop/quality` và thanh điều hướng 7 tab.
+31. `popQualityScan.js`: Xử lý sự kiện quét Barcode tự động nhận diện loại phiếu kiểm định.
+32. `popQualityInsp.js`: Nhập mẫu đo kiểm định, tính toán sai số so với Spec (USL/LSL/Target).
+33. `popQualityIqc.js`: Nghiệp vụ kiểm tra nguyên vật liệu đầu vào.
+34. `popQualityOqc.js`: Nghiệp vụ kiểm tra xuất xưởng đóng gói thành phẩm.
+35. `popQualityFoqc.js`: Nghiệp vụ kiểm tra chất lượng xuất khẩu đặc biệt.
+36. `popQualityRouteJudge.js`: Quyết định Phán định tuyến Pass/Fail khóa mở chuyền.
+37. `popQualityInspHistory.js`: Tra cứu lịch sử kiểm định đa chiều và xuất báo cáo Excel.
+38. `popQualitySpc.js`, `popQualityPareto.js`, `popQualityAql.js`: Biểu đồ kiểm soát SPC, biểu đồ Pareto lỗi và bảng chuẩn lấy mẫu AQL.
 
 ---
 

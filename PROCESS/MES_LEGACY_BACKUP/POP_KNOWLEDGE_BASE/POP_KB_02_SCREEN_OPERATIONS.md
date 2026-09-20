@@ -468,5 +468,109 @@ Khác với giao diện Cell Line lắp ráp thông thường (nạp BOM phẳng
    - Bấm **[+ Thêm khổ]** để tạo cấu hình dải cắt: Nhập `Chiều rộng xẻ (mm)` và `Số lượng cuộn (EA)`.
    - Có thể cấu hình đa khổ xẻ trên cùng 1 cuộn mẹ (ví dụ: 17.7mm x 10 cuộn, 90mm x 5 cuộn...).
 4. **Thực hiện xẻ & In tem cuộn con:**
-   - Bấm **[Chạy xẻ]**: Hệ thống ghi nhận kết quả vào `STB_ElectrodeSlittingResult`, tự động sinh mã Barcode cho từng cuộn con (`<LotMẹ>-001`, `<LotMẹ>-002`... như `VVQQ2520001E79-001` đến `-021`), sinh record trong `STB_SetInfo` với mã `SRF%` tương ứng, in tem barcode dán lên từng cuộn và nhập kho `Stb_SlittingStock_VVT` sẵn sàng cấp cho chuyền Cell Line.
+    - Bấm **[Chạy xẻ]**: Hệ thống ghi nhận kết quả vào `STB_ElectrodeSlittingResult`, tự động sinh mã Barcode cho từng cuộn con (`<LotMẹ>-001`, `<LotMẹ>-002`... như `VVQQ2520001E79-001` đến `-021`), sinh record trong `STB_SetInfo` với mã `SRF%` tương ứng, in tem barcode dán lên từng cuộn và nhập kho `Stb_SlittingStock_VVT` sẵn sàng cấp cho chuyền Cell Line.
 
+---
+
+## 17. 📊 MA TRẬN TOÀN DIỆN CÁC NÚT BẤM, VIEW & QUYẾT ĐỊNH DỮ LIỆU (CRUD & INTERLOCK MATRIX)
+
+> **Dữ liệu kiểm chứng thực tế:** Reverse-engineered 100% từ giao diện Live Web `https://pop.vinatech.com/` bằng tài khoản `92603003` (Nguyễn Văn Đức - EA team) và đối chiếu trực tiếp với 38 file JavaScript Frontend tại `resources/js/`.
+
+### 17.1 Màn hình POP Sản Xuất (`/pop/screen`)
+
+| Thành phần / Nút bấm | Selector / ID | Cách lấy dữ liệu (API & Nguồn) | Logic quyết định & Kiểm soát (Interlock) | Tác động Xem (View / Select) | Tác động Thêm (Add / Create) | Tác động Sửa (Edit / Update) | Tác động Xóa (Delete / Discard) |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **Nút Hard Reload** | `#btnHardReload` | Gọi `window.location.reload(true)` sau khi xóa cache Vuex | Kích hoạt khi Kiosk bị lệch state, mất đồng bộ WebSocket hoặc cache giao diện cũ. | Đọc lại 100% dữ liệu từ Server/DB | Không | Reset lại trạng thái DOM trên RAM trình duyệt | Xóa toàn bộ dữ liệu tạm trên `localStorage` và `sessionStorage` |
+| **Nút Toggle Menu Trái** | `#btnToggleLeftMenu` | Đổi class CSS `is-collapsed` | Tối ưu không gian hiển thị cho Kiosk màn hình nhỏ hoặc máy tính bảng gắn trên máy. | Ẩn/hiện danh sách công đoạn | Không | Cập nhật cờ hiển thị UI | Không |
+| **Chọn Chuyền (Line Modal)** | `#lineModal` / `openLineModal()` | `GET /api/line/list` hoặc đọc cache danh mục `STB_LineInfo` | - Phân loại theo Pháp nhân (1000: Korea / 2000: Vietnam).<br>- Phân cấp 5 Nhà máy (Bắc Ninh, Bắc Giang, Hà Nam, BG2, Hưng Yên).<br>- Lọc tức thì theo từ khóa nhập vào ô tìm kiếm. | Xem danh sách Nhà máy và tất cả Line khả dụng | Lưu mã Line vừa chọn vào `LINE_HISTORY_KEY` (Recent chips) | Chuyển `POP.lineCode`, đổi phiên làm việc của Kiosk | Xóa chip Line khỏi danh sách đã chọn gần đây khi bấm dấu `×` |
+| **Lịch Kế hoạch (Lot Search)** | `#lotSearchModal` / `openLotSearchModal()` | `GET /api/dayplan/calendar-summary?lineCode=&yearMonth=` (Đọc `STB_DayProdPlan`) | - Hiển thị số lượng đơn hàng (ĐH) và tỷ lệ hoàn tất (%) theo từng ngày trong tháng.<br>- Phải chọn ngày có kế hoạch hoặc tìm theo từ khóa mã LOT (tối thiểu 4 ký tự). | Xem lịch biểu kế hoạch SX, danh sách WO và các LOT thuộc DayPlan | Gán WO và nạp danh sách LOT Card vào màn hình làm việc | Không | Đóng modal không lưu nếu bấm Hủy |
+| **Tìm kiếm LOT theo Barcode** | `#lotKeywordInput` / `#btnLotKeywordSearch` | `GET /api/dayplan/lot-search?keyword=` (Đọc `STB_SetInfo` & `STB_DayProdPlan`) | Quét trực tiếp tem mã vạch LOT hoặc gõ >= 4 ký tự. Chỉ cho phép nạp LOT chưa đóng và thuộc Chuyền hiện hành. | Tra cứu thông tin chi tiết LOT: Model, Kế hoạch, Trạng thái | Đưa LOT vào danh sách Active trên màn hình | Cập nhật thẻ LOT hiển thị | Không |
+| **Chọn Công Nhân** | `#workerModal` / `openWorkerModal()` | `GET /api/common/getWorkerList` (Đọc `STB_WorkerInfo` / `VINA_EMP`) | - Cây phòng ban phân cấp theo xưởng.<br>- Cho phép chọn nhiều công nhân (Multi-worker ca kíp).<br>- **Bắt buộc chỉ định đúng 01 Công nhân Chính (Representative)** làm trưởng ca. | Xem danh sách công nhân theo phòng ban, xưởng | Thêm công nhân vào danh sách thực hiện ca | Đổi người đại diện chính (Representative Worker) | Xóa công nhân khỏi danh sách ca làm việc |
+| **Gán Thiết Bị** | `#btnEquipmentPanel` / `popEquipment.js` | `GET /api/equipment/list?lineCode=` (Đọc `STB_ProductMachine` & `VINA_EQUIPMENT_MAPPING`) | - Lọc các máy đang được gán cho Line/Route.<br>- Chặn máy nếu đang bị chiếm dụng bởi Plan khác (`MAPPING_STATUS = 'ACTIVE'`). | Xem danh sách máy thuộc chuyền và trạng thái kết nối PLC | Tạo bản ghi gán máy mới `VINA_EQUIPMENT_MAPPING` với status `ACTIVE` | Đổi trạng thái máy sang `PAUSED` hoặc `RUNNING` | Chuyển status máy sang `RELEASED` khi kết thúc ca |
+| **Kho Cấp Vật Tư** | `#mixWarehouseBtn` | `GET /api/material/warehouses` (Đọc `STB_WarehouseMaster`) | Chỉ cho phép chọn kho nguyên vật liệu hợp lệ theo Nhà máy (ví dụ `ROUTE_VN_WH`, `ROH_HN_WH`). | Xem danh sách kho nguyên vật liệu | Không | Đổi kho xuất vật tư của ca | Không |
+| **Nút Tồn Kho NVL** | `#btnMixStockDetail` / `#btnWarehouseStock` | `GET /api/material/stock?materialCode=&whCode=` (Đọc `STB_MaterialLotInfo`) | Kiểm tra tồn kho khả dụng thực tế (`CurrentQty > 0`) của từng Lot NVL trong kho được chọn. | Xem danh sách cuộn/thùng NVL, hạn sử dụng, trạng thái Hold | Không | Không | Không |
+| **Nút Lượng Kiến Cấp** | `#btnMixQtyExpected` / `#btnAutoFillBOM` | Tính toán nội bộ từ `STB_BomDetail` x Sản lượng kế hoạch | Tự động điền 100% định mức BOM vào ô số lượng, giảm thiểu thao tác gõ số thủ công của công nhân. | Xem định mức tiêu hao lý thuyết | Nạp số lượng dự kiến vào bảng cấp phát tạm | Cập nhật số lượng đề xuất | Không |
+| **Kết Nối Cân Điện Tử** | `⚖ Kết nối cân` (`popScaleSerial.js`) | Đọc tín hiệu thời gian thực từ cổng COM/RS232 qua WebSocket/Serial API | Kiểm tra tính ổn định của số cân (chờ cân ổn định STABLE trước khi đọc giá trị). | Xem khối lượng thực tế trên cân | Tự động điền số kg vào ô vật liệu đang chọn | Cập nhật khối lượng theo thời gian thực | Không |
+| **Hủy Tất Cả Nhập Liệu** | `#btnMixDiscard` | Xóa dữ liệu trên bộ nhớ đệm Frontend | Chỉ xóa các thông số vừa nhập trên màn hình mà CHƯA bấm Lưu/Gửi về Server. | Xem lại màn hình nạp vật tư trống | Không | Xóa các giá trị trong ô input về rỗng | Không ảnh hưởng đến dữ liệu đã lưu trong DB |
+| **Lịch Sử Nhập Vật Liệu** | `#btnMixHistory` | `GET /api/material/input-history?lotNo=` (Đọc `VINA_MATERIAL_INPUT_HIST`) | Hiển thị chi tiết từng lần nạp vật tư của LOT: ai nạp, mã cuộn/thùng nào, bao nhiêu kg/chiếc. | Xem nhật ký cấp phát vật tư của LOT | Không | Không | Không |
+| **Bàn Phím Ảo (Numpad)** | `.numpad-grid` / `popKeypad.js` | Sự kiện click cảm ứng trên giao diện Kiosk | Hỗ trợ nhập số cho màn hình cảm ứng công nghiệp không có bàn phím cơ. | Xem số liệu đang nhập | Điền số vào ô input đang trỏ (Active Input) | Sửa/xóa ký tự vừa gõ (`<<`) | Xóa toàn bộ ô nhập |
+| **Toggle SUB / ADD Mode** | `#prodModeIndicator` | Chuyển đổi trạng thái biến `POP.inputMode` ('ADD' hoặc 'SUB') | Dùng để sửa sai số lượng lỗi: chế độ ADD cộng thêm lỗi, chế độ SUB trừ bớt số lượng lỗi đã nhập nhầm. | Xem trạng thái chế độ hiện tại | Không | Đổi chế độ tính toán của Numpad | Không |
+| **Nút LOẠI LỖI** | `#btnDefectType` | `GET /api/defect/types?routeCode=` (Đọc `STB_DefectCodeMaster`) | Mở danh mục mã lỗi chuẩn tương ứng với công đoạn hiện hành để công nhân chọn. | Xem danh mục các loại phế phẩm/lỗi ngoại quan | Không | Chọn mã lỗi cần ghi nhận | Không |
+| **Nút ĐĂNG KÝ (Lỗi)** | `#btnRegisterDefect` | `POST /api/defect/register` | Yêu cầu phải chọn ít nhất 1 mã lỗi và số lượng lỗi > 0. Nếu đang ở mode SUB thì trừ lùi số lỗi. | Xem tổng số lỗi được cập nhật trên thẻ LOT | Thêm bản ghi lỗi vào `STB_DefectInfo` (hoặc giảm bớt nếu SUB) | Cập nhật tổng số lỗi `DefectQty` trên LOT | Không |
+| **Nút Ghi Nhận Sản Xuất / Hoàn Thành** | `#btnCompleteProduction` | `POST /api/production/complete` | **INTERLOCK KHẮT KHE:**<br>1. Phải nạp đủ 100% NVL theo BOM (`Material Status = Full`).<br>2. Sản lượng Đạt + Lỗi phải khớp với tổng số gia công.<br>3. Phải có thiết bị kết nối hợp lệ.<br>4. Không bị chặn bởi QC Route Judge. | Xem bảng tóm tắt kết quả ca (SL Đạt, Lỗi, Thiết bị) | Ghi nhận bản ghi chốt công đoạn vào `SmartFactoryV2.dbo.STB_ProdRouteHist` | Cập nhật `STB_SetInfo.IsProdFinish = 1` và chuyển `CurrentRoute` sang bước sau | Không |
+| **Nút In Nhãn** | `#btnLabelPrint` / `PopLabelPrint` | `POST /api/label/print` | - Lấy mẫu tem phù hợp theo Model sản phẩm (Mẫu có dấu `⭐`).<br>- Tự động tạo mã Barcode 128 hoặc QR Code 2D bằng thư viện `bwip-js`. | Xem trước tem nhãn (Preview) với kích thước thực | Tạo lệnh in gửi đến Máy in nhãn (Zebra/TSC qua Windows Spooler) | Sửa tên vật tư hoặc thông số in trước khi xuất lệnh | Hủy lệnh in đang chờ trong hàng đợi |
+| **Nút Mã Marking** | `#btnMarkingCode` (Bọc vỏ) | `POST /api/screen/saveMarkingCode` | Bắt buộc thực hiện tại công đoạn Bọc Vỏ trước khi chuyển Lot sang công đoạn kế tiếp. | Xem mã Marking hiện tại của Lot | Lưu mã Marking thân vỏ mới vào `STB_SetInfo.MarkingCode` | Cập nhật lại mã Marking nếu nhập sai | Không |
+| **Nút WH Chuyển Kho** | `#wtModalPanel` | `POST /api/warehouse/transfer` | Cho phép điều chuyển Lot bán thành phẩm giữa các kho nội bộ xưởng ngay tại Kiosk. | Xem danh sách Lot và tồn kho các kho xuất/nhập | Ghi nhận phiếu điều chuyển kho vào `STB_ProdRouteHist` | Cập nhật kho hiện tại của Lot | Đảo ngược chiều chuyển kho nếu phát hiện nhầm |
+| **Nút Tự Kiểm (Self Insp)** | `#btnSelfInspection` | `POST /api/quality/self/save` | **Cơ chế Auto-save on blur:** Chỉ cần chạm ra ngoài ô nhập liệu là tự động lưu tức thì về CSDL MES. | Xem bảng tiêu chí đo kiểm kích thước/ngoại quan | Ghi nhận kết quả đo mẫu vào `VINA_SELF_INSP_HIST` | Cập nhật giá trị đo khi sửa trực tiếp trên ô | Không |
+| **Nút Đóng Gói (Packing)** | `#btnPack` | `POST /api/packing/pack` | Chỉ hiển thị các Lot đã hoàn thành 100% tất cả công đoạn sản xuất trước đó. Hỗ trợ Single Pack và Split Pack. | Xem danh sách Lot chờ đóng gói và số lượng tồn lẻ | Sinh Box mới, ghi nhận vào `STB_MaterialLotInfo` | Cập nhật số lượng đã đóng gói của Lot | Không |
+| **Nút Đóng Gói Gộp (Merge Pack)**| `#btnMergePack` | `POST /api/packing/merge` | Cho phép gộp từ 2 Lot trở lên (cùng Model sản phẩm). Trừ số lượng tồn lẻ theo **thuật toán FIFO từ trên xuống**. | Xem tổng số lượng sẵn sàng gộp của các Lot đã chọn | Sinh Box gộp chung nhiều Lot nguồn | Cập nhật tồn lẻ `CurrentQty` của từng Lot thành phần | Không |
+| **Hủy Hộp Đóng Gói (Rollback)** | `#btnCancelBox` / Popup Lịch sử | Gọi SP `SmartFactoryV2.dbo.usp_DoCancelProdPacking_LotNo` | **Yêu cầu quyền Quản trị viên (Nhập mã NV quản trị)** và thùng hàng chưa quét xuất kho thực tế (`ShipFlag = 0`). | Xem lịch sử các Box đã đóng gói | Ghi vết hủy vào `STB_ProdRouteHistCancelHist` | Khôi phục số lượng Lot về trạng thái Đang Chờ (IsProdFinish = 0) | Xóa bản ghi lượt đóng gói trong `STB_ProdRouteHist` và Box BTP |
+
+---
+
+### 17.2 Màn hình Quản Lý Chất Lượng (`/pop/quality`)
+
+| Tab / Thành phần | Selector / ID | Cách lấy dữ liệu (API & Nguồn) | Logic quyết định & Kiểm soát (Interlock) | Tác động Xem (View / Select) | Tác động Thêm (Add / Create) | Tác động Sửa (Edit / Update) | Tác động Xóa (Delete / Discard) |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **Tab IQC** | `#nav-btn-iqc` | `GET /api/quality/iqc/list` (Đọc `STB_MaterialLotInfo`, `VINA_IQC_INSP_HIST`) | Lọc theo Mã vạch, WorkCenter, Pháp nhân, Khoảng ngày. Phân loại theo 4 trạng thái: All, Pass, Reject, Pending. | Xem danh sách phiếu kiểm NVL đầu vào và bảng tiêu chí đo | Thêm mẫu kiểm tra kích thước/ngoại quan NVL | Sửa kết quả đo mẫu khi chưa chốt phiếu | Không cho phép xóa (Lưu vết Audit) |
+| **Tab Tra Cứu Tự Kiểm** | `#nav-btn-self` | `GET /api/quality/self/history` (Đọc `VINA_SELF_INSP_HIST`) | **Chế độ CHỈ XEM (Read-only)**. Nhắc nhở: *"Chỉ xem. Vui lòng nhập tại Tự kiểm trên POP Sản Xuất"*. | Xem kết quả các mẫu đo tự kiểm do công nhân nhập tại xưởng | Bị chặn (Phải nhập tại `/pop/screen`) | Bị chặn | Không |
+| **Tab PQC** | `#nav-btn-process` | `GET /api/quality/pqc/items?barcode=` | Bắt buộc quét mã Barcode LOT bán thành phẩm trước để nạp danh mục tiêu chí kiểm tra công đoạn tương ứng. | Xem danh mục tiêu chí kiểm tra PQC theo Spec kỹ thuật | Ghi nhận mẫu đo thực tế của công đoạn | Sửa kết quả đo kiểm | Không |
+| **Tab OQC** | `#nav-btn-oqc` | `GET /api/quality/oqc/list` | Kiểm tra chất lượng thành phẩm hoàn thiện trước khi nhập kho FG. Hiển thị KPI: Total, Pass, Reject, Pending, Pass Rate %. | Xem danh sách lô hàng xuất xưởng và kết quả kiểm | Tạo phiếu kiểm tra xuất xưởng mới | Cập nhật đánh giá đạt/không đạt của OQC | Không |
+| **Tab FOQC** | `#nav-btn-foqc` | `GET /api/quality/foqc/list` | Áp dụng cho các đơn hàng đặc biệt/khách hàng yêu cầu kiểm định độ tin cậy nghiêm ngặt (Sanmina, v.v.). | Xem danh sách kiểm tra chất lượng cuối cùng | Tạo biên bản nghiệm thu chất lượng FOQC | Cập nhật kết quả thẩm định | Không |
+| **Tab Route Judge (Phán định)**| `#nav-btn-routejudge`| `GET /api/quality/routeJudge/info?lotNo=` | **KHÓA / MỞ KHÓA LUÂN CHUYỂN DÂY CHUYỀN:**<br>- Đánh giá **PASS**: Cho phép Lot tiếp tục đi vào các công đoạn sản xuất sau.<br>- Đánh giá **FAIL (NG)**: Kích hoạt Interlock chặn đứng toàn bộ các Kiosk không cho nạp Lot này. | Xem toàn bộ lịch sử chất lượng các công đoạn của Lot | Ghi nhận phán định chất lượng cho công đoạn | Thay đổi phán định Pass/Fail (Yêu cầu quyền QC Lead) | Không |
+| **Tab Lịch Sử Kiểm Tra** | `#nav-btn-insphistory`| `POST /api/quality/inspection/history` | Bộ lọc đa chiều: Từ ngày-Đến ngày, Mã hàng, Nhóm KT, Loại KT, Xưởng, Inspector, Pháp nhân, Trạng thái. | Xem lưới dữ liệu kiểm tra chi tiết theo dòng và mẫu đo | Không | Không | Không |
+| **Nút Xuất Excel** | `#qltIhExcelBtn` | Gọi API xuất file `/api/quality/exportExcel` | Xuất toàn bộ dữ liệu lọc được ra file `.xlsx` định dạng chuẩn báo cáo chất lượng. | Tải file Excel báo cáo về máy trạm | Không | Không | Không |
+| **Nút Báo Cáo Theo Ngày**| `#qltIhDailyToggle`| Phân nhóm dữ liệu trên Frontend (GroupBy Date) | Gom nhóm các lần kiểm tra theo từng ngày để xem tỷ lệ Pass/Fail tổng hợp. | Xem bảng tóm tắt chất lượng theo ngày | Không | Đổi chế độ hiển thị lưới | Không |
+
+---
+
+## 18. 🔌 PHÂN HỆ QUẢN LÝ DỮ LIỆU THIẾT BỊ IOT & NHẬT KÝ KẾT NỐI MÁY (`/equipmentData/*`)
+
+Hệ thống POP tích hợp trực tiếp với tầng tự động hóa xưởng (Shopfloor Automation) để thu thập dữ liệu máy móc theo thời gian thực mà không phụ thuộc hoàn toàn vào nhập liệu thủ công.
+
+### 18.1 Màn hình Danh Sách Dữ Liệu Thiết Bị (`/equipmentData/data/list`)
+- **Mục đích:** Giám sát trực quan trạng thái vận hành, áp suất, nhiệt độ, tốc độ, điện áp và các chỉ số tức thời của máy sản xuất.
+- **Thanh tìm kiếm & Lọc:**
+  - Ô chọn **Select2** (`#select2-equipmentIdSelect-container`): Hỗ trợ tìm kiếm nhanh theo Mã thiết bị (`Equipment ID`) hoặc Tên máy (ví dụ `VVEP284`, `VVEP287`, `VVEP427`...).
+- **Hai Chế Độ Xem Trực Quan:**
+  1. **Chế độ Thẻ (Card View - `#btnCardView`):** Hiển thị từng thiết bị dưới dạng Thẻ đồ họa trực quan kèm biểu tượng trạng thái (Đang chạy 🟢, Tạm dừng 🟡, Mất kết nối 🔴), thông số tức thời và nhịp tim (Heartbeat).
+  2. **Chế độ Danh Sách (Flat/List View - `#btnFlatView`):** Hiển thị dưới dạng bảng dữ liệu chi tiết cho phép xem đồng thời nhiều thiết bị, sắp xếp theo cột và kiểm tra các giá trị đo Min/Max/Avg.
+- **Nguồn dữ liệu & Cơ chế lưu trữ:**
+  - Dữ liệu cảm biến thời gian thực được lưu trữ tại cơ sở dữ liệu **MongoDB** (Time-series collections) để xử lý lượng ghi cực lớn từ PLC.
+  - Các thông số hiệu suất chốt công đoạn được đồng bộ sang bảng trung gian `SmartFactoryV2.dbo.MongoToMesPerformance` để MES hạch toán sản lượng.
+
+### 18.2 Màn hình Nhật Ký Thu Thập Dữ Liệu Thiết Bị (`/equipmentData/log/list`)
+- **Mục đích:** Kiểm tra và chẩn đoán sự cố đường truyền dữ liệu giữa các máy sản xuất và máy chủ POP.
+- **Thanh tìm kiếm:** Ô Select2 chọn máy (`#logEquipmentIdSelect`) và ô lọc nhanh theo từ khóa (`#completeLogFilter`).
+- **Hai Phân Hệ Log:**
+  1. **Nhật Ký Thành Công (`#completeLogTab` - Complete Logs):** Ghi lại chi tiết các gói tin/file dữ liệu thu thập thành công từ PLC, bao gồm: Mã máy, Tên gói dữ liệu, Kích thước, Thời điểm nhận, Số lượng tham số đo hợp lệ.
+  2. **Nhật Ký Lỗi (`#errorLogLogTab` - Error Logs):** Ghi nhận các sự cố kết nối, mất tín hiệu cảm biến, dữ liệu vượt dải đo (Out of Range), lỗi timeout socket hoặc lỗi định dạng gói tin PLC. Dùng để IT/EA team phát hiện nhanh máy nào bị đứt kết nối mạng xưởng.
+
+### 18.3 Cơ Chế Giao Tiếp WebSocket/STOMP & Client Thu Thập Dữ Liệu
+- **Thư viện Frontend:**
+  - `popStompClient.js`: Lớp bọc điều khiển kết nối WebSocket.
+  - `sockjs.min.js` & `stomp.min.js`: Đảm bảo kết nối STOMP qua WebSocket luôn ổn định, tự động Fallback sang HTTP Polling nếu mạng Kiosk có Firewall chặn WS.
+- **Client Thu Thập Dữ Liệu Cài Đặt Tại Máy:**
+  - File cài đặt: `vinatechEquipmentDataSetup.exe` (Link tải trực tiếp trên Header: `/download/vinatechEquipmentDataSetup.exe`).
+  - Dịch vụ Windows Service chạy ngầm tại máy tính điều khiển PLC, đọc dữ liệu qua giao thức OPC-UA, Modbus TCP, MC Protocol (Mitsubishi) hoặc Serial RS-232/RS-485, đóng gói JSON và bắn về Webhook của POP Server qua API `/api/equipment/data/push`.
+
+---
+
+## 19. 🛡️ PHÂN HỆ DASHBOARD BÁO CÁO & CƠ CHẾ PHÂN QUYỀN RBAC (`/dashboard/*`)
+
+### 19.1 Thực Trạng Kiểm Chứng Với Tài Khoản Thực Tế
+- Khi sử dụng tài khoản công nhân vận hành `92603003` (Nguyễn Văn Đức - EA team) truy cập vào 2 màn hình Dashboard:
+  - `https://pop.vinatech.com/dashboard/electrodeStatus` (Theo dõi tiến độ & tồn kho điện cực)
+  - `https://pop.vinatech.com/dashboard/assemblyTrace` (Truy vết phả hệ lắp ráp linh kiện)
+- **Hệ thống hiển thị cảnh báo chặn quyền:**
+  > *"권한이 없습니다. 지속적인 문제가 발생시 EA팀에 문의 바랍니다."*  
+  > *(Bạn không có quyền truy cập. Nếu vấn đề tiếp diễn, vui lòng liên hệ EA team).*
+
+### 19.2 Cơ Chế Phân Quyền Vai Trò (Role-Based Access Control - RBAC)
+POP Web thiết lập ma trận phân quyền chặt chẽ dựa trên chức vụ nhân viên lưu tại `VINATECH_POP.dbo.VINA_EMP` và bảng quyền `SmartFramework.dbo.STB_UserInfo`:
+
+| Nhóm Tài Khoản | Vai Trò (Role) | Quyền Truy Cập Giao Diện | Giới Hạn Thao Tác Dữ Liệu (CRUD) |
+| :--- | :--- | :--- | :--- |
+| **Công nhân vận hành (Operator)** | `WORKER` / `OPERATOR` | - `/pop/screen` (Sản xuất Kiosk)<br>- `/pop/quality` (Xem & kiểm tra chất lượng)<br>- `/equipmentData/*` (Giám sát máy) | - **XEM:** Kế hoạch, Lot, BOM, Tồn kho NVL.<br>- **THÊM:** Nạp vật tư, ghi nhận phế phẩm, mẫu tự kiểm, in nhãn.<br>- **SỬA:** Chế độ SUB mode sửa sai số lỗi.<br>- **XÓA:** Bị chặn hoàn toàn (Không thể xóa Lot, không thể xóa NVL đã nạp). Hủy hộp đóng gói yêu cầu nhập mật khẩu quản trị. |
+| **Trưởng ca / Quản đốc (Supervisor)**| `LEADER` / `SUPERVISOR` | Toàn quyền nhóm WORKER + Báo cáo xưởng | - Được quyền hủy hộp đóng gói (Rollback Box).<br>- Phán định lại trạng thái Route Judge nếu chất lượng trong ngưỡng cho phép. |
+| **Kỹ sư Quản lý / DX / EA Team** | `MANAGER` / `ADMIN` | Toàn quyền hệ thống, bao gồm các Dashboard chuyên sâu:<br>- `/dashboard/electrodeStatus`<br>- `/dashboard/assemblyTrace`<br>- `/popSetting/*` (Cấu hình hệ thống) | - Toàn quyền XEM, THÊM, SỬA, CẤU HÌNH.<br>- Mapping Slot NVL theo cụm.<br>- Cấu hình mẫu tem nhãn và dung sai thiết bị IoT. |

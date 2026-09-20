@@ -1,4 +1,4 @@
-<!--
+﻿<!--
 AI-READY METADATA
 Purpose: Nhật ký ghi chép lịch sử xử lý bug & hotfix đã được AI triển khai thành công
 Scope: Hotfix History Registry
@@ -730,3 +730,14 @@ Related Files:
 * **Tham chiếu KB:** [POP_KB_01_ARCHITECTURE_AND_API.md § 3.3](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_01_ARCHITECTURE_AND_API.md), [POP_KB_03_TROUBLESHOOTING.md § 2.20](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_03_TROUBLESHOOTING.md), [KB_09_SCREEN_BUG_FIXBOOK.md § [POP Kiosk]](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md)
 
 
+
+### 📍 ID_58 - POP - Ma loi phe tren POP Kiosk khong hien du STB_DefectRepairInfo...
+* **Ngay sua:** `2026-09-21`
+* **Man hinh lien quan (TCode):** `POP - Chua xac dinh`
+* **Trieu chung loi:** Ma loi phe tren POP Kiosk khong hien du STB_DefectRepairInfo co data (Lot VVQR153R060615)
+* **Nguyen nhan goc (Root Cause):** Three-Valued Logic: Cot IsDelete va RepairQty trong STB_DefectRepairInfo bi NULL do thieu constraint default. Menh de WHERE IsDelete=0 bo qua 6,605 ban ghi, STB_SetInfo.DefectQty bi thieu
+* **Phuong an sua loi (SQL Patch / Action):**
+  ```sql
+UPDATE STB_DefectRepairInfo SET IsDelete=0, RepairQty=0 WHERE DefectSummaryNo=20260919000550; UPDATE STB_SetInfo SET DefectQty=9 WHERE Barcode=VVQR153R060615;
+  ```
+* **Tham chieu KB:** KB_09, POP_KB_03

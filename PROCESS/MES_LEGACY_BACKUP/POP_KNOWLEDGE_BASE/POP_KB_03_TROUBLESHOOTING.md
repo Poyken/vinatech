@@ -892,3 +892,51 @@ BEGIN CATCH
     THROW;
 END CATCH;
 ```
+
+---
+
+### Template 11: Chuẩn Hóa Lỗi Phế POP Bị Ẩn Do Three-Valued Logic (IsDelete IS NULL, RepairQty IS NULL)
+
+> **Ngữ cảnh:** Mã lỗi phế đã ghi nhận trên POP Kiosk (bảng `MongoToMesDefect` và `STB_DefectRepairInfo`), nhưng giao diện Kiosk/B782 không hiển thị mã lỗi hoặc tổng phế trên `STB_SetInfo.DefectQty` bị thiếu.
+> **Nguyên nhân gốc:** Cột `IsDelete` và `RepairQty` trong `STB_DefectRepairInfo` không có ràng buộc `DEFAULT '0'` / `DEFAULT 0`. Khi chèn từ POP bị để trống (`NULL`), mệnh đề SQL `WHERE IsDelete = '0'` cho kết quả `UNKNOWN` (Three-Valued Logic) và loại bỏ hoàn toàn các bản ghi này. Ngoài ra `DefectQty - RepairQty` bị ra `NULL` thay vì số lượng thực.
+
+```sql
+USE SmartFactoryV2;
+BEGIN TRANSACTION;
+BEGIN TRY
+    -- 1. Snapshot backup trước khi sửa
+    -- SELECT * INTO BAK_STB_DefectRepairInfo_<Date>_<Barcode> 
+    -- FROM STB_DefectRepairInfo WHERE ControlNo = '<ControlNo>' AND FindRouteCode = '<RouteCode>';
+
+    -- 2. Chuẩn hóa IsDelete và RepairQty cho bản ghi phế của Lot
+    UPDATE STB_DefectRepairInfo
+    SET IsDelete       = '0',
+        RepairQty      = ISNULL(RepairQty, 0),
+        ChangeDateTime = GETDATE(),
+        ChangeUserID   = 'it_hotfix'
+    WHERE ControlNo = '<ControlNo>'
+      AND FindRouteCode = '<RouteCode>'
+      AND (IsDelete IS NULL OR RepairQty IS NULL);
+
+    -- 3. Cập nhật lại tổng DefectQty trên STB_SetInfo
+    UPDATE s
+    SET s.DefectQty = ISNULL((
+            SELECT SUM(DefectQty) 
+            FROM STB_DefectRepairInfo WITH(NOLOCK) 
+            WHERE ControlNo = s.ControlNo AND IsDelete = '0'
+        ), 0),
+        s.IsDefect = CASE WHEN ISNULL((SELECT SUM(DefectQty) FROM STB_DefectRepairInfo WITH(NOLOCK) WHERE ControlNo = s.ControlNo AND IsDelete = '0'), 0) > 0 THEN 1 ELSE 0 END,
+        s.ChangeDateTime = GETDATE(),
+        s.ChangeUserID = 'it_hotfix'
+    FROM STB_SetInfo s
+    WHERE s.ControlNo = '<ControlNo>';
+
+    PRINT N'>> Hoàn tất chuẩn hóa phế thành công!';
+    -- Đổi ROLLBACK thành COMMIT TRANSACTION sau khi verify:
+    ROLLBACK TRANSACTION;
+END TRY
+BEGIN CATCH
+    ROLLBACK TRANSACTION;
+    THROW;
+END CATCH;
+```

@@ -10,6 +10,7 @@ Related Files:
   - [POP_KB_01_ARCHITECTURE_AND_API.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_01_ARCHITECTURE_AND_API.md)
   - [POP_KB_02_SCREEN_OPERATIONS.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_02_SCREEN_OPERATIONS.md)
   - [POP_KB_03_TROUBLESHOOTING.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_03_TROUBLESHOOTING.md)
+  - [POP_KB_06_MIGRATION_SPEC.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_06_MIGRATION_SPEC.md)
 -->
 
 # 📋 POP KNOWLEDGE BASE — MASTER INDEX
@@ -36,6 +37,7 @@ Related Files:
 | 03 | [POP_KB_03_TROUBLESHOOTING.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_03_TROUBLESHOOTING.md) | Lỗi thường gặp + Root cause + Fix (POP-ERR-01 đến POP-ERR-20) | Xử lý sự cố khẩn cấp, kẹt máy, nạp NVL BOM | ✅ Active |
 | 04 | [POP_KB_04_ROLLBACK_AND_SAFETY.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_04_ROLLBACK_AND_SAFETY.md) | Phân tích khả năng Rollback trên UI + DB safety (v2.0) | Hủy đóng gói Box, an toàn dữ liệu | ✅ Active |
 | 05 | [POP_KB_05_DB_VERIFICATION_AUDIT.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_05_DB_VERIFICATION_AUDIT.md) | Kết quả đối chiếu UI vs DB thực tế | Kiểm toán, xác minh tính chính xác | ✅ Active |
+| 06 | [POP_KB_06_MIGRATION_SPEC.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_06_MIGRATION_SPEC.md) | **Đặc tả chuyển đổi 100% POP Web**: Bảng quy chiếu 1:1 màn hình WinForm ➔ Web, Gap Analysis, 8 bước checklist Line Readiness | Quy hoạch tắt MES WinForm, chuẩn bị cutover | ✅ Active |
 | ~~MAP~~ | ~~POP_SLIDE_DECK_MAPPING_AND_ANALYSIS.md~~ | ~~Phân tích 51 slides POP.pptx & 50 ảnh trích xuất~~ | ~~Đối chiếu tài liệu đào tạo DX Team~~ | ❌ **[ARCHIVED]** |
 | ~~REF~~ | ~~POP_USER_MANUAL.md~~ | ~~Cẩm nang vận hành chi tiết 6 phần cho end-user~~ | ~~Training công nhân, thao tác Kiosk~~ | ❌ **[ARCHIVED]** |
 | ~~REF~~ | ~~POP_SYSTEM_INTEGRATION_GUIDE.md~~ | ~~Tích hợp POP ⇄ MES ⇄ Groupware ⇄ ERP~~ | ~~Hiểu luồng dữ liệu liên hệ thống~~ | ❌ **[ARCHIVED]** |
@@ -70,6 +72,14 @@ Related Files:
 | Tra cứu Top 10 lỗi runtime thực tế Kiosk | **KB_03 §2.21** (SoT) | KB_03 §1 |
 | Bản đồ điều hướng 4 phân hệ UI Web POP | **KB_01 §2.4** (SoT) | KB_02 |
 | Cấu hình 10 Slot nạp NVL chuẩn theo Line | **KB_01 §3.6 (Nhóm 2)** | KB_02 §6 |
+| **Quy hoạch chuyển đổi 100% POP Web (Khai tử WinForm)** | **KB_06 (SoT)** | KB_01 |
+| **Bảng ánh xạ 1:1 màn hình WinForm ➔ Web POP** | **KB_06 §1** (SoT) | KB_02 |
+| **Checklist 8 bước sẵn sàng cắt WinForm cho Line** | **KB_06 §3** (SoT) | `.\mes.ps1 pop-readiness` |
+| **Chuẩn hóa lỗi phế ẩn (Three-Valued Logic NULL)** | **KB_03 §3 (Template 11)** | HOTFIX_LOG ID_56 |
+| **Tra cứu chức năng, Button, View & Ma trận CRUD (Xem, Thêm, Sửa, Xóa)** | **KB_02 §17 (SoT)** | KB_01 §2 |
+| **Phân hệ quản lý dữ liệu thiết bị IoT & Log PLC (`/equipmentData/*`)** | **KB_02 §18 (SoT)** | KB_01 §1.1, §1.2 |
+| **Phân quyền Dashboard RBAC & Giải thích lỗi 403 Forbidden** | **KB_02 §19 (SoT)** | KB_01 §1.1 |
+| **Danh mục 38 Frontend JavaScript Client Modules (`resources/js/`)** | **KB_01 §1.3 (SoT)** | KB_02 §16.1 |
 
 ---
 

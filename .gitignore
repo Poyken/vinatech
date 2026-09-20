@@ -51,7 +51,8 @@ __pycache__/
 
 # Ignore MES scratch, sql, and temporary procedure sync files
 **/scratch/
-**/sql/
-**/sql/procedures/
+**/sql/*
+!**/sql/template_*.sql
+!**/tools/sql/procedures/usp_VINA_SyncPopToMes_*.sql
 **/%USERP~1/
 *.local.json

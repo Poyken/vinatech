@@ -47,6 +47,8 @@ function Show-Help {
 
     Write-Host ''
     Write-Host '  2. TRUY VAN & KIEM TRA HE THONG (SYSTEM & QUERY):' -ForegroundColor Cyan
+    Write-Host '     .\mes.ps1 pop-readiness [-Target <Line>]' -ForegroundColor Green
+    Write-Host '-> Kiem toan 8 buoc san sang cat WinForm & chay 100% POP Web theo Line' -ForegroundColor Gray
     Write-Host '     .\mes.ps1 pop-audit                 ' -NoNewline -ForegroundColor Green
     Write-Host '-> Kiem toan & doi soat lech du lieu POP Kiosk vs MES (IsTransferred=0)' -ForegroundColor Gray
     Write-Host '     .\mes.ps1 check [-Profile <Name>]   ' -NoNewline -ForegroundColor Green
@@ -291,6 +293,14 @@ elseif ($cmdLower -eq 'pop-audit' -or $cmdLower -eq 'pop-sync' -or $cmdLower -eq
     $conn.Close()
     Write-Host ''
     Write-Host '-> Hoan thanh kiem toan doi soat POP vs MES.' -ForegroundColor Green
+}
+elseif ($cmdLower -eq 'pop-readiness' -or $cmdLower -eq 'readiness') {
+    $popReadinessScript = Join-Path $toolsDir 'pop_readiness.ps1'
+    if (Test-Path $popReadinessScript) {
+        & $popReadinessScript -Line $Target
+    } else {
+        Write-Error 'tools/pop_readiness.ps1 not found.'
+    }
 }
 elseif ($cmdLower -eq 'bot' -or $cmdLower -eq 'telegram') {
     $botScript = Join-Path $toolsDir 'mes_telegram_bot.py'

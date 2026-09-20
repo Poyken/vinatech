@@ -1,4 +1,4 @@
-<!--
+﻿<!--
 AI-READY METADATA
 Purpose: Sổ tay cứu hộ 70+ bugs theo TCode thực tế (Tra cứu triệu chứng -> nguyên nhân -> giải pháp SQL patch)
 Scope: Troubleshooting & Hotfix Knowledge Base
@@ -689,6 +689,13 @@ COMMIT TRANSACTION;
 
 ---
 
+
+### POP
+**Ten:** Chua xac dinh
+
+| # | Trieu chung | Nguyen nhan | Fix |
+|---|---|---|---|
+| 1 | Ma loi phe tren POP Kiosk khong hien du STB_DefectRepairInfo co data (Lot VVQR153R060615) | Three-Valued Logic: Cot IsDelete va RepairQty trong STB_DefectRepairInfo bi NULL do thieu constraint default. Menh de WHERE IsDelete=0 bo qua 6,605 ban ghi, STB_SetInfo.DefectQty bi thieu | `UPDATE STB_DefectRepairInfo SET IsDelete=0, RepairQty=0 WHERE DefectSummaryNo=20260919000550; UPDATE STB_SetInfo SET DefectQty=9 WHERE Barcode=VVQR153...` |
 ## Z-Series: System Admin
 
 ### [Z410]
