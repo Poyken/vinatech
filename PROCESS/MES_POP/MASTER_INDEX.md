@@ -112,14 +112,19 @@ PROCESS/MES_POP/
 | Lệnh | Cú Pháp Mẫu | Mục Đích Nghiệp Vụ |
 | :--- | :--- | :--- |
 | **Truy vết 360° Siêu Tốc** | `.\mes.ps1 trace "<LotID>"` | Golden Query 360° quét Lot, Routing, NVL, Tồn kho (Single Round-Trip) |
+| **Truy vết Huyết Mạch 3 Trụ Cột** | `.\mes.ps1 lineage "<Lot/PO>"` | Truy vết liên hệ thống: PO Master ➔ Kho NVL ➔ Tiến độ MES ➔ Kiosk POP (<1s) |
 | **Truy vết POP Kiosk** | `.\mes.ps1 pop-trace "<Keyword>"` | Truy vết chuyên sâu Kiosk: Sync status, Phế, Máy kẹt, Kiosk logs |
 | **Debug Màn Hình MES** | `.\mes.ps1 screen "<ScreenID>"` | Debug SP, Bảng, Lưới dữ liệu màn hình MES (`B530`, `B540`, `S510`...) |
 | **Tra cứu tri thức nhanh** | `.\mes.ps1 find "<Keyword>"` | Tra cứu L1 Quick Matrix (<0.001s) và 78+ file Markdown KB |
 | **Sức Khỏe Hệ Thống** | `.\mes.ps1 health [-Detail]` | Morning Health Check quét Lot HOLD, WIP 24h, DB Lock |
 | **Kiểm toán Chuyển Đổi POP** | `.\mes.ps1 pop-readiness [-Target <Line>]` | Kiểm toán 8 bước sẵn sàng cắt WinForms & chạy 100% POP Web |
 | **Giải phóng Thiết Bị Treo** | `.\mes.ps1 release-machines [-Target <Line>] [-Force]` | Giải phóng máy bị kẹt trạng thái ACTIVE ở DayPlan cũ trên Kiosk POP |
+| **Hotfix Chuyển Ngày B782** | `.\mes.ps1 fix-movedate -Lots "..." -TargetDate "..."` | Sinh Hotfix chuyển ngày chốt B782 chuẩn 10h00 AM (Author vanduc) |
+| **Hotfix Xử Lý Điện Cực B552** | `.\mes.ps1 fix-electrode -Lots "..." [-Type Slitting\|Mixing]` | Sinh Hotfix xóa cuộn/mẻ trộn B552 & reset IsLineInput cuộn mẹ |
+| **Hotfix Rollback Chốt B530** | `.\mes.ps1 fix-rollback -Lots "..." [-Route "..."]` | Sinh Hotfix rollback lượt chốt B530 / POP Kiosk |
+| **Tự Động Báo Cáo Tuần IT** | `.\mes.ps1 weekly-report [-StartDate "..." -EndDate "..."]` | Tự động tạo file CSV báo cáo tuần chuẩn tại Desktop/thanks_and_ojt_reports |
 | **Tải Stored Procedure** | `.\mes.ps1 sp "<SP_Name>"` | Tải mã nguồn SP mới nhất từ DB về local để phân tích |
 | **Truy vấn an toàn** | `.\mes.ps1 query "<SELECT_SQL>"` | Chạy câu lệnh SELECT an toàn có kiểm tra từ khóa cấm & NOLOCK |
 | **Sinh Template Hotfix** | `.\mes.ps1 new-fix "<Tên_Lỗi>" [-Template <b552\|b782\|rollback>]` | Sinh template SQL Hotfix chuẩn UTF-8-BOM có snapshot backup |
-| **Triển khai Hotfix SQL** | `.\mes.ps1 deploy "<File.sql>" [-Force]` | Deploy script SQL an toàn (Tự động Snapshot Pre-flight backup) |
+| **Triển khai Hotfix SQL** | `.\mes.ps1 deploy "<File.sql>" [-Force]` | Deploy script SQL an toàn (Tự động Snapshot Pre-flight & Auto-Learn Log) |
 | **Trợ Lý Telegram** | `.\mes.ps1 bot` | Khởi động Trợ lý AI Telegram phục vụ điều khiển từ xa qua điện thoại |

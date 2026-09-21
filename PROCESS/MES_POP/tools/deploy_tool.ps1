@@ -1,4 +1,4 @@
-﻿param (
+param (
     [string]$SqlPath,
     [string]$Profile = "SmartFactoryV2",
     [switch]$Force,
@@ -81,6 +81,36 @@ try {
     }
     
     Write-Host "Deployed successfully: $SqlPath to DB: $($connection.Database)" -ForegroundColor Green
+
+    # ==========================================================================
+    # AUTO-LEARN & AUDIT TRAIL HOOK (Tự động học tri thức từ Hotfix thành công)
+    # ==========================================================================
+    $logDir = Join-Path (Split-Path -Parent $PSScriptRoot) "AI_AGENT_CONFIG"
+    $jsonlPath = Join-Path $logDir "HOTFIX_LOG.jsonl"
+    
+    $titleMatch = [regex]::Match($sqlText, "(?mi)^\s*--\s*(?:HOTFIX|ISSUE|TITLE)\s*:\s*(.+)$")
+    $issueTitle = if ($titleMatch.Success) { $titleMatch.Groups[1].Value.Trim() } else { (Split-Path -Leaf $SqlPath) }
+    
+    $authorMatch = [regex]::Match($sqlText, "(?mi)^\s*--\s*Author.*?:\s*(.+)$")
+    $author = if ($authorMatch.Success) { $authorMatch.Groups[1].Value.Trim() } else { "vanduc" }
+    
+    $targetTables = @()
+    if ($updateMatches) { $targetTables += ($updateMatches | ForEach-Object { $_.Groups[1].Value.Trim() }) }
+    if ($deleteMatches) { $targetTables += ($deleteMatches | ForEach-Object { $_.Groups[1].Value.Trim() }) }
+    $targetTables = $targetTables | Select-Object -Unique
+    
+    $record = @{
+        timestamp = (Get-Date -Format "yyyy-MM-dd HH:mm:ss")
+        file = (Split-Path -Leaf $SqlPath)
+        db = $connection.Database
+        author = $author
+        title = $issueTitle
+        tables = $targetTables
+    }
+    
+    $recordJson = ($record | ConvertTo-Json -Compress)
+    [System.IO.File]::AppendAllText($jsonlPath, "$recordJson`n", [System.Text.Encoding]::UTF8)
+    Write-Host "-> [AUTO-LEARN] Da tu dong cap nhat nhat ky tri thuc: $jsonlPath" -ForegroundColor Cyan
 } catch {
     Write-Error "Deployment failed for $SqlPath : $_"
     exit 1

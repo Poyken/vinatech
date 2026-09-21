@@ -1,4 +1,4 @@
-﻿# ==============================================================================
+# ==============================================================================
 # pop_trace.ps1 — Ultra-Fast 360° Trace with Smart Identifier Resolver
 # Single Round-Trip | Auto Pattern Detection (Lot / Packing / Machine / Line)
 # Tham chiếu: RULE 6 (Golden Query), POP_KB_01, POP_KB_02, POP_KB_03
@@ -36,7 +36,7 @@ $sw = [System.Diagnostics.Stopwatch]::StartNew()
 
 Write-Host ''
 Write-Host '======================================================================' -ForegroundColor Cyan
-Write-Host "     [POP-TRACE 360°] TRUY VET SIEU TOC (SINGLE ROUND-TRIP)" -ForegroundColor Yellow
+Write-Host "     [POP-TRACE 360] TRUY VET SIEU TOC (SINGLE ROUND-TRIP)" -ForegroundColor Yellow
 Write-Host "     Ma truy vet: $t | Loai nhan dien: $type" -ForegroundColor White
 Write-Host '======================================================================' -ForegroundColor Cyan
 
@@ -122,47 +122,63 @@ ORDER BY ModifyDateTime DESC;
 "@
 } else { # LOT / BARCODE / CONTROLNO
     $cmd.CommandText = @"
--- 1. STB_SetInfo
+SET NOCOUNT ON;
+DECLARE @Ctrl VARCHAR(30) = '$t';
+DECLARE @Bar VARCHAR(50) = '$t';
+DECLARE @LineCode VARCHAR(30) = NULL;
+
+-- 0. RESOLVE CONTROLNO VA BARCODE (Index Seek <1ms)
+IF EXISTS (SELECT 1 FROM SmartFactoryV2.dbo.STB_SetInfo WITH(NOLOCK) WHERE ControlNo = '$t')
+BEGIN
+    SELECT TOP 1 @Bar = Barcode FROM SmartFactoryV2.dbo.STB_SetInfo WITH(NOLOCK) WHERE ControlNo = '$t';
+END
+ELSE
+BEGIN
+    SELECT TOP 1 @Ctrl = ControlNo FROM SmartFactoryV2.dbo.STB_SetInfo WITH(NOLOCK) WHERE Barcode = '$t';
+END
+
+-- 1. STB_SetInfo (Index Seek)
 SELECT TOP 1 ControlNo, PONo, Barcode, MaterialCode, IsProdFinish, IsLineInput, DefectQty, CreateDateTime 
 FROM SmartFactoryV2.dbo.STB_SetInfo WITH(NOLOCK) 
-WHERE Barcode = '$t' OR ControlNo = '$t';
+WHERE ControlNo = @Ctrl;
 
--- 2. STB_ProdRouteHist
+-- 2. STB_ProdRouteHist (Index Seek)
 SELECT TOP 10 ProdRouteHistNo, ControlNo, RouteCode, WorkCenterCode, ProdQty, JobDate, ProdDateTime, CompleteRoute 
 FROM SmartFactoryV2.dbo.STB_ProdRouteHist WITH(NOLOCK) 
-WHERE ControlNo = '$t' OR ControlNo = (SELECT TOP 1 ControlNo FROM SmartFactoryV2.dbo.STB_SetInfo WITH(NOLOCK) WHERE Barcode = '$t') 
+WHERE ControlNo = @Ctrl 
 ORDER BY CreateDateTime DESC;
 
 -- 3. MongoToMesPerformance (POP Sync)
 SELECT TOP 10 DayPlanNo, Barcode, RouteCode, LineCode, MachineCode, TotalProdQty, TotalDefectQty, IsDone, IsTransferred, InsertDateTime, ModifyDateTime 
 FROM SmartFactoryV2.dbo.MongoToMesPerformance WITH(NOLOCK) 
-WHERE Barcode = '$t' OR Barcode = (SELECT TOP 1 Barcode FROM SmartFactoryV2.dbo.STB_SetInfo WITH(NOLOCK) WHERE ControlNo = '$t') 
+WHERE Barcode = @Bar 
 ORDER BY ModifyDateTime DESC;
 
--- 4. STB_DefectRepairInfo (Phế phẩm)
+-- Lay nhanh LineCode tu buoc sync
+SELECT TOP 1 @LineCode = LineCode 
+FROM SmartFactoryV2.dbo.MongoToMesPerformance WITH(NOLOCK) 
+WHERE Barcode = @Bar;
+
+-- 4. STB_DefectRepairInfo (Index Seek)
 SELECT TOP 10 DefectSummaryNo, ControlNo, FindRouteCode, DefectCode, DefectQty, RepairQty, IsDelete, CreateDateTime 
 FROM SmartFactoryV2.dbo.STB_DefectRepairInfo WITH(NOLOCK) 
-WHERE ControlNo = '$t' OR ControlNo = (SELECT TOP 1 ControlNo FROM SmartFactoryV2.dbo.STB_SetInfo WITH(NOLOCK) WHERE Barcode = '$t') 
+WHERE ControlNo = @Ctrl 
 ORDER BY CreateDateTime DESC;
 
 -- 5. STB_MaterialLotInfo (NVL / Box)
 SELECT TOP 10 MaterialLotNo, LotNo, MaterialCode, PackingID, CurrentQty, InitialQty 
 FROM SmartFactoryV2.dbo.STB_MaterialLotInfo WITH(NOLOCK) 
-WHERE LotNo = '$t' OR MaterialLotNo = '$t' OR PackingID = '$t' 
-   OR LotNo = (SELECT TOP 1 Barcode FROM SmartFactoryV2.dbo.STB_SetInfo WITH(NOLOCK) WHERE ControlNo = '$t');
+WHERE LotNo = @Bar OR MaterialLotNo = @Bar OR PackingID = @Bar;
 
--- 6. VINA_EQUIPMENT_MAPPING (Thiết bị gán trên Kiosk)
+-- 6. VINA_EQUIPMENT_MAPPING (Thiet bi gan tren Kiosk theo Line)
 SELECT TOP 10 MAPPING_ID, DAY_PLAN_NO, LINE_CODE, ROUTE_CODE, EQUIPMENT_ID, EQUIPMENT_NAME, MAPPING_STATUS, MAPPED_AT 
 FROM VINATECH_POP.dbo.VINA_EQUIPMENT_MAPPING WITH(NOLOCK) 
-WHERE LINE_CODE IN (
-    SELECT TOP 1 LineCode FROM SmartFactoryV2.dbo.MongoToMesPerformance WITH(NOLOCK) 
-    WHERE Barcode = '$t' OR Barcode = (SELECT TOP 1 Barcode FROM SmartFactoryV2.dbo.STB_SetInfo WITH(NOLOCK) WHERE ControlNo = '$t')
-) AND MAPPING_STATUS IN ('ACTIVE', 'AUTO_MAPPED');
+WHERE (@LineCode IS NOT NULL AND LINE_CODE = @LineCode) AND MAPPING_STATUS IN ('ACTIVE', 'AUTO_MAPPED');
 
--- 7. VINA_POP_ACTION_LOG (Nhật ký POP Action)
+-- 7. VINA_POP_ACTION_LOG (Nhat ky thao tac POP)
 SELECT TOP 5 SEQ, ACTION_TYPE, ACTION_NAME, LINE_CODE, ROUTE_CODE, EQUIPMENT_ID, LOT_NUMBER, QTY, RESULT_STATUS, ERROR_MESSAGE, WORKER_CODE, REG_DATE 
 FROM VINATECH_POP.dbo.VINA_POP_ACTION_LOG WITH(NOLOCK) 
-WHERE LOT_NUMBER = '$t' OR LOT_NUMBER = (SELECT TOP 1 Barcode FROM SmartFactoryV2.dbo.STB_SetInfo WITH(NOLOCK) WHERE ControlNo = '$t') 
+WHERE LOT_NUMBER = @Bar 
 ORDER BY REG_DATE DESC;
 "@
 }
@@ -210,5 +226,5 @@ if ($type -eq "PACKING") {
 
 Write-Host ''
 Write-Host "======================================================================" -ForegroundColor Cyan
-Write-Host "-> Hoan thanh truy vet 360° sieu toc trong: $($sw.ElapsedMilliseconds) ms (Single Round-Trip)" -ForegroundColor Green
+Write-Host "-> Hoan thanh truy vet 360 Do sieu toc trong: $($sw.ElapsedMilliseconds) ms (Single Round-Trip)" -ForegroundColor Green
 Write-Host "======================================================================" -ForegroundColor Cyan

@@ -25,6 +25,7 @@ Mọi câu trả lời khi nhận báo lỗi sự cố BẮT BUỘC theo 4 phầ
 - `shell` — Bật Persistent REPL Shell tức thời (<0.05s response, nạp sẵn L1 Cache & DB conn trong RAM)
 - `diagnose "<Text/Lot>"` — Master Auto-Diagnostic tức thời 1-Shot (<1s) xuất đúng 4 Dòng Vàng
 - `trace "<LotID>"` — Golden Query 360° (Single Round-Trip)
+- `lineage "<Lot/PO>"` — Truy vết huyết mạch 3 trụ cột (PO Master ➔ Kho NVL ➔ Tiến độ MES ➔ Kiosk POP)
 - `pop-trace "<Keyword>"` — Truy vết chuyên sâu Kiosk POP (Sync, Phế, Máy kẹt)
 - `fix-movedate -Lots "..." -TargetDate "yyyy-MM-dd"` — Sinh Hotfix chuyển ngày chốt B782 chuẩn 10h00 AM (Author vanduc)
 - `fix-electrode -Lots "..." [-Type Slitting|Mixing]` — Sinh Hotfix xóa cuộn/mẻ trộn B552 & reset IsLineInput

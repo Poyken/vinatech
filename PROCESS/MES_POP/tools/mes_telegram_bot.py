@@ -658,11 +658,15 @@ def handle_message(text, chat_id, token, config):
             "⚡ <b>LỆNH TÁC CHIẾN TỨC THỜI (1-SHOT):</b>\n"
             "• <code>/diagnose &lt;Lỗi/Lot&gt;</code> : Chẩn đoán thần tốc xuất đúng 4 Dòng Vàng\n"
             "• <code>/trace &lt;Lot&gt;</code> : Golden Query 360° quét toàn diện trạng thái Lot\n"
+            "• <code>/lineage &lt;Lot/PO&gt;</code> : Truy vết huyết mạch 3 trụ cột (PO ➔ Kho ➔ MES ➔ POP)\n"
             "• <code>/release</code> : Giải phóng tự động các máy POP bị kẹt khóa ACTIVE\n"
-            "• <code>/readiness</code> : Kiểm toán sẵn sàng chuyển đổi Kiosk POP 31 chuyền\n"
+            "• <code>/fix_movedate &lt;Lot&gt; &lt;Date&gt;</code> : Chuyển ngày chốt B782 chuẩn 10:00 AM\n"
+            "• <code>/fix_electrode &lt;Cuộn&gt;</code> : Xóa mẻ trộn/cuộn điện cực B552 & reset cuộn mẹ\n"
+            "• <code>/fix_rollback &lt;Lot&gt; &lt;Route&gt;</code> : Rollback công đoạn chốt lỗi B530/POP\n"
+            "• <code>/report</code> : Xuất Báo Cáo Tuần IT (EA Team) ra Desktop CSV\n"
             "• <code>/health</code> : Morning Health Check quét Lot HOLD, WIP 24h\n"
             "• <code>/clear</code> : Xóa trí nhớ hội thoại để bắt đầu phiên mới\n\n"
-            "💡 <b>Mẹo cực nhanh:</b> Bạn có thể paste thẳng ảnh chụp màn hình hoặc câu báo lỗi của OP vào đây (Ví dụ: <code>B530 kẹt số lượng</code> hoặc <code>This route is already completed in MES</code>), tôi sẽ tự động phân tích và đưa giải pháp ngay!"
+            "💡 <b>Mẹo cực nhanh:</b> Bạn có thể paste thẳng câu báo lỗi của OP vào đây (Ví dụ: <code>B530 kẹt số lượng</code> hoặc <code>This route is already completed in MES</code>), bot sẽ tự động phân tích và đưa giải pháp ngay!"
         )
 
     if cmd in ["/clear", "/reset"]:
@@ -685,6 +689,12 @@ def handle_message(text, chat_id, token, config):
         res = run_powershell_cmd([f".\\mes.ps1 trace '{lot}'"], timeout=25)
         return f"📋 <b>KẾT QUẢ TRUY VẾT 360° CHO: <code>{lot}</code></b>\n<pre>{res}</pre>"
 
+    # 3.1 Fast-path: Lệnh /lineage (Truy vết huyết mạch PO ➔ Kho ➔ MES ➔ POP)
+    if cmd.startswith("/lineage ") or cmd.startswith("lineage "):
+        target_val = re.sub(r"^/(lineage)\s+|^lineage\s+", "", text_clean, flags=re.IGNORECASE).strip()
+        res = run_powershell_cmd([f".\\mes.ps1 lineage '{target_val}'"], timeout=25)
+        return f"⛓️ <b>KẾT QUẢ HUYẾT MẠCH 3 TRỤ CỘT CHO: <code>{target_val}</code></b>\n<pre>{res}</pre>"
+
     # 4. Fast-path: Lệnh /release
     if cmd in ["/release", "release"]:
         res = run_powershell_cmd([".\\mes.ps1 release-machines -Force"], timeout=25)
@@ -699,6 +709,38 @@ def handle_message(text, chat_id, token, config):
     if cmd in ["/health", "health"]:
         res = run_powershell_cmd([".\\mes.ps1 health"], timeout=25)
         return f"🏥 <b>KẾT QUẢ SỨC KHỎE HỆ THỐNG MES:</b>\n<pre>{res}</pre>"
+
+    # 7. Actionable 1-Click Fix: Chuyển ngày chốt B782 (/fix_movedate <lots> <yyyy-MM-dd>)
+    if cmd.startswith("/fix_movedate ") or cmd.startswith("/fix_date "):
+        args = re.sub(r"^/(fix_movedate|fix_date)\s+", "", text_clean, flags=re.IGNORECASE).strip().split()
+        if len(args) < 2:
+            return "⚠️ <b>CÚ PHÁP:</b> <code>/fix_movedate &lt;Mã_Lot&gt; &lt;yyyy-MM-dd&gt;</code>\nVí dụ: <code>/fix_movedate VVQR153R825707 2026-09-22</code>"
+        lot_arg, date_arg = args[0], args[1]
+        res = run_powershell_cmd([f".\\mes.ps1 fix-movedate -Lots '{lot_arg}' -TargetDate '{date_arg}' -Deploy"], timeout=30)
+        return f"⚡ <b>KẾT QUẢ CHUYỂN NGÀY CHỐT B782:</b>\n<pre>{res}</pre>"
+
+    # 8. Actionable 1-Click Fix: Xóa cuộn/mẻ trộn điện cực B552 (/fix_electrode <lot>)
+    if cmd.startswith("/fix_electrode ") or cmd.startswith("/fix_elec "):
+        lot_arg = re.sub(r"^/(fix_electrode|fix_elec)\s+", "", text_clean, flags=re.IGNORECASE).strip()
+        if not lot_arg:
+            return "⚠️ <b>CÚ PHÁP:</b> <code>/fix_electrode &lt;Mã_Cuộn_Hoặc_Mẻ_Trộn&gt;</code>"
+        res = run_powershell_cmd([f".\\mes.ps1 fix-electrode -Lots '{lot_arg}' -Deploy"], timeout=30)
+        return f"⚡ <b>KẾT QUẢ XỬ LÝ ĐIỆN CỰC B552:</b>\n<pre>{res}</pre>"
+
+    # 9. Actionable 1-Click Fix: Rollback công đoạn kẹt B530 (/fix_rollback <lot> [route])
+    if cmd.startswith("/fix_rollback "):
+        args = re.sub(r"^/fix_rollback\s+", "", text_clean, flags=re.IGNORECASE).strip().split()
+        if not args:
+            return "⚠️ <b>CÚ PHÁP:</b> <code>/fix_rollback &lt;Mã_Lot&gt; [Mã_Route]</code>\nVí dụ: <code>/fix_rollback VVQR153R060615 V-22_HY</code>"
+        lot_arg = args[0]
+        route_arg = args[1] if len(args) > 1 else "V-22_HY"
+        res = run_powershell_cmd([f".\\mes.ps1 fix-rollback -Lots '{lot_arg}' -Route '{route_arg}' -Deploy"], timeout=30)
+        return f"⚡ <b>KẾT QUẢ ROLLBACK CÔNG ĐOẠN {route_arg}:</b>\n<pre>{res}</pre>"
+
+    # 10. Actionable 1-Click: Báo cáo tuần IT (/report)
+    if cmd in ["/report", "/weekly_report", "report"]:
+        res = run_powershell_cmd([".\\mes.ps1 weekly-report"], timeout=20)
+        return f"📊 <b>KẾT QUẢ XUẤT BÁO CÁO TUẦN IT (EA TEAM):</b>\n<pre>{res}</pre>\n<i>File CSV đã được cập nhật tại Desktop/thanks_and_ojt_reports.</i>"
 
     api_key = config.get("gemini_api_key", "").strip()
     model_name = config.get("model_name", "gemini-3.6-flash").strip()

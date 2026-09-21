@@ -51,6 +51,8 @@ function Show-Help {
     Write-Host '-> Master Auto-Diagnostic: Chan doan tuc thoi 1-Shot xuat 4 Dong Vang (<1s)' -ForegroundColor Yellow
     Write-Host '     .\mes.ps1 trace <Lot/Line/Machine/Box>' -NoNewline -ForegroundColor Green
     Write-Host '-> Golden Query 360 sieu toc (Single Round-Trip) tu dong nhan dien Lot, Line, Thiet bi, Thung' -ForegroundColor Gray
+    Write-Host '     .\mes.ps1 lineage <Target>          ' -NoNewline -ForegroundColor Green
+    Write-Host '-> Truy vet huyet mach lien he thong (PO/GW -> Kho -> MES -> POP Kiosk)' -ForegroundColor Gray
     Write-Host '     .\mes.ps1 pop-trace <Keyword>       ' -NoNewline -ForegroundColor Green
     Write-Host '-> Truy vet chuyen sau he sinh thai POP Kiosk (Sync, Phe, May ket, Kiosk logs)' -ForegroundColor Gray
     Write-Host '     .\mes.ps1 screen <ScreenID>         ' -NoNewline -ForegroundColor Green
@@ -162,6 +164,21 @@ elseif ($cmdLower -eq 'trace' -or $cmdLower -eq 'pop-trace') {
         & $popTraceScript -Target $Target
     } else {
         Write-Error 'tools/pop_trace.ps1 not found.'
+    }
+}
+elseif ($cmdLower -eq 'lineage') {
+    if ([string]::IsNullOrWhiteSpace($Target)) {
+        Show-MesBanner
+        Write-Host 'Loi: Vui long nhap ma can truy vet huyet mach (Lot, Barcode hoac PO)!' -ForegroundColor Red
+        Write-Host 'Vi du: .\mes.ps1 lineage "VVQR153R060615"' -ForegroundColor Yellow
+        exit 1
+    }
+
+    $lineageScript = Join-Path $toolsDir 'trace_lineage.ps1'
+    if (Test-Path $lineageScript) {
+        & $lineageScript -Target $Target
+    } else {
+        Write-Error 'tools/trace_lineage.ps1 not found.'
     }
 }
 elseif ($cmdLower -eq 'screen') {
