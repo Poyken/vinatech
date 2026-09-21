@@ -593,13 +593,37 @@ def call_gemini_conversational(chat_id, user_text, api_key, model_pref="gemini-3
     return None
 
 # ------------------------------------------------------------------------------
-# LOCAL FALLBACK ENGINE (DỰ PHÒNG KHI MẤT MẠNG / AI NGHẼN)
+# LOCAL FALLBACK ENGINE & 1-SHOT DIAGNOSTIC (TỰ ĐỘNG CHẨN ĐOÁN LỖI)
 # ------------------------------------------------------------------------------
+def format_diagnostic_html(diag):
+    """Định dạng kết quả chẩn đoán 4 Dòng Vàng sang Telegram HTML chuẩn"""
+    import html as html_lib
+    html = "⚡ <b>VINATECH MES CHẨN ĐOÁN 1-SHOT</b>\n"
+    html += "━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+    esc_rc = html_lib.escape(diag.get('root_cause', 'N/A'))
+    esc_ds = html_lib.escape(diag.get('data_state', 'N/A'))
+    html += f"🎯 <b>1. NGUYÊN NHÂN GỐC:</b>\n{esc_rc}\n\n"
+    html += f"📍 <b>2. HIỆN TRẠNG DỮ LIỆU:</b>\n{esc_ds}\n\n"
+    html += "🛠️ <b>3. HƯỚNG DẪN OP TỰ XỬ LÝ (UI):</b>\n"
+    for line in diag.get("op_workaround", "").splitlines():
+        html += f"• {html_lib.escape(line)}\n"
+    esc_sql = html_lib.escape(diag.get('sql_hotfix', '-- N/A'))
+    html += f"\n⚡ <b>4. SQL HOTFIX (IT CAN THIỆP):</b>\n<pre>{esc_sql}</pre>"
+    return html
+
 def local_fallback_handler(text):
-    """Xử lý cục bộ khi Gemini gặp sự cố mạng ngoài"""
+    """Xử lý cục bộ khi Gemini gặp sự cố mạng ngoài hoặc yêu cầu chẩn đoán"""
     clean_text = text.strip()
-    # Kiểm tra Lot
-    lot_match = re.search(r"(?:lot\s+|barcode\s+)?(VVQR[A-Za-z0-9]+|VN-[A-Za-z0-9\-]+|[A-Z]{2}[0-9]{8,16})", clean_text, re.IGNORECASE)
+    try:
+        from mes_diagnose import diagnose
+        diag = diagnose(clean_text)
+        if diag.get("matched_rule") or diag.get("l1_screen") or diag.get("entities", {}).get("lots"):
+            return format_diagnostic_html(diag)
+    except Exception as e:
+        print(f"[FALLBACK DIAGNOSE ERROR]: {e}")
+
+    # Kiểm tra Lot trực tiếp
+    lot_match = re.search(r"(?:lot\s+|barcode\s+)?(VV[A-Za-z0-9]+|VE\d{6}-\d{3}|SP\d{6}-\d{3}|PK[A-Za-z0-9]+)", clean_text, re.IGNORECASE)
     if lot_match:
         lot = lot_match.group(1)
         res = run_powershell_cmd([f".\\mes.ps1 trace '{lot}'"], timeout=25)
@@ -625,26 +649,56 @@ def handle_message(text, chat_id, token, config):
 
     send_chat_action(token, chat_id, "typing")
 
+    # 1. Trợ giúp & Giới thiệu
     if cmd in ["/start", "/help", "help", "trợ giúp"]:
         return (
-            "🤖 <b>VINATECH MES SENIOR AI TECH LEAD (v5.0 Deep Live)</b>\n"
+            "🤖 <b>VINATECH MES & POP MOBILE WAR-ROOM (v5.1 Live)</b>\n"
             "━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
-            "Xin chào! Tôi là Trợ lý AI Kỹ sư trưởng MES Vinatech, được kết nối trực tiếp vào Database Production (<code>SmartFactoryV2</code>) và hơn 78 file tài liệu quy trình nhà máy.\n\n"
-            "💡 <b>Tôi có thể làm gì cùng bạn?</b>\n"
-            "• <b>Truy vết & Phân tích Lot:</b> Quét 360° hành trình qua 8 công đoạn, phân tích hao hụt số lượng, trạm hiện tại.\n"
-            "• <b>Tra cứu CSDL tự do:</b> Hỏi tồn kho vật tư, kiểm tra mã PO, đếm lot theo công đoạn, truy vấn dữ liệu theo ngày.\n"
-            "• <b>Chẩn đoán sự cố:</b> Phân tích lỗi Lot HOLD, vi phạm FIFO, lỗi in tem Sanmina, rã box, lỗi bypass.\n"
-            "• <b>Hướng dẫn màn hình:</b> Chi tiết Stored Procedure, logic nghiệp vụ các màn hình B530, B540, S510...\n"
-            "• <b>Hội thoại chuyên sâu:</b> Bạn có thể hỏi bất kỳ câu hỏi kỹ thuật nào và trao đổi liên tục như một đồng nghiệp kỹ sư.\n\n"
-            "⚡ <b>Phím tắt nhanh:</b>\n"
-            "• <code>/trace &lt;Lot&gt;</code> : Truy vết nhanh Golden Query 360°\n"
-            "• <code>/health</code> : Morning Health Check quét Lot HOLD, WIP\n"
-            "• <code>/clear</code> : Xóa trí nhớ hội thoại để bắt đầu chủ đề mới"
+            "Xin chào! Tôi là Trợ lý AI Kỹ sư trưởng MES Vinatech, hỗ trợ giám sát và chẩn đoán sự cố nhà máy tức thời 24/7.\n\n"
+            "⚡ <b>LỆNH TÁC CHIẾN TỨC THỜI (1-SHOT):</b>\n"
+            "• <code>/diagnose &lt;Lỗi/Lot&gt;</code> : Chẩn đoán thần tốc xuất đúng 4 Dòng Vàng\n"
+            "• <code>/trace &lt;Lot&gt;</code> : Golden Query 360° quét toàn diện trạng thái Lot\n"
+            "• <code>/release</code> : Giải phóng tự động các máy POP bị kẹt khóa ACTIVE\n"
+            "• <code>/readiness</code> : Kiểm toán sẵn sàng chuyển đổi Kiosk POP 31 chuyền\n"
+            "• <code>/health</code> : Morning Health Check quét Lot HOLD, WIP 24h\n"
+            "• <code>/clear</code> : Xóa trí nhớ hội thoại để bắt đầu phiên mới\n\n"
+            "💡 <b>Mẹo cực nhanh:</b> Bạn có thể paste thẳng ảnh chụp màn hình hoặc câu báo lỗi của OP vào đây (Ví dụ: <code>B530 kẹt số lượng</code> hoặc <code>This route is already completed in MES</code>), tôi sẽ tự động phân tích và đưa giải pháp ngay!"
         )
 
     if cmd in ["/clear", "/reset"]:
         CHAT_HISTORIES.pop(chat_id, None)
         return "🧹 <i>Đã xóa sạch ngữ cảnh hội thoại cũ. Bạn có thể bắt đầu chủ đề mới!</i>"
+
+    # 2. Fast-path: Lệnh /diagnose hoặc /diag
+    if cmd.startswith("/diagnose ") or cmd.startswith("/diag ") or cmd.startswith("diagnose ") or cmd.startswith("diag "):
+        q = re.sub(r"^/(diagnose|diag)\s+|^diagnose\s+|^diag\s+", "", text_clean, flags=re.IGNORECASE).strip()
+        try:
+            from mes_diagnose import diagnose
+            diag = diagnose(q)
+            return format_diagnostic_html(diag)
+        except Exception as e:
+            return f"❌ <b>LỖI CHẨN ĐOÁN:</b> {e}"
+
+    # 3. Fast-path: Lệnh /trace
+    if cmd.startswith("/trace ") or cmd.startswith("trace "):
+        lot = re.sub(r"^/(trace)\s+|^trace\s+", "", text_clean, flags=re.IGNORECASE).strip()
+        res = run_powershell_cmd([f".\\mes.ps1 trace '{lot}'"], timeout=25)
+        return f"📋 <b>KẾT QUẢ TRUY VẾT 360° CHO: <code>{lot}</code></b>\n<pre>{res}</pre>"
+
+    # 4. Fast-path: Lệnh /release
+    if cmd in ["/release", "release"]:
+        res = run_powershell_cmd([".\\mes.ps1 release-machines -Force"], timeout=25)
+        return f"🔓 <b>KẾT QUẢ GIẢI PHÓNG THIẾT BỊ KẸT LOCK:</b>\n<pre>{res}</pre>"
+
+    # 5. Fast-path: Lệnh /readiness
+    if cmd in ["/readiness", "readiness"]:
+        res = run_powershell_cmd([".\\mes.ps1 pop-readiness"], timeout=30)
+        return f"🏭 <b>KẾT QUẢ KIỂM TOÁN SẴN SÀNG POP WEB 31 CHUYỀN:</b>\n<pre>{res}</pre>"
+
+    # 6. Fast-path: Lệnh /health
+    if cmd in ["/health", "health"]:
+        res = run_powershell_cmd([".\\mes.ps1 health"], timeout=25)
+        return f"🏥 <b>KẾT QUẢ SỨC KHỎE HỆ THỐNG MES:</b>\n<pre>{res}</pre>"
 
     api_key = config.get("gemini_api_key", "").strip()
     model_name = config.get("model_name", "gemini-3.6-flash").strip()
@@ -655,7 +709,7 @@ def handle_message(text, chat_id, token, config):
         if ai_reply:
             return ai_reply
 
-    # Fallback tự động khi AI nghẽn
+    # Fallback tự động khi AI nghẽn hoặc chưa có API key
     return local_fallback_handler(text_clean)
 
 # ------------------------------------------------------------------------------

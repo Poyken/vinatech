@@ -199,7 +199,26 @@ def check_system_vitals():
             "level": "WARNING",
             "title": "THIẾT BỊ BỊ TREO KHÓA KẾ HOẠCH CŨ",
             "message": f"Có {vitals['orphan_machines']} thiết bị bị kẹt trạng thái ACTIVE ở DayPlan cũ, công nhân ca mới không thể chọn máy.",
-            "action": "Chạy '.\\mes.ps1 release-machines -Force' để tự động giải phóng."
+            "action": ".\\mes.ps1 release-machines -Force",
+            "fix_code": "UPDATE VINATECH_POP.dbo.VINA_EQUIPMENT_MAPPING SET MAPPING_STATUS='RELEASED', RELEASED_AT=GETDATE() WHERE MAPPING_STATUS IN ('ACTIVE','AUTO_MAPPED') AND LEFT(DAY_PLAN_NO, 8) < CONVERT(VARCHAR(8), GETDATE(), 112);"
+        })
+
+    # 4. Kiem tra Lot bi HOLD trong 24h
+    q_hold = "SELECT TOP 5 Barcode, MaterialCode, CurrentRouteCode FROM STB_SetInfo WITH(NOLOCK) WHERE IsHold = 1 AND ModifyDateTime > DATEADD(HOUR, -24, GETDATE()) ORDER BY ModifyDateTime DESC"
+    out_hold = run_ps_query(q_hold, "SmartFactoryV2")
+    hold_lots = []
+    for line in out_hold.splitlines():
+        parts = [p.strip() for p in line.split() if p.strip()]
+        if parts and parts[0].startswith("VV"):
+            hold_lots.append(f"{parts[0]} ({parts[1] if len(parts)>1 else ''})")
+    vitals["recent_hold_lots"] = hold_lots
+    if hold_lots:
+        vitals["alerts"].append({
+            "level": "WARNING",
+            "title": "PHÁT SINH LÔ HÀNG BỊ KHÓA (LOT HOLD 24H)",
+            "message": f"Phát hiện {len(hold_lots)} Lot bị gắn cờ HOLD gần đây:\n" + "\n".join([f"• {x}" for x in hold_lots]),
+            "action": f".\\mes.ps1 trace \"{hold_lots[0].split()[0]}\"",
+            "fix_code": f"EXEC usp_UnHoldLot_Manual @Barcode = '{hold_lots[0].split()[0]}';"
         })
 
     return vitals
@@ -208,18 +227,26 @@ def format_alert_html(vitals):
     if not vitals["alerts"]:
         return ""
     
-    html = f"🚨 <b>[VINATECH MES WATCHDOG ALERT]</b>\n"
+    import html as html_lib
+    html = f"🚨 <b>[VINATECH MES WATCHDOG — CẢNH BÁO TÁC CHIẾN]</b>\n"
     html += f"⏰ <i>Thời gian tuần tra: {vitals['timestamp']}</i>\n"
     html += f"━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
 
     for idx, a in enumerate(vitals["alerts"], 1):
         icon = "🔴" if a["level"] == "CRITICAL" else "⚠️"
-        html += f"{icon} <b>{idx}. {a['title']}</b>\n"
-        html += f"{a['message']}\n"
-        html += f"👉 <code>{a['action']}</code>\n\n"
+        esc_title = html_lib.escape(a["title"])
+        esc_msg = html_lib.escape(a["message"])
+        esc_act = html_lib.escape(a["action"])
+        html += f"{icon} <b>{idx}. {esc_title}</b>\n"
+        html += f"{esc_msg}\n"
+        html += f"👉 <b>Lệnh xử lý:</b> <code>{esc_act}</code>\n"
+        if "fix_code" in a and a["fix_code"]:
+            esc_fix = html_lib.escape(a["fix_code"])
+            html += f"⚡ <b>SQL tham khảo:</b>\n<pre>{esc_fix}</pre>\n"
+        html += "\n"
 
     html += f"━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
-    html += f"⚡ <i>Hệ thống giám sát tự động MES_POP Watchdog</i>"
+    html += f"⚡ <i>Hệ thống giám sát tự động MES_POP Auto-Pilot (0 Browser)</i>"
     return html
 
 def run_once():

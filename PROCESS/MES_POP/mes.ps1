@@ -65,6 +65,8 @@ function Show-Help {
     Write-Host '-> Morning Health Check quet Lot HOLD, WIP 24h, Box do dang' -ForegroundColor Gray
     Write-Host '     .\mes.ps1 audit                     ' -NoNewline -ForegroundColor Green
     Write-Host '-> Audit do tin cay toan bo tai lieu Markdown vs Live DB' -ForegroundColor Gray
+    Write-Host '     .\mes.ps1 audit-l1                  ' -NoNewline -ForegroundColor Green
+    Write-Host '-> Kiem toan do tin cay tuyet doi giua L1 Quick Matrix va Live DB' -ForegroundColor Yellow
     Write-Host '     .\mes.ps1 query "<SELECT_SQL>"      ' -NoNewline -ForegroundColor Green
     Write-Host '-> Chay cau SELECT an toan (kem NOLOCK warning & Multi-DB)' -ForegroundColor Gray
 
@@ -270,6 +272,14 @@ elseif ($cmdLower -eq 'audit' -or $cmdLower -eq 'verify-kb') {
         & $auditScript
     } else {
         Write-Error 'tools/audit_kb_reliability.ps1 not found.'
+    }
+}
+elseif ($cmdLower -eq 'audit-l1' -or $cmdLower -eq 'audit-matrix') {
+    $auditL1Script = Join-Path $toolsDir 'audit_l1_cache.ps1'
+    if (Test-Path $auditL1Script) {
+        & $auditL1Script
+    } else {
+        Write-Error 'tools/audit_l1_cache.ps1 not found.'
     }
 }
 elseif ($cmdLower -eq 'pop-audit' -or $cmdLower -eq 'pop-sync' -or $cmdLower -eq 'reconcile') {

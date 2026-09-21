@@ -1,4 +1,4 @@
-﻿{
+{
     "version": "2.3.0",
     "updated_at": "2026-09-21 04:11:40",
     "description": "Full 95 Screens & Bugs L1 In-Memory Pre-compiled Matrix for Vinatech MES (Deduplicated & Cleaned v2.3)",
@@ -59,8 +59,8 @@
         "A418": {
             "name": "Packing Qty per Size (SL đóng gói theo Size)",
             "module": "MasterData",
-            "sp_get": "usp_GetA418",
-            "sp_iud": "usp_DoProcessA418",
+            "sp_get": null,
+            "sp_iud": null,
             "tables": [
                 "STB_MaterialMaster"
             ],
@@ -97,8 +97,8 @@
         "A510": {
             "name": "Production Order (Lệnh sản xuất - PO)",
             "module": "MasterData",
-            "sp_get": "usp_GetA510",
-            "sp_iud": "usp_DoProcessA510",
+            "sp_get": null,
+            "sp_iud": null,
             "tables": [
                 "STB_MaterialMaster"
             ],
@@ -110,8 +110,8 @@
         "B210": {
             "name": "Màn hình B210",
             "module": "Production",
-            "sp_get": "usp_GetB210",
-            "sp_iud": "usp_DoProcessB210",
+            "sp_get": null,
+            "sp_iud": null,
             "tables": [
                 "STB_ScreenObjects"
             ],
@@ -129,8 +129,7 @@
             "sp_iud": "usp_GetBasicRouteingDetailForRoute",
             "tables": [
                 "STB_BasicRoutingInfo",
-                "STB_BasicRoutingDetail",
-                "VVT_F5"
+                "STB_BasicRoutingDetail"
             ],
             "common_bugs": {
                 "t_o_po_t_i_b310_b_o_l_i": "Nhà máy (ví dụ `VVT_F5`) chưa được định nghĩa bộ `BasicRoutingCode` hoặc các bước công đoạn (`RouteCode`) chưa được tick chọn sử dụng -> Vào **B240** → Chọn `CompanyCode` (`VVT`) và `WorkCenterCode` (`VVT_F5`) → Kiểm tra danh sách Routing ở lưới trái (`HY_MainRoutingMedium`, `HY_MainRoutingBigSiz`...) → Ở lưới phải, tick chọn `Sử dụng` cho các công đoạn từ Cuộn đến Đóng gói (`V-22_HY` ➔ `V-28_HY`) → Nhấn Lưu. Sau đó sang **A230** gán mã này cho NVL."
@@ -143,9 +142,7 @@
             "sp_get": "usp_ProdWorkerInfo_get",
             "sp_iud": "usp_ProdWorkerInfo_iud",
             "tables": [
-                "STB_ProdWorkerInfo",
-                "VVT_F5",
-                "VVT_F1"
+                "STB_ProdWorkerInfo"
             ],
             "common_bugs": {
                 "ng_k_nh_n_vi_n_t_i_b260_nh_ng_t_m_ki_m": "1. Chọn nhầm `WorkCenterCode` tại ô tìm kiếm đầu trang khi tạo (VD: chọn `VVT_F5` Hưng Yên trong khi trạm tác nghiệp chạy `VVT_F1` Bắc Ninh).<br>2. Cột `WorkerGroupCode` bị trống (rỗng).<br>3. Chưa tick chọn `Sử dụng` (`IsUsed=1`) hoặc `IsProdWorker=1`. -> Vào **B260** chuyển đúng xưởng (`WorkCenterCode`) và gán nhóm `WorkerGroupCode` (`V-21` cho điện cực, `VE-01` cho lắp ráp) rồi tick đủ 2 ô `Sử dụng` + `IsProdWorker`. Hoặc chạy SQL: `UPDATE STB_ProdWorkerInfo SET WorkCenterCode='VVT_F1', WorkerGroupCode='V-21', IsUsed=1, IsProdWorker=1 WHERE WorkerCode='mã'` — xem [KB_06 §12](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/KB_06_MASTER_DATA_TOOLS.md#b260--12--thông-tin-nhân-viên-sản-xuất-master-data-worker)"
@@ -273,8 +270,8 @@
         "B528": {
             "name": "Barrel Barcode (In tem thùng phuy)",
             "module": "Production",
-            "sp_get": "usp_GetB528",
-            "sp_iud": "usp_DoProcessB528",
+            "sp_get": null,
+            "sp_iud": null,
             "tables": [
                 "STB_ModelLabelInfo"
             ],
@@ -344,8 +341,8 @@
         "B560": {
             "name": "Hela OutBox List (In tem thùng Hela)",
             "module": "Production",
-            "sp_get": "usp_GetB560",
-            "sp_iud": "usp_DoProcessB560",
+            "sp_get": null,
+            "sp_iud": null,
             "tables": [
                 "STB_HelaPackingCheckHist"
             ],
@@ -393,7 +390,7 @@
             "name": "Rework (Làm lại sản phẩm)",
             "module": "Production",
             "sp_get": "usp_GetInforLotReworkHaNamFactory_uid",
-            "sp_iud": "usp_DoProcessB618",
+            "sp_iud": null,
             "tables": [
                 "STB_SetInfo",
                 "STB_ProdRouteHist"
@@ -406,8 +403,8 @@
         "B682": {
             "name": "Màn hình B682",
             "module": "Production",
-            "sp_get": "usp_GetB682",
-            "sp_iud": "usp_DoProcessB682",
+            "sp_get": null,
+            "sp_iud": null,
             "tables": [
                 "STB_VVT_ESRDATA",
                 "STB_ProdRouteHist",
@@ -618,9 +615,7 @@
             "module": "Production",
             "sp_get": "",
             "sp_iud": "stb_CheckSheetDaily",
-            "tables": [
-                "KB_03"
-            ],
+            "tables": [],
             "common_bugs": {},
             "fix_template": "—"
         },
@@ -629,10 +624,7 @@
             "module": "Production",
             "sp_get": "",
             "sp_iud": "STB_MachinePmHistory, STB_MachinePmItem",
-            "tables": [
-                "KB_01",
-                "KB_03"
-            ],
+            "tables": [],
             "common_bugs": {},
             "fix_template": "—"
         },
@@ -702,8 +694,8 @@
         "C243": {
             "name": "QC Kiểm Tra Lot Slitting",
             "module": "QC",
-            "sp_get": "usp_GetC243",
-            "sp_iud": "usp_DoProcessC243",
+            "sp_get": null,
+            "sp_iud": null,
             "tables": [
                 "STB_MaterialQcInfo"
             ],
@@ -742,8 +734,8 @@
         "C451": {
             "name": "PQC Inspection",
             "module": "QC",
-            "sp_get": "usp_GetC451",
-            "sp_iud": "usp_DoProcessC451",
+            "sp_get": null,
+            "sp_iud": null,
             "tables": [
                 "STB_MaterialQcInfo"
             ],
@@ -798,9 +790,7 @@
             "module": "QC",
             "sp_get": "usp_OQCrefer_get",
             "sp_iud": "usp_DoProcessOQCrefer_VVT",
-            "tables": [
-                "VVT_OQC_REFER"
-            ],
+            "tables": [],
             "common_bugs": {},
             "fix_template": "Reset `finished = 0` khi chọn nhầm cấp"
         },
@@ -848,8 +838,8 @@
         "D100": {
             "name": "Màn hình D100",
             "module": "MES",
-            "sp_get": "usp_GetD100",
-            "sp_iud": "usp_DoProcessD100",
+            "sp_get": null,
+            "sp_iud": null,
             "tables": [
                 "STB_CustomerPartNoInfo"
             ],
@@ -988,7 +978,7 @@
             "name": "Daifuku Warehouse (Kho robot tự động)",
             "module": "MES",
             "sp_get": "usp_DaifukuWarehouse_iud",
-            "sp_iud": "usp_DoProcessG660",
+            "sp_iud": null,
             "tables": [
                 "STB_SetInfo"
             ],
@@ -1011,20 +1001,13 @@
         "HN523": {
             "name": "Packing Hà Nam",
             "module": "MES",
-            "sp_get": "usp_GetHN523",
-            "sp_iud": "usp_DoProcessHN523",
+            "sp_get": null,
+            "sp_iud": null,
             "tables": [
                 "STB_PackingStandard",
                 "STB_PackingNilonToBoxSmall_HN",
                 "STB_MaterialDocLotInfo",
-                "STB_MaterialLotInfo",
-                "STB_MaterialLotInfo_BK",
-                "STB_MaterialDocInfo_BK",
-                "STB_MaterialDocDetail_BK",
-                "STB_MaterialDocLotInfo_BK",
-                "STB_ProdRouteHist_BK",
-                "STB_ProdRouteSummary_BK",
-                "STB_ProductionOrderInfo_BK"
+                "STB_MaterialLotInfo"
             ],
             "common_bugs": {
                 "gộp_box_lỗi_qty=0": "`STB_PackingStandard` thiếu record cho model HN -> INSERT record — xem [KB_04 §6.13](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_01_CORE_PACKAGING.md)",
@@ -1037,7 +1020,7 @@
             "name": "Gộp túi bóng thành hộp nhỏ (Hà Nam)",
             "module": "MES",
             "sp_get": "usp_GetMaterialLotInfo_Packing_VVT_F3",
-            "sp_iud": "usp_DoProcessHN544",
+            "sp_iud": null,
             "tables": [
                 "STB_SetInfo"
             ],
@@ -1050,8 +1033,8 @@
         "HN551": {
             "name": "FG Export (Xuất kho Thành Phẩm Hà Nam & Bắc Giang)",
             "module": "MES",
-            "sp_get": "usp_GetHN551",
-            "sp_iud": "usp_DoProcessHN551",
+            "sp_get": null,
+            "sp_iud": null,
             "tables": [
                 "STB_VN_FINISHGOODS_BG",
                 "STB_VN_FINISHGOODS_HN_Export"
@@ -1066,7 +1049,7 @@
             "name": "Gộp Packing Hàng Lẻ (Hà Nam)",
             "module": "MES",
             "sp_get": "usp_MergePackingHN710_HN",
-            "sp_iud": "usp_DoProcessHN555",
+            "sp_iud": null,
             "tables": [
                 "STB_PackingHN710_HN"
             ],
@@ -1078,8 +1061,8 @@
         "HNC321": {
             "name": "Defect Repair Hà Nam",
             "module": "MES",
-            "sp_get": "usp_GetHNC321",
-            "sp_iud": "usp_DoProcessHNC321",
+            "sp_get": null,
+            "sp_iud": null,
             "tables": [
                 "STB_SetInfo"
             ],
@@ -1091,8 +1074,8 @@
         "HYFG01": {
             "name": "Finished Goods WH HY (Kho & Xuất kho Thành Phẩm Hưng Yên)",
             "module": "MES",
-            "sp_get": "usp_GetHYFG01",
-            "sp_iud": "usp_DoProcessHYFG01",
+            "sp_get": null,
+            "sp_iud": null,
             "tables": [
                 "STB_VN_FINISHGOODS_HY"
             ],
@@ -1132,8 +1115,8 @@
         "K109": {
             "name": "BG2 Production Plan",
             "module": "MES",
-            "sp_get": "usp_GetK109",
-            "sp_iud": "usp_DoProcessK109",
+            "sp_get": null,
+            "sp_iud": null,
             "tables": [
                 "STB_DayProdPlan"
             ],
@@ -1230,7 +1213,7 @@
             "name": "Lot Tracking BG2 (Kết luận Pass/Fail)",
             "module": "MES",
             "sp_get": "usp_LotTrackingInfo_VVTF4_get",
-            "sp_iud": "usp_DoProcessK366",
+            "sp_iud": null,
             "tables": [
                 "STB_SetInfo"
             ],
@@ -1242,8 +1225,8 @@
         "P111": {
             "name": "Attendance (Chấm công)",
             "module": "MES",
-            "sp_get": "usp_GetP111",
-            "sp_iud": "usp_DoProcessP111",
+            "sp_get": null,
+            "sp_iud": null,
             "tables": [
                 "STB_VN_Shift"
             ],
@@ -1266,8 +1249,8 @@
         "W788": {
             "name": "GetDataSortingProgram (Tra cứu kết quả đo Sorting V2)",
             "module": "MES",
-            "sp_get": "usp_GetW788",
-            "sp_iud": "usp_DoProcessW788",
+            "sp_get": null,
+            "sp_iud": null,
             "tables": [
                 "STB_SetInfo"
             ],
@@ -1279,8 +1262,8 @@
         "Z410": {
             "name": "User Management",
             "module": "MES",
-            "sp_get": "usp_GetZ410",
-            "sp_iud": "usp_DoProcessZ410",
+            "sp_get": null,
+            "sp_iud": null,
             "tables": [
                 "STB_SetInfo"
             ],
@@ -1293,8 +1276,8 @@
         "Z530": {
             "name": "Label Info (Label Design)",
             "module": "MES",
-            "sp_get": "usp_GetZ530",
-            "sp_iud": "usp_DoProcessZ530",
+            "sp_get": null,
+            "sp_iud": null,
             "tables": [
                 "STB_SetInfo"
             ],
