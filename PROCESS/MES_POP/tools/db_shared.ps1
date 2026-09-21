@@ -1,4 +1,4 @@
-# db_shared.ps1 — Shared Database Functions & Configuration Loader for Vinatech MES
+﻿# db_shared.ps1 — Shared Database Functions & Configuration Loader for Vinatech MES
 # Multi-DB Profiles | Auto-Failover | Pre-flight Backup | Safe Execution
 
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8

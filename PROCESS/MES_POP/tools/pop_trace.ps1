@@ -1,4 +1,4 @@
-# ==============================================================================
+﻿# ==============================================================================
 # pop_trace.ps1 — Ultra-Fast 360° Trace with Smart Identifier Resolver
 # Single Round-Trip | Auto Pattern Detection (Lot / Packing / Machine / Line)
 # Tham chiếu: RULE 6 (Golden Query), POP_KB_01, POP_KB_02, POP_KB_03

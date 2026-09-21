@@ -1,4 +1,4 @@
-# ==============================================================================
+﻿# ==============================================================================
 # mes.ps1 — VINATECH MES UNIFIED CLI HUB (Trung Tam Dieu Phoi Lenh Van Hanh)
 # ==============================================================================
 
@@ -11,6 +11,15 @@ param(
     
     [string]$Profile = 'SmartFactoryV2',
     [string]$Template = '',
+    [string]$Lots = '',
+    [string]$TargetDate = '',
+    [string]$Route = '',
+    [string]$Type = 'Slitting',
+    [int]$Hours = 10,
+    [string]$SourceSp = '',
+    [string]$TargetFactory = 'HY',
+    [switch]$Deploy,
+    [switch]$ViewOnly,
     [switch]$Force,
     [switch]$Detail,
     [switch]$Clean
@@ -72,6 +81,12 @@ function Show-Help {
 
     Write-Host ''
     Write-Host '  3. KHAC PHUC SU CO & TRIEN KHAI (HOTFIX & DEPLOY):' -ForegroundColor Cyan
+    Write-Host '     .\mes.ps1 fix-movedate -Lots "..." -TargetDate "yyyy-MM-dd" [-Hours 10] [-Deploy]' -ForegroundColor Yellow
+    Write-Host '-> Sinh SQL chuyen ngay chot B782 cat ca 10:00 AM chuan Author/ChangeUserID vanduc' -ForegroundColor Gray
+    Write-Host '     .\mes.ps1 fix-electrode -Lots "..." [-Type Slitting|Mixing] [-Deploy]' -ForegroundColor Yellow
+    Write-Host '-> Sinh SQL xoa cuon/me tron dien cuc B552 & reset IsLineInput cuon me an toan' -ForegroundColor Gray
+    Write-Host '     .\mes.ps1 fix-rollback -Lots "..." [-Route "V-22_HY"] [-Deploy]' -ForegroundColor Yellow
+    Write-Host '-> Sinh SQL rollback luot chot cong doan ket B530 / POP Kiosk an toan' -ForegroundColor Gray
     Write-Host '     .\mes.ps1 new-fix <Name> [-Template <b552|b782|rollback>]' -ForegroundColor Green
     Write-Host '-> Sinh template SQL Fix chuan (ho tro B552 dien cuc, B782 chuyen ngay, Rollback chot)' -ForegroundColor Gray
     Write-Host '     .\mes.ps1 deploy <Path.sql> [-Force]' -NoNewline -ForegroundColor Green
@@ -80,7 +95,12 @@ function Show-Help {
     Write-Host '-> Don dep scratch workspace, kiem tra an toan token & git status' -ForegroundColor Gray
 
     Write-Host ''
-    Write-Host '  4. TRO LY DI DONG & QUAN LY BOT (TELEGRAM):' -ForegroundColor Cyan
+    Write-Host '  4. NANG SUAT & TU DONG HOA IT (IT AUTOMATION):' -ForegroundColor Cyan
+    Write-Host '     .\mes.ps1 weekly-report [-StartDate "..." -EndDate "..."] [-ViewOnly]' -ForegroundColor Yellow
+    Write-Host '-> Tu dong soan Bao Cao Tuan IT (CSV tai Desktop/thanks_and_ojt_reports, phan loai REMARK MES/GW/ECM/HW)' -ForegroundColor Green
+
+    Write-Host ''
+    Write-Host '  5. TRO LY DI DONG & QUAN LY BOT (TELEGRAM):' -ForegroundColor Cyan
     Write-Host '     .\mes.ps1 bot                       ' -NoNewline -ForegroundColor Green
     Write-Host '-> Khoi dong Telegram Assistant tren Console' -ForegroundColor Gray
     Write-Host '     .\mes.ps1 bot-hidden                ' -NoNewline -ForegroundColor Green
@@ -476,6 +496,60 @@ elseif ($cmdLower -eq 'diagnose' -or $cmdLower -eq 'diag' -or $cmdLower -eq 'cha
         python $diagScript $Target
     } else {
         Write-Error 'tools/mes_diagnose.py not found.'
+    }
+}
+elseif ($cmdLower -eq 'fix-movedate' -or $cmdLower -eq 'fix-date') {
+    $fixScript = Join-Path $toolsDir 'generate_safe_hotfix.ps1'
+    $lotsVal = if ($Lots) { $Lots } else { $Target }
+    if ([string]::IsNullOrWhiteSpace($lotsVal)) {
+        Write-Host "Loi: Vui long cung cap ma Lot can chuyen ngay!" -ForegroundColor Red
+        Write-Host "Vi du: .\mes.ps1 fix-movedate -Lots 'VVQR153R825707,VVQR153R825706' -TargetDate '2026-09-22'" -ForegroundColor Yellow
+        exit 1
+    }
+    if ($Deploy) {
+        & $fixScript -Action movedate -Lots $lotsVal -TargetDate $TargetDate -Hours $Hours -Route $Route -DeployNow
+    } else {
+        & $fixScript -Action movedate -Lots $lotsVal -TargetDate $TargetDate -Hours $Hours -Route $Route
+    }
+}
+elseif ($cmdLower -eq 'fix-electrode' -or $cmdLower -eq 'fix-elec') {
+    $fixScript = Join-Path $toolsDir 'generate_safe_hotfix.ps1'
+    $lotsVal = if ($Lots) { $Lots } else { $Target }
+    if ([string]::IsNullOrWhiteSpace($lotsVal)) {
+        Write-Host "Loi: Vui long cung cap ma cuon hoac me tron can xoa!" -ForegroundColor Red
+        Write-Host "Vi du: .\mes.ps1 fix-electrode -Lots 'VVQR0720001' -Type Slitting" -ForegroundColor Yellow
+        exit 1
+    }
+    if ($Deploy) {
+        & $fixScript -Action electrode -Lots $lotsVal -Type $Type -DeployNow
+    } else {
+        & $fixScript -Action electrode -Lots $lotsVal -Type $Type
+    }
+}
+elseif ($cmdLower -eq 'fix-rollback') {
+    $fixScript = Join-Path $toolsDir 'generate_safe_hotfix.ps1'
+    $lotsVal = if ($Lots) { $Lots } else { $Target }
+    if ([string]::IsNullOrWhiteSpace($lotsVal)) {
+        Write-Host "Loi: Vui long cung cap ma Lot can rollback cong doan!" -ForegroundColor Red
+        Write-Host "Vi du: .\mes.ps1 fix-rollback -Lots 'VVQR153R060615' -Route 'V-22_HY'" -ForegroundColor Yellow
+        exit 1
+    }
+    if ($Deploy) {
+        & $fixScript -Action rollback-route -Lots $lotsVal -Route $Route -DeployNow
+    } else {
+        & $fixScript -Action rollback-route -Lots $lotsVal -Route $Route
+    }
+}
+elseif ($cmdLower -eq 'weekly-report' -or $cmdLower -eq 'report-it') {
+    $rptScript = Join-Path $toolsDir 'it_weekly_report.ps1'
+    if (Test-Path $rptScript) {
+        if ($ViewOnly) {
+            & $rptScript -StartDate $TargetDate -ViewOnly
+        } else {
+            & $rptScript -StartDate $TargetDate
+        }
+    } else {
+        Write-Error 'tools/it_weekly_report.ps1 not found.'
     }
 }
 elseif ($cmdLower -eq 'clean') {

@@ -1,4 +1,4 @@
-param (
+﻿param (
     [string]$SPName,
     [switch]$Clean
 )

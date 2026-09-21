@@ -1,4 +1,4 @@
-# ==============================================================================
+﻿# ==============================================================================
 # run_query.ps1 — SELECT-Only Query Tool for Vinatech MES
 # Multi-DB Profile | Tự động dò Server | Chống Lock CSDL | UTF-8 Unicode
 #

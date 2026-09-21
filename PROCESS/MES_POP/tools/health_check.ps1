@@ -1,4 +1,4 @@
-# ==============================================================================
+﻿# ==============================================================================
 # health_check.ps1 — Morning Operational Health Check for Vinatech MES
 # Kiem tra ket noi da CSDL | Quet Lot ket/HOLD | Kiem tra bat thuong dong goi
 #

@@ -311,6 +311,34 @@ WHERE ControlNo = (SELECT ControlNo FROM SmartFactoryV2.dbo.STB_SetInfo WITH(NOL
 -- COMMIT TRAN;"""
     },
     {
+        "id": "RULE_B360_KOREA_CONVERT",
+        "patterns": [
+            r"rạch vỏ", r"hàn quốc.*việt nam", r"korea.*việt nam",
+            r"model 1625", r"chuyển đổi mã lot"
+        ],
+        "screen": "B360 - Material Lot Conversion",
+        "root_cause": "Quy trình rạch vỏ & chuyển đổi mã Lot từ Hàn Quốc về Việt Nam (như lô 155,000 pcs model 1625). Màn B360 quản lý chuyển đổi mã Lot và cấp phát barcode mới trong `STB_MaterialLotInfo`.",
+        "op_workaround": "1. Mở màn hình B360 (Chuyển đổi Lot NVL).\n2. Quét mã Lot gốc Korea và chọn mã sản phẩm Việt Nam tương ứng.\n3. Xác nhận để hệ thống sinh Barcode mới chuẩn Việt Nam.",
+        "sql_template": """-- Tra cứu tiền lệ chuyển đổi Lot trên B360:
+SELECT TOP 10 * FROM SmartFactoryV2.dbo.STB_MaterialLotInfo WITH(NOLOCK)
+WHERE LotID LIKE '%1625%' OR LotNo LIKE '%1625%'
+ORDER BY CreateDateTime DESC;"""
+    },
+    {
+        "id": "RULE_QC_CLONE_HY",
+        "patterns": [
+            r"c121.*hy", r"c122.*hy", r"clone.*_hy", r"9 màn.*hy", r"màn hình.*_hy"
+        ],
+        "screen": "QC Screens Clone _HY (C121, C122, C220, C460...)",
+        "root_cause": "Clone màn hình WinForms cho nhà máy mới Hưng Yên `_HY` (VVT_F5). Cần tạo Stored Procedure riêng biệt, sửa WorkCenterCode='VVT_F5', và Author/Modifier='vanduc'. Không dùng chung SP cũ vì sẽ lẫn lộn dữ liệu giữa Bắc Giang và Hưng Yên.",
+        "op_workaround": "1. Sử dụng script `.\\mes.ps1 clone-factory` để clone SP và Table chuẩn hóa.\n2. Kiểm tra WinForms gọi đúng tên SP mới có đuôi `_HY`.",
+        "sql_template": """-- Kiểm tra các SP clone _HY đã khai báo đúng Author vanduc và WorkCenterCode:
+SELECT name, create_date, modify_date 
+FROM SmartFactoryV2.sys.procedures 
+WHERE name LIKE '%_HY%' OR name LIKE '%_VNT'
+ORDER BY modify_date DESC;"""
+    },
+    {
         "id": "RULE_A230_B310_NO_ROUTING",
         "patterns": [
             r"không có thông tin routing", r"공정라우팅정보가 없습니다",

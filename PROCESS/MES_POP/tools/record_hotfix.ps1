@@ -1,4 +1,4 @@
-param (
+﻿param (
     [Parameter(Mandatory=$true)]
     [string]$TCode,
     [Parameter(Mandatory=$true)]
@@ -195,4 +195,4 @@ if (Test-Path $fixbookPath) {
         Write-Host "[OK] Created new TCode section and added hotfix to KB_09" -ForegroundColor Green
     }
 }
-
+

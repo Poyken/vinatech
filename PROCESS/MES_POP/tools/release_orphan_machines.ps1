@@ -1,4 +1,4 @@
-# ==============================================================================
+﻿# ==============================================================================
 # release_orphan_machines.ps1 — Auto Release Orphan Machine Locks in POP DB
 # Giải phóng máy bị kẹt ACTIVE ở DayPlan cũ trên Kiosk POP
 # Tham chiếu: POP_KB_03 § Template 10, POP_KB_06 § 2.2

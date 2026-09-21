@@ -1,4 +1,4 @@
-param (
+﻿param (
     [string]$TCode,
     [string]$ErrorMsg,
     [string]$Barcode,

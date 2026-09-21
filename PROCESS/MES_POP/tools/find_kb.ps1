@@ -1,4 +1,4 @@
-# ==============================================================================
+﻿# ==============================================================================
 # find_kb.ps1 — 2-Tier Knowledge Base Finder for Vinatech MES Ecosystem
 # Tier 1: L1 Ultra-Fast JSON Cache (<0.001s, ~200 tokens)
 # Tier 2: Deep Markdown Archive (78+ files)

@@ -1,4 +1,4 @@
-param (
+﻿param (
     [string]$SqlPath,
     [string]$Profile = "SmartFactoryV2",
     [switch]$Force,
