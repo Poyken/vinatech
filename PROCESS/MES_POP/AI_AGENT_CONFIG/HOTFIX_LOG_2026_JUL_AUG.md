@@ -7,7 +7,7 @@ Scope: Archived Hotfix Registry
 # 📓 Vinatech MES Agent — Hotfix Log Archive (07/2026 - 08/2026)
 
 > **Ghi chú:** Đây là file lưu trữ các hotfix cũ hơn 30 ngày đã được xử lý thành công.
-> Các hotfix đang hoạt động gần nhất xem tại [HOTFIX_LOG.md](../HOTFIX_LOG.md).
+> Các hotfix đang hoạt động gần nhất xem tại [HOTFIX_LOG.md](HOTFIX_LOG.md).
 
 ---
 
@@ -487,7 +487,7 @@ WHERE LEN(BoxSerialNo) = 13 AND BoxSerialNo LIKE @SerialPrefix + '%'
   SET BasicRoutingCode = 'HY_MainRoutingBigSiz'
   WHERE MaterialCode = 'ECVT30-260';
   ```
-* **Tham chiếu KB:** [KB_03_03_SCREEN_BUGS_B.md § B310 Lỗi 3](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_03_SCREEN_BUGS_B.md#lỗi-3-공정-라우팅-정보가-없습니다-không-có-thông-tin-routing-công-đoạn-khi-tạo-po-thủ-công-tại-b310), [KB_09_SCREEN_BUG_FIXBOOK.md § B310 #4](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md#b310)
+* **Tham chiếu KB:** [KB_03_03_SCREEN_BUGS_B.md § B310 Lỗi 3](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_03_SCREEN_BUGS_B.md#lỗi-3-공정-라우팅-정보가-없습니다-không-có-thông-tin-routing-công-đoạn-khi-tạo-po-thủ-công-tại-b310), [KB_09_SCREEN_BUG_FIXBOOK.md § B310 #4](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md#b310)
 
 ---
 
@@ -513,7 +513,7 @@ WHERE LEN(BoxSerialNo) = 13 AND BoxSerialNo LIKE @SerialPrefix + '%'
   WHERE ElectrodeLotNumber = 'VVQO3020001E17' AND Seq BETWEEN 6 AND 30;
   COMMIT TRANSACTION;
   ```
-* **Tham chiếu KB:** [KB_09_SCREEN_BUG_FIXBOOK.md § [B552] #2](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md#L210), [HOTFIX_LOG.md § ID_29](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/AI_AGENT_CONFIG/HOTFIX_LOG.md#L287)
+* **Tham chiếu KB:** [KB_09_SCREEN_BUG_FIXBOOK.md § [B552] #2](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md#L210), [HOTFIX_LOG.md § ID_29](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/AI_AGENT_CONFIG/HOTFIX_LOG.md#L287)
 
 ---
 

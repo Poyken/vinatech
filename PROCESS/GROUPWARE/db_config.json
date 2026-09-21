@@ -61,8 +61,8 @@
       "Description": "K-SOX Internal Audit & Compliance DB"
     },
     "LegacyERP": {
-      "Database": "erpdb_Legacy",
-      "Description": "Old ERP Database (Archive)"
+      "Database": "erpdb",
+      "Description": "Old ERP Database (Historical Archive EUC-KR)"
     },
     "StreamDocs": {
       "Database": "streamdocs",

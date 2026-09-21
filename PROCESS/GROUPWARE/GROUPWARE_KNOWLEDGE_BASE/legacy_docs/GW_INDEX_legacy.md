@@ -9,14 +9,14 @@
 
 | File | Nội dung | Chức năng chính |
 |------|----------|-----------------|
-| [GW_01_DANG_NHAP.md](GW_01_DANG_NHAP.md) | Đăng nhập, mật khẩu, chọn công ty | Login, Reset password, Bảng thông báo, Q&A |
-| [GW_02_MUA_HANG.md](GW_02_MUA_HANG.md) | Luồng mua hàng đầy đủ: PO → Arrival → IQC → Receiving → Closing | Purchase Order, Inter-company PO, Hủy/Đóng PO, Hải quan & B/L |
-| [GW_03_KE_HOACH_SX.md](GW_03_KE_HOACH_SX.md) | Tạo PO tháng, kế hoạch ngày, tạo Lot | Month Production Plan, Đồng bộ tự động từ Suju, Nguyên vật liệu, B310, B450 |
-| [GW_04_MASTER_DATA.md](GW_04_MASTER_DATA.md) | Đăng ký mã code, BOM, nhà thầu/khách hàng/vendor | Item Registration (Cell/Module/Raw), BOM 2001, Partner Management |
-| [GW_05_HANH_CHINH.md](GW_05_HANH_CHINH.md) | Công tác, ngày nghỉ, tuyển dụng, nghỉ việc, phê duyệt | Business Trip, Holiday Work, HR, Draft Document, AI Tinh Chỉnh |
-| [GW_06_THANH_TOAN.md](GW_06_THANH_TOAN.md) | Yêu cầu thanh toán, chọn tài khoản, phê duyệt chi phí | Disbursement Document, Kéo liên kết PO, Phí Logistics |
-| [GW_07_KHO_THANH_PHAM.md](GW_07_KHO_THANH_PHAM.md) | Vận hành kho thành phẩm và quản lý mã kho | FG01, B750, B752, Tra cứu mã kho Bắc Ninh/Bắc Giang/Hà Nam |
-| [GW_08_BAN_HANG.md](GW_08_BAN_HANG.md) | Luồng bán hàng & xuất khẩu (Suju, Shipment, Invoice) | Sales Order (Suju), Shipment Request, Shipment Confirmation, 매출결의서 |
+| [GW_01_DANG_NHAP.md](../GW_01_DANG_NHAP.md) | Đăng nhập, mật khẩu, chọn công ty | Login, Reset password, Bảng thông báo, Q&A |
+| [GW_02_MUA_HANG.md](../GW_02_MUA_HANG.md) | Luồng mua hàng đầy đủ: PO → Arrival → IQC → Receiving → Closing | Purchase Order, Inter-company PO, Hủy/Đóng PO, Hải quan & B/L |
+| [GW_03_KE_HOACH_SX.md](../GW_03_KE_HOACH_SX.md) | Tạo PO tháng, kế hoạch ngày, tạo Lot | Month Production Plan, Đồng bộ tự động từ Suju, Nguyên vật liệu, B310, B450 |
+| [GW_04_MASTER_DATA.md](../GW_04_MASTER_DATA.md) | Đăng ký mã code, BOM, nhà thầu/khách hàng/vendor | Item Registration (Cell/Module/Raw), BOM 2001, Partner Management |
+| [GW_05_HANH_CHINH.md](../GW_05_HANH_CHINH.md) | Công tác, ngày nghỉ, tuyển dụng, nghỉ việc, phê duyệt | Business Trip, Holiday Work, HR, Draft Document, AI Tinh Chỉnh |
+| [GW_06_THANH_TOAN.md](../GW_06_THANH_TOAN.md) | Yêu cầu thanh toán, chọn tài khoản, phê duyệt chi phí | Disbursement Document, Kéo liên kết PO, Phí Logistics |
+| [GW_07_KHO_THANH_PHAM.md](../GW_07_KHO_THANH_PHAM.md) | Vận hành kho thành phẩm và quản lý mã kho | FG01, B750, B752, Tra cứu mã kho Bắc Ninh/Bắc Giang/Hà Nam |
+| [GW_08_BAN_HANG.md](../GW_08_BAN_HANG.md) | Luồng bán hàng & xuất khẩu (Suju, Shipment, Invoice) | Sales Order (Suju), Shipment Request, Shipment Confirmation, 매출결의서 |
 
 ---
 

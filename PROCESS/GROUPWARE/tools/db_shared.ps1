@@ -376,11 +376,13 @@ function Invoke-ProactiveKbSearch {
     Write-Host "----------------------------------------------------------------------" -ForegroundColor Cyan
 
     $rootDir = Split-Path $PSScriptRoot -Parent
+    $processRoot = Split-Path $rootDir -Parent
     $dirs = @(
-        (Join-Path $rootDir "MES_MASTER_KNOWLEDGE_BASE"),
-        (Join-Path $rootDir "DATABASE_KNOWLEDGE_BASE"),
         (Join-Path $rootDir "GROUPWARE_KNOWLEDGE_BASE"),
-        (Join-Path $rootDir "AI_AGENT_CONFIG")
+        (Join-Path $rootDir "AI_AGENT_CONFIG"),
+        (Join-Path $processRoot "DATABASE\DATABASE_KNOWLEDGE_BASE"),
+        (Join-Path $processRoot "MES_POP\MES_MASTER_KNOWLEDGE_BASE"),
+        (Join-Path $processRoot "MES_POP\POP_KNOWLEDGE_BASE")
     )
     
     $files = @()

@@ -2,8 +2,8 @@
 
 > [!NOTE]
 > **Tài liệu tham chiếu nghiệp vụ người dùng:**
-> *   Xem hướng dẫn hiện trường kho thành phẩm và tra cứu mã kho tại: [GW_07_KHO_THANH_PHAM.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/GROUPWARE/GROUPWARE_KNOWLEDGE_BASE/GW_07_KHO_THANH_PHAM.md)
-> *   Xem hướng dẫn luồng bán hàng và xuất khẩu tại: [GW_08_BAN_HANG.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/GROUPWARE/GROUPWARE_KNOWLEDGE_BASE/GW_08_BAN_HANG.md)
+> *   Xem hướng dẫn hiện trường kho thành phẩm và tra cứu mã kho tại: [GW_07_KHO_THANH_PHAM.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/GROUPWARE/GROUPWARE_KNOWLEDGE_BASE/GW_07_KHO_THANH_PHAM.md)
+> *   Xem hướng dẫn luồng bán hàng và xuất khẩu tại: [GW_08_BAN_HANG.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/GROUPWARE/GROUPWARE_KNOWLEDGE_BASE/GW_08_BAN_HANG.md)
 
 Tài liệu này đi sâu vào cấu trúc dữ liệu vật lý và cơ chế liên thông cơ sở dữ liệu của **Hệ thống Kho hàng & Quản lý tồn kho thành phẩm (Warehouse & Inventory Management)** giữa **MES (`SmartFactoryV2`)**, **Groupware (`VINATECH_GROUP`)** và **ERP (`NEOE`)**.
 

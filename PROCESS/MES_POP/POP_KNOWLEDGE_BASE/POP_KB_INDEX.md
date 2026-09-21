@@ -6,11 +6,11 @@ Single Source of Truth: POP_KNOWLEDGE_BASE/POP_KB_INDEX.md
 Target Systems: POP Web UI, VINATECH_POP DB, SmartFactoryV2 DB, VINATECH_RESTFUL API
 Last Updated: 2026-09-21 (Audit DB schema 66 bảng, đánh dấu 5 file archived)
 Related Files:
-  - [MES KB_INDEX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
-  - [POP_KB_01_ARCHITECTURE_AND_API.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_01_ARCHITECTURE_AND_API.md)
-  - [POP_KB_02_SCREEN_OPERATIONS.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_02_SCREEN_OPERATIONS.md)
-  - [POP_KB_03_TROUBLESHOOTING.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_03_TROUBLESHOOTING.md)
-  - [POP_KB_06_MIGRATION_SPEC.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_06_MIGRATION_SPEC.md)
+  - [MES KB_INDEX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
+  - [POP_KB_01_ARCHITECTURE_AND_API.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_01_ARCHITECTURE_AND_API.md)
+  - [POP_KB_02_SCREEN_OPERATIONS.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_02_SCREEN_OPERATIONS.md)
+  - [POP_KB_03_TROUBLESHOOTING.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_03_TROUBLESHOOTING.md)
+  - [POP_KB_06_MIGRATION_SPEC.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_06_MIGRATION_SPEC.md)
 -->
 
 # 📋 POP KNOWLEDGE BASE — MASTER INDEX
@@ -31,13 +31,13 @@ Related Files:
 
 | # | File | Nội dung | Khi nào dùng | Trạng thái |
 |---|------|----------|--------------|------------|
-| INDEX | [POP_KB_INDEX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_INDEX.md) | Master Index + Routing Map | Điểm bắt đầu mọi tra cứu POP | ✅ Active |
-| 01 | [POP_KB_01_ARCHITECTURE_AND_API.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_01_ARCHITECTURE_AND_API.md) | Kiến trúc hệ thống, API endpoints, **Data Pipeline & Hệ sinh thái Bảng đệm Trung gian** (MongoToMes*, STB_ERP_INTERFACE, STB_RFIDPrintQueue §3.5), DB schema mapping **66 bảng** (§3.6) | Debug API, hiểu data flow, kiến trúc staging, logic chọn máy Kiosk | ✅ Active |
-| 02 | [POP_KB_02_SCREEN_OPERATIONS.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_02_SCREEN_OPERATIONS.md) | Hướng dẫn vận hành từng màn hình + DB impact, Modal "Xác nhận Kết thúc?" | Thao tác sản xuất, đóng gói, marking, chọn máy | ✅ Active |
-| 03 | [POP_KB_03_TROUBLESHOOTING.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_03_TROUBLESHOOTING.md) | Lỗi thường gặp + Root cause + Fix (POP-ERR-01 đến POP-ERR-20) | Xử lý sự cố khẩn cấp, kẹt máy, nạp NVL BOM | ✅ Active |
-| 04 | [POP_KB_04_ROLLBACK_AND_SAFETY.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_04_ROLLBACK_AND_SAFETY.md) | Phân tích khả năng Rollback trên UI + DB safety (v2.0) | Hủy đóng gói Box, an toàn dữ liệu | ✅ Active |
-| 05 | [POP_KB_05_DB_VERIFICATION_AUDIT.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_05_DB_VERIFICATION_AUDIT.md) | Kết quả đối chiếu UI vs DB thực tế | Kiểm toán, xác minh tính chính xác | ✅ Active |
-| 06 | [POP_KB_06_MIGRATION_SPEC.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_06_MIGRATION_SPEC.md) | **Đặc tả chuyển đổi 100% POP Web**: Bảng quy chiếu 1:1 màn hình WinForm ➔ Web, Gap Analysis, 8 bước checklist Line Readiness | Quy hoạch tắt MES WinForm, chuẩn bị cutover | ✅ Active |
+| INDEX | [POP_KB_INDEX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_INDEX.md) | Master Index + Routing Map | Điểm bắt đầu mọi tra cứu POP | ✅ Active |
+| 01 | [POP_KB_01_ARCHITECTURE_AND_API.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_01_ARCHITECTURE_AND_API.md) | Kiến trúc hệ thống, API endpoints, **Data Pipeline & Hệ sinh thái Bảng đệm Trung gian** (MongoToMes*, STB_ERP_INTERFACE, STB_RFIDPrintQueue §3.5), DB schema mapping **66 bảng** (§3.6) | Debug API, hiểu data flow, kiến trúc staging, logic chọn máy Kiosk | ✅ Active |
+| 02 | [POP_KB_02_SCREEN_OPERATIONS.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_02_SCREEN_OPERATIONS.md) | Hướng dẫn vận hành từng màn hình + DB impact, Modal "Xác nhận Kết thúc?" | Thao tác sản xuất, đóng gói, marking, chọn máy | ✅ Active |
+| 03 | [POP_KB_03_TROUBLESHOOTING.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_03_TROUBLESHOOTING.md) | Lỗi thường gặp + Root cause + Fix (POP-ERR-01 đến POP-ERR-20) | Xử lý sự cố khẩn cấp, kẹt máy, nạp NVL BOM | ✅ Active |
+| 04 | [POP_KB_04_ROLLBACK_AND_SAFETY.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_04_ROLLBACK_AND_SAFETY.md) | Phân tích khả năng Rollback trên UI + DB safety (v2.0) | Hủy đóng gói Box, an toàn dữ liệu | ✅ Active |
+| 05 | [POP_KB_05_DB_VERIFICATION_AUDIT.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_05_DB_VERIFICATION_AUDIT.md) | Kết quả đối chiếu UI vs DB thực tế | Kiểm toán, xác minh tính chính xác | ✅ Active |
+| 06 | [POP_KB_06_MIGRATION_SPEC.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_06_MIGRATION_SPEC.md) | **Đặc tả chuyển đổi 100% POP Web**: Bảng quy chiếu 1:1 màn hình WinForm ➔ Web, Gap Analysis, 8 bước checklist Line Readiness | Quy hoạch tắt MES WinForm, chuẩn bị cutover | ✅ Active |
 | ~~MAP~~ | ~~POP_SLIDE_DECK_MAPPING_AND_ANALYSIS.md~~ | ~~Phân tích 51 slides POP.pptx & 50 ảnh trích xuất~~ | ~~Đối chiếu tài liệu đào tạo DX Team~~ | ❌ **[ARCHIVED]** |
 | ~~REF~~ | ~~POP_USER_MANUAL.md~~ | ~~Cẩm nang vận hành chi tiết 6 phần cho end-user~~ | ~~Training công nhân, thao tác Kiosk~~ | ❌ **[ARCHIVED]** |
 | ~~REF~~ | ~~POP_SYSTEM_INTEGRATION_GUIDE.md~~ | ~~Tích hợp POP ⇄ MES ⇄ Groupware ⇄ ERP~~ | ~~Hiểu luồng dữ liệu liên hệ thống~~ | ❌ **[ARCHIVED]** |
@@ -90,11 +90,11 @@ Related Files:
 
 | POP KB | MES KB tương ứng | Ghi chú |
 |--------|------------------|---------|
-| POP_KB_01 (Architecture) | [KB_08_CORE_SP_ENGINE](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_08_CORE_SP_ENGINE.md) | POP gọi cùng SP engine |
-| POP_KB_02 (Screens) | [KB_01_UI_AND_SCREENS](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_01_UI_AND_SCREENS.md) | POP Web ≠ MES WinForm |
-| POP_KB_03 (Troubleshoot) | [KB_09_SCREEN_BUG_FIXBOOK](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md) | Một số bug chung |
-| POP_KB_04 (Rollback) | [KB_04_PACKING](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_04) | Logic hủy đóng gói chung |
-| POP nhập NVL | [KB_03_PRODUCTION](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_03_PRODUCTION.md) | Trừ kho chia sẻ logic |
+| POP_KB_01 (Architecture) | [KB_08_CORE_SP_ENGINE](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/KB_08_CORE_SP_ENGINE.md) | POP gọi cùng SP engine |
+| POP_KB_02 (Screens) | [KB_01_UI_AND_SCREENS](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/KB_01_UI_AND_SCREENS.md) | POP Web ≠ MES WinForm |
+| POP_KB_03 (Troubleshoot) | [KB_09_SCREEN_BUG_FIXBOOK](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md) | Một số bug chung |
+| POP_KB_04 (Rollback) | [KB_04_PACKING](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/KB_04) | Logic hủy đóng gói chung |
+| POP nhập NVL | [KB_03_PRODUCTION](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/KB_03/INDEX.md) | Trừ kho chia sẻ logic |
 
 ---
 

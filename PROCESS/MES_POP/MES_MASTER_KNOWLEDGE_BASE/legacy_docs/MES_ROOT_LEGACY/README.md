@@ -20,7 +20,7 @@ MES/
 └── README.md                        # Tài liệu hướng dẫn workspace
 ```
 
-> **Lưu ý:** Các tài liệu và công cụ phiên bản cũ đã được lưu trữ an toàn tại thư mục backup `C:\Users\User Vinatech.DESKTOP-RJJSEQU\Desktop\MES_LEGACY_BACKUP`.
+> **Lưu ý:** Các tài liệu và công cụ phiên bản cũ đã được lưu trữ an toàn tại thư mục backup `c:\Users\User Vinatech.DESKTOP-RJJSEQU\Desktop\PROCESS\MES_POP`.
 
 ---
 

@@ -2,15 +2,15 @@
 AI-READY METADATA
 Purpose: Cẩm Nang Vận Hành Hệ Thống POP Kiosk Vinatech (Point of Production) Cho Công Nhân & Kỹ Sư
 Scope: 100% Giao diện thực tế pop.vinatech.com/pop/screen và pop.vinatech.com/pop/quality
-Single Source of Truth: POP_KNOWLEDGE_BASE/POP_USER_MANUAL.md
+Single Source of Truth: POP_KNOWLEDGE_BASE/legacy_manuals/POP_USER_MANUAL.md
 Authors: Hanbit Kang (Created) | Vietnam DX Team (Modified 2026-09) | Antigravity AI Agent (Integrated)
 Source Presentation: POP_KNOWLEDGE_BASE/assets/POP.pptx
 Slide Images: POP_KNOWLEDGE_BASE/assets/slides_images/
 Related Files:
-  - [POP_KB_INDEX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_INDEX.md)
-  - [POP_SLIDE_DECK_MAPPING_AND_ANALYSIS.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_SLIDE_DECK_MAPPING_AND_ANALYSIS.md)
-  - [POP_KB_02_SCREEN_OPERATIONS.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_02_SCREEN_OPERATIONS.md)
-  - [POP_KB_04_ROLLBACK_AND_SAFETY.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_04_ROLLBACK_AND_SAFETY.md)
+  - [POP_KB_INDEX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_INDEX.md)
+  - [POP_SLIDE_DECK_MAPPING_AND_ANALYSIS.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/legacy_manuals/POP_SLIDE_DECK_MAPPING_AND_ANALYSIS.md)
+  - [POP_KB_02_SCREEN_OPERATIONS.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_02_SCREEN_OPERATIONS.md)
+  - [POP_KB_04_ROLLBACK_AND_SAFETY.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_04_ROLLBACK_AND_SAFETY.md)
 -->
 
 # HƯỚNG DẪN SỬ DỤNG HỆ THỐNG POP KIOSK (POINT OF PRODUCTION)

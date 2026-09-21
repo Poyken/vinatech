@@ -123,4 +123,4 @@ WHERE P.CD_PARTNER = 'MÃ_VENDOR_CẦN_TRA'
 *Tài liệu được biên soạn phục vụ cho Kỹ sư Vận hành và Lập trình viên hệ thống Vinatech.*
 > [!NOTE]
 > **Tài liệu tham chiếu nghiệp vụ người dùng:**
-> *   Xem hướng dẫn đăng ký mã code, BOM và nhà thầu tại: [GW_04_MASTER_DATA.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/GROUPWARE/GROUPWARE_KNOWLEDGE_BASE/GW_04_MASTER_DATA.md)
+> *   Xem hướng dẫn đăng ký mã code, BOM và nhà thầu tại: [GW_04_MASTER_DATA.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/GROUPWARE/GROUPWARE_KNOWLEDGE_BASE/GW_04_MASTER_DATA.md)

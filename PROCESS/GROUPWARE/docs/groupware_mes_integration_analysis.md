@@ -170,7 +170,7 @@ Quy trình này kiểm soát từ khi có nhu cầu mua nguyên vật liệu cho
 4.  **Form `receivingPhysicalItemConfirmationDocument` (Xác nhận nhập kho vật lý sản phẩm):**
     *   *Mục đích:* Khai báo nhập xuất kho vật lý nội bộ cho các Lot bán thành phẩm giữa các kho trong nhà máy bằng dropdown `I` (Nhập) hoặc `O` (Xuất).
 5.  **Form `purchaseResolutionDocument` (Quyết toán mua hàng):**
-    *   *Tương tác:* Thanh toán tiền cho nhà cung cấp dựa trên chứng từ hàng về hoặc nhập kho. Người duyệt đối chiếu trực tiếp với tệp đính kèm hóa đơn logistics (Ví dụ: [Bee Logistics_Vina tech_By_Air...pdf](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/GROUPWARE/GROUPWARE_KNOWLEDGE_BASE/Bee%20Logistics_Vina%20tech_By_Air_Inv-2925431946.pdf)) và mã phụ phí chuẩn (THC, CFS, FSC, v.v.). Sau khi duyệt, hệ thống tự động ghi sổ nợ ERP.
+    *   *Tương tác:* Thanh toán tiền cho nhà cung cấp dựa trên chứng từ hàng về hoặc nhập kho. Người duyệt đối chiếu trực tiếp với tệp đính kèm hóa đơn logistics (Ví dụ: [Bee Logistics_Vina tech_By_Air...pdf](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/GROUPWARE/GROUPWARE_KNOWLEDGE_BASE/attachments/Logistic/Bee%20Logistics_Vina%20tech_By_Air_Inv-2925431946.pdf)) và mã phụ phí chuẩn (THC, CFS, FSC, v.v.). Sau khi duyệt, hệ thống tự động ghi sổ nợ ERP.
 
 ---
 

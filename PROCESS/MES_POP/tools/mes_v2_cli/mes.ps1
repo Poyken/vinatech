@@ -27,7 +27,7 @@ param(
 $OutputEncoding = [System.Text.Encoding]::UTF8
 
 $root = Split-Path $PSScriptRoot -Parent
-$modulePath = Join-Path $root "core\Vinatech.MES.psm1"
+$modulePath = Join-Path $root "mes_v2_core\Vinatech.MES.psm1"
 
 Import-Module $modulePath -Force
 $ctx = Initialize-MesContext

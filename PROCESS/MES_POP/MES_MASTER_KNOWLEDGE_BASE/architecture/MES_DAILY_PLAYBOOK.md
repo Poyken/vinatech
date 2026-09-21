@@ -1,7 +1,7 @@
 # 📝 Daily Operational Playbook — Vận Hành & Giám Sát Hệ Thống Vinatech Hằng Ngày
 
 > **Cập nhật:** 2026-06-14 | **Dành cho:** Kỹ sư hệ thống Vinatech & AI Agent (Antigravity)
-> ← [Về INDEX](README.md) | [Nhật ký Sự cố & Vận hành](MES_OPERATIONAL_LOG.md)
+> ← [Về INDEX](SYSTEM_INDEX.md) | [Nhật ký Sự cố & Vận hành](MES_OPERATIONAL_LOG.md)
 
 Tài liệu này chứa quy trình kiểm tra sức khỏe hệ thống (Health Check) hàng ngày, giúp phát hiện sớm các sự cố về nghẽn cơ sở dữ liệu, lỗi đồng bộ ERP, hoặc lỗi dữ liệu hiện trường. Kỹ sư vận hành hoặc AI Agent có thể chạy các câu lệnh SQL dưới đây thông qua SSMS hoặc `run_query.ps1` để giám sát hệ thống.
 

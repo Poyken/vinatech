@@ -118,4 +118,4 @@ ORDER BY S.DOCUMENT_SAVE_REG_DATE DESC;
 *Tài liệu được biên soạn phục vụ cho Kỹ sư Vận hành và Lập trình viên hệ thống Vinatech.*
 > [!NOTE]
 > **Tài liệu tham chiếu nghiệp vụ người dùng:**
-> *   Xem hướng dẫn nghiệp vụ hành chính (công tác, đi làm ngày lễ, nhân sự) tại: [GW_05_HANH_CHINH.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/GROUPWARE/GROUPWARE_KNOWLEDGE_BASE/GW_05_HANH_CHINH.md)
+> *   Xem hướng dẫn nghiệp vụ hành chính (công tác, đi làm ngày lễ, nhân sự) tại: [GW_05_HANH_CHINH.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/GROUPWARE/GROUPWARE_KNOWLEDGE_BASE/GW_05_HANH_CHINH.md)

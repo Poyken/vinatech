@@ -105,4 +105,4 @@ ORDER BY [Total Cost VND] DESC;
 *Tài liệu được biên soạn phục vụ cho Kỹ sư Vận hành và Lập trình viên hệ thống Vinatech.*
 > [!NOTE]
 > **Tài liệu tham chiếu nghiệp vụ người dùng:**
-> *   Xem hướng dẫn quyết toán thanh toán tại: [GW_06_THANH_TOAN.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/GROUPWARE/GROUPWARE_KNOWLEDGE_BASE/GW_06_THANH_TOAN.md)
+> *   Xem hướng dẫn quyết toán thanh toán tại: [GW_06_THANH_TOAN.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/GROUPWARE/GROUPWARE_KNOWLEDGE_BASE/GW_06_THANH_TOAN.md)

@@ -7,10 +7,10 @@ Source Slide Deck: POP_KNOWLEDGE_BASE/assets/POP.pptx
 Slide Images: POP_KNOWLEDGE_BASE/assets/slides_images/
 Target Tables: STB_SetInfo, STB_ProdRouteHist, STB_MaterialLotInfo, STB_PackingInfo, STB_DefectInfo, VINA_MATERIAL_INPUT_HIST, VINA_KIOSK_SESSION, VINA_EQUIPMENT_MAPPING, STB_DayProdPlan, STB_BomDetail
 Related Files:
-  - [POP_KB_INDEX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_INDEX.md)
-  - [POP_KB_01_ARCHITECTURE_AND_API.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_01_ARCHITECTURE_AND_API.md)
-  - [POP_KB_03_TROUBLESHOOTING.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_03_TROUBLESHOOTING.md)
-  - [POP_KB_04_ROLLBACK_AND_SAFETY.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_04_ROLLBACK_AND_SAFETY.md)
+  - [POP_KB_INDEX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_INDEX.md)
+  - [POP_KB_01_ARCHITECTURE_AND_API.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_01_ARCHITECTURE_AND_API.md)
+  - [POP_KB_03_TROUBLESHOOTING.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_03_TROUBLESHOOTING.md)
+  - [POP_KB_04_ROLLBACK_AND_SAFETY.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_04_ROLLBACK_AND_SAFETY.md)
 -->
 
 # POP_KB_02 — Cẩm Nang Vận Hành Chuyên Sâu Giao Diện POP Kiosk, Luồng Quy Trình & Tác Động Dữ Liệu
@@ -20,7 +20,7 @@ Related Files:
 > **Tác giả tài liệu gốc:** Hanbit Kang | **Hiệu chỉnh:** Vietnam DX Team  
 > **Cơ sở dữ liệu liên đới:** `SmartFactoryV2` + `VINATECH_POP`  
 > **🔑 Keywords:** process flow, screen operation, ADD mode, SUB mode, WIP label, WH transfer, self inspection, material input, defect, packing, merge pack, label print, marking, auto-save  
-> ← [Về INDEX](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_INDEX.md)
+> ← [Về INDEX](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_INDEX.md)
 
 ---
 
@@ -281,7 +281,7 @@ Chỉ những LOT đã hoàn thành 100% tất cả các công đoạn sản xu�
   - Giảm lũy kế hoàn thành `ProdFinishQty` trong `STB_ProductionOrderInfo` và `OutputQty` trong `STB_ProdRouteSummary`.
   - Hủy chứng từ kho trong `STB_MaterialDocInfo` (`IsCancel = 1`).
   - Cập nhật `STB_SetInfo.IsProdFinish = 0`, khôi phục số lượng sẵn sàng trên Kiosk POP về 100%.
-  - *Xem chi tiết tại SoT:* [POP_KB_04_ROLLBACK_AND_SAFETY.md §2.5](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_04_ROLLBACK_AND_SAFETY.md#25--đóng-gói-packing--cơ-chế-hủy-hộp--rollback-đóng-gói-trên-pop-web-kiosk).
+  - *Xem chi tiết tại SoT:* [POP_KB_04_ROLLBACK_AND_SAFETY.md §2.5](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_04_ROLLBACK_AND_SAFETY.md#25--đóng-gói-packing--cơ-chế-hủy-hộp--rollback-đóng-gói-trên-pop-web-kiosk).
 
 - **📌 Nghiệp vụ thực tế với Đóng gói gộp (Merge Pack):**
   - Khi một Lot được chia làm nhiều Box hoặc gộp chung với Lot khác (ví dụ Lot `VVQR113R060640` chia Box đơn 500 EA mã `PKQR1800400` và Box gộp 1,477 EA mã `PKQR1800401`):

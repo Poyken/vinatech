@@ -2,7 +2,7 @@
 
 > [!IMPORTANT]
 > **Tài liệu hướng dẫn nghiệp vụ vận hành người dùng:**
-> *   Xem chi tiết mục lục và quy trình nghiệp vụ Groupware tại: [GW_INDEX.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/GROUPWARE/GROUPWARE_KNOWLEDGE_BASE/GW_INDEX.md)
+> *   Xem chi tiết mục lục và quy trình nghiệp vụ Groupware tại: [GW_INDEX.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/GROUPWARE/GROUPWARE_KNOWLEDGE_BASE/GW_INDEX.md)
 
 `VINATECH_GROUP` là cơ sở dữ liệu cốt lõi của hệ thống **Groupware (GW)** tại Vinatech Việt Nam. Hệ thống này đóng vai trò trung tâm điều phối toàn bộ luồng phê duyệt điện tử (Electronic Approval), thông tin nhân sự, sơ đồ tổ chức và kết nối chặt chẽ các luồng dữ liệu nghiệp vụ giữa **MES (SmartFactoryV2)** và **ERP (NEOE)**.
 
@@ -12,15 +12,15 @@
 
 Để hỗ trợ đắc lực cho việc vận hành và debug, các tài liệu kỹ thuật chi tiết đã được phân rã theo từng luồng nghiệp vụ liên kết hệ thống:
 
-1.  **Sơ đồ Tổ chức & Phê duyệt điện tử:** [ORGANIZATION_AND_WORKFLOW.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/VINATECH_GROUP/ORGANIZATION_AND_WORKFLOW.md) (Đối chiếu tài khoản nhân sự và lịch sử phê duyệt).
-2.  **Tích hợp Mua hàng (PO):** [PURCHASE_INTEGRATION.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/VINATECH_GROUP/PURCHASE_INTEGRATION.md) (Đối chiếu từ PO đến Arrival, kiểm QC, nhập kho và quyết toán).
-3.  **Kế hoạch & Chỉ thị sản xuất:** [PRODUCTION_PLANNING.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/VINATECH_GROUP/PRODUCTION_PLANNING.md) (Đồng bộ Month Plan, Daily Plan và chia tách Lot sản xuất).
-4.  **Quản lý Dữ liệu gốc (Master Data):** [MASTER_DATA_INTEGRATION.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/VINATECH_GROUP/MASTER_DATA_INTEGRATION.md) (Đăng ký mã vật tư mới, BOM 2001 và thông tin đối tác/đơn giá).
-5.  **Tích hợp Đề nghị thanh toán:** [DISBURSEMENT_INTEGRATION.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/VINATECH_GROUP/DISBURSEMENT_INTEGRATION.md) (Quyết toán chi phí mua hàng và quản lý cước Logistics).
-6.  **Tích hợp Hành chính - Nhân sự:** [HR_AND_ADMIN_INTEGRATION.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/VINATECH_GROUP/HR_AND_ADMIN_INTEGRATION.md) (Xin nghỉ phép, tăng ca ngày nghỉ, đi công tác và nhân sự nghỉ việc).
-7.  **Tích hợp Bán hàng & Xuất khẩu:** [SALES_AND_SHIPMENT_INTEGRATION.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/VINATECH_GROUP/SALES_AND_SHIPMENT_INTEGRATION.md) (Theo dõi Suju, Shipment Request, Shipment Confirmation và Sales Resolution).
-8.  **Quản lý Kho & Tồn kho thành phẩm:** [WAREHOUSE_AND_INVENTORY_INTEGRATION.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/VINATECH_GROUP/WAREHOUSE_AND_INVENTORY_INTEGRATION.md) (Vận hành hiện trường MES FG01, B750, B752 và tra cứu mã kho chuẩn).
-9.  **Bảo mật & Single Sign-On (SSO):** [SSO_AND_SECURITY_INTEGRATION.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/VINATECH_GROUP/SSO_AND_SECURITY_INTEGRATION.md) (Xác thực một lần qua RESTful API, quản lý Token và IP Whitelists).
+1.  **Sơ đồ Tổ chức & Phê duyệt điện tử:** [ORGANIZATION_AND_WORKFLOW.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/DATABASE/DATABASE_KNOWLEDGE_BASE/VINATECH_GROUP/ORGANIZATION_AND_WORKFLOW.md) (Đối chiếu tài khoản nhân sự và lịch sử phê duyệt).
+2.  **Tích hợp Mua hàng (PO):** [PURCHASE_INTEGRATION.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/DATABASE/DATABASE_KNOWLEDGE_BASE/VINATECH_GROUP/PURCHASE_INTEGRATION.md) (Đối chiếu từ PO đến Arrival, kiểm QC, nhập kho và quyết toán).
+3.  **Kế hoạch & Chỉ thị sản xuất:** [PRODUCTION_PLANNING.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/DATABASE/DATABASE_KNOWLEDGE_BASE/VINATECH_GROUP/PRODUCTION_PLANNING.md) (Đồng bộ Month Plan, Daily Plan và chia tách Lot sản xuất).
+4.  **Quản lý Dữ liệu gốc (Master Data):** [MASTER_DATA_INTEGRATION.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/DATABASE/DATABASE_KNOWLEDGE_BASE/VINATECH_GROUP/MASTER_DATA_INTEGRATION.md) (Đăng ký mã vật tư mới, BOM 2001 và thông tin đối tác/đơn giá).
+5.  **Tích hợp Đề nghị thanh toán:** [DISBURSEMENT_INTEGRATION.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/DATABASE/DATABASE_KNOWLEDGE_BASE/VINATECH_GROUP/DISBURSEMENT_INTEGRATION.md) (Quyết toán chi phí mua hàng và quản lý cước Logistics).
+6.  **Tích hợp Hành chính - Nhân sự:** [HR_AND_ADMIN_INTEGRATION.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/DATABASE/DATABASE_KNOWLEDGE_BASE/VINATECH_GROUP/HR_AND_ADMIN_INTEGRATION.md) (Xin nghỉ phép, tăng ca ngày nghỉ, đi công tác và nhân sự nghỉ việc).
+7.  **Tích hợp Bán hàng & Xuất khẩu:** [SALES_AND_SHIPMENT_INTEGRATION.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/DATABASE/DATABASE_KNOWLEDGE_BASE/VINATECH_GROUP/SALES_AND_SHIPMENT_INTEGRATION.md) (Theo dõi Suju, Shipment Request, Shipment Confirmation và Sales Resolution).
+8.  **Quản lý Kho & Tồn kho thành phẩm:** [WAREHOUSE_AND_INVENTORY_INTEGRATION.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/DATABASE/DATABASE_KNOWLEDGE_BASE/VINATECH_GROUP/WAREHOUSE_AND_INVENTORY_INTEGRATION.md) (Vận hành hiện trường MES FG01, B750, B752 và tra cứu mã kho chuẩn).
+9.  **Bảo mật & Single Sign-On (SSO):** [SSO_AND_SECURITY_INTEGRATION.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/DATABASE/DATABASE_KNOWLEDGE_BASE/VINATECH_GROUP/SSO_AND_SECURITY_INTEGRATION.md) (Xác thực một lần qua RESTful API, quản lý Token và IP Whitelists).
 
 ---
 

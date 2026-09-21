@@ -1,6 +1,6 @@
 # 🤖 VINATECH MES AGENT ECOSYSTEM (.agents)
 
-> **Workspace:** `MES_LEGACY_BACKUP` | **Phiên bản:** 2.1
+> **Workspace:** `MES_POP` | **Phiên bản:** 2.1
 
 ## Cấu Trúc
 - **`rules/`** — `00_vinatech_rules.md` (Rules 0-13), `01_sql_safety_rules.md` (SQL chuẩn)

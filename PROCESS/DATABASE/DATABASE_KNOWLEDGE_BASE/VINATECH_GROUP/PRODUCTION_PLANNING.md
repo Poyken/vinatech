@@ -2,7 +2,7 @@
 
 > [!NOTE]
 > **Tài liệu tham chiếu nghiệp vụ người dùng:**
-> *   Xem hướng dẫn lập kế hoạch sản xuất và PO ngày tại: [GW_03_KE_HOACH_SX.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/GROUPWARE/GROUPWARE_KNOWLEDGE_BASE/GW_03_KE_HOACH_SX.md)
+> *   Xem hướng dẫn lập kế hoạch sản xuất và PO ngày tại: [GW_03_KE_HOACH_SX.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/GROUPWARE/GROUPWARE_KNOWLEDGE_BASE/GW_03_KE_HOACH_SX.md)
 
 Tài liệu này đi sâu vào cấu trúc dữ liệu vật lý và cơ chế liên thông cơ sở dữ liệu của **Phân hệ Kế hoạch Sản xuất (Production Planning Module)** trên Groupware (`VINATECH_GROUP`) kết nối với **MES (`SmartFactoryV2`)**.
 

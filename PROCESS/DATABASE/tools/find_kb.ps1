@@ -28,10 +28,16 @@ if (Test-Path $matrixPath) {
             $matched = $true
         }
 
-        foreach ($tbl in $db.CoreTables) {
+        $candidateTables = @()
+        if ($db.CoreOperationalTables) { $candidateTables += $db.CoreOperationalTables }
+        if ($db.HighVolumeTables) { $candidateTables += $db.HighVolumeTables }
+        if ($db.CoreTables) { $candidateTables += $db.CoreTables }
+
+        foreach ($tbl in $candidateTables) {
             if ($tbl.Table -match $Keyword -or $tbl.Role -match $Keyword -or $tbl.PK -match $Keyword) {
                 $matched = $true
-                $matchedTables += "$($tbl.Table) [PK: $($tbl.PK)] - $($tbl.Role)"
+                $pkStr = if ($tbl.PK) { " [PK: $($tbl.PK)]" } else { "" }
+                $matchedTables += "$($tbl.Table)$pkStr - $($tbl.Role)"
             }
         }
 

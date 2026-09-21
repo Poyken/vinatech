@@ -2,7 +2,7 @@
 
 > **Phạm vi:** Toàn bộ chuỗi sản xuất khép kín từ **Điện cực (Electrode Line)** chuyển giao sang **Lắp ráp Cell (Cell Assembly Line)**.  
 > **Cơ sở dữ liệu chính:** `SmartFactoryV2`  
-> **Tài liệu tham chiếu:** [BAN_DO_CHI_TIET_CONG_DOAN_SAN_XUAT_MES_VINATECH.md](BAN_DO_CHI_TIET_CONG_DOAN_SAN_XUAT_MES_VINATECH.md) *(Bản đồ phân rã chi tiết 16 công đoạn, RouteCode & SP)*, [KB_05_01_QC_AND_ELECTRODE_CORE.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md), [KB_03_02_CELL_LINE.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_02_CELL_LINE.md), [KB_09_SCREEN_BUG_FIXBOOK.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md).
+> **Tài liệu tham chiếu:** [BAN_DO_CHI_TIET_CONG_DOAN_SAN_XUAT_MES_VINATECH.md](BAN_DO_CHI_TIET_CONG_DOAN_SAN_XUAT_MES_VINATECH.md) *(Bản đồ phân rã chi tiết 16 công đoạn, RouteCode & SP)*, [KB_05_01_QC_AND_ELECTRODE_CORE.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md), [KB_03_02_CELL_LINE.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_02_CELL_LINE.md), [KB_09_SCREEN_BUG_FIXBOOK.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md).
 
 ---
 

@@ -3,7 +3,7 @@
 >
 > **Dành cho:** Kỹ sư hệ thống, lập trình viên và nhân viên vận hành nhà xưởng.
 >
-> ← [Quay lại Mục lục chính](README.md) | 🏛️ [Tập 1: Kiến trúc & CSDL (VOL_01)](VOL_01_SYSTEM_ARCHITECTURE.md) | 🔍 [Tập 3: Sửa lỗi Screen ID (VOL_03)](VOL_03_SCREEN_OPERATIONS_AND_TROUBLESHOOTING.md)
+> ← [Quay lại Mục lục chính](../../DATABASE/SYSTEM_ARCHITECTURE/SYSTEM_INDEX.md) | 🏛️ [Tập 1: Kiến trúc & CSDL (VOL_01)](../../DATABASE/SYSTEM_ARCHITECTURE/VOL_01_SYSTEM_ARCHITECTURE.md) | 🔍 [Tập 3: Sửa lỗi Screen ID (VOL_03)](../../DATABASE/SYSTEM_ARCHITECTURE/VOL_03_SCREEN_OPERATIONS_AND_TROUBLESHOOTING.md)
 
 ---
 

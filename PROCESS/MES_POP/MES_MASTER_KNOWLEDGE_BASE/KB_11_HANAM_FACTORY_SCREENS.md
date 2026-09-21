@@ -6,16 +6,16 @@ Single Source of Truth: KB_11_HANAM_FACTORY_SCREENS.md (Hà Nam Factory Screens 
 Target WorkCenter: VVT_F3 (Hà Nam F3)
 Target Tables: STB_VN_FINISHGOODS_HN_New, STB_MachineByRoute_HN, STB_CommInspDocHistory
 Related Files:
-  - [KB_INDEX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
-  - [KB_10_FACTORY_WORKCENTER_MATRIX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_10_FACTORY_WORKCENTER_MATRIX.md)
-  - [BOOTSTRAP.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/AI_AGENT_CONFIG/BOOTSTRAP.md)
+  - [KB_INDEX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
+  - [KB_10_FACTORY_WORKCENTER_MATRIX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/KB_10_FACTORY_WORKCENTER_MATRIX.md)
+  - [BOOTSTRAP.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/AI_AGENT_CONFIG/BOOTSTRAP.md)
 -->
 
 # KB_11 — Hà Nam Factory Screen Map & Deep System Discovery
 
 > **Verified against DB:** 2026-06-18
 > **🔑 Keywords:** Hà Nam, VVT_F3, HN screen, HNC, VE route, QC subsystem, vision, IoT, XRF, BOM, sales, H screen
-> ← [Về INDEX](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md) | Cross-ref: [KB_02 §HN](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_02/KB_02_01_WMS_CORE.md), [KB_10 §Route](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_10_FACTORY_WORKCENTER_MATRIX.md)
+> ← [Về INDEX](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md) | Cross-ref: [KB_02 §HN](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/KB_02/KB_02_01_WMS_CORE.md), [KB_10 §Route](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/KB_10_FACTORY_WORKCENTER_MATRIX.md)
 
 
 ---
@@ -48,7 +48,7 @@ Related Files:
 | `HN06` | Nhập kho tem nhỏ thành phẩm HN | Nhập kho small label |
 | `HN12` | Thay đổi mã NVL để in tem đóng gói | Sửa material code cho label |
 | `HN15` | Thay đổi mã NVL để in tem HN | Sửa material code HN |
-| `HN523` | **Vietnam_Donggoi_Hnam** | **★ Đóng gói Hà Nam** (tương tự B523 — xem [KB_04_02 § [HN523]](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_02_SCREEN_BUGS.md#hn523--kịch-bản-sự-cố-khẩn-cấp-hủy-tem-đóng-gói--rã-box-tại-hà-nam-đồng-bộ-giảm-sản-lượng-ve10--po) cho kịch bản hủy box/giảm sản lượng VE10) |
+| `HN523` | **Vietnam_Donggoi_Hnam** | **★ Đóng gói Hà Nam** (tương tự B523 — xem [KB_04_02 § [HN523]](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_02_SCREEN_BUGS.md#hn523--kịch-bản-sự-cố-khẩn-cấp-hủy-tem-đóng-gói--rã-box-tại-hà-nam-đồng-bộ-giảm-sản-lượng-ve10--po) cho kịch bản hủy box/giảm sản lượng VE10) |
 | `HN541` | Thêm chữ Marking cho sản phẩm | Marking text config |
 | `HN542` | Chia tem và in tem đóng gói | **Split & print packing labels** |
 | `HN543` | Chia tem với mã tùy chỉnh NCC | Custom vendor code labels |

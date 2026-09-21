@@ -9,15 +9,15 @@
 
 | Triệu Chứng | Nguyên Nhân Gốc | Màn Hình | Tài Liệu & Kịch Bản |
 |---|---|:---:|---|
-| **Không gộp được Box (B523)** | Cờ `IsLotUse=0` tại F110 hoặc QC chưa `PASS` hoặc thiếu `STB_PackingStandard` | B523 | [03_packaging_labels.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_V2/docs/operations/03_packaging_labels.md) |
-| **"Not found label type"** | Chưa map Model với định dạng tem trong `STB_ModelLabelInfo` tại A460 | A460 / B523 | [03_packaging_labels.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_V2/docs/operations/03_packaging_labels.md) |
-| **B530 kẹt công đoạn V25** | Cột Status chưa chọn chữ `Making` | B530 | [02_production_pop.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_V2/docs/operations/02_production_pop.md) |
-| **B450 không sinh được Lot** | Chưa tích chọn `IsFixed = 1` | B450 | [02_production_pop.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_V2/docs/operations/02_production_pop.md) |
-| **NVL báo hết hạn sử dụng** | Quá ngày `LotAttr10` + `ValidMonth`. Ân xá qua `stb_vvt_OpenExpiredMaterial` | B597 / F330 | [01_wms_warehouse.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_V2/docs/operations/01_wms_warehouse.md) |
-| **Xuất kho chặn FIFO** | Tồn tại Lot cùng mã nhập trước. Bypass tại `STB_MaterialStockAttributeInfo` | F430 | [01_wms_warehouse.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_V2/docs/operations/01_wms_warehouse.md) |
-| **Lỗi vỏ nhôm không khớp** | Logic hardcode trong `usp_Vietnam_RawMaterialInputHist_uid` (không có bảng rười) | B597 | [04_qc_electrode.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_V2/docs/operations/04_qc_electrode.md) |
-| **B351 đổi Lot nhưng in mã cũ** | Lệch giữa `STB_SetInfo` và `STB_MaterialLotInfo`/`STB_ProdRouteHist` | B351 / B523 | [bug_playbook.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_V2/docs/troubleshooting/bug_playbook.md) |
-| **Tạo Popup Grid / Dropdown UI** | Quy chuẩn tạo PopupGrid trên SmartFramework Designer UI | B767 / Toàn hệ thống | [05_popup_grid_designer_sop.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES/MES_V2/docs/operations/05_popup_grid_designer_sop.md) |
+| **Không gộp được Box (B523)** | Cờ `IsLotUse=0` tại F110 hoặc QC chưa `PASS` hoặc thiếu `STB_PackingStandard` | B523 | [03_packaging_labels.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/MES_V2_DOCS/operations/03_packaging_labels.md) |
+| **"Not found label type"** | Chưa map Model với định dạng tem trong `STB_ModelLabelInfo` tại A460 | A460 / B523 | [03_packaging_labels.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/MES_V2_DOCS/operations/03_packaging_labels.md) |
+| **B530 kẹt công đoạn V25** | Cột Status chưa chọn chữ `Making` | B530 | [02_production_pop.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/MES_V2_DOCS/operations/02_production_pop.md) |
+| **B450 không sinh được Lot** | Chưa tích chọn `IsFixed = 1` | B450 | [02_production_pop.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/MES_V2_DOCS/operations/02_production_pop.md) |
+| **NVL báo hết hạn sử dụng** | Quá ngày `LotAttr10` + `ValidMonth`. Ân xá qua `stb_vvt_OpenExpiredMaterial` | B597 / F330 | [01_wms_warehouse.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/MES_V2_DOCS/operations/01_wms_warehouse.md) |
+| **Xuất kho chặn FIFO** | Tồn tại Lot cùng mã nhập trước. Bypass tại `STB_MaterialStockAttributeInfo` | F430 | [01_wms_warehouse.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/MES_V2_DOCS/operations/01_wms_warehouse.md) |
+| **Lỗi vỏ nhôm không khớp** | Logic hardcode trong `usp_Vietnam_RawMaterialInputHist_uid` (không có bảng rười) | B597 | [04_qc_electrode.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/MES_V2_DOCS/operations/04_qc_electrode.md) |
+| **B351 đổi Lot nhưng in mã cũ** | Lệch giữa `STB_SetInfo` và `STB_MaterialLotInfo`/`STB_ProdRouteHist` | B351 / B523 | [bug_playbook.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/MES_V2_DOCS/troubleshooting/bug_playbook.md) |
+| **Tạo Popup Grid / Dropdown UI** | Quy chuẩn tạo PopupGrid trên SmartFramework Designer UI | B767 / Toàn hệ thống | [05_popup_grid_designer_sop.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/MES_V2_DOCS/operations/05_popup_grid_designer_sop.md) |
 
 ---
 

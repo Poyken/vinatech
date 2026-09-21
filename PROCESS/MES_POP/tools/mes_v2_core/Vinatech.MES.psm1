@@ -17,16 +17,24 @@ $moduleRoot = $PSScriptRoot
 
 # Global singleton factory
 function Initialize-MesContext([string]$configPath = "") {
+    $mesPopRoot = Split-Path (Split-Path $moduleRoot -Parent) -Parent
     if ([string]::IsNullOrEmpty($configPath)) {
-        $configPath = Join-Path (Split-Path $moduleRoot -Parent) "config\db.config.json"
+        $candidatePaths = @(
+            (Join-Path $mesPopRoot "db_config.json"),
+            (Join-Path (Split-Path $moduleRoot -Parent) "db_config.json"),
+            (Join-Path (Split-Path $moduleRoot -Parent) "config\db.config.json")
+        )
+        foreach ($cp in $candidatePaths) {
+            if (Test-Path $cp) { $configPath = $cp; break }
+        }
     }
     $connMgr = [MesConnectionManager]::new($configPath)
     $queryEng = [MesQueryEngine]::new($connMgr)
     $goldenEng = [MesGoldenQueryEngine]::new($queryEng)
     $screenDbg = [MesScreenDebugger]::new($queryEng)
     $deployEng = [MesDeployEngine]::new($connMgr)
-    $procDir = Join-Path (Split-Path $moduleRoot -Parent) "sql\procedures"
-    $docsRoot = Join-Path (Split-Path $moduleRoot -Parent) "docs"
+    $procDir = Join-Path $mesPopRoot "sql\procedures"
+    $docsRoot = Join-Path $mesPopRoot "docs"
     $syncMgr = [MesSpSyncManager]::new($connMgr, $procDir)
     $logger = [MesFixbookLogger]::new($docsRoot)
 

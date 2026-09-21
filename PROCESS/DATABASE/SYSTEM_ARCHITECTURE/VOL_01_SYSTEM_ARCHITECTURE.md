@@ -4,7 +4,7 @@
 > **Môi trường sản xuất:** SQL Server Instance: `dbserver.hycap.co.kr,5398`
 > **Phạm vi áp dụng:** Hệ sinh thái phần mềm nhà máy Vinatech (Bắc Giang, Hà Nam, Hưng Yên)
 >
-> ← [Quay lại Mục lục chính](README.md) | 📖 [Tập 2: Quy trình nghiệp vụ & Hướng dẫn Form](VOL_02_BUSINESS_WORKFLOWS_AND_FORMS.md)
+> ← [Quay lại Mục lục chính](SYSTEM_INDEX.md) | 📖 [Tập 2: Quy trình nghiệp vụ & Hướng dẫn Form](VOL_02_BUSINESS_WORKFLOWS_AND_FORMS.md)
 
 ---
 

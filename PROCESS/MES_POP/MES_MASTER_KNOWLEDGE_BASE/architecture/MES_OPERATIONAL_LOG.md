@@ -4,7 +4,7 @@
 > **Nguyên tắc phối hợp:** 
 > 1. **User** ghi nhận triệu chứng, mã lỗi, và mã Lot/Barcode bị lỗi vào phần **[Sự Cố Mới Phát Sinh]**.
 > 2. **AI Agent** đọc log, chạy truy vấn DB kiểm tra, đề xuất SQL fix script an toàn (bọc transaction) hoặc giải pháp cấu hình, cập nhật trạng thái sự cố.
-> ← [Về INDEX](README.md) | [Cẩm nang giám sát hàng ngày](MES_DAILY_PLAYBOOK.md)
+> ← [Về INDEX](SYSTEM_INDEX.md) | [Cẩm nang giám sát hàng ngày](MES_DAILY_PLAYBOOK.md)
 
 ---
 

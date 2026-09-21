@@ -3,7 +3,7 @@
 >
 > **Môi trường:** Production SQL Server Instance: `dbserver.hycap.co.kr,5398`
 >
-> ← [Quay lại Mục lục chính](README.md) | 🏛️ [Tập 1: Kiến trúc & CSDL (VOL_01)](VOL_01_SYSTEM_ARCHITECTURE.md) | 📖 [Tập 2: Quy trình nghiệp vụ (VOL_02)](VOL_02_BUSINESS_WORKFLOWS_AND_FORMS.md)
+> ← [Quay lại Mục lục chính](SYSTEM_INDEX.md) | 🏛️ [Tập 1: Kiến trúc & CSDL (VOL_01)](VOL_01_SYSTEM_ARCHITECTURE.md) | 📖 [Tập 2: Quy trình nghiệp vụ (VOL_02)](VOL_02_BUSINESS_WORKFLOWS_AND_FORMS.md)
 
 ---
 

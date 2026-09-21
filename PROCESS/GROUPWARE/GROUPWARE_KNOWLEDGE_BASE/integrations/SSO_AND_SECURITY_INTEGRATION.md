@@ -2,8 +2,8 @@
 
 > [!NOTE]
 > **Tài liệu tham chiếu nghiệp vụ người dùng:**
-> *   Xem hướng dẫn đăng nhập và thiết lập công ty tại: [GW_01_DANG_NHAP.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/GROUPWARE/GROUPWARE_KNOWLEDGE_BASE/GW_01_DANG_NHAP.md)
-> *   Xem hướng dẫn phân quyền và sơ đồ tổ chức tại: [ORGANIZATION_AND_WORKFLOW.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/database/VINATECH_GROUP/ORGANIZATION_AND_WORKFLOW.md)
+> *   Xem hướng dẫn đăng nhập và thiết lập công ty tại: [GW_01_DANG_NHAP.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/GROUPWARE/GROUPWARE_KNOWLEDGE_BASE/GW_01_DANG_NHAP.md)
+> *   Xem hướng dẫn phân quyền và sơ đồ tổ chức tại: [ORGANIZATION_AND_WORKFLOW.md](file:///C:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/DATABASE/DATABASE_KNOWLEDGE_BASE/VINATECH_GROUP/ORGANIZATION_AND_WORKFLOW.md)
 
 Tài liệu này đi sâu vào cơ chế xác thực tập trung **Single Sign-On (SSO)** và cấu trúc dữ liệu bảo mật giữa cơ sở dữ liệu `VINATECH_RESTFUL`, cổng Portal Groupware (`VINATECH_GROUP`), ứng dụng di động và hệ thống phân xưởng **MES (`SmartFactoryV2`)**.
 

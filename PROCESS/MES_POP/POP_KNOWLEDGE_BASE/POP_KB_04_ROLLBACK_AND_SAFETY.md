@@ -5,9 +5,9 @@ Scope: Mọi thao tác WRITE trên POP Web và khả năng hoàn tác tương �
 Single Source of Truth: POP_KB_04_ROLLBACK_AND_SAFETY.md
 Target Tables: STB_PackingInfo, STB_SetInfo, VINA_MATERIAL_INPUT_HIST, STB_ProdRouteHist
 Related Files:
-  - [POP_KB_INDEX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_INDEX.md)
-  - [POP_KB_02_SCREEN_OPERATIONS.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_02_SCREEN_OPERATIONS.md)
-  - [KB_04_PACKING](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_04)
+  - [POP_KB_INDEX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_INDEX.md)
+  - [POP_KB_02_SCREEN_OPERATIONS.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_02_SCREEN_OPERATIONS.md)
+  - [KB_04_PACKING](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/KB_04)
 -->
 
 # POP_KB_04 — Rollback & An Toàn Dữ Liệu (Rollback & Data Safety)
@@ -15,7 +15,7 @@ Related Files:
 > **Phạm vi:** Phân tích toàn diện khả năng hoàn tác (rollback) cho MỌI thao tác ghi dữ liệu trên POP Web  
 > **Xác minh:** Dựa trên Live UI Testing (2026-09-08) + API behavior analysis  
 > **🔑 Keywords:** rollback, undo, cancel, hủy, hoàn tác, revert, safety, an toàn, xóa, delete  
-> ← [Về INDEX](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_INDEX.md)
+> ← [Về INDEX](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_INDEX.md)
 
 ---
 

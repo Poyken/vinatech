@@ -12,7 +12,7 @@
 
 Toàn bộ hệ thống tri thức, quy trình nghiệp vụ và cẩm nang sửa lỗi tích hợp giữa Groupware và MES đã được dọn dẹp và hợp nhất thành một cấu trúc 3 Volumes tinh gọn:
 
-*   ### 🗂️ [MỤC LỤC TRUNG TÂM TRA CỨU HỆ THỐNG](SYSTEM_MASTER_KNOWLEDGE_BASE/README.md)
+*   ### 🗂️ [MỤC LỤC TRUNG TÂM TRA CỨU HỆ THỐNG](../architecture/SYSTEM_INDEX.md)
 
 Vui lòng bấm vào liên kết trên để vào trang điều hướng chính.
 

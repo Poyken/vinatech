@@ -23,7 +23,7 @@ class MesConnectionManager {
 
     [object] GetProfile([string]$profileName) {
         if ([string]::IsNullOrEmpty($profileName)) {
-            $profileName = $this.Config.DefaultProfile
+            $profileName = if ($this.Config.DefaultProfile) { $this.Config.DefaultProfile } else { "SmartFactoryV2" }
         }
         $prof = $this.Config.Profiles.$profileName
         if ($null -eq $prof) {
@@ -38,17 +38,20 @@ class MesConnectionManager {
 
     [System.Data.SqlClient.SqlConnection] GetConnection([string]$profileName) {
         $prof = $this.GetProfile($profileName)
-        $servers = @($prof.Server) + @($this.Config.FallbackServers) | Select-Object -Unique
+        $servers = @($prof.Server) + @($this.Config.Server) + @($this.Config.FailoverServers) + @($this.Config.FallbackServers) | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } | Select-Object -Unique
+        $usr = if ($prof.User) { $prof.User } else { $this.Config.User }
+        $pwd = if ($prof.Password) { $prof.Password } else { $this.Config.Password }
+        $db = if ($prof.Database) { $prof.Database } else { $this.Config.Database }
 
         foreach ($srv in $servers) {
             if ([string]::IsNullOrWhiteSpace($srv)) { continue }
-            $connStr = "Server=$srv;Database=$($prof.Database);User Id=$($prof.User);Password=$($prof.Password);Connect Timeout=4;Encrypt=False;TrustServerCertificate=True;"
+            $connStr = "Server=$srv;Database=$db;User Id=$usr;Password=$pwd;Connect Timeout=5;Encrypt=False;TrustServerCertificate=True;"
             $conn = New-Object System.Data.SqlClient.SqlConnection($connStr)
             try {
                 $conn.Open()
                 if ($conn.State -eq [System.Data.ConnectionState]::Open) {
                     $this.CurrentServer = $srv
-                    $this.CurrentDatabase = $prof.Database
+                    $this.CurrentDatabase = $db
                     return $conn
                 }
             } catch {
@@ -57,7 +60,7 @@ class MesConnectionManager {
                 }
             }
         }
-        throw "Could not connect to any SQL Server in fallback list for database '$($prof.Database)'."
+        throw "Could not connect to any SQL Server in fallback list for database '$db'."
     }
 
     [hashtable] TestTcpConnection() {
@@ -66,10 +69,11 @@ class MesConnectionManager {
 
     [hashtable] TestTcpConnection([string]$profileName) {
         $prof = $this.GetProfile($profileName)
+        $srv = if ($prof.Server) { $prof.Server } else { $this.Config.Server }
         $hostName = "dbserver.hycap.co.kr"
         $port = 5398
 
-        if ($prof.Server -match "^([^,]+)(?:,(\d+))?$") {
+        if ($srv -match "^([^,]+)(?:,(\d+))?$") {
             $hostName = $matches[1]
             if ($matches[2]) { $port = [int]$matches[2] }
         }

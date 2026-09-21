@@ -308,9 +308,15 @@ def execute_agent_tool(func_name, func_args):
         if not target.exists():
             target = BASE_DIR / "MES_MASTER_KNOWLEDGE_BASE" / rel_path
         if not target.exists():
-            target = BASE_DIR / "DATABASE_KNOWLEDGE_BASE" / rel_path
+            target = BASE_DIR / "POP_KNOWLEDGE_BASE" / rel_path
+        if not target.exists():
+            target = BASE_DIR.parent / "DATABASE" / "DATABASE_KNOWLEDGE_BASE" / rel_path
+        if not target.exists():
+            target = BASE_DIR.parent / "GROUPWARE" / "GROUPWARE_KNOWLEDGE_BASE" / rel_path
         if not target.exists():
             matches = list(BASE_DIR.glob(f"**/{rel_path}"))
+            if not matches:
+                matches = list(BASE_DIR.parent.glob(f"**/{rel_path}"))
             if matches:
                 target = matches[0]
         if not target.exists() or not target.is_file():

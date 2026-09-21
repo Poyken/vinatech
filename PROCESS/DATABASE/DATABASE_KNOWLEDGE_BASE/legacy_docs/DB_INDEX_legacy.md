@@ -56,22 +56,22 @@ graph TD
 | # | File | Database | Vai trò | Quy mô |
 |---|------|----------|---------|--------|
 | 01 | *Đã có trong KB_INDEX* | **SmartFactoryV2** | DB nghiệp vụ MES chính | ~500+ bảng |
-| 02 | [DB_02_MES_MANUFACTURING_PROCESS_PIPELINE.md](DB_02_MES_MANUFACTURING_PROCESS_PIPELINE.md) | **SmartFactoryV2** | Chuỗi công đoạn SX: Mixing → Slitting → Winding → Packing | Toàn bộ chuỗi MES |
-| 02-DETAIL | [BAN_DO_CHI_TIET_CONG_DOAN_SAN_XUAT_MES_VINATECH.md](BAN_DO_CHI_TIET_CONG_DOAN_SAN_XUAT_MES_VINATECH.md) | **SmartFactoryV2** | Bản đồ chi tiết từng trạm công đoạn, RouteCode, SP, Bảng, 7 Gates | Chi tiết sâu 16 công đoạn |
+| 02 | [DB_02_MES_MANUFACTURING_PROCESS_PIPELINE.md](../../../MES_POP/MES_MASTER_KNOWLEDGE_BASE/architecture/DB_02_MES_MANUFACTURING_PROCESS_PIPELINE.md) | **SmartFactoryV2** | Chuỗi công đoạn SX: Mixing → Slitting → Winding → Packing | Toàn bộ chuỗi MES |
+| 02-DETAIL | [BAN_DO_CHI_TIET_CONG_DOAN_SAN_XUAT_MES_VINATECH.md](../../../MES_POP/MES_MASTER_KNOWLEDGE_BASE/architecture/BAN_DO_CHI_TIET_CONG_DOAN_SAN_XUAT_MES_VINATECH.md) | **SmartFactoryV2** | Bản đồ chi tiết từng trạm công đoạn, RouteCode, SP, Bảng, 7 Gates | Chi tiết sâu 16 công đoạn |
 | 02.1 | *Đã có trong KB_01* | **SmartFramework** | UI Metadata & Phân quyền | ~50+ bảng |
-| 03 | [DB_03_VINATECH_GROUP.md](DB_03_VINATECH_GROUP.md) | **VINATECH_GROUP** | Groupware phê duyệt điện tử | ~200+ bảng |
-| 04 | [DB_04_NEOE_ERP.md](DB_04_NEOE_ERP.md) | **NEOE** | ERP Douzone iU (Sổ cái trung tâm) | 4876 bảng |
-| 05 | [DB_05_DZICUBE.md](DB_05_DZICUBE.md) | **DZICUBE** | Bizbox Kế toán Douzone | 3300+ bảng |
-| 06 | [DB_06_VINATECH_POP.md](DB_06_VINATECH_POP.md) | **VINATECH_POP** | Kiosk đầu cuối xưởng | ~20+ bảng |
-| 07 | [DB_07_AndonDB.md](DB_07_AndonDB.md) | **AndonDB** | Andon cảnh báo dây chuyền | 3 bảng |
-| 08 | [DB_08_VINATECH_RESTFUL.md](DB_08_VINATECH_RESTFUL.md) | **VINATECH_RESTFUL** | SSO Token bảo mật | 3 bảng |
-| 09 | [DB_09_VINATECH_WEBSOCKET.md](DB_09_VINATECH_WEBSOCKET.md) | **VINATECH_WEBSOCKET** | WebSocket realtime | ~5 bảng |
-| 10 | [DB_10_VINATECH_SPREADSHEET.md](DB_10_VINATECH_SPREADSHEET.md) | **VINATECH_SPREADSHEET** | Excel Online cộng tác | ~10 bảng |
-| 11 | [DB_11_WCMS.md](DB_11_WCMS.md) | **WCMS_STANDARD_NEW** | CMS quản lý dòng tiền | ~15+ bảng |
-| 12 | [DB_12_SmartFactoryIncubator.md](DB_12_SmartFactoryIncubator.md) | **SmartFactoryIncubator** | R&D Sandbox | ~50 bảng |
-| 13 | [DB_13_VINATECH_DATA_KSOX.md](DB_13_VINATECH_DATA_KSOX.md) | **VINATECH_DATA_KSOX** | K-SOX tuân thủ nội bộ | ~15+ bảng |
-| 14 | [DB_14_erpdb_Legacy.md](DB_14_erpdb_Legacy.md) | **erpdb** | ERP cũ (Archive only) | 884 bảng |
-| 15 | [DB_15_streamdocs.md](DB_15_streamdocs.md) | **streamdocs** | PDF Viewer Forcs | ~10 bảng |
+| 03 | [DB_03_VINATECH_GROUP.md](../VINATECH_GROUP/README.md) | **VINATECH_GROUP** | Groupware phê duyệt điện tử | ~200+ bảng |
+| 04 | [DB_04_NEOE_ERP.md](../NEOE/README.md) | **NEOE** | ERP Douzone iU (Sổ cái trung tâm) | 4876 bảng |
+| 05 | [DB_05_DZICUBE.md](../DZICUBE/README.md) | **DZICUBE** | Bizbox Kế toán Douzone | 3300+ bảng |
+| 06 | [DB_06_VINATECH_POP.md](../VINATECH_POP/README.md) | **VINATECH_POP** | Kiosk đầu cuối xưởng | ~20+ bảng |
+| 07 | [DB_07_AndonDB.md](../AndonDB/README.md) | **AndonDB** | Andon cảnh báo dây chuyền | 3 bảng |
+| 08 | [DB_08_VINATECH_RESTFUL.md](../VINATECH_RESTFUL/README.md) | **VINATECH_RESTFUL** | SSO Token bảo mật | 3 bảng |
+| 09 | [DB_09_VINATECH_WEBSOCKET.md](../VINATECH_WEBSOCKET/README.md) | **VINATECH_WEBSOCKET** | WebSocket realtime | ~5 bảng |
+| 10 | [DB_10_VINATECH_SPREADSHEET.md](../VINATECH_SPREADSHEET/README.md) | **VINATECH_SPREADSHEET** | Excel Online cộng tác | ~10 bảng |
+| 11 | [DB_11_WCMS.md](../WCMS_STANDARD_NEW/README.md) | **WCMS_STANDARD_NEW** | CMS quản lý dòng tiền | ~15+ bảng |
+| 12 | [DB_12_SmartFactoryIncubator.md](../SmartFactoryIncubator/README.md) | **SmartFactoryIncubator** | R&D Sandbox | ~50 bảng |
+| 13 | [DB_13_VINATECH_DATA_KSOX.md](../VINATECH_DATA_KSOX/README.md) | **VINATECH_DATA_KSOX** | K-SOX tuân thủ nội bộ | ~15+ bảng |
+| 14 | [DB_14_erpdb_Legacy.md](../erpdb/README.md) | **erpdb** | ERP cũ (Archive only) | 884 bảng |
+| 15 | [DB_15_streamdocs.md](../streamdocs/README.md) | **streamdocs** | PDF Viewer Forcs | ~10 bảng |
 
 ### 📌 Ghi Chú Quan Trọng
 

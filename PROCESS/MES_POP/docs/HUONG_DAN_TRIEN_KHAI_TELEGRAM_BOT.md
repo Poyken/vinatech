@@ -60,7 +60,7 @@
 
 ### 🔹 BƯỚC 2: Cập Nhật File Cấu Hình Trên Laptop
 
-1. Mở file cấu hình: [`tools\telegram_config.json`](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/tools/telegram_config.json)
+1. Mở file cấu hình: [`tools\telegram_config.json`](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/tools/telegram_config.json)
 2. Điền thông tin gồm Token, Chat ID và **Gemini API Key** (để kích hoạt Não AI trả lời tự nhiên):
 
 ```json
@@ -88,9 +88,9 @@ Bạn có 3 cách để khởi động Bot:
 
 | Cách thực hiện | Thao tác | Mô tả |
 | :--- | :--- | :--- |
-| **Cách 1 (Nhanh nhất)** | Nhấp đúp chuột vào file [**`start_telegram_bot.bat`**](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/start_telegram_bot.bat) | Mở cửa sổ Console theo dõi trực tiếp nhật ký gửi/nhận lệnh. |
+| **Cách 1 (Nhanh nhất)** | Nhấp đúp chuột vào file [**`start_telegram_bot.bat`**](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/start_telegram_bot.bat) | Mở cửa sổ Console theo dõi trực tiếp nhật ký gửi/nhận lệnh. |
 | **Cách 2 (Từ PowerShell)** | Chạy lệnh: `.\mes.ps1 bot` | Khởi động thông qua CLI Hub trung tâm của MES. |
-| **Cách 3 (Chạy ngầm ẩn)** | Nhấp đúp chuột vào file [**`start_telegram_bot_hidden.vbs`**](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/start_telegram_bot_hidden.vbs) | Bot chạy hoàn toàn dưới nền, không hiện bất kỳ cửa sổ nào. |
+| **Cách 3 (Chạy ngầm ẩn)** | Nhấp đúp chuột vào file [**`start_telegram_bot_hidden.vbs`**](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/start_telegram_bot_hidden.vbs) | Bot chạy hoàn toàn dưới nền, không hiện bất kỳ cửa sổ nào. |
 
 ---
 
@@ -137,15 +137,15 @@ Khi mở Telegram và nhắn tin cho Bot của bạn, bạn có thể sử dụn
 
 ### Q3: Muốn cho bot tự động chạy mỗi khi bật máy tính?
 - Nhấn tổ hợp phím `Windows + R`, gõ: `shell:startup` rồi nhấn Enter.
-- Tạo một Shortcut (phím tắt) của file [`start_telegram_bot_hidden.vbs`](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/start_telegram_bot_hidden.vbs) và dán vào thư mục này.
+- Tạo một Shortcut (phím tắt) của file [`start_telegram_bot_hidden.vbs`](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/start_telegram_bot_hidden.vbs) và dán vào thư mục này.
 - Kể từ lần khởi động máy tiếp theo, Bot sẽ tự động chạy ngầm mà không cần bạn làm thêm gì.
 
 ---
 
 ## 📂 5. Danh Sách Các File Đã Được Tạo Trong Hệ Thống
 
-1. [**`tools\mes_telegram_bot.py`**](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/tools/mes_telegram_bot.py): Script điều phối chính kết nối Telegram API và CLI Hub.
-2. [**`tools\telegram_config.json`**](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/tools/telegram_config.json): File lưu trữ Bot Token và Chat ID bảo mật.
-3. [**`start_telegram_bot.bat`**](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/start_telegram_bot.bat): File khởi động nhanh có hiển thị cửa sổ theo dõi log.
-4. [**`start_telegram_bot_hidden.vbs`**](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/start_telegram_bot_hidden.vbs): File khởi động ngầm hoàn toàn không hiện cửa sổ.
-5. [**`mes.ps1`**](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/mes.ps1): Đã tích hợp sẵn lệnh `.\mes.ps1 bot`.
+1. [**`tools\mes_telegram_bot.py`**](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/tools/mes_telegram_bot.py): Script điều phối chính kết nối Telegram API và CLI Hub.
+2. [**`tools\telegram_config.json`**](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/tools/telegram_config.json): File lưu trữ Bot Token và Chat ID bảo mật.
+3. [**`start_telegram_bot.bat`**](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/start_telegram_bot.bat): File khởi động nhanh có hiển thị cửa sổ theo dõi log.
+4. [**`start_telegram_bot_hidden.vbs`**](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/start_telegram_bot_hidden.vbs): File khởi động ngầm hoàn toàn không hiện cửa sổ.
+5. [**`mes.ps1`**](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/mes.ps1): Đã tích hợp sẵn lệnh `.\mes.ps1 bot`.

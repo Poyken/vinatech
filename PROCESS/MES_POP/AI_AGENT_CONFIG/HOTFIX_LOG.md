@@ -4,8 +4,8 @@ Purpose: Nhật ký ghi chép lịch sử xử lý bug & hotfix đã được AI
 Scope: Hotfix History Registry
 Single Source of Truth: HOTFIX_LOG.md (Lịch sử hotfixes) & KB_09 (Sổ tay cứu hộ)
 Related Files:
-  - [KB_09_SCREEN_BUG_FIXBOOK.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md)
-  - [record_hotfix.ps1](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/MES_LEGACY_BACKUP/record_hotfix.ps1)
+  - [KB_09_SCREEN_BUG_FIXBOOK.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md)
+  - [record_hotfix.ps1](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/tools/record_hotfix.ps1)
 -->
 
 # 📓 Vinatech MES Agent — Hotfix Log (Nhật ký lỗi & Giải pháp)
@@ -34,7 +34,7 @@ Related Files:
 ## ⚡ Các Lỗi Đã Được Xử Lý (Resolved Bugs)
 
 
-> 💡 **Lưu trữ:** Các hotfix cũ hơn (Tháng 07 & 08/2026, 24 entries) đã được chuyển vào [archive/HOTFIX_LOG_2026_JUL_AUG.md](archive/HOTFIX_LOG_2026_JUL_AUG.md).
+> 💡 **Lưu trữ:** Các hotfix cũ hơn (Tháng 07 & 08/2026, 24 entries) đã được chuyển vào [HOTFIX_LOG_2026_JUL_AUG.md](HOTFIX_LOG_2026_JUL_AUG.md).
 
 ### [POP Screen] — 📍 ID_51 Xóa kẹt trạng thái công đoạn hoàn thành trên Kiosk POP (MongoToMesPerformance)
 * **Ngày sửa:** `2026-09-19`
@@ -127,7 +127,7 @@ Related Files:
   COMMIT TRANSACTION;
   GO
   ```
-* **Tham chiếu KB:** [KB_09_SCREEN_BUG_FIXBOOK.md § B725](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md#b725)
+* **Tham chiếu KB:** [KB_09_SCREEN_BUG_FIXBOOK.md § B725](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md#b725)
 
 ---
 
@@ -186,7 +186,7 @@ Related Files:
 
   COMMIT TRANSACTION;
   ```
-* **Tham chiếu KB:** [KB_09_SCREEN_BUG_FIXBOOK.md § B723](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md#b723)
+* **Tham chiếu KB:** [KB_09_SCREEN_BUG_FIXBOOK.md § B723](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md#b723)
 
 ---
 
@@ -221,7 +221,7 @@ Related Files:
 * **Kết quả nghiệm thu:**
   - `STB_ElectrodeSlittingResult`: Còn lại chính xác **15 bản ghi** (`Seq` từ 1 đến 15).
   - Không có bất kỳ lỗi phát sinh nào, dữ liệu hạ nguồn an toàn 100%.
-* **Tham chiếu KB:** [KB_09_SCREEN_BUG_FIXBOOK.md § [B552] #2](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md#L210), [HOTFIX_LOG.md § ID_36](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/AI_AGENT_CONFIG/HOTFIX_LOG.md#L499)
+* **Tham chiếu KB:** [KB_09_SCREEN_BUG_FIXBOOK.md § [B552] #2](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md#L210), [HOTFIX_LOG.md § ID_36](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/AI_AGENT_CONFIG/HOTFIX_LOG.md#L499)
 
 ---
 
@@ -260,7 +260,7 @@ Related Files:
   - `STB_ElectrodeMixInfo`: Còn lại **0 bản ghi**.
   - `STB_SetInfo`: Còn lại **0 bản ghi**.
   - Không có bất kỳ lỗi phát sinh nào, dữ liệu hạ nguồn an toàn 100%.
-* **Tham chiếu KB:** [KB_09_SCREEN_BUG_FIXBOOK.md § [B552] #3](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md#L211), [KB_05_01 § 8.10](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md#810-quy-trình-dọn-dẹp--xóa-mẻ-trộn-điện-cực-thừa-electrode-mixing-cancellation-sop)
+* **Tham chiếu KB:** [KB_09_SCREEN_BUG_FIXBOOK.md § [B552] #3](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md#L211), [KB_05_01 § 8.10](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md#810-quy-trình-dọn-dẹp--xóa-mẻ-trộn-điện-cực-thừa-electrode-mixing-cancellation-sop)
 
 ---
 
@@ -301,7 +301,7 @@ Related Files:
   - `VVQR0720001E66`: Đã xóa thành công 40 bản ghi (Seq 11 ➔ 50). Còn lại chính xác **12 bản ghi** (Seq 1 ➔ 10 và Seq 51, 52).
   - `VVQP0720001E11`: Đã xóa thành công 5 bản ghi (Seq 16 ➔ 20). Còn lại chính xác **15 bản ghi** (Seq 1 ➔ 15).
   - `STB_ElectrodeSlittingResultHist`: Đã ghi nhận đầy đủ 45 dòng audit log.
-* **Tham chiếu KB:** [KB_09_SCREEN_BUG_FIXBOOK.md § [B552] #2](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md#L210), [HOTFIX_LOG.md § ID_36](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/AI_AGENT_CONFIG/HOTFIX_LOG.md#L515), [HOTFIX_LOG.md § ID_39](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/AI_AGENT_CONFIG/HOTFIX_LOG.md#L638)
+* **Tham chiếu KB:** [KB_09_SCREEN_BUG_FIXBOOK.md § [B552] #2](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md#L210), [HOTFIX_LOG.md § ID_36](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/AI_AGENT_CONFIG/HOTFIX_LOG.md#L515), [HOTFIX_LOG.md § ID_39](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/AI_AGENT_CONFIG/HOTFIX_LOG.md#L638)
 
 ---
 
@@ -324,7 +324,7 @@ Related Files:
   GO
   ```
 * **Kết quả nghiệm thu:** Xóa thành công 8 dòng MixStep, 1 dòng MixInfo, 1 dòng SetInfo. Đã kiểm tra `STB_ElectrodeCoatingInfo = 0`.
-* **Tham chiếu KB:** [KB_09_SCREEN_BUG_FIXBOOK.md § [B552] #3](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md#L211), [KB_05_01 § 8.10](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md#810-quy-trình-dọn-dẹp--xóa-mẻ-trộn-điện-cực-thừa-electrode-mixing-cancellation-sop)
+* **Tham chiếu KB:** [KB_09_SCREEN_BUG_FIXBOOK.md § [B552] #3](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md#L211), [KB_05_01 § 8.10](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md#810-quy-trình-dọn-dẹp--xóa-mẻ-trộn-điện-cực-thừa-electrode-mixing-cancellation-sop)
 
 ---
 
@@ -347,7 +347,7 @@ Related Files:
   GO
   ```
 * **Kết quả nghiệm thu:** Xóa thành công mẻ trộn, khôi phục trạng thái sạch cho phân xưởng điện cực.
-* **Tham chiếu KB:** [KB_09_SCREEN_BUG_FIXBOOK.md § [B552] #3](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md#L211)
+* **Tham chiếu KB:** [KB_09_SCREEN_BUG_FIXBOOK.md § [B552] #3](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md#L211)
 
 ---
 
@@ -389,7 +389,7 @@ Related Files:
   - B782: 0 dòng hiển thị (ẩn hoàn toàn 2 Lot).
   - B530: Mở lại Winding `V-22_HY` để OP chốt lại số lượng chuẩn.
   - Toàn bộ dữ liệu NVL quét tại B540 được giữ nguyên vẹn.
-* **Tham chiếu KB:** [KB_09_SCREEN_BUG_FIXBOOK.md § [B782]](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md), [KB_03_01_OVERVIEW.md § 5.16](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_01_OVERVIEW.md#L345)
+* **Tham chiếu KB:** [KB_09_SCREEN_BUG_FIXBOOK.md § [B782]](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md), [KB_03_01_OVERVIEW.md § 5.16](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_01_OVERVIEW.md#L345)
 
 ---
 
@@ -425,7 +425,7 @@ Related Files:
   - `STB_SetInfo`: 6 Lot đều có `IsProdFinish = False`.
   - B530: Đã mở lại công đoạn Winding `V-22_HY` để OP chốt lại số lượng chuẩn.
   - Dữ liệu NVL scan tại B540 giữ nguyên 100%.
-* **Tham chiếu KB:** [KB_09_SCREEN_BUG_FIXBOOK.md § [B782]](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md#L356-L363)
+* **Tham chiếu KB:** [KB_09_SCREEN_BUG_FIXBOOK.md § [B782]](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md#L356-L363)
 
 ---
 
@@ -451,7 +451,7 @@ Related Files:
 * **Kết quả nghiệm thu:**
   - `STB_ElectrodeMixStepInfo`: 0 dòng (đã dọn sạch toàn bộ 17 bản ghi bước cân).
   - Giao diện lưới cân điện cực / B552 / B470: Không còn hiển thị 4 mã Lot thừa này nữa.
-* **Tham chiếu KB:** [KB_09_SCREEN_BUG_FIXBOOK.md § [B552] #3](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md#L220), [KB_05_01 §8.10](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md#810-quy-trình-dọn-dẹp--xóa-mẻ-trộn-điện-cực-thừa-electrode-mixing-cancellation-sop)
+* **Tham chiếu KB:** [KB_09_SCREEN_BUG_FIXBOOK.md § [B552] #3](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md#L220), [KB_05_01 §8.10](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md#810-quy-trình-dọn-dẹp--xóa-mẻ-trộn-điện-cực-thừa-electrode-mixing-cancellation-sop)
 
 ---
 
@@ -493,7 +493,7 @@ Related Files:
   - `STB_ProdRouteHist`: 5 dòng (công đoạn cuối trả về V-26_HY 1053 pcs, công đoạn V-28_HY đã được giải phóng).
   - `VINATECH_POP.dbo.VINA_PACKING_REMAIN_QTY`: Đã xóa bản ghi tạm.
   - Giao diện POP Kiosk Web: Khôi phục hạn mức còn lại 1046 EA, cho phép công nhân chia Box và bấm Đóng gói bình thường.
-* **Tham chiếu KB:** [POP_KB_04_ROLLBACK_AND_SAFETY.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_04_ROLLBACK_AND_SAFETY.md), [KB_07_03_SCREEN_BUGS.md § Lỗi 3](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_07/KB_07_03_SCREEN_BUGS.md#hy530--route-process-input-hy-chốt-sản-lượng-công-đoạn-hưng-yên)
+* **Tham chiếu KB:** [POP_KB_04_ROLLBACK_AND_SAFETY.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_04_ROLLBACK_AND_SAFETY.md), [KB_07_03_SCREEN_BUGS.md § Lỗi 3](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/KB_07/KB_07_03_SCREEN_BUGS.md#hy530--route-process-input-hy-chốt-sản-lượng-công-đoạn-hưng-yên)
 
 ---
 
@@ -526,7 +526,7 @@ Related Files:
   GO
   ```
 * **Kết quả nghiệm thu:** Xóa thành công bản ghi kẹt cũ, mở lại trạng thái để công nhân F5 Kiosk và bấm Hoàn thành sản xuất trên POP Kiosk bình thường.
-* **Tham chiếu KB:** [POP_KB_03 § 2.6](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_03_TROUBLESHOOTING.md#26-pop-err-09-lỗi-this-route-is-already-completed-in-mes-khi-chốt-công-đoạn), [KB_09_SCREEN_BUG_FIXBOOK.md § [B530] #11](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md#L202)
+* **Tham chiếu KB:** [POP_KB_03 § 2.6](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_03_TROUBLESHOOTING.md#26-pop-err-09-lỗi-this-route-is-already-completed-in-mes-khi-chốt-công-đoạn), [KB_09_SCREEN_BUG_FIXBOOK.md § [B530] #11](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md#L202)
 
 ---
 
@@ -550,7 +550,7 @@ Related Files:
 * **Kết quả nghiệm thu:**
   - `usp_LotTrackingInfo_VVT2_get` ngày 17/09: Trả về **0 dòng** (đã ẩn sạch khỏi ngày 17).
   - `usp_LotTrackingInfo_VVT2_get` ngày 18/09: Trả về đầy đủ tất cả công đoạn (`V-23_HY`, `V-24_HY`, `V-25_HY`, `V-27_HY`, `V-28_HY`, `V-29_HY`), hiển thị liền mạch trên màn hình B782.
-* **Tham chiếu KB:** [KB_03_01_OVERVIEW.md § 5.2](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_01_OVERVIEW.md#L53-L79), [KB_09_SCREEN_BUG_FIXBOOK.md § [B782]](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md#L357)
+* **Tham chiếu KB:** [KB_03_01_OVERVIEW.md § 5.2](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_01_OVERVIEW.md#L53-L79), [KB_09_SCREEN_BUG_FIXBOOK.md § [B782]](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md#L357)
 
 ---
 
@@ -567,15 +567,15 @@ Related Files:
   - `tools/backups/preflight_20260919_031122_STB_ProdRouteHist_backup_b782_move_date_18_to_17.json` (6 bản ghi routing)
   - `tools/backups/preflight_20260919_031123_STB_DefectRepairInfo_backup_b782_move_date_18_to_17.json` (12 bản ghi phế NG)
   - `tools/backups/preflight_20260919_031123_STB_SetInfo_backup_b782_move_date_18_to_17.json` (6 bản ghi SetInfo)
-* **Phương án sửa lỗi & Script Deploy:** `sql_hotfixes/hotfix_20260919_031500_B782_MOVE_6LOTS_DATE_18_TO_17.sql`
+* **Phương án sửa lỗi & Script Deploy:** `sql/hotfix_20260919_031500_B782_MOVE_6LOTS_DATE_18_TO_17.sql`
   - Dời `ProdDateTime` của `V-22_HY` lùi 1 ngày về `2026-09-17 12:56 - 12:58` và cập nhật `JobDate = '2026-09-17'`.
   - Đồng bộ `CreateDateTime` của 12 bản ghi phế NG trong `STB_DefectRepairInfo` về `2026-09-17 12:56 - 12:58`.
   - Đồng bộ `InputDateTime` và `InputJobDate` trong `STB_SetInfo` về `2026-09-17`.
-* **Script Rollback chuẩn bị sẵn:** `sql_hotfixes/rollback_20260919_031500_B782_MOVE_6LOTS_DATE_18_TO_17.sql`
+* **Script Rollback chuẩn bị sẵn:** `sql/rollback_20260919_031500_B782_MOVE_6LOTS_DATE_18_TO_17.sql`
 * **Kết quả nghiệm thu:**
   - `usp_LotTrackingInfo_VVT2_get` ngày 17/09: Trả về **đầy đủ 6 Lot** ở công đoạn `V-22_HY` (sản lượng 988 PCS sau trừ 12 phế NG).
   - `usp_LotTrackingInfo_VVT2_get` ngày 18/09: Trả về **0 dòng** (đã ẩn sạch khỏi ngày 18).
-* **Tham chiếu KB:** [KB_03_01_OVERVIEW.md § 5.2](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_01_OVERVIEW.md#L53-L79), [KB_09_SCREEN_BUG_FIXBOOK.md § [B782]](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md#L357)
+* **Tham chiếu KB:** [KB_03_01_OVERVIEW.md § 5.2](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_01_OVERVIEW.md#L53-L79), [KB_09_SCREEN_BUG_FIXBOOK.md § [B782]](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md#L357)
 
 ---
 
@@ -592,15 +592,15 @@ Related Files:
 * **Cơ chế sao lưu (Pre-flight Backup):**
   - `tools/backups/preflight_20260919_051345_STB_ProdRouteHist_backup_b782_17lots_v24_move_to_18.json` (17 bản ghi)
   - `tools/backups/preflight_20260919_051346_STB_DefectRepairInfo_backup_b782_17lots_v24_move_to_18.json` (15 bản ghi)
-* **Phương án sửa lỗi & Script Deploy:** `sql_hotfixes/hotfix_20260919_051500_B782_MOVE_17LOTS_V24_DATE_18.sql`
+* **Phương án sửa lỗi & Script Deploy:** `sql/hotfix_20260919_051500_B782_MOVE_17LOTS_V24_DATE_18.sql`
   - Cập nhật `JobDate = '2026-09-18'` cho 17 ControlNo tại công đoạn `V-24_HY` trên `STB_ProdRouteHist`.
   - Đồng bộ `FindJobdate = '2026-09-18'` cho các bản ghi phế NG tại `V-24_HY` trên `STB_DefectRepairInfo`.
   - Ghi nhận `ChangeUserID = 'it_hotfix'`, `ChangeDateTime = GETDATE()`.
-* **Script Rollback chuẩn bị sẵn:** `sql_hotfixes/rollback_20260919_051500_B782_MOVE_17LOTS_V24_DATE_18.sql`
+* **Script Rollback chuẩn bị sẵn:** `sql/rollback_20260919_051500_B782_MOVE_17LOTS_V24_DATE_18.sql`
 * **Kết quả nghiệm thu Live DB:**
   - 17/17 bản ghi `STB_ProdRouteHist` tại `V-24_HY` đã cập nhật `JobDate = '2026-09-18'`.
   - 15/15 bản ghi `STB_DefectRepairInfo` tại `V-24_HY` đã đồng bộ `FindJobdate = '2026-09-18'`.
-* **Tham chiếu KB:** [KB_03_01_OVERVIEW.md § 5.2](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_01_OVERVIEW.md#L53-L79), [KB_09_SCREEN_BUG_FIXBOOK.md § [B782] Mục 2 & 3](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md#L366-L368), [HOTFIX_LOG.md § ID_50](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/AI_AGENT_CONFIG/HOTFIX_LOG.md#L1034-L1055)
+* **Tham chiếu KB:** [KB_03_01_OVERVIEW.md § 5.2](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_01_OVERVIEW.md#L53-L79), [KB_09_SCREEN_BUG_FIXBOOK.md § [B782] Mục 2 & 3](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md#L366-L368), [HOTFIX_LOG.md § ID_50](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/AI_AGENT_CONFIG/HOTFIX_LOG.md#L1034-L1055)
 
 ---
 
@@ -615,13 +615,13 @@ Related Files:
   - Cả 3 Lot hoàn thành công đoạn `V-24_HY` vào ca đêm rạng sáng ngày 18/09 (00:32 - 04:02 AM). Do chốt trước 10:00 AM, hệ thống tự động gán `JobDate = '2026-09-17'`.
 * **Cơ chế sao lưu (Pre-flight Backup):**
   - `tools/backups/preflight_20260919_051811_STB_ProdRouteHist_backup_b782_3lots_v24_move_to_18.json` (3 bản ghi)
-* **Phương án sửa lỗi & Script Deploy:** `sql_hotfixes/hotfix_20260919_052000_B782_MOVE_3LOTS_V24_DATE_18.sql`
+* **Phương án sửa lỗi & Script Deploy:** `sql/hotfix_20260919_052000_B782_MOVE_3LOTS_V24_DATE_18.sql`
   - Cập nhật `JobDate = '2026-09-18'` cho 3 ControlNo tại công đoạn `V-24_HY`.
   - Ghi nhận `ChangeUserID = 'it_hotfix'`, `ChangeDateTime = GETDATE()`.
-* **Script Rollback chuẩn bị sẵn:** `sql_hotfixes/rollback_20260919_052000_B782_MOVE_3LOTS_V24_DATE_18.sql`
+* **Script Rollback chuẩn bị sẵn:** `sql/rollback_20260919_052000_B782_MOVE_3LOTS_V24_DATE_18.sql`
 * **Kết quả nghiệm thu Live DB:**
   - 3/3 bản ghi `STB_ProdRouteHist` tại `V-24_HY` đã cập nhật thành công `JobDate = '2026-09-18'`.
-* **Tham chiếu KB:** [KB_03_01_OVERVIEW.md § 5.2](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_01_OVERVIEW.md#L53-L79), [KB_09_SCREEN_BUG_FIXBOOK.md § [B782]](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md#L366-L368), [HOTFIX_LOG.md § ID_50, ID_52](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/AI_AGENT_CONFIG/HOTFIX_LOG.md#L1034-L1082)
+* **Tham chiếu KB:** [KB_03_01_OVERVIEW.md § 5.2](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_01_OVERVIEW.md#L53-L79), [KB_09_SCREEN_BUG_FIXBOOK.md § [B782]](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md#L366-L368), [HOTFIX_LOG.md § ID_50, ID_52](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/AI_AGENT_CONFIG/HOTFIX_LOG.md#L1034-L1082)
 
 ---
 
@@ -634,14 +634,14 @@ Related Files:
 * **Nguyên nhân gốc (Root Cause):**
   - Màn hình B782 (`usp_LotTrackingInfo_VVT2_get`) lọc dữ liệu ngày 18/09 theo khoảng thời gian: `ProdDateTime >= '2026-09-18 10:00:00' AND ProdDateTime < '2026-09-19 10:00:00'`.
   - Toàn bộ 20 Lot trên thực tế dập mép vào ca đêm rạng sáng (00:32 - 08:22 AM ngày 18/09), do đó dù cột `JobDate` là `2026-09-18` nhưng vì `ProdDateTime < 10:00:00 AM` nên B782 vẫn gom vào ngày 17/09.
-* **Phương án sửa lỗi & Script Deploy:** `sql_hotfixes/hotfix_20260919_053000_B782_ADD_HOURS_20LOTS_V24_DATE_18.sql`
+* **Phương án sửa lỗi & Script Deploy:** `sql/hotfix_20260919_053000_B782_ADD_HOURS_20LOTS_V24_DATE_18.sql`
   - Cập nhật: `SET ProdDateTime = DATEADD(HOUR, 10, ProdDateTime), JobDate = '2026-09-18'` cho 20 ControlNo tại `V-24_HY`.
   - Đẩy giờ dập thực tế sang khoảng `10:32 - 18:22` ngày 18/09, vượt ngưỡng lọc ca của B782.
-* **Script Rollback chuẩn bị sẵn:** `sql_hotfixes/rollback_20260919_053000_B782_ADD_HOURS_20LOTS_V24_DATE_18.sql`
+* **Script Rollback chuẩn bị sẵn:** `sql/rollback_20260919_053000_B782_ADD_HOURS_20LOTS_V24_DATE_18.sql`
 * **Kết quả nghiệm thu Live DB qua SP `usp_LotTrackingInfo_VVT2_get`:**
   - **Ngày 18/09/2026:** Trả về **20 / 20 Lot** tại công đoạn `V-24_HY`, hiển thị đầy đủ, liền mạch trên B782.
   - **Ngày 17/09/2026:** Trả về **0 Lot** tại công đoạn `V-24_HY` (đã dọn sạch hoàn toàn khỏi ngày 17).
-* **Tham chiếu KB:** [KB_03_01_OVERVIEW.md § 5.2](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_01_OVERVIEW.md#L53-L79), [KB_09_SCREEN_BUG_FIXBOOK.md § [B782]](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md#L366-L368), [HOTFIX_LOG.md § ID_50](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/AI_AGENT_CONFIG/HOTFIX_LOG.md#L1034-L1055)
+* **Tham chiếu KB:** [KB_03_01_OVERVIEW.md § 5.2](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_01_OVERVIEW.md#L53-L79), [KB_09_SCREEN_BUG_FIXBOOK.md § [B782]](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md#L366-L368), [HOTFIX_LOG.md § ID_50](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/AI_AGENT_CONFIG/HOTFIX_LOG.md#L1034-L1055)
 
 ---
 
@@ -662,7 +662,7 @@ Related Files:
   - `STB_ElectrodeRollPressingInfo`: **0 records**
   - `STB_ElectrodeSlittingResult`: **0 records**
   - `STB_SetInfo`: **1 record** (Trạng thái Lot mới tinh 100%, sẵn sàng thực hành từ công đoạn Trộn).
-* **Tham chiếu KB:** [KB_05_01_QC_AND_ELECTRODE_CORE.md § 8.11](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md#L601), [POP_KB_02_SCREEN_OPERATIONS.md § 16](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_02_SCREEN_OPERATIONS.md#L377)
+* **Tham chiếu KB:** [KB_05_01_QC_AND_ELECTRODE_CORE.md § 8.11](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md#L601), [POP_KB_02_SCREEN_OPERATIONS.md § 16](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_02_SCREEN_OPERATIONS.md#L377)
 
 ---
 
@@ -685,7 +685,7 @@ Related Files:
   - Cập nhật trực tiếp trên Live DB với định danh user `vanduc`.
 * **Kết quả nghiệm thu Live DB:**
   - Cột NG trên màn hình B782 đã hiển thị chính xác 100% số lượng phế thực tế theo thời gian thực từ POP Kiosk.
-* **Tham chiếu KB:** [KB_09_SCREEN_BUG_FIXBOOK.md § [B782] Bug #5](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md), [KB_03_01_OVERVIEW.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_01_OVERVIEW.md)
+* **Tham chiếu KB:** [KB_09_SCREEN_BUG_FIXBOOK.md § [B782] Bug #5](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md), [KB_03_01_OVERVIEW.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_01_OVERVIEW.md)
 
 ---
 
@@ -711,7 +711,7 @@ Related Files:
 * **Cơ chế sao lưu (Pre-flight Backup):**
   - Snapshot file: `tools/backups/preflight_20260920_113219_VINA_EQUIPMENT_MAPPING_release_locked_machines.json` (7 bản ghi)
 * **Phương án sửa lỗi & Script Deploy:**
-  - Script triển khai: [`sql_hotfixes/hotfix_20260920_release_locked_equipment_mappings.sql`](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/sql_hotfixes/hotfix_20260920_release_locked_equipment_mappings.sql)
+  - Script triển khai: [`sql/hotfix_20260920_release_locked_equipment_mappings.sql`](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/sql/hotfix_20260920_release_locked_equipment_mappings.sql)
   - Cập nhật:
     ```sql
     UPDATE VINATECH_POP.dbo.VINA_EQUIPMENT_MAPPING
@@ -723,11 +723,11 @@ Related Files:
     WHERE MAPPING_ID IN (2298, 2416, 2239, 2240, 2346, 2360, 2352)
       AND MAPPING_STATUS IN ('ACTIVE', 'AUTO_MAPPED');
     ```
-  - Script Rollback dự phòng: [`sql_hotfixes/rollback_20260920_release_locked_equipment_mappings.sql`](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/sql_hotfixes/rollback_20260920_release_locked_equipment_mappings.sql)
+  - Script Rollback dự phòng: [`sql/rollback_20260920_release_locked_equipment_mappings.sql`](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/sql/rollback_20260920_release_locked_equipment_mappings.sql)
 * **Kết quả nghiệm thu Live DB:**
   - 7/7 bản ghi đã chuyển sang `MAPPING_STATUS = 'RELEASED'`, `NO_EMP_MODIFYER = 'vanduc'`.
   - Trên Kiosk POP, toàn bộ 20 máy Winding, 10 máy Curling, 10 máy Sleeving hiển thị đầy đủ 100%, công nhân chọn máy và chốt sản lượng thành công.
-* **Tham chiếu KB:** [POP_KB_01_ARCHITECTURE_AND_API.md § 3.3](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_01_ARCHITECTURE_AND_API.md), [POP_KB_03_TROUBLESHOOTING.md § 2.20](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_03_TROUBLESHOOTING.md), [KB_09_SCREEN_BUG_FIXBOOK.md § [POP Kiosk]](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md)
+* **Tham chiếu KB:** [POP_KB_01_ARCHITECTURE_AND_API.md § 3.3](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_01_ARCHITECTURE_AND_API.md), [POP_KB_03_TROUBLESHOOTING.md § 2.20](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_03_TROUBLESHOOTING.md), [KB_09_SCREEN_BUG_FIXBOOK.md § [POP Kiosk]](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/KB_09_SCREEN_BUG_FIXBOOK.md)
 
 
 
@@ -754,7 +754,7 @@ UPDATE STB_DefectRepairInfo SET IsDelete=0, RepairQty=0 WHERE DefectSummaryNo=20
   3. `tools/release_orphan_machines.ps1` & lệnh `.\mes.ps1 release-machines [-Target <Line>] [-Force]` kèm SQL routine `sql/routine_RELEASE_ORPHAN_MACHINE_LOCKS.sql`: Tự động quét và giải phóng 52 thiết bị bị kẹt `ACTIVE` ở DayPlan cũ.
   4. `sql/template_GENERATE_POP_PACKING_ID.sql`: Thuật toán sinh mã `PackingID` chuẩn 11 ký tự (`PK...`) cập nhật `STB_MaterialLotInfo` và `STB_SavePackingTime_VVT`.
   5. Bổ sung chi tiết 4 bảng CSDL thiết bị & PLC baseline (`VINA_EQUIPMENT_SETTING`, `VINA_PLC_BASELINE`, `VINA_EQUIPMENT_REMAINDER`, `VINA_EQUIPMENT_MAPPING`) vào `POP_KB_02 § 18.4`.
-* **Tham chiếu KB:** [POP_KB_06_MIGRATION_SPEC.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_06_MIGRATION_SPEC.md), [POP_KB_02 § 18.4](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_02_SCREEN_OPERATIONS.md), [POP_KB_INDEX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_INDEX.md)
+* **Tham chiếu KB:** [POP_KB_06_MIGRATION_SPEC.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_06_MIGRATION_SPEC.md), [POP_KB_02 § 18.4](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_02_SCREEN_OPERATIONS.md), [POP_KB_INDEX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_INDEX.md)
 
 ---
 
@@ -771,6 +771,6 @@ UPDATE STB_DefectRepairInfo SET IsDelete=0, RepairQty=0 WHERE DefectSummaryNo=20
   2. **Bộ Nhớ Đệm L1 Siêu Tốc (`AI_AGENT_CONFIG/POP_MATRIX.json`):**
      - Biên dịch sẵn cấu hình 31 dây chuyền, các Route Web POP, và Top lỗi runtime.
      - Tích hợp vào `tools/find_kb.ps1` và `mes.ps1 find`: tra cứu thông tin dây chuyền và lỗi trong **< 0.001 giây** không cần kết nối DB.
-* **Tham chiếu KB:** [POP_KB_INDEX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/POP_KNOWLEDGE_BASE/POP_KB_INDEX.md), [mes.ps1](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_LEGACY_BACKUP/mes.ps1)
+* **Tham chiếu KB:** [POP_KB_INDEX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_INDEX.md), [mes.ps1](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/mes.ps1)
 
 

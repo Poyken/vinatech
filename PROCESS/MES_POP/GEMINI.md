@@ -1,4 +1,4 @@
-# 🛡️ VINATECH MES WORKSPACE RULES (MES_LEGACY_BACKUP)
+# 🛡️ VINATECH MES WORKSPACE RULES (MES_POP)
 
 > **Single Source of Truth:** `.agents/rules/00_vinatech_rules.md`
 
