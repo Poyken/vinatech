@@ -1285,6 +1285,35 @@
         "tem_in_không_đúng_format": "Template label bị sai layout -> Vào Z530 → sửa label template → deploy lại"
       },
       "fix_template": "Template label bị sai layout -> Vào Z530 → sửa label template → deploy lại"
+    },
+    "C460": {
+      "name": "Electrode QC Report (Báo cáo QC điện cực)",
+      "module": "QC",
+      "sp_get": "usp_CommInspDocHistory_get",
+      "sp_iud": "usp_CommInspDocHistory_iud",
+      "tables": [
+        "STB_CommInspDocHistory",
+        "STB_CommInspDocItem",
+        "STB_ElectrodeSlittingResult"
+      ],
+      "common_bugs": {
+        "báo_cáo_qc_trống_hoặc_thiếu_dữ_liệu": "Chưa thực hiện QC điện cực hoặc dữ liệu QC chưa đồng bộ từ C141/C143 -> Kiểm tra STB_CommInspDocHistory & STB_CommInspDocItem"
+      },
+      "fix_template": "Kiểm tra STB_CommInspDocHistory & STB_CommInspDocItem xem dữ liệu QC điện cực đã được ghi nhận chưa -> Xem KB_05_02 § C460"
+    },
+    "HY311": {
+      "name": "PO Kế Hoạch Sản Xuất Hưng Yên",
+      "module": "MES",
+      "sp_get": "usp_ProductionOrderInfo_HY_get",
+      "sp_iud": "usp_ProductionOrderInfo_HY_iud",
+      "tables": [
+        "STB_ProductionOrderInfo",
+        "STB_ProductionOrderRouting"
+      ],
+      "common_bugs": {
+        "không_tạo_được_lot_cho_po_mới": "Chưa khai báo MaterialType = EROH tại A230 hoặc chưa gán BasicRoutingCode tại B310 -> Khai báo master data trước khi tạo PO"
+      },
+      "fix_template": "Kiểm tra BasicRoutingCode trong STB_ProductionOrderInfo và MaterialType trong STB_MaterialMaster"
     }
   },
   "core_tables": {
