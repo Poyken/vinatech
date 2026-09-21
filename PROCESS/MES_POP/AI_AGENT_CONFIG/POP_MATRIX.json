@@ -1,4 +1,4 @@
-{
+﻿{
     "version": "1.0.0",
     "updated_at": "2026-09-21 06:55:00",
     "description": "L1 Ultra-Fast JSON Cache for Vinatech POP Web Ecosystem (31 Lines, 6 Routes, 21 Errors & Fast CLI Mapping)",
@@ -118,6 +118,11 @@
         }
     },
     "top_errors": {
+        "POP-ERR-09": {
+            "title": "This route is already completed in MES (498 lan)",
+            "root_cause": "Cong doan da duoc chot hoan thanh tren MES WinForm hoac luot truoc, WinForm chan ghi de tu Kiosk",
+            "fast_fix": "Dung Golden Query .\\mes.ps1 trace '<Lot>' kiem tra STB_ProdRouteHist. Xoa luot ket cu qua Template 3 hoac chuyen cong doan tiep theo"
+        },
         "POP-ERR-16": {
             "title": "Tem thung in tu POP bi co ngan ma vach PackingID (Scanner khong doc duoc)",
             "root_cause": "Kiosk POP thieu engine sinh PackingID chuan 11 ky tu (PKQR1900142). DevExpress AutoModule=true lam co cum thanh vach Code 128",
@@ -137,6 +142,41 @@
             "title": "Ma loi phe tren POP Kiosk khong hien hoac STB_SetInfo.DefectQty bi thieu",
             "root_cause": "Three-Valued Logic: Cot IsDelete va RepairQty bi NULL do thieu constraint default trong STB_DefectRepairInfo",
             "fast_fix": "Chay Template 11 (POP_KB_03): UPDATE STB_DefectRepairInfo SET IsDelete='0', RepairQty=0 WHERE ControlNo='<ControlNo>' AND (IsDelete IS NULL OR RepairQty IS NULL)"
+        },
+        "POP-ERR-22": {
+            "title": "Already transferred to MES. Cannot modify (162 lan)",
+            "root_cause": "Ban ghi san luong hoac phe da duoc luong ngam dong bo sang MES (IsTransferred=1), Kiosk khoa quyen sua/xoa",
+            "fast_fix": "Bao IT dieu chinh truc tiep tren MES WinForm hoac chay Hotfix rollback/update bọc BEGIN TRAN...ROLLBACK"
+        },
+        "POP-ERR-23": {
+            "title": "실적이 없는 공정입니다. 실적 등록 후 추가하세요 (120 lan)",
+            "root_cause": "Chua dang ky san luong tot (Good Qty) ma da bam them phe pham hoac ket thuc cong doan",
+            "fast_fix": "Nhap so luong san xuat tot truoc vao o yangpum (Good Qty), sau do moi mo modal phe pham va bam Hoan tat"
+        },
+        "POP-ERR-24": {
+            "title": "This roll has already been used for 2 product LOTs. Input blocked (100 lan)",
+            "root_cause": "Rang buoc toan ven nghiep vu: 1 cuon BTP dien cuc chi duoc phep cat/nap toi da cho 2 LOT san pham, quet vao LOT thu 3 bi chan",
+            "fast_fix": "Doi sang cuon dien cuc moi chua vuot qua 2 LOT. Khong co quet ep cuon da dung du dinh muc"
+        },
+        "POP-ERR-25": {
+            "title": "코팅 생산수량 등록 후 불량등록이 가능합니다 (73 lan)",
+            "root_cause": "Trinh tu bat buoc tai cong doan Coating: He thong yeu cau phai ghi nhan chieu dai Coating truoc khi dang ky phe",
+            "fast_fix": "Nhap met mang Coating tot truoc, sau do moi bam dang ky cac ma phe pham me tron/trang phu"
+        },
+        "POP-ERR-26": {
+            "title": "작업자를 먼저 지정해 주세요 (60 lan)",
+            "root_cause": "Chua chon hoac chua quet the nhan vien kiem tra (Inspector) truoc khi luu bien ban PQC/In-Line QC",
+            "fast_fix": "Quet the nhan vien hoac chon ma cong nhan kiem tra tai o Inspector truoc khi bam Luu"
+        },
+        "POP-ERR-27": {
+            "title": "믹싱 공정이 완료되지 않았습니다 (40 lan)",
+            "root_cause": "Me tron Mixing chua nap du 100% cac ma NVL theo dinh muc recipe (con ton dong NVL chua quet)",
+            "fast_fix": "Mo danh sach NVL Mixing, quet bo sung day du cac ma NVL con thieu roi moi chot san luong Coating"
+        },
+        "POP-ERR-28": {
+            "title": "호일 부족: 코팅 생산수량 > 투입 호일 가용 길이 (15 lan)",
+            "root_cause": "Can bang vat tu: Chieu dai mang Coating dang ky vuot qua tong chieu dai la Foil kim loai da nap vao may",
+            "fast_fix": "Quet nap them cuon Foil kim loai bo sung vao o NVL de bu dap chieu dai thieu hut"
         },
         "POP-ERR-SYNC": {
             "title": "Kẹt đồng bộ POP sang MES (MongoToMesPerformance)",

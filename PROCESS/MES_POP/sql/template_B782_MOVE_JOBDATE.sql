@@ -1,4 +1,4 @@
--- ==============================================================================
+﻿-- ==============================================================================
 -- TEMPLATE: B782 CHUYEN NGAY GHI NHAN SAN XUAT (MOVE JOB DATE)
 -- Thay the: {{CONTROLNO_LIST}}, {{ROUTE_CODE}}, {{TARGET_DATE}}, {{TARGET_DATETIME}}
 -- Tham chieu: KB_03_01 § 5.2, KB_09 § B782
@@ -30,7 +30,7 @@ UPDATE STB_ProdRouteHist
 SET ProdDateTime = '{{TARGET_DATETIME}}',
     JobDate = '{{TARGET_DATE}}',
     ChangeDateTime = GETDATE(),
-    ChangeUserID = 'it_hotfix'
+    ChangeUserID = 'vanduc'
 WHERE ControlNo IN ({{CONTROLNO_LIST}})
   AND RouteCode IN ({{ROUTE_CODE}});
 
@@ -38,7 +38,7 @@ WHERE ControlNo IN ({{CONTROLNO_LIST}})
 UPDATE STB_DefectRepairInfo 
 SET CreateDateTime = '{{TARGET_DATETIME}}',
     ChangeDateTime = GETDATE(),
-    ChangeUserID = 'it_hotfix'
+    ChangeUserID = 'vanduc'
 WHERE ControlNo IN ({{CONTROLNO_LIST}})
   AND FindRouteCode IN ({{ROUTE_CODE}});
 

@@ -36,6 +36,25 @@ Related Files:
 
 > 💡 **Lưu trữ:** Các hotfix cũ hơn (Tháng 07 & 08/2026, 24 entries) đã được chuyển vào [HOTFIX_LOG_2026_JUL_AUG.md](HOTFIX_LOG_2026_JUL_AUG.md).
 
+### [B530]/[POP Screen] — 📍 ID_52 Cập nhật chính xác tên máy công đoạn Cuốn Winding (V-22_HY) cho 3 Lot Hưng Yên
+* **Ngày sửa:** `2026-09-21`
+* **Màn hình liên quan (TCode / Module):** `[B530] - Nhập sản lượng / Kiosk POP Hưng Yên`
+* **Triệu chứng lỗi:**
+  - 3 Lot bị gán nhầm mã máy sấy chân không (`Dry Vacuum Oven`) thay vì máy cuốn (`Winding`) tại công đoạn cuốn `V-22_HY`:
+    + `VVQR203R072777`: Bị gán `Dry Vacuum Oven C#2-01` (`VVMHY45`) thay vì `Winding C#2-02` (`VVMHY40`).
+    + `VVQR213R072722`: Bị gán `Dry Vacuum Oven C#9-01` (`VVMHY136`) thay vì `Winding C#9-01` (`VVMHY130`).
+    + `VVQR083R072762`: Bị gán `Dry Vacuum Oven C#9-01` (`VVMHY136`) thay vì `Winding C#9-01` (`VVMHY130`).
+* **Nguyên nhân gốc (Root Cause):**
+  - Trong quá trình chốt công đoạn đầu `V-22_HY` trên UI B530 hoặc cấu hình máy quét trạm, công nhân chọn nhầm thiết bị Dry Vacuum Oven thuộc cùng cụm chuyền.
+* **Phương án sửa lỗi & Backup (Thực thi thành công):**
+  - Đã sao lưu pre-flight snapshot tự động qua `deploy_tool.ps1`.
+  - Cập nhật trực tiếp trên bảng `SmartFactoryV2.dbo.STB_ProdRouteHist`:
+    + `ProdRouteHistNo = '20260921001516'` -> `MachineCode = 'VVMHY40'` (`Winding C#2-02`).
+    + `ProdRouteHistNo = '20260921001529'` -> `MachineCode = 'VVMHY130'` (`Winding C#9-01`).
+    + `ProdRouteHistNo = '20260921001420'` -> `MachineCode = 'VVMHY130'` (`Winding C#9-01`).
+    + `ChangeUserID = 'vanduc'`, `ChangeDateTime = GETDATE()`.
+  - File hotfix: `sql/hotfixes/hotfix_20260921_UPDATE_MACHINE_NAME_3LOTS.sql`.
+
 ### [POP Screen] — 📍 ID_51 Xóa kẹt trạng thái công đoạn hoàn thành trên Kiosk POP (MongoToMesPerformance)
 * **Ngày sửa:** `2026-09-19`
 * **Màn hình liên quan (TCode / URL):** `[POP Screen] - pop.vinatech.com/pop/screen (Kiosk HY Cell Line #17)`

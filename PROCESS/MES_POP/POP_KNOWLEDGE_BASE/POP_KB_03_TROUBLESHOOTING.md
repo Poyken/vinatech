@@ -44,6 +44,17 @@ Related Files:
 | **POP-ERR-18: Kẹt Pipeline Đồng Bộ POP ➔ MES (Worker bị treo / `IsTransferred = 0`)** | Background Polling Worker IIS bị treo hoặc đứt kết nối SQL (Line `VVC-11`) | Dùng Template 8 kiểm tra, restart AppPool IIS, hoặc dùng Template 9 chốt bù thủ công | **CÓ (SQL Hotfix)** |
 | **POP-ERR-19: Lỗi "Không Tìm Thấy LOT Trong Kho" Khi Nạp Cuộn Điện Cực / NVL BOM** | Bên Điện cực đã xuất vào kho `ROUTE_VN_WH` nhưng cuộn mang mã BTP mới (vd: `SRECYK0-900`) trong khi BOM của Lệnh SX (PO) lại khai báo mã quy cách cũ (`SRFCO85 / SREYO85`), hoặc mã cũ trong kho có tồn = 0 | Map bổ sung mã NVL mới vào BOM của PO (`STB_ProductionOrderBom`) hoặc sửa `MaterialCode` cuộn khớp BOM, sau đó bấm `Danh sách NVL BOM 🔄` (Reload) trên Kiosk POP | **CÓ (BOM Map / Master)** |
 | **POP-ERR-20: POP Kiosk Thiếu Thiết Bị / Ẩn Máy Tại Modal "Xác Nhận Kết Thúc" (Winding/Curling/Sleeving)** | Máy bị kẹt trạng thái `MAPPING_STATUS = 'ACTIVE'` trong `VINATECH_POP.dbo.VINA_EQUIPMENT_MAPPING` từ Kế hoạch sản xuất (`DAY_PLAN_NO`) cũ do OP không bấm "Hủy gán / Release" khi xong ca và POP thiếu Auto-Release | Giải phóng máy: chạy script UPDATE `VINA_EQUIPMENT_MAPPING SET MAPPING_STATUS = 'RELEASED', RELEASED_AT = GETDATE(), NO_EMP_MODIFYER = 'vanduc'` cho các Plan cũ | **CÓ (SQL Hotfix)** |
+| **POP-ERR-21: Mã Lỗi Phế Bị Ẩn / Thiếu DefectQty Do Three-Valued Logic** | Cột `IsDelete` và `RepairQty` trong `STB_DefectRepairInfo` bị `NULL`, mệnh đề `WHERE IsDelete = '0'` lọc mất bản ghi | Chạy Template 11: UPDATE `IsDelete = '0'`, `RepairQty = 0` và đồng bộ lại `STB_SetInfo.DefectQty` | **CÓ (SQL Hotfix)** |
+| **POP-ERR-22: Lỗi "Already transferred to MES. Cannot modify"** | Bản ghi sản lượng hoặc phế đã được luồng ngầm đồng bộ sang MES WinForm (`IsTransferred = 1`), giao diện Kiosk khóa quyền xóa/sửa | Nếu nhập sai phế hoặc sản lượng, IT phải can thiệp điều chỉnh trực tiếp trên WinForm hoặc chạy Hotfix chuẩn bọc TRAN | **CÓ (SQL Hotfix)** |
+| **POP-ERR-23: Lỗi "실적이 없는 공정입니다. 실적 등록 후 추가하세요"** | Chưa đăng ký số lượng tốt (Good Qty) mà OP đã bấm thêm phế phẩm hoặc bấm kết thúc công đoạn | Nhập sản lượng sản xuất tốt trước vào ô `양품수량`, sau đó mới mở modal phế phẩm và bấm hoàn tất | Không |
+| **POP-ERR-24: Lỗi Chặn Nạp Cuộn "This roll has already been used for 2 product LOTs"** | Ràng buộc nghiệp vụ toàn vẹn: 1 cuộn BTP điện cực chỉ được phép cắt/nạp tối đa cho 2 LOT sản phẩm, quét sang LOT thứ 3 bị chặn | Đổi sang cuộn điện cực mới chưa vượt quá 2 LOT. Không cố quét ép cuộn đã dùng đủ định mức | Không |
+| **POP-ERR-25: Lỗi Trình Tự Coating "코팅 생산수량 등록 후 불량등록이 가능합니다"** | Trình tự bắt buộc tại công đoạn Coating: Hệ thống yêu cầu phải ghi nhận chiều dài Coating trước khi đăng ký phế | Nhập mét màng Coating tốt trước, sau đó mới bấm đăng ký các mã phế phẩm mẻ trộn/tráng phủ | Không |
+| **POP-ERR-26: Lỗi Thiếu Người Kiểm Tra "작업자를 먼저 지정해 주세요"** | Chưa chọn hoặc chưa quét thẻ nhân viên kiểm tra (Inspector) trước khi lưu biên bản PQC/In-Line QC | Quét thẻ nhân viên hoặc chọn mã công nhân kiểm tra tại ô `검사자` trước khi bấm Lưu | Không |
+| **POP-ERR-27: Lỗi Khóa Liên Động Mixing ➔ Coating "믹싱 공정이 완료되지 않았습니다"** | Mẻ trộn Mixing chưa nạp đủ 100% các mã NVL theo định mức recipe (còn tồn đọng NVL chưa quét) | Mở bảng danh mục NVL Mixing, quét bổ sung đầy đủ các mã NVL còn thiếu rồi mới chốt Coating | Không |
+| **POP-ERR-28: Lỗi Thiếu Foil "호일 부족: 코팅 생산수량 > 투입 호일 가용 길이"** | Cân bằng vật tư: Chiều dài sản phẩm Coating đăng ký vượt quá tổng chiều dài lá Foil kim loại đã quét nạp | Quét nạp thêm cuộn Foil kim loại bổ sung vào ô Slot NVL để bù đắp số mét thiếu hụt | Không |
+| **POP-ERR-29: Lỗi Chặn Đóng Gói "Material input is required before packing"** | Công đoạn Đóng gói (Packing) bắt buộc phải quét nạp vật tư tiêu hao (thùng carton, túi hút ẩm, tem nhãn) | Quét đủ mã vạch thùng và túi đóng gói theo định mức rồi mới bấm Hoàn thành đóng gói | Không |
+| **POP-ERR-30: Lỗi Sai Vùng Kho "Electrode roll cannot be input from another work center warehouse"** | Cuộn BTP điện cực đang nằm ở vị trí kho của Phân xưởng khác (chưa chuyển kho sang Line hiện tại) | Yêu cầu bộ phận kho làm phiếu chuyển kho (Warehouse Transfer) trên hệ thống sang đúng Chuyền | Không |
+
 
 
 ---
@@ -434,20 +445,117 @@ Khi công nhân bấm nút **"GHI NHẬN SẢN XUẤT"** để mở modal popup 
 
 ### 2.21 📊 Bảng Phân Tích & Giải Mã Top 10 Thông Báo Lỗi Runtime Thực Tế (Production Telemetry)
 
-Dựa trên kiểm toán thực tế hơn 200,000 bản ghi thao tác trong `VINATECH_POP.dbo.VINA_POP_ACTION_LOG`, dưới đây là 10 thông báo lỗi xuất hiện thường xuyên nhất tại các xưởng sản xuất kèm nguyên nhân và cách xử lý tức thì:
+Dựa trên kiểm toán thực tế hơn 231,000 bản ghi thao tác trong `VINATECH_POP.dbo.VINA_POP_ACTION_LOG`, dưới đây là danh sách thông báo lỗi xuất hiện thường xuyên nhất tại các xưởng sản xuất kèm nguyên nhân kỹ thuật và cách xử lý:
 
 | # | Thông báo lỗi trên màn hình Kiosk POP | `ACTION_TYPE` | Số lần ghi nhận | Nguyên nhân kỹ thuật & Cách xử lý |
 |---|---------------------------------------|---------------|----------------:|-----------------------------------|
-| 1 | **"Already transferred to MES. Cannot modify."** | `MANUAL_DEFECT` | 151 | **Đã đồng bộ sang MES, khóa sửa**: Bản ghi sản lượng/phế của công đoạn đã được Worker đồng bộ sang `STB_ProdRouteHist` (`IsTransferred = 1`). Kiosk POP khóa cứng không cho OP tự sửa. <br>➔ **Xử lý:** Kỹ sư MES can thiệp sửa trực tiếp trên WinForm (B530/B540) hoặc dùng Template 7 để rollback. |
-| 2 | **"실적이 없는 공정입니다. 실적 등록 후 추가하세요."**<br>*(Công đoạn chưa có sản lượng. Hãy đăng ký sản lượng trước)* | `WORKER_HIST_ADD` | 107 | **Thao tác ngược trình tự**: OP bấm thêm/chỉnh sửa công nhân thao tác tại trạm khi công đoạn đó chưa hề được bấm "Ghi nhận sản lượng". <br>➔ **Xử lý:** Nhập số lượng sản xuất/phế phẩm trước, sau đó hệ thống mới cho phép ghi nhận công nhân. |
-| 3 | **"코팅 생산수량 등록 후 불량등록이 가능합니다."**<br>*(Chỉ đăng ký phế sau khi đã nhập sản lượng Coating)* | `AUTO_ELECTRODE_WASTE` | 73 | **Ràng buộc Xưởng Điện Cực**: Bắt buộc phải có sản lượng màng Coating hợp lệ (`Coating ProdQty > 0`) thì mới được phép khai báo phế phẩm cuộn. |
-| 4 | **"작업자를 먼저 지정해 주세요. (검사자 미기록 저장 불가)"**<br>*(Vui lòng chỉ định công nhân trước khi lưu)* | `AUTO_INSPECTION_ADDPROCESS` | 60 | **Thiếu mã người kiểm tra**: Khi lưu kết quả đo tự kiểm PQC In-Line, ô công nhân (`WorkerID`) bị để trống. Kiosk chặn lưu để tránh dữ liệu mồ côi không quy được trách nhiệm. <br>➔ **Xử lý:** Quét mã QR thẻ nhân viên trước khi bấm lưu. |
-| 5 | **"믹싱 공정이 완료되지 않았습니다. 전 자재 투입 완료 후 코팅 실적 등록이 가능합니다. (미투입 자재 ...건)"**<br>*(Mixing chưa hoàn thành. Cần nạp đủ NVL trước khi chốt Coating)* | `MANUAL_PROD` | 52 | **Khóa liên động (Interlock) công đoạn**: Công đoạn Trộn keo/Dung môi (Mixing) chưa quét nạp đủ danh mục NVL định mức BOM. Kiosk khóa không cho chuyển sang công đoạn Tráng phủ (Coating). <br>➔ **Xử lý:** Kiểm tra tab Nạp NVL của mẻ Mixing, quét nạp nốt các vật tư còn thiếu. |
-| 6 | **"Same material input is already in progress. Please wait."** | `AUTO_MATERIAL_INPUT` | 44 | **Xung đột bấm đúp (Double click)**: Công nhân bấm quét barcode NVL liên tiếp 2 lần nhanh hơn thời gian API xử lý xong giao dịch trừ kho. <br>➔ **Xử lý:** Đợi 2-3 giây để popup hoàn tất, không bấm liên thanh. |
-| 7 | **"equipment.mapping.preempted"** | `AUTO_MAPPING_ADD` | 35 | **Xung đột chiếm dụng máy**: Máy móc đã được một Kiosk khác hoặc ca làm việc trước đó gán ở trạng thái `ACTIVE` (chính là sự cố [POP-ERR-20](#220-pop-kiosk-thiếu-thiết-bị--ẩn-máy-tại-modal-xác-nhận-kết-thúc-windingcurlingsleeving)). <br>➔ **Xử lý:** Dùng Template 10 giải phóng máy. |
-| 8 | **"코팅 공정이 완료되지 않았습니다. 코팅 양품수량 등록 후 롤프레싱 실적 등록이 가능합니다."**<br>*(Coating chưa chốt. Cần nhập sản lượng OK trước khi cán Roll Press)* | `MANUAL_PROD` | 26 | **Tuần tự công đoạn Điện Cực**: Cấm nhảy cóc từ Coating sang Roll Pressing khi chưa có sản lượng đạt (Yield OK). |
-| 9 | **"Material input is required before packing."** | `AUTO_PACKING_EXECUTE_MULTI` | 24 | **Thiếu nạp NVL đóng gói**: Thùng hoặc Lot chưa hoàn tất bước nạp vỏ/nhãn/hạt hút ẩm theo quy cách đóng gói. <br>➔ **Xử lý:** Thực hiện nạp NVL đóng gói trước khi chốt chia Box / Merge Pack. |
-| 10 | **"이미 완료된 검사 문서입니다. 추가 측정이 불가합니다."**<br>*(Phiếu đo đã hoàn thành. Không thể đo thêm)* | `AUTO_INSPECTION_ADDPROCESS` | 21 | **Phiếu kiểm tra đã chốt đóng**: Tài liệu đo PQC đã bấm Hoàn thành (`IsFinished = 1`) (sự cố [POP-ERR-12](#28-pop-err-11--12-sự-cố-phân-hệ-chất-lượng-quality-popqualityself)). <br>➔ **Xử lý:** Bấm "Hoàn tác" để gửi yêu cầu mở lại hoặc dùng Template 5. |
+| 1 | **"This route is already completed in MES."** | `MANUAL_COMPLETE` | 498 | **Trùng lặp công đoạn**: Công đoạn đã được chốt hoàn thành trên MES WinForm hoặc lượt trước, WinForm chặn ghi đè từ Kiosk. <br>➔ **Xử lý:** Dùng Golden Query `.\mes.ps1 trace '<Lot>'` kiểm tra `STB_ProdRouteHist`. Xóa lượt kẹt cũ qua Template 3 hoặc chuyển Lot sang công đoạn kế tiếp. |
+| 2 | **"Already transferred to MES. Cannot modify."** | `MANUAL_DEFECT` | 162 | **Đã đồng bộ sang MES, khóa sửa**: Bản ghi sản lượng/phế của công đoạn đã được Worker đồng bộ sang `STB_ProdRouteHist` (`IsTransferred = 1`). Kiosk POP khóa cứng không cho OP tự sửa. <br>➔ **Xử lý:** Kỹ sư MES can thiệp sửa trực tiếp trên WinForm (B530/B540) hoặc dùng Template 7 để rollback. |
+| 3 | **"실적이 없는 공정입니다. 실적 등록 후 추가하세요."**<br>*(Công đoạn chưa có sản lượng. Hãy đăng ký sản lượng trước)* | `WORKER_HIST_ADD` | 120 | **Thao tác ngược trình tự**: OP bấm thêm/chỉnh sửa công nhân thao tác hoặc phế phẩm khi công đoạn đó chưa hề được bấm "Ghi nhận sản lượng". <br>➔ **Xử lý:** Nhập số lượng sản xuất tốt (`Good Qty`) trước, sau đó hệ thống mới cho phép ghi nhận phế/công nhân. |
+| 4 | **"This roll has already been used for 2 product LOTs. Input blocked."**<br>*(Cuộn này đã được dùng cho 2 LOT sản phẩm. Bị chặn nạp)* | `AUTO_MATERIAL_INPUT` | 100 | **Ràng buộc an toàn vật tư (Business Integrity Rule)**: 1 cuộn điện cực BTP chỉ được phép cắt/nạp tối đa cho 2 LOT sản phẩm nhằm kiểm soát phế và chống âm kho. Quét vào LOT thứ 3 bị chặn. <br>➔ **Xử lý:** Đổi sang cuộn điện cực mới còn tồn kho hợp lệ và chưa vượt quá 2 LOT. |
+| 5 | **"코팅 생산수량 등록 후 불량등록이 가능합니다."**<br>*(Chỉ đăng ký phế sau khi đã nhập sản lượng Coating)* | `AUTO_ELECTRODE_WASTE` | 73 | **Ràng buộc Xưởng Điện Cực**: Bắt buộc phải có sản lượng màng Coating hợp lệ (`Coating ProdQty > 0`) thì mới được phép khai báo phế phẩm cuộn. |
+| 6 | **"작업자를 먼저 지정해 주세요. (검사자 미기록 저장 불가)"**<br>*(Vui lòng chỉ định công nhân trước khi lưu)* | `AUTO_INSPECTION_ADDPROCESS` | 60 | **Thiếu mã người kiểm tra**: Khi lưu kết quả đo tự kiểm PQC In-Line, ô công nhân (`WorkerID`) bị để trống. Kiosk chặn lưu để tránh dữ liệu mồ côi không quy được trách nhiệm. <br>➔ **Xử lý:** Quét mã QR thẻ nhân viên trước khi bấm lưu. |
+| 7 | **"Same material input is already in progress. Please wait."** | `AUTO_MATERIAL_INPUT` | 44 | **Xung đột bấm đúp (Double click)**: Công nhân bấm quét barcode NVL liên tiếp 2 lần nhanh hơn thời gian API xử lý xong giao dịch trừ kho. <br>➔ **Xử lý:** Đợi 2-3 giây để popup hoàn tất, không bấm liên thanh. |
+| 8 | **"믹싱 공정이 완료되지 않았습니다. 전 자재 투입 완료 후 코팅 실적 등록이 가능합니다. (미투입 자재 ...건)"**<br>*(Mixing chưa hoàn thành. Cần nạp đủ NVL trước khi chốt Coating)* | `MANUAL_PROD` | 40 | **Khóa liên động (Interlock) công đoạn**: Công đoạn Trộn keo/Dung môi (Mixing) chưa quét nạp đủ danh mục NVL định mức BOM. Kiosk khóa không cho chuyển sang công đoạn Tráng phủ (Coating). <br>➔ **Xử lý:** Kiểm tra tab Nạp NVL của mẻ Mixing, quét nạp nốt các vật tư còn thiếu. |
+| 9 | **"equipment.mapping.preempted"** | `AUTO_MAPPING_ADD` | 35 | **Xung đột chiếm dụng máy**: Máy móc đã được một Kiosk khác hoặc ca làm việc trước đó gán ở trạng thái `ACTIVE` (sự cố [POP-ERR-20](#220-pop-kiosk-thiếu-thiết-bị--ẩn-máy-tại-modal-xác-nhận-kết-thúc-windingcurlingsleeving)). <br>➔ **Xử lý:** Chạy `.\mes.ps1 release-machines -Target <Line> -Force` hoặc dùng Template 10 giải phóng máy. |
+| 10 | **"코팅 공정이 완료되지 않았습니다. 코팅 양품수량 등록 후 롤프레싱 실적 등록이 가능합니다."**<br>*(Coating chưa chốt. Cần nhập sản lượng OK trước khi cán Roll Press)* | `MANUAL_PROD` | 29 | **Tuần tự công đoạn Điện Cực**: Cấm nhảy cóc từ Coating sang Roll Pressing khi chưa có sản lượng đạt (Yield OK). |
+| 11 | **"Material input is required before packing."** | `AUTO_PACKING_EXECUTE_MULTI` | 24 | **Thiếu nạp NVL đóng gói**: Thùng hoặc Lot chưa hoàn tất bước nạp vỏ/nhãn/hạt hút ẩm theo quy cách đóng gói. <br>➔ **Xử lý:** Thực hiện nạp NVL đóng gói trước khi chốt chia Box / Merge Pack. |
+| 12 | **"이미 완료된 검사 문서입니다. 추가 측정이 불가합니다."**<br>*(Phiếu đo đã hoàn thành. Không thể đo thêm)* | `AUTO_INSPECTION_ADDPROCESS` | 25 | **Phiếu kiểm tra đã chốt đóng**: Tài liệu đo PQC đã bấm Hoàn thành (`IsFinished = 1`) (sự cố [POP-ERR-12](#28-pop-err-11--12-sự-cố-phân-hệ-chất-lượng-quality-popqualityself)). <br>➔ **Xử lý:** Bấm "Hoàn tác" để gửi yêu cầu mở lại hoặc dùng Template 5. |
+| 13 | **"호일 부족: 코팅 생산수량 > 투입 호일 가용 길이"**<br>*(Thiếu lá kim loại Foil)* | `MANUAL_PROD` | 15 | **Cân bằng tiêu hao vật tư**: Tổng mét màng Coating đăng ký vượt quá chiều dài lá kim loại Foil đã nạp. <br>➔ **Xử lý:** Quét nạp cuộn Foil bổ sung vào ô Slot NVL để bù đắp chiều dài thiếu hụt. |
+| 14 | **"폐기할 잔여 폭이 없습니다. (잔여 폭 0)"** | `AUTO_ELECTRODE_WASTE` | 12 | **Thanh lý rìa mép cuộn**: Hệ thống ghi nhận cuộn đã thanh lý hết phần rìa mép hoặc chưa khai báo chiều rộng màng cuộn. <br>➔ **Xử lý:** Kiểm tra lại lịch sử phế phẩm của cuộn. Nếu đã thanh lý trước đó thì không thao tác lại. |
+| 15 | **"Electrode roll cannot be input from another work center's warehouse."** | `AUTO_MATERIAL_INPUT` | 8 | **Sai vị trí kho phân xưởng**: Cuộn BTP điện cực đang nằm ở vị trí kho của Phân xưởng khác (chưa chuyển kho sang Line hiện tại). <br>➔ **Xử lý:** Yêu cầu thủ kho làm phiếu chuyển kho (Warehouse Transfer) trên hệ thống sang đúng Chuyền. |
+
+
+---
+
+### 2.22 POP-ERR-22: Lỗi "Already transferred to MES. Cannot modify"
+* **Hiện tượng:** Công nhân trên Kiosk bấm nút "Sửa" hoặc "Xóa" lượt chốt sản lượng/phế phẩm nhưng màn hình hiện popup đỏ: `"Already transferred to MES. Cannot modify."`
+* **Nguyên nhân cốt lõi:** Bản ghi sản lượng hoặc phế đã được Background Worker của POP đồng bộ thành công sang bảng đệm `SmartFactoryV2.dbo.MongoToMesPerformance` và đẩy vào `SmartFactoryV2.dbo.STB_ProdRouteHist` (`IsTransferred = 1`). Cơ chế bảo vệ dữ liệu của Kiosk tự động khóa cứng để chống sai lệch giữa Web và CSDL MES WinForm.
+* **Cách OP xử lý:** Không cố bấm sửa trên Kiosk. Thông báo cho Quản lý ca / Kỹ sư IT.
+* **Thao tác IT:** Nếu cần điều chỉnh sản lượng hoặc xóa lượt chốt sai:
+  1. Dùng Golden Query: `.\mes.ps1 trace '<Mã_Lot>'` để xác định bản ghi kẹt.
+  2. Rollback trên WinForm bằng `.\mes.ps1 fix-rollback -Lots '<Mã_Lot>' -Route '<Mã_Công_Đoạn>'` hoặc dùng Hotfix Template 3.
+
+---
+
+### 2.23 POP-ERR-23: Lỗi "실적이 없는 공정입니다. 실적 등록 후 추가하세요"
+* **Hiện tượng:** Công nhân mở modal "Phế phẩm" hoặc bấm nút "Kết thúc công đoạn" thì hệ thống báo lỗi tiếng Hàn: `"실적이 없는 공정입니다. 실적 등록 후 추가하세요."` *(Công đoạn chưa có sản lượng. Vui lòng đăng ký sản lượng trước)*.
+* **Nguyên nhân cốt lõi:** Thao tác ngược trình tự logic. Công đoạn hiện tại chưa có bản ghi sản lượng tốt (`GoodQty > 0`), nhưng công nhân đã bấm lưu phế hoặc bấm hoàn tất.
+* **Cách OP xử lý:**
+  1. Nhập số lượng sản xuất đạt (`양품수량` / Good Qty) vào ô chính của màn hình.
+  2. Sau khi số lượng tốt hiển thị hợp lệ, mới mở lại modal để nhập số lượng phế phẩm (`불량수량`).
+  3. Bấm "Xác nhận kết thúc" để hoàn tất công đoạn.
+
+---
+
+### 2.24 POP-ERR-24: Lỗi Chặn Nạp Cuộn "This roll has already been used for 2 product LOTs. Input blocked"
+* **Hiện tượng:** Công nhân tại trạm Cuốn lõi (Winding) hoặc Xẻ cuộn (Slitting) quét mã barcode cuộn điện cực BTP vào ô nạp NVL, Kiosk báo lỗi: `"This roll has already been used for 2 product LOTs. Input blocked."`
+* **Nguyên nhân cốt lõi:** Ràng buộc an toàn toàn vẹn định mức (Business Integrity Rule). Trên hệ thống MES Vinatech, 1 cuộn điện cực BTP chỉ được phép cắt xẻ và phân bổ tối đa cho **2 LOT thành phẩm**. Nếu quét sang LOT thứ 3, trigger chặn lại nhằm ngăn chặn gian lận phế, âm kho và lẫn lộn truy vết Lot.
+* **Cách OP xử lý:**
+  1. Kiểm tra tem cuộn điện cực: Cuộn này đã được sử dụng hết định mức cho 2 LOT trước đó.
+  2. Lấy cuộn điện cực mới từ giá chờ nạp, quét kiểm tra mã vạch mới.
+  3. Tuyệt đối không cố quét ép cuộn đã hết định mức.
+* **Thao tác IT:** Nếu thực tế cuộn vẫn còn dư màng do dung sai và phân xưởng yêu cầu tận dụng: IT kiểm tra bảng `SmartFactoryV2.dbo.STB_MaterialLotInfo` để xác minh số lượng tồn thực tế trước khi hỗ trợ thủ tục tách Lot BTP mới.
+
+---
+
+### 2.25 POP-ERR-25: Lỗi Trình Tự Coating "코팅 생산수량 등록 후 불량등록이 가능합니다"
+* **Hiện tượng:** Tại màn hình Tráng phủ (Coating), khi công nhân bấm nhập phế phẩm cuộn thì popup báo: `"코팅 생산수량 등록 후 불량등록이 가능합니다."` *(Chỉ đăng ký phế sau khi đã nhập sản lượng Coating)*.
+* **Nguyên nhân cốt lõi:** Logic tính toán tỷ lệ thu hồi màng (Yield Rate): Hệ thống yêu cầu phải có tổng chiều dài màng tráng phủ đạt tiêu chuẩn (`Coating ProdQty > 0`) làm cơ sở đối chiếu trước khi ghi nhận chiều dài phế đầu/cuối cuộn.
+* **Cách OP xử lý:**
+  1. Nhập chiều dài mét màng tráng phủ đạt vào ô sản lượng tốt trước.
+  2. Sau đó mở khung phế phẩm để khai báo chiều dài phế mép, phế bọt keo, phế khởi động.
+
+---
+
+### 2.26 POP-ERR-26: Lỗi Thiếu Người Kiểm Tra "작업자를 먼저 지정해 주세요"
+* **Hiện tượng:** Khi lưu biên bản tự kiểm tra chất lượng PQC In-Line (`/pop/quality/self`), màn hình hiện lỗi: `"작업자를 먼저 지정해 주세요. (검사자 미기록 저장 불가)"`.
+* **Nguyên nhân cốt lõi:** Trường mã nhân viên kiểm tra (`WORKER_ID` / `INSPECTOR_ID`) bị để trống. Hệ thống chặn lưu các biên bản kiểm tra không có định danh người thực hiện để đảm bảo quy chuẩn ISO / IATF 16949.
+* **Cách OP xử lý:**
+  1. Chạm vào ô `검사자` (Người kiểm tra) trên đầu màn hình Kiosk.
+  2. Dùng súng barcode quét mã QR trên thẻ nhân viên hoặc chọn tên từ danh sách tổ ca.
+  3. Bấm nút Lưu biên bản kiểm tra.
+
+---
+
+### 2.27 POP-ERR-27: Lỗi Khóa Liên Động Mixing ➔ Coating "믹싱 공정이 완료되지 않았습니다"
+* **Hiện tượng:** Tại Kiosk Tráng phủ Coating, khi chọn mẻ để sản xuất thì hệ thống báo: `"믹싱 공정이 완료되지 않았습니다. 전 자재 투입 완료 후 코팅 실적 등록이 가능합니다. (미투입 자재 ...건)"`.
+* **Nguyên nhân cốt lõi:** Khóa liên động (Interlock) giữa công đoạn Trộn keo (Mixing) và Tráng phủ (Coating). Mẻ trộn Mixing chưa hoàn thành nạp đủ 100% các mã nguyên vật liệu theo định mức recipe BOM (còn tồn đọng NVL chưa quét xác nhận).
+* **Cách OP xử lý:**
+  1. Quay lại Kiosk trạm Mixing hoặc thông báo cho thợ pha trộn.
+  2. Mở tab "Nạp NVL" của mẻ trộn tương ứng.
+  3. Quét nạp nốt các mã hóa chất/dung môi/bột than còn thiếu theo danh sách cảnh báo rồi bấm "Hoàn tất mẻ trộn".
+  4. Sau khi Mixing hoàn tất, Kiosk Coating sẽ tự động mở khóa.
+
+---
+
+### 2.28 POP-ERR-28: Lỗi Thiếu Foil "호일 부족: 코팅 생산수량 > 투입 호일 가용 길이"
+* **Hiện tượng:** Khi chốt sản lượng Coating, Kiosk báo lỗi: `"호일 부족: 코팅 생산수량 > 투입 호일 가용 길이"`.
+* **Nguyên nhân cốt lõi:** Cân bằng định mức vật tư tiêu hao. Chiều dài sản phẩm Coating đăng ký vượt quá tổng chiều dài của các cuộn lá kim loại Foil (Al/Cu) đã được quét nạp vào máy.
+* **Cách OP xử lý:**
+  1. Kiểm tra cuộn Foil kim loại thực tế đang lắp trên máy.
+  2. Quét mã vạch nạp thêm cuộn Foil kim loại bổ sung vào Slot NVL trên Kiosk.
+  3. Sau khi chiều dài khả dụng của Foil lớn hơn hoặc bằng chiều dài sản phẩm, bấm Lưu sản lượng.
+
+---
+
+### 2.29 POP-ERR-29: Lỗi Chặn Đóng Gói "Material input is required before packing"
+* **Hiện tượng:** Khi bấm "Đóng gói / Merge Pack" tại trạm Packing, Kiosk hiện lỗi: `"Material input is required before packing."`
+* **Nguyên nhân cốt lõi:** Quy chuẩn đóng gói thành phẩm bắt buộc phải quét nạp vật tư tiêu hao (thùng carton, túi hút ẩm, khay xốp, tem nhãn) vào danh mục vật tư công đoạn Đóng gói trước khi hệ thống cho phép sinh mã Box và in tem.
+* **Cách OP xử lý:**
+  1. Chuyển sang tab "Nạp NVL đóng gói" trên màn hình Kiosk.
+  2. Quét mã vạch thùng carton và các vật tư theo định mức của Lệnh SX.
+  3. Quay lại tab Đóng gói và thực hiện hoàn tất chia box / in tem.
+
+---
+
+### 2.30 POP-ERR-30: Lỗi Sai Vùng Kho "Electrode roll cannot be input from another work center's warehouse"
+* **Hiện tượng:** Quét nạp cuộn BTP điện cực vào máy thì Kiosk báo lỗi: `"Electrode roll cannot be input from another work center's warehouse."`
+* **Nguyên nhân cốt lõi:** Cuộn BTP điện cực trên CSDL vẫn đang ghi nhận vị trí tại kho của Phân xưởng khác (ví dụ: kho Hà Nam `ROUTE_VN_WH` nhưng Line đang sản xuất tại Hưng Yên `ROUTE_HY_WH`, hoặc khác Line).
+* **Cách OP xử lý:**
+  1. Kiểm tra tem cuộn và vị trí thực tế của cuộn BTP.
+  2. Báo thủ kho thực hiện thao tác Chuyển kho (Warehouse Transfer) trên hệ thống MES WinForm (màn hình F430) về đúng mã kho của Phân xưởng/Line hiện tại.
+  3. Sau khi chuyển kho thành công, quét lại mã vạch cuộn trên Kiosk POP.
 
 ---
 
@@ -913,7 +1021,7 @@ BEGIN TRY
     SET IsDelete       = '0',
         RepairQty      = ISNULL(RepairQty, 0),
         ChangeDateTime = GETDATE(),
-        ChangeUserID   = 'it_hotfix'
+        ChangeUserID   = 'vanduc'
     WHERE ControlNo = '<ControlNo>'
       AND FindRouteCode = '<RouteCode>'
       AND (IsDelete IS NULL OR RepairQty IS NULL);
@@ -927,7 +1035,7 @@ BEGIN TRY
         ), 0),
         s.IsDefect = CASE WHEN ISNULL((SELECT SUM(DefectQty) FROM STB_DefectRepairInfo WITH(NOLOCK) WHERE ControlNo = s.ControlNo AND IsDelete = '0'), 0) > 0 THEN 1 ELSE 0 END,
         s.ChangeDateTime = GETDATE(),
-        s.ChangeUserID = 'it_hotfix'
+        s.ChangeUserID = 'vanduc'
     FROM STB_SetInfo s
     WHERE s.ControlNo = '<ControlNo>';
 

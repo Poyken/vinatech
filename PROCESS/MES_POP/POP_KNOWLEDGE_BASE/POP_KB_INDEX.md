@@ -34,7 +34,7 @@ Related Files:
 | INDEX | [POP_KB_INDEX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_INDEX.md) | Master Index + Routing Map | Điểm bắt đầu mọi tra cứu POP | ✅ Active |
 | 01 | [POP_KB_01_ARCHITECTURE_AND_API.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_01_ARCHITECTURE_AND_API.md) | Kiến trúc hệ thống, API endpoints, **Data Pipeline & Hệ sinh thái Bảng đệm Trung gian** (MongoToMes*, STB_ERP_INTERFACE, STB_RFIDPrintQueue §3.5), DB schema mapping **66 bảng** (§3.6) | Debug API, hiểu data flow, kiến trúc staging, logic chọn máy Kiosk | ✅ Active |
 | 02 | [POP_KB_02_SCREEN_OPERATIONS.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_02_SCREEN_OPERATIONS.md) | Hướng dẫn vận hành từng màn hình + DB impact, Modal "Xác nhận Kết thúc?" | Thao tác sản xuất, đóng gói, marking, chọn máy | ✅ Active |
-| 03 | [POP_KB_03_TROUBLESHOOTING.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_03_TROUBLESHOOTING.md) | Lỗi thường gặp + Root cause + Fix (POP-ERR-01 đến POP-ERR-20) | Xử lý sự cố khẩn cấp, kẹt máy, nạp NVL BOM | ✅ Active |
+| 03 | [POP_KB_03_TROUBLESHOOTING.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_03_TROUBLESHOOTING.md) | Lỗi thường gặp + Root cause + Fix (POP-ERR-01 đến POP-ERR-30, Top 15 Production Telemetry) | Xử lý sự cố khẩn cấp, kẹt máy, nạp cuộn điện cực, khóa 2 Lot | ✅ Active |
 | 04 | [POP_KB_04_ROLLBACK_AND_SAFETY.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_04_ROLLBACK_AND_SAFETY.md) | Phân tích khả năng Rollback trên UI + DB safety (v2.0) | Hủy đóng gói Box, an toàn dữ liệu | ✅ Active |
 | 05 | [POP_KB_05_DB_VERIFICATION_AUDIT.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_05_DB_VERIFICATION_AUDIT.md) | Kết quả đối chiếu UI vs DB thực tế | Kiểm toán, xác minh tính chính xác | ✅ Active |
 | 06 | [POP_KB_06_MIGRATION_SPEC.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_06_MIGRATION_SPEC.md) | **Đặc tả chuyển đổi 100% POP Web**: Bảng quy chiếu 1:1 màn hình WinForm ➔ Web, Gap Analysis, 8 bước checklist Line Readiness | Quy hoạch tắt MES WinForm, chuẩn bị cutover | ✅ Active |
@@ -70,7 +70,10 @@ Related Files:
 | Kiểm toán UI vs DB | **KB_05** (SoT) | KB_01 §3 |
 | Hiểu kiến trúc tổng thể | KB_01 §1 | KB_01 §5 |
 | Tra cứu danh mục đầy đủ 66 bảng VINATECH_POP | **KB_01 §3.6** (SoT) | KB_05 |
-| Tra cứu Top 10 lỗi runtime thực tế Kiosk | **KB_03 §2.21** (SoT) | KB_03 §1 |
+| Tra cứu Top 15 lỗi runtime thực tế Kiosk (Action Log Telemetry) | **KB_03 §2.21** (SoT) | KB_03 §1, POP_MATRIX.json |
+| Lỗi cuộn điện cực đã nạp quá 2 Lot (`POP-ERR-24`) | **KB_03 §2.24** | POP_MATRIX.json, STB_MaterialLotInfo |
+| Lỗi thứ tự công đoạn: Chưa chốt Coating/Mixing (`POP-ERR-23`, `POP-ERR-28`) | **KB_03 §2.23, §2.28** | KB_02 §4 |
+| Tranh chấp máy sản xuất bị chiếm quyền (`equipment.mapping.preempted` - `POP-ERR-27`) | **KB_03 §2.27** | `.\mes.ps1 release-machines` |
 | Bản đồ điều hướng 4 phân hệ UI Web POP | **KB_01 §2.4** (SoT) | KB_02 |
 | Cấu hình 10 Slot nạp NVL chuẩn theo Line | **KB_01 §3.6 (Nhóm 2)** | KB_02 §6 |
 | **Quy hoạch chuyển đổi 100% POP Web (Khai tử WinForm)** | **KB_06 (SoT)** | KB_01 |

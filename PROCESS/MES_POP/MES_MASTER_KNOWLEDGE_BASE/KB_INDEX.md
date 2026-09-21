@@ -129,6 +129,9 @@ Related Files:
 ### 🟡 Sản Xuất & POP Kiosk (Xem KB_03 & POP_KB)
 *   **Lỗi tính phế âm / NULL B782 (Lot Tracking):** Sửa công thức trừ phế bọc `ISNULL(a.DefectQty, 0) - ISNULL(a.RepairQty, 0)` tại 12 vị trí trong SP `usp_LotTrackingInfo_VVT2_get` → Chi tiết: **KB_09 [B782] Bug #5**, **HOTFIX_LOG ID_56**
 *   **POP Kiosk thiếu máy Winding / Curling / Sleeving:** Khai báo cấu hình `STB_ProductMachine` cho Model và giải phóng khóa `ACTIVE` trong `VINATECH_POP.dbo.VINA_EQUIPMENT_MAPPING` sang `RELEASED` → Chi tiết: **POP_KB_01 §3.3**, **POP_KB_03 §2.20**, **KB_09 [POP Kiosk]**, **HOTFIX_LOG ID_57**
+*   **Cuộn điện cực đã nạp quá 2 Lot (POP-ERR-24):** Quy tắc hệ thống chặn 1 cuộn phân bổ quá 2 Lot sản phẩm. Cần kiểm tra bảng `STB_MaterialLotInfo` hoặc xuất cuộn mới → Chi tiết: **POP_KB_03 §2.24**
+*   **Lỗi thứ tự công đoạn POP (Chưa chốt Mixing/Coating - POP-ERR-23, POP-ERR-28):** Chặn chốt công đoạn downstream khi công đoạn trước chưa hoàn tất. OP phải chốt tuần tự từ trạm trước → Chi tiết: **POP_KB_03 §2.23, §2.28**
+*   **Máy POP bị chiếm quyền / Preempted (POP-ERR-27):** Kiosk khác cùng Line đang chiếm máy. Dùng `.\mes.ps1 release-machines` để giải phóng → Chi tiết: **POP_KB_03 §2.27**
 *   **Lỗi "Không tìm thấy LOT trong kho" khi nạp cuộn điện cực POP:** Lệch mã BOM giữa cuộn điện cực xuất kho thực tế và mã BOM định nghĩa trong PO → Chi tiết: **POP_KB_03 §2.19 (POP-ERR-19)**
 *   **Hủy chốt nhầm Winding B782 / B530:** Xóa phế `STB_DefectRepairInfo`, xóa công đoạn downstream `V-23_HY` trong `STB_ProdRouteHist`, update `CompleteRoute = NULL` trên `V-22_HY` để OP chốt lại → Chi tiết: **KB_09 §B782**, **KB_03 §5.16**, **HOTFIX_LOG ID_44**
 *   **Hủy mẻ trộn điện cực thừa B470/B552:** Xóa sạch `STB_ElectrodeMixStepInfo`, `STB_ElectrodeMixInfo`, `STB_SetInfo` khi chưa tráng Coating → Chi tiết: **KB_09 §B552 #3**, **KB_05_01 §8.10**, **HOTFIX_LOG ID_42 & ID_43**
