@@ -62,6 +62,7 @@ function Show-ShellBanner {
 function Show-ShellHelp {
     Write-Host ""
     Write-Host "CAC LENH TUC THOI (SUB-100MS RESPONSE):" -ForegroundColor Yellow
+    Write-Host "  diagnose <Text/Lot/Error>     : Master Auto-Diagnostic xuat 4 Dong Vang" -ForegroundColor Yellow
     Write-Host "  trace <Lot/Box/Machine/Line>  : Truy vet Golden Query 360 do" -ForegroundColor Green
     Write-Host "  find <Keyword>                : Tra cuu sieu toc L1 Cache trong RAM (<5ms)" -ForegroundColor Green
     Write-Host "  health [-Detail]              : Quet suc khoe CSDL truc tiep" -ForegroundColor Green
@@ -71,6 +72,7 @@ function Show-ShellHelp {
     Write-Host "  profile <SmartFactoryV2|POP..>: Chuyen CSDL profile thuong truc" -ForegroundColor Green
     Write-Host "  clear / cls                   : Xoa man hinh" -ForegroundColor Green
     Write-Host "  exit / quit / q               : Dong ket noi va thoat Shell" -ForegroundColor Green
+    Write-Host "  * Meo: Paste thang bat ky van ban bao loi hoac ma Lot, Shell se tu dong chan doan!" -ForegroundColor Gray
     Write-Host ""
 }
 
@@ -216,8 +218,24 @@ while ($true) {
             }
         }
 
+        { $_ -in @("diagnose", "diag", "chan-doan") } {
+            if ([string]::IsNullOrWhiteSpace($arg)) {
+                Write-Host "Vui long nhap noi dung loi can chan doan. Vi du: diagnose B530 ket so luong" -ForegroundColor Yellow
+            } else {
+                $diagPy = Join-Path $toolsDir "mes_diagnose.py"
+                python $diagPy $arg
+            }
+        }
+
         default {
-            Write-Host "Lenh khong hop le: '$cmd'. Go 'help' de xem danh sach lenh." -ForegroundColor Red
+            # Tu dong fallback sang Diagnose neu noi dung giong text bao loi hoac co ma Lot
+            if ($cmd -match "^(VV|PK|ML|VE|SP|\d{10})|[A-Z]{1,3}\d{3,4}" -or $rawInput.Length -gt 15) {
+                Write-Host "(*) Tu dong kich hoat Master Auto-Diagnostic cho: '$rawInput'..." -ForegroundColor Cyan
+                $diagPy = Join-Path $toolsDir "mes_diagnose.py"
+                python $diagPy $rawInput
+            } else {
+                Write-Host "Lenh khong hop le: '$cmd'. Go 'help' de xem danh sach lenh, hoac go 'diagnose <loi>'." -ForegroundColor Red
+            }
         }
     }
 

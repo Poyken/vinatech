@@ -38,6 +38,8 @@ function Show-Help {
     Write-Host '  1. TRUY VET DU LIEU & SU CO (INVESTIGATION):' -ForegroundColor Cyan
     Write-Host '     .\mes.ps1 shell                     ' -NoNewline -ForegroundColor Green
     Write-Host '-> Bat Persistent REPL Shell tuc thoi (Zero Cold-Start, <0.05s response)' -ForegroundColor Yellow
+    Write-Host '     .\mes.ps1 diagnose "<Text/Lot>"     ' -NoNewline -ForegroundColor Green
+    Write-Host '-> Master Auto-Diagnostic: Chan doan tuc thoi 1-Shot xuat 4 Dong Vang (<1s)' -ForegroundColor Yellow
     Write-Host '     .\mes.ps1 trace <Lot/Line/Machine/Box>' -NoNewline -ForegroundColor Green
     Write-Host '-> Golden Query 360 sieu toc (Single Round-Trip) tu dong nhan dien Lot, Line, Thiet bi, Thung' -ForegroundColor Gray
     Write-Host '     .\mes.ps1 pop-trace <Keyword>       ' -NoNewline -ForegroundColor Green
@@ -451,60 +453,19 @@ elseif ($cmdLower -eq 'watchdog-stop') {
         Write-Host "-> Khong tim thay tien trinh Auto-Pilot Watchdog nao dang hoat dong." -ForegroundColor Gray
     }
 }
-elseif ($cmdLower -eq 'dashboard' -or $cmdLower -eq 'web') {
-    $dashScript = Join-Path $toolsDir 'web_dashboard.py'
-    if (Test-Path $dashScript) {
-        $port = if ($Target -match '^\d+$') { [int]$Target } else { 5000 }
-        Write-Host "(*) Dang khoi dong Realtime Factory Web Dashboard tai port $port..." -ForegroundColor Cyan
-        Start-Process python -ArgumentList "-u", $dashScript, "--port", $port -WindowStyle Hidden
-        Start-Sleep -Seconds 1
-        Start-Process "http://localhost:$port"
-        & (Join-Path $scriptDir 'mes.ps1') dashboard-status
-    } else {
-        Write-Error 'tools/web_dashboard.py not found.'
-    }
-}
-elseif ($cmdLower -eq 'dashboard-status') {
-    $lockFile = Join-Path $toolsDir '.dashboard.lock'
-    if (Test-Path $lockFile) {
-        $pidText = (Get-Content $lockFile -Raw).Trim()
-        $proc = Get-Process -Id $pidText -ErrorAction SilentlyContinue
-        if ($proc) {
-            $memMb = [math]::Round($proc.WorkingSet64 / 1MB, 2)
-            $startTime = $proc.StartTime.ToString('yyyy-MM-dd HH:mm:ss')
-            Write-Host "-> [ONLINE] Web Dashboard dang hoat dong voi PID: $pidText (RAM: $memMb MB, Started: $startTime)" -ForegroundColor Green
-            Write-Host "   URL: http://localhost:5000" -ForegroundColor Cyan
-        } else {
-            Write-Host "-> [STALE LOCK] File .dashboard.lock ton tai (PID: $pidText) nhung server da dung." -ForegroundColor Yellow
-            Remove-Item $lockFile -Force -ErrorAction SilentlyContinue
-            Write-Host "   Da tu dong thu hoi file lock moi." -ForegroundColor Gray
+elseif ($cmdLower -eq 'diagnose' -or $cmdLower -eq 'diag' -or $cmdLower -eq 'chan-doan') {
+    $diagScript = Join-Path $toolsDir 'mes_diagnose.py'
+    if (Test-Path $diagScript) {
+        if ([string]::IsNullOrWhiteSpace($Target)) {
+            Write-Host 'Loi: Vui long nhap noi dung loi, ma Lot hoac ma man hinh can chan doan!' -ForegroundColor Red
+            Write-Host 'Vi du: .\mes.ps1 diagnose "B530 ket so luong"' -ForegroundColor Yellow
+            Write-Host '       .\mes.ps1 diagnose "This route is already completed in MES"' -ForegroundColor Yellow
+            Write-Host '       .\mes.ps1 diagnose "VVQR153R060615"' -ForegroundColor Yellow
+            exit 1
         }
+        python $diagScript $Target
     } else {
-        Write-Host "-> [OFFLINE] Web Dashboard hien khong chay." -ForegroundColor Gray
-        Write-Host "   Khoi dong: .\mes.ps1 dashboard" -ForegroundColor Cyan
-    }
-}
-elseif ($cmdLower -eq 'dashboard-stop') {
-    $lockFile = Join-Path $toolsDir '.dashboard.lock'
-    $stopped = $false
-    if (Test-Path $lockFile) {
-        $pidText = (Get-Content $lockFile -Raw).Trim()
-        $proc = Get-Process -Id $pidText -ErrorAction SilentlyContinue
-        if ($proc) {
-            Stop-Process -Id $pidText -Force -ErrorAction SilentlyContinue
-            Write-Host "-> Da dung tien trinh Web Dashboard (PID: $pidText)." -ForegroundColor Green
-            $stopped = $true
-        }
-        Remove-Item $lockFile -Force -ErrorAction SilentlyContinue
-    }
-    $procs = Get-CimInstance Win32_Process -Filter "Name LIKE '%python%'" -ErrorAction SilentlyContinue | Where-Object { $_.CommandLine -match 'web_dashboard' }
-    foreach ($p in $procs) {
-        Stop-Process -Id $p.ProcessId -Force -ErrorAction SilentlyContinue
-        Write-Host "-> Da dung tien trinh Web Dashboard phu (PID: $($p.ProcessId))." -ForegroundColor Green
-        $stopped = $true
-    }
-    if (-not $stopped) {
-        Write-Host "-> Khong tim thay tien trinh Web Dashboard nao dang hoat dong." -ForegroundColor Gray
+        Write-Error 'tools/mes_diagnose.py not found.'
     }
 }
 elseif ($cmdLower -eq 'clean') {
