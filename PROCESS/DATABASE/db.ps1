@@ -13,7 +13,7 @@
 #>
 param (
     [Parameter(Position=0)]
-    [ValidateSet("help", "list", "health", "find", "schema", "query", "trace", "stats", "sp", "jobs", "triggers", "index", "crossdb", "lineage")]
+    [ValidateSet("help", "list", "health", "find", "schema", "query", "trace", "stats", "sp", "jobs", "triggers", "index", "crossdb", "lineage", "auditkb")]
     [string]$Action = "help",
 
     [Parameter(Position=1)]
@@ -30,7 +30,8 @@ param (
     [int]$MaxRows = 50,
     [switch]$Detail,
     [switch]$ActiveOnly,
-    [switch]$AllDatabases
+    [switch]$AllDatabases,
+    [switch]$ExportReport
 )
 
 $toolsDir = "$PSScriptRoot\tools"
@@ -59,6 +60,7 @@ function Show-Help {
     Write-Host ' 11. .\db.ps1 index -Profile <P> -Table <T>    - Kiem toan Index, Space Used va DMV Missing Index'
     Write-Host ' 12. .\db.ps1 crossdb [-Profile <P>]           - Quet cac phu thuoc goi cheo CSDL & Linked Servers'
     Write-Host ' 13. .\db.ps1 lineage -Type <T> -Value <V>     - Truy vet huyet mach du lieu 360 do (PO/WO/LOT/BARCODE)'
+    Write-Host ' 14. .\db.ps1 auditkb [-ExportReport]          - Kiem toan do tin cay cua Markdown KB vs Live DB'
     Write-Host ""
     Write-Host "DANH SACH PROFILES CHINH:" -ForegroundColor Magenta
     Write-Host "  SmartFactoryV2, SmartFramework, Groupware, ERP, Bizbox, POP, Andon,"
@@ -186,6 +188,14 @@ switch ($Action.ToLower()) {
             default {
                 Write-Host "Loai truy vet khong duoc ho tro: $Type. Ho tro: PO, LOT" -ForegroundColor Red
             }
+        }
+    }
+
+    "auditkb" {
+        if ($PSBoundParameters.ContainsKey('ExportReport')) {
+            & "$toolsDir\audit_kb_reliability.ps1" -ExportReport:$ExportReport
+        } else {
+            & "$toolsDir\audit_kb_reliability.ps1" -ExportReport:$true
         }
     }
 }

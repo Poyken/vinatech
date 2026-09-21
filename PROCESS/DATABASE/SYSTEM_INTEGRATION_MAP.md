@@ -1,7 +1,16 @@
-# 🌐 SYSTEM INTEGRATION MAP — BẢN ĐỒ LIÊN KẾT 3 NỀN TẢNG & 15 CƠ SỞ DỮ LIỆU
+# 🌐 SYSTEM INTEGRATION MAP — BẢN ĐỒ LIÊN KẾT 4 NỀN TẢNG & 15 CƠ SỞ DỮ LIỆU
 
 > **Cập nhật:** 2026-09-21  
 > **Mục tiêu:** Bản đồ trực quan hóa chi tiết các đường dẫn dữ liệu (Data Pipelines), khóa liên kết (Foreign / Cross-DB Keys) và quy trình giao dịch xuyên suốt 15 cơ sở dữ liệu tại Vinatech.
+
+---
+
+## 🏛️ 0. Bốn Trụ Cột Nền Tảng Doanh Nghiệp (Enterprise Platforms)
+
+1. **① Groupware (`gw.vinatech.com`):** Cổng phê duyệt tờ trình hành chính, nhân sự, mua sắm và kế hoạch ở thượng nguồn (`VINATECH_GROUP`, `VINATECH_RESTFUL`, `VINATECH_SPREADSHEET`, `streamdocs`).
+2. **② ERP Douzone iU (`NEOE`):** Sổ cái trung tâm lưu trữ Master Data gốc (vật tư, đối tác, BOM, HR), hạch toán tài chính (`NEOE`, `DZICUBE`, `WCMS_STANDARD_NEW`, `erpdb`).
+3. **③ NAIS MES (`mes.hycap.co.kr:9952`):** Hệ thống thực thi sản xuất tại hiện trường nhà xưởng (quét barcode, routing, QC và kho vật lý: `SmartFactoryV2`, `SmartFramework`, `VINATECH_POP`, `AndonDB`).
+4. **④ YoungLimWon K-System Ace Web ERP (`evn.vinatech.com`):** Hệ thống Web ERP quản trị thế hệ mới cho Vinatech Việt Nam (17 phân hệ, 213 process menus, 4.473 sub-programs) bao gồm: Quản lý Lệnh sản xuất, MRP, Quản lý kho theo LOT (`FrmWPDLotList`), Kế toán, Mua hàng, Bán hàng và phân hệ cầu nối Smart Factory (`K-스마트`). Chi tiết: [KSYSTEM_ACE_ERP_MASTER_SPECIFICATION.md](SYSTEM_ARCHITECTURE/KSYSTEM_ACE_ERP_MASTER_SPECIFICATION.md).
 
 ---
 

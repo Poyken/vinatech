@@ -148,21 +148,15 @@ elseif ($cmdLower -eq 'query') {
     }
 }
 elseif ($cmdLower -eq 'audit') {
-    Show-GwBanner
-    Write-Host "Kiem toan danh muc bang Groupware trong VINATECH_GROUP..." -ForegroundColor Cyan
-    $sqlAudit = @"
-SELECT 
-    TABLE_NAME, 
-    TABLE_TYPE 
-FROM INFORMATION_SCHEMA.TABLES 
-WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME LIKE 'VINA%'
-ORDER BY TABLE_NAME;
-"@
-    $tables = Invoke-DbQuery -Profile 'Groupware' -Query $sqlAudit
-    if ($tables) {
-        Write-Host "-> Tim thay $($tables.Rows.Count) bang co tien to 'VINA%' trong CSDL VINATECH_GROUP." -ForegroundColor Green
-        $tables | Select-Object -First 15 | Format-Table -AutoSize
-        Write-Host "(Hien thi 15/$($tables.Rows.Count) bang...)" -ForegroundColor Gray
+    $auditScript = Join-Path $toolsDir 'audit_kb_reliability.ps1'
+    if (Test-Path $auditScript) {
+        if ($Detail) {
+            & $auditScript -Detailed
+        } else {
+            & $auditScript
+        }
+    } else {
+        Write-Error "tools/audit_kb_reliability.ps1 not found."
     }
 }
 elseif ($cmdLower -eq 'routine') {
