@@ -36,6 +36,8 @@ function Show-Help {
     Write-Host 'CAC LENH VAN HANH CHINH:' -ForegroundColor Yellow
     Write-Host ''
     Write-Host '  1. TRUY VET DU LIEU & SU CO (INVESTIGATION):' -ForegroundColor Cyan
+    Write-Host '     .\mes.ps1 shell                     ' -NoNewline -ForegroundColor Green
+    Write-Host '-> Bat Persistent REPL Shell tuc thoi (Zero Cold-Start, <0.05s response)' -ForegroundColor Yellow
     Write-Host '     .\mes.ps1 trace <Lot/Line/Machine/Box>' -NoNewline -ForegroundColor Green
     Write-Host '-> Golden Query 360 sieu toc (Single Round-Trip) tu dong nhan dien Lot, Line, Thiet bi, Thung' -ForegroundColor Gray
     Write-Host '     .\mes.ps1 pop-trace <Keyword>       ' -NoNewline -ForegroundColor Green
@@ -83,6 +85,12 @@ function Show-Help {
     Write-Host '-> Kiem tra trang thai Bot dang chay hay dung' -ForegroundColor Gray
     Write-Host '     .\mes.ps1 bot-stop                  ' -NoNewline -ForegroundColor Green
     Write-Host '-> Dung an toan tien trinh Bot Telegram' -ForegroundColor Gray
+    Write-Host '     .\mes.ps1 watchdog-hidden           ' -NoNewline -ForegroundColor Green
+    Write-Host '-> Bat Auto-Pilot Watchdog tuan tra 24/7 & tu ban alert Telegram' -ForegroundColor Yellow
+    Write-Host '     .\mes.ps1 watchdog-status           ' -NoNewline -ForegroundColor Green
+    Write-Host '-> Kiem tra trang thai Watchdog' -ForegroundColor Gray
+    Write-Host '     .\mes.ps1 watchdog-stop             ' -NoNewline -ForegroundColor Green
+    Write-Host '-> Dung an toan tien trinh Watchdog' -ForegroundColor Gray
 
     Write-Host ''
     Write-Host 'Cac Profile CSDL ho tro:' -ForegroundColor Yellow
@@ -105,6 +113,14 @@ elseif ($cmdLower -eq 'check') {
         $conn.Close()
     } else {
         Write-Host "-> Khong the ket noi toi profile: $Profile" -ForegroundColor Red
+    }
+}
+elseif ($cmdLower -eq 'shell' -or $cmdLower -eq 'repl') {
+    $shellScript = Join-Path $toolsDir 'mes_shell.ps1'
+    if (Test-Path $shellScript) {
+        & $shellScript
+    } else {
+        Write-Error 'tools/mes_shell.ps1 not found.'
     }
 }
 elseif ($cmdLower -eq 'trace' -or $cmdLower -eq 'pop-trace') {
@@ -362,6 +378,133 @@ elseif ($cmdLower -eq 'bot-stop') {
     }
     if (-not $stopped) {
         Write-Host "-> Khong tim thay tien trinh Bot Telegram nao dang hoat dong." -ForegroundColor Gray
+    }
+}
+elseif ($cmdLower -eq 'watchdog') {
+    $wdScript = Join-Path $toolsDir 'mes_watchdog.py'
+    if (Test-Path $wdScript) {
+        python -u $wdScript
+    } else {
+        Write-Error 'tools/mes_watchdog.py not found.'
+    }
+}
+elseif ($cmdLower -eq 'watchdog-once') {
+    $wdScript = Join-Path $toolsDir 'mes_watchdog.py'
+    if (Test-Path $wdScript) {
+        python $wdScript --once
+    } else {
+        Write-Error 'tools/mes_watchdog.py not found.'
+    }
+}
+elseif ($cmdLower -eq 'watchdog-hidden') {
+    $wdScript = Join-Path $toolsDir 'mes_watchdog.py'
+    if (Test-Path $wdScript) {
+        Write-Host "(*) Dang khoi dong Auto-Pilot Watchdog chay ngam..." -ForegroundColor Cyan
+        Start-Process python -ArgumentList "-u", $wdScript -WindowStyle Hidden
+        Start-Sleep -Seconds 1
+        & (Join-Path $scriptDir 'mes.ps1') watchdog-status
+    } else {
+        Write-Error 'tools/mes_watchdog.py not found.'
+    }
+}
+elseif ($cmdLower -eq 'watchdog-status') {
+    $lockFile = Join-Path $toolsDir '.watchdog.lock'
+    if (Test-Path $lockFile) {
+        $pidText = (Get-Content $lockFile -Raw).Trim()
+        $proc = Get-Process -Id $pidText -ErrorAction SilentlyContinue
+        if ($proc) {
+            $memMb = [math]::Round($proc.WorkingSet64 / 1MB, 2)
+            $startTime = $proc.StartTime.ToString('yyyy-MM-dd HH:mm:ss')
+            Write-Host "-> [ONLINE] Auto-Pilot Watchdog dang hoat dong voi PID: $pidText (RAM: $memMb MB, Started: $startTime)" -ForegroundColor Green
+        } else {
+            Write-Host "-> [STALE LOCK] File .watchdog.lock ton tai (PID: $pidText) nhung tien trinh da dung." -ForegroundColor Yellow
+            Remove-Item $lockFile -Force -ErrorAction SilentlyContinue
+            Write-Host "   Da tu dong thu hoi file lock moi." -ForegroundColor Gray
+        }
+    } else {
+        Write-Host "-> [OFFLINE] Auto-Pilot Watchdog hien khong chay." -ForegroundColor Gray
+        Write-Host "   - Khoi dong che do console: .\mes.ps1 watchdog" -ForegroundColor Cyan
+        Write-Host "   - Khoi dong che do ngam   : .\mes.ps1 watchdog-hidden" -ForegroundColor Cyan
+        Write-Host "   - Tuan tra 1 lan thu nghiem: .\mes.ps1 watchdog-once" -ForegroundColor Cyan
+    }
+}
+elseif ($cmdLower -eq 'watchdog-stop') {
+    $lockFile = Join-Path $toolsDir '.watchdog.lock'
+    $stopped = $false
+    if (Test-Path $lockFile) {
+        $pidText = (Get-Content $lockFile -Raw).Trim()
+        $proc = Get-Process -Id $pidText -ErrorAction SilentlyContinue
+        if ($proc) {
+            Stop-Process -Id $pidText -Force -ErrorAction SilentlyContinue
+            Write-Host "-> Da dung tien trinh Auto-Pilot Watchdog (PID: $pidText)." -ForegroundColor Green
+            $stopped = $true
+        }
+        Remove-Item $lockFile -Force -ErrorAction SilentlyContinue
+    }
+    $procs = Get-CimInstance Win32_Process -Filter "Name LIKE '%python%'" -ErrorAction SilentlyContinue | Where-Object { $_.CommandLine -match 'mes_watchdog' }
+    foreach ($p in $procs) {
+        Stop-Process -Id $p.ProcessId -Force -ErrorAction SilentlyContinue
+        Write-Host "-> Da dung tien trinh Watchdog phu (PID: $($p.ProcessId))." -ForegroundColor Green
+        $stopped = $true
+    }
+    if (-not $stopped) {
+        Write-Host "-> Khong tim thay tien trinh Auto-Pilot Watchdog nao dang hoat dong." -ForegroundColor Gray
+    }
+}
+elseif ($cmdLower -eq 'dashboard' -or $cmdLower -eq 'web') {
+    $dashScript = Join-Path $toolsDir 'web_dashboard.py'
+    if (Test-Path $dashScript) {
+        $port = if ($Target -match '^\d+$') { [int]$Target } else { 5000 }
+        Write-Host "(*) Dang khoi dong Realtime Factory Web Dashboard tai port $port..." -ForegroundColor Cyan
+        Start-Process python -ArgumentList "-u", $dashScript, "--port", $port -WindowStyle Hidden
+        Start-Sleep -Seconds 1
+        Start-Process "http://localhost:$port"
+        & (Join-Path $scriptDir 'mes.ps1') dashboard-status
+    } else {
+        Write-Error 'tools/web_dashboard.py not found.'
+    }
+}
+elseif ($cmdLower -eq 'dashboard-status') {
+    $lockFile = Join-Path $toolsDir '.dashboard.lock'
+    if (Test-Path $lockFile) {
+        $pidText = (Get-Content $lockFile -Raw).Trim()
+        $proc = Get-Process -Id $pidText -ErrorAction SilentlyContinue
+        if ($proc) {
+            $memMb = [math]::Round($proc.WorkingSet64 / 1MB, 2)
+            $startTime = $proc.StartTime.ToString('yyyy-MM-dd HH:mm:ss')
+            Write-Host "-> [ONLINE] Web Dashboard dang hoat dong voi PID: $pidText (RAM: $memMb MB, Started: $startTime)" -ForegroundColor Green
+            Write-Host "   URL: http://localhost:5000" -ForegroundColor Cyan
+        } else {
+            Write-Host "-> [STALE LOCK] File .dashboard.lock ton tai (PID: $pidText) nhung server da dung." -ForegroundColor Yellow
+            Remove-Item $lockFile -Force -ErrorAction SilentlyContinue
+            Write-Host "   Da tu dong thu hoi file lock moi." -ForegroundColor Gray
+        }
+    } else {
+        Write-Host "-> [OFFLINE] Web Dashboard hien khong chay." -ForegroundColor Gray
+        Write-Host "   Khoi dong: .\mes.ps1 dashboard" -ForegroundColor Cyan
+    }
+}
+elseif ($cmdLower -eq 'dashboard-stop') {
+    $lockFile = Join-Path $toolsDir '.dashboard.lock'
+    $stopped = $false
+    if (Test-Path $lockFile) {
+        $pidText = (Get-Content $lockFile -Raw).Trim()
+        $proc = Get-Process -Id $pidText -ErrorAction SilentlyContinue
+        if ($proc) {
+            Stop-Process -Id $pidText -Force -ErrorAction SilentlyContinue
+            Write-Host "-> Da dung tien trinh Web Dashboard (PID: $pidText)." -ForegroundColor Green
+            $stopped = $true
+        }
+        Remove-Item $lockFile -Force -ErrorAction SilentlyContinue
+    }
+    $procs = Get-CimInstance Win32_Process -Filter "Name LIKE '%python%'" -ErrorAction SilentlyContinue | Where-Object { $_.CommandLine -match 'web_dashboard' }
+    foreach ($p in $procs) {
+        Stop-Process -Id $p.ProcessId -Force -ErrorAction SilentlyContinue
+        Write-Host "-> Da dung tien trinh Web Dashboard phu (PID: $($p.ProcessId))." -ForegroundColor Green
+        $stopped = $true
+    }
+    if (-not $stopped) {
+        Write-Host "-> Khong tim thay tien trinh Web Dashboard nao dang hoat dong." -ForegroundColor Gray
     }
 }
 elseif ($cmdLower -eq 'clean') {

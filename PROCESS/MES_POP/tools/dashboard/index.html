@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VINATECH MES & POP — Realtime Operations Dashboard</title>
+    <style>
+        :root {
+            --bg-base: #0a0d14;
+            --bg-card: rgba(18, 24, 38, 0.75);
+            --bg-card-hover: rgba(28, 36, 56, 0.85);
+            --border: rgba(255, 255, 255, 0.08);
+            --border-hover: rgba(0, 212, 255, 0.4);
+            --text-main: #f0f4fc;
+            --text-sub: #8ea0be;
+            --cyan: #00d4ff;
+            --green: #00e676;
+            --yellow: #ffd600;
+            --red: #ff3d71;
+            --blue: #2979ff;
+            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-family);
+        }
+
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 24px;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(0, 212, 255, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(0, 230, 118, 0.04) 0%, transparent 40%);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* HEADER */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 28px;
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            margin-bottom: 24px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .logo-area h1 {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-area h1 span {
+            color: var(--cyan);
+        }
+
+        .logo-area p {
+            font-size: 13px;
+            color: var(--text-sub);
+            margin-top: 4px;
+        }
+
+        .header-meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .badge-live {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(0, 230, 118, 0.12);
+            color: var(--green);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            border: 1px solid rgba(0, 230, 118, 0.3);
+        }
+
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--green);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--green);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); opacity: 0.8; }
+            50% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(0.95); opacity: 0.8; }
+        }
+
+        /* KPI ROW */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 18px;
+            margin-bottom: 24px;
+        }
+
+        .kpi-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            padding: 20px;
+            border-radius: 14px;
+            transition: all 0.25s ease;
+        }
+
+        .kpi-card:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-2px);
+        }
+
+        .kpi-title {
+            font-size: 13px;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        .kpi-value {
+            font-size: 32px;
+            font-weight: 700;
+            margin: 8px 0 4px 0;
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+        }
+
+        .kpi-sub {
+            font-size: 12px;
+            color: var(--text-sub);
+        }
+
+        /* ACTION BAR */
+        .action-bar {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 10px 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .btn:hover {
+            background: rgba(0, 212, 255, 0.15);
+            border-color: var(--cyan);
+            color: var(--cyan);
+        }
+
+        .btn-primary {
+            background: rgba(0, 212, 255, 0.15);
+            border-color: var(--cyan);
+            color: var(--cyan);
+        }
+
+        /* 31 POP LINES SECTION */
+        .section-box {
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .lines-summary {
+            display: flex;
+            gap: 12px;
+            font-size: 13px;
+        }
+
+        .stat-badge {
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+
+        .stat-pass { background: rgba(0, 230, 118, 0.15); color: var(--green); }
+        .stat-warn { background: rgba(255, 214, 0, 0.15); color: var(--yellow); }
+        .stat-fail { background: rgba(255, 61, 113, 0.15); color: var(--red); }
+
+        .lines-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+            gap: 12px;
+        }
+
+        .line-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            padding: 14px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .line-card:hover {
+            border-color: var(--border-hover);
+            background: var(--bg-card-hover);
+            transform: translateY(-2px);
+        }
+
+        .line-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .line-code {
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .line-status {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .line-details {
+            font-size: 12px;
+            color: var(--text-sub);
+            line-height: 1.5;
+        }
+
+        /* SEARCH L1 MATRIX SECTION */
+        .search-box {
+            width: 100%;
+            margin-bottom: 16px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 14px 20px;
+            background: rgba(10, 13, 20, 0.6);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text-main);
+            font-size: 15px;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .search-input:focus {
+            border-color: var(--cyan);
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.2);
+        }
+
+        .search-results {
+            max-height: 400px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .result-item {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 14px;
+        }
+
+        .result-item:hover {
+            border-color: var(--cyan);
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 700;
+            font-size: 14px;
+            color: var(--cyan);
+            margin-bottom: 4px;
+        }
+
+        .result-meta {
+            font-size: 12px;
+            color: var(--text-sub);
+            margin-bottom: 8px;
+        }
+
+        .bug-tag {
+            background: rgba(255, 214, 0, 0.08);
+            border: 1px solid rgba(255, 214, 0, 0.2);
+            color: var(--yellow);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-top: 4px;
+            display: inline-block;
+        }
+
+        /* MODAL / TERMINAL */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(6px);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: #0f1422;
+            border: 1px solid var(--cyan);
+            border-radius: 14px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6);
+        }
+
+        .modal-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-body {
+            padding: 20px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 13px;
+            white-space: pre-wrap;
+            line-height: 1.5;
+            color: #d1d9e6;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--text-sub);
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .close-btn:hover { color: var(--red); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- HEADER -->
+        <header>
+            <div class="logo-area">
+                <h1>⚡ VINATECH <span>MES & POP MONITOR</span></h1>
+                <p>Cổng giám sát thời gian thực Shop Floor — NAIS MES + Kiosk POP Web</p>
+            </div>
+            <div class="header-meta">
+                <div class="badge-live">
+                    <div class="pulse-dot"></div>
+                    <span id="liveStatus">CSDL KẾT NỐI</span>
+                </div>
+                <div style="font-size: 13px; color: var(--text-sub);" id="clock">--:--:--</div>
+            </div>
+        </header>
+
+        <!-- KPI CARDS -->
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-title">CSDL Production</div>
+                <div class="kpi-value" style="color: var(--cyan);">ONLINE</div>
+                <div class="kpi-sub">SmartFactoryV2 + POP DB</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-title">Lot Trong Kho HOLD</div>
+                <div class="kpi-value" style="color: var(--yellow);" id="holdCount">3,458</div>
+                <div class="kpi-sub">Kho HOLDING_WH (Cần review)</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-title">Hoạt Động WIP 24H</div>
+                <div class="kpi-value" style="color: var(--green);" id="wipCount">571</div>
+                <div class="kpi-sub">ControlNo phát sinh sản xuất</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-title">POP Máy Treo Khóa</div>
+                <div class="kpi-value" style="color: var(--green);" id="lockCount">0</div>
+                <div class="kpi-sub">Đã giải phóng sạch sẽ</div>
+            </div>
+        </div>
+
+        <!-- ACTION BUTTONS -->
+        <div class="action-bar">
+            <button class="btn btn-primary" onclick="runAction('health')">🔍 Quét Sức Khỏe (Health Check)</button>
+            <button class="btn" onclick="runAction('readiness')">📋 Kiểm Toán POP (Readiness)</button>
+            <button class="btn" onclick="runAction('release')">🔓 Khảo Sát Máy Kẹt (Survey)</button>
+            <button class="btn" onclick="runAction('pop-audit')">⚖️ Đối Soát Lệch POP-MES</button>
+            <button class="btn" onclick="reloadDashboard()">🔄 Làm Mới Dữ Liệu</button>
+        </div>
+
+        <!-- 31 POP LINES SECTION -->
+        <div class="section-box">
+            <div class="section-header">
+                <div class="section-title">🏭 Bản Đồ 31 Dây Chuyền POP Kiosk (Hà Nam & Hưng Yên)</div>
+                <div class="lines-summary">
+                    <span class="stat-badge stat-pass" id="cntPass">11 PASS</span>
+                    <span class="stat-badge stat-warn" id="cntWarn">6 WARN</span>
+                    <span class="stat-badge stat-fail" id="cntFail">14 FAIL</span>
+                </div>
+            </div>
+            <div class="lines-grid" id="linesGrid">
+                <!-- Javascript will inject 31 line cards here -->
+            </div>
+        </div>
+
+        <!-- INSTANT L1 SEARCH SECTION -->
+        <div class="section-box">
+            <div class="section-header">
+                <div class="section-title">⚡ Tra Cứu Siêu Tốc L1 Cache (95 Màn Hình MES & Bugs)</div>
+                <span style="font-size: 12px; color: var(--text-sub);">Phản hồi &lt;1 mili-giây từ RAM</span>
+            </div>
+            <div class="search-box">
+                <input type="text" class="search-input" id="searchInput" placeholder="Nhập mã màn hình hoặc triệu chứng lỗi (Ví dụ: B530, B540, HOLD, Sanmina, Vol/Farad...)" oninput="handleSearch(this.value)">
+            </div>
+            <div class="search-results" id="searchResults">
+                <!-- Search results will show here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- TERMINAL MODAL -->
+    <div class="modal" id="terminalModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span style="font-weight: 700; color: var(--cyan);" id="modalTitle">KẾT QUẢ THỰC THI</span>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody">Đang xử lý...</div>
+        </div>
+    </div>
+
+    <script>
+        let popData = null;
+        let matrixData = null;
+
+        // Clock
+        setInterval(() => {
+            const now = new Date();
+            document.getElementById('clock').innerText = now.toLocaleTimeString('vi-VN');
+        }, 1000);
+
+        // Load data on start
+        async function loadData() {
+            try {
+                const [rPop, rMatrix] = await Promise.all([
+                    fetch('/api/pop'),
+                    fetch('/api/matrix')
+                ]);
+                popData = await rPop.json();
+                matrixData = await rMatrix.json();
+                renderLines();
+                renderInitialScreens();
+            } catch (e) {
+                console.error("Lỗi nạp dữ liệu:", e);
+            }
+        }
+
+        function renderLines() {
+            if (!popData || !popData.lines) return;
+            const grid = document.getElementById('linesGrid');
+            grid.innerHTML = '';
+
+            let pass = 0, warn = 0, fail = 0;
+
+            for (const [code, info] of Object.entries(popData.lines)) {
+                if (info.status === 'PASS') pass++;
+                else if (info.status === 'WARN') warn++;
+                else fail++;
+
+                const card = document.createElement('div');
+                card.className = 'line-card';
+                card.onclick = () => showLineDetail(code, info);
+
+                let badgeClass = 'stat-pass';
+                if (info.status === 'WARN') badgeClass = 'stat-warn';
+                if (info.status === 'FAIL') badgeClass = 'stat-fail';
+
+                card.innerHTML = `
+                    <div class="line-card-header">
+                        <span class="line-code">${code}</span>
+                        <span class="line-status ${badgeClass}">${info.status}</span>
+                    </div>
+                    <div class="line-details">
+                        🏭 ${info.factory} | Mode: ${info.input_mode}<br>
+                        ⚙️ SX: ${info.prod_mode} (${info.total_slots} slots)
+                    </div>
+                `;
+                grid.appendChild(card);
+            }
+
+            document.getElementById('cntPass').innerText = `${pass} PASS`;
+            document.getElementById('cntWarn').innerText = `${warn} WARN`;
+            document.getElementById('cntFail').innerText = `${fail} FAIL`;
+        }
+
+        function showLineDetail(code, info) {
+            const body = `MÃ CHUYỀN: ${code}\nNhà máy: ${info.factory}\nChế độ nạp NVL: ${info.input_mode}\nChế độ sản xuất: ${info.prod_mode}\nTổng số Slots: ${info.total_slots} (Cuộn: ${info.winding_slots}, Lắp ráp: ${info.assembly_slots}, Vỏ: ${info.sleeving_slots})\nTrạng thái: ${info.status}\nGhi chú kỹ thuật: ${info.note}\n\n👉 Lệnh kiểm toán CLI: .\\mes.ps1 pop-readiness -Target ${code}`;
+            openModal(`CHI TIẾT CHUYỀN ${code}`, body);
+        }
+
+        function renderInitialScreens() {
+            if (!matrixData || !matrixData.screens) return;
+            handleSearch('');
+        }
+
+        function handleSearch(q) {
+            const results = document.getElementById('searchResults');
+            results.innerHTML = '';
+            if (!matrixData || !matrixData.screens) return;
+
+            const term = q.toLowerCase().trim();
+            let count = 0;
+
+            for (const [code, sc] of Object.entries(matrixData.screens)) {
+                let match = false;
+                let matchedBug = '';
+
+                if (!term || code.toLowerCase().includes(term) || sc.name.toLowerCase().includes(term)) {
+                    match = true;
+                } else if (sc.common_bugs) {
+                    for (const [bk, bv] of Object.entries(sc.common_bugs)) {
+                        if (bk.toLowerCase().includes(term) || bv.toLowerCase().includes(term)) {
+                            match = true;
+                            matchedBug = `${bk}: ${bv}`;
+                            break;
+                        }
+                    }
+                }
+
+                if (match) {
+                    count++;
+                    const item = document.createElement('div');
+                    item.className = 'result-item';
+                    item.innerHTML = `
+                        <div class="result-header">
+                            <span>[${code}] ${sc.name}</span>
+                            <span style="font-size: 12px; color: var(--text-sub);">${sc.module}</span>
+                        </div>
+                        <div class="result-meta">
+                            SP Search: <code>${sc.sp_get || 'N/A'}</code> | SP Process: <code>${sc.sp_iud || 'N/A'}</code> | Bảng: ${(sc.tables || []).join(', ')}
+                        </div>
+                        ${matchedBug ? `<div class="bug-tag">⚠️ ${matchedBug}</div>` : ''}
+                    `;
+                    results.appendChild(item);
+                    if (count >= 12) break;
+                }
+            }
+
+            if (count === 0) {
+                results.innerHTML = '<div style="color: var(--text-sub); padding: 10px;">Không tìm thấy màn hình hoặc mã lỗi phù hợp.</div>';
+            }
+        }
+
+        async function runAction(actionName) {
+            openModal(`ĐANG CHẠY TÁC VỤ: ${actionName.toUpperCase()}`, "Vui lòng chờ lệnh thực thi trên máy chủ...\n");
+            try {
+                const res = await fetch('/api/action', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({action: actionName})
+                });
+                const data = await res.json();
+                document.getElementById('modalBody').innerText = data.output || "Không có kết quả trả về.";
+            } catch (e) {
+                document.getElementById('modalBody').innerText = "Lỗi thực thi: " + e;
+            }
+        }
+
+        function openModal(title, body) {
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalBody').innerText = body;
+            document.getElementById('terminalModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('terminalModal').style.display = 'none';
+        }
+
+        function reloadDashboard() {
+            loadData();
+        }
+
+        window.onload = loadData;
+    </script>
+</body>
+</html>
