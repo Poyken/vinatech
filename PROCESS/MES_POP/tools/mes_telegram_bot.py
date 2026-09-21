@@ -113,6 +113,7 @@ DEFAULT_CONFIG = {
 # Lưu lịch sử ngữ cảnh hội thoại đa lượt cho từng Chat ID (tối đa 12 lượt hội thoại)
 CHAT_HISTORIES = {}
 MAX_HISTORY_TURNS = 12
+USER_STATES = {}
 
 # Bộ nhớ đệm RAM (TTL 10 phút)
 TOOL_CACHE = {}
@@ -176,10 +177,22 @@ def markdown_to_html(text):
     
     return text
 
-def send_telegram_message(token, chat_id, text, is_html=True):
+MAIN_KEYBOARD = {
+    "keyboard": [
+        ["🔍 Truy Vết 360° Lot", "⛓️ Huyết Mạch PO/Lot"],
+        ["🎯 Chẩn Đoán Sự Cố", "🏥 Sức Khỏe MES"],
+        ["🏭 Kiểm Toán POP", "📊 Báo Cáo Tuần IT"]
+    ],
+    "resize_keyboard": True,
+    "is_persistent": True
+}
+
+def send_telegram_message(token, chat_id, text, is_html=True, reply_markup=None):
     url = f"https://api.telegram.org/bot{token}/sendMessage"
     max_len = 4000
     formatted_text = markdown_to_html(text) if is_html else text
+    if reply_markup is None:
+        reply_markup = MAIN_KEYBOARD
     
     # Tách tin nhắn thông minh theo đoạn để tránh ngắt giữa dòng
     chunks = []
@@ -202,7 +215,8 @@ def send_telegram_message(token, chat_id, text, is_html=True):
         payload = {
             "chat_id": chat_id,
             "text": chunk,
-            "parse_mode": "HTML" if is_html else None
+            "parse_mode": "HTML" if is_html else None,
+            "reply_markup": reply_markup
         }
         data = json.dumps(payload).encode("utf-8")
         req = urllib.request.Request(url, data=data, headers={"Content-Type": "application/json"})
@@ -649,33 +663,82 @@ def handle_message(text, chat_id, token, config):
 
     send_chat_action(token, chat_id, "typing")
 
-    # 1. Trợ giúp & Giới thiệu
-    if cmd in ["/start", "/help", "help", "trợ giúp"]:
+    # 1. Trợ giúp & Giới thiệu / Lời chào
+    if cmd in ["/start", "/help", "help", "trợ giúp", "chào", "xin chào", "chào bạn", "hello", "hi"]:
         return (
-            "🤖 <b>VINATECH MES & POP MOBILE WAR-ROOM (v5.1 Live)</b>\n"
+            "🤖 <b>VINATECH MES & POP MOBILE WAR-ROOM (v5.2 Local-First)</b>\n"
             "━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
-            "Xin chào! Tôi là Trợ lý AI Kỹ sư trưởng MES Vinatech, hỗ trợ giám sát và chẩn đoán sự cố nhà máy tức thời 24/7.\n\n"
-            "⚡ <b>LỆNH TÁC CHIẾN TỨC THỜI (1-SHOT):</b>\n"
-            "• <code>/diagnose &lt;Lỗi/Lot&gt;</code> : Chẩn đoán thần tốc xuất đúng 4 Dòng Vàng\n"
-            "• <code>/trace &lt;Lot&gt;</code> : Golden Query 360° quét toàn diện trạng thái Lot\n"
-            "• <code>/lineage &lt;Lot/PO&gt;</code> : Truy vết huyết mạch 3 trụ cột (PO ➔ Kho ➔ MES ➔ POP)\n"
-            "• <code>/release</code> : Giải phóng tự động các máy POP bị kẹt khóa ACTIVE\n"
-            "• <code>/fix_movedate &lt;Lot&gt; &lt;Date&gt;</code> : Chuyển ngày chốt B782 chuẩn 10:00 AM\n"
-            "• <code>/fix_electrode &lt;Cuộn&gt;</code> : Xóa mẻ trộn/cuộn điện cực B552 & reset cuộn mẹ\n"
-            "• <code>/fix_rollback &lt;Lot&gt; &lt;Route&gt;</code> : Rollback công đoạn chốt lỗi B530/POP\n"
-            "• <code>/report</code> : Xuất Báo Cáo Tuần IT (EA Team) ra Desktop CSV\n"
-            "• <code>/health</code> : Morning Health Check quét Lot HOLD, WIP 24h\n"
-            "• <code>/clear</code> : Xóa trí nhớ hội thoại để bắt đầu phiên mới\n\n"
-            "💡 <b>Mẹo cực nhanh:</b> Bạn có thể paste thẳng câu báo lỗi của OP vào đây (Ví dụ: <code>B530 kẹt số lượng</code> hoặc <code>This route is already completed in MES</code>), bot sẽ tự động phân tích và đưa giải pháp ngay!"
+            "Xin chào anh Đức! Hệ thống giám sát và truy vết MES sẵn sàng 24/7.\n\n"
+            "👇 <b>BẤM CÁC NÚT TRUY VẾT DƯỚI BÀN PHÍM ĐỂ SỬ DỤNG NHANH:</b>\n"
+            "• <code>🔍 Truy Vết 360° Lot</code> : Quét toàn diện hiện trạng Lot (1.2s)\n"
+            "• <code>⛓️ Huyết Mạch PO/Lot</code> : Truy vết luồng PO ➔ Kho ➔ MES ➔ POP (<1s)\n"
+            "• <code>🎯 Chẩn Đoán Sự Cố</code> : Phân tích lỗi theo chuẩn 4 Dòng Vàng\n"
+            "• <code>🏥 Sức Khỏe MES</code> : Morning Health Check quét Lot HOLD/WIP\n"
+            "• <code>🏭 Kiểm Toán POP</code> : Đối soát sẵn sàng Kiosk POP 31 chuyền\n"
+            "• <code>📊 Báo Cáo Tuần IT</code> : Xuất file CSV báo cáo ra Desktop\n\n"
+            "💡 <b>Hoặc paste thẳng mã Lot (VD: <code>VVQR153R060615</code>) hoặc câu báo lỗi của OP vào đây để nhận kết quả ngay!</b>"
         )
 
     if cmd in ["/clear", "/reset"]:
         CHAT_HISTORIES.pop(chat_id, None)
-        return "🧹 <i>Đã xóa sạch ngữ cảnh hội thoại cũ. Bạn có thể bắt đầu chủ đề mới!</i>"
+        USER_STATES.pop(chat_id, None)
+        return "🧹 <i>Đã làm mới trạng thái hội thoại. Bạn có thể bắt đầu truy vết mới!</i>"
 
-    # 2. Fast-path: Lệnh /diagnose hoặc /diag
-    if cmd.startswith("/diagnose ") or cmd.startswith("/diag ") or cmd.startswith("diagnose ") or cmd.startswith("diag "):
-        q = re.sub(r"^/(diagnose|diag)\s+|^diagnose\s+|^diag\s+", "", text_clean, flags=re.IGNORECASE).strip()
+    # 2. Xử lý các nút bấm Keyboard tương tác (Interactive Buttons)
+    if "truy vết 360" in cmd or cmd == "🔍 truy vết 360° lot":
+        USER_STATES[chat_id] = "WAITING_FOR_LOT"
+        return "🔍 <b>BẠN MUỐN TRUY VẾT LOT NÀO?</b>\n\nVui lòng paste mã Lot, Barcode hoặc mã Thùng vào đây (Ví dụ: <code>VVQR153R060615</code>):"
+
+    if "huyết mạch" in cmd or cmd == "⛓️ huyết mạch po/lot":
+        USER_STATES[chat_id] = "WAITING_FOR_LINEAGE"
+        return "⛓️ <b>TRUY VẾT HUYẾT MẠCH LIÊN HỆ THỐNG (PO ➔ Kho ➔ MES ➔ POP)</b>\n\nVui lòng nhập mã Lệnh SX (PO) hoặc mã Lot (Ví dụ: <code>260828000015</code> hoặc <code>VVQR153R060615</code>):"
+
+    if "chẩn đoán" in cmd or cmd == "🎯 chẩn đoán sự cố":
+        USER_STATES[chat_id] = "WAITING_FOR_DIAGNOSE"
+        return "🎯 <b>CHẨN ĐOÁN SỰ CỐ NHÀ MÁY (4 DÒNG VÀNG)</b>\n\nVui lòng paste câu báo lỗi của công nhân, mã màn hình (B530, B552, C121...) hoặc hiện tượng sự cố vào đây:"
+
+    if "sức khỏe" in cmd or cmd == "🏥 sức khỏe mes" or cmd in ["/health", "health"]:
+        res = run_powershell_cmd([".\\mes.ps1 health"], timeout=25)
+        return f"🏥 <b>KẾT QUẢ SỨC KHỎE HỆ THỐNG MES:</b>\n<pre>{res}</pre>"
+
+    if "kiểm toán" in cmd or cmd == "🏭 kiểm toán pop" or cmd in ["/readiness", "readiness"]:
+        res = run_powershell_cmd([".\\mes.ps1 pop-readiness"], timeout=30)
+        return f"🏭 <b>KẾT QUẢ KIỂM TOÁN SẴN SÀNG POP WEB 31 CHUYỀN:</b>\n<pre>{res}</pre>"
+
+    if "báo cáo tuần" in cmd or cmd == "📊 báo cáo tuần it" or cmd in ["/report", "report"]:
+        res = run_powershell_cmd([".\\mes.ps1 weekly-report"], timeout=20)
+        return f"📊 <b>KẾT QUẢ XUẤT BÁO CÁO TUẦN IT (EA TEAM):</b>\n<pre>{res}</pre>\n<i>File CSV đã được cập nhật tại Desktop/thanks_and_ojt_reports.</i>"
+
+    # 3. Xử lý trạng thái người dùng đang chờ nhập (State Machine)
+    if chat_id in USER_STATES:
+        st = USER_STATES.pop(chat_id)
+        if st == "WAITING_FOR_LOT":
+            res = run_powershell_cmd([f".\\mes.ps1 trace '{text_clean}'"], timeout=25)
+            return f"📋 <b>KẾT QUẢ TRUY VẾT 360° CHO: <code>{text_clean}</code></b>\n<pre>{res}</pre>"
+        elif st == "WAITING_FOR_LINEAGE":
+            res = run_powershell_cmd([f".\\mes.ps1 lineage '{text_clean}'"], timeout=25)
+            return f"⛓️ <b>KẾT QUẢ HUYẾT MẠCH LIÊN HỆ THỐNG CHO: <code>{text_clean}</code></b>\n<pre>{res}</pre>"
+        elif st == "WAITING_FOR_DIAGNOSE":
+            try:
+                from mes_diagnose import diagnose
+                diag = diagnose(text_clean)
+                return format_diagnostic_html(diag)
+            except Exception as e:
+                return f"❌ <b>LỖI CHẨN ĐOÁN:</b> {e}"
+
+    # 4. Lệnh Fast-path có tiền tố (/trace, /lineage, /diagnose)
+    if cmd.startswith("/trace ") or cmd.startswith("trace "):
+        lot = re.sub(r"^/(trace)\s+|^trace\s+", "", text_clean, flags=re.IGNORECASE).strip()
+        res = run_powershell_cmd([f".\\mes.ps1 trace '{lot}'"], timeout=25)
+        return f"📋 <b>KẾT QUẢ TRUY VẾT 360° CHO: <code>{lot}</code></b>\n<pre>{res}</pre>"
+
+    if cmd.startswith("/lineage ") or cmd.startswith("lineage "):
+        target_val = re.sub(r"^/(lineage)\s+|^lineage\s+", "", text_clean, flags=re.IGNORECASE).strip()
+        res = run_powershell_cmd([f".\\mes.ps1 lineage '{target_val}'"], timeout=25)
+        return f"⛓️ <b>KẾT QUẢ HUYẾT MẠCH 3 TRỤ CỘT CHO: <code>{target_val}</code></b>\n<pre>{res}</pre>"
+
+    if cmd.startswith("/diagnose ") or cmd.startswith("/diag "):
+        q = re.sub(r"^/(diagnose|diag)\s+", "", text_clean, flags=re.IGNORECASE).strip()
         try:
             from mes_diagnose import diagnose
             diag = diagnose(q)
@@ -683,80 +746,51 @@ def handle_message(text, chat_id, token, config):
         except Exception as e:
             return f"❌ <b>LỖI CHẨN ĐOÁN:</b> {e}"
 
-    # 3. Fast-path: Lệnh /trace
-    if cmd.startswith("/trace ") or cmd.startswith("trace "):
-        lot = re.sub(r"^/(trace)\s+|^trace\s+", "", text_clean, flags=re.IGNORECASE).strip()
-        res = run_powershell_cmd([f".\\mes.ps1 trace '{lot}'"], timeout=25)
-        return f"📋 <b>KẾT QUẢ TRUY VẾT 360° CHO: <code>{lot}</code></b>\n<pre>{res}</pre>"
+    # 5. An toàn CSDL (Trace-Only Safe Mode cho các lệnh can thiệp)
+    if cmd.startswith("/fix_") or cmd in ["/release", "release"]:
+        return (
+            "🔒 <b>NGUYÊN TẮC AN TOÀN IT (TRACE-ONLY MODE):</b>\n\n"
+            "Để bảo đảm an toàn tuyệt đối cho Production CSDL, mọi thao tác sửa đổi dữ liệu (Hotfix / Release) được bảo lưu thực hiện trực tiếp trên Laptop.\n\n"
+            f"💻 <b>Vui lòng mở PowerShell trên Laptop và chạy:</b>\n"
+            f"<code>.\\mes.ps1 {cmd.replace('/', '')}</code>\n\n"
+            "<i>Telegram được tối ưu 100% cho việc Truy vết & Giám sát tức thời!</i>"
+        )
 
-    # 3.1 Fast-path: Lệnh /lineage (Truy vết huyết mạch PO ➔ Kho ➔ MES ➔ POP)
-    if cmd.startswith("/lineage ") or cmd.startswith("lineage "):
-        target_val = re.sub(r"^/(lineage)\s+|^lineage\s+", "", text_clean, flags=re.IGNORECASE).strip()
-        res = run_powershell_cmd([f".\\mes.ps1 lineage '{target_val}'"], timeout=25)
-        return f"⛓️ <b>KẾT QUẢ HUYẾT MẠCH 3 TRỤ CỘT CHO: <code>{target_val}</code></b>\n<pre>{res}</pre>"
+    # 6. LOCAL-FIRST PATTERN RECOGNITION (< 0.1s - 1.2s, Không phụ thuộc AI đám mây)
+    # 6.1 Nhận diện mã Lot/Barcode (VV..., VE..., SP..., PK...)
+    lot_match = re.search(r"\b(VV[A-Za-z0-9]+|VE\d{6}-\d{3}|SP\d{6}-\d{3}|PK[A-Za-z0-9]+)\b", text_clean, re.IGNORECASE)
+    if lot_match:
+        found_lot = lot_match.group(1)
+        res = run_powershell_cmd([f".\\mes.ps1 trace '{found_lot}'"], timeout=25)
+        return f"📋 <b>KẾT QUẢ TRUY VẾT DATABASE CHO LOT: <code>{found_lot}</code></b>\n<pre>{res}</pre>"
 
-    # 4. Fast-path: Lệnh /release
-    if cmd in ["/release", "release"]:
-        res = run_powershell_cmd([".\\mes.ps1 release-machines -Force"], timeout=25)
-        return f"🔓 <b>KẾT QUẢ GIẢI PHÓNG THIẾT BỊ KẸT LOCK:</b>\n<pre>{res}</pre>"
+    # 6.2 Nhận diện mã PO (2608..., 1808..., 12 chữ số)
+    po_match = re.search(r"\b(2[0-9]{11}|1[0-9]{11})\b", text_clean)
+    if po_match:
+        found_po = po_match.group(1)
+        res = run_powershell_cmd([f".\\mes.ps1 lineage '{found_po}'"], timeout=25)
+        return f"⛓️ <b>KẾT QUẢ HUYẾT MẠCH CHO PO: <code>{found_po}</code></b>\n<pre>{res}</pre>"
 
-    # 5. Fast-path: Lệnh /readiness
-    if cmd in ["/readiness", "readiness"]:
-        res = run_powershell_cmd([".\\mes.ps1 pop-readiness"], timeout=30)
-        return f"🏭 <b>KẾT QUẢ KIỂM TOÁN SẴN SÀNG POP WEB 31 CHUYỀN:</b>\n<pre>{res}</pre>"
+    # 6.3 Nhận diện câu báo lỗi hoặc mã màn hình (B530, B552, C121, kẹt, lỗi...)
+    try:
+        from mes_diagnose import diagnose
+        diag = diagnose(text_clean)
+        if diag.get("matched_rule") or diag.get("l1_screen"):
+            return format_diagnostic_html(diag)
+    except Exception:
+        pass
 
-    # 6. Fast-path: Lệnh /health
-    if cmd in ["/health", "health"]:
-        res = run_powershell_cmd([".\\mes.ps1 health"], timeout=25)
-        return f"🏥 <b>KẾT QUẢ SỨC KHỎE HỆ THỐNG MES:</b>\n<pre>{res}</pre>"
+    # 6.4 Nhận diện mã màn hình MES (B530, C121, S510...)
+    scr_match = re.search(r"\b([A-Za-z][0-9]{3}[A-Za-z0-9]?)\b", text_clean)
+    if scr_match:
+        scr = scr_match.group(1).upper()
+        res = run_powershell_cmd([f".\\mes.ps1 screen '{scr}'"], timeout=20)
+        return f"🖥️ <b>THÔNG TIN MÀN HÌNH MES <code>{scr}</code>:</b>\n<pre>{res}</pre>"
 
-    # 7. Actionable 1-Click Fix: Chuyển ngày chốt B782 (/fix_movedate <lots> <yyyy-MM-dd>)
-    if cmd.startswith("/fix_movedate ") or cmd.startswith("/fix_date "):
-        args = re.sub(r"^/(fix_movedate|fix_date)\s+", "", text_clean, flags=re.IGNORECASE).strip().split()
-        if len(args) < 2:
-            return "⚠️ <b>CÚ PHÁP:</b> <code>/fix_movedate &lt;Mã_Lot&gt; &lt;yyyy-MM-dd&gt;</code>\nVí dụ: <code>/fix_movedate VVQR153R825707 2026-09-22</code>"
-        lot_arg, date_arg = args[0], args[1]
-        res = run_powershell_cmd([f".\\mes.ps1 fix-movedate -Lots '{lot_arg}' -TargetDate '{date_arg}' -Deploy"], timeout=30)
-        return f"⚡ <b>KẾT QUẢ CHUYỂN NGÀY CHỐT B782:</b>\n<pre>{res}</pre>"
+    # 7. Fallback cuối cùng: Tra cứu tài liệu KB nội bộ
+    res = run_powershell_cmd([f".\\mes.ps1 find '{text_clean}'"], timeout=15)
+    return f"📚 <b>KẾT QUẢ TRA CỨU TÀI LIỆU KB CHO: <code>{text_clean}</code></b>\n<pre>{res}</pre>"
 
-    # 8. Actionable 1-Click Fix: Xóa cuộn/mẻ trộn điện cực B552 (/fix_electrode <lot>)
-    if cmd.startswith("/fix_electrode ") or cmd.startswith("/fix_elec "):
-        lot_arg = re.sub(r"^/(fix_electrode|fix_elec)\s+", "", text_clean, flags=re.IGNORECASE).strip()
-        if not lot_arg:
-            return "⚠️ <b>CÚ PHÁP:</b> <code>/fix_electrode &lt;Mã_Cuộn_Hoặc_Mẻ_Trộn&gt;</code>"
-        res = run_powershell_cmd([f".\\mes.ps1 fix-electrode -Lots '{lot_arg}' -Deploy"], timeout=30)
-        return f"⚡ <b>KẾT QUẢ XỬ LÝ ĐIỆN CỰC B552:</b>\n<pre>{res}</pre>"
-
-    # 9. Actionable 1-Click Fix: Rollback công đoạn kẹt B530 (/fix_rollback <lot> [route])
-    if cmd.startswith("/fix_rollback "):
-        args = re.sub(r"^/fix_rollback\s+", "", text_clean, flags=re.IGNORECASE).strip().split()
-        if not args:
-            return "⚠️ <b>CÚ PHÁP:</b> <code>/fix_rollback &lt;Mã_Lot&gt; [Mã_Route]</code>\nVí dụ: <code>/fix_rollback VVQR153R060615 V-22_HY</code>"
-        lot_arg = args[0]
-        route_arg = args[1] if len(args) > 1 else "V-22_HY"
-        res = run_powershell_cmd([f".\\mes.ps1 fix-rollback -Lots '{lot_arg}' -Route '{route_arg}' -Deploy"], timeout=30)
-        return f"⚡ <b>KẾT QUẢ ROLLBACK CÔNG ĐOẠN {route_arg}:</b>\n<pre>{res}</pre>"
-
-    # 10. Actionable 1-Click: Báo cáo tuần IT (/report)
-    if cmd in ["/report", "/weekly_report", "report"]:
-        res = run_powershell_cmd([".\\mes.ps1 weekly-report"], timeout=20)
-        return f"📊 <b>KẾT QUẢ XUẤT BÁO CÁO TUẦN IT (EA TEAM):</b>\n<pre>{res}</pre>\n<i>File CSV đã được cập nhật tại Desktop/thanks_and_ojt_reports.</i>"
-
-    api_key = config.get("gemini_api_key", "").strip()
-    model_name = config.get("model_name", "gemini-3.6-flash").strip()
-
-    # Ưu tiên Bộ não AI Gemini thông minh
-    if api_key and api_key != "YOUR_GEMINI_API_KEY_HERE":
-        ai_reply = call_gemini_conversational(chat_id, text_clean, api_key, model_name, token=token)
-        if ai_reply:
-            return ai_reply
-
-    # Fallback tự động khi AI nghẽn hoặc chưa có API key
-    return local_fallback_handler(text_clean)
-
-# ------------------------------------------------------------------------------
-# MAIN LOOP
-# ------------------------------------------------------------------------------
 def main():
     print("=================================================================")
     print("  VINATECH MES TELEGRAM AI AGENT (v5.0 Deep Live Active)         ")

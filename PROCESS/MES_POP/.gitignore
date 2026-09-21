@@ -1,0 +1,5 @@
+tools/.bot.lock
+tools/.watchdog.lock
+tools/telegram_config.local.json
+*.pyc
+__pycache__/
