@@ -86,6 +86,9 @@ if (-not $Force) {
 Write-Host ''
 Write-Host "Dang thuc thi giai phong thiet bi..." -ForegroundColor Yellow
 
+$whereClause = "MAPPING_STATUS IN ('ACTIVE', 'AUTO_MAPPED') $lineFilter AND (LEFT(DAY_PLAN_NO, 8) < CONVERT(VARCHAR(8), GETDATE(), 112) OR MAPPED_AT < DATEADD(HOUR, -12, GETDATE()))"
+Export-PreflightSnapshot -TableName "VINATECH_POP.dbo.VINA_EQUIPMENT_MAPPING" -WhereClause $whereClause -Profile "POP" -Reason "release_orphan_machines"
+
 $sqlUpdate = @"
 BEGIN TRANSACTION;
 BEGIN TRY

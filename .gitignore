@@ -57,3 +57,6 @@ __pycache__/
 !**/tools/sql/procedures/usp_VINA_SyncPopToMes_*.sql
 **/%USERP~1/
 *.local.json
+db_config.local.json
+**/backups/*.json
+tools/.bot.lock

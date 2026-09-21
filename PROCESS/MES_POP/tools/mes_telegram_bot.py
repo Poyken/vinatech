@@ -28,6 +28,7 @@ import http.client
 import urllib.request
 import urllib.parse
 import urllib.error
+import atexit
 import subprocess
 from pathlib import Path
 
@@ -41,6 +42,65 @@ if sys.platform == "win32":
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 CONFIG_FILE = Path(__file__).resolve().parent / "telegram_config.json"
+LOCK_FILE = Path(__file__).resolve().parent / ".bot.lock"
+
+def is_pid_running(pid):
+    """Kiểm tra xem tiến trình PID có đang chạy trên hệ thống hay không"""
+    if sys.platform == "win32":
+        try:
+            import ctypes
+            PROCESS_QUERY_LIMITED_INFORMATION = 0x1000
+            handle = ctypes.windll.kernel32.OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, False, pid)
+            if handle:
+                ctypes.windll.kernel32.CloseHandle(handle)
+                return True
+            return False
+        except Exception:
+            return False
+    else:
+        try:
+            os.kill(pid, 0)
+            return True
+        except OSError:
+            return False
+
+def acquire_bot_lock():
+    """Đảm bảo chỉ có DUY NHẤT 1 tiến trình bot chạy tại một thời điểm (Chống lỗi 409 Conflict)"""
+    if LOCK_FILE.exists():
+        try:
+            with open(LOCK_FILE, "r", encoding="utf-8") as f:
+                old_pid = int(f.read().strip())
+            if is_pid_running(old_pid):
+                print(f"[CẢNH BÁO SINGLETON] Bot Telegram đã đang chạy ngầm với PID={old_pid}!")
+                print(f"  -> Huỷ bỏ phiên bản mới này để tránh lỗi xung đột mạng '409 Conflict'.")
+                print(f"  -> Dùng '.\\mes.ps1 bot-stop' nếu muốn dừng bot cũ.")
+                sys.exit(0)
+            else:
+                try:
+                    LOCK_FILE.unlink()
+                except Exception:
+                    pass
+        except Exception:
+            pass
+
+    try:
+        with open(LOCK_FILE, "w", encoding="utf-8") as f:
+            f.write(str(os.getpid()))
+    except Exception as e:
+        print(f"[CẢNH BÁO] Không thể tạo file lock: {e}")
+
+def release_bot_lock():
+    """Tự động dọn dẹp file lock khi tiến trình kết thúc"""
+    try:
+        if LOCK_FILE.exists():
+            with open(LOCK_FILE, "r", encoding="utf-8") as f:
+                current_locked_pid = int(f.read().strip())
+            if current_locked_pid == os.getpid():
+                LOCK_FILE.unlink()
+    except Exception:
+        pass
+
+atexit.register(release_bot_lock)
 
 DEFAULT_CONFIG = {
     "bot_token": "YOUR_TELEGRAM_BOT_TOKEN_HERE",
@@ -605,6 +665,8 @@ def main():
     print("=================================================================")
     print("  VINATECH MES TELEGRAM AI AGENT (v5.0 Deep Live Active)         ")
     print("=================================================================")
+    
+    acquire_bot_lock()
     
     config = load_config()
     token = config.get("bot_token", "").strip()

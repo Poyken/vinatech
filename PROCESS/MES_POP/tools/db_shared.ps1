@@ -4,10 +4,19 @@
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 $OutputEncoding = [System.Text.Encoding]::UTF8
 
-$configPath = Join-Path $PSScriptRoot "db_config.json"
-if (-not (Test-Path $configPath)) {
-    $configPath = Join-Path $PSScriptRoot "..\db_config.json"
+# Check for local overridden credentials first (gitignored), then fallback to default db_config.json
+$localConfigPath = Join-Path $PSScriptRoot "db_config.local.json"
+if (-not (Test-Path $localConfigPath)) {
+    $localConfigPath = Join-Path $PSScriptRoot "..\db_config.local.json"
 }
+
+$defaultConfigPath = Join-Path $PSScriptRoot "db_config.json"
+if (-not (Test-Path $defaultConfigPath)) {
+    $defaultConfigPath = Join-Path $PSScriptRoot "..\db_config.json"
+}
+
+$configPath = if (Test-Path $localConfigPath) { $localConfigPath } else { $defaultConfigPath }
+
 if (!(Test-Path $configPath)) {
     Write-Error "Configuration file not found at: $configPath"
     exit 1
@@ -16,7 +25,7 @@ if (!(Test-Path $configPath)) {
 try {
     $global:mesConfig = Get-Content -Raw -Path $configPath -Encoding UTF8 | ConvertFrom-Json
 } catch {
-    Write-Error "Failed to parse db_config.json: $_"
+    Write-Error "Failed to parse database configuration ($configPath): $_"
     exit 1
 }
 

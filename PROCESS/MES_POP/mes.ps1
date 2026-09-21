@@ -74,9 +74,15 @@ function Show-Help {
     Write-Host '-> Don dep scratch workspace, kiem tra an toan token & git status' -ForegroundColor Gray
 
     Write-Host ''
-    Write-Host '  4. TRO LY DI DONG (TELEGRAM BOT):' -ForegroundColor Cyan
+    Write-Host '  4. TRO LY DI DONG & QUAN LY BOT (TELEGRAM):' -ForegroundColor Cyan
     Write-Host '     .\mes.ps1 bot                       ' -NoNewline -ForegroundColor Green
-    Write-Host '-> Khoi dong Telegram Assistant de dieu khien tu dien thoai' -ForegroundColor Gray
+    Write-Host '-> Khoi dong Telegram Assistant tren Console' -ForegroundColor Gray
+    Write-Host '     .\mes.ps1 bot-hidden                ' -NoNewline -ForegroundColor Green
+    Write-Host '-> Khoi dong Bot ngam an toan co lockfile chong 409' -ForegroundColor Gray
+    Write-Host '     .\mes.ps1 bot-status                ' -NoNewline -ForegroundColor Green
+    Write-Host '-> Kiem tra trang thai Bot dang chay hay dung' -ForegroundColor Gray
+    Write-Host '     .\mes.ps1 bot-stop                  ' -NoNewline -ForegroundColor Green
+    Write-Host '-> Dung an toan tien trinh Bot Telegram' -ForegroundColor Gray
 
     Write-Host ''
     Write-Host 'Cac Profile CSDL ho tro:' -ForegroundColor Yellow
@@ -297,6 +303,65 @@ elseif ($cmdLower -eq 'bot' -or $cmdLower -eq 'telegram') {
         python -u $botScript
     } else {
         Write-Error 'tools/mes_telegram_bot.py not found.'
+    }
+}
+elseif ($cmdLower -eq 'bot-hidden') {
+    $vbsScript = Join-Path $scriptDir 'start_telegram_bot_hidden.vbs'
+    if (Test-Path $vbsScript) {
+        Write-Host "(*) Dang khoi dong Bot Telegram chay ngam..." -ForegroundColor Cyan
+        cscript //nologo $vbsScript
+        Start-Sleep -Seconds 1
+        & (Join-Path $scriptDir 'mes.ps1') bot-status
+    } else {
+        Write-Error 'start_telegram_bot_hidden.vbs not found.'
+    }
+}
+elseif ($cmdLower -eq 'bot-status') {
+    $lockFile = Join-Path $toolsDir '.bot.lock'
+    if (Test-Path $lockFile) {
+        $pidText = (Get-Content $lockFile -Raw).Trim()
+        $proc = Get-Process -Id $pidText -ErrorAction SilentlyContinue
+        if ($proc) {
+            $memMb = [math]::Round($proc.WorkingSet64 / 1MB, 2)
+            $startTime = $proc.StartTime.ToString('yyyy-MM-dd HH:mm:ss')
+            Write-Host "-> [ONLINE] Bot Telegram dang hoat dong voi PID: $pidText (RAM: $memMb MB, Started: $startTime)" -ForegroundColor Green
+        } else {
+            Write-Host "-> [STALE LOCK] File .bot.lock ton tai (PID: $pidText) nhung tien trinh da dung." -ForegroundColor Yellow
+            Remove-Item $lockFile -Force -ErrorAction SilentlyContinue
+            Write-Host "   Da tu dong thu hoi file lock moi." -ForegroundColor Gray
+        }
+    } else {
+        $procs = Get-CimInstance Win32_Process -Filter "Name LIKE '%python%'" -ErrorAction SilentlyContinue | Where-Object { $_.CommandLine -match 'mes_telegram_bot' }
+        if ($procs) {
+            Write-Host "-> [ONLINE] Phat hien Bot Telegram dang chay ngoai lockfile (PID: $($procs.ProcessId))" -ForegroundColor Yellow
+        } else {
+            Write-Host "-> [OFFLINE] Bot Telegram hien khong chay." -ForegroundColor Gray
+            Write-Host "   - Khoi dong che do console : .\mes.ps1 bot" -ForegroundColor Cyan
+            Write-Host "   - Khoi dong che do chay ngam: .\mes.ps1 bot-hidden" -ForegroundColor Cyan
+        }
+    }
+}
+elseif ($cmdLower -eq 'bot-stop') {
+    $lockFile = Join-Path $toolsDir '.bot.lock'
+    $stopped = $false
+    if (Test-Path $lockFile) {
+        $pidText = (Get-Content $lockFile -Raw).Trim()
+        $proc = Get-Process -Id $pidText -ErrorAction SilentlyContinue
+        if ($proc) {
+            Stop-Process -Id $pidText -Force -ErrorAction SilentlyContinue
+            Write-Host "-> Da dung tien trinh Bot Telegram (PID: $pidText)." -ForegroundColor Green
+            $stopped = $true
+        }
+        Remove-Item $lockFile -Force -ErrorAction SilentlyContinue
+    }
+    $procs = Get-CimInstance Win32_Process -Filter "Name LIKE '%python%'" -ErrorAction SilentlyContinue | Where-Object { $_.CommandLine -match 'mes_telegram_bot' }
+    foreach ($p in $procs) {
+        Stop-Process -Id $p.ProcessId -Force -ErrorAction SilentlyContinue
+        Write-Host "-> Da dung tien trinh Bot phu (PID: $($p.ProcessId))." -ForegroundColor Green
+        $stopped = $true
+    }
+    if (-not $stopped) {
+        Write-Host "-> Khong tim thay tien trinh Bot Telegram nao dang hoat dong." -ForegroundColor Gray
     }
 }
 elseif ($cmdLower -eq 'clean') {
