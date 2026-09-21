@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "name": "vinatech-groupware-hooks",
+  "version": "1.0.0",
+  "description": "Automated Lifecycle Hooks for Vinatech Groupware Operational Safety",
+  "hooks": {
+    "pre_tool_execution": [
+      {
+        "matcher": {
+          "tool": "run_command",
+          "args_pattern": ".*(UPDATE|DELETE|INSERT|DROP|ALTER|TRUNCATE).*"
+        },
+        "action": "enforce_safety_check",
+        "description": "Chặn các câu lệnh DML/DDL trực tiếp trên CSDL VINATECH_GROUP nếu không bọc Transaction hoặc phê duyệt từ Quản trị viên"
+      }
+    ],
+    "post_query_execution": [
+      {
+        "matcher": {
+          "tool": "run_command",
+          "args_pattern": ".*(gw\\.ps1|run_query\\.ps1).*"
+        },
+        "action": "verify_anti_lock_compliance",
+        "description": "Tự động kiểm tra tuân thủ WITH(NOLOCK) và thời gian phản hồi câu truy vấn trên CSDL Groupware"
+      }
+    ]
+  }
+}

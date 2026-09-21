@@ -1,0 +1,55 @@
+{
+  "version": "1.0.0",
+  "updated_at": "2026-09-21 07:18:00",
+  "description": "Approval Lines & Department Matrix for Vinatech Groupware (Vietnam Corporation)",
+  "departments": {
+    "PURCHASING": {
+      "name": "Phòng Mua Hàng & Xuất Nhập Khẩu",
+      "drafters": ["Đào Thị Phiên (71908026)", "Nhân viên mua hàng"],
+      "intermediate_approvers": ["Trần Quang Thỏa (21910034)"],
+      "final_approver": "Kim Kyeong Cheol (CEO)",
+      "accounting_cc": [
+        "22205010-Nguyễn Thị Thúy_V6",
+        "22205011-Nguyễn Thị Phương Linh",
+        "22308006-Ngô Phương Anh",
+        "22312004-Lê Thị Trang",
+        "22404015-Nguyễn Thị Hồng_V3"
+      ]
+    },
+    "PRODUCTION": {
+      "name": "Khối Sản Xuất (Hà Nam & Hưng Yên)",
+      "drafters": ["Quản đốc xưởng", "Tổ trưởng sản xuất"],
+      "intermediate_approvers": ["Giám đốc sản xuất"],
+      "final_approver": "Kim Kyeong Cheol (CEO)"
+    },
+    "IT": {
+      "name": "Bộ Phận Công Nghệ Thông Tin (IT)",
+      "drafters": ["92005006-Nguyễn Văn Nha", "92404003-Nguyễn Văn Thuần", "92209001-Trần Quang Duy", "92011009-Đỗ Xuân Đồng"],
+      "intermediate_approvers": ["11910035-Nguyễn Thành Phi"],
+      "final_approver": "Trần Quang Thỏa (21910034)"
+    },
+    "HR_ADMIN": {
+      "name": "Phòng Hành Chính - Nhân Sự",
+      "drafters": ["Nhân sự tổng hợp"],
+      "intermediate_approvers": ["Trưởng phòng Nhân sự"],
+      "final_approver": "Trần Quang Thỏa (21910034) / CEO"
+    }
+  },
+  "financial_thresholds_vnd": {
+    "TIER_1": {
+      "max_amount": 10000000,
+      "approver": "Trưởng phòng phụ trách bộ phận",
+      "accounting_review": "Optional"
+    },
+    "TIER_2": {
+      "max_amount": 50000000,
+      "approver": "Trần Quang Thỏa (21910034)",
+      "accounting_review": "Mandatory CC"
+    },
+    "TIER_3": {
+      "max_amount": null,
+      "approver": "Kim Kyeong Cheol (CEO)",
+      "accounting_review": "Mandatory Chief Accountant Agreement"
+    }
+  }
+}

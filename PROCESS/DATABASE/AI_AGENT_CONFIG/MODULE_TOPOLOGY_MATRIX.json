@@ -1,0 +1,41 @@
+{
+  "Version": "1.0.0",
+  "Updated": "2026-09-21",
+  "Description": "Deep Module Prefix Topology for Vinatech Enterprise Databases",
+  "PrefixTaxonomy": {
+    "NEOE_ERP": [
+      {"Prefix": "WC_", "Count": 757, "Department": "Production & Cost Accounting", "Role": "Work Center capacity, standard routing hours, plant work units"},
+      {"Prefix": "FI_", "Count": 631, "Department": "Finance & Accounting", "Role": "General ledger, journal slips (FI_DOCU/D), accounts, VAT reporting"},
+      {"Prefix": "HR_", "Count": 407, "Department": "Human Resources & Payroll", "Role": "Employee master, monthly payroll calculation, social insurance, timekeeping"},
+      {"Prefix": "WP_", "Count": 336, "Department": "Production Shopfloor", "Role": "Work plant execution, equipment work orders"},
+      {"Prefix": "CA_", "Count": 328, "Department": "Cost Accounting", "Role": "Cost allocation, manufacturing overhead distribution, unit cost calculation"},
+      {"Prefix": "MA_", "Count": 274, "Department": "Master Data Administration", "Role": "Single Source of Truth: Items (MA_ITEM), Partners (MA_PARTNER), Warehouses (MA_SL)"},
+      {"Prefix": "WH_", "Count": 264, "Department": "Warehouse Management", "Role": "ERP inventory locations, physical inventory count variance"},
+      {"Prefix": "PR_", "Count": 234, "Department": "Production Management", "Role": "Bill of Materials (PR_BOM), work orders, production output confirmation"},
+      {"Prefix": "WS_", "Count": 233, "Department": "Plant Scheduling", "Role": "Work schedule shifts, plant holiday calendar"},
+      {"Prefix": "WM_", "Count": 184, "Department": "Warehouse Movement", "Role": "Material transfer between locations, lot movement tracking"},
+      {"Prefix": "SA_", "Count": 182, "Department": "Sales & Distribution", "Role": "Customer orders (Suju SA_SOH/L), delivery orders (SA_GIRH/L), invoicing"},
+      {"Prefix": "PU_", "Count": 120, "Department": "Purchasing", "Role": "Purchase orders (PU_POH/L), goods receiving notes (PU_RCVH/L), vendor pricing"}
+    ],
+    "SmartFactoryV2_MES": [
+      {"Prefix": "STB_", "Count": 924, "Department": "MES Shop Floor Execution", "Role": "SmartFactory Base: Routing (STB_ProdRouteHist), Lot tracking (STB_SetInfo), Scrap (STB_DefectRepairInfo), WMS (STB_MaterialStock)"},
+      {"Prefix": "BAK_", "Count": 67, "Department": "Database Administration", "Role": "Table snapshots taken before hotfixes or production deployments"},
+      {"Prefix": "ESM_", "Count": 19, "Department": "Equipment Maintenance", "Role": "Equipment & Sensor Monitoring, temperature, vibration, cycle time"},
+      {"Prefix": "VNTVN_", "Count": 11, "Department": "Vietnam Factory Custom", "Role": "Vietnam-specific customization screens and logic"},
+      {"Prefix": "HN_", "Count": 5, "Department": "Ha Nam Factory", "Role": "Ha Nam factory specific line and screen configurations"},
+      {"Prefix": "VINA_", "Count": 4, "Department": "Integration Gateway", "Role": "API interfaces synchronizing data with POP Web and external systems"}
+    ],
+    "DZICUBE_Bizbox": [
+      {"Prefix": "USP_A", "Count": 5036, "Type": "Stored Procedure", "Role": "Accounting module automated voucher generation"},
+      {"Prefix": "USP_B", "Count": 5036, "Type": "Stored Procedure", "Role": "Basic business organization and user mapping"},
+      {"Prefix": "USP_W", "Count": 4211, "Type": "Stored Procedure", "Role": "Workflow electronic approval synchronization"},
+      {"Prefix": "USP_S", "Count": 2966, "Type": "Stored Procedure", "Role": "System utilities and inter-system synchronization"},
+      {"Prefix": "USP_P", "Count": 2547, "Type": "Stored Procedure", "Role": "Payroll and payment disbursements"}
+    ],
+    "VINATECH_GROUP_GW": [
+      {"Prefix": "VINA_DOCUMENT_", "Count": 150, "Department": "Electronic Approval", "Role": "17 Core business approval forms (PO, PR, Daily Plan, Payment, Leave)"},
+      {"Prefix": "VINA_GW_", "Count": 80, "Department": "Groupware Engine", "Role": "Approval lines, parallel approvals, delegation, notification queues"},
+      {"Prefix": "VINA_ORG_", "Count": 45, "Department": "Human Resources", "Role": "Organization hierarchy, department trees, position codes"}
+    ]
+  }
+}
