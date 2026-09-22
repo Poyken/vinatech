@@ -119,9 +119,9 @@
     },
     "top_errors": {
         "POP-ERR-09": {
-            "title": "This route is already completed in MES (498 lan)",
-            "root_cause": "Cong doan da duoc chot hoan thanh tren MES WinForm hoac luot truoc, WinForm chan ghi de tu Kiosk",
-            "fast_fix": "Dung Golden Query .\\mes.ps1 trace '<Lot>' kiem tra STB_ProdRouteHist. Xoa luot ket cu qua Template 3 hoac chuyen cong doan tiep theo"
+            "title": "This route is already completed in MES / Chốt Cấp Thứ Aging (500+ lần)",
+            "root_cause": "Khi chốt công đoạn trước trên MES WinForm, SP usp_DoProcessProdRouteHistForCalc_SmartApp_VNT tự động clone dòng công đoạn kế tiếp với CompleteRoute IS NULL. Chuyển sang Web POP Kiosk (Aging V-26_HY), API Kiosk hiểu lầm là đã chốt trên MES nên chặn không cho tạo mới.",
+            "fast_fix": "Xóa dòng clone tự sinh thừa: DELETE FROM STB_ProdRouteHist WHERE ControlNo IN (...) AND CompleteRoute IS NULL (hoặc chạy .\\mes.ps1 fix-pop-clone -Lots '<Lots>' -Deploy)"
         },
         "POP-ERR-16": {
             "title": "Tem thung in tu POP bi co ngan ma vach PackingID (Scanner khong doc duoc)",

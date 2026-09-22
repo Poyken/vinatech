@@ -18,6 +18,9 @@ param(
     [int]$Hours = 10,
     [string]$SourceSp = '',
     [string]$TargetFactory = 'HY',
+    [string]$BoxId = '',
+    [string]$PackingId = '',
+    [double]$Qty = 0,
     [switch]$Deploy,
     [switch]$ViewOnly,
     [switch]$Force,
@@ -89,6 +92,10 @@ function Show-Help {
     Write-Host '-> Sinh SQL xoa cuon/me tron dien cuc B552 & reset IsLineInput cuon me an toan' -ForegroundColor Gray
     Write-Host '     .\mes.ps1 fix-rollback -Lots "..." [-Route "V-22_HY"] [-Deploy]' -ForegroundColor Yellow
     Write-Host '-> Sinh SQL rollback luot chot cong doan ket B530 / POP Kiosk an toan' -ForegroundColor Gray
+    Write-Host '     .\mes.ps1 fix-pop-clone -Lots "..." [-Deploy]' -ForegroundColor Yellow
+    Write-Host '-> Sinh SQL xoa dong tu sinh CompleteRoute IS NULL de mo chot POP Kiosk (Cap thu Aging)' -ForegroundColor Gray
+    Write-Host '     .\mes.ps1 fix-cancel-pack -Target "<Lot>" [-BoxId "<Box>"] [-PackingId "<PK>"] [-Deploy]' -ForegroundColor Yellow
+    Write-Host '-> Sinh SQL huy le tung Box/Pack dong goi (STB_MaterialDocLotInfo, STB_ProdRouteHist, PO)' -ForegroundColor Gray
     Write-Host '     .\mes.ps1 new-fix <Name> [-Template <b552|b782|rollback>]' -ForegroundColor Green
     Write-Host '-> Sinh template SQL Fix chuan (ho tro B552 dien cuc, B782 chuyen ngay, Rollback chot)' -ForegroundColor Gray
     Write-Host '     .\mes.ps1 deploy <Path.sql> [-Force]' -NoNewline -ForegroundColor Green
@@ -570,6 +577,34 @@ elseif ($cmdLower -eq 'fix-rollback') {
         & $fixScript -Action rollback-route -Lots $lotsVal -Route $Route
     }
 }
+elseif ($cmdLower -eq 'fix-pop-clone' -or $cmdLower -eq 'fix-clone') {
+    $fixScript = Join-Path $toolsDir 'generate_safe_hotfix.ps1'
+    $lotsVal = if ($Lots) { $Lots } else { $Target }
+    if ([string]::IsNullOrWhiteSpace($lotsVal)) {
+        Write-Host "Loi: Vui long cung cap ma Lot can xoa dong tu sinh CompleteRoute IS NULL!" -ForegroundColor Red
+        Write-Host "Vi du: .\mes.ps1 fix-pop-clone -Lots 'VVQR073R072777,VVQR073R072765' -Deploy" -ForegroundColor Yellow
+        exit 1
+    }
+    if ($Deploy) {
+        & $fixScript -Action clean-pop-clone -Lots $lotsVal -DeployNow
+    } else {
+        & $fixScript -Action clean-pop-clone -Lots $lotsVal
+    }
+}
+elseif ($cmdLower -eq 'fix-cancel-pack' -or $cmdLower -eq 'fix-pack') {
+    $fixScript = Join-Path $toolsDir 'generate_safe_hotfix.ps1'
+    $lotsVal = if ($Lots) { $Lots } else { $Target }
+    if ([string]::IsNullOrWhiteSpace($lotsVal)) {
+        Write-Host "Loi: Vui long cung cap ma Lot can huy le pack!" -ForegroundColor Red
+        Write-Host "Vi du: .\mes.ps1 fix-cancel-pack -Target 'VVQR143R060619' -BoxId 'ECVT30-260QR2300003'" -ForegroundColor Yellow
+        exit 1
+    }
+    if ($Deploy) {
+        & $fixScript -Action cancel-pack -Lots $lotsVal -Route $Route -BoxId $BoxId -PackingId $PackingId -Qty $Qty -DeployNow
+    } else {
+        & $fixScript -Action cancel-pack -Lots $lotsVal -Route $Route -BoxId $BoxId -PackingId $PackingId -Qty $Qty
+    }
+}
 elseif ($cmdLower -eq 'weekly-report' -or $cmdLower -eq 'report-it') {
     $rptScript = Join-Path $toolsDir 'it_weekly_report.ps1'
     if (Test-Path $rptScript) {
@@ -635,9 +670,9 @@ elseif ($cmdLower -eq 'zalo-clip') {
     $zaloScript = Join-Path $toolsDir 'mes_zalo_autopilot.py'
     python -u $zaloScript --clip
 }
-elseif ($cmdLower -eq 'zalo-inbox') {
-    $zaloScript = Join-Path $toolsDir 'mes_zalo_autopilot.py'
-    python -u $zaloScript --inbox
+elseif ($cmdLower -eq 'zalo-inbox' -or $cmdLower -eq 'inbox') {
+    $qMgr = Join-Path $toolsDir 'zalo_queue_manager.py'
+    python $qMgr --display
 }
 elseif ($cmdLower -eq 'zalo-pending') {
     $zaloScript = Join-Path $toolsDir 'mes_zalo_autopilot.py'

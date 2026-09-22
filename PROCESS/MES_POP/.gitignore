@@ -5,4 +5,5 @@ tools/telegram_config.local.json
 __pycache__/
 @AutomationLog.txt
 tools/scratch/
+AI_AGENT_CONFIG/zalo_inbox/*.jsonl
 

@@ -215,7 +215,22 @@ def classify_request(raw_text, use_context=True):
             'reason': 'Tiền lệ chuẩn Giải phóng Lock máy Kiosk POP'
         }
 
-    # 5. TIỀN LỆ 5: HỎI THÔNG TIN / CHẨN ĐOÁN LỖI (4 DÒNG VÀNG - SELECT-ONLY)
+    # 5. TIỀN LỆ 5: XÓA DÒNG TỰ SINH DỞ DANG ĐỂ MỞ CHỐT POP KIOSK (CẤP THỨ AGING)
+    pop_clone_keywords = [
+        "cấp thứ", "cap thu", "aging", "againg", "luyện điện", "luyen dien",
+        "already completed", "chốt cấp thứ", "chot cap thu", "máy cấp thứ", "may cap thu",
+        "tự clone", "completeroute is null", "dòng tự sinh", "kẹt aging"
+    ]
+    if any(kw in text_lower for kw in pop_clone_keywords) and len(lots) > 0:
+        return {
+            'verdict': PrecedentVerdict.AUTO_EXECUTE,
+            'action_type': 'FIX_POP_CLONE',
+            'lots': lots,
+            'details': {'route': route or 'V-26_HY'},
+            'reason': 'Tiền lệ chuẩn Xóa dòng clone dở dang CompleteRoute IS NULL để mở chốt POP Kiosk (Aging)'
+        }
+
+    # 6. TIỀN LỆ 6: HỎI THÔNG TIN / CHẨN ĐOÁN LỖI (4 DÒNG VÀNG - SELECT-ONLY)
     inquiry_keywords = [
         "tại sao", "tai sao", "sao không quét", "sao khong quet", "bị kẹt", "bi ket",
         "lỗi fifo", "loi fifo", "báo lỗi", "bao loi", "màn hình", "kiểm tra lot", 
@@ -341,7 +356,23 @@ def execute_precedent(classification):
         else:
             return f"❌ [LỖI RESET CUỘN TỰ ĐỘNG]\nChi tiết: {proc.stderr[:300]}"
 
-    # D. RELEASE MACHINE LOCK
+    # D. FIX_POP_CLONE (XÓA DÒNG CLONE DỞ DANG ĐỂ CHỐT CẤP THỨ AGING TRÊN POP KIOSK)
+    elif action == 'FIX_POP_CLONE':
+        cmd = f'powershell -ExecutionPolicy Bypass -File "{TOOLS_DIR / "generate_safe_hotfix.ps1"}" -Action clean-pop-clone -Lots "{lots_str}" -DeployNow'
+        proc = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+        if proc.returncode == 0:
+            return (
+                f"✅ [IT MES - ĐÃ TỰ ĐỘNG XỬ LÝ XONG]\n"
+                f"⏰ Thời gian: {now_str}\n"
+                f"📋 Yêu cầu: Giải phóng dòng tự sinh dở dang để chốt cấp thứ Aging trên POP Kiosk\n"
+                f"📦 Danh sách Lot: {lots_str}\n"
+                f"🛡️ Trạng thái: Đã xóa bản ghi clone dở dang CompleteRoute IS NULL (Author: vanduc)\n"
+                f"👉 Hướng dẫn: Công nhân có thể tải lại Kiosk POP và bấm chốt cấp thứ Aging bình thường."
+            )
+        else:
+            return f"❌ [LỖI XỬ LÝ TỰ ĐỘNG AGING POP]\nChi tiết: {proc.stderr[:300]}\nHệ thống đã chuyển thông tin tới anh Đức kiểm tra lại."
+
+    # E. RELEASE MACHINE LOCK
     elif action == 'RELEASE_MACHINE':
         cmd = f'powershell -ExecutionPolicy Bypass -File "{TOOLS_DIR / "release_orphan_machines.ps1"}" -Force'
         proc = subprocess.run(cmd, shell=True, capture_output=True, text=True)
@@ -667,15 +698,37 @@ def main():
         run_inbox_watcher()
 
     elif args.pending:
+        inbox_file = INBOX_DIR / "incoming_queue.jsonl"
+        has_data = False
+        if inbox_file.exists():
+            lines = [l.strip() for l in inbox_file.read_text(encoding="utf-8").splitlines() if l.strip()]
+            if lines:
+                has_data = True
+                print(f"\n{'='*70}")
+                print(f"  HÀNG ĐỢI TIN NHẮN ZALO ĐANG CHỜ ANTIGRAVITY DUYỆT (Tổng số: {len(lines)})")
+                print(f"{'='*70}")
+                for i, line in enumerate(lines[-10:], 1):
+                    try:
+                        item = json.loads(line)
+                        print(f"[{i}] {item.get('timestamp')} | Nguồn: {item.get('source_window') or item.get('source')}")
+                        print(f"    Mã Lots: {item.get('classification', {}).get('lots')}")
+                        print(f"    Nội dung: \"{item.get('raw_message')[:120]}\"")
+                        print(f"    Phân loại: {item.get('classification', {}).get('action_type')}\n")
+                    except Exception:
+                        pass
+
         if ESCALATION_FILE.exists():
             data = json.loads(ESCALATION_FILE.read_text(encoding="utf-8"))
-            print(f"\n[DANH SÁCH YÊU CẦU CHỜ ANH ĐỨC DUYỆT] (Tổng số: {len(data)})")
-            for item in data:
-                print(f" - [{item['id']}] {item['timestamp']} | Lot: {item['lots']}")
-                print(f"   Nội dung: {item['raw_message']}")
-                print(f"   Lý do: {item['reason']}\n")
-        else:
-            print("\n[INFO] Không có yêu cầu nào đang chờ duyệt.")
+            if data:
+                has_data = True
+                print(f"\n[YÊU CẦU MỚI CẦN DUYỆT] (Tổng số: {len(data)})")
+                for item in data:
+                    print(f" - [{item['id']}] {item['timestamp']} | Lot: {item['lots']}")
+                    print(f"   Nội dung: {item['raw_message']}")
+                    print(f"   Lý do: {item['reason']}\n")
+
+        if not has_data:
+            print("\n[INFO] Hiện tại không có yêu cầu nào đang chờ duyệt.")
 
     else:
         # Mặc định chạy Clipboard Sniffer (chế độ tối ưu nhất)

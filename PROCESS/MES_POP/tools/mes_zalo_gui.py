@@ -28,19 +28,33 @@ from pathlib import Path
 import tkinter as tk
 from tkinter import ttk, messagebox, scrolledtext
 
-# Đảm bảo UTF-8 trên Windows
-if sys.platform == "win32":
-    try:
-        sys.stdout.reconfigure(encoding="utf-8")
-        sys.stderr.reconfigure(encoding="utf-8")
-    except Exception:
-        pass
-
 BASE_DIR = Path(__file__).resolve().parent.parent
 TOOLS_DIR = BASE_DIR / "tools"
 CONFIG_DIR = BASE_DIR / "AI_AGENT_CONFIG"
 HOTFIX_DIR = BASE_DIR / "sql" / "hotfixes"
 SETTINGS_FILE = CONFIG_DIR / "zalo_gui_settings.json"
+LOG_FILE = BASE_DIR / "zalo_gui.log"
+
+# Đảm bảo stdout / stderr hoạt động bình thường trên cả python và pythonw
+if sys.stdout is None:
+    try:
+        sys.stdout = open(LOG_FILE, "a", encoding="utf-8", buffering=1)
+    except Exception:
+        pass
+if sys.stderr is None:
+    try:
+        sys.stderr = open(LOG_FILE, "a", encoding="utf-8", buffering=1)
+    except Exception:
+        pass
+
+if sys.platform == "win32":
+    try:
+        if hasattr(sys.stdout, "reconfigure"):
+            sys.stdout.reconfigure(encoding="utf-8")
+        if hasattr(sys.stderr, "reconfigure"):
+            sys.stderr.reconfigure(encoding="utf-8")
+    except Exception:
+        pass
 
 sys.path.insert(0, str(TOOLS_DIR))
 try:
@@ -85,6 +99,7 @@ class ZaloControlCenterApp:
         self.load_settings()
         self.build_ui()
         self.start_monitoring_thread()
+        self.root.after(500, self.check_and_launch_zalo_on_startup)
         self.root.protocol("WM_DELETE_WINDOW", self.on_close)
 
     def setup_styles(self):
@@ -167,23 +182,32 @@ class ZaloControlCenterApp:
         mode_box = ttk.Frame(control_frame, style="Card.TFrame")
         mode_box.pack(fill="x", pady=4)
 
-        rb_auto = ttk.Radiobutton(
+        rb_co_pilot = ttk.Radiobutton(
             mode_box,
-            text="🟢 Chế Độ Tự Động (Auto-Pilot): Tiền lệ lặp lại tự sửa & deploy 100% | Lỗi mới tuân thủ quy trình & xin duyệt",
+            text="🔵 Chế Độ Duyệt Qua Antigravity (An Toàn Tuyệt Đối): Thu thập tin vào hàng đợi -> Chờ mở Antigravity cùng anh Đức duyệt",
             variable=self.mode_var,
-            value="AUTO",
+            value="ANTIGRAVITY",
             command=self.on_mode_changed
         )
-        rb_auto.pack(anchor="w", pady=3)
+        rb_co_pilot.pack(anchor="w", pady=3)
 
         rb_manual = ttk.Radiobutton(
             mode_box,
-            text="🟠 Chế Độ Bán Tự Động (Manual Approval): DỪNG LẠI và bắt buộc anh Đức bấm Duyệt cho MỌI yêu cầu",
+            text="🟠 Chế Độ Thủ Công (Modal GUI): Bật cửa sổ Popup Tkinter để anh Đức duyệt trực tiếp trên màn hình",
             variable=self.mode_var,
             value="MANUAL",
             command=self.on_mode_changed
         )
         rb_manual.pack(anchor="w", pady=3)
+
+        rb_auto = ttk.Radiobutton(
+            mode_box,
+            text="🟢 Chế Độ Tự Động (Auto-Pilot): Tiền lệ quen thuộc tự sửa DB 100% | Lỗi mới xin duyệt",
+            variable=self.mode_var,
+            value="AUTO",
+            command=self.on_mode_changed
+        )
+        rb_auto.pack(anchor="w", pady=3)
 
         # Cài đặt phụ trợ
         opt_box = ttk.Frame(control_frame, style="Card.TFrame")
@@ -290,15 +314,30 @@ class ZaloControlCenterApp:
 
     def launch_accessible_zalo(self):
         """Khởi động Zalo kèm cờ trợ năng"""
-        bat_file = BASE_DIR / "start_zalo_accessible.bat"
-        if bat_file.exists():
-            subprocess.Popen(["cmd.exe", "/c", str(bat_file)])
-            self.log("🚀 Đã gửi lệnh khởi động Zalo PC với cờ --force-renderer-accessibility!")
+        zalo_exe = Path(os.path.expandvars(r"%LOCALAPPDATA%\Programs\Zalo\Zalo.exe"))
+        if zalo_exe.exists():
+            subprocess.Popen([str(zalo_exe), "--force-renderer-accessibility"], cwd=str(zalo_exe.parent))
+            self.log("🚀 Đã mở Zalo PC với cờ trợ năng (--force-renderer-accessibility)!")
         else:
-            zalo_exe = Path(os.path.expandvars(r"%LOCALAPPDATA%\Programs\Zalo\Zalo.exe"))
-            if zalo_exe.exists():
-                subprocess.Popen([str(zalo_exe), "--force-renderer-accessibility"])
-                self.log("🚀 Đã mở Zalo PC với cờ trợ năng!")
+            bat_file = BASE_DIR / "start_zalo_accessible.bat"
+            if bat_file.exists():
+                subprocess.Popen(["cmd.exe", "/c", str(bat_file)])
+                self.log("🚀 Đã gửi lệnh khởi động Zalo PC với cờ --force-renderer-accessibility!")
+            else:
+                self.log("❌ Không tìm thấy Zalo.exe tại đường dẫn mặc định.")
+
+    def check_and_launch_zalo_on_startup(self):
+        """Tự động kiểm tra và khởi động Zalo trợ năng nếu chưa mở"""
+        try:
+            cmd = 'tasklist /fi "imagename eq Zalo.exe" 2>nul'
+            out = subprocess.check_output(cmd, shell=True, text=True, errors="ignore")
+            if "Zalo.exe" not in out:
+                self.log("ℹ️ Chưa phát hiện Zalo PC đang chạy. Đang tự động khởi động Zalo Trợ Năng...")
+                self.launch_accessible_zalo()
+            else:
+                self.log("✅ Zalo PC đang hoạt động.")
+        except Exception:
+            pass
 
     def on_mode_changed(self):
         mode = self.mode_var.get()
@@ -344,6 +383,29 @@ class ZaloControlCenterApp:
 
         self.log(f"🔎 Phân loại: {verdict} | Action: {action} | Lots: [{lots_str}]")
 
+        # Lưu tin nhắn vào hàng đợi để Antigravity có thể đọc và duyệt bất cứ lúc nào
+        try:
+            inbox_dir = BASE_DIR / "AI_AGENT_CONFIG" / "zalo_inbox"
+            inbox_dir.mkdir(parents=True, exist_ok=True)
+            queue_file = inbox_dir / "incoming_queue.jsonl"
+            queue_entry = {
+                "timestamp": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                "source": source,
+                "source_window": win.Name if win else "",
+                "raw_message": raw_text,
+                "classification": {
+                    "verdict": str(verdict),
+                    "action_type": action,
+                    "lots": lots,
+                    "reason": classification.get("reason", "")
+                },
+                "status": "WAITING_REVIEW"
+            }
+            with open(queue_file, "a", encoding="utf-8") as qf:
+                qf.write(json.dumps(queue_entry, ensure_ascii=False) + "\n")
+        except Exception as e:
+            self.log(f"Lỗi ghi hàng đợi inbox: {e}")
+
         current_mode = self.mode_var.get()
 
         if verdict == PrecedentVerdict.IGNORE:
@@ -380,9 +442,7 @@ class ZaloControlCenterApp:
         lots_in = ", ".join([f"'{l}'" for l in lots]) if lots else "''"
         action = classification['action_type']
 
-        if diag_data and diag_data.get("sql_hotfix") and not diag_data["sql_hotfix"].startswith("Khong can"):
-            proposed_sql = diag_data["sql_hotfix"]
-        elif action == "MOVEDATE":
+        if action == "MOVEDATE":
             today = datetime.datetime.now().strftime("%Y-%m-%d")
             proposed_sql = f"""USE SmartFactoryV2;
 GO
@@ -418,6 +478,24 @@ WHERE ProdRouteHistNo IN (
     WHERE S.Barcode IN ({lots_in})
 );
 COMMIT TRAN;"""
+        elif action == "FIX_POP_CLONE":
+            proposed_sql = f"""USE SmartFactoryV2;
+GO
+BEGIN TRAN;
+-- Xóa dòng tự sinh dở dang CompleteRoute IS NULL để mở chốt POP Kiosk Aging (Author: vanduc)
+DELETE W
+FROM SmartFactoryV2.dbo.STB_ProdRouteWorkerHist W
+INNER JOIN SmartFactoryV2.dbo.STB_ProdRouteHist H ON W.ProdRouteHistNo = H.ProdRouteHistNo
+INNER JOIN SmartFactoryV2.dbo.STB_SetInfo S ON H.ControlNo = S.ControlNo
+WHERE S.Barcode IN ({lots_in}) AND H.CompleteRoute IS NULL;
+
+DELETE H
+FROM SmartFactoryV2.dbo.STB_ProdRouteHist H
+INNER JOIN SmartFactoryV2.dbo.STB_SetInfo S ON H.ControlNo = S.ControlNo
+WHERE S.Barcode IN ({lots_in}) AND H.CompleteRoute IS NULL;
+COMMIT TRAN;"""
+        elif diag_data and diag_data.get("sql_hotfix") and not diag_data["sql_hotfix"].startswith("Khong can") and not diag_data["sql_hotfix"].startswith("--"):
+            proposed_sql = diag_data["sql_hotfix"]
         else:
             proposed_sql = f"""USE SmartFactoryV2;
 GO
@@ -562,6 +640,7 @@ COMMIT TRAN;"""
         # 2. Nạp vào Clipboard
         if self.auto_copy_var.get():
             try:
+                self.last_clipboard_text = response_text.strip()
                 self.root.clipboard_clear()
                 self.root.clipboard_append(response_text)
                 self.log("📋 Đã nạp câu trả lời vào Clipboard làm backup.")
@@ -593,6 +672,11 @@ COMMIT TRAN;"""
         kernel32 = ctypes.windll.kernel32
 
         try:
+            ctypes.windll.ole32.CoInitialize(None)
+        except Exception:
+            pass
+
+        try:
             h_def = user32.OpenDesktopW('Default', 0, False, 0x01FF)
             if h_def:
                 user32.SetThreadDesktop(h_def)
@@ -600,20 +684,14 @@ COMMIT TRAN;"""
             pass
 
         def get_clip_text():
-            if not user32.OpenClipboard(None):
-                return ""
             try:
-                CF_UNICODETEXT = 13
-                h_data = user32.GetClipboardData(CF_UNICODETEXT)
-                if not h_data:
+                import uiautomation as _auto
+                return _auto.GetClipboardText() or ""
+            except Exception:
+                try:
+                    return self.root.clipboard_get() or ""
+                except Exception:
                     return ""
-                kernel32.GlobalLock.restype = ctypes.c_wchar_p
-                text_ptr = kernel32.GlobalLock(h_data)
-                text = str(text_ptr) if text_ptr else ""
-                kernel32.GlobalUnlock(h_data)
-                return text
-            finally:
-                user32.CloseClipboard()
 
         seen_window_messages = set()
 
@@ -631,21 +709,27 @@ COMMIT TRAN;"""
         while not self.stop_event.is_set():
             try:
                 if self.is_monitoring.get():
-                    # 1. Quét trực tiếp cửa sổ Zalo PC (Direct Window Reader)
+                    # 1. Quét trực tiếp TẤT CẢ các cửa sổ Zalo PC đang mở (Đa nhóm / Cửa sổ riêng)
                     if self.window_reader:
-                        win = self.window_reader.select_target_window()
-                        if win:
+                        target_wins = self.window_reader.get_all_target_windows()
+                        for win in target_wins:
                             self.active_zalo_win = win
                             new_msgs = self.window_reader.read_latest_messages_from_window(win)
                             for msg in new_msgs:
                                 if msg not in seen_window_messages:
                                     seen_window_messages.add(msg)
-                                    self.root.after(0, lambda m=msg, w=win: self.process_incoming_message(m, source="ZALO_WINDOW", win=w))
+                                    self.root.after(0, lambda m=msg, w=win: self.process_incoming_message(m, source=f"ZALO ({w.Name})", win=w))
 
                     # 2. Giám sát Clipboard làm kênh phụ trợ
                     current_clip = get_clip_text().strip()
                     if current_clip and current_clip != self.last_clipboard_text:
                         self.last_clipboard_text = current_clip
+
+                        # Bỏ qua các tin nhắn do chính AI sinh ra để triệt tiêu vòng lặp vô tận
+                        ai_signatures = ["🔍 [KẾT QUẢ", "✅ [IT MES", "💡 [HƯỚNG DẪN", "⚠️ [IT MES", "VINATECH MES & POP", "SQL HOTFIX"]
+                        if any(sig in current_clip for sig in ai_signatures):
+                            continue
+
                         lots = extract_lots(current_clip)
                         keywords = ["b782", "b530", "b552", "rollback", "chuyển ngày", "chuyen ngay", "kẹt", "ket", "fifo", "màn hình", "lot"]
                         if len(lots) > 0 or any(k in current_clip.lower() for k in keywords):
@@ -653,9 +737,9 @@ COMMIT TRAN;"""
                                 seen_window_messages.add(current_clip)
                                 self.root.after(0, lambda t=current_clip: self.process_incoming_message(t, source="CLIPBOARD"))
 
-                time.sleep(0.8)
+                time.sleep(2.0)
             except Exception:
-                time.sleep(1)
+                time.sleep(2.0)
 
     def on_close(self):
         self.save_settings()
@@ -663,9 +747,27 @@ COMMIT TRAN;"""
         self.root.destroy()
 
 def main():
-    root = tk.Tk()
-    app = ZaloControlCenterApp(root)
-    root.mainloop()
+    import traceback
+    def on_tk_exception(exc_type, exc_value, exc_traceback):
+        try:
+            with open(LOG_FILE, "a", encoding="utf-8") as f:
+                f.write(f"\n[TK_EXCEPTION {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}]:\n")
+                traceback.print_exception(exc_type, exc_value, exc_traceback, file=f)
+        except Exception:
+            pass
+
+    try:
+        root = tk.Tk()
+        root.report_callback_exception = on_tk_exception
+        app = ZaloControlCenterApp(root)
+        root.mainloop()
+    except Exception as e:
+        try:
+            with open(LOG_FILE, "a", encoding="utf-8") as f:
+                f.write(f"\n[FATAL_ERROR {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}]:\n")
+                traceback.print_exc(file=f)
+        except Exception:
+            pass
 
 if __name__ == "__main__":
     main()

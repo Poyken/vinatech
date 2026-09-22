@@ -53,27 +53,59 @@ class ZaloWindowReader:
         self.current_window = None
 
     def find_zalo_windows(self):
-        """Tìm tất cả các cửa sổ Zalo đang mở (cả cửa sổ chính và cửa sổ nhóm đã tách riêng)"""
+        """Tìm tất cả các cửa sổ Zalo đang mở (siêu tốc qua Win32 EnumDesktopWindows <2ms, 0% CPU)"""
         if not auto:
             return []
 
         import ctypes
-        user32 = ctypes.windll.user32
-        h_def = user32.OpenDesktopW('Default', 0, False, 0x01FF)
-        if h_def:
-            user32.SetThreadDesktop(h_def)
-
-        zalo_wins = []
+        import ctypes.wintypes
         try:
-            root = auto.GetRootControl()
-            for win in root.GetChildren():
-                c_name = win.ClassName
-                w_name = win.Name
-                # Cửa sổ Electron của Zalo có class Chrome_WidgetWin_1 hoặc tên chứa Zalo
-                if c_name == "Chrome_WidgetWin_1" or "zalo" in w_name.lower():
-                    # Lọc bớt các cửa sổ phụ vô hình
-                    if win.NativeWindowHandle and user32.IsWindowVisible(win.NativeWindowHandle):
-                        zalo_wins.append(win)
+            ctypes.windll.ole32.CoInitialize(None)
+        except Exception:
+            pass
+
+        user32 = ctypes.windll.user32
+        kernel32 = ctypes.windll.kernel32
+        PROCESS_QUERY_LIMITED_INFORMATION = 0x1000
+
+        def get_proc_name(pid):
+            if not pid:
+                return ''
+            h = kernel32.OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, False, pid)
+            if not h:
+                return ''
+            try:
+                buf = ctypes.create_unicode_buffer(1024)
+                size = ctypes.wintypes.DWORD(1024)
+                if kernel32.QueryFullProcessImageNameW(h, 0, buf, ctypes.byref(size)):
+                    return buf.value.lower()
+            finally:
+                kernel32.CloseHandle(h)
+            return ''
+
+        h_def = user32.OpenDesktopW('Default', 0, False, 0x01FF)
+        zalo_wins = []
+
+        WNDENUMPROC = ctypes.WINFUNCTYPE(ctypes.c_bool, ctypes.wintypes.HWND, ctypes.wintypes.LPARAM)
+        def enum_proc(hwnd, lparam):
+            if user32.IsWindowVisible(hwnd):
+                pid = ctypes.wintypes.DWORD()
+                user32.GetWindowThreadProcessId(hwnd, ctypes.byref(pid))
+                pname = get_proc_name(pid.value)
+                if 'zalo.exe' in pname:
+                    try:
+                        ctrl = auto.ControlFromHandle(hwnd)
+                        if ctrl:
+                            zalo_wins.append(ctrl)
+                    except Exception:
+                        pass
+            return True
+
+        try:
+            if h_def:
+                user32.EnumDesktopWindows(h_def, WNDENUMPROC(enum_proc), 0)
+            else:
+                user32.EnumWindows(WNDENUMPROC(enum_proc), 0)
         except Exception as e:
             print(f"[ZALO READER] Lỗi quét cửa sổ: {e}")
 
@@ -93,37 +125,34 @@ class ZaloWindowReader:
 
         # Ưu tiên cửa sổ tách riêng (tên không chỉ là chữ 'Zalo' đơn thuần)
         for w in wins:
-            if w.Name.strip() and w.Name.strip().lower() != "zalo" and "antigravity" not in w.Name.lower():
-                return w
-
-        # Fallback về cửa sổ Zalo bất kỳ
-        for w in wins:
-            if "antigravity" not in w.Name.lower() and "chrome" not in w.Name.lower():
+            w_name = w.Name.strip().lower()
+            if w_name and w_name != "zalo":
                 return w
 
         return wins[0] if wins else None
 
+    def get_all_target_windows(self):
+        """Lấy TẤT CẢ các cửa sổ Zalo hợp lệ"""
+        return self.find_zalo_windows()
+
     def read_latest_messages_from_window(self, win):
-        """Đọc danh sách các tin nhắn văn bản hiện có trong cửa sổ Zalo"""
+        """Đọc danh sách các tin nhắn văn bản hiện có trong cửa sổ Zalo (siêu nhẹ, maxDepth=7)"""
         if not win or not auto:
             return []
 
         messages = []
         try:
-            # Quét các phần tử dạng Text hoặc ListItem bên trong cửa sổ
-            for ctrl, depth in auto.WalkControl(win, maxDepth=12):
-                c_type = ctrl.ControlTypeName
+            for ctrl, depth in auto.WalkControl(win, maxDepth=7):
                 name = ctrl.Name.strip() if ctrl.Name else ""
-                
-                # Bắt các đoạn văn bản có ý nghĩa (bỏ qua icon, thời gian lẻ, nút bấm)
                 if name and len(name) > 3:
-                    # Kiểm tra xem có dấu hiệu mã Lot hoặc từ khóa MES không
                     lots = extract_lots(name) if 'extract_lots' in globals() else []
                     mes_keywords = ["b782", "b530", "b552", "rollback", "chuyển ngày", "chuyen ngay", "kẹt", "ket", "fifo", "lot", "lỗi", "loi"]
                     if len(lots) > 0 or any(k in name.lower() for k in mes_keywords):
                         messages.append(name)
         except Exception:
             pass
+
+        return messages
 
         return messages
 
@@ -191,14 +220,14 @@ class ZaloWindowReader:
 
         while self.running:
             try:
-                win = self.select_target_window()
-                if win:
+                target_wins = self.get_all_target_windows()
+                for win in target_wins:
                     self.current_window = win
                     messages = self.read_latest_messages_from_window(win)
                     for msg in messages:
                         if msg not in self.seen_messages:
                             self.seen_messages.add(msg)
-                            print(f"\n[PHÁT HIỆN TIN NHẮN MỚI TỪ ZALO]: \"{msg[:100]}\"")
+                            print(f"\n[PHÁT HIỆN TIN NHẮN MỚI TỪ ZALO ('{win.Name}')]: \"{msg[:100]}\"")
                             
                             # Xử lý tin nhắn
                             if self.on_message_callback:

@@ -36,6 +36,21 @@ Related Files:
 
 > 💡 **Lưu trữ:** Các hotfix cũ hơn (Tháng 07 & 08/2026, 24 entries) đã được chuyển vào [HOTFIX_LOG_2026_JUL_AUG.md](HOTFIX_LOG_2026_JUL_AUG.md).
 
+### [POP Screen] — 📍 ID_53 Cơ chế Hủy lẻ từng Pack đóng gói & Ma trận phân quyền Admin Kiosk POP
+* **Ngày xử lý / Đóng gói tri thức:** `2026-09-23`
+* **Màn hình liên quan (TCode / URL):** `[POP Screen] - pop.vinatech.com/pop/screen (Packing - HY Cell Line #17)`
+* **Triệu chứng & Thắc mắc:**
+  - Khi bấm hủy 1 Box đóng gói trên Web POP (Box `ECVT30-260QR2300003` của Lot `VVQR143R060619`), nhập `vanduc` hoặc `92603003` bị báo lỗi: `관리자 권한이 없습니다.` (Không có quyền quản trị viên).
+  - Thắc mắc cơ chế hủy lẻ từng pack khi Lot có 2 pack (khác gì với `usp_DoCancelProdPacking_LotNo`), và số chứng từ `@pMaterialDocNo` lấy ở đâu.
+* **Nguyên nhân gốc (Root Cause):**
+  - Web POP kiểm tra quyền Quản trị viên trong bảng `VINATECH_POP.dbo.VINA_EMP` với cờ `EMP_ADMIN = 'Y'` hoặc `EMP_SYSTEM_ADMIN = 'Y'`. Mã `vanduc` là username text (không phải mã NV 8 số). Mã `92603003` chưa được cấp quyền trong `VINA_EMP` của CSDL POP. Mã hợp lệ hiện tại là `92503020`.
+  - SP `usp_DoCancelProdPacking_LotNo` là cấp độ Lot (Lot-level), hủy toàn bộ các pack của Lot cùng lúc.
+  - Web POP hỗ trợ cấp độ Pack (Pack-level) qua API `cancelSingleBox`: Tái sử dụng `usp_DoCancelMaterialDoc` cho riêng chứng từ của pack đó và thực hiện trừ lũy kế sản lượng trên `STB_ProdRouteHist` (`ProdQty = ProdQty - @CancelQty`), `MongoToMesPerformance`, `STB_ProductionOrderInfo`.
+* **Truy vết chứng từ kho `@pMaterialDocNo`:**
+  - Lấy trực tiếp từ bảng `SmartFactoryV2.dbo.STB_MaterialDocLotInfo`: Cột **`LotID`** chính là **Mã Tem Box (Box Barcode)** in dán trên thùng carton!
+  - `WHERE LotID = 'ECVT30-260QR2300003'` -> Trả về ngay `MaterialDocNo = '260923000241'`, `PackingID = 'PKQR2300158'`, `StockQty = 495`.
+* **Tài liệu hóa hoàn chỉnh:** Đã cập nhật vào [POP_KB_04_ROLLBACK_AND_SAFETY.md §2.5 Phương án 4](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_04_ROLLBACK_AND_SAFETY.md#🌟-phương-án-4-chuyên-sâu--hủy-lẻ-từng-box--pack-partial-packing-cancellation).
+
 ### [B530]/[POP Screen] — 📍 ID_52 Cập nhật chính xác tên máy công đoạn Cuốn Winding (V-22_HY) cho 3 Lot Hưng Yên
 * **Ngày sửa:** `2026-09-21`
 * **Màn hình liên quan (TCode / Module):** `[B530] - Nhập sản lượng / Kiosk POP Hưng Yên`
@@ -820,6 +835,46 @@ UPDATE STB_DefectRepairInfo SET IsDelete=0, RepairQty=0 WHERE DefectSummaryNo=20
   4. **Nâng cấp Master Auto-Diagnostic (`tools/mes_diagnose.py`):** Tích hợp đầy đủ các Rule chẩn đoán 1-Shot tức thời cho các ca bệnh trên khi gọi `.\mes.ps1 diagnose "<Lỗi/Lot>"`.
   5. **Đồng bộ hóa Index:** Cập nhật liên kết trong `POP_KB_INDEX.md`.
 * **Tham chiếu KB:** [POP_KB_03_TROUBLESHOOTING.md § 3](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_03_TROUBLESHOOTING.md), [HƯỚNG DẪN XỬ LÝ HỆ THỐNG POP KHI GẶP LỖI.docx](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/HƯỚNG DẪN XỬ LÝ HỆ THỐNG POP KHI GẶP LỖI.docx)
+
+---
+
+### [POP Kiosk / B530 / V-26_HY] — 📍 ID_62 Xóa dòng tự sinh thừa (CompleteRoute IS NULL) để chốt Cấp Thứ Aging trên POP Kiosk
+* **Ngày sửa:** `2026-09-23` (01:20:00)
+* **Người thực hiện:** `vanduc` (IT MES - EA Team)
+* **Màn hình liên quan (TCode):** `POP Web Kiosk (pop.vinatech.com/pop/screen) - Công đoạn Aging (Lão hóa / Cấp thứ V-26_HY)` & `MES WinForm [B530]`
+* **Bảng liên quan:** `SmartFactoryV2.dbo.STB_ProdRouteHist`, `SmartFactoryV2.dbo.STB_SetInfo`
+* **Danh sách Lot:** `VVQR073R072777`, `VVQR073R072765`, `VVQR073R072723`, `VVQR073R072760` (PO `260828000020`, Model `ECVT30-357`, Chưởng Cell Hưng Yên `VVT_F5`)
+* **Triệu chứng & Yêu cầu:** Tổ sản xuất Hưng Yên (chị Tám) gửi danh sách 4 Lot lên nhóm Zalo: *"ho tro c dde chot cap thu againg nhe"*. Trên POP Kiosk không thể chọn hoặc chốt sản lượng Aging `V-26_HY`.
+* **Nguyên nhân gốc rễ (Root Cause):**
+  - Khi chốt công đoạn trước (`V-25_HY` Sleeving) trên WinForm MES, SP nghiệp vụ lõi (`usp_DoProcessProdRouteHistForCalc_SmartApp_VNT`) sau khi gán `CompleteRoute = 1` ở `V-25_HY` sẽ **tự động clone (nhân bản) thêm 1 dòng chờ cho công đoạn tiếp theo (`V-26_HY`)** với cờ `CompleteRoute IS NULL`.
+  - Trên WinForm MES cũ, đây là logic chờ để form kế tiếp load lên cho OP thao tác.
+  - Tuy nhiên, khi chuyển sang vận hành trên **Web POP Kiosk**, API Kiosk kiểm tra thấy trong `STB_ProdRouteHist` đã tồn tại bản ghi của `V-26_HY` nên hiểu lầm là công đoạn này đã được tạo / đã hoàn thành trên MES hoặc kẹt trạng thái dở dang -> Chặn không cho Kiosk tạo lượt chốt mới.
+* **Phương án sửa lỗi chuẩn (Author 'vanduc'):**
+  ```sql
+  USE SmartFactoryV2;
+  GO
+  BEGIN TRANSACTION;
+  BEGIN TRY
+      -- Xóa bản ghi dở dang tự sinh từ WinForm MES để giải phóng quyền cho POP Kiosk
+      DELETE FROM SmartFactoryV2.dbo.STB_ProdRouteHist 
+      WHERE ControlNo IN (
+          SELECT ControlNo FROM SmartFactoryV2.dbo.STB_SetInfo WITH(NOLOCK) 
+          WHERE Barcode IN ('VVQR073R072777', 'VVQR073R072765', 'VVQR073R072723', 'VVQR073R072760')
+      )
+      AND CompleteRoute IS NULL;
+
+      COMMIT TRANSACTION;
+  END TRY
+  BEGIN CATCH
+      ROLLBACK TRANSACTION;
+      THROW;
+  END CATCH;
+  GO
+  ```
+* **Kết quả nghiệm thu:** Xóa sạch các dòng clone thừa dở dang, bảo toàn 100% lịch sử các công đoạn đã chốt thật trước đó (`CompleteRoute = 1`). Kiosk POP nhận diện thông suốt, công nhân F5 và chốt cấp thứ Aging bình thường.
+* **Lệnh CLI tích hợp:** `.\mes.ps1 fix-pop-clone -Lots "VVQR073R072777,VVQR073R072765,VVQR073R072723,VVQR073R072760" -Deploy`
+* **Tham chiếu KB:** [POP_KB_03_TROUBLESHOOTING.md § 2.7 & 3 Case 3](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_03_TROUBLESHOOTING.md), [KB_03_02_CELL_LINE.md § 6.16 L773](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_02_CELL_LINE.md#L773)
+
 
 
 

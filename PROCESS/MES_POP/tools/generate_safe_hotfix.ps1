@@ -11,7 +11,7 @@
 
 param (
     [Parameter(Mandatory=$true)]
-    [ValidateSet("movedate", "electrode", "rollback-route")]
+    [ValidateSet("movedate", "electrode", "rollback-route", "clean-pop-clone", "cancel-pack")]
     [string]$Action,
 
     [string]$Lots,          # Danh sách mã Lot (ngăn cách bởi dấu phẩy, khoảng trắng hoặc xuống dòng)
@@ -19,6 +19,9 @@ param (
     [int]$Hours = 10,       # Số giờ cộng thêm để vượt mốc 10:00 AM (mặc định 10)
     [string]$Route = "",    # Mã công đoạn (V-22_HY, V-26_HY, V-28_HY...)
     [string]$Type = "Slitting", # Loại điện cực (Slitting / Mixing)
+    [string]$BoxId = "",    # Mã Barcode dán trên nhãn Box (VD: ECVT30-260QR2300003)
+    [string]$PackingId = "",# Mã PackingID của Box (VD: PKQR2300158)
+    [double]$Qty = 0,       # Số lượng của riêng Box cần hủy
     [switch]$DeployNow      # Chạy deploy ngay sau khi sinh file
 )
 
@@ -34,10 +37,10 @@ if (-not (Test-Path $hotfixDir)) {
 $dateTag = Get-Date -Format "yyyyMMdd_HHmmss"
 $nowStr = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
 
-# Parse danh sách Lot
+# Parse danh sách Lot (luôn ép kiểu Array @() để tránh lỗi chuỗi đơn bị cắt ký tự đầu)
 $lotList = @()
 if ($Lots) {
-    $lotList = $Lots -split "[\r\n,; ]+" | Where-Object { $_ -match "\S" } | ForEach-Object { $_.Trim() }
+    $lotList = @($Lots -split "[\r\n,; ]+" | Where-Object { $_ -match "\S" } | ForEach-Object { $_.Trim() })
 }
 
 if ($lotList.Count -eq 0 -and $Action -ne "electrode") {
@@ -219,8 +222,186 @@ BEGIN
     DELETE FROM SmartFactoryV2.dbo.STB_MaterialLotInfo WHERE LotNo = '$lotTarget' AND MaterialWarehouseCode LIKE '%ROUTE%';
 END
 
+    COMMIT TRAN;
+    PRINT '-> [THANH CONG] Da rollback thanh cong cong doan $Route cho Lot $lotTarget!';
+    GO
+"@
+}
+elseif ($Action -eq "clean-pop-clone") {
+    $lotInClause = ($lotList | ForEach-Object { "'$_'" }) -join ", "
+    $firstLot = $lotList[0]
+    $fileName = "hotfix_${dateTag}_POP_CLEAN_CLONED_PRODROUTE_${firstLot}.sql"
+    $filePath = Join-Path $hotfixDir $fileName
+
+    $sqlContent = @"
+-- ==============================================================================
+-- HOTFIX: XÓA DÒNG CLONE DỞ DANG ĐỂ MỞ CHỐT POP KIOSK (CẤP THỨ AGING)
+-- Created At: $nowStr
+-- Target Lots: $($lotList -join ', ')
+-- Author / ChangeUserID: vanduc
+-- ==============================================================================
+USE SmartFactoryV2;
+GO
+
+-- 1. PRE-FLIGHT CHECK (Kiểm tra các dòng dở dang CompleteRoute IS NULL)
+SELECT 
+    H.ProdRouteHistNo, H.ControlNo, S.Barcode, H.RouteCode, H.CompleteRoute, H.ProdQty, H.CreateDateTime
+FROM SmartFactoryV2.dbo.STB_ProdRouteHist H WITH(NOLOCK)
+INNER JOIN SmartFactoryV2.dbo.STB_SetInfo S WITH(NOLOCK) ON H.ControlNo = S.ControlNo
+WHERE S.Barcode IN ($lotInClause) AND H.CompleteRoute IS NULL;
+GO
+
+BEGIN TRAN;
+
+-- 2. XÓA WORKER MAPPING DỞ DANG NẾU CÓ
+DELETE W
+FROM SmartFactoryV2.dbo.STB_ProdRouteWorkerHist W
+INNER JOIN SmartFactoryV2.dbo.STB_ProdRouteHist H ON W.ProdRouteHistNo = H.ProdRouteHistNo
+INNER JOIN SmartFactoryV2.dbo.STB_SetInfo S ON H.ControlNo = S.ControlNo
+WHERE S.Barcode IN ($lotInClause) AND H.CompleteRoute IS NULL;
+
+-- 3. XÓA BẢN GHI PRODROUTEHIST TỰ CLONE TỪ MES WINFORM
+DELETE H
+FROM SmartFactoryV2.dbo.STB_ProdRouteHist H
+INNER JOIN SmartFactoryV2.dbo.STB_SetInfo S ON H.ControlNo = S.ControlNo
+WHERE S.Barcode IN ($lotInClause) AND H.CompleteRoute IS NULL;
+
 COMMIT TRAN;
-PRINT '-> [THANH CONG] Da rollback thanh cong cong doan $Route cho Lot $lotTarget!';
+PRINT '-> [THANH CONG] Da xoa sach cac dong tu clone CompleteRoute IS NULL cho cac Lot: $($lotList -join ", ")!';
+GO
+"@
+}
+elseif ($Action -eq "cancel-pack") {
+    $firstLot = $lotList[0]
+    $fileName = "hotfix_${dateTag}_CANCEL_PACK_${firstLot}.sql"
+    $filePath = Join-Path $hotfixDir $fileName
+
+    $routeCode = if ($Route) { $Route } else { 'V-28_HY' }
+    $boxIdVal = if ($BoxId) { $BoxId } else { '' }
+    $packingIdVal = if ($PackingId) { $PackingId } else { '' }
+    $qtyVal = if ($Qty -gt 0) { $Qty } else { 0 }
+
+    $sqlContent = @"
+-- ==============================================================================
+-- HOTFIX THỦ CÔNG: HỦY LẺ 1 PACK CỦA LOT [$firstLot]
+-- Author: vanduc
+-- CreateDateTime: $nowStr
+-- Reference: POP_KB_04 §2.5 Phương án 4 & HOTFIX_LOG ID_53
+-- ==============================================================================
+USE SmartFactoryV2;
+GO
+
+SET NOCOUNT ON;
+
+BEGIN TRANSACTION;
+BEGIN TRY
+    DECLARE @LotNo VARCHAR(50) = '$firstLot';
+    DECLARE @PackingID VARCHAR(50) = '$packingIdVal';
+    DECLARE @BoxBarcode VARCHAR(50) = '$boxIdVal';
+    DECLARE @CancelQty NUMERIC(20,5) = $qtyVal;
+    DECLARE @RouteCode VARCHAR(20) = '$routeCode';
+    DECLARE @UserID VARCHAR(20) = 'vanduc';
+
+    -- Tự động tìm PackingID và Qty từ BoxBarcode nếu chưa truyền
+    IF (ISNULL(@PackingID, '') = '' OR @CancelQty <= 0) AND ISNULL(@BoxBarcode, '') <> ''
+    BEGIN
+        SELECT TOP 1 @PackingID = PackingID, @CancelQty = StockQty
+        FROM SmartFactoryV2.dbo.STB_MaterialDocLotInfo WITH(NOLOCK)
+        WHERE LotID = @BoxBarcode AND LotNo = @LotNo;
+    END
+
+    -- 1. Lấy thông tin điều phối ControlNo & PONo
+    DECLARE @ControlNo VARCHAR(20), @PONo VARCHAR(20);
+    SELECT @ControlNo = ControlNo, @PONo = PONo 
+    FROM SmartFactoryV2.dbo.STB_SetInfo WITH(NOLOCK) 
+    WHERE Barcode = @LotNo;
+
+    IF @ControlNo IS NULL
+    BEGIN
+        RAISERROR(N'Không tìm thấy thông tin Lot trong STB_SetInfo!', 16, 1);
+        RETURN;
+    END
+
+    -- 2. Tìm chứng từ kho tương ứng của Pack và hủy chứng từ
+    DECLARE @MaterialDocNo VARCHAR(20);
+    SELECT @MaterialDocNo = MaterialDocNo 
+    FROM SmartFactoryV2.dbo.STB_MaterialDocLotInfo WITH(NOLOCK)
+    WHERE PackingID = @PackingID AND LotNo = @LotNo;
+
+    IF @MaterialDocNo IS NOT NULL
+    BEGIN
+        EXEC usp_DoCancelMaterialDoc 
+             @pProcessLanguage = 'VIETNAMESE', 
+             @pProcessUserID = @UserID, 
+             @pMaterialDocNo = @MaterialDocNo;
+        PRINT N'>> 1. Đã hủy chứng từ kho: ' + @MaterialDocNo;
+    END
+
+    -- 3. Xóa thùng BTP của riêng Box này trong STB_MaterialLotInfo
+    DELETE FROM SmartFactoryV2.dbo.STB_MaterialLotInfo 
+    WHERE LotNo = @LotNo AND PackingID = @PackingID;
+    PRINT N'>> 2. Đã xóa Box trong STB_MaterialLotInfo: ' + CAST(@@ROWCOUNT AS VARCHAR);
+
+    -- 4. Giảm trừ sản lượng lũy kế đóng gói trong STB_ProdRouteHist
+    UPDATE SmartFactoryV2.dbo.STB_ProdRouteHist
+    SET ProdQty = ProdQty - @CancelQty,
+        ChangeDateTime = GETDATE()
+    WHERE ControlNo = @ControlNo AND RouteCode = @RouteCode;
+    PRINT N'>> 3. Đã giảm trừ ProdQty trong STB_ProdRouteHist.';
+
+    -- Nếu sau khi trừ mà sản lượng <= 0, xóa dòng chốt và worker mapping
+    DELETE FROM SmartFactoryV2.dbo.STB_ProdRouteHist
+    WHERE ControlNo = @ControlNo AND RouteCode = @RouteCode AND ProdQty <= 0;
+    IF @@ROWCOUNT > 0
+    BEGIN
+        DELETE FROM SmartFactoryV2.dbo.STB_ProdRouteWorkerHist 
+        WHERE ProdRouteHistNo NOT IN (SELECT ProdRouteHistNo FROM SmartFactoryV2.dbo.STB_ProdRouteHist WITH(NOLOCK));
+    END
+
+    -- 5. Giảm trừ sản lượng hoàn thành PO và Tổng kết công đoạn
+    UPDATE SmartFactoryV2.dbo.STB_ProductionOrderInfo
+    SET ProdFinishQty = CASE WHEN ProdFinishQty >= @CancelQty THEN ProdFinishQty - @CancelQty ELSE 0 END
+    WHERE PONo = @PONo;
+
+    UPDATE SmartFactoryV2.dbo.STB_ProdRouteSummary
+    SET OutputQty = CASE WHEN OutputQty >= @CancelQty THEN OutputQty - @CancelQty ELSE 0 END
+    WHERE PONo = @PONo AND RouteCode = @RouteCode;
+    PRINT N'>> 4. Đã giảm trừ sản lượng PO và RouteSummary.';
+
+    -- 6. Đồng bộ Kiosk POP (MongoToMesPerformance)
+    UPDATE SmartFactoryV2.dbo.MongoToMesPerformance
+    SET TotalProdQty = CASE WHEN TotalProdQty >= CAST(@CancelQty AS INT) THEN TotalProdQty - CAST(@CancelQty AS INT) ELSE 0 END,
+        IsDone = 0,
+        IsTransferred = 0,
+        InsertDateTime = GETDATE()
+    WHERE Barcode = @LotNo AND RouteCode = @RouteCode;
+    PRINT N'>> 5. Đã đồng bộ giảm trừ Kiosk POP.';
+
+    -- 7. Khôi phục trạng thái Lot trong STB_SetInfo về WIP (chưa hoàn thành)
+    UPDATE SmartFactoryV2.dbo.STB_SetInfo 
+    SET IsProdFinish = 0,
+        ProdFinishDateTime = NULL,
+        ChangeDateTime = GETDATE()
+    WHERE ControlNo = @ControlNo;
+    PRINT N'>> 6. Đã khôi phục IsProdFinish = 0 trong STB_SetInfo.';
+
+    -- 8. Ghi nhật ký kiểm toán Audit Trail
+    INSERT INTO SmartFactoryV2.dbo.STB_ProdRouteHistCancelHist (LotNo, CreateUserID, CreateDateTime)
+    VALUES (@LotNo, @UserID, GETDATE());
+    PRINT N'>> 7. Đã ghi log Audit vào STB_ProdRouteHistCancelHist.';
+
+    SELECT Barcode, IsProdFinish FROM SmartFactoryV2.dbo.STB_SetInfo WITH(NOLOCK) WHERE ControlNo = @ControlNo;
+    SELECT RouteCode, ProdQty FROM SmartFactoryV2.dbo.STB_ProdRouteHist WITH(NOLOCK) WHERE ControlNo = @ControlNo AND RouteCode = @RouteCode;
+    SELECT MaterialLotNo, PackingID, CurrentQty FROM SmartFactoryV2.dbo.STB_MaterialLotInfo WITH(NOLOCK) WHERE LotNo = @LotNo;
+
+    ROLLBACK TRANSACTION;
+    PRINT N'>> [AN TOÀN] Giao dịch đã ROLLBACK để kiểm tra. Đổi sang COMMIT khi xác nhận chính xác.';
+END TRY
+BEGIN CATCH
+    IF @@TRANCOUNT > 0 ROLLBACK TRANSACTION;
+    PRINT N'>> LỖI: ' + ERROR_MESSAGE();
+    THROW;
+END CATCH;
 GO
 "@
 }
