@@ -1,1 +1,6 @@
 ﻿{"author":"vanduc","db":"SmartFactoryV2","timestamp":"2026-09-21 23:06:24","tables":{},"title":"UPDATE MACHINE NAME (STB_ProdRouteHist) FOR 3 LOTS AT ROUTE V-22_HY","file":"hotfix_20260921_UPDATE_MACHINE_NAME_3LOTS.sql"}
+{"author":"vanduc","db":"SmartFactoryV2","timestamp":"2026-09-22 23:46:02","tables":{},"title":"B782 MOVE JOBDATE \u0026 TIME (Cáº®T CA 10:00 AM)","file":"hotfix_20260922_234545_B782_MOVE_JOBDATE_2026-09-22.sql"}
+{"author":"vanduc","db":"SmartFactoryV2","timestamp":"2026-09-23 00:22:05","tables":{},"title":"B782 MOVE JOBDATE \u0026 TIME (Cáº®T CA 10:00 AM)","file":"hotfix_20260923_002203_B782_MOVE_JOBDATE_2026-09-23.sql"}
+{"author":"vanduc","db":"SmartFactoryV2","timestamp":"2026-09-23 00:22:13","tables":["VINATECH_POP.dbo.VINA_PACKING_REMAIN_QTY","SmartFactoryV2.dbo.STB_MaterialLotInfo"],"title":"ROLLBACK ROUTE CHá»T NHáº¦M (B530 / POP KIOSK)","file":"hotfix_20260923_002211_B530_ROLLBACK_ROUTE_S.sql"}
+{"author":"vanduc","db":"SmartFactoryV2","timestamp":"2026-09-23 00:22:57","tables":{},"title":"B782 MOVE JOBDATE \u0026 TIME (Cáº®T CA 10:00 AM)","file":"hotfix_20260923_002256_B782_MOVE_JOBDATE_2026-09-23.sql"}
+{"author":"vanduc","db":"SmartFactoryV2","timestamp":"2026-09-23 01:06:11","tables":{},"title":"B782 MOVE JOBDATE \u0026 TIME (Cáº®T CA 10:00 AM)","file":"hotfix_20260923_010609_B782_MOVE_JOBDATE_2026-09-24.sql"}

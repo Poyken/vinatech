@@ -1048,3 +1048,337 @@ BEGIN CATCH
     THROW;
 END CATCH;
 ```
+
+---
+
+## 3. 🛠️ CẨM NANG 17 CA BỆNH THỰC CHIẾN NỘI BỘ EA TEAM (HƯỚNG DẪN XỬ LÝ HỆ THỐNG POP KHI GẶP LỖI)
+
+> **Tài liệu gốc:** `HƯỚNG DẪN XỬ LÝ HỆ THỐNG POP KHI GẶP LỖI.docx` (Master Playbook - EA Team)  
+> **Tác giả & Vận hành:** Nguyen Van Duc (`vanduc`) - Ban IT / EA Team Vinatech  
+> **Nguyên tắc vận hành:** Đây là 17 ca bệnh thực tế phát sinh trực tiếp tại các chuyền sản xuất Hà Nam & Hưng Yên, chứa đựng cơ chế ngầm và câu lệnh SQL can thiệp chuẩn mực.
+
+---
+
+### Case 1: Lỗi Cắt Đóng Gói Điện Cực Báo Sai Line
+* **Hiện tượng:** Khi thực hiện cắt đóng gói điện cực trên Kiosk POP, hệ thống báo lỗi không thể tiếp tục.
+* **Nguyên nhân cốt lõi:** Hệ thống POP mặc định yêu cầu chọn line Cắt là `ElectrodeBN` đối với nhà máy Bắc Ninh (hoặc Line tương ứng ở Hưng Yên). Nếu `STB_DayProdPlan` của Lot đang bị gán sai Line thì Kiosk chặn thực thi.
+* **Query kiểm tra:**
+  ```sql
+  SELECT SI.Barcode, SI.DayPlanNo, DPP.LineCode, DPP.PONo, DPP.MaterialCode
+  FROM SmartFactoryV2.dbo.STB_SetInfo SI WITH(NOLOCK)
+  INNER JOIN SmartFactoryV2.dbo.STB_DayProdPlan DPP WITH(NOLOCK) ON DPP.DayPlanNo = SI.DayPlanNo
+  WHERE SI.Barcode = '<Mã_Lot>';
+  ```
+* **Cách khắc phục:** Cập nhật lại `LineCode` trong `STB_DayProdPlan` về đúng Line cắt quy định (`ElectrodeBN`).
+
+---
+
+### Case 2: Chưa Thêm Mã Lỗi Ứng Với Từng Công Đoạn (`STB_DefectGroup` & `STB_DefectInfo`)
+* **Hiện tượng:** Trên Kiosk POP không hiển thị bảng danh mục phế phẩm khi công nhân bấm nút khai báo phế, hoặc báo lỗi công đoạn chưa có nhóm phế.
+* **Nguyên nhân cốt lõi:** Công đoạn mới (ví dụ: `V-11_HY` - Slitting Hưng Yên) chưa được đăng ký nhóm phế trong `STB_DefectGroup` hoặc chưa clone danh mục mã phế con từ nhóm chuẩn `V-11` sang `STB_DefectInfo`.
+* **Hai bảng quản trị:** `STB_DefectGroup` (Nhóm lỗi) và `STB_DefectInfo` (Chi tiết mã lỗi).
+* **SQL Hotfix chuẩn (Author: vanduc):**
+  ```sql
+  USE SmartFactoryV2;
+  BEGIN TRANSACTION;
+  BEGIN TRY
+      -- 1. Đăng ký nhóm phế công đoạn nếu chưa có
+      IF NOT EXISTS (SELECT 1 FROM STB_DefectGroup WHERE DefectGroupCode = 'V-11_HY')
+      BEGIN
+          INSERT INTO STB_DefectGroup(DefectGroupCode, BasicDefectGroupName, IsUsed, CreateUserID, CreateDateTime)
+          VALUES ('V-11_HY', 'SLITTING', 1, 'vanduc', GETDATE());
+      END
+
+      -- 2. Clone mã lỗi từ nhóm gốc sang nhóm mới
+      INSERT INTO STB_DefectInfo (
+          DefectCode, BasicDefectName, DefectDesc, DefectGroupCode, UseGroup, DisplayIndex,
+          IsRealDefect, IsUsed, DefectImage, CreateDateTime, CreateUserID, ChangeDateTime, ChangeUserID,
+          DirectlyUnder, WorkCenterCode, DefectCause, DefectEnglishName
+      )
+      SELECT
+          REPLACE(DefectCode, 'V-11_', 'V-11_HY_'), BasicDefectName, DefectDesc, 'V-11_HY',
+          UseGroup, DisplayIndex, IsRealDefect, IsUsed, DefectImage, GETDATE(), 'vanduc', NULL, NULL,
+          DirectlyUnder, WorkCenterCode, DefectCause, DefectEnglishName
+      FROM STB_DefectInfo WITH(NOLOCK)
+      WHERE DefectGroupCode = 'V-11'
+        AND NOT EXISTS (
+            SELECT 1 FROM STB_DefectInfo 
+            WHERE DefectCode = REPLACE(STB_DefectInfo.DefectCode, 'V-11_', 'V-11_HY_')
+        );
+
+      COMMIT TRANSACTION;
+      PRINT N'>> Đã cấu hình danh mục mã lỗi thành công.';
+  END TRY
+  BEGIN CATCH
+      IF @@TRANCOUNT > 0 ROLLBACK TRANSACTION;
+      THROW;
+  END CATCH;
+  ```
+
+---
+
+### Case 3 & 14: Xung Đột Dữ Liệu MES WinForm vs Web POP & Lỗi Nhảy Cóc Công Đoạn
+* **Hiện tượng:** 
+  * Khi hàng đã thao tác trên MES WinForm rồi quay sang POP, Kiosk báo lỗi: `"This route is already completed in MES"`.
+  * Hoặc công đoạn chưa kịp chốt trên POP thì hệ thống đã tự sinh ra công đoạn tiếp theo.
+* **Nguyên nhân gốc rễ (Bản chất kỹ thuật):**
+  * **Cơ chế MES WinForm:** Khi chốt hoàn thành 1 công đoạn, hệ thống **tự động sinh sẵn 1 dòng ở công đoạn kế tiếp** trong `STB_ProdRouteHist` với `CompleteRoute = 1`.
+  * **Cơ chế Web POP:** Khi hoàn thành 1 công đoạn, hệ thống **chỉ sinh ra duy nhất 1 dòng hoàn thành cho công đoạn đó** và để `CompleteRoute = NULL`.
+  * **Xung đột:** Khi OP quay lại Web POP, Kiosk kiểm tra thấy đã tồn tại bản ghi ở công đoạn đó rồi ➔ Chặn không cho nhập và báo lỗi đã hoàn thành.
+* **Quy trình xử lý chuẩn:**
+  ```sql
+  USE SmartFactoryV2;
+  BEGIN TRANSACTION;
+  BEGIN TRY
+      -- Bước 1: Lấy ProdRouteHistNo bị sinh thừa ở công đoạn kế tiếp
+      SELECT ProdRouteHistNo, ControlNo, RouteCode, CompleteRoute, CreateDateTime
+      FROM STB_ProdRouteHist WITH(NOLOCK)
+      WHERE ControlNo = (SELECT ControlNo FROM STB_SetInfo WITH(NOLOCK) WHERE Barcode = '<Mã_Lot>')
+        AND RouteCode = '<Mã_Công_Đoạn_Bị_Sinh_Sớm>';
+
+      -- Bước 2: Xóa công nhân và xóa lượt chốt thừa
+      DELETE FROM STB_ProdRouteWorkerHist 
+      WHERE ProdRouteHistNo IN (
+          SELECT ProdRouteHistNo FROM STB_ProdRouteHist 
+          WHERE ControlNo = (SELECT ControlNo FROM STB_SetInfo WHERE Barcode = '<Mã_Lot>') 
+            AND RouteCode = '<Mã_Công_Đoạn_Bị_Sinh_Sớm>'
+      );
+
+      DELETE FROM STB_ProdRouteHist 
+      WHERE ControlNo = (SELECT ControlNo FROM STB_SetInfo WHERE Barcode = '<Mã_Lot>') 
+        AND RouteCode = '<Mã_Công_Đoạn_Bị_Sinh_Sớm>';
+
+      COMMIT TRANSACTION;
+      PRINT N'>> Đã xóa lượt sinh sớm, công đoạn sẵn sàng chốt trên POP.';
+  END TRY
+  BEGIN CATCH
+      IF @@TRANCOUNT > 0 ROLLBACK TRANSACTION;
+      THROW;
+  END CATCH;
+  ```
+
+---
+
+### Case 4: Ràng Buộc Nạp Cuộn Điện Cực Tối Đa 2 LOTNO
+* **Hiện tượng:** Quét cuộn BTP điện cực vào Kiosk báo: `"This roll has already been used for 2 product LOTs. Input blocked."`
+* **Nguyên nhân:** Ràng buộc an toàn vật tư của nhà máy Vinatech: Hiện tại hệ thống đang cấu hình **1 mã cắt cuộn điện cực chỉ cho phép nạp tối đa vào 2 LOTNO sản phẩm** để kiểm soát phế và chống âm kho.
+* **Hướng xử lý:**
+  1. Đổi sang cuộn điện cực mới còn tồn kho hợp lệ.
+  2. Nếu cuộn cũ thực tế còn màng dài do dung sai: Báo Quản đốc làm thủ tục tách mã phụ Lot BTP trên MES WinForm. (Trong tương lai hệ thống sẽ được nâng cấp lên tối đa 3 LOTNO).
+
+---
+
+### Case 5: Không Thể Đóng Gói Khi Báo Không Có Kho
+* **Hiện tượng:** Tại trạm Đóng gói, công nhân bấm hoàn thành thì Kiosk báo lỗi không xác định được kho thành phẩm.
+* **Nguyên nhân:** CellLine chưa được cấu hình liên kết công đoạn đóng gói với kho đích trong Master Data.
+* **Cách xử lý:** Vào MES WinForm, mở màn hình **B230** (Cấu hình CellLine), kiểm tra thiết lập gắn công đoạn và kho đóng gói (tham khảo cấu hình chuẩn tại Line Thủ công TX1).
+
+---
+
+### Case 6: Hạng Mục Tự Kiểm PQC In-Line Thiết Lập Nhầm Công Đoạn
+* **Hiện tượng:** Công nhân kiểm tra chất lượng mở Kiosk PQC nhưng hạng mục đo bị gắn sai công đoạn (ví dụ: các mã đo `V_H1_HY`, `V_H2_HY`, `V_WA_HY` đáng lẽ ở `V-24_HY` nhưng lại nằm ở công đoạn khác).
+* **Quy trình xử lý 2 bước:**
+  1. **Bước 1 (Master):** Vào màn hình **C141** trên WinForm để cập nhật lại cấu hình công đoạn chuẩn cho hạng mục kiểm tra.
+  2. **Bước 2 (SQL Data Fix):** Cập nhật dữ liệu tài liệu kiểm tra đã sinh cho Lot:
+     ```sql
+     USE SmartFactoryV2;
+     BEGIN TRANSACTION;
+     BEGIN TRY
+         UPDATE DI 
+         SET DI.RouteCode = 'V-24_HY'
+         FROM STB_CommInspDocItem DI
+         INNER JOIN STB_CommInspDocHistory DH ON DH.CommInspDocNo = DI.CommInspDocNo
+         INNER JOIN STB_SetInfo SI ON SI.ControlNo = DH.ProdNo
+         WHERE SI.Barcode = '<Mã_Lot>'
+           AND DI.CommInspItemCode IN ('V_H1_HY', 'V_H2_HY', 'V_WA_HY');
+
+         COMMIT TRANSACTION;
+         PRINT N'>> Đã điều chỉnh công đoạn tài liệu kiểm tra thành công.';
+     END TRY
+     BEGIN CATCH
+         IF @@TRANCOUNT > 0 ROLLBACK TRANSACTION;
+         THROW;
+     END CATCH;
+     ```
+
+---
+
+### Case 7: Báo Hết Tồn Kho Nguyên Vật Liệu Khi Nạp Kiosk
+* **Hiện tượng:** Kiosk báo lỗi hết tồn kho NVL hoặc không tìm thấy Lot NVL khả dụng.
+* **Quy trình chẩn đoán 3 kịch bản:**
+  * **TH1 (Có NVL thay thế trong BOM):** Bấm biểu tượng icon chuyển đổi NVL thay thế ngay trên Kiosk để chọn mã NVL tương đương.
+  * **TH2 (Hàng sản xuất liên phân xưởng BN & HY):** Cuộn NVL đang nằm ở kho Phân xưởng khác (chưa chuyển kho). Yêu cầu thủ kho làm phiếu Chuyển kho (F430) trên WinForm.
+  * **TH3 (Kiểm tra số lượng tồn kho `CurrentQty`):**
+    ```sql
+    SELECT MaterialLotNo, LotID, MaterialCode, MaterialWarehouseCode, InitialQty, CurrentQty
+    FROM SmartFactoryV2.dbo.STB_MaterialLotInfo WITH(NOLOCK)
+    WHERE LotID = '<Mã_Cuộn_NVL>';
+    ```
+    * Nếu `CurrentQty = 0`: Cần cập nhật lại tồn kho thực tế hoặc kiểm tra lại lịch sử xuất kho trên F430.
+
+---
+
+### Case 8 & 9: Tìm Kiếm & Tạo Cưỡng Chế Tồn Kho Điện Cực (Cho Cuộn Bị Mờ/Rách Tem)
+* **Ngữ cảnh:** Cuộn điện cực tại xưởng bị rách tem, mờ barcode hoặc chưa được đồng bộ từ Slitting vào `STB_MaterialLotInfo`, công nhân không thể quét nạp.
+* **Cơ chế lọc Kiosk:** Popup tìm kiếm cuộn trên Kiosk chỉ hiển thị cuộn khi thỏa mãn:
+  `CompanyCode = 'VVT' AND IsSlitting = 1 AND LotAttr01 = 'SLITTING' AND CurrentQty > 0 AND MaterialWarehouseCode = @warehouseCode AND PlusMinus IS NOT NULL`
+* **Lưu ý cực tính (+/-):** Hệ thống phân biệt rõ cực tính Âm `(-)` và Dương `(+)` dựa trên `STB_MaterialMaster.PlusMinus` hoặc tên `MaterialName`.
+* **Script tạo cưỡng chế chuẩn (Author: vanduc):**
+  ```sql
+  USE SmartFactoryV2;
+  -- STEP 0: Xác định cuộn hợp lệ từ kết quả Slitting
+  DECLARE @baseLot VARCHAR(50) = 'VWQO2720001E03'; -- Base Lot
+  SELECT ESR.Barcode, ESR.Seq, ESR.SlittingWidth, ESR.ElectrodeThick, ESR.GoodQtyLength,
+         ESR.SlittingMaterialCode, RTRIM(ISNULL(SlitMM.PlusMinus,'')) AS Polarity
+  FROM STB_ElectrodeSlittingResult ESR WITH(NOLOCK)
+  LEFT JOIN STB_MaterialMaster SlitMM WITH(NOLOCK) ON SlitMM.MaterialCode = ESR.SlittingMaterialCode
+  WHERE ESR.ElectrodeLotNumber = @baseLot AND ESR.CompanyCode = 'VVT'
+  ORDER BY ESR.Seq;
+
+  -- STEP 1: Tạo bản ghi tồn kho cưỡng chế qua STB_SerialRule
+  DECLARE @rollBarcode VARCHAR(50) = '<Mã_Cuộn_Cần_Tạo>';
+  DECLARE @warehouseCode VARCHAR(20) = 'ROUTE_VN_WH';
+
+  BEGIN TRANSACTION;
+  BEGIN TRY
+      -- Lấy thông tin cuộn
+      DECLARE @matCode VARCHAR(50), @lengthM NUMERIC(13,3), @electrodeLot VARCHAR(50), @wcCode VARCHAR(20);
+      SELECT TOP 1 
+          @matCode = CASE WHEN SlitMM.MaterialCode IS NOT NULL THEN ESR.SlittingMaterialCode ELSE DPP.MaterialCode END,
+          @lengthM = ISNULL(ESR.GoodQtyLength, 0),
+          @electrodeLot = ESR.ElectrodeLotNumber,
+          @wcCode = ISNULL(W.WorkCenterCode, 'VVT_F1')
+      FROM STB_ElectrodeSlittingResult ESR WITH(NOLOCK)
+      INNER JOIN STB_SetInfo SI WITH(NOLOCK) ON SI.Barcode = ESR.ElectrodeLotNumber
+      INNER JOIN STB_DayProdPlan DPP WITH(NOLOCK) ON DPP.DayPlanNo = SI.DayPlanNo
+      LEFT JOIN STB_MaterialMaster SlitMM WITH(NOLOCK) ON SlitMM.MaterialCode = ESR.SlittingMaterialCode
+      LEFT JOIN STB_MaterialWarehouse W WITH(NOLOCK) ON W.MaterialWarehouseCode = @warehouseCode AND W.CompanyCode = 'VVT'
+      WHERE ESR.Barcode = @rollBarcode AND ESR.CompanyCode = 'VVT';
+
+      -- Sinh số serial chuẩn từ STB_SerialRule
+      DECLARE @curDate VARCHAR(8) = CONVERT(VARCHAR(8), GETDATE(), 112);
+      DECLARE @prefix VARCHAR(12), @serialLen INT, @lastNo INT;
+      SELECT @prefix = REPLACE(REPLACE(PrefixData, 'YYYY', SUBSTRING(@curDate,1,4)), 'MM', SUBSTRING(@curDate,5,2)),
+             @serialLen = SerialLen, @lastNo = LastSerialNo
+      FROM SmartFramework.dbo.STB_SerialRule WITH(UPDLOCK, ROWLOCK)
+      WHERE TableName = 'STB_MaterialLotInfo';
+
+      UPDATE SmartFramework.dbo.STB_SerialRule SET LastSerialNo = LastSerialNo + 1 WHERE TableName = 'STB_MaterialLotInfo';
+      DECLARE @newLotNo VARCHAR(20) = @prefix + RIGHT(REPLICATE('0', @serialLen) + CAST(@lastNo + 1 AS VARCHAR(10)), @serialLen);
+
+      -- Chèn tồn kho với LotAttr01 = 'SLITTING' và IsSlitting = 1
+      INSERT INTO STB_MaterialLotInfo (
+          MaterialLotNo, LotID, CompanyCode, WorkCenterCode, MaterialWarehouseCode, MaterialLocationCode,
+          MaterialCode, MaterialStockAttribute, StockAttrib2, StockAttrib3, GRDate, InitialQty, CurrentQty,
+          PickingQty, LotNo, IsSplitLot, LotAttr01, IsSlitting, LengthSlitting, CreateDateTime, CreateUserID
+      ) VALUES (
+          @newLotNo, @rollBarcode, 'VVT', @wcCode, @warehouseCode, '', @matCode, 'NORMAL', '', '',
+          CONVERT(VARCHAR(10), GETDATE(), 23), @lengthM, @lengthM, 0, @electrodeLot, 0, 'SLITTING', 1, @lengthM, GETDATE(), 'vanduc'
+      );
+
+      COMMIT TRANSACTION;
+      PRINT N'>> Tạo tồn kho cưỡng chế thành công cho cuộn: ' + @rollBarcode;
+  END TRY
+  BEGIN CATCH
+      IF @@TRANCOUNT > 0 ROLLBACK TRANSACTION;
+      THROW;
+  END CATCH;
+  ```
+
+---
+
+### Case 10: Hướng Dẫn Thiết Lập Nguyên Vật Liệu Theo Từng CellLine Trên POP Web
+* **Mục đích:** Thiết lập các ô Slot NVL trên Kiosk của từng Line theo đúng cấu trúc lắp ráp.
+* **Bảng CSDL quản trị (`VINATECH_POP`):**
+  * `VINA_ASSEMBLY_GROUP_MODE`: Cấu hình chế độ nạp theo cụm / group của Line.
+  * `VINA_GROUP_INPUT_ROUTE`: Thiết lập thứ tự Slot, mã Route và tính bắt buộc (`IS_REQUIRED`).
+* **Truy vấn kiểm tra:**
+  ```sql
+  SELECT * FROM VINATECH_POP.dbo.VINA_ASSEMBLY_GROUP_MODE ORDER BY LINE_CODE;
+  SELECT LINE_CODE, SLOT_CODE, SLOT_NAME, ROUTE_CODE, IS_REQUIRED, DISPLAY_ORDER
+  FROM VINATECH_POP.dbo.VINA_GROUP_INPUT_ROUTE
+  WHERE LINE_CODE = 'VVHYC-13'
+  ORDER BY DISPLAY_ORDER;
+  ```
+* **Quy tắc:** Mapping theo Group trên Kiosk tuân thủ theo tiêu chuẩn nhóm mặt hàng trong BOM (`ProductGroupCode` trong bảng `STB_MaterialMaster`). Chỉ tài khoản Admin mới có quyền thao tác trên UI Kiosk.
+
+---
+
+### Case 11: Hủy Đóng Gói Và Hủy Hoàn Thành Công Đoạn (Cơ Chế Phân Quyền Rollback)
+* **Hiện tượng:** Công nhân muốn hủy lượt đóng gói hoặc hoàn tác công đoạn nhưng không tìm thấy nút hoặc bị báo lỗi quyền.
+* **Cơ chế phân quyền:** Hệ thống POP Web giới hạn nghiêm ngặt thao tác Rollback để chống thất thoát dữ liệu. Chỉ các tài khoản được ủy quyền (Leader / Kỹ sư IT) mới được phân quyền thực hiện hủy đóng gói và hủy sản lượng trên giao diện.
+
+---
+
+### Case 12: Xử Lý Nguyên Vật Liệu Thay Thế Trong BOM
+* **Ngữ cảnh:** Thực tế sản xuất có NVL thay thế từ nhà cung cấp khác hoặc mã NVL cũ hết hàng.
+* **Cách xử lý:**
+  1. Nếu BOM thừa hoặc có NVL thay thế: Thiết lập mã thay thế tại các cột `DelegateMaterialCode1`, `DelegateMaterialCode2`... trong Master Data.
+  2. Trên giao diện Kiosk: Khi quét mã NVL thay thế đã được định nghĩa, Kiosk tự động nhận diện và đối trừ định mức hợp lệ.
+
+---
+
+### Case 13: Lỗi Khi Bấm Nhầm Chế Độ (+) Nhập Lượng Hoàn Thành vs (-) Phế Phẩm
+* **Hiện tượng:** Công nhân ấn nhầm vào dấu `(+)` ở phần nhập phế làm Kiosk chuyển sang chế độ nhập lượng hoàn thành, sau đó bấm kết thúc bị lỗi hệ thống.
+* **Cách xử lý:** Tiến hành Rollback lại lượt thao tác để công nhân chọn lại dấu `(-)` cho đúng phân hệ nhập phế phẩm.
+
+---
+
+### Case 15: Lỗi Chưa Lưu Độ Nhớt Ở Công Đoạn Trộn (Mixing)
+* **Hiện tượng:** Kiosk công đoạn Mixing không cho bấm hoàn thành mẻ trộn hoặc Kiosk Coating chặn không cho nhận mẻ keo.
+* **Nguyên nhân:** Công nhân pha trộn chưa lưu chỉ số đo độ nhớt của mẻ keo vào bảng kết quả đo.
+* **Cách xử lý:** OP mở lại mẻ Mixing trên Kiosk, nhập đầy đủ giá trị độ nhớt đo thực tế và bấm Lưu trước khi chốt hoàn thành.
+
+---
+
+### Case 16: Lỗi Sửa Tên Máy / Gán Nhầm Mã Máy Khi Chốt Sản Lượng
+* **Hiện tượng:** Công nhân chọn nhầm máy trên Kiosk (ví dụ: chạy máy `VVMHY130` nhưng bấm nhầm `VVMHY136`).
+* **⚠️ NGUYÊN TẮC VÀNG BẮT BUỘC:** Phải UPDATE đồng thời ở **CẢ 2 BẢNG** (`STB_ProdRouteHist` **VÀ** `MongoToMesPerformance`). Nếu chỉ sửa bảng MES WinForm thì Background Worker của POP sẽ ghi đè ngược lại mã cũ!
+* **SQL Hotfix chuẩn (Author: vanduc):**
+  ```sql
+  USE SmartFactoryV2;
+  BEGIN TRANSACTION;
+  BEGIN TRY
+      DECLARE @Barcode VARCHAR(50) = '<Mã_Lot>';
+      DECLARE @RouteCode VARCHAR(50) = 'V-22_HY';
+      DECLARE @NewMachineCode VARCHAR(50) = 'VVMHY130'; -- Mã máy đúng
+
+      -- 1. Cập nhật trên MES Lõi
+      UPDATE STB_ProdRouteHist
+      SET MachineCode    = @NewMachineCode,
+          ChangeDateTime = GETDATE(),
+          ChangeUserID   = 'vanduc'
+      WHERE ControlNo = (SELECT ControlNo FROM STB_SetInfo WITH(NOLOCK) WHERE Barcode = @Barcode)
+        AND RouteCode = @RouteCode;
+
+      -- 2. Cập nhật trên bảng đệm POP (Chống Worker ghi đè)
+      UPDATE MongoToMesPerformance
+      SET MachineCode = @NewMachineCode
+      WHERE Barcode = @Barcode
+        AND RouteCode = @RouteCode;
+
+      COMMIT TRANSACTION;
+      PRINT N'>> Đã sửa đổi mã máy đồng bộ trên cả MES và POP!';
+  END TRY
+  BEGIN CATCH
+      IF @@TRANCOUNT > 0 ROLLBACK TRANSACTION;
+      THROW;
+  END CATCH;
+  ```
+* *(Ghi chú: Có thể vào màn hình **B270** trên WinForm để tra cứu `MachineCode` theo `MachineName` mà OP cung cấp).*
+
+---
+
+### Case 17: Nút Bấm "Cắt Điện Cực" Bị Mờ / Không Thể Nhấn
+* **Hiện tượng:** Trên Kiosk công đoạn Cắt điện cực, nút bấm Cắt bị mờ (Disable), công nhân không thể thực hiện thao tác cắt màng.
+* **NGUYÊN NHÂN CỐT LÕI (Logic Hệ Thống):** Hệ thống có thuật toán kiểm tra an toàn chất lượng: **Nếu độ dày màng điện cực `< 100` (`MaterialThickness < 100` trong `STB_MaterialMaster`) thì hệ thống tự động khóa nút Cắt!**
+* **Câu lệnh kiểm tra độ dày:**
+  ```sql
+  SELECT MaterialCode, MaterialName, MaterialThickness, MaterialTypeCode
+  FROM SmartFactoryV2.dbo.STB_MaterialMaster WITH(NOLOCK)
+  WHERE MaterialCode = (
+      SELECT MaterialCode FROM SmartFactoryV2.dbo.STB_SetInfo WITH(NOLOCK) WHERE Barcode = '<Mã_Lot>'
+  );
+  ```
+* **Khắc phục:** Kiểm tra lại quy cách độ dày màng trong Master Data (`STB_MaterialMaster`). Nếu thông số thực tế hợp lệ nhưng cấu hình nhập sai `< 100`, Kỹ sư IT/Master Data cập nhật lại `MaterialThickness >= 100` để nút Cắt tự động sáng trở lại.
+

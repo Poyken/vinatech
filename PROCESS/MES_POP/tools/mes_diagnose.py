@@ -350,6 +350,119 @@ ORDER BY modify_date DESC;"""
         "sql_template": """-- Kiểm tra cấu hình Routing Master:
 SELECT MaterialCode, BasicRoutingCode FROM SmartFactoryV2.dbo.STB_MaterialMaster WITH(NOLOCK) WHERE MaterialCode = '{MODEL}';
 SELECT BasicRoutingCode, WorkCenterCode, RouteCode, IsUsed FROM SmartFactoryV2.dbo.STB_BasicRoutingDetail WITH(NOLOCK) WHERE BasicRoutingCode = '{ROUTING}';"""
+    },
+    {
+        "id": "RULE_POP_SWAP_MACHINE",
+        "patterns": [
+            r"sửa tên máy", r"sửa mã máy", r"chọn nhầm máy", r"nhầm máy",
+            r"đổi máy.*pop", r"vvmhy", r"vvep"
+        ],
+        "screen": "POP Kiosk / B270 / B530",
+        "root_cause": "Công nhân chọn nhầm thiết bị khi chốt sản lượng trên Kiosk (ví dụ: máy VVMHY130 nhưng bấm nhầm VVMHY136). NGUYÊN TẮC VÀNG: Bắt buộc phải UPDATE đồng thời ở CẢ 2 BẢNG (STB_ProdRouteHist VÀ MongoToMesPerformance) để tránh Background Worker của POP ghi đè ngược lại mã cũ.",
+        "op_workaround": "1. Ghi nhận chính xác Barcode của Lot, mã công đoạn và mã máy thực tế công nhân đã chạy.\n2. Báo IT can thiệp cập nhật đồng bộ cả 2 bảng CSDL.\n3. Tra cứu mã máy theo tên máy tại màn hình B270 trên WinForm.",
+        "sql_template": """BEGIN TRAN;
+-- 1. Sửa trên MES Lõi
+UPDATE SmartFactoryV2.dbo.STB_ProdRouteHist
+SET MachineCode = '{NEW_MACHINE}', ChangeDateTime = GETDATE(), ChangeUserID = 'vanduc'
+WHERE ControlNo = (SELECT ControlNo FROM SmartFactoryV2.dbo.STB_SetInfo WITH(NOLOCK) WHERE Barcode = '{LOT}')
+  AND RouteCode = '{ROUTE}';
+
+-- 2. Sửa trên bảng đệm POP (Chống Worker ghi đè)
+UPDATE SmartFactoryV2.dbo.MongoToMesPerformance
+SET MachineCode = '{NEW_MACHINE}'
+WHERE Barcode = '{LOT}' AND RouteCode = '{ROUTE}';
+-- COMMIT TRAN;"""
+    },
+    {
+        "id": "RULE_POP_SLITTING_THICKNESS_UNDER_100",
+        "patterns": [
+            r"nút.*cắt.*không sáng", r"không thể.*cắt điện cực", r"nút cắt.*mờ",
+            r"độ dày điện cực", r"materialthickness", r"độ dày.*<.*100"
+        ],
+        "screen": "POP Kiosk / Cắt điện cực / B210",
+        "root_cause": "Logic an toàn hệ thống xưởng Vinatech: Kiosk tự động khóa nút 'Cắt điện cực' (Button mờ) nếu độ dày màng điện cực MaterialThickness < 100 trong bảng STB_MaterialMaster.",
+        "op_workaround": "1. Kiểm tra thông số độ dày màng thực tế của Model.\n2. Báo IT/Master Data kiểm tra cột MaterialThickness trong STB_MaterialMaster.\n3. Cập nhật lại thông số MaterialThickness >= 100 ➔ Nút Cắt trên Kiosk sẽ tự động sáng trở lại.",
+        "sql_template": """-- Kiểm tra độ dày điện cực trong Master:
+SELECT MaterialCode, MaterialName, MaterialThickness, MaterialTypeCode
+FROM SmartFactoryV2.dbo.STB_MaterialMaster WITH(NOLOCK)
+WHERE MaterialCode = (
+    SELECT MaterialCode FROM SmartFactoryV2.dbo.STB_SetInfo WITH(NOLOCK) WHERE Barcode = '{LOT}'
+);
+
+-- Cập nhật lại độ dày nếu bị nhập sai < 100:
+-- UPDATE SmartFactoryV2.dbo.STB_MaterialMaster SET MaterialThickness = 120, ChangeDateTime = GETDATE(), ChangeUserID = 'vanduc' WHERE MaterialCode = '{MATERIAL}';"""
+    },
+    {
+        "id": "RULE_POP_DEFECT_GROUP_MISSING",
+        "patterns": [
+            r"chưa.*thêm mã lỗi", r"thiếu mã lỗi.*công đoạn", r"không có danh mục phế",
+            r"v-11_hy.*defect", r"stb_defectgroup", r"stb_defectinfo"
+        ],
+        "screen": "POP Kiosk / B110 / B120",
+        "root_cause": "Công đoạn mới (ví dụ Slitting Hưng Yên V-11_HY) chưa được khai báo nhóm lỗi trong STB_DefectGroup hoặc chưa clone danh mục mã phế con từ nhóm chuẩn V-11 sang STB_DefectInfo.",
+        "op_workaround": "1. Báo IT cấu hình đồng bộ nhóm lỗi và danh mục lỗi cho công đoạn mới.\n2. F5 Kiosk POP ➔ Bảng phế phẩm sẽ hiển thị đầy đủ.",
+        "sql_template": """BEGIN TRAN;
+-- 1. Đăng ký nhóm lỗi
+INSERT INTO SmartFactoryV2.dbo.STB_DefectGroup(DefectGroupCode, BasicDefectGroupName, IsUsed, CreateUserID, CreateDateTime)
+VALUES ('{ROUTE}', 'DEFECT_GROUP', 1, 'vanduc', GETDATE());
+
+-- 2. Clone mã lỗi từ nhóm chuẩn V-11
+INSERT INTO SmartFactoryV2.dbo.STB_DefectInfo (
+    DefectCode, BasicDefectName, DefectDesc, DefectGroupCode, UseGroup, DisplayIndex,
+    IsRealDefect, IsUsed, DefectImage, CreateDateTime, CreateUserID, ChangeDateTime, ChangeUserID,
+    DirectlyUnder, WorkCenterCode, DefectCause, DefectEnglishName
+)
+SELECT
+    REPLACE(DefectCode, 'V-11_', '{ROUTE}_'), BasicDefectName, DefectDesc, '{ROUTE}',
+    UseGroup, DisplayIndex, IsRealDefect, IsUsed, DefectImage, GETDATE(), 'vanduc', NULL, NULL,
+    DirectlyUnder, WorkCenterCode, DefectCause, DefectEnglishName
+FROM SmartFactoryV2.dbo.STB_DefectInfo WITH(NOLOCK)
+WHERE DefectGroupCode = 'V-11';
+-- COMMIT TRAN;"""
+    },
+    {
+        "id": "RULE_POP_PQC_ROUTE_MISMATCH",
+        "patterns": [
+            r"hạng mục kiểm tra.*nhầm công đoạn", r"tự kiểm.*nhầm công đoạn",
+            r"v_h1_hy", r"v_h2_hy", r"v_wa_hy", r"c141"
+        ],
+        "screen": "POP Kiosk Quality / C141",
+        "root_cause": "Hạng mục đo tự kiểm PQC In-Line (V_H1_HY, V_H2_HY, V_WA_HY) bị cấu hình sai công đoạn trong tài liệu đo STB_CommInspDocItem.",
+        "op_workaround": "1. Vào màn hình C141 trên WinForm để cập nhật lại cấu hình công đoạn cho hạng mục kiểm tra.\n2. Báo IT chạy SQL điều chỉnh RouteCode của tài liệu đo đã sinh cho Lot.",
+        "sql_template": """BEGIN TRAN;
+UPDATE DI 
+SET DI.RouteCode = '{ROUTE}', DI.ChangeDateTime = GETDATE(), DI.ChangeUserID = 'vanduc'
+FROM SmartFactoryV2.dbo.STB_CommInspDocItem DI
+INNER JOIN SmartFactoryV2.dbo.STB_CommInspDocHistory DH ON DH.CommInspDocNo = DI.CommInspDocNo
+INNER JOIN SmartFactoryV2.dbo.STB_SetInfo SI ON SI.ControlNo = DH.ProdNo
+WHERE SI.Barcode = '{LOT}' AND DI.CommInspItemCode IN ('V_H1_HY', 'V_H2_HY', 'V_WA_HY');
+-- COMMIT TRAN;"""
+    },
+    {
+        "id": "RULE_POP_SLIT_STOCK_FORCE_CREATE",
+        "patterns": [
+            r"cưỡng chế tồn kho", r"tạo tồn kho điện cực", r"cuộn rách tem",
+            r"mờ mã vạch.*cuộn", r"không quét được mã điện cực", r"modalvisible"
+        ],
+        "screen": "POP Kiosk / STB_MaterialLotInfo / B552",
+        "root_cause": "Cuộn điện cực bị rách tem, mờ barcode hoặc chưa được tạo tồn kho từ Slitting vào STB_MaterialLotInfo, khiến Kiosk không quét được và không tìm thấy trên popup. Kiosk chỉ hiện cuộn khi ModalVisible='Y' (thỏa mãn IsSlitting=1, LotAttr01='SLITTING', CurrentQty>0 và đúng cực tính PlusMinus).",
+        "op_workaround": "1. Xác định cuộn hợp lệ từ STB_ElectrodeSlittingResult.\n2. IT chạy script sinh số serial chuẩn qua STB_SerialRule và chèn vào STB_MaterialLotInfo với LotAttr01='SLITTING', IsSlitting=1.\n3. F5 Kiosk POP ➔ Cuộn sẽ xuất hiện trên popup tìm kiếm.",
+        "sql_template": """-- Xem chi tiết script tạo tồn kho cưỡng chế chuẩn tại POP_KB_03 § 3 (Case 8 & 9)
+-- hoặc chạy theo template routine_CREATE_ELECTRODE_STOCK_ON_DEMAND.sql"""
+    },
+    {
+        "id": "RULE_POP_PACKING_NO_WAREHOUSE",
+        "patterns": [
+            r"không thể đóng gói.*không có kho", r"đóng gói.*không có kho",
+            r"báo không có kho", r"b230"
+        ],
+        "screen": "POP Kiosk Packing / B230",
+        "root_cause": "CellLine chưa được cấu hình liên kết công đoạn đóng gói với kho đích trong Master Data.",
+        "op_workaround": "1. Vào MES WinForm, mở màn hình B230 (Cấu hình CellLine).\n2. Gán công đoạn và kho đóng gói cho CellLine (tham khảo Line chuẩn TX1).\n3. Reload Kiosk Đóng gói và chốt lại.",
+        "sql_template": """-- Kiểm tra cấu hình kho của Line trên B230:
+SELECT LineCode, LineName, MaterialWarehouseCode, IsUsed 
+FROM SmartFactoryV2.dbo.STB_LineInfo WITH(NOLOCK) 
+WHERE LineCode = '{LINE}';"""
     }
 ]
 

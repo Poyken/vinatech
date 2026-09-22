@@ -3,3 +3,6 @@ tools/.watchdog.lock
 tools/telegram_config.local.json
 *.pyc
 __pycache__/
+@AutomationLog.txt
+tools/scratch/
+

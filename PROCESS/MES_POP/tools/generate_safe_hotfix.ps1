@@ -1,4 +1,4 @@
-﻿<#
+<#
 .SYNOPSIS
     generate_safe_hotfix.ps1 — Bộ sinh mã SQL Hotfix An Toàn 100% chuẩn Vinatech MES
 .DESCRIPTION
@@ -97,18 +97,7 @@ WHERE S.Barcode IN ($lotInClause) $routeFilter;
 
 DECLARE @RowsHist INT = @@ROWCOUNT;
 
--- 3. CẬP NHẬT STB_ProdRouteWorkerHist
-UPDATE W
-SET 
-    W.JobDate = '$TargetDate',
-    W.ChangeDateTime = GETDATE(),
-    W.ChangeUserID = 'vanduc'
-FROM SmartFactoryV2.dbo.STB_ProdRouteWorkerHist W
-INNER JOIN SmartFactoryV2.dbo.STB_ProdRouteHist H ON W.ProdRouteHistNo = H.ProdRouteHistNo
-INNER JOIN SmartFactoryV2.dbo.STB_SetInfo S ON H.ControlNo = S.ControlNo
-WHERE S.Barcode IN ($lotInClause);
-
--- 4. CẬP NHẬT BẢNG DEFECT NẾU CÓ
+-- 3. CẬP NHẬT BẢNG DEFECT NẾU CÓ TẠI CÔNG ĐOẠN ĐÍCH
 UPDATE D
 SET 
     D.FindJobdate = '$TargetDate',
@@ -117,7 +106,7 @@ SET
     D.ChangeUserID = 'vanduc'
 FROM SmartFactoryV2.dbo.STB_DefectRepairInfo D
 INNER JOIN SmartFactoryV2.dbo.STB_SetInfo S ON D.ControlNo = S.ControlNo
-WHERE S.Barcode IN ($lotInClause);
+WHERE S.Barcode IN ($lotInClause) $(if ($Route) { "AND D.FindRouteCode = '$Route'" });
 
 -- 5. KIỂM TRA SỐ DÒNG BỊ TÁC ĐỘNG
 PRINT '-> So dong STB_ProdRouteHist cap nhat: ' + CAST(@RowsHist AS VARCHAR(10));

@@ -86,6 +86,8 @@ Related Files:
 | **Phân hệ quản lý dữ liệu thiết bị IoT & Log PLC (`/equipmentData/*`)** | **KB_02 §18 (SoT)** | KB_01 §1.1, §1.2 |
 | **Phân quyền Dashboard RBAC & Giải thích lỗi 403 Forbidden** | **KB_02 §19 (SoT)** | KB_01 §1.1 |
 | **Danh mục 38 Frontend JavaScript Client Modules (`resources/js/`)** | **KB_01 §1.3 (SoT)** | KB_02 §16.1 |
+| **Cẩm Nang 17 Ca Bệnh Thực Chiến Nội Bộ EA Team (Tài liệu gốc DOCX)** | **KB_03 §3 (SoT)** | `HƯỚNG DẪN XỬ LÝ HỆ THỐNG POP KHI GẶP LỖI.docx`, `POP_MATRIX.json` |
+
 
 ---
 

@@ -792,4 +792,34 @@ UPDATE STB_DefectRepairInfo SET IsDelete=0, RepairQty=0 WHERE DefectSummaryNo=20
      - Tích hợp vào `tools/find_kb.ps1` và `mes.ps1 find`: tra cứu thông tin dây chuyền và lỗi trong **< 0.001 giây** không cần kết nối DB.
 * **Tham chiếu KB:** [POP_KB_INDEX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_INDEX.md), [mes.ps1](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/mes.ps1)
 
+---
+
+### [Knowledge Base & Operations] — 📍 ID_61 Chuẩn hóa toàn bộ Tri Thức POP Troubleshooting theo Cẩm Nang Thực Chiến Nội Bộ (EA Team)
+* **Ngày tạo:** `2026-09-23`
+* **Người thực hiện:** `vanduc` (IT MES - EA Team)
+* **Tài liệu gốc (Single Source of Truth):** `HƯỚNG DẪN XỬ LÝ HỆ THỐNG POP KHI GẶP LỖI.docx` (4.4 MB - Full hình ảnh và 17 ca bệnh thực chiến xưởng Hà Nam / Hưng Yên)
+* **Các thành phần đã triển khai toàn diện:**
+  1. **Chuẩn hóa Master Document:** Loại bỏ bản docx 23KB lý thuyết cũ, hợp nhất tài liệu nội bộ 4.4 MB thành file chính thống duy nhất `HƯỚNG DẪN XỬ LÝ HỆ THỐNG POP KHI GẶP LỖI.docx`.
+  2. **Bổ sung Mục 3 vào `POP_KB_03_TROUBLESHOOTING.md`:** Đưa toàn bộ 17 ca bệnh thực chiến với đầy đủ câu query SQL (Author `vanduc`), phân tích cơ chế ngầm:
+     - Case 1: Cắt đóng gói điện cực báo sai Line (Quy định `ElectrodeBN`).
+     - Case 2: Chưa thêm mã lỗi ứng với từng công đoạn (`STB_DefectGroup` & `STB_DefectInfo`).
+     - Case 3 & 14: Xung đột dữ liệu WinForm vs POP Web (`CompleteRoute = 1` vs `NULL`) và sinh dòng thừa / nhảy cóc công đoạn.
+     - Case 4: Ràng buộc nạp cuộn điện cực tối đa 2 LOTNO.
+     - Case 5: Không thể đóng gói khi báo không có kho (Cấu hình B230).
+     - Case 6: Hạng mục tự kiểm PQC In-Line thiết lập nhầm công đoạn (C141 + `STB_CommInspDocItem`).
+     - Case 7: Báo hết tồn kho NVL (NVL thay thế, chuyển kho F430, kiểm tra `CurrentQty`).
+     - Case 8 & 9: Tìm kiếm & Tạo cưỡng chế tồn kho điện cực cho cuộn rách tem (`STB_SerialRule`, `STB_MaterialLotInfo`, cờ `ModalVisible='Y'`).
+     - Case 10: Thiết lập ô Slot NVL CellLine trên Kiosk POP (`VINA_ASSEMBLY_GROUP_MODE`, `VINA_GROUP_INPUT_ROUTE`).
+     - Case 11: Phân quyền tài khoản Rollback hủy đóng gói / sản lượng.
+     - Case 12: Nguyên vật liệu thay thế trong BOM (`DelegateMaterialCode1, 2...`).
+     - Case 13: Xử lý nhầm dấu `(+)` nhập lượng hoàn thành thay vì `(-)` phế phẩm.
+     - Case 15: Lỗi chưa lưu độ nhớt ở công đoạn Trộn (Mixing).
+     - Case 16: Lỗi sửa tên máy / gán nhầm mã máy ➔ BẮT BUỘC UPDATE ĐỒNG THỜI cả `STB_ProdRouteHist` VÀ `MongoToMesPerformance`.
+     - Case 17: Nút Cắt điện cực bị mờ do logic hệ thống chặn nếu độ dày `MaterialThickness < 100`.
+  3. **Cập nhật L1 Cache (`POP_MATRIX.json`):** Bổ sung danh mục các case thực chiến vào bộ nhớ đệm chẩn đoán nhanh (<0.001s).
+  4. **Nâng cấp Master Auto-Diagnostic (`tools/mes_diagnose.py`):** Tích hợp đầy đủ các Rule chẩn đoán 1-Shot tức thời cho các ca bệnh trên khi gọi `.\mes.ps1 diagnose "<Lỗi/Lot>"`.
+  5. **Đồng bộ hóa Index:** Cập nhật liên kết trong `POP_KB_INDEX.md`.
+* **Tham chiếu KB:** [POP_KB_03_TROUBLESHOOTING.md § 3](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_03_TROUBLESHOOTING.md), [HƯỚNG DẪN XỬ LÝ HỆ THỐNG POP KHI GẶP LỖI.docx](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/HƯỚNG DẪN XỬ LÝ HỆ THỐNG POP KHI GẶP LỖI.docx)
+
+
 

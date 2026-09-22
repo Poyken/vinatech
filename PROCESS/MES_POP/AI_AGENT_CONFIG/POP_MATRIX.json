@@ -1,4 +1,4 @@
-﻿{
+{
     "version": "1.0.0",
     "updated_at": "2026-09-21 06:55:00",
     "description": "L1 Ultra-Fast JSON Cache for Vinatech POP Web Ecosystem (31 Lines, 6 Routes, 21 Errors & Fast CLI Mapping)",
@@ -182,6 +182,46 @@
             "title": "Kẹt đồng bộ POP sang MES (MongoToMesPerformance)",
             "root_cause": "Dữ liệu chốt trên Web có IsTransferred = 0 hoặc IsDone = 1 chưa được luồng ngầm đẩy vào STB_ProdRouteHist",
             "fast_fix": "Chạy thủ tục tools/sql/procedures/usp_VINA_SyncPopToMes_SingleLot.sql @Barcode = '<Barcode>'"
+        },
+        "POP-CASE-02": {
+            "title": "Chưa thêm mã lỗi ứng với từng công đoạn (Thiếu bảng phế phẩm Kiosk)",
+            "root_cause": "Công đoạn mới chưa được đăng ký trong STB_DefectGroup hoặc chưa clone danh mục mã lỗi sang STB_DefectInfo",
+            "fast_fix": "INSERT STB_DefectGroup và clone từ nhóm chuẩn V-11 sang nhóm mới (vd: V-11_HY) qua REPLACE(DefectCode, 'V-11_', 'V-11_HY_')"
+        },
+        "POP-CASE-05": {
+            "title": "Không thể đóng gói được khi báo không có kho",
+            "root_cause": "CellLine chưa được cấu hình liên kết công đoạn đóng gói với kho thành phẩm đích trong Master",
+            "fast_fix": "Vào MES WinForm màn hình B230 gán công đoạn và kho đóng gói cho CellLine (tham khảo Line chuẩn TX1)"
+        },
+        "POP-CASE-06": {
+            "title": "Hạng mục tự kiểm PQC In-Line thiết lập nhầm công đoạn",
+            "root_cause": "Mã kiểm tra (V_H1_HY, V_H2_HY, V_WA_HY) bị cấu hình sai RouteCode trong tài liệu đo",
+            "fast_fix": "Cập nhật lại công đoạn trên màn hình C141 và UPDATE STB_CommInspDocItem.RouteCode = 'V-24_HY'"
+        },
+        "POP-CASE-09": {
+            "title": "Tạo cưỡng chế tồn kho điện cực (Cuộn hỏng tem barcode / chưa vào kho)",
+            "root_cause": "Cuộn BTP từ Slitting chưa đồng bộ vào STB_MaterialLotInfo, rách tem hoặc thiếu cờ ModalVisible='Y'",
+            "fast_fix": "Lấy số nhảy từ STB_SerialRule và INSERT STB_MaterialLotInfo với LotAttr01='SLITTING', IsSlitting=1, LengthSlitting=GoodQtyLength (Author: vanduc)"
+        },
+        "POP-CASE-10": {
+            "title": "Thiết lập cấu hình Slot NVL CellLine trên Kiosk POP",
+            "root_cause": "Cần cấu hình giao diện nạp NVL cho Line mới hoặc điều chỉnh thứ tự slot nạp",
+            "fast_fix": "Cấu hình bảng VINA_ASSEMBLY_GROUP_MODE và VINA_GROUP_INPUT_ROUTE trong CSDL VINATECH_POP theo ProductGroupCode của BOM"
+        },
+        "POP-CASE-15": {
+            "title": "Lỗi chưa lưu độ nhớt ở công đoạn Trộn (Mixing)",
+            "root_cause": "Công nhân chưa nhập hoặc chưa lưu giá trị đo độ nhớt mẻ keo trước khi chốt sang Coating",
+            "fast_fix": "OP mở lại mẻ Mixing trên Kiosk, nhập giá trị độ nhớt đo thực tế và bấm Lưu trước khi hoàn tất"
+        },
+        "POP-CASE-16": {
+            "title": "Lỗi sửa tên máy / gán nhầm mã máy khi chốt sản lượng",
+            "root_cause": "Công nhân chọn nhầm máy trên Kiosk (vd: VVMHY136 thay vì VVMHY130). Nếu chỉ sửa 1 bảng sẽ bị Worker ghi đè lại",
+            "fast_fix": "BẮT BUỘC UPDATE ĐỒNG THỜI 2 BẢNG: STB_ProdRouteHist.MachineCode VÀ MongoToMesPerformance.MachineCode (Author: vanduc)"
+        },
+        "POP-CASE-17": {
+            "title": "Nút Button 'Cắt điện cực' bị mờ / không sáng để bấm cắt",
+            "root_cause": "Logic an toàn hệ thống: Chặn nút Cắt nếu độ dày màng điện cực MaterialThickness < 100 trong STB_MaterialMaster",
+            "fast_fix": "Kiểm tra STB_MaterialMaster.MaterialThickness của Model. Nếu thực tế hợp lệ nhưng master nhập sai < 100 thì cập nhật lại >= 100"
         }
     }
 }

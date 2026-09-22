@@ -1,0 +1,12 @@
+[
+  {
+    "id": "ESC_20260923_002219",
+    "timestamp": "2026-09-23 00:22:19",
+    "raw_message": "Anh Đức ơi xóa trắng toàn bộ dữ liệu kiểm tra của lô hàng này trong ERP và đổi mã sản phẩm giúp em lot VE26090123",
+    "lots": [
+      "VE26090123"
+    ],
+    "reason": "Yêu cầu can thiệp dữ liệu chưa có tiền lệ tự động / Rủi ro cao -> Bắt buộc hỏi anh Đức",
+    "status": "WAITING_APPROVAL"
+  }
+]
