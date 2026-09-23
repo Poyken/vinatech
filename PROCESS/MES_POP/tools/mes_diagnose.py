@@ -15,6 +15,7 @@ import os
 import sys
 import re
 import json
+import time
 import argparse
 import subprocess
 from pathlib import Path
@@ -469,7 +470,17 @@ WHERE LineCode = '{LINE}';"""
 # ----------------------------------------------------------------------
 # 3. LIVE DB PROBE (TRUY VẤN TRẠNG THÁI THỰC TẾ CỦA LOT QUA SINGLE SHOT)
 # ----------------------------------------------------------------------
+# Cache Live DB probe (TTL 30s tránh gọi subprocess lại cho cùng Lot)
+_LIVE_DB_CACHE = {}
+_LIVE_DB_CACHE_TTL = 30
+
 def query_live_lot(lot_id):
+    # Check cache trước
+    now = time.time()
+    if lot_id in _LIVE_DB_CACHE:
+        val, expire = _LIVE_DB_CACHE[lot_id]
+        if now < expire:
+            return val
     load_matrices()
     tools_dir = BASE_DIR / "tools"
     ps_script = f"""
@@ -534,7 +545,9 @@ def query_live_lot(lot_id):
         )
         out = proc.stdout.strip()
         if out.startswith("{"):
-            return json.loads(out)
+            result = json.loads(out)
+            _LIVE_DB_CACHE[lot_id] = (result, time.time() + _LIVE_DB_CACHE_TTL)
+            return result
     except Exception:
         pass
     return None

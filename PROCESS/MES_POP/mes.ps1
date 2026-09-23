@@ -126,19 +126,6 @@ function Show-Help {
     Write-Host '-> Dung an toan tien trinh Watchdog' -ForegroundColor Gray
 
     Write-Host ''
-    Write-Host '  6. TU DONG HOA XU LY TIN NHAN ZALO (ZALO AUTO-PILOT):' -ForegroundColor Cyan
-    Write-Host '     .\mes.ps1 zalo-gui                  ' -NoNewline -ForegroundColor Green
-    Write-Host '-> Bat Bang Dieu Khien Truc Quan (GUI Dashboard: Chon Che Do Tu Dong / Thu Cong & Phe Duyet Loi Moi)' -ForegroundColor Yellow
-    Write-Host '     .\mes.ps1 zalo "<Message>"          ' -NoNewline -ForegroundColor Green
-    Write-Host '-> Xu ly tuc thi 1 tin nhan Zalo (Tien le -> Tu dong sua | Moi -> Hoi anh Duc)' -ForegroundColor Gray
-    Write-Host '     .\mes.ps1 zalo-clip                 ' -NoNewline -ForegroundColor Green
-    Write-Host '-> Bat Smart Clipboard Auto-Pilot (Chi can Copy tin Zalo la tu dong xu ly & nap dap an vao Clipboard)' -ForegroundColor Yellow
-    Write-Host '     .\mes.ps1 zalo-inbox                ' -NoNewline -ForegroundColor Green
-    Write-Host '-> Giam sat thu muc AI_AGENT_CONFIG/zalo_inbox tu dong xu ly file' -ForegroundColor Gray
-    Write-Host '     .\mes.ps1 zalo-pending              ' -NoNewline -ForegroundColor Green
-    Write-Host '-> Xem danh sach cac yeu cau moi/chua biet cach lam dang cho anh Duc phe duyet' -ForegroundColor Gray
-
-    Write-Host ''
     Write-Host 'Cac Profile CSDL ho tro:' -ForegroundColor Yellow
     Write-Host '  SmartFactoryV2 (Mac dinh), SmartFramework, Groupware, ERP, Bizbox, POP, Andon...' -ForegroundColor Gray
     Write-Host ''
@@ -654,30 +641,7 @@ elseif ($cmdLower -eq 'clean') {
     Write-Host ''
     Write-Host '-> Hoan tat kiem tra & don dep Workspace.' -ForegroundColor Green
 }
-elseif ($cmdLower -eq 'zalo-gui' -or $cmdLower -eq 'zalo-ui') {
-    $guiScript = Join-Path $toolsDir 'mes_zalo_gui.py'
-    Start-Process python -ArgumentList $guiScript
-}
-elseif ($cmdLower -eq 'zalo') {
-    $zaloScript = Join-Path $toolsDir 'mes_zalo_autopilot.py'
-    if ($Target) {
-        python -u $zaloScript --process $Target
-    } else {
-        python -u $zaloScript --clip
-    }
-}
-elseif ($cmdLower -eq 'zalo-clip') {
-    $zaloScript = Join-Path $toolsDir 'mes_zalo_autopilot.py'
-    python -u $zaloScript --clip
-}
-elseif ($cmdLower -eq 'zalo-inbox' -or $cmdLower -eq 'inbox') {
-    $qMgr = Join-Path $toolsDir 'zalo_queue_manager.py'
-    python $qMgr --display
-}
-elseif ($cmdLower -eq 'zalo-pending') {
-    $zaloScript = Join-Path $toolsDir 'mes_zalo_autopilot.py'
-    python -u $zaloScript --pending
-}
+
 else {
     Write-Host "Lenh khong hop le: $Command" -ForegroundColor Red
     Show-Help

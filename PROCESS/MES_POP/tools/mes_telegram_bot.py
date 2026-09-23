@@ -119,6 +119,11 @@ USER_STATES = {}
 TOOL_CACHE = {}
 CACHE_TTL_SECONDS = 600
 
+# Config cache (reload mỗi 60s thay vì mỗi vòng polling)
+_config_cache = None
+_config_last_load = 0
+CONFIG_RELOAD_INTERVAL = 60
+
 def get_from_cache(key):
     if key in TOOL_CACHE:
         val, expire_at = TOOL_CACHE[key]
@@ -815,7 +820,12 @@ def main():
 
     while True:
         try:
-            current_cfg = load_config()
+            current_cfg = config
+            now_ts = time.time()
+            if now_ts - _config_last_load > CONFIG_RELOAD_INTERVAL:
+                current_cfg = load_config()
+                _config_cache = current_cfg
+                _config_last_load = now_ts
             allowed_chat_ids = [str(x).strip() for x in current_cfg.get("allowed_chat_ids", [])]
 
             url = f"https://api.telegram.org/bot{token}/getUpdates?timeout=20"
