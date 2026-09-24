@@ -101,6 +101,7 @@ PROCESS/MES_POP/
 │   └── 📄 routine_RELEASE_ORPHAN_MACHINE_LOCKS.sql # Routine giải phóng thiết bị treo Kiosk
 │
 └── 📂 docs/                                    # TÀI LIỆU VẬN HÀNH BỔ TRỢ
+    ├── 📄 MES_POP_DEEP_DIVE_AUDIT_AND_INQUIRY.md # 🌟 Báo cáo nghiên cứu chuyên sâu & 12 câu hỏi vận hành cốt lõi
     ├── 📄 HUONG_DAN_TRIEN_KHAI_TELEGRAM_BOT.md # Cẩm nang 4 bước thiết lập Bot Telegram
     └── 📄 KB_RELIABILITY_REPORT.md             # Báo cáo đối soát tri thức KB vs CSDL
 ```

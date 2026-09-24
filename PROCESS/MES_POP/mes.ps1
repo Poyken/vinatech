@@ -19,7 +19,8 @@ param(
     [string]$SourceSp = '',
     [string]$TargetFactory = 'HY',
     [string]$BoxId = '',
-    [string]$PackingId = '',
+    [string]$Machine = '',
+    [string]$Line = '',
     [double]$Qty = 0,
     [switch]$Deploy,
     [switch]$ViewOnly,
@@ -86,6 +87,8 @@ function Show-Help {
 
     Write-Host ''
     Write-Host '  3. KHAC PHUC SU CO & TRIEN KHAI (HOTFIX & DEPLOY):' -ForegroundColor Cyan
+    Write-Host '     .\mes.ps1 unlock <Machine> [-Deploy]' -NoNewline -ForegroundColor Yellow
+    Write-Host '-> Mo khoa giai phong may POP Kiosk bi ket ACTIVE (1-Shot < 0.5s)' -ForegroundColor Gray
     Write-Host '     .\mes.ps1 fix-movedate -Lots "..." -TargetDate "yyyy-MM-dd" [-Hours 10] [-Deploy]' -ForegroundColor Yellow
     Write-Host '-> Sinh SQL chuyen ngay chot B782 cat ca 10:00 AM chuan Author/ChangeUserID vanduc' -ForegroundColor Gray
     Write-Host '     .\mes.ps1 fix-electrode -Lots "..." [-Type Slitting|Mixing] [-Deploy]' -ForegroundColor Yellow
@@ -367,6 +370,19 @@ elseif ($cmdLower -eq 'release-machines' -or $cmdLower -eq 'release-orphan-machi
         & $relScript @params
     } else {
         Write-Error 'tools/release_orphan_machines.ps1 not found.'
+    }
+}
+elseif ($cmdLower -eq 'unlock' -or $cmdLower -eq 'unlock-machine' -or $cmdLower -eq 'release-machine') {
+    $unlockScript = Join-Path $toolsDir 'unlock_machine.ps1'
+    if (Test-Path $unlockScript) {
+        $params = @{}
+        $targetMachine = if ($Machine) { $Machine } else { $Target }
+        if ($targetMachine) { $params['Machine'] = $targetMachine }
+        if ($Line) { $params['Line'] = $Line }
+        if ($Deploy -or $Force) { $params['Deploy'] = $true }
+        & $unlockScript @params
+    } else {
+        Write-Error 'tools/unlock_machine.ps1 not found.'
     }
 }
 elseif ($cmdLower -eq 'bot' -or $cmdLower -eq 'telegram') {

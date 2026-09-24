@@ -1,4 +1,4 @@
-﻿# ==============================================================================
+# ==============================================================================
 # run_query.ps1 — SELECT-Only Query Tool for Vinatech MES
 # Multi-DB Profile | Tự động dò Server | Chống Lock CSDL | UTF-8 Unicode
 #
@@ -26,6 +26,24 @@ if (Test-Path $sharedScript) {
 } else {
     Write-Error "db_shared.ps1 not found."
     exit 1
+}
+
+# Auto-detect profile from TABLE_ROUTER.json if user didn't explicitly override profile
+$routerPath = Join-Path $PSScriptRoot "..\AI_AGENT_CONFIG\TABLE_ROUTER.json"
+if ($Profile -eq "SmartFactoryV2" -and (Test-Path $routerPath)) {
+    try {
+        $router = Get-Content -Raw -Path $routerPath -Encoding UTF8 | ConvertFrom-Json
+        foreach ($tblName in $router.routes.PSObject.Properties.Name) {
+            if ($Query -match "\b$tblName\b") {
+                $targetProfile = $router.routes.$tblName.profile
+                if ($targetProfile -and $targetProfile -ne "SmartFactoryV2") {
+                    $Profile = $targetProfile
+                    Write-Host "(!) [AUTO-ROUTER] Phat hien bang '$tblName' -> Tu dong chuyen Profile sang: '$Profile'" -ForegroundColor Cyan
+                    break
+                }
+            }
+        }
+    } catch {}
 }
 
 $conn = Get-DbConnection -Profile $Profile

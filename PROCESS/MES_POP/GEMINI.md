@@ -41,5 +41,6 @@ Mọi câu trả lời khi nhận báo lỗi sự cố BẮT BUỘC theo 4 phầ
 - `find "<Keyword>"` — Tra cứu L1 Cache (<0.001s)
 - `health` — Morning Health Check quét Lot HOLD, WIP 24h
 - `watchdog-hidden` / `watchdog-status` — Auto-Pilot tuần tra 24/7 & tự động bắn alert Telegram
-- `release-machines [-Force]` — Giải phóng máy POP kẹt lock
+- `release-machines [-Force]` — Giải phóng máy POP kẹt lock hàng loạt theo Line
+- `unlock "<Machine>" [-Deploy]` — Mở khóa giải phóng máy POP Kiosk cụ thể tức thời 1-Shot (<0.5s)
 - `pop-readiness` / `pop-audit` — Kiểm toán & đối soát Kiosk POP

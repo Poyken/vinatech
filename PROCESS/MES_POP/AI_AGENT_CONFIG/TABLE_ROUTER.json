@@ -1,0 +1,38 @@
+{
+  "version": "1.0.0",
+  "updated_at": "2026-09-24",
+  "description": "Static Table to Database Router & Profile Resolver for Vinatech Ecosystem",
+  "routes": {
+    "VINA_EQUIPMENT_MAPPING": { "db": "VINATECH_POP", "profile": "POP", "module": "POP_Equipment" },
+    "VINA_EQUIPMENT_REMAINDER": { "db": "VINATECH_POP", "profile": "POP", "module": "POP_Equipment" },
+    "VINA_EQUIPMENT_SETTING": { "db": "VINATECH_POP", "profile": "POP", "module": "POP_Equipment" },
+    "VINA_POP_ACTION_LOG": { "db": "VINATECH_POP", "profile": "POP", "module": "POP_Audit" },
+    "VINA_PACKING_REMAIN_QTY": { "db": "VINATECH_POP", "profile": "POP", "module": "POP_Packing" },
+    "VINA_QUALITY_ITEM_EQUIPMENT_MAP": { "db": "VINATECH_POP", "profile": "POP", "module": "POP_Quality" },
+    "VINA_QUALITY_EQUIP_USE_HIST": { "db": "VINATECH_POP", "profile": "POP", "module": "POP_Quality" },
+    "VINA_QUALITY_EQUIPMENT_LINK": { "db": "VINATECH_POP", "profile": "POP", "module": "POP_Quality" },
+    
+    "STB_SetInfo": { "db": "SmartFactoryV2", "profile": "SmartFactoryV2", "module": "MES_Core" },
+    "STB_ProdRouteHist": { "db": "SmartFactoryV2", "profile": "SmartFactoryV2", "module": "MES_Core" },
+    "STB_ProdRouteWorkerHist": { "db": "SmartFactoryV2", "profile": "SmartFactoryV2", "module": "MES_Core" },
+    "STB_MaterialLotInfo": { "db": "SmartFactoryV2", "profile": "SmartFactoryV2", "module": "MES_Core" },
+    "STB_MaterialMaster": { "db": "SmartFactoryV2", "profile": "SmartFactoryV2", "module": "MES_Master" },
+    "STB_DefectRepairInfo": { "db": "SmartFactoryV2", "profile": "SmartFactoryV2", "module": "MES_Defect" },
+    "STB_RawMaterialInputHist": { "db": "SmartFactoryV2", "profile": "SmartFactoryV2", "module": "MES_Material" },
+    "STB_SavePackingTime_VVT": { "db": "SmartFactoryV2", "profile": "SmartFactoryV2", "module": "MES_Packing" },
+    "MongoToMesPerformance": { "db": "SmartFactoryV2", "profile": "SmartFactoryV2", "module": "POP_Sync" },
+    "STB_ItemCode": { "db": "SmartFactoryV2", "profile": "SmartFactoryV2", "module": "MES_Master" },
+    "STB_LotChangeMaterialHistory": { "db": "SmartFactoryV2", "profile": "SmartFactoryV2", "module": "MES_Transition" },
+    
+    "Tbl_OverTime": { "db": "CMS_VINA", "profile": "CMS", "module": "CMS_HR" },
+    "Tbl_FingerRegister": { "db": "CMS_VINA", "profile": "CMS", "module": "CMS_HR" },
+    "Tbl_Employees": { "db": "CMS_VINA", "profile": "CMS", "module": "CMS_HR" },
+    "Tbl_Shift": { "db": "CMS_VINA", "profile": "CMS", "module": "CMS_HR" },
+    "Tbl_TimeAttendance": { "db": "CMS_VINA", "profile": "CMS", "module": "CMS_HR" },
+    
+    "STB_CodeMaster": { "db": "SmartFramework", "profile": "SmartFramework", "module": "MES_Auth" },
+    "STB_ScreenMaster": { "db": "SmartFramework", "profile": "SmartFramework", "module": "MES_Auth" },
+    "STB_UserMaster": { "db": "SmartFramework", "profile": "SmartFramework", "module": "MES_Auth" },
+    "STB_CompanyInfo": { "db": "SmartFramework", "profile": "SmartFramework", "module": "MES_Auth" }
+  }
+}

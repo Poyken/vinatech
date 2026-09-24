@@ -18,6 +18,6 @@
 
 
 ## ⚡ 3 CLI HUBS TẠI WORKSPACE ROOT
-- `.\mes.ps1 [trace|pop-trace|screen|find|health|pop-readiness|release-machines|new-fix|deploy]`
+- `.\mes.ps1 [trace|pop-trace|screen|find|health|pop-readiness|release-machines|unlock|new-fix|deploy]`
 - `.\gw.ps1 [trace|form|find|routine|chain|health|check|query|audit]`
 - `.\db.ps1 [list|health|stats|sp|schema|query|find|jobs|triggers|index|crossdb|lineage|auditkb]`
