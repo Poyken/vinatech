@@ -275,14 +275,17 @@ Dưới đây là bảng tổng hợp ngắn gọn các câu hỏi cần sự đ
 | **Q2** | **Sync Pipeline** | 37 bản ghi `SourceType = 'AUTO'` kẹt tại `VVC-11`. | Nguyên nhân do thiếu `WorkerCode` khi PLC đẩy tự động? Cách gán user mặc định cho các sự kiện máy móc? |
 | **Q3** | **Dual-Entry** | Lỗi clone dòng thừa `CompleteRoute IS NULL` từ WinForm. | Có thể sửa API POP để UPDATE đè vào dòng clone chờ sẵn, hoặc tạo Trigger chặn clone để triệt tiêu lỗi `POP-ERR-09` không? |
 | **Q4** | **BOM & Stock** | Bảng `VINA_MATERIAL_INPUT_HIST` hiện có 0 dòng. | Xác nhận bảng này đã bị loại bỏ hoàn toàn trong thực tế hay chưa để dọn dẹp tài liệu KB? |
-| **Q5** | **BOM & Stock** | Thùng dung dịch 150 KG tự động về 0 KG khi quét Lot mới. | Cơ chế Auto-exhaust nằm ở đâu? Hướng xử lý căn cơ cho vật tư dùng chung nhiều Lot? |
-| **Q6** | **BOM & Stock** | Ràng buộc 1 cuộn BTP điện cực tối đa 2 Lot sản phẩm. | Khi cuộn còn dư màng, xưởng đang xử lý thế nào? Kế hoạch nâng lên tối đa 3 Lot đã sẵn sàng chưa? |
+| **Q5** | **BOM & Stock** | Thùng dung dịch 150 KG tự động về 0 KG ([`POP-ERR-14`](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_03_TROUBLESHOOTING.md#214-pop-err-14-xung-đột-chuyển-vùng-kho-vn--hy--thùng-dung-dịch-electrolyte-bị-trừ-hết-0-kg)). | ✅ **ĐÃ GIẢI ĐÁP / CLOSED:** Anh Đức xác nhận case này đã được EA Team xử lý hoàn tất trên live DB bằng Template 6 (khôi phục 150 KG). Không còn là sự cố mở. |
+| **Q6** | **BOM & Stock** | Ràng buộc 1 cuộn BTP điện cực tối đa bao nhiêu Lot? | ✅ **ĐÃ GIẢI ĐÁP:** Anh Đức xác nhận hệ thống thực tế **đã nâng cấp lên tối đa 3 LOTNO** (thay cho định mức cũ 2 LOTNO). Đã cập nhật KB_02, KB_03 và GEMINI.md. |
 | **Q7** | **Equipment** | Máy kẹt `ACTIVE` ở DayPlan cũ làm ẩn máy trên Kiosk. | Tại sao Kiosk không auto-release sau 24h/sau ca? Có rủi ro gì nếu thiết lập job tự động giải phóng lúc 10h00 AM không? |
 | **Q8** | **Packing** | In tem thùng Box Label bị co ngắn mã vạch do thiếu `PackingID`. | Rào cản nào khiến chưa nhúng `template_GENERATE_POP_PACKING_ID.sql` trực tiếp vào API `/api/pop/screen/savePacking`? |
 | **Q9** | **Packing** | Phân quyền Quản trị viên hủy Box trên Kiosk POP. | Có nên cập nhật trực tiếp `EMP_ADMIN = 'Y'` cho tài khoản `92603003` trong `VINA_EMP` để anh Đức có toàn quyền hủy hộp không? |
 | **Q10** | **Quality** | Bị lỗi 403 Forbidden khi mở 2 Dashboard `/dashboard/*`. | Bảng nào quản lý quyền truy cập 2 Dashboard này để mở full quyền cho tài khoản của anh Đức? |
 | **Q11** | **Electrode** | Nút Cắt điện cực bị mờ nếu độ dày `< 100`. | Căn cứ kỹ thuật của ngưỡng 100 µm? Có ảnh hưởng đến các Model siêu tụ mỏng thế hệ mới không? |
 | **Q12** | **Cutover** | 14 Line bị trạng thái FAIL (12 line thiếu `PROD_MODE`). | Anh Đức có duyệt để em tạo Hotfix script chuẩn hóa đồng loạt 14 Line này đưa toàn bộ về PASS không? |
+| **Q13** | **Plant Cutover** | Tình trạng áp dụng POP giữa 2 nhà máy F3 Hà Nam và F5 Hưng Yên. | ✅ **ĐÃ XÁC NHẬN:** F5 Hưng Yên đã **100% POP Kiosk**, F3 Hà Nam chạy **Hybrid**. 95% lỗi chốt nhầm do OP thao tác nhầm trên Kiosk cảm ứng. |
+| **Q14** | **IoT / PLC** | Cơ chế đếm sản lượng và quy trình ghi nhận của OP. | ✅ **ĐÃ XÁC NHẬN:** PLC đếm tự động qua phần mềm `.exe`. OP không đếm OK thủ công, OP nhập báo phế trước ➔ Kiosk tự trừ ➔ OP chốt số tự động. |
+| **Q15** | **Reporting** | Mốc 10h00 AM `JobDate` vs Báo cáo sản lượng B782: Có nên sửa đè DB? | ✅ **ĐÃ ĐỊNH HƯỚNG:** **Không nên sửa đè DB** vì vi phạm audit IATF 16949 và làm méo mó OEE; giải pháp chuẩn là bổ sung bộ lọc kép (Dual View) ở Tầng Báo Cáo. |
 
 ---
 

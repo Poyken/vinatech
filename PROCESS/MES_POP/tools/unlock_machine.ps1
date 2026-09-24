@@ -136,7 +136,8 @@ END CATCH;
     Write-Host "[DRY-RUN] Thoi gian tra cuu: $($sw.ElapsedMilliseconds) ms. Du lieu chua thay doi." -ForegroundColor Yellow
     Write-Host ""
     Write-Host "DE THUC THI GIAI PHONG NGAY, CHAY LENH:" -ForegroundColor Cyan
-    Write-Host "  .\mes.ps1 unlock `"$Machine`" -Deploy" -ForegroundColor Green
+    Write-Host "  .\pop.ps1 unlock `"$Machine`" -Deploy" -ForegroundColor Green
+    Write-Host "  (hoac: .\mes.ps1 unlock `"$Machine`" -Deploy)" -ForegroundColor DarkGray
     Write-Host ""
     Write-Host "HOAC COPY SCRIPT SQL HOTFIX CHUAN (Author: vanduc):" -ForegroundColor Cyan
     Write-Host @"

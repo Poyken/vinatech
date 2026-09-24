@@ -14,7 +14,7 @@
 4. **RULE 4 (SURGICAL RETRIEVAL):** Ưu tiên L1 Cache JSON (<0.001s, ~150 tokens) trước khi đọc cả file Markdown lớn.
 5. **RULE 14 (TỐC ĐỘ PHẢN HỒI):** Tối đa 1-2 tool calls trúng đích/câu hỏi. Lấy xong thông tin cốt lõi DỪNG NGAY và trả lời (<5-10s).
 6. **RULE 15 (TRÚNG ĐÍCH):** CẤM tự ý tạo script hotfix hay plan khi User chỉ yêu cầu kiểm tra/tra cứu.
-7. **RULE 20 (POP BẤT BIẾN - EA PLAYBOOK):** Đổi máy nhầm Kiosk BẮT BUỘC UPDATE CẢ 2 BẢNG (`STB_ProdRouteHist` VÀ `MongoToMesPerformance`). Lỗi "Already completed" xóa dòng thừa trong `STB_ProdRouteHist` & `STB_ProdRouteWorkerHist`. Nút Cắt điện cực mờ do độ dày `< 100`. Cuộn BTP tối đa 2 LOTNO. Máy kẹt ACTIVE giải phóng qua `VINA_EQUIPMENT_MAPPING.MAPPING_STATUS = 'RELEASED'`.
+7. **RULE 20 (POP BẤT BIẾN - EA PLAYBOOK):** Đổi máy nhầm Kiosk BẮT BUỘC UPDATE CẢ 2 BẢNG (`STB_ProdRouteHist` VÀ `MongoToMesPerformance`). Lỗi "Already completed" xóa dòng thừa trong `STB_ProdRouteHist` & `STB_ProdRouteWorkerHist`. Nút Cắt điện cực mờ do độ dày `< 100`. Cuộn BTP tối đa 3 LOTNO. Máy kẹt ACTIVE giải phóng qua `VINA_EQUIPMENT_MAPPING.MAPPING_STATUS = 'RELEASED'`.
 
 
 ## ⚡ 3 CLI HUBS TẠI WORKSPACE ROOT

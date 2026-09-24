@@ -26,10 +26,14 @@ if ([string]::IsNullOrWhiteSpace($t)) {
 $type = "LOT"
 if ($t -match '^PK') {
     $type = "PACKING"
-} elseif ($t -match '^(V[VN]EP|VVMM|VNMD|VVMHY)') {
+} elseif ($t -match '^(V[VN]EP|VVMM|VNMD|VVMHY|EQ)') {
     $type = "EQUIPMENT"
 } elseif ($t -match '^(VVC-|VVHYC-|TCX|ELECTRODE|MEA)') {
     $type = "LINE"
+} elseif ($t -match '^\d{12}$') {
+    $type = "PO"
+} elseif ($t -match '^(ECVT|CRFY|SRFH|LIVT|CREH|WIC|WSC)') {
+    $type = "MODEL"
 }
 
 $sw = [System.Diagnostics.Stopwatch]::StartNew()
@@ -120,6 +124,66 @@ FROM SmartFactoryV2.dbo.MongoToMesPerformance WITH(NOLOCK)
 WHERE LineCode = '$t' AND IsDone = 1 AND IsTransferred = 0 
 ORDER BY ModifyDateTime DESC;
 "@
+} elseif ($type -eq "PO") {
+    $cmd.CommandText = @"
+-- 1. PO Summary
+SELECT 
+    PONo, 
+    MaterialCode, 
+    COUNT(*) AS TotalLots,
+    SUM(CASE WHEN IsProdFinish = 1 THEN 1 ELSE 0 END) AS FinishedLots,
+    SUM(CASE WHEN IsLineInput = 1 THEN 1 ELSE 0 END) AS InputLots,
+    SUM(DefectQty) AS TotalDefects,
+    MIN(CreateDateTime) AS FirstLotDate,
+    MAX(CreateDateTime) AS LastLotDate
+FROM SmartFactoryV2.dbo.STB_SetInfo WITH(NOLOCK)
+WHERE PONo = '$t'
+GROUP BY PONo, MaterialCode;
+
+-- 2. Danh sach cac Lot thuoc PO
+SELECT TOP 30 
+    ControlNo, 
+    Barcode, 
+    MaterialCode, 
+    IsProdFinish, 
+    IsLineInput, 
+    DefectQty, 
+    CreateDateTime
+FROM SmartFactoryV2.dbo.STB_SetInfo WITH(NOLOCK)
+WHERE PONo = '$t'
+ORDER BY CreateDateTime DESC;
+"@
+} elseif ($type -eq "MODEL") {
+    $cmd.CommandText = @"
+-- 1. Model Summary
+SELECT 
+    MaterialCode, 
+    COUNT(DISTINCT PONo) AS TotalPOs, 
+    COUNT(DISTINCT ControlNo) AS TotalLots,
+    SUM(CASE WHEN IsProdFinish = 1 THEN 1 ELSE 0 END) AS FinishedLots,
+    MAX(CreateDateTime) AS LastActiveDate
+FROM SmartFactoryV2.dbo.STB_SetInfo WITH(NOLOCK)
+WHERE MaterialCode = '$t'
+GROUP BY MaterialCode;
+
+-- 2. Cac PO gan nhat
+SELECT TOP 10 
+    PONo, 
+    COUNT(*) AS LotsInPO, 
+    SUM(CASE WHEN IsProdFinish = 1 THEN 1 ELSE 0 END) AS FinishedLots, 
+    MAX(CreateDateTime) AS RecentDate
+FROM SmartFactoryV2.dbo.STB_SetInfo WITH(NOLOCK)
+WHERE MaterialCode = '$t'
+GROUP BY PONo
+ORDER BY RecentDate DESC;
+
+-- 3. Cac Lot gan nhat
+SELECT TOP 15 
+    ControlNo, Barcode, PONo, IsProdFinish, CreateDateTime
+FROM SmartFactoryV2.dbo.STB_SetInfo WITH(NOLOCK)
+WHERE MaterialCode = '$t'
+ORDER BY CreateDateTime DESC;
+"@
 } else { # LOT / BARCODE / CONTROLNO
     $cmd.CommandText = @"
 SET NOCOUNT ON;
@@ -132,9 +196,22 @@ IF EXISTS (SELECT 1 FROM SmartFactoryV2.dbo.STB_SetInfo WITH(NOLOCK) WHERE Contr
 BEGIN
     SELECT TOP 1 @Bar = Barcode FROM SmartFactoryV2.dbo.STB_SetInfo WITH(NOLOCK) WHERE ControlNo = '$t';
 END
-ELSE
+ELSE IF EXISTS (SELECT 1 FROM SmartFactoryV2.dbo.STB_SetInfo WITH(NOLOCK) WHERE Barcode = '$t')
 BEGIN
     SELECT TOP 1 @Ctrl = ControlNo FROM SmartFactoryV2.dbo.STB_SetInfo WITH(NOLOCK) WHERE Barcode = '$t';
+END
+ELSE
+BEGIN
+    -- Fallback: Do theo phan he Chat luong / PQC Web (CommInspDocItemNo hoac CommInspDocNo)
+    SELECT TOP 1 @Ctrl = H.ProdNo 
+    FROM SmartFactoryV2.dbo.STB_CommInspDocHistory H WITH(NOLOCK)
+    LEFT JOIN SmartFactoryV2.dbo.STB_CommInspDocItem I WITH(NOLOCK) ON H.CommInspDocNo = I.CommInspDocNo
+    WHERE I.CommInspDocItemNo = '$t' OR H.CommInspDocNo = '$t';
+
+    IF @Ctrl IS NOT NULL
+    BEGIN
+        SELECT TOP 1 @Bar = Barcode FROM SmartFactoryV2.dbo.STB_SetInfo WITH(NOLOCK) WHERE ControlNo = @Ctrl;
+    END
 END
 
 -- 1. STB_SetInfo (Index Seek)
@@ -180,6 +257,13 @@ SELECT TOP 5 SEQ, ACTION_TYPE, ACTION_NAME, LINE_CODE, ROUTE_CODE, EQUIPMENT_ID,
 FROM VINATECH_POP.dbo.VINA_POP_ACTION_LOG WITH(NOLOCK) 
 WHERE LOT_NUMBER = @Bar 
 ORDER BY REG_DATE DESC;
+
+-- 8. STB_CommInspDocHistory & STB_CommInspDocItem (Chung tu QC PQC)
+SELECT TOP 5 H.CommInspDocNo, I.CommInspDocItemNo, I.CommInspItemCode, H.CommInspTypeCode, H.MaterialCode, H.CreateUserID, H.CreateDateTime 
+FROM SmartFactoryV2.dbo.STB_CommInspDocHistory H WITH(NOLOCK) 
+LEFT JOIN SmartFactoryV2.dbo.STB_CommInspDocItem I WITH(NOLOCK) ON H.CommInspDocNo = I.CommInspDocNo 
+WHERE I.CommInspDocItemNo = '$t' OR H.CommInspDocNo = '$t' OR (H.ProdNo = @Ctrl AND @Ctrl IS NOT NULL) 
+ORDER BY H.CreateDateTime DESC;
 "@
 }
 
@@ -188,15 +272,148 @@ $adapter.Fill($ds) | Out-Null
 $conn.Close()
 $sw.Stop()
 
-# 2. RENDER KET QUA SIEU TOC
+# 2. RENDER KET QUA SIEU TOC (UI CHUAN DEP & DE NHIN)
 function Show-Table([string]$title, [System.Data.DataTable]$table, [string]$color = "Cyan") {
-    Write-Host ''
-    Write-Host ">>> $title ($($table.Rows.Count) ban ghi):" -ForegroundColor $color
-    if ($table.Rows.Count -eq 0) {
-        Write-Host "    (Khong co du lieu)" -ForegroundColor Gray
+    if ($null -eq $table -or $table.Rows.Count -eq 0) {
+        Write-Host "   [-] $title : 0 ban ghi" -ForegroundColor DarkGray
         return
     }
+    Write-Host ''
+    Write-Host ">>> $title ($($table.Rows.Count) ban ghi):" -ForegroundColor $color
     $table | Format-Table -AutoSize | Out-String | ForEach-Object { Write-Host $_.TrimEnd() -ForegroundColor White }
+}
+
+function Show-LotCard([System.Data.DataTable]$table) {
+    if ($null -eq $table -or $table.Rows.Count -eq 0) {
+        Write-Host ''
+        Write-Host "   [-] 1. THONG TIN LOT MES (STB_SetInfo): Khong tim thay ban ghi" -ForegroundColor DarkYellow
+        return
+    }
+    $r = $table.Rows[0]
+    $ctrl = $r['ControlNo']
+    $bar = $r['Barcode']
+    $po = $r['PONo']
+    $mat = $r['MaterialCode']
+    $isFin = if ($r['IsProdFinish'] -eq $true) { "DA HOAN THANH (True)" } else { "CHUA HOAN THANH (False)" }
+    $finColor = if ($r['IsProdFinish'] -eq $true) { "Green" } else { "Yellow" }
+    $isLine = if ($r['IsLineInput'] -eq $true) { "DA NAP CHUYEN (True)" } else { "CHUA NAP CHUYEN (False)" }
+    $defQty = $r['DefectQty']
+    $crDate = if ($r['CreateDateTime']) { ([datetime]$r['CreateDateTime']).ToString("dd/MM/yyyy HH:mm:ss") } else { "N/A" }
+
+    Write-Host ''
+    Write-Host "+-------------------------------------------------------------------------------+" -ForegroundColor Cyan
+    Write-Host "|  [1. THONG TIN LOT MES COT LOI - STB_SetInfo]                                 |" -ForegroundColor Cyan
+    Write-Host "+-------------------------------------------------------------------------------+" -ForegroundColor Cyan
+    Write-Host "   * Ma Barcode tem       : " -NoNewline -ForegroundColor Gray
+    Write-Host "$bar" -ForegroundColor Green
+    Write-Host "   * Ma Lot MES (Control) : " -NoNewline -ForegroundColor Gray
+    Write-Host "$ctrl" -ForegroundColor White
+    Write-Host "   * Ma San pham / Model  : " -NoNewline -ForegroundColor Gray
+    Write-Host "$mat" -ForegroundColor Yellow
+    Write-Host "   * Lenh san xuat (PO)   : " -NoNewline -ForegroundColor Gray
+    Write-Host "$po" -ForegroundColor White
+    Write-Host "   * Tien do san xuat     : " -NoNewline -ForegroundColor Gray
+    Write-Host "$isFin" -ForegroundColor $finColor
+    Write-Host "   * Trang thai nap chuyen: " -NoNewline -ForegroundColor Gray
+    Write-Host "$isLine" -ForegroundColor White
+    Write-Host "   * Tong phe (DefectQty) : " -NoNewline -ForegroundColor Gray
+    Write-Host "$defQty" -ForegroundColor $(if ([int]$defQty -gt 0) { "Red" } else { "Green" })
+    Write-Host "   * Thoi gian tao Lot    : " -NoNewline -ForegroundColor Gray
+    Write-Host "$crDate" -ForegroundColor DarkGray
+    Write-Host "+-------------------------------------------------------------------------------+" -ForegroundColor Cyan
+}
+
+function Show-QcCard([System.Data.DataTable]$table) {
+    if ($null -eq $table -or $table.Rows.Count -eq 0) { return }
+    $r = $table.Rows[0]
+    $docNo = $r['CommInspDocNo']
+    $itemNo = $r['CommInspDocItemNo']
+    $itemCode = $r['CommInspItemCode']
+    $typeCode = $r['CommInspTypeCode']
+    $user = $r['CreateUserID']
+    $crDate = if ($r['CreateDateTime']) { ([datetime]$r['CreateDateTime']).ToString("dd/MM/yyyy HH:mm:ss") } else { "N/A" }
+
+    Write-Host ''
+    Write-Host "+-------------------------------------------------------------------------------+" -ForegroundColor Magenta
+    Write-Host "|  [CHUNG TU KIEM TRA PQC / CHAT LUONG - STB_CommInspDocHistory]               |" -ForegroundColor Magenta
+    Write-Host "+-------------------------------------------------------------------------------+" -ForegroundColor Magenta
+    Write-Host "   * Ma phieu QC (DocNo)  : " -NoNewline -ForegroundColor Gray
+    Write-Host "$docNo" -ForegroundColor Yellow
+    if ($itemNo) {
+        Write-Host "   * Hang muc do (ItemNo) : " -NoNewline -ForegroundColor Gray
+        Write-Host "$itemNo ($itemCode)" -ForegroundColor White
+    }
+    Write-Host "   * Loai kiem tra        : " -NoNewline -ForegroundColor Gray
+    Write-Host "$typeCode" -ForegroundColor White
+    Write-Host "   * Nguoi tao & Thoi gian: " -NoNewline -ForegroundColor Gray
+    Write-Host "$user - $crDate" -ForegroundColor Green
+    Write-Host "+-------------------------------------------------------------------------------+" -ForegroundColor Magenta
+}
+
+function Show-PoCard([System.Data.DataTable]$table) {
+    if ($null -eq $table -or $table.Rows.Count -eq 0) {
+        Write-Host "   [-] THONG TIN PO: Khong tim thay du lieu" -ForegroundColor DarkYellow
+        return
+    }
+    $r = $table.Rows[0]
+    $po = $r['PONo']
+    $mat = $r['MaterialCode']
+    $tot = $r['TotalLots']
+    $fin = $r['FinishedLots']
+    $inp = $r['InputLots']
+    $def = $r['TotalDefects']
+    $first = if ($r['FirstLotDate']) { ([datetime]$r['FirstLotDate']).ToString("dd/MM/yyyy HH:mm") } else { "N/A" }
+    $last = if ($r['LastLotDate']) { ([datetime]$r['LastLotDate']).ToString("dd/MM/yyyy HH:mm") } else { "N/A" }
+    $pct = if ($tot -gt 0) { [math]::Round(($fin / $tot) * 100, 1) } else { 0 }
+
+    Write-Host ''
+    Write-Host "+-------------------------------------------------------------------------------+" -ForegroundColor Cyan
+    Write-Host "|  [THONG TIN LENH SAN XUAT - PO DASHBOARD]                                     |" -ForegroundColor Cyan
+    Write-Host "+-------------------------------------------------------------------------------+" -ForegroundColor Cyan
+    Write-Host "   * Ma Don hang / PO     : " -NoNewline -ForegroundColor Gray
+    Write-Host "$po" -ForegroundColor Green
+    Write-Host "   * Ma San pham / Model  : " -NoNewline -ForegroundColor Gray
+    Write-Host "$mat" -ForegroundColor Yellow
+    Write-Host "   * Tong so Lot da tao   : " -NoNewline -ForegroundColor Gray
+    Write-Host "$tot Lots" -ForegroundColor White
+    Write-Host "   * Tien do hoan thanh   : " -NoNewline -ForegroundColor Gray
+    Write-Host "$fin / $tot Lots ($pct%)" -ForegroundColor $(if ($fin -eq $tot) { "Green" } else { "Yellow" })
+    Write-Host "   * So Lot da nap chuyen : " -NoNewline -ForegroundColor Gray
+    Write-Host "$inp / $tot Lots" -ForegroundColor White
+    Write-Host "   * Tong phe pham        : " -NoNewline -ForegroundColor Gray
+    Write-Host "$def" -ForegroundColor $(if ([int]$def -gt 0) { "Red" } else { "Green" })
+    Write-Host "   * Khoang thoi gian tao : " -NoNewline -ForegroundColor Gray
+    Write-Host "$first -> $last" -ForegroundColor DarkGray
+    Write-Host "+-------------------------------------------------------------------------------+" -ForegroundColor Cyan
+}
+
+function Show-ModelCard([System.Data.DataTable]$table) {
+    if ($null -eq $table -or $table.Rows.Count -eq 0) {
+        Write-Host "   [-] THONG TIN MODEL: Khong tim thay du lieu" -ForegroundColor DarkYellow
+        return
+    }
+    $r = $table.Rows[0]
+    $mat = $r['MaterialCode']
+    $pos = $r['TotalPOs']
+    $lots = $r['TotalLots']
+    $fin = $r['FinishedLots']
+    $last = if ($r['LastActiveDate']) { ([datetime]$r['LastActiveDate']).ToString("dd/MM/yyyy HH:mm") } else { "N/A" }
+
+    Write-Host ''
+    Write-Host "+-------------------------------------------------------------------------------+" -ForegroundColor Cyan
+    Write-Host "|  [THONG TIN SAN PHAM / MODEL - STB_SetInfo]                                   |" -ForegroundColor Cyan
+    Write-Host "+-------------------------------------------------------------------------------+" -ForegroundColor Cyan
+    Write-Host "   * Ma San pham / Model  : " -NoNewline -ForegroundColor Gray
+    Write-Host "$mat" -ForegroundColor Yellow
+    Write-Host "   * Tong so PO da tao    : " -NoNewline -ForegroundColor Gray
+    Write-Host "$pos Don hang" -ForegroundColor White
+    Write-Host "   * Tong so Lot san xuat : " -NoNewline -ForegroundColor Gray
+    Write-Host "$lots Lots" -ForegroundColor White
+    Write-Host "   * So Lot da hoan thanh : " -NoNewline -ForegroundColor Gray
+    Write-Host "$fin / $lots Lots" -ForegroundColor Green
+    Write-Host "   * Hoat dong gan nhat   : " -NoNewline -ForegroundColor Gray
+    Write-Host "$last" -ForegroundColor DarkGray
+    Write-Host "+-------------------------------------------------------------------------------+" -ForegroundColor Cyan
 }
 
 if ($type -eq "PACKING") {
@@ -214,8 +431,18 @@ if ($type -eq "PACKING") {
     Show-Table "2. CAU HINH SLOT NAP NVL (VINA_GROUP_INPUT_ROUTE)" $ds.Tables[1] "Cyan"
     Show-Table "3. MAY DANG BI KHOA ACTIVE (VINA_EQUIPMENT_MAPPING)" $ds.Tables[2] "Red"
     Show-Table "4. CAC LOT DANG TAC NGHEN DONG BO (IsTransferred=0)" $ds.Tables[3] "Magenta"
+} elseif ($type -eq "PO") {
+    Show-PoCard $ds.Tables[0]
+    Show-Table "DANH SACH CAC LOT THUOC PO (STB_SetInfo)" $ds.Tables[1] "Yellow"
+} elseif ($type -eq "MODEL") {
+    Show-ModelCard $ds.Tables[0]
+    Show-Table "CAC PO GAN NHAT DANG SAN XUAT" $ds.Tables[1] "Yellow"
+    Show-Table "CAC LOT GAN NHAT (STB_SetInfo)" $ds.Tables[2] "Cyan"
 } else { # LOT
-    Show-Table "1. THONG TIN LOT MES (STB_SetInfo)" $ds.Tables[0] "Yellow"
+    if ($ds.Tables.Count -ge 8 -and $ds.Tables[7].Rows.Count -gt 0) {
+        Show-QcCard $ds.Tables[7]
+    }
+    Show-LotCard $ds.Tables[0]
     Show-Table "2. TIEN DO CONG DOAN MES (STB_ProdRouteHist)" $ds.Tables[1] "Cyan"
     Show-Table "3. TRANG THAI POP KIOSK & DONG BO (MongoToMesPerformance)" $ds.Tables[2] "Green"
     Show-Table "4. THONG KE PHE PHAM (STB_DefectRepairInfo)" $ds.Tables[3] "Red"
@@ -228,3 +455,4 @@ Write-Host ''
 Write-Host "======================================================================" -ForegroundColor Cyan
 Write-Host "-> Hoan thanh truy vet 360 Do sieu toc trong: $($sw.ElapsedMilliseconds) ms (Single Round-Trip)" -ForegroundColor Green
 Write-Host "======================================================================" -ForegroundColor Cyan
+

@@ -191,16 +191,12 @@ elseif ($cmdLower -eq 'lineage') {
         Write-Error 'tools/trace_lineage.ps1 not found.'
     }
 }
-elseif ($cmdLower -eq 'screen') {
-    $dbgScript = Join-Path $toolsDir 'debug_screen.ps1'
-    if (Test-Path $dbgScript) {
-        if ($Target -match '^[A-Za-z0-9_]+$') {
-            & $dbgScript -TCode $Target
-        } else {
-            & $dbgScript -ErrorMsg $Target
-        }
+elseif ($cmdLower -eq 'screen' -or $cmdLower -eq 'diagnose') {
+    $diagScript = Join-Path $toolsDir 'mes_diagnose.py'
+    if (Test-Path $diagScript) {
+        python $diagScript "$Target"
     } else {
-        Write-Error 'tools/debug_screen.ps1 not found.'
+        Write-Error 'tools/mes_diagnose.py not found.'
     }
 }
 elseif ($cmdLower -eq 'sp') {
@@ -659,6 +655,38 @@ elseif ($cmdLower -eq 'clean') {
 }
 
 else {
-    Write-Host "Lenh khong hop le: $Command" -ForegroundColor Red
-    Show-Help
+    # ==============================================================================
+    # SMART AUTO-ROUTER (TOAN NANG 1-SHOT CHO POP & MES)
+    # Tu dong nhan dien moi loai ma / loi ma khong can go ten lenh
+    # ==============================================================================
+    
+    # 1. Kiem tra neu la ma man hinh (B530, B540, C443, B782, B552, C141...)
+    if ($Command -match '^[BCbc]\d{3}[A-Za-z]?$') {
+        Write-Host "-> Tu dong nhan dien '$Command' la ma man hinh MES. Tien hanh tra cuu & chan doan..." -ForegroundColor Yellow
+        $diagScript = Join-Path $toolsDir 'mes_diagnose.py'
+        if (Test-Path $diagScript) {
+            python $diagScript $Command
+            exit 0
+        }
+    }
+    
+    # 2. Kiem tra neu la mo ta su co / loi pho bien
+    if ($Command -match '(HOLD|Already completed|Socket|ACTIVE|Bi khoa|Thieu|Thickness|DayPlan|Transferred|Khong the|Loi|Error)') {
+        Write-Host "-> Tu dong nhan dien mo ta su co: '$Command'. Tien hanh chan doan 4 Dong Vang..." -ForegroundColor Yellow
+        $diagScript = Join-Path $toolsDir 'mes_diagnose.py'
+        if (Test-Path $diagScript) {
+            python $diagScript "$Command $Target"
+            exit 0
+        }
+    }
+
+    # 3. Mac dinh toan nang: Tu dong nhan dien moi ma (Lot, Barcode, PO, Model, QC Doc, Line, Machine, Box)
+    Write-Host "-> Tu dong nhan dien '$Command' -> Khoi chay Truy vet Sieu toc 360 do..." -ForegroundColor Green
+    $popTraceScript = Join-Path $toolsDir 'pop_trace.ps1'
+    if (Test-Path $popTraceScript) {
+        & $popTraceScript -Target $Command
+    } else {
+        Write-Error 'tools/pop_trace.ps1 not found.'
+    }
 }
+

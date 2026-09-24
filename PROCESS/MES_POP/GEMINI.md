@@ -17,7 +17,7 @@
   1. *Đổi máy nhầm Kiosk:* BẮT BUỘC UPDATE đồng thời CẢ 2 BẢNG `STB_ProdRouteHist` VÀ `MongoToMesPerformance`.
   2. *Lỗi "Already completed in MES":* Do WinForm sinh sẵn dòng kế tiếp (`CompleteRoute = 1`), xóa dòng thừa trong `STB_ProdRouteHist` & `STB_ProdRouteWorkerHist`.
   3. *Nút Cắt điện cực mờ:* Do logic khóa nếu `MaterialThickness < 100` trong `STB_MaterialMaster`.
-  4. *Nạp cuộn BTP:* Tối đa 2 LOTNO cho 1 mã cắt.
+  4. *Nạp cuộn BTP:* Tối đa 3 LOTNO cho 1 mã cắt (Đã nâng cấp từ định mức cũ 2 LOTNO).
   5. *Kẹt máy ACTIVE POP:* Giải phóng qua `VINA_EQUIPMENT_MAPPING.MAPPING_STATUS = 'RELEASED'` (`.\mes.ps1 release-machines -Force`).
 
 

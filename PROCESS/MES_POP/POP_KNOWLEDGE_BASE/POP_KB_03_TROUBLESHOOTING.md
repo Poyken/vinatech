@@ -246,6 +246,9 @@ WHERE LotNo = N'<LOT_NO>';
 4. Áp dụng **Template 6** để UPDATE trả lại `CurrentQty = InitialQty` (hoặc 150 KG) tại `ROUTE_HY_WH`.
 5. Yêu cầu công nhân trên Kiosk bấm nút **`Danh sách NVL BOM 🔄` (Reload)** ➔ Cột Tồn kho lập tức chuyển sang xanh (150 KG) và bấm **[NHẬP]** thành công.
 
+> [!NOTE]
+> **Trạng thái thực tế (Operational Status):** Sự cố điển hình này đã được EA Team (kỹ sư Nguyễn Văn Đức) can thiệp xử lý dứt điểm thành công cho Lot `ML20260331000035` trên Line #13 bằng Template 6. Về mặt vận hành, ca sự cố này đã ở trạng thái **RESOLVED / CLOSED**. Nếu tái diễn hiện tượng thùng dung dịch mới bị tụt về 0 KG tại các chuyền khác, tiếp tục kích hoạt Template 6 để khôi phục nhanh cho sản xuất.
+
 ---
 
 ### 2.15 POP-ERR-15: Đã Xóa `STB_ProdRouteHist` Nhưng Trên Kiosk POP Vẫn Hiện "Công Đoạn Này Đã Hoàn Thành"
@@ -1159,12 +1162,13 @@ END CATCH;
 
 ---
 
-### Case 4: Ràng Buộc Nạp Cuộn Điện Cực Tối Đa 2 LOTNO
-* **Hiện tượng:** Quét cuộn BTP điện cực vào Kiosk báo: `"This roll has already been used for 2 product LOTs. Input blocked."`
-* **Nguyên nhân:** Ràng buộc an toàn vật tư của nhà máy Vinatech: Hiện tại hệ thống đang cấu hình **1 mã cắt cuộn điện cực chỉ cho phép nạp tối đa vào 2 LOTNO sản phẩm** để kiểm soát phế và chống âm kho.
+### Case 4: Ràng Buộc Nạp Cuộn Điện Cực Tối Đa 3 LOTNO (Đã Nâng Cấp Từ 2 Lên 3)
+* **Hiện trạng hiện hành:** Hệ thống POP Kiosk đã được cấu hình nâng cấp cho phép nạp **tối đa 3 LOTNO sản phẩm** cho một mã cắt cuộn điện cực BTP (thay vì định mức cũ 2 LOTNO).
+* **Hiện tượng lỗi nếu vượt quá:** Quét cuộn BTP điện cực vào Kiosk báo: `"This roll has already been used for 3 product LOTs. Input blocked."`
+* **Nguyên nhân:** Ràng buộc an toàn vật tư của nhà máy Vinatech: Giới hạn số Lot thành phẩm sử dụng chung một cuộn BTP để kiểm soát phế phẩm, sai số dung sai độ dày và chống âm kho.
 * **Hướng xử lý:**
   1. Đổi sang cuộn điện cực mới còn tồn kho hợp lệ.
-  2. Nếu cuộn cũ thực tế còn màng dài do dung sai: Báo Quản đốc làm thủ tục tách mã phụ Lot BTP trên MES WinForm. (Trong tương lai hệ thống sẽ được nâng cấp lên tối đa 3 LOTNO).
+  2. Nếu cuộn cũ thực tế vẫn còn màng dài do dung sai sản xuất: Báo Quản đốc/Kỹ sư xưởng làm thủ tục tách mã phụ Lot BTP trên MES WinForm để tiếp tục cấp phát hợp lệ.
 
 ---
 

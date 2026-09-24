@@ -183,9 +183,14 @@ UPDATE SmartFactoryV2.dbo.STB_SetInfo
 SET IsLineInput = 1
 WHERE LotNo = @LotNo;
 ```
-> [!CAUTION]
-> Thao tác Nhập NVL **TRỪ KHO TỨC THÌ**. Trên UI **KHÔNG CÓ NÚT ROLLBACK** để tránh gian lận hao hụt kho ERP.
-> Nếu quét nhầm cuộn hoặc nhập sai số lượng, bắt buộc phải nhờ IT xử lý SQL hoàn kho có `BEGIN TRAN...ROLLBACK`.
+### 6.4 ⭐ Quy Tắc Quét Lại Barcode Cho Vật Tư Phụ Dở Dang (PiTape, Separator...)
+* **Cơ chế kế thừa:** Kiosk POP **KHÔNG tự động kế thừa ngầm** mã cuộn vật tư phụ (băng dính, màng cách ly, màng bọc...) khi kết thúc Lot cũ và bắt đầu Lot mới.
+* **Quy trình OP bắt buộc:** Khi nạp Lot mới, dù cuộn vật tư phụ vẫn còn lắp dở trên máy, **công nhân bắt buộc phải dùng máy quét mã vạch (barcode scanner) quét lại Barcode của cuộn đó**.
+* **Mục đích Poka-Yoke:** Xác thực cuộn vật tư đang cắm trên máy thực sự thuộc BOM cho phép của Model mới, chống lỗi dùng nhầm chủng loại khi chuyển đổi sản phẩm (Change-over).
+
+### 6.5 ⭐ Ràng Buộc Nạp Cuộn Điện Cực BTP: Tối Đa 3 LOTNO (Đã Nâng Cấp Từ 2 Lên 3)
+* **Hiện trạng hiện hành:** Hệ thống POP Kiosk cho phép nạp **tối đa 3 LOTNO thành phẩm** cho một mã cắt cuộn BTP (cực âm / cực dương / slitting).
+* **Ràng buộc:** Nếu vượt quá 3 Lot, hệ thống sẽ chặn nạp (`Input blocked`). OP không được ép nạp mà phải đổi cuộn mới hoặc báo Quản đốc/Kỹ sư xưởng xử lý dung sai.
 
 ---
 
@@ -216,22 +221,49 @@ WHERE LotNo = @LotNo;
 
 ---
 
-## 8. 🚀 CHI TIẾT BƯỚC 4: GHI NHẬN SẢN XUẤT & CHỐT CÔNG ĐOẠN (SAVE PRODUCTION)
+## 8. 🚀 CHI TIẾT BƯỚC 4: GHI NHẬN SẢN XUẤT, THU THẬP PLC & CHỐT CÔNG ĐOẠN (SAVE PRODUCTION)
 *(Tham chiếu Slide 27 — `image16.png`)*
 
-- Sau khi kiểm tra đủ số lượng thành phẩm và phế phẩm:
-  1. Công nhân bấm nút lớn **`HOÀN THÀNH SẢN XUẤT`** (Save Production).
-  2. Kiosk hiển thị hộp thoại xác nhận **"Xác nhận Kết thúc?"** gồm 2 cột:
-     - **Cột trái:** Tên Công đoạn, Người thực hiện, SL Đạt (Good Qty), SL Lỗi (Defect Qty), Thời gian gia công, Mã LOT.
-     - **Cột phải:** Danh sách thiết bị kết nối (**`Thiết Bị: N máy`**).
-       - Tải toàn bộ máy từ `STB_ProductMachine` theo `LineCode` + `RouteCode`.
-       - Lọc bỏ các máy đang bị chiếm dụng (`MAPPING_STATUS = 'ACTIVE'`) ở các Kế hoạch (`DAY_PLAN_NO`) khác trong `VINA_EQUIPMENT_MAPPING`.
-       - Nếu thiếu máy do OP ca trước quên bấm Release: IT chạy script chuyển `MAPPING_STATUS = 'RELEASED'` cho các Plan cũ.
-  3. Bấm **"Đồng ý"** (Xác nhận kết thúc).
-- **Tác động Database:**
-  - Gọi SP `SmartFactoryV2.dbo.USP_POP_SET_ROUTE_COMPLETE`.
-  - Ghi nhận `STB_ProdRouteHist`.
-  - Cập nhật `STB_SetInfo.IsProdFinish = 1` và chuyển `CurrentRoute` sang công đoạn kế tiếp.
+### 8.1 ⚡ Cơ Chế Thu Thập Xung Đếm PLC Tự Động & Quy Trình Báo Phế
+* **Tự động hóa hoàn toàn từ PLC:** Các máy gia công được kết nối PLC và giao tiếp qua dịch vụ phần mềm trung gian `.exe` (`vinatechEquipmentDataSetup.exe` / DAQ service). Xung nhịp sản xuất được PLC đếm tự động và đẩy thẳng lên giao diện POP Kiosk.
+* **Công nhân KHÔNG đếm thủ công hàng OK:** Công nhân tại xưởng không cần ngồi đếm thủ công từng sản phẩm đạt vào khay.
+* **Quy trình chuẩn 3 bước của OP tại Kiosk:**
+  1. **Bước 1 (Báo Phế):** Khi gia công xong mẻ/Lot, OP kiểm tra phân loại hàng hỏng và bấm nút **`LOẠI LỖI`** để nhập số lượng phế theo từng mã lỗi.
+  2. **Bước 2 (Kiosk Tự Trừ Phế):** Kiosk tự động lấy tổng số xung PLC trừ đi số lượng phế vừa nhập để ra **Sản lượng Đạt (Good Qty)** hiển thị trên màn hình.
+  3. **Bước 3 (Chốt Hoàn Thành):** OP đối chiếu số lượng tự động hiển thị trên màn hình và bấm nút lớn **`HOÀN THÀNH SẢN XUẤT`** (Save Production).
+
+### 8.2 🖥️ Hộp Thoại Xác Nhận Kết Thúc & Kiểm Tra Thiết Bị
+Kiosk hiển thị hộp thoại xác nhận **"Xác nhận Kết thúc?"** gồm 2 cột:
+* **Cột trái:** Tên Công đoạn, Người thực hiện, SL Đạt (Good Qty), SL Lỗi (Defect Qty), Thời gian gia công, Mã LOT.
+* **Cột phải:** Danh sách thiết bị kết nối (**`Thiết Bị: N máy`**).
+  - Tải toàn bộ máy từ `STB_ProductMachine` theo `LineCode` + `RouteCode`.
+  - Lọc bỏ các máy đang bị chiếm dụng (`MAPPING_STATUS = 'ACTIVE'`) ở các Kế hoạch (`DAY_PLAN_NO`) khác trong `VINA_EQUIPMENT_MAPPING`.
+  - Nếu thiếu máy do OP ca trước quên bấm Release: IT chạy script chuyển `MAPPING_STATUS = 'RELEASED'` cho các Plan cũ.
+* Bấm **"Đồng ý"** (Xác nhận kết thúc).
+
+### 8.3 🏭 Hiện Trạng Triển Khai Thực Tế Nhà Máy
+* **Nhà máy Hưng Yên (F5):** Đã triển khai **100% POP Kiosk** trên toàn bộ các chuyền. Công nhân vận hành hoàn toàn trên màn hình cảm ứng Kiosk, các màn hình WinForm máy tính bàn (B530, B540...) đã không còn được sử dụng trực tiếp tại xưởng.
+* **Nhà máy Hà Nam (F3):** Đang vận hành theo mô hình kết hợp (**Hybrid**). Một số công đoạn đã lên POP, nhưng nhiều công đoạn vẫn sử dụng song song WinForm MES (B530, HN530, B523).
+
+### 8.4 ⚠️ Bản Chất 95% Lỗi Chốt Nhầm Phát Sinh Từ Thao Tác Cảm Ứng (OP Human Error)
+* Qua thống kê thực tế, 95% các sự cố chốt nhầm máy hoặc chốt lệch tiến độ không phải do lỗi hệ thống tự sinh, mà xuất phát từ **thao tác của OP trên Kiosk cảm ứng**:
+  - Giao diện cảm ứng công nghiệp với các nút chọn máy/chuyền đặt sát nhau, OP thao tác nhanh hoặc đeo găng tay dẫn tới bấm nhầm sang máy bên cạnh (gây lệch máy giữa `STB_ProdRouteHist` và `MongoToMesPerformance`).
+  - Thao tác đúp (Double-click) khi mạng nội bộ xưởng có độ trễ gây sinh 2 bản ghi chốt liên tiếp.
+
+### 8.5 ⏱️ Mốc Cắt Ca 10:00 AM (`JobDate`) vs Báo Cáo Sản Lượng (B782): Phân Tích & Khuyến Nghị
+* **Quy ước thiết kế NAIS MES:** Ngày làm việc (`JobDate`) tính từ **10:00:00 AM ngày D** đến **09:59:59 AM ngày D+1**. Sản lượng ca đêm (20h00 - 08h00 sáng hôm sau) được ghi nhận hợp lệ vào `JobDate` của ngày hôm trước.
+* **Xung đột báo cáo xưởng:** Ban quản lý và Kế hoạch thường lọc báo cáo B782 theo ngày lịch tự nhiên (Calendar Date: 00h00 - 23h59). Khi lọc như vậy, sản lượng ca đêm bị thiếu ở ngày hiện tại, dẫn tới yêu cầu IT phải can thiệp script (`fix-movedate`) dời `ProdDateTime` / `JobDate`.
+* **Khuyến nghị kiến trúc (EA Best Practice):**
+  - **KHÔNG NÊN** sửa đè dữ liệu vật lý trong DB vì sẽ phá vỡ dấu vết truy vết thực tế (Audit Trail) phục vụ tiêu chuẩn ô tô IATF 16949 / khách hàng xuất khẩu, đồng thời làm sai lệch OEE và năng suất thực giữa các ca.
+  - **Giải pháp triệt để:** Bổ sung bộ lọc kép tại **Tầng Báo Cáo (Report Layer)** trên B782: cho phép người dùng chọn **"Xem theo Ngày Ca (10h-10h)"** hoặc **"Xem theo Ngày Lịch (00h-24h)"** để giải phóng hoàn toàn kỹ sư IT khỏi việc chạy script dời ngày thủ công mỗi sáng.
+
+### 8.6 Tác Động Database Khi Chốt Công Đoạn
+```sql
+-- Gọi SP chốt công đoạn chính thức
+EXEC SmartFactoryV2.dbo.USP_POP_SET_ROUTE_COMPLETE ...;
+-- Ghi nhận lịch sử sản xuất
+-- Cập nhật STB_SetInfo.IsProdFinish = 1 và chuyển CurrentRoute sang công đoạn kế tiếp.
+```
 
 ---
 
