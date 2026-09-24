@@ -616,3 +616,80 @@ POP Web thiết lập ma trận phân quyền chặt chẽ dựa trên chức v�
 | **Công nhân vận hành (Operator)** | `WORKER` / `OPERATOR` | - `/pop/screen` (Sản xuất Kiosk)<br>- `/pop/quality` (Xem & kiểm tra chất lượng)<br>- `/equipmentData/*` (Giám sát máy) | - **XEM:** Kế hoạch, Lot, BOM, Tồn kho NVL.<br>- **THÊM:** Nạp vật tư, ghi nhận phế phẩm, mẫu tự kiểm, in nhãn.<br>- **SỬA:** Chế độ SUB mode sửa sai số lỗi.<br>- **XÓA:** Bị chặn hoàn toàn (Không thể xóa Lot, không thể xóa NVL đã nạp). Hủy hộp đóng gói yêu cầu nhập mật khẩu quản trị. |
 | **Trưởng ca / Quản đốc (Supervisor)**| `LEADER` / `SUPERVISOR` | Toàn quyền nhóm WORKER + Báo cáo xưởng | - Được quyền hủy hộp đóng gói (Rollback Box).<br>- Phán định lại trạng thái Route Judge nếu chất lượng trong ngưỡng cho phép. |
 | **Kỹ sư Quản lý / DX / EA Team** | `MANAGER` / `ADMIN` | Toàn quyền hệ thống, bao gồm các Dashboard chuyên sâu:<br>- `/dashboard/electrodeStatus`<br>- `/dashboard/assemblyTrace`<br>- `/popSetting/*` (Cấu hình hệ thống) | - Toàn quyền XEM, THÊM, SỬA, CẤU HÌNH.<br>- Mapping Slot NVL theo cụm.<br>- Cấu hình mẫu tem nhãn và dung sai thiết bị IoT. |
+
+---
+
+## 20. 🔒 PHÂN HỆ INTERLOCK MANAGER & MỞ KHÓA QUẢN TRỊ (`/popSetting/interlockSetting`)
+
+### 20.1 Tổng Quan 6 Tab Cấu Hình Liên Động
+1. **Tab 1 — Cài đặt liên động (`인터락 설정`):**
+   - Chọn Nhà xưởng ➔ Chọn Line sản xuất.
+   - Thiết lập 3 quy tắc:
+     - **Bảo toàn thứ tự LOT (LOT 순서 지키기):** Lot trước trong cùng lệnh sản xuất phải hoàn thành công đoạn thì Lot sau mới được phép thao tác.
+     - **Thời gian chờ tối thiểu (공정 간 최소 대기):** Bắt buộc thời gian chờ vật lý (như Lão hóa - Aging, Sấy - Drying). Kiosk khóa nút chốt và đếm ngược; hết thời gian tự động mở.
+     - **Thời gian chờ tối đa / Quá hạn (공정 간 시간 제한):** Nếu Lot đã hoàn thành công đoạn trước nhưng bị bỏ quên quá số phút cho phép, hệ thống kích hoạt Interlock Block (Khóa cứng). Kiosk chặn không cho làm tiếp.
+   - ⚠️ **Ngoại lệ bất biến:** Các line Điện cực (Mixing, Coating, Roll Pressing, Slitting) được khuyến cáo **KHÔNG BẬT** cấu hình này.
+2. **Tab 2 — Mở khóa quản trị (`관리자 해제`):**
+   - Nơi Admin/IT (EA Team) tra cứu các Lot bị khóa do vượt ngưỡng thời gian chờ (`MAX_WAIT`).
+   - Cung cấp nút giải phóng khóa để Kiosk tiếp tục sản xuất sau khi QA/Kỹ thuật đã đánh giá rủi ro đạt chuẩn. Thao tác ghi vết trực tiếp vào `VINATECH_POP.dbo.VINA_INTERLOCK_RELEASE_LOG`.
+3. **Tab 3 — Ánh xạ nạp nguyên vật liệu (`자재 투입 매핑`):**
+   - Thiết lập quy tắc nạp vật tư ứng với từng công đoạn, liên kết bảng `VINA_MATERIAL_ROUTE_MAP`.
+4. **Tab 4 — Danh mục phân hạng đóng gói (`포장 등급 품목`):**
+   - Quản lý các mã sản phẩm yêu cầu phân loại cấp chất lượng đóng gói (Grade A, B, C...) ghi nhận vào `VINA_PACK_GRADE_ITEM`.
+5. **Tab 5 — Tài liệu công đoạn PDF (`공정 문서(PDF)`):**
+   - Gán tài liệu hướng dẫn công việc (SOP / Bản vẽ kỹ thuật) vào từng công đoạn. Tích hợp trực tiếp với CSDL `streamdocs` để hiển thị trên Kiosk.
+6. **Tab 6 — Sử dụng phán định thử nghiệm (`시험 판정 사용`):**
+   - Bật/tắt việc kiểm tra phán định chất lượng tự động trước khi cho phép chốt sản lượng (`VINA_ROUTE_TEST_SETTING`).
+
+---
+
+## 21. ⚖️ PHÂN HỆ QUẢN TRỊ CHẤT LƯỢNG & PHÊ DUYỆT HOÀN TÁC (`/systemAdmin/qualityAdmin` & `/systemAdmin/qualityEquipment`)
+
+### 21.1 Quy Trình Phê Duyệt Hoàn Tác Kiểm Tra (`되돌리기 요청` - Reopen Flow)
+- **Tình huống thực tế:** Nhân viên QC sau khi hoàn thành biên bản kiểm tra IQC/PQC/OQC phát hiện nhập nhầm kích thước, sai spec, hoặc phát sinh lỗi *"ko nhap dc kt"* (như đơn thực tế `20260920000162`).
+- **Cơ chế:** Kiosk QC không cho phép tự sửa biên bản đã đóng (`IsDone = 1`). QC phải bấm gửi "Yêu cầu hoàn tác" (Reopen Request).
+- **Quyền hạn Admin EA/QA trên Web:**
+  - Truy cập `/systemAdmin/qualityAdmin` ➔ Tab `되돌리기 요청`.
+  - Kiểm tra thông tin: Số biên bản, Mã Lot, Mặt hàng, Kết quả trước đó, Người yêu cầu, Lý do.
+  - Nhấn nút **`승인` (Approve):**
+    - Trạng thái biên bản kiểm tra được mở khóa (`STB_CommInspDocMaster.IsDone = 0`).
+    - Lệnh tạm giữ hàng (`STB_HoldingMaster`) và các khoản phế phẩm phát sinh do biên bản này được **tự động Rollback** trên CSDL MES!
+  - Nhấn nút **`반려` (Reject):** Giữ nguyên hiện trạng, từ chối mở lại.
+
+### 21.2 Cầu Nối Thiết Bị Đo Chất Lượng IoT (`/systemAdmin/qualityEquipment`)
+- Quản trị kết nối tự động giữa thiết bị đo kiểm và Kiosk QC qua 4 tab:
+  1. `검사항목-장비 매핑`: Ánh xạ chỉ tiêu kiểm tra với mã máy đo (`VINA_QUALITY_ITEM_EQUIPMENT_MAP`).
+  2. `품질장비 분류 - 개체 연결`: Thiết lập kênh WebSocket (`WS_CHANNEL_ID`) và cột đo mặc định (`DEFAULT_MEASURE_COLUMN`).
+  3. `연결 상태 진단`: Cơ chế Fallback thông minh (**Name Matching Fallback - `이름매칭 폴백`**) cho 6 dòng thiết bị đo:
+     - `STATIC_DATA_000090`: Thước kẹp điện tử (Calipers)
+     - `STATIC_DATA_000091`: Máy nạp/xả phân tích (Charge/Discharge Tester)
+     - `STATIC_DATA_000092`: Thước đo pan-me (Micrometer)
+     - `STATIC_DATA_000093`: Máy đo quang học 2D (2D Measuring Instrument)
+     - `STATIC_DATA_000094`: Máy phân tích độ ẩm (Moisture Analyzer)
+     - `STATIC_DATA_000095`: Cân phân tích điện tử (CAS Scale/Balance)
+  4. `사용이력 통계`: Thống kê tần suất truyền nhận dữ liệu đo kiểm theo ngày.
+
+---
+
+## 22. 🎛️ PHÂN HỆ CẤU HÌNH TỰ ĐỘNG HÓA PLC & GIÁM SÁT PC BIÊN (`/dataCollection/*`)
+
+### 22.1 Thiết Lập Model Thu Thập & Chuyển Đổi Modbus (`/dataCollection/modelSetting`)
+- Hỗ trợ hơn 65+ Model máy móc: Trộn, Phủ, Ép cuộn, Máy đo ESR, AOI, Vision, XRF, Barcode Scanner.
+- **Tính năng chuyển đổi địa chỉ Modbus:** Tích hợp bộ convert giữa địa chỉ thanh ghi PLC nội bộ và Modbus Register tiêu chuẩn.
+- **Cấu hình Tập dữ liệu (Dataset):**
+  - Định nghĩa kiểu dữ liệu thu thập: Siemens S7 (`SIMENS-S7`), Modbus TCP, COM RS232, File Scraper XML/CSV.
+  - Cấu hình Macro hoàn thành, tiến trình xử lý, dòng bắt đầu/kết thúc và Sheet dữ liệu.
+
+### 22.2 Cờ Tự Động Hóa Sản Lượng PLC (`/dataCollection/equipmentSetting`)
+- **Tên tính năng:** `PLC 자동 실적 등록` (PLC Auto Performance Registration).
+- **Mã trường CSDL:** `VINA_EQUIPMENT_SETTING.EQUIPMENT_SETTING_AUTO_PERF = 'Y'`.
+- **Cơ chế vận hành:** Khi kích hoạt, công nhân tại máy không cần bấm "Bắt đầu". Mỗi khi PLC kích hoạt tín hiệu hoàn thành chu kỳ sản phẩm (Cycle Complete Counter), hệ thống tự nhận diện Lot đang gán trên máy đó và tự động ghi nhận sản lượng vào bảng `MongoToMesPerformance` để chuyển giao sang MES.
+
+### 22.3 Giám Sát Tập Trung 58 PC Biên Thu Thập (`/dataCollection/pcMacDashboard`)
+- Màn hình Cockpit trực quan quản lý **58 Edge PC** trên toàn bộ các cụm nhà máy:
+  - Bản doanh Hàn Quốc (12 máy), Wanju 1 (10 máy), Wanju 2 (16 máy), Bắc Giang (14 máy), Bắc Ninh (2 máy), Hưng Yên/Khác (4 máy).
+- **Trạng thái Realtime:** Hiển thị IP, MAC, Phiên bản phần mềm (`vinatechEquipmentDataSetup.exe` v1.0.1 ~ v1.2.33), và số lượng máy đang tích cực nạp dữ liệu Telemetry vào MongoDB.
+- **Điều khiển từ xa (Remote Operation):** Cung cấp 2 nút điều khiển độc quyền cho IT:
+  - **`업데이트` (Update):** Đẩy bản vá binary mới xuống máy trạm xưởng.
+  - **`재시작` (Restart):** Khởi động lại dịch vụ thu thập dữ liệu của Windows Service mà không cần kỹ sư IT chạy ra dây chuyền.
+

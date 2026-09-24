@@ -562,6 +562,61 @@ Dựa trên kiểm toán thực tế hơn 231,000 bản ghi thao tác trong `VIN
 
 ---
 
+### 2.31 POP-ERR-31: Lệch Mốc Sản Lượng Do Chế Độ SUBTRACT (Line Prod Mode)
+* **Hiện tượng:** Sản lượng đạt (Good Qty) hiển thị trên Kiosk và báo cáo B782 bị lệch so với thực tế sản xuất tại xưởng; Kỹ sư IT thường xuyên phải can thiệp sửa mốc sản lượng cho khớp.
+* **Nguyên nhân cốt lõi:** Dây chuyền đang cấu hình chế độ `SUBTRACT` trong `VINA_LINE_PROD_MODE`. Hệ thống tự động tính:
+  $$\text{Sản lượng Đạt} = \text{Kế hoạch Lot (PlanQty)} - \text{Tổng Phế (DefectQty)}$$
+  Nếu công nhân báo phế muộn (dồn cuối ca mới báo), quên báo phế, hoặc kế hoạch Lot bị điều chỉnh giữa ca, số lượng Đạt tự động sinh ra sẽ bị sai lệch hoàn toàn so với thực tế.
+* **Cách xử lý chuẩn:**
+  1. **Quy trình xưởng:** Nhắc nhở OP báo phế ngay tức thời theo từng mẻ/thùng, không được dồn cuối ca.
+  2. **Cấu hình hệ thống:** Đối với các công đoạn có tỷ lệ phế phẩm dao động lớn (như đồ gá, jig hỗ trợ), IT truy cập `/popSetting/lineProdMode` chuyển chế độ từ `SUBTRACT` sang **`ADD`** để cho phép công nhân gõ tay trực tiếp số lượng Đạt thực tế.
+  3. **IT can thiệp sửa mốc (Nếu cần):** Bắt buộc chạy script đồng thời bọc `BEGIN TRAN...ROLLBACK`, cập nhật cả 2 bảng `SmartFactoryV2.dbo.MongoToMesPerformance` VÀ `STB_ProdRouteHist`, gán `CreateUserID = 'vanduc'`.
+
+---
+
+### 2.32 POP-ERR-32: Kẹt Khóa Liên Động Vượt Quá Thời Gian Chờ (Interlock Max Dwell Time Block)
+* **Hiện tượng:** Kiosk POP hiển thị cảnh báo đỏ và khóa cứng, không cho phép công nhân bấm bắt đầu hoặc chốt công đoạn cho Lot.
+* **Nguyên nhân cốt lõi:** Vi phạm quy tắc `MAX_WAIT` cấu hình trong bảng `VINATECH_POP.dbo.VINA_INTERLOCK_SETTING`. Lot sản phẩm đã hoàn thành công đoạn trước nhưng bị bỏ quên ngoài dây chuyền quá số phút cho phép (vượt ngưỡng kiểm soát oxy hóa/nhiệt độ môi trường). Hệ thống kích hoạt cơ chế khóa bảo vệ chất lượng tự động.
+* **Cách xử lý chuẩn:**
+  1. Báo Quản đốc và Kỹ thuật chất lượng kiểm tra ngoại quan, độ ẩm và các chỉ số vật lý của Lot.
+  2. Khi QA/Kỹ thuật xác nhận Lot vẫn đạt tiêu chuẩn tiếp tục sản xuất: Kỹ sư IT (EA Team) truy cập Web POP:
+     - Đường dẫn: `/popSetting/interlockSetting` ➔ Chọn Tab **`관리자 해제` (Admin Release)**.
+     - Tìm mã Barcode của Lot bị kẹt trong danh sách.
+     - Nhập lý do giải phóng khóa (Release Reason) và nhấn nút **`해제` (Release)**.
+     - Thao tác tự động chuyển trạng thái bản ghi trong `VINA_INTERLOCK_RELEASE_LOG` thành `RELEASED` với người thực hiện `vanduc`.
+  3. Công nhân tại Kiosk nhấn F5 hoặc tải lại lệnh sản xuất để tiếp tục thao tác bình thường.
+
+---
+
+### 2.33 POP-ERR-33: Kẹt Biên Bản Kiểm Tra QC ("ko nhap dc kt") & Phê Duyệt Hoàn Tác Reopen
+* **Hiện tượng:** Kiosk QC báo biên bản kiểm tra đã hoàn thành (`IsDone = 1`), khóa toàn bộ các ô nhập kích thước / spec đo kiểm, Lot bị kéo theo cờ HOLD không thể xuất hàng hoặc chuyển công đoạn kế tiếp.
+* **Nguyên nhân cốt lõi:** Kiểm tra viên vô tình nhấn "Hoàn tất" khi chưa nhập xong số liệu đo, hoặc do đường truyền máy đo tự động bị gián đoạn dẫn đến biên bản bị đóng sớm.
+* **Cách xử lý chuẩn:**
+  1. Kiểm tra viên QC nhấn gửi **"Yêu cầu hoàn tác" (Reopen Request)** trực tiếp trên Kiosk QC kèm lý do.
+  2. Kỹ sư IT (EA Team) hoặc QA Manager truy cập `/systemAdmin/qualityAdmin` ➔ Chọn Tab **`되돌리기 요청`**.
+  3. Kiểm tra thông tin đơn yêu cầu (ví dụ: Số biên bản `20260920000162`, Lot `VVQR203R825701`, Người yêu cầu `32605038`, Lý do *"ko nhap dc kt"*).
+  4. Nhấn nút **`승인` (Approve)**:
+     - Hệ thống tự động cập nhật `VINA_REOPEN_REQUEST.STATUS = 'APPROVED'`.
+     - Tự động gỡ cờ hoàn thành trên MES (`SmartFactoryV2.dbo.STB_CommInspDocMaster.IsDone = 0`).
+     - Tự động xóa cờ tạm giữ (`STB_HoldingMaster.IsDelete = 1`) và rollback phế phẩm phát sinh do biên bản đó.
+  5. Kiểm tra viên QC mở lại biên bản trên Kiosk QC và nhập đầy đủ kích thước đo kiểm theo spec.
+
+---
+
+### 2.34 POP-ERR-34: Mất Kết Nối Agent Thu Thập Dữ Liệu PLC 58 PC Biên (VINA_PC_MAC)
+* **Hiện tượng:** Kiosk sản xuất không nhảy counter tự động, các thông số cảm biến (áp suất, nhiệt độ sấy, tốc độ cán) trên màn hình giám sát IoT bị đứng yên hoặc hiển thị `미수집` (Không thu thập).
+* **Nguyên nhân cốt lõi:** Phần mềm Client `vinatechEquipmentDataSetup.exe` chạy ngầm trên PC máy trạm xưởng bị treo process, mất kết nối mạng nội bộ, hoặc bị dừng Windows Service.
+* **Cách xử lý chuẩn:**
+  1. Kỹ sư IT truy cập Web POP: `/dataCollection/pcMacDashboard` (hoặc `/dataCollection/pcMacList`).
+  2. Tra cứu máy theo IP hoặc MAC address của máy trạm đang gặp sự cố.
+  3. Xem trạng thái:
+     - Nếu card hiển thị màu đỏ `미연결` (Disconnected): Nhấn nút **`재시작` (Restart)** trực tiếp trên Web. Hệ thống sẽ gửi tín hiệu WebSocket đẩy lệnh restart Windows Service trên máy trạm từ xa.
+     - Nếu card hiển thị phiên bản phần mềm cũ (ví dụ: v1.0.1 thay vì v1.2.33): Nhấn nút **`업데이트` (Update)** để tự động cập nhật bản vá mới nhất.
+  4. Sau 15-30 giây, card chuyển sang màu xanh `연결됨` (Connected) và số liệu Telemetry tiếp tục được nạp tự động vào MongoDB.
+
+
+---
+
 ## 3. 🛠️ TEMPLATE SQL CỨU HỘ VẬN HÀNH (SAFETY HOTFIX TEMPLATES)
 
 > [!CAUTION]

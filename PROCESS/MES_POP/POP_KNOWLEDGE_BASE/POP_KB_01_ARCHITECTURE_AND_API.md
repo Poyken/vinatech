@@ -763,3 +763,75 @@ GROUP BY
     END;
 ```
 
+---
+
+## 7. 🔗 BẢN ĐỒ QUAN HỆ DỮ LIỆU ĐỘC QUYỀN: 8 PHÂN HỆ ADMIN POP VỚI CSDL MSSQL & MONGODB
+
+> [!IMPORTANT]
+> **Khám phá Quản trị Cấp cao (Admin Level Audit):** Khảo sát trực tiếp giao diện Admin `https://pop.vinatech.com/` kết hợp truy vấn Schema CSDL `VINATECH_POP`, `SmartFactoryV2` và `MongoDB` cho thấy toàn bộ các màn hình cài đặt Admin đều ánh xạ 1:1 sang các bảng dữ liệu cấu hình và quy tắc nghiệp vụ ngầm.
+
+### 7.1 Ma Trận Ánh Xạ Toàn Diện (Web Admin Screen ➔ Database ➔ CSDL Đích)
+
+| Phân hệ Admin | URL / Màn hình Web | Bảng CSDL Cốt Lõi (`VINATECH_POP`) | CSDL & Bảng Liên Quan (`SmartFactoryV2` / `MongoDB`) | Mục đích & Cơ Chế Vận Hành Ngầm |
+|---|---|---|---|---|
+| **1. Patch Management** | `/bbs/bbsList?bbsTypeId=patch` | `VINA_BBS_CONTENT`, `VINA_BBS_TYPE`, `VINA_SYSTEM_VERSION` | — | Lưu trữ lịch sử nâng cấp phiên bản hệ thống, bản vá lỗi Kiosk / PLC Agent |
+| **2. Interlock Setting** | `/popSetting/interlockSetting` | `VINA_INTERLOCK_SETTING`, `VINA_INTERLOCK_RELEASE_LOG`, `VINA_PACK_GRADE_ITEM`, `VINA_ROUTE_DOC`, `VINA_ROUTE_TEST_SETTING` | `SmartFactoryV2.dbo.STB_ProdRouteHist`, `streamdocs.dbo.*` | Kiểm soát thứ tự Lot (FIFO), thời gian chờ tối thiểu (Min Dwell), khóa quá hạn (Max Dwell). Mở khóa qua tab `관리자 해제` |
+| **3. Line Prod Mode** | `/popSetting/lineProdMode` | `VINA_LINE_PROD_MODE` | `SmartFactoryV2.dbo.MongoToMesPerformance` | Chế độ `SUBTRACT` (Đạt = Kế hoạch - Phế) vs `ADD` (Nhập tay sản lượng). Giải thích gốc rễ lỗi lệch mốc sản lượng |
+| **4. Assembly Group Mapping** | `/popSetting/assemblyGroupMapping` | `VINA_ASSEMBLY_GROUP_MODE`, `VINA_GROUP_INPUT_ROUTE` | `SmartFactoryV2.dbo.STB_BomMaster`, `STB_MaterialMaster` | Chế độ `GROUP` quản lý 10 Slot nạp NVL linh hoạt theo mã nhóm `ProductGroupCode` thay vì ép cứng mã NVL theo BOM |
+| **5. Quality Admin (Rollback)** | `/systemAdmin/qualityAdmin` | `VINA_REOPEN_REQUEST`, `VINA_REOPEN_POLICY` | `SmartFactoryV2.dbo.STB_CommInspDocMaster`, `STB_HoldingMaster`, `STB_DefectRepairInfo` | Xử lý yêu cầu hoàn tác kiểm tra (`되돌리기 요청`). Khi Approve, tự động gỡ `IsDone`, hủy lệnh HOLD và rollback phế trên MES |
+| **6. Quality Equipment Bridge** | `/systemAdmin/qualityEquipment` | `VINA_QUALITY_ITEM_EQUIPMENT_MAP`, `VINA_QUALITY_EQUIPMENT_LINK`, `VINA_QUALITY_EQUIP_USE_HIST` | `VINATECH_WEBSOCKET.dbo.*` | Cầu nối thiết bị đo chất lượng (Caliper, Micrometer, CAS Scale...). Cơ chế Fallback Name Matching qua WebSocket Channel |
+| **7. Equipment Data & IoT** | `/dataCollection/equipmentSetting`, `/dataCollection/modelSetting`, `/equipmentData/*` | `VINA_EQUIPMENT_SETTING`, `VINA_MODEL_SETTING`, `VINA_MODEL_SETTING_DETAIL`, `VINA_PC_MAC` | **MongoDB (Time-Series)**, `SmartFactoryV2.dbo.MongoToMesPerformance` | Cờ `EQUIPMENT_SETTING_AUTO_PERF = 'Y'`: PLC tự nhận diện Lot & chốt sản lượng không cần bấm Start. Lưu telemetry thô trên MongoDB |
+| **8. Kiosk Central & Action Log** | `/dashboard/kiosk/dashboard`, `/pop/screen` | `VINA_POP_ACTION_LOG` (286K+ rows), `VINA_KIOSK_LOG`, `VINA_LABEL_PRINT_HIST` | `SmartFactoryV2.dbo.STB_SetInfo`, `STB_ProdRouteHist` | Giám sát 117 Kiosks toàn cầu. Ghi vết toàn bộ hành vi bấm nút, quét mã, thời gian phản hồi (DurationMs) và lỗi runtime |
+
+---
+
+### 7.2 Chi Tiết Các Cấu Trúc Bảng Cốt Lõi Mới Khám Phá
+
+#### A. Bảng Quản Lý Khóa Liên Động: `VINA_INTERLOCK_SETTING` & `VINA_INTERLOCK_RELEASE_LOG`
+- **`VINA_INTERLOCK_SETTING`**:
+  - `LINE_CODE` (PK), `ROUTE_CODE` (PK), `INTERLOCK_TYPE` (PK): Gồm `FIFO_ORDER`, `MIN_WAIT`, `MAX_WAIT`.
+  - `USE_YN`: Cờ kích hoạt (Y/N).
+  - `PARAM_NUM1`: Giá trị tham số số học (Số phút chờ tối thiểu hoặc số phút tối đa cho phép trước khi khóa).
+- **`VINA_INTERLOCK_RELEASE_LOG`** (Nhật ký mở khóa của Admin):
+  - `RELEASE_LOG_ID`: Khóa tự tăng.
+  - `BARCODE`, `ROUTE_CODE`, `DAY_PLAN_NO`, `LINE_CODE`: Xác định Lot và công đoạn bị khóa.
+  - `ELAPSED_MIN`: Số phút thực tế Lot đã nằm chờ.
+  - `LIMIT_MIN`: Ngưỡng quy định trong cấu hình.
+  - `RELEASE_REASON`: Lý do Admin IT/QA mở khóa.
+  - `STATUS`: Trạng thái (`LOCKED` ➔ `RELEASED`).
+  - `NO_EMP_WRITER`: Mã nhân viên thực hiện mở khóa (Thường là `vanduc`).
+
+#### B. Bảng Yêu Cầu Hoàn Tác Kiểm Tra Chất Lượng: `VINA_REOPEN_REQUEST`
+- **Cột cốt lõi:**
+  - `COMM_INSP_DOC_NO`: Số chứng từ biên bản kiểm tra (ví dụ: `20260920000162`).
+  - `BARCODE`, `CONTROL_NO`, `MATERIAL_CODE`: Lot sản phẩm liên quan.
+  - `REQUEST_REASON`: Lý do yêu cầu rollback (ví dụ: *"ko nhap dc kt"*).
+  - `REQUESTER_EMP_NO`: Mã nhân viên QC yêu cầu (ví dụ: `32605038` - Nguyễn Đức Lâm).
+  - `STATUS`: `PENDING` (Đang chờ duyệt), `APPROVED` (Đã duyệt), `REJECTED` (Từ chối).
+  - `APPROVER_EMP_NO`, `APPROVE_DATETIME`: Mã người phê duyệt và thời điểm duyệt.
+- **Hệ quả CSDL khi bấm Approve (`승인`):**
+  1. `UPDATE VINATECH_POP.dbo.VINA_REOPEN_REQUEST SET STATUS = 'APPROVED'`
+  2. `UPDATE SmartFactoryV2.dbo.STB_CommInspDocMaster SET IsDone = 0 WHERE CommInspDocNo = ...`
+  3. `UPDATE SmartFactoryV2.dbo.STB_HoldingMaster SET IsDelete = 1 WHERE Barcode = ...`
+  4. `UPDATE SmartFactoryV2.dbo.STB_DefectRepairInfo SET IsDelete = 1 WHERE Barcode = ...`
+
+#### C. Bảng Cấu Hình Thiết Bị & Cờ Tự Động Hóa PLC: `VINA_EQUIPMENT_SETTING`
+- **`EQUIPMENT_SETTING_AUTO_PERF`**: Char(1) — `Y`: Kích hoạt chế độ **"PLC 자동 실적 등록" (Tự động ghi nhận sản lượng PLC)**.
+  - Khi bật `Y`, Kiosk không cần người thao tác bấm Bắt đầu. Bộ xử lý nền đọc dữ liệu nhịp counter từ MongoDB, tự động ánh xạ Lot đang nạp trên máy và ghi vào `MongoToMesPerformance`.
+- **`EQUIPMENT_SETTING_LINE_CODE`**: Dây chuyền liên kết.
+- **`EQUIPMENT_SETTING_DATA_COLLECTION_TIME`**: Chu kỳ đọc dữ liệu (giây).
+- **`EQUIPMENT_SETTING_PROCESS_MODE`**: Chế độ công đoạn (`CONTINUOUS` - Liên tục, `BATCH` - Theo mẻ, `MANUAL` - Thủ công).
+
+#### D. Bảng Giám Sát PC Biên: `VINA_PC_MAC`
+- Quản lý **58 PC biên** chạy bộ cài `vinatechEquipmentDataSetup.exe`.
+- **`PC_MAC_ADDRESS`**: Địa chỉ MAC vật lý của card mạng.
+- **`PC_IPV4_ADDRESS`**: Địa chỉ IP mạng nội bộ của máy trạm.
+- **`SYSTEM_VERSION`**: Phiên bản Client Agent (VD: 1.0.1 đến 1.2.33).
+- **`EQUIPMENT_SETTING_JSON`**: Chuỗi JSON nạp cấu hình cổng COM (RS232), địa chỉ thanh ghi Modbus, hoặc đường dẫn thư mục File Scraper (AOI/XRF).
+
+#### E. Bảng Nhật Ký Hoạt Động Kiosk Chi Tiết: `VINA_POP_ACTION_LOG`
+- Hơn **286,800+ bản ghi**.
+- Chứa toàn bộ vết thực thi: `ACTION_TYPE`, `LINE_CODE`, `DAY_PLAN_NO`, `LOT_NUMBER`, `ROUTE_CODE`, `EQUIPMENT_ID`, `RESULT_STATUS` (`PASS`/`FAIL`), `ERROR_MESSAGE`, `CLIENT_IP`, `DURATION_MS` (Độ trễ xử lý từng request), `PARAM_JSON` (Payload gửi lên).
+- **Công cụ chẩn đoán số 1:** Khi Kiosk báo lỗi không rõ nguyên nhân, chỉ cần `SELECT TOP 10 * FROM VINA_POP_ACTION_LOG WHERE CLIENT_IP = '...' ORDER BY SEQ DESC` là xác định ngay mã lỗi và tham số gây crash.
+
+

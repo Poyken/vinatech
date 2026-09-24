@@ -1,13 +1,13 @@
 {
-    "version": "1.0.0",
-    "updated_at": "2026-09-21 06:55:00",
-    "description": "L1 Ultra-Fast JSON Cache for Vinatech POP Web Ecosystem (31 Lines, 6 Routes, 21 Errors & Fast CLI Mapping)",
+    "version": "2.0.0",
+    "updated_at": "2026-09-24 17:30:00",
+    "description": "L1 Ultra-Fast JSON Cache for Vinatech POP Web Ecosystem (31 Lines, 11 Routes, 25 Errors & Fast CLI Mapping)",
     "summary": {
         "total_lines": 31,
         "pass_lines": 6,
         "warn_lines": 11,
         "fail_lines": 14,
-        "database_profiles": ["SmartFactoryV2", "VINATECH_POP", "SmartFramework"]
+        "database_profiles": ["SmartFactoryV2", "VINATECH_POP", "SmartFramework", "VINATECH_WEBSOCKET", "MongoDB"]
     },
     "lines": {
         "VVC-01": { "factory": "HN", "input_mode": "GROUP", "prod_mode": "SUBTRACT", "total_slots": 10, "winding_slots": 6, "assembly_slots": 3, "sleeving_slots": 1, "status": "PASS", "note": "San sang cat WinForm 100%" },
@@ -115,6 +115,31 @@
             "description": "Truy vet phan cap tu cuon dien cuc, linh kien nvl den thung dong goi thanh pham",
             "tables": ["SmartFactoryV2.dbo.STB_SetInfo", "STB_ProdRouteHist", "STB_MaterialLotInfo"],
             "equivalent_winform": ["B782", "B785"]
+        },
+        "/popSetting/interlockSetting": {
+            "name": "Quan Ly Khoa Lien Dong Interlock (Interlock Management)",
+            "description": "Cai dat 3 khoa FIFO Lot Order, Min Dwell Time, Max Dwell Time va Tab Quan tri mo khoa Admin Release",
+            "tables": ["VINATECH_POP.dbo.VINA_INTERLOCK_SETTING", "VINATECH_POP.dbo.VINA_INTERLOCK_RELEASE_LOG", "VINATECH_POP.dbo.VINA_PACK_GRADE_ITEM", "VINATECH_POP.dbo.VINA_ROUTE_DOC", "VINATECH_POP.dbo.VINA_ROUTE_TEST_SETTING"]
+        },
+        "/popSetting/lineProdMode": {
+            "name": "Che Do San Luong Line (Line Production Mode)",
+            "description": "Cau hinh SUBTRACT (Dat = Ke hoach - Phe) vs ADD (Nhap tay truc tiep)",
+            "tables": ["VINATECH_POP.dbo.VINA_LINE_PROD_MODE", "SmartFactoryV2.dbo.MongoToMesPerformance"]
+        },
+        "/systemAdmin/qualityAdmin": {
+            "name": "Quan Tri Chat Luong & Hoan Tac (Quality Admin Reopen)",
+            "description": "Phe duyet hoan tac bien ban QC kiem tra (Reopen Request), rollback co HOLD va phe pham MES",
+            "tables": ["VINATECH_POP.dbo.VINA_REOPEN_REQUEST", "VINATECH_POP.dbo.VINA_REOPEN_POLICY", "SmartFactoryV2.dbo.STB_CommInspDocMaster", "SmartFactoryV2.dbo.STB_HoldingMaster", "SmartFactoryV2.dbo.STB_DefectRepairInfo"]
+        },
+        "/dataCollection/pcMacDashboard": {
+            "name": "Giam Sat PC Bien & Cap Nhat Tu Xa (Edge PC Monitoring)",
+            "description": "Cockpit giam sat 58 PC thu thap PLC, restart va update agent v1.2.33 tu xa",
+            "tables": ["VINATECH_POP.dbo.VINA_PC_MAC", "VINATECH_POP.dbo.VINA_EQUIPMENT_SETTING", "MongoDB Time-Series"]
+        },
+        "/dataCollection/equipmentSetting": {
+            "name": "Cai Dat Thiet Bi & Tu Dong Hoa PLC (Equipment Automation)",
+            "description": "Bat co EQUIPMENT_SETTING_AUTO_PERF = Y de PLC tu nhan dien Lot va chot san luong khong can bam Start",
+            "tables": ["VINATECH_POP.dbo.VINA_EQUIPMENT_SETTING", "SmartFactoryV2.dbo.MongoToMesPerformance"]
         }
     },
     "top_errors": {
@@ -222,6 +247,26 @@
             "title": "Nút Button 'Cắt điện cực' bị mờ / không sáng để bấm cắt",
             "root_cause": "Logic an toàn hệ thống: Chặn nút Cắt nếu độ dày màng điện cực MaterialThickness < 100 trong STB_MaterialMaster",
             "fast_fix": "Kiểm tra STB_MaterialMaster.MaterialThickness của Model. Nếu thực tế hợp lệ nhưng master nhập sai < 100 thì cập nhật lại >= 100"
+        },
+        "POP-ERR-31": {
+            "title": "Lệch mốc sản lượng do chế độ SUBTRACT (Line Prod Mode)",
+            "root_cause": "Dây chuyền cấu hình SUBTRACT trong VINA_LINE_PROD_MODE (GoodQty = PlanQty - DefectQty). Công nhân dồn phế cuối ca hoặc kế hoạch Lot bị chỉnh sửa làm số lượng Đạt nhảy sai",
+            "fast_fix": "Nhắc OP báo phế ngay tức thời. Nếu phế biến thiên lớn chuyển Line sang 'ADD' trên /popSetting/lineProdMode. Nếu sửa mốc cập nhật đồng thời MongoToMesPerformance và STB_ProdRouteHist"
+        },
+        "POP-ERR-32": {
+            "title": "Kẹt khóa liên động vượt thời gian chờ (Interlock Max Dwell Time Block)",
+            "root_cause": "Lot nằm chờ giữa 2 công đoạn vượt quá số phút MAX_WAIT trong VINA_INTERLOCK_SETTING, hệ thống kích hoạt Interlock Block tự động",
+            "fast_fix": "QA xác nhận chất lượng Lot. IT vào /popSetting/interlockSetting -> Tab '관리자 해제' (Admin Release), nhập lý do và bấm Release (Ghi nhận VINA_INTERLOCK_RELEASE_LOG với Author vanduc)"
+        },
+        "POP-ERR-33": {
+            "title": "Kẹt biên bản kiểm tra QC ('ko nhap dc kt') & Phê duyệt Hoàn tác Reopen",
+            "root_cause": "Kiosk QC đóng biên bản (IsDone = 1) khi chưa nhập đủ kích thước hoặc mất kết nối máy đo tự động. Lot bị kéo theo cờ HOLD",
+            "fast_fix": "QC gửi Reopen Request. IT/QA vào /systemAdmin/qualityAdmin -> Tab '되돌리기 요청' bấm '승인' (Approve) để mở khóa IsDone=0 và tự động rollback cờ HOLD trên STB_HoldingMaster"
+        },
+        "POP-ERR-34": {
+            "title": "Mất kết nối Agent thu thập PLC 58 PC biên (VINA_PC_MAC)",
+            "root_cause": "Phần mềm vinatechEquipmentDataSetup.exe trên PC xưởng bị dừng service, đứt mạng hoặc tràn bộ nhớ",
+            "fast_fix": "Vào /dataCollection/pcMacDashboard (hoặc pcMacList), tìm IP/MAC bị đỏ '미연결', nhấn nút '재시작' (Restart) để khởi động lại service từ xa hoặc '업데이트' (Update) lên v1.2.33"
         }
     }
 }

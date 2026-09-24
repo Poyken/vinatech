@@ -17,24 +17,24 @@ Related Files:
 
 > **Hệ thống:** POP (Point of Production) — Web Kiosk Sản xuất Vinatech  
 > **URL:** `https://pop.vinatech.com/`  
-> **Backend DB:** `VINATECH_POP` (**66 bảng** — audit 2026-09-21) + `SmartFactoryV2` (shared với MES)  
+> **Backend DB:** `VINATECH_POP` (**66 bảng** — audit 2026-09-24) + `SmartFactoryV2` (shared với MES)  
 > **API Server:** `https://pop.vinatech.com/api/` (RESTful, JSON)  
-> **Phiên bản KB:** v2.1 (Cập nhật 2026-09-21 — Audit DB schema 66 bảng, đánh dấu 5 file archived)  
-> **🔑 Keywords:** POP, kiosk, sản xuất, đóng gói, nhập NVL, packing, merge pack, label, quality, IQC, PQC, OQC, slide mapping, marking, self inspection, auto-save, VINA_EQUIPMENT_MAPPING, STB_ProductMachine, locked ACTIVE machine, lệch BOM điện cực, POP-ERR-19, POP-ERR-20
+> **Phiên bản KB:** v3.0 (Cập nhật 2026-09-24 — Khảo sát Admin toàn diện, bóc tách 8 phân hệ ngầm, 58 PC biên, MongoDB Time-Series & 34 mã lỗi POP-ERR)  
+> **🔑 Keywords:** POP, kiosk, sản xuất, đóng gói, nhập NVL, packing, merge pack, label, quality, IQC, PQC, OQC, interlock, admin release, reopen request, line prod mode, subtract, add, assembly group 10 slots, plc auto perf, pc mac dashboard, mongodb telemetry, POP-ERR-31, POP-ERR-32, POP-ERR-33, POP-ERR-34
 
 ---
 
 ## 📚 BẢN ĐỒ TÀI LIỆU (KB FILE MAP)
 
 > [!NOTE]
-> **Cập nhật 2026-09-21:** 5 file phụ trợ (MAP, REF) đã bị xóa khỏi thư mục. Nội dung chính đã được tích hợp vào KB_01–KB_05. Các file bị đánh dấu `[ARCHIVED]` bên dưới.
+> **Cập nhật 2026-09-24:** Tích hợp phát hiện thực tế quyền Admin cấp cao (EA Team): Bóc tách 8 phân hệ quản trị ngầm, ánh xạ 1:1 Schema 66 bảng CSDL `VINATECH_POP`, cơ chế tự động hóa PLC Auto Performance, và bộ xử lý hoàn tác QC Reopen.
 
 | # | File | Nội dung | Khi nào dùng | Trạng thái |
 |---|------|----------|--------------|------------|
-| INDEX | [POP_KB_INDEX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_INDEX.md) | Master Index + Routing Map | Điểm bắt đầu mọi tra cứu POP | ✅ Active |
-| 01 | [POP_KB_01_ARCHITECTURE_AND_API.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_01_ARCHITECTURE_AND_API.md) | Kiến trúc hệ thống, API endpoints, **Data Pipeline & Hệ sinh thái Bảng đệm Trung gian** (MongoToMes*, STB_ERP_INTERFACE, STB_RFIDPrintQueue §3.5), DB schema mapping **66 bảng** (§3.6) | Debug API, hiểu data flow, kiến trúc staging, logic chọn máy Kiosk | ✅ Active |
-| 02 | [POP_KB_02_SCREEN_OPERATIONS.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_02_SCREEN_OPERATIONS.md) | Hướng dẫn vận hành từng màn hình + DB impact, Modal "Xác nhận Kết thúc?" | Thao tác sản xuất, đóng gói, marking, chọn máy | ✅ Active |
-| 03 | [POP_KB_03_TROUBLESHOOTING.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_03_TROUBLESHOOTING.md) | Lỗi thường gặp + Root cause + Fix (POP-ERR-01 đến POP-ERR-30, Top 15 Production Telemetry) | Xử lý sự cố khẩn cấp, kẹt máy, nạp cuộn điện cực, khóa 2 Lot | ✅ Active |
+| INDEX | [POP_KB_INDEX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_INDEX.md) | Master Index + Routing Map v3.0 | Điểm bắt đầu mọi tra cứu POP | ✅ Active |
+| 01 | [POP_KB_01_ARCHITECTURE_AND_API.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_01_ARCHITECTURE_AND_API.md) | Kiến trúc hệ thống, API endpoints, **Data Pipeline & Hệ sinh thái Bảng đệm Trung gian** (MongoToMes*, STB_ERP_INTERFACE, STB_RFIDPrintQueue §3.5), DB schema mapping **66 bảng** (§3.6), **Bản đồ quan hệ dữ liệu 8 phân hệ Admin POP (§7)** | Debug API, hiểu data flow, kiến trúc staging, logic chọn máy Kiosk, cấu trúc bảng ngầm | ✅ Active |
+| 02 | [POP_KB_02_SCREEN_OPERATIONS.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_02_SCREEN_OPERATIONS.md) | Hướng dẫn vận hành 22 phân hệ màn hình Kiosk & Admin, Interlock Manager (§20), Quality Admin & Rollback Reopen (§21), PLC Automation & PC Mac Dashboard 58 PC biên (§22) | Thao tác sản xuất, đóng gói, marking, chọn máy, mở khóa Interlock, duyệt Reopen | ✅ Active |
+| 03 | [POP_KB_03_TROUBLESHOOTING.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_03_TROUBLESHOOTING.md) | Lỗi thường gặp + Root cause + Fix (**POP-ERR-01 đến POP-ERR-34**, Top 15 Telemetry, Lệch mốc SUBTRACT, Kẹt MAX_WAIT, Reopen QC) | Xử lý sự cố khẩn cấp, kẹt máy, nạp cuộn điện cực, sửa mốc sản lượng, restart agent | ✅ Active |
 | 04 | [POP_KB_04_ROLLBACK_AND_SAFETY.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_04_ROLLBACK_AND_SAFETY.md) | Phân tích khả năng Rollback trên UI + DB safety (v2.0) | Hủy đóng gói Box, an toàn dữ liệu | ✅ Active |
 | 05 | [POP_KB_05_DB_VERIFICATION_AUDIT.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_05_DB_VERIFICATION_AUDIT.md) | Kết quả đối chiếu UI vs DB thực tế | Kiểm toán, xác minh tính chính xác | ✅ Active |
 | 06 | [POP_KB_06_MIGRATION_SPEC.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_06_MIGRATION_SPEC.md) | **Đặc tả chuyển đổi 100% POP Web**: Bảng quy chiếu 1:1 màn hình WinForm ➔ Web, Gap Analysis, 8 bước checklist Line Readiness | Quy hoạch tắt MES WinForm, chuẩn bị cutover | ✅ Active |
@@ -58,6 +58,10 @@ Related Files:
 | Tra cứu đích danh LOT NVL trong kho | KB_02 §6.2 ("Tồn kho") | KB_01 §3.1 |
 | Lỗi "Không tìm thấy LOT trong kho" khi nạp cuộn điện cực / BOM | **KB_03 §2.19 (POP-ERR-19)** | KB_02 §6 |
 | POP Kiosk thiếu thiết bị / Ẩn máy tại modal "Xác nhận Kết thúc?" | **KB_03 §2.20 (POP-ERR-20)** | **KB_01 §3.3**, KB_02 §5, HOTFIX_LOG ID_57 |
+| Lệch mốc sản lượng do chế độ `SUBTRACT` | **KB_03 §2.31 (POP-ERR-31)** | KB_01 §7.1, KB_02 §20 |
+| Kẹt khóa liên động vượt thời gian chờ (`MAX_WAIT`) | **KB_03 §2.32 (POP-ERR-32)** | KB_01 §7.2.A, KB_02 §20.1 |
+| Kẹt biên bản kiểm tra QC ("ko nhap dc kt") / Phê duyệt Reopen | **KB_03 §2.33 (POP-ERR-33)** | KB_01 §7.2.B, KB_02 §21.1 |
+| Mất kết nối Agent thu thập PLC 58 PC biên (Restart/Update từ xa) | **KB_03 §2.34 (POP-ERR-34)** | KB_01 §7.2.D, KB_02 §22.3 |
 | Lỗi không link số lượng NG từ POP Kiosk xuống NAIS MES (B782) | **MES KB_09 § [B782] Bug #5** | HOTFIX_LOG ID_56 |
 | Nhập mã Marking công đoạn Bọc Vỏ | KB_02 §7.2 | KB_02 §7 |
 | Lỗi đóng gói / Merge Pack / Chia Box | KB_02 §9 | KB_03 §4 |
