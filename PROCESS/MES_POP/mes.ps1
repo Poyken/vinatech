@@ -521,14 +521,14 @@ elseif ($cmdLower -eq 'bot' -or $cmdLower -eq 'telegram') {
     }
 }
 elseif ($cmdLower -eq 'bot-hidden') {
-    $vbsScript = Join-Path $scriptDir 'start_telegram_bot_hidden.vbs'
-    if (Test-Path $vbsScript) {
+    $botScript = Join-Path $toolsDir 'mes_telegram_bot.py'
+    if (Test-Path $botScript) {
         Write-Host "(*) Dang khoi dong Bot Telegram chay ngam..." -ForegroundColor Cyan
-        cscript //nologo $vbsScript
-        Start-Sleep -Seconds 1
+        Start-Process python -ArgumentList "-u `"$botScript`"" -WorkingDirectory $scriptDir -WindowStyle Hidden
+        Start-Sleep -Seconds 2
         & (Join-Path $scriptDir 'mes.ps1') bot-status
     } else {
-        Write-Error 'start_telegram_bot_hidden.vbs not found.'
+        Write-Error 'tools/mes_telegram_bot.py not found.'
     }
 }
 elseif ($cmdLower -eq 'bot-status') {

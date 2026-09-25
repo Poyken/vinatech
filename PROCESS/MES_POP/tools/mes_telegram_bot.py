@@ -107,8 +107,8 @@ DEFAULT_CONFIG = {
     "bot_token": "YOUR_TELEGRAM_BOT_TOKEN_HERE",
     "allowed_chat_ids": ["YOUR_TELEGRAM_CHAT_ID_HERE"],
     "gemini_api_key": "",
-    "model_name": "gemini-3.6-flash",
-    "poll_interval_seconds": 1
+    "model_name": "gemini-flash-lite-latest",
+    "poll_interval_seconds": 0.2
 }
 
 # Lưu lịch sử ngữ cảnh hội thoại đa lượt cho từng Chat ID (tối đa 12 lượt hội thoại)
@@ -205,8 +205,8 @@ MAIN_KEYBOARD = {
     "keyboard": [
         ["🔍 Truy Vết POP 360°", "⛓️ Huyết Mạch PO/Lot"],
         ["🎯 Chẩn Đoán Sự Cố", "🏥 Sức Khỏe MES"],
-        ["🏭 Kiểm Toán POP", "🔓 Giải Phóng Máy"],
-        ["🔒 Khóa & Deadlock", "💰 Đơn Giá B598"]
+        ["📦 BOM & Tồn Kho NVL", "🔄 Kẹt Đồng Bộ POP"],
+        ["🔓 Giải Phóng Máy", "🔒 Khóa & Deadlock"]
     ],
     "resize_keyboard": True,
     "is_persistent": True
@@ -476,14 +476,28 @@ TOOL_DECLARATIONS = [
         }
     },
     {
-        "name": "inspect_b598_price",
-        "description": "Tra cứu nhanh đơn giá USD và công thức chia cân nặng hardcode bên trong Stored Procedure usp_vn_showproductionerror cho màn hình báo phế B598.",
+        "name": "inspect_nvl_bom",
+        "description": "Soi định mức BOM NVL, kiểm tra tồn khả dụng tại kho chuyền ROUTE_VN_WH vs kho tổng MAIN_VN_WH, và gợi ý mã thay thế AltCode khi hết hàng cho mã Lot hoặc PO.",
         "parameters": {
             "type": "OBJECT",
             "properties": {
-                "material_code": {
+                "lot_or_po": {
                     "type": "STRING",
-                    "description": "Mã vật tư NVL cần soi đơn giá (ví dụ GCMDPT-601, GCSN00-004)"
+                    "description": "Mã Lot hoặc mã PO cần tra cứu NVL BOM"
+                }
+            },
+            "required": ["lot_or_po"]
+        }
+    },
+    {
+        "name": "check_pop_sync",
+        "description": "Quét phát hiện các Lot bị kẹt pipeline đồng bộ từ Web Kiosk POP sang MES WinForm (IsDone = 1 nhưng IsTransferred = 0).",
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "line_code": {
+                    "type": "STRING",
+                    "description": "Mã chuyền (để trống để quét toàn bộ)"
                 }
             }
         }
@@ -581,6 +595,13 @@ def execute_agent_tool(func_name, func_args):
         prof = func_args.get("profile", "").strip()
         cmd_str = f".\\mes.ps1 locks -Profile '{prof}'" if prof else ".\\mes.ps1 locks"
         raw_res = run_powershell_cmd([cmd_str], timeout=25)
+    elif func_name == "inspect_nvl_bom":
+        code = func_args.get("lot_or_po", "").strip()
+        raw_res = run_powershell_cmd([f".\\mes.ps1 nvl '{code}'"], timeout=25)
+    elif func_name == "check_pop_sync":
+        line = func_args.get("line_code", "").strip()
+        cmd_str = f".\\mes.ps1 sync -Line '{line}'" if line else ".\\mes.ps1 sync"
+        raw_res = run_powershell_cmd([cmd_str], timeout=25)
     elif func_name == "inspect_b598_price":
         mat = func_args.get("material_code", "").strip()
         cmd_str = f".\\mes.ps1 b598-price '{mat}'" if mat else ".\\mes.ps1 b598-price"
@@ -651,10 +672,10 @@ TIÊU CHUẨN PHẢN HỒI (SENIOR TECH LEAD STANDARD):
 - Duy trì trí nhớ hội thoại liên tục qua từng lượt hỏi.
 """
 
-def call_gemini_conversational(chat_id, user_text, api_key, model_pref="gemini-flash-latest", token=None, image_bytes=None):
+def call_gemini_conversational(chat_id, user_text, api_key, model_pref="gemini-flash-lite-latest", token=None, image_bytes=None):
     """Gọi Gemini REST API với Multimodal Vision, Tool Calling, Retry chống 503 và duy trì ngữ cảnh sâu"""
     models = [model_pref] if model_pref else []
-    for fallback in ["gemini-flash-latest", "gemini-3.1-flash-lite", "gemini-flash-lite-latest", "gemini-3.8-flash"]:
+    for fallback in ["gemini-flash-lite-latest", "gemini-3.5-flash-lite", "gemini-3.1-flash-lite", "gemini-3.6-flash"]:
         if fallback not in models:
             models.append(fallback)
 
@@ -882,8 +903,10 @@ def handle_message(text, chat_id, token, config, image_bytes=None):
             "• <code>⛓️ Huyết Mạch PO/Lot</code> : Dòng chảy PO ➔ Kho ➔ MES ➔ POP\n"
             "• <code>🎯 Chẩn Đoán Sự Cố</code> : Chuẩn đoán 1-Shot 4 Dòng Vàng\n"
             "• <code>🏥 Sức Khỏe MES</code> : Morning Health Check quét Lot HOLD/WIP\n"
-            "• <code>🏭 Kiểm Toán POP</code> : Kiểm tra 8 tiêu chí cắt WinForm\n"
-            "• <code>🔓 Giải Phóng Máy</code> : Tự động Clear máy kẹt ACTIVE trên Line\n\n"
+            "• <code>📦 BOM & Tồn Kho NVL</code> : Soi BOM, mã thay thế AltCode & tồn kho xưởng ROUTE_VN_WH\n"
+            "• <code>🔄 Kẹt Đồng Bộ POP</code> : Quét các Lot kẹt IsTransferred = 0 giữa POP và MES\n"
+            "• <code>🔓 Giải Phóng Máy</code> : Tự động Clear máy kẹt ACTIVE trên Line\n"
+            "• <code>🔒 Khóa & Deadlock</code> : Soi real-time Blocking Locks & Deadlock CSDL\n\n"
             "💡 <b>Hoặc gõ bất kỳ câu hỏi/thắc mắc nào để trao đổi như với Antigravity IDE!</b>"
         )
 
@@ -925,9 +948,13 @@ def handle_message(text, chat_id, token, config, image_bytes=None):
         res = run_powershell_cmd([".\\mes.ps1 locks"], timeout=25)
         return f"🔒 <b>KẾT QUẢ KIỂM TRA KHÓA & NGHẼN CSDL:</b>\n<pre>{res}</pre>"
 
-    if "đơn giá b598" in cmd or cmd == "💰 đơn giá b598":
-        USER_STATES[chat_id] = "WAITING_FOR_B598"
-        return "💰 <b>TRA CỨU ĐƠN GIÁ & CÂN NẶNG BÁO PHẾ B598:</b>\n\nVui lòng nhập mã vật tư (ví dụ <code>GCMDPT-601</code> hoặc gõ <code>ALL</code> để xem toàn bộ):"
+    if "bom" in cmd or "tồn kho nvl" in cmd or cmd == "📦 bom & tồn kho nvl":
+        USER_STATES[chat_id] = "WAITING_FOR_BOM"
+        return "📦 <b>TRA CỨU BOM NVL & TỒN KHO XƯỞNG (ROUTE_VN_WH)</b>\n\nVui lòng nhập mã Lot hoặc mã PO cần tra cứu (Ví dụ: <code>VVQR113R072717</code> hoặc <code>260829000018</code>):"
+
+    if "đồng bộ" in cmd or "kẹt đồng bộ" in cmd or cmd == "🔄 kẹt đồng bộ pop" or cmd in ["/sync", "sync"]:
+        res = run_powershell_cmd([".\\mes.ps1 sync"], timeout=30)
+        return f"🔄 <b>KẾT QUẢ QUÉT KẸT ĐỒNG BỘ POP ➔ MES:</b>\n<pre>{res}</pre>"
 
     if "báo cáo tuần" in cmd or cmd == "📊 báo cáo tuần it" or cmd in ["/report", "report"]:
         res = run_powershell_cmd([".\\mes.ps1 weekly-report"], timeout=25)
@@ -952,11 +979,9 @@ def handle_message(text, chat_id, token, config, image_bytes=None):
                 return format_diagnostic_html(diag)
             except Exception as e:
                 return f"❌ <b>LỖI CHẨN ĐOÁN:</b> {e}"
-        elif st == "WAITING_FOR_B598":
-            mat = "" if text_clean.upper() == "ALL" else text_clean
-            cmd_str = f".\\mes.ps1 b598-price '{mat}'" if mat else ".\\mes.ps1 b598-price"
-            res = run_powershell_cmd([cmd_str], timeout=20)
-            return f"💰 <b>KẾT QUẢ SOI ĐƠN GIÁ B598 CHO <code>{text_clean}</code>:</b>\n<pre>{res}</pre>"
+        elif st == "WAITING_FOR_BOM":
+            res = run_powershell_cmd([f".\\mes.ps1 nvl '{text_clean}'"], timeout=25)
+            return f"📦 <b>KẾT QUẢ BOM NVL & TỒN KHO CHO: <code>{text_clean}</code></b>\n<pre>{res}</pre>"
 
     # 4. Lệnh Fast-path có tiền tố (/trace, /pop, /lineage, /diagnose, /fix, /locks, /b598)
     if cmd.startswith("/trace ") or cmd.startswith("trace "):
@@ -993,6 +1018,17 @@ def handle_message(text, chat_id, token, config, image_bytes=None):
     if cmd.startswith("/locks") or cmd.startswith("locks"):
         res = run_powershell_cmd([".\\mes.ps1 locks"], timeout=25)
         return f"🔒 <b>KẾT QUẢ KIỂM TRA KHÓA & NGHẼN CSDL:</b>\n<pre>{res}</pre>"
+
+    if cmd.startswith("/nvl ") or cmd.startswith("nvl ") or cmd.startswith("/bom ") or cmd.startswith("bom "):
+        target_val = re.sub(r"^/(nvl|bom)\s+|^nvl\s+|^bom\s+", "", text_clean, flags=re.IGNORECASE).strip()
+        res = run_powershell_cmd([f".\\mes.ps1 nvl '{target_val}'"], timeout=25)
+        return f"📦 <b>KẾT QUẢ BOM NVL & TỒN KHO CHO: <code>{target_val}</code></b>\n<pre>{res}</pre>"
+
+    if cmd.startswith("/sync") or cmd.startswith("sync"):
+        line = re.sub(r"^/(sync)\s*|^sync\s*", "", text_clean, flags=re.IGNORECASE).strip()
+        cmd_str = f".\\mes.ps1 sync -Line '{line}'" if line else ".\\mes.ps1 sync"
+        res = run_powershell_cmd([cmd_str], timeout=30)
+        return f"🔄 <b>KẾT QUẢ QUÉT KẸT ĐỒNG BỘ POP ➔ MES:</b>\n<pre>{res}</pre>"
 
     if cmd.startswith("/b598") or cmd.startswith("b598"):
         mat = re.sub(r"^/(b598)\s*|^b598\s*", "", text_clean, flags=re.IGNORECASE).strip()
@@ -1046,6 +1082,7 @@ def main():
     print("=================================================================")
     
     acquire_bot_lock()
+    global _config_last_load, _config_cache
     
     config = load_config()
     token = config.get("bot_token", "").strip()
@@ -1057,10 +1094,21 @@ def main():
 
     print(f"[OK] Đang chạy với Bot Token: {token[:6]}...{token[-4:]}")
     print(f"[OK] Danh sách Chat ID được phép: {allowed_chat_ids}")
+
+    # Tự động gỡ bỏ Webhook nếu có để mở khóa Long Polling getUpdates
+    try:
+        del_webhook_url = f"https://api.telegram.org/bot{token}/deleteWebhook"
+        req_del = urllib.request.Request(del_webhook_url)
+        with urllib.request.urlopen(req_del, timeout=10) as resp:
+            pass
+        print("[OK] Đã giải phóng Webhook để kích hoạt Long Polling siêu tốc.")
+    except Exception as e:
+        print(f"[CẢNH BÁO] Không thể gỡ Webhook: {e}")
+
     print("[OK] Đang chờ tin nhắn từ Telegram (Nhấn Ctrl+C để dừng)...\n")
 
     offset = None
-    poll_interval = config.get("poll_interval_seconds", 1)
+    poll_interval = config.get("poll_interval_seconds", 0.2)
 
     while True:
         try:
@@ -1099,6 +1147,9 @@ def main():
                             print(f"[CẢNH BÁO] Nhận tin nhắn từ Chat ID lạ: {chat_id} ({sender_name}): {text}")
                             continue
 
+                    # Bắn tín hiệu typing tức thời (<0.05s) để Telegram hiện 'đang soạn tin...' ngay lập tức
+                    send_chat_action(token, chat_id, "typing")
+
                     if photo:
                         largest_photo = photo[-1]
                         file_id = largest_photo.get("file_id")
@@ -1113,12 +1164,24 @@ def main():
                     send_telegram_message(token, chat_id, response, is_html=True)
                     print(f"[{time.strftime('%H:%M:%S')}] -> Đã phản hồi xong cho {sender_name}.")
 
-            time.sleep(poll_interval)
+            if not data.get("result"):
+                time.sleep(poll_interval)
 
         except KeyboardInterrupt:
             print("\n[STOP] Đã dừng Bot.")
             break
-        except (http.client.RemoteDisconnected, TimeoutError, urllib.error.URLError):
+        except urllib.error.HTTPError as he:
+            if he.code == 409:
+                print("[409 CONFLICT] Phát hiện Webhook hoặc kết nối cạnh tranh. Đang tự động gỡ Webhook...")
+                try:
+                    urllib.request.urlopen(f"https://api.telegram.org/bot{token}/deleteWebhook", timeout=5)
+                except Exception:
+                    pass
+                time.sleep(1)
+            else:
+                print(f"[HTTP ERROR {he.code}]: {he}")
+                time.sleep(2)
+        except (http.client.RemoteDisconnected, TimeoutError):
             continue
         except Exception as e:
             print(f"[LỖI] Ngoại lệ vòng lặp bot: {e}")
