@@ -208,10 +208,25 @@
             "root_cause": "Dữ liệu chốt trên Web có IsTransferred = 0 hoặc IsDone = 1 chưa được luồng ngầm đẩy vào STB_ProdRouteHist",
             "fast_fix": "Chạy thủ tục tools/sql/procedures/usp_VINA_SyncPopToMes_SingleLot.sql @Barcode = '<Barcode>'"
         },
+        "POP-CASE-01": {
+            "title": "Cắt đóng gói điện cực báo sai Line (Yêu cầu Line ElectrodeBN tại Bắc Ninh)",
+            "root_cause": "Hệ thống POP yêu cầu Line cắt mặc định là ElectrodeBN với nhà máy Bắc Ninh. STB_DayProdPlan của Lot đang bị gán sai Line",
+            "fast_fix": "SELECT SI.DayPlanNo, DPP.LineCode FROM STB_SetInfo SI JOIN STB_DayProdPlan DPP ON SI.DayPlanNo=DPP.DayPlanNo WHERE Barcode='<Lot>'. UPDATE STB_DayProdPlan SET LineCode='ElectrodeBN'"
+        },
         "POP-CASE-02": {
             "title": "Chưa thêm mã lỗi ứng với từng công đoạn (Thiếu bảng phế phẩm Kiosk)",
             "root_cause": "Công đoạn mới chưa được đăng ký trong STB_DefectGroup hoặc chưa clone danh mục mã lỗi sang STB_DefectInfo",
-            "fast_fix": "INSERT STB_DefectGroup và clone từ nhóm chuẩn V-11 sang nhóm mới (vd: V-11_HY) qua REPLACE(DefectCode, 'V-11_', 'V-11_HY_')"
+            "fast_fix": "Chạy .\\mes.ps1 new-fix 'CLONE_DEFECT' -Template clone-defect (Đăng ký STB_DefectGroup và clone STB_DefectInfo)"
+        },
+        "POP-CASE-03": {
+            "title": "Lỗi khi dùng MES rồi quay sang dùng POP (Xung đột CompleteRoute = 1 vs NULL)",
+            "root_cause": "MES tự sinh dòng công đoạn kế tiếp với CompleteRoute = 1, POP kiểm tra thấy có dòng sẵn nên báo Already completed",
+            "fast_fix": "Xóa dòng thừa trong STB_ProdRouteHist và STB_ProdRouteWorkerHist (hoặc chạy .\\mes.ps1 fix-pop-clone -Lots '<Lot>' -Deploy)"
+        },
+        "POP-CASE-04": {
+            "title": "Không thể nạp 1 mã cắt điện cực từ 2 Lot trở lên (Ràng buộc tối đa 3 LOTNO)",
+            "root_cause": "Hệ thống khống chế 1 cuộn BTP điện cực chỉ được nạp tối đa 2 đến 3 LOTNO thành phẩm để chống âm kho và kiểm soát sai số",
+            "fast_fix": "Đổi sang cuộn điện cực mới còn tồn kho. Nếu cuộn cũ còn màng dài, báo Kỹ sư xưởng làm thủ tục tách mã phụ trên WinForm"
         },
         "POP-CASE-05": {
             "title": "Không thể đóng gói được khi báo không có kho",
@@ -221,17 +236,47 @@
         "POP-CASE-06": {
             "title": "Hạng mục tự kiểm PQC In-Line thiết lập nhầm công đoạn",
             "root_cause": "Mã kiểm tra (V_H1_HY, V_H2_HY, V_WA_HY) bị cấu hình sai RouteCode trong tài liệu đo",
-            "fast_fix": "Cập nhật lại công đoạn trên màn hình C141 và UPDATE STB_CommInspDocItem.RouteCode = 'V-24_HY'"
+            "fast_fix": "Cập nhật lại công đoạn trên màn hình C141 và chạy .\\mes.ps1 new-fix 'PQC_FIX' -Template pqc"
+        },
+        "POP-CASE-07": {
+            "title": "Báo hết tồn kho nguyên vật liệu khi nạp Kiosk",
+            "root_cause": "3 kịch bản: (1) Có NVL thay thế trong BOM, (2) Hàng sản xuất liên phân xưởng BN-HY cần đổi kho, (3) CurrentQty=0 trên F430",
+            "fast_fix": "TH1: Chạm icon thay thế NVL trên Kiosk. TH2: Làm phiếu chuyển kho F430. TH3: Kiểm tra STB_MaterialLotInfo.CurrentQty"
+        },
+        "POP-CASE-08": {
+            "title": "Tìm kiếm tồn kho cuộn điện cực khi không quét được mã Barcode",
+            "root_cause": "Cuộn bị rách tem, mờ mã vạch hoặc scanner Kiosk kén mã. Cần tìm cuộn qua modal tìm kiếm thủ công",
+            "fast_fix": "Kiểm tra điều kiện hiển thị modal: CompanyCode='VVT' AND IsSlitting=1 AND LotAttr01='SLITTING' AND CurrentQty>0 AND MaterialWarehouseCode khớp kho AND PlusMinus (+/-) đúng cực tính"
         },
         "POP-CASE-09": {
             "title": "Tạo cưỡng chế tồn kho điện cực (Cuộn hỏng tem barcode / chưa vào kho)",
             "root_cause": "Cuộn BTP từ Slitting chưa đồng bộ vào STB_MaterialLotInfo, rách tem hoặc thiếu cờ ModalVisible='Y'",
-            "fast_fix": "Lấy số nhảy từ STB_SerialRule và INSERT STB_MaterialLotInfo với LotAttr01='SLITTING', IsSlitting=1, LengthSlitting=GoodQtyLength (Author: vanduc)"
+            "fast_fix": "Chạy .\\mes.ps1 new-fix 'FORCE_ROLL' -Template force-stock (Cấp số STB_SerialRule và chèn STB_MaterialLotInfo với LotAttr01='SLITTING')"
         },
         "POP-CASE-10": {
             "title": "Thiết lập cấu hình Slot NVL CellLine trên Kiosk POP",
             "root_cause": "Cần cấu hình giao diện nạp NVL cho Line mới hoặc điều chỉnh thứ tự slot nạp",
             "fast_fix": "Cấu hình bảng VINA_ASSEMBLY_GROUP_MODE và VINA_GROUP_INPUT_ROUTE trong CSDL VINATECH_POP theo ProductGroupCode của BOM"
+        },
+        "POP-CASE-11": {
+            "title": "Hủy đóng gói Box và hủy hoàn thành công đoạn (Phân quyền Rollback)",
+            "root_cause": "Công nhân thao tác nhầm muốn hủy Box hoặc hoàn tác lượt chốt, nhưng UI Kiosk giới hạn quyền",
+            "fast_fix": "Chỉ tài khoản Leader/IT Admin được ủy quyền mới có quyền hủy trên UI. Hoặc chạy .\\mes.ps1 fix-cancel-pack -Target '<Lot>'"
+        },
+        "POP-CASE-12": {
+            "title": "Nguyên vật liệu thay thế trong định mức BOM",
+            "root_cause": "Mã NVL trong PO hết hàng hoặc có mã tương đương từ nhà cung cấp khác",
+            "fast_fix": "Thiết lập mã thay thế tại DelegateMaterialCode1, DelegateMaterialCode2... trong STB_ProductionOrderBom. Kiosk tự động nhận diện khi quét"
+        },
+        "POP-CASE-13": {
+            "title": "Lỗi khi ấn sang chế độ (+) nhập lượng hoàn thành thay vì (-) phế phẩm",
+            "root_cause": "Công nhân ấn nhầm dấu (+) ở phần nhập phế phẩm làm Kiosk chuyển sang nhập lượng hoàn thành, khi bấm kết thúc bị crash",
+            "fast_fix": "Chạy rollback lượt thao tác bằng .\\mes.ps1 fix-rollback để công nhân nhập lại dấu (-) cho đúng phân hệ phế phẩm"
+        },
+        "POP-CASE-14": {
+            "title": "Công đoạn hoàn thành trên MES tự sinh công đoạn kế tiếp khi POP chưa chốt",
+            "root_cause": "MES WinForm có cơ chế auto-clone dòng tiếp theo với CompleteRoute=1, làm Kiosk POP nhảy cóc công đoạn",
+            "fast_fix": "Chạy .\\mes.ps1 fix-rollback -Lots '<Lot>' -Route '<Route_Bị_Sinh_Sớm>' để xóa dòng thừa trước khi cho Kiosk chốt lại"
         },
         "POP-CASE-15": {
             "title": "Lỗi chưa lưu độ nhớt ở công đoạn Trộn (Mixing)",
@@ -239,14 +284,14 @@
             "fast_fix": "OP mở lại mẻ Mixing trên Kiosk, nhập giá trị độ nhớt đo thực tế và bấm Lưu trước khi hoàn tất"
         },
         "POP-CASE-16": {
-            "title": "Lỗi sửa tên máy / gán nhầm mã máy khi chốt sản lượng",
+            "title": "Lỗi sửa tên máy / gán nhầm mã máy khi chốt sản lượng (RULE 20)",
             "root_cause": "Công nhân chọn nhầm máy trên Kiosk (vd: VVMHY136 thay vì VVMHY130). Nếu chỉ sửa 1 bảng sẽ bị Worker ghi đè lại",
-            "fast_fix": "BẮT BUỘC UPDATE ĐỒNG THỜI 2 BẢNG: STB_ProdRouteHist.MachineCode VÀ MongoToMesPerformance.MachineCode (Author: vanduc)"
+            "fast_fix": "BẮT BUỘC UPDATE ĐỒNG THỜI 2 BẢNG: Chạy .\\mes.ps1 new-fix 'SWAP_MACHINE' -Template swap-machine"
         },
         "POP-CASE-17": {
-            "title": "Nút Button 'Cắt điện cực' bị mờ / không sáng để bấm cắt",
+            "title": "Nút Button 'Cắt điện cực' bị mờ / không sáng để bấm cắt (RULE 20)",
             "root_cause": "Logic an toàn hệ thống: Chặn nút Cắt nếu độ dày màng điện cực MaterialThickness < 100 trong STB_MaterialMaster",
-            "fast_fix": "Kiểm tra STB_MaterialMaster.MaterialThickness của Model. Nếu thực tế hợp lệ nhưng master nhập sai < 100 thì cập nhật lại >= 100"
+            "fast_fix": "Chạy .\\mes.ps1 new-fix 'FIX_THICK' -Template thick để kiểm tra và cập nhật MaterialThickness >= 100"
         },
         "POP-ERR-31": {
             "title": "Lệch mốc sản lượng do chế độ SUBTRACT (Line Prod Mode)",

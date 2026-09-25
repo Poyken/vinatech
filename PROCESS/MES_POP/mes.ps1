@@ -99,8 +99,8 @@ function Show-Help {
     Write-Host '-> Sinh SQL xoa dong tu sinh CompleteRoute IS NULL de mo chot POP Kiosk (Cap thu Aging)' -ForegroundColor Gray
     Write-Host '     .\mes.ps1 fix-cancel-pack -Target "<Lot>" [-BoxId "<Box>"] [-PackingId "<PK>"] [-Deploy]' -ForegroundColor Yellow
     Write-Host '-> Sinh SQL huy le tung Box/Pack dong goi (STB_MaterialDocLotInfo, STB_ProdRouteHist, PO)' -ForegroundColor Gray
-    Write-Host '     .\mes.ps1 new-fix <Name> [-Template <b552|b782|rollback>]' -ForegroundColor Green
-    Write-Host '-> Sinh template SQL Fix chuan (ho tro B552 dien cuc, B782 chuyen ngay, Rollback chot)' -ForegroundColor Gray
+    Write-Host '     .\mes.ps1 new-fix <Name> [-Template <b552|b782|rollback|swap-machine|force-stock|clone-defect|pqc|thick|packing-id>]' -ForegroundColor Green
+    Write-Host '-> Sinh template SQL Fix chuan (ho tro B552, B782, Rollback, Doi may Kiosk, Cuong che ton kho, Clone phe, PQC, Do day)' -ForegroundColor Gray
     Write-Host '     .\mes.ps1 deploy <Path.sql> [-Force]' -NoNewline -ForegroundColor Green
     Write-Host '-> Deploy SQL an toan (Tu dong Snapshot Pre-flight backup)' -ForegroundColor Gray
     Write-Host '     .\mes.ps1 clean                     ' -NoNewline -ForegroundColor Green
@@ -244,7 +244,7 @@ elseif ($cmdLower -eq 'new-fix') {
     # Chon template phu hop
     $tplName = 'template_hotfix.sql'
     $targetLower = $Target.ToLower()
-    $tplParamLower = $Template.ToLower()
+    $tplParamLower = if ($Template) { $Template.ToLower() } else { '' }
 
     if ($tplParamLower -eq 'b552' -or $tplParamLower -eq 'electrode' -or $targetLower -match 'b552|electrode|mixing|slitting') {
         $tplName = 'template_B552_ELECTRODE_CLEANUP.sql'
@@ -254,6 +254,24 @@ elseif ($cmdLower -eq 'new-fix') {
     }
     elseif ($tplParamLower -eq 'rollback' -or $targetLower -match 'rollback') {
         $tplName = 'template_B782_B530_ROLLBACK_CHOT.sql'
+    }
+    elseif ($tplParamLower -match 'swap-machine|machine|doi-may' -or $targetLower -match 'machine|doi_may|doi-may') {
+        $tplName = 'template_SWAP_MACHINE_CODE.sql'
+    }
+    elseif ($tplParamLower -match 'force-stock|roll-stock|cuong-che' -or $targetLower -match 'force_stock|roll_stock|cuong_che') {
+        $tplName = 'template_FORCE_ROLL_STOCK.sql'
+    }
+    elseif ($tplParamLower -match 'clone-defect|defect-group|phe' -or $targetLower -match 'defect|clone_defect') {
+        $tplName = 'template_CLONE_DEFECT_GROUP.sql'
+    }
+    elseif ($tplParamLower -match 'pqc|fix-pqc|route-pqc' -or $targetLower -match 'pqc') {
+        $tplName = 'template_FIX_PQC_INSP_ROUTE.sql'
+    }
+    elseif ($tplParamLower -match 'thick|do-day|cut-button' -or $targetLower -match 'thick|do_day') {
+        $tplName = 'template_FIX_ELECTRODE_THICKNESS.sql'
+    }
+    elseif ($tplParamLower -match 'packing-id|label' -or $targetLower -match 'packing_id|label') {
+        $tplName = 'template_GENERATE_POP_PACKING_ID.sql'
     }
 
     $templatePath = Join-Path $sqlDir $tplName
