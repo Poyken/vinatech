@@ -1,6 +1,7 @@
 # 🌐 BẢN ĐỒ TÍCH HỢP TOÀN HỆ THỐNG VINATECH (GW ↔ ERP ↔ MES ↔ POP)
 
-> **Cập nhật:** 2026-09-21 | **Phạm vi:** Toàn bộ hệ sinh thái phần mềm điều hành & sản xuất Vinatech
+> **Cập nhật:** 2026-09-24 | **Phạm vi:** Toàn bộ hệ sinh thái phần mềm điều hành & sản xuất Vinatech  
+> **Tài liệu kim chỉ nam:** [GW_00_CORE_OPERATING_PRINCIPLES.md](GROUPWARE_KNOWLEDGE_BASE/GW_00_CORE_OPERATING_PRINCIPLES.md) (*"No Approved Document, No Physical Movement"*)
 
 ---
 
@@ -83,3 +84,24 @@ graph TD
    - Khi chuyển phòng ban cho nhân viên trong ERP `MA_EMP`, Trigger sẽ tự ghi vào `USER_MAPPING_INFO`. IT cần kiểm tra thêm bảng `SmartFactoryV2.dbo.STB_VN_Employees` (cột `CODEDEPARTMENT`) để MES không bị lệch thông tin phòng ban với Groupware.
 6. **Truy Vết Chứng Từ ERP Qua Chuỗi `(ED-...)`:**
    - Khi một tờ trình Groupware được duyệt, mã hồ sơ `RECORD_INCREASE_CODE` (ví dụ `ED-VJPMTR000000021`) được chèn vào trường `NM_PUMM` của chứng từ kế toán `NEOE.NEOE.FI_DOCU`. Dùng View `VINA_DOCUMENT_ERP_DOCU_INFO_VIEW` để tra cứu hai chiều tức thì.
+
+---
+
+## 🎯 4. BẢNG ĐỐI CHIẾU CHÉO 3 CHIỀU: GROUPWARE ↔ MES ↔ POP (100% VERIFIED MAPPING)
+
+Kết quả kiểm toán đối chiếu chéo giữa 3 phân hệ:
+
+| Chuỗi Nghiệp Vụ | Thượng Nguồn: GROUPWARE (`VINATECH_GROUP`) | Trung Nguồn: NAIS MES (`SmartFactoryV2`) | Hạ Nguồn: POP KIOSK (`VINATECH_POP`) | Đánh Giá Khớp Nối |
+| :--- | :--- | :--- | :--- | :---: |
+| **1. Kế Hoạch & Lot SX** | `VINA_PROD_MONTH_PRODPLAN` duyệt `008` ➔ Kế hoạch ngày `dailyProductionOrderDocument` (BOM 2001/2002) | Nạp vào `STB_ProductionOrderInfo` (`B310`) ➔ `STB_DayProdPlan` (`B450`) chia Lot ➔ `STB_SetInfo` (`Barcode`, `LotNo`) | API `/api/pop/screen/getDayPlanList` và `getLotList` đọc trực tiếp từ `STB_DayProdPlan` và `STB_SetInfo` | **KHỚP 100%** |
+| **2. Cấp NVL theo BOM** | Arrival `VINA_DOCUMENT_RECEIVING_PHYSICAL_ITEM_H` ➔ Tiếp nhận `F330` ➔ IQC `C220 PASS` ➔ Receiving `008` | `STB_MaterialLotInfo.CurrentQty` lưu tồn ➔ Trạm cấp NVL `B540/B597` quét trừ tồn và ghi `STB_RawMaterialInputHist` | Giao diện Kiosk `popMaterialInput.js` & `popBomModal.js` gọi API `saveMaterialInput` ghi thẳng vào `STB_RawMaterialInputHist` | **KHỚP 100%** |
+| **3. Chốt Mẻ & Khai Phế** | Quản đốc mở form `dailyProductionReportDocument` ký duyệt báo cáo ca làm việc từ sản lượng tổng hợp | Đọc dữ liệu từ `STB_ProdRouteHist` (sản lượng OK) và `STB_DefectRepairInfo` (lỗi phế phẩm) | Công nhân chốt Kiosk ➔ Ghi bảng đệm `MongoToMesPerformance` & `MongoToMesDefect` ➔ Worker chuyển sang MES | **KHỚP 100%** (Cần update cả 2 bảng khi hotfix) |
+| **4. Đóng Gói & Xuất Kho** | Bán hàng lập `deliverOutDocument` duyệt `008` ➔ Sau bốc hàng lập `deliverOutConfirmationDocument` duyệt `008` | Mở trạm `FG01` quét Box PASS OQC (`STB_VN_FINISHGOODS_forQCAudit`) ➔ Trạm `B750` in tem Pallet ➔ Trạm `B752` đối chiếu xe | Giao diện Kiosk `popManualPackModal.js` gom Box (Single/Split/Merge Pack) ➔ Ghi `STB_PackingInfo` | **KHỚP 100%** |
+| **5. Xác Thực & Thiết Bị** | SSO Token Gateway `VINATECH_RESTFUL.dbo.VINA_SSO_TOKEN`, quản lý mã nhân viên `NO_EMP` | `SmartFramework.dbo.STB_UserInfo` ánh xạ cột `Appendix8 = NO_EMP`. SP `usp_DoGUILogin` chặn `CD_INCOM='099'` | Kiosk API `/api/common/login` xác thực SSO. Quản lý chiếm dụng máy qua `VINATECH_POP.dbo.VINA_EQUIPMENT_MAPPING` | **KHỚP 100%** |
+
+### ⚠️ 5 Lưu Ý Vận Hành Sống Còn Giữa 3 Hệ Thống:
+1. **Cơ Chế Bảng Đệm Kép (RULE 20):** Khi sửa máy/sản lượng chạy nhầm Kiosk, BẮT BUỘC cập nhật đồng thời cả `STB_ProdRouteHist` (MES) VÀ `MongoToMesPerformance` (POP) để tránh lệch mốc sản lượng Kiosk (`POP-ERR-31`).
+2. **Chốt Chặn Phiên Bản BOM (2001/2002):** Groupware bắt buộc nạp BOM 2001/2002. Lệch BOM khiến MES `B450` mờ nút tạo Lot và POP Kiosk không thể nạp "Lượng kiến cấp".
+3. **Typo Dịch Thuật Kho Việt Nam:** `ROH_VN_WH` (Bắc Ninh F1) và `ROH_BG_WH` (Bắc Giang F2) bị đảo tên tiếng Việt trên form GW. Cả GW, MES, POP phải luôn tuân theo tiền tố mã kho `VN` và `BG`.
+4. **Khóa Máy Chiếm Dụng Kiosk (`VINA_EQUIPMENT_MAPPING`):** Nếu OP ca trước quên bấm "Hủy gán", máy bị kẹt `ACTIVE` khiến ca sau không thấy máy. Phải giải phóng bằng `MAPPING_STATUS = 'RELEASED'`.
+5. **Chốt Chặn IQC Gatekeeper:** IQC trên MES `C220` (hoặc POP Quality tab) phải bấm Confirm PASS thì Groupware mới mở khóa form Receiving Confirmation.

@@ -17,7 +17,8 @@
 7. **RULE 20 (POP BẤT BIẾN - EA PLAYBOOK):** Đổi máy nhầm Kiosk BẮT BUỘC UPDATE CẢ 2 BẢNG (`STB_ProdRouteHist` VÀ `MongoToMesPerformance`). Lỗi "Already completed" xóa dòng thừa trong `STB_ProdRouteHist` & `STB_ProdRouteWorkerHist`. Nút Cắt điện cực mờ do độ dày `< 100`. Cuộn BTP tối đa 3 LOTNO. Máy kẹt ACTIVE giải phóng qua `VINA_EQUIPMENT_MAPPING.MAPPING_STATUS = 'RELEASED'`.
 
 
-## ⚡ 3 CLI HUBS TẠI WORKSPACE ROOT
+## ⚡ 4 CLI HUBS TẠI WORKSPACE ROOT
 - `.\mes.ps1 [trace|pop-trace|screen|find|health|pop-readiness|release-machines|unlock|new-fix|deploy]`
 - `.\gw.ps1 [trace|form|find|routine|chain|health|check|query|audit]`
 - `.\db.ps1 [list|health|stats|sp|schema|query|find|jobs|triggers|index|crossdb|lineage|auditkb]`
+- `.\ksys.ps1 [trace|find|module|schema|bridge|health]`

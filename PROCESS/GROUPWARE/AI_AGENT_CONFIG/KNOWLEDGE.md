@@ -1,13 +1,16 @@
 # 🧠 GROUPWARE CHEAT SHEET (Ultra-Condensed Knowledge)
 
-> **Mục tiêu:** Nạp ngữ cảnh siêu tốc (~300 tokens) cho Agent khi tác nghiệp trong workspace Groupware.
+> **Mục tiêu:** Nạp ngữ cảnh siêu tốc (~300 tokens) cho Agent khi tác nghiệp trong workspace Groupware.  
+> **Kim chỉ nam cốt lõi:** `GROUPWARE_KNOWLEDGE_BASE/GW_00_CORE_OPERATING_PRINCIPLES.md` (7 Quy tắc bất biến)
 
 ---
 
 ## ⚡ 1. Bản Đồ Nền Tảng & CSDL Cốt Lõi
+- **Vị thế cốt lõi:** Groupware là Cổng Thẩm Quyền Thượng Nguồn (*"No Approved Document, No Physical Movement"*).
 - **URL Groupware:** `https://gw.vinatech.com` (Bizbox Alpha by Douzone Bizon).
 - **CSDL Chính:** `VINATECH_GROUP` trên `dbserver.hycap.co.kr,5398`.
-- **CSDL Liên quan:** `NEOE_ERP` (ERP Douzone iU), `SmartFactoryV2` (MES Sản xuất), `VINATECH_RESTFUL` (SSO Token), `DZICUBE` (Kế toán Bizbox).
+- **CSDL Vệ tinh:** `VINATECH_RESTFUL` (SSO Token), `streamdocs` (PDF K-SOX), `VINATECH_SPREADSHEET` (JSON Sheet), `VINATECH_WEBSOCKET` (Realtime Push).
+- **Hệ thống liên quan:** `NEOE_ERP` (ERP Douzone iU), `SmartFactoryV2` / `SmartFramework` (MES Sản xuất).
 
 ---
 
@@ -21,18 +24,19 @@
 ## 🔄 3. Năm Mã Trạng Thái Phê Duyệt (`DOCUMENT_SAVE_STATE`)
 - `001`: **DRAFT** (Lưu nháp, chưa gửi).
 - `002`: **APPROVING** (Đang trình duyệt qua các cấp).
-- `008` / `090`: **APPROVED** (Phê duyệt hoàn tất ➔ kích hoạt sync ERP).
+- `008` / `090`: **APPROVED** (Phê duyệt hoàn tất ➔ kích hoạt 5 side-effects: ký PDF streamdocs, cấp mã ED-..., sync ERP NEOE, push WebSocket, lock data).
 - `004`: **REJECTED** (Từ chối).
 - `009`: **CANCELLED** (Hủy bỏ / Thu hồi).
 
 ---
 
-## 🔗 4. Bản Đồ Tương Tác Biểu Mẫu GW ➔ Màn Hình MES
-- **GW Arrival Confirmation** ➔ Mở màn hình **MES F330** (Nhập hàng & in tem barcode NVL).
-- **MES C220 (IQC)** PASS ➔ Mở quyền tạo form **GW Receiving Confirmation** (Nhập kho chính thức).
-- **GW Month Production Plan** ➔ Mở màn hình **MES B310** (Giám sát PO) & **B450** (Phát hành Lot).
-- **GW Shipment Request** ➔ Mở màn hình **MES FG01** (Quét Packing ID xuất kho thành phẩm).
-- **GW Shipment Confirmation** ➔ Mở màn hình **MES B750** (In tem Pallet niêm phong).
+## 🔗 4. Bản Đồ Khóa Liên Động (Interlocks: GW ↔ ERP ↔ MES)
+- **GW Arrival Confirmation** `008` ➔ Mở màn hình **MES F330** (Nhập hàng & in tem barcode NVL).
+- **MES C220 (IQC)** PASS ➔ Mở quyền tạo form **GW Receiving Confirmation** (Nhập kho tài chính).
+- **BOM Version Lock (2001/2002)** ➔ Bắt buộc trên PO Kế hoạch sản xuất để **MES B310/B450** phát hành Lot.
+- **GW Month Production Plan** `008` ➔ Kích hoạt màn hình **MES B310** (Giám sát PO) & **B450** (Tạo Lot).
+- **GW Shipment Request** `008` ➔ Mở màn hình **MES FG01** (Quét Box OQC PASS xuất kho thành phẩm).
+- **GW Shipment Confirmation** `008` ➔ Mở màn hình **MES B750** (In tem Pallet) & **B752** (Container).
 
 ---
 

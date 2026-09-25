@@ -9,6 +9,7 @@
 
 | File | Nội dung | Chức năng chính |
 |------|----------|-----------------|
+| [GW_00_CORE_OPERATING_PRINCIPLES.md](GW_00_CORE_OPERATING_PRINCIPLES.md) | **Bản chất cốt lõi & 7 Quy tắc vận hành bất biến** | **Kim chỉ nam tối cao, State Machine, Side-effects, Interlocks** |
 | [GW_01_DANG_NHAP.md](GW_01_DANG_NHAP.md) | Đăng nhập, mật khẩu, chọn công ty | Login, Reset password, Bảng thông báo, Q&A |
 | [GW_02_MUA_HANG.md](GW_02_MUA_HANG.md) | Luồng mua hàng đầy đủ: PO → Arrival → IQC → Receiving → Closing | Purchase Order, Inter-company PO, Hủy/Đóng PO, Hải quan & B/L |
 | [GW_03_KE_HOACH_SX.md](GW_03_KE_HOACH_SX.md) | Tạo PO tháng, kế hoạch ngày, tạo Lot | Month Production Plan, Đồng bộ tự động từ Suju, Nguyên vật liệu, B310, B450 |
@@ -24,6 +25,7 @@
 | [GW_13_BIZBOX_AI_AGENT_ENGINE.md](GW_13_BIZBOX_AI_AGENT_ENGINE.md) | Kiến trúc AI Agent & Dynamic APIs của Bizbox Alpha | VINA_AGENT_%, Spring Beans, Tool Calling, Quản lý Token |
 | [GW_14_GROUPWARE_DATABASE_ROUTINES_AND_VIEWS.md](GW_14_GROUPWARE_DATABASE_ROUTINES_AND_VIEWS.md) | Sổ tay Stored Procedures, Functions & Views | usp_DoSyncMaterialUnit_itf_TF, UP_HR_WTMCALC_TIME_CALC, 4 Views lõi |
 | [GW_15_GROUPWARE_ECOSYSTEM_DATABASES.md](GW_15_GROUPWARE_ECOSYSTEM_DATABASES.md) | Hệ sinh thái 5 CSDL thành phần hỗ trợ Groupware | VINATECH_RESTFUL, streamdocs, SPREADSHEET, WEBSOCKET, NEOE |
+| [GW_16_FULL_FEATURE_DATABASE_MAPPING_BLUEPRINT.md](GW_16_FULL_FEATURE_DATABASE_MAPPING_BLUEPRINT.md) | **Bản thiết kế toàn cảnh: 100% tính năng & Ánh xạ CSDL** | **Field-level Schema, Bảng khóa ngoại, Stored Procedures, Interlocks** |
 | [integrations/](integrations/README.md) | Bộ 10 tài liệu kỹ thuật tích hợp chuyên sâu | Purchase, Sales, HR, Planning, Master Data, SSO, Disbursement |
 
 ---

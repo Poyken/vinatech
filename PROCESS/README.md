@@ -16,11 +16,12 @@ Toàn bộ hệ thống tri thức, quy trình nghiệp vụ, cẩm nang sửa l
 👉 **[PHÂN HỆ MES & POP (MES_POP/MASTER_INDEX.md)](MES_POP/MASTER_INDEX.md)** — Vận hành sản xuất hiện trường, Routing, Kiosk POP, Cẩm nang 70+ bugs & CLI `.\mes.ps1`.  
 👉 **[PHÂN HỆ GROUPWARE (GROUPWARE/MASTER_INDEX.md)](GROUPWARE/MASTER_INDEX.md)** — Cổng phê duyệt 17 biểu mẫu, Mua hàng PO, Kế hoạch SX, Bán hàng Suju, Master Data & CLI `.\gw.ps1`.  
 👉 **[PHÂN HỆ DATABASE (DATABASE/MASTER_INDEX.md)](DATABASE/MASTER_INDEX.md)** — Tri thức 15 Cơ sở Dữ liệu, 3 Tập Đặc tả Hệ thống (Vol 1-3), Lineage 360° & CLI `.\db.ps1`.  
+👉 **[HẠT NHÂN HỢP NHẤT K-SYSTEM ACE (FINAL/MASTER_INDEX.md)](FINAL/MASTER_INDEX.md)** — [TRỤ CỘT 4 - ĐÍCH ĐẾN HỢP NHẤT] K-System Ace Web ERP, 17 Phân hệ, 213 Quy trình, 4.473 Chương trình & CLI `.\ksys.ps1`.  
 👉 **[BẢN ĐỒ LIÊN KẾT 4 NỀN TẢNG (DATABASE/SYSTEM_INTEGRATION_MAP.md)](DATABASE/SYSTEM_INTEGRATION_MAP.md)** — Luồng tích hợp khép kín GW ↔ ERP ↔ MES ↔ POP ↔ K-System Ace.
 
 ---
 
-## 📁 CẤU TRÚC 3 TRỤ CỘT HỆ THỐNG (PROCESS ARCHITECTURE)
+## 📁 CẤU TRÚC 4 TRỤ CỘT HỆ THỐNG (PROCESS ARCHITECTURE)
 
 ```
 PROCESS/
@@ -28,6 +29,7 @@ PROCESS/
 ├── 📄 mes.ps1                                  # ⚡ PROXY ĐIỀU PHỐI MES & POP (trace, screen, health, find)
 ├── 📄 gw.ps1                                   # ⚡ PROXY ĐIỀU PHỐI GROUPWARE (trace, form, health, find)
 ├── 📄 db.ps1                                   # ⚡ PROXY ĐIỀU PHỐI CSDL (list, health, query, schema, find)
+├── 📄 ksys.ps1                                 # ⚡ PROXY ĐIỀU PHỐI K-SYSTEM ACE (find, trace, module, bridge)
 ├── 📄 README.md                                # ← BẠN ĐANG Ở ĐÂY (Cổng thông tin chung)
 ├── 📄 GEMINI.md                                # 🛡️ Quy tắc tổng thể Antigravity Agent
 ├── 📂 .agents/                                 # Cấu hình Master Agent Workspace
@@ -70,13 +72,22 @@ PROCESS/
     ├── 📂 tools/                               # Bộ công cụ: inspect_schema, inspect_sp, lineage, db_stats
     ├── 📂 sql/                                 # 75 SP definitions, Cross-DB queries, Data dictionary
     └── 📂 docs/                                # SOP quy trình điều chỉnh BOM, báo cáo trình sếp gốc
+│
+└── 📂 FINAL/                                    # 🏛️ [TRỤ CỘT 4 - ĐÍCH ĐẾN HỢP NHẤT] K-SYSTEM ACE ERP CORE
+    ├── 📄 ksys.ps1                             # CLI Điều phối K-System Ace (find, trace, module, bridge)
+    ├── 📄 MASTER_INDEX.md                      # Mục lục điều hành 17 Phân hệ, 213 Quy trình, 4.473 Chương trình
+    ├── 📄 GEMINI.md                            # Quy tắc agent phân hệ FINAL
+    ├── 📄 README.md                            # Cổng thông tin chi tiết Trụ Cột Hợp Nhất
+    ├── 📂 AI_AGENT_CONFIG/                     # L1 Cache Matrix (KSYSTEM_MATRIX.json, UNIFIED_INTEGRATION_MATRIX.json)
+    ├── 📂 ARCHITECTURE/                        # 🏛️ 4 Tập Đặc tả Kiến trúc Vận hành Thâm sâu (Vol 1-4)
+    └── 📂 tools/                               # Bộ công cụ: ksys_find, ksys_trace, ksys_shared
 ```
 
 ---
 
 ## ⚡ BẢNG LỆNH ĐIỀU HÀNH TOÀN HỆ THỐNG (ROOT CLI PROXIES)
 
-Tại thư mục gốc `PROCESS/`, bạn có thể thực thi ngay toàn bộ các lệnh của 3 phân hệ:
+Tại thư mục gốc `PROCESS/`, bạn có thể thực thi ngay toàn bộ các lệnh của 4 phân hệ:
 
 | Phân Hệ | Cú Pháp Lệnh | Mục Đích Sử Dụng |
 | :--- | :--- | :--- |
@@ -92,6 +103,10 @@ Tại thư mục gốc `PROCESS/`, bạn có thể thực thi ngay toàn bộ c�
 | **DATABASE** | `.\db.ps1 health [-Detail]` | Quét độ trễ và trạng thái Online 15 CSDL |
 | **DATABASE** | `.\db.ps1 find "<Keyword>"` | Tra cứu bảng, khóa chính, cột trong L1 Cache 15 CSDL |
 | **DATABASE** | `.\db.ps1 lineage -Type <T> -Value <V>` | Truy vết huyết mạch dữ liệu 360° xuyên suốt 5 hệ thống |
+| **K-SYSTEM (FINAL)** | `.\ksys.ps1 find "<Keyword>"` | Tra cứu siêu tốc L1 Cache qua 17 phân hệ, 213 quy trình K-System Ace |
+| **K-SYSTEM (FINAL)** | `.\ksys.ps1 trace "<LotNo/WO>"` | Truy vết 360° Lô hàng / Lệnh SX theo chuẩn màn hình FrmWPDLotList |
+| **K-SYSTEM (FINAL)** | `.\ksys.ps1 module [-Seq <N>]` | Liệt kê danh mục 17 phân hệ hoặc xem chi tiết 1 phân hệ |
+| **K-SYSTEM (FINAL)** | `.\ksys.ps1 bridge` | Kiểm toán phân hệ cầu nối K-스마트 (Module 132 / Smart Factory Bridge) |
 
 ---
 

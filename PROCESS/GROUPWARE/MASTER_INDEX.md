@@ -30,8 +30,9 @@ PROCESS/GROUPWARE/
 │   ├── 📄 KNOWLEDGE.md                         # Cheat sheet nén gọn ngữ cảnh
 │   └── 📄 LESSONS_LEARNED.md                   # Nhật ký bài học kinh nghiệm & sự cố thực tế
 │
-├── 📂 GROUPWARE_KNOWLEDGE_BASE/                # 📚 TRI THỨC NGHIỆP VỤ & KỸ THUẬT (12+ KB Files)
+├── 📂 GROUPWARE_KNOWLEDGE_BASE/                # 📚 TRI THỨC NGHIỆP VỤ & KỸ THUẬT (13+ KB Files)
 │   ├── 📄 GW_INDEX.md                          # Mục lục điều hướng & tra cứu nhanh
+│   ├── 📄 GW_00_CORE_OPERATING_PRINCIPLES.md   # 🏛️ KIM CHỈ NAM: Bản chất cốt lõi & 7 Quy tắc vận hành bất biến
 │   ├── 📄 GW_01_DANG_NHAP.md                   # Đăng nhập, mật khẩu, phân quyền, SSO
 │   ├── 📄 GW_02_MUA_HANG.md                    # Luồng PO, Arrival, IQC, Receiving, Đóng sổ
 │   ├── 📄 GW_03_KE_HOACH_SX.md                 # Kế hoạch tháng, ngày, tạo Lot, sync MES B310/B450
@@ -47,6 +48,7 @@ PROCESS/GROUPWARE/
 │   ├── 📄 GW_13_BIZBOX_AI_AGENT_ENGINE.md        # Kiến trúc AI Agent & Dynamic APIs của Bizbox Alpha
 │   ├── 📄 GW_14_GROUPWARE_DATABASE_ROUTINES_AND_VIEWS.md # Sổ tay Stored Procedures, Functions & Views
 │   ├── 📄 GW_15_GROUPWARE_ECOSYSTEM_DATABASES.md # Hệ sinh thái 5 CSDL thành phần (RESTFUL, streamdocs, SPREADSHEET, WEBSOCKET, NEOE)
+│   ├── 📄 GW_16_FULL_FEATURE_DATABASE_MAPPING_BLUEPRINT.md # 🗺️ BẢN THIẾT KẾ TOÀN CẢNH: 100% tính năng & Ánh xạ CSDL chi tiết
 │   │
 │   ├── 📂 integrations/                        # 🗄️ Bộ 10 tài liệu phân tích kỹ thuật tích hợp CSDL
 │   │   ├── PURCHASE_INTEGRATION.md             # Tích hợp mua hàng chi tiết

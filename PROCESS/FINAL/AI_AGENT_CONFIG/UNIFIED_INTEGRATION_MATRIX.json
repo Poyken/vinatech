@@ -1,0 +1,161 @@
+{
+  "version": "1.0.0",
+  "updated_at": "2026-09-24 21:35:00",
+  "description": "Unified Cross-System Integration & Table Lineage Matrix for K-System Ace (Bridge to MES, POP, GW, Douzone, Andon, WCMS)",
+  "touchpoints": [
+    {
+      "pipeline_id": "PIPE_01_MASTER_ITEM",
+      "name": "Đồng Bộ Master Data Vật Tư & Sản Phẩm (Item Master)",
+      "flow": "Douzone (NEOE) ➔ K-System Ace (VINATECVN) ➔ NAIS MES (SmartFactoryV2)",
+      "ksystem_table": "VINATECVN.dbo._TDAItem",
+      "ksystem_keys": ["CompanySeq", "ItemSeq", "ItemNo", "ItemNm", "Spec"],
+      "legacy_mappings": {
+        "douzone": {
+          "table": "NEOE.dbo.MA_ITEM",
+          "keys": ["CD_ITEM", "NM_ITEM", "STND_ITEM", "CLS_ITEM"]
+        },
+        "groupware": {
+          "table": "VINATECH_GROUP.dbo.VINA_ITEM",
+          "keys": ["ITEM_CODE", "ITEM_NAME", "SPECIFICATION"]
+        },
+        "mes": {
+          "table": "SmartFactoryV2.dbo.STB_MaterialMaster",
+          "keys": ["MaterialCode", "MaterialName", "ModelCode", "MaterialThickness"]
+        }
+      },
+      "sync_direction": "K-System nắm giữ quyền Master Data tối cao, đẩy mã vật tư xuống MES A230 và Groupware"
+    },
+    {
+      "pipeline_id": "PIPE_02_BOM_EXPLOSION",
+      "name": "Đồng Bộ Định Mức Kỹ Thuật & BOM Sản Xuất (Engineering BOM)",
+      "flow": "K-System Ace (Module 8) ➔ NAIS MES (Phase 0 Master Data)",
+      "ksystem_table": "VINATECVN.dbo._TPRBOM",
+      "ksystem_keys": ["CompanySeq", "BOMSeq", "ParentItemSeq", "ChildItemSeq", "StdQty", "LossRate"],
+      "legacy_mappings": {
+        "douzone": {
+          "table": "NEOE.dbo.PR_BOM",
+          "keys": ["CD_PLANT", "CD_ITEM", "CD_MAT", "QT_DOS"]
+        },
+        "mes": {
+          "table": "SmartFactoryV2.dbo.STB_MaterialBOM",
+          "keys": ["ParentMaterialCode", "ChildMaterialCode", "UnitQty", "BOMVersion"]
+        },
+        "pop": {
+          "table": "VINATECH_POP.dbo.VINA_BOM_INPUT_ROUTE",
+          "keys": ["ModelCode", "RouteCode", "MaterialCode"]
+        }
+      },
+      "sync_direction": "K-System phát hành phiên bản Standard BOM; MES nạp vào A310 để kiểm tra khi công nhân quét nạp cuộn cực tại B597/POP"
+    },
+    {
+      "pipeline_id": "PIPE_03_WORK_ORDER",
+      "name": "Phát Hành Lệnh Sản Xuất & Kế Hoạch Ngày (Work Order Dispatch)",
+      "flow": "Groupware (Phê duyệt) ➔ K-System (Lệnh SX Master) ➔ MES (Kế hoạch ngày) ➔ POP (Gán máy)",
+      "ksystem_table": "VINATECVN.dbo._TPRWorkOrder",
+      "ksystem_keys": ["CompanySeq", "WorkOrderSeq", "WorkOrderNo", "ItemSeq", "PlanQty", "StartDate", "EndDate"],
+      "legacy_mappings": {
+        "groupware": {
+          "table": "VINATECH_GROUP.dbo.VINA_DOCUMENT_DAILY_PLAN",
+          "keys": ["DOCUMENT_SAVE_CODE", "DAY_PLAN_NO", "MODEL_CODE", "PLAN_QTY"]
+        },
+        "mes": {
+          "table": "SmartFactoryV2.dbo.STB_DayProdPlan",
+          "keys": ["DayPlanNo", "OrderNo", "ModelCode", "PlanQty", "IsFixed"]
+        },
+        "pop": {
+          "table": "VINATECH_POP.dbo.VINA_EQUIPMENT_MAPPING",
+          "keys": ["DayPlanNo", "EquipmentCode", "MappingStatus"]
+        }
+      },
+      "sync_direction": "Lệnh SX cấp cao từ K-System được chia nhỏ thành DayPlanNo trên MES và sinh Barcode ControlNo trên STB_SetInfo"
+    },
+    {
+      "pipeline_id": "PIPE_04_PROD_RESULT_LOT",
+      "name": "Tiến Độ Sản Xuất & Truy Vết LOT 360° (Shop Floor Execution & Traceability)",
+      "flow": "POP Kiosk (Quét Barcode/PLC) ➔ MES (STB_ProdRouteHist) ➔ K-System (FrmWPDLotList / _TPRProdResult)",
+      "ksystem_table": "VINATECVN.dbo._TPRProdResult",
+      "ksystem_keys": ["CompanySeq", "ProdResultSeq", "WorkOrderSeq", "LotNo", "WorkCenterSeq", "GoodQty", "ScrapQty"],
+      "legacy_mappings": {
+        "pop": {
+          "table": "SmartFactoryV2.dbo.MongoToMesPerformance",
+          "keys": ["MachineCode", "Barcode", "RouteCode", "CreateDate"]
+        },
+        "mes": {
+          "table": "SmartFactoryV2.dbo.STB_ProdRouteHist",
+          "keys": ["Barcode", "RouteCode", "EquipmentCode", "ProdQty", "WorkerID", "JobDate"]
+        },
+        "mes_lot": {
+          "table": "SmartFactoryV2.dbo.STB_SetInfo",
+          "keys": ["Barcode", "LotNo", "ModelCode", "DayPlanNo", "FinishDate"]
+        }
+      },
+      "sync_direction": "Công nhân quét tại POP ghi vào MongoToMesPerformance -> MES chốt STB_ProdRouteHist -> K-Smart Bridge tổng hợp đẩy lên K-System _TPRProdResult"
+    },
+    {
+      "pipeline_id": "PIPE_05_PROCURE_TO_STOCK",
+      "name": "Mua Hàng, Kiểm Tra IQC & Quản Lý Kho LOT (Procure-to-Lot-Stock)",
+      "flow": "Groupware (Đơn mua PO) ➔ K-System (POH/POL) ➔ MES (F330 Tiếp nhận & C220 IQC) ➔ K-System (Kho LOT)",
+      "ksystem_table": "VINATECVN.dbo._TMAPOH / _TMAItemStockLot",
+      "ksystem_keys": ["CompanySeq", "POSeq", "PONo", "VendorSeq", "ItemSeq", "LotNo", "StockQty"],
+      "legacy_mappings": {
+        "groupware": {
+          "table": "VINATECH_GROUP.dbo.VINA_DOCUMENT_POH",
+          "keys": ["DOCUMENT_SAVE_CODE", "NO_PO", "CD_PARTNER"]
+        },
+        "douzone": {
+          "table": "NEOE.dbo.PU_POH",
+          "keys": ["NO_PO", "CD_PARTNER", "DT_PO"]
+        },
+        "mes_receipt": {
+          "table": "SmartFactoryV2.dbo.STB_MaterialLotInfo",
+          "keys": ["MaterialLotID", "PO_NO", "MaterialCode", "LotNo", "ReceiveQty"]
+        },
+        "mes_qc": {
+          "table": "SmartFactoryV2.dbo.STB_MaterialQcInfo",
+          "keys": ["MaterialLotID", "StatusCheck", "InspectDate"]
+        }
+      },
+      "sync_direction": "PO từ K-System -> Thủ kho MES nhận hàng tại F330 -> QC duyệt PASS tại C220 -> Tồn kho thực tế đồng bộ về K-System FrmWLGWHLOTStockRealList"
+    },
+    {
+      "pipeline_id": "PIPE_06_COGS_ACCOUNTING",
+      "name": "Hạch Toán Tự Động & Tính Giá Thành Sản Phẩm (COGS & General Ledger)",
+      "flow": "MES (Sản lượng thực & Tiêu hao NVL) + Groupware (Bảng chấm công) ➔ K-System (Module 11 Giá vốn ➔ Module 4 Kế toán)",
+      "ksystem_table": "VINATECVN.dbo._TCOUnitProductCost / _TACSlip",
+      "ksystem_keys": ["CompanySeq", "CostYearMonth", "ItemSeq", "DirectMatCost", "DirectLaborCost", "OverheadCost", "UnitCost"],
+      "legacy_mappings": {
+        "douzone": {
+          "table": "NEOE.dbo.FI_DOCU",
+          "keys": ["NO_DOCU", "NO_DOLINE", "CD_ACCT", "AMT"]
+        },
+        "bizbox": {
+          "table": "DZICUBE.dbo.ABDOCU",
+          "keys": ["DOCUMENT_SAVE_CODE", "NO_DOCU", "ACCT_CODE"]
+        },
+        "banking": {
+          "table": "WCMS_STANDARD_NEW.dbo.WCMS_ACCOUNT_TRNX_LOG",
+          "keys": ["ACCOUNT_TRNX_LOG_UUID", "TRNX_AMT", "ERP_FLAG"]
+        }
+      },
+      "sync_direction": "K-System tập hợp tự động: Chi phí NVL thực tế từ MES + Chi phí nhân công ca kíp + Khấu hao máy móc -> Tính giá thành đơn vị (COGS) và tự động sinh bút toán sổ cái _TACSlip"
+    },
+    {
+      "pipeline_id": "PIPE_07_HR_ORGANIZATION",
+      "name": "Đồng Bộ Danh Mục Nhân Sự & Phân Quyền Vận Hành (Employee Master & Security)",
+      "flow": "K-System (_THREmp - 825 CBNV) ➔ Groupware (V_ORG_USER) ➔ SmartFramework (STB_UserMaster)",
+      "ksystem_table": "VINATECVN.dbo._THREmp",
+      "ksystem_keys": ["CompanySeq", "EmpSeq", "EmpNo", "EmpNm", "DeptSeq", "WorkStatus"],
+      "legacy_mappings": {
+        "groupware": {
+          "table": "VINATECH_GROUP.dbo.V_ORG_USER",
+          "keys": ["EMP_SEQ", "USER_ID", "USER_NAME", "DEPT_SEQ"]
+        },
+        "smartframework": {
+          "table": "SmartFramework.dbo.STB_UserMaster",
+          "keys": ["UserID", "UserName", "DepartmentCode", "IsActive"]
+        }
+      },
+      "sync_direction": "K-System quản lý hồ sơ nhân sự gốc; đồng bộ mã nhân viên sang Groupware để ký duyệt và sang SmartFramework để công nhân đăng nhập Kiosk POP"
+    }
+  ]
+}
