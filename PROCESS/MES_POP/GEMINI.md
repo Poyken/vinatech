@@ -30,29 +30,38 @@ Mọi câu trả lời khi nhận báo lỗi sự cố BẮT BUỘC theo 4 phầ
 3. 🛠️ **Cách OP tự xử lý trên giao diện (Workaround):** Các bước 1-2-3 cho công nhân/tổ trưởng tại xưởng.
 4. ⚡ **SQL Hotfix chuẩn (Nếu IT phải can thiệp):** Đã bọc `BEGIN TRAN...ROLLBACK`, có NOLOCK, ChangeUserID='vanduc'.
 
-## ⚡ 1. POP KIOSK CLI HUB: `.\pop.ps1` (Mặt Trận Xưởng & Kiosk)
-- `nvl <Lot/PO>` / `bom <Lot/PO>` — Soi định mức NVL BOM, AltCode và tồn khả dụng `ROUTE_VN_WH` (<1.4s)
-- `trace <Target>` — Golden Query 360 Kiosk (BOM, lịch sử nạp NVL Kiosk `STB_RawMaterialInputHist`, sync, mapping máy)
+## ⚡ 1. ALL-IN-ONE MASTER CLI HUB: `.\mes.ps1` (CÔNG CỤ TOÀN NĂNG HỢP NHẤT)
+- `trace "<LotID>"` — Golden Query 360° toàn diện (Lot, Line, Thiết bị, Thùng)
+- `diagnose "<Text/Lot/Screen>"` — Master Auto-Diagnostic tức thời 1-Shot (<1s) xuất đúng 4 Dòng Vàng
+- `lineage "<Lot/PO>"` — Truy vết huyết mạch 3 trụ cột (PO Master ➔ Kho NVL ➔ Tiến độ MES ➔ Kiosk POP)
+- `nvl <Lot/PO>` / `bom <Lot/PO>` — Soi định mức BOM NVL, AltCode và tồn khả dụng `ROUTE_VN_WH` vs `MAIN_VN_WH` (<1s)
+- `gw <PO/DocCode>` — Truy vết tờ trình thay thế vật tư Groupware, phê duyệt & ERP NEOE (<2.5s)
 - `unlock "<Machine>" [-Deploy]` — Mở khóa giải phóng máy POP Kiosk cụ thể tức thời 1-Shot (<0.5s)
 - `release-machines [-Force]` — Giải phóng toàn bộ máy POP kẹt lock hàng loạt theo Line
 - `sync [-Line <Line>]` — Quét phát hiện các Lot bị kẹt pipeline đồng bộ POP -> MES (`IsDone=1, IsTransferred=0`)
-- `readiness` / `audit` — Kiểm toán độ sẵn sàng chuyển đổi POP Web & đối soát sản lượng POP vs MES
-- `find "<Keyword>"` — Tra cứu POP L1 Matrix & tài liệu POP KB chuyên sâu
-
-## ⚡ 2. CORE MES CLI HUB: `.\mes.ps1` (Lõi Sản Xuất & Hotfix Backend)
-- `trace "<LotID>"` — Golden Query 360° sản xuất MES (Single Round-Trip)
-- `shell` — Bật Persistent REPL Shell tức thời (<0.05s response, nạp sẵn L1 Cache & DB conn trong RAM)
-- `diagnose "<Text/Lot>"` — Master Auto-Diagnostic tức thời 1-Shot (<1s) xuất đúng 4 Dòng Vàng
-- `lineage "<Lot/PO>"` — Truy vết huyết mạch 3 trụ cột (PO Master ➔ Kho NVL ➔ Tiến độ MES ➔ Kiosk POP)
-- `screen <ScreenID>` — Debug màn hình MES WinForm (Grid, SP, Bảng liên quan: B530, B540, B552, B781, B782...)
-- `sp <SP_Name>` — Tải SP gốc mới nhất từ DB về local để phân tích
-- `health` — Morning Health Check quét Lot HOLD, WIP 24h
-- `watchdog-hidden` / `watchdog-status` — Auto-Pilot tuần tra 24/7 & tự động bắn alert Telegram
-- `weekly-report [-StartDate "..." -EndDate "..."]` — Tự động soạn Báo Cáo Tuần IT (CSV tại Desktop/thanks_and_ojt_reports)
+- `swap-machine -Lots "..." -Machine "..."` — Sinh Hotfix đổi máy Kiosk chuẩn Rule 20.1 (Atomic 2 bảng)
+- `fix-solution -Lots "..."` — Cấp cứu khôi phục thùng dung dịch điện giải 150kg
 - `fix-movedate -Lots "..." -TargetDate "yyyy-MM-dd"` — Sinh Hotfix chuyển ngày chốt B782 chuẩn 10h00 AM (Author vanduc)
 - `fix-electrode -Lots "..." [-Type Slitting|Mixing]` — Sinh Hotfix xóa cuộn/mẻ trộn B552 & reset IsLineInput
 - `fix-rollback -Lots "..." [-Route "..."]` — Sinh Hotfix rollback lượt chốt B530 / POP Kiosk
 - `fix-pop-clone -Lots "..."` — Sinh Hotfix xóa dòng tự sinh `CompleteRoute IS NULL` để mở chốt POP Kiosk
-- `deploy <file.sql> [-Force]` — Triển khai Hotfix qua Transaction an toàn
-- `find "<Keyword>"` — Tra cứu L1 Quick Matrix 95 màn hình MES (<0.001s)
+- `fix-cancel-pack -Target "<Lot>" [-BoxId "..."]` — Sinh Hotfix hủy lẻ từng Box/Pack đóng gói (B523/HN523)
+- `fix-defect-null -Lots "..."` — Sinh Hotfix chuẩn hóa RepairQty = 0 sửa mất cột NG trên B782
+- `fix-lineinput -Lots "..."` — Sinh Hotfix kích hoạt lại IsLineInput = 1 cho Lot
+- `deploy <file.sql> [-Force]` — Triển khai Hotfix qua Transaction an toàn có Pre-flight backup
+- `screen <ScreenID>` — Debug màn hình MES WinForm (Grid, SP, Bảng liên quan: B530, B540, B552, B781, B782...)
+- `sp <SP_Name>` — Tải SP gốc mới nhất từ DB về local để phân tích
+- `health` — Morning Health Check quét Lot HOLD, WIP 24h
+- `locks [-Profile <Name>]` — Soi real-time cac khoa blocking, page U-locks va deadlocks tren 15 CSDL (<2s)
+- `b598-price [-Target <Code>]` — Soi nhanh don gia USD & ty le can hardcode trong SP usp_vn_showproductionerror (<1s)
+- `validate-excel <File.xlsx> [-Route F330|B598]` — Kiem toan pre-flight file Excel, bat loi lech cot (Ma khay E04, E05 vao StartPeriod) (<1s)
+- `clean` — Don dep scratch workspace, quet & tieu diet zombie background process bao ve CPU chong ru quat
+- `weekly-report [-StartDate "..." -EndDate "..."]` — Tự động soạn Báo Cáo Tuần IT (CSV tại Desktop/thanks_and_ojt_reports)
+- `find "<Keyword>"` — Tra cứu L1 Quick Matrix 95 màn hình MES (<0.001s) và toàn bộ KB
+
+## ⚡ 2. POP KIOSK CHUYÊN DỤNG: `.\pop.ps1` (Mặt Trận Xưởng & Kiosk)
+- `nvl <Lot/PO>` / `bom <Lot/PO>` — Soi nhanh BOM NVL và tồn kho
+- `trace <Target>` — Golden Query 360 Kiosk
+- `unlock "<Machine>"` / `release-machines` — Mở khóa thiết bị Kiosk
+- `sync` / `readiness` / `audit` — Đồng bộ & kiểm toán Kiosk POP Web
 

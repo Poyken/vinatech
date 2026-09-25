@@ -63,6 +63,16 @@ Toàn bộ hệ thống được điều phối qua CLI Hub duy nhất: `.\mes.p
    Bảng `STB_MaterialDocDetail` có trigger `tgMaterialDocDetailForDelete`. Để xóa chứng từ lỗi, bắt buộc phải set `CONTEXT_INFO 0x999997` và mở `DocStatus = 'CREATE'` trước khi DELETE.
 6. **Mọi phép tính số học phải bọc `ISNULL(..., 0)`:**
    SQL Server tuân thủ Three-Valued Logic: `Giá trị - NULL = NULL`. Mọi câu lệnh tính phế, sản lượng phải bọc `ISNULL(col, 0)`.
+7. **Bẫy Lệch Cột khi Import Excel (Column Shift Misalignment - F330/B598):**
+   Khi OP gửi ảnh/file Excel lỗi, phải kiểm tra tiêu đề cột và kiểu dữ liệu từng ô. Lỗi phổ biến nhất là dán nhầm mã vị trí khay/kệ (`E04, E05`) vào cột chu kỳ ngày tháng (`StartPeriod`). Sử dụng ngay `.\mes.ps1 validate-excel <File.xlsx> -Route F330` để phát hiện tự động trong 0.5s.
+8. **Đặc thù Hardcode Báo Phế B598 (`usp_vn_showproductionerror`):**
+   Màn hình B598 từ năm 2021 đến nay không đọc giá từ bảng Master mà gán cứng công thức chia cân nặng và đơn giá USD trong SP bằng `CASE WHEN MaLotNguyenLieu = '...' THEN ...`. Tra cứu nhanh bằng `.\mes.ps1 b598-price <MaterialCode>` thay vì đọc chay SP.
+9. **Huyết mạch Nguyên vật liệu thay thế (Alt Material):**
+   Kiosk POP đọc mã thay thế từ trường `DelegateMaterialCode` trong `STB_MaterialMaster`. Nguồn gốc phê duyệt xuất phát từ Tờ trình Groupware và ERP NEOE BOM. Nếu mã chính và mã thay thế lệch quy cách (ví dụ Tape 5mm vs Tape 10mm), Kiosk sẽ chặn không cho quét tem. Soi bằng `.\mes.ps1 nvl <Lot>` hoặc `.\gw.ps1 trace <DocCode>`.
+10. **Ngăn chặn Zombie Background Process gây rú quạt CPU 100%:**
+    Mọi script nền/bot phải có timeout và cờ lockfile. Chạy định kỳ `.\mes.ps1 clean` để tự động phát hiện và dọn dẹp các tiến trình PowerShell/Python ngầm bị kẹt.
+11. **Giám sát Khóa Blocking & Deadlock DMV Real-time:**
+    Tránh các hàm Scalar UDF (như `fn_VVT_getdatebyVendorLot_MergeCode`) trong câu lệnh UPDATE lớn vì sẽ giữ Update Lock (U-lock) quét toàn bảng triệu dòng gây deadlock với đóng gói. Soi tức thời qua `.\mes.ps1 locks`.
 
 ---
 

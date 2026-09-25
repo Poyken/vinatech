@@ -1,4 +1,4 @@
-﻿# ==============================================================================
+# ==============================================================================
 # mes.ps1 — VINATECH MES UNIFIED CLI HUB (Trung Tam Dieu Phoi Lenh Van Hanh)
 # ==============================================================================
 
@@ -38,20 +38,22 @@ $toolsDir = Join-Path $scriptDir 'tools'
 function Show-MesBanner {
     Write-Host ''
     Write-Host '======================================================================' -ForegroundColor Cyan
-    Write-Host '             VINATECH MES UNIFIED CLI HUB (v2.2)' -ForegroundColor Yellow
-    Write-Host '    Trung Tam Dieu Phoi Van Hanh, Chan Doan & Khac Phuc Su Co MES' -ForegroundColor White
+    Write-Host '           VINATECH MES ALL-IN-ONE MASTER CLI HUB (v3.0)' -ForegroundColor Yellow
+    Write-Host '     CONG CU TOAN NANG: MES SAN XUAT - KIOSK POP - GROUPWARE - 15 DB' -ForegroundColor White
     Write-Host '======================================================================' -ForegroundColor Cyan
 }
 
 function Show-Help {
     Show-MesBanner
     Write-Host ''
-    Write-Host 'HE SINH THAI 3 CLI HUBS CHUYEN TRACH:' -ForegroundColor Cyan
-    Write-Host '   .\pop.ps1 ...  -> Hub chuyen trach Mat tran Kiosk POP tai xuong (BOM NVL, Kho ROUTE_VN_WH, Unlock may, Sync)' -ForegroundColor Yellow
-    Write-Host '   .\mes.ps1 ...  -> Hub chuyen trach Loi San Xuat MES, Vong doi Lot, Man hinh WinForm & Hotfixes' -ForegroundColor Yellow
-    Write-Host '   .\gw.ps1  ...  -> Hub chuyen trach Phe Duyet Groupware & Chung Tu ERP NEOE' -ForegroundColor Yellow
+    Write-Host '(*) SMART AUTO-ROUTER: Chi can go ".\mes.ps1 <MA_BAT_KY>" - He thong tu dong nhan dien & xu ly!' -ForegroundColor Magenta
+    Write-Host '    - Ma Lot / Barcode (VVQR...)  -> Tu dong chay Golden Query 360 & chan doan' -ForegroundColor Gray
+    Write-Host '    - So PO (260829000018 - 12 so)-> Tu dong truy vet huyet mach Lineage & BOM' -ForegroundColor Gray
+    Write-Host '    - Ma man hinh (B530, B782...) -> Tu dong tra cuu man hinh WinForm & chan doan' -ForegroundColor Gray
+    Write-Host '    - Ma thiet bi (VVMHY130...)   -> Tu dong kiem tra mapping & khoa ACTIVE' -ForegroundColor Gray
+    Write-Host '    - Mo ta loi (HOLD, ACTIVE...) -> Tu dong Master Diagnostic xuat 4 Dong Vang' -ForegroundColor Gray
     Write-Host ''
-    Write-Host 'CAC LENH VAN HANH MES CHINH:' -ForegroundColor Yellow
+    Write-Host 'CAC LENH VAN HANH CHINH THEO 5 PHAN HE:' -ForegroundColor Yellow
     Write-Host ''
     Write-Host '  1. TRUY VET DU LIEU & SU CO (INVESTIGATION):' -ForegroundColor Cyan
     Write-Host '     .\mes.ps1 shell                     ' -NoNewline -ForegroundColor Green
@@ -62,6 +64,10 @@ function Show-Help {
     Write-Host '-> Golden Query 360 sieu toc (Single Round-Trip) tu dong nhan dien Lot, Line, Thiet bi, Thung' -ForegroundColor Gray
     Write-Host '     .\mes.ps1 lineage <Target>          ' -NoNewline -ForegroundColor Green
     Write-Host '-> Truy vet huyet mach lien he thong (PO/GW -> Kho -> MES -> POP Kiosk)' -ForegroundColor Gray
+    Write-Host '     .\mes.ps1 nvl <Lot/PO>              ' -NoNewline -ForegroundColor Green
+    Write-Host '-> Soi BOM NVL, ma thay the (AltCode) & ton kha dung ROUTE_VN_WH vs MAIN_VN_WH' -ForegroundColor Gray
+    Write-Host '     .\mes.ps1 gw <PO/DocCode>           ' -NoNewline -ForegroundColor Green
+    Write-Host '-> Truy vet to trinh thay the vat tu Groupware, phe duyet & ERP NEOE' -ForegroundColor Gray
     Write-Host '     .\mes.ps1 screen <ScreenID>         ' -NoNewline -ForegroundColor Green
     Write-Host '-> Debug man hinh MES (Grid, SP, Bang lien quan: B530, B540...)' -ForegroundColor Gray
     Write-Host '     .\mes.ps1 sp <SP_Name>              ' -NoNewline -ForegroundColor Green
@@ -72,6 +78,8 @@ function Show-Help {
 
     Write-Host ''
     Write-Host '  2. TRUY VAN & KIEM TRA HE THONG (SYSTEM & QUERY):' -ForegroundColor Cyan
+    Write-Host '     .\mes.ps1 sync [-Line <Line>]       ' -NoNewline -ForegroundColor Green
+    Write-Host '-> Quet phat hien cac Lot bi ket pipeline dong bo POP -> MES (IsTransferred=0)' -ForegroundColor Gray
     Write-Host '     .\mes.ps1 pop-readiness [-Target <Line>]' -ForegroundColor Green
     Write-Host '-> Kiem toan 8 buoc san sang cat WinForm & chay 100% POP Web theo Line' -ForegroundColor Gray
     Write-Host '     .\mes.ps1 release-machines [-Target <Line>] [-Force]' -ForegroundColor Green
@@ -86,6 +94,12 @@ function Show-Help {
     Write-Host '-> Audit do tin cay toan bo tai lieu Markdown vs Live DB' -ForegroundColor Gray
     Write-Host '     .\mes.ps1 audit-l1                  ' -NoNewline -ForegroundColor Green
     Write-Host '-> Kiem toan do tin cay tuyet doi giua L1 Quick Matrix va Live DB' -ForegroundColor Yellow
+    Write-Host '     .\mes.ps1 locks [-Profile <Name>]   ' -NoNewline -ForegroundColor Green
+    Write-Host '-> Soi real-time cac khoa blocking, U-locks, deadlocks tren 15 CSDL' -ForegroundColor Gray
+    Write-Host '     .\mes.ps1 b598-price [-Target <Code>]' -NoNewline -ForegroundColor Green
+    Write-Host '-> Soi nhanh don gia USD & ty le can hardcode trong SP usp_vn_showproductionerror' -ForegroundColor Gray
+    Write-Host '     .\mes.ps1 validate-excel <File.xlsx> [-Route F330|B598]' -ForegroundColor Green
+    Write-Host '-> Kiem toan pre-flight file Excel, bat loi lech cot (Ma khay E04, E05 vao StartPeriod)' -ForegroundColor Yellow
     Write-Host '     .\mes.ps1 query "<SELECT_SQL>"      ' -NoNewline -ForegroundColor Green
     Write-Host '-> Chay cau SELECT an toan (kem NOLOCK warning & Multi-DB)' -ForegroundColor Gray
 
@@ -181,12 +195,18 @@ elseif ($cmdLower -eq 'pop') {
     }
 }
 elseif ($cmdLower -eq 'nvl' -or $cmdLower -eq 'bom') {
-    $popScript = Join-Path $scriptDir 'pop.ps1'
-    if (Test-Path $popScript) {
-        Write-Host "-> [MES Hub] Chuyen tiep tra cuu NVL toi POP Hub: .\pop.ps1 nvl $Target..." -ForegroundColor DarkCyan
-        & $popScript nvl $Target
+    $targetVal = if ($Target) { $Target } else { $Lots }
+    if ([string]::IsNullOrWhiteSpace($targetVal)) {
+        Write-Host "Loi: Vui long nhap ma Lot hoac ma PO can tra cuu BOM NVL!" -ForegroundColor Red
+        Write-Host "Vi du: .\mes.ps1 nvl 'VVQR253R018601'" -ForegroundColor Yellow
+        Write-Host "       .\mes.ps1 nvl '260829000018'" -ForegroundColor Yellow
+        exit 1
+    }
+    $nvlScript = Join-Path $toolsDir 'inspect_nvl_bom.ps1'
+    if (Test-Path $nvlScript) {
+        & $nvlScript $targetVal
     } else {
-        Write-Error 'pop.ps1 not found.'
+        Write-Error 'tools/inspect_nvl_bom.ps1 not found.'
     }
 }
 elseif ($cmdLower -eq 'trace' -or $cmdLower -eq 'pop-trace') {
@@ -396,6 +416,69 @@ elseif ($cmdLower -eq 'pop-audit' -or $cmdLower -eq 'pop-sync' -or $cmdLower -eq
     $conn.Close()
     Write-Host ''
     Write-Host '-> Hoan thanh kiem toan doi soat POP vs MES.' -ForegroundColor Green
+}
+elseif ($cmdLower -eq 'sync') {
+    Show-MesBanner
+    Write-Host "-> Kiem tra cac Lot bi tac nghen pipeline dong bo POP -> MES..." -ForegroundColor Yellow
+    $conn = Get-DbConnection -Profile 'SmartFactoryV2' -Silent
+    if ($null -eq $conn) {
+        Write-Host "LOI: Khong the ket noi CSDL SmartFactoryV2!" -ForegroundColor Red
+        exit 1
+    }
+    $lineFilter = if ($Line) { "AND LineCode = '$($Line.Replace("'", "''"))'" } else { "" }
+    $sql = @"
+SELECT TOP 20 DayPlanNo, Barcode, RouteCode, LineCode, TotalProdQty, TotalDefectQty, IsDone, IsTransferred, ModifyDateTime 
+FROM SmartFactoryV2.dbo.MongoToMesPerformance WITH(NOLOCK) 
+WHERE IsDone = 1 AND IsTransferred = 0 $lineFilter
+ORDER BY ModifyDateTime DESC;
+"@
+    $cmd = $conn.CreateCommand()
+    $cmd.CommandText = $sql
+    $da = New-Object System.Data.SqlClient.SqlDataAdapter($cmd)
+    $dt = New-Object System.Data.DataTable
+    $da.Fill($dt) | Out-Null
+    $conn.Close()
+
+    if ($dt.Rows.Count -eq 0) {
+        Write-Host "   [OK] Pipeline dong bo thong suot! Khong co Lot nao bi ket (IsDone=1, IsTransferred=0)." -ForegroundColor Green
+    } else {
+        Write-Host ">>> PHAT HIEN $($dt.Rows.Count) LOT BI TAC NGHEN DONG BO:" -ForegroundColor Red
+        $dt | Format-Table -AutoSize | Out-String | ForEach-Object { Write-Host $_.TrimEnd() -ForegroundColor White }
+    }
+}
+elseif ($cmdLower -eq 'gw' -or $cmdLower -eq 'gw-trace') {
+    $targetVal = if ($Target) { $Target } else { $Lots }
+    if ([string]::IsNullOrWhiteSpace($targetVal)) {
+        Write-Host "Loi: Vui long nhap ma can truy vet Groupware (PO / Ma Van Ban / Nhan Vien / Vat Tu)!" -ForegroundColor Red
+        Write-Host "Vi du: .\mes.ps1 gw '260829000018'" -ForegroundColor Yellow
+        Write-Host "       .\mes.ps1 gw 'PO202606001'" -ForegroundColor Yellow
+        exit 1
+    }
+    $processRoot = Split-Path -Parent $scriptDir
+    $gwTraceScript = Join-Path $processRoot 'GROUPWARE\tools\gw_trace.ps1'
+    if (Test-Path $gwTraceScript) {
+        & $gwTraceScript -Target $targetVal
+    } else {
+        Write-Error "Khong tim thay script: $gwTraceScript"
+    }
+}
+elseif ($cmdLower -eq 'gw-form' -or $cmdLower -eq 'form') {
+    $processRoot = Split-Path -Parent $scriptDir
+    $gwScript = Join-Path $processRoot 'GROUPWARE\gw.ps1'
+    if (Test-Path $gwScript) {
+        & $gwScript form $Target
+    } else {
+        Write-Error "Khong tim thay script: $gwScript"
+    }
+}
+elseif ($cmdLower -eq 'gw-chain' -or $cmdLower -eq 'chain') {
+    $processRoot = Split-Path -Parent $scriptDir
+    $gwScript = Join-Path $processRoot 'GROUPWARE\gw.ps1'
+    if (Test-Path $gwScript) {
+        & $gwScript chain $Target
+    } else {
+        Write-Error "Khong tim thay script: $gwScript"
+    }
 }
 elseif ($cmdLower -eq 'pop-readiness' -or $cmdLower -eq 'readiness') {
     $popReadinessScript = Join-Path $toolsDir 'pop_readiness.ps1'
@@ -720,6 +803,38 @@ elseif ($cmdLower -eq 'weekly-report' -or $cmdLower -eq 'report-it') {
         Write-Error 'tools/it_weekly_report.ps1 not found.'
     }
 }
+elseif ($cmdLower -eq 'locks' -or $cmdLower -eq 'db-locks') {
+    $lScript = Join-Path $toolsDir 'inspect_db_locks.ps1'
+    if (Test-Path $lScript) {
+        $targetProfile = if ($Target) { $Target } else { $Profile }
+        & $lScript -Profile $targetProfile
+    } else {
+        Write-Error 'tools/inspect_db_locks.ps1 not found.'
+    }
+}
+elseif ($cmdLower -eq 'b598-price' -or $cmdLower -eq 'scrap-price') {
+    $pScript = Join-Path $toolsDir 'inspect_b598_price.ps1'
+    if (Test-Path $pScript) {
+        & $pScript -MaterialCode $Target
+    } else {
+        Write-Error 'tools/inspect_b598_price.ps1 not found.'
+    }
+}
+elseif ($cmdLower -eq 'validate-excel' -or $cmdLower -eq 'check-excel') {
+    if ([string]::IsNullOrWhiteSpace($Target)) {
+        Show-MesBanner
+        Write-Host "Loi: Vui long nhap duong dan toi file Excel can kiem tra!" -ForegroundColor Red
+        Write-Host "Vi du: .\mes.ps1 validate-excel 'C:\Users\...\import.xlsx' -Route F330" -ForegroundColor Yellow
+        exit 1
+    }
+    $targetScreen = if ($Route) { $Route } else { 'F330' }
+    $vScript = Join-Path $toolsDir 'validate_excel_import.ps1'
+    if (Test-Path $vScript) {
+        & $vScript -FilePath $Target -Screen $targetScreen
+    } else {
+        Write-Error 'tools/validate_excel_import.ps1 not found.'
+    }
+}
 elseif ($cmdLower -eq 'clean') {
     Show-MesBanner
     Write-Host '(*) Dang tien hanh kiem tra va don dep Workspace...' -ForegroundColor Cyan
@@ -750,7 +865,29 @@ elseif ($cmdLower -eq 'clean') {
         }
     }
 
-    # 3. Kiem tra Git Working Tree
+    # 3. Kiem tra va tieu diet zombie process ngam (Powershell/Python orphan chay > 60s gay ru quat CPU)
+    Write-Host '(*) Kiem tra va tieu diet cac tien trinh ngam chay qua han (Zombie CPU Cleanup)...' -ForegroundColor Cyan
+    $zombieCount = 0
+    $bgProcs = Get-CimInstance Win32_Process -ErrorAction SilentlyContinue | Where-Object { 
+        ($_.Name -match 'powershell|python' -and $_.CommandLine -match 'mes_diagnose|pop_trace|watchdog|inspect_') -and
+        $_.ProcessId -ne $PID
+    }
+    if ($bgProcs) {
+        foreach ($zp in $bgProcs) {
+            try {
+                Stop-Process -Id $zp.ProcessId -Force -ErrorAction SilentlyContinue
+                Write-Host "   -> Da dung tien trinh ngam tre (PID: $($zp.ProcessId), CMD: $($zp.Name))" -ForegroundColor Yellow
+                $zombieCount++
+            } catch {}
+        }
+    }
+    if ($zombieCount -gt 0) {
+        Write-Host "-> Da giai phong $zombieCount tien trinh ngam, bao ve CPU & quat laptop." -ForegroundColor Green
+    } else {
+        Write-Host "-> Khong co tien trinh ngam nao gay qua tai CPU." -ForegroundColor Green
+    }
+
+    # 4. Kiem tra Git Working Tree
     Write-Host ''
     Write-Host '(*) Trang thai Git Working Tree:' -ForegroundColor Cyan
     git status --short
@@ -784,8 +921,39 @@ else {
         }
     }
 
-    # 3. Mac dinh toan nang: Tu dong nhan dien moi ma (Lot, Barcode, PO, Model, QC Doc, Line, Machine, Box)
-    Write-Host "-> Tu dong nhan dien '$Command' -> Khoi chay Truy vet Sieu toc 360 do..." -ForegroundColor Green
+    # 3. Kiem tra neu la Lenh San Xuat (PO: 12 chu so)
+    if ($Command -match '^\d{12}$') {
+        Write-Host "-> Tu dong nhan dien '$Command' la Lenh San Xuat (PO). Khoi chay Truy vet Huyet mach Lineage & BOM..." -ForegroundColor Yellow
+        $lineageScript = Join-Path $toolsDir 'trace_lineage.ps1'
+        if (Test-Path $lineageScript) {
+            & $lineageScript -Target $Command
+            exit 0
+        }
+    }
+
+    # 4. Kiem tra neu la Ma Chung Tu / PO Groupware (GW, DOC, PO20..., EX...)
+    if ($Command -match '^(GW|DOC|PO20\d{5}|EX\d+)') {
+        Write-Host "-> Tu dong nhan dien '$Command' la Ma Chung Tu Groupware. Khoi chay Truy vet Groupware..." -ForegroundColor Yellow
+        $processRoot = Split-Path -Parent $scriptDir
+        $gwTraceScript = Join-Path $processRoot 'GROUPWARE\tools\gw_trace.ps1'
+        if (Test-Path $gwTraceScript) {
+            & $gwTraceScript -Target $Command
+            exit 0
+        }
+    }
+
+    # 5. Kiem tra neu la Ma Thiet Bi (VVMHY..., VINA..., EQ...)
+    if ($Command -match '^(VVM|VINA|EQ)') {
+        Write-Host "-> Tu dong nhan dien '$Command' la Ma Thiet Bi. Kiem tra trang thai Khoa & Mapping tren Kiosk..." -ForegroundColor Yellow
+        $unlockScript = Join-Path $toolsDir 'unlock_machine.ps1'
+        if (Test-Path $unlockScript) {
+            & $unlockScript -Machine $Command
+            exit 0
+        }
+    }
+
+    # 6. Mac dinh toan nang: Tu dong nhan dien moi ma (Lot, Barcode, Model, QC Doc, Line, Box)
+    Write-Host "-> Tu dong nhan dien '$Command' -> Khoi chay Golden Query 360 do..." -ForegroundColor Green
     $popTraceScript = Join-Path $toolsDir 'pop_trace.ps1'
     if (Test-Path $popTraceScript) {
         & $popTraceScript -Target $Command

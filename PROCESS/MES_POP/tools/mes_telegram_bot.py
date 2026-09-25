@@ -205,7 +205,8 @@ MAIN_KEYBOARD = {
     "keyboard": [
         ["🔍 Truy Vết POP 360°", "⛓️ Huyết Mạch PO/Lot"],
         ["🎯 Chẩn Đoán Sự Cố", "🏥 Sức Khỏe MES"],
-        ["🏭 Kiểm Toán POP", "🔓 Giải Phóng Máy"]
+        ["🏭 Kiểm Toán POP", "🔓 Giải Phóng Máy"],
+        ["🔒 Khóa & Deadlock", "💰 Đơn Giá B598"]
     ],
     "resize_keyboard": True,
     "is_persistent": True
@@ -460,6 +461,32 @@ TOOL_DECLARATIONS = [
             },
             "required": ["file_path"]
         }
+    },
+    {
+        "name": "inspect_db_locks",
+        "description": "Kiểm tra real-time các khóa blocking, page U-locks, và deadlocks trên 15 CSDL SmartFactoryV2/VINATECH_POP, kèm danh sách truy vấn chạy lâu >= 3 giây.",
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "profile": {
+                    "type": "STRING",
+                    "description": "Tên profile database (mặc định SmartFactoryV2)"
+                }
+            }
+        }
+    },
+    {
+        "name": "inspect_b598_price",
+        "description": "Tra cứu nhanh đơn giá USD và công thức chia cân nặng hardcode bên trong Stored Procedure usp_vn_showproductionerror cho màn hình báo phế B598.",
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "material_code": {
+                    "type": "STRING",
+                    "description": "Mã vật tư NVL cần soi đơn giá (ví dụ GCMDPT-601, GCSN00-004)"
+                }
+            }
+        }
     }
 ]
 
@@ -550,6 +577,14 @@ def execute_agent_tool(func_name, func_args):
         raw_res = run_powershell_cmd([f".\\mes.ps1 screen '{scr}'"], timeout=20)
     elif func_name == "system_health_check":
         raw_res = run_powershell_cmd([".\\mes.ps1 health"], timeout=35)
+    elif func_name == "inspect_db_locks":
+        prof = func_args.get("profile", "").strip()
+        cmd_str = f".\\mes.ps1 locks -Profile '{prof}'" if prof else ".\\mes.ps1 locks"
+        raw_res = run_powershell_cmd([cmd_str], timeout=25)
+    elif func_name == "inspect_b598_price":
+        mat = func_args.get("material_code", "").strip()
+        cmd_str = f".\\mes.ps1 b598-price '{mat}'" if mat else ".\\mes.ps1 b598-price"
+        raw_res = run_powershell_cmd([cmd_str], timeout=20)
     else:
         return f"Công cụ {func_name} không tồn tại."
 
@@ -886,6 +921,14 @@ def handle_message(text, chat_id, token, config, image_bytes=None):
         res = run_powershell_cmd([".\\mes.ps1 release-machines"], timeout=30)
         return f"🔓 <b>KẾT QUẢ GIẢI PHÓNG MÁY KẸT TRÊN LINE:</b>\n<pre>{res}</pre>"
 
+    if "khóa" in cmd or cmd == "🔒 khóa & deadlock" or cmd in ["/locks", "locks"]:
+        res = run_powershell_cmd([".\\mes.ps1 locks"], timeout=25)
+        return f"🔒 <b>KẾT QUẢ KIỂM TRA KHÓA & NGHẼN CSDL:</b>\n<pre>{res}</pre>"
+
+    if "đơn giá b598" in cmd or cmd == "💰 đơn giá b598":
+        USER_STATES[chat_id] = "WAITING_FOR_B598"
+        return "💰 <b>TRA CỨU ĐƠN GIÁ & CÂN NẶNG BÁO PHẾ B598:</b>\n\nVui lòng nhập mã vật tư (ví dụ <code>GCMDPT-601</code> hoặc gõ <code>ALL</code> để xem toàn bộ):"
+
     if "báo cáo tuần" in cmd or cmd == "📊 báo cáo tuần it" or cmd in ["/report", "report"]:
         res = run_powershell_cmd([".\\mes.ps1 weekly-report"], timeout=25)
         return f"📊 <b>KẾT QUẢ XUẤT BÁO CÁO TUẦN IT (EA TEAM):</b>\n<pre>{res}</pre>\n<i>File CSV đã được cập nhật tại Desktop/thanks_and_ojt_reports.</i>"
@@ -909,8 +952,13 @@ def handle_message(text, chat_id, token, config, image_bytes=None):
                 return format_diagnostic_html(diag)
             except Exception as e:
                 return f"❌ <b>LỖI CHẨN ĐOÁN:</b> {e}"
+        elif st == "WAITING_FOR_B598":
+            mat = "" if text_clean.upper() == "ALL" else text_clean
+            cmd_str = f".\\mes.ps1 b598-price '{mat}'" if mat else ".\\mes.ps1 b598-price"
+            res = run_powershell_cmd([cmd_str], timeout=20)
+            return f"💰 <b>KẾT QUẢ SOI ĐƠN GIÁ B598 CHO <code>{text_clean}</code>:</b>\n<pre>{res}</pre>"
 
-    # 4. Lệnh Fast-path có tiền tố (/trace, /pop, /lineage, /diagnose, /fix)
+    # 4. Lệnh Fast-path có tiền tố (/trace, /pop, /lineage, /diagnose, /fix, /locks, /b598)
     if cmd.startswith("/trace ") or cmd.startswith("trace "):
         lot = re.sub(r"^/(trace)\s+|^trace\s+", "", text_clean, flags=re.IGNORECASE).strip()
         res = run_powershell_cmd([f".\\mes.ps1 trace '{lot}'"], timeout=25)
@@ -941,6 +989,16 @@ def handle_message(text, chat_id, token, config, image_bytes=None):
         tpl = parts[2] if len(parts) > 2 else ""
         res = run_powershell_cmd([f".\\mes.ps1 new-fix '{issue_name}' -Template '{tpl}'"], timeout=25)
         return f"🛠️ <b>KẾT QUẢ SINH TEMPLATE HOTFIX:</b>\n<pre>{res}</pre>"
+
+    if cmd.startswith("/locks") or cmd.startswith("locks"):
+        res = run_powershell_cmd([".\\mes.ps1 locks"], timeout=25)
+        return f"🔒 <b>KẾT QUẢ KIỂM TRA KHÓA & NGHẼN CSDL:</b>\n<pre>{res}</pre>"
+
+    if cmd.startswith("/b598") or cmd.startswith("b598"):
+        mat = re.sub(r"^/(b598)\s*|^b598\s*", "", text_clean, flags=re.IGNORECASE).strip()
+        cmd_str = f".\\mes.ps1 b598-price '{mat}'" if mat else ".\\mes.ps1 b598-price"
+        res = run_powershell_cmd([cmd_str], timeout=20)
+        return f"💰 <b>KẾT QUẢ SOI ĐƠN GIÁ B598 CHO <code>{mat if mat else 'TOÀN BỘ'}</code>:</b>\n<pre>{res}</pre>"
 
     # 5. FAST-PATH PATTERN RECOGNITION (< 0.1s - 1.2s, Không mất token)
     # 5.1 Nhận diện mã Lot/Barcode (VV..., VE..., SP..., PK...)

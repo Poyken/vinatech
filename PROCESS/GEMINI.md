@@ -17,9 +17,16 @@
 7. **RULE 20 (POP BẤT BIẾN - EA PLAYBOOK):** Đổi máy nhầm Kiosk BẮT BUỘC UPDATE CẢ 2 BẢNG (`STB_ProdRouteHist` VÀ `MongoToMesPerformance`). Lỗi "Already completed" xóa dòng thừa trong `STB_ProdRouteHist` & `STB_ProdRouteWorkerHist`. Nút Cắt điện cực mờ do độ dày `< 100`. Cuộn BTP tối đa 3 LOTNO. Máy kẹt ACTIVE giải phóng qua `.\pop.ps1 unlock <Machine> -Deploy` hoặc `.\pop.ps1 release-machines -Force`.
 
 
-## ⚡ 5 CLI HUBS TẠI WORKSPACE ROOT (PHÂN ĐỊNH RÕ RÀNG)
+## ⚡ HỆ THỐNG CLI HUBS TẠI WORKSPACE ROOT
+- `.\mes.ps1` ➔ 🌟 **ALL-IN-ONE MASTER CLI HUB (CÔNG CỤ TOÀN NĂNG)**: Tích hợp đầy đủ mọi phân hệ:
+  * Smart Auto-Router tự nhận diện Lot/PO/Screen/Machine/Lỗi (<0.01s)
+  * Trace 360° siêu tốc tích hợp tiến độ đóng gói POP (`VINA_PACKING_REMAIN_QTY`), BOM NVL, Tồn kho xưởng, Thiết bị, PQC (<2s)
+  * Kiểm toán Pre-flight file Excel `.\mes.ps1 validate-excel <File.xlsx> -Route <F330|B598>` chống lệch cột (E04/E05 vào StartPeriod) (<1s)
+  * Tra cứu nhanh đơn giá & tỷ lệ cân hardcode B598 `.\mes.ps1 b598-price [-Target <Code>]` (<1s)
+  * Soi real-time khóa blocking & deadlock trên 15 CSDL `.\mes.ps1 locks [-Profile <Name>]` (<2s)
+  * Dọn dẹp & tiêu diệt zombie process ngầm chống quá tải CPU / rú quạt `.\mes.ps1 clean`
+  * Chẩn đoán 4 Dòng Vàng, BOM NVL & Tồn kho, Groupware & ERP, Toàn bộ Hotfixes bọc Transaction.
 - `.\pop.ps1 [trace|nvl|unlock|release-machines|sync|readiness|audit|find]` ➔ **Kiosk POP tại xưởng (NVL BOM, Tồn kho ROUTE_VN_WH, Mở khóa máy, Sync)**
-- `.\mes.ps1 [trace|shell|diagnose|lineage|screen|sp|health|watchdog-hidden|weekly-report|fix-movedate|fix-electrode|fix-rollback|fix-pop-clone|deploy]` ➔ **Lõi MES Sản Xuất & Hotfix Backend**
 - `.\gw.ps1 [trace|form|find|routine|chain|health|check|query|audit]` ➔ **Groupware Bizbox & Duyệt Chứng Từ ERP NEOE**
 - `.\db.ps1 [list|health|stats|sp|schema|query|find|jobs|triggers|index|crossdb|lineage|auditkb]` ➔ **Quản Trị 15 CSDL Multi-DB Engine**
 - `.\ksys.ps1 [trace|find|module|schema|bridge|health]` ➔ **Hợp Nhất ERP K-System Ace**

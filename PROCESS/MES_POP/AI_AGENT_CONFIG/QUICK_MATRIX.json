@@ -1,6 +1,6 @@
-{
-  "version": "2.3.0",
-  "updated_at": "2026-09-21 04:11:40",
+﻿{
+  "version": "2.4.0",
+  "updated_at": "2026-09-25 17:00:00",
   "description": "Full 95 Screens & Bugs L1 In-Memory Pre-compiled Matrix for Vinatech MES (Deduplicated & Cleaned v2.3)",
   "screens": {
     "A230": {
@@ -888,7 +888,8 @@
         "bị_chặn_\"receiving_confirmation\"": "IQC chưa PASS tại C220 -> QC hoàn thành IQC PASS trước",
         "nvl_không_tìm_thấy_trong_popup_chọn": "Chưa khai báo NVL tại A230 -> Vào A230 thêm MaterialCode",
         "đổi_mã_vật_tư_tự_động_lỗi": "`STB_ChangeMaterialCode_HN` thiếu mapping -> INSERT mapping mã cũ→mới — xem [KB_02 §3.1](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/KB_02/KB_02_01_WMS_CORE.md)",
-        "quét_nhập_mã_lot_vendor_họ_vỏ_nhôm_aoxin": "Hàm `fn_VVT_getdatebyVendorLot_MergeCode` và `fn_VVT_getdatebyVendorLot` bị hardcode mã đơn lẻ thay vì wildcard `LIKE 'GBAXAC-%'` (18 số) và `LIKE 'GBNKSP-%'` (Tháng mã hóa ký tự) -> Cập nhật hàm `fn_VVT_getdatebyVendorLot_MergeCode` & `fn_VVT_getdatebyVendorLot` bổ sung wildcard parse tự động — xem chi tiết [KB_02_01 §4.11 Mẫu 5, Mẫu 6](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/KB_02/KB_02_01_WMS_CORE.md#3-các-mẫu-viết-logic-parse-ngày-thông-dụng)"
+        "quét_nhập_mã_lot_vendor_họ_vỏ_nhôm_aoxin": "Hàm `fn_VVT_getdatebyVendorLot_MergeCode` và `fn_VVT_getdatebyVendorLot` bị hardcode mã đơn lẻ thay vì wildcard `LIKE 'GBAXAC-%'` (18 số) và `LIKE 'GBNKSP-%'` (Tháng mã hóa ký tự) -> Cập nhật hàm `fn_VVT_getdatebyVendorLot_MergeCode` & `fn_VVT_getdatebyVendorLot` bổ sung wildcard parse tự động — xem chi tiết [KB_02_01 §4.11 Mẫu 5, Mẫu 6](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/KB_02/KB_02_01_WMS_CORE.md#3-các-mẫu-viết-logic-parse-ngày-thông-dụng)",
+        "lỗi_import_excel_lệch_cột_startperiod": "Do dán nhầm mã Bin/Kệ E04/E05 vào cột StartPeriod -> Dùng .\\mes.ps1 validate-excel <File.xlsx> -Route F330 để check và sửa lại file"
       },
       "fix_template": "IQC chưa PASS tại C220 -> QC hoàn thành IQC PASS trước"
     },
@@ -1436,6 +1437,45 @@
         "STB_FIFOSetting"
       ],
       "solution": "Chạy SP bypass FIFO hoặc tạm thời tắt kiểm tra FIFO theo chỉ đạo của Quản đốc/QC."
+    },
+    "F330_EXCEL_COLUMN_SHIFT_IMPORT": {
+      "title": "Lỗi Import Excel Báo Phế / Nhận Hàng F330 do lệch cột (Column Shift)",
+      "screen": "F330 / F-Screens / Scrap Import",
+      "description": "Công nhân dán nhầm dữ liệu Excel (dán mã Bin/Kệ E04, E05 vào cột StartPeriod ngày tháng) làm crash MES hoặc script import. Pre-flight validator phát hiện lệch cột trước khi gọi DB.",
+      "tables": [
+        "STB_MaterialDocInfo",
+        "STB_MaterialDocDetail",
+        "STB_MaterialLotInfo"
+      ],
+      "solution": "Chạy .\\mes.ps1 validate-excel <File.xlsx> -Route F330 để soi cột lệch và dòng dữ liệu sai kiểu trước khi import."
+    },
+    "B598_SCRAP_PRICE_WEIGHT_HARDCODE": {
+      "title": "Báo phế B598 thành tiền = 0 hoặc sai số lượng quy đổi (Can_Nang_Moi & PRICES)",
+      "screen": "B598",
+      "description": "Đơn giá và định mức chia cân nặng không nằm trong Master Data mà bị gán cứng trong SP usp_vn_showproductionerror (khối Can_Nang_Moi và PRICES). Sửa master table không có tác dụng.",
+      "tables": [
+        "STB_VN_PRODUCTION_ERROR"
+      ],
+      "solution": "Chạy .\\mes.ps1 b598-price [-Target <Code>] để trích xuất ngay các dòng CASE WHEN và giá trị chia/đơn giá hardcode."
+    },
+    "POP_PACKING_BUFFER_GHOST_RECORD": {
+      "title": "Kiosk POP Đóng Gói / Buffer Hộp Tồn (Ghost Record PACKED_QTY = 0)",
+      "screen": "/pop/screen (Packing)",
+      "description": "Bản ghi nạp hộp/cuộn tồn tại trong VINATECH_POP.dbo.VINA_PACKING_REMAIN_QTY với PACKED_QTY = 0 trong khi TOTAL_PROD_QTY > 0 gây nghẽn giao diện đóng gói Kiosk POP.",
+      "tables": [
+        "VINATECH_POP.dbo.VINA_PACKING_REMAIN_QTY",
+        "SmartFactoryV2.dbo.STB_SetInfo"
+      ],
+      "solution": "Chạy .\\mes.ps1 trace <Lot> hoặc .\\pop.ps1 trace <Lot> tự động quét Table 5.4 VINA_PACKING_REMAIN_QTY và cảnh báo lệch số lượng."
+    },
+    "WMS_PACKAGING_SP_DEADLOCK": {
+      "title": "Kẹt Deadlock & Khóa U-Lock giữa usp_vvt_MaterialLotInfo_get và SP Đóng Gói",
+      "screen": "F330 / B523 / Packing",
+      "description": "Hàm fn_VVT_getdatebyVendorLot_MergeCode trong UPDATE WHERE LotAttr10 = '' của usp_vvt_MaterialLotInfo_get quét toàn bảng STB_MaterialLotInfo, chiếm U-lock và deadlock với tiến trình đóng gói.",
+      "tables": [
+        "STB_MaterialLotInfo"
+      ],
+      "solution": "Chạy .\\mes.ps1 locks để phát hiện Blocking SPID, lock type và truy vấn gây kẹt tức thì."
     }
   }
 }

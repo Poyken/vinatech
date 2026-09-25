@@ -93,6 +93,43 @@ if (Test-Path $matrixFile) {
                 $foundInL1 = $true
             }
         }
+
+        # 1.2b Match Historical Precedents (Tien Le Van Hanh)
+        if ($matrixJson.historical_precedents) {
+            $matchedPrecedents = @()
+            foreach ($pProp in $matrixJson.historical_precedents.PSObject.Properties) {
+                $pCode = $pProp.Name
+                $pObj = $pProp.Value
+                if ($pCode -match "(?i)$([regex]::Escape($Query))" -or 
+                    $pObj.title -match "(?i)$([regex]::Escape($Query))" -or 
+                    $pObj.description -match "(?i)$([regex]::Escape($Query))" -or 
+                    $pObj.screen -match "(?i)$([regex]::Escape($Query))" -or 
+                    $pObj.solution -match "(?i)$([regex]::Escape($Query))") {
+                    $matchedPrecedents += [PSCustomObject]@{
+                        Code        = $pCode
+                        Title       = $pObj.title
+                        Screen      = $pObj.screen
+                        Description = $pObj.description
+                        Solution    = $pObj.solution
+                        Tables      = ($pObj.tables -join ', ')
+                    }
+                }
+            }
+            if ($matchedPrecedents.Count -gt 0) {
+                Write-Host ''
+                Write-Host '======================================================================' -ForegroundColor Magenta
+                Write-Host ('  [L1 PRECEDENT HIT] TIM THAY ' + $matchedPrecedents.Count + " TIEN LE VAN HANH: '$Query'") -ForegroundColor Yellow
+                Write-Host '======================================================================' -ForegroundColor Magenta
+                foreach ($mp in ($matchedPrecedents | Select-Object -First 3)) {
+                    Write-Host ('  [' + $mp.Code + '] ' + $mp.Title + ' (Screen: ' + $mp.Screen + ')') -ForegroundColor Cyan
+                    Write-Host ('    * Mo Ta     : ' + $mp.Description) -ForegroundColor Gray
+                    Write-Host ('    * Bang CSDL : ' + $mp.Tables) -ForegroundColor Yellow
+                    Write-Host ('    * Giai Phap : ' + $mp.Solution) -ForegroundColor Green
+                }
+                Write-Host '======================================================================' -ForegroundColor Magenta
+                $foundInL1 = $true
+            }
+        }
     } catch {}
 }
 

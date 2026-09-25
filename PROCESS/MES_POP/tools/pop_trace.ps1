@@ -1,4 +1,4 @@
-﻿# ==============================================================================
+# ==============================================================================
 # pop_trace.ps1 — Ultra-Fast 360° Trace with Smart Identifier Resolver
 # Single Round-Trip | Auto Pattern Detection (Lot / Packing / Machine / Line)
 # Tham chiếu: RULE 6 (Golden Query), POP_KB_01, POP_KB_02, POP_KB_03
@@ -74,6 +74,11 @@ WHERE PackingID = '$t';
 SELECT TOP 10 PackingID, LotNo, MaterialCode, PackQty, CreateDate 
 FROM SmartFactoryV2.dbo.STB_VN_FINISHGOODS WITH(NOLOCK) 
 WHERE PackingID = '$t';
+
+-- 5. VINA_PACKING_REMAIN_QTY (Tien do dong goi tren POP)
+SELECT TOP 5 DAY_PLAN_NO, BARCODE, ROUTE_CODE, TOTAL_PROD_QTY, PACKED_QTY, REMAIN_QTY, REG_DATE 
+FROM VINATECH_POP.dbo.VINA_PACKING_REMAIN_QTY WITH(NOLOCK) 
+WHERE BARCODE = '$t' OR BARCODE IN (SELECT LotNo FROM SmartFactoryV2.dbo.STB_MaterialLotInfo WITH(NOLOCK) WHERE PackingID = '$t');
 "@
 } elseif ($type -eq "EQUIPMENT") {
     $cmd.CommandText = @"
@@ -189,16 +194,17 @@ ORDER BY CreateDateTime DESC;
 SET NOCOUNT ON;
 DECLARE @Ctrl VARCHAR(30) = '$t';
 DECLARE @Bar VARCHAR(50) = '$t';
+DECLARE @PONo VARCHAR(30) = NULL;
 DECLARE @LineCode VARCHAR(30) = NULL;
 
 -- 0. RESOLVE CONTROLNO VA BARCODE (Index Seek <1ms)
 IF EXISTS (SELECT 1 FROM SmartFactoryV2.dbo.STB_SetInfo WITH(NOLOCK) WHERE ControlNo = '$t')
 BEGIN
-    SELECT TOP 1 @Bar = Barcode FROM SmartFactoryV2.dbo.STB_SetInfo WITH(NOLOCK) WHERE ControlNo = '$t';
+    SELECT TOP 1 @Bar = Barcode, @PONo = PONo FROM SmartFactoryV2.dbo.STB_SetInfo WITH(NOLOCK) WHERE ControlNo = '$t';
 END
 ELSE IF EXISTS (SELECT 1 FROM SmartFactoryV2.dbo.STB_SetInfo WITH(NOLOCK) WHERE Barcode = '$t')
 BEGIN
-    SELECT TOP 1 @Ctrl = ControlNo FROM SmartFactoryV2.dbo.STB_SetInfo WITH(NOLOCK) WHERE Barcode = '$t';
+    SELECT TOP 1 @Ctrl = ControlNo, @PONo = PONo FROM SmartFactoryV2.dbo.STB_SetInfo WITH(NOLOCK) WHERE Barcode = '$t';
 END
 ELSE
 BEGIN
@@ -210,7 +216,7 @@ BEGIN
 
     IF @Ctrl IS NOT NULL
     BEGIN
-        SELECT TOP 1 @Bar = Barcode FROM SmartFactoryV2.dbo.STB_SetInfo WITH(NOLOCK) WHERE ControlNo = @Ctrl;
+        SELECT TOP 1 @Bar = Barcode, @PONo = PONo FROM SmartFactoryV2.dbo.STB_SetInfo WITH(NOLOCK) WHERE ControlNo = @Ctrl;
     END
 END
 
@@ -244,25 +250,44 @@ FROM SmartFactoryV2.dbo.STB_DefectRepairInfo WITH(NOLOCK)
 WHERE ControlNo = @Ctrl 
 ORDER BY CreateDateTime DESC;
 
--- 5.1. STB_ProductionOrderBom (Dinh muc BOM, Alt Code & Ton kho kho chuyen ROUTE_VN_WH)
-SELECT 
-    B.RouteCode, 
-    B.ChildMaterialCode, 
-    ISNULL(MM_Base.MaterialName, '') AS MaterialName, 
-    B.UsedQty, 
-    ISNULL(MM_Base.DelegateMaterialCode, '-') AS AltCode1, 
-    ISNULL(MM_Base.DelegateMaterialCode2, '-') AS AltCode2,
-    ISNULL(S.StockQty, 0) AS WhStockQty
-FROM SmartFactoryV2.dbo.STB_ProductionOrderBom B WITH(NOLOCK)
-LEFT JOIN SmartFactoryV2.dbo.STB_MaterialMaster MM_Base WITH(NOLOCK) ON B.ChildMaterialCode = MM_Base.MaterialCode
-OUTER APPLY (
-    SELECT SUM(CurrentQty) AS StockQty 
+-- 5.1. STB_ProductionOrderBom (Dinh muc BOM, Alt Code & Ton kho kho chuyen ROUTE_VN_WH sieu toc)
+IF @PONo IS NOT NULL
+BEGIN
+    SELECT 
+        B.RouteCode, 
+        B.ChildMaterialCode, 
+        B.UsedQty
+    INTO #TMP_BOM
+    FROM SmartFactoryV2.dbo.STB_ProductionOrderBom B WITH(NOLOCK)
+    WHERE B.PONo = @PONo;
+
+    SELECT MaterialCode, SUM(CurrentQty) AS StockQty 
+    INTO #TMP_STOCK
     FROM SmartFactoryV2.dbo.STB_MaterialLotInfo WITH(NOLOCK)
-    WHERE MaterialCode = B.ChildMaterialCode AND MaterialWarehouseCode = 'ROUTE_VN_WH'
-) S
-WHERE B.PONo = (SELECT TOP 1 PONo FROM SmartFactoryV2.dbo.STB_SetInfo WITH(NOLOCK) WHERE ControlNo = @Ctrl) 
-  AND (@LineCode IS NULL OR B.RouteCode = (SELECT TOP 1 RouteCode FROM SmartFactoryV2.dbo.MongoToMesPerformance WITH(NOLOCK) WHERE Barcode = @Bar) OR (SELECT TOP 1 RouteCode FROM SmartFactoryV2.dbo.MongoToMesPerformance WITH(NOLOCK) WHERE Barcode = @Bar) IS NULL)
-ORDER BY B.RouteCode, B.ChildMaterialCode;
+    WHERE MaterialWarehouseCode = 'ROUTE_VN_WH' 
+      AND MaterialCode IN (SELECT ChildMaterialCode FROM #TMP_BOM)
+    GROUP BY MaterialCode;
+
+    SELECT 
+        B.RouteCode, 
+        B.ChildMaterialCode, 
+        ISNULL(MM_Base.MaterialName, '') AS MaterialName, 
+        B.UsedQty, 
+        ISNULL(MM_Base.DelegateMaterialCode, '-') AS AltCode1, 
+        ISNULL(MM_Base.DelegateMaterialCode2, '-') AS AltCode2,
+        ISNULL(S.StockQty, 0) AS WhStockQty
+    FROM #TMP_BOM B
+    LEFT JOIN SmartFactoryV2.dbo.STB_MaterialMaster MM_Base WITH(NOLOCK) ON B.ChildMaterialCode = MM_Base.MaterialCode
+    LEFT JOIN #TMP_STOCK S ON B.ChildMaterialCode = S.MaterialCode
+    ORDER BY B.RouteCode, B.ChildMaterialCode;
+
+    DROP TABLE #TMP_BOM;
+    DROP TABLE #TMP_STOCK;
+END
+ELSE
+BEGIN
+    SELECT '' AS RouteCode, '' AS ChildMaterialCode, '' AS MaterialName, 0.0 AS UsedQty, '-' AS AltCode1, '-' AS AltCode2, 0.0 AS WhStockQty WHERE 1=0;
+END
 
 -- 5.2. STB_RawMaterialInputHist (Lich su NVL da nap tai Kiosk POP)
 SELECT TOP 15 RawMaterialBarcode, MaterialCode, Qty, RouteCode, CreateDateTime 
@@ -292,6 +317,12 @@ FROM SmartFactoryV2.dbo.STB_CommInspDocHistory H WITH(NOLOCK)
 LEFT JOIN SmartFactoryV2.dbo.STB_CommInspDocItem I WITH(NOLOCK) ON H.CommInspDocNo = I.CommInspDocNo 
 WHERE I.CommInspDocItemNo = '$t' OR H.CommInspDocNo = '$t' OR (H.ProdNo = @Ctrl AND @Ctrl IS NOT NULL) 
 ORDER BY H.CreateDateTime DESC;
+
+-- 9. VINA_PACKING_REMAIN_QTY (Tien do dong goi & han muc le tren Kiosk POP)
+SELECT TOP 5 DAY_PLAN_NO, BARCODE, ROUTE_CODE, TOTAL_PROD_QTY, PACKED_QTY, REMAIN_QTY, REG_DATE 
+FROM VINATECH_POP.dbo.VINA_PACKING_REMAIN_QTY WITH(NOLOCK) 
+WHERE BARCODE = @Bar 
+ORDER BY REG_DATE DESC;
 "@
 }
 
@@ -505,6 +536,9 @@ if ($type -eq "PACKING") {
     Show-Table "2. DANH SACH LOT TRONG THUNG (STB_MaterialLotInfo)" $ds.Tables[1] "Cyan"
     Show-Table "3. LICH SU IN TEM THUNG (STB_PackingLabelPrintHist)" $ds.Tables[2] "Green"
     Show-Table "4. THANH PHAM DONG THUNG (STB_VN_FINISHGOODS)" $ds.Tables[3] "Magenta"
+    if ($ds.Tables.Count -ge 5 -and $ds.Tables[4].Rows.Count -gt 0) {
+        Show-Table "5. BUFFER DONG GOI POP (VINA_PACKING_REMAIN_QTY)" $ds.Tables[4] "DarkYellow"
+    }
 } elseif ($type -eq "EQUIPMENT") {
     Show-Table "1. CAU HINH SOCKET MAY (VINA_EQUIPMENT_SETTING)" $ds.Tables[0] "Yellow"
     Show-Table "2. DIEM MOC COUNTER PLC (VINA_PLC_BASELINE)" $ds.Tables[1] "Cyan"
@@ -533,6 +567,18 @@ if ($type -eq "PACKING") {
     Show-BomCard $ds.Tables[4]
     Show-Table "5.2. LICH SU NVL DA NAP TREN KIOSK POP (STB_RawMaterialInputHist)" $ds.Tables[5] "Magenta"
     Show-Table "5.3. BTP HOAC THUNG DONG GOI (STB_MaterialLotInfo)" $ds.Tables[6] "DarkMagenta"
+    if ($ds.Tables.Count -ge 11 -and $ds.Tables[10].Rows.Count -gt 0) {
+        $pTable = $ds.Tables[10]
+        Show-Table "5.4. TIEN DO DONG GOI KIOSK POP (VINA_PACKING_REMAIN_QTY)" $pTable "Magenta"
+        foreach ($pRow in $pTable.Rows) {
+            $pTot = [int]$pRow['TOTAL_PROD_QTY']
+            $pPk = [int]$pRow['PACKED_QTY']
+            $pRem = [int]$pRow['REMAIN_QTY']
+            if ($pPk -eq 0 -and $pTot -gt 0) {
+                Write-Host "   [!] CANH BAO: Lot co dong V-28 dong goi nhung PACKED_QTY = 0 (Chua dong thung tren POP - Ghost Record)!" -ForegroundColor Red
+            }
+        }
+    }
     Show-Table "6. MAY DANG GAN TREN CHUYEN (VINA_EQUIPMENT_MAPPING)" $ds.Tables[7] "Yellow"
     Show-Table "7. NHAT KY THAO TAC POP (VINA_POP_ACTION_LOG)" $ds.Tables[8] "Gray"
 }
