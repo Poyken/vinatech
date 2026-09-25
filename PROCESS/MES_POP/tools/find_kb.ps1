@@ -1,4 +1,4 @@
-﻿# ==============================================================================
+# ==============================================================================
 # find_kb.ps1 — 2-Tier Knowledge Base Finder for Vinatech MES Ecosystem
 # Tier 1: L1 Ultra-Fast JSON Cache (<0.001s, ~200 tokens)
 # Tier 2: Deep Markdown Archive (78+ files)
@@ -129,8 +129,36 @@ if (Test-Path $popMatrixFile) {
             Write-Host '======================================================================' -ForegroundColor Red
             $foundInL1 = $true
         }
-        # Match Route
         else {
+            # Match Top Error theo trieu chung / tu khoa
+            $matchedPopErrors = @()
+            foreach ($prop in $popJson.top_errors.PSObject.Properties) {
+                $eCode = $prop.Name
+                $eObj = $prop.Value
+                if ($eCode -match "(?i)$([regex]::Escape($Query))" -or $eObj.title -match "(?i)$([regex]::Escape($Query))" -or $eObj.root_cause -match "(?i)$([regex]::Escape($Query))" -or $eObj.fast_fix -match "(?i)$([regex]::Escape($Query))") {
+                    $matchedPopErrors += [PSCustomObject]@{
+                        Code  = $eCode
+                        Title = $eObj.title
+                        Cause = $eObj.root_cause
+                        Fix   = $eObj.fast_fix
+                    }
+                }
+            }
+            if ($matchedPopErrors.Count -gt 0) {
+                Write-Host ''
+                Write-Host '======================================================================' -ForegroundColor Red
+                Write-Host ('  [L1 POP ERROR HIT] TIM THAY ' + $matchedPopErrors.Count + " MA LOI POP KHOP TRIEU CHUNG: '$Query'") -ForegroundColor Yellow
+                Write-Host '======================================================================' -ForegroundColor Red
+                foreach ($me in ($matchedPopErrors | Select-Object -First 3)) {
+                    Write-Host ('  [' + $me.Code + '] ' + $me.Title) -ForegroundColor Cyan
+                    Write-Host ('    * Nguyen Nhan: ' + $me.Cause) -ForegroundColor White
+                    Write-Host ('    * Cach Xu Ly : ' + $me.Fix) -ForegroundColor Green
+                }
+                Write-Host '======================================================================' -ForegroundColor Red
+                $foundInL1 = $true
+            }
+
+            # Match Route
             foreach ($prop in $popJson.routes.PSObject.Properties) {
                 $rPath = $prop.Name
                 $rObj = $prop.Value
