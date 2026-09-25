@@ -1,6 +1,6 @@
 # 🏭 VINATECH MES & POP — MASTER INDEX (Trang Chủ Tri Thức & Điều Hành Sản Xuất)
 
-> **Cập nhật:** 2026-09-21  
+> **Cập nhật:** 2026-09-25  
 > **Phân hệ:** Điều hành sản xuất hiện trường (Shop Floor Manufacturing Execution) — NAIS MES WinForms + Kiosk POP Web + PLC Telemetry  
 > **Máy chủ CSDL trung tâm:** `dbserver.hycap.co.kr,5398` (Database: `SmartFactoryV2`, `SmartFramework`, `VINATECH_POP`, `AndonDB`)  
 > **Nguyên tắc cốt lõi:** SELECT-ONLY trên Production, Golden Query 360° Trace First, L1 Cache First (<0.001s).
@@ -58,8 +58,7 @@ PROCESS/MES_POP/
 │   ├── 📄 KB_10_FACTORY_WORKCENTER_MATRIX.md   # Ma trận Workcenter & Nhà máy
 │   ├── 📄 KB_11_HANAM_FACTORY_SCREENS.md       # Cụm màn hình đặc thù nhà máy Hà Nam
 │   ├── 📄 MES_SCRIPT_GUIDE.md                  # Hướng dẫn bộ công cụ script vận hành
-│   ├── 📂 architecture/                        # Bản đồ công đoạn sản xuất chi tiết & Pipeline
-│   └── 📂 legacy_docs/                         # Tài liệu tham khảo lưu trữ
+│   └── 📂 architecture/                        # Bản đồ công đoạn sản xuất chi tiết & Pipeline
 │
 ├── 📂 POP_KNOWLEDGE_BASE/                      # 🖥️ TRI THỨC KIOSK POP WEB & API
 │   ├── 📄 POP_KB_INDEX.md                      # Mục lục tra cứu POP Kiosk
@@ -74,9 +73,6 @@ PROCESS/MES_POP/
 ├── 📂 tools/                                   # ⚡ BỘ CÔNG CỤ POWERSHELL & PYTHON VẬN HÀNH
 │   ├── 📄 db_shared.ps1                        # Module kết nối CSDL, failover, query an toàn
 │   ├── 📄 find_kb.ps1                          # Tra cứu 2 tầng: L1 Quick Matrix + 78 Markdown KB
-│   ├── 📄 health_check.ps1                     # Morning Health Check quét Lot HOLD, WIP 24h
-│   ├── 📄 debug_screen.ps1                     # Debug thông tin màn hình MES
-│   ├── 📄 get_sp.ps1                           # Tải Stored Procedure từ Live DB về local
 │   ├── 📄 pop_trace.ps1                        # Single Round-Trip 360° truy vết hệ sinh thái POP
 │   ├── 📄 pop_readiness.ps1                    # Kiểm toán 8 bước sẵn sàng chuyển 100% POP Web
 │   ├── 📄 release_orphan_machines.ps1          # Giải phóng máy bị kẹt khóa ACTIVE ở DayPlan cũ
@@ -90,6 +86,7 @@ PROCESS/MES_POP/
 │   ├── 📂 barcode_tools/                       # Bộ công cụ phân tích & giải mã barcode Code 128
 │   ├── 📂 kb_scripts/                          # Script rà soát & kiểm toán tài liệu
 │   └── 📂 scratch/                             # Thư mục chứa script kiểm tra tạm thời
+│   # ℹ️ health_check, debug_screen, get_sp đã tích hợp vào mes.ps1 (health/screen/sp)
 │
 ├── 📂 sql/                                     # THƯ VIỆN SQL PROCEDURES & HOTFIX TEMPLATES
 │   ├── 📂 procedures/                          # 90+ Stored Procedure definitions trích xuất

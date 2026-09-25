@@ -23,9 +23,9 @@ Dùng trực tiếp các công cụ PowerShell tại thư mục gốc MES:
 
 ```powershell
 # 1. Chẩn đoán màn hình: Tìm SP, UI objects, tra KB tự động
-.\debug_screen.ps1 -TCode "B597"
-.\debug_screen.ps1 -Barcode "K16418106262500772"
-.\debug_screen.ps1 -ErrorMsg "chua duoc dua vao tuyen"
+.\mes.ps1 screen "B597"
+.\mes.ps1 trace "K16418106262500772"
+.\mes.ps1 diagnose "chua duoc dua vao tuyen"
 
 # 2. Ghi nhật ký Hotfix tự động vào HOTFIX_LOG.md và KB_09
 .\record_hotfix.ps1 -TCode "B597" -Symptom "Tràn chuỗi NVL" -Cause "NVARCHAR(100)" -SQLPatch "ALTER TABLE..."
