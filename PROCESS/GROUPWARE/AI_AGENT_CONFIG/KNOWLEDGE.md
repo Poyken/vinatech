@@ -10,7 +10,7 @@
 - **URL Groupware:** `https://gw.vinatech.com` (Bizbox Alpha by Douzone Bizon).
 - **CSDL Chính:** `VINATECH_GROUP` trên `dbserver.hycap.co.kr,5398`.
 - **CSDL Vệ tinh:** `VINATECH_RESTFUL` (SSO Token), `streamdocs` (PDF K-SOX), `VINATECH_SPREADSHEET` (JSON Sheet), `VINATECH_WEBSOCKET` (Realtime Push).
-- **Hệ thống liên quan:** `NEOE_ERP` (ERP Douzone iU), `SmartFactoryV2` / `SmartFramework` (MES Sản xuất).
+- **Hệ thống liên quan:** `NEOE_ERP` (ERP Douzone iU), `SmartFactoryV2` / `SmartFramework` (MES Sản xuất), `VINATECH_POP` (Kiosk Cảm Ứng Xưởng).
 
 ---
 
@@ -30,11 +30,12 @@
 
 ---
 
-## 🔗 4. Bản Đồ Khóa Liên Động (Interlocks: GW ↔ ERP ↔ MES)
+## 🔗 4. Bản Đồ Khóa Liên Động (Interlocks: GW ↔ ERP ↔ MES ↔ POP)
 - **GW Arrival Confirmation** `008` ➔ Mở màn hình **MES F330** (Nhập hàng & in tem barcode NVL).
 - **MES C220 (IQC)** PASS ➔ Mở quyền tạo form **GW Receiving Confirmation** (Nhập kho tài chính).
-- **BOM Version Lock (2001/2002)** ➔ Bắt buộc trên PO Kế hoạch sản xuất để **MES B310/B450** phát hành Lot.
-- **GW Month Production Plan** `008` ➔ Kích hoạt màn hình **MES B310** (Giám sát PO) & **B450** (Tạo Lot).
+- **BOM Version Lock (2001/2002)** ➔ Bắt buộc trên PO Kế hoạch sản xuất để **MES B310/B450** phát hành Lot và **POP Kiosk** nạp định mức cấp NVL.
+- **GW Month Production Plan** `008` ➔ Kích hoạt màn hình **MES B310** (Giám sát PO) & **B450** (Tạo Lot) ➔ nạp vào **Kiosk POP**.
+- **POP Dual-Buffer (RULE 20)** ➔ Chốt sản lượng Kiosk ghi `MongoToMesPerformance` (POP) ➔ Worker đồng bộ sang `STB_ProdRouteHist` (MES). Sửa máy nhầm phải update cả 2 bảng!
 - **GW Shipment Request** `008` ➔ Mở màn hình **MES FG01** (Quét Box OQC PASS xuất kho thành phẩm).
 - **GW Shipment Confirmation** `008` ➔ Mở màn hình **MES B750** (In tem Pallet) & **B752** (Container).
 

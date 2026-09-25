@@ -74,10 +74,36 @@ SELECT TOP 1 PONo, MaterialCode, PlanQty, ProdFinishQty, IsFinish, BasicRoutingC
 FROM SmartFactoryV2.dbo.STB_ProductionOrderInfo WITH(NOLOCK) 
 WHERE PONo = @PO OR PONo = (SELECT TOP 1 PONo FROM SmartFactoryV2.dbo.STB_SetInfo WITH(NOLOCK) WHERE Barcode = @Bar);
 
--- 2. KHAU KHO NVL & CAP PHAT (STB_MaterialLotInfo)
-SELECT TOP 5 MaterialLotNo, LotNo, MaterialCode, MaterialWarehouseCode, CurrentQty, InitialQty, CreateDateTime 
-FROM SmartFactoryV2.dbo.STB_MaterialLotInfo WITH(NOLOCK) 
-WHERE LotNo = @Bar OR MaterialLotNo = @Bar OR LotNo = @Input;
+-- 2.1 KHAU KHO NVL BOM & TON KHO KHO CHUYEN (ROUTE_VN_WH)
+SELECT 
+    B.RouteCode, 
+    B.ChildMaterialCode, 
+    ISNULL(MM.MaterialName, '') AS MaterialName, 
+    B.UsedQty, 
+    ISNULL(MM.DelegateMaterialCode, '-') AS AltCode1
+INTO #BOM
+FROM SmartFactoryV2.dbo.STB_ProductionOrderBom B WITH(NOLOCK)
+LEFT JOIN SmartFactoryV2.dbo.STB_MaterialMaster MM WITH(NOLOCK) ON B.ChildMaterialCode = MM.MaterialCode
+WHERE B.PONo = @PO OR B.PONo = (SELECT TOP 1 PONo FROM SmartFactoryV2.dbo.STB_SetInfo WITH(NOLOCK) WHERE Barcode = @Bar);
+
+SELECT MaterialCode, SUM(CurrentQty) AS StockQty
+INTO #STOCK
+FROM SmartFactoryV2.dbo.STB_MaterialLotInfo WITH(NOLOCK)
+WHERE MaterialWarehouseCode = 'ROUTE_VN_WH' 
+  AND MaterialCode IN (SELECT ChildMaterialCode FROM #BOM)
+  AND CurrentQty > 0
+GROUP BY MaterialCode;
+
+SELECT b.RouteCode, b.ChildMaterialCode, b.MaterialName, b.UsedQty, b.AltCode1, ISNULL(s.StockQty, 0) AS WhStockQty
+FROM #BOM b
+LEFT JOIN #STOCK s ON b.ChildMaterialCode = s.MaterialCode
+ORDER BY b.RouteCode, b.ChildMaterialCode;
+
+-- 2.2 LICH SU NVL DA NAP TREN KIOSK POP (STB_RawMaterialInputHist)
+SELECT TOP 10 RawMaterialBarcode, MaterialCode, Qty, RouteCode, CreateDateTime 
+FROM SmartFactoryV2.dbo.STB_RawMaterialInputHist WITH(NOLOCK) 
+WHERE Barcode = @Bar
+ORDER BY CreateDateTime DESC;
 
 -- 3. KHAU TIEN DO SAN XUAT MES (STB_SetInfo & STB_ProdRouteHist)
 SELECT TOP 1 ControlNo, PONo, Barcode, MaterialCode, IsLineInput, IsProdFinish, DefectQty, CreateDateTime 
@@ -113,34 +139,51 @@ function Out-Block($title, $table, $color="White") {
 }
 
 Out-Block "1. LENH SAN XUAT / PO MASTER DATA" $ds.Tables[0] "Yellow"
-Out-Block "2. KHO NVL & VAT TU DAU VAO" $ds.Tables[1] "Cyan"
-Out-Block "3.1 KHOI TAO TUYEN MES (STB_SetInfo)" $ds.Tables[2] "Green"
-Out-Block "3.2 CAC CONG DOAN DA CHOT TREN MES" $ds.Tables[3] "Green"
-Out-Block "4. DONG BO KIOSK POP (MongoToMesPerformance)" $ds.Tables[4] "Magenta"
+Out-Block "2.1 DINH MUC BOM & TON KHO KHO CHUYEN (ROUTE_VN_WH)" $ds.Tables[1] "Cyan"
+Out-Block "2.2 LICH SU NVL DA NAP TREN KIOSK POP (STB_RawMaterialInputHist)" $ds.Tables[2] "Cyan"
+Out-Block "3.1 KHOI TAO TUYEN MES (STB_SetInfo)" $ds.Tables[3] "Green"
+Out-Block "3.2 CAC CONG DOAN DA CHOT TREN MES" $ds.Tables[4] "Green"
+Out-Block "4. DONG BO KIOSK POP (MongoToMesPerformance)" $ds.Tables[5] "Magenta"
 
 # PHAN TICH TU DONG NUT THAT DONG CHAY
 Write-Host ""
 Write-Host "----------------------------------------------------------------------" -ForegroundColor Cyan
-Write-Host "🎯 CHAN DOAN NUT THAT HUYET MACH (AUTOMATED BOTTLENECK ANALYSIS):" -ForegroundColor Yellow
+Write-Host "[!] CHAN DOAN NUT THAT HUYET MACH (AUTOMATED BOTTLENECK ANALYSIS):" -ForegroundColor Yellow
 
 $poTable = $ds.Tables[0]
-$setTable = $ds.Tables[2]
-$routeTable = $ds.Tables[3]
-$popTable = $ds.Tables[4]
+$bomTable = $ds.Tables[1]
+$rawHistTable = $ds.Tables[2]
+$setTable = $ds.Tables[3]
+$routeTable = $ds.Tables[4]
+$popTable = $ds.Tables[5]
 
-if ($setTable.Rows.Count -eq 0) {
-    Write-Host "⚠️ DUT GAY TAI DAU VAO: Ma $t chua tung duoc dua vao tuyen MES (STB_SetInfo trong)." -ForegroundColor Red
+# 1. Kiem tra thieu hang kho trung chuyen xuong
+if ($bomTable -ne $null -and $bomTable.Rows.Count -gt 0) {
+    $outOfStock = @($bomTable.Rows | Where-Object { [double]$_["WhStockQty"] -eq 0 })
+    if ($outOfStock.Count -gt 0) {
+        $codes = ($outOfStock | ForEach-Object { $_["ChildMaterialCode"] }) -join ', '
+        Write-Host "[-] CANH BAO KHO CHUYEN XUONG: Co $($outOfStock.Count) vat tu BOM het ton kho tai ROUTE_VN_WH: $codes" -ForegroundColor Red
+        Write-Host "    -> Khac phuc: Thu kho can xuat chuyen kho F430 tu MAIN_VN_WH sang ROUTE_VN_WH hoac dung ma AltCode." -ForegroundColor Gray
+    }
+}
+
+if ($rawHistTable -ne $null -and $rawHistTable.Rows.Count -gt 0) {
+    Write-Host "[+] KIOSK POP: Da nap thanh cong $($rawHistTable.Rows.Count) vat tu tai xuyen suot ca truc." -ForegroundColor Green
+}
+
+if ($setTable -eq $null -or $setTable.Rows.Count -eq 0) {
+    Write-Host "[-] DUT GAY TAI DAU VAO: Ma $t chua tung duoc dua vao tuyen MES (STB_SetInfo trong)." -ForegroundColor Red
 } elseif ($setTable.Rows[0]["IsLineInput"] -eq $false) {
-    Write-Host "⚠️ DUT GAY TAI CONG DOAN DAU: Lot da tao nhung chua scan vao tuyen (IsLineInput = 0)." -ForegroundColor Yellow
-    Write-Host "   -> Khac phuc: Quet cong doan dau hoac IT kich hoat IsLineInput=1." -ForegroundColor Gray
-} elseif ($popTable.Rows.Count -gt 0 -and $popTable.Rows[0]["IsDone"] -eq $true -and $popTable.Rows[0]["IsTransferred"] -eq $false) {
-    Write-Host "⚠️ NGHEN TAI DONG BO POP <-> MES: Chuyen POP da chot hoan thanh nhung chua chuyen giao sang MES (IsTransferred = 0)." -ForegroundColor Yellow
-    Write-Host "   -> Khac phuc: Cho worker sync hoac kiem tra dich vu POP Sync Scheduler." -ForegroundColor Gray
-} elseif ($routeTable.Rows.Count -gt 0 -and ($routeTable.Rows | Select-Object -Last 1)["CompleteRoute"] -eq [DBNull]::Value) {
+    Write-Host "[-] DUT GAY TAI CONG DOAN DAU: Lot da tao nhung chua scan vao tuyen (IsLineInput = 0)." -ForegroundColor Yellow
+    Write-Host "    -> Khac phuc: Quet cong doan dau hoac IT kich hoat IsLineInput=1." -ForegroundColor Gray
+} elseif ($popTable -ne $null -and $popTable.Rows.Count -gt 0 -and $popTable.Rows[0]["IsDone"] -eq $true -and $popTable.Rows[0]["IsTransferred"] -eq $false) {
+    Write-Host "[-] NGHEN TAI DONG BO POP <-> MES: Chuyen POP da chot hoan thanh nhung chua chuyen giao sang MES (IsTransferred = 0)." -ForegroundColor Yellow
+    Write-Host "    -> Khac phuc: Cho worker sync hoac kiem tra dich vu POP Sync Scheduler." -ForegroundColor Gray
+} elseif ($routeTable -ne $null -and $routeTable.Rows.Count -gt 0 -and ($routeTable.Rows | Select-Object -Last 1)["CompleteRoute"] -eq [DBNull]::Value) {
     $lastRoute = ($routeTable.Rows | Select-Object -Last 1)["RouteCode"]
-    Write-Host "📍 LOT DANG DO DANG TAI CONG DOAN: $lastRoute (Chua hoan thanh luot chot CompleteRoute)." -ForegroundColor Green
+    Write-Host "[*] LOT DANG DO DANG TAI CONG DOAN: $lastRoute (Chua hoan thanh luot chot CompleteRoute)." -ForegroundColor Green
 } else {
-    Write-Host "✅ DONG CHAY BINH THUONG: Du lieu thong suot giua PO, MES va Kiosk POP." -ForegroundColor Green
+    Write-Host "[OK] DONG CHAY BINH THUONG: Du lieu thong suot giua PO, MES va Kiosk POP." -ForegroundColor Green
 }
 
 Write-Host "----------------------------------------------------------------------" -ForegroundColor Cyan

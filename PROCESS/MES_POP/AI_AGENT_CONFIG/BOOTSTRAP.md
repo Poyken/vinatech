@@ -15,43 +15,49 @@ Related Files:
 
 # ⚡ BOOTSTRAP — Đọc file này ĐẦU TIÊN mỗi session mới
 
-> **Cách dùng:** Khi bắt đầu session mới, user nói: *"Đọc file `MES/AI_AGENT_CONFIG/BOOTSTRAP.md` trước"*
-> **Cập nhật:** 2026-07-02
+> **Cách dùng:** Khi bắt đầu session mới, tra cứu nhanh quy tắc và 2 CLI Hubs của phân hệ `PROCESS/MES_POP`.
+> **Cập nhật:** 2026-09-25
 
 ---
 
-## 🔒 QUY TẮC VÀNG BẮT BUỘC
+## 🔒 QUY TẮC VÀNG BẮT BUỘC (RULES 0 - 20)
 
 > [!IMPORTANT]
-> Chi tiết đầy đủ quy tắc → [RULES.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/AI_AGENT_CONFIG/RULES.md) | Bài học kinh nghiệm → [LESSONS_LEARNED.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/AI_AGENT_CONFIG/LESSONS_LEARNED.md)
+> Chi tiết đầy đủ quy tắc → [GEMINI.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/GEMINI.md) hoặc [.agents/rules/00_vinatech_rules.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/.agents/rules/00_vinatech_rules.md)
 
-0. **ZERO SELECT WITHOUT PRIOR KB (BẤT BIẾN)** — CẤM chạy `SELECT` khi chưa chạy `.\find_kb.ps1` hoặc tra cứu tài liệu KB và trích dẫn căn cứ.
-1. **SELECT-ONLY** — Tuyệt đối KHÔNG INSERT/UPDATE/DELETE/ALTER/CREATE/DROP trực tiếp trên production DB.
-2. **Script → User chạy** — Viết script fix (bọc `BEGIN TRAN...ROLLBACK`) → user tự chạy SSMS hoặc qua `.\mes.ps1 deploy <file.sql>`.
-3. **Golden Query 360° First** — Dùng `.\mes.ps1 trace <Lot>` quét sạch 4 bảng trong 1 lần gọi duy nhất khi truy vết Lot/Barcode.
-4. **Surgical Changes & Retrieval** — Chỉ tra cứu và đọc đúng 20-40 dòng cần thiết (không đọc full file >50KB làm ngợp context).
-5. **Không commit SP lên Git** — Dùng `.\mes.ps1 sp <Name>` tải tạm, xong chạy `.\mes.ps1 sp -Clean`.
-6. **Hỏi trước khi làm** — Thiếu thông tin hoặc nghi ngờ → dừng và hỏi user.
-7. **NOLOCK** — Luôn dùng `WITH(NOLOCK)` trên bảng giao dịch lớn (`STB_ProdRouteHist`, `STB_MaterialLotInfo`, `STB_SetInfo`).
+0. **RULE 0:** CẤM chạy `SELECT` trước khi tra cứu `.\pop.ps1 find` / `.\mes.ps1 find` hoặc KB modules.
+1. **RULE 1:** SELECT-ONLY trên Production DB. Mọi script can thiệp phải bọc `BEGIN TRAN...ROLLBACK`.
+2. **RULE 14:** Tốc độ phản hồi thần tốc (<3-5s). Gọi đúng 1-Shot Golden Query (`.\pop.ps1 trace` hoặc `.\mes.ps1 trace`), có data dừng ngay.
+3. **RULE 16:** KHÔNG DÙNG TRÌNH DUYỆT / KHÔNG HTML. 100% vận hành qua Console CLI, REPL Shell, Python và Telegram Bot.
+4. **RULE 18:** Định danh IT: Author = 'vanduc' và ChangeUserID = 'vanduc'.
+5. **RULE 20 (POP Bất Biến):** Đổi máy nhầm update 2 bảng (`STB_ProdRouteHist` + `MongoToMesPerformance`). Nút Cắt điện cực mờ do `< 100`. Cuộn BTP tối đa 3 LOTNO. Mở khóa máy kẹt qua `.\pop.ps1 unlock <Machine> -Deploy`.
 
 ---
 
-## 🔌 BỘ CÔNG CỤ ĐIỀU PHỐI VẬN HÀNH (V2.0)
+## 🔌 2 TRUNG TÂM ĐIỀU PHỐI LỆNH VẬN HÀNH
 
 > [!NOTE]
-> Trung tâm điều phối duy nhất: [mes.ps1](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/mes.ps1) | Cấu hình 15 DB: [db_config.json](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/db_config.json)
+> Điều phối Kiosk POP: [pop.ps1](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/pop.ps1) | Điều phối MES Core: [mes.ps1](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/mes.ps1) | Cấu hình 15 DB: [db_config.json](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/db_config.json)
 
 ```powershell
-.\mes.ps1 help                         # Xem toàn bộ cú pháp & hướng dẫn
-.\mes.ps1 find "<Keyword>"             # Tra cứu siêu tốc trong 78+ file KB & 90+ Screens
-.\mes.ps1 trace "<LotID/Barcode>"      # Golden Query 360° quét Lot, PO, Routing, NVL, Thùng
-.\mes.ps1 screen "<ScreenID>"          # Debug màn hình MES (Menu, SP, Grid layout: B530, B540...)
-.\mes.ps1 health [-Detail]             # Morning Health Check quét Lot HOLD, WIP 24h, DB Lock
-.\mes.ps1 audit                        # Audit đối soát độ tin cậy tài liệu vs Live DB
-.\mes.ps1 query "<SELECT>" [-Profile]  # Chạy SELECT an toàn đa Database (MES, GW, ERP, POP...)
-.\mes.ps1 new-fix "<IssueCode>"        # Sinh template SQL Hotfix chuẩn UTF-8-BOM có BEGIN TRAN
-.\mes.ps1 deploy <file.sql> [-Force]   # Deploy SQL an toàn (Tự động Pre-flight Snapshot backup)
-.\mes.ps1 sp "<SP_Name>"               # Tải SP tạm từ DB / Xóa sạch: .\mes.ps1 sp -Clean
+# 1. KIOSK POP & NVL BOM (pop.ps1)
+.\pop.ps1 trace "<Lot/PO/Line/Machine>"  # Golden Query 360 Kiosk: BOM, Kho ROUTE_VN_WH, Nạp NVL, Tiến độ
+.\pop.ps1 nvl "<Lot/PO>"                # Soi nhanh định mức BOM & tồn khả dụng kho chuyền
+.\pop.ps1 unlock "<Machine>" -Deploy    # Mở khóa giải phóng máy POP kẹt ACTIVE tức thời 1-Shot
+.\pop.ps1 release-machines [-Force]     # Giải phóng toàn bộ máy POP kẹt lock mồ côi
+.\pop.ps1 sync [-Line <Line>]           # Quét Lot nghẽn đồng bộ POP -> MES (MongoToMesPerformance)
+
+# 2. LÕI MES & SẢN XUẤT (mes.ps1)
+.\mes.ps1 trace "<LotID>"               # Golden Query 360° sản xuất MES (Single Round-Trip)
+.\mes.ps1 shell                         # Bật Persistent REPL Shell tức thời (<0.05s response)
+.\mes.ps1 diagnose "<Text/Lot>"         # Chẩn đoán tức thời 1-Shot xuất đúng chuẩn 4 Dòng Vàng
+.\mes.ps1 lineage "<Lot/PO>"            # Truy vết huyết mạch: PO Master -> Kho -> MES -> POP
+.\mes.ps1 screen "<ScreenID>"           # Debug màn hình MES WinForm (Grid, SP, Bảng: B530, B540...)
+.\mes.ps1 health [-Detail]              # Morning Health Check quét Lot HOLD, WIP 24h, Lock
+.\mes.ps1 fix-movedate -Lots "..."      # Sinh Hotfix chuyển ngày chốt B782 chuẩn 10h00 AM (Author vanduc)
+.\mes.ps1 fix-electrode -Lots "..."     # Sinh Hotfix xóa cuộn/mẻ trộn B552 & reset IsLineInput
+.\mes.ps1 fix-rollback -Lots "..."      # Sinh Hotfix rollback lượt chốt B530 / POP Kiosk
+.\mes.ps1 deploy <file.sql> [-Force]    # Deploy SQL an toàn (Tự động Snapshot Pre-flight)
 ```
 
 

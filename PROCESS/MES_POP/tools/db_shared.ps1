@@ -1,4 +1,4 @@
-﻿# db_shared.ps1 — Shared Database Functions & Configuration Loader for Vinatech MES
+# db_shared.ps1 — Shared Database Functions & Configuration Loader for Vinatech MES
 # Multi-DB Profiles | Auto-Failover | Pre-flight Backup | Safe Execution
 
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
@@ -199,7 +199,8 @@ function Export-PreflightSnapshot {
         return $null
     }
 
-    $backupDir = Join-Path $PSScriptRoot "backups"
+    $mesPopRoot = Split-Path $PSScriptRoot -Parent
+    $backupDir = Join-Path $mesPopRoot "backups"
     if (!(Test-Path $backupDir)) {
         New-Item -ItemType Directory -Path $backupDir -Force | Out-Null
     }

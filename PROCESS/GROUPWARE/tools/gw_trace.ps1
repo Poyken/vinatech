@@ -1,4 +1,4 @@
-# ==============================================================================
+﻿# ==============================================================================
 # gw_trace.ps1 — Golden Query 360 Multi-System Tracer for Vinatech Groupware
 # Tracks: Document Code / PO Number / Employee ID / Item Code
 # Cross-System: VINATECH_GROUP -> NEOE (ERP) -> SmartFactoryV2 (MES)
@@ -62,6 +62,17 @@ if ($empRows -and $empRows.Rows.Count -gt 0) {
     $empRows.DefaultView | Format-Table -AutoSize
 }
 
+# 1.4 Kiem tra Van ban thay the NVL hoac Master Data lien quan tren Groupware
+$sqlAltDoc = "SELECT TOP 5 DOCUMENT_SAVE_CODE, DOCUMENT_TYPE_ID, DOCUMENT_SAVE_STATE, NO_EMP_WRITER, DOCUMENT_SAVE_SUBJECT, CONVERT(varchar(19), DOCUMENT_SAVE_REG_DATE, 120) AS REG_DATE FROM VINATECH_GROUP.dbo.VINA_DOCUMENT_SAVE WITH (NOLOCK) WHERE DOCUMENT_SAVE_SUBJECT LIKE '%$Target%' OR (DOCUMENT_SAVE_SUBJECT LIKE '%대체%' AND DOCUMENT_SAVE_SUBJECT LIKE '%$Target%') ORDER BY DOCUMENT_SAVE_REG_DATE DESC;"
+try {
+    $altDocs = Invoke-DbQuery -Profile 'Groupware' -Query $sqlAltDoc
+    if ($altDocs -and $altDocs.Rows.Count -gt 0) {
+        Write-Host ''
+        Write-Host '-> Van ban lien quan toi Thay the NVL / Item tren Groupware:' -ForegroundColor Yellow
+        $altDocs.DefaultView | Format-Table -AutoSize
+    }
+} catch {}
+
 # 2. TRUY VET TREN CSDL ERP (NEOE)
 Write-Host ''
 Write-Host '[2/3] Kiem tra tren Douzone ERP (NEOE)...' -ForegroundColor Green
@@ -78,6 +89,16 @@ try {
     Write-Host '-> Khong the ket noi toi ERP NEOE hoac bang PU_POH khong co du lieu.' -ForegroundColor Gray
 }
 
+# 2.2 Kiem tra Master Item tren ERP (NEOE.MA_PITEM)
+$sqlErpItem = "SELECT TOP 5 CD_ITEM, NM_ITEM, STND_ITEM, UNIT_IM, TP_ITEM, EN_ITEM FROM NEOE.NEOE.MA_PITEM WITH (NOLOCK) WHERE CD_ITEM LIKE '%$Target%' OR NM_ITEM LIKE '%$Target%';"
+try {
+    $erpItem = Invoke-DbQuery -Profile 'ERP' -Query $sqlErpItem
+    if ($erpItem -and $erpItem.Rows.Count -gt 0) {
+        Write-Host '-> Master Data Vat tu tren ERP NEOE (MA_PITEM):' -ForegroundColor Yellow
+        $erpItem.DefaultView | Format-Table -AutoSize
+    }
+} catch {}
+
 # 3. TRUY VET TREN CSDL MES (SmartFactoryV2)
 Write-Host ''
 Write-Host '[3/3] Kiem tra tren NAIS MES (SmartFactoryV2)...' -ForegroundColor Green
@@ -93,6 +114,16 @@ try {
 } catch {
     Write-Host '-> Khong the truy van SmartFactoryV2.' -ForegroundColor Gray
 }
+
+# 3.2 Kiem tra Quy cach & Vat tu thay the tren MES (STB_MaterialMaster)
+$sqlMesMat = "SELECT TOP 5 MaterialCode, MaterialName, DelegateMaterialCode, DelegateMaterialCode2, MaterialThickness, MaterialTypeCode FROM SmartFactoryV2.dbo.STB_MaterialMaster WITH (NOLOCK) WHERE MaterialCode LIKE '%$Target%' OR DelegateMaterialCode LIKE '%$Target%' OR DelegateMaterialCode2 LIKE '%$Target%';"
+try {
+    $mesMat = Invoke-DbQuery -Profile 'SmartFactoryV2' -Query $sqlMesMat
+    if ($mesMat -and $mesMat.Rows.Count -gt 0) {
+        Write-Host '-> Quy cach & Ma Vat tu Thay the (AltCode) tren MES STB_MaterialMaster:' -ForegroundColor Yellow
+        $mesMat.DefaultView | Format-Table -AutoSize
+    }
+} catch {}
 
 Write-Host ''
 Write-Host '======================================================================' -ForegroundColor Cyan

@@ -507,6 +507,62 @@ Hệ sinh thái MES Vinatech là kiến trúc phân tán đa tầng kết nối 
 | **Cơ Chế Xử Lý Lũy Đẳng (Idempotency)** | Bắt buộc kiểm tra `STB_ProdRouteHist` trước khi chèn; Có SP cứu hộ `usp_VINA_SyncPopToMes_SingleLot` | Cờ `InterfaceFinYn` = 'Y' đánh dấu bản ghi đã xử lý | Cờ `QueueStatus` ('READY' ➔ 'SENT' ➔ 'FAILED') + Giới hạn `RetryCount` |
 | **Cơ Chế Rollback Khi Hủy Chốt** | **Bắt buộc DUAL-DELETE**: Xóa `STB_ProdRouteHist` kèm xóa `MongoToMesPerformance` (Template 7) | Cập nhật `IUD_FLAG = 'D'` để ERP nhận biết giao dịch hủy | Đánh dấu `QueueStatus = 'CANCELLED'` |
 
+#### 3.5.6 🧬 Cơ Chế Vận Hành 3 Bảng Huyết Mạch & Kỹ Thuật Fallback PQC Web (Engine `tools/pop_trace.ps1`)
+
+> **Single Source of Truth:** Trích xuất trực tiếp từ mã nguồn Golden Query 360° `.\pop.ps1 trace` (`tools/pop_trace.ps1`, L187–L235).
+
+##### A. Kỹ Thuật Phân Giải Định Danh Đa Năng (Universal ID Resolution & Fallback PQC Web)
+Khi truy vết một mã bất kỳ (`$t`), hệ thống không yêu cầu người dùng phải nhớ chính xác là Barcode hay ControlNo. Thuật toán phân giải 3 tầng đạt tốc độ `<1ms` qua Index Seek:
+
+```sql
+SET NOCOUNT ON;
+DECLARE @Ctrl VARCHAR(30) = '$t';
+DECLARE @Bar VARCHAR(50) = '$t';
+DECLARE @LineCode VARCHAR(30) = NULL;
+
+-- Tầng 1: Nếu đầu vào là ControlNo (Mã Lot MES)
+IF EXISTS (SELECT 1 FROM SmartFactoryV2.dbo.STB_SetInfo WITH(NOLOCK) WHERE ControlNo = '$t')
+BEGIN
+    SELECT TOP 1 @Bar = Barcode FROM SmartFactoryV2.dbo.STB_SetInfo WITH(NOLOCK) WHERE ControlNo = '$t';
+END
+-- Tầng 2: Nếu đầu vào là Barcode (Mã tem vạch)
+ELSE IF EXISTS (SELECT 1 FROM SmartFactoryV2.dbo.STB_SetInfo WITH(NOLOCK) WHERE Barcode = '$t')
+BEGIN
+    SELECT TOP 1 @Ctrl = ControlNo FROM SmartFactoryV2.dbo.STB_SetInfo WITH(NOLOCK) WHERE Barcode = '$t';
+END
+-- Tầng 3: Fallback PQC Web - Dò ngược từ mã chứng từ/biên bản kiểm định chất lượng
+ELSE
+BEGIN
+    SELECT TOP 1 @Ctrl = H.ProdNo 
+    FROM SmartFactoryV2.dbo.STB_CommInspDocHistory H WITH(NOLOCK)
+    LEFT JOIN SmartFactoryV2.dbo.STB_CommInspDocItem I WITH(NOLOCK) ON H.CommInspDocNo = I.CommInspDocNo
+    WHERE I.CommInspDocItemNo = '$t' OR H.CommInspDocNo = '$t';
+
+    IF @Ctrl IS NOT NULL
+    BEGIN
+        SELECT TOP 1 @Bar = Barcode FROM SmartFactoryV2.dbo.STB_SetInfo WITH(NOLOCK) WHERE ControlNo = @Ctrl;
+    END
+END
+```
+
+##### B. Bộ 3 Bảng Huyết Mạch (The Holy Trinity of POP & MES Operations)
+Mọi trạng thái vận hành của Kiosk POP và MES đều quy tụ tại 3 bảng này:
+
+| Thứ tự | Bảng CSDL | Khóa Tra Cứu | Ý Nghĩa Kỹ Thuật & Chỉ Số Vận Hành |
+|:------:|-----------|:------------:|------------------------------------|
+| **1** | `SmartFactoryV2.dbo.STB_SetInfo` | `ControlNo = @Ctrl` | **Quản trị vòng đời Lot & PO:** `PONo`, `MaterialCode`, `IsProdFinish` (1 = xong toàn bộ), `IsLineInput` (1 = đã nạp NVL), `DefectQty` (tổng phế). |
+| **2** | `SmartFactoryV2.dbo.STB_ProdRouteHist` | `ControlNo = @Ctrl` | **Lịch sử chốt công đoạn MES Core:** `RouteCode`, `WorkCenterCode` (máy/chuyền), `ProdQty`, `JobDate` (ngày ca), `CompleteRoute` (1 = xong bước này). |
+| **3** | `SmartFactoryV2.dbo.MongoToMesPerformance` | `Barcode = @Bar` | **Trục đồng bộ trung gian Kiosk POP ➔ MES:** `RouteCode`, `LineCode`, `MachineCode`, `TotalProdQty`, `IsDone` (1 = Kiosk đã chốt), `IsTransferred` (1 = đã nạp vào `STB_ProdRouteHist`). |
+
+##### C. 4 Quy Tắc Sửa Lỗi Bất Biến Khi Sai Lệch Giữa 3 Bảng (Rule 20 - EA Playbook)
+1. **Đổi máy nhầm Kiosk (Rule 20.1):** Khi công nhân chốt nhầm máy, **BẮT BUỘC UPDATE ĐỒNG BỘ CẢ 2 BẢNG**:
+   * Bảng `STB_ProdRouteHist`: `UPDATE SET WorkCenterCode = @NewMachine, ChangeDateTime = GETDATE(), ChangeUserID = 'vanduc' WHERE ControlNo = @Ctrl AND RouteCode = @Route`
+   * Bảng `MongoToMesPerformance`: `UPDATE SET MachineCode = @NewMachine, ModifyDateTime = GETDATE() WHERE Barcode = @Bar AND RouteCode = @Route`
+   *(Nếu chỉ sửa 1 bảng, giao diện Kiosk POP và báo cáo MES sẽ lệch máy nhau).*
+2. **Lỗi "Already completed in MES" (Rule 20.2 / POP-ERR-09):** Do WinForm sinh sẵn dòng kế tiếp (`CompleteRoute = 1`), Kiosk chặn không cho chốt. **Cách sửa:** Xóa bản ghi thừa trong `STB_ProdRouteWorkerHist` và `STB_ProdRouteHist`.
+3. **Kẹt Pipeline Đồng Bộ (`IsDone = 1, IsTransferred = 0` / POP-ERR-18):** Kiosk POP đã chốt xong nhưng MES WinForm chưa thấy sản lượng. **Cách sửa:** Chạy kiểm toán `.\pop.ps1 sync` hoặc chạy SP cứu hộ `usp_VINA_SyncPopToMes_SingleLot`.
+4. **Kiosk vẫn hiện "Đã hoàn thành" dù đã xóa trên MES (POP-ERR-15):** Do `MongoToMesPerformance.IsDone = 1`. **Cách sửa:** Phải reset đồng bộ: `UPDATE MongoToMesPerformance SET IsDone = 0, IsTransferred = 0 WHERE Barcode = @Bar AND RouteCode = @Route`.
+
 ---
 
 ### 3.6 📚 Danh Mục Đầy Đủ 66 Bảng CSDL VINATECH_POP (Kiểm Toán Thực Tế 2026-09-21)

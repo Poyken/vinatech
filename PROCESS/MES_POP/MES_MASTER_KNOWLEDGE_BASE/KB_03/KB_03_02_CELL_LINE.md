@@ -576,25 +576,75 @@ B802 (Electrode Prod Route Hist) — XEM TỔNG HỢP:
 
 ```sql
 -- Xem tất cả phế theo Line và ngày
-SELECT * FROM STB_VN_PRODUCTION_ERROR
-WHERE LineCode = 'VVBNC-01' AND JobDate = '2026-04-13'
+SELECT * FROM STB_VN_PRODUCTION_ERROR WITH (NOLOCK)
+WHERE LINENAME = 'TCX1' AND InputDate >= '2026-09-01'
 
--- Sửa cân nặng phế sai
+-- Sửa cân nặng phế sai (nếu OP nhập nhầm số cân thực tế)
 UPDATE STB_VN_PRODUCTION_ERROR
-SET WasteWeight = [cân_nặng_đúng], CanNangMoi = [cân_nặng_đúng]
-WHERE ID = [id]
+SET Weights = [cân_nặng_mới], ChangeDateTime = GETDATE(), ChangeUserID = 'vanduc'
+WHERE IDPE = [IDPE]
 
 -- Hủy bản ghi phế
 UPDATE STB_VN_PRODUCTION_ERROR
-SET Status = 'CANCEL', CancelDateTime = GETDATE(), CancelUserID = 'admin'
-WHERE ID = [id]
-
--- Kiểm tra tổng phế theo tháng
-SELECT LineCode, SUM(WasteWeight) AS TongPhe, COUNT(*) AS SoBanGhi
-FROM STB_VN_PRODUCTION_ERROR
-WHERE JobDate BETWEEN '2026-04-01' AND '2026-04-30'
-GROUP BY LineCode ORDER BY TongPhe DESC
+SET StatusError = 'CANCEL', ChangeDateTime = GETDATE(), ChangeUserID = 'vanduc'
+WHERE IDPE = [IDPE]
 ```
+
+#### 📌 Quy Trình Chuẩn (SOP) Cập Nhật Đơn Giá & Trọng Lượng Quy Đổi NVL Báo Phế B598 (Cơ Chế Fix Cứng Trực Tiếp Trong SP)
+
+> ⚡ **ĐẶC THÙ BẢN CHẤT HỆ THỐNG B598:** 
+> Màn hình B598 **KHÔNG CÓ BẢNG MASTER DATA CẤU HÌNH ĐƠN GIÁ HAY TRỌNG LƯỢNG RIÊNG**. Bảng `STB_VN_PRODUCTION_ERROR` cũng **không lưu cứng** cột `Số lượng` và `Thành tiền`. 
+> Toàn bộ logic định giá và quy đổi số lượng phế trên B598 **VẬN HÀNH 100% BẰNG CÁCH FIX CỨNG TRỰC TIẾP TRONG MÃ NGUỒN CỦA STORED PROCEDURE `[dbo].[usp_vn_showproductionerror]`** (Database `SmartFactoryV2`). Khi sửa SP xong, toàn bộ dữ liệu báo phế quá khứ và hiện tại sẽ tự động nhảy số theo giá trị mới ngay khi bấm lại nút **Tìm kiếm**.
+
+**1. Hai Khối `CASE WHEN` Bắt Buộc Phải Sửa Đồng Bộ Trong `usp_vn_showproductionerror`:**
+
+* **Khối 1: Cột Số Lượng (`Can_Nang_Moi` - Khoảng dòng 112 đến 570):**
+  * *Kiểu 1 (Fix cứng công thức theo Cân nặng thực tế):* Dùng khi phế phụ thuộc vào trọng lượng OP cân được:
+    ```sql
+    WHEN MaLotNguyenLieu = 'GCMDPT-601' THEN CAST(Weights AS FLOAT) / 5.06  -- Lấy cân nặng chia trọng lượng 1 mét
+    ```
+  * *Kiểu 2 (Fix cứng giá trị cố định theo yêu cầu PE/Sản xuất):* Dùng khi yêu cầu gán thẳng hệ số/sản lượng cố định:
+    ```sql
+    WHEN MaLotNguyenLieu = 'GCMDPT-601' THEN 0.0890  -- Gán thẳng giá trị theo yêu cầu
+    ```
+
+* **Khối 2: Cột Thành Tiền (`PRICES` - Khoảng dòng 572 đến 974):**
+  * *Kiểu 1 (Tính theo Cân nặng thực tế * Đơn giá):*
+    ```sql
+    WHEN MaLotNguyenLieu = 'GCMDPT-601' THEN (CAST(Weights AS FLOAT) / 5.06) * 0.0890
+    ```
+  * *Kiểu 2 (Fix cứng giá trị thành tiền):*
+    ```sql
+    WHEN MaLotNguyenLieu = 'GCMDPT-601' THEN 0.0890 * 0.089  -- Chú ý: giá trị nhỏ hơn 0.005 sẽ bị hiển thị làm tròn thành 0.00$
+    -- Hoặc gán thẳng đơn giá:
+    WHEN MaLotNguyenLieu = 'GBCP00-002' THEN 8.2
+    WHEN MaLotNguyenLieu = 'CREBO83'    THEN 4.216
+    ```
+
+**2. Hướng Dẫn Từng Bước Cho Kỹ Sư IT Khi Có Yêu Cầu Cập Nhật Giá/Trọng Lượng B598 Về Sau:**
+
+1. **Lấy thông tin yêu cầu:**
+   * Mã nguyên liệu báo phế (`MaLotNguyenLieu`): ví dụ `GCMDPT-601`.
+   * Người yêu cầu (chị Phương, anh Huân, QLSX...).
+   * Giá trị cần fix cứng: Đơn giá ($), Trọng lượng định mức (g/m hoặc g/pcs), hoặc giá trị cố định muốn hiển thị.
+2. **Mở SP trên SQL Server:**
+   * Kết nối Database: `SmartFactoryV2`.
+   * Lấy mã nguồn: `ALTER PROCEDURE [dbo].[usp_vn_showproductionerror]`.
+3. **Chèn/Sửa dòng điều kiện tại 2 khối:**
+   * Tìm khối 1 (`Can_Nang_Moi`): Thêm dòng `WHEN MaLotNguyenLieu = '<Mã>' THEN ...`
+   * Tìm khối 2 (`PRICES`): Thêm dòng `WHEN MaLotNguyenLieu = '<Mã>' THEN ...`
+   * Đánh dấu comment lịch sử chuẩn IT:
+     ```sql
+     -- YYYY-MM-DD - Author: vanduc dev by <Tên_Người_Yêu_Cầu> req
+     ```
+4. **Thực thi & Nghiệm thu:**
+   * Nhấn `Execute` (`F5`) để cập nhật SP.
+   * Mở giao diện WinForm `[B598] Báo phế`, chọn ngày và bấm nút **Tìm kiếm**.
+   * Kiểm tra dòng mã hàng tương ứng: Cột `Số lượng` và `Thành tiền` đã nhảy đúng theo giá trị fix cứng.
+
+**3. Bảng Tham Chiếu Trọng Lượng Định Mức Vỏ Bọc (Sleeve `GCMDPT-%`):**
+* Cell $\varnothing10$ (1025, 1030, 1040 như `GCMDPT-479`, `GCMDPT-330`, `GCMDPT-450`, `GCMDPT-601`): Định mức chuẩn **`5.06` g/m** (màng dày: `5.54` g/m).
+* Cell $\varnothing08$: **`3.60` g/m** | $\varnothing13, \varnothing16$: **`6.79` g/m** | $\varnothing18$: **`8.10` ~ `9.60` g/m** | $\varnothing22$-$\varnothing35$: **`14.80` ~ `15.70` g/m**.
 
 ---
 

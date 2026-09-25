@@ -20,9 +20,10 @@
 ```
 PROCESS/MES_POP/
 │
-├── 📄 mes.ps1                                  # ⚡ TRUNG TÂM ĐIỀU PHỐI LỆNH VẬN HÀNH (v2.1)
+├── 📄 mes.ps1                                  # ⚡ TRUNG TÂM ĐIỀU PHỐI LÕI MES (v2.2)
+├── 📄 pop.ps1                                  # 🖥️ TRUNG TÂM ĐIỀU PHỐI KIOSK POP & BOM NVL (v2.0)
 ├── 📄 MASTER_INDEX.md                          # ← BẠN ĐANG Ở ĐÂY
-├── 📄 GEMINI.md                                # 🛡️ Quy tắc cốt lõi & CLI Hub cho AI Agent
+├── 📄 GEMINI.md                                # 🛡️ Quy tắc cốt lõi & 2 CLI Hubs cho AI Agent
 ├── 📄 db_config.json                           # Cấu hình kết nối 15 Database (Mặc định: SmartFactoryV2)
 ├── 📄 start_telegram_bot.bat                   # Khởi động Telegram Assistant Bot (Console)
 ├── 📄 start_telegram_bot_hidden.vbs            # Khởi động ngầm Telegram Assistant Bot
@@ -85,12 +86,14 @@ PROCESS/MES_POP/
 │   ├── 📄 run_query.ps1                        # Chạy câu lệnh SELECT an toàn có NOLOCK
 │   ├── 📄 validate_sql.ps1                     # Kiểm tra cú pháp SQL trước deploy
 │   ├── 📄 mes_telegram_bot.py                  # Trợ lý AI Senior Tech Lead qua Telegram
+│   ├── 📄 mes_watchdog.py                      # Watchdog tự động giám sát 24/7 & cảnh báo
 │   ├── 📂 barcode_tools/                       # Bộ công cụ phân tích & giải mã barcode Code 128
-│   ├── 📂 mes_v2_core/                         # Kiến trúc Engine hướng đối tượng (ConnectionManager, QueryEngine)
-│   └── 📂 mes_v2_cli/                          # CLI Controller V2
+│   ├── 📂 kb_scripts/                          # Script rà soát & kiểm toán tài liệu
+│   └── 📂 scratch/                             # Thư mục chứa script kiểm tra tạm thời
 │
 ├── 📂 sql/                                     # THƯ VIỆN SQL PROCEDURES & HOTFIX TEMPLATES
-│   ├── 📂 procedures/                          # 25+ Stored Procedure definitions trích xuất
+│   ├── 📂 procedures/                          # 90+ Stored Procedure definitions trích xuất
+│   ├── 📂 hotfixes/                            # Nhật ký file SQL hotfix tác chiến
 │   ├── 📄 template_hotfix.sql                  # Template hotfix bọc BEGIN TRAN...ROLLBACK
 │   ├── 📄 template_B552_ELECTRODE_CLEANUP.sql   # Template dọn dẹp điện cực B552
 │   ├── 📄 template_B782_B530_ROLLBACK_CHOT.sql  # Template rollback chốt sản lượng B530/B782
@@ -103,29 +106,46 @@ PROCESS/MES_POP/
 └── 📂 docs/                                    # TÀI LIỆU VẬN HÀNH BỔ TRỢ
     ├── 📄 MES_POP_DEEP_DIVE_AUDIT_AND_INQUIRY.md # 🌟 Báo cáo nghiên cứu chuyên sâu & 12 câu hỏi vận hành cốt lõi
     ├── 📄 HUONG_DAN_TRIEN_KHAI_TELEGRAM_BOT.md # Cẩm nang 4 bước thiết lập Bot Telegram
+    ├── 📄 MASTER_OPERATIONAL_PLAYBOOK.md       # Cẩm nang vận hành hiện trường Vinatech
     └── 📄 KB_RELIABILITY_REPORT.md             # Báo cáo đối soát tri thức KB vs CSDL
 ```
 
 ---
 
-## ⚡ Bảng Lệnh CLI Hub `.\mes.ps1` (Phiên Bản v2.1)
+## 🖥️ 1. Bảng Lệnh CLI Hub `.\pop.ps1` (Mặt Trận Xưởng & Kiosk POP v2.0)
+
+| Lệnh | Cú Pháp Mẫu | Mục Đích Nghiệp Vụ |
+| :--- | :--- | :--- |
+| **Truy vết POP 360°** | `.\pop.ps1 trace "<Lot/PO/Line/Machine>"` | Golden Query 360: Soi định mức BOM, Tồn kho chuyền `ROUTE_VN_WH`, Nạp NVL Kiosk, Tiến độ POP |
+| **Soi định mức NVL & Tồn kho** | `.\pop.ps1 nvl "<Lot/PO>"` | Soi nhanh định mức BOM, mã thay thế (AltCode) và tồn khả dụng tại kho chuyền `ROUTE_VN_WH` |
+| **Mở khóa máy POP tức thời** | `.\pop.ps1 unlock "<Machine>" [-Deploy]` | Mở khóa giải phóng máy POP bị kẹt `ACTIVE` tức thời 1-Shot (<0.5s) |
+| **Giải phóng toàn bộ máy treo** | `.\pop.ps1 release-machines [-Force]` | Quét và giải phóng toàn bộ máy POP kẹt lock mồ côi theo Line |
+| **Kiểm tra nghẽn đồng bộ Sync** | `.\pop.ps1 sync [-Line <Line>]` | Quét phát hiện các Lot bị kẹt pipeline đồng bộ POP -> MES (`MongoToMesPerformance`) |
+| **Đổi máy nhầm Kiosk** | `.\pop.ps1 swap-machine -Target <Lot> -Machine <M>` | Đổi máy nhầm Kiosk đồng bộ cả `STB_ProdRouteHist` và `MongoToMesPerformance` (Rule 20.1) |
+| **Cứu dung dịch điện giải** | `.\pop.ps1 fix-solution -Target <Lot/Barrel>` | Cấp cứu khôi phục thùng dung dịch điện giải 150kg bị auto-exhaust về 0kg |
+| **Kiểm toán Chuyển Đổi POP** | `.\pop.ps1 readiness` / `audit` | Kiểm toán 8 bước sẵn sàng chuyển đổi POP Web & đối soát sản lượng POP vs MES |
+| **Tra cứu tri thức POP** | `.\pop.ps1 find "<Keyword>"` | Tra cứu siêu tốc L1 POP Matrix (<0.001s) và tài liệu POP KB chuyên sâu |
+
+---
+
+## ⚡ 2. Bảng Lệnh CLI Hub `.\mes.ps1` (Lõi MES & Hotfix Backend v2.2)
 
 | Lệnh | Cú Pháp Mẫu | Mục Đích Nghiệp Vụ |
 | :--- | :--- | :--- |
 | **Truy vết 360° Siêu Tốc** | `.\mes.ps1 trace "<LotID>"` | Golden Query 360° quét Lot, Routing, NVL, Tồn kho (Single Round-Trip) |
+| **REPL Shell Siêu Tốc** | `.\mes.ps1 shell` | Bật Persistent REPL Shell tức thời (Zero Cold-Start, <0.05s response) |
+| **Chẩn đoán Master 1-Shot** | `.\mes.ps1 diagnose "<Text/Lot>"` | Chẩn đoán tức thời 1-Shot xuất đúng chuẩn 4 Dòng Vàng (<1s) |
 | **Truy vết Huyết Mạch 3 Trụ Cột** | `.\mes.ps1 lineage "<Lot/PO>"` | Truy vết liên hệ thống: PO Master ➔ Kho NVL ➔ Tiến độ MES ➔ Kiosk POP (<1s) |
-| **Truy vết POP Kiosk** | `.\mes.ps1 pop-trace "<Keyword>"` | Truy vết chuyên sâu Kiosk: Sync status, Phế, Máy kẹt, Kiosk logs |
 | **Debug Màn Hình MES** | `.\mes.ps1 screen "<ScreenID>"` | Debug SP, Bảng, Lưới dữ liệu màn hình MES (`B530`, `B540`, `S510`...) |
 | **Tra cứu tri thức nhanh** | `.\mes.ps1 find "<Keyword>"` | Tra cứu L1 Quick Matrix (<0.001s) và 78+ file Markdown KB |
 | **Sức Khỏe Hệ Thống** | `.\mes.ps1 health [-Detail]` | Morning Health Check quét Lot HOLD, WIP 24h, DB Lock |
-| **Kiểm toán Chuyển Đổi POP** | `.\mes.ps1 pop-readiness [-Target <Line>]` | Kiểm toán 8 bước sẵn sàng cắt WinForms & chạy 100% POP Web |
-| **Giải phóng Thiết Bị Treo** | `.\mes.ps1 release-machines [-Target <Line>] [-Force]` | Giải phóng máy bị kẹt trạng thái ACTIVE ở DayPlan cũ trên Kiosk POP |
-| **Hotfix Chuyển Ngày B782** | `.\mes.ps1 fix-movedate -Lots "..." -TargetDate "..."` | Sinh Hotfix chuyển ngày chốt B782 chuẩn 10h00 AM (Author vanduc) |
+| **Hotfix Chuyển Ngày B782** | `.\mes.ps1 fix-movedate -Lots "..." -TargetDate "..."` | Sinh Hotfix chuyển ngày chốt B782 chuẩn 10h00 AM (Author: vanduc) |
 | **Hotfix Xử Lý Điện Cực B552** | `.\mes.ps1 fix-electrode -Lots "..." [-Type Slitting\|Mixing]` | Sinh Hotfix xóa cuộn/mẻ trộn B552 & reset IsLineInput cuộn mẹ |
 | **Hotfix Rollback Chốt B530** | `.\mes.ps1 fix-rollback -Lots "..." [-Route "..."]` | Sinh Hotfix rollback lượt chốt B530 / POP Kiosk |
+| **Hotfix Dòng Cloned POP** | `.\mes.ps1 fix-pop-clone -Lots "..."` | Sinh Hotfix xóa dòng tự sinh `CompleteRoute IS NULL` để mở chốt Kiosk POP |
 | **Tự Động Báo Cáo Tuần IT** | `.\mes.ps1 weekly-report [-StartDate "..." -EndDate "..."]` | Tự động tạo file CSV báo cáo tuần chuẩn tại Desktop/thanks_and_ojt_reports |
 | **Tải Stored Procedure** | `.\mes.ps1 sp "<SP_Name>"` | Tải mã nguồn SP mới nhất từ DB về local để phân tích |
 | **Truy vấn an toàn** | `.\mes.ps1 query "<SELECT_SQL>"` | Chạy câu lệnh SELECT an toàn có kiểm tra từ khóa cấm & NOLOCK |
-| **Sinh Template Hotfix** | `.\mes.ps1 new-fix "<Tên_Lỗi>" [-Template <b552\|b782\|rollback>]` | Sinh template SQL Hotfix chuẩn UTF-8-BOM có snapshot backup |
 | **Triển khai Hotfix SQL** | `.\mes.ps1 deploy "<File.sql>" [-Force]` | Deploy script SQL an toàn (Tự động Snapshot Pre-flight & Auto-Learn Log) |
 | **Trợ Lý Telegram** | `.\mes.ps1 bot` | Khởi động Trợ lý AI Telegram phục vụ điều khiển từ xa qua điện thoại |
+| **Tuần tra Watchdog 24/7** | `.\mes.ps1 watchdog-hidden` | Kích hoạt Auto-Pilot tuần tra ngầm 24/7 cảnh báo qua Telegram |

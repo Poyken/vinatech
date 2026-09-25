@@ -1,9 +1,9 @@
-# 🛡️ VINATECH MASTER AGENT WORKSPACE RULE DEFINITIONS (V3.0)
+# 🛡️ VINATECH MASTER AGENT WORKSPACE RULE DEFINITIONS (V3.1)
 
 ## QUY TẮC BẮT BUỘC KHÔNG THỂ BỎ QUA:
 
 1. **RULE 0 - ZERO SELECT WITHOUT PRIOR KB (BẤT BIẾN):**
-   - Luôn tra cứu L1 Cache qua `.\mes.ps1 find "<Keyword>"`, `.\gw.ps1 find "<Keyword>"`, hoặc `.\db.ps1 find "<Keyword>"` trước khi chạy bất kỳ câu lệnh SQL SELECT nào.
+   - Luôn tra cứu L1 Cache qua `.\pop.ps1 find "<Keyword>"`, `.\mes.ps1 find "<Keyword>"`, `.\gw.ps1 find "<Keyword>"`, hoặc `.\db.ps1 find "<Keyword>"` trước khi chạy bất kỳ câu lệnh SQL SELECT nào.
 
 2. **RULE 1 - SELECT-ONLY ON PRODUCTION:**
    - Cấm thực thi DML/DDL trực tiếp. Mọi hotfix phải có `BEGIN TRAN...ROLLBACK` và triển khai qua `deploy_tool.ps1` hoặc `.\mes.ps1 deploy <file.sql>`.
@@ -12,14 +12,14 @@
    - Ưu tiên đọc L1 JSON Matrix (<0.001s, ~150 tokens). Tuyệt đối không đọc tràn lan cả file Markdown >50KB gây nghẽn Context.
 
 4. **RULE 6 - GOLDEN QUERY 360° FIRST:**
-   - Truy vết sản xuất: `.\mes.ps1 trace "<LotID>"`
-   - Truy vết POP Kiosk: `.\mes.ps1 pop-trace "<Keyword>"`
+   - Truy vết POP Kiosk & NVL BOM: `.\pop.ps1 trace "<Keyword>"` hoặc `.\pop.ps1 nvl "<Lot/PO>"`
+   - Truy vết sản xuất MES: `.\mes.ps1 trace "<LotID>"`
    - Truy vết Groupware: `.\gw.ps1 trace "<PO/DocCode>"`
-   - Truy vết Lineage: `.\db.ps1 lineage -Type <T> -Value <V>`
+   - Truy vết Lineage: `.\mes.ps1 lineage "<Lot/PO>"` hoặc `.\db.ps1 lineage -Type <T> -Value <V>`
 
 5. **RULE 10 - STANDARD TOOLING & ZERO JUNK FILES (BẢO VỆ WORKSPACE):**
    - Tuyệt đối CẤM tạo các file script `.ps1` rời rạc trực tiếp tại thư mục gốc.
-   - BẮT BUỘC sử dụng các CLI Hub: `.\mes.ps1`, `.\gw.ps1`, `.\db.ps1`.
+   - BẮT BUỘC sử dụng đúng 5 CLI Hub: `.\pop.ps1`, `.\mes.ps1`, `.\gw.ps1`, `.\db.ps1`, `.\ksys.ps1`.
    - Nếu bắt buộc tạo scratch script: BẮT BUỘC đặt trong `tools/scratch/` hoặc subfolder `scratch/`.
 
 6. **RULE 11 - CẤM ĐỘNG VÀO STB_SetInfo KHI ROLLBACK SẢN XUẤT:**
@@ -43,6 +43,6 @@
     - Sửa mã máy kép: UPDATE đồng thời cả `STB_ProdRouteHist` VÀ `MongoToMesPerformance`.
     - Xung đột WinForm vs POP: WinForm sinh sẵn dòng kế tiếp (`CompleteRoute = 1`), xóa dòng thừa trong `STB_ProdRouteHist` & `STB_ProdRouteWorkerHist`.
     - Khóa độ dày Cắt điện cực: Nút Cắt mờ do `MaterialThickness < 100` trong `STB_MaterialMaster`.
-    - Nạp cuộn BTP: Tối đa 2 LOTNO cho 1 mã cắt.
-    - Giải phóng máy POP kẹt ACTIVE qua `VINA_EQUIPMENT_MAPPING.MAPPING_STATUS = 'RELEASED'`.
+    - Nạp cuộn BTP: Tối đa 3 LOTNO cho 1 mã cắt (Đã nâng cấp từ định mức cũ 2 LOTNO).
+    - Giải phóng máy POP kẹt ACTIVE: Qua `.\pop.ps1 unlock <Machine> -Deploy` hoặc `.\pop.ps1 release-machines -Force` (`VINA_EQUIPMENT_MAPPING.MAPPING_STATUS = 'RELEASED'`).
 

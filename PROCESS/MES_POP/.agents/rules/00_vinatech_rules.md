@@ -1,9 +1,9 @@
-# 🛡️ VINATECH MES AGENT WORKSPACE RULE DEFINITIONS (V2.1)
+# 🛡️ VINATECH MES AGENT WORKSPACE RULE DEFINITIONS (V2.2)
 
 ## QUY TẮC BẮT BUỘC KHÔNG THỂ BỎ QUA:
 
 1. **RULE 0 - ZERO SELECT WITHOUT PRIOR KB (BẤT BIẾN):**
-   - Luôn tra cứu L1 `QUICK_MATRIX.json` qua `.\find_kb.ps1 "<Keyword>"` hoặc module KB trước khi chạy bất kỳ câu lệnh SQL SELECT nào.
+   - Luôn tra cứu L1 qua `.\pop.ps1 find "<Keyword>"` (POP Kiosk) hoặc `.\mes.ps1 find "<Keyword>"` (MES Core) trước khi chạy bất kỳ câu lệnh SQL SELECT nào.
 
 2. **RULE 1 - SELECT-ONLY ON PRODUCTION:**
    - Cấm thực thi DML/DDL trực tiếp. Mọi hotfix phải có `BEGIN TRAN...ROLLBACK` và triển khai qua `.\mes.ps1 deploy <file.sql>`.
@@ -12,7 +12,8 @@
    - Ưu tiên đọc L1 JSON Matrix (<0.001s, ~150 tokens). Tuyệt đối không đọc tràn lan cả file Markdown >50KB gây nghẽn Context.
 
 4. **RULE 6 - GOLDEN QUERY 360° FIRST:**
-   - Dùng `.\mes.ps1 trace "<LotID>"` trong lần kiểm tra đầu tiên khi truy vết Lot/Barcode (quét sạch 4 bảng trong 1 lần duy nhất).
+   - Khi điều tra sự cố POP Kiosk & NVL BOM: Dùng `.\pop.ps1 trace "<Target>"` hoặc `.\pop.ps1 nvl "<Lot/PO>"`.
+   - Khi điều tra sự cố sản xuất MES: Dùng `.\mes.ps1 trace "<LotID>"` (quét sạch 4 bảng trong 1 lần duy nhất).
 
 5. **RULE 7 - GIAO THỨC XỬ LÝ KHI USER CUNG CẤP THIẾU THÔNG TIN (UNDERSPECIFIED INPUT):**
    - **Trường hợp User chỉ gõ "check" / "kiểm tra hệ thống":** Tự động kích hoạt `.\mes.ps1 health -Detail` (quét Lot HOLD, WIP 24h, DB Lock) và đưa ra 4 tùy chọn tra cứu nhanh (Trace Lot / Debug Screen / Audit Schema / Inventory). CẤM chạy SELECT mò mẫm tự do.
@@ -21,7 +22,7 @@
 
 6. **RULE 10 - STANDARD TOOLING & ZERO JUNK FILES (BẢO VỆ WORKSPACE):**
    - Tuyệt đối CẤM tạo các file script `.ps1` rời rạc (`check_*.ps1`, `find_*.ps1`, `inspect_*.ps1`...) trực tiếp tại thư mục gốc hoặc trong `tools/`.
-   - BẮT BUỘC sử dụng CLI Hub `.\mes.ps1` (`.\mes.ps1 query`, `.\mes.ps1 trace`, `.\mes.ps1 screen`, `.\mes.ps1 find`).
+   - BẮT BUỘC sử dụng đúng CLI Hub: `.\pop.ps1` (Kiosk POP tại xưởng) và `.\mes.ps1` (Lõi MES sản xuất & Hotfix).
    - Nếu trong trường hợp đặc biệt bắt buộc phải tạo scratch script để test: BẮT BUỘC đặt trong `tools/scratch/` (thư mục này đã được `.gitignore` bảo vệ) và phải dọn dẹp sau ca làm việc.
 
 7. **RULE 11 - CẤM ĐỘNG VÀO STB_SetInfo KHI ROLLBACK SẢN XUẤT:**
@@ -67,6 +68,6 @@
    - **(1) Sửa mã máy kép:** Khi đổi máy gán nhầm trên POP Kiosk, BẮT BUỘC UPDATE đồng thời ở **CẢ 2 BẢNG**: `SmartFactoryV2.dbo.STB_ProdRouteHist` VÀ bảng đệm `SmartFactoryV2.dbo.MongoToMesPerformance`. Tuyệt đối CẤM chỉ sửa 1 bảng vì Background Worker của POP sẽ ghi đè ngược lại mã cũ.
    - **(2) Xung đột sinh sớm công đoạn (MES WinForm vs Web POP):** MES WinForm khi chốt tự động sinh sẵn dòng ở công đoạn tiếp theo (`CompleteRoute = 1`), trong khi Web POP chỉ sinh 1 dòng cho công đoạn vừa chốt (`CompleteRoute = NULL`). Khi Kiosk báo *"This route is already completed in MES"*, BẮT BUỘC xóa dòng sinh sớm thừa trong `STB_ProdRouteWorkerHist` và `STB_ProdRouteHist`.
    - **(3) Khóa liên động độ dày Cắt điện cực:** Nút "Cắt điện cực" trên Kiosk bị mờ / vô hiệu hóa nếu độ dày màng `MaterialThickness < 100` trong `STB_MaterialMaster`. BẮT BUỘC kiểm tra độ dày trước khi nghi ngờ lỗi phần mềm.
-   - **(4) Giới hạn nạp cuộn BTP tối đa 2 LOTNO:** Một mã cắt cuộn BTP chỉ cho phép nạp tối đa vào 2 LOTNO sản phẩm để kiểm soát phế và chống âm kho. CẤM quét ép vào LOT thứ 3.
-   - **(5) Cơ chế giải phóng máy kẹt (Exclusive Lock):** Bảng `VINATECH_POP.dbo.VINA_EQUIPMENT_MAPPING` quản trị phiên gắn máy theo DayPlan. Khi OP quên bấm Hủy gán làm máy kẹt `ACTIVE` (POP-ERR-20, POP-ERR-27), BẮT BUỘC chuyển sang `MAPPING_STATUS = 'RELEASED'` (dùng lệnh `.\mes.ps1 release-machines -Force` hoặc SQL Hotfix).
+   - **(4) Giới hạn nạp cuộn BTP tối đa 3 LOTNO:** Một mã cắt cuộn BTP chỉ cho phép nạp tối đa vào 3 LOTNO sản phẩm để kiểm soát phế và chống âm kho (Đã nâng cấp từ định mức cũ 2 LOTNO). CẤM quét ép vào LOT thứ 4.
+   - **(5) Cơ chế giải phóng máy kẹt (Exclusive Lock):** Bảng `VINATECH_POP.dbo.VINA_EQUIPMENT_MAPPING` quản trị phiên gắn máy theo DayPlan. Khi OP quên bấm Hủy gán làm máy kẹt `ACTIVE` (POP-ERR-20, POP-ERR-27), BẮT BUỘC chuyển sang `MAPPING_STATUS = 'RELEASED'` (dùng lệnh `.\pop.ps1 unlock <Machine> -Deploy` hoặc `.\pop.ps1 release-machines -Force`).
 

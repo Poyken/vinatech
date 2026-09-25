@@ -1,4 +1,4 @@
-# ==============================================================================
+﻿# ==============================================================================
 # pop_trace.ps1 — Ultra-Fast 360° Trace with Smart Identifier Resolver
 # Single Round-Trip | Auto Pattern Detection (Lot / Packing / Machine / Line)
 # Tham chiếu: RULE 6 (Golden Query), POP_KB_01, POP_KB_02, POP_KB_03
@@ -214,6 +214,8 @@ BEGIN
     END
 END
 
+SELECT TOP 1 @LineCode = LineCode FROM SmartFactoryV2.dbo.MongoToMesPerformance WITH(NOLOCK) WHERE Barcode = @Bar;
+
 -- 1. STB_SetInfo (Index Seek)
 SELECT TOP 1 ControlNo, PONo, Barcode, MaterialCode, IsProdFinish, IsLineInput, DefectQty, CreateDateTime 
 FROM SmartFactoryV2.dbo.STB_SetInfo WITH(NOLOCK) 
@@ -242,7 +244,33 @@ FROM SmartFactoryV2.dbo.STB_DefectRepairInfo WITH(NOLOCK)
 WHERE ControlNo = @Ctrl 
 ORDER BY CreateDateTime DESC;
 
--- 5. STB_MaterialLotInfo (NVL / Box)
+-- 5.1. STB_ProductionOrderBom (Dinh muc BOM, Alt Code & Ton kho kho chuyen ROUTE_VN_WH)
+SELECT 
+    B.RouteCode, 
+    B.ChildMaterialCode, 
+    ISNULL(MM_Base.MaterialName, '') AS MaterialName, 
+    B.UsedQty, 
+    ISNULL(MM_Base.DelegateMaterialCode, '-') AS AltCode1, 
+    ISNULL(MM_Base.DelegateMaterialCode2, '-') AS AltCode2,
+    ISNULL(S.StockQty, 0) AS WhStockQty
+FROM SmartFactoryV2.dbo.STB_ProductionOrderBom B WITH(NOLOCK)
+LEFT JOIN SmartFactoryV2.dbo.STB_MaterialMaster MM_Base WITH(NOLOCK) ON B.ChildMaterialCode = MM_Base.MaterialCode
+OUTER APPLY (
+    SELECT SUM(CurrentQty) AS StockQty 
+    FROM SmartFactoryV2.dbo.STB_MaterialLotInfo WITH(NOLOCK)
+    WHERE MaterialCode = B.ChildMaterialCode AND MaterialWarehouseCode = 'ROUTE_VN_WH'
+) S
+WHERE B.PONo = (SELECT TOP 1 PONo FROM SmartFactoryV2.dbo.STB_SetInfo WITH(NOLOCK) WHERE ControlNo = @Ctrl) 
+  AND (@LineCode IS NULL OR B.RouteCode = (SELECT TOP 1 RouteCode FROM SmartFactoryV2.dbo.MongoToMesPerformance WITH(NOLOCK) WHERE Barcode = @Bar) OR (SELECT TOP 1 RouteCode FROM SmartFactoryV2.dbo.MongoToMesPerformance WITH(NOLOCK) WHERE Barcode = @Bar) IS NULL)
+ORDER BY B.RouteCode, B.ChildMaterialCode;
+
+-- 5.2. STB_RawMaterialInputHist (Lich su NVL da nap tai Kiosk POP)
+SELECT TOP 15 RawMaterialBarcode, MaterialCode, Qty, RouteCode, CreateDateTime 
+FROM SmartFactoryV2.dbo.STB_RawMaterialInputHist WITH(NOLOCK) 
+WHERE Barcode = @Bar 
+ORDER BY CreateDateTime DESC;
+
+-- 5.3. STB_MaterialLotInfo (Neu ma nhap vao la cuon BTP / Box dong goi trong kho)
 SELECT TOP 10 MaterialLotNo, LotNo, MaterialCode, PackingID, CurrentQty, InitialQty 
 FROM SmartFactoryV2.dbo.STB_MaterialLotInfo WITH(NOLOCK) 
 WHERE LotNo = @Bar OR MaterialLotNo = @Bar OR PackingID = @Bar;
@@ -281,6 +309,36 @@ function Show-Table([string]$title, [System.Data.DataTable]$table, [string]$colo
     Write-Host ''
     Write-Host ">>> $title ($($table.Rows.Count) ban ghi):" -ForegroundColor $color
     $table | Format-Table -AutoSize | Out-String | ForEach-Object { Write-Host $_.TrimEnd() -ForegroundColor White }
+}
+
+function Show-BomCard([System.Data.DataTable]$table) {
+    if ($null -eq $table -or $table.Rows.Count -eq 0) {
+        Write-Host "   [-] 5.1. DINH MUC BOM CONG DOAN: 0 ban ghi" -ForegroundColor DarkGray
+        return
+    }
+    Write-Host ''
+    Write-Host ">>> 5.1. DINH MUC BOM CONG DOAN & TON KHO KHO CHUYEN (ROUTE_VN_WH) ($($table.Rows.Count) vat tu):" -ForegroundColor Magenta
+    foreach ($row in $table.Rows) {
+        $rt = $row['RouteCode']
+        $code = $row['ChildMaterialCode']
+        $name = $row['MaterialName']
+        $qty = $row['UsedQty']
+        $alt1 = $row['AltCode1']
+        $alt2 = $row['AltCode2']
+        $stock = [double]$row['WhStockQty']
+        $stockStr = if ($stock -eq 0) { "[HET HANG (0)]" } else { "$stock" }
+        $stockColor = if ($stock -eq 0) { "Red" } else { "Green" }
+
+        Write-Host "   [$rt] " -NoNewline -ForegroundColor DarkCyan
+        Write-Host "$code " -NoNewline -ForegroundColor Yellow
+        Write-Host "($name) " -NoNewline -ForegroundColor White
+        Write-Host "Dinh muc: $qty " -NoNewline -ForegroundColor Gray
+        if ($alt1 -ne '-' -or $alt2 -ne '-') {
+            Write-Host "| Alt: $alt1, $alt2 " -NoNewline -ForegroundColor DarkYellow
+        }
+        Write-Host "| Ton kho: " -NoNewline -ForegroundColor Gray
+        Write-Host "$stockStr" -ForegroundColor $stockColor
+    }
 }
 
 function Show-LotCard([System.Data.DataTable]$table) {
@@ -348,6 +406,32 @@ function Show-QcCard([System.Data.DataTable]$table) {
     Write-Host "   * Nguoi tao & Thoi gian: " -NoNewline -ForegroundColor Gray
     Write-Host "$user - $crDate" -ForegroundColor Green
     Write-Host "+-------------------------------------------------------------------------------+" -ForegroundColor Magenta
+}
+
+function Show-BomDelegateCard([System.Data.DataTable]$table) {
+    if ($null -eq $table -or $table.Rows.Count -eq 0) {
+        Write-Host "   [-] 8. BOM DINH MUC & NVL THAY THE (STB_ProductionOrderBom): 0 ban ghi" -ForegroundColor DarkGray
+        return
+    }
+    Write-Host ''
+    Write-Host ">>> 8. BOM DINH MUC & NVL THAY THE (STB_ProductionOrderBom + STB_MaterialMaster) ($($table.Rows.Count) ban ghi):" -ForegroundColor Cyan
+    
+    # Kiem tra xem co mismatch size giua ma goc va ma thay the khong
+    $mismatches = @($table | Where-Object { $_['DelegateStatus'] -eq 'MISMATCH_SIZE' })
+    if ($mismatches.Count -gt 0) {
+        Write-Host "   +-------------------------------------------------------------------------------+" -ForegroundColor Red
+        Write-Host "   | [!] CANH BAO: PHAT HIEN MISMATCH QUY CACH NGUYEN VAT LIEU THAY THE!          |" -ForegroundColor Red
+        Write-Host "   +-------------------------------------------------------------------------------+" -ForegroundColor Red
+        foreach ($m in $mismatches) {
+            Write-Host "   * Ma BOM goc  : $($m['ChildMaterialCode']) ($($m['BaseMaterialName']))" -ForegroundColor Yellow
+            Write-Host "   * Ma thay the : $($m['DelegateCode']) ($($m['DelegateMaterialName']))" -ForegroundColor Red
+            Write-Host "   * Nguyen nhan : Quy cach bi lech (5mm vs 10mm)! Kiosk POP se chan khong cho quet tem." -ForegroundColor Magenta
+            Write-Host "   * Khac phuc   : Vao WinForm [A230] sua DelegateMaterialCode hoac bao IT hotfix STB_MaterialMaster." -ForegroundColor White
+        }
+        Write-Host "   +-------------------------------------------------------------------------------+" -ForegroundColor Red
+    }
+    
+    $table | Format-Table -Property RouteCode, ChildMaterialCode, BaseMaterialName, UsedQty, DelegateCode, DelegateMaterialName, DelegateStatus -AutoSize | Out-String | ForEach-Object { Write-Host $_.TrimEnd() -ForegroundColor White }
 }
 
 function Show-PoCard([System.Data.DataTable]$table) {
@@ -439,16 +523,18 @@ if ($type -eq "PACKING") {
     Show-Table "CAC PO GAN NHAT DANG SAN XUAT" $ds.Tables[1] "Yellow"
     Show-Table "CAC LOT GAN NHAT (STB_SetInfo)" $ds.Tables[2] "Cyan"
 } else { # LOT
-    if ($ds.Tables.Count -ge 8 -and $ds.Tables[7].Rows.Count -gt 0) {
-        Show-QcCard $ds.Tables[7]
+    if ($ds.Tables.Count -ge 10 -and $ds.Tables[9].Rows.Count -gt 0) {
+        Show-QcCard $ds.Tables[9]
     }
     Show-LotCard $ds.Tables[0]
     Show-Table "2. TIEN DO CONG DOAN MES (STB_ProdRouteHist)" $ds.Tables[1] "Cyan"
     Show-Table "3. TRANG THAI POP KIOSK & DONG BO (MongoToMesPerformance)" $ds.Tables[2] "Green"
     Show-Table "4. THONG KE PHE PHAM (STB_DefectRepairInfo)" $ds.Tables[3] "Red"
-    Show-Table "5. NVL NAP & THUNG DONG GOI (STB_MaterialLotInfo)" $ds.Tables[4] "Magenta"
-    Show-Table "6. MAY DANG GAN TREN CHUYEN (VINA_EQUIPMENT_MAPPING)" $ds.Tables[5] "Yellow"
-    Show-Table "7. NHAT KY THAO TAC POP (VINA_POP_ACTION_LOG)" $ds.Tables[6] "Gray"
+    Show-BomCard $ds.Tables[4]
+    Show-Table "5.2. LICH SU NVL DA NAP TREN KIOSK POP (STB_RawMaterialInputHist)" $ds.Tables[5] "Magenta"
+    Show-Table "5.3. BTP HOAC THUNG DONG GOI (STB_MaterialLotInfo)" $ds.Tables[6] "DarkMagenta"
+    Show-Table "6. MAY DANG GAN TREN CHUYEN (VINA_EQUIPMENT_MAPPING)" $ds.Tables[7] "Yellow"
+    Show-Table "7. NHAT KY THAO TAC POP (VINA_POP_ACTION_LOG)" $ds.Tables[8] "Gray"
 }
 
 Write-Host ''

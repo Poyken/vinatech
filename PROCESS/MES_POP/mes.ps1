@@ -1,4 +1,4 @@
-# ==============================================================================
+﻿# ==============================================================================
 # mes.ps1 — VINATECH MES UNIFIED CLI HUB (Trung Tam Dieu Phoi Lenh Van Hanh)
 # ==============================================================================
 
@@ -38,7 +38,7 @@ $toolsDir = Join-Path $scriptDir 'tools'
 function Show-MesBanner {
     Write-Host ''
     Write-Host '======================================================================' -ForegroundColor Cyan
-    Write-Host '             VINATECH MES UNIFIED CLI HUB (v2.1)' -ForegroundColor Yellow
+    Write-Host '             VINATECH MES UNIFIED CLI HUB (v2.2)' -ForegroundColor Yellow
     Write-Host '    Trung Tam Dieu Phoi Van Hanh, Chan Doan & Khac Phuc Su Co MES' -ForegroundColor White
     Write-Host '======================================================================' -ForegroundColor Cyan
 }
@@ -46,7 +46,12 @@ function Show-MesBanner {
 function Show-Help {
     Show-MesBanner
     Write-Host ''
-    Write-Host 'CAC LENH VAN HANH CHINH:' -ForegroundColor Yellow
+    Write-Host 'HE SINH THAI 3 CLI HUBS CHUYEN TRACH:' -ForegroundColor Cyan
+    Write-Host '   .\pop.ps1 ...  -> Hub chuyen trach Mat tran Kiosk POP tai xuong (BOM NVL, Kho ROUTE_VN_WH, Unlock may, Sync)' -ForegroundColor Yellow
+    Write-Host '   .\mes.ps1 ...  -> Hub chuyen trach Loi San Xuat MES, Vong doi Lot, Man hinh WinForm & Hotfixes' -ForegroundColor Yellow
+    Write-Host '   .\gw.ps1  ...  -> Hub chuyen trach Phe Duyet Groupware & Chung Tu ERP NEOE' -ForegroundColor Yellow
+    Write-Host ''
+    Write-Host 'CAC LENH VAN HANH MES CHINH:' -ForegroundColor Yellow
     Write-Host ''
     Write-Host '  1. TRUY VET DU LIEU & SU CO (INVESTIGATION):' -ForegroundColor Cyan
     Write-Host '     .\mes.ps1 shell                     ' -NoNewline -ForegroundColor Green
@@ -57,14 +62,13 @@ function Show-Help {
     Write-Host '-> Golden Query 360 sieu toc (Single Round-Trip) tu dong nhan dien Lot, Line, Thiet bi, Thung' -ForegroundColor Gray
     Write-Host '     .\mes.ps1 lineage <Target>          ' -NoNewline -ForegroundColor Green
     Write-Host '-> Truy vet huyet mach lien he thong (PO/GW -> Kho -> MES -> POP Kiosk)' -ForegroundColor Gray
-    Write-Host '     .\mes.ps1 pop-trace <Keyword>       ' -NoNewline -ForegroundColor Green
-    Write-Host '-> Truy vet chuyen sau he sinh thai POP Kiosk (Sync, Phe, May ket, Kiosk logs)' -ForegroundColor Gray
     Write-Host '     .\mes.ps1 screen <ScreenID>         ' -NoNewline -ForegroundColor Green
     Write-Host '-> Debug man hinh MES (Grid, SP, Bang lien quan: B530, B540...)' -ForegroundColor Gray
     Write-Host '     .\mes.ps1 sp <SP_Name>              ' -NoNewline -ForegroundColor Green
     Write-Host '-> Tai SP goc moi nhat tu DB ve local de phan tich' -ForegroundColor Gray
     Write-Host '     .\mes.ps1 find <Keyword>            ' -NoNewline -ForegroundColor Green
     Write-Host '-> Tra cuu L1 Quick Matrix (<0.001s) va 78+ file Markdown' -ForegroundColor Gray
+
 
     Write-Host ''
     Write-Host '  2. TRUY VAN & KIEM TRA HE THONG (SYSTEM & QUERY):' -ForegroundColor Cyan
@@ -99,6 +103,14 @@ function Show-Help {
     Write-Host '-> Sinh SQL xoa dong tu sinh CompleteRoute IS NULL de mo chot POP Kiosk (Cap thu Aging)' -ForegroundColor Gray
     Write-Host '     .\mes.ps1 fix-cancel-pack -Target "<Lot>" [-BoxId "<Box>"] [-PackingId "<PK>"] [-Deploy]' -ForegroundColor Yellow
     Write-Host '-> Sinh SQL huy le tung Box/Pack dong goi (STB_MaterialDocLotInfo, STB_ProdRouteHist, PO)' -ForegroundColor Gray
+    Write-Host '     .\mes.ps1 swap-machine -Lots "..." -Machine "<M>" [-Route "<R>"] [-Deploy]' -ForegroundColor Yellow
+    Write-Host '-> Sinh SQL doi may nham Kiosk dong bo ca STB_ProdRouteHist va MongoToMesPerformance (Rule 20.1)' -ForegroundColor Gray
+    Write-Host '     .\mes.ps1 fix-defect-null -Lots "..." [-Deploy]' -ForegroundColor Yellow
+    Write-Host '-> Sinh SQL chuan hoa RepairQty = 0 de hien thi lai cot NG bi trang do logic NULL tren B782' -ForegroundColor Gray
+    Write-Host '     .\mes.ps1 fix-lineinput -Lots "..." [-Deploy]' -ForegroundColor Yellow
+    Write-Host '-> Sinh SQL kich hoat lai IsLineInput = 1 cho Lot bi ket khong vao duoc chuyen' -ForegroundColor Gray
+    Write-Host '     .\mes.ps1 fix-solution -Lots "..." [-Deploy]' -ForegroundColor Yellow
+    Write-Host '-> Sinh SQL cap cuu khoi phuc thung dung dich dien giai 150kg bi auto-exhaust ve 0kg' -ForegroundColor Gray
     Write-Host '     .\mes.ps1 new-fix <Name> [-Template <b552|b782|rollback|swap-machine|force-stock|clone-defect|pqc|thick|packing-id>]' -ForegroundColor Green
     Write-Host '-> Sinh template SQL Fix chuan (ho tro B552, B782, Rollback, Doi may Kiosk, Cuong che ton kho, Clone phe, PQC, Do day)' -ForegroundColor Gray
     Write-Host '     .\mes.ps1 deploy <Path.sql> [-Force]' -NoNewline -ForegroundColor Green
@@ -157,6 +169,24 @@ elseif ($cmdLower -eq 'shell' -or $cmdLower -eq 'repl') {
         & $shellScript
     } else {
         Write-Error 'tools/mes_shell.ps1 not found.'
+    }
+}
+elseif ($cmdLower -eq 'pop') {
+    $popScript = Join-Path $scriptDir 'pop.ps1'
+    if (Test-Path $popScript) {
+        Write-Host "-> [MES Hub] Chuyen tiep toi POP Kiosk CLI Hub: .\pop.ps1 $Target..." -ForegroundColor DarkCyan
+        & $popScript $Target @args
+    } else {
+        Write-Error 'pop.ps1 not found.'
+    }
+}
+elseif ($cmdLower -eq 'nvl' -or $cmdLower -eq 'bom') {
+    $popScript = Join-Path $scriptDir 'pop.ps1'
+    if (Test-Path $popScript) {
+        Write-Host "-> [MES Hub] Chuyen tiep tra cuu NVL toi POP Hub: .\pop.ps1 nvl $Target..." -ForegroundColor DarkCyan
+        & $popScript nvl $Target
+    } else {
+        Write-Error 'pop.ps1 not found.'
     }
 }
 elseif ($cmdLower -eq 'trace' -or $cmdLower -eq 'pop-trace') {
@@ -620,6 +650,62 @@ elseif ($cmdLower -eq 'fix-cancel-pack' -or $cmdLower -eq 'fix-pack') {
         & $fixScript -Action cancel-pack -Lots $lotsVal -Route $Route -BoxId $BoxId -PackingId $PackingId -Qty $Qty -DeployNow
     } else {
         & $fixScript -Action cancel-pack -Lots $lotsVal -Route $Route -BoxId $BoxId -PackingId $PackingId -Qty $Qty
+    }
+}
+elseif ($cmdLower -eq 'swap-machine' -or $cmdLower -eq 'fix-machine') {
+    $fixScript = Join-Path $toolsDir 'generate_safe_hotfix.ps1'
+    $lotsVal = if ($Lots) { $Lots } else { $Target }
+    if ([string]::IsNullOrWhiteSpace($lotsVal) -or [string]::IsNullOrWhiteSpace($Machine)) {
+        Write-Host "Loi: Bắt buộc cung cấp mã Lot (-Lots) và mã máy mới (-Machine)!" -ForegroundColor Red
+        Write-Host "Vi du: .\mes.ps1 swap-machine -Lots 'VVQR253R018601' -Machine 'VVMHY130' -Route 'V-22' [-Deploy]" -ForegroundColor Yellow
+        exit 1
+    }
+    if ($Deploy) {
+        & $fixScript -Action swap-machine -Lots $lotsVal -Machine $Machine -Route $Route -DeployNow
+    } else {
+        & $fixScript -Action swap-machine -Lots $lotsVal -Machine $Machine -Route $Route
+    }
+}
+elseif ($cmdLower -eq 'fix-defect-null' -or $cmdLower -eq 'fix-defect') {
+    $fixScript = Join-Path $toolsDir 'generate_safe_hotfix.ps1'
+    $lotsVal = if ($Lots) { $Lots } else { $Target }
+    if ([string]::IsNullOrWhiteSpace($lotsVal)) {
+        Write-Host "Loi: Vui long cung cap ma Lot can chuan hoa RepairQty = 0!" -ForegroundColor Red
+        Write-Host "Vi du: .\mes.ps1 fix-defect-null -Lots 'VVQR153R060615' [-Deploy]" -ForegroundColor Yellow
+        exit 1
+    }
+    if ($Deploy) {
+        & $fixScript -Action fix-defect-null -Lots $lotsVal -DeployNow
+    } else {
+        & $fixScript -Action fix-defect-null -Lots $lotsVal
+    }
+}
+elseif ($cmdLower -eq 'fix-lineinput') {
+    $fixScript = Join-Path $toolsDir 'generate_safe_hotfix.ps1'
+    $lotsVal = if ($Lots) { $Lots } else { $Target }
+    if ([string]::IsNullOrWhiteSpace($lotsVal)) {
+        Write-Host "Loi: Vui long cung cap ma Lot can kich hoat lai IsLineInput = 1!" -ForegroundColor Red
+        Write-Host "Vi du: .\mes.ps1 fix-lineinput -Lots 'VVQR153R060615' [-Deploy]" -ForegroundColor Yellow
+        exit 1
+    }
+    if ($Deploy) {
+        & $fixScript -Action fix-lineinput -Lots $lotsVal -DeployNow
+    } else {
+        & $fixScript -Action fix-lineinput -Lots $lotsVal
+    }
+}
+elseif ($cmdLower -eq 'fix-solution') {
+    $fixScript = Join-Path $toolsDir 'generate_safe_hotfix.ps1'
+    $lotsVal = if ($Lots) { $Lots } else { $Target }
+    if ([string]::IsNullOrWhiteSpace($lotsVal)) {
+        Write-Host "Loi: Vui long cung cap ma thung dung dich hoac ma Lot can khoi phuc 150kg!" -ForegroundColor Red
+        Write-Host "Vi du: .\mes.ps1 fix-solution -Lots 'CRECO85-03-2401' [-Deploy]" -ForegroundColor Yellow
+        exit 1
+    }
+    if ($Deploy) {
+        & $fixScript -Action fix-solution -Lots $lotsVal -DeployNow
+    } else {
+        & $fixScript -Action fix-solution -Lots $lotsVal
     }
 }
 elseif ($cmdLower -eq 'weekly-report' -or $cmdLower -eq 'report-it') {

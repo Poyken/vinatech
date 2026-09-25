@@ -464,6 +464,113 @@ WHERE SI.Barcode = '{LOT}' AND DI.CommInspItemCode IN ('V_H1_HY', 'V_H2_HY', 'V_
 SELECT LineCode, LineName, MaterialWarehouseCode, IsUsed 
 FROM SmartFactoryV2.dbo.STB_LineInfo WITH(NOLOCK) 
 WHERE LineCode = '{LINE}';"""
+    },
+    {
+        "id": "RULE_POP_SUBSTITUTE_MATERIAL_MISMATCH",
+        "patterns": [
+            r"vật liệu thay thế", r"nguyên vật liệu thay thế", r"substitute.*material",
+            r"tape.*10mm", r"tape.*5mm", r"băng keo.*10mm", r"băng keo.*5mm",
+            r"băng dính.*10mm", r"băng dính.*5mm", r"gbrbpl", r"gbtppl", r"ka2550",
+            r"đang nhập vật liệu thay thế", r"mismatch.*nvl", r"sai nvl.*bom"
+        ],
+        "screen": "POP Kiosk (/pop/screen) / A230 (Material Master) / GW Raw Material Input Adjustment Document",
+        "root_cause": "Mismatch quy cách Nguyên vật liệu thay thế (Delegate Material): Trong CSDL `STB_MaterialMaster` (Màn hình A230 / Phiếu phê duyệt Groupware), mã NVL gốc và mã thay thế bị gán lệch quy cách kỹ thuật (ví dụ: BOM gốc cần Tape 5mm `GBTPPL-001`, nhưng cột `DelegateMaterialCode` lại gán nhầm sang Tape 10mm `GBRBPL-003`). Kiosk POP khi nạp NVL thay thế đọc từ trường này và ép công nhân phải quét cuộn 10mm, làm kẹt không nạp được cuộn 5mm thực tế ngoài chuyền.",
+        "op_workaround": "1. Đối soát tem nhãn cuộn NVL thực tế tại chuyền (Mã NCC, quy cách 5mm hay 10mm).\n2. Mở popup 'Lượng yêu cầu (BOM)' trên Kiosk POP: Chú ý phân biệt nút cao su (GBSN00-004 고무전 10mm) với băng keo (GBTPPL-001 테이프 870A_5mm). BOM gốc vốn đã là 5mm.\n3. Vào WinForm [A230] Material Master: Tìm mã gốc GBTPPL-001 ➔ Sửa ô DelegateMaterialCode thành mã cuộn 5mm chuẩn GBRBPL-002 (và sửa GBTPPL-007 trỏ về GBRBPL-003). Nhấn Lưu.\n4. Trên Kiosk POP: Bấm nút [🔄 Làm mới] cạnh 'Danh sách NVL BOM' để tải lại danh mục thay thế.",
+        "sql_template": """BEGIN TRAN;
+-- Hiệu chỉnh mapping NVL thay thế chuẩn trong STB_MaterialMaster (Author: vanduc)
+-- 1. Sửa mapping cho Tape 5mm: GBTPPL-001 trỏ về GBRBPL-002 (KA2550_5mm * 4000m)
+UPDATE SmartFactoryV2.dbo.STB_MaterialMaster
+SET DelegateMaterialCode = 'GBRBPL-002',
+    DelegateMaterialCode2 = NULL,
+    ChangeDateTime = GETDATE(),
+    ChangeUserID = 'vanduc'
+WHERE MaterialCode = 'GBTPPL-001';
+
+-- 2. Sửa mapping cho Tape 10mm: GBTPPL-007 trỏ về GBRBPL-003 (KA2550_10mm * 4000m)
+UPDATE SmartFactoryV2.dbo.STB_MaterialMaster
+SET DelegateMaterialCode = 'GBRBPL-003',
+    DelegateMaterialCode2 = NULL,
+    ChangeDateTime = GETDATE(),
+    ChangeUserID = 'vanduc'
+WHERE MaterialCode = 'GBTPPL-007';
+-- COMMIT TRAN;"""
+    },
+    {
+        "id": "RULE_POP_RAW_MATERIAL_SCAN_FAIL",
+        "patterns": [
+            r"không load được nvl", r"không load được nguyên vật liệu", r"không nạp được",
+            r"không load.*nvl", r"không quét được nvl", r"chưa có nvl",
+            r"quét nvl báo đỏ", r"thiếu nvl", r"báo lỗi nvl", r"hết nvl",
+            r"chưa nạp nvl", r"lỗi nạp nvl"
+        ],
+        "screen": "POP Kiosk (Modal Nạp NVL) / F430",
+        "root_cause": "Thiếu tồn kho chuyển xưởng ROUTE_VN_WH: Khi công nhân quét Barcode NVL trên Kiosk POP, hệ thống đối soát với BOM PO (`STB_ProductionOrderBom`) và số dư khả dụng tại kho `ROUTE_VN_WH`. Nếu tồn kho tại `ROUTE_VN_WH` bằng 0 (do kho tổng `MAIN_VN_WH` chưa làm phiếu xuất chuyển kho F430 hoặc NVL thay thế chưa được phê duyệt AltCode/Groupware), Kiosk sẽ báo popup đỏ từ chối nạp.",
+        "op_workaround": "1. Dùng lệnh `.\\pop.ps1 nvl \"{LOT}\"` để xem ngay vật tư nào đang có tồn bằng 0.\n2. Báo thủ kho làm phiếu xuất kho F430 chuyển từ MAIN_VN_WH sang ROUTE_VN_WH.\n3. Nếu dùng mã vật tư thay thế: Kiểm tra mã AltCode hoặc hoàn tất đơn đăng ký thay thế NVL trên Groupware.\n4. Trên Kiosk POP: Nhấn nút [Danh sách NVL BOM 🔄] để tải lại danh mục.",
+        "sql_template": """-- Kiểm tra số dư tồn kho tổng vs kho xưởng chuyển (Author: vanduc):
+SELECT 
+    b.ChildMaterialCode, b.MaterialName, ISNULL(b.AltCode1, '-') AS AltCode,
+    ISNULL(s_route.StockQty, 0) AS TonKho_ROUTE_VN_WH,
+    ISNULL(s_main.StockQty, 0) AS TonKho_MAIN_VN_WH
+FROM SmartFactoryV2.dbo.STB_ProductionOrderBom b WITH(NOLOCK)
+OUTER APPLY (
+    SELECT SUM(CurrentQty) AS StockQty FROM SmartFactoryV2.dbo.STB_MaterialLotInfo WITH(NOLOCK)
+    WHERE MaterialCode = b.ChildMaterialCode AND MaterialWarehouseCode = 'ROUTE_VN_WH' AND CurrentQty > 0
+) s_route
+OUTER APPLY (
+    SELECT SUM(CurrentQty) AS StockQty FROM SmartFactoryV2.dbo.STB_MaterialLotInfo WITH(NOLOCK)
+    WHERE MaterialCode = b.ChildMaterialCode AND MaterialWarehouseCode = 'MAIN_VN_WH' AND CurrentQty > 0
+) s_main
+WHERE b.PONo = (SELECT TOP 1 PONo FROM SmartFactoryV2.dbo.STB_SetInfo WITH(NOLOCK) WHERE Barcode = '{LOT}')
+  AND ISNULL(s_route.StockQty, 0) <= 0;"""
+    },
+    {
+        "id": "RULE_B598_PRODUCTION_ERROR_PERMISSION",
+        "patterns": [
+            r"không báo phế đc", r"không báo phế được", r"báo phế.*lỗi",
+            r"b598.*không báo phế", r"usp_add_productionerror", r"báo phế của sx",
+            r"màn hình báo phế"
+        ],
+        "screen": "B598 - Báo phế (DataView: vn_showproductionerror)",
+        "root_cause": "Chặn quyền SỬA/XÓA phế trong Stored Procedure: Trong SP `usp_Add_ProductionError`, hệ thống kiểm tra logic `@existsUPDATE` và `@existsDELETE`. Nếu thao tác là sửa hoặc xóa dòng phế đã lưu mà tài khoản không thuộc danh sách Whitelist quản lý Kế hoạch SX (`sieusao`, `transao`, `nguyennha`, `phuongnt`, `HảiTrieu`), SP sẽ chặn và ném thông báo 'Bạn không được phép SỬA(XÓA)...'.",
+        "op_workaround": "1. Trên giao diện WinForm B598: Không bấm chọn vào các dòng phế cũ đã có trên bảng lưới để sửa.\n2. Bấm nút 'Thêm mới' (hoặc xóa trắng các ô nhập liệu) rồi nhập mới từ đầu để hệ thống thực hiện lệnh INSERT thay vì UPDATE.\n3. Nếu bắt buộc phải điều chỉnh dòng phế cũ đã ghi nhận: Liên hệ Kế hoạch SX (Whitelist) hoặc nhờ IT can thiệp.",
+        "sql_template": """-- Kiểm tra các bản ghi phế phát sinh của Lot:
+SELECT TOP 10 
+    DefectRepairHistNo, ControlNo, FindRouteCode, DefectCode, DefectQty, RepairQty,
+    CreateDateTime, CreateUserID
+FROM SmartFactoryV2.dbo.STB_DefectRepairInfo WITH(NOLOCK)
+WHERE ControlNo = (SELECT ControlNo FROM SmartFactoryV2.dbo.STB_SetInfo WITH(NOLOCK) WHERE Barcode = '{LOT}')
+ORDER BY CreateDateTime DESC;"""
+    },
+    {
+        "id": "RULE_B598_MATERIAL_PRICE_WEIGHT_UPDATE",
+        "patterns": [
+            r"giá và trọng lượng.*vỏ bọc", r"b598.*đơn giá", r"gcmdpt-601",
+            r"usp_vn_showproductionerror", r"giá.*trọng lượng.*b598",
+            r"đơn giá.*vỏ bọc", r"trọng lượng.*vỏ bọc"
+        ],
+        "screen": "B598 - Báo phế / SP: usp_vn_showproductionerror",
+        "root_cause": "Hardcoded đơn giá & cân nặng trong Stored Procedure: Giá phế và trọng lượng quy đổi cho từng mã NVL (vỏ bọc, can, tape...) đang được gán cứng trong SP `usp_vn_showproductionerror` ở 2 khối `Can_Nang_Moi` và `PRICES`. Khi cập nhật mã mới, nếu lập trình viên chỉ gán cứng con số đơn giá mà quên công thức chia theo trọng lượng chiếc thì cột Số lượng và Thành tiền sẽ bị lệch.",
+        "op_workaround": "1. Báo IT kiểm tra và cập nhật lại SP `usp_vn_showproductionerror` theo đúng tỷ lệ cân thực tế.\n2. Sau khi IT cập nhật SP, người dùng đóng màn hình B598 và mở lại để truy vấn lại báo cáo.",
+        "sql_template": """-- SOP Cập nhật SP usp_vn_showproductionerror (Author: vanduc):
+-- Trong khối Can_Nang_Moi (Dòng ~440):
+-- WHEN MaLotNguyenLieu = 'GCMDPT-601' THEN ROUND(TrongLuongThucTe / 118.0, 4)
+-- Trong khối PRICES (Dòng ~895):
+-- WHEN MaLotNguyenLieu = 'GCMDPT-601' THEN ROUND(TrongLuongThucTe / 118.0, 4) * 0.0890;"""
+    },
+    {
+        "id": "RULE_POP_SLITTING_FEEDING_QUOTA",
+        "patterns": [
+            r"nạp cuộn.*vượt quá", r"tối đa 3 lotno", r"slitting.*nạp cuộn",
+            r"cắt điện cực.*cuộn btp", r"vượt quá số cuộn cho phép", r"3 cuộn.*slitting"
+        ],
+        "screen": "POP Kiosk / Công đoạn Cắt điện cực (Slitting)",
+        "root_cause": "Định mức nạp cuộn BTP Slitting (EA Playbook Rule 20): Hệ thống cho phép tối đa 3 LOTNO cho 1 mã cắt (đã nâng cấp từ định mức cũ 2 LOTNO). Nếu Kiosk báo lỗi quá định mức, công nhân đang quét đến cuộn thứ 4 hoặc Kiosk client chưa reload cấu hình mới.",
+        "op_workaround": "1. OP kiểm tra danh sách cuộn đã nạp: Tối đa chỉ được nạp 3 cuộn BTP cho 1 ca cắt.\n2. Bấm F5 trên Kiosk POP để nạp lại cấu hình client mới nhất.\n3. Nếu có cuộn nạp nhầm: Bấm 'Hủy / Xóa cuộn' trước khi quét cuộn mới.",
+        "sql_template": """-- Kiểm tra lịch sử nạp cuộn BTP cho Lot:
+SELECT TOP 10 RawMaterialBarcode, MaterialCode, Qty, RouteCode, CreateDateTime
+FROM SmartFactoryV2.dbo.STB_RawMaterialInputHist WITH(NOLOCK)
+WHERE Barcode = '{LOT}'
+ORDER BY CreateDateTime DESC;"""
     }
 ]
 
@@ -490,40 +597,97 @@ def query_live_lot(lot_id):
     $cmd = $conn.CreateCommand()
     $cmd.CommandText = @"
     SET NOCOUNT ON;
+    DECLARE @In VARCHAR(50) = '{lot_id}';
+    DECLARE @PONo VARCHAR(30) = NULL;
+    DECLARE @Bar VARCHAR(50) = NULL;
+    DECLARE @Ctrl VARCHAR(50) = NULL;
+
     SELECT TOP 1 
-        s.ControlNo, s.Barcode, s.MaterialCode, s.CurrentRouteCode, s.IsHold, s.IsProdFinish, s.InputLineCode,
-        (SELECT COUNT(1) FROM STB_ProdRouteHist WITH(NOLOCK) WHERE ControlNo = s.ControlNo) AS TotalRoutes,
-        (SELECT COUNT(1) FROM STB_DefectRepairInfo WITH(NOLOCK) WHERE ControlNo = s.ControlNo AND IsDelete = 0) AS TotalDefects,
-        (SELECT TOP 1 RouteCode FROM STB_ProdRouteHist WITH(NOLOCK) WHERE ControlNo = s.ControlNo ORDER BY ProdRouteHistNo DESC) AS LastRoute
-    FROM STB_SetInfo s WITH(NOLOCK)
-    WHERE s.Barcode = '{lot_id}' OR s.ControlNo = '{lot_id}';
-    
-    SELECT TOP 1 LineCode, RouteCode, IsDone, IsTransferred, TotalProdQty 
-    FROM MongoToMesPerformance WITH(NOLOCK) 
-    WHERE Barcode = '{lot_id}' ORDER BY ModifyDateTime DESC;
+        @Ctrl = s.ControlNo,
+        @Bar = s.Barcode,
+        @PONo = s.PONo
+    FROM SmartFactoryV2.dbo.STB_SetInfo s WITH(NOLOCK)
+    WHERE s.Barcode = @In OR s.ControlNo = @In;
+
+    IF @Ctrl IS NULL
+    BEGIN
+        SELECT TOP 1 @Bar = Barcode 
+        FROM SmartFactoryV2.dbo.MongoToMesPerformance WITH(NOLOCK) 
+        WHERE Barcode = @In;
+        IF @Bar IS NOT NULL
+        BEGIN
+            SELECT TOP 1 @Ctrl = ControlNo, @PONo = PONo 
+            FROM SmartFactoryV2.dbo.STB_SetInfo WITH(NOLOCK) WHERE Barcode = @Bar;
+        END
+    END
+
+    -- 1. Lot SetInfo & Route State
+    SELECT TOP 1 
+        s.ControlNo, s.PONo, s.Barcode, s.MaterialCode, s.IsLineInput, s.IsProdFinish, s.DefectQty,
+        (SELECT COUNT(1) FROM SmartFactoryV2.dbo.STB_ProdRouteHist WITH(NOLOCK) WHERE ControlNo = s.ControlNo) AS TotalRoutes,
+        (SELECT COUNT(1) FROM SmartFactoryV2.dbo.STB_DefectRepairInfo WITH(NOLOCK) WHERE ControlNo = s.ControlNo AND IsDelete = 0) AS TotalDefects,
+        (SELECT TOP 1 RouteCode FROM SmartFactoryV2.dbo.STB_ProdRouteHist WITH(NOLOCK) WHERE ControlNo = s.ControlNo ORDER BY ProdRouteHistNo DESC) AS LastRoute,
+        0 AS IsHold
+    FROM SmartFactoryV2.dbo.STB_SetInfo s WITH(NOLOCK)
+    WHERE s.ControlNo = @Ctrl;
+
+    -- 2. POP Sync Info
+    SELECT TOP 1 LineCode, RouteCode, IsDone, IsTransferred, TotalProdQty, TotalDefectQty 
+    FROM SmartFactoryV2.dbo.MongoToMesPerformance WITH(NOLOCK) 
+    WHERE Barcode = @Bar ORDER BY ModifyDateTime DESC;
+
+    -- 3. Out-of-Stock BOM in ROUTE_VN_WH (Fast Batch Query)
+    SELECT B.RouteCode, B.ChildMaterialCode, B.UsedQty, MM.MaterialName, 
+           ISNULL(MM.DelegateMaterialCode, '-') AS AltCode1
+    INTO #BOM
+    FROM SmartFactoryV2.dbo.STB_ProductionOrderBom B WITH(NOLOCK)
+    LEFT JOIN SmartFactoryV2.dbo.STB_MaterialMaster MM WITH(NOLOCK) ON B.ChildMaterialCode = MM.MaterialCode
+    WHERE B.PONo = @PONo;
+
+    SELECT MaterialCode, SUM(CurrentQty) AS StockQty
+    INTO #STOCK
+    FROM SmartFactoryV2.dbo.STB_MaterialLotInfo WITH(NOLOCK)
+    WHERE MaterialWarehouseCode = 'ROUTE_VN_WH' 
+      AND MaterialCode IN (SELECT ChildMaterialCode FROM #BOM)
+      AND CurrentQty > 0
+    GROUP BY MaterialCode;
+
+    SELECT b.RouteCode, b.ChildMaterialCode, b.MaterialName, b.UsedQty, b.AltCode1, ISNULL(s.StockQty, 0) AS WhStockQty
+    FROM #BOM b
+    LEFT JOIN #STOCK s ON b.ChildMaterialCode = s.MaterialCode
+    WHERE ISNULL(s.StockQty, 0) <= 0
+    ORDER BY b.RouteCode, b.ChildMaterialCode;
+
+    -- 4. Kiosk Scan Count
+    SELECT COUNT(1) AS TotalKioskScans
+    FROM SmartFactoryV2.dbo.STB_RawMaterialInputHist WITH(NOLOCK)
+    WHERE Barcode = @Bar;
 "@
     $adapter = New-Object System.Data.SqlClient.SqlDataAdapter($cmd)
     $ds = New-Object System.Data.DataSet
     $adapter.Fill($ds) | Out-Null
     $conn.Close()
-    
+
     $res = @{{
         lot = $null
         pop_sync = $null
+        out_of_stock_boms = @()
+        total_kiosk_scans = 0
     }}
     if ($ds.Tables[0].Rows.Count -gt 0) {{
         $r = $ds.Tables[0].Rows[0]
         $res.lot = @{{
             ControlNo = [string]$r["ControlNo"]
+            PONo = [string]$r["PONo"]
             Barcode = [string]$r["Barcode"]
             MaterialCode = [string]$r["MaterialCode"]
-            CurrentRoute = [string]$r["CurrentRouteCode"]
-            IsHold = [int]$r["IsHold"]
+            IsLineInput = [int]$r["IsLineInput"]
             IsProdFinish = [int]$r["IsProdFinish"]
-            Line = [string]$r["InputLineCode"]
             TotalRoutes = [int]$r["TotalRoutes"]
             TotalDefects = [int]$r["TotalDefects"]
             LastRoute = [string]$r["LastRoute"]
+            IsHold = if ($r["IsHold"] -is [DBNull]) {{ 0 }} else {{ [int]$r["IsHold"] }}
+            Line = ""
         }}
     }}
     if ($ds.Tables.Count -gt 1 -and $ds.Tables[1].Rows.Count -gt 0) {{
@@ -534,14 +698,39 @@ def query_live_lot(lot_id):
             IsDone = [int]$p["IsDone"]
             IsTransferred = [int]$p["IsTransferred"]
             Qty = [int]$p["TotalProdQty"]
+            Defect = [int]$p["TotalDefectQty"]
         }}
+        if ($res.lot) {{
+            $res.lot.Line = [string]$p["LineCode"]
+            if (-not $res.lot.LastRoute) {{
+                $res.lot.LastRoute = [string]$p["RouteCode"]
+            }}
+        }}
+    }}
+    if ($ds.Tables.Count -gt 2 -and $ds.Tables[2].Rows.Count -gt 0) {{
+        $boms = @()
+        foreach ($b in $ds.Tables[2].Rows) {{
+            $boms += @{{
+                Route = [string]$b["RouteCode"]
+                Material = [string]$b["ChildMaterialCode"]
+                Name = [string]$b["MaterialName"]
+                AltCode = [string]$b["AltCode1"]
+                Stock = [double]$b["WhStockQty"]
+            }}
+        }}
+        $res.out_of_stock_boms = $boms
+    }}
+    if ($ds.Tables.Count -gt 3 -and $ds.Tables[3].Rows.Count -gt 0) {{
+        $res.total_kiosk_scans = [int]$ds.Tables[3].Rows[0]["TotalKioskScans"]
     }}
     $res | ConvertTo-Json -Compress
     """
     try:
+        import base64
+        enc = base64.b64encode(ps_script.encode("utf-16-le")).decode("ascii")
         proc = subprocess.run(
-            ["powershell", "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-Command", ps_script],
-            capture_output=True, text=True, timeout=5, encoding="utf-8", errors="replace"
+            ["powershell", "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-EncodedCommand", enc],
+            capture_output=True, text=True, timeout=8, encoding="utf-8", errors="replace"
         )
         out = proc.stdout.strip()
         if out.startswith("{"):
@@ -566,10 +755,25 @@ def diagnose(input_text, check_live_db=True):
             if re.search(p, input_text, re.IGNORECASE):
                 matched_rules.append(rule)
                 break
-                
-    # 2. Khớp theo L1 QUICK_MATRIX (nếu có TCode hoặc từ khóa)
+
+    # 2. Khảo sát Live DB nếu có mã Lot
+    live_info = None
+    target_lot = entities["lots"][0] if entities["lots"] else None
+    if target_lot and check_live_db:
+        live_info = query_live_lot(target_lot)
+
+    # 3. Thông minh hóa: Nếu chưa khớp Rule nhưng Live DB phát hiện nút thắt nghiêm trọng
+    if not matched_rules and live_info:
+        # Nếu có NVL BOM hết tồn kho tại ROUTE_VN_WH
+        if live_info.get("out_of_stock_boms"):
+            for r in RULE_CATALOG:
+                if r["id"] == "RULE_POP_RAW_MATERIAL_SCAN_FAIL":
+                    matched_rules.append(r)
+                    break
+
+    # 4. Khớp theo L1 QUICK_MATRIX (nếu có TCode hoặc từ khóa)
     l1_hit = None
-    if _L1_MATRIX and "screens" in _L1_MATRIX:
+    if not matched_rules and _L1_MATRIX and "screens" in _L1_MATRIX:
         # Check Screen Code trực tiếp
         for s_code in entities["screens"]:
             if s_code in _L1_MATRIX["screens"]:
@@ -585,13 +789,7 @@ def diagnose(input_text, check_live_db=True):
                     l1_hit["code"] = s_code
                     break
 
-    # 3. Khảo sát Live DB nếu có mã Lot
-    live_info = None
-    target_lot = entities["lots"][0] if entities["lots"] else None
-    if target_lot and check_live_db:
-        live_info = query_live_lot(target_lot)
-
-    # 4. Tổng hợp & sinh phản hồi chuẩn "4 DÒNG VÀNG"
+    # 5. Tổng hợp & sinh phản hồi chuẩn "4 DÒNG VÀNG"
     result = {
         "entities": entities,
         "matched_rule": matched_rules[0] if matched_rules else None,
@@ -603,22 +801,30 @@ def diagnose(input_text, check_live_db=True):
         "sql_hotfix": ""
     }
 
-    # Sinh Root Cause
+    # Sinh Root Cause & Workaround & SQL
     if matched_rules:
         r = matched_rules[0]
-        result["root_cause"] = f"[{r['screen']}] {r['root_cause']}"
-        result["op_workaround"] = r["op_workaround"]
+        # Custom hóa nếu là thiếu NVL BOM
+        if r["id"] == "RULE_POP_RAW_MATERIAL_SCAN_FAIL" and live_info and live_info.get("out_of_stock_boms"):
+            missing_items = [b["Material"] for b in live_info["out_of_stock_boms"]][:5]
+            missing_str = ", ".join(missing_items)
+            result["root_cause"] = f"[{r['screen']}] Thiếu tồn kho chuyển xưởng ROUTE_VN_WH: Phát hiện {len(live_info['out_of_stock_boms'])} mã NVL BOM hết tồn kho tại xưởng ({missing_str}). Kiosk POP sẽ báo lỗi đỏ hoặc không cho nạp."
+            result["op_workaround"] = f"1. Chạy '.\\pop.ps1 nvl \"{target_lot or 'LOT'}\"' để xem chi tiết từng mã tồn kho và AltCode.\n2. Yêu cầu thủ kho xuất chuyển kho F430 từ MAIN_VN_WH sang ROUTE_VN_WH cho các mã: {missing_str}.\n3. Trên Kiosk POP: Bấm [Danh sách NVL BOM 🔄] để tải lại danh mục."
+        else:
+            result["root_cause"] = f"[{r['screen']}] {r['root_cause']}"
+            result["op_workaround"] = r["op_workaround"]
+
         sql_patch = r["sql_template"]
         if target_lot:
             sql_patch = sql_patch.replace("{LOT}", target_lot)
         if live_info and live_info.get("lot"):
-            cur_route = live_info["lot"].get("CurrentRoute") or live_info["lot"].get("LastRoute") or "V-22_HY"
+            cur_route = live_info["lot"].get("LastRoute") or "V-22"
             sql_patch = sql_patch.replace("{ROUTE}", cur_route)
             sql_patch = sql_patch.replace("{CURRENT_ROUTE}", cur_route)
-            sql_patch = sql_patch.replace("{NEXT_ROUTE}", "V-23_HY")
+            sql_patch = sql_patch.replace("{NEXT_ROUTE}", "V-23")
         else:
-            sql_patch = sql_patch.replace("{ROUTE}", "V-22_HY")
-        sql_patch = sql_patch.replace("{TARGET_DATE}", "2026-09-22")
+            sql_patch = sql_patch.replace("{ROUTE}", "V-22")
+        sql_patch = sql_patch.replace("{TARGET_DATE}", "2026-09-25")
         result["sql_hotfix"] = sql_patch
     elif l1_hit:
         s_name = l1_hit.get("name", "")
@@ -639,8 +845,13 @@ def diagnose(input_text, check_live_db=True):
         sync_str = ""
         if live_info.get("pop_sync"):
             p = live_info["pop_sync"]
-            sync_str = f" | POP Sync: Route {p['Route']}, Done={p['IsDone']}, Transferred={p['IsTransferred']}"
-        result["data_state"] = f"Lot {lot_d['Barcode']} (Model: {lot_d['MaterialCode']}, Chuyền: {lot_d['Line']}) đang ở trạng thái [{status_str}]. Công đoạn: {lot_d['CurrentRoute']} (Lượt chốt cuối: {lot_d['LastRoute']}), Đã qua {lot_d['TotalRoutes']} công đoạn, Phát sinh {lot_d['TotalDefects']} phế NG{sync_str}."
+            sync_str = f" | POP Sync: Route {p['Route']}, Line {p['Line']}, Done={p['IsDone']}, Transferred={p['IsTransferred']}"
+        line_input_str = " | ĐÃ VÀO TUYẾN" if lot_d["IsLineInput"] == 1 else " | CHƯA SCAN VÀO TUYẾN (IsLineInput=0)"
+        kiosk_str = f" | Đã nạp {live_info.get('total_kiosk_scans', 0)} NVL trên Kiosk"
+        bom_warn = ""
+        if live_info.get("out_of_stock_boms"):
+            bom_warn = f" | ⚠️ HẾT TỒN KHO {len(live_info['out_of_stock_boms'])} MÃ NVL ROUTE_VN_WH"
+        result["data_state"] = f"Lot {lot_d['Barcode']} (PO: {lot_d['PONo']}, Model: {lot_d['MaterialCode']}, Chuyền: {lot_d['Line']}) [{status_str}]{line_input_str}. Công đoạn cuối: {lot_d['LastRoute']}, Đã qua {lot_d['TotalRoutes']} công đoạn, Phế NG: {lot_d['TotalDefects']}{kiosk_str}{sync_str}{bom_warn}."
     elif target_lot:
         result["data_state"] = f"Đang truy vết cho mã: {target_lot}. Không tìm thấy bản ghi hoạt động trực tiếp hoặc CSDL phản hồi chậm."
     else:

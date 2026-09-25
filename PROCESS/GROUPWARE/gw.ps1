@@ -1,4 +1,4 @@
-# ==============================================================================
+﻿# ==============================================================================
 # gw.ps1 — VINATECH GROUPWARE UNIFIED CLI HUB (Trung Tam Dieu Phoi Van Hanh GW)
 # ==============================================================================
 
@@ -59,6 +59,11 @@ function Show-Help {
     Write-Host '-> Chay cau SELECT an toan tren VINATECH_GROUP (kem NOLOCK warning)' -ForegroundColor Gray
     Write-Host '     .\gw.ps1 audit                      ' -NoNewline -ForegroundColor Green
     Write-Host '-> Doi soat danh muc bang va luoc do CSDL Groupware vs Live DB' -ForegroundColor Gray
+    Write-Host ''
+    Write-Host '  HE SINH THAI 3 CLI HUBS CHUYEN TRACH:' -ForegroundColor Cyan
+    Write-Host '     .\pop.ps1 ...  -> Hub chuyen trach Mat tran Kiosk POP tai xuong (BOM NVL, Kho ROUTE_VN_WH, Unlock may, Sync)' -ForegroundColor Yellow
+    Write-Host '     .\mes.ps1 ...  -> Hub chuyen trach Loi San Xuat MES, Vong doi Lot, Man hinh WinForm & Hotfixes' -ForegroundColor Yellow
+    Write-Host '     .\gw.ps1  ...  -> Hub chuyen trach Phe Duyet Groupware & Chung Tu ERP NEOE' -ForegroundColor Yellow
     Write-Host ''
     Write-Host 'Cac Profile CSDL ho tro:' -ForegroundColor Yellow
     Write-Host '  Groupware (Mac dinh), ERP, SmartFactoryV2, SSO, Bizbox, Spreadsheet...' -ForegroundColor Gray

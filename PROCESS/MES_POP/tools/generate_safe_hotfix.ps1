@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     generate_safe_hotfix.ps1 — Bộ sinh mã SQL Hotfix An Toàn 100% chuẩn Vinatech MES
 .DESCRIPTION
@@ -11,7 +11,7 @@
 
 param (
     [Parameter(Mandatory=$true)]
-    [ValidateSet("movedate", "electrode", "rollback-route", "clean-pop-clone", "cancel-pack")]
+    [ValidateSet("movedate", "electrode", "rollback-route", "clean-pop-clone", "cancel-pack", "swap-machine", "fix-solution", "fix-defect-null", "fix-lineinput")]
     [string]$Action,
 
     [string]$Lots,          # Danh sách mã Lot (ngăn cách bởi dấu phẩy, khoảng trắng hoặc xuống dòng)
@@ -21,6 +21,7 @@ param (
     [string]$Type = "Slitting", # Loại điện cực (Slitting / Mixing)
     [string]$BoxId = "",    # Mã Barcode dán trên nhãn Box (VD: ECVT30-260QR2300003)
     [string]$PackingId = "",# Mã PackingID của Box (VD: PKQR2300158)
+    [string]$Machine = "",  # Mã máy mới (VVMHY130, VVMHY120...)
     [double]$Qty = 0,       # Số lượng của riêng Box cần hủy
     [switch]$DeployNow      # Chạy deploy ngay sau khi sinh file
 )
@@ -402,6 +403,233 @@ BEGIN CATCH
     PRINT N'>> LỖI: ' + ERROR_MESSAGE();
     THROW;
 END CATCH;
+GO
+"@
+}
+elseif ($Action -eq "swap-machine") {
+    if ([string]::IsNullOrWhiteSpace($Machine)) {
+        Write-Host "Lỗi: Bắt buộc cung cấp mã thiết bị mới qua tham số -Machine (VD: -Machine 'VVMHY130')" -ForegroundColor Red
+        exit 1
+    }
+    $lotInClause = ($lotList | ForEach-Object { "'$_'" }) -join ", "
+    $firstLot = $lotList[0]
+    $fileName = "hotfix_${dateTag}_POP_SWAP_MACHINE_${firstLot}_${Machine}.sql"
+    $filePath = Join-Path $hotfixDir $fileName
+
+    $routeFilterHist = if ($Route) { "AND H.RouteCode = '$Route'" } else { "" }
+    $routeFilterPOP = if ($Route) { "AND RouteCode = '$Route'" } else { "" }
+
+    $sqlContent = @"
+-- ==============================================================================
+-- HOTFIX: POP KIOSK ĐỔI MÁY NHẦM (RULE 20.1 EA PLAYBOOK)
+-- Created At: $nowStr
+-- Target Lots: $($lotList -join ', ')
+-- Target Route: $(if ($Route) { $Route } else { 'ALL' })
+-- New Machine: $Machine
+-- Author / ChangeUserID: vanduc
+-- ==============================================================================
+USE SmartFactoryV2;
+GO
+
+-- 1. PRE-FLIGHT CHECK (Kiểm tra dữ liệu trước khi đổi máy)
+SELECT H.ControlNo, S.Barcode, H.RouteCode, H.MachineCode AS CurrentMESMachine, H.ProdQty, H.JobDate
+FROM SmartFactoryV2.dbo.STB_ProdRouteHist H WITH(NOLOCK)
+INNER JOIN SmartFactoryV2.dbo.STB_SetInfo S WITH(NOLOCK) ON H.ControlNo = S.ControlNo
+WHERE S.Barcode IN ($lotInClause) $routeFilterHist;
+
+SELECT DayPlanNo, Barcode, RouteCode, LineCode, MachineCode AS CurrentPOPMachine, TotalProdQty, IsDone, IsTransferred
+FROM SmartFactoryV2.dbo.MongoToMesPerformance WITH(NOLOCK)
+WHERE Barcode IN ($lotInClause) $routeFilterPOP;
+GO
+
+BEGIN TRAN;
+
+-- 2. CẬP NHẬT BẢNG MES STB_ProdRouteHist (Author: vanduc)
+UPDATE H
+SET 
+    H.MachineCode = '$Machine',
+    H.ChangeDateTime = GETDATE(),
+    H.ChangeUserID = 'vanduc'
+FROM SmartFactoryV2.dbo.STB_ProdRouteHist H
+INNER JOIN SmartFactoryV2.dbo.STB_SetInfo S ON H.ControlNo = S.ControlNo
+WHERE S.Barcode IN ($lotInClause) $routeFilterHist;
+
+DECLARE @RowsHist INT = @@ROWCOUNT;
+
+-- 3. CẬP NHẬT BẢNG KIOSK POP MongoToMesPerformance
+UPDATE M
+SET 
+    M.MachineCode = '$Machine',
+    M.InsertDateTime = GETDATE()
+FROM SmartFactoryV2.dbo.MongoToMesPerformance M
+WHERE M.Barcode IN ($lotInClause) $routeFilterPOP;
+
+DECLARE @RowsPOP INT = @@ROWCOUNT;
+
+PRINT '-> So dong STB_ProdRouteHist cap nhat: ' + CAST(@RowsHist AS VARCHAR(10));
+PRINT '-> So dong MongoToMesPerformance cap nhat: ' + CAST(@RowsPOP AS VARCHAR(10));
+
+IF @RowsHist = 0 AND @RowsPOP = 0
+BEGIN
+    PRINT '-> [CANH BAO] Khong co dong nao duoc cap nhat! Dang ROLLBACK...';
+    ROLLBACK TRAN;
+END
+ELSE
+BEGIN
+    COMMIT TRAN;
+    PRINT '-> [THANH CONG] Da doi may sang $Machine dong bo ca MES va POP cho $($lotList.Count) Lots!';
+END
+GO
+"@
+}
+elseif ($Action -eq "fix-solution") {
+    $lotInClause = ($lotList | ForEach-Object { "'$_'" }) -join ", "
+    $firstLot = $lotList[0]
+    $fileName = "hotfix_${dateTag}_RECOVERY_ELECTROLYTE_BARREL_${firstLot}.sql"
+    $filePath = Join-Path $hotfixDir $fileName
+
+    $sqlContent = @"
+-- ==============================================================================
+-- HOTFIX: CẤP CỨU THÙNG DUNG DỊCH ĐIỆN GIẢI 150KG (ELECTROLYTE RECOVERY)
+-- Created At: $nowStr
+-- Target Barrel/Lot: $($lotList -join ', ')
+-- Author / ChangeUserID: vanduc
+-- ==============================================================================
+USE SmartFactoryV2;
+GO
+
+-- 1. PRE-FLIGHT CHECK
+SELECT MaterialLotNo, LotNo, MaterialCode, MaterialWarehouseCode, CurrentQty, OutQty, Holddate, HoldError
+FROM SmartFactoryV2.dbo.STB_MaterialLotInfo WITH(NOLOCK)
+WHERE LotNo IN ($lotInClause) OR MaterialLotNo IN ($lotInClause);
+GO
+
+BEGIN TRAN;
+
+-- 2. KHÔI PHỤC TRỌNG LƯỢNG 150KG VÀ RESET HOLD
+UPDATE SmartFactoryV2.dbo.STB_MaterialLotInfo
+SET 
+    CurrentQty = 150.0,
+    OutQty = 0.0,
+    Holddate = NULL,
+    HoldError = NULL,
+    HoldPeriod = NULL,
+    ChangeDateTime = GETDATE(),
+    ChangeUserID = 'vanduc'
+WHERE LotNo IN ($lotInClause) OR MaterialLotNo IN ($lotInClause);
+
+DECLARE @RowsUpdated INT = @@ROWCOUNT;
+PRINT '-> So thung dung dich duoc khoi phuc 150kg: ' + CAST(@RowsUpdated AS VARCHAR(10));
+
+IF @RowsUpdated = 0
+BEGIN
+    PRINT '-> [CANH BAO] Khong tim thay thung dung dich tuong ung! Dang ROLLBACK...';
+    ROLLBACK TRAN;
+END
+ELSE
+BEGIN
+    COMMIT TRAN;
+    PRINT '-> [THANH CONG] Da khoi phuc thanh cong trong luong 150kg va go HOLD!';
+END
+GO
+"@
+}
+elseif ($Action -eq "fix-defect-null") {
+    $lotInClause = ($lotList | ForEach-Object { "'$_'" }) -join ", "
+    $firstLot = $lotList[0]
+    $fileName = "hotfix_${dateTag}_B782_FIX_DEFECT_NULL_${firstLot}.sql"
+    $filePath = Join-Path $hotfixDir $fileName
+
+    $sqlContent = @"
+-- ==============================================================================
+-- HOTFIX: B782 FIX DEFECT REPAIR NULL (NG COLUMN BLANK FIX)
+-- Created At: $nowStr
+-- Target Lots: $($lotList -join ', ')
+-- Author / ChangeUserID: vanduc
+-- ==============================================================================
+USE SmartFactoryV2;
+GO
+
+-- 1. PRE-FLIGHT CHECK
+SELECT D.DefectRepairInfoNo, D.ControlNo, S.Barcode, D.FindRouteCode, D.DefectCode, D.DefectQty, D.RepairQty, D.FindJobdate
+FROM SmartFactoryV2.dbo.STB_DefectRepairInfo D WITH(NOLOCK)
+INNER JOIN SmartFactoryV2.dbo.STB_SetInfo S WITH(NOLOCK) ON D.ControlNo = S.ControlNo
+WHERE S.Barcode IN ($lotInClause) AND D.RepairQty IS NULL;
+GO
+
+BEGIN TRAN;
+
+-- 2. GÁN REPAIR개수 = 0 ĐỂ PHÉP TRỪ KHÔNG BỊ BIẾN THÀNH NULL
+UPDATE D
+SET 
+    D.RepairQty = 0,
+    D.ChangeDateTime = GETDATE(),
+    D.ChangeUserID = 'vanduc'
+FROM SmartFactoryV2.dbo.STB_DefectRepairInfo D
+INNER JOIN SmartFactoryV2.dbo.STB_SetInfo S ON D.ControlNo = S.ControlNo
+WHERE S.Barcode IN ($lotInClause) AND D.RepairQty IS NULL;
+
+DECLARE @RowsDefect INT = @@ROWCOUNT;
+PRINT '-> So ban ghi Defect duoc chuan hoa RepairQty = 0: ' + CAST(@RowsDefect AS VARCHAR(10));
+
+IF @RowsDefect = 0
+BEGIN
+    PRINT '-> [THONG BAO] Khong co ban ghi nao co RepairQty = NULL. Khong can can thiep.';
+    ROLLBACK TRAN;
+END
+ELSE
+BEGIN
+    COMMIT TRAN;
+    PRINT '-> [THANH CONG] Da chuan hoa RepairQty = 0, cot NG tren man hinh B782 se hien thi chinh xac!';
+END
+GO
+"@
+}
+elseif ($Action -eq "fix-lineinput") {
+    $lotInClause = ($lotList | ForEach-Object { "'$_'" }) -join ", "
+    $firstLot = $lotList[0]
+    $fileName = "hotfix_${dateTag}_RESET_LINEINPUT_${firstLot}.sql"
+    $filePath = Join-Path $hotfixDir $fileName
+
+    $sqlContent = @"
+-- ==============================================================================
+-- HOTFIX: RESET ISLINEINPUT CHO PHÉP NẠP LOT VÀO DÂY CHUYỀN
+-- Created At: $nowStr
+-- Target Lots: $($lotList -join ', ')
+-- Author / ChangeUserID: vanduc
+-- ==============================================================================
+USE SmartFactoryV2;
+GO
+
+-- 1. PRE-FLIGHT CHECK
+SELECT ControlNo, Barcode, MaterialCode, PlanQty, IsLineInput, IsProdFinish, CreateDateTime
+FROM SmartFactoryV2.dbo.STB_SetInfo WITH(NOLOCK)
+WHERE Barcode IN ($lotInClause);
+GO
+
+BEGIN TRAN;
+
+-- 2. KÍCH HOẠT LẠI ISLINEINPUT
+UPDATE SmartFactoryV2.dbo.STB_SetInfo
+SET 
+    IsLineInput = 1,
+    ChangeDateTime = GETDATE(),
+    ChangeUserID = 'vanduc'
+WHERE Barcode IN ($lotInClause);
+
+DECLARE @RowsSet INT = @@ROWCOUNT;
+PRINT '-> So Lot duoc kich hoat IsLineInput = 1: ' + CAST(@RowsSet AS VARCHAR(10));
+
+IF @RowsSet = 0
+BEGIN
+    PRINT '-> [CANH BAO] Khong tim thay Lot tuong ung trong STB_SetInfo! Dang ROLLBACK...';
+    ROLLBACK TRAN;
+END
+ELSE
+BEGIN
+    COMMIT TRAN;
+    PRINT '-> [THANH CONG] Da kich hoat IsLineInput = 1 cho $($lotList.Count) Lots!';
+END
 GO
 "@
 }

@@ -313,6 +313,20 @@
         "sai_mã_kho_nhận": "Bắt buộc chọn đúng mã kho vật lý tương ứng của nhà máy F1 (VN) hoặc F2 (BG)."
       },
       "diagnostic_query": "SELECT TOP 10 S.DOCUMENT_SAVE_CODE, S.DOCUMENT_SAVE_SUBJECT, S.DOCUMENT_SAVE_STATE FROM VINATECH_GROUP.dbo.VINA_DOCUMENT_SAVE S WITH (NOLOCK) WHERE S.DOCUMENT_TYPE_ID LIKE '%PHYSICAL%' ORDER BY S.DOCUMENT_SAVE_REG_DATE DESC"
+    },
+    "FORM_RAW_MATERIAL_INPUT_ADJUSTMENT": {
+      "name": "Điều Chỉnh / Thay Thế Nguyên Vật Liệu (Raw Material Input Adjustment Document)",
+      "module": "Production/Development",
+      "tables": ["VINA_DOCUMENT_SAVE", "VINA_DOCUMENT_RAW_MATERIAL_INPUT_PREVENTION"],
+      "erp_tables": [],
+      "mes_screens": ["A230"],
+      "approval_line": "Kỹ sư PE / Sản xuất -> Quản đốc Phân xưởng -> QA / QC -> Giám Đốc Nhà Máy",
+      "common_errors": {
+        "cross_model_overwrite": "DelegateMaterialCode trong STB_MaterialMaster là cấp mã dùng chung, chọn sai quy cách (vd Tape 5mm sang 10mm) sẽ ghi đè toàn bộ model khác.",
+        "chưa_làm_mới_kiosk": "Sau khi duyệt xong, Kiosk POP cần nhấn nút [🔄 Làm mới] để cập nhật mã thay thế mới."
+      },
+      "diagnostic_query": "SELECT TOP 10 DOCUMENT_SAVE_CODE, CD_ITEM, CHILD_MATERIAL_CODE, DELEGATE_MATERIAL_CODE, REG_DTTM, REG_EMPNO FROM VINATECH_GROUP.dbo.VINA_DOCUMENT_RAW_MATERIAL_INPUT_PREVENTION WITH (NOLOCK) WHERE CD_ITEM = '{TARGET}' OR CHILD_MATERIAL_CODE = '{TARGET}' ORDER BY REG_DTTM DESC"
     }
   }
 }
+

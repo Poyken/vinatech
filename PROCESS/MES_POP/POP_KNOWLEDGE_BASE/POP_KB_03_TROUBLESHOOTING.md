@@ -54,6 +54,7 @@ Related Files:
 | **POP-ERR-28: Lỗi Thiếu Foil "호일 부족: 코팅 생산수량 > 투입 호일 가용 길이"** | Cân bằng vật tư: Chiều dài sản phẩm Coating đăng ký vượt quá tổng chiều dài lá Foil kim loại đã quét nạp | Quét nạp thêm cuộn Foil kim loại bổ sung vào ô Slot NVL để bù đắp số mét thiếu hụt | Không |
 | **POP-ERR-29: Lỗi Chặn Đóng Gói "Material input is required before packing"** | Công đoạn Đóng gói (Packing) bắt buộc phải quét nạp vật tư tiêu hao (thùng carton, túi hút ẩm, tem nhãn) | Quét đủ mã vạch thùng và túi đóng gói theo định mức rồi mới bấm Hoàn thành đóng gói | Không |
 | **POP-ERR-30: Lỗi Sai Vùng Kho "Electrode roll cannot be input from another work center warehouse"** | Cuộn BTP điện cực đang nằm ở vị trí kho của Phân xưởng khác (chưa chuyển kho sang Line hiện tại) | Yêu cầu bộ phận kho làm phiếu chuyển kho (Warehouse Transfer) trên hệ thống sang đúng Chuyền | Không |
+| **POP-ERR-35: Lệch Trạng Thái 3 Bảng Huyết Mạch (SetInfo - ProdRouteHist - MongoToMes) & Fallback PQC** | Sai lệch giữa giao diện Kiosk POP và MES WinForm do chốt nhầm máy, kẹt 'Already completed', hoặc kẹt đồng bộ ngầm | Chạy Golden Query `.\pop.ps1 trace '<Mã>'` (dò qua cả PQC Web) và áp dụng 4 quy tắc sửa lỗi đồng bộ Rule 20 | **CÓ (SQL Hotfix)** |
 
 
 
@@ -614,6 +615,48 @@ Dựa trên kiểm toán thực tế hơn 231,000 bản ghi thao tác trong `VIN
      - Nếu card hiển thị phiên bản phần mềm cũ (ví dụ: v1.0.1 thay vì v1.2.33): Nhấn nút **`업데이트` (Update)** để tự động cập nhật bản vá mới nhất.
   4. Sau 15-30 giây, card chuyển sang màu xanh `연결됨` (Connected) và số liệu Telemetry tiếp tục được nạp tự động vào MongoDB.
 
+---
+
+### 2.35 POP-ERR-35: Kỹ Thuật Truy Vết 3 Bảng Huyết Mạch & Fallback Dò Mã PQC Web (Golden Query Engine)
+* **Hiện tượng:** Xảy ra sai lệch giữa Kiosk POP và MES WinForm:
+  * Kiosk hiện công đoạn đã chốt nhưng MES WinForm (B530/B782) không có sản lượng.
+  * Hoặc MES WinForm đã xóa/rollback nhưng Kiosk vẫn báo "Đã hoàn thành".
+  * Hoặc OP/QC chỉ cung cấp mã tem kiểm định PQC Web (`CommInspDocItemNo`) và không tra cứu được mã Lot MES.
+* **Cơ chế vận hành của màn hình (Trích xuất từ `tools/pop_trace.ps1`):**
+  1. **Thuật toán Phân giải ID Đa năng & Fallback PQC Web:**
+     ```sql
+     SET NOCOUNT ON;
+     DECLARE @Ctrl VARCHAR(30) = '$t';
+     DECLARE @Bar VARCHAR(50) = '$t';
+     DECLARE @LineCode VARCHAR(30) = NULL;
+
+     -- Dò ControlNo (Mã Lot MES)
+     IF EXISTS (SELECT 1 FROM SmartFactoryV2.dbo.STB_SetInfo WITH(NOLOCK) WHERE ControlNo = '$t')
+         SELECT TOP 1 @Bar = Barcode FROM SmartFactoryV2.dbo.STB_SetInfo WITH(NOLOCK) WHERE ControlNo = '$t';
+     -- Dò Barcode (Tem vạch)
+     ELSE IF EXISTS (SELECT 1 FROM SmartFactoryV2.dbo.STB_SetInfo WITH(NOLOCK) WHERE Barcode = '$t')
+         SELECT TOP 1 @Ctrl = ControlNo FROM SmartFactoryV2.dbo.STB_SetInfo WITH(NOLOCK) WHERE Barcode = '$t';
+     -- Fallback PQC Web (CommInspDocItemNo / CommInspDocNo)
+     ELSE
+     BEGIN
+         SELECT TOP 1 @Ctrl = H.ProdNo 
+         FROM SmartFactoryV2.dbo.STB_CommInspDocHistory H WITH(NOLOCK)
+         LEFT JOIN SmartFactoryV2.dbo.STB_CommInspDocItem I WITH(NOLOCK) ON H.CommInspDocNo = I.CommInspDocNo
+         WHERE I.CommInspDocItemNo = '$t' OR H.CommInspDocNo = '$t';
+
+         IF @Ctrl IS NOT NULL
+             SELECT TOP 1 @Bar = Barcode FROM SmartFactoryV2.dbo.STB_SetInfo WITH(NOLOCK) WHERE ControlNo = @Ctrl;
+     END
+     ```
+  2. **Soi đồng thời 3 Bảng Huyết Mạch:**
+     * `STB_SetInfo`: Quản lý Lot, PO, Model, `IsProdFinish`, `IsLineInput`, `DefectQty`.
+     * `STB_ProdRouteHist`: Lưu tiến độ chốt công đoạn trên MES (`RouteCode`, `WorkCenterCode`, `ProdQty`, `JobDate`, `CompleteRoute`).
+     * `MongoToMesPerformance`: Trục đệm đồng bộ Kiosk POP sang MES (`DayPlanNo`, `Barcode`, `RouteCode`, `LineCode`, `MachineCode`, `TotalProdQty`, `IsDone`, `IsTransferred`).
+* **4 Quy tắc sửa lỗi bất biến khi có sai lệch (Rule 20 - EA Playbook):**
+  1. *Đổi máy nhầm Kiosk:* **BẮT BUỘC UPDATE CẢ 2 BẢNG** (`STB_ProdRouteHist.WorkCenterCode` VÀ `MongoToMesPerformance.MachineCode`). Nếu chỉ sửa 1 bảng, Worker POP sẽ ghi đè lại hoặc Kiosk lệch máy.
+  2. *Lỗi "Already completed in MES":* WinForm sinh trước dòng kế tiếp (`CompleteRoute = 1`). Xóa bản ghi thừa trong `STB_ProdRouteWorkerHist` và `STB_ProdRouteHist`.
+  3. *Kẹt `IsDone = 1, IsTransferred = 0`:* Kiosk đã chốt nhưng chưa sang MES. Chốt bù vào `STB_ProdRouteHist` (Template 9) hoặc kích hoạt `usp_VINA_SyncPopToMes_SingleLot`.
+  4. *Kiosk vẫn hiện hoàn thành sau khi MES xóa:* Reset `IsDone = 0, IsTransferred = 0` trong `MongoToMesPerformance` (Template 7).
 
 ---
 
@@ -1369,11 +1412,47 @@ END CATCH;
 
 ---
 
-### Case 12: Xử Lý Nguyên Vật Liệu Thay Thế Trong BOM
-* **Ngữ cảnh:** Thực tế sản xuất có NVL thay thế từ nhà cung cấp khác hoặc mã NVL cũ hết hàng.
-* **Cách xử lý:**
-  1. Nếu BOM thừa hoặc có NVL thay thế: Thiết lập mã thay thế tại các cột `DelegateMaterialCode1`, `DelegateMaterialCode2`... trong Master Data.
-  2. Trên giao diện Kiosk: Khi quét mã NVL thay thế đã được định nghĩa, Kiosk tự động nhận diện và đối trừ định mức hợp lệ.
+### Case 12: Xử Lý Nguyên Vật Liệu Thay Thế Trong BOM (Delegate Material Mismatch)
+* **Ngữ cảnh & Triệu chứng thực tế:**
+  * Thực tế sản xuất có NVL thay thế từ nhà cung cấp (NCC) khác hoặc mã cuộn NVL cũ hết hàng.
+  * **Sự cố thực tế (Incident 2026-09-25 - Model 1025):** Model `1025` (`ECVT30-270`, PO `260829000014`, Lot `VVQR253R010602`) tại công đoạn Cuộn `V-22` sử dụng Tape PI 5mm (mã NCC thực tế `GBRBPL-002` - `KA2550_5mm * 4000m`). Tuy nhiên, trên Kiosk POP hiển thị dòng chữ: *"Đang nhập vật liệu thay thế cho GBTPPL-001"* và bắt buộc phải nạp cuộn `GBRBPL-003` (`KA2550_10mm * 4000m`). Công nhân quét cuộn 5mm bị chặn không cho chốt.
+* **Nguyên nhân gốc rễ & Cơ chế huyết mạch dữ liệu:**
+  1. **Hiểu lầm khi đọc BOM Kiosk:** Trên popup *"Lượng yêu cầu (BOM)"*, dòng 3 ghi `GBSN00-004 - 고무전 10mm` (Đây là **Nút cao su / Rubber Plug 10mm**, không phải băng dính). Dòng 4 `GBTPPL-001 - 테이프 870A_5mm` mới là Tape 5mm. BOM gốc của PO vốn dĩ đã đúng là 5mm.
+  2. **Cơ chế đồng bộ Groupware ➔ MES:** Trên Groupware, các cặp mã thay thế được phê duyệt qua biểu mẫu `rawMaterialInputPreventionDocument` (lưu tại bảng `VINATECH_GROUP.dbo.VINA_DOCUMENT_RAW_MATERIAL_INPUT_PREVENTION`). Khi Giám đốc duyệt, dữ liệu sync tự động ghi vào cột `DelegateMaterialCode` của bảng **`SmartFactoryV2.dbo.STB_MaterialMaster`** (Màn hình WinForm **[A230] Material Master**).
+  3. **Rủi ro Ghi đè Master Data (Cross-Model Overwrite):** Ban đầu ngày 16/09/2026, phiếu `DOCUMENT_SAVE_20260912173714867601` đã cấu hình đúng `GBTPPL-001` trỏ về `GBRBPL-002` (5mm). Nhưng vào ngày 19/09/2026, khi duyệt phiếu cho Model khác (`ECVT30-235`), người tạo form đã chọn nhầm `GBTPPL-001` trỏ sang `GBRBPL-003` (10mm). Vì `STB_MaterialMaster` là bảng Master dùng chung cho toàn bộ nhà máy, tiến trình sync đã **ghi đè mã sai lên toàn bộ các Model khác**!
+* **Cách tra cứu & chẩn đoán thần tốc:**
+  * **Trên MES:** Chạy `.\mes.ps1 trace "<LotID>"` ➔ Mục 8 sẽ tự động hiển thị bảng BOM PO và **bật cảnh báo viền đỏ `MISMATCH_SIZE`** nếu mã gốc 5mm bị trỏ sang mã thay thế 10mm.
+  * **Trên Engine chẩn đoán:** Chạy `.\mes.ps1 diagnose "tape 10mm"` ➔ Xuất ngay 4 Dòng Vàng.
+  * **Trên Groupware:** Chạy `.\gw.ps1 query "SELECT DOCUMENT_SAVE_CODE, CD_ITEM, CHILD_MATERIAL_CODE, DELEGATE_MATERIAL_CODE, REG_DTTM, REG_EMPNO FROM VINA_DOCUMENT_RAW_MATERIAL_INPUT_PREVENTION WITH(NOLOCK) WHERE CHILD_MATERIAL_CODE IN ('GBTPPL-001', 'GBTPPL-007') ORDER BY REG_DTTM DESC"` để truy ra ai đã lập form ghi đè.
+* **Cách khắc phục chuẩn hóa:**
+  * **Cách 1 (Giao diện UI WinForm):** Mở màn hình **[A230] Material Master** ➔ Tìm mã gốc `GBTPPL-001` ➔ Sửa ô `DelegateMaterialCode` về đúng `GBRBPL-002` (và sửa `GBTPPL-007` về `GBRBPL-003`) ➔ Nhấn **Lưu** ➔ Trên Kiosk POP nhấn nút **[🔄 Làm mới]** cạnh Danh sách NVL BOM.
+  * **Cách 2 (SQL Hotfix chuẩn IT - Author: vanduc):**
+    ```sql
+    USE SmartFactoryV2;
+    BEGIN TRANSACTION;
+    BEGIN TRY
+        UPDATE STB_MaterialMaster
+        SET DelegateMaterialCode = 'GBRBPL-002', DelegateMaterialCode2 = NULL, ChangeDateTime = GETDATE(), ChangeUserID = 'vanduc'
+        WHERE MaterialCode = 'GBTPPL-001';
+
+        UPDATE STB_MaterialMaster
+        SET DelegateMaterialCode = 'GBRBPL-003', DelegateMaterialCode2 = NULL, ChangeDateTime = GETDATE(), ChangeUserID = 'vanduc'
+        WHERE MaterialCode = 'GBTPPL-007';
+
+        COMMIT TRANSACTION;
+        PRINT N'✅ Đã hiệu chỉnh thành công mapping NVL thay thế cho Tape 5mm và 10mm!';
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        PRINT N'❌ Lỗi: ' + ERROR_MESSAGE();
+    END CATCH;
+    ```
+  * **Cách 3 (Quy trình chuẩn hóa chính thống qua Groupware):**
+    - Chi tiết xem tại: [GW_04_MASTER_DATA.md §3.4](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/GROUPWARE/GROUPWARE_KNOWLEDGE_BASE/GW_04_MASTER_DATA.md#L150).
+    - **Thực hiện:** Kỹ sư PE/Sản xuất truy cập `Production/Development` ➔ `Raw Material Input Adjustment Document` (`rawMaterialInputPreventionDocument`).
+    - Chọn Model `ECVT30-270`, BOM version `2001`, tích chọn `GBTPPL-001` trên Cây BOM Phẳng.
+    - Tại bảng dưới, nhấn `[🔍]` tại cột "Mã vật liệu thay thế" ➔ Tìm mã `GBRBPL-002` (5mm) ➔ Nhấn `[Áp dụng các mục đã chọn]`.
+    - Trình duyệt qua Quản đốc ➔ QA ➔ Giám Đốc Nhà Máy. Sau khi duyệt xong, hệ thống tự động đồng bộ vào MES `STB_MaterialMaster`.
 
 ---
 

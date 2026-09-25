@@ -147,6 +147,110 @@ Tiến trình đồng bộ BOM từ ERP/Groupware sang MES sẽ tự động ch�
 - **B310 (Màn Giám Sát PO cấp xưởng MES):** Xem khi làm PO xem BOM đã được áp dụng.
 - **A230 (Màn Thiết Lập MES):** Xem lại mã code.
 
+### 3.4 🔄 Cấp Phép & Quản Lý Nguyên Vật Liệu Thay Thế (Substitute Materials Approval)
+
+**Đường dẫn trên Groupware:**
+- **Menu điều hướng:** `Production/Development` ➔ **`Raw Material Input Adjustment Document`**
+- **URL trực tiếp:** `https://gw.vinatech.com/document/addDocument?documentTypeId=rawMaterialInputPreventionDocument`
+- **Mã loại biểu mẫu (documentTypeId):** `rawMaterialInputPreventionDocument`
+- **Bảng CSDL lưu trữ:** `VINATECH_GROUP.dbo.VINA_DOCUMENT_RAW_MATERIAL_INPUT_PREVENTION`
+- **Tài liệu quy trình chuẩn:** `SOP-VNT-MES-008` (Quản lý & phê duyệt NVL thay thế được chấp nhận trong BOM).
+
+---
+
+#### 1. Bản chất nghiệp vụ:
+- **KHÔNG SỬA BOM GỐC:** Giữ nguyên 100% định mức kỹ thuật trên ERP/MES.
+- **CẤP PHÉP MÃ TƯƠNG ĐƯƠNG:** Khai báo cặp `Mã NVL gốc` (`CHILD_MATERIAL_CODE`) trỏ sang `Mã NVL thay thế` (`DELEGATE_MATERIAL_CODE`) của nhà cung cấp khác để cho phép máy trạm Kiosk POP mở khóa cho công nhân quét tem nạp vào máy.
+
+---
+
+#### 2. Quy trình thao tác từng bước trên giao diện Web (Step-by-Step UI Guide):
+
+```
+[Groupware: Production/Development] 
+       │
+       ▼
+[Raw Material Input Adjustment Document] 
+       │
+       ▼
+[Chọn Model Cha & BOM Version 2001]
+       │
+       ▼
+[Tích chọn checkbox NVL gốc trên Cây BOM Phẳng]
+       │
+       ▼
+[Nhấn icon 🔍 tại cột "Mã vật liệu thay thế" trong bảng dưới]
+       │
+       ▼
+[Popup "Tìm kiếm mục": Nhập mã thay thế chuẩn ➔ Chọn ➔ Áp dụng]
+       │
+       ▼
+[Nhập lý do thay thế ➔ Thiết lập tuyến duyệt ➔ Gửi đi]
+```
+
+##### 🔹 Bước 1: Chọn Model Cha & Phiên Bản BOM (Parent Item & BOM Version)
+1. Tại ô **`Mục cha`**: Nhấp tìm kiếm hoặc nhập mã Model thành phẩm cần cấu hình (ví dụ: `ECVT30-270` - `HY-CAP WEC3R0106QA (1025)`).
+2. Tại ô **`BOM Phiên bản`**: Bắt buộc chọn version **`2001`** *(Phiên bản BOM tiêu chuẩn áp dụng cho toàn bộ nhà máy Vinatech Việt Nam)*.
+
+##### 🔹 Bước 2: Tích chọn Nguyên vật liệu cần thay thế từ Cây BOM Phẳng
+1. Sau khi chọn Model và BOM 2001, bảng **`BOM Phẳng (Chọn các mục con để ngăn chặn nhập)`** hiển thị toàn bộ các vật tư thành phần cấp 1.
+2. Tìm dòng vật tư gốc cần gán thay thế (ví dụ: dòng `GBTPPL-001` - `테이프 870A_5mm`).
+   > [!NOTE]
+   > **Phân biệt vật tư:** Cần nhìn kỹ mã code và tên. Ví dụ: `GBSN00-004 - 고무전 10mm` là Nút cao su (Rubber Plug 10mm), còn `GBTPPL-001 - 테이프 870A_5mm` mới là Băng keo 5mm.
+3. Tích vào ô **Checkbox** ở cột đầu tiên bên trái của dòng vật tư gốc cần thay thế.
+4. Ngay khi tích chọn, hệ thống tự động đưa dòng vật tư này xuống bảng dưới: **`Danh sách các tài liệu điều chỉnh`**.
+
+##### 🔹 Bước 3: Tìm kiếm và gán Mã vật liệu thay thế (Delegate Material Selection)
+1. Tại bảng bên dưới **`Danh sách các tài liệu điều chỉnh`**, quan sát dòng vật tư vừa được thêm vào:
+   - **`Loại Cầu`**: Chọn `Thay thế đầu vào` (Input Replacement).
+   - **`Thời hạn hiệu lực Hiện tại`**: Mặc định là `9999-12-31`.
+2. Tại cột **`Mã vật liệu thay thế (Tên, Mã con)`**:
+   - Nhấp vào nút tìm kiếm kính lúp: **`[Chọn b...] [🔍]`**.
+   - Hộp thoại popup **`Tìm kiếm mục`** sẽ xuất hiện trên màn hình.
+3. Trong popup **`Tìm kiếm mục`**:
+   - Nhập vào ô **`Mã vật tư`**: Gõ chính xác mã thay thế (ví dụ: `GBRBPL-002`).
+   - HOẶC nhập vào ô **`Tên vật tư`**: Gõ quy cách kỹ thuật (ví dụ: `5mm` hoặc `KA2550`).
+   - Nhấn nút **`[Tìm kiếm mục]`**.
+4. Chọn đúng vật tư tương đương:
+   - Trong danh sách kết quả tìm kiếm, tích chọn **Radio button** của mã vật tư chuẩn (ví dụ: `GBRBPL-002` - `KA2550_5mm * 4000m`).
+   - ⚠️ **Lưu ý kiểm tra kỹ quy cách:** Đối soát kỹ cột `Tên vật tư` và `Quy cách` (5mm vs 10mm). Tuyệt đối không chọn nhầm sang cuộn 10mm (`GBRBPL-003`).
+   - Nhấn nút xanh **`[Áp dụng các mục đã chọn]`** để xác nhận gán mã thay thế.
+
+##### 🔹 Bước 4: Nhập lý do và hoàn thiện hồ sơ
+1. **`Số Serial`**: Nhập số serial / mã cuộn đặc thù nếu có yêu cầu kiểm soát theo từng lô đơn lẻ; nếu áp dụng chung cho toàn line thì để trống theo hướng dẫn.
+2. **`Kết thúc/Lý do thay thế`**: Nhập văn bản giải trình rõ lý do (ví dụ: *"NVL chính GBTPPL-001 tạm hết hàng, sử dụng mã tương đương GBRBPL-002 theo phê duyệt của PE"*).
+3. Có thể bấm `(Áp dụng hàng loạt)` nếu gán cùng một lý do cho nhiều dòng.
+
+##### 🔹 Bước 5: Thiết lập tuyến duyệt & Gửi đi (Approval Line & Submit)
+1. Nhấp nút **`Chọn dòng phê duyệt +`**:
+   - Tuyến duyệt quy định: **Người đề xuất (Kỹ sư PE / Sản xuất)** ➔ **Quản đốc Phân xưởng** ➔ **QA / QC** ➔ **Giám Đốc Nhà Máy (Final Approval)**.
+2. Nhấn nút **`Gửi đi`** (Submit).
+
+---
+
+#### 3. Cơ chế lưu trữ & Huyết mạch đồng bộ xuống MES:
+- Dữ liệu chi tiết phiếu lưu tại: `VINATECH_GROUP.dbo.VINA_DOCUMENT_RAW_MATERIAL_INPUT_PREVENTION`.
+- Khi cấp cuối cùng (Giám Đốc Nhà Máy) nhấn **Approve**: Hệ thống tự động đồng bộ dữ liệu vào trường **`DelegateMaterialCode`** trong bảng **`SmartFactoryV2.dbo.STB_MaterialMaster`** (Màn hình WinForm **[A230] Material Master**).
+- Kiosk POP (`/pop/screen`) đọc trực tiếp trường `DelegateMaterialCode` từ `STB_MaterialMaster` để đối soát khi công nhân bấm *"Nhập vật liệu thay thế"*.
+
+---
+
+#### 4. ⚠️ NGUY CƠ GHI ĐÈ TOÀN BỘ MASTER DATA (CROSS-MODEL OVERWRITE):
+> [!CAUTION]
+> **CẢNH BÁO QUAN TRỌNG:** Cột `DelegateMaterialCode` nằm ở cấp độ **Mã Vật Tư Dùng Chung** (`STB_MaterialMaster`), KHÔNG phân biệt theo Model. Nếu nhân sự tạo form cho Model A nhưng chọn nhầm mã thay thế (ví dụ: Tape 5mm `GBTPPL-001` lại chọn nhầm sang Tape 10mm `GBRBPL-003`), khi duyệt xong nó sẽ **ghi đè và phá hỏng cấu hình của tất cả các Model khác đang chạy trên dây chuyền**!
+
+---
+
+#### 5. Cách tra cứu & Kiểm tra sau khi phê duyệt:
+- **Trên Web Groupware:** Vào `Document Box` ➔ `Completed Documents` ➔ Lọc form `Raw Material Input Adjustment Document` ➔ Tìm theo mã Model hoặc số văn bản.
+- **Bằng CLI Hub `gw.ps1`:**
+  ```powershell
+  .\gw.ps1 query "SELECT DOCUMENT_SAVE_CODE, CD_ITEM, CHILD_MATERIAL_CODE, DELEGATE_MATERIAL_CODE, REG_DTTM, REG_EMPNO FROM VINA_DOCUMENT_RAW_MATERIAL_INPUT_PREVENTION WITH(NOLOCK) WHERE CHILD_MATERIAL_CODE IN ('GBTPPL-001', 'GBTPPL-007') ORDER BY REG_DTTM DESC"
+  ```
+- **Xác minh trên Kiosk POP sau khi duyệt:**
+  - Trên màn hình Kiosk POP (`/pop/screen`), bấm nút **`[🔄 Làm mới]`** bên cạnh danh sách NVL BOM.
+  - Chọn nút *"Nhập vật liệu thay thế"*, quét tem cuộn `GBRBPL-002` để xác nhận máy đã nhận diện thành công.
+
 ---
 
 ## 4. 🏢 Đăng Ký Nhà Thầu / Khách Hàng (Partner Management)

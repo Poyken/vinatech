@@ -6,4 +6,6 @@ __pycache__/
 @AutomationLog.txt
 tools/scratch/
 AI_AGENT_CONFIG/zalo_inbox/*.jsonl
+backups/
+tools/backups/
 

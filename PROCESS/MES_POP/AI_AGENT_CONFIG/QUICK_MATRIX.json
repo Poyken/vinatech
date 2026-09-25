@@ -1,4 +1,4 @@
-﻿{
+{
   "version": "2.3.0",
   "updated_at": "2026-09-21 04:11:40",
   "description": "Full 95 Screens & Bugs L1 In-Memory Pre-compiled Matrix for Vinatech MES (Deduplicated & Cleaned v2.3)",
@@ -382,9 +382,10 @@
         "STB_VN_PRODUCTION_ERROR"
       ],
       "common_bugs": {
-        "báo_phế_nvl_bị_chặn_không_đồng_bộ": "Lệch `JobDate` giữa ca thực tế và kế hoạch -> Sửa JobDate: `UPDATE STB_ProdRouteHist SET JobDate = CAST(GETDATE() AS DATE) WHERE ...`"
+        "báo_phế_nvl_bị_chặn_không_đồng_bộ": "Lệch `JobDate` giữa ca thực tế và kế hoạch -> Sửa JobDate: `UPDATE STB_ProdRouteHist SET JobDate = CAST(GETDATE() AS DATE) WHERE ...`",
+        "phế_nvl_thành_tiền_0_hoặc_sai_số_lượng_quy_đổi": "SP `usp_vn_showproductionerror` bị gán cứng số (ví dụ `THEN 0.0890`) hoặc thiếu khai báo -> Sửa đồng thời 2 khối `Can_Nang_Moi` (`CAST(Weights AS FLOAT)/<ĐịnhMức>`) và `PRICES` (`(CAST(Weights AS FLOAT)/<ĐịnhMức>)*<ĐơnGiá>`) trong SP [dbo].[usp_vn_showproductionerror]"
       },
-      "fix_template": "Lệch `JobDate` giữa ca thực tế và kế hoạch -> Sửa JobDate: `UPDATE STB_ProdRouteHist SET JobDate = CAST(GETDATE() AS DATE) WHERE ...`"
+      "fix_template": "Sửa đồng thời 2 khối Can_Nang_Moi và PRICES trong usp_vn_showproductionerror. Chi tiết: KB_03_02 §6.12"
     },
     "B618": {
       "name": "Rework (Làm lại sản phẩm)",

@@ -1,4 +1,4 @@
-﻿<!--
+<!--
 AI-READY METADATA
 Purpose: Sổ tay cứu hộ 70+ bugs theo TCode thực tế (Tra cứu triệu chứng -> nguyên nhân -> giải pháp SQL patch)
 Scope: Troubleshooting & Hotfix Knowledge Base
@@ -276,6 +276,7 @@ Related Files:
 | # | Triệu chứng | Nguyên nhân | Fix |
 |---|---|---|---|
 | 1 | Báo phế NVL bị chặn/không đồng bộ | Lệch `JobDate` giữa ca thực tế và kế hoạch | Sửa JobDate: `UPDATE STB_ProdRouteHist SET JobDate = CAST(GETDATE() AS DATE) WHERE ...` |
+| 2 | Phế NVL hiển thị Thành tiền = 0.00$ hoặc Số lượng bị cố định không đổi theo Cân nặng | SP `usp_vn_showproductionerror` bị gán cứng số (ví dụ `THEN 0.0890`) hoặc thiếu khai báo công thức chia trọng lượng định mức $\text{Weights} / W$ | Sửa đồng thời 2 khối `Can_Nang_Moi` và `PRICES` trong SP: `CAST(Weights AS FLOAT)/<Định_Mức>` và `(CAST(Weights AS FLOAT)/<Định_Mức>) * <Đơn_Giá>`. Chi tiết: [KB_03 §6.12](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_02_CELL_LINE.md) |
 
 > 🔗 Chi tiết: [KB_03 §6.12](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_02_CELL_LINE.md)
 

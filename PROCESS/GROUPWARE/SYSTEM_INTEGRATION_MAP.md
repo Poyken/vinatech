@@ -66,7 +66,10 @@ graph TD
 | **Xác Thực Đăng Nhập** | SSO Token Gateway | Xác thực mật khẩu ERP (`ERPiUVerify` cho HQ) | `SmartFramework.dbo.usp_DoGUILogin` | `VINATECH_RESTFUL.dbo.VINA_SSO_TOKEN` |
 | **Xem Tài Liệu PDF** | E-Approval Web Viewer | - | - | `streamdocs.dbo.pdf_resource` |
 | **Bảng Tính Trực Tuyến** | Web Spreadsheet | - | - | `VINATECH_SPREADSHEET.dbo.VINA_SPREAD_SHEET_JSON` |
-| **Chuông Báo Thời Gian Thực**| Realtime Push Notification | - | Đổi màu TV Andon khi máy dừng | `VINATECH_WEBSOCKET.dbo.VINA_MODULE` |
+| **Chuông Báo Thời Gian Thực**| Realtime Push Alarm | - | Đổi màu TV Andon khi máy dừng | `VINATECH_WEBSOCKET.dbo.VINA_MODULE`, `AndonDB.dbo.STB_LineSituation_VVT` |
+| **Thanh Toán FirmBanking**| `VINA_DOCUMENT_PURCHASE_RESOLUTION` / `disbursement` | `NEOE.FI_DOCU` (Ghi nhận nợ/có) | - | `WCMS_STANDARD_NEW.dbo.WCMS_ACCOUNT_TRNX_LOG` (LinkedServer `CMS_VINA_LINK`) |
+| **Kiểm Soát Nội Bộ K-SOX** | `VINA_DOCUMENT_APPROVAL_SAVE` (Lưu chữ ký số) | `FI_DOCU` (Chứng từ tài chính) | - | `VINATECH_DATA_KSOX.dbo.ICM_CTRLMATRIX_MT` |
+| **Hợp Nhất ERP Thế Hệ Mới**| Đồng bộ sơ đồ tổ chức & quyền | Lịch sử kế toán chuyển giao | Đồng bộ Lệnh SX, BOM & Sản lượng qua `K_SMART` | `VINATECVN.dbo._TPRWorkOrder`, `_TDAWH (IsMES='Y')` |
 
 ---
 

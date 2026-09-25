@@ -36,6 +36,36 @@ Related Files:
 
 > 💡 **Lưu trữ:** Các hotfix cũ hơn (Tháng 07 & 08/2026, 24 entries) đã được chuyển vào [HOTFIX_LOG_2026_JUL_AUG.md](HOTFIX_LOG_2026_JUL_AUG.md).
 
+### [POP Screen / GW] — 📍 ID_54 Lỗi Mismatch Quy Cách NVL Thay Thế Tape 5mm vs 10mm & Cơ Chế Đồng Bộ GW-MES
+* **Ngày xử lý / Đóng gói tri thức:** `2026-09-25`
+* **Màn hình liên quan (TCode / URL):** `[POP Screen] - pop.vinatech.com/pop/screen (Winding V-22 / Chuyền VVC-22)` & `[A230] Material Master` & `[GW Form] rawMaterialInputPreventionDocument`
+* **Triệu chứng & Báo lỗi thực tế:**
+  - Chuyền sản xuất Model `1025` (`ECVT30-270`, PO `260829000014`, Lot `VVQR253R010602`) tại công đoạn Cuộn `V-22` sử dụng Tape PI 5mm (mã NCC `GBRBPL-002` - `KA2550_5mm * 4000m`).
+  - Trên Kiosk POP hiển thị: *"Đang nhập vật liệu thay thế cho GBTPPL-001"* nhưng lại bắt buộc phải nạp cuộn `GBRBPL-003` (`KA2550_10mm * 4000m`). Công nhân quét cuộn 5mm bị chặn không cho chốt.
+  - Quản lý kiểm tra popup BOM Kiosk nhìn nhầm dòng `GBSN00-004 - 고무전 10mm` (nút cao su 10mm) thành "BOM cũng là 10mm".
+* **Nguyên nhân gốc (Root Cause):**
+  1. BOM gốc PO: Dòng 4 là `GBTPPL-001 - 테이프 870A_5mm` (Băng dính 5mm) ➔ BOM gốc hoàn toàn đúng.
+  2. Kiosk POP đọc mã NVL thay thế từ cột `DelegateMaterialCode` trong `SmartFactoryV2.dbo.STB_MaterialMaster`.
+  3. Cơ chế đồng bộ từ Groupware: Ngày 16/09, phiếu `DOCUMENT_SAVE_20260912173714867601` của bạn Thảo khai báo đúng `GBTPPL-001` ➔ `GBRBPL-002` (5mm). Nhưng ngày 19/09, khi duyệt phiếu `DOCUMENT_SAVE_20260918174436835601` cho model khác (`ECVT30-235`), người tạo form đã chọn nhầm `GBTPPL-001` trỏ sang `GBRBPL-003` (10mm). Do `STB_MaterialMaster` là bảng master dùng chung, tiến trình sync đã ghi đè làm hỏng mapping của model 1025.
+* **Hành động nâng cấp hệ thống (Tools Enhancement):**
+  - **`tools/pop_trace.ps1`:** Bổ sung Query 9 tự động JOIN `STB_ProductionOrderBom` với `STB_MaterialMaster` và in khối cảnh báo đỏ `MISMATCH_SIZE` ngay lập tức khi phát hiện lệch quy cách 5mm vs 10mm.
+  - **`tools/mes_diagnose.py`:** Bổ sung rule `RULE_POP_SUBSTITUTE_MATERIAL_MISMATCH` nhận diện các từ khóa tape, vật liệu thay thế, gbrbpl, gbtppl và xuất 4 Dòng Vàng kèm Hotfix.
+  - **`POP_MATRIX.json`:** Chuẩn hóa lại tài liệu, sửa bảng lưu trữ từ `STB_ProductionOrderBom` sang `STB_MaterialMaster.DelegateMaterialCode`.
+* **SQL Hotfix chuẩn (Author: vanduc):**
+  ```sql
+  BEGIN TRAN;
+  UPDATE SmartFactoryV2.dbo.STB_MaterialMaster
+  SET DelegateMaterialCode = 'GBRBPL-002', DelegateMaterialCode2 = NULL, ChangeDateTime = GETDATE(), ChangeUserID = 'vanduc'
+  WHERE MaterialCode = 'GBTPPL-001';
+
+  UPDATE SmartFactoryV2.dbo.STB_MaterialMaster
+  SET DelegateMaterialCode = 'GBRBPL-003', DelegateMaterialCode2 = NULL, ChangeDateTime = GETDATE(), ChangeUserID = 'vanduc'
+  WHERE MaterialCode = 'GBTPPL-007';
+  COMMIT TRAN;
+  ```
+
+---
+
 ### [POP Screen] — 📍 ID_53 Cơ chế Hủy lẻ từng Pack đóng gói & Ma trận phân quyền Admin Kiosk POP
 * **Ngày xử lý / Đóng gói tri thức:** `2026-09-23`
 * **Màn hình liên quan (TCode / URL):** `[POP Screen] - pop.vinatech.com/pop/screen (Packing - HY Cell Line #17)`
