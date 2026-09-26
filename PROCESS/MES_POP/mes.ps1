@@ -72,6 +72,10 @@ function Show-Help {
     Write-Host '-> Debug man hinh MES (Grid, SP, Bang lien quan: B530, B540...)' -ForegroundColor Gray
     Write-Host '     .\mes.ps1 sp <SP_Name>              ' -NoNewline -ForegroundColor Green
     Write-Host '-> Tai SP goc moi nhat tu DB ve local de phan tich' -ForegroundColor Gray
+    Write-Host '     .\mes.ps1 pack <Lot/PackingID>      ' -NoNewline -ForegroundColor Green
+    Write-Host '-> Truy vet dong goi & in tem PackingID 360 do (SmartFactoryV2 & Kiosk POP)' -ForegroundColor Gray
+    Write-Host '     .\mes.ps1 user <EmpNo/UserId>       ' -NoNewline -ForegroundColor Green
+    Write-Host '-> Tra cuu nhan su & tai khoan dong bo 360 do tren 5 CSDL (ERP, POP, MES, GW, SSO)' -ForegroundColor Gray
     Write-Host '     .\mes.ps1 find <Keyword>            ' -NoNewline -ForegroundColor Green
     Write-Host '-> Tra cuu L1 Quick Matrix (<0.001s) va 78+ file Markdown' -ForegroundColor Gray
 
@@ -239,6 +243,37 @@ elseif ($cmdLower -eq 'lineage') {
         & $lineageScript -Target $Target
     } else {
         Write-Error 'tools/trace_lineage.ps1 not found.'
+    }
+}
+elseif ($cmdLower -eq 'pack' -or $cmdLower -eq 'packing') {
+    $targetVal = if ($Target) { $Target } else { $Lots }
+    if ([string]::IsNullOrWhiteSpace($targetVal)) {
+        Show-MesBanner
+        Write-Host 'Loi: Vui long nhap ma can kiem tra dong goi (LotNo, Barcode hoac PackingID)!' -ForegroundColor Red
+        Write-Host 'Vi du: .\mes.ps1 pack "VVQR232R710618"' -ForegroundColor Yellow
+        Write-Host '       .\mes.ps1 pack "PKQR2501480"' -ForegroundColor Yellow
+        exit 1
+    }
+    $packScript = Join-Path $toolsDir 'inspect_pack.ps1'
+    if (Test-Path $packScript) {
+        & $packScript $targetVal
+    } else {
+        Write-Error 'tools/inspect_pack.ps1 not found.'
+    }
+}
+elseif ($cmdLower -eq 'user' -or $cmdLower -eq 'emp') {
+    if ([string]::IsNullOrWhiteSpace($Target)) {
+        Show-MesBanner
+        Write-Host 'Loi: Vui long nhap ma nhan vien, username hoac ten nguoi dung!' -ForegroundColor Red
+        Write-Host 'Vi du: .\mes.ps1 user "92603003"' -ForegroundColor Yellow
+        Write-Host '       .\mes.ps1 user "31707007"' -ForegroundColor Yellow
+        exit 1
+    }
+    $userScript = Join-Path $toolsDir 'inspect_user.ps1'
+    if (Test-Path $userScript) {
+        & $userScript $Target
+    } else {
+        Write-Error 'tools/inspect_user.ps1 not found.'
     }
 }
 elseif ($cmdLower -eq 'screen' -or $cmdLower -eq 'diagnose') {
@@ -948,6 +983,26 @@ else {
         $unlockScript = Join-Path $toolsDir 'unlock_machine.ps1'
         if (Test-Path $unlockScript) {
             & $unlockScript -Machine $Command
+            exit 0
+        }
+    }
+
+    # 6. Kiem tra neu la Ma PackingID (PKQR..., PK...)
+    if ($Command -match '^PK') {
+        Write-Host "-> Tu dong nhan dien '$Command' la Ma PackingID. Khoi chay Truy vet Dong Goi 360..." -ForegroundColor Yellow
+        $packScript = Join-Path $toolsDir 'inspect_pack.ps1'
+        if (Test-Path $packScript) {
+            & $packScript $Command
+            exit 0
+        }
+    }
+
+    # 7. Kiem tra neu la Ma Nhan Vien (8 chu so: 92603003, 31707007...)
+    if ($Command -match '^\d{8}$') {
+        Write-Host "-> Tu dong nhan dien '$Command' la Ma Nhan Vien. Khoi chay Tra cuu Nhan Su & Tai Khoan 360..." -ForegroundColor Yellow
+        $userScript = Join-Path $toolsDir 'inspect_user.ps1'
+        if (Test-Path $userScript) {
+            & $userScript $Command
             exit 0
         }
     }

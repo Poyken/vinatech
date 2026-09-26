@@ -56,3 +56,10 @@ Groupware không phải là cổng thông tin văn phòng thông thường, mà 
 
 ### 14. RULE 13 - TÔN TRỌNG CHỐT CHẶN KỸ THUẬT IQC (C220 PASS GATEKEEPER):
 - Khi người dùng thắc mắc không lập được phiếu Receiving Confirmation trên GW: Bắt buộc kiểm tra kết quả kiểm định IQC trên màn hình MES `C220`. Nếu QC chưa bấm Confirm PASS (`QcResult = 'PASS'`), Groupware có quyền từ chối mở form theo đúng tiêu chuẩn ISO.
+
+### 15. RULE 21 - BẮT BUỘC LUÔN DÙNG TOOL CHUYÊN DỤNG (CLI HUBS) — TUYỆT ĐỐI CẤM QUERY DÒ DẪM (ZERO BLIND SQL EXPLORATION):
+- BẮT BUỘC dùng Tool CLI Hubs (`.\gw.ps1 [trace|form|find|routine]`, `.\mes.ps1`, `.\pop.ps1`, `.\ksys.ps1`).
+- CẤM TUYỆT ĐỐI dùng `.\db.ps1 query` để mò mẫm cấu trúc bảng hoặc chạy chuỗi SELECT thử sai.
+- Muốn biết form, menu, trường dữ liệu ➔ BẮT BUỘC tra cứu L1 Cache (`GW_FORM_MATRIX.json`, `APPROVAL_LINE_MATRIX.json`) hoặc `find`.
+- Giới hạn cứng 1-2 tool calls trúng đích, xong là DỪNG NGAY.
+

@@ -690,6 +690,16 @@
       "title": "Kẹt Buffer Đóng Gói VINA_PACKING_REMAIN_QTY (Ghost Record PACKED_QTY = 0)",
       "root_cause": "Giao diện đóng gói Kiosk POP lưu bản ghi tồn đọng vào VINATECH_POP.dbo.VINA_PACKING_REMAIN_QTY nhưng PACKED_QTY bị rỗng hoặc = 0 trong khi TOTAL_PROD_QTY > 0 làm nghẽn hiển thị số lượng còn lại.",
       "fast_fix": "Chạy .\\pop.ps1 trace <Lot> để quét kiểm tra Table 5.4. Nếu có dòng rác, kiểm tra STB_SetInfo và cập nhật PACKED_QTY hoặc xóa bản ghi mồ côi."
+    },
+    "POP-ERR-37": {
+      "title": "Không in được tem PackingID (Chưa sinh PackingID hoặc IsPrintAllow = False)",
+      "root_cause": "Công đoạn đóng gói chưa hoàn tất hoặc tem đã in quá số lần cho phép (IsPrintAllow=0 trong STB_PackingLabelPrintHist).",
+      "fast_fix": "Chạy .\\pop.ps1 pack <Lot> hoặc .\\mes.ps1 pack <Lot> để xác định tình trạng và lấy mã PackingID."
+    },
+    "POP-ERR-38": {
+      "title": "Lỗi đăng nhập Kiosk / Không chọn được công nhân vào ca / Thiếu quyền Admin hủy box",
+      "root_cause": "Mã nhân viên chưa có trong VINATECH_POP.dbo.VINA_EMP, bị cờ EMP_STOP='1', hoặc thiếu EMP_ADMIN='Y' để hủy box.",
+      "fast_fix": "Chạy .\\pop.ps1 user <EmpNo> hoặc .\\mes.ps1 user <EmpNo> để kiểm tra trạng thái trên cả 5 CSDL."
     }
   }
 }

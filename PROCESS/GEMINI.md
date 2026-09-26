@@ -15,6 +15,8 @@
 5. **RULE 14 (TỐC ĐỘ PHẢN HỒI):** Tối đa 1-2 tool calls trúng đích/câu hỏi. Lấy xong thông tin cốt lõi DỪNG NGAY và trả lời (<5-10s).
 6. **RULE 15 (TRÚNG ĐÍCH):** CẤM tự ý tạo script hotfix hay plan khi User chỉ yêu cầu kiểm tra/tra cứu.
 7. **RULE 20 (POP BẤT BIẾN - EA PLAYBOOK):** Đổi máy nhầm Kiosk BẮT BUỘC UPDATE CẢ 2 BẢNG (`STB_ProdRouteHist` VÀ `MongoToMesPerformance`). Lỗi "Already completed" xóa dòng thừa trong `STB_ProdRouteHist` & `STB_ProdRouteWorkerHist`. Nút Cắt điện cực mờ do độ dày `< 100`. Cuộn BTP tối đa 3 LOTNO. Máy kẹt ACTIVE giải phóng qua `.\pop.ps1 unlock <Machine> -Deploy` hoặc `.\pop.ps1 release-machines -Force`.
+8. **RULE 21 (BẮT BUỘC LUÔN DÙNG TOOL CHUYÊN DỤNG - TUYỆT ĐỐI CẤM QUERY DÒ DẪM):** BẮT BUỘC dùng Tool CLI Hubs (`.\mes.ps1`, `.\pop.ps1`, `.\gw.ps1`, `.\ksys.ps1`) cho mọi tác vụ tra cứu, phân tích, truy vết. Tuyệt đối CẤM dùng `.\db.ps1 query` để mò mẫm cấu trúc bảng, tên menu hay thử sai liên tục (0 blind SQL looping). Muốn biết bảng/menu/trường ➔ Tra cứu L1 Cache (`POP_MATRIX.json`, `QUICK_MATRIX.json`, `KSYSTEM_MATRIX.json`, `GW_FORM_MATRIX.json`) hoặc `find`. Giới hạn cứng tối đa 1-2 tool calls.
+
 
 
 ## ⚡ HỆ THỐNG CLI HUBS TẠI WORKSPACE ROOT

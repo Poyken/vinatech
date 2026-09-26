@@ -1476,6 +1476,32 @@
         "STB_MaterialLotInfo"
       ],
       "solution": "Chạy .\\mes.ps1 locks để phát hiện Blocking SPID, lock type và truy vấn gây kẹt tức thì."
+    },
+    "B523_PACKING_ID_INSPECTION": {
+      "title": "Truy vết lỗi đóng gói & in tem PackingID (Không in được tem hoặc thiếu mã PackingID)",
+      "screen": "B523 / B528 / POP Packaging",
+      "description": "Lot chưa sinh PackingID trong STB_MaterialLotInfo hoặc cờ IsPrintAllow=0 trong STB_PackingLabelPrintHist khiến Kiosk/WinForm chặn in tem.",
+      "tables": [
+        "STB_MaterialLotInfo",
+        "STB_SavePackingTime_VVT",
+        "STB_PackingLabelPrintHist",
+        "STB_DividePackaging",
+        "VINA_PACKING_REMAIN_QTY"
+      ],
+      "solution": "Chạy ngay .\\mes.ps1 pack <Lot/PackingID> hoặc .\\pop.ps1 pack <Lot/PackingID> để quét 360 độ hiện trạng đóng gói và lấy PackingID/mở cờ IsPrintAllow."
+    },
+    "AUTH_USER_CROSS_SYSTEM_SYNC": {
+      "title": "Tra cứu phân quyền tài khoản & xác thực đăng nhập Kiosk POP / ERP / MES",
+      "screen": "Kiosk Login / ERP P_MA_USER / SmartFramework",
+      "description": "Worker không đăng nhập được Kiosk (thiếu VINA_EMP hoặc EMP_STOP='1'), User IT/Admin không có quyền hủy Box (thiếu EMP_ADMIN='Y'), hoặc tài khoản ERP chưa kích hoạt (YN_LOGIN='N').",
+      "tables": [
+        "NEOE.MA_USER",
+        "VINATECH_POP.VINA_EMP",
+        "SmartFramework.STB_UserInfo",
+        "VINATECH_GROUP.VINA_EMP",
+        "VINATECH_RESTFUL.VINA_SSO_LOGIN"
+      ],
+      "solution": "Chạy ngay .\\mes.ps1 user <EmpNo/UserId> hoặc .\\pop.ps1 user <EmpNo/UserId> để chẩn đoán đồng bộ 5 CSDL trong 1-shot (<1s)."
     }
   }
 }

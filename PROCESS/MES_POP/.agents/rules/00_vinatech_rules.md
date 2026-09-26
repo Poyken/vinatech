@@ -71,3 +71,17 @@
    - **(4) Giới hạn nạp cuộn BTP tối đa 3 LOTNO:** Một mã cắt cuộn BTP chỉ cho phép nạp tối đa vào 3 LOTNO sản phẩm để kiểm soát phế và chống âm kho (Đã nâng cấp từ định mức cũ 2 LOTNO). CẤM quét ép vào LOT thứ 4.
    - **(5) Cơ chế giải phóng máy kẹt (Exclusive Lock):** Bảng `VINATECH_POP.dbo.VINA_EQUIPMENT_MAPPING` quản trị phiên gắn máy theo DayPlan. Khi OP quên bấm Hủy gán làm máy kẹt `ACTIVE` (POP-ERR-20, POP-ERR-27), BẮT BUỘC chuyển sang `MAPPING_STATUS = 'RELEASED'` (dùng lệnh `.\pop.ps1 unlock <Machine> -Deploy` hoặc `.\pop.ps1 release-machines -Force`).
 
+17. **RULE 21 - BẮT BUỘC LUÔN DÙNG TOOL CHUYÊN DỤNG (CLI HUBS & L1 CACHE) — TUYỆT ĐỐI CẤM QUERY DÒ DẪM (ZERO BLIND SQL EXPLORATION):**
+    - **ƯU TIÊN TUYỆT ĐỐI CÁC TOOL CLI ĐÃ ĐÓNG GÓI:**
+      * POP Kiosk / NVL BOM / Tồn kho: `.\pop.ps1 trace "<Target>"`, `.\pop.ps1 nvl "<Lot/PO>"`, `.\pop.ps1 unlock "<Machine>"`, `.\pop.ps1 sync`
+      * MES Core Sản xuất / Lot Lifecycle / Màn hình / Lỗi: `.\mes.ps1 trace "<LotID>"`, `.\mes.ps1 diagnose "<Text>"`, `.\mes.ps1 screen "<ScreenID>"`, `.\mes.ps1 sp "<SP_Name>"`, `.\mes.ps1 lineage "<Lot/PO>"`
+      * Groupware / Tờ trình / Phê duyệt: `.\gw.ps1 trace "<PO/DocCode>"`, `.\gw.ps1 form "<Form>"`, `.\gw.ps1 find "<Keyword>"`
+      * Hợp nhất ERP K-System Ace: `.\ksys.ps1 find "<Keyword>"`, `.\ksys.ps1 trace "<Lot/PO>"`, `.\ksys.ps1 module "<ModuleID>"`
+      * Tra cứu từ khóa / mã lỗi: `.\pop.ps1 find "<Keyword>"`, `.\mes.ps1 find "<Keyword>"`, `.\ksys.ps1 find "<Keyword>"`.
+    - **CẤM TUYỆT ĐỐI LẠM DỤNG `.\db.ps1 query` ĐỂ THỬ SAI (0 BLIND SQL LOOPING):**
+      * CẤM chạy chuỗi `SELECT` thăm dò (SELECT *, SELECT TOP...) để đoán cấu trúc bảng, tên menu ERP hay tìm kiếm logic nghiệp vụ.
+      * Muốn biết thông tin bảng, menu, quy trình: BẮT BUỘC tra cứu L1 Cache (`POP_MATRIX.json`, `QUICK_MATRIX.json`, `KSYSTEM_MATRIX.json`, `GW_FORM_MATRIX.json`) hoặc đọc SP gốc (`.\mes.ps1 sp`).
+      * Lệnh `.\db.ps1 query` CHỈ ĐƯỢC PHÉP dùng khi CLI Hub chưa hỗ trợ VÀ đã biết đích xác 100% bảng + 3-5 cột từ tài liệu/KB/SP, có `WITH (NOLOCK)`. CẤM chạy quá 1-2 query.
+    - **KỶ LUẬT HARD CEILING 1-2 TOOL CALLS:** Lấy xong dữ liệu từ CLI Hub là DỪNG NGAY và trả lời theo chuẩn 4 Dòng Vàng. Cấm gọi thêm tool để verify lan man.
+
+

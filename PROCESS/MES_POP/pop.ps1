@@ -1,4 +1,4 @@
-﻿# ==============================================================================
+# ==============================================================================
 # pop.ps1 — VINATECH POP KIOSK UNIFIED CLI HUB (v2.0)
 # Trung Tam Dieu Phoi Van Hanh, Nap NVL BOM & Su Co Kiosk POP Tai Xuong
 # Author: vanduc (EA Team)
@@ -44,6 +44,10 @@ function Show-Help {
     Write-Host '-> Golden Query 360: Soi dinh muc BOM, Ton kho kho chuyen (ROUTE_VN_WH), Lich su nap NVL Kiosk, Tien do POP' -ForegroundColor Gray
     Write-Host '     .\pop.ps1 nvl <Lot/PO>               ' -NoNewline -ForegroundColor Green
     Write-Host '-> Soi nhanh dinh muc BOM, ma thay the (AltCode) va ton kho kha dung cua tung vat tu tai ROUTE_VN_WH' -ForegroundColor Gray
+    Write-Host '     .\pop.ps1 pack <Lot/PackingID>       ' -NoNewline -ForegroundColor Green
+    Write-Host '-> Truy vet dong goi & in tem PackingID 360 do tren Kiosk POP & SmartFactoryV2' -ForegroundColor Gray
+    Write-Host '     .\pop.ps1 user <EmpNo/UserId>        ' -NoNewline -ForegroundColor Green
+    Write-Host '-> Tra cuu nhan su & quyen dang nhap Kiosk tren 5 CSDL (VINA_EMP, ERP, GW, SSO)' -ForegroundColor Gray
     Write-Host '     .\pop.ps1 sync [-Line <LineCode>]    ' -NoNewline -ForegroundColor Green
     Write-Host '-> Kiem tra cac Lot bi ket pipeline dong bo POP -> MES (MongoToMesPerformance)' -ForegroundColor Gray
     Write-Host ''
@@ -102,6 +106,32 @@ switch ($cmdLower) {
             & $nvlScript $Target
         } else {
             Write-Error "tools/inspect_nvl_bom.ps1 not found."
+        }
+    }
+    { $_ -in 'pack', 'packing' } {
+        if ([string]::IsNullOrWhiteSpace($Target)) {
+            Show-PopBanner
+            Write-Host 'Loi: Vui long nhap ma can kiem tra dong goi (Lot / PackingID)!' -ForegroundColor Red
+            exit 1
+        }
+        $packScript = Join-Path $toolsDir 'inspect_pack.ps1'
+        if (Test-Path $packScript) {
+            & $packScript $Target
+        } else {
+            Write-Error "tools/inspect_pack.ps1 not found."
+        }
+    }
+    { $_ -in 'user', 'emp' } {
+        if ([string]::IsNullOrWhiteSpace($Target)) {
+            Show-PopBanner
+            Write-Host 'Loi: Vui long nhap ma nhan vien hoac username can tra cuu!' -ForegroundColor Red
+            exit 1
+        }
+        $userScript = Join-Path $toolsDir 'inspect_user.ps1'
+        if (Test-Path $userScript) {
+            & $userScript $Target
+        } else {
+            Write-Error "tools/inspect_user.ps1 not found."
         }
     }
     'unlock' {
@@ -205,6 +235,26 @@ ORDER BY ModifyDateTime DESC;
         & (Join-Path $scriptDir 'mes.ps1') $Command @passParams
     }
     default {
+        # 1. Kiem tra neu la Ma PackingID (PK...)
+        if ($Command -match '^PK') {
+            Write-Host "-> Tu dong nhan dien '$Command' la Ma PackingID. Khoi chay Truy vet Dong Goi 360..." -ForegroundColor Yellow
+            $packScript = Join-Path $toolsDir 'inspect_pack.ps1'
+            if (Test-Path $packScript) {
+                & $packScript $Command
+                exit 0
+            }
+        }
+        
+        # 2. Kiem tra neu la Ma Nhan Vien (8 chu so)
+        if ($Command -match '^\d{8}$') {
+            Write-Host "-> Tu dong nhan dien '$Command' la Ma Nhan Vien. Khoi chay Tra cuu Nhan Su & Tai Khoan 360..." -ForegroundColor Yellow
+            $userScript = Join-Path $toolsDir 'inspect_user.ps1'
+            if (Test-Path $userScript) {
+                & $userScript $Command
+                exit 0
+            }
+        }
+
         # Fallback: Tu dong nhan dien moi ma dau vao de chay Trace
         Write-Host "-> Tu dong nhan dien '$Command' -> Khoi chay Truy vet POP Kiosk 360 do..." -ForegroundColor Green
         $popTraceScript = Join-Path $toolsDir 'pop_trace.ps1'

@@ -41,3 +41,10 @@
 
 ### 7. RULE 14 - TỐC ĐỘ PHẢN HỒI CAO (<5-10s)
 - Tối đa 1-2 tool calls cho mỗi yêu cầu tra cứu/kiểm tra. Lấy xong data là DỪNG NGAY LẬP TỨC và tổng hợp báo cáo cho người dùng.
+
+### 8. RULE 21 - BẮT BUỘC LUÔN DÙNG TOOL CHUYÊN DỤNG (CLI HUBS) — TUYỆT ĐỐI CẤM QUERY SELECT DÒ DẪM (ZERO BLIND SQL EXPLORATION)
+- BẮT BUỘC dùng các lệnh chuyên dụng của CLI Hubs (`.\mes.ps1`, `.\pop.ps1`, `.\gw.ps1`, `.\ksys.ps1`, `.\db.ps1 [find|sp|lineage|locks]`).
+- CẤM TUYỆT ĐỐI dùng `.\db.ps1 query` làm công cụ thử sai (trial-and-error), chạy chuỗi hàng chục câu SELECT mò mẫm tên bảng/cột/menu.
+- Khi cần tìm hiểu schema/nghiệp vụ: BẮT BUỘC tra L1 Cache (`DATABASE_MATRIX.json`, `QUICK_MATRIX.json`, `POP_MATRIX.json`, `KSYSTEM_MATRIX.json`) hoặc `find`.
+- `.\db.ps1 query` chỉ được dùng khi đã biết đích danh 100% bảng & cột cần lấy từ tài liệu, có `WITH (NOLOCK)` và giới hạn cứng tối đa 1-2 lần gọi.
+

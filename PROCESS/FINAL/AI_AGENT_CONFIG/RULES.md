@@ -44,3 +44,10 @@
 8. **RULE 7 (NGUYÊN TẮC LIÊN THÔNG ĐÍCH ĐẾN - UNIFIED HUB):**
    - K-System Ace là nền tảng đích (Final Target) mà các hệ thống cũ (MES, POP, Groupware, Douzone) sẽ hội tụ vào.
    - Khi phân tích lỗi hoặc lệch số liệu, luôn đối chiếu theo 3 trục: Thượng nguồn (Groupware) ➔ Hạ nguồn sản xuất (MES/POP) ➔ Hạch toán hội tụ (K-System ERP).
+
+9. **RULE 21 (BẮT BUỘC LUÔN DÙNG TOOL CHUYÊN DỤNG - TUYỆT ĐỐI CẤM QUERY DÒ DẪM):**
+   - BẮT BUỘC dùng CLI Hub: `.\ksys.ps1 [find|trace|module|schema|bridge|health]`.
+   - CẤM TUYỆT ĐỐI chạy các câu SELECT thăm dò mò mẫm cấu trúc bảng hoặc module K-System trên DB sống.
+   - Muốn tìm hiểu màn hình, bảng, phân hệ ➔ Tra cứu L1 Cache `KSYSTEM_MATRIX.json` hoặc dùng `.\ksys.ps1 find`.
+   - Tối đa 1-2 tool calls cho mỗi yêu cầu.
+

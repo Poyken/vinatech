@@ -13,7 +13,7 @@
 #>
 param (
     [Parameter(Position=0)]
-    [ValidateSet("help", "list", "health", "find", "schema", "query", "trace", "stats", "sp", "jobs", "triggers", "index", "crossdb", "lineage", "auditkb")]
+    [ValidateSet("help", "list", "health", "find", "schema", "query", "trace", "stats", "sp", "jobs", "triggers", "index", "crossdb", "lineage", "auditkb", "locks", "user", "pack")]
     [string]$Action = "help",
 
     [Parameter(Position=1)]
@@ -61,6 +61,9 @@ function Show-Help {
     Write-Host ' 12. .\db.ps1 crossdb [-Profile <P>]           - Quet cac phu thuoc goi cheo CSDL & Linked Servers'
     Write-Host ' 13. .\db.ps1 lineage -Type <T> -Value <V>     - Truy vet huyet mach du lieu 360 do (PO/WO/LOT/BARCODE)'
     Write-Host ' 14. .\db.ps1 auditkb [-ExportReport]          - Kiem toan do tin cay cua Markdown KB vs Live DB'
+    Write-Host ' 15. .\db.ps1 locks [-Profile <P>]             - Soi real-time khoa blocking, page U-locks tren 15 CSDL'
+    Write-Host ' 16. .\db.ps1 user "<EmpNo/UserId>"           - Tra cuu nhan su & tai khoan 360 do tren 5 CSDL'
+    Write-Host ' 17. .\db.ps1 pack "<Lot/PackingID>"          - Truy vet dong goi & in tem PackingID 360 do'
     Write-Host ""
     Write-Host "DANH SACH PROFILES CHINH:" -ForegroundColor Magenta
     Write-Host "  SmartFactoryV2, SmartFramework, Groupware, ERP, Bizbox, POP, Andon,"
@@ -196,6 +199,38 @@ switch ($Action.ToLower()) {
             & "$toolsDir\audit_kb_reliability.ps1" -ExportReport:$ExportReport
         } else {
             & "$toolsDir\audit_kb_reliability.ps1" -ExportReport:$true
+        }
+    }
+
+    "locks" {
+        $mesTools = Join-Path $PSScriptRoot "..\MES_POP\tools"
+        $lockScript = Join-Path $mesTools "inspect_db_locks.ps1"
+        if (Test-Path $lockScript) {
+            & $lockScript -Profile $Profile
+        } else {
+            Write-Error "inspect_db_locks.ps1 not found."
+        }
+    }
+
+    "user" {
+        $mesTools = Join-Path $PSScriptRoot "..\MES_POP\tools"
+        $userScript = Join-Path $mesTools "inspect_user.ps1"
+        $usr = if ($Target) { $Target } else { $Value }
+        if (Test-Path $userScript) {
+            & $userScript $usr
+        } else {
+            Write-Error "inspect_user.ps1 not found."
+        }
+    }
+
+    "pack" {
+        $mesTools = Join-Path $PSScriptRoot "..\MES_POP\tools"
+        $packScript = Join-Path $mesTools "inspect_pack.ps1"
+        $pk = if ($Target) { $Target } else { $Value }
+        if (Test-Path $packScript) {
+            & $packScript $pk
+        } else {
+            Write-Error "inspect_pack.ps1 not found."
         }
     }
 }

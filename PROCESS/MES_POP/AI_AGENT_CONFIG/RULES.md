@@ -1,4 +1,4 @@
-﻿<!--
+<!--
 AI-READY METADATA
 Purpose: Quy tắc bắt buộc không thể vi phạm cho AI Agent khi thao tác trên DB & Workspace MES
 Scope: Safety & Execution Rules
@@ -39,6 +39,10 @@ Related Files:
 > **9. CẤM CẮM ĐẦU VÀO SELECT DATABASE** — CẤM CẮM ĐẦU VÀO SELECT DATABASE NGAY KHI NHẬN YÊU CẦU! AI BẮT BUỘC phải đọc và tra cứu tài liệu KB / SoT trước: Nếu tra RA ➔ Trình bày căn cứ KB rồi mới SELECT verify tài liệu; Nếu tra KHÔNG RA ➔ Báo cáo đã tra các tài liệu nào nhưng không có, sau đó mới đề xuất hoặc thực thi SELECT khảo sát DB.
 > **10. CẤM TẠO FILE DƯ THỪA & BẮT BUỘC DÙNG FILE CÓ SẴN** — CẤM tự ý tạo các file script test tạm, file SQL rác hay file rác dư thừa trong workspace. BẮT BUỘC chỉ sử dụng các file/công cụ sẵn có trong hệ thống (Ưu tiên CLI Hub: `.\mes.ps1` kết hợp `find_kb.ps1`, `run_query.ps1`, `deploy_tool.ps1`...). Dọn dẹp sạch sẽ nguyên trạng ngay sau khi hoàn thành công việc.
 > **11. CẤM ĐỘNG VÀO STB_SetInfo KHI ROLLBACK SẢN XUẤT** — Khi rollback / hủy chốt sản lượng các công đoạn sản xuất (Winding, Riveting, Curling... B530/B782): CHỈ thao tác trên `STB_DefectRepairInfo` (xóa phế NG) và `STB_ProdRouteHist` (xóa downstream, update `CompleteRoute = NULL` công đoạn cần chốt lại). TUYỆT ĐỐI CẤM UPDATE hoặc DELETE trên `STB_SetInfo` (để bảo toàn định danh Lot, mã vạch Barcode và dữ liệu khởi tạo chuyền ban đầu).
+> **12. RULE 21 - BẮT BUỘC LUÔN DÙNG TOOL CHUYÊN DỤNG (CLI HUBS & L1 CACHE) — TUYỆT ĐỐI CẤM QUERY DÒ DẪM (ZERO BLIND SQL EXPLORATION)** —
+>   - BẮT BUỘC dùng Tool CLI Hubs: `.\mes.ps1` (MES Core/Trace/Screen/SP/Lineage), `.\pop.ps1` (POP Kiosk/NVL/Unlock/Sync), `.\gw.ps1` (Groupware/Form), `.\ksys.ps1` (ERP K-System).
+>   - CẤM TUYỆT ĐỐI việc chạy chuỗi câu lệnh `SELECT` để mò mẫm cấu trúc bảng, tên menu ERP hay thử sai liên tục (0 blind SQL looping). Muốn biết bảng/menu/trường ➔ BẮT BUỘC tra cứu L1 Cache (`POP_MATRIX.json`, `QUICK_MATRIX.json`, `KSYSTEM_MATRIX.json`) hoặc sub-command `find`.
+>   - Giới hạn cứng: Tối đa 1-2 tool calls cho mỗi câu hỏi. Lấy xong data DỪNG NGAY và trả lời.
 
 ---
 
@@ -62,7 +66,7 @@ Related Files:
 
 ## 4. CẤM & HẠN CHẾ
 
-- ❌ Đoán mò — Mọi kết luận phải có SELECT chứng minh (sử dụng `run_query.ps1` để truy vấn nhanh).
+- ❌ Đoán mò / Chạy chuỗi SELECT dò dẫm — BẮT BUỘC dùng Tool CLI Hubs có sẵn (`.\mes.ps1`, `.\pop.ps1`, `.\gw.ps1`, `.\ksys.ps1`) và L1 Cache. CẤM chạy chuỗi SELECT thử sai để tìm bảng/cột/menu.
 - ❌ Ghi nhớ/dùng SP cũ — Luôn query định nghĩa mới nhất từ `sys.sql_modules` hoặc dùng `db_sync_tool.ps1`.
 - ❌ Tự ý reformat toàn bộ code/SP — chỉ thực hiện sửa đổi cục bộ (Surgical Changes) tại đúng dòng/khu vực cần thiết để giữ sạch Git diff.
 - ❌ Lưu trữ Stored Procedure trên Git — Cấm check-in các file stored procedure (.sql) vào Git. Khi làm việc, AI chỉ được phép tải tạm thời bằng `db_sync_tool.ps1` để phân tích cục bộ và bắt buộc phải xóa/revert các file SQL tạm thời này trước khi thực hiện commit (hoặc chạy nhanh `.\db_sync_tool.ps1 -Clean`).

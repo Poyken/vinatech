@@ -46,3 +46,17 @@
     - Nạp cuộn BTP: Tối đa 3 LOTNO cho 1 mã cắt (Đã nâng cấp từ định mức cũ 2 LOTNO).
     - Giải phóng máy POP kẹt ACTIVE: Qua `.\pop.ps1 unlock <Machine> -Deploy` hoặc `.\pop.ps1 release-machines -Force` (`VINA_EQUIPMENT_MAPPING.MAPPING_STATUS = 'RELEASED'`).
 
+12. **RULE 21 - BẮT BUỘC LUÔN DÙNG TOOL CHUYÊN DỤNG (CLI HUBS & L1 CACHE) — TUYỆT ĐỐI CẤM QUERY DÒ DẪM (ZERO BLIND SQL EXPLORATION):**
+    - **ƯU TIÊN TUYỆT ĐỐI CÁC TOOL CLI ĐÃ ĐÓNG GÓI:**
+      * POP Kiosk / NVL BOM / Tồn kho: `.\pop.ps1 trace "<Target>"`, `.\pop.ps1 nvl "<Lot/PO>"`, `.\pop.ps1 unlock "<Machine>"`, `.\pop.ps1 sync`
+      * MES Core Sản xuất / Lot Lifecycle / Màn hình / Lỗi: `.\mes.ps1 trace "<LotID>"`, `.\mes.ps1 diagnose "<Text>"`, `.\mes.ps1 screen "<ScreenID>"`, `.\mes.ps1 sp "<SP_Name>"`, `.\mes.ps1 lineage "<Lot/PO>"`
+      * Groupware / Tờ trình / Phê duyệt: `.\gw.ps1 trace "<PO/DocCode>"`, `.\gw.ps1 form "<Form>"`, `.\gw.ps1 find "<Keyword>"`
+      * Hợp nhất ERP K-System Ace: `.\ksys.ps1 find "<Keyword>"`, `.\ksys.ps1 trace "<Lot/PO>"`, `.\ksys.ps1 module "<ModuleID>"`
+      * Quản trị 15 DB Multi-Engine: `.\db.ps1 find "<Keyword>"`, `.\db.ps1 lineage`, `.\db.ps1 sp`, `.\db.ps1 locks`
+    - **CẤM TUYỆT ĐỐI LẠM DỤNG `.\db.ps1 query` ĐỂ THỬ SAI (0 BLIND SQL LOOPING):**
+      * CẤM chạy chuỗi `SELECT` thăm dò (SELECT *, SELECT TOP...) để đoán cấu trúc bảng, tên menu ERP hay tìm kiếm logic nghiệp vụ.
+      * Muốn biết thông tin bảng, menu, quy trình: BẮT BUỘC tra cứu L1 Cache (`POP_MATRIX.json`, `QUICK_MATRIX.json`, `KSYSTEM_MATRIX.json`, `DATABASE_MATRIX.json`, `GW_FORM_MATRIX.json`) hoặc đọc SP gốc (`.\mes.ps1 sp`).
+      * Lệnh `.\db.ps1 query` CHỈ ĐƯỢC PHÉP dùng khi CLI Hub chưa hỗ trợ VÀ đã biết đích xác 100% bảng + 3-5 cột từ tài liệu/KB/SP, có `WITH (NOLOCK)`. CẤM chạy quá 1-2 query.
+    - **KỶ LUẬT HARD CEILING 1-2 TOOL CALLS:** Lấy xong dữ liệu từ CLI Hub là DỪNG NGAY và trả lời. Cấm gọi thêm tool để verify lan man.
+
+

@@ -21,6 +21,11 @@
   3. *Nút Cắt điện cực mờ:* Do logic khóa nếu `MaterialThickness < 100` trong `STB_MaterialMaster`.
   4. *Nạp cuộn BTP:* Tối đa 3 LOTNO cho 1 mã cắt (Đã nâng cấp từ định mức cũ 2 LOTNO).
   5. *Kẹt máy ACTIVE POP:* Giải phóng qua `.\pop.ps1 unlock <Machine> -Deploy` hoặc `.\pop.ps1 release-machines -Force`.
+- **RULE 21 (BẮT BUỘC LUÔN DÙNG TOOL CHUYÊN DỤNG - TUYỆT ĐỐI CẤM QUERY DÒ DẪM):**
+  * **LUÔN DÙNG TOOL ĐÃ ĐÓNG GÓI:** POP Kiosk & NVL dùng `.\pop.ps1 [trace|nvl|unlock|find]`, MES Core dùng `.\mes.ps1 [trace|diagnose|screen|sp|find|lineage]`, Groupware dùng `.\gw.ps1 [trace|form|find]`, K-System ERP dùng `.\ksys.ps1 [find|trace|module]`.
+  * **CẤM TUYỆT ĐỐI DÙNG `.\db.ps1 query` ĐỂ THỬ SAI (0 BLIND SQL LOOPING):** Cấm chạy chuỗi SELECT mò mẫm bảng, cột hay đoán logic. Muốn biết bảng/menu/trường ➔ Bắt buộc tra L1 Cache (`POP_MATRIX.json`, `QUICK_MATRIX.json`, `KSYSTEM_MATRIX.json`, `GW_FORM_MATRIX.json`) hoặc `find`.
+  * **GIỚI HẠN CỨNG 1-2 TOOL CALLS:** Lấy xong data DỪNG NGAY và trả lời, cấm query lan man.
+
 
 
 ## ⚡ KHUÔN MẪU PHẢN HỒI LỖI CHUẨN MỰC ("4 DÒNG VÀNG"):
