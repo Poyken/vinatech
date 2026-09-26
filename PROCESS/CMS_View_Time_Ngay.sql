@@ -1,0 +1,5 @@
+﻿CREATE PROC View_Time_Ngay
+AS
+BEGIN
+	SELECT TOP(1) EMPID FROM Tbl_Academy 
+END

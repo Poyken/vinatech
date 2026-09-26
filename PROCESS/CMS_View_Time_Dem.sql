@@ -1,0 +1,6 @@
+﻿
+CREATE PROC View_Time_Dem
+AS
+BEGIN
+	SELECT TOP(1) EMPID FROM Tbl_Academy 
+END

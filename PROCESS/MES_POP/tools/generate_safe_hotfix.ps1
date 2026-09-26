@@ -1,4 +1,4 @@
-﻿<#
+<#
 .SYNOPSIS
     generate_safe_hotfix.ps1 — Bộ sinh mã SQL Hotfix An Toàn 100% chuẩn Vinatech MES
 .DESCRIPTION
@@ -490,7 +490,7 @@ elseif ($Action -eq "fix-solution") {
 
     $sqlContent = @"
 -- ==============================================================================
--- HOTFIX: CẤP CỨU THÙNG DUNG DỊCH ĐIỆN GIẢI 150KG (ELECTROLYTE RECOVERY)
+-- HOTFIX: CAP CUU THUNG DUNG DICH DIEN GIAI 150KG (ELECTROLYTE RECOVERY)
 -- Created At: $nowStr
 -- Target Barrel/Lot: $($lotList -join ', ')
 -- Author / ChangeUserID: vanduc
@@ -499,24 +499,23 @@ USE SmartFactoryV2;
 GO
 
 -- 1. PRE-FLIGHT CHECK
-SELECT MaterialLotNo, LotNo, MaterialCode, MaterialWarehouseCode, CurrentQty, OutQty, Holddate, HoldError
+SELECT MaterialLotNo, LotNo, PackingID, MaterialCode, MaterialWarehouseCode, CurrentQty, InitialQty, Holddate, HoldError
 FROM SmartFactoryV2.dbo.STB_MaterialLotInfo WITH(NOLOCK)
-WHERE LotNo IN ($lotInClause) OR MaterialLotNo IN ($lotInClause);
+WHERE LotNo IN ($lotInClause) OR MaterialLotNo IN ($lotInClause) OR PackingID IN ($lotInClause);
 GO
 
 BEGIN TRAN;
 
--- 2. KHÔI PHỤC TRỌNG LƯỢNG 150KG VÀ RESET HOLD
+-- 2. KHOI PHUC TRONG LUONG 150KG VA RESET HOLD
 UPDATE SmartFactoryV2.dbo.STB_MaterialLotInfo
 SET 
     CurrentQty = 150.0,
-    OutQty = 0.0,
     Holddate = NULL,
     HoldError = NULL,
     HoldPeriod = NULL,
     ChangeDateTime = GETDATE(),
     ChangeUserID = 'vanduc'
-WHERE LotNo IN ($lotInClause) OR MaterialLotNo IN ($lotInClause);
+WHERE LotNo IN ($lotInClause) OR MaterialLotNo IN ($lotInClause) OR PackingID IN ($lotInClause);
 
 DECLARE @RowsUpdated INT = @@ROWCOUNT;
 PRINT '-> So thung dung dich duoc khoi phuc 150kg: ' + CAST(@RowsUpdated AS VARCHAR(10));
