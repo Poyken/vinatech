@@ -16,21 +16,14 @@ $OutputEncoding = [System.Text.Encoding]::UTF8
 $toolsDir = $PSScriptRoot
 . (Join-Path $toolsDir 'db_shared.ps1')
 
-$t = $Target.Trim()
-if ([string]::IsNullOrWhiteSpace($t)) {
+$t = if ($Target) { $Target.Trim() } else { '' }
+$targetList = $t -split '[\s,;]+' | Where-Object { -not [string]::IsNullOrWhiteSpace($_) }
+if ($targetList.Count -eq 0) {
     Write-Host "Loi: Vui long nhap ma can kiem tra dong goi (LotNo, Barcode hoac PackingID)!" -ForegroundColor Red
-    Write-Host "Vi du: .\mes.ps1 pack 'VVQR232R710618'" -ForegroundColor Yellow
-    Write-Host "       .\mes.ps1 pack 'PKQR2501480'" -ForegroundColor Yellow
     exit 1
 }
 
 $sw = [System.Diagnostics.Stopwatch]::StartNew()
-
-Write-Host ''
-Write-Host '======================================================================' -ForegroundColor Cyan
-Write-Host '     [PACK-INVESTIGATOR 360] TRUY VET DONG GOI & IN TEM PACKING' -ForegroundColor Yellow
-Write-Host "     Doi tuong: $t | Pham vi: SmartFactoryV2 & VINATECH_POP" -ForegroundColor White
-Write-Host '======================================================================' -ForegroundColor Cyan
 
 $conn = Get-DbConnection -Profile 'SmartFactoryV2' -Silent
 if (-not $conn) {
@@ -39,11 +32,21 @@ if (-not $conn) {
 }
 
 try {
-    $cmd = $conn.CreateCommand()
-    $cmd.CommandText = @"
+    foreach ($item in $targetList) {
+        $cleanItem = ($item -replace '[^A-Za-z0-9_-]', '').Trim()
+        if ([string]::IsNullOrWhiteSpace($cleanItem)) { continue }
+
+        Write-Host ''
+        Write-Host '======================================================================' -ForegroundColor Cyan
+        Write-Host '     [PACK-INVESTIGATOR 360] TRUY VET DONG GOI & IN TEM PACKING' -ForegroundColor Yellow
+        Write-Host "     Doi tuong: $cleanItem | Pham vi: SmartFactoryV2 & VINATECH_POP" -ForegroundColor White
+        Write-Host '======================================================================' -ForegroundColor Cyan
+
+        $cmd = $conn.CreateCommand()
+        $cmd.CommandText = @"
 SET NOCOUNT ON;
 
-DECLARE @Target VARCHAR(50) = '$t';
+DECLARE @Target VARCHAR(50) = '$cleanItem';
 DECLARE @LotNo VARCHAR(50) = @Target;
 DECLARE @PackingID VARCHAR(50) = @Target;
 
@@ -285,6 +288,7 @@ ORDER BY REG_DATE DESC;
             }
         }
     }
+}
 
 } catch {
     Write-Host "LOI THUC THI: $($_.Exception.Message)" -ForegroundColor Red

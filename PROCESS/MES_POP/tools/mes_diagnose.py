@@ -571,6 +571,67 @@ SELECT TOP 10 RawMaterialBarcode, MaterialCode, Qty, RouteCode, CreateDateTime
 FROM SmartFactoryV2.dbo.STB_RawMaterialInputHist WITH(NOLOCK)
 WHERE Barcode = '{LOT}'
 ORDER BY CreateDateTime DESC;"""
+    },
+    {
+        "id": "RULE_PACKING_LABEL_PRINT_FAIL",
+        "patterns": [
+            r"in tem.*packingid.*(lỗi|loi)", r"không in được tem", r"khong in duoc tem", r"ko in được tem",
+            r"chưa hề có mã packingid", r"chua he co ma packingid", r"in tem.*(lỗi|loi)", r"đóng gói.*in tem",
+            r"dong goi.*in tem", r"lên đóng gói in tem", r"packingid.*(lỗi|loi|hỏng|hong|kẹt|ket|gì|gi)",
+            r"(lỗi|loi|bị lỗi|bi loi|kiểm tra|kiem tra).*packingid", r"stb_packinglabelprinthist",
+            r"in tem packing", r"(lỗi|loi) in tem", r"pkqr\d+.*(lỗi|loi|hỏng|hong|kẹt|ket|gì|gi)"
+        ],
+        "screen": "Đóng gói in tem (B523 / Kiosk POP / STB_PackingLabelPrintHist)",
+        "root_cause": "Trục trặc công đoạn Đóng gói & In tem PackingID (4 nguyên nhân chính):\n"
+                      "   1. Thiếu mã PackingID: Công đoạn đóng gói trên Kiosk POP hoặc WinForm B523 chưa được quét chốt, hoặc `STB_MaterialLotInfo.PackingID` còn rỗng.\n"
+                      "   2. Khuyết thông số cân nặng: Lot chưa có cân nặng trong `STB_VIETNAM_BARCODEWEIGHT` làm SP `usp_Vietnam_GetBoxIDForLotNo_VVT` trả về lỗi mẫu tem.\n"
+                      "   3. Khóa lượt in lại: `STB_PackingLabelPrintHist.IsPrintAllow = 0` hoặc đã in quá hạn mức (`PrintCount > 0`).\n"
+                      "   4. Hết hạn mức POP: Bảng `VINATECH_POP.dbo.VINA_PACKING_REMAIN_QTY` có `REMAIN_QTY = 0` do ca trước đã đóng gói hết hạn mức của công đoạn V-28.",
+        "op_workaround": "1. Chạy ngay lệnh 1-Shot: `.\\mes.ps1 pack \"{LOT}\"` để đối soát toàn bộ 8 bảng đóng gói trong 2 giây.\n"
+                         "2. Nếu chưa có PackingID: Bấm chia Box / Đóng gói trên Kiosk POP để hệ thống tự sinh mã PackingID.\n"
+                         "3. Nếu bị khóa in lại: Báo IT chạy SQL mở khóa `IsPrintAllow = 1`.\n"
+                         "4. Quét lại Lot trên màn hình in tem và ấn In.",
+        "sql_template": """BEGIN TRAN;
+-- 1. Nạp trọng lượng Barcode chuẩn nếu thiếu
+IF NOT EXISTS (SELECT 1 FROM SmartFactoryV2.dbo.STB_VIETNAM_BARCODEWEIGHT WHERE BARCODE = '{LOT}')
+    INSERT INTO SmartFactoryV2.dbo.STB_VIETNAM_BARCODEWEIGHT (BARCODE, WEIGHT, CREATEDATETIME) 
+    VALUES ('{LOT}', 25.5, GETDATE());
+
+-- 2. Mở khóa cho phép in lại tem trong STB_PackingLabelPrintHist
+UPDATE SmartFactoryV2.dbo.STB_PackingLabelPrintHist 
+SET IsPrintAllow = 1, PrintCount = 0, ChangeDateTime = GETDATE(), ChangeUserID = 'vanduc'
+WHERE LotNo = '{LOT}' OR PackingID IN (SELECT PackingID FROM SmartFactoryV2.dbo.STB_MaterialLotInfo WITH(NOLOCK) WHERE LotNo = '{LOT}');
+
+-- 3. Phục hồi hạn mức đóng gói POP nếu bị cạn về 0
+UPDATE VINATECH_POP.dbo.VINA_PACKING_REMAIN_QTY
+SET REMAIN_QTY = TOTAL_PROD_QTY, PACKED_QTY = 0
+WHERE BARCODE = '{LOT}' AND REMAIN_QTY = 0;
+-- COMMIT TRAN;"""
+    },
+    {
+        "id": "RULE_ERP_USER_LOGIN_MA_USER",
+        "patterns": [
+            r"p_ma_user", r"ma_user", r"không thể login.*erp", r"không login được",
+            r"không đăng nhập được.*erp", r"yn_login", r"yn_gw", r"user register information",
+            r"stop using.*groupware", r"tài khoản.*không login được"
+        ],
+        "screen": "ERP Douzone iU (Màn hình: P_MA_USER - User Registration) / SSO",
+        "root_cause": "Khóa đăng nhập hoặc lệch cấu hình tài khoản ERP NEOE / Bizbox:\n"
+                      "   1. Bảng `NEOE.MA_USER` đang đặt `YN_LOGIN = 'N'` (Chặn đăng nhập) hoặc `CD_STOP = '1'` (Dừng sử dụng).\n"
+                      "   2. Người dùng thuộc Công ty 2000 (Vinatech Vina) nhưng chưa được cấp quyền Client/Plant Authority.\n"
+                      "   3. Trigger đồng bộ sang Bizbox Alpha `UT_MA_EMP_BIZBOX_GW` chưa kích hoạt hoặc tài khoản SSO bị khóa.",
+        "op_workaround": "1. Chạy ngay lệnh 1-Shot: `.\\mes.ps1 user \"{LOT}\"` để soi trạng thái tài khoản trên cả 5 CSDL (ERP, POP, MES, GW, SSO).\n"
+                         "2. Quản trị viên mở ERP Douzone: Menu [P_MA_USER] ➔ Tìm User ID ➔ Sửa 'Stop Using' = N, 'Login availability' = Y ➔ Bấm Lưu.\n"
+                         "3. Bấm 'Reset Password' về mặc định (123456) nếu nhân viên quên mật khẩu.",
+        "sql_template": """BEGIN TRAN;
+-- Mở khóa đăng nhập ERP NEOE cho tài khoản Công ty 2000 (Author: vanduc)
+UPDATE NEOE.NEOE.MA_USER
+SET YN_LOGIN = 'Y', 
+    YN_GW = 'Y', 
+    CD_STOP = '0',
+    YN_FIRST_PWD = 'N'
+WHERE (ID_USER = '{LOT}' OR NO_EMP = '{LOT}') AND CD_COMPANY = '2000';
+-- COMMIT TRAN;"""
     }
 ]
 

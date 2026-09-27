@@ -1,5 +1,6 @@
 -- ==============================================================================
 -- TEMPLATE 3: ROLLBACK CHỐT NHẦM SẢN LƯỢNG (B782 / B530 / POP KIOSK)
+-- Author / ChangeUserID: vanduc
 -- Mục đích: Hủy lượt chốt sản lượng sai/kẹt sớm để công nhân nhập lại trên MES/POP
 -- Thay thế: 
 --   {{BARCODE}}          : Barcode của Lot (VD: 'VVQR013R072727')
@@ -91,7 +92,7 @@ BEGIN TRY
     UPDATE STB_SetInfo
     SET CurrentRouteCode = '{{ROUTE_CODE}}',
         ChangeDateTime = GETDATE(),
-        ChangeUserID = 'it_rollback'
+        ChangeUserID = 'vanduc'
     WHERE ControlNo = '{{CONTROL_NO}}';
     PRINT '>> [EXEC 4] Update CurrentRouteCode tren STB_SetInfo ve: {{ROUTE_CODE}}.';
 

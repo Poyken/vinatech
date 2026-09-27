@@ -1,0 +1,84 @@
+[
+  {
+    "ip": "192.168.184.1",
+    "mac": "e4:4e:2d:4b:8d:51",
+    "role": "Core Switch Layer 3 Gateway",
+    "open_ports": [
+      80,
+      443,
+      22,
+      23
+    ],
+    "hostname": "N/A"
+  },
+  {
+    "ip": "192.168.184.10",
+    "mac": "NVR-01 in FortiGate VIP",
+    "role": "Camera NVR 01",
+    "open_ports": [
+      80,
+      443,
+      8000
+    ],
+    "hostname": "N/A"
+  },
+  {
+    "ip": "192.168.184.11",
+    "mac": "NVR-02 in FortiGate VIP",
+    "role": "Camera NVR 02",
+    "open_ports": [
+      80,
+      443,
+      8000
+    ],
+    "hostname": "N/A"
+  },
+  {
+    "ip": "192.168.184.34",
+    "mac": "30:56:0f:23:6f:40",
+    "role": "Neighbor Host 34",
+    "open_ports": [
+      445,
+      135
+    ],
+    "hostname": "Admin-PC"
+  },
+  {
+    "ip": "192.168.184.36",
+    "mac": "bc:0f:f3:c0-f9:e3",
+    "role": "Neighbor Host 36",
+    "open_ports": [
+      445,
+      135
+    ],
+    "hostname": "MrCuong-ProductionHY"
+  },
+  {
+    "ip": "192.168.184.40",
+    "mac": "30:d0:42:10:88:2f",
+    "role": "Neighbor Host 40",
+    "open_ports": [],
+    "hostname": "N/A"
+  },
+  {
+    "ip": "192.168.184.42",
+    "mac": "2c:58:b9:0c:72:c9",
+    "role": "Neighbor Host 42",
+    "open_ports": [
+      445,
+      135
+    ],
+    "hostname": "PC-Thu-PRODUCTION"
+  },
+  {
+    "ip": "192.168.184.45",
+    "mac": "e8:cf:83:9e:71:d7",
+    "role": "Neighbor Host 45",
+    "open_ports": [
+      80,
+      443,
+      3389
+    ],
+    "hostname": "N/A"
+  }
+]

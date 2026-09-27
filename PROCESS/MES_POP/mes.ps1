@@ -1,4 +1,4 @@
-# ==============================================================================
+﻿# ==============================================================================
 # mes.ps1 — VINATECH MES UNIFIED CLI HUB (Trung Tam Dieu Phoi Lenh Van Hanh)
 # ==============================================================================
 
@@ -6,9 +6,10 @@ param(
     [Parameter(Position = 0)]
     [string]$Command = 'help',
     
-    [Parameter(Position = 1)]
-    [string]$Target = '',
+    [Parameter(Position = 1, ValueFromRemainingArguments = $true)]
+    [string[]]$TargetArgs,
     
+    [string]$Target = '',
     [string]$Profile = 'SmartFactoryV2',
     [string]$Template = '',
     [string]$Lots = '',
@@ -28,6 +29,11 @@ param(
     [switch]$Detail,
     [switch]$Clean
 )
+
+# Gop cac doi so con lai vao Target neu khong chi dinh tuong minh -Target
+if (-not $Target -and $TargetArgs) {
+    $Target = ($TargetArgs -join ' ').Trim()
+}
 
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 $OutputEncoding = [System.Text.Encoding]::UTF8
@@ -155,21 +161,137 @@ function Show-Help {
     Write-Host ''
 }
 
+function Invoke-SmartAutoRouter {
+    param([string]$Query)
+
+    $q = $Query.Trim()
+    if ([string]::IsNullOrWhiteSpace($q)) {
+        Show-Help
+        exit 0
+    }
+
+    # 1. Mo ta su co / Loi / Huong dan / Chan doan (Trieu chung, tu khoa tieng Viet co dau & khong dau)
+    $symptomRegex = '(?i)(HOLD|Already completed|Socket|ACTIVE|Bị khóa|Bi khoa|Thiếu|Thieu|Thickness|Độ dày|Do day|DayPlan|Transferred|Không thể|Khong the|Lỗi|Loi|Error|Fail|Hỏng|Hong|Kẹt|Ket|Đóng gói|Dong goi|In tem|Mất tem|Mat tem|MA_USER|Khóa tài khoản|Khoa tai khoan|Đăng nhập|Dang nhap|Quên mật khẩu|Quen mat khau|Chốt sản lượng|Chot san luong|B598|B552|B530|B782|B523|B521|P_MA_USER)'
+    if ($q -match $symptomRegex) {
+        Write-Host "-> Tu dong nhan dien trieu chung su co: '$q'. Tien hanh Master Diagnostic xuat 4 Dong Vang..." -ForegroundColor Yellow
+        $diagScript = Join-Path $toolsDir 'mes_diagnose.py'
+        if (Test-Path $diagScript) {
+            python $diagScript "$q"
+            exit 0
+        }
+    }
+
+    # 2. Ma man hinh MES WinForm (B530, B540, C443, B782, B552, C141...)
+    if ($q -match '\b[BCbc]\d{3}[A-Za-z]?\b') {
+        $screenCode = $matches[0]
+        Write-Host "-> Tu dong nhan dien '$screenCode' la ma man hinh MES. Tien hanh tra cuu & chan doan..." -ForegroundColor Yellow
+        $diagScript = Join-Path $toolsDir 'mes_diagnose.py'
+        if (Test-Path $diagScript) {
+            python $diagScript $screenCode
+            exit 0
+        }
+    }
+
+    # 3. Ma PackingID (PKQR..., PK...)
+    $packMatches = [regex]::Matches($q, '\b(PKQR[A-Za-z0-9_-]+|PK[A-Za-z0-9_-]{4,})\b')
+    if ($packMatches.Count -gt 0) {
+        $pkList = ($packMatches | ForEach-Object { $_.Value }) -join ' '
+        Write-Host "-> Tu dong nhan dien ma PackingID: $pkList. Khoi chay Truy vet Dong Goi 360..." -ForegroundColor Yellow
+        $packScript = Join-Path $toolsDir 'inspect_pack.ps1'
+        if (Test-Path $packScript) {
+            & $packScript $pkList
+            exit 0
+        }
+    }
+
+    # 4. Ma Nhan Vien (8 chu so: 92603003, 31707007...)
+    if ($q -match '\b(\d{8})\b') {
+        $empNo = $matches[1]
+        Write-Host "-> Tu dong nhan dien '$empNo' la Ma Nhan Vien. Khoi chay Tra cuu Nhan Su & Tai Khoan 360 tren 5 CSDL..." -ForegroundColor Yellow
+        $userScript = Join-Path $toolsDir 'inspect_user.ps1'
+        if (Test-Path $userScript) {
+            & $userScript $empNo
+            exit 0
+        }
+    }
+
+    # 5. Lenh San Xuat (PO: 12 chu so)
+    if ($q -match '\b(\d{12})\b') {
+        $poNo = $matches[1]
+        Write-Host "-> Tu dong nhan dien '$poNo' la Lenh San Xuat (PO). Khoi chay Truy vet Huyet mach Lineage & BOM..." -ForegroundColor Yellow
+        $lineageScript = Join-Path $toolsDir 'trace_lineage.ps1'
+        if (Test-Path $lineageScript) {
+            & $lineageScript -Target $poNo
+            exit 0
+        }
+    }
+
+    # 6. Ma Chung Tu / PO Groupware (GW, DOC, PO20..., EX...)
+    if ($q -match '\b(GW[A-Za-z0-9_-]+|DOC[A-Za-z0-9_-]+|PO20\d{5}|EX\d+)\b') {
+        $docNo = $matches[1]
+        Write-Host "-> Tu dong nhan dien '$docNo' la Ma Chung Tu Groupware. Khoi chay Truy vet Groupware..." -ForegroundColor Yellow
+        $processRoot = Split-Path -Parent $scriptDir
+        $gwTraceScript = Join-Path $processRoot 'GROUPWARE\tools\gw_trace.ps1'
+        if (Test-Path $gwTraceScript) {
+            & $gwTraceScript -Target $docNo
+            exit 0
+        }
+    }
+
+    # 7. Ma Thiet Bi (VVMHY..., VINA..., EQ...)
+    if ($q -match '\b(VVM[A-Za-z0-9_-]+|VINA[A-Za-z0-9_-]+|EQ[A-Za-z0-9_-]+)\b') {
+        $mCode = $matches[1]
+        Write-Host "-> Tu dong nhan dien '$mCode' la Ma Thiet Bi. Kiem tra trang thai Khoa & Mapping tren Kiosk..." -ForegroundColor Yellow
+        $unlockScript = Join-Path $toolsDir 'unlock_machine.ps1'
+        if (Test-Path $unlockScript) {
+            & $unlockScript -Machine $mCode
+            exit 0
+        }
+    }
+
+    # 8. Ma Lot San Xuat (VVQR..., VV..., ML...)
+    if ($q -match '\b([A-Za-z0-9_-]*VV[A-Za-z0-9_-]+|ML\d{14})\b') {
+        $lotCode = $matches[1]
+        Write-Host "-> Tu dong nhan dien '$lotCode' la Ma Lot San Xuat. Khoi chay Golden Query 360 do..." -ForegroundColor Green
+        $popTraceScript = Join-Path $toolsDir 'pop_trace.ps1'
+        if (Test-Path $popTraceScript) {
+            & $popTraceScript -Target $lotCode
+            exit 0
+        }
+    }
+
+    # 9. Mac dinh toan nang: Chay Golden Query 360 voi toan bo chuoi
+    Write-Host "-> Tu dong nhan dien '$q' -> Khoi chay Golden Query 360 do..." -ForegroundColor Green
+    $popTraceScript = Join-Path $toolsDir 'pop_trace.ps1'
+    if (Test-Path $popTraceScript) {
+        & $popTraceScript -Target $q
+    } else {
+        Write-Error 'tools/pop_trace.ps1 not found.'
+    }
+}
+
 # Main Command Dispatcher
 $cmdLower = $Command.ToLower()
 if ($cmdLower -eq 'help' -or $cmdLower -eq '-h' -or $cmdLower -eq '--help') {
     Show-Help
 }
 elseif ($cmdLower -eq 'check') {
-    Show-MesBanner
-    if ($Target) { $Profile = $Target }
-    Write-Host "Kiem tra ket noi Database Profile: $Profile..." -ForegroundColor Cyan
-    $conn = Get-DbConnection -Profile $Profile
-    if ($conn -ne $null) {
-        Write-Host "-> Ket noi thanh cong toi Database: $($conn.Database) tren may chu: $($conn.DataSource)" -ForegroundColor Green
-        $conn.Close()
+    $knownProfiles = @('smartfactoryv2', 'smartframework', 'groupware', 'erp', 'bizbox', 'pop', 'andon', 'mes', 'ksox', 'k-system', 'ksystem', 'sf', 'gw', 'sf2', 'sqlexpress', 'local')
+    if ([string]::IsNullOrWhiteSpace($Target) -or ($knownProfiles -contains $Target.ToLower())) {
+        Show-MesBanner
+        if ($Target) { $Profile = $Target }
+        Write-Host "Kiem tra ket noi Database Profile: $Profile..." -ForegroundColor Cyan
+        $conn = Get-DbConnection -Profile $Profile
+        if ($conn -ne $null) {
+            Write-Host "-> Ket noi thanh cong toi Database: $($conn.Database) tren may chu: $($conn.DataSource)" -ForegroundColor Green
+            $conn.Close()
+        } else {
+            Write-Host "-> Khong the ket noi toi profile: $Profile" -ForegroundColor Red
+        }
     } else {
-        Write-Host "-> Khong the ket noi toi profile: $Profile" -ForegroundColor Red
+        # Cau hoi tu nhien bat dau bang 'check' (vi du: 'check xem...', 'check tai khoan...')
+        $fullQuery = "$Command $Target".Trim()
+        Invoke-SmartAutoRouter -Query $fullQuery
     }
 }
 elseif ($cmdLower -eq 'shell' -or $cmdLower -eq 'repl') {
@@ -799,89 +921,7 @@ elseif ($cmdLower -eq 'clean') {
 }
 
 else {
-    # ==============================================================================
-    # SMART AUTO-ROUTER (TOAN NANG 1-SHOT CHO POP & MES)
-    # Tu dong nhan dien moi loai ma / loi ma khong can go ten lenh
-    # ==============================================================================
-    
-    # 1. Kiem tra neu la ma man hinh (B530, B540, C443, B782, B552, C141...)
-    if ($Command -match '^[BCbc]\d{3}[A-Za-z]?$') {
-        Write-Host "-> Tu dong nhan dien '$Command' la ma man hinh MES. Tien hanh tra cuu & chan doan..." -ForegroundColor Yellow
-        $diagScript = Join-Path $toolsDir 'mes_diagnose.py'
-        if (Test-Path $diagScript) {
-            python $diagScript $Command
-            exit 0
-        }
-    }
-    
-    # 2. Kiem tra neu la mo ta su co / loi pho bien
-    if ($Command -match '(HOLD|Already completed|Socket|ACTIVE|Bi khoa|Thieu|Thickness|DayPlan|Transferred|Khong the|Loi|Error)') {
-        Write-Host "-> Tu dong nhan dien mo ta su co: '$Command'. Tien hanh chan doan 4 Dong Vang..." -ForegroundColor Yellow
-        $diagScript = Join-Path $toolsDir 'mes_diagnose.py'
-        if (Test-Path $diagScript) {
-            python $diagScript "$Command $Target"
-            exit 0
-        }
-    }
-
-    # 3. Kiem tra neu la Lenh San Xuat (PO: 12 chu so)
-    if ($Command -match '^\d{12}$') {
-        Write-Host "-> Tu dong nhan dien '$Command' la Lenh San Xuat (PO). Khoi chay Truy vet Huyet mach Lineage & BOM..." -ForegroundColor Yellow
-        $lineageScript = Join-Path $toolsDir 'trace_lineage.ps1'
-        if (Test-Path $lineageScript) {
-            & $lineageScript -Target $Command
-            exit 0
-        }
-    }
-
-    # 4. Kiem tra neu la Ma Chung Tu / PO Groupware (GW, DOC, PO20..., EX...)
-    if ($Command -match '^(GW|DOC|PO20\d{5}|EX\d+)') {
-        Write-Host "-> Tu dong nhan dien '$Command' la Ma Chung Tu Groupware. Khoi chay Truy vet Groupware..." -ForegroundColor Yellow
-        $processRoot = Split-Path -Parent $scriptDir
-        $gwTraceScript = Join-Path $processRoot 'GROUPWARE\tools\gw_trace.ps1'
-        if (Test-Path $gwTraceScript) {
-            & $gwTraceScript -Target $Command
-            exit 0
-        }
-    }
-
-    # 5. Kiem tra neu la Ma Thiet Bi (VVMHY..., VINA..., EQ...)
-    if ($Command -match '^(VVM|VINA|EQ)') {
-        Write-Host "-> Tu dong nhan dien '$Command' la Ma Thiet Bi. Kiem tra trang thai Khoa & Mapping tren Kiosk..." -ForegroundColor Yellow
-        $unlockScript = Join-Path $toolsDir 'unlock_machine.ps1'
-        if (Test-Path $unlockScript) {
-            & $unlockScript -Machine $Command
-            exit 0
-        }
-    }
-
-    # 6. Kiem tra neu la Ma PackingID (PKQR..., PK...)
-    if ($Command -match '^PK') {
-        Write-Host "-> Tu dong nhan dien '$Command' la Ma PackingID. Khoi chay Truy vet Dong Goi 360..." -ForegroundColor Yellow
-        $packScript = Join-Path $toolsDir 'inspect_pack.ps1'
-        if (Test-Path $packScript) {
-            & $packScript $Command
-            exit 0
-        }
-    }
-
-    # 7. Kiem tra neu la Ma Nhan Vien (8 chu so: 92603003, 31707007...)
-    if ($Command -match '^\d{8}$') {
-        Write-Host "-> Tu dong nhan dien '$Command' la Ma Nhan Vien. Khoi chay Tra cuu Nhan Su & Tai Khoan 360..." -ForegroundColor Yellow
-        $userScript = Join-Path $toolsDir 'inspect_user.ps1'
-        if (Test-Path $userScript) {
-            & $userScript $Command
-            exit 0
-        }
-    }
-
-    # 6. Mac dinh toan nang: Tu dong nhan dien moi ma (Lot, Barcode, Model, QC Doc, Line, Box)
-    Write-Host "-> Tu dong nhan dien '$Command' -> Khoi chay Golden Query 360 do..." -ForegroundColor Green
-    $popTraceScript = Join-Path $toolsDir 'pop_trace.ps1'
-    if (Test-Path $popTraceScript) {
-        & $popTraceScript -Target $Command
-    } else {
-        Write-Error 'tools/pop_trace.ps1 not found.'
-    }
+    $fullInput = if ($Target) { "$Command $Target" } else { $Command }
+    Invoke-SmartAutoRouter -Query $fullInput
 }
 
