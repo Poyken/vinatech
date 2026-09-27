@@ -1,7 +1,7 @@
 # 📘 VINATECH MES & POP — MASTER OPERATIONAL PLAYBOOK (SỔ TAY VẬN HÀNH THỰC CHIẾN)
 
 > **Cập nhật:** 2026-09-21 | **Phiên bản:** 3.0 Enterprise Core  
-> **Nguyên tắc môi trường:** 100% Terminal / PowerShell / Python Console / Telegram Bot. **Tuyệt đối không dùng Trình duyệt Web / Không mở HTML**.  
+> **Nguyên tắc môi trường:** Vận hành qua Console CLI Hubs (`.\mes.ps1`, `.\pop.ps1`...) và Web Operations Portal (`MES_POP/web`). Khai tử hoàn toàn Telegram Bot để bảo mật tuyệt đối CSDL.  
 > **Mục tiêu tối thượng:** Phản xạ tức thời (< 3 giây), chẩn đoán chính xác 100%, an toàn dữ liệu tuyệt đối (SELECT-Only, BEGIN TRAN...ROLLBACK).
 
 ---
@@ -43,9 +43,9 @@ Toàn bộ hệ thống được điều phối qua CLI Hub duy nhất: `.\mes.p
 ### 3. Golden Query 360° (`.\mes.ps1 trace "<LotID>"`)
 - Gom toàn bộ 6 bảng cốt lõi (`STB_SetInfo`, `STB_ProdRouteHist`, `STB_MaterialLotInfo`, `STB_DefectRepairInfo`, `MongoToMesPerformance`, `VINA_PACKING_REMAIN_QTY`) vào **1 nhịp mạng TCP duy nhất**.
 
-### 4. Auto-Pilot Watchdog 24/7 (`.\mes.ps1 watchdog-hidden`)
-- Tuần tra ngầm liên tục 4 chỉ số sinh tồn: Deadlock/Blocking CSDL, Kẹt sync POP >30p, Máy kẹt lock >12h, Lot HOLD.
-- Tự động phát hiện và gửi tin nhắn cảnh báo cứu hỏa về Telegram kèm giải pháp tức thì.
+### 4. Real-time Live Dashboard & Web Operations Portal (`.\mes.ps1 web`)
+- Giám sát thời gian thực toàn diện: WIP 24h, tắc nghẽn đồng bộ POP ➔ MES (`MongoToMesPerformance`), thiết bị kẹt khóa `ACTIVE`.
+- Giao diện trực quan Enterprise, bảo mật qua API Relay nội bộ và Cloudflare Tunnel, thay thế hoàn toàn Telegram.
 
 ---
 

@@ -43,9 +43,10 @@ PROCESS/
 │   ├── 📂 AI_AGENT_CONFIG/                     # L1 Quick Matrix (95 screens), POP Matrix, Rules, Hotfix logs
 │   ├── 📂 MES_MASTER_KNOWLEDGE_BASE/           # Tri thức MES WinForms, Routing, 70+ bug fixes (KB_01 - KB_11)
 │   ├── 📂 POP_KNOWLEDGE_BASE/                  # Tri thức POP Kiosk, PLC, API, Rollback, Migration (POP_KB_01 - 06)
-│   ├── 📂 tools/                               # Bộ công cụ: trace, screen, readiness, release_machines, bot
+│   ├── 📂 tools/                               # Bộ công cụ: trace, screen, readiness, release_machines, relay
+│   ├── 📂 web/                                 # Web Operations Portal (Next.js 16, React 19, Tailwind)
 │   ├── 📂 sql/                                 # Stored Procedures, Hotfix templates bọc BEGIN TRAN...ROLLBACK
-│   └── 📂 docs/                                # Hướng dẫn Telegram Bot, Báo cáo kiểm toán
+│   └── 📂 docs/                                # Sổ tay vận hành thực chiến, Báo cáo kiểm toán
 │
 ├── 📂 GROUPWARE/                                # 🏛️ [TRỤ CỘT 2] PHÊ DUYỆT & ĐIỀU HÀNH THƯỢNG NGUỒN
 │   ├── 📄 gw.ps1                               # CLI Điều phối Groupware (trace, form, routine, health, find)

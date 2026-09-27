@@ -25,8 +25,8 @@ PROCESS/MES_POP/
 ├── 📄 MASTER_INDEX.md                          # ← BẠN ĐANG Ở ĐÂY
 ├── 📄 GEMINI.md                                # 🛡️ Quy tắc cốt lõi & 2 CLI Hubs cho AI Agent
 ├── 📄 db_config.json                           # Cấu hình kết nối 15 Database (Mặc định: SmartFactoryV2)
-├── 📄 start_telegram_bot.bat                   # Khởi động Telegram Assistant Bot (Console)
-├── 📄 start_telegram_bot_hidden.vbs            # Khởi động ngầm Telegram Assistant Bot
+├── 📄 start_tunnel.ps1                         # Khởi động Cloudflare Tunnel & API Relay kết nối Vercel
+├── 📂 web/                                     # 🌐 Web Operations Portal (Next.js 16, React 19, Tailwind)
 │
 ├── 📂 .agents/                                 # Cấu hình Antigravity Agent Workspace
 │   ├── 📄 AGENTS.md                            # Danh mục Agent: investigator, auditor, deployer
@@ -81,8 +81,8 @@ PROCESS/MES_POP/
 │   ├── 📄 record_hotfix.ps1                    # Ghi nhật ký hotfix
 │   ├── 📄 run_query.ps1                        # Chạy câu lệnh SELECT an toàn có NOLOCK
 │   ├── 📄 validate_sql.ps1                     # Kiểm tra cú pháp SQL trước deploy
-│   ├── 📄 mes_telegram_bot.py                  # Trợ lý AI Senior Tech Lead qua Telegram
-│   ├── 📄 mes_watchdog.py                      # Watchdog tự động giám sát 24/7 & cảnh báo
+│   ├── 📄 api_relay.py                         # API Relay bảo mật kết nối Web Portal tới DB
+│   ├── 📄 cloudflared.exe                      # Cloudflare Tunnel kết nối Vercel không mở port
 │   ├── 📂 barcode_tools/                       # Bộ công cụ phân tích & giải mã barcode Code 128
 │   ├── 📂 kb_scripts/                          # Script rà soát & kiểm toán tài liệu
 │   └── 📂 scratch/                             # Thư mục chứa script kiểm tra tạm thời
@@ -102,7 +102,6 @@ PROCESS/MES_POP/
 │
 └── 📂 docs/                                    # TÀI LIỆU VẬN HÀNH BỔ TRỢ
     ├── 📄 MES_POP_DEEP_DIVE_AUDIT_AND_INQUIRY.md # 🌟 Báo cáo nghiên cứu chuyên sâu & 12 câu hỏi vận hành cốt lõi
-    ├── 📄 HUONG_DAN_TRIEN_KHAI_TELEGRAM_BOT.md # Cẩm nang 4 bước thiết lập Bot Telegram
     ├── 📄 MASTER_OPERATIONAL_PLAYBOOK.md       # Cẩm nang vận hành hiện trường Vinatech
     └── 📄 KB_RELIABILITY_REPORT.md             # Báo cáo đối soát tri thức KB vs CSDL
 ```
@@ -144,5 +143,6 @@ PROCESS/MES_POP/
 | **Tải Stored Procedure** | `.\mes.ps1 sp "<SP_Name>"` | Tải mã nguồn SP mới nhất từ DB về local để phân tích |
 | **Truy vấn an toàn** | `.\mes.ps1 query "<SELECT_SQL>"` | Chạy câu lệnh SELECT an toàn có kiểm tra từ khóa cấm & NOLOCK |
 | **Triển khai Hotfix SQL** | `.\mes.ps1 deploy "<File.sql>" [-Force]` | Deploy script SQL an toàn (Tự động Snapshot Pre-flight & Auto-Learn Log) |
-| **Trợ Lý Telegram** | `.\mes.ps1 bot` | Khởi động Trợ lý AI Telegram phục vụ điều khiển từ xa qua điện thoại |
-| **Tuần tra Watchdog 24/7** | `.\mes.ps1 watchdog-hidden` | Kích hoạt Auto-Pilot tuần tra ngầm 24/7 cảnh báo qua Telegram |
+| **Khởi Động Web Portal** | `.\mes.ps1 web` | Khởi động giao diện điều hành Web Portal nội bộ (Next.js localhost:3000) |
+| **Mở Tunnel Vercel** | `.\mes.ps1 tunnel` | Kích hoạt Cloudflare Tunnel & API Relay kết nối bảo mật lên Vercel |
+

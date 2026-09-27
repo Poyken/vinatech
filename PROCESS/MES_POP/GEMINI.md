@@ -11,7 +11,7 @@
   - Khi User hỏi về mã lỗi / màn hình: Tra cứu L1 Cache `QUICK_MATRIX.json` / `POP_MATRIX.json` ➔ Trả lời ngay tức thì.
   - TUYỆT ĐỐI CẤM chạy chuỗi 2-5 tool gọi dò dẫm, cấm viết văn dài dòng lý thuyết sách giáo khoa.
 - **RULE 15 (TRÚNG ĐÍCH):** CẤM tự ý tạo script hotfix hay lập plan khi User chỉ yêu cầu kiểm tra/hỏi nguyên nhân.
-- **RULE 16 (KHÔNG DÙNG TRÌNH DUYỆT / KHÔNG HTML):** Môi trường vận hành không thể mở file `.html` hay trình duyệt. Tuyệt đối KHÔNG tạo web app, KHÔNG dùng `Start-Process http://...`, 100% vận hành qua Console CLI, REPL Shell, Terminal, Python và Telegram Bot.
+- **RULE 16 (CHUẨN VẬN HÀNH CONSOLE CLI & WEB PORTAL):** Toàn bộ vận hành hệ thống tập trung qua 2 kênh chính thống: Console CLI Hubs (`.\mes.ps1`, `.\pop.ps1`, `.\gw.ps1`, `.\ksys.ps1`, `.\db.ps1`) và Web Operations Portal (`MES_POP/web` Next.js kết nối bảo mật qua Cloudflare Tunnel & API Relay). Khai tử hoàn toàn Telegram Bot để triệt tiêu triệt để nguy cơ rò rỉ dữ liệu CSDL ra bên ngoài.
 - **RULE 17 (CẤM OVER-ENGINEERING / LÀM ĐÚNG PHẠM VI):** Tuyệt đối chỉ làm đúng nội dung được yêu cầu. CẤM tự ý sửa file ngoài phạm vi hoặc làm thừa.
 - **RULE 18 (ĐỊNH DANH IT & CHUẨN AUTHOR/CHANGEUSERID):** Người dùng là Kỹ sư IT (Nguyen Van Duc - EA Team). Mọi can thiệp CSDL, Hotfix, Stored Procedure, Script hay comment BẮT BUỘC dùng `Author = 'vanduc'` và `ChangeUserID = 'vanduc'`. CẤM dùng `Antigravity` hay `it_hotfix`.
 - **RULE 19 (TRIỆT TIÊU LỖI FONT TIẾNG VIỆT & MA TRẬN TIỀN LỆ):** File `.ps1`, `.sql`, `.json` phải có UTF-8-BOM. Tuyệt đối không để lỗi font. Luôn tra cứu tiền lệ trong L1 Cache (`historical_precedents` & `RULE_CATALOG`) trước khi chẩn đoán.

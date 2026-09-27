@@ -47,7 +47,6 @@ DATABASE/
 │   ├── KB_RELIABILITY_REPORT.md                # 📊 Báo cáo kiểm toán độ tin cậy KB vs Live DB
 │   ├── ARCHITECTURE_DEEP_DIVE_GROUPWARE_ERP_MES.md # Khảo sát kiến trúc tích hợp sâu
 │   ├── BUSINESS_RULES_AND_MANUALS_DIGEST.md    # Tóm lược quy tắc nghiệp vụ sổ tay
-│   ├── HUONG_DAN_TRIEN_KHAI_TELEGRAM_BOT.md    # Hướng dẫn triển khai bot Telegram
 │   ├── DEEP_DIVE_01_PHYSICAL_TOPOLOGY_AND_LINKED_SERVERS.md # 🌐 Mạng lưới Linked Servers & Topology
 │   ├── DEEP_DIVE_02_SQL_AGENT_JOBS_AND_DATA_PUMPS.md        # ⏱️ 40 SQL Agent Jobs & Bơm dữ liệu
 │   ├── DEEP_DIVE_03_END_TO_END_DATA_LINEAGE_ATLAS.md        # 🗺️ Huyết mạch dữ liệu 360° từ PO -> Ship

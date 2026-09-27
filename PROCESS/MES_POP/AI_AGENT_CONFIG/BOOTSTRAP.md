@@ -28,7 +28,7 @@ Related Files:
 0. **RULE 0:** CẤM chạy `SELECT` trước khi tra cứu `.\pop.ps1 find` / `.\mes.ps1 find` hoặc KB modules.
 1. **RULE 1:** SELECT-ONLY trên Production DB. Mọi script can thiệp phải bọc `BEGIN TRAN...ROLLBACK`.
 2. **RULE 14:** Tốc độ phản hồi thần tốc (<3-5s). Gọi đúng 1-Shot Golden Query (`.\pop.ps1 trace` hoặc `.\mes.ps1 trace`), có data dừng ngay.
-3. **RULE 16:** KHÔNG DÙNG TRÌNH DUYỆT / KHÔNG HTML. 100% vận hành qua Console CLI, REPL Shell, Python và Telegram Bot.
+3. **RULE 16:** CHUẨN VẬN HÀNH CONSOLE CLI & WEB PORTAL. Vận hành qua Console CLI Hubs và Web Operations Portal (MES_POP/web). Khai tử hoàn toàn Telegram Bot.
 4. **RULE 18:** Định danh IT: Author = 'vanduc' và ChangeUserID = 'vanduc'.
 5. **RULE 20 (POP Bất Biến):** Đổi máy nhầm update 2 bảng (`STB_ProdRouteHist` + `MongoToMesPerformance`). Nút Cắt điện cực mờ do `< 100`. Cuộn BTP tối đa 3 LOTNO. Mở khóa máy kẹt qua `.\pop.ps1 unlock <Machine> -Deploy`.
 

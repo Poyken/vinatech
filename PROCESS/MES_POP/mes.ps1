@@ -142,21 +142,12 @@ function Show-Help {
     Write-Host '-> Tu dong soan Bao Cao Tuan IT (CSV tai Desktop/thanks_and_ojt_reports, phan loai REMARK MES/GW/ECM/HW)' -ForegroundColor Green
 
     Write-Host ''
-    Write-Host '  5. TRO LY DI DONG & QUAN LY BOT (TELEGRAM):' -ForegroundColor Cyan
-    Write-Host '     .\mes.ps1 bot                       ' -NoNewline -ForegroundColor Green
-    Write-Host '-> Khoi dong Telegram Assistant tren Console' -ForegroundColor Gray
-    Write-Host '     .\mes.ps1 bot-hidden                ' -NoNewline -ForegroundColor Green
-    Write-Host '-> Khoi dong Bot ngam an toan co lockfile chong 409' -ForegroundColor Gray
-    Write-Host '     .\mes.ps1 bot-status                ' -NoNewline -ForegroundColor Green
-    Write-Host '-> Kiem tra trang thai Bot dang chay hay dung' -ForegroundColor Gray
-    Write-Host '     .\mes.ps1 bot-stop                  ' -NoNewline -ForegroundColor Green
-    Write-Host '-> Dung an toan tien trinh Bot Telegram' -ForegroundColor Gray
-    Write-Host '     .\mes.ps1 watchdog-hidden           ' -NoNewline -ForegroundColor Green
-    Write-Host '-> Bat Auto-Pilot Watchdog tuan tra 24/7 & tu ban alert Telegram' -ForegroundColor Yellow
-    Write-Host '     .\mes.ps1 watchdog-status           ' -NoNewline -ForegroundColor Green
-    Write-Host '-> Kiem tra trang thai Watchdog' -ForegroundColor Gray
-    Write-Host '     .\mes.ps1 watchdog-stop             ' -NoNewline -ForegroundColor Green
-    Write-Host '-> Dung an toan tien trinh Watchdog' -ForegroundColor Gray
+    Write-Host '  5. VINATECH MES WEB OPERATIONS PORTAL & HYBRID RELAY:' -ForegroundColor Cyan
+    Write-Host '     .\mes.ps1 web                       ' -NoNewline -ForegroundColor Green
+    Write-Host '-> Khoi dong Web Operations Portal local (Next.js localhost:3000)' -ForegroundColor Gray
+    Write-Host '     .\mes.ps1 tunnel                    ' -NoNewline -ForegroundColor Green
+    Write-Host '-> Khoi dong Cloudflare Tunnel & API Relay ket noi bao mat len Vercel' -ForegroundColor Gray
+
 
     Write-Host ''
     Write-Host 'Cac Profile CSDL ho tro:' -ForegroundColor Yellow
@@ -547,142 +538,21 @@ elseif ($cmdLower -eq 'unlock' -or $cmdLower -eq 'unlock-machine' -or $cmdLower 
         Write-Error 'tools/unlock_machine.ps1 not found.'
     }
 }
-elseif ($cmdLower -eq 'bot' -or $cmdLower -eq 'telegram') {
-    $botScript = Join-Path $toolsDir 'mes_telegram_bot.py'
-    if (Test-Path $botScript) {
-        python -u $botScript
+elseif ($cmdLower -eq 'web' -or $cmdLower -eq 'portal') {
+    $webDir = Join-Path $scriptDir 'web'
+    if (Test-Path $webDir) {
+        Write-Host "(*) Dang khoi dong Vinatech MES Web Portal (localhost:3000)..." -ForegroundColor Cyan
+        npm --prefix $webDir run dev
     } else {
-        Write-Error 'tools/mes_telegram_bot.py not found.'
+        Write-Error 'Thu muc web khong ton tai.'
     }
 }
-elseif ($cmdLower -eq 'bot-hidden') {
-    $botScript = Join-Path $toolsDir 'mes_telegram_bot.py'
-    if (Test-Path $botScript) {
-        Write-Host "(*) Dang khoi dong Bot Telegram chay ngam..." -ForegroundColor Cyan
-        Start-Process python -ArgumentList "-u `"$botScript`"" -WorkingDirectory $scriptDir -WindowStyle Hidden
-        Start-Sleep -Seconds 2
-        & (Join-Path $scriptDir 'mes.ps1') bot-status
+elseif ($cmdLower -eq 'tunnel' -or $cmdLower -eq 'relay') {
+    $tunnelScript = Join-Path $scriptDir 'start_tunnel.ps1'
+    if (Test-Path $tunnelScript) {
+        & $tunnelScript
     } else {
-        Write-Error 'tools/mes_telegram_bot.py not found.'
-    }
-}
-elseif ($cmdLower -eq 'bot-status') {
-    $lockFile = Join-Path $toolsDir '.bot.lock'
-    if (Test-Path $lockFile) {
-        $pidText = (Get-Content $lockFile -Raw).Trim()
-        $proc = Get-Process -Id $pidText -ErrorAction SilentlyContinue
-        if ($proc) {
-            $memMb = [math]::Round($proc.WorkingSet64 / 1MB, 2)
-            $startTime = $proc.StartTime.ToString('yyyy-MM-dd HH:mm:ss')
-            Write-Host "-> [ONLINE] Bot Telegram dang hoat dong voi PID: $pidText (RAM: $memMb MB, Started: $startTime)" -ForegroundColor Green
-        } else {
-            Write-Host "-> [STALE LOCK] File .bot.lock ton tai (PID: $pidText) nhung tien trinh da dung." -ForegroundColor Yellow
-            Remove-Item $lockFile -Force -ErrorAction SilentlyContinue
-            Write-Host "   Da tu dong thu hoi file lock moi." -ForegroundColor Gray
-        }
-    } else {
-        $procs = Get-CimInstance Win32_Process -Filter "Name LIKE '%python%'" -ErrorAction SilentlyContinue | Where-Object { $_.CommandLine -match 'mes_telegram_bot' }
-        if ($procs) {
-            Write-Host "-> [ONLINE] Phat hien Bot Telegram dang chay ngoai lockfile (PID: $($procs.ProcessId))" -ForegroundColor Yellow
-        } else {
-            Write-Host "-> [OFFLINE] Bot Telegram hien khong chay." -ForegroundColor Gray
-            Write-Host "   - Khoi dong che do console : .\mes.ps1 bot" -ForegroundColor Cyan
-            Write-Host "   - Khoi dong che do chay ngam: .\mes.ps1 bot-hidden" -ForegroundColor Cyan
-        }
-    }
-}
-elseif ($cmdLower -eq 'bot-stop') {
-    $lockFile = Join-Path $toolsDir '.bot.lock'
-    $stopped = $false
-    if (Test-Path $lockFile) {
-        $pidText = (Get-Content $lockFile -Raw).Trim()
-        $proc = Get-Process -Id $pidText -ErrorAction SilentlyContinue
-        if ($proc) {
-            Stop-Process -Id $pidText -Force -ErrorAction SilentlyContinue
-            Write-Host "-> Da dung tien trinh Bot Telegram (PID: $pidText)." -ForegroundColor Green
-            $stopped = $true
-        }
-        Remove-Item $lockFile -Force -ErrorAction SilentlyContinue
-    }
-    $procs = Get-CimInstance Win32_Process -Filter "Name LIKE '%python%'" -ErrorAction SilentlyContinue | Where-Object { $_.CommandLine -match 'mes_telegram_bot' }
-    foreach ($p in $procs) {
-        Stop-Process -Id $p.ProcessId -Force -ErrorAction SilentlyContinue
-        Write-Host "-> Da dung tien trinh Bot phu (PID: $($p.ProcessId))." -ForegroundColor Green
-        $stopped = $true
-    }
-    if (-not $stopped) {
-        Write-Host "-> Khong tim thay tien trinh Bot Telegram nao dang hoat dong." -ForegroundColor Gray
-    }
-}
-elseif ($cmdLower -eq 'watchdog') {
-    $wdScript = Join-Path $toolsDir 'mes_watchdog.py'
-    if (Test-Path $wdScript) {
-        python -u $wdScript
-    } else {
-        Write-Error 'tools/mes_watchdog.py not found.'
-    }
-}
-elseif ($cmdLower -eq 'watchdog-once') {
-    $wdScript = Join-Path $toolsDir 'mes_watchdog.py'
-    if (Test-Path $wdScript) {
-        python $wdScript --once
-    } else {
-        Write-Error 'tools/mes_watchdog.py not found.'
-    }
-}
-elseif ($cmdLower -eq 'watchdog-hidden') {
-    $wdScript = Join-Path $toolsDir 'mes_watchdog.py'
-    if (Test-Path $wdScript) {
-        Write-Host "(*) Dang khoi dong Auto-Pilot Watchdog chay ngam..." -ForegroundColor Cyan
-        Start-Process python -ArgumentList "-u", $wdScript -WindowStyle Hidden
-        Start-Sleep -Seconds 1
-        & (Join-Path $scriptDir 'mes.ps1') watchdog-status
-    } else {
-        Write-Error 'tools/mes_watchdog.py not found.'
-    }
-}
-elseif ($cmdLower -eq 'watchdog-status') {
-    $lockFile = Join-Path $toolsDir '.watchdog.lock'
-    if (Test-Path $lockFile) {
-        $pidText = (Get-Content $lockFile -Raw).Trim()
-        $proc = Get-Process -Id $pidText -ErrorAction SilentlyContinue
-        if ($proc) {
-            $memMb = [math]::Round($proc.WorkingSet64 / 1MB, 2)
-            $startTime = $proc.StartTime.ToString('yyyy-MM-dd HH:mm:ss')
-            Write-Host "-> [ONLINE] Auto-Pilot Watchdog dang hoat dong voi PID: $pidText (RAM: $memMb MB, Started: $startTime)" -ForegroundColor Green
-        } else {
-            Write-Host "-> [STALE LOCK] File .watchdog.lock ton tai (PID: $pidText) nhung tien trinh da dung." -ForegroundColor Yellow
-            Remove-Item $lockFile -Force -ErrorAction SilentlyContinue
-            Write-Host "   Da tu dong thu hoi file lock moi." -ForegroundColor Gray
-        }
-    } else {
-        Write-Host "-> [OFFLINE] Auto-Pilot Watchdog hien khong chay." -ForegroundColor Gray
-        Write-Host "   - Khoi dong che do console: .\mes.ps1 watchdog" -ForegroundColor Cyan
-        Write-Host "   - Khoi dong che do ngam   : .\mes.ps1 watchdog-hidden" -ForegroundColor Cyan
-        Write-Host "   - Tuan tra 1 lan thu nghiem: .\mes.ps1 watchdog-once" -ForegroundColor Cyan
-    }
-}
-elseif ($cmdLower -eq 'watchdog-stop') {
-    $lockFile = Join-Path $toolsDir '.watchdog.lock'
-    $stopped = $false
-    if (Test-Path $lockFile) {
-        $pidText = (Get-Content $lockFile -Raw).Trim()
-        $proc = Get-Process -Id $pidText -ErrorAction SilentlyContinue
-        if ($proc) {
-            Stop-Process -Id $pidText -Force -ErrorAction SilentlyContinue
-            Write-Host "-> Da dung tien trinh Auto-Pilot Watchdog (PID: $pidText)." -ForegroundColor Green
-            $stopped = $true
-        }
-        Remove-Item $lockFile -Force -ErrorAction SilentlyContinue
-    }
-    $procs = Get-CimInstance Win32_Process -Filter "Name LIKE '%python%'" -ErrorAction SilentlyContinue | Where-Object { $_.CommandLine -match 'mes_watchdog' }
-    foreach ($p in $procs) {
-        Stop-Process -Id $p.ProcessId -Force -ErrorAction SilentlyContinue
-        Write-Host "-> Da dung tien trinh Watchdog phu (PID: $($p.ProcessId))." -ForegroundColor Green
-        $stopped = $true
-    }
-    if (-not $stopped) {
-        Write-Host "-> Khong tim thay tien trinh Auto-Pilot Watchdog nao dang hoat dong." -ForegroundColor Gray
+        Write-Error 'start_tunnel.ps1 khong ton tai.'
     }
 }
 elseif ($cmdLower -eq 'diagnose' -or $cmdLower -eq 'diag' -or $cmdLower -eq 'chan-doan') {
@@ -889,22 +759,20 @@ elseif ($cmdLower -eq 'clean') {
         }
     }
     
-    # 2. Kiem tra bao mat telegram_config.json
-    $cfgPath = Join-Path $toolsDir 'telegram_config.json'
-    if (Test-Path $cfgPath) {
-        $content = Get-Content $cfgPath -Raw
-        if ($content -match 'YOUR_TELEGRAM_BOT_TOKEN_HERE') {
-            Write-Host "-> telegram_config.json: AN TOAN (Su dung Placeholder mẫu)." -ForegroundColor Green
-        } else {
-            Write-Host "-> CANH BAO: telegram_config.json co the chua Token that! Vui long kiem tra." -ForegroundColor Red
-        }
+    # 2. Kiem tra trang thai Web Relay Tunnel
+    $tunnelUrlPath = Join-Path $toolsDir 'tunnel_url.txt'
+    if (Test-Path $tunnelUrlPath) {
+        $tUrl = (Get-Content $tunnelUrlPath -Raw).Trim()
+        Write-Host "-> Web Relay Tunnel URL: $tUrl" -ForegroundColor Green
+    } else {
+        Write-Host "-> Web Relay Tunnel: San sang khoi tao qua .\mes.ps1 tunnel" -ForegroundColor Gray
     }
 
     # 3. Kiem tra va tieu diet zombie process ngam (Powershell/Python orphan chay > 60s gay ru quat CPU)
     Write-Host '(*) Kiem tra va tieu diet cac tien trinh ngam chay qua han (Zombie CPU Cleanup)...' -ForegroundColor Cyan
     $zombieCount = 0
     $bgProcs = Get-CimInstance Win32_Process -ErrorAction SilentlyContinue | Where-Object { 
-        ($_.Name -match 'powershell|python' -and $_.CommandLine -match 'mes_diagnose|pop_trace|watchdog|inspect_') -and
+        ($_.Name -match 'powershell|python' -and $_.CommandLine -match 'mes_diagnose|pop_trace|inspect_') -and
         $_.ProcessId -ne $PID
     }
     if ($bgProcs) {

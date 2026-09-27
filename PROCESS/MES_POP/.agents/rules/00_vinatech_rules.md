@@ -30,8 +30,8 @@
    - TUYỆT ĐỐI CẤM UPDATE hoặc DELETE trên `STB_SetInfo` (để bảo toàn định danh Lot, mã vạch Barcode và dữ liệu khởi tạo chuyền ban đầu).
 
 8. **RULE 12 - BẢO MẬT CREDENTIAL & TÁCH BIỆT TOKEN (ZERO KEY LEAKAGE):**
-   - File `tools/telegram_config.json` chỉ được chứa giá trị PLACEHOLDER mẫu (`YOUR_TELEGRAM_BOT_TOKEN_HERE`, `YOUR_GEMINI_API_KEY_HERE`).
-   - Mọi Token Telegram và API Key thật của Production BẮT BUỘC lưu vào `tools/telegram_config.local.json` (được bảo vệ bởi `.gitignore` qua `*.local.json`). Tuyệt đối CẤM commit key thật lên GitHub repository.
+   - Tuyệt đối CẤM lưu API key, database credentials thật vào các file mã nguồn hoặc file mẫu công khai.
+   - Mọi API Key thật của Production BẮT BUỘC lưu vào các file `*.local.json` hoặc `.env.local` (được bảo vệ bởi `.gitignore`). Tuyệt đối CẤM commit key thật lên GitHub repository.
 
 9. **RULE 13 - ĐỒNG BỘ HAI CHIỀU POP KIOSK & NAIS MES (DUAL-SYNC INTEGRITY):**
    - Kiosk POP Web (`pop.vinatech.com/pop/screen`) đọc tiến độ và trạng thái hoàn thành từ bảng trung gian `SmartFactoryV2.dbo.MongoToMesPerformance`, không đọc trực tiếp từ `STB_ProdRouteHist`.
@@ -47,9 +47,9 @@
    - Khi User hỏi "check", "tại sao", "xem giúp": CHỈ phân tích nguyên nhân và báo cáo hiện trạng.
    - TUYỆT ĐỐI CẤM tự ý tạo file `.sql` hotfix, tự ý tạo plan hay sửa đổi CSDL khi người dùng chưa yêu cầu sửa lỗi.
 
-12. **RULE 16 - CẤM TRÌNH DUYỆT & KHÔNG DÙNG HTML (NO BROWSER / ZERO HTML):**
-   - Môi trường vận hành nhà máy không thể mở file `.html` hoặc khởi chạy trình duyệt Web.
-   - 100% vận hành qua Console CLI (`mes.ps1`), REPL Shell, Terminal, Python và Telegram Bot.
+12. **RULE 16 - CHUẨN VẬN HÀNH CONSOLE CLI & WEB PORTAL (CLI HUBS & WEB PORTAL):**
+   - Toàn bộ vận hành hệ thống tập trung qua 2 kênh chính thống: Console CLI Hubs (`.\mes.ps1`, `.\pop.ps1`, `.\gw.ps1`, `.\ksys.ps1`, `.\db.ps1`) và Web Operations Portal (`MES_POP/web` Next.js kết nối bảo mật qua Cloudflare Tunnel & API Relay).
+   - Đã khai tử hoàn toàn Telegram Bot để triệt tiêu triệt để nguy cơ rò rỉ dữ liệu CSDL ra bên ngoài.
 
 13. **RULE 17 - CẤM OVER-ENGINEERING & LÀM ĐÚNG PHẠM VI YÊU CẦU:**
    - Tuyệt đối chỉ làm đúng nội dung công việc được người dùng yêu cầu.
@@ -61,7 +61,7 @@
 
 15. **RULE 19 - TRIỆT TIÊU LỖI FONT TIẾNG VIỆT & MA TRẬN TIỀN LỆ L1:**
    - Mọi file `.ps1`, `.sql`, `.json` bắt buộc lưu với định dạng UTF-8 with BOM trên Windows.
-   - Tuyệt đối không để xảy ra lỗi font chữ tiếng Việt hay lỗi parsing ký tự HTML trên Telegram Bot.
+   - Tuyệt đối không để xảy ra lỗi font chữ tiếng Việt trên Console và Web Portal.
    - Luôn tra cứu tiền lệ trong L1 Cache (`historical_precedents` & `RULE_CATALOG`) trước khi chẩn đoán, không chạy truy vấn mò mẫm vào CSDL.
 
 16. **RULE 20 - 5 NGUYÊN TẮC BẤT BIẾN VẬN HÀNH POP (MASTER PLAYBOOK EA TEAM):**
