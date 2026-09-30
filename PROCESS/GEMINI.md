@@ -1,4 +1,4 @@
-# 🛡️ VINATECH ENTERPRISE PROCESS WORKSPACE (MASTER RULES)
+﻿# 🛡️ VINATECH ENTERPRISE PROCESS WORKSPACE (MASTER RULES)
 
 > **Single Source of Truth:** `.agents/rules/00_vinatech_master_rules.md`
 > **Primary Command Hubs:** `.\pop.ps1` (POP Kiosk), `.\mes.ps1` (Core MES), `.\gw.ps1` (Groupware), `.\db.ps1` (15 Databases), `.\ksys.ps1` (K-System)
@@ -16,6 +16,7 @@
 6. **RULE 15 (TRÚNG ĐÍCH):** CẤM tự ý tạo script hotfix hay plan khi User chỉ yêu cầu kiểm tra/tra cứu.
 7. **RULE 20 (POP BẤT BIẾN - EA PLAYBOOK):** Đổi máy nhầm Kiosk BẮT BUỘC UPDATE CẢ 2 BẢNG (`STB_ProdRouteHist` VÀ `MongoToMesPerformance`). Lỗi "Already completed" xóa dòng thừa trong `STB_ProdRouteHist` & `STB_ProdRouteWorkerHist`. Nút Cắt điện cực mờ do độ dày `< 100`. Cuộn BTP tối đa 3 LOTNO. Máy kẹt ACTIVE giải phóng qua `.\pop.ps1 unlock <Machine> -Deploy` hoặc `.\pop.ps1 release-machines -Force`.
 8. **RULE 21 (BẮT BUỘC LUÔN DÙNG TOOL CHUYÊN DỤNG - TUYỆT ĐỐI CẤM QUERY DÒ DẪM):** BẮT BUỘC dùng Tool CLI Hubs (`.\mes.ps1`, `.\pop.ps1`, `.\gw.ps1`, `.\ksys.ps1`) cho mọi tác vụ tra cứu, phân tích, truy vết. Tuyệt đối CẤM dùng `.\db.ps1 query` để mò mẫm cấu trúc bảng, tên menu hay thử sai liên tục (0 blind SQL looping). Muốn biết bảng/menu/trường ➔ Tra cứu L1 Cache (`POP_MATRIX.json`, `QUICK_MATRIX.json`, `KSYSTEM_MATRIX.json`, `GW_FORM_MATRIX.json`) hoặc `find`. Giới hạn cứng tối đa 1-2 tool calls.
+9. **RULE 22 (ĐỊNH DANH SỰ CỐ & PHÂN LOẠI ISSUE — POP BẮT BUỘC GHI POP, KHÔNG GHI MES):** Mọi sự cố/issue/task/báo cáo tuần IT/báo cáo khắc phục sự cố liên quan đến POP (Kiosk xưởng, Web POP, nạp NVL Kiosk, kẹt máy Kiosk, sync MongoToMesPerformance) BẮT BUỘC ghi phân loại/remark/hệ thống là **POP**, TUYỆT ĐỐI KHÔNG ghi là **MES** nữa. MES chỉ dành riêng cho Core MES Sản Xuất WinForm & CSDL lõi.
 
 
 

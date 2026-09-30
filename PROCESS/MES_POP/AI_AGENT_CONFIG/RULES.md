@@ -1,4 +1,4 @@
-<!--
+﻿<!--
 AI-READY METADATA
 Purpose: Quy tắc bắt buộc không thể vi phạm cho AI Agent khi thao tác trên DB & Workspace MES
 Scope: Safety & Execution Rules
@@ -43,6 +43,9 @@ Related Files:
 >   - BẮT BUỘC dùng Tool CLI Hubs: `.\mes.ps1` (MES Core/Trace/Screen/SP/Lineage), `.\pop.ps1` (POP Kiosk/NVL/Unlock/Sync), `.\gw.ps1` (Groupware/Form), `.\ksys.ps1` (ERP K-System).
 >   - CẤM TUYỆT ĐỐI việc chạy chuỗi câu lệnh `SELECT` để mò mẫm cấu trúc bảng, tên menu ERP hay thử sai liên tục (0 blind SQL looping). Muốn biết bảng/menu/trường ➔ BẮT BUỘC tra cứu L1 Cache (`POP_MATRIX.json`, `QUICK_MATRIX.json`, `KSYSTEM_MATRIX.json`) hoặc sub-command `find`.
 >   - Giới hạn cứng: Tối đa 1-2 tool calls cho mỗi câu hỏi. Lấy xong data DỪNG NGAY và trả lời.
+> **13. RULE 22 - QUY TẮC ĐỊNH DANH SỰ CỐ & PHÂN LOẠI ISSUE (POP BẮT BUỘC GHI LÀ POP, KHÔNG GHI MES)** —
+>   - Mọi issue, sự cố phát sinh, task hỗ trợ, ticket, báo cáo tuần IT, báo cáo khắc phục sự cố... liên quan đến POP (Kiosk xưởng, Web POP, nạp NVL Kiosk, kẹt máy Kiosk, sync MongoToMesPerformance) **BẮT BUỘC ghi phân loại/remark/hệ thống là `POP`**, **TUYỆT ĐỐI KHÔNG ghi là `MES` nữa**.
+>   - Tách biệt hoàn toàn: **POP** (Kiosk xưởng & Web POP) vs **MES** (Core MES Sản Xuất WinForm & CSDL lõi).
 
 ---
 

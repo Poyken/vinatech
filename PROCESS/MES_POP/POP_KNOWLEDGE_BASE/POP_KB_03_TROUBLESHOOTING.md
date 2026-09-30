@@ -1520,3 +1520,71 @@ END CATCH;
   ```
 * **Khắc phục:** Kiểm tra lại quy cách độ dày màng trong Master Data (`STB_MaterialMaster`). Nếu thông số thực tế hợp lệ nhưng cấu hình nhập sai `< 100`, Kỹ sư IT/Master Data cập nhật lại `MaterialThickness >= 100` để nút Cắt tự động sáng trở lại.
 
+---
+
+### Case 18: OP Bắc Ninh (BN) Lỡ Thao Tác Xẻ / Đóng Gói Chia Cuộn Mẹ Điện Cực — Rollback Khôi Phục Để Hưng Yên (HY) Xẻ Lại
+* **Hiện tượng:** Cuộn Mẹ điện cực (`CRCEK0-...` / `VWQQ...`) theo kế hoạch chỉ tráng/ép tại Bắc Ninh, sau đó vận chuyển về Hưng Yên để xẻ ra các cuộn con BTP. Tuy nhiên, OP tại Bắc Ninh đã lỡ vào POP Kiosk Web (`/pop/screen`), tab **"Đóng gói chia"** của chuyền Bắc Ninh, bấm hoàn thành đóng gói / chạy xẻ. Hậu quả:
+  - Sinh ra các cuộn BTP (`MaterialLotNo`) trong `STB_MaterialLotInfo`.
+  - Chốt công đoạn `W-04` trên `MongoToMesPerformance` (`IsDone = 1`).
+  - Sinh phiếu đo kiểm PQC `STB_CommInspDocHistory` (`ROUTE_ELECTRODE_QUALITY2`).
+  - Cuộn mẹ trên `STB_SetInfo` bị khóa hoàn thành (`CompleteRoute = 1`, `IsLineInput = 0`), số mét còn lại về `0 M`.
+  - Khi mang cuộn mẹ xuống Kiosk Hưng Yên quét tem thì bị chặn hoặc báo popup đỏ: *"Không tìm thấy thông tin line xẻ."*.
+* **NGUYÊN NHÂN CỐT LÕI:**
+  - OP tại Bắc Ninh đã chọn sai chuyền và chạy chia cuộn trên line điện cực Wanju 2 / BN.
+  - Phân xưởng điện cực vận hành qua cả 2 phân hệ: Quản lý cuộn BTP (`STB_MaterialLotInfo`) và Cờ nạp chuyền cuộn mẹ (`IsLineInput` trên `STB_SetInfo`). Khi đã chốt hoàn thành đóng gói, hạn mức bị trừ hết và cờ nạp chuyền bị hạ về 0.
+* **HƯỚNG DẪN KHẮC PHỤC (SOP ROLLBACK CHUẨN):**
+  1. **Thao tác OP tại xưởng HY:** Sau khi IT rollback, OP mở Kiosk Hưng Yên, bấm nút **[CHUYỀN]** trên header -> Chọn đúng **`HY Slitting Line`** (Chuyền cắt Hưng Yên), quét mã tem cuộn mẹ, cài đặt khổ dao xẻ và bấm Chạy xẻ / Đóng gói.
+  2. **SQL Hotfix IT can thiệp (Bọc Transaction an toàn, ChangeUserID 'vanduc'):**
+     ```sql
+     USE SmartFactoryV2;
+     GO
+     BEGIN TRANSACTION;
+     BEGIN TRY
+         DECLARE @LotNo VARCHAR(50) = '<MÃ_LOT_CUỘN_MẸ>'; -- VD: 'VWQQ0720001E16'
+         DECLARE @ControlNo VARCHAR(20) = '<CONTROL_NO>';  -- VD: '20260806000241'
+         DECLARE @ChangeUser VARCHAR(20) = 'vanduc';
+
+         -- 1. Thu hồi các cuộn BTP đã sinh nhầm trên POP Bắc Ninh
+         DELETE FROM SmartFactoryV2.dbo.STB_MaterialLotInfo
+         WHERE LotNo = @LotNo;
+
+         -- 2. Xóa kết quả xẻ điện cực nếu có
+         DELETE FROM SmartFactoryV2.dbo.STB_ElectrodeSlittingResult WHERE ElectrodeLotNumber = @LotNo;
+         DELETE FROM SmartFactoryV2.dbo.STB_ElectrodeSlittingInfo WHERE ElectrodeLotNumber = @LotNo;
+
+         -- 3. Hủy phiếu kiểm tra PQC đã tạo theo lượt xẻ cũ
+         DELETE FROM SmartFactoryV2.dbo.STB_CommInspDocHistory
+         WHERE DocNo IN (SELECT MaterialLotNo FROM SmartFactoryV2.dbo.STB_MaterialLotInfo WITH(NOLOCK) WHERE LotNo = @LotNo)
+            OR (MaterialCode LIKE 'SRE%' AND MaterialLotNo = @LotNo);
+
+         -- 4. Reset công đoạn xẻ W-04 trên bảng đồng bộ POP Kiosk
+         UPDATE SmartFactoryV2.dbo.MongoToMesPerformance
+         SET TotalProdQty = 0, TotalDefectQty = 0, IsDone = 0, IsTransferred = 0, ChangeDateTime = GETDATE()
+         WHERE Barcode = @LotNo AND RouteCode = 'W-04';
+
+         -- 5. Xóa dữ liệu đệm đóng gói Kiosk POP
+         DELETE FROM VINATECH_POP.dbo.VINA_PACKING_REMAIN_QTY WHERE BARCODE = @LotNo;
+
+         -- 6. Ghi log kiểm toán theo chuẩn IT Vinatech
+         INSERT INTO SmartFactoryV2.dbo.STB_ProdRouteHistCancelHist (LotNo, CreateUserID, CreateDateTime)
+         VALUES (@LotNo, @ChangeUser, GETDATE());
+
+         -- 7. Khôi phục Cuộn Mẹ và kích hoạt cờ nạp chuyền để Kiosk HY nhận diện
+         UPDATE SmartFactoryV2.dbo.STB_SetInfo
+         SET CompleteRoute = 0,
+             IsLineInput = 1,
+             ModifyDateTime = GETDATE(),
+             ChangeUserID = @ChangeUser
+         WHERE ControlNo = @ControlNo;
+
+         COMMIT TRANSACTION;
+         PRINT N'>> [THÀNH CÔNG] Đã rollback hoàn tất cuộn mẹ để Hưng Yên xẻ lại!';
+     END TRY
+     BEGIN CATCH
+         IF @@TRANCOUNT > 0 ROLLBACK TRANSACTION;
+         THROW;
+     END CATCH;
+     GO
+     ```
+
+

@@ -905,6 +905,29 @@ UPDATE STB_DefectRepairInfo SET IsDelete=0, RepairQty=0 WHERE DefectSummaryNo=20
 * **Lệnh CLI tích hợp:** `.\mes.ps1 fix-pop-clone -Lots "VVQR073R072777,VVQR073R072765,VVQR073R072723,VVQR073R072760" -Deploy`
 * **Tham chiếu KB:** [POP_KB_03_TROUBLESHOOTING.md § 2.7 & 3 Case 3](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_03_TROUBLESHOOTING.md), [KB_03_02_CELL_LINE.md § 6.16 L773](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/KB_03/KB_03_02_CELL_LINE.md#L773)
 
+---
+
+### [POP Kiosk / B552 / Slitting] — 📍 ID_63 Rollback chốt xẻ/đóng gói chia cuộn mẹ điện cực nhầm tại BN để Hưng Yên xẻ lại
+* **Ngày phát hiện / tài liệu hóa:** `2026-09-28`
+* **Người phụ trách:** `vanduc` (IT MES - EA Team)
+* **Màn hình liên quan (TCode):** `POP Web Kiosk (pop.vinatech.com/pop/screen) - Tab Đóng gói chia / Slitting Line`
+* **Bảng liên quan:** `SmartFactoryV2.dbo.STB_MaterialLotInfo`, `SmartFactoryV2.dbo.MongoToMesPerformance`, `SmartFactoryV2.dbo.STB_SetInfo`, `SmartFactoryV2.dbo.STB_CommInspDocHistory`, `VINATECH_POP.dbo.VINA_PACKING_REMAIN_QTY`, `SmartFactoryV2.dbo.STB_ProdRouteHistCancelHist`
+* **Danh sách Lot đối chứng:** `VWQQ0720001E16` (PO `260724000012`, Model cuộn mẹ `CRCEK0-272`, Phân xưởng Điện cực)
+* **Triệu chứng & Yêu cầu:** Cuộn mẹ tráng/ép ở Bắc Ninh, đáng lẽ chuyển về xưởng Hưng Yên để xẻ và in tem BTP. Nhưng OP tại Bắc Ninh đã lỡ vào tab "Đóng gói chia" trên Kiosk Web của BN bấm hoàn thành đóng gói / chạy xẻ. Hệ thống sinh 10 cuộn BTP `20260927000104` ~ `20260927000205`, chốt công đoạn `W-04`, sinh phiếu PQC, và đánh dấu cuộn mẹ hoàn thành (`CompleteRoute = 1`, `IsLineInput = 0`, Còn lại = `0 M`). Khi mang xuống Kiosk Hưng Yên quét mã tem thì báo đỏ: *"Không tìm thấy thông tin line xẻ."*.
+* **Nguyên nhân gốc rễ (Root Cause):** OP tại Bắc Ninh thao tác nhầm trên giao diện Kiosk của BN khiến cuộn mẹ bị tiêu thụ hết hạn mức khả dụng và ngắt cờ nạp chuyền (`IsLineInput = 0`). Kiosk Hưng Yên không tìm thấy mapping line xẻ do Lot đã ở trạng thái đóng và mở sai phân xưởng.
+* **Phương án sửa lỗi chuẩn (Author 'vanduc', Transaction an toàn):**
+  1. Thu hồi các cuộn BTP (`MaterialLotNo`) trong `STB_MaterialLotInfo`.
+  2. Xóa kết quả xẻ thừa (nếu có) trong `STB_ElectrodeSlittingResult` và `STB_ElectrodeSlittingInfo`.
+  3. Xóa phiếu PQC đo kiểm cũ trong `STB_CommInspDocHistory` (`DocNo = 20260927000104`).
+  4. Reset công đoạn xẻ `W-04` về 0 (`TotalProdQty = 0, IsDone = 0, IsTransferred = 0`) trên `MongoToMesPerformance`.
+  5. Xóa dữ liệu đệm đóng gói `VINA_PACKING_REMAIN_QTY`.
+  6. Ghi log kiểm toán `STB_ProdRouteHistCancelHist`.
+  7. Khôi phục cuộn mẹ trên `STB_SetInfo`: `CompleteRoute = 0, IsLineInput = 1, ChangeUserID = 'vanduc'`.
+  8. OP tại Hưng Yên chọn đúng chuyền `HY Slitting Line`, quét nạp cuộn mẹ và tiến hành xẻ lại.
+* **Kết quả nghiệm thu:** Đã chuẩn hóa quy trình SOP, bổ sung vào L1 Cache `POP_MATRIX.json` (`POP-CASE-18`) và `POP_KB_03_TROUBLESHOOTING.md` (`Case 18`).
+* **Tham chiếu KB:** [POP_KB_03 § Case 18](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_03_TROUBLESHOOTING.md), [KB_05_01 § 8.11](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/KB_05/KB_05_01_QC_AND_ELECTRODE_CORE.md#811--phân-tích-bản-chất-thâm-sâu-vận-hành-lot-điện-cực-trên-pop-web-kiosk-popvinatechcompopscreen--cơ-chế-handoff-sang-slitting-line), [POP_KB_04 § 2.5](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_04_ROLLBACK_AND_SAFETY.md#25--đóng-gói-packing--cơ-chế-hủy-hộp--rollback-đóng-gói-trên-pop-web-kiosk)
+
+
 
 
 

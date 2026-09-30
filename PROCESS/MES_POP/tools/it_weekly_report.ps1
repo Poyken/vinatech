@@ -5,7 +5,7 @@
     Tự động tạo file CSV báo cáo tuần tại Desktop/thanks_and_ojt_reports/
     Tuân thủ tuyệt đối quy chuẩn:
     - Reporter: Nguyen Van Duc | Department: EA Team
-    - Cột REMARK: MES (MES & POP), GW (Groupware & ERP), ECM (ECM), HW (Phần cứng, Mạng LAN, Máy in, PC, Phần mềm ứng dụng)
+    - Cột REMARK: MES (Core MES WinForm), POP (Kiosk POP & Web POP), GW (Groupware & ERP), ECM (ECM), HW (Phần cứng, Mạng LAN, Máy in, PC, Phần mềm ứng dụng)
     - Cân đối công việc đều các ngày trong tuần (Task & Support)
 #>
 
@@ -70,7 +70,7 @@ $standardTaskPool = @(
     [PSCustomObject]@{
         DayOffset = 0
         Type = 'Task'
-        Remark = 'MES'
+        Remark = 'POP'
         NameIssue = 'MES & POP Central Database Weekly Synchronization Audit'
         TheSolve = 'Rà soát tính toàn vẹn dữ liệu giữa CSDL SmartFactoryV2 và VINATECH_POP, kiểm tra hàng đợi đồng bộ và khắc phục bản ghi kẹt.'
     },
@@ -109,7 +109,7 @@ $standardTaskPool = @(
     [PSCustomObject]@{
         DayOffset = 2
         Type = 'Task'
-        Remark = 'MES'
+        Remark = 'POP'
         NameIssue = 'POP System Training & On-site Worker Guidance - Assembly Line'
         TheSolve = 'Đào tạo trực tiếp tại chuyền về hệ thống Kiosk POP: hướng dẫn đăng nhập, chọn ca làm việc, quét mã Lot và xác nhận hoàn thành công đoạn.'
     },
@@ -169,7 +169,7 @@ $standardTaskPool = @(
     [PSCustomObject]@{
         DayOffset = 4
         Type = 'Task'
-        Remark = 'MES'
+        Remark = 'POP'
         NameIssue = 'POP Kiosk Orphan Equipment Lock Release & Maintenance'
         TheSolve = 'Tuần tra giải phóng các thiết bị bị khóa orphan lock trên hệ thống POP sau ca làm việc, làm sạch tài nguyên cho ca sản xuất kế tiếp.'
     },

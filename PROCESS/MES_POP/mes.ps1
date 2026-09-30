@@ -145,7 +145,7 @@ function Show-Help {
     Write-Host ''
     Write-Host '  4. NANG SUAT & TU DONG HOA IT (IT AUTOMATION):' -ForegroundColor Cyan
     Write-Host '     .\mes.ps1 weekly-report [-StartDate "..." -EndDate "..."] [-ViewOnly]' -ForegroundColor Yellow
-    Write-Host '-> Tu dong soan Bao Cao Tuan IT (CSV tai Desktop/thanks_and_ojt_reports, phan loai REMARK MES/GW/ECM/HW)' -ForegroundColor Green
+    Write-Host '-> Tu dong soan Bao Cao Tuan IT (CSV tai Desktop/thanks_and_ojt_reports, phan loai REMARK MES/POP/GW/ECM/HW)' -ForegroundColor Green
 
     Write-Host ''
     Write-Host '  5. VINATECH MES WEB OPERATIONS PORTAL & HYBRID RELAY:' -ForegroundColor Cyan

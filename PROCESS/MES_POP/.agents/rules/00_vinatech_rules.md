@@ -1,4 +1,4 @@
-# 🛡️ VINATECH MES AGENT WORKSPACE RULE DEFINITIONS (V2.2)
+﻿# 🛡️ VINATECH MES AGENT WORKSPACE RULE DEFINITIONS (V2.2)
 
 ## QUY TẮC BẮT BUỘC KHÔNG THỂ BỎ QUA:
 
@@ -83,5 +83,11 @@
       * Muốn biết thông tin bảng, menu, quy trình: BẮT BUỘC tra cứu L1 Cache (`POP_MATRIX.json`, `QUICK_MATRIX.json`, `KSYSTEM_MATRIX.json`, `GW_FORM_MATRIX.json`) hoặc đọc SP gốc (`.\mes.ps1 sp`).
       * Lệnh `.\db.ps1 query` CHỈ ĐƯỢC PHÉP dùng khi CLI Hub chưa hỗ trợ VÀ đã biết đích xác 100% bảng + 3-5 cột từ tài liệu/KB/SP, có `WITH (NOLOCK)`. CẤM chạy quá 1-2 query.
     - **KỶ LUẬT HARD CEILING 1-2 TOOL CALLS:** Lấy xong dữ liệu từ CLI Hub là DỪNG NGAY và trả lời theo chuẩn 4 Dòng Vàng. Cấm gọi thêm tool để verify lan man.
+
+18. **RULE 22 - QUY TẮC ĐỊNH DANH SỰ CỐ & PHÂN LOẠI ISSUE (POP BẮT BUỘC GHI LÀ POP, KHÔNG GHI MES):**
+    - Từ nay, mọi issue (sự cố phát sinh, task hỗ trợ, ticket sự cố, báo cáo tuần IT, báo cáo khắc phục sự cố, Overtime report...) có liên quan đến hệ thống POP (POP Kiosk tại xưởng, giao diện Web POP `pop.vinatech.com`, nạp cuộn BTP/NVL BOM Kiosk, mở khóa máy kẹt `ACTIVE`, kiểm tra/sửa lỗi đồng bộ `MongoToMesPerformance` / `VINATECH_POP`, DayPlan Kiosk...) **BẮT BUỘC ghi phân loại/remark/hệ thống là `POP`**, **TUYỆT ĐỐI KHÔNG ghi là `MES` nữa**.
+    - **Tách biệt rõ ràng 2 phân hệ độc lập:**
+      * **`POP`:** Toàn bộ công việc, sự cố, hỗ trợ liên quan đến Kiosk xưởng & Web POP.
+      * **`MES`:** Chỉ ghi cho các vấn đề thuộc về Core MES Sản xuất (WinForm NAIS MES, SmartFactoryV2 lõi, chốt sản lượng B530/B540/B552/B781/B782, in tem thùng, đóng gói B523, v.v.).
 
 

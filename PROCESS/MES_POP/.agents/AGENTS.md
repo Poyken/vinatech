@@ -1,9 +1,9 @@
-# 🤖 VINATECH MES & POP AGENT ECOSYSTEM (.agents)
+﻿# 🤖 VINATECH MES & POP AGENT ECOSYSTEM (.agents)
 
 > **Workspace:** `MES_POP` | **Phiên bản:** 2.2
 
 ## Cấu Trúc
-- **`rules/`** — `00_vinatech_rules.md` (Rules 0-21), `01_sql_safety_rules.md` (SQL chuẩn)
+- **`rules/`** — `00_vinatech_rules.md` (Rules 0-22), `01_sql_safety_rules.md` (SQL chuẩn)
 - **`skills/`** — `vinatech-mes-troubleshoot`, `vinatech-db-operations`, `vinatech-new-model-setup`
 - **`agents/`** — `investigator-agent`, `auditor-agent`, `hotfix-deployer`
 

@@ -1,4 +1,4 @@
-# 🛡️ VINATECH MASTER AGENT WORKSPACE RULE DEFINITIONS (V3.1)
+﻿# 🛡️ VINATECH MASTER AGENT WORKSPACE RULE DEFINITIONS (V3.1)
 
 ## QUY TẮC BẮT BUỘC KHÔNG THỂ BỎ QUA:
 
@@ -58,5 +58,9 @@
       * Muốn biết thông tin bảng, menu, quy trình: BẮT BUỘC tra cứu L1 Cache (`POP_MATRIX.json`, `QUICK_MATRIX.json`, `KSYSTEM_MATRIX.json`, `DATABASE_MATRIX.json`, `GW_FORM_MATRIX.json`) hoặc đọc SP gốc (`.\mes.ps1 sp`).
       * Lệnh `.\db.ps1 query` CHỈ ĐƯỢC PHÉP dùng khi CLI Hub chưa hỗ trợ VÀ đã biết đích xác 100% bảng + 3-5 cột từ tài liệu/KB/SP, có `WITH (NOLOCK)`. CẤM chạy quá 1-2 query.
     - **KỶ LUẬT HARD CEILING 1-2 TOOL CALLS:** Lấy xong dữ liệu từ CLI Hub là DỪNG NGAY và trả lời. Cấm gọi thêm tool để verify lan man.
+
+13. **RULE 22 - QUY TẮC ĐỊNH DANH SỰ CỐ & PHÂN LOẠI ISSUE (POP BẮT BUỘC GHI LÀ POP, KHÔNG GHI MES):**
+    - Mọi issue, sự cố phát sinh, task hỗ trợ, ticket, báo cáo tuần IT, báo cáo khắc phục sự cố... liên quan đến POP (Kiosk xưởng, Web POP, nạp NVL Kiosk, kẹt máy Kiosk, sync MongoToMesPerformance) **BẮT BUỘC ghi phân loại/remark/hệ thống là `POP`**, **TUYỆT ĐỐI KHÔNG ghi là `MES` nữa**.
+    - **Tách bạch rõ ràng:** `POP` (Toàn bộ Kiosk xưởng & Web POP) vs `MES` (Chỉ dành riêng cho Core MES Sản Xuất WinForm & CSDL lõi).
 
 

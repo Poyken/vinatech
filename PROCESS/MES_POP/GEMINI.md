@@ -1,4 +1,4 @@
-# 🛡️ VINATECH MES WORKSPACE RULES (MES_POP)
+﻿# 🛡️ VINATECH MES WORKSPACE RULES (MES_POP)
 
 > **Single Source of Truth:** `.agents/rules/00_vinatech_rules.md`
 > **Primary Command Hubs:** `.\pop.ps1` (POP Kiosk) & `.\mes.ps1` (Core MES Production)
@@ -25,6 +25,9 @@
   * **LUÔN DÙNG TOOL ĐÃ ĐÓNG GÓI:** POP Kiosk & NVL dùng `.\pop.ps1 [trace|nvl|unlock|find]`, MES Core dùng `.\mes.ps1 [trace|diagnose|screen|sp|find|lineage]`, Groupware dùng `.\gw.ps1 [trace|form|find]`, K-System ERP dùng `.\ksys.ps1 [find|trace|module]`.
   * **CẤM TUYỆT ĐỐI DÙNG `.\db.ps1 query` ĐỂ THỬ SAI (0 BLIND SQL LOOPING):** Cấm chạy chuỗi SELECT mò mẫm bảng, cột hay đoán logic. Muốn biết bảng/menu/trường ➔ Bắt buộc tra L1 Cache (`POP_MATRIX.json`, `QUICK_MATRIX.json`, `KSYSTEM_MATRIX.json`, `GW_FORM_MATRIX.json`) hoặc `find`.
   * **GIỚI HẠN CỨNG 1-2 TOOL CALLS:** Lấy xong data DỪNG NGAY và trả lời, cấm query lan man.
+- **RULE 22 (ĐỊNH DANH SỰ CỐ & PHÂN LOẠI ISSUE — POP BẮT BUỘC GHI POP, KHÔNG GHI MES):**
+  * Mọi issue (sự cố/task/ticket/báo cáo tuần IT/báo cáo khắc phục sự cố) liên quan đến POP (POP Kiosk, Web POP, nạp NVL Kiosk, kẹt máy Kiosk, đồng bộ MongoToMesPerformance...) BẮT BUỘC ghi phân loại/remark là **POP**, TUYỆT ĐỐI KHÔNG ghi là **MES** nữa.
+  * Tách biệt rõ ràng: **MES** (chỉ cho Core MES Sản Xuất WinForm B-series & DB lõi) vs **POP** (toàn bộ Kiosk xưởng & Web POP).
 
 
 
