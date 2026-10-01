@@ -77,15 +77,26 @@ class RelayHandler(BaseHTTPRequestHandler):
             return
 
         if path == "/api/health":
-            result = run_cli_command([".\\mes.ps1", "health"])
+            json_res = run_cli_command([".\\tools\\get_health_json.ps1"])
+            out_str = json_res.get("stdout", "").strip()
+            health_data = None
+            if out_str and "{" in out_str:
+                try:
+                    start_idx = out_str.find("{")
+                    end_idx = out_str.rfind("}") + 1
+                    health_data = json.loads(out_str[start_idx:end_idx])
+                except Exception:
+                    pass
+            if not health_data:
+                health_data = {
+                    "relay_status": "ONLINE",
+                    "raw_output": out_str
+                }
             self.send_response(200)
             self._send_cors_headers()
             self.send_header("Content-Type", "application/json")
             self.end_headers()
-            self.wfile.write(json.dumps({
-                "relay_status": "ONLINE",
-                "raw_output": result.get("stdout", "")
-            }).encode("utf-8"))
+            self.wfile.write(json.dumps(health_data).encode("utf-8"))
 
         elif path == "/api/trace":
             target = params.get("target", [""])[0]
