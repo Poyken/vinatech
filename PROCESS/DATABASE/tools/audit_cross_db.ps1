@@ -1,4 +1,4 @@
-﻿<#
+<#
 .SYNOPSIS
     Kiem toan toan bo cac phu thuoc lien co so du lieu (Cross-Database Dependencies).
 .DESCRIPTION
@@ -53,39 +53,31 @@ foreach ($p in $profilesToScan) {
         $cmd.CommandText = @"
 SELECT 
     '$currentDB' AS SourceDB,
-    s.name AS [Schema],
-    o.name AS ObjectName,
+    OBJECT_SCHEMA_NAME(d.referencing_id) AS [Schema],
+    OBJECT_NAME(d.referencing_id) AS ObjectName,
     o.type_desc AS ObjectType,
     o.modify_date AS ModifyDate,
-    m.definition AS Definition
-FROM sys.sql_modules m WITH(NOLOCK)
-JOIN sys.objects o WITH(NOLOCK) ON m.object_id = o.object_id
-JOIN sys.schemas s WITH(NOLOCK) ON o.schema_id = s.schema_id
-WHERE ($whereSQL)
+    ISNULL(d.referenced_server_name + '.', '') + d.referenced_database_name AS ReferencedDB
+FROM sys.sql_expression_dependencies d WITH(NOLOCK)
+JOIN sys.objects o WITH(NOLOCK) ON d.referencing_id = o.object_id
+WHERE d.referenced_database_name IS NOT NULL
+GROUP BY d.referencing_id, o.type_desc, o.modify_date, d.referenced_server_name, d.referenced_database_name
 ORDER BY o.modify_date DESC;
 "@
-        $cmd.CommandTimeout = 60
+        $cmd.CommandTimeout = 15
         $adapter = New-Object System.Data.SqlClient.SqlDataAdapter($cmd)
         $ds = New-Object System.Data.DataSet
         [void]$adapter.Fill($ds)
         $tableRes = $ds.Tables[0]
 
         foreach ($row in $tableRes.Rows) {
-            # Find which external DBs were referenced
-            $referencedDBs = @()
-            foreach ($db in $searchTerms) {
-                if ($row.Definition -match "(?i)\b$db\b\.|\b\[$db\]\b") {
-                    $referencedDBs += $db
-                }
-            }
-
             $allResults += [PSCustomObject]@{
                 SourceDB     = $row.SourceDB
                 Schema       = $row.Schema
                 ObjectName   = $row.ObjectName
                 ObjectType   = $row.ObjectType
                 ModifyDate   = $row.ModifyDate
-                ReferencedDB = ($referencedDBs | Select-Object -Unique) -join ", "
+                ReferencedDB = $row.ReferencedDB
             }
         }
 

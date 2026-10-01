@@ -1,4 +1,4 @@
-﻿<#
+<#
 .SYNOPSIS
     Kiem tra va bóc tach toàn bo SQL Server Agent Jobs tren he thong.
 .DESCRIPTION
@@ -24,6 +24,7 @@ try {
     if ($Detail -and $Name) {
         Write-Host "DOC CHI TIET CAC BUOC CUA JOB: '$Name'..." -ForegroundColor Yellow
         $cmd = $conn.CreateCommand()
+        $cmd.CommandTimeout = 120
         $cleanName = $Name.Replace("'", "''")
         $cmd.CommandText = @"
 SELECT 
@@ -65,6 +66,7 @@ ORDER BY s.step_id;
         }
 
         $cmd = $conn.CreateCommand()
+        $cmd.CommandTimeout = 120
         $cmd.CommandText = @"
 SELECT 
     j.name AS JobName,

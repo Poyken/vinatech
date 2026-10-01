@@ -189,14 +189,20 @@ function Get-DbConnection {
     throw "Cannot connect to database profile: $Profile across all failovers."
 }
 
-# Compatibility for GROUPWARE/tools/gw_trace.ps1
+# Compatibility for GROUPWARE and other callers
 function Invoke-DbQuery {
     param(
         [string]$Profile = "Groupware",
-        [string]$Query = ""
+        [string]$Query = "",
+        $Connection = $null
     )
     if ([string]::IsNullOrWhiteSpace($Query)) { return $null }
-    $conn = Get-DbConnection -Profile $Profile -Silent
+    $conn = $Connection
+    $shouldClose = $false
+    if ($conn -eq $null) {
+        $conn = Get-DbConnection -Profile $Profile -Silent
+        $shouldClose = $true
+    }
     if ($conn -eq $null) { return $null }
     try {
         $cmd = $conn.CreateCommand()
@@ -208,10 +214,10 @@ function Invoke-DbQuery {
         $reader.Close()
         return ,$dt
     } catch {
-        Write-Host "Invoke-DbQuery ERROR: $($_.Exception.Message)" -ForegroundColor Red
+        Write-Warning "Invoke-DbQuery: $($_.Exception.Message)"
         return $null
     } finally {
-        if ($conn.State -eq 'Open') { $conn.Close() }
+        if ($shouldClose -and $conn.State -eq 'Open') { $conn.Close() }
     }
 }
 
@@ -535,4 +541,101 @@ function Invoke-SafeSelect {
 function Get-DBConfig {
     param([string]$ConfigPath = "")
     return $global:mesConfig
+}
+
+# Validate SQL read-only safety rules (for run_query.ps1 / mes query)
+function Test-SqlReadOnlySafety {
+    param (
+        [string]$SqlText
+    )
+    
+    $restrictedKeywords = @(
+        "\bINSERT\b", "\bUPDATE\b", "\bDELETE\b", "\bMERGE\b",
+        "\bDROP\b", "\bALTER\b", "\bTRUNCATE\b", "\bCREATE\b"
+    )
+    
+    foreach ($keyword in $restrictedKeywords) {
+        if ($SqlText -match "(?mi)$keyword") {
+            return @{
+                IsValid = $false
+                Error = "Safety violation: Modifying command detected ($keyword). Read-only queries only."
+            }
+        }
+    }
+    
+    return @{ IsValid = $true }
+}
+
+# Generate warnings if queries access key transactional tables without NOLOCK
+function Get-NoLockWarnings {
+    param (
+        [string]$SqlText
+    )
+    
+    $warnings = @()
+    $transactionTables = @("STB_ProdRouteHist", "STB_MaterialLotInfo", "STB_SetInfo", "STB_MaterialDocDetail", "STB_MaterialStock")
+    
+    foreach ($table in $transactionTables) {
+        if ($SqlText -match "(?mi)\b$table\b" -and $SqlText -notmatch "(?mi)\b$table\b.*\bNOLOCK\b" -and $SqlText -notmatch "(?mi)\bNOLOCK\b.*\b$table\b") {
+            $warnings += "Warning: Query accesses transactional table '$table' without WITH(NOLOCK). Please add WITH(NOLOCK) to prevent table locks."
+        }
+    }
+    
+    return $warnings
+}
+
+# Validate SQL deployment safety rules
+function Test-SqlDeploySafety {
+    param (
+        [string]$SqlText,
+        [bool]$AllowDangerous = $false
+    )
+    
+    $isValid = $true
+    $errors = @()
+    $warnings = @()
+    
+    $isRoutineDefinition = $SqlText -match "(?mi)\b(CREATE|ALTER)\s+(OR\s+ALTER\s+)?(PROCEDURE|PROC|FUNCTION|VIEW|TRIGGER)\b"
+    $hasDML = $SqlText -match "(?mi)\b(INSERT|UPDATE|DELETE|MERGE)\b"
+    
+    if ($hasDML -and -not $isRoutineDefinition) {
+        if ($SqlText -notmatch "(?mi)\bBEGIN\s+(TRAN|TRANSACTION)\b") {
+            $errors += "Validation Error: SQL contains DML (INSERT/UPDATE/DELETE) but is missing 'BEGIN TRAN'."
+            $isValid = $false
+        }
+        
+        if ($SqlText -notmatch "(?mi)\b(ROLLBACK|COMMIT)\s+(TRAN|TRANSACTION)?\b") {
+            $errors += "Validation Error: SQL contains DML but is missing 'ROLLBACK' or 'COMMIT'."
+            $isValid = $false
+        }
+        
+        if ($SqlText -match "(?mi)\b(UPDATE|DELETE)\b" -and $SqlText -notmatch "(?mi)\b(WHERE|JOIN)\b") {
+            $errors += "Validation Error: SQL contains UPDATE/DELETE without WHERE or JOIN clause! Extremely dangerous."
+            $isValid = $false
+        }
+    }
+    
+    $dangerousDDLKeywords = @(
+        "\bDROP\s+TABLE\s+(?!(?:#|(?:\[?dbo\]?\.)?\[?B(?:K|AK)_))\S+",
+        "\bDROP\s+DATABASE\b",
+        "\bTRUNCATE\s+TABLE\b",
+        "\bALTER\s+TABLE\s+(?!(?:#|(?:\[?dbo\]?\.)?\[?B(?:K|AK)_))\S+"
+    )
+    
+    foreach ($keyword in $dangerousDDLKeywords) {
+        if ($SqlText -match "(?mi)$keyword") {
+            if ($AllowDangerous) {
+                $warnings += "Warning: Dangerous DDL statement detected ($keyword) but allowed via -AllowDangerous."
+            } else {
+                $errors += "Validation Error: Dangerous DDL statement detected ($keyword)."
+                $isValid = $false
+            }
+        }
+    }
+    
+    return @{
+        IsValid  = $isValid
+        Errors   = $errors
+        Warnings = $warnings
+    }
 }

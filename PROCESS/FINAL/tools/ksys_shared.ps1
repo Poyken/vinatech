@@ -1,4 +1,4 @@
-﻿<#
+<#
 .SYNOPSIS
     Shared Database Connection Module for YoungLimWon K-System Ace ERP (FINAL)
 .DESCRIPTION
@@ -91,6 +91,9 @@ function Invoke-KSysQuery {
             return $table
         }
         return @()
+    } catch {
+        Write-Warning "Invoke-KSysQuery: $($_.Exception.Message)"
+        return $null
     } finally {
         $conn.Close()
     }

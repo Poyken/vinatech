@@ -11,6 +11,7 @@ $files = @(
     'tools\shared\db_shared.ps1',
     'tools\shared\safety_hook.ps1',
     'tools\shared\reminder_hook.ps1',
+    'tools\shared\full_system_exhaustive_audit.ps1',
     '.agents\skills\vinatech-enterprise-ops\SKILL.md',
     '.agents\skills\vinatech-new-model-setup\SKILL.md'
 )
