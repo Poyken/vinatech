@@ -37,17 +37,33 @@ Khi nhận bất kỳ yêu cầu nào từ người dùng liên quan đến mộ
 
 ---
 
-## 2. Quy Trình Hotfix An Toàn Tuyệt Đối (Rule 24 - Zero Irreversible Hotfix)
-Mọi can thiệp CSDL phải tuân thủ nghiêm ngặt quy trình Pre-flight Snapshot:
-1. **Pre-flight Snapshot:** Trước khi chạy DML trên Production, hệ thống tự động lưu bản chụp JSON các bản ghi gốc tại `backups/snapshots/` và sinh script hoàn tác `backups/undo/undo_<Target>_<Timestamp>.sql`.
-2. **Triển khai an toàn:** Luôn có `BEGIN TRAN...ROLLBACK` và thông tin định danh `Author = 'vanduc'`, `ChangeUserID = 'vanduc'`.
-3. **1-Click Rollback:**
+## 2. Quy Trình Triển Khai Hotfix & Hoàn Tác An Toàn (Rule 24 & DEPLOYMENT_SOP)
+Mọi can thiệp CSDL phải tuân thủ nghiêm ngặt quy trình 5 bước trong [DEPLOYMENT_SOP.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/.agents/rules/DEPLOYMENT_SOP.md):
+
+1. **Sinh mã & Tiền kiểm định (Pre-flight Lint):**
+   - Soạn script theo chuẩn 4 pha bọc Transaction, `Author = 'vanduc'`, `ChangeUserID = 'vanduc'`.
+   - Kiểm tra an toàn qua `validate_sql.ps1`.
+
+2. **Thực thi Triển Khai Qua Master Hub (`ops deploy`):**
    ```powershell
-   # Xem trước câu lệnh hoàn tác:
+   # Triển khai Hotfix vào CSDL chỉ định (Mặc định SmartFactoryV2):
+   ops deploy ".\MES_POP\sql\hotfixes\hotfix_20261002_VVQR2601001.sql" -Profile SmartFactoryV2
+   ```
+   *Cơ chế tự động:*
+   - Bóc tách TargetId (Lot/PO/Mã sự cố) từ câu lệnh.
+   - Tự động chụp JSON Snapshot tại `backups/snapshots/snap_<Target>_<ts>.json`.
+   - Tự động sinh file hoàn tác `backups/undo/undo_<Target>_<ts>.sql` có đóng dấu `-- Profile: <DbProfile>`.
+   - Thực thi từng batch `GO` an toàn qua ADO.NET và tự động cập nhật nhật ký tri thức `AI_AGENT_CONFIG/HOTFIX_LOG.jsonl`.
+
+3. **1-Click Emergency Rollback (< 1.5s):**
+   ```powershell
+   # Bước 1: Xem trước câu lệnh hoàn tác (Dry-run):
    ops rollback -Target <LotID_hoặc_Mã>
-   # Thực thi hoàn tác an toàn qua Transaction:
+
+   # Bước 2: Kích hoạt hoàn tác khôi phục nguyên trạng ngay lập tức:
    ops rollback -Target <LotID_hoặc_Mã> -Deploy
    ```
+   Hệ thống tự động phát hiện Database Profile từ header của undo script, mở Transaction và khôi phục dữ liệu nguyên vẹn ban đầu.
 
 ---
 

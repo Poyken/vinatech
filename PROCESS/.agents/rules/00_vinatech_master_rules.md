@@ -1,12 +1,17 @@
 ﻿# 🛡️ VINATECH MASTER AGENT WORKSPACE RULE DEFINITIONS (V3.1)
 
+> **Single Source of Truth:** `.agents/rules/00_vinatech_master_rules.md`  
+> **Production Deployment SOP:** `.agents/rules/DEPLOYMENT_SOP.md`  
+> **Production SQL Protocol:** `.agents/rules/01_sql_safety_rules.md`  
+> **Primary Command Hubs:** `.\ops.ps1`, `.\pop.ps1`, `.\mes.ps1`, `.\gw.ps1`, `.\db.ps1`, `.\ksys.ps1`
+
 ## QUY TẮC BẮT BUỘC KHÔNG THỂ BỎ QUA:
 
 1. **RULE 0 - ZERO SELECT WITHOUT PRIOR KB (BẤT BIẾN):**
    - Luôn tra cứu L1 Cache qua `.\pop.ps1 find "<Keyword>"`, `.\mes.ps1 find "<Keyword>"`, `.\gw.ps1 find "<Keyword>"`, hoặc `.\db.ps1 find "<Keyword>"` trước khi chạy bất kỳ câu lệnh SQL SELECT nào.
 
-2. **RULE 1 - SELECT-ONLY ON PRODUCTION:**
-   - Cấm thực thi DML/DDL trực tiếp. Mọi hotfix phải có `BEGIN TRAN...ROLLBACK` và triển khai qua `deploy_tool.ps1` hoặc `.\mes.ps1 deploy <file.sql>`.
+2. **RULE 1 - SELECT-ONLY ON PRODUCTION & MANDATORY DEPLOYMENT SOP:**
+   - Cấm thực thi DML/DDL trực tiếp trên Production Console. Mọi hotfix phải có `BEGIN TRAN...ROLLBACK`, tuân thủ [DEPLOYMENT_SOP.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/.agents/rules/DEPLOYMENT_SOP.md) và triển khai qua `ops deploy <file.sql>` hoặc `.\mes.ps1 deploy <file.sql>`.
 
 3. **RULE 4 - SURGICAL RETRIEVAL & L1 CACHE FIRST:**
    - Ưu tiên đọc L1 JSON Matrix (<0.001s, ~150 tokens). Tuyệt đối không đọc tràn lan cả file Markdown >50KB gây nghẽn Context.

@@ -70,9 +70,10 @@ function Show-OpsHelp {
     Write-Host "  2. .\ops.ps1 trace <Keyword>       - Universal 360 Trace: Tu nhan dien 10 loai thuc the" -ForegroundColor Green
     Write-Host "  3. .\ops.ps1 clean [-Force]        - Deep Workspace Purge: Don rac, log cu & tieu diet zombie process" -ForegroundColor Green
     Write-Host "  4. .\ops.ps1 audit-kb              - Anti-Drift: Kiem toan L1 Cache vs Schema DB Production thuc te" -ForegroundColor Green
-    Write-Host "  5. .\ops.ps1 rollback -Target <ID> - 1-Click Undo: Khoi phuc du lieu tu snapshot hotfix an toan" -ForegroundColor Green
-    Write-Host "  6. .\ops.ps1 weekly-report         - Tu dong tong hop Bao Cao Tuan IT (Chuan Rule 22: POP vs MES)" -ForegroundColor Green
-    Write-Host "  7. .\ops.ps1 <mes|pop|gw|db|ksys>  - Chuyen tiep lenh truc tiep den tung Sub-Hub chuyen dung" -ForegroundColor Gray
+    Write-Host "  5. .\ops.ps1 deploy <file.sql>     - Trien khai Hotfix: Kiem toan an toan, Pre-flight Snapshot & Transaction" -ForegroundColor Green
+    Write-Host "  6. .\ops.ps1 rollback -Target <ID> - 1-Click Undo: Khoi phuc du lieu tu snapshot hotfix an toan" -ForegroundColor Green
+    Write-Host "  7. .\ops.ps1 weekly-report         - Tu dong tong hop Bao Cao Tuan IT (Chuan Rule 22: POP vs MES)" -ForegroundColor Green
+    Write-Host "  8. .\ops.ps1 <mes|pop|gw|db|ksys>  - Chuyen tiep lenh truc tiep den tung Sub-Hub chuyen dung" -ForegroundColor Gray
     Write-Host "================================================================================" -ForegroundColor Cyan
 }
 
@@ -397,6 +398,17 @@ switch ($Command.ToLower()) {
     }
     "clean" {
         Invoke-DeepClean -Force:$Force
+    }
+    "deploy" {
+        $deployScript = Join-Path $scriptDir "MES_POP\tools\deploy_tool.ps1"
+        if (-not (Test-Path $deployScript)) {
+            Write-Error "Khong tim thay deploy_tool.ps1 tai $deployScript"
+            exit 1
+        }
+        $deployParams = @{ SqlPath = $Target }
+        if ($Profile) { $deployParams["Profile"] = $Profile }
+        if ($Force) { $deployParams["Force"] = $true }
+        & $deployScript @deployParams
     }
     "rollback" {
         Invoke-SafeRollback -TargetId $Target

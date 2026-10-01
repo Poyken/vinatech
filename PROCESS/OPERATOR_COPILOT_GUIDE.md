@@ -134,3 +134,44 @@ Khi nhận được báo lỗi từ hiện trường, AI Copilot luôn phản h�
 2. 📍 **Hiện trạng thực tế:** Lot đang ở đâu, kẹt cái gì, bảng nào.
 3. 🛠️ **Cách OP tự xử lý trên giao diện (Workaround):** Các bước 1-2-3 cho công nhân/tổ trưởng tại xưởng.
 4. ⚡ **SQL Hotfix chuẩn (Nếu IT phải can thiệp):** Đã bọc `BEGIN TRAN...ROLLBACK`, có NOLOCK, ChangeUserID='vanduc'.
+
+---
+
+## 🚀 8. QUY TRÌNH TRIỂN KHAI VẬN HÀNH CHUẨN (STANDARD DEPLOYMENT RUNBOOK)
+
+> **Chi tiết toàn diện:** Tham khảo tài liệu gốc [.agents/rules/DEPLOYMENT_SOP.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/.agents/rules/DEPLOYMENT_SOP.md)
+
+### 🔹 Vòng đời 5 bước khi triển khai bất kỳ thay đổi CSDL nào:
+1. **Khảo sát Hiện trạng:** `ops trace "<LotID>"` (Golden Query 360°).
+2. **Sinh mã Hotfix an toàn:** Dùng các lệnh `mes fix-...` hoặc soạn file SQL theo chuẩn 4 pha bọc Transaction.
+3. **Tiền kiểm định (Linting):** Chạy `validate_sql.ps1` phát hiện từ khóa nguy hiểm.
+4. **Bấm lệnh Triển khai:**
+   ```powershell
+   ops deploy <đường_dẫn_file.sql> [-Profile <DbProfile>]
+   ```
+   *Hệ thống tự động chụp Pre-flight JSON Snapshot và sinh mã hoàn tác `undo_<Target>.sql` vào `backups/undo/` trước khi chạm vào dữ liệu.*
+5. **Nghiệm thu & Học hỏi:** Trace lại dữ liệu xác nhận thành công, yêu cầu xưởng F5 màn hình, và kích hoạt `/learn` nếu phát hiện tiền lệ mới.
+
+### 🔹 Kích hoạt Hoàn tác Khẩn cấp (1-Click Emergency Rollback):
+Khi OP báo nhầm hoặc dữ liệu sai lệch sau khi sửa:
+```powershell
+# Xem trước nội dung hoàn tác:
+ops rollback -Target <LotID_hoặc_MãSựCố>
+
+# Thực thi khôi phục nguyên trạng trong < 1.5 giây:
+ops rollback -Target <LotID_hoặc_MãSựCố> -Deploy
+```
+
+---
+
+## 🔒 9. MA TRẬN PHÂN ĐỊNH TRÁCH NHIỆM TRIỂN KHAI (RACI MATRIX)
+
+| Hoạt Động Triển Khai | AI Copilot (Antigravity) | IT Operator (Kỹ Sư Đức) | Quản Đốc / Tổ Trưởng Xưởng |
+| :--- | :---: | :---: | :---: |
+| **Tiếp nhận & Chẩn đoán lỗi** | Thực hiện (Trace 360°, Root Cause) | Giám sát & Phê duyệt | Báo mã Lot, màn hình lỗi |
+| **Soạn mã Hotfix / Script** | Thực hiện (Theo chuẩn 4 pha, Author 'vanduc') | Kiểm tra cú pháp & Logic | Không can thiệp |
+| **Tiền kiểm định & Snapshot** | Tự động hóa (`validate_sql`, `Snapshot`) | Xác nhận kết quả Lint | Không can thiệp |
+| **Bấm lệnh Triển khai (Deploy)** | Đề xuất câu lệnh CLI hoàn chỉnh | **Quyết định & Thực thi** (`ops deploy`) | Không can thiệp |
+| **Nghiệm thu sau triển khai** | Tự động trace xác nhận dữ liệu DB | Xác nhận hoàn thành | Thao tác thử trên WinForm / Kiosk |
+| **Kích hoạt Hoàn tác (Rollback)** | Tự động trích xuất file Undo | **Quyết định & Thực thi** (`ops rollback -Deploy`) | Báo dừng chuyền nếu có lỗi |
+| **Lưu trữ tri thức (`/learn`)** | Đề xuất bài học & Ghi nhận vào L1 Cache | Duyệt nội dung bài học | Không can thiệp |

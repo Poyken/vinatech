@@ -33,9 +33,21 @@ if (Test-Path $validateScript) {
 }
 
 # Load shared database utilities
-. (Join-Path $PSScriptRoot "db_shared.ps1")
+$sharedUtil = Join-Path (Split-Path (Split-Path $PSScriptRoot -Parent) -Parent) "tools\shared\db_shared.ps1"
+if (Test-Path $sharedUtil) {
+    . $sharedUtil
+} else {
+    . (Join-Path $PSScriptRoot "db_shared.ps1")
+}
 
 $sqlText = [System.IO.File]::ReadAllText($SqlPath, [System.Text.Encoding]::UTF8)
+
+# Detect TargetId from filename or Lot in SQL
+$targetId = [System.IO.Path]::GetFileNameWithoutExtension($SqlPath)
+$lotMatch = [regex]::Match($sqlText, "(?mi)\b(VV[A-Z0-9_\-]+)\b")
+if ($lotMatch.Success) {
+    $targetId = $lotMatch.Groups[1].Value
+}
 
 # Automatic Pre-flight Snapshot for DML changes
 if (-not $SkipBackup) {
@@ -44,7 +56,7 @@ if (-not $SkipBackup) {
         $tbl = $m.Groups[1].Value.Trim()
         $where = $m.Groups[2].Value.Trim()
         if ($tbl -and $where) {
-            Export-PreflightSnapshot -TableName $tbl -WhereClause $where -Profile $Profile -Reason "deploy_preflight"
+            Export-PreflightSnapshot -TableName $tbl -WhereClause $where -Profile $Profile -Reason $targetId
         }
     }
 
@@ -53,7 +65,7 @@ if (-not $SkipBackup) {
         $tbl = $m.Groups[1].Value.Trim()
         $where = $m.Groups[2].Value.Trim()
         if ($tbl -and $where) {
-            Export-PreflightSnapshot -TableName $tbl -WhereClause $where -Profile $Profile -Reason "deploy_preflight"
+            Export-PreflightSnapshot -TableName $tbl -WhereClause $where -Profile $Profile -Reason $targetId
         }
     }
 }
