@@ -709,8 +709,12 @@ C122 (Chỉ định hạng mục cho từng NVL)
     → Tìm NVL → Ấn "Chọn trong nhóm/Hạng mục" → Tick → OK → Lưu
     ↓
 C220 (Kiểm tra NVL đầu vào)
-    → Khi NVL về kho → IQC vào C220 để nhập kết quả kiểm tra
+    → Khi NVL về kho → Thủ kho phải bấm "Xử lý hàng nhận về" và bấm "Tạo tem" tại F330 để sinh Lot vào STB_MaterialDocLotInfo
+    → IQC vào C220 để nhập kết quả kiểm tra (Pass/Fail)
+    → Sau khi PASS, thủ kho quay lại F330 bấm "Xác nhận nhập kho"
 ```
+
+> ⚠️ **Lưu ý đồng bộ F330 ➔ C220:** C220 truy vấn qua SP `usp_MaterialQcInfo_get` có `INNER JOIN STB_MaterialDocLotInfo`. Nếu thủ kho chỉ bấm "Xử lý hàng nhận về" (Arrival) mà **chưa bấm "Tạo tem"** tại F330, C220 sẽ KHÔNG hiển thị phiếu này để IQC đánh giá, và cột "Kết quả" tại F330 vẫn hiện `None`.
 
 ```sql
 -- Kiểm tra hạng mục IQC của NVL

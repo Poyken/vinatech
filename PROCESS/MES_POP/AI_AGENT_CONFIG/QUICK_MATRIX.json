@@ -890,7 +890,8 @@
         "nvl_không_tìm_thấy_trong_popup_chọn": "Chưa khai báo NVL tại A230 -> Vào A230 thêm MaterialCode",
         "đổi_mã_vật_tư_tự_động_lỗi": "`STB_ChangeMaterialCode_HN` thiếu mapping -> INSERT mapping mã cũ→mới — xem [KB_02 §3.1](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/KB_02/KB_02_01_WMS_CORE.md)",
         "quét_nhập_mã_lot_vendor_họ_vỏ_nhôm_aoxin": "Hàm `fn_VVT_getdatebyVendorLot_MergeCode` và `fn_VVT_getdatebyVendorLot` bị hardcode mã đơn lẻ thay vì wildcard `LIKE 'GBAXAC-%'` (18 số) và `LIKE 'GBNKSP-%'` (Tháng mã hóa ký tự) -> Cập nhật hàm `fn_VVT_getdatebyVendorLot_MergeCode` & `fn_VVT_getdatebyVendorLot` bổ sung wildcard parse tự động — xem chi tiết [KB_02_01 §4.11 Mẫu 5, Mẫu 6](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/KB_02/KB_02_01_WMS_CORE.md#3-các-mẫu-viết-logic-parse-ngày-thông-dụng)",
-        "lỗi_import_excel_lệch_cột_startperiod": "Do dán nhầm mã Bin/Kệ E04/E05 vào cột StartPeriod -> Dùng .\\mes.ps1 validate-excel <File.xlsx> -Route F330 để check và sửa lại file"
+        "lỗi_import_excel_lệch_cột_startperiod": "Do dán nhầm mã Bin/Kệ E04/E05 vào cột StartPeriod -> Dùng .\\mes.ps1 validate-excel <File.xlsx> -Route F330 để check và sửa lại file",
+        "đã_bấm_arrival_nhưng_chưa_link_c220_kết_quả_none": "Thủ kho mới bấm 'Xử lý hàng nhận về' (Arrival) nhưng chưa bấm nút 'Tạo tem' (bảng STB_MaterialDocLotInfo chưa có dòng). SP usp_MaterialQcInfo_get INNER JOIN STB_MaterialDocLotInfo nên C220 không thấy phiếu -> Mở lại F330 -> chọn dòng NVL -> bấm 'Tạo tem' -> F5 lại C220 để IQC đánh giá PASS"
       },
       "fix_template": "IQC chưa PASS tại C220 -> QC hoàn thành IQC PASS trước"
     },
@@ -1503,6 +1504,18 @@
         "VINATECH_RESTFUL.VINA_SSO_LOGIN"
       ],
       "solution": "Chạy ngay .\\mes.ps1 user <EmpNo/UserId> hoặc .\\pop.ps1 user <EmpNo/UserId> để chẩn đoán đồng bộ 5 CSDL trong 1-shot (<1s)."
+    },
+    "F330_C220_IQC_RECEIPT_LOT_LINK": {
+      "title": "Phiếu nhập hàng F330 đã nhận hàng (Arrival) nhưng chưa link C220 để IQC đánh giá (Cột Kết quả là None)",
+      "screen": "F330 / C220 / IQC",
+      "description": "Thủ kho đã bấm 'Xử lý hàng nhận về' (DocStatusName='ARRIVAL') ở F330 nhưng chưa bấm 'Tạo tem' để sinh mã Lot. SP usp_MaterialQcInfo_get trên C220 bắt buộc INNER JOIN STB_MaterialDocLotInfo nên lọc bỏ phiếu, khiến C220 không hiển thị và F330 cột Kết quả là None.",
+      "tables": [
+        "STB_MaterialDocInfo",
+        "STB_MaterialDocDetail",
+        "STB_MaterialDocLotInfo",
+        "STB_MaterialQcInfo"
+      ],
+      "solution": "Tại F330: Chọn dòng NVL -> Nhập quy cách đóng gói -> Bấm 'Tạo tem' để sinh STB_MaterialDocLotInfo -> Mở C220 nhấn F5 sẽ thấy Lot hiển thị để IQC đánh giá PASS -> Quay lại F330 bấm 'Xác nhận nhập kho'."
     }
   }
 }

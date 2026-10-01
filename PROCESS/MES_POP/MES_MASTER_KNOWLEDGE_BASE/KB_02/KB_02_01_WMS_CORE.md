@@ -524,6 +524,7 @@ NVL sẵn sàng cho sản xuất
 ```
 
 > Không nhập được F330 -> Groupware chưa duyệt Arrival Confirmation?
+> Hàng đã bấm "Xử lý hàng nhận về" nhưng C220 không thấy để IQC đánh giá (kết quả "None") -> F330 chưa bấm nút "Tạo tem" để sinh `STB_MaterialDocLotInfo` (do SP `usp_MaterialQcInfo_get` INNER JOIN với bảng Lot).
 > Không làm được Receiving Confirmation -> C220 chưa PASS?
 
 ---

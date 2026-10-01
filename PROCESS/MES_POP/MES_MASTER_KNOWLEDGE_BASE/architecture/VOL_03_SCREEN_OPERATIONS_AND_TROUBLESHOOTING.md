@@ -193,6 +193,9 @@ Dưới đây là cẩm nang tra cứu và khắc phục lỗi thực tế phân
         SET HoldError = NULL, Holddate = NULL, MaterialWarehouseCode = 'ROH_BG_WH' 
         WHERE MaterialLotNo = 'MÃ_LOT';
         ```
+*   **Sự cố: Phiếu nhập hàng đã bấm Arrival ở F330 nhưng không hiển thị trên C220 (Cột Kết quả hiện "None")**
+    *   *Nguyên nhân:* SP `usp_MaterialQcInfo_get` INNER JOIN với bảng `STB_MaterialDocLotInfo`. Thủ kho mới chỉ nhấn "Xử lý hàng nhận về" nhưng chưa bấm nút **"Tạo tem"** để sinh các mã Lot con.
+    *   *Khắc phục:* Mở lại F330 ➔ Chọn phiếu nhập và dòng NVL ➔ Nhập quy cách đóng gói ➔ Bấm **"Tạo tem"** (sinh Lot vào `STB_MaterialDocLotInfo`) ➔ Quay lại C220 nhấn F5 sẽ thấy danh sách Lot để IQC đo kiểm và xác nhận PASS ➔ Quay lại F330 bấm **"Xác nhận nhập kho"**.
 
 #### 📊 C530 — OQC Audit (Kiểm định chất lượng xuất xưởng)
 *   **Chức năng:** QC rút mẫu đo 20 thông số kỹ thuật của thùng hàng thành phẩm đã đóng gói, nhập kết quả mẫu và set trạng thái **StatusCheck = 'Pass'** để cho phép xuất kho.
