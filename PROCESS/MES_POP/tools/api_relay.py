@@ -261,9 +261,8 @@ class RelayHandler(BaseHTTPRequestHandler):
                     f.write(sql_content)
 
                 # Execute safely via deploy_tool.ps1
-                cmd = ["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File",
-                       os.path.join(WORKSPACE_DIR, "tools", "deploy_tool.ps1"),
-                       "-SqlPath", f'"{temp_sql_path}"', "-Profile", f'"{profile}"']
+                cmd = ["&", f"'{os.path.join(WORKSPACE_DIR, 'tools', 'deploy_tool.ps1')}'",
+                       "-SqlPath", f"'{temp_sql_path}'", "-Profile", f"'{profile}'"]
                 result = run_cli_command(cmd)
 
                 self.send_response(200)
@@ -286,16 +285,40 @@ class RelayHandler(BaseHTTPRequestHandler):
 
         elif parsed.path == "/api/query":
             try:
+                import time
                 data = json.loads(body)
                 query_sql = data.get("query", "")
                 profile = data.get("profile", "SmartFactoryV2")
-                cmd = [".\\mes.ps1", "query", f'"{query_sql}"', "-Profile", f'"{profile}"']
+
+                scratch_dir = os.path.join(WORKSPACE_DIR, "scratch")
+                os.makedirs(scratch_dir, exist_ok=True)
+                temp_query_path = os.path.join(scratch_dir, f"web_query_{int(time.time()*1000)}.sql")
+                with open(temp_query_path, "w", encoding="utf-8") as f:
+                    f.write(query_sql)
+
+                cmd = ["&", f"'{os.path.join(WORKSPACE_DIR, 'tools', 'run_query.ps1')}'",
+                       "-SqlPath", f"'{temp_query_path}'", "-Profile", f"'{profile}'", "-Json"]
                 result = run_cli_command(cmd)
+                out_str = result.get("stdout", "").strip()
+                query_res = None
+                if out_str and "{" in out_str:
+                    try:
+                        s_idx = out_str.find("{")
+                        e_idx = out_str.rfind("}") + 1
+                        query_res = json.loads(out_str[s_idx:e_idx])
+                    except Exception:
+                        pass
+                if not query_res:
+                    query_res = {
+                        "success": result.get("success", False),
+                        "stdout": out_str,
+                        "error": result.get("stderr", "") or out_str
+                    }
                 self.send_response(200)
                 self._send_cors_headers()
                 self.send_header("Content-Type", "application/json")
                 self.end_headers()
-                self.wfile.write(json.dumps(result).encode("utf-8"))
+                self.wfile.write(json.dumps(query_res).encode("utf-8"))
             except Exception as e:
                 self.send_response(400)
                 self._send_cors_headers()

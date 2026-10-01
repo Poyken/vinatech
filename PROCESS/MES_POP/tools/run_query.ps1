@@ -1,4 +1,4 @@
-# ==============================================================================
+﻿# ==============================================================================
 # run_query.ps1 — SELECT-Only Query Tool for Vinatech MES
 # Multi-DB Profile | Tự động dò Server | Chống Lock CSDL | UTF-8 Unicode
 #
@@ -14,11 +14,17 @@
 
 param(
     [string]$Query = "",
-    [string]$Profile = "SmartFactoryV2"
+    [string]$SqlPath = "",
+    [string]$Profile = "SmartFactoryV2",
+    [switch]$Json
 )
 
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 $OutputEncoding = [System.Text.Encoding]::UTF8
+
+if (-not [string]::IsNullOrWhiteSpace($SqlPath) -and (Test-Path $SqlPath)) {
+    $Query = [System.IO.File]::ReadAllText($SqlPath, [System.Text.Encoding]::UTF8)
+}
 
 $sharedScript = Join-Path $PSScriptRoot "db_shared.ps1"
 if (Test-Path $sharedScript) {
@@ -38,7 +44,9 @@ if ($Profile -eq "SmartFactoryV2" -and (Test-Path $routerPath)) {
                 $targetProfile = $router.routes.$tblName.profile
                 if ($targetProfile -and $targetProfile -ne "SmartFactoryV2") {
                     $Profile = $targetProfile
-                    Write-Host "(!) [AUTO-ROUTER] Phat hien bang '$tblName' -> Tu dong chuyen Profile sang: '$Profile'" -ForegroundColor Cyan
+                    if (-not $Json) {
+                        Write-Host "(!) [AUTO-ROUTER] Phat hien bang '$tblName' -> Tu dong chuyen Profile sang: '$Profile'" -ForegroundColor Cyan
+                    }
                     break
                 }
             }
@@ -46,8 +54,12 @@ if ($Profile -eq "SmartFactoryV2" -and (Test-Path $routerPath)) {
     } catch {}
 }
 
-$conn = Get-DbConnection -Profile $Profile
+$conn = Get-DbConnection -Profile $Profile -Silent:$Json
 if ($conn -eq $null) {
+    if ($Json) {
+        @{ success = $false; error = "Khong the ket noi CSDL cho profile '$Profile'!" } | ConvertTo-Json -Compress
+        exit 1
+    }
     Write-Host "LOI: Khong the ket noi toi CSDL cho profile '$Profile'!" -ForegroundColor Red
     exit 1
 }
@@ -58,19 +70,24 @@ function Execute-SelectQuery([string]$sqlText) {
     # 1. Safety check: Read-Only rule
     $safety = Test-SqlReadOnlySafety -SqlText $sqlText
     if (-not $safety.IsValid) {
+        if ($Json) {
+            @{ success = $false; error = $safety.Error } | ConvertTo-Json -Compress
+            return
+        }
         Write-Host "CANH BAO: $($safety.Error)" -ForegroundColor Red
         return
     }
 
     # 2. Check for missing NOLOCK
-    $warnings = Get-NoLockWarnings -SqlText $sqlText
-    foreach ($w in $warnings) {
-        Write-Host "(!) $w" -ForegroundColor Yellow
+    if (-not $Json) {
+        $warnings = Get-NoLockWarnings -SqlText $sqlText
+        foreach ($w in $warnings) {
+            Write-Host "(!) $w" -ForegroundColor Yellow
+        }
+        Invoke-ProactiveKbSearch -SqlText $sqlText
     }
 
-    # 3. Trigger proactive KB suggestions
-    Invoke-ProactiveKbSearch -SqlText $sqlText
-
+    $qSw = [System.Diagnostics.Stopwatch]::StartNew()
     try {
         $cmd = $conn.CreateCommand()
         $cmd.CommandTimeout = 60
@@ -79,6 +96,37 @@ function Execute-SelectQuery([string]$sqlText) {
         $adapter = New-Object System.Data.SqlClient.SqlDataAdapter($cmd)
         $dt = New-Object System.Data.DataTable
         $null = $adapter.Fill($dt)
+        $qSw.Stop()
+
+        if ($Json) {
+            $cols = @()
+            foreach ($c in $dt.Columns) { $cols += $c.ColumnName }
+            $rowsList = @()
+            foreach ($r in $dt.Rows) {
+                $rowObj = [ordered]@{}
+                foreach ($c in $dt.Columns) {
+                    $val = $r[$c.ColumnName]
+                    if ($val -eq [DBNull]::Value) {
+                        $rowObj[$c.ColumnName] = $null
+                    } elseif ($val -is [DateTime]) {
+                        $rowObj[$c.ColumnName] = ([datetime]$val).ToString("yyyy-MM-dd HH:mm:ss")
+                    } else {
+                        $rowObj[$c.ColumnName] = $val
+                    }
+                }
+                $rowsList += $rowObj
+            }
+            $payload = @{
+                success = $true
+                profile = $Profile
+                rowCount = $dt.Rows.Count
+                executionMs = [Math]::Round($qSw.Elapsed.TotalMilliseconds, 1)
+                columns = $cols
+                rows = $rowsList
+            }
+            $payload | ConvertTo-Json -Depth 5 -Compress
+            return
+        }
 
         if ($dt.Rows.Count -eq 0) {
             Write-Host "(0 rows returned)" -ForegroundColor Gray
@@ -87,6 +135,10 @@ function Execute-SelectQuery([string]$sqlText) {
             $dt | Format-Table -AutoSize | Out-String -Width 4000
         }
     } catch {
+        if ($Json) {
+            @{ success = $false; error = $_.Exception.Message } | ConvertTo-Json -Compress
+            return
+        }
         Write-Host "LOI SQL: $($_.Exception.Message)" -ForegroundColor Red
     }
 }
