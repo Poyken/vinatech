@@ -1,4 +1,4 @@
-﻿# 🛡️ VINATECH MES WORKSPACE RULES (MES_POP)
+# 🛡️ VINATECH MES WORKSPACE RULES (MES_POP)
 
 > **Single Source of Truth:** `.agents/rules/00_vinatech_rules.md`
 > **Primary Command Hubs:** `.\pop.ps1` (POP Kiosk) & `.\mes.ps1` (Core MES Production)
@@ -28,6 +28,11 @@
 - **RULE 22 (ĐỊNH DANH SỰ CỐ & PHÂN LOẠI ISSUE — POP BẮT BUỘC GHI POP, KHÔNG GHI MES):**
   * Mọi issue (sự cố/task/ticket/báo cáo tuần IT/báo cáo khắc phục sự cố) liên quan đến POP (POP Kiosk, Web POP, nạp NVL Kiosk, kẹt máy Kiosk, đồng bộ MongoToMesPerformance...) BẮT BUỘC ghi phân loại/remark là **POP**, TUYỆT ĐỐI KHÔNG ghi là **MES** nữa.
   * Tách biệt rõ ràng: **MES** (chỉ cho Core MES Sản Xuất WinForm B-series & DB lõi) vs **POP** (toàn bộ Kiosk xưởng & Web POP).
+- **RULE 23 (TIER-0 MASTER ORCHESTRATION — ops.ps1 FIRST):** Khi nhận mã bất kỳ chưa rõ nguồn gốc hoặc bắt đầu ca sáng: BẮT BUỘC gọi `.\ops.ps1 health` hoặc `.\ops.ps1 trace <ID>` đầu tiên.
+- **RULE 24 (ZERO IRREVERSIBLE HOTFIX — SNAPSHOT & UNDO BẮT BUỘC):** Mọi lệnh UPDATE/DELETE Production bắt buộc chạy qua Pre-flight Snapshot tự sinh `undo_<Target>.sql`. Khi OP báo nhầm, hoàn tác bằng `.\ops.ps1 rollback -Target <ID> -Deploy`.
+- **RULE 25 (WORKSPACE MODULARITY & ZERO ROOT POLLUTION):** Cấm lưu file SQL, dump, scratch lẻ tại root `PROCESS/`. Mọi module phụ nằm trong folder riêng (`ATTENDANCE_CMS/`, `tools/shared/`).
+- **RULE 26 (ACTIVE KNOWLEDGE RETENTION & ANTI-DRIFT):** Nghiệm thu xong bug mới bắt buộc cập nhật vào L1 Cache JSON & `hotfix_audit.jsonl`. Định kỳ chạy `.\ops.ps1 audit-kb`.
+- **RULE 27 (MULTI-ROOT WORKSPACE SYNCHRONIZATION):** Luôn mở IDE qua `vinatech-enterprise.code-workspace` và bảo đảm script có Universal Root Detection.
 
 
 

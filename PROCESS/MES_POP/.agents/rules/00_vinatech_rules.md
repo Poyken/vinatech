@@ -1,4 +1,4 @@
-﻿# 🛡️ VINATECH MES AGENT WORKSPACE RULE DEFINITIONS (V2.2)
+# 🛡️ VINATECH MES AGENT WORKSPACE RULE DEFINITIONS (V2.2)
 
 ## QUY TẮC BẮT BUỘC KHÔNG THỂ BỎ QUA:
 
@@ -89,5 +89,26 @@
     - **Tách biệt rõ ràng 2 phân hệ độc lập:**
       * **`POP`:** Toàn bộ công việc, sự cố, hỗ trợ liên quan đến Kiosk xưởng & Web POP.
       * **`MES`:** Chỉ ghi cho các vấn đề thuộc về Core MES Sản xuất (WinForm NAIS MES, SmartFactoryV2 lõi, chốt sản lượng B530/B540/B552/B781/B782, in tem thùng, đóng gói B523, v.v.).
+
+19. **RULE 23 - TIER-0 ENTERPRISE MASTER ORCHESTRATION (ops.ps1 FIRST):**
+    - Khi nhận một mã bất kỳ chưa rõ nguồn gốc hoặc khi bắt đầu ca làm việc (Morning Patrol): **BẮT BUỘC sử dụng `ops.ps1` làm điểm tiếp nhận đầu tiên (`ops health` hoặc `ops trace <Mã>`)**.
+    - Để Universal Smart Auto-Router tự động nhận diện 10 loại thực thể và điều phối sang sub-hub chuyên dụng.
+
+20. **RULE 24 - ZERO IRREVERSIBLE HOTFIX (SNAPSHOT & 1-CLICK ROLLBACK BẮT BUỘC):**
+    - Mọi can thiệp DML (`UPDATE`, `DELETE`) trên Production CSDL **BẮT BUỘC phải thực thi qua cơ chế Pre-flight Snapshot (`Create-SafePreflightSnapshot` hoặc `deploy_tool.ps1`)**.
+    - Script triển khai phải tự động lưu bản chụp JSON các dòng bị ảnh hưởng tại `backups/snapshots/` và tự sinh tệp hoàn tác `backups/undo/undo_<Target>_<Timestamp>.sql`.
+    - Khi có yêu cầu hoàn tác từ hiện trường, BẮT BUỘC thực thi qua lệnh chuẩn: `ops rollback -Target <LotID> -Deploy`.
+
+21. **RULE 25 - WORKSPACE MODULARITY & ZERO ROOT POLLUTION (BẢO VỆ ĐỘ SẠCH GỐC):**
+    - Thư mục gốc `PROCESS/` là **Khu Vực Bất Khả Xâm Phạm**: Chỉ được phép chứa 5 thư mục trụ cột chính, các thư mục module phụ (`ATTENDANCE_CMS`, `tools/shared`), và các tệp chuyển tiếp.
+    - Tuyệt đối CẤM lưu các tệp script thử nghiệm, tệp dump SQL, tệp export dữ liệu hoặc tệp log tạm thời trực tiếp tại root `PROCESS/`.
+
+22. **RULE 26 - ACTIVE KNOWLEDGE RETENTION & ANTI-DRIFT (TRIỆT TIÊU TRI THỨC MỒ CÔI):**
+    - Khi phát hiện một triệu chứng lỗi mới hoặc giải pháp sửa lỗi mới được kiểm chứng thành công: **BẮT BUỘC phải ghi nhận ngay vào L1 Cache JSON (`historical_precedents`) và ghi log vào `hotfix_audit.jsonl`**.
+    - Định kỳ hàng tuần hoặc sau mỗi đợt bảo trì CSDL, BẮT BUỘC chạy `ops audit-kb` để rà soát tự động 100% Stored Procedures và Tables giữa L1 Cache và Live DB (Anti-Drift).
+
+23. **RULE 27 - MULTI-ROOT WORKSPACE SYNCHRONIZATION (ĐỒNG NHẤT MÔI TRƯỜNG LÀM VIỆC):**
+    - Luôn ưu tiên mở IDE thông qua tệp `vinatech-enterprise.code-workspace` để nạp đầy đủ cả 5 phân hệ cùng lúc.
+    - Mọi công cụ viết mới BẮT BUỘC phải tích hợp cơ chế Universal Root Detection.
 
 
