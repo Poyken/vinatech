@@ -1,4 +1,4 @@
-﻿<!--
+<!--
 AI-READY METADATA
 Purpose: Sổ tay các kịch bản lỗi & hướng dẫn khắc phục phân hệ Quality Control (B597, C112-C564, HNC321)
 Scope: Quality Control Screen Bug Fixbook
@@ -266,6 +266,22 @@ Mã phiếu IQC (`MaterialQcNo`) có thể được tìm thấy bằng 3 cách:
     COMMIT TRANSACTION; -- Hoặc ROLLBACK TRANSACTION;
     ```
     > ⚠️ **Lưu ý:** Sau khi chạy script, yêu cầu QC **tắt hoàn toàn màn hình C443 và mở lại** để hệ thống xóa bộ nhớ đệm (cache) và tải lại số lượng trống từ DB.
+
+### [C443] — Lỗi 3: Hạng mục kiểm tra đánh giá (CHECK) tích ĐẠT trên Web POP nhưng hiển thị thành NG trên C443
+*   **Triệu chứng:** Trên giao diện Web POP Kiosk (`https://pop.vinatech.com/pop/quality`), công nhân/QC tích chọn ĐẠT (tích xanh `[✓]`) cho các hạng mục kiểm tra ngoại quan (như *"Mặt trước và mặt sau mài khớp nhau"*, *"Kiểm tra ngoại quan vết mài"*...). Nhưng khi mở màn hình WinForm NAIS **`[C443]`**, các cột `Giá trị đo lần 1, 2, 3...` đều hiển thị chữ `NG`, và cột `Kiểm tra OK` bị bỏ tích `[ ]`.
+*   **Nguyên nhân gốc:**
+    1. **Khác biệt quy ước giá trị giữa POP và SP:** Phía POP Web Kiosk lưu giá trị PASS vào `SmartFactoryV2.dbo.STB_CommInspMeasureHist` với `MeasureResult = '0'` (chuẩn 0 = Không lỗi / PASS).
+    2. **Logic lỗi thời trong SP C443:** Stored Procedure `dbo.usp_GetCommInspection_HistoryForBarcode_Vietnam` (dòng 348–360) so sánh:
+       `WHEN CIMH.MeasureResult = '1' OR CIMH.MeasureResult = 'OK' THEN 'OK' ELSE 'NG'`
+       SP chỉ nhận `'1'` hoặc `'OK'` là ĐẠT, dẫn đến mọi bản ghi `'0'` từ POP (hơn 22,000 bản ghi thực tế) đều rơi vào nhánh `ELSE 'NG'`.
+    3. **Nhầm biến đại diện:** Các cột Lần 1, 2, 3 đều trỏ vào biến `CIMH` (mẫu cuối cùng `MAX(MeasureSeq)`) thay vì trỏ đúng từng mẫu `CIMH1`, `CIMH2`, `CIMH3`...
+*   **Cách khắc phục:**
+    1. **Tạm thời tại xưởng:** Báo QC/OP an tâm rằng dữ liệu thực tế trên DB và POP đã ĐẠT, không ảnh hưởng xuất chuyền.
+    2. **Triệt để trên DB:** Cập nhật lại Stored Procedure `dbo.usp_GetCommInspection_HistoryForBarcode_Vietnam`:
+       - Cho phép `MeasureResult IN ('0', 'OK', 'PASS')` hiển thị `'OK'`.
+       - Cho phép `MeasureResult IN ('1', 'NG', 'FAIL')` hiển thị `'NG'`.
+       - Trỏ đúng từng biến mẫu `CIMH1..CIMH20` cho các cột `FirstMeasureValue..Value20`.
+       - Cập nhật `CheckDisplay`: `WHEN CIMH.MeasureResult IN ('0', 'OK', 'PASS') THEN CONVERT(BIT, 1)`.
 
 ---
 

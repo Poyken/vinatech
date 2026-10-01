@@ -55,6 +55,7 @@ Related Files:
 | **POP-ERR-29: Lỗi Chặn Đóng Gói "Material input is required before packing"** | Công đoạn Đóng gói (Packing) bắt buộc phải quét nạp vật tư tiêu hao (thùng carton, túi hút ẩm, tem nhãn) | Quét đủ mã vạch thùng và túi đóng gói theo định mức rồi mới bấm Hoàn thành đóng gói | Không |
 | **POP-ERR-30: Lỗi Sai Vùng Kho "Electrode roll cannot be input from another work center warehouse"** | Cuộn BTP điện cực đang nằm ở vị trí kho của Phân xưởng khác (chưa chuyển kho sang Line hiện tại) | Yêu cầu bộ phận kho làm phiếu chuyển kho (Warehouse Transfer) trên hệ thống sang đúng Chuyền | Không |
 | **POP-ERR-35: Lệch Trạng Thái 3 Bảng Huyết Mạch (SetInfo - ProdRouteHist - MongoToMes) & Fallback PQC** | Sai lệch giữa giao diện Kiosk POP và MES WinForm do chốt nhầm máy, kẹt 'Already completed', hoặc kẹt đồng bộ ngầm | Chạy Golden Query `.\pop.ps1 trace '<Mã>'` (dò qua cả PQC Web) và áp dụng 4 quy tắc sửa lỗi đồng bộ Rule 20 | **CÓ (SQL Hotfix)** |
+| **POP-ERR-36: Kiosk Báo "Không có thiết bị đăng ký (0)" Khi Chọn Công Đoạn** | Chuyền Cell chưa được gán máy cho công đoạn downstream (Aging/Sorting `V-26_HY`) trong `STB_ProductMachine`, hoặc máy bị gán nhầm nhà máy (WorkCenterCode) trong `STB_MachineMaster` | Sửa thông tin máy/nhà máy trên WinForm `B250`, gán máy vào Chuyền qua `B270` hoặc chạy SQL Hotfix INSERT `STB_ProductMachine` | **CÓ (Master Data)** |
 
 
 
@@ -657,6 +658,95 @@ Dựa trên kiểm toán thực tế hơn 231,000 bản ghi thao tác trong `VIN
   2. *Lỗi "Already completed in MES":* WinForm sinh trước dòng kế tiếp (`CompleteRoute = 1`). Xóa bản ghi thừa trong `STB_ProdRouteWorkerHist` và `STB_ProdRouteHist`.
   3. *Kẹt `IsDone = 1, IsTransferred = 0`:* Kiosk đã chốt nhưng chưa sang MES. Chốt bù vào `STB_ProdRouteHist` (Template 9) hoặc kích hoạt `usp_VINA_SyncPopToMes_SingleLot`.
   4. *Kiosk vẫn hiện hoàn thành sau khi MES xóa:* Reset `IsDone = 0, IsTransferred = 0` trong `MongoToMesPerformance` (Template 7).
+
+---
+
+### 2.36 POP-ERR-36: POP Kiosk Báo "Không có thiết bị đăng ký (0)" Khi Chọn Công Đoạn (Aging / Sorting / Downstream Route)
+* **Hiện tượng:**
+  Tại Kiosk của một Chuyền Cell (ví dụ `HY Cell Line #16` - `VVHYC-16`), công nhân bấm chọn công đoạn **05 Aging (Lão hóa - `V-26_HY`)** để bắt đầu sản xuất. Hệ thống hiển thị popup:
+  > *"Không có thiết bị đăng ký"*  
+  > *"Tình trạng thiết bị (0)"*  
+  > *"Chọn thiết bị khi bắt đầu"*
+  Công nhân không thể chọn được máy để bấm bắt đầu hay chốt sản lượng.
+
+* **Nguyên nhân cốt lõi (Root Cause):**
+  1. **Cơ chế truy vấn thiết bị của POP Kiosk:** Khi chọn công đoạn, POP Kiosk gọi API `/api/common/getEquipmentList` đọc dữ liệu từ `SmartFactoryV2.dbo.STB_ProductMachine` theo cặp khóa `(LineCode, RouteCode)`.
+  2. **Thiếu bản ghi mapping:** Trong CSDL, chuyền Cell `VVHYC-16` chỉ mới được Master Data khai báo máy cho các công đoạn từ V-22 đến V-25 (`Winding`, `Assembly`, `Curling`, `Sleeving`). Riêng công đoạn Aging `V-26_HY` hoàn toàn **chưa có dòng nào trong `STB_ProductMachine`**.
+  3. **Đặc thù Master Data Hưng Yên (F5):**
+     * 5 máy Auto Aging (`VVMHY34` ~ `VVMHY38`) ban đầu được tạo dưới dạng các chuyền riêng biệt `VVHYBAS-01` ~ `VVHYBAS-05`, không được gán vào các chuyền Cell.
+     * 5 máy Sorting Hưng Yên (`VVMHY16` ~ `VVMHY20`): Bị đặt tên cũ `Bigsize_Auto Sorting #1..#5` và bị lưu nhầm mã nhà máy `WorkCenterCode = 'VVT_F2'` (Bắc Giang) thay vì `VVT_F5` (Hưng Yên), đồng thời chưa từng được map vào `STB_ProductMachine`.
+     * Quy trình sản xuất Cell Hưng Yên không có Route Sorting riêng (`V-35_HY`), mà toàn bộ 10 máy (5 Auto Aging + 5 Sorting) đều phục vụ công đoạn Lão hóa `V-26_HY`.
+
+* **Quy trình xử lý chuẩn (2 Cách):**
+  * **Cách 1: Thao tác trên Core MES WinForms (Giao diện UI)**
+    1. Mở màn hình **`B250` (Machine Master / 설비정보)**: Tra cứu `WorkCenter = 'VVT_F2'`, tìm 5 máy `VVMHY16` ~ `VVMHY20`, sửa tên thành `Sorting #1` ~ `#5` và chuyển `WorkCenter` sang `VVT_F5`. Bấm Lưu (F8).
+    2. Mở màn hình **`B270` (Product Machine / 생산설비정보)**: Chọn Line `VVHYC-16`, Route `V-26_HY`, bấm F2 thêm 10 máy (`VVMHY34~38` và `VVMHY16~20`). Bấm Lưu (F8).
+  * **Cách 2: Hotfix SQL đồng bộ 1-Shot (Chuẩn an toàn `vanduc`):**
+    ```sql
+    USE SmartFactoryV2;
+    GO
+    BEGIN TRAN;
+
+    -- 1. Chuẩn hóa 5 máy Sorting
+    UPDATE dbo.STB_MachineMaster
+    SET MachineName = CASE MachineCode
+            WHEN 'VVMHY16' THEN N'Sorting #1'
+            WHEN 'VVMHY17' THEN N'Sorting #2'
+            WHEN 'VVMHY18' THEN N'Sorting #3'
+            WHEN 'VVMHY19' THEN N'Sorting #4'
+            WHEN 'VVMHY20' THEN N'Sorting #5'
+        END,
+        WorkCenterCode = 'VVT_F5',
+        ChangeDateTime = GETDATE(),
+        ChangeUserID = 'vanduc'
+    WHERE MachineCode IN ('VVMHY16','VVMHY17','VVMHY18','VVMHY19','VVMHY20');
+
+    -- 2. Gán đủ 10 máy vào công đoạn V-26_HY cho Chuyền Cell (VVHYC-16 hoặc toàn bộ VVHYC-%)
+    DELETE FROM dbo.STB_ProductMachine
+    WHERE LineCode = 'VVHYC-16' AND RouteCode = 'V-26_HY'
+      AND MachineCode IN ('VVMHY34','VVMHY35','VVMHY36','VVMHY37','VVMHY38','VVMHY16','VVMHY17','VVMHY18','VVMHY19','VVMHY20');
+
+    INSERT INTO dbo.STB_ProductMachine (LineCode, RouteCode, MachineCode, DisplayIndex, CreateDateTime, CreateUserID)
+    VALUES 
+        ('VVHYC-16', 'V-26_HY', 'VVMHY34', 1, GETDATE(), 'vanduc'),
+        ('VVHYC-16', 'V-26_HY', 'VVMHY35', 2, GETDATE(), 'vanduc'),
+        ('VVHYC-16', 'V-26_HY', 'VVMHY36', 3, GETDATE(), 'vanduc'),
+        ('VVHYC-16', 'V-26_HY', 'VVMHY37', 4, GETDATE(), 'vanduc'),
+        ('VVHYC-16', 'V-26_HY', 'VVMHY38', 5, GETDATE(), 'vanduc'),
+        ('VVHYC-16', 'V-26_HY', 'VVMHY16', 6, GETDATE(), 'vanduc'),
+        ('VVHYC-16', 'V-26_HY', 'VVMHY17', 7, GETDATE(), 'vanduc'),
+        ('VVHYC-16', 'V-26_HY', 'VVMHY18', 8, GETDATE(), 'vanduc'),
+        ('VVHYC-16', 'V-26_HY', 'VVMHY19', 9, GETDATE(), 'vanduc'),
+        ('VVHYC-16', 'V-26_HY', 'VVMHY20', 10, GETDATE(), 'vanduc');
+
+    COMMIT TRAN;
+    ```
+
+---
+
+### 2.37 POP-ERR-37: Hạng Mục PQC Đánh Giá (CHECK) Tích Đạt [✓] Trên Web POP Nhưng NAIS MES C443 Hiển Thị Toàn Bộ NG
+* **Hiện tượng:**
+  Tại Web POP Kiosk (`https://pop.vinatech.com/pop/quality` tab PQC), công nhân/QC tích chọn ĐẠT (tích xanh `[✓]`, PASS 3/3 mẫu) cho các hạng mục kiểm tra ngoại quan/đánh giá (như *"Mặt trước và mặt sau mài khớp nhau"*, *"Kiểm tra ngoại quan vết mài"*...). Nhưng khi mở màn hình WinForm NAIS **`[C443] Việt nam - Kiểm tra PQC`**, các cột `Giá trị đo lần 1, 2, 3...` đều hiển thị chữ `NG`, và cột `Kiểm tra OK` (`CheckDisplay`) bị bỏ tích `[ ]`.
+* **Nguyên nhân gốc (Root Cause):**
+  1. **Khác biệt quy ước giá trị giữa POP và SP:** Phía POP Web Kiosk lưu giá trị PASS vào `SmartFactoryV2.dbo.STB_CommInspMeasureHist` với `MeasureResult = '0'` (quy ước chuẩn 0 = Không lỗi / PASS).
+  2. **Logic so sánh lỗi thời trong SP C443:** Stored Procedure `dbo.usp_GetCommInspection_HistoryForBarcode_Vietnam` (dòng 348–360) so sánh cứng:
+     ```sql
+     CASE 
+         WHEN VIEW_CIIT.CommInspInputTypeName = 'NUMERIC' 
+              THEN CONVERT(VARCHAR, CONVERT(NUMERIC(10,3), CIMH1.NumericMeasure)) 	  
+         WHEN ISNULL(CIMH.MeasureResult,'') = '' THEN NULL 
+         WHEN CIMH.MeasureResult = '1' OR CIMH.MeasureResult = 'OK' THEN 'OK' 
+         ELSE 'NG' 
+     END AS FirstMeasureValue
+     ```
+     SP chỉ nhận diện `'1'` hoặc `'OK'` là ĐẠT, dẫn đến mọi bản ghi mang giá trị `'0'` từ POP (hơn 22,000 bản ghi thực tế) đều rơi vào nhánh `ELSE 'NG'`.
+  3. **Nhầm biến đại diện:** Các cột Lần 1, 2, 3 đều trỏ vào biến `CIMH` (mẫu cuối cùng `MAX(MeasureSeq)`) thay vì trỏ đúng từng mẫu `CIMH1`, `CIMH2`, `CIMH3`...
+* **Quy trình chuẩn đoán & Khắc phục:**
+  1. **Dưới xưởng / OP:** Thông báo cho QC/OP an tâm rằng sản phẩm **thực tế không bị lỗi**. Dữ liệu trên CSDL và Web POP đã ghi nhận PASS hợp cách.
+  2. **Sửa Stored Procedure:** Cập nhật lại SP `dbo.usp_GetCommInspection_HistoryForBarcode_Vietnam` trên `SmartFactoryV2`:
+     - Nhánh kiểm tra kết quả đo: `WHEN CIMH1.MeasureResult IN ('0', 'OK', 'PASS') THEN 'OK' WHEN CIMH1.MeasureResult IN ('1', 'NG', 'FAIL') THEN 'NG' ELSE CIMH1.MeasureResult`.
+     - Trỏ đúng từng biến mẫu `CIMH1..CIMH20`.
+     - Cột `CheckDisplay`: `WHEN CIMH.MeasureResult IN ('0', 'OK', 'PASS') THEN CONVERT(BIT, 1)`.
 
 ---
 

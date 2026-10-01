@@ -102,7 +102,7 @@ PROCESS/MES_POP/
 │
 └── 📂 docs/                                    # TÀI LIỆU VẬN HÀNH BỔ TRỢ
     ├── 📄 MES_POP_DEEP_DIVE_AUDIT_AND_INQUIRY.md # 🌟 Báo cáo nghiên cứu chuyên sâu & 12 câu hỏi vận hành cốt lõi
-    ├── 📄 MASTER_OPERATIONAL_PLAYBOOK.md       # Cẩm nang vận hành hiện trường Vinatech
+    ├── 📄 MASTER_OPERATIONAL_PLAYBOOK.md       # Bách khoa toàn thư vận hành hiện trường v5.0 (16 công đoạn, 7 Gate, 35 lỗi POP, 5 Trục)
     └── 📄 KB_RELIABILITY_REPORT.md             # Báo cáo đối soát tri thức KB vs CSDL
 ```
 
