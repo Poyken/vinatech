@@ -1,4 +1,4 @@
-# ==============================================================================
+﻿# ==============================================================================
 # audit_kb_reliability.ps1 — Groupware Automated KB Reliability Auditor
 # Kiem tra do tin cay cua tai lieu Groupware vs CSDL Thuc te (VINATECH_GROUP, ERP, MES)
 # ==============================================================================

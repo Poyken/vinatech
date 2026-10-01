@@ -1,4 +1,4 @@
-. "$PSScriptRoot\DATABASE\tools\db_shared.ps1"
+﻿. "$PSScriptRoot\DATABASE\tools\db_shared.ps1"
 $db = Get-DBConnection -Profile SmartFactoryV2
 
 $cmd = $db.Connection.CreateCommand()

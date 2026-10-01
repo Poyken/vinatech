@@ -1,4 +1,4 @@
-# Script truy vấn và kiểm tra dữ liệu thực tế gần đây từ các database
+﻿# Script truy vấn và kiểm tra dữ liệu thực tế gần đây từ các database
 $server = "dbserver.hycap.co.kr,5398"
 $database = "SmartFactoryV2"
 $user = "vinaadmin"

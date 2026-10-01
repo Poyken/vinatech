@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     Kiem tra va doc ma nguon DML/DDL Triggers tren 15 CSDL Vinatech.
 .DESCRIPTION

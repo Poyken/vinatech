@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     audit_kb_reliability.ps1 — Automated KB Reliability & Schema Drift Auditor
 .DESCRIPTION

@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     Kiem toan Index, kich thuoc dung luong, do phan manh va de xuat thieu Index tu SQL Server DMVs.
 .DESCRIPTION

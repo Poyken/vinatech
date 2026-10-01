@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     Tra cứu cấu trúc cột, kiểu dữ liệu, và khóa chính của bảng (Data Dictionary).
 #>

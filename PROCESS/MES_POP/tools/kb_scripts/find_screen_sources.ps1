@@ -1,4 +1,4 @@
-# Find which KB files mention each missing screen
+﻿# Find which KB files mention each missing screen
 $missing = @(
     "A210","A320","A410","A418","A419","A460",
     "B220","B230","B240","B270","B301","B450","B453","B460","B470","B525","B528","B540",

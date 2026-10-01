@@ -1,4 +1,4 @@
-# Script kiểm tra link tài liệu nâng cao cho cấu trúc mới
+﻿# Script kiểm tra link tài liệu nâng cao cho cấu trúc mới
 $files = @(
     "c:\Users\User Vinatech.DESKTOP-RJJSEQU\Desktop\PROCESS\README.md",
     "c:\Users\User Vinatech.DESKTOP-RJJSEQU\Desktop\PROCESS\DATABASE\VINATECH_GROUP\README.md",

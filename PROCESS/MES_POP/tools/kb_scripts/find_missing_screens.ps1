@@ -1,4 +1,4 @@
-# Step 1: Get existing screen IDs from KB_SCREEN_BUG_REF.md
+﻿# Step 1: Get existing screen IDs from KB_SCREEN_BUG_REF.md
 $existingScreens = @()
 $lines = Get-Content -Path "KB_SCREEN_BUG_REF.md" -Encoding UTF8
 foreach ($line in $lines) {

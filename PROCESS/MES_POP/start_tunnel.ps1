@@ -1,4 +1,4 @@
-# ======================================================================
+﻿# ======================================================================
 #   VINATECH MES - 1-CLICK TUNNEL & API RELAY LAUNCHER
 #   Ket noi an toan tu Vercel ve 15 CSDL Noi Bo khong can mo Port
 #   Tac gia: Nguyen Van Duc (vanduc - EA Team)

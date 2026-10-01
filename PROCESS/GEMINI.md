@@ -1,4 +1,4 @@
-# 🛡️ VINATECH ENTERPRISE PROCESS WORKSPACE (MASTER RULES)
+﻿# 🛡️ VINATECH ENTERPRISE PROCESS WORKSPACE (MASTER RULES)
 
 > **Single Source of Truth:** `.agents/rules/00_vinatech_master_rules.md`
 > **Primary Command Hubs:** `.\pop.ps1` (POP Kiosk), `.\mes.ps1` (Core MES), `.\gw.ps1` (Groupware), `.\db.ps1` (15 Databases), `.\ksys.ps1` (K-System)
@@ -44,3 +44,11 @@
 - `.\gw.ps1 [trace|form|find|routine|chain|health|check|query|audit]` ➔ **Groupware Bizbox & Duyệt Chứng Từ ERP NEOE**
 - `.\db.ps1 [list|health|stats|sp|schema|query|find|jobs|triggers|index|crossdb|lineage|auditkb]` ➔ **Quản Trị 15 CSDL Multi-DB Engine**
 - `.\ksys.ps1 [trace|find|module|schema|bridge|health]` ➔ **Hợp Nhất ERP K-System Ace**
+
+## 🧭 CÁC LỆNH SLASH COMMANDS CHUYÊN BIỆT (/plan, /learn, /grill-me, /goal)
+- `/plan`: Lập kế hoạch thực thi chi tiết, yêu cầu người dùng duyệt `Proceed` trước khi triển khai các thay đổi lớn.
+- `/learn`: Dạy bài học mới cho AI khi xử lý xong một sự cố thực địa, tự động lưu vĩnh viễn vào `.agents/rules/02_learned_patterns.md`.
+- `/grill-me`: Phỏng vấn làm sáng tỏ các quyết định kỹ thuật/nghiệp vụ trước khi bắt tay vào code.
+- `/goal`: Tác chiến bền bỉ cho các nhiệm vụ dài hạn không dừng giữa chừng.
+- Chi tiết tham khảo toàn diện tại: [Sổ Tay Vận Hành AI Copilot](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/OPERATOR_COPILOT_GUIDE.md).
+

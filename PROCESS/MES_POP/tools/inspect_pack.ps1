@@ -1,4 +1,4 @@
-# ==============================================================================
+﻿# ==============================================================================
 # inspect_pack.ps1 — 360° Comprehensive Packaging & PackingID Investigator
 # Tables: STB_MaterialLotInfo | STB_DividePackaging | STB_SavePackingTime_VVT
 #         STB_PackingLabelPrintHist | stb_MergeBoxReality | VINA_PACKING_REMAIN_QTY

@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     Module PowerShell chia sẻ kết nối cơ sở dữ liệu cho hệ sinh thái 15 CSDL Vinatech.
 .DESCRIPTION

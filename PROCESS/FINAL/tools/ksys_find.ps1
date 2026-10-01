@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     Superfast L1 Cache Search (<0.001s) for YoungLimWon K-System Ace ERP (FINAL)
 .DESCRIPTION

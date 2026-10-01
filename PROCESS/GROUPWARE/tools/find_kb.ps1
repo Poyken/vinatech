@@ -1,4 +1,4 @@
-# ==============================================================================
+﻿# ==============================================================================
 # find_kb.ps1 — 2-Tier Knowledge Base Finder for Vinatech Groupware Ecosystem
 # Tier 1: L1 Ultra-Fast JSON Cache (<0.001s, ~150 tokens)
 # Tier 2: Deep Markdown Archive (12+ KB files & Integrations)

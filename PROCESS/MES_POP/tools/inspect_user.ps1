@@ -1,4 +1,4 @@
-# ==============================================================================
+﻿# ==============================================================================
 # inspect_user.ps1 — 360° Comprehensive User & Auth Investigator
 # Multi-DB Cross Query: ERP (NEOE) | POP (VINA_EMP) | MES (SmartFramework) | GW | SSO
 # Tối ưu hóa 1-Shot (<1s), triệt tiêu nhu cầu chạy SELECT dò dẫm

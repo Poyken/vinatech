@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     Tra cuu sieu toc L1 Cache va Thu vien tri thuc 15 CSDL Vinatech.
 #>

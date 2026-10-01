@@ -1,27 +1,26 @@
-{
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "name": "vinatech-database-hooks",
-  "version": "1.0.0",
-  "description": "Automated Lifecycle Hooks for Vinatech 15-Database Operational Safety",
-  "hooks": {
-    "pre_tool_execution": [
+﻿{
+  "enterprise-safety-gate": {
+    "enabled": true,
+    "PreToolUse": [
       {
-        "matcher": {
-          "tool": "run_command",
-          "args_pattern": ".*(UPDATE|DELETE|INSERT|DROP|ALTER|TRUNCATE).*"
-        },
-        "action": "enforce_readonly_safety",
-        "description": "Chặn tuyệt đối các câu lệnh DML/DDL can thiệp trực tiếp trên Live 15 Databases"
+        "matcher": "run_command",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell -ExecutionPolicy Bypass -File ..\\..\\tools\\shared\\safety_hook.ps1",
+            "timeout": 10
+          }
+        ]
       }
-    ],
-    "post_query_execution": [
+    ]
+  },
+  "enterprise-governance-reminder": {
+    "enabled": true,
+    "PreInvocation": [
       {
-        "matcher": {
-          "tool": "run_command",
-          "args_pattern": ".*(db\\.ps1|run_query\\.ps1).*"
-        },
-        "action": "verify_anti_lock_compliance",
-        "description": "Tự động kiểm tra tuân thủ WITH(NOLOCK), TOP limit và thời gian phản hồi câu truy vấn"
+        "type": "command",
+        "command": "powershell -ExecutionPolicy Bypass -File ..\\..\\tools\\shared\\reminder_hook.ps1",
+        "timeout": 5
       }
     ]
   }

@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     Shared Database Connection Module for YoungLimWon K-System Ace ERP (FINAL)
 .DESCRIPTION

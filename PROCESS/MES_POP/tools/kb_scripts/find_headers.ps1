@@ -1,4 +1,4 @@
-# Step 1: Get ALL ## headers in KB_SCREEN_BUG_REF.md
+﻿# Step 1: Get ALL ## headers in KB_SCREEN_BUG_REF.md
 Write-Host "=== CURRENT ## HEADERS ==="
 $lines = Get-Content -Path "KB_SCREEN_BUG_REF.md" -Encoding UTF8
 foreach ($line in $lines) {

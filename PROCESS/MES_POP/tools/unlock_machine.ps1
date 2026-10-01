@@ -1,4 +1,4 @@
-# ==============================================================================
+﻿# ==============================================================================
 # unlock_machine.ps1 — 1-Shot Machine Unlock Engine for POP Kiosk (VINATECH_POP)
 # Tự động tìm, hiển thị trạng thái và giải phóng máy bị kẹt ACTIVE trên POP Kiosk
 # Author: vanduc (EA Team)

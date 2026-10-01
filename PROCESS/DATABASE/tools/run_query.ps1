@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     Thực thi câu truy vấn SELECT an toàn trên 15 CSDL Vinatech.
 #>

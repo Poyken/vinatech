@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     Golden Query 360 Lot Traceability Tool for K-System Ace (FINAL)
 .DESCRIPTION

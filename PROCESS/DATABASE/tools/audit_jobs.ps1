@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     Kiem tra va bóc tach toàn bo SQL Server Agent Jobs tren he thong.
 .DESCRIPTION

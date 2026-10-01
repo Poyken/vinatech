@@ -1,4 +1,4 @@
-# Export all routines from VINATECH_GROUP to sql/routines/
+﻿# Export all routines from VINATECH_GROUP to sql/routines/
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $rootDir = Split-Path -Parent $scriptDir
 . "$scriptDir\db_shared.ps1"

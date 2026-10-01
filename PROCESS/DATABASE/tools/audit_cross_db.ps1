@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     Kiem toan toan bo cac phu thuoc lien co so du lieu (Cross-Database Dependencies).
 .DESCRIPTION

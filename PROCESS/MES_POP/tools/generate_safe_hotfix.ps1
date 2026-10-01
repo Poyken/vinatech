@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     generate_safe_hotfix.ps1 — Bộ sinh mã SQL Hotfix An Toàn 100% chuẩn Vinatech MES
 .DESCRIPTION

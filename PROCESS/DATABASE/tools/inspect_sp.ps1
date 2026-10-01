@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     Tra cuu va doc ma nguon Stored Procedure tren 15 CSDL Vinatech.
 #>

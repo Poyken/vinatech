@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     Kiem tra suc khoe va do tre phan hoi cua toan bo 15 CSDL Vinatech.
 #>

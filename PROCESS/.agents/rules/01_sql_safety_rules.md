@@ -1,4 +1,4 @@
-# 🛡️ VINATECH SQL SAFETY RULES & PROTOCOL
+﻿# 🛡️ VINATECH SQL SAFETY RULES & PROTOCOL
 
 ## 1. NGUYÊN TẮC CỐT LÕI
 1. **SELECT-ONLY trên Production:** Mọi câu lệnh chạy trực tiếp qua `.\mes.ps1 query`, `.\gw.ps1 query`, `.\db.ps1 query` đều bị kiểm tra chặt chẽ: CẤM tuyệt đối `INSERT`, `UPDATE`, `DELETE`, `DROP`, `ALTER`, `TRUNCATE`, `EXEC`.
