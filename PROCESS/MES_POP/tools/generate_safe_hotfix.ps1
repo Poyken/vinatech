@@ -1,4 +1,4 @@
-﻿<#
+<#
 .SYNOPSIS
     generate_safe_hotfix.ps1 — Bộ sinh mã SQL Hotfix An Toàn 100% chuẩn Vinatech MES
 .DESCRIPTION
@@ -96,7 +96,7 @@ SET
     H.ChangeDateTime = GETDATE(),
     H.ChangeUserID = 'vanduc'
 FROM SmartFactoryV2.dbo.STB_ProdRouteHist H
-INNER JOIN SmartFactoryV2.dbo.STB_SetInfo S ON H.ControlNo = S.ControlNo
+INNER JOIN SmartFactoryV2.dbo.STB_SetInfo S WITH(NOLOCK) ON H.ControlNo = S.ControlNo
 WHERE S.Barcode IN ($lotInClause) $routeFilter;
 
 DECLARE @RowsHist INT = @@ROWCOUNT;
@@ -109,7 +109,7 @@ SET
     D.ChangeDateTime = GETDATE(),
     D.ChangeUserID = 'vanduc'
 FROM SmartFactoryV2.dbo.STB_DefectRepairInfo D
-INNER JOIN SmartFactoryV2.dbo.STB_SetInfo S ON D.ControlNo = S.ControlNo
+INNER JOIN SmartFactoryV2.dbo.STB_SetInfo S WITH(NOLOCK) ON D.ControlNo = S.ControlNo
 WHERE S.Barcode IN ($lotInClause) $(if ($Route) { "AND D.FindRouteCode = '$Route'" });
 
 -- 5. KIỂM TRA SỐ DÒNG BỊ TÁC ĐỘNG
@@ -207,13 +207,13 @@ BEGIN TRAN;
 DELETE W
 FROM SmartFactoryV2.dbo.STB_ProdRouteWorkerHist W
 INNER JOIN SmartFactoryV2.dbo.STB_ProdRouteHist H ON W.ProdRouteHistNo = H.ProdRouteHistNo
-INNER JOIN SmartFactoryV2.dbo.STB_SetInfo S ON H.ControlNo = S.ControlNo
+INNER JOIN SmartFactoryV2.dbo.STB_SetInfo S WITH(NOLOCK) ON H.ControlNo = S.ControlNo
 WHERE S.Barcode = '$lotTarget' AND H.RouteCode = '$Route';
 
 -- 3. XÓA HOẶC RESET PRODROUTEHIST
 DELETE H
 FROM SmartFactoryV2.dbo.STB_ProdRouteHist H
-INNER JOIN SmartFactoryV2.dbo.STB_SetInfo S ON H.ControlNo = S.ControlNo
+INNER JOIN SmartFactoryV2.dbo.STB_SetInfo S WITH(NOLOCK) ON H.ControlNo = S.ControlNo
 WHERE S.Barcode = '$lotTarget' AND H.RouteCode = '$Route';
 
 -- 4. NẾU LÀ CÔNG ĐOẠN ĐÓNG GÓI -> DỌN BẢN GHI TẠM TRONG VINATECH_POP
@@ -258,13 +258,13 @@ BEGIN TRAN;
 DELETE W
 FROM SmartFactoryV2.dbo.STB_ProdRouteWorkerHist W
 INNER JOIN SmartFactoryV2.dbo.STB_ProdRouteHist H ON W.ProdRouteHistNo = H.ProdRouteHistNo
-INNER JOIN SmartFactoryV2.dbo.STB_SetInfo S ON H.ControlNo = S.ControlNo
+INNER JOIN SmartFactoryV2.dbo.STB_SetInfo S WITH(NOLOCK) ON H.ControlNo = S.ControlNo
 WHERE S.Barcode IN ($lotInClause) AND H.CompleteRoute IS NULL;
 
 -- 3. XÓA BẢN GHI PRODROUTEHIST TỰ CLONE TỪ MES WINFORM
 DELETE H
 FROM SmartFactoryV2.dbo.STB_ProdRouteHist H
-INNER JOIN SmartFactoryV2.dbo.STB_SetInfo S ON H.ControlNo = S.ControlNo
+INNER JOIN SmartFactoryV2.dbo.STB_SetInfo S WITH(NOLOCK) ON H.ControlNo = S.ControlNo
 WHERE S.Barcode IN ($lotInClause) AND H.CompleteRoute IS NULL;
 
 COMMIT TRAN;
@@ -451,7 +451,7 @@ SET
     H.ChangeDateTime = GETDATE(),
     H.ChangeUserID = 'vanduc'
 FROM SmartFactoryV2.dbo.STB_ProdRouteHist H
-INNER JOIN SmartFactoryV2.dbo.STB_SetInfo S ON H.ControlNo = S.ControlNo
+INNER JOIN SmartFactoryV2.dbo.STB_SetInfo S WITH(NOLOCK) ON H.ControlNo = S.ControlNo
 WHERE S.Barcode IN ($lotInClause) $routeFilterHist;
 
 DECLARE @RowsHist INT = @@ROWCOUNT;
@@ -565,7 +565,7 @@ SET
     D.ChangeDateTime = GETDATE(),
     D.ChangeUserID = 'vanduc'
 FROM SmartFactoryV2.dbo.STB_DefectRepairInfo D
-INNER JOIN SmartFactoryV2.dbo.STB_SetInfo S ON D.ControlNo = S.ControlNo
+INNER JOIN SmartFactoryV2.dbo.STB_SetInfo S WITH(NOLOCK) ON D.ControlNo = S.ControlNo
 WHERE S.Barcode IN ($lotInClause) AND D.RepairQty IS NULL;
 
 DECLARE @RowsDefect INT = @@ROWCOUNT;

@@ -154,30 +154,65 @@ function Get-ConnectionString {
     return "Server=$targetServer;Database=$($p.Database);User Id=$($p.User);Password=$($p.Password);TrustServerCertificate=True;Connect Timeout=$($p.Timeout);Application Name=Vinatech_Master_Ops"
 }
 
-# Compatibility for DATABASE/db.ps1
-function Get-DBConnection {
+# Unified Get-DbConnection (Supports both $conn directly and $dbObj.Connection / $dbObj.Server)
+function Get-DbConnection {
     param (
         [string]$Profile = "SmartFactoryV2",
-        [string]$CustomDB = $null
+        [string]$CustomDB = $null,
+        [switch]$Silent,
+        [int]$ConnectTimeoutSeconds = 15
     )
     $p = Get-DbProfileConfig -Profile $Profile
     if ($CustomDB) { $p.Database = $CustomDB }
+    $timeout = if ($ConnectTimeoutSeconds) { $ConnectTimeoutSeconds } else { $p.Timeout }
     
     foreach ($srv in $p.FailoverServers) {
-        $connStr = "Server=$srv;Database=$($p.Database);User Id=$($p.User);Password=$($p.Password);TrustServerCertificate=True;Connect Timeout=$($p.Timeout);Application Name=Vinatech_DB_Hub"
+        $connStr = "Server=$srv;Database=$($p.Database);User Id=$($p.User);Password=$($p.Password);TrustServerCertificate=True;Connect Timeout=$timeout;Application Name=Vinatech_Master_Ops"
         try {
             $conn = New-Object System.Data.SqlClient.SqlConnection($connStr)
             $conn.Open()
-            return @{
-                Connection = $conn
-                Server     = $srv
-                Database   = $p.Database
+            if ($conn.State -eq 'Open') {
+                # Attach properties so caller can use both $conn directly OR $dbObj.Connection / $dbObj.Server / $dbObj.Database
+                $conn | Add-Member -NotePropertyName "Connection" -NotePropertyValue $conn -Force
+                $conn | Add-Member -NotePropertyName "Server" -NotePropertyValue $srv -Force
+                $conn | Add-Member -NotePropertyName "Database" -NotePropertyValue $p.Database -Force
+                $conn | Add-Member -NotePropertyName "Profile" -NotePropertyValue $Profile -Force
+                return $conn
             }
         } catch {
-            continue
+            if (-not $Silent) {
+                Write-Verbose "Connection failed to $srv ($($p.Database)): $($_.Exception.Message)"
+            }
+            if ($conn -ne $null -and $conn.State -eq 'Open') { $conn.Close() }
         }
     }
     throw "Cannot connect to database profile: $Profile across all failovers."
+}
+
+# Compatibility for GROUPWARE/tools/gw_trace.ps1
+function Invoke-DbQuery {
+    param(
+        [string]$Profile = "Groupware",
+        [string]$Query = ""
+    )
+    if ([string]::IsNullOrWhiteSpace($Query)) { return $null }
+    $conn = Get-DbConnection -Profile $Profile -Silent
+    if ($conn -eq $null) { return $null }
+    try {
+        $cmd = $conn.CreateCommand()
+        $cmd.CommandTimeout = 60
+        $cmd.CommandText = $Query
+        $reader = $cmd.ExecuteReader()
+        $dt = New-Object System.Data.DataTable
+        $dt.Load($reader)
+        $reader.Close()
+        return ,$dt
+    } catch {
+        Write-Host "Invoke-DbQuery ERROR: $($_.Exception.Message)" -ForegroundColor Red
+        return $null
+    } finally {
+        if ($conn.State -eq 'Open') { $conn.Close() }
+    }
 }
 
 # Safe SQL Query Execution
