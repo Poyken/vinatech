@@ -12,10 +12,23 @@ import os
 import subprocess
 import urllib.parse
 from http.server import HTTPServer, BaseHTTPRequestHandler
+from socketserver import ThreadingMixIn
+
+class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
+    daemon_threads = True
+    allow_reuse_address = True
 
 PORT = int(os.environ.get("MES_RELAY_PORT", 5000))
 SECRET_TOKEN = os.environ.get("MES_RELAY_SECRET", "vinatech_secret_token_2026")
-WORKSPACE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+script_dir = os.path.dirname(os.path.abspath(__file__))
+candidate = script_dir
+WORKSPACE_DIR = script_dir
+while candidate and candidate != os.path.dirname(candidate):
+    if os.path.exists(os.path.join(candidate, "mes.ps1")):
+        WORKSPACE_DIR = candidate
+        break
+    candidate = os.path.dirname(candidate)
 
 def run_cli_command(cmd_args):
     """Executes powershell CLI command within MES_POP directory and captures output"""
@@ -76,12 +89,26 @@ class RelayHandler(BaseHTTPRequestHandler):
 
         elif path == "/api/trace":
             target = params.get("target", [""])[0]
-            result = run_cli_command([".\\mes.ps1", "trace", f'"{target}"'])
+            # Lay Native JSON truc tiep tu pop_trace.ps1 -Json
+            json_res = run_cli_command([".\\tools\\pop_trace.ps1", "-Target", f'"{target}"', "-Json"])
+            
+            response_payload = {
+                "success": json_res.get("success", False),
+                "output": json_res.get("stdout", ""),
+                "stdout": json_res.get("stdout", "")
+            }
+            try:
+                out_str = json_res.get("stdout", "").strip()
+                if out_str and out_str.startswith("{"):
+                    response_payload["structured"] = json.loads(out_str)
+            except Exception:
+                pass
+            
             self.send_response(200)
             self._send_cors_headers()
             self.send_header("Content-Type", "application/json")
             self.end_headers()
-            self.wfile.write(json.dumps(result).encode("utf-8"))
+            self.wfile.write(json.dumps(response_payload).encode("utf-8"))
 
         elif path == "/api/pack":
             target = params.get("target", [""])[0]
@@ -143,6 +170,33 @@ class RelayHandler(BaseHTTPRequestHandler):
         elif path == "/api/gw":
             target = params.get("target", [""])[0]
             result = run_cli_command([".\\mes.ps1", "gw", f'"{target}"'])
+            self.send_response(200)
+            self._send_cors_headers()
+            self.send_header("Content-Type", "application/json")
+            self.end_headers()
+            self.wfile.write(json.dumps(result).encode("utf-8"))
+
+        elif path == "/api/b598-price":
+            target = params.get("target", [""])[0]
+            cmd = [".\\mes.ps1", "b598-price"]
+            if target:
+                cmd.extend(["-Target", f'"{target}"'])
+            result = run_cli_command(cmd)
+            self.send_response(200)
+            self._send_cors_headers()
+            self.send_header("Content-Type", "application/json")
+            self.end_headers()
+            self.wfile.write(json.dumps(result).encode("utf-8"))
+
+        elif path == "/api/weekly-report":
+            start_date = params.get("startDate", [""])[0]
+            end_date = params.get("endDate", [""])[0]
+            cmd = [".\\mes.ps1", "weekly-report"]
+            if start_date:
+                cmd.extend(["-StartDate", f'"{start_date}"'])
+            if end_date:
+                cmd.extend(["-EndDate", f'"{end_date}"'])
+            result = run_cli_command(cmd)
             self.send_response(200)
             self._send_cors_headers()
             self.send_header("Content-Type", "application/json")
@@ -218,6 +272,26 @@ class RelayHandler(BaseHTTPRequestHandler):
                 self.send_header("Content-Type", "application/json")
                 self.end_headers()
                 self.wfile.write(json.dumps({"error": str(e)}).encode("utf-8"))
+
+        elif parsed.path == "/api/query":
+            try:
+                data = json.loads(body)
+                query_sql = data.get("query", "")
+                profile = data.get("profile", "SmartFactoryV2")
+                cmd = [".\\mes.ps1", "query", f'"{query_sql}"', "-Profile", f'"{profile}"']
+                result = run_cli_command(cmd)
+                self.send_response(200)
+                self._send_cors_headers()
+                self.send_header("Content-Type", "application/json")
+                self.end_headers()
+                self.wfile.write(json.dumps(result).encode("utf-8"))
+            except Exception as e:
+                self.send_response(400)
+                self._send_cors_headers()
+                self.send_header("Content-Type", "application/json")
+                self.end_headers()
+                self.wfile.write(json.dumps({"error": str(e)}).encode("utf-8"))
+
         else:
             self.send_response(404)
             self._send_cors_headers()
@@ -226,7 +300,7 @@ class RelayHandler(BaseHTTPRequestHandler):
 if __name__ == "__main__":
     print(f"[*] Starting Vinatech MES Relay Server on port {PORT}...")
     print(f"[*] Workspace: {WORKSPACE_DIR}")
-    server = HTTPServer(("0.0.0.0", PORT), RelayHandler)
+    server = ThreadedHTTPServer(("0.0.0.0", PORT), RelayHandler)
     try:
         server.serve_forever()
     except KeyboardInterrupt:

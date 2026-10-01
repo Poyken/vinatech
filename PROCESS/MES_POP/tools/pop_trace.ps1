@@ -38,11 +38,13 @@ if ($t -match '^PK') {
 
 $sw = [System.Diagnostics.Stopwatch]::StartNew()
 
-Write-Host ''
-Write-Host '======================================================================' -ForegroundColor Cyan
-Write-Host "     [POP-TRACE 360] TRUY VET SIEU TOC (SINGLE ROUND-TRIP)" -ForegroundColor Yellow
-Write-Host "     Ma truy vet: $t | Loai nhan dien: $type" -ForegroundColor White
-Write-Host '======================================================================' -ForegroundColor Cyan
+if (-not $Json) {
+    Write-Host ''
+    Write-Host '======================================================================' -ForegroundColor Cyan
+    Write-Host "     [POP-TRACE 360] TRUY VET SIEU TOC (SINGLE ROUND-TRIP)" -ForegroundColor Yellow
+    Write-Host "     Ma truy vet: $t | Loai nhan dien: $type" -ForegroundColor White
+    Write-Host '======================================================================' -ForegroundColor Cyan
+}
 
 $conn = Get-DbConnection -Profile 'SmartFactoryV2' -Silent
 if ($null -eq $conn) {
@@ -228,10 +230,27 @@ FROM SmartFactoryV2.dbo.STB_SetInfo WITH(NOLOCK)
 WHERE ControlNo = @Ctrl;
 
 -- 2. STB_ProdRouteHist (Index Seek)
-SELECT TOP 10 ProdRouteHistNo, ControlNo, RouteCode, WorkCenterCode, ProdQty, JobDate, ProdDateTime, CompleteRoute 
-FROM SmartFactoryV2.dbo.STB_ProdRouteHist WITH(NOLOCK) 
-WHERE ControlNo = @Ctrl 
-ORDER BY CreateDateTime DESC;
+SELECT TOP 30 
+    H.ProdRouteHistNo, 
+    H.ControlNo, 
+    H.RouteCode, 
+    H.WorkCenterCode, 
+    H.ProdQty, 
+    H.JobDate, 
+    H.ProdDateTime, 
+    ISNULL(W.WorkerCode, H.CreateUserID) AS WorkerCode,
+    ISNULL(PW.WorkerName, ISNULL(W.WorkerCode, H.CreateUserID)) AS WorkerName,
+    H.CompleteRoute 
+FROM SmartFactoryV2.dbo.STB_ProdRouteHist H WITH(NOLOCK) 
+OUTER APPLY (
+    SELECT TOP 1 WorkerCode 
+    FROM SmartFactoryV2.dbo.STB_ProdRouteWorkerHist WITH(NOLOCK) 
+    WHERE ProdRouteHistNo = H.ProdRouteHistNo 
+    ORDER BY CreateDateTime DESC
+) W
+LEFT JOIN SmartFactoryV2.dbo.STB_ProdWorkerInfo PW WITH(NOLOCK) ON W.WorkerCode = PW.WorkerCode
+WHERE H.ControlNo = @Ctrl 
+ORDER BY H.ProdRouteHistNo ASC;
 
 -- 3. MongoToMesPerformance (POP Sync)
 SELECT TOP 10 DayPlanNo, Barcode, RouteCode, LineCode, MachineCode, TotalProdQty, TotalDefectQty, IsDone, IsTransferred, InsertDateTime, ModifyDateTime 
@@ -529,6 +548,135 @@ function Show-ModelCard([System.Data.DataTable]$table) {
     Write-Host "   * Hoat dong gan nhat   : " -NoNewline -ForegroundColor Gray
     Write-Host "$last" -ForegroundColor DarkGray
     Write-Host "+-------------------------------------------------------------------------------+" -ForegroundColor Cyan
+}
+
+if ($Json) {
+    function Get-DataVal($row, $col) {
+        if ($null -eq $row) { return '' }
+        try {
+            $val = $row[$col]
+            if ($null -ne $val -and $val -ne [DBNull]::Value) {
+                return $val.ToString().Trim()
+            }
+        } catch {}
+        try {
+            $val = $row.$col
+            if ($null -ne $val -and $val -ne [DBNull]::Value) {
+                return $val.ToString().Trim()
+            }
+        } catch {}
+        return ''
+    }
+
+    $routeNames = @{
+        'V-22_HY' = 'Cuon loi (Winding - B530)';
+        'V-23_HY' = 'Lap cao su (Assembly - B540)';
+        'V-24_HY' = 'Cuon mep (Curling)';
+        'V-25_HY' = 'Boc vo (Sleeving)';
+        'V-26_HY' = 'Visual Inspection (Ngoai quan)';
+        'V-27_HY' = 'Packing (Dong goi - B523)';
+        'V-28_HY' = 'Nhap kho va In tem (Finished Goods)';
+        'V-22'    = 'Cuon loi (Winding)';
+        'V-23'    = 'Lap rap (Assembly)';
+        'V-24'    = 'Cuon mep (Curling)';
+        'V-25'    = 'Boc vo (Sleeving)';
+        'V-26'    = 'Ngoai quan (Visual)';
+        'V-27'    = 'Dong goi (Packing)';
+        'V-28'    = 'Nhap kho (Finished Goods)';
+    }
+
+    $routeList = New-Object System.Collections.Generic.List[PSObject]
+    $routeTable = $null
+    if ($ds.Tables.Count -gt 1) { $routeTable = $ds.Tables[1] }
+    $mongoTable = $null
+    if ($ds.Tables.Count -gt 2) { $mongoTable = $ds.Tables[2] }
+    
+    $mongoMachineMap = @{}
+    try {
+        if ($null -ne $mongoTable -and $mongoTable.Rows.Count -gt 0) {
+            for ($m = 0; $m -lt $mongoTable.Rows.Count; $m++) {
+                $mRow = $mongoTable.Rows[$m]
+                $rC = "$($mRow['RouteCode'])".Trim()
+                $mC = "$($mRow['MachineCode'])".Trim()
+                if ($rC -and $mC -and -not $mongoMachineMap.ContainsKey($rC)) {
+                    $mongoMachineMap[$rC] = $mC
+                }
+            }
+        }
+    } catch {}
+
+    if ($null -ne $routeTable -and $routeTable.Rows.Count -gt 0) {
+        $idx = 1
+        for ($i = 0; $i -lt $routeTable.Rows.Count; $i++) {
+            $r = $routeTable.Rows[$i]
+            $rCode = "$($r['RouteCode'])".Trim()
+            $rName = if ($rCode -and $routeNames.ContainsKey($rCode)) { $routeNames[$rCode] } elseif ($rCode) { $rCode } else { '' }
+            $wCode = "$($r['WorkerCode'])".Trim()
+            $wName = "$($r['WorkerName'])".Trim()
+            
+            $workerDisplay = if ($wName -and $wCode -and $wName -ne $wCode) { 
+                "$wName ($wCode)" 
+            } elseif ($wName) { 
+                $wName 
+            } elseif ($wCode) { 
+                $wCode 
+            } else { 
+                "Chua co thong tin cong nhan" 
+            }
+
+            $wcCode = "$($r['WorkCenterCode'])".Trim()
+            $mCode = if ($rCode -and $mongoMachineMap.ContainsKey($rCode)) {
+                $mongoMachineMap[$rCode]
+            } elseif ($wcCode) {
+                $wcCode
+            } else {
+                "KIOSK-POP"
+            }
+
+            $pQtyVal = 0
+            if ($r['ProdQty']) { [double]::TryParse("$($r['ProdQty'])", [ref]$pQtyVal) | Out-Null }
+            $pTimeVal = "$($r['ProdDateTime'])".Trim()
+            $jDateVal = "$($r['JobDate'])".Trim()
+
+            $routeList.Add([PSCustomObject]@{
+                routeOrder = $idx++
+                routeCode = $rCode
+                routeName = $rName
+                machineCode = $mCode
+                workerId = $workerDisplay
+                workerCode = $wCode
+                workerName = $wName
+                inTime = if ($jDateVal) { "$jDateVal 08:00:00" } else { $pTimeVal }
+                outTime = $pTimeVal
+                goodQty = [int]$pQtyVal
+                ngQty = 0
+            })
+        }
+    }
+    $setRow = if ($ds.Tables.Count -gt 0 -and $ds.Tables[0].Rows.Count -gt 0) { $ds.Tables[0].Rows[0] } else { $null }
+    $modelCode = try { if ($setRow -and $setRow['MaterialCode'] -ne [DBNull]::Value) { $setRow['MaterialCode'].ToString().Trim() } else { '' } } catch { '' }
+    $poCode = try { if ($setRow -and $setRow['PONo'] -ne [DBNull]::Value) { $setRow['PONo'].ToString().Trim() } else { '' } } catch { '' }
+    $ctrlNo = try { if ($setRow -and $setRow['ControlNo'] -ne [DBNull]::Value) { $setRow['ControlNo'].ToString().Trim() } else { $t } } catch { $t }
+
+    $jsonResult = [PSCustomObject]@{
+        target = $t
+        type = $type
+        controlNo = $ctrlNo
+        modelCode = $modelCode
+        modelName = if ($modelCode) { "$modelCode (PO: $poCode)" } else { "San pham Vinatech" }
+        line = if ($LineCode) { $LineCode } else { "HY Cell Line #1" }
+        status = if ($routeList.Count -gt 0) { "COMPLETED_POP" } else { "PENDING" }
+        currentRoute = if ($routeList.Count -gt 0) { $routeList[-1].routeName } else { "Khoi tao" }
+        routeHistory = $routeList
+        packingInfo = [PSCustomObject]@{
+            packingId = if ($poCode) { "PO-$poCode" } else { "PENDING_PACK" }
+            printCount = 0
+            isPrintAllow = 1
+        }
+    }
+
+    $jsonResult | ConvertTo-Json -Depth 6 -Compress:$false
+    exit 0
 }
 
 if ($type -eq "PACKING") {
