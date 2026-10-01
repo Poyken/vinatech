@@ -1,22 +1,22 @@
-﻿# BÃO CÃO Äá»˜ TIN Cáº¬Y TÃ€I LIá»†U & SCHEMA DRIFT AUDIT
+﻿# BÁO CÁO ĐỘ TIN CẬY TÀI LIỆU & SCHEMA DRIFT AUDIT
 
-> **Cáº­p nháº­t:** 2026-10-01 23:50:58
-> **Tá»•ng quan há»‡ thá»‘ng:** **77.8%** Ä‘á»‘i tÆ°á»£ng khá»›p chÃ­nh xÃ¡c vá»›i Live DB (458 / 589 Ä‘á»‘i tÆ°á»£ng).
-> **Má»¥c Ä‘Ã­ch:** HÆ°á»›ng dáº«n AI vÃ  Ká»¹ sÆ° xÃ¡c Ä‘á»‹nh chÃ­nh xÃ¡c má»©c Ä‘á»™ tin cáº­y cá»§a tá»«ng tÃ i liá»‡u trÆ°á»›c khi váº­n hÃ nh.
-
----
-
-## 1. TiÃªu Chuáº©n PhÃ¢n Loáº¡i Äá»™ Tin Cáº­y
-
-- **HIGH (>= 90%):** TÃ i liá»‡u chuáº©n xÃ¡c cao, Báº£ng & Stored Procedure Ä‘Ã£ Ä‘Æ°á»£c verify vá»›i CSDL thá»±c táº¿. **CÃ³ thá»ƒ Ã¡p dá»¥ng ngay logic nghiá»‡p vá»¥.**
-- **MEDIUM (70% - 89%):** TÃ i liá»‡u cÃ³ Ä‘á»™ chÃ­nh xÃ¡c khÃ¡, má»™t sá»‘ SP/Báº£ng thuá»™c DB phá»¥ hoáº·c cÃ³ typo nhá». Cáº§n kiá»ƒm tra nháº¹ trÆ°á»›c khi cháº¡y.
-- **LOW (< 70%):** TÃ i liá»‡u cÃ³ nhiá»u giáº£ Ä‘á»‹nh hoáº·c Ä‘á» cáº­p SP chÆ°a triá»ƒn khai trÃªn Production. Báº¯t buá»™c kiá»ƒm tra ká»¹ CSDL.
+> **Cập nhật:** 2026-10-02 00:26:42
+> **Tổng quan hệ thống:** **77.8%** đối tượng khớp chính xác với Live DB (458 / 589 đối tượng).
+> **Mục đích:** Hướng dẫn AI và Kỹ sư xác định chính xác mức độ tin cậy của từng tài liệu trước khi vận hành.
 
 ---
 
-## 2. Báº£ng ÄÃ¡nh GiÃ¡ Chi Tiáº¿t Tá»«ng TÃ i Liá»‡u
+## 1. Tiêu Chuẩn Phân Loại Độ Tin Cậy
 
-| File TÃ i Liá»‡u | Báº£ng Khá»›p | SP Khá»›p | Äá»™ Tin Cáº­y | PhÃ¢n Loáº¡i |
+- **HIGH (>= 90%):** Tài liệu chuẩn xác cao, Bảng & Stored Procedure đã được verify với CSDL thực tế. **Có thể áp dụng ngay logic nghiệp vụ.**
+- **MEDIUM (70% - 89%):** Tài liệu có độ chính xác khá, một số SP/Bảng thuộc DB phụ hoặc có typo nhỏ. Cần kiểm tra nhẹ trước khi chạy.
+- **LOW (< 70%):** Tài liệu có nhiều giả định hoặc đề cập SP chưa triển khai trên Production. Bắt buộc kiểm tra kỹ CSDL.
+
+---
+
+## 2. Bảng Đánh Giá Chi Tiết Từng Tài Liệu
+
+| File Tài Liệu | Bảng Khớp | SP Khớp | Độ Tin Cậy | Phân Loại |
 |:---|:---:|:---:|:---:|:---:|
 | [./DATABASE_KNOWLEDGE_BASE/DEEP_DIVE_04_HIGH_VOLUME_PERFORMANCE_AND_INDEXES.md](./DATABASE_KNOWLEDGE_BASE/DEEP_DIVE_04_HIGH_VOLUME_PERFORMANCE_AND_INDEXES.md) | 6/6 | 0/0 | **100%** | [HIGH] |
 | [./AI_AGENT_CONFIG/RULES.md](./AI_AGENT_CONFIG/RULES.md) | 3/3 | 0/0 | **100%** | [HIGH] |
@@ -59,92 +59,92 @@
 
 ---
 
-## 3. Danh SÃ¡ch Äá»‘i TÆ°á»£ng Cáº§n LÆ°u Ã (Unverified / Typos / Cross-DB)
+## 3. Danh Sách Đối Tượng Cần Lưu Ý (Unverified / Typos / Cross-DB)
 
 ### File: ./DATABASE_KNOWLEDGE_BASE/ARCHITECTURE_DEEP_DIVE_GROUPWARE_ERP_MES.md
-- **Báº£ng chÆ°a tÃ¬m tháº¥y trong Live DB:** STB_UserInfo_MES, MA_USER_ERP, MA_EMP_ERP, VVT_F1, VVT_F2, VVT_F3
+- **Bảng chưa tìm thấy trong Live DB:** STB_UserInfo_MES, MA_USER_ERP, MA_EMP_ERP, VVT_F1, VVT_F2, VVT_F3
 
 ### File: ./DATABASE_KNOWLEDGE_BASE/DEEP_DIVE_02_SQL_AGENT_JOBS_AND_DATA_PUMPS.md
-- **SP chÆ°a tÃ¬m tháº¥y trong Live DB:** usp_DoSyncMaterialUnit, usp_SalesUnitPrice_interface
+- **SP chưa tìm thấy trong Live DB:** usp_DoSyncMaterialUnit, usp_SalesUnitPrice_interface
 
 ### File: ./DATABASE_KNOWLEDGE_BASE/DEEP_DIVE_03_END_TO_END_DATA_LINEAGE_ATLAS.md
-- **Báº£ng chÆ°a tÃ¬m tháº¥y trong Live DB:** GW_PO, POP_LOG, STB_BoxPackagingInfo, STB_PalletPackagingInfo, VVT_F5
+- **Bảng chưa tìm thấy trong Live DB:** GW_PO, POP_LOG, STB_BoxPackagingInfo, STB_PalletPackagingInfo, VVT_F5
 
 ### File: ./DATABASE_KNOWLEDGE_BASE/DEEP_DIVE_05_TRIGGER_AND_EVENT_DRIVEN_ARCHITECTURE.md
-- **Báº£ng chÆ°a tÃ¬m tháº¥y trong Live DB:** STB_SetInfoRemoveHist
+- **Bảng chưa tìm thấy trong Live DB:** STB_SetInfoRemoveHist
 
 ### File: ./DATABASE_KNOWLEDGE_BASE/DZICUBE/README.md
-- **Báº£ng chÆ°a tÃ¬m tháº¥y trong Live DB:** VINA_DOCUMENT_PAYMENT, FI_DOCU_D
-- **SP chÆ°a tÃ¬m tháº¥y trong Live DB:** USP_A_, USP_A, USP_B, USP_W, USP_S, USP_P, USP_H, USP_M, USP_D
+- **Bảng chưa tìm thấy trong Live DB:** VINA_DOCUMENT_PAYMENT, FI_DOCU_D
+- **SP chưa tìm thấy trong Live DB:** USP_A_, USP_A, USP_B, USP_W, USP_S, USP_P, USP_H, USP_M, USP_D
 
 ### File: ./DATABASE_KNOWLEDGE_BASE/legacy_docs/DB_INDEX_legacy.md
-- **Báº£ng chÆ°a tÃ¬m tháº¥y trong Live DB:** GW_Core
+- **Bảng chưa tìm thấy trong Live DB:** GW_Core
 
 ### File: ./DATABASE_KNOWLEDGE_BASE/NEOE/README.md
-- **Báº£ng chÆ°a tÃ¬m tháº¥y trong Live DB:** FI_DOCU_D, PU_PO
+- **Bảng chưa tìm thấy trong Live DB:** FI_DOCU_D, PU_PO
 
 ### File: ./DATABASE_KNOWLEDGE_BASE/SmartFactoryIncubator/README.md
-- **Báº£ng chÆ°a tÃ¬m tháº¥y trong Live DB:** STB_CellTestResult, STB_CellTestResultMax, STB_CellTestResultRT
+- **Bảng chưa tìm thấy trong Live DB:** STB_CellTestResult, STB_CellTestResultMax, STB_CellTestResultRT
 
 ### File: ./DATABASE_KNOWLEDGE_BASE/VINATECH_GROUP/DISBURSEMENT_INTEGRATION.md
-- **Báº£ng chÆ°a tÃ¬m tháº¥y trong Live DB:** GW_PO, GW_Pay, FI_DOCU_D, FI_ACCT, GW_06_THANH_TOAN
+- **Bảng chưa tìm thấy trong Live DB:** GW_PO, GW_Pay, FI_DOCU_D, FI_ACCT, GW_06_THANH_TOAN
 
 ### File: ./DATABASE_KNOWLEDGE_BASE/VINATECH_GROUP/HR_AND_ADMIN_INTEGRATION.md
-- **Báº£ng chÆ°a tÃ¬m tháº¥y trong Live DB:** GW_HR, GW_Trip, GW_Report, GW_Leave, GW_Retire, GW_05_HANH_CHINH
+- **Bảng chưa tìm thấy trong Live DB:** GW_HR, GW_Trip, GW_Report, GW_Leave, GW_Retire, GW_05_HANH_CHINH
 
 ### File: ./DATABASE_KNOWLEDGE_BASE/VINATECH_GROUP/MASTER_DATA_INTEGRATION.md
-- **Báº£ng chÆ°a tÃ¬m tháº¥y trong Live DB:** GW_Item, GW_BOM, GW_Vendor, GW_Price, GW_H, GW_L, GW_04_MASTER_DATA
+- **Bảng chưa tìm thấy trong Live DB:** GW_Item, GW_BOM, GW_Vendor, GW_Price, GW_H, GW_L, GW_04_MASTER_DATA
 
 ### File: ./DATABASE_KNOWLEDGE_BASE/VINATECH_GROUP/ORGANIZATION_AND_WORKFLOW.md
-- **Báº£ng chÆ°a tÃ¬m tháº¥y trong Live DB:** GW_01_DANG_NHAP, GW_04_MASTER_DATA, GW_05_HANH_CHINH
+- **Bảng chưa tìm thấy trong Live DB:** GW_01_DANG_NHAP, GW_04_MASTER_DATA, GW_05_HANH_CHINH
 
 ### File: ./DATABASE_KNOWLEDGE_BASE/VINATECH_GROUP/PRODUCTION_PLANNING.md
-- **Báº£ng chÆ°a tÃ¬m tháº¥y trong Live DB:** GW_03_KE_HOACH_SX, VINA_DOCUMENT_DAILY_PRODUCTION_ORDER_LOT
+- **Bảng chưa tìm thấy trong Live DB:** GW_03_KE_HOACH_SX, VINA_DOCUMENT_DAILY_PRODUCTION_ORDER_LOT
 
 ### File: ./DATABASE_KNOWLEDGE_BASE/VINATECH_GROUP/PURCHASE_INTEGRATION.md
-- **Báº£ng chÆ°a tÃ¬m tháº¥y trong Live DB:** GW_02_MUA_HANG, GW_06_THANH_TOAN, FI_DOCU_D
+- **Bảng chưa tìm thấy trong Live DB:** GW_02_MUA_HANG, GW_06_THANH_TOAN, FI_DOCU_D
 
 ### File: ./DATABASE_KNOWLEDGE_BASE/VINATECH_GROUP/README.md
-- **Báº£ng chÆ°a tÃ¬m tháº¥y trong Live DB:** GW_INDEX
+- **Bảng chưa tìm thấy trong Live DB:** GW_INDEX
 
 ### File: ./DATABASE_KNOWLEDGE_BASE/VINATECH_GROUP/SALES_AND_SHIPMENT_INTEGRATION.md
-- **Báº£ng chÆ°a tÃ¬m tháº¥y trong Live DB:** GW_08_BAN_HANG, GW_07_KHO_THANH_PHAM, GW_03, VINA_DOCUMENT_DELIVER_OUT_CONFIRMATION, VINA_DOCUMENT_SALES_ORDER_LINE, VINA_DOCUMENT_SALES_RESOLUTION
+- **Bảng chưa tìm thấy trong Live DB:** GW_08_BAN_HANG, GW_07_KHO_THANH_PHAM, GW_03, VINA_DOCUMENT_DELIVER_OUT_CONFIRMATION, VINA_DOCUMENT_SALES_ORDER_LINE, VINA_DOCUMENT_SALES_RESOLUTION
 
 ### File: ./DATABASE_KNOWLEDGE_BASE/VINATECH_GROUP/SSO_AND_SECURITY_INTEGRATION.md
-- **Báº£ng chÆ°a tÃ¬m tháº¥y trong Live DB:** GW_01_DANG_NHAP, VINA_SSO_TOKEN, VINA_SSO_LOGIN
+- **Bảng chưa tìm thấy trong Live DB:** GW_01_DANG_NHAP, VINA_SSO_TOKEN, VINA_SSO_LOGIN
 
 ### File: ./DATABASE_KNOWLEDGE_BASE/VINATECH_GROUP/WAREHOUSE_AND_INVENTORY_INTEGRATION.md
-- **Báº£ng chÆ°a tÃ¬m tháº¥y trong Live DB:** GW_07_KHO_THANH_PHAM, GW_08_BAN_HANG, VVT_F1, VVT_F2, VVT_F3
+- **Bảng chưa tìm thấy trong Live DB:** GW_07_KHO_THANH_PHAM, GW_08_BAN_HANG, VVT_F1, VVT_F2, VVT_F3
 
 ### File: ./DATABASE_KNOWLEDGE_BASE/VINATECH_RESTFUL/README.md
-- **Báº£ng chÆ°a tÃ¬m tháº¥y trong Live DB:** VINA_SSO_LOGIN, VINA_SSO_TOKEN
+- **Bảng chưa tìm thấy trong Live DB:** VINA_SSO_LOGIN, VINA_SSO_TOKEN
 
 ### File: ./DATABASE_KNOWLEDGE_BASE/VINATECH_SPREADSHEET/README.md
-- **Báº£ng chÆ°a tÃ¬m tháº¥y trong Live DB:** VINA_SPREAD_SHEET_JSON, VINA_SPREAD_SHEET, VINA_SPREAD_SHEET_OPEN, VINA_SPREAD_SHEET_PERMISSIONS, VINA_SPREAD_SHEET_HISTORY, VINA_SPREAD_SHEET_TYPE, VINA_SPREAD_SHEET_USER, VINA_SPREAD_SHEET_USER_JSON
+- **Bảng chưa tìm thấy trong Live DB:** VINA_SPREAD_SHEET_JSON, VINA_SPREAD_SHEET, VINA_SPREAD_SHEET_OPEN, VINA_SPREAD_SHEET_PERMISSIONS, VINA_SPREAD_SHEET_HISTORY, VINA_SPREAD_SHEET_TYPE, VINA_SPREAD_SHEET_USER, VINA_SPREAD_SHEET_USER_JSON
 
 ### File: ./SYSTEM_ARCHITECTURE/MES_DAILY_PLAYBOOK.md
-- **Báº£ng chÆ°a tÃ¬m tháº¥y trong Live DB:** STB_ESM_WO_HEADER
+- **Bảng chưa tìm thấy trong Live DB:** STB_ESM_WO_HEADER
 
 ### File: ./SYSTEM_ARCHITECTURE/VOL_01_SYSTEM_ARCHITECTURE.md
-- **Báº£ng chÆ°a tÃ¬m tháº¥y trong Live DB:** STB_MaterialBOM, STB_CellTestResult, VINA_SSO_TOKEN, VINA_SPREAD_SHEET_JSON, VINA_DOCUMENT_DELIVER_OUT_CONFIRMATION, VINA_DOCUMENT_DAILY_PRODUCTION_ORDER_LOT, VINA_DOCUMENT_BUSINESS_TRIP, VINA_DOCUMENT_PARTNER_REG, VINA_DOCUMENT_BOM_REVISION, GW_H, GW_L, VINA_DOCUMENT_SALES_ORDER_LINE, VINA_BG
-- **SP chÆ°a tÃ¬m tháº¥y trong Live DB:** usp_SyncPurchaseRequest, usp_GetPurchaseOrderList, usp_DoApplyIncomingQty, usp_DoCreateAccountingSlip, usp_SyncSalesOrder, usp_GetShipmentRequestList, usp_DoApplyRealShipment, usp_SyncDailyProductionPlan, usp_DoFinishRouteOperation, usp_SyncMaterialMaster
+- **Bảng chưa tìm thấy trong Live DB:** STB_MaterialBOM, STB_CellTestResult, VINA_SSO_TOKEN, VINA_SPREAD_SHEET_JSON, VINA_DOCUMENT_DELIVER_OUT_CONFIRMATION, VINA_DOCUMENT_DAILY_PRODUCTION_ORDER_LOT, VINA_DOCUMENT_BUSINESS_TRIP, VINA_DOCUMENT_PARTNER_REG, VINA_DOCUMENT_BOM_REVISION, GW_H, GW_L, VINA_DOCUMENT_SALES_ORDER_LINE, VINA_BG
+- **SP chưa tìm thấy trong Live DB:** usp_SyncPurchaseRequest, usp_GetPurchaseOrderList, usp_DoApplyIncomingQty, usp_DoCreateAccountingSlip, usp_SyncSalesOrder, usp_GetShipmentRequestList, usp_DoApplyRealShipment, usp_SyncDailyProductionPlan, usp_DoFinishRouteOperation, usp_SyncMaterialMaster
 
 ### File: ./SYSTEM_ARCHITECTURE/VOL_03_SCREEN_OPERATIONS_AND_TROUBLESHOOTING.md
-- **SP chÆ°a tÃ¬m tháº¥y trong Live DB:** fn_VVT_getdatebyVendorLot
+- **SP chưa tìm thấy trong Live DB:** fn_VVT_getdatebyVendorLot
 
 ### File: ./AI_AGENT_CONFIG/HOTFIX_LOG_HISTORICAL.md
-- **Báº£ng chÆ°a tÃ¬m tháº¥y trong Live DB:** VVT_F1, VVT_F2, VVT_F5, POP_KB_03
-- **SP chÆ°a tÃ¬m tháº¥y trong Live DB:** fn_VVT_getdatebyVendorLot_MergeCode, fn_VVT_getdatebyVendorLot, usp_DoProcessProdRouteHist_HY
+- **Bảng chưa tìm thấy trong Live DB:** VVT_F1, VVT_F2, VVT_F5, POP_KB_03
+- **SP chưa tìm thấy trong Live DB:** fn_VVT_getdatebyVendorLot_MergeCode, fn_VVT_getdatebyVendorLot, usp_DoProcessProdRouteHist_HY
 
 ### File: ./AI_AGENT_CONFIG/KNOWLEDGE.md
-- **Báº£ng chÆ°a tÃ¬m tháº¥y trong Live DB:** VINA_DOCUMENT_DAILY_PLAN, VINA_DOCUMENT_PAYMENT, FI_DOCU_D
+- **Bảng chưa tìm thấy trong Live DB:** VINA_DOCUMENT_DAILY_PLAN, VINA_DOCUMENT_PAYMENT, FI_DOCU_D
 
 ### File: ./AI_AGENT_CONFIG/LESSONS_LEARNED.md
-- **Báº£ng chÆ°a tÃ¬m tháº¥y trong Live DB:** VVT_F1, VVT_F2, VVT_F5
-- **SP chÆ°a tÃ¬m tháº¥y trong Live DB:** fn_VVT_getdatebyVendorLot_MergeCode, fn_VVT_getdatebyVendorLot
+- **Bảng chưa tìm thấy trong Live DB:** VVT_F1, VVT_F2, VVT_F5
+- **SP chưa tìm thấy trong Live DB:** fn_VVT_getdatebyVendorLot_MergeCode, fn_VVT_getdatebyVendorLot
 
 ### File: ./SYSTEM_INTEGRATION_MAP.md
-- **Báº£ng chÆ°a tÃ¬m tháº¥y trong Live DB:** GW_PO, GW_PLAN, GW_PAY, POP_MAP, VINA_DOCUMENT_DAILY_PLAN, VINA_DOCUMENT_PAYMENT, FI_DOCU_D, VINA_SSO_TOKEN, VINA_SSO_LOGIN
+- **Bảng chưa tìm thấy trong Live DB:** GW_PO, GW_PLAN, GW_PAY, POP_MAP, VINA_DOCUMENT_DAILY_PLAN, VINA_DOCUMENT_PAYMENT, FI_DOCU_D, VINA_SSO_TOKEN, VINA_SSO_LOGIN
 
 ---
-*BÃ¡o cÃ¡o Ä‘Æ°á»£c táº¡o tá»± Ä‘á»™ng bá»Ÿi cÃ´ng cá»¥ audit_kb_reliability.ps1.*
+*Báo cáo được tạo tự động bởi công cụ audit_kb_reliability.ps1.*

@@ -95,6 +95,15 @@ Tuyệt đối ghi nhớ nguyên tắc phân định:
 - `mes screen "<ScreenID>"`: Debug cấu trúc Grid, SP, Bảng của màn hình WinForm.
 - `mes locks`: Soi real-time các khóa blocking trên CSDL.
 - `mes deploy <file.sql>`: Triển khai Hotfix qua Transaction có Pre-flight Snapshot.
+- `mes swap-machine -Lots "<Lot>" -Machine "<Machine>"`: Sửa đổi máy nhầm Kiosk chuẩn Rule 20.1 (Atomic 2 bảng).
+- `mes fix-solution -Lots "<Lot>"`: Cấp cứu khôi phục thùng dung dịch điện giải 150kg.
+- `mes fix-movedate -Lots "<Lot>" -TargetDate "yyyy-MM-dd"`: Chuyển ngày chốt B782 chuẩn 10h00 AM ca làm việc.
+- `mes fix-electrode -Lots "<Lot>" [-Type Slitting|Mixing]`: Xóa mẻ trộn / cuộn slitting B552 kẹt.
+- `mes fix-pop-clone -Lots "<Lot>"`: Xóa dòng tự sinh thừa mở chốt Kiosk POP.
+- `mes fix-cancel-pack -Target "<Lot>" -BoxId "<BoxId>"`: Hủy lẻ từng Box đóng gói.
+- `mes fix-defect-null -Lots "<Lot>"`: Chuẩn hóa RepairQty = 0 sửa mất cột NG trên B782.
+- `mes validate-excel <File.xlsx> -Route F330`: Kiểm toán pre-flight chống lệch cột Excel import.
+- `mes b598-price`: Soi nhanh đơn giá USD & tỷ lệ cân hardcode trong SP.
 
 ### 📱 POP Kiosk (`pop`):
 - `pop trace "<Keyword>"`: Truy vết nhanh Kiosk hiện trường.
@@ -115,3 +124,13 @@ Tuyệt đối ghi nhớ nguyên tắc phân định:
 - `db find "<Keyword>"`: Tra cứu vị trí bảng trên 15 CSDL.
 - `db schema -Profile <Profile> -Table <TableName>`: Xuất data dictionary của bảng.
 - `db locks`: Giám sát deadlock và session lock.
+
+---
+
+## ⚡ 7. KHUÔN MẪU PHẢN HỒI LỖI CHUẨN MỰC ("4 DÒNG VÀNG")
+
+Khi nhận được báo lỗi từ hiện trường, AI Copilot luôn phản hồi cô đọng theo 4 phần dứt khoát:
+1. 🎯 **Nguyên nhân gốc rễ (Root Cause):** Tên màn hình, Stored Procedure, cơ chế gây lỗi.
+2. 📍 **Hiện trạng thực tế:** Lot đang ở đâu, kẹt cái gì, bảng nào.
+3. 🛠️ **Cách OP tự xử lý trên giao diện (Workaround):** Các bước 1-2-3 cho công nhân/tổ trưởng tại xưởng.
+4. ⚡ **SQL Hotfix chuẩn (Nếu IT phải can thiệp):** Đã bọc `BEGIN TRAN...ROLLBACK`, có NOLOCK, ChangeUserID='vanduc'.

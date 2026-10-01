@@ -23,10 +23,18 @@ Lệnh này quét đồng thời 15 CSDL, đo thời gian phản hồi (ms) và 
 ```
 Xuất ra danh sách toàn bộ cột, kiểu dữ liệu, độ dài, nullability, và khóa chính.
 
-## 4. Truy Vấn SELECT An Toàn
+## 5. Giám Sát Khóa & Deadlock (Real-time Locks)
 ```powershell
-.\db.ps1 query -Profile <Profile> -Query "SELECT TOP 10 ... FROM <table> WITH(NOLOCK) WHERE ..."
+db locks [-Profile <Profile>]
 ```
-- CLI tự động kiểm tra cú pháp SELECT-ONLY.
-- Tự động cảnh báo nếu thiếu `WITH(NOLOCK)`.
-- Giới hạn tối đa 50 dòng kết quả.
+Soi ngay lập tức các phiên bị block (`blocking_session_id <> 0`), danh sách SQL text gây nghẽn và thời gian giữ lock.
+
+## 6. Giao Thức Bảo Vệ 3 Bảng Khổng Lồ (Rule 15):
+1. **`STB_VVT_ESRDATA` (423 Triệu dòng, 64.8 GB):** CẤM câu lệnh `SELECT` không có điều kiện `id` (ví dụ `WHERE id > ...`).
+2. **`STB_ProductStockInfo` (69 Triệu dòng, 13.1 GB):** BẮT BUỘC luôn lọc theo `WHERE BaseDate = '...'`.
+3. **`STB_SetInfo` (789K dòng, HEAP):** Luôn lọc theo `Barcode`, `LotNumber`, `DayPlanNo`.
+
+## 7. Kỷ Luật Tuyệt Đối (Rule 21 - Zero Blind SQL Exploration):
+- CẤM chạy chuỗi SELECT thử sai mò mẫm bảng/cột.
+- Luôn tra cứu cấu trúc qua `db find "<Keyword>"` và `DATABASE_MATRIX.json` trước.
+

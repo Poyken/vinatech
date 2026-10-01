@@ -1,4 +1,4 @@
-# 🛡️ CÁC QUY TẮC VÀNG VẬN HÀNH AGENT GROUPWARE (VINATECH_GROUP)
+﻿# 🛡️ CÁC QUY TẮC VÀNG VẬN HÀNH AGENT GROUPWARE (VINATECH_GROUP)
 
 > **Phạm vi áp dụng:** Workspace `PROCESS/GROUPWARE` | **Single Source of Truth:** `.agents/rules/00_groupware_rules.md`  
 > **Tài liệu kim chỉ nam:** `GROUPWARE_KNOWLEDGE_BASE/GW_00_CORE_OPERATING_PRINCIPLES.md`  
@@ -56,3 +56,30 @@ Groupware là **CỔNG THẨM QUYỀN ĐIỀU HÀNH THƯỢNG NGUỒN (Upstream 
 
 14. **RULE 13 - CHỐT CHẶN KỸ THUẬT IQC (C220 PASS GATEKEEPER):**
     - Nhập kho NVL Groupware (Receiving Confirmation) phụ thuộc hoàn toàn vào kết quả kiểm định IQC `PASS` trên MES `C220`. Không được bỏ qua bước này.
+
+15. **RULE 21 - BẮT BUỘC DÙNG TOOL CHUYÊN DỤNG (CLI HUBS):**
+    - Bắt buộc dùng `.\gw.ps1 [trace|form|find|health|query]`. Cấm dùng `.\db.ps1 query` để mò mẫm cấu trúc bảng hoặc đoán quy trình duyệt. Tra cứu qua `GW_FORM_MATRIX.json`. Giới hạn 1-2 tool calls.
+
+16. **RULE 22 - ĐỊNH DANH SỰ CỐ & PHÂN LOẠI ISSUE (POP BẮT BUỘC GHI POP):**
+    - Bắt buộc phân loại rạch ròi: `POP` (Toàn bộ Kiosk xưởng & Web POP) vs `MES` (Core MES Sản Xuất WinForm & CSDL lõi).
+
+17. **RULE 23 - TIER-0 ENTERPRISE MASTER ORCHESTRATION (ops.ps1 FIRST):**
+    - Điểm tiếp nhận đầu tiên: `ops health` hoặc `ops trace <Mã>`.
+
+18. **RULE 24 - ZERO IRREVERSIBLE HOTFIX (SNAPSHOT & 1-CLICK ROLLBACK):**
+    - Mọi can thiệp DML bắt buộc qua Pre-flight Snapshot tự sinh `undo_<Target>.sql`. Hoàn tác bằng `ops rollback -Target <LotID> -Deploy`.
+
+19. **RULE 25 - WORKSPACE MODULARITY & ZERO ROOT POLLUTION:**
+    - Root `PROCESS/` bất khả xâm phạm. Cấm lưu file SQL, dump, scratch lẻ.
+
+20. **RULE 26 - ACTIVE KNOWLEDGE RETENTION & ANTI-DRIFT:**
+    - Nghiệm thu bug mới bắt buộc cập nhật L1 Cache JSON & `hotfix_audit.jsonl`. Định kỳ chạy `ops audit-kb`.
+
+21. **RULE 27 - MULTI-ROOT WORKSPACE SYNCHRONIZATION:**
+    - Luôn mở qua `vinatech-enterprise.code-workspace` và tích hợp Universal Root Detection.
+
+22. **SLASH COMMANDS & LEARNING GOVERNANCE:**
+    - `/plan`: Lập kế hoạch chi tiết, chờ duyệt `Proceed` trước khi can thiệp lớn.
+    - `/learn`: Dạy bài học mới, tự động lưu vào `.agents/rules/02_learned_patterns.md`.
+    - Sổ tay vận hành: `OPERATOR_COPILOT_GUIDE.md`.
+

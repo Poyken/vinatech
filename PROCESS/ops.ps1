@@ -353,8 +353,16 @@ function Invoke-SafeRollback {
 
     if ($Deploy) {
         Write-Host "[*] DANG THUC THI HOAN TAC TRONG TRANSACTION..." -ForegroundColor Yellow
-        $sqlText = [System.IO.File]::ReadAllText($latestUndo.FullName, [System.Text.Encoding]::UTF8)
-        $connStr = Get-ConnectionString -Profile "SmartFactoryV2"
+        $sqlText = [System.IO.File]::ReadAllText($latestUndo.FullName, [System.Text.Encoding]::UTF8).Trim()
+        
+        # Auto-detect profile from header
+        $targetProfile = if ($Profile -and $Profile -ne "SmartFactoryV2") { $Profile } else { "SmartFactoryV2" }
+        if ($sqlText -match "(?i)-- Profile:\s*(\w+)") {
+            $targetProfile = $matches[1]
+        }
+        
+        Write-Host "-> Ket noi CSDL Profile: $targetProfile" -ForegroundColor Cyan
+        $connStr = Get-ConnectionString -Profile $targetProfile
         $conn = New-Object System.Data.SqlClient.SqlConnection($connStr)
         $conn.Open()
         $cmd = $conn.CreateCommand()
@@ -362,12 +370,13 @@ function Invoke-SafeRollback {
         $cmd.CommandTimeout = 30
         $cmd.ExecuteNonQuery() | Out-Null
         $conn.Close()
-        Write-Host "[SUCCESS] Du lieu da duoc hoan tac ve nguyen trang!" -ForegroundColor Green
-        Write-HotfixAuditLog -System "MES" -Target $TargetId -Action "ROLLBACK" -ScriptFile $latestUndo.FullName -Status "REVERTED"
+        Write-Host "[SUCCESS] Du lieu da duoc hoan tac ve nguyen trang tren Profile [$targetProfile]!" -ForegroundColor Green
+        Write-HotfixAuditLog -System $targetProfile -Target $TargetId -Action "ROLLBACK" -ScriptFile $latestUndo.FullName -Status "REVERTED"
     } else {
         Write-Host "(Chay kem co -Deploy de thuc thi file Undo nay tren CSDL: .\ops.ps1 rollback -Target $TargetId -Deploy)" -ForegroundColor Magenta
     }
 }
+
 
 # 5. DISPATCH MAIN COMMAND
 switch ($Command.ToLower()) {

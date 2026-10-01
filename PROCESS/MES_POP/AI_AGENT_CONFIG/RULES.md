@@ -46,6 +46,21 @@ Related Files:
 > **13. RULE 22 - QUY TẮC ĐỊNH DANH SỰ CỐ & PHÂN LOẠI ISSUE (POP BẮT BUỘC GHI LÀ POP, KHÔNG GHI MES)** —
 >   - Mọi issue, sự cố phát sinh, task hỗ trợ, ticket, báo cáo tuần IT, báo cáo khắc phục sự cố... liên quan đến POP (Kiosk xưởng, Web POP, nạp NVL Kiosk, kẹt máy Kiosk, sync MongoToMesPerformance) **BẮT BUỘC ghi phân loại/remark/hệ thống là `POP`**, **TUYỆT ĐỐI KHÔNG ghi là `MES` nữa**.
 >   - Tách biệt hoàn toàn: **POP** (Kiosk xưởng & Web POP) vs **MES** (Core MES Sản Xuất WinForm & CSDL lõi).
+> **14. RULE 23 - TIER-0 ENTERPRISE MASTER ORCHESTRATION (ops.ps1 FIRST)** —
+>   - Bắt đầu ca sáng hoặc nhận mã chưa rõ nguồn gốc: BẮT BUỘC gọi `ops health` hoặc `ops trace <ID>` đầu tiên.
+> **15. RULE 24 - ZERO IRREVERSIBLE HOTFIX (SNAPSHOT & 1-CLICK ROLLBACK)** —
+>   - Mọi can thiệp DML bắt buộc qua Pre-flight Snapshot tự sinh `undo_<Target>.sql`. Hoàn tác bằng `ops rollback -Target <LotID> -Deploy`.
+> **16. RULE 25 - WORKSPACE MODULARITY & ZERO ROOT POLLUTION** —
+>   - Root `PROCESS/` bất khả xâm phạm. Cấm lưu file SQL, dump, scratch lẻ.
+> **17. RULE 26 - ACTIVE KNOWLEDGE RETENTION & ANTI-DRIFT** —
+>   - Nghiệm thu bug mới bắt buộc cập nhật L1 Cache JSON & `hotfix_audit.jsonl`. Định kỳ chạy `ops audit-kb`.
+> **18. RULE 27 - MULTI-ROOT WORKSPACE SYNCHRONIZATION** —
+>   - Luôn mở qua `vinatech-enterprise.code-workspace` và tích hợp Universal Root Detection.
+> **19. SLASH COMMANDS & LEARNING GOVERNANCE** —
+>   - `/plan`: Lập kế hoạch chi tiết, chờ duyệt `Proceed` trước khi can thiệp lớn.
+>   - `/learn`: Dạy bài học mới, tự động lưu vào `.agents/rules/02_learned_patterns.md`.
+>   - Sổ tay vận hành: `OPERATOR_COPILOT_GUIDE.md`.
+
 
 ---
 

@@ -1,4 +1,4 @@
-# 🛡️ VINATECH GROUPWARE AGENT RULES (00_groupware_rules.md)
+﻿# 🛡️ VINATECH GROUPWARE AGENT RULES (00_groupware_rules.md)
 
 > **Phạm vi áp dụng:** Workspace `PROCESS/GROUPWARE` | **Phiên bản:** 2.0 (Master Governance Edition)  
 > **Tài liệu kim chỉ nam (North Star):** `GROUPWARE_KNOWLEDGE_BASE/GW_00_CORE_OPERATING_PRINCIPLES.md`  
@@ -62,4 +62,28 @@ Groupware không phải là cổng thông tin văn phòng thông thường, mà 
 - CẤM TUYỆT ĐỐI dùng `.\db.ps1 query` để mò mẫm cấu trúc bảng hoặc chạy chuỗi SELECT thử sai.
 - Muốn biết form, menu, trường dữ liệu ➔ BẮT BUỘC tra cứu L1 Cache (`GW_FORM_MATRIX.json`, `APPROVAL_LINE_MATRIX.json`) hoặc `find`.
 - Giới hạn cứng 1-2 tool calls trúng đích, xong là DỪNG NGAY.
+
+### 16. RULE 22 - QUY TẮC ĐỊNH DANH SỰ CỐ & PHÂN LOẠI ISSUE (POP BẮT BUỘC GHI POP):
+- Mọi issue liên quan đến Kiosk xưởng & Web POP ghi rõ là `POP`, không ghi `MES`.
+
+### 17. RULE 23 - TIER-0 ENTERPRISE MASTER ORCHESTRATION (ops.ps1 FIRST):
+- Tiếp nhận đầu tiên qua `ops health` hoặc `ops trace <Mã>`.
+
+### 18. RULE 24 - ZERO IRREVERSIBLE HOTFIX (SNAPSHOT & 1-CLICK ROLLBACK):
+- Pre-flight Snapshot tự động sinh `undo_<Target>.sql`. Hoàn tác bằng `ops rollback -Target <TargetID> -Deploy`.
+
+### 19. RULE 25 - WORKSPACE MODULARITY & ZERO ROOT POLLUTION:
+- Root `PROCESS/` bất khả xâm phạm. Cấm lưu file rác.
+
+### 20. RULE 26 - ACTIVE KNOWLEDGE RETENTION & ANTI-DRIFT:
+- Nghiệm thu xong cập nhật L1 Cache JSON & `hotfix_audit.jsonl`. Định kỳ chạy `ops audit-kb`.
+
+### 21. RULE 27 - MULTI-ROOT WORKSPACE SYNCHRONIZATION:
+- Mở IDE qua `vinatech-enterprise.code-workspace` và tích hợp Universal Root Detection.
+
+### 22. SLASH COMMANDS & LEARNING GOVERNANCE:
+- `/plan`: Lập kế hoạch chi tiết, chờ duyệt `Proceed` trước khi can thiệp lớn.
+- `/learn`: Dạy bài học mới, tự động lưu vào `.agents/rules/02_learned_patterns.md`.
+- Sổ tay vận hành: `OPERATOR_COPILOT_GUIDE.md`.
+
 

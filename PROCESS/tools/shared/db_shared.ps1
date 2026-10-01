@@ -297,7 +297,8 @@ function Create-SafePreflightSnapshot {
 
     # Save JSON Snapshot
     $snapFile = Join-Path $snapshotDir "snap_${TargetId}_${timestamp}.json"
-    $rows | ConvertTo-Json -Depth 5 | Set-Content -Path $snapFile -Encoding UTF8
+    $jsonText = $rows | ConvertTo-Json -Depth 5
+    [System.IO.File]::WriteAllText($snapFile, $jsonText, (New-Object System.Text.UTF8Encoding($true)))
 
     # Generate Undo SQL
     $undoFile = Join-Path $undoDir "undo_${TargetId}_${timestamp}.sql"
@@ -305,6 +306,7 @@ function Create-SafePreflightSnapshot {
     $undoSql.AppendLine("-- ==============================================================================") | Out-Null
     $undoSql.AppendLine("-- AUTOMATIC REVERSIBLE UNDO SCRIPT") | Out-Null
     $undoSql.AppendLine("-- Generated: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') | Target: $TargetId") | Out-Null
+    $undoSql.AppendLine("-- Profile: $Profile | TargetTable: $TargetTable") | Out-Null
     $undoSql.AppendLine("-- Author: vanduc | ChangeUserID: vanduc") | Out-Null
     $undoSql.AppendLine("-- ==============================================================================") | Out-Null
     $undoSql.AppendLine("BEGIN TRANSACTION;") | Out-Null
@@ -347,10 +349,11 @@ function Create-SafePreflightSnapshot {
     $undoSql.AppendLine("    PRINT '[ERROR] Reversible Undo failed: ' + ERROR_MESSAGE();") | Out-Null
     $undoSql.AppendLine("END CATCH;") | Out-Null
 
-    $undoSql.ToString() | Set-Content -Path $undoFile -Encoding UTF8
+    [System.IO.File]::WriteAllText($undoFile, $undoSql.ToString(), (New-Object System.Text.UTF8Encoding($true)))
 
     Write-Host "[OK] Pre-flight Snapshot: $snapFile ($($rows.Count) rows)" -ForegroundColor Green
-    Write-Host "[OK] Auto-Undo Script: $undoFile" -ForegroundColor Cyan
+    Write-Host "[OK] Auto-Undo Script: $undoFile (Profile: $Profile)" -ForegroundColor Cyan
+
 
     return @{
         SnapshotFile = $snapFile

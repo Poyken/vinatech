@@ -1,4 +1,4 @@
-# 🛡️ VINATECH DATABASE AGENT WORKSPACE RULES (V1.0)
+﻿# 🛡️ VINATECH DATABASE AGENT WORKSPACE RULES (V1.0)
 
 > **Single Source of Truth:** `DATABASE/AI_AGENT_CONFIG/RULES.md` & `GEMINI.md`  
 > **CLI Hub:** `.\db.ps1`
@@ -47,4 +47,28 @@
 - CẤM TUYỆT ĐỐI dùng `.\db.ps1 query` làm công cụ thử sai (trial-and-error), chạy chuỗi hàng chục câu SELECT mò mẫm tên bảng/cột/menu.
 - Khi cần tìm hiểu schema/nghiệp vụ: BẮT BUỘC tra L1 Cache (`DATABASE_MATRIX.json`, `QUICK_MATRIX.json`, `POP_MATRIX.json`, `KSYSTEM_MATRIX.json`) hoặc `find`.
 - `.\db.ps1 query` chỉ được dùng khi đã biết đích danh 100% bảng & cột cần lấy từ tài liệu, có `WITH (NOLOCK)` và giới hạn cứng tối đa 1-2 lần gọi.
+
+### 9. RULE 22 - ĐỊNH DANH SỰ CỐ & PHÂN LOẠI ISSUE (POP BẮT BUỘC GHI POP)
+- Mọi issue liên quan đến Kiosk xưởng & Web POP ghi rõ là `POP`, không ghi `MES`.
+
+### 10. RULE 23 - TIER-0 ENTERPRISE MASTER ORCHESTRATION (ops.ps1 FIRST)
+- Điểm tiếp nhận đầu tiên: `ops health` hoặc `ops trace <Mã>`.
+
+### 11. RULE 24 - ZERO IRREVERSIBLE HOTFIX (SNAPSHOT & 1-CLICK ROLLBACK)
+- Pre-flight Snapshot tự sinh `undo_<Target>.sql`. Hoàn tác bằng `ops rollback -Target <TargetID> -Deploy`.
+
+### 12. RULE 25 - WORKSPACE MODULARITY & ZERO ROOT POLLUTION
+- Root `PROCESS/` bất khả xâm phạm. Cấm lưu file rác.
+
+### 13. RULE 26 - ACTIVE KNOWLEDGE RETENTION & ANTI-DRIFT
+- Nghiệm thu xong cập nhật L1 Cache JSON & `hotfix_audit.jsonl`. Định kỳ chạy `ops audit-kb`.
+
+### 14. RULE 27 - MULTI-ROOT WORKSPACE SYNCHRONIZATION
+- Mở IDE qua `vinatech-enterprise.code-workspace` và tích hợp Universal Root Detection.
+
+### 15. SLASH COMMANDS & LEARNING GOVERNANCE
+- `/plan`: Lập kế hoạch chi tiết, chờ duyệt `Proceed` trước khi can thiệp lớn.
+- `/learn`: Dạy bài học mới, tự động lưu vào `.agents/rules/02_learned_patterns.md`.
+- Sổ tay vận hành: `OPERATOR_COPILOT_GUIDE.md`.
+
 

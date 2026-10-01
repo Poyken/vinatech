@@ -1,4 +1,4 @@
-# 🛡️ K-SYSTEM ACE ERP AGENT RULES — FINAL UNIFIED SYSTEM
+﻿# 🛡️ K-SYSTEM ACE ERP AGENT RULES — FINAL UNIFIED SYSTEM
 
 > **Hệ thống:** YoungLimWon K-System Ace Web ERP Suite (`https://evn.vinatech.com/`)
 > **Pháp nhân:** `비나텍(베트남법인)` — Công ty TNHH Vinatech Vina (CompanySeq = 1)
@@ -50,4 +50,28 @@
    - CẤM TUYỆT ĐỐI chạy các câu SELECT thăm dò mò mẫm cấu trúc bảng hoặc module K-System trên DB sống.
    - Muốn tìm hiểu màn hình, bảng, phân hệ ➔ Tra cứu L1 Cache `KSYSTEM_MATRIX.json` hoặc dùng `.\ksys.ps1 find`.
    - Tối đa 1-2 tool calls cho mỗi yêu cầu.
+
+10. **RULE 22 (ĐỊNH DANH SỰ CỐ POP BẮT BUỘC GHI POP):**
+    - Mọi sự cố liên quan Kiosk xưởng & Web POP ghi rõ là `POP`, không ghi `MES`.
+
+11. **RULE 23 (TIER-0 ENTERPRISE MASTER ORCHESTRATION — ops.ps1 FIRST):**
+    - Điểm tiếp nhận đầu tiên: `ops health` hoặc `ops trace <Mã>`.
+
+12. **RULE 24 (ZERO IRREVERSIBLE HOTFIX — SNAPSHOT & ROLLBACK):**
+    - Pre-flight Snapshot tự sinh `undo_<Target>.sql`. Hoàn tác bằng `ops rollback -Target <TargetID> -Deploy`.
+
+13. **RULE 25 (WORKSPACE MODULARITY & ZERO ROOT POLLUTION):**
+    - Root `PROCESS/` bất khả xâm phạm. Cấm lưu file rác.
+
+14. **RULE 26 (ACTIVE KNOWLEDGE RETENTION & ANTI-DRIFT):**
+    - Nghiệm thu xong cập nhật L1 Cache JSON & `hotfix_audit.jsonl`. Định kỳ chạy `ops audit-kb`.
+
+15. **RULE 27 (MULTI-ROOT WORKSPACE SYNCHRONIZATION):**
+    - Mở IDE qua `vinatech-enterprise.code-workspace` và tích hợp Universal Root Detection.
+
+16. **SLASH COMMANDS & LEARNING GOVERNANCE:**
+    - `/plan`: Lập kế hoạch chi tiết, chờ duyệt `Proceed` trước khi can thiệp lớn.
+    - `/learn`: Dạy bài học mới, tự động lưu vào `.agents/rules/02_learned_patterns.md`.
+    - Sổ tay vận hành: `OPERATOR_COPILOT_GUIDE.md`.
+
 

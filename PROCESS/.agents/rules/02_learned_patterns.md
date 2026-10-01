@@ -56,6 +56,59 @@
 ### 8. Định Mức BOM Phiên Bản Việt Nam (Lock Version 2001/2002)
 - **Tiền lệ:** MES `B310`/`B450` chỉ chấp nhận BOM phiên bản **2001** (Việt Nam) hoặc **2002** (Dây chuyền Cell mới). Mọi phiên bản khác đều bị từ chối phát hành Lot.
 
+### 9. Chuyển Ngày Chốt Sản Lượng B782 (B782 Move Job Date)
+- **Triệu chứng:** Công nhân chốt sản lượng ca đêm sau 00:00 nhưng thuộc ca ngày hôm trước, dẫn đến báo cáo ca bị lệch ngày.
+- **Giải pháp:** Chuyển ngày chốt về đúng 10h00 AM ca làm việc chuẩn:
+  ```powershell
+  mes fix-movedate -Lots "<LotID>" -TargetDate "yyyy-MM-dd"
+  ```
+
+### 10. Cấp Cứu Thùng Dung Dịch Điện Giải 150kg (Electrolyte Solution Recovery)
+- **Triệu chứng:** Thùng dung dịch điện giải 150kg bị trừ nhầm hoặc kẹt không cấp phát được tiếp cho các line nạp dung dịch.
+- **Giải pháp:**
+  ```powershell
+  mes fix-solution -Lots "<SolutionLot>"
+  ```
+
+### 11. Xóa Mẻ Trộn / Cuộn Slitting B552 & Reset IsLineInput
+- **Triệu chứng:** Cuộn điện cực hoặc mẻ trộn B552 bị kẹt `IsLineInput = 1`, không cho nạp tiếp hoặc cần hủy lượt chốt.
+- **Giải pháp:**
+  ```powershell
+  mes fix-electrode -Lots "<LotID>" [-Type Slitting|Mixing]
+  ```
+
+### 12. Mất Cột Lỗi NG Trên Lưới B782 (RepairQty IS NULL)
+- **Triệu chứng:** Màn hình B782 không hiển thị cột NG hoặc tính tổng phế bị sai do `RepairQty` mang giá trị `NULL`.
+- **Root Cause:** Biểu thức tính phế trong WinForm: `DefectQty - RepairQty`. Nếu `RepairQty` là NULL, toàn bộ kết quả trở thành NULL.
+- **Giải pháp:** Chuẩn hóa `RepairQty = 0` bằng lệnh:
+  ```powershell
+  mes fix-defect-null -Lots "<LotID>"
+  ```
+
+### 13. Hủy Lẻ Box Đóng Gói (B523 / HN523 Single Box Cancel)
+- **Triệu chứng:** Công nhân đóng nhầm 1 Box trong thùng Carton hoặc Pallet, cần rã lẻ 1 Box mà không muốn hủy toàn bộ Pallet lớn.
+- **Giải pháp:**
+  ```powershell
+  mes fix-cancel-pack -Target "<LotID>" -BoxId "<BoxId>"
+  ```
+
+### 14. Giao Thức Bảo Vệ 3 Bảng Khổng Lồ (Monster Tables Guard - Rule 15)
+- **`STB_VVT_ESRDATA` (423 Triệu dòng, 64.8 GB):** CẤM câu lệnh `SELECT` không có `WHERE id > ...`. Bảng chỉ có 1 Clustered Index trên `id`. Quét theo ngày sẽ gây Clustered Index Scan làm tê liệt hệ thống.
+- **`STB_ProductStockInfo` (69 Triệu dòng, 13.1 GB):** BẮT BUỘC luôn lọc theo `WHERE BaseDate = '...'`.
+- **`STB_SetInfo` (789K dòng, HEAP):** Luôn tìm kiếm theo `Barcode`, `LotNumber`, `DayPlanNo`. Tránh tìm kiếm theo cột tự do không có chỉ mục.
+
+### 15. Mismatch Quy Cách NVL Thay Thế POP Kiosk (DelegateMaterialCode Sync Overwrite)
+- **Triệu chứng:** Kiosk POP ép công nhân nạp cuộn thay thế sai quy cách (ví dụ Tape 10mm thay vì 5mm). Quét cuộn chuẩn theo PO bị chặn.
+- **Root Cause:** Cột `DelegateMaterialCode` trong `STB_MaterialMaster` dùng chung cho toàn bộ nhà máy. Khi Groupware duyệt một tờ trình của model khác dùng chung mã vật tư cơ sở, tiến trình sync ghi đè lên mã thay thế của model hiện tại.
+- **Giải pháp:** Cập nhật lại `DelegateMaterialCode` theo đúng quy cách của PO trong `STB_MaterialMaster` (Author: `vanduc`):
+  ```sql
+  BEGIN TRAN;
+  UPDATE SmartFactoryV2.dbo.STB_MaterialMaster
+  SET DelegateMaterialCode = 'GBRBPL-002', ChangeDateTime = GETDATE(), ChangeUserID = 'vanduc'
+  WHERE MaterialCode = 'GBTPPL-001';
+  COMMIT;
+  ```
+
 ---
 
 ## 📝 NHẬT KÝ BÀI HỌC MỚI (LEARNED ENTRIES SINK)
