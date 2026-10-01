@@ -5,6 +5,12 @@ $files = @(
     'OPERATOR_COPILOT_GUIDE.md',
     'ops.ps1',
     'MES_POP\tools\deploy_tool.ps1',
+    'MES_POP\tools\db_shared.ps1',
+    'DATABASE\tools\db_shared.ps1',
+    'GROUPWARE\tools\db_shared.ps1',
+    'tools\shared\db_shared.ps1',
+    'tools\shared\safety_hook.ps1',
+    'tools\shared\reminder_hook.ps1',
     '.agents\skills\vinatech-enterprise-ops\SKILL.md',
     '.agents\skills\vinatech-new-model-setup\SKILL.md'
 )

@@ -485,3 +485,19 @@ function Export-PreflightSnapshot {
     )
     return Create-SafePreflightSnapshot -TargetTable $TableName -WhereClause $WhereClause -Profile $Profile -TargetId $Reason
 }
+
+# Backward compatibility aliases for DATABASE & GROUPWARE pillars
+function Invoke-SafeSelect {
+    param(
+        [Parameter(Mandatory=$true)][string]$Query,
+        [string]$Profile = "SmartFactoryV2",
+        [int]$MaxRows = 50,
+        [int]$TimeoutSeconds = 15
+    )
+    return Invoke-SafeSqlQuery -Query $Query -Profile $Profile
+}
+
+function Get-DBConfig {
+    param([string]$ConfigPath = "")
+    return $global:mesConfig
+}

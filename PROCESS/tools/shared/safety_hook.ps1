@@ -44,6 +44,16 @@ try {
             Write-Output (ConvertTo-Json $resp -Compress)
             exit 0
         }
+
+        # Check 4: Monster Tables Guard (Rule 15 - STB_VVT_ESRDATA 423M Rows)
+        if ($cmd -match "(?i)\bSTB_VVT_ESRDATA\b" -and $cmd -notmatch "(?i)\b(id\s*[>=<]|TOP\s+[0-9]+)\b") {
+            $resp = @{
+                decision = "force_ask"
+                reason = "⚠️ VINATECH MONSTER TABLE GUARD: Phát hiện truy vấn trên bảng STB_VVT_ESRDATA (423 triệu dòng, 64.8GB) thiếu điều kiện Index theo id hoặc TOP. Cần xác nhận của kỹ sư IT!"
+            }
+            Write-Output (ConvertTo-Json $resp -Compress)
+            exit 0
+        }
     }
 
     Write-Output '{"decision":"allow"}'
