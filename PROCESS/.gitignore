@@ -1,4 +1,4 @@
-# Dependencies
+﻿# Dependencies
 node_modules/
 **/node_modules/
 
@@ -8,11 +8,27 @@ node_modules/
 out/
 build/
 
-# Environment Variables
+# Environment Variables & Private Credentials (Rule 12)
 .env
 .env*.local
+*.local.json
+db_config.local.json
+**/*.local.json
 
-# Logs & temp
+# Scratch & Temporary Files
+**/scratch/
+scratch/
+*.tmp
+*.bak
+*.dmp
+
+# Backups & Snapshots (Reversible Undo storage)
+backups/snapshots/
+backups/undo/
+**/backups/snapshots/
+**/backups/undo/
+
+# Logs & Debug
 *.log
 npm-debug.log*
 yarn-debug.log*

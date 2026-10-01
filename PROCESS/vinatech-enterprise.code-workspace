@@ -1,0 +1,42 @@
+﻿{
+	"folders": [
+		{
+			"name": "🌟 PROCESS (Enterprise Master Root)",
+			"path": "."
+		},
+		{
+			"name": "🏭 MES & POP (Core Production & Web Portal)",
+			"path": "MES_POP"
+		},
+		{
+			"name": "🏛️ GROUPWARE (Bizbox & ERP Approval)",
+			"path": "GROUPWARE"
+		},
+		{
+			"name": "🗄️ DATABASE (15 CSDL Multi-Engine)",
+			"path": "DATABASE"
+		},
+		{
+			"name": "🌐 K-SYSTEM ACE (YoungLimWon Web ERP)",
+			"path": "FINAL"
+		}
+	],
+	"settings": {
+		"files.encoding": "utf8bom",
+		"files.autoGuessEncoding": true,
+		"terminal.integrated.defaultProfile.windows": "PowerShell",
+		"terminal.integrated.profiles.windows": {
+			"PowerShell": {
+				"source": "PowerShell",
+				"args": ["-NoExit", "-Command", "[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; $OutputEncoding = [System.Text.Encoding]::UTF8"]
+			}
+		},
+		"search.exclude": {
+			"**/node_modules": true,
+			"**/.next": true,
+			"**/archive": true,
+			"**/backups": true,
+			"**/*.log": true
+		}
+	}
+}

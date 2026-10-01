@@ -1,4 +1,4 @@
-﻿# 🛡️ VINATECH ENTERPRISE PROCESS WORKSPACE (MASTER RULES)
+# 🛡️ VINATECH ENTERPRISE PROCESS WORKSPACE (MASTER RULES)
 
 > **Single Source of Truth:** `.agents/rules/00_vinatech_master_rules.md`
 > **Primary Command Hubs:** `.\pop.ps1` (POP Kiosk), `.\mes.ps1` (Core MES), `.\gw.ps1` (Groupware), `.\db.ps1` (15 Databases), `.\ksys.ps1` (K-System)
@@ -21,7 +21,13 @@
 
 
 ## ⚡ HỆ THỐNG CLI HUBS TẠI WORKSPACE ROOT
-- `.\mes.ps1` ➔ 🌟 **ALL-IN-ONE MASTER CLI HUB (CÔNG CỤ TOÀN NĂNG)**: Tích hợp đầy đủ mọi phân hệ:
+- `.\ops.ps1 [health|trace|clean|rollback|audit-kb|weekly-report]` ➔ 🌟 **ENTERPRISE MASTER OPERATIONS HUB (TỔNG HÀNH DINH ĐIỀU HÀNH v4.0)**:
+  * Morning 360 Patrol quét song song 15 DB, POP Kiosk, Core MES, Groupware, K-System (<3s)
+  * Universal Smart Auto-Router tự nhận diện 10 loại mã (Lot, PO, Machine, Screen, SP, Table, K-System)
+  * Deep Workspace Purge & Zombie process killer dọn dẹp rác máy trạm
+  * 1-Click Undo / Rollback an toàn tuyệt đối với snapshot khôi phục tự động
+  * Tổng hợp Báo Cáo Tuần IT chuẩn Rule 22 (tách bạch rõ ràng POP vs MES)
+- `.\mes.ps1` ➔ 🏭 **MES & POP MASTER HUB**: Tích hợp đầy đủ phân hệ sản xuất hiện trường:
   * Smart Auto-Router tự nhận diện Lot/PO/Screen/Machine/Lỗi (<0.01s)
   * Trace 360° siêu tốc tích hợp tiến độ đóng gói POP (`VINA_PACKING_REMAIN_QTY`), BOM NVL, Tồn kho xưởng, Thiết bị, PQC (<2s)
   * Kiểm toán Pre-flight file Excel `.\mes.ps1 validate-excel <File.xlsx> -Route <F330|B598>` chống lệch cột (E04/E05 vào StartPeriod) (<1s)

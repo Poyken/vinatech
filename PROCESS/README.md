@@ -26,6 +26,7 @@ Toàn bộ hệ thống tri thức, quy trình nghiệp vụ, cẩm nang sửa l
 ```
 PROCESS/
 │
+├── 📄 ops.ps1                                  # 🌟 TỔNG HÀNH DINH ENTERPRISE (health, trace, clean, rollback)
 ├── 📄 mes.ps1                                  # ⚡ PROXY ĐIỀU PHỐI MES & POP (trace, screen, health, find)
 ├── 📄 gw.ps1                                   # ⚡ PROXY ĐIỀU PHỐI GROUPWARE (trace, form, health, find)
 ├── 📄 db.ps1                                   # ⚡ PROXY ĐIỀU PHỐI CSDL (list, health, query, schema, find)
@@ -33,6 +34,7 @@ PROCESS/
 ├── 📄 README.md                                # ← BẠN ĐANG Ở ĐÂY (Cổng thông tin chung)
 ├── 📄 GEMINI.md                                # 🛡️ Quy tắc tổng thể Antigravity Agent
 ├── 📂 .agents/                                 # Cấu hình Master Agent Workspace
+├── 📂 ATTENDANCE_CMS/                          # 🕒 Module đồng bộ dữ liệu chấm công & vân tay CMS
 │
 ├── 📂 MES_POP/                                  # 🏭 [TRỤ CỘT 1] VẬN HÀNH SẢN XUẤT HIỆN TRƯỜNG
 │   ├── 📄 mes.ps1                              # CLI Điều phối sản xuất & Hotfix
@@ -92,6 +94,10 @@ Tại thư mục gốc `PROCESS/`, bạn có thể thực thi ngay toàn bộ c�
 
 | Phân Hệ | Cú Pháp Lệnh | Mục Đích Sử Dụng |
 | :--- | :--- | :--- |
+| **🌟 TOÀN HỆ THỐNG** | `.\ops.ps1 health` | **Enterprise Morning 360 Patrol**: Quét song song 15 DB, POP, MES, GW, K-System (<3s) |
+| **🌟 TOÀN HỆ THỐNG** | `.\ops.ps1 trace "<ID>"` | **Universal Smart Auto-Router**: Tự nhận diện 10 loại thực thể & điều phối |
+| **🌟 TOÀN HỆ THỐNG** | `.\ops.ps1 clean [-Force]` | **Deep Workspace Purge**: Dọn rác, log cũ & tiêu diệt zombie process bảo vệ CPU |
+| **🌟 TOÀN HỆ THỐNG** | `.\ops.ps1 rollback -Target <ID>` | **1-Click Undo**: Tự động khôi phục dữ liệu từ snapshot an toàn |
 | **MES & POP** | `.\mes.ps1 trace "<LotID>"` | Golden Query 360° truy vết Lot, Routing, NVL, Tồn kho (Single Round-Trip) |
 | **MES & POP** | `.\mes.ps1 pop-trace "<Keyword>"` | Truy vết Kiosk POP: Sync status, Phế, Máy kẹt, Kiosk logs |
 | **MES & POP** | `.\mes.ps1 screen "<ScreenID>"` | Debug màn hình MES (`B530`, `B540`, `S510`...) |
