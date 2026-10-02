@@ -1,4 +1,4 @@
-﻿# 🛡️ VINATECH MASTER AGENT WORKSPACE RULE DEFINITIONS (V3.1)
+# 🛡️ VINATECH MASTER AGENT WORKSPACE RULE DEFINITIONS (V3.1)
 
 > **Single Source of Truth:** `.agents/rules/00_vinatech_master_rules.md`  
 > **Production Deployment SOP:** `.agents/rules/DEPLOYMENT_SOP.md`  
@@ -44,12 +44,17 @@
 10. **RULE 15 - CẤM TỰ Ý TẠO HOTFIX / PLAN KHI CHƯA ĐƯỢC YÊU CẦU:**
     - Khi User hỏi "check", "tại sao", "xem giúp": CHỈ phân tích nguyên nhân và báo cáo hiện trạng.
 
-11. **RULE 20 - 5 NGUYÊN TẮC BẤT BIẾN VẬN HÀNH POP (MASTER PLAYBOOK EA TEAM):**
-    - Sửa mã máy kép: UPDATE đồng thời cả `STB_ProdRouteHist` VÀ `MongoToMesPerformance`.
-    - Xung đột WinForm vs POP: WinForm sinh sẵn dòng kế tiếp (`CompleteRoute = 1`), xóa dòng thừa trong `STB_ProdRouteHist` & `STB_ProdRouteWorkerHist`.
-    - Khóa độ dày Cắt điện cực: Nút Cắt mờ do `MaterialThickness < 100` trong `STB_MaterialMaster`.
-    - Nạp cuộn BTP: Tối đa 3 LOTNO cho 1 mã cắt (Đã nâng cấp từ định mức cũ 2 LOTNO).
-    - Giải phóng máy POP kẹt ACTIVE: Qua `.\pop.ps1 unlock <Machine> -Deploy` hoặc `.\pop.ps1 release-machines -Force` (`VINA_EQUIPMENT_MAPPING.MAPPING_STATUS = 'RELEASED'`).
+11. **RULE 20 - CẨM NANG VẬN HÀNH POP 26 CA BỆNH (MASTER PLAYBOOK EA TEAM [POP_KB_07]):**
+    - Mọi sự cố/báo lỗi từ người dùng chuyển tiếp cho AI phải đối chiếu xử lý theo đúng tài liệu chuẩn [POP_KB_07_POP_FAULT_HANDLING_PLAYBOOK.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_07_POP_FAULT_HANDLING_PLAYBOOK.md) (Hải Triều & Đức Nguyễn).
+    - **8 Nguyên tắc vàng bất biến:**
+      * Sửa mã máy kép: UPDATE đồng thời cả `STB_ProdRouteHist` VÀ `MongoToMesPerformance`.
+      * Xung đột WinForm vs POP: Kiểm tra `CompleteRoute IS NULL` trước (NULL là POP đã xong chỉ reload). Nếu MES sinh sẵn dòng kế tiếp (`CompleteRoute = 1`), xóa dòng thừa trong `STB_ProdRouteHist` & `STB_ProdRouteWorkerHist`.
+      * Khóa độ dày Cắt điện cực: Nút Cắt mờ do `MaterialThickness < 100` trong `STB_MaterialMaster`.
+      * Nạp cuộn BTP: Tối đa 2 đến 3 LOTNO cho 1 mã cắt. Hết hạn mức bắt buộc đổi cuộn mới.
+      * Giải phóng máy POP kẹt ACTIVE: Qua `.\pop.ps1 unlock <Machine> -Deploy` hoặc `.\pop.ps1 release-machines -Force` (`VINA_EQUIPMENT_MAPPING.MAPPING_STATUS = 'RELEASED'`).
+      * Tạo cưỡng chế tồn kho điện cực (Force Slitting Stock): Tuân thủ quy trình 3 bước (Xác định Base Lot ➔ Cấp số qua `STB_SerialRule` & INSERT `STB_MaterialLotInfo` kèm `LotAttr01='SLITTING'` ➔ Check cờ `ModalVisible='Y'`).
+      * Đối soát hết tồn kho NVL / Dung dịch / Tape: Kiểm tra `InitialQty` vs `CurrentQty`, đối chiếu `STB_RawMaterialInputHist` với định mức `STB_BomDetail` (`Định mức BOM x Qty Lot`), cập nhật lại thực tiêu hao và tồn kho.
+      * Truy vết Grade Model 35105: Phải đi qua bảng trung gian `STB_MaterialDocLotInfo` để liên kết giữa `STB_MaterialLotInfo` và `STB_MaterialDocDetail`.
 
 12. **RULE 21 - BẮT BUỘC LUÔN DÙNG TOOL CHUYÊN DỤNG (CLI HUBS & L1 CACHE) — TUYỆT ĐỐI CẤM QUERY DÒ DẪM (ZERO BLIND SQL EXPLORATION):**
     - **ƯU TIÊN TUYỆT ĐỐI CÁC TOOL CLI ĐÃ ĐÓNG GÓI:**

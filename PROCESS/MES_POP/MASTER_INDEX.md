@@ -64,10 +64,11 @@ PROCESS/MES_POP/
 │   ├── 📄 POP_KB_INDEX.md                      # Mục lục tra cứu POP Kiosk
 │   ├── 📄 POP_KB_01_ARCHITECTURE_AND_API.md    # Kiến trúc POP Web, REST API, MongoToMes*, Bảng đệm
 │   ├── 📄 POP_KB_02_SCREEN_OPERATIONS.md       # Thao tác từng màn hình Kiosk & Modal chọn máy
-│   ├── 📄 POP_KB_03_TROUBLESHOOTING.md         # Sổ tay cứu hộ 20 mã lỗi POP (POP-ERR-01 → 20)
+│   ├── 📄 POP_KB_03_TROUBLESHOOTING.md         # Sổ tay cứu hộ 38 mã lỗi POP
 │   ├── 📄 POP_KB_04_ROLLBACK_AND_SAFETY.md     # Cơ chế hủy đóng gói Box, Rollback & An toàn dữ liệu
 │   ├── 📄 POP_KB_05_DB_VERIFICATION_AUDIT.md   # Báo cáo kiểm toán UI Kiosk vs Live DB
 │   ├── 📄 POP_KB_06_MIGRATION_SPEC.md          # Đặc tả chuyển đổi 100% POP Web (Cutover WinForms)
+│   ├── 📄 POP_KB_07_POP_FAULT_HANDLING_PLAYBOOK.md # 🌟 Cẩm nang xử lý lỗi hệ thống POP (26 ca bệnh thực chiến EA Team)
 │   └── 📂 legacy_manuals/                      # Sổ tay hướng dẫn sử dụng POP gốc
 │
 ├── 📂 tools/                                   # ⚡ BỘ CÔNG CỤ POWERSHELL & PYTHON VẬN HÀNH

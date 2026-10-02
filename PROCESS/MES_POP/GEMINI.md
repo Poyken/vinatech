@@ -15,12 +15,17 @@
 - **RULE 17 (CẤM OVER-ENGINEERING / LÀM ĐÚNG PHẠM VI):** Tuyệt đối chỉ làm đúng nội dung được yêu cầu. CẤM tự ý sửa file ngoài phạm vi hoặc làm thừa.
 - **RULE 18 (ĐỊNH DANH IT & CHUẨN AUTHOR/CHANGEUSERID):** Người dùng là Kỹ sư IT (Nguyen Van Duc - EA Team). Mọi can thiệp CSDL, Hotfix, Stored Procedure, Script hay comment BẮT BUỘC dùng `Author = 'vanduc'` và `ChangeUserID = 'vanduc'`. CẤM dùng `Antigravity` hay `it_hotfix`.
 - **RULE 19 (TRIỆT TIÊU LỖI FONT TIẾNG VIỆT & MA TRẬN TIỀN LỆ):** File `.ps1`, `.sql`, `.json` phải có UTF-8-BOM. Tuyệt đối không để lỗi font. Luôn tra cứu tiền lệ trong L1 Cache (`historical_precedents` & `RULE_CATALOG`) trước khi chẩn đoán.
-- **RULE 20 (5 NGUYÊN TẮC BẤT BIẾN VẬN HÀNH POP - EA PLAYBOOK):**
-  1. *Đổi máy nhầm Kiosk:* BẮT BUỘC UPDATE đồng thời CẢ 2 BẢNG `STB_ProdRouteHist` VÀ `MongoToMesPerformance`.
-  2. *Lỗi "Already completed in MES":* Do WinForm sinh sẵn dòng kế tiếp (`CompleteRoute = 1`), xóa dòng thừa trong `STB_ProdRouteHist` & `STB_ProdRouteWorkerHist`.
-  3. *Nút Cắt điện cực mờ:* Do logic khóa nếu `MaterialThickness < 100` trong `STB_MaterialMaster`.
-  4. *Nạp cuộn BTP:* Tối đa 3 LOTNO cho 1 mã cắt (Đã nâng cấp từ định mức cũ 2 LOTNO).
-  5. *Kẹt máy ACTIVE POP:* Giải phóng qua `.\pop.ps1 unlock <Machine> -Deploy` hoặc `.\pop.ps1 release-machines -Force`.
+- **RULE 20 (CẨM NANG VẬN HÀNH POP 26 CA BỆNH — EA PLAYBOOK [POP_KB_07]):**
+  * **Cẩm nang nền tảng bắt buộc:** Mọi yêu cầu/báo lỗi từ người dùng chuyển tiếp cho AI phải đối chiếu xử lý theo đúng [POP_KB_07_POP_FAULT_HANDLING_PLAYBOOK.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_07_POP_FAULT_HANDLING_PLAYBOOK.md) (Hải Triều & Đức Nguyễn).
+  * **8 Nguyên tắc vàng bất biến:**
+    1. *Đổi máy nhầm Kiosk:* BẮT BUỘC UPDATE đồng thời CẢ 2 BẢNG `STB_ProdRouteHist` VÀ `MongoToMesPerformance`.
+    2. *Lỗi "Already completed in MES":* Kiểm tra `STB_ProdRouteHist`. Nếu `CompleteRoute IS NULL` là POP đã chốt xong, chỉ cần bảo OP F5 reload Kiosk. Nếu MES sinh thừa công đoạn kế tiếp (`CompleteRoute = 1`), xóa dòng thừa trong `STB_ProdRouteHist` & `STB_ProdRouteWorkerHist`.
+    3. *Nút Cắt điện cực mờ:* Do logic an toàn khóa nếu `MaterialThickness < 100` trong `STB_MaterialMaster`.
+    4. *Nạp cuộn BTP:* Tối đa 2 đến 3 LOTNO cho 1 mã cắt. Hết hạn mức bắt buộc đổi cuộn mới.
+    5. *Kẹt máy ACTIVE POP:* Giải phóng qua `.\pop.ps1 unlock <Machine> -Deploy` hoặc `.\pop.ps1 release-machines -Force`.
+    6. *Tạo cưỡng chế tồn kho điện cực (Force Slitting Stock):* Tuân thủ quy trình 3 bước: Xác định Base Lot `ElectrodeLotNumber` ➔ Cấp số qua `STB_SerialRule` & INSERT `STB_MaterialLotInfo` (`LotAttr01='SLITTING'`, `IsSlitting=1`) ➔ Kiểm tra cờ `ModalVisible='Y'` và khớp cực tính `PlusMinus (+/-)`.
+    7. *Đối soát hết tồn kho NVL / Dung dịch / Tape:* Kiểm tra `InitialQty` vs `CurrentQty`, đối chiếu `STB_RawMaterialInputHist` với định mức `STB_BomDetail` (`Định mức BOM x Qty Lot`), cập nhật lại thực tiêu hao và tồn kho.
+    8. *Truy vết Grade Model 35105:* Phải đi qua bảng trung gian `STB_MaterialDocLotInfo` để liên kết giữa `STB_MaterialLotInfo` và `STB_MaterialDocDetail`.
 - **RULE 21 (BẮT BUỘC LUÔN DÙNG TOOL CHUYÊN DỤNG - TUYỆT ĐỐI CẤM QUERY DÒ DẪM):**
   * **LUÔN DÙNG TOOL ĐÃ ĐÓNG GÓI:** POP Kiosk & NVL dùng `.\pop.ps1 [trace|nvl|unlock|find]`, MES Core dùng `.\mes.ps1 [trace|diagnose|screen|sp|find|lineage]`, Groupware dùng `.\gw.ps1 [trace|form|find]`, K-System ERP dùng `.\ksys.ps1 [find|trace|module]`.
   * **CẤM TUYỆT ĐỐI DÙNG `.\db.ps1 query` ĐỂ THỬ SAI (0 BLIND SQL LOOPING):** Cấm chạy chuỗi SELECT mò mẫm bảng, cột hay đoán logic. Muốn biết bảng/menu/trường ➔ Bắt buộc tra L1 Cache (`POP_MATRIX.json`, `QUICK_MATRIX.json`, `KSYSTEM_MATRIX.json`, `GW_FORM_MATRIX.json`) hoặc `find`.

@@ -1,4 +1,4 @@
-<!--
+﻿<!--
 AI-READY METADATA
 Purpose: Hướng dẫn chuyên sâu toàn diện về luồng vận hành (Process Flow), 4 vùng giao diện Kiosk, từng nút bấm/modal và tác động cơ sở dữ liệu ngầm của POP Web
 Scope: Khai thác thực tế 100% giao diện pop.vinatech.com/pop/screen và pop.vinatech.com/pop/quality (Đồng bộ theo Bộ Slide Đào Tạo Chuẩn 2026-09 của DX Team)
@@ -692,4 +692,48 @@ POP Web thiết lập ma trận phân quyền chặt chẽ dựa trên chức v�
 - **Điều khiển từ xa (Remote Operation):** Cung cấp 2 nút điều khiển độc quyền cho IT:
   - **`업데이트` (Update):** Đẩy bản vá binary mới xuống máy trạm xưởng.
   - **`재시작` (Restart):** Khởi động lại dịch vụ thu thập dữ liệu của Windows Service mà không cần kỹ sư IT chạy ra dây chuyền.
+
+---
+
+## 23. ✂️ QUẢN TRỊ KHỔ DAO XẺ ĐIỆN CỰC & RÀNG BUỘC DUNG SAI (SLITTING POKA-YOKE — `VINA_SLITTING_MODEL_WIDTH`)
+
+### 23.1 Mục Đích & Bối Cảnh Nghiệp Vụ (Khởi Tạo 2026-10-02)
+- **Công đoạn:** Cắt xẻ điện cực (Slitting / Phân xưởng Điện Cực xưởng 1).
+- **Tính chất kỹ thuật:** Dao xẻ lá cực yêu cầu độ chính xác cơ khí tuyệt đối tính bằng milimet. Nếu xẻ lệch mép hoặc sai khổ, toàn bộ cuộn BTP lá cực (Anode/Cathode) sẽ bị lỗi kích thước, dẫn tới chập ngắn mạch hoặc kẹt buồng máy quấn (Winding `V-22`).
+- **Nâng cấp mới trên CSDL POP (02/10/2026):**
+  - Triển khai bảng chuẩn `VINATECH_POP.dbo.VINA_SLITTING_MODEL_WIDTH` đóng vai trò **Cổng Kiểm Soát Kỹ Thuật Số (Digital Poka-Yoke Gatekeeper)** trên giao diện Kiosk Slitting.
+  - Nạp sẵn **48 Model chuẩn** (`2026-10-02 현장 모델표 시드`) với bề rộng chuẩn và biên độ dung sai khắt khe **±0.10 mm**.
+
+### 23.2 Cấu Trúc Dữ Liệu Tiêu Chuẩn Dao Xẻ
+| Tên Cột | Kiểu Dữ Liệu | Ràng Buộc | Ý Nghĩa Kỹ Thuật & Vận Hành |
+|---------|--------------|:---------:|-----------------------------|
+| `MODEL_WIDTH_SEQ` | `int` (IDENTITY) | **PK** | Khóa định danh bản ghi quy chuẩn. |
+| `MODEL_NAME` | `varchar(100)` | **NOT NULL** | Tên Model sản phẩm điện cực (Khớp với danh mục Model trên Kiosk). |
+| `SLITTING_WIDTH` | `decimal(10,2)` | **NOT NULL** | Bề rộng tiêu chuẩn của lá cực sau khi xẻ dao (Đơn vị: mm). |
+| `TOLERANCE` | `decimal(10,2)` | DEFAULT `0.10` | Dung sai cho phép (Chuẩn hóa toàn xưởng: **±0.10 mm**). |
+| `SORT_ORDER` | `int` | | Thứ tự ưu tiên sắp xếp trên danh sách thả xuống Kiosk. |
+| `USE_YN` | `char(1)` | DEFAULT `'Y'` | Trạng thái hiệu lực áp dụng (`Y` = Đang kích hoạt). |
+| `REMARK` | `nvarchar(500)` | | Ghi chú nguồn gốc (`2026-10-02 현장 모델표 시드`). |
+| `DT_WRITE` / `NO_EMP_WRITER` | `datetime` / `varchar` | | Dấu vết thời gian và nhân viên thiết lập. |
+
+### 23.3 Bảng Quy Chuẩn 48 Model Xẻ Điện Cực Thực Tế (Live Production Specs)
+Dữ liệu đối soát trực tiếp từ CSDL `VINATECH_POP` ngày 02/10/2026:
+
+| Nhóm Kích Thước | Model Name | Khổ Xẻ Chuẩn (`SLITTING_WIDTH`) | Dung Sai (`TOLERANCE`) | Ứng Dụng Sản Phẩm |
+|:----------------|:-----------|:--------------------------------:|:----------------------:|:------------------|
+| **Dòng Siêu Lớn (Large Cell)** | `35105 (Điện cực Hà)` | **97.00 mm** | ±0.10 mm | Model công suất lớn 35105 nhà máy Hà Nam |
+| | `35105 (Điện cực VN)` | **97.00 mm** | ±0.10 mm | Model công suất lớn 35105 Việt Nam |
+| | `3582` | **76.00 mm** | ±0.10 mm | Dòng Cell năng lượng 3582 |
+| | `3560` / `2560` | **54.00 mm** | ±0.10 mm | Dòng Cell trung 3560 / 2560 |
+| **Dòng Trung Bình (Mid Cell)** | `1840` | **37.00 mm** | ±0.10 mm | Dòng Cell hình trụ 1840 |
+| | `1635` / `1625` | **32.00 mm** / **21.50 mm** | ±0.10 mm | Dòng Cell chuẩn 1635 / 1625 |
+| | `1335` / `1325` | **31.70 mm** / **22.00 mm** | ±0.10 mm | Dòng Cell chuẩn 1335 / 1325 |
+| **Dòng Nhỏ & Siêu Nhỏ (Small Cell)** | `1220` / `1030` | **17.70 mm** / **26.80 mm** | ±0.10 mm | Dòng Cell nhỏ 1220 / 1030 |
+| | `1020` / `0820` | **17.50 mm** / **17.50 mm** | ±0.10 mm | Dòng Cell nhỏ 1020 / 0820 |
+| | `0812` / `0612` / `0609` | **9.50 mm** / **9.50 mm** / **7.00 mm** | ±0.10 mm | Dòng Cell cúc áo / siêu nhỏ |
+
+### 23.4 Cơ Chế Khóa Poka-Yoke Trên Kiosk Slitting
+1. **Tự động ràng buộc:** Khi công nhân quét Barcode cuộn mẹ và chọn Model sản xuất trên Kiosk, hệ thống tự động khóa khổ dao mục tiêu theo bảng này.
+2. **Xác thực đo mẫu:** Trước khi bấm chạy hàng loạt, OP dùng thước kẹp pan-me điện tử đo mẫu màng cực xẻ đầu tiên.
+3. **Chặn lỗi nếu vượt ngưỡng:** Nếu kích thước đo nằm ngoài khoảng $[ 	ext{Width} - 0.10, 	ext{Width} + 0.10 ]$, nút **`BẮT ĐẦU XẺ / LƯU SẢN LƯỢNG`** sẽ bị mờ khóa hoàn toàn, bắt buộc OP căn chỉnh lại cữ dao trước khi tiếp tục.
 

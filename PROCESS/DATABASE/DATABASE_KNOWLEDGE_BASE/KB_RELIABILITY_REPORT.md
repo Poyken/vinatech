@@ -1,6 +1,6 @@
 ﻿# BÁO CÁO ĐỘ TIN CẬY TÀI LIỆU & SCHEMA DRIFT AUDIT
 
-> **Cập nhật:** 2026-10-02 01:27:54
+> **Cập nhật:** 2026-10-02 08:51:40
 > **Tổng quan hệ thống:** **77.8%** đối tượng khớp chính xác với Live DB (458 / 589 đối tượng).
 > **Mục đích:** Hướng dẫn AI và Kỹ sư xác định chính xác mức độ tin cậy của từng tài liệu trước khi vận hành.
 

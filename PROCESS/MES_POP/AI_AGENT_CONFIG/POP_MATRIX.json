@@ -1,7 +1,7 @@
-{
-  "version": "2.1.0",
-  "updated_at": "2026-09-25 17:00:00",
-  "description": "L1 Ultra-Fast JSON Cache for Vinatech POP Web Ecosystem (31 Lines, 11 Routes, 25 Errors & Fast CLI Mapping)",
+﻿{
+  "version": "2.3.0",
+  "updated_at": "2026-10-02 11:30:00",
+  "description": "L1 Ultra-Fast JSON Cache for Vinatech POP Web Ecosystem (77 Tables, 31 Lines, 11 Routes, 26 Standard EA Playbook Cases + 20 System Errors & Fast CLI Mapping)",
   "summary": {
     "total_lines": 31,
     "pass_lines": 6,
@@ -13,7 +13,9 @@
       "SmartFramework",
       "VINATECH_WEBSOCKET",
       "MongoDB"
-    ]
+    ],
+    "total_tables_vinatech_pop": 77,
+    "live_audit_date": "2026-10-02"
   },
   "lines": {
     "VVC-01": {
@@ -135,7 +137,7 @@
       "assembly_slots": 3,
       "sleeving_slots": 1,
       "status": "FAIL",
-      "note": "Ket 37 ban ghi sync trong MongoToMesPerformance (IsTransferred = 0) va 5 may ket"
+      "note": "37 ban ghi sync ket cu tu thang 8-9/2026 (legacy frozen); pipeline tu 19/09 den nay chay muot 100% (Watchdog 15' giam sat)"
     },
     "VVC-12": {
       "factory": "HN",
@@ -662,9 +664,9 @@
       "fast_fix": "Chạy .\\mes.ps1 new-fix 'FIX_THICK' -Template thick để kiểm tra và cập nhật MaterialThickness >= 100"
     },
     "POP-CASE-18": {
-      "title": "OP Bắc Ninh lỡ xẻ/đóng gói chia Cuộn Mẹ Điện Cực nhầm nhà máy - Khôi phục để Hưng Yên xẻ lại",
-      "root_cause": "OP Bắc Ninh vào tab 'Đóng gói chia' trên Kiosk chốt xẻ nhầm làm sinh 10 cuộn BTP trong STB_MaterialLotInfo, chốt W-04 trên MongoToMesPerformance và khóa cuộn mẹ CompleteRoute=1, IsLineInput=0",
-      "fast_fix": "Thu hồi các cuộn BTP trong STB_MaterialLotInfo, xóa phiếu PQC, reset công đoạn W-04 về 0 trên MongoToMesPerformance, xóa đệm VINA_PACKING_REMAIN_QTY và set IsLineInput=1 trên STB_SetInfo để HY quét nạp lại cuộn mẹ"
+      "title": "Kiểm tra Điện cực có sai BOM hay không (Cực tính PlusMinus +/-)",
+      "root_cause": "Cột PlusMinus trong STB_MaterialMaster bị trống hoặc sai giá trị (bắt buộc phải là 1 (-) hoặc 1 (+) thì mới gán được NVL lên Line)",
+      "fast_fix": "SELECT MaterialCode, MaterialName, ProductGroupCode, PlusMinus FROM STB_MaterialMaster WHERE MaterialCode IN (...). Nếu sai nhờ KTSP cập nhật lại BOM/Master"
     },
     "POP-ERR-31": {
       "title": "Lệch mốc sản lượng do chế độ SUBTRACT (Line Prod Mode)",
@@ -705,6 +707,119 @@
       "title": "Lỗi đăng nhập Kiosk / Không chọn được công nhân vào ca / Thiếu quyền Admin hủy box",
       "root_cause": "Mã nhân viên chưa có trong VINATECH_POP.dbo.VINA_EMP, bị cờ EMP_STOP='1', hoặc thiếu EMP_ADMIN='Y' để hủy box.",
       "fast_fix": "Chạy .\\pop.ps1 user <EmpNo> hoặc .\\mes.ps1 user <EmpNo> để kiểm tra trạng thái trên cả 5 CSDL."
+    },
+    "POP-CASE-18-SPLIT": {
+      "title": "OP Bắc Ninh lỡ xẻ/đóng gói chia Cuộn Mẹ Điện Cực nhầm nhà máy - Khôi phục để Hưng Yên xẻ lại",
+      "root_cause": "OP Bắc Ninh vào tab 'Đóng gói chia' trên Kiosk chốt xẻ nhầm làm sinh 10 cuộn BTP trong STB_MaterialLotInfo, chốt W-04 trên MongoToMesPerformance và khóa cuộn mẹ CompleteRoute=1, IsLineInput=0",
+      "fast_fix": "Thu hồi các cuộn BTP trong STB_MaterialLotInfo, xóa phiếu PQC, reset công đoạn W-04 về 0 trên MongoToMesPerformance, xóa đệm VINA_PACKING_REMAIN_QTY và set IsLineInput=1 trên STB_SetInfo để HY quét nạp lại cuộn mẹ"
+    },
+    "POP-CASE-19": {
+      "title": "Không tìm thấy mã NVL từ trụ sở khi ấn tồn kho để cắt (Kho ROUTE_VN_WH)",
+      "root_cause": "Bộ phận Kho chưa làm thủ tục Nhập kho hoặc chưa Xuất kho sang kho ROUTE_VN_WH cho sản xuất. Logic Kiosk POP bắt buộc phải ở kho ROUTE_VN_WH",
+      "fast_fix": "Kiểm tra STB_MaterialLotInfo.MaterialWarehouseCode. Báo Kho hoàn tất phiếu xuất nội bộ sang kho ROUTE_VN_WH"
+    },
+    "POP-CASE-20": {
+      "title": "Quản lý Cấp chất lượng (Grade) khi đóng gói Model 35105 (Quan hệ 3 bảng)",
+      "root_cause": "STB_MaterialLotInfo lưu tồn vật lý, STB_MaterialDocLotInfo là cầu nối trung gian lưu (LotID, MaterialDocDetailNo), STB_MaterialDocDetail lưu cột Grade",
+      "fast_fix": "SELECT MLI.LotID, MLI.MaterialCode, MDD.Grade FROM STB_MaterialLotInfo MLI JOIN STB_MaterialDocLotInfo MDL ON MDL.LotID=MLI.LotID JOIN STB_MaterialDocDetail MDD ON MDD.MaterialDocDetailNo=MDL.MaterialDocDetailNo WHERE MLI.LotID='<Lot>'"
+    },
+    "POP-CASE-21": {
+      "title": "Lỗi bị thừa NVL do thêm nguyên vật liệu thay thế vào (Bảng VINA_BOM_INPUT_ROUTE)",
+      "root_cause": "Cấu hình NVL thay thế trong VINATECH_POP.dbo.VINA_BOM_INPUT_ROUTE bị gán thừa các mã DELEGATE_MATERIAL_CODE không sử dụng",
+      "fast_fix": "UPDATE VINATECH_POP.dbo.VINA_BOM_INPUT_ROUTE SET DELEGATE_MATERIAL_CODE = NULL WHERE MATERIAL_CODE = '<Mã_NVL>'"
+    },
+    "POP-CASE-22": {
+      "title": "Cùng 1 model nhưng nạp NVL khác nhau do chưa thiết lập GROUP",
+      "root_cause": "Chuyền sản xuất chưa được cấu hình Group nạp NVL trong bảng VINATECH_POP.dbo.VINA_GROUP_INPUT_ROUTE theo ProductGroupCode của BOM",
+      "fast_fix": "Đăng nhập Web POP bằng tài khoản Admin -> Cài đặt CellLine -> Thiết lập nhóm NVL theo đúng BOM và ProductGroupCode trong STB_MaterialMaster"
+    },
+    "POP-CASE-23": {
+      "title": "Điện cực báo chưa cắt nhưng hết số lượng để cắt tiếp (Báo phế nhầm)",
+      "root_cause": "Công nhân xưởng điện cực báo phế nhầm số lượng mét màng trong bảng STB_ElectrodeWasteInfoNew (xem cột Remark ghi nhận số mét phế)",
+      "fast_fix": "SELECT * FROM STB_ElectrodeWasteInfoNew WHERE Barcode='<Lot>'. Xóa dòng phế phẩm bị báo nhầm hoặc vào giao diện đăng ký lỗi hủy phế"
+    },
+    "POP-CASE-24": {
+      "title": "Báo đã hoàn thành trên MES nhưng thực tế đã xong trên POP (CompleteRoute IS NULL)",
+      "root_cause": "OP thấy báo đã hoàn thành trên MES nghi ngờ lỗi, nhưng thực tế trên POP khi hoàn tất công đoạn sẽ có CompleteRoute IS NULL",
+      "fast_fix": "SELECT CompleteRoute FROM STB_ProdRouteHist WHERE Barcode='<Lot>' AND RouteCode='<Route>'. Nếu CompleteRoute IS NULL là đã xong chuẩn trên POP, chỉ cần F5 reload Kiosk"
+    },
+    "POP-CASE-25": {
+      "title": "Dung dịch, Giấy, Tape Pi báo hết tồn (Đối soát & Cân bằng định mức BOM 4 bước)",
+      "root_cause": "Tồn kho InitialQty/CurrentQty trong STB_MaterialLotInfo bị trừ sai lệch do công nhân nhập sai số lượng trên STB_RawMaterialInputHist so với định mức BOM",
+      "fast_fix": "Đối soát Qty tiêu hao: Định mức BOM x Số lượng Lot. Điều chỉnh lại STB_RawMaterialInputHist.Qty và tính lại STB_MaterialLotInfo.CurrentQty"
+    },
+    "POP-CASE-26": {
+      "title": "Nhập điện cực ở trụ sở chính về xưởng không tìm thấy (Thiếu xuất kho ROUTE)",
+      "root_cause": "Cuộn BTP điện cực chuyển từ Hàn Quốc/Trụ sở chưa được bộ phận Kho làm thủ tục nhập và xuất sang kho ROUTE_VN_WH",
+      "fast_fix": "SELECT * FROM STB_MaterialLotInfo WHERE LotNo='<Lot>'. Yêu cầu Kho làm phiếu xuất sang kho ROUTE_VN_WH"
+    }
+  },
+  "recent_database_changes_2026_10": {
+    "audit_date": "2026-10-02",
+    "total_tables": 77,
+    "new_tables_count": 11,
+    "key_findings": {
+      "VINA_SLITTING_MODEL_WIDTH": {
+        "created_at": "2026-10-02 10:18:25",
+        "rows": 48,
+        "purpose": "Digital Poka-Yoke: Tieu chuan kho xe dao dien cuc va dung sai 0.10mm cho 48 Model",
+        "key_columns": [
+          "MODEL_WIDTH_SEQ",
+          "MODEL_NAME",
+          "SLITTING_WIDTH",
+          "TOLERANCE",
+          "SORT_ORDER",
+          "USE_YN"
+        ]
+      },
+      "VINA_EQUIP_COLLECT_WATCH_SUBSYSTEM": {
+        "created_at": "2026-09-29 10:17:23",
+        "tables": [
+          "VINA_EQUIP_COLLECT_WATCH_CONFIG",
+          "VINA_EQUIP_COLLECT_WATCH_HIST",
+          "VINA_EQUIP_COLLECT_WATCH_RUN",
+          "VINA_EQUIP_COLLECT_WATCH_EQUIP",
+          "VINA_EQUIP_COLLECT_WATCH_SITE"
+        ],
+        "config": {
+          "DEFAULT_THRESHOLD_MIN": 180,
+          "MONGO_FAIL_NOTIFY_COUNT": 2,
+          "MAIL_TO": "hbkang@vina.co.kr",
+          "MONITOR_STALE_MIN": 15,
+          "cron_frequency": "15 min (CYCLE) + 23:00 UTC (DAILY)"
+        },
+        "purpose": "Watchdog giam sat thiet bi IoT va canh bao dut gay dong bo Mongo-MES"
+      },
+      "VINA_BLOOM_PORTAL_SUBSYSTEM": {
+        "created_at": "2026-09-29 19:37:28",
+        "configured_by": "jhkim",
+        "tables": [
+          "VINA_BLOOM_PORTAL_CONFIG",
+          "VINA_BLOOM_PORTAL_ALIAS",
+          "VINA_BLOOM_PORTAL_ROUTE",
+          "VINA_BLOOM_PORTAL_ROOT"
+        ],
+        "purpose": "Cau hinh cong thong tin khach hang Bloom Energy (loai tru ROUTE_%,W62, Ample Ratio 2.0, chan ngay tuong lai bang TODAY)"
+      },
+      "VINA_BOM_INPUT_ROUTE_UPDATES": {
+        "total_rows": 989,
+        "updated_at": "2026-10-01 14:29:00",
+        "purpose": "Mass backfill anh xa vat tu phu cho ECVT30-232, EDVTSY-001, ECVT30-357, 252, 270, 260, ECVT27-370..."
+      },
+      "VINA_EQUIPMENT_MAPPING_OPERATIONAL_PATTERN": {
+        "total_rows": 3192,
+        "active_locks": 40,
+        "released": 3152,
+        "auto_release_reason": "REASSIGNED khi OP chuyen sang DayPlan moi"
+      },
+      "MONGO_TO_MES_PIPELINE_HEALTH": {
+        "database": "SmartFactoryV2",
+        "total_rows": 29028,
+        "stuck_rows": 37,
+        "stuck_origin": "VVC-11 (Aug 26 - Sep 19, 2026) legacy frozen",
+        "recent_13_days_throughput": "100% (0 new stuck records)",
+        "last_synced_at": "2026-10-02 10:55:31"
+      }
     }
   }
 }

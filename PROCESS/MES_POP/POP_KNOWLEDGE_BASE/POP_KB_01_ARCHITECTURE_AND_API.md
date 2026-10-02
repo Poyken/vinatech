@@ -1,4 +1,4 @@
-<!--
+﻿<!--
 AI-READY METADATA
 Purpose: Kiến trúc hệ thống POP, API endpoints, DB schema mapping, luồng dữ liệu
 Scope: POP Web Architecture (Frontend → API → DB)
@@ -204,24 +204,28 @@ Dựa trên cấu hình Master Menu (`VINATECH_POP.dbo.VINA_MENU`), hệ thống
 
 ## 3. 🗄️ DATABASE SCHEMA MAPPING
 
-### 3.1 VINATECH_POP — Bảng Riêng POP (Đã Đối Chiếu Live DB 66 Bảng)
+### 3.1 VINATECH_POP — Bảng Riêng POP (Đã Đối Chiếu Live DB 77 Bảng — Audit 2026-10-02)
 
 > [!WARNING]
-> **Kiểm toán 2026-09-21:** Bảng `VINA_MATERIAL_INPUT_HIST` hiện có **0 records** trên production DB. Kiosk POP có thể ghi nhận trực tiếp vào `SmartFactoryV2.dbo.STB_MaterialLotInfo` hoặc sử dụng cơ chế đồng bộ khác. Xem chi tiết danh mục toàn bộ 66 bảng tại [§3.6](#36--danh-mục-đầy-đủ-66-bảng-csdl-vinatech_pop-kiểm-toán-thực-tế-2026-09-21).
+> **Kiểm toán 2026-10-02 (Cập nhật Live DB):** CSDL `VINATECH_POP` hiện có **77 bảng vật lý** (tăng thêm 11 bảng so với đợt kiểm toán 2026-09-21). Bảng `VINA_MATERIAL_INPUT_HIST` tiếp tục giữ **0 records** trên production DB do Kiosk POP ghi nhận trực tiếp vào `SmartFactoryV2.dbo.STB_RawMaterialInputHist` và trừ kho tại `STB_MaterialLotInfo`. Xem chi tiết danh mục toàn bộ 77 bảng tại [§3.6](#36--danh-mục-đầy-đủ-77-bảng-csdl-vinatech_pop-kiểm-toán-thực-tế-2026-10-02).
 
 | Bảng | Mục đích | Vai trò vận hành POP |
 |------|----------|----------------------|
-| `VINA_MATERIAL_INPUT_HIST` | **Lịch sử nạp NVL** (SoT cho POP) | Ghi nhận chi tiết từng lần quét cuộn NVL, Lot, Qty, Worker, Route (Hiện 0 rows) |
+| `VINA_MATERIAL_INPUT_HIST` | **Lịch sử nạp NVL** (SoT cho POP) | Ghi nhận chi tiết từng lần quét cuộn NVL, Lot, Qty, Worker, Route (Hiện 0 rows — ghi trực tiếp sang SFV2) |
 | `VINA_KIOSK_SESSION` | Phiên làm việc trên Kiosk | Quản lý token đăng nhập, trạng thái Kiosk, WorkerID ca hiện hành |
 | `VINA_KIOSK_LOG` / `VINA_POP_ACTION_LOG` | Nhật ký thao tác Kiosk | Ghi lại hành vi bấm nút, đổi Line, quét mã, tải lệnh sản xuất (202K+ rows) |
 | `VINA_LABEL_INFO` / `VINA_CUSTOM_LABEL` | Cấu hình tem nhãn Kiosk | Mẫu in ZPL, định dạng mã vạch Code128/DataMatrix cho máy in Zebra |
-| `VINA_EQUIPMENT_MAPPING` | Gán thiết bị với Kiosk | Ánh xạ mã máy móc, cân điện tử RS232, PLC baseline theo dây chuyền |
+| `VINA_EQUIPMENT_MAPPING` | Gán thiết bị với Kiosk | Ánh xạ mã máy móc, cân điện tử RS232, PLC baseline theo dây chuyền (40 ACTIVE, 3,152 RELEASED) |
 | `VINA_PACKING_REMAIN_QTY` | Quản lý số lượng lẻ khi đóng gói | Theo dõi tồn dư của các Lot lẻ phục vụ tính năng "Tìm Lot còn lại" & Merge Pack |
 | `VINA_QC_DECISION_HIST` | Lịch sử phán định QC trên POP | Lưu kết quả kiểm định IQC, PQC, OQC, FOQC và Route Judgment |
 | `VINA_QUALITY_ITEM_EQUIPMENT_MAP` | Ánh xạ hạng mục đo với thiết bị đo | Liên kết chỉ tiêu chất lượng với máy đo tự động tại chuyền (Hiện 0 rows) |
-| `VINA_INTERLOCK_SETTING` | Cài đặt khóa liên động liên công đoạn | Ngăn chặn nhảy cóc công đoạn hoặc nạp sai NVL khi chưa hoàn tất kiểm tra (Hiện 0 rows) |
+| `VINA_INTERLOCK_SETTING` | Cài đặt khóa liên động liên công đoạn | Ngăn chặn nhảy cóc công đoạn hoặc nạp sai NVL khi chưa hoàn tất kiểm tra |
 | `VINA_WIP_STOCK_HIST` | Lịch sử biến động bán thành phẩm | Theo dõi di chuyển bán thành phẩm giữa các trạm Kiosk |
 | `VINA_REOPEN_REQUEST` / `VINA_REOPEN_POLICY` | Yêu cầu mở lại Lot/Lệnh đã đóng | Cơ chế cấp quyền mở lại các lệnh sản xuất đã hoàn tất để tái xử lý |
+| ⭐ `VINA_SLITTING_MODEL_WIDTH` | **Tiêu chuẩn khổ xẻ dao điện cực** | *Mới tạo 2026-10-02:* Quản lý bề rộng xẻ dao (Slitting Width) và dung sai (Tolerance 0.10mm) cho 48 Model điện cực |
+| ⭐ `VINA_EQUIP_COLLECT_WATCH_*` (5 bảng) | **Watchdog giám sát thu thập IoT** | *Mới tạo 2026-09-29:* Giám sát tiến trình thu thập dữ liệu máy xưởng, cảnh báo đứt gãy đồng bộ Mongo ➔ MES (ngưỡng 180 phút, gửi mail `hbkang@vina.co.kr`) |
+| ⭐ `VINA_BLOOM_PORTAL_*` (4 bảng) | **Cấu hình Cổng Khách Hàng Bloom** | *Mới tạo 2026-09-29:* Quản trị dữ liệu xuất cổng khách hàng Bloom Energy (trừ kho `ROUTE_%,W62`, Ample Ratio 2.0, chặn date ảo bằng TODAY) |
+| ⭐ `VINA_KIOSK_AUTO_LOGIN` | **Khung tự động đăng nhập Kiosk** | *Mới tạo 2026-09-29:* Chuẩn bị cơ chế auto-authenticate cho các máy trạm Kiosk gắn cố định tại chuyền |
 
 ### 3.2 SmartFactoryV2 — Bảng Chia Sẻ Với MES
 
@@ -287,8 +291,11 @@ Khi Kiosk mở modal chốt sản xuất hoặc modal gán máy, Backend thực 
 #### B. Cơ Chế Filter (Chống Xung Đột Thiết Bị)
 - **Logic:** Tại 1 thời điểm, 1 máy vật lý chỉ được phục vụ 1 Kế hoạch sản xuất (`DAY_PLAN_NO`).
 - Nếu máy có `MAPPING_STATUS = 'ACTIVE'` ở một `DAY_PLAN_NO` khác Kế hoạch đang mở ➔ Backend/UI tự động **loại bỏ (ẩn)** máy đó khỏi danh sách chọn.
-- **Sự cố "Khóa mồ côi" (Orphan Lock):** Nếu OP ca trước / ngày trước làm xong Lot nhưng không bấm "Hủy gán / Release", bản ghi `ACTIVE` sẽ tồn tại vĩnh viễn khiến ca sau mở Plan mới không thấy máy.
-- **Cách xử lý cứu hộ:** Cập nhật `MAPPING_STATUS = 'RELEASED', RELEASED_AT = GETDATE(), NO_EMP_MODIFYER = 'vanduc'` cho các `MAPPING_ID` bị kẹt của các Plan cũ.
+- **Cơ chế Tự Động Hoàn Tác & Tái Gán (`RELEASE_REASON = 'REASSIGNED'` — Audit 2026-10-02):**
+  - Khảo sát thực tế Live DB ngày 02/10/2026 xác nhận: Khi OP chuyển sang DayPlan mới và chọn cùng một thiết bị đã gán trước đó, hệ thống POP Web tự động giải phóng bản ghi cũ: `UPDATE VINA_EQUIPMENT_MAPPING SET MAPPING_STATUS = 'RELEASED', RELEASED_AT = GETDATE(), RELEASE_REASON = 'REASSIGNED'`.
+  - Cơ chế này đã vận hành tự động cho hàng loạt thiết bị (như `VVMHY70`, `VVMHY69`...).
+- **Sự cố "Khóa mồ côi" (Orphan Lock):** Chỉ phát sinh khi OP làm xong Lot nhưng **không mở Plan mới và cũng không bấm Release**, khiến bản ghi `ACTIVE` tồn lưu vĩnh viễn và chặn Plan của ca khác.
+- **Cách xử lý cứu hộ:** Cập nhật `MAPPING_STATUS = 'RELEASED', RELEASED_AT = GETDATE(), RELEASE_REASON = N'Release cho ca mới', NO_EMP_MODIFYER = 'vanduc'` cho các `MAPPING_ID` bị kẹt của các Plan cũ.
 
 ### 3.4 Sơ Đồ Data Flow — Nhập NVL (Material Input)
 
@@ -431,36 +438,29 @@ Khi Scheduled Worker trên IIS gặp lỗi hoặc độ trễ mạng khiến d�
           @pProcessUserID = 'vanduc';
      ```
 
-#### 3.5.4 Phân Tích Hiện Trạng Dữ Liệu Thực Tế & Điểm Nghẽn Kẹt Đồng Bộ (Telemetry Live DB)
+#### 3.5.4 Phân Tích Hiện Trạng Dữ Liệu Thực Tế & Điểm Nghẽn Kẹt Đồng Bộ (Telemetry Live DB — Cập Nhật 2026-10-02)
 
-Kết quả kiểm toán phân bổ trạng thái trên live database tại thời điểm **2026-09-21**:
+Kết quả kiểm toán đối soát chuyên sâu trên live database tại thời điểm **2026-10-02 11:00**:
 
-##### 1. Thống kê trạng thái `MongoToMesPerformance` (13,372 dòng)
-| Nguồn (`SourceType`) | Đã Xong (`IsDone`) | Đã Sang MES (`IsTransferred`) | Bỏ Qua (`IsSkipped`) | Số Dòng | Tỷ Lệ | Trạng Thái Vận Hành |
-|----------------------|:------------------:|:----------------------------:|:-------------------:|--------:|------:|---------------------|
-| `MANUAL` | **True (1)** | **True (1)** | 0 | **8,693** | 65.0% | ✅ Hoàn thành & đồng bộ chuẩn xác sang MES |
-| `MANUAL` | False (0) | True (1) | 0 | **2,174** | 16.3% | ℹ️ Công đoạn dở dang đã khởi tạo trạng thái |
-| `MANUAL` | False (0) | False (0) | 0 | **1,210** | 9.0% | 🔄 Công đoạn đang mở trên chuyền chưa chốt |
-| `AUTO` | False (0) | False (0) | 0 | **632** | 4.7% | 📡 Dữ liệu máy móc/PLC đang tích lũy |
-| `MANUAL` | **True (1)** | **True (1)** | 1 | **596** | 4.5% | 🛠️ Các lượt chốt được IT bypass / sync thủ công |
-| `AUTO` | **True (1)** | **False (0)** | 0 | **37** | **0.3%** | ⚠️ **ĐIỂM NGHẼN KẸT ĐỒNG BỘ HIỆN TẠI!** |
-| `AUTO` | True (1) | True (1) | 0 | **25** | 0.2% | ✅ Chốt tự động đã sang MES thành công |
-| `AUTO` | True (1) | True (1) | 1 | **5** | <0.1% | 🛠️ Chốt tự động được bypass thủ công |
+##### 1. Thống kê trạng thái `MongoToMesPerformance` (Quy mô hiện tại: **29,028 dòng**)
+- **Tốc độ tăng trưởng:** Hệ thống tích lũy thêm hơn 15,650 lượt chốt từ ngày 21/09/2026 đến nay, trung bình hơn 1,400 lượt/ngày trên toàn bộ các line Hà Nam và Hưng Yên.
+- **Dữ liệu thời gian thực:** Bản ghi mới nhất ghi nhận lúc `2026-10-02 10:55:31`, hệ thống background worker đồng bộ tức thì sang `STB_ProdRouteHist` trong vòng **1-2 giây**.
+- **Điểm nghẽn 37 bản ghi kẹt (`IsDone = 1 AND IsTransferred = 0`):**
+  - Đã đối soát 100% danh sách 37 bản ghi kẹt: Toàn bộ đều phát sinh từ ngày **`2026-08-26 12:00` đến `2026-09-19 00:09`** trên riêng dây chuyền **`VVC-11`** (Hà Nam), gắn với các máy `VVEP274`, `VVEP174`, `VVEP266`, `VVEP192`.
+  - **KẾT LUẬN CỐT LÕI:** Từ ngày **19/09/2026 đến 02/10/2026 (13 ngày liên tục)**, **KHÔNG CÓ BẤT KỲ BẢN GHI NÀO BỊ KẸT MỚI (Tỷ lệ thông lượng đạt 100%)**. Luồng đồng bộ ngầm hiện tại đang hoạt động cực kỳ ổn định.
+  - 37 bản ghi trên là **dữ liệu đóng băng lịch sử (Legacy Frozen)**, không ảnh hưởng tới tiến độ sản xuất hiện tại.
 
-##### 2. Thống kê trạng thái `MongoToMesDefect` (6,861 dòng)
-| Nguồn (`SourceType`) | Đã Xong (`IsDone`) | Đã Sang MES (`IsTransferred`) | Số Dòng | Tỷ Lệ | Trạng Thái Vận Hành |
-|----------------------|:------------------:|:----------------------------:|--------:|------:|---------------------|
-| `AUTO` | **True (1)** | **True (1)** | **6,570** | 95.8% | ✅ Đã đồng bộ chi tiết lỗi sang `STB_DefectRepairInfo` |
-| `AUTO` | False (0) | False (0) | **269** | 3.9% | 🔄 Lỗi đang ghi nhận dở dang trên chuyền |
-| `AUTO` | **True (1)** | **False (0)** | **22** | **0.3%** | ⚠️ **ĐIỂM NGHẼN KẸT PHẾ CÙNG THỜI ĐIỂM!** |
+##### 2. Hệ Thống Giám Sát Tự Động (Watchdog Subsystem — Triển Khai 2026-09-29)
+Để chấm dứt hoàn toàn nguy cơ đứt gãy đồng bộ âm thầm như từng xảy ra tại VVC-11, ngày **29/09/2026**, hệ thống đã kích hoạt phân hệ **Equipment Collection Watchdog** ngầm:
+- **Bảng điều khiển:** `VINA_EQUIP_COLLECT_WATCH_CONFIG`, `VINA_EQUIP_COLLECT_WATCH_HIST`, `VINA_EQUIP_COLLECT_WATCH_RUN`.
+- **Ngưỡng giám sát (`DEFAULT_THRESHOLD_MIN`):** `180 phút`. Nếu máy ngừng nạp telemetry quá 3 giờ, hệ thống kích hoạt cảnh báo.
+- **Quy tắc đứt gãy Mongo (`MONGO_FAIL_NOTIFY_COUNT`):** `2 lần liên tiếp`. Nếu worker quét lỗi 2 chu kỳ, kích hoạt thông báo sự cố ngay lập tức.
+- **Kênh thông báo (`MAIL_TO`):** `hbkang@vina.co.kr` (Kang Hee-Bong - Quản trị hệ thống).
+- **Chu kỳ chạy:** Job tự động quét mỗi **15 phút** (`CYCLE`) và tổng kết cuối ngày lúc **23:00 UTC** (`DAILY`).
 
-##### 3. Chi tiết điểm nghẽn kẹt đồng bộ tại dây chuyền `VVC-11` (Hà Nam)
-Toàn bộ **37** bản ghi kẹt trong `MongoToMesPerformance` và **22** bản ghi kẹt trong `MongoToMesDefect` tập trung 100% tại:
-- **Chuyền sản xuất:** `VVC-11` (Cell Line 11 — Nhà máy Hà Nam).
-- **Công đoạn ảnh hưởng:** `V-22` (Cuốn - 18 bản ghi), `V-23` (Lắp cao su - 16 bản ghi), `V-24` (Curling - 2 bản ghi), `V-25` (Bọc vỏ - 1 bản ghi).
-- **Thời gian kẹt:** Từ ngày `2026-08-27 12:00:17` đến `2026-09-19 00:09:26`.
-- **Nguyên nhân:** Các bản ghi này có `SourceType = 'AUTO'` do máy tự động ghi nhận nhưng Worker IIS gặp lỗi thiếu thông tin máy móc hoặc không thể ánh xạ mã công nhân `WorkerCode` cho nguồn tự động, dẫn tới việc Worker bỏ qua và để lại ở trạng thái `IsTransferred = 0`.
-- **Cách xử lý triệt để:** Dùng lệnh `.\mes.ps1 pop-audit` để rà quét và chạy SP `usp_VINA_SyncPopToMes_SingleLot` cho từng Lot bị kẹt.
+##### 3. Chi tiết xử lý triệt để 37 bản ghi đóng băng VVC-11
+- Các bản ghi này có `SourceType = 'AUTO'` từ các lượt thử nghiệm PLC máy cuốn/cao su cũ.
+- Khi cần dọn sạch hàng đợi để giao diện giám sát xanh 100%: Chạy script cứu hộ `EXEC SmartFactoryV2.dbo.usp_VINA_SyncPopToMes_SingleLot` hoặc chuyển cờ `IsSkipped = 1` để Worker bỏ qua vĩnh viễn.
 
 ---
 
@@ -565,9 +565,9 @@ Mọi trạng thái vận hành của Kiosk POP và MES đều quy tụ tại 3 
 
 ---
 
-### 3.6 📚 Danh Mục Đầy Đủ 66 Bảng CSDL VINATECH_POP (Kiểm Toán Thực Tế 2026-09-21)
+### 3.6 📚 Danh Mục Đầy Đủ 77 Bảng CSDL VINATECH_POP (Kiểm Toán Thực Tế 2026-10-02)
 
-Toàn bộ 66 bảng vật lý trong database `VINATECH_POP` trên server `dbserver.hycap.co.kr,5398` được phân loại theo 11 nhóm chức năng vận hành:
+Toàn bộ 77 bảng vật lý trong database `VINATECH_POP` trên server `dbserver.hycap.co.kr,5398` được phân loại theo 13 nhóm chức năng vận hành:
 
 #### Nhóm 1: Core Operations & Kiosk Logs (Vận Hành & Nhật Ký Thao Tác)
 | Tên bảng | Số dòng (Rows) | Vai trò vận hành & Ghi chú |
@@ -586,14 +586,14 @@ Toàn bộ 66 bảng vật lý trong database `VINATECH_POP` trên server `dbser
 #### Nhóm 2: BOM & Material Route Mapping (Định Mức & Ánh Xạ NVL)
 | Tên bảng | Số dòng (Rows) | Vai trò vận hành & Ghi chú |
 |----------|---------------:|---------------------------|
-| `VINA_BOM_INPUT_ROUTE` | 894 | Quy định chi tiết mã vật tư phụ (`SUB_MATERIAL_CODE`) phải nạp tại công đoạn nào (`INPUT_ROUTE_CODE`) theo từng Version BOM của Module/MEA. |
+| `VINA_BOM_INPUT_ROUTE` | 989 | Quy định chi tiết mã vật tư phụ (`SUB_MATERIAL_CODE`) phải nạp tại công đoạn nào (`INPUT_ROUTE_CODE`) theo từng Version BOM của Module/MEA. |
 | `VINA_MATERIAL_ROUTE_MAP` | 435 | Ánh xạ chi tiết danh mục vật tư NVL với Route Code thực tế tại xưởng. |
 | `VINA_GROUP_INPUT_ROUTE` | 306 | **Cấu hình 10 Slot nạp NVL chuẩn cho Kiosk**: <br>• `V-22` (Cuốn/Winding): 6 slot (`ElectrodeP`, `ElectrodeM`, `Separator`, `PiTape`, `TerminalP`, `TerminalM`).<br>• `V-24` (Lắp ráp/Assembly): 3 slot (`RubberPad`, `Case`, `Electrolyte`).<br>• `V-25` (Bọc vỏ/Sleeving): 1 slot (`Sleeve`).<br>Nếu slot có `IS_REQUIRED = Y` mà chưa nạp đủ, Kiosk sẽ khóa nút hoàn thành. |
 
 #### Nhóm 3: Equipment & PLC Management (Máy Móc Thiết Bị & PLC)
 | Tên bảng | Số dòng (Rows) | Vai trò vận hành & Ghi chú |
 |----------|---------------:|---------------------------|
-| `VINA_EQUIPMENT_MAPPING` | 2,402 | **Quản lý trạng thái gán máy Kiosk**: Theo dõi máy nào đang `ACTIVE`, `AUTO_MAPPED`, hay `RELEASED` theo DayPlan. Tránh đụng máy giữa các ca. |
+| `VINA_EQUIPMENT_MAPPING` | 3,192 | **Quản lý trạng thái gán máy Kiosk**: Theo dõi máy nào đang `ACTIVE`, `AUTO_MAPPED`, hay `RELEASED` theo DayPlan. Tránh đụng máy giữa các ca. |
 | `VINA_EQUIPMENT_SETTING` | 93 | Thiết lập thuộc tính máy móc: chế độ chạy liên tục (CONTINUOUS), theo mẻ (BATCH), hoặc thủ công (MANUAL). |
 | `VINA_EQUIPMENT_REMAINDER` | 9 | Theo dõi số lượng phôi/bán thành phẩm còn dư đọng lại trên buồng máy sau ca. |
 | `VINA_PLC_BASELINE` | 5 | Thông số chuẩn Baseline cho thiết bị kết nối PLC đọc tín hiệu tự động. |
@@ -623,6 +623,7 @@ Toàn bộ 66 bảng vật lý trong database `VINATECH_POP` trên server `dbser
 | `VINA_MODULE` | 17 | Danh mục các dòng Module sản phẩm. |
 | `VINA_MODEL_SETTING_MACRO` | 14 | Cấu hình macro tự động áp dụng thông số cài đặt Model. |
 | `VINA_PACK_GRADE_ITEM` | 1 | Tiêu chuẩn phân hạng đóng gói (Grade). |
+| `VINA_SLITTING_MODEL_WIDTH` | 48 | **Tiêu chuẩn bề rộng xẻ dao điện cực (Slitting Width)**: Mới tạo ngày 02/10/2026, seed 48 Model chuẩn (Width 31.70mm ~ 97.00mm, dung sai Tolerance = 0.10mm). |
 | `VINA_FORMULA_CONFIG` | 0 | Cấu hình công thức tính toán tự động (dự phòng). |
 
 #### Nhóm 6: Label & Packing (In Tem Nhãn & Đóng Gói)
@@ -644,6 +645,7 @@ Toàn bộ 66 bảng vật lý trong database `VINATECH_POP` trên server `dbser
 | `VINA_ATTACHED_FILE` | 13 | Quản lý file đính kèm, ảnh bằng chứng lỗi upload từ Kiosk. |
 | `VINA_KIOSK_FACTORY_CONFIG` | 7 | Cấu hình gán máy Kiosk theo từng Nhà máy (Hà Nam / Hưng Yên / Bắc Ninh). |
 | `VINA_SYSTEM_VERSION` | 1 | Ghi nhận phiên bản ứng dụng POP Kiosk hiện hành. |
+| `VINA_KIOSK_AUTO_LOGIN` | 0 | Khung tự động đăng nhập thiết bị Kiosk trạm xưởng (tạo ngày 29/09/2026). |
 | `VINA_COOKIE_NAME` | 0 | Cấu hình định danh cookie phiên làm việc. |
 
 #### Nhóm 8: Menu & Authorization (Menu & Phân Quyền)
@@ -678,6 +680,27 @@ Toàn bộ 66 bảng vật lý trong database `VINATECH_POP` trên server `dbser
 |----------|---------------:|---------------------------|
 | `VINA_POP_ACTION_LOG_BK20260919` | 24 | Snapshot sao lưu một phần nhật ký thao tác ngày 19/09/2026. |
 | `BAK_VINA_PACKING_REMAIN_QTY_20260917_VVQR013R072727` | 1 | Snapshot sao lưu tồn dư đóng gói của Lot VVQR013R072727 ngày 17/09/2026. |
+
+#### Nhóm 12: Equipment Collection Watchdog Subsystem (Phân Hệ Giám Sát Thu Thập Dữ Liệu Thiết Bị & Cảnh Báo Mongo-MES)
+*(Triển khai kích hoạt ngày 29/09/2026 — Quản trị ngầm luồng đồng bộ IoT thiết bị)*
+
+| Tên bảng | Số dòng (Rows) | Vai trò vận hành & Ghi chú |
+|----------|---------------:|---------------------------|
+| `VINA_EQUIP_COLLECT_WATCH_CONFIG` | 1 | Cấu hình tham số ngưỡng cảnh báo Watchdog: `DEFAULT_THRESHOLD_MIN = 180` phút, `MONGO_FAIL_NOTIFY_COUNT = 2` lần quét lỗi liên tiếp, `MAIL_TO = hbkang@vina.co.kr`, `MONITOR_STALE_MIN = 15`. |
+| `VINA_EQUIP_COLLECT_WATCH_HIST` | 63 | Lịch sử biến động trạng thái thu thập thiết bị: Ghi vết chuyển đổi trạng thái `COLLECTING` ➔ `STOPPED` ➔ `IDLE` theo từng máy (như `VNEP11102` Coater #2, `ESR_COM3`...). |
+| `VINA_EQUIP_COLLECT_WATCH_RUN` | 16 | Nhật ký thực thi các phiên quét của Watchdog: Chạy chu kỳ `CYCLE` mỗi 15 phút và tổng hợp `DAILY` lúc 23:00 UTC. |
+| `VINA_EQUIP_COLLECT_WATCH_EQUIP` | 0 | Danh sách thiết bị cấu hình lọc theo dõi riêng biệt (dự phòng). |
+| `VINA_EQUIP_COLLECT_WATCH_SITE` | 0 | Danh sách phân xưởng cấu hình lọc theo dõi riêng biệt (dự phòng). |
+
+#### Nhóm 13: Customer Portal Configuration Subsystem (Phân Hệ Cấu Hình Cổng Khách Hàng Bloom Energy)
+*(Triển khai cấu hình ngày 29/09/2026 bởi Kỹ sư jhkim — Phục vụ trích xuất dữ liệu khách hàng Bloom)*
+
+| Tên bảng | Số dòng (Rows) | Vai trò vận hành & Ghi chú |
+|----------|---------------:|---------------------------|
+| `VINA_BLOOM_PORTAL_CONFIG` | 1 | Cấu hình xuất dữ liệu Bloom: Loại trừ kho công đoạn `ROUTE_%,W62`, thiết lập tỷ lệ đệm `AMPLE_COVER_RATIO = 2.0`, chặn lỗi ngày tương lai ảo bằng `DATE_UPPER_GUARD = TODAY`. |
+| `VINA_BLOOM_PORTAL_ALIAS` | 23 | Ánh xạ bí danh (Alias) tên linh kiện và mã vật tư hiển thị trên cổng thông tin Bloom. |
+| `VINA_BLOOM_PORTAL_ROUTE` | 15 | Danh mục các công đoạn sản xuất được phê duyệt chia sẻ trên giao diện portal. |
+| `VINA_BLOOM_PORTAL_ROOT` | 2 | Cấu hình cây thư mục gốc phục vụ trích xuất báo cáo portal. |
 
 ---
 

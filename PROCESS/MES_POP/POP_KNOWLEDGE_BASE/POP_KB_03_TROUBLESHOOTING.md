@@ -1,4 +1,4 @@
-<!--
+﻿<!--
 AI-READY METADATA
 Purpose: Cẩm nang xử lý sự cố khẩn cấp trên hệ thống POP Web Kiosk Vinatech
 Scope: Toàn bộ các lỗi vận hành POP, Kiosk phần cứng, API lỗi, kẹt Lot, lỗi in tem, và SQL Fix Scripts
@@ -9,6 +9,7 @@ Related Files:
   - [POP_KB_01_ARCHITECTURE_AND_API.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_01_ARCHITECTURE_AND_API.md)
   - [POP_KB_02_SCREEN_OPERATIONS.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_02_SCREEN_OPERATIONS.md)
   - [POP_KB_04_ROLLBACK_AND_SAFETY.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_04_ROLLBACK_AND_SAFETY.md)
+  - [POP_KB_07_POP_FAULT_HANDLING_PLAYBOOK.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_07_POP_FAULT_HANDLING_PLAYBOOK.md)
 -->
 
 # POP_KB_03 — Cẩm Nang Xử Lý Sự Cố POP (Troubleshooting & Incident Guide)
@@ -16,6 +17,7 @@ Related Files:
 > **Hệ thống:** POP Kiosk Web — `https://pop.vinatech.com/`  
 > **Phạm vi:** Chẩn đoán sự cố, Root Cause Analysis (RCA), Hướng xử lý nhanh và SQL Hotfix cứu hộ  
 > **🔑 Keywords:** troubleshoot, error, fix, bug, incident, timeout, printer, stuck lot, material error, packing error  
+> **🌟 ĐẶC BIỆT CHÚ Ý:** Bộ cẩm nang xử lý 26 ca bệnh thực chiến hiện trường của EA Team (Hải Triều & Đức Nguyễn) được chuẩn hóa tại 👉 **[POP_KB_07_POP_FAULT_HANDLING_PLAYBOOK.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_07_POP_FAULT_HANDLING_PLAYBOOK.md)**. Khi tiếp nhận yêu cầu lỗi từ người dùng, BẮT BUỘC đối chiếu POP_KB_07 trước tiên!  
 > ← [Về INDEX](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_INDEX.md)
 
 ---
@@ -41,7 +43,7 @@ Related Files:
 | **POP-ERR-15: Đã xóa STB_ProdRouteHist nhưng Kiosk vẫn hiện "Công đoạn đã hoàn thành"** | Chưa xóa bản ghi tương ứng trong `MongoToMesPerformance` (`IsDone = 1`) | Dùng Template 7 xóa dòng công đoạn kẹt trong `MongoToMesPerformance` và F5 Kiosk | **CÓ (SQL Hotfix)** |
 | **POP-ERR-16: Tem Thùng In Từ Kiosk POP Bị Co Ngắn Mã Vạch (Scanner không đọc được)** | Kiosk POP thiếu engine sinh `PackingID` chuẩn 11 ký tự (`PK...`), `AutoModule` làm co vạch | In lại tem chuẩn từ MES WinForm (màn hình B523/B528) hoặc vệ sinh đầu in | Không (In WinForm) |
 | **POP-ERR-17: Kiosk Hiển Thị Bước Kế Tiếp Dù Chuyền Mới Chốt Bước Trước** | Hành vi chuẩn: MES tự động tạo pre-allocated slot với `CompleteRoute = NULL` | Kiểm tra query `CompleteRoute IS NULL` là bình thường, không phải lỗi | Không |
-| **POP-ERR-18: Kẹt Pipeline Đồng Bộ POP ➔ MES (Worker bị treo / `IsTransferred = 0`)** | Background Polling Worker IIS bị treo hoặc đứt kết nối SQL (Line `VVC-11`) | Dùng Template 8 kiểm tra, restart AppPool IIS, hoặc dùng Template 9 chốt bù thủ công | **CÓ (SQL Hotfix)** |
+| **POP-ERR-18: Kẹt Pipeline Đồng Bộ POP ➔ MES (Worker bị treo / `IsTransferred = 0`)** | 37 bản ghi kẹt trên `VVC-11` là dữ liệu đóng băng cũ (tháng 8-9/2026). Pipeline 13 ngày qua đạt 100% thông lượng, có Watchdog 15' giám sát ngầm | Dùng Template 8 kiểm tra hoặc bypass `IsSkipped = 1`; có thể chạy SP `usp_VINA_SyncPopToMes_SingleLot` | **CÓ (SQL Hotfix)** |
 | **POP-ERR-19: Lỗi "Không Tìm Thấy LOT Trong Kho" Khi Nạp Cuộn Điện Cực / NVL BOM** | Bên Điện cực đã xuất vào kho `ROUTE_VN_WH` nhưng cuộn mang mã BTP mới (vd: `SRECYK0-900`) trong khi BOM của Lệnh SX (PO) lại khai báo mã quy cách cũ (`SRFCO85 / SREYO85`), hoặc mã cũ trong kho có tồn = 0 | Map bổ sung mã NVL mới vào BOM của PO (`STB_ProductionOrderBom`) hoặc sửa `MaterialCode` cuộn khớp BOM, sau đó bấm `Danh sách NVL BOM 🔄` (Reload) trên Kiosk POP | **CÓ (BOM Map / Master)** |
 | **POP-ERR-20: POP Kiosk Thiếu Thiết Bị / Ẩn Máy Tại Modal "Xác Nhận Kết Thúc" (Winding/Curling/Sleeving)** | Máy bị kẹt trạng thái `MAPPING_STATUS = 'ACTIVE'` trong `VINATECH_POP.dbo.VINA_EQUIPMENT_MAPPING` từ Kế hoạch sản xuất (`DAY_PLAN_NO`) cũ do OP không bấm "Hủy gán / Release" khi xong ca và POP thiếu Auto-Release | Giải phóng máy: chạy script UPDATE `VINA_EQUIPMENT_MAPPING SET MAPPING_STATUS = 'RELEASED', RELEASED_AT = GETDATE(), NO_EMP_MODIFYER = 'vanduc'` cho các Plan cũ | **CÓ (SQL Hotfix)** |
 | **POP-ERR-21: Mã Lỗi Phế Bị Ẩn / Thiếu DefectQty Do Three-Valued Logic** | Cột `IsDelete` và `RepairQty` trong `STB_DefectRepairInfo` bị `NULL`, mệnh đề `WHERE IsDelete = '0'` lọc mất bản ghi | Chạy Template 11: UPDATE `IsDelete = '0'`, `RepairQty = 0` và đồng bộ lại `STB_SetInfo.DefectQty` | **CÓ (SQL Hotfix)** |
@@ -335,21 +337,35 @@ ORDER BY ProdDateTime ASC;
 - Công nhân đã bấm chốt sản lượng hoàn thành trên Kiosk POP (đã trừ NVL, đã hiện dấu tích xanh trên POP).
 - Nhưng trên MES WinForm (màn hình B782, B530, B540) hoặc các báo cáo tiến độ không hề thấy sản lượng đâu.
 
-**Nguyên nhân gốc (Root Cause):**
-- Background Polling Worker trên IIS Server (`pop.vinatech.com`) gặp sự cố gián đoạn kết nối tới SQL Server, hoặc logic xử lý bị lock bởi một bản ghi lỗi trên dây chuyền cụ thể (điển hình từng kẹt trên Line `VVC-11`).
-- Dữ liệu bị ứ đọng trong `SmartFactoryV2.dbo.MongoToMesPerformance` với trạng thái `IsDone = 1` nhưng `IsTransferred = 0`.
+**Kết quả kiểm toán thực tế Live DB (Audit 2026-10-02):**
+- Quy mô bảng đệm `SmartFactoryV2.dbo.MongoToMesPerformance` hiện đạt **29,028 bản ghi**.
+- **Giải mã 37 bản ghi kẹt đồng bộ:**
+  - Toàn bộ 37 bản ghi kẹt (`IsDone = 1 AND IsTransferred = 0`) là dữ liệu lịch sử đóng băng phát sinh từ **`2026-08-26` đến `2026-09-19`** trên riêng line **`VVC-11`** (Hà Nam), gắn với các máy `VVEP274`, `VVEP174`, `VVEP266`, `VVEP192` (nguồn `SourceType = 'AUTO'` thử nghiệm PLC).
+  - **Thông lượng 13 ngày gần nhất:** Từ ngày `19/09/2026` đến nay, **100% bản ghi mới được chuyển tức thì sang MES trong 1-2 giây (0 bản ghi kẹt mới)**. Pipeline nền hoạt động rất hoàn hảo.
+- **Hệ thống giám sát ngầm tự động (Watchdog Subsystem — 2026-09-29):**
+  - Đã triển khai bộ 5 bảng `VINA_EQUIP_COLLECT_WATCH_*` chạy quét mỗi **15 phút**.
+  - Tự động gửi email cảnh báo tới Quản trị viên `hbkang@vina.co.kr` nếu máy gián đoạn nạp telemetry > 180 phút hoặc đồng bộ Mongo thất bại 2 lần liên tiếp (`MONGO_FAIL_NOTIFY_COUNT = 2`).
 
-**Quy trình khắc phục:**
+**Quy trình chuẩn đoán & Khắc phục:**
 1. Chạy câu truy vấn kiểm tra danh sách các bản ghi bị nghẽn:
    ```sql
-   SELECT DayPlanNo, Barcode, RouteCode, TotalProdQty, IsDone, IsTransferred, ModifyDateTime 
+   SELECT DayPlanNo, Barcode, RouteCode, LineCode, MachineCode, TotalProdQty, IsDone, IsTransferred, ModifyDateTime 
    FROM SmartFactoryV2.dbo.MongoToMesPerformance WITH(NOLOCK) 
    WHERE IsDone = 1 AND IsTransferred = 0 AND IsSkipped = 0 
    ORDER BY ModifyDateTime ASC;
    ```
-2. Nếu số lượng nghẽn tăng dần:
-   - Báo bộ phận Server Admin restart lại Application Pool của Web POP trên IIS.
-   - Hoặc nếu chỉ kẹt riêng 1 Line (như `VVC-11`), kiểm tra xem Line đó có bị exclude trong cấu hình Worker hay không.
+2. Nếu phát sinh kẹt mới ở ca hiện tại:
+   - Chạy Stored Procedure đồng bộ tức thì cho Lot:
+     ```sql
+     EXEC SmartFactoryV2.dbo.usp_VINA_SyncPopToMes_SingleLot 
+          @pBarcode = '<MÃ_LOT>', 
+          @pRouteCode = NULL, 
+          @pProcessUserID = 'vanduc';
+     ```
+   - Kiểm tra Watchdog logs: `SELECT TOP 20 * FROM VINATECH_POP.dbo.VINA_EQUIP_COLLECT_WATCH_HIST ORDER BY HIST_SEQ DESC;`
+   - Báo Server Admin restart lại Application Pool của Web POP trên IIS nếu IIS Worker bị đơ.
+3. Đối với 37 bản ghi lịch sử VVC-11:
+   - Có thể dọn sạch bằng cách gắn cờ bỏ qua: `UPDATE SmartFactoryV2.dbo.MongoToMesPerformance SET IsSkipped = 1 WHERE LineCode = 'VVC-11' AND IsTransferred = 0;`
 
 ---
 
@@ -409,9 +425,9 @@ Khi công nhân bấm nút **"GHI NHẬN SẢN XUẤT"** để mở modal popup 
            AND M.DAY_PLAN_NO <> @CurrentDayPlanNo
      )
      ```
-2. **Kẹt khóa mồ côi (Orphan Lock):**
-   - Các máy bị thiếu đã từng được gán vào Kế hoạch sản xuất cũ (`DAY_PLAN_NO` của các ngày trước) nhưng khi kết thúc kế hoạch không được giải phóng (`MAPPING_STATUS` vẫn giữ nguyên là `'ACTIVE'`).
-   - Kiosk POP hiện tại chưa có cron job Auto-Release khi hết ca hoặc sang ngày mới, khiến trạng thái `ACTIVE` cũ tồn lưu vĩnh viễn và chặn không cho Lệnh sản xuất mới nhìn thấy máy.
+2. **Kẹt khóa mồ côi (Orphan Lock) & Cơ chế Auto-Release (`REASSIGNED`):**
+   - **Cơ chế tự động mới (Audit 2026-10-02):** Khảo sát thực tế Live DB xác nhận POP Web đã có cơ chế tự động giải phóng khi OP chuyển sang DayPlan mới: máy cũ sẽ được cập nhật `MAPPING_STATUS = 'RELEASED'` với lý do `RELEASE_REASON = 'REASSIGNED'` (như máy `VVMHY70`, `VVMHY69`).
+   - **Trường hợp mồ côi thực sự:** Chỉ phát sinh khi OP làm xong ca nhưng **không mở DayPlan mới và cũng không bấm nút "Hủy gán / Release"**, khiến máy bị bỏ rơi ở trạng thái `ACTIVE` của ngày hôm trước và chặn các Kế hoạch của ca sau.
 
 **Quy trình chuẩn đoán & Khắc phục chuẩn (3 Bước):**
 1. **Kiểm tra các máy đang bị kẹt lock:**

@@ -1,10 +1,10 @@
-<!--
+﻿<!--
 AI-READY METADATA
 Purpose: Master Index — Bộ KB toàn diện cho hệ thống POP (Point of Production) Vinatech
-Scope: POP Web Kiosk (pop.vinatech.com), VINATECH_POP DB (66 bảng), SmartFactoryV2 Integration
+Scope: POP Web Kiosk (pop.vinatech.com), VINATECH_POP DB (77 bảng), SmartFactoryV2 Integration
 Single Source of Truth: POP_KNOWLEDGE_BASE/POP_KB_INDEX.md
 Target Systems: POP Web UI, VINATECH_POP DB, SmartFactoryV2 DB, VINATECH_RESTFUL API
-Last Updated: 2026-09-21 (Audit DB schema 66 bảng, đánh dấu 5 file archived)
+Last Updated: 2026-10-02 (Audit Live DB schema 77 bảng, Watchdog Subsystem, Slitting Width Poka-Yoke, Bloom Portal)
 Related Files:
   - [MES KB_INDEX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/KB_INDEX.md)
   - [POP_KB_01_ARCHITECTURE_AND_API.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_01_ARCHITECTURE_AND_API.md)
@@ -17,9 +17,9 @@ Related Files:
 
 > **Hệ thống:** POP (Point of Production) — Web Kiosk Sản xuất Vinatech  
 > **URL:** `https://pop.vinatech.com/`  
-> **Backend DB:** `VINATECH_POP` (**66 bảng** — audit 2026-09-24) + `SmartFactoryV2` (shared với MES)  
+> **Backend DB:** `VINATECH_POP` (**77 bảng** — audit 2026-10-02) + `SmartFactoryV2` (shared với MES)  
 > **API Server:** `https://pop.vinatech.com/api/` (RESTful, JSON)  
-> **Phiên bản KB:** v3.0 (Cập nhật 2026-09-24 — Khảo sát Admin toàn diện, bóc tách 8 phân hệ ngầm, 58 PC biên, MongoDB Time-Series & 34 mã lỗi POP-ERR)  
+> **Phiên bản KB:** v3.1 (Cập nhật 2026-10-02 — Live DB 77 bảng, Watchdog 15' cảnh báo Mongo-MES sync, Poka-Yoke khổ dao xẻ 48 Model, Cổng khách hàng Bloom Energy)  
 > **🔑 Keywords:** POP, kiosk, sản xuất, đóng gói, nhập NVL, packing, merge pack, label, quality, IQC, PQC, OQC, interlock, admin release, reopen request, line prod mode, subtract, add, assembly group 10 slots, plc auto perf, pc mac dashboard, mongodb telemetry, POP-ERR-31, POP-ERR-32, POP-ERR-33, POP-ERR-34
 
 ---
@@ -32,12 +32,13 @@ Related Files:
 | # | File | Nội dung | Khi nào dùng | Trạng thái |
 |---|------|----------|--------------|------------|
 | INDEX | [POP_KB_INDEX.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_INDEX.md) | Master Index + Routing Map v3.0 | Điểm bắt đầu mọi tra cứu POP | ✅ Active |
-| 01 | [POP_KB_01_ARCHITECTURE_AND_API.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_01_ARCHITECTURE_AND_API.md) | Kiến trúc hệ thống, API endpoints, **Data Pipeline & Hệ sinh thái Bảng đệm Trung gian** (MongoToMes*, STB_ERP_INTERFACE, STB_RFIDPrintQueue §3.5), DB schema mapping **66 bảng** (§3.6), **Bản đồ quan hệ dữ liệu 8 phân hệ Admin POP (§7)** | Debug API, hiểu data flow, kiến trúc staging, logic chọn máy Kiosk, cấu trúc bảng ngầm | ✅ Active |
-| 02 | [POP_KB_02_SCREEN_OPERATIONS.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_02_SCREEN_OPERATIONS.md) | Hướng dẫn vận hành 22 phân hệ màn hình Kiosk & Admin, Interlock Manager (§20), Quality Admin & Rollback Reopen (§21), PLC Automation & PC Mac Dashboard 58 PC biên (§22) | Thao tác sản xuất, đóng gói, marking, chọn máy, mở khóa Interlock, duyệt Reopen | ✅ Active |
+| 01 | [POP_KB_01_ARCHITECTURE_AND_API.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_01_ARCHITECTURE_AND_API.md) | Kiến trúc hệ thống, API endpoints, **Data Pipeline & Hệ sinh thái Bảng đệm Trung gian** (MongoToMes*, STB_ERP_INTERFACE, STB_RFIDPrintQueue §3.5), DB schema mapping **77 bảng** (§3.6), **Watchdog IoT & Bloom Portal (§3.5.4, §3.6 Nhóm 12-13)**, **Bản đồ quan hệ dữ liệu 8 phân hệ Admin POP (§7)** | Debug API, hiểu data flow, kiến trúc staging, logic chọn máy Kiosk, cấu trúc bảng ngầm | ✅ Active |
+| 02 | [POP_KB_02_SCREEN_OPERATIONS.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_02_SCREEN_OPERATIONS.md) | Hướng dẫn vận hành 22 phân hệ màn hình Kiosk & Admin, Interlock Manager (§20), Quality Admin & Rollback Reopen (§21), PLC Automation & PC Mac Dashboard 58 PC biên (§22), **Khổ dao xẻ điện cực & Dung sai Poka-Yoke 48 Model (§23)** | Thao tác sản xuất, đóng gói, marking, chọn máy, mở khóa Interlock, duyệt Reopen | ✅ Active |
 | 03 | [POP_KB_03_TROUBLESHOOTING.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_03_TROUBLESHOOTING.md) | Lỗi thường gặp + Root cause + Fix (**POP-ERR-01 đến POP-ERR-34**, Top 15 Telemetry, Lệch mốc SUBTRACT, Kẹt MAX_WAIT, Reopen QC) | Xử lý sự cố khẩn cấp, kẹt máy, nạp cuộn điện cực, sửa mốc sản lượng, restart agent | ✅ Active |
 | 04 | [POP_KB_04_ROLLBACK_AND_SAFETY.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_04_ROLLBACK_AND_SAFETY.md) | Phân tích khả năng Rollback trên UI + DB safety (v2.0) | Hủy đóng gói Box, an toàn dữ liệu | ✅ Active |
 | 05 | [POP_KB_05_DB_VERIFICATION_AUDIT.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_05_DB_VERIFICATION_AUDIT.md) | Kết quả đối chiếu UI vs DB thực tế | Kiểm toán, xác minh tính chính xác | ✅ Active |
 | 06 | [POP_KB_06_MIGRATION_SPEC.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_06_MIGRATION_SPEC.md) | **Đặc tả chuyển đổi 100% POP Web**: Bảng quy chiếu 1:1 màn hình WinForm ➔ Web, Gap Analysis, 8 bước checklist Line Readiness | Quy hoạch tắt MES WinForm, chuẩn bị cutover | ✅ Active |
+| 07 | [POP_KB_07_POP_FAULT_HANDLING_PLAYBOOK.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_07_POP_FAULT_HANDLING_PLAYBOOK.md) | 🌟 **Cẩm Nang Xử Lý Hệ Thống POP Khi Gặp Lỗi (EA Fault Handling Playbook)**: Chuẩn hóa 14 bảng CSDL và 26 kịch bản xử lý lỗi hiện trường (Hải Triều & Đức Nguyễn) | Cẩm nang số 1 khi tiếp nhận báo lỗi thực địa từ người dùng | ✅ Active |
 | AUDIT | [MES_POP_DEEP_DIVE_AUDIT_AND_INQUIRY.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/docs/MES_POP_DEEP_DIVE_AUDIT_AND_INQUIRY.md) | **Nghiên cứu chuyên sâu & 12 câu hỏi bản chất vận hành MES & POP**: Phân tích 8 miền kiến trúc, Staging buffers, Dual-entry conflicts, 14 FAIL lines | Chiến lược vận hành, bóc tách điểm mù & đối thoại kỹ thuật | ✅ Active |
 | ~~MAP~~ | ~~POP_SLIDE_DECK_MAPPING_AND_ANALYSIS.md~~ | ~~Phân tích 51 slides POP.pptx & 50 ảnh trích xuất~~ | ~~Đối chiếu tài liệu đào tạo DX Team~~ | ❌ **[ARCHIVED]** |
 | ~~REF~~ | ~~POP_USER_MANUAL.md~~ | ~~Cẩm nang vận hành chi tiết 6 phần cho end-user~~ | ~~Training công nhân, thao tác Kiosk~~ | ❌ **[ARCHIVED]** |
@@ -90,8 +91,10 @@ Related Files:
 | **Tra cứu chức năng, Button, View & Ma trận CRUD (Xem, Thêm, Sửa, Xóa)** | **KB_02 §17 (SoT)** | KB_01 §2 |
 | **Phân hệ quản lý dữ liệu thiết bị IoT & Log PLC (`/equipmentData/*`)** | **KB_02 §18 (SoT)** | KB_01 §1.1, §1.2 |
 | **Phân quyền Dashboard RBAC & Giải thích lỗi 403 Forbidden** | **KB_02 §19 (SoT)** | KB_01 §1.1 |
-| **Danh mục 38 Frontend JavaScript Client Modules (`resources/js/`)** | **KB_01 §1.3 (SoT)** | KB_02 §16.1 |
-| **Cẩm Nang 17 Ca Bệnh Thực Chiến Nội Bộ EA Team (Tài liệu gốc DOCX)** | **KB_03 §3 (SoT)** | `HƯỚNG DẪN XỬ LÝ HỆ THỐNG POP KHI GẶP LỖI.docx`, `POP_MATRIX.json` |
+| **Cẩm Nang 26 Ca Bệnh Thực Chiến Nội Bộ EA Team (Hải Triều & Đức Nguyễn)** | **[POP_KB_07](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_07_POP_FAULT_HANDLING_PLAYBOOK.md) (SoT)** | `HƯỚNG DẪN XỬ LÝ HỆ THỐNG POP KHI GẶP LỖI.docx`, `POP_MATRIX.json`, KB_03 |
+| **Tiêu chuẩn khổ dao xẻ điện cực & Dung sai 0.10mm (`VINA_SLITTING_MODEL_WIDTH`)** | **KB_02 §23 (SoT)** | KB_01 §3.1, §3.6 (Nhóm 5) |
+| **Giám sát thu thập IoT & Cảnh báo đứt gãy Mongo-MES (Watchdog Subsystem)** | **KB_01 §3.5.4, §3.6 (Nhóm 12) (SoT)** | KB_03 §2.18 |
+| **Cấu hình trích xuất dữ liệu Cổng Khách Hàng Bloom Energy (`VINA_BLOOM_PORTAL_*`)** | **KB_01 §3.6 (Nhóm 13) (SoT)** | KB_01 §3.1 |
 
 
 ---

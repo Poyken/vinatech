@@ -64,12 +64,17 @@
    - Tuyệt đối không để xảy ra lỗi font chữ tiếng Việt trên Console và Web Portal.
    - Luôn tra cứu tiền lệ trong L1 Cache (`historical_precedents` & `RULE_CATALOG`) trước khi chẩn đoán, không chạy truy vấn mò mẫm vào CSDL.
 
-16. **RULE 20 - 5 NGUYÊN TẮC BẤT BIẾN VẬN HÀNH POP (MASTER PLAYBOOK EA TEAM):**
-   - **(1) Sửa mã máy kép:** Khi đổi máy gán nhầm trên POP Kiosk, BẮT BUỘC UPDATE đồng thời ở **CẢ 2 BẢNG**: `SmartFactoryV2.dbo.STB_ProdRouteHist` VÀ bảng đệm `SmartFactoryV2.dbo.MongoToMesPerformance`. Tuyệt đối CẤM chỉ sửa 1 bảng vì Background Worker của POP sẽ ghi đè ngược lại mã cũ.
-   - **(2) Xung đột sinh sớm công đoạn (MES WinForm vs Web POP):** MES WinForm khi chốt tự động sinh sẵn dòng ở công đoạn tiếp theo (`CompleteRoute = 1`), trong khi Web POP chỉ sinh 1 dòng cho công đoạn vừa chốt (`CompleteRoute = NULL`). Khi Kiosk báo *"This route is already completed in MES"*, BẮT BUỘC xóa dòng sinh sớm thừa trong `STB_ProdRouteWorkerHist` và `STB_ProdRouteHist`.
-   - **(3) Khóa liên động độ dày Cắt điện cực:** Nút "Cắt điện cực" trên Kiosk bị mờ / vô hiệu hóa nếu độ dày màng `MaterialThickness < 100` trong `STB_MaterialMaster`. BẮT BUỘC kiểm tra độ dày trước khi nghi ngờ lỗi phần mềm.
-   - **(4) Giới hạn nạp cuộn BTP tối đa 3 LOTNO:** Một mã cắt cuộn BTP chỉ cho phép nạp tối đa vào 3 LOTNO sản phẩm để kiểm soát phế và chống âm kho (Đã nâng cấp từ định mức cũ 2 LOTNO). CẤM quét ép vào LOT thứ 4.
-   - **(5) Cơ chế giải phóng máy kẹt (Exclusive Lock):** Bảng `VINATECH_POP.dbo.VINA_EQUIPMENT_MAPPING` quản trị phiên gắn máy theo DayPlan. Khi OP quên bấm Hủy gán làm máy kẹt `ACTIVE` (POP-ERR-20, POP-ERR-27), BẮT BUỘC chuyển sang `MAPPING_STATUS = 'RELEASED'` (dùng lệnh `.\pop.ps1 unlock <Machine> -Deploy` hoặc `.\pop.ps1 release-machines -Force`).
+16. **RULE 20 - CẨM NANG VẬN HÀNH POP 26 CA BỆNH (MASTER PLAYBOOK EA TEAM [POP_KB_07]):**
+   - Mọi sự cố/báo lỗi từ người dùng chuyển tiếp cho AI phải đối chiếu xử lý theo đúng tài liệu chuẩn [POP_KB_07_POP_FAULT_HANDLING_PLAYBOOK.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_07_POP_FAULT_HANDLING_PLAYBOOK.md) (Hải Triều & Đức Nguyễn).
+   - **8 Nguyên tắc vàng bất biến:**
+     * **(1) Sửa mã máy kép:** Khi đổi máy gán nhầm trên POP Kiosk, BẮT BUỘC UPDATE đồng thời ở **CẢ 2 BẢNG**: `SmartFactoryV2.dbo.STB_ProdRouteHist` VÀ bảng đệm `SmartFactoryV2.dbo.MongoToMesPerformance`. Tuyệt đối CẤM chỉ sửa 1 bảng vì Background Worker của POP sẽ ghi đè ngược lại mã cũ.
+     * **(2) Xung đột sinh sớm công đoạn (MES WinForm vs Web POP):** Kiểm tra `STB_ProdRouteHist`. Nếu `CompleteRoute IS NULL` là POP đã chốt xong, chỉ cần bảo OP F5 reload Kiosk. Nếu MES WinForm khi chốt tự động sinh sẵn dòng ở công đoạn tiếp theo (`CompleteRoute = 1`), khi Kiosk báo *"This route is already completed in MES"*, BẮT BUỘC xóa dòng sinh sớm thừa trong `STB_ProdRouteWorkerHist` và `STB_ProdRouteHist`.
+     * **(3) Khóa liên động độ dày Cắt điện cực:** Nút "Cắt điện cực" trên Kiosk bị mờ / vô hiệu hóa nếu độ dày màng `MaterialThickness < 100` trong `STB_MaterialMaster`. BẮT BUỘC kiểm tra độ dày trước khi nghi ngờ lỗi phần mềm.
+     * **(4) Giới hạn nạp cuộn BTP tối đa 3 LOTNO:** Một mã cắt cuộn BTP chỉ cho phép nạp tối đa vào 3 LOTNO sản phẩm để kiểm soát phế và chống âm kho (Đã nâng cấp từ định mức cũ 2 LOTNO). CẤM quét ép vào LOT thứ 4.
+     * **(5) Cơ chế giải phóng máy kẹt (Exclusive Lock):** Bảng `VINATECH_POP.dbo.VINA_EQUIPMENT_MAPPING` quản trị phiên gắn máy theo DayPlan. Khi OP quên bấm Hủy gán làm máy kẹt `ACTIVE` (POP-ERR-20, POP-ERR-27), BẮT BUỘC chuyển sang `MAPPING_STATUS = 'RELEASED'` (dùng lệnh `.\pop.ps1 unlock <Machine> -Deploy` hoặc `.\pop.ps1 release-machines -Force`).
+     * **(6) Tạo cưỡng chế tồn kho điện cực (Force Slitting Stock):** Áp dụng quy trình 3 bước chuẩn: Xác định Base Lot `ElectrodeLotNumber` ➔ Cấp số qua `SmartFramework.dbo.STB_SerialRule` & INSERT `STB_MaterialLotInfo` (`LotAttr01='SLITTING'`, `IsSlitting=1`) ➔ Kiểm tra cờ `ModalVisible='Y'` và khớp cực tính `PlusMinus (+/-)`.
+     * **(7) Đối soát hết tồn kho NVL / Dung dịch / Tape:** Kiểm tra `InitialQty` vs `CurrentQty`, đối chiếu `STB_RawMaterialInputHist` với định mức `STB_BomDetail` (`Định mức BOM x Qty Lot`), cập nhật lại thực tiêu hao và tồn kho.
+     * **(8) Truy vết Grade Model 35105:** Bắt buộc đi qua bảng trung gian `STB_MaterialDocLotInfo` để liên kết giữa `STB_MaterialLotInfo` và `STB_MaterialDocDetail`.
 
 17. **RULE 21 - BẮT BUỘC LUÔN DÙNG TOOL CHUYÊN DỤNG (CLI HUBS & L1 CACHE) — TUYỆT ĐỐI CẤM QUERY DÒ DẪM (ZERO BLIND SQL EXPLORATION):**
     - **ƯU TIÊN TUYỆT ĐỐI CÁC TOOL CLI ĐÃ ĐÓNG GÓI:**
