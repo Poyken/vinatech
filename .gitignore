@@ -55,6 +55,8 @@ __pycache__/
 !**/sql/template_*.sql
 !**/sql/routine_*.sql
 !**/tools/sql/procedures/usp_VINA_SyncPopToMes_*.sql
+!**/tools/sql/procedures/usp_Sanmina*.sql
+!**/tools/sql/scripts/*Sanmina*.sql
 **/%USERP~1/
 *.local.json
 db_config.local.json

@@ -213,3 +213,39 @@ Khi cần phát triển hệ thống in tem theo kế hoạch xuất cho khách 
    - Tính toán `CartonBoxNo` và `BaseSerial` tịnh tiến liên tục.
 5. **Tạo SP ghi log `usp_YLabelPrintHist_iud`:** Thêm cờ `@IsOuterLabel` guard để tránh lỗi tăng tiến độ x3.
 6. **Thiết kế template trên Z530 & ánh xạ trên A460.**
+
+---
+
+## 6. 🚀 Tính Năng In Hàng Loạt Theo Lô/Pallet & Tích Lũy Đa Lot (Batch Spooling & Multi-Lot)
+
+### 6.1 Mục tiêu nghiệp vụ
+* **Gom cả Pallet / Đa Lot:** Cho phép công nhân quét liên tiếp nhiều mã Lot khác nhau trên cùng một Pallet (ví dụ: Lot 1 gồm 10 thùng, Lot 2 gồm 2 thùng, Lot 3 gồm 3 thùng...), hệ thống tự động nối tiếp số thùng (`01/800` .. `10/800` ➔ `11/800`, `12/800` ➔ `13/800` .. `15/800`) và Serial tịnh tiến liên tục.
+* **In 1 lần duy nhất:** Xuất ra 1 tệp PDF duy nhất gửi khách hàng Sanmina, loại bỏ thao tác in lẻ từng thùng.
+
+### 6.2 Kiến trúc kỹ thuật & Quy luật vận hành
+```mermaid
+flowchart TD
+    A["Nhập Box Count (VD: 10) & Quét Lot 1"] --> B["usp_SanminaLabelPrint_get_Vietnam"]
+    B --> C["Sinh thùng 01/800 .. 10/800 & Ghi STB_SanminaPrintQueue"]
+    C --> D["Nhập Box Count (VD: 2) & Quét tiếp Lot 2"]
+    D --> E["SP đọc Queue: QueuedBoxes = 10"]
+    E --> F["Đếm tiếp thùng 11/800, 12/800 & Tịnh tiến Serial"]
+    F --> G{"Thao tác tiếp theo"}
+    G -->|"Bấm 'In tem'"| H["usp_SanminaIndiaLabelPrintHist_iud: In PDF, cập nhật B763, xóa Queue"]
+    G -->|"Bấm 'Clear'"| I["usp_SanminaPrintQueue_clear: Xóa 100% Queue trong CSDL & Xóa lưới client"]
+    I --> J["Quét lại quay về từ đầu 01/800"]
+```
+
+* **Ô `Box Count` trên giao diện [B767]:** Cho phép chỉ định số lượng thùng cần sinh cho từng mã Lot.
+* **Tally Table Set-based Generation:** SP `usp_SanminaLabelPrint_get_Vietnam` sử dụng Tally Table (`sys.all_columns`) để sinh $N$ thùng tức thời (<0.05s), không dùng con trỏ/vòng lặp WHILE.
+* **Hàng đợi tạm `STB_SanminaPrintQueue`:**
+  * Giữ danh sách các thùng đang chờ in trong phiên làm việc của user (`ProcessUserID`).
+  * Khi quét tiếp mã Lot mới trong cùng phiên: Hệ thống đọc `@QueuedBoxes = COUNT(*)` để nối tiếp số thùng (`StartBoxNumber = PrintedBoxCount + QueuedBoxes + 1`) và nối tiếp Serial lớn nhất (`@MaxQueueSerial`).
+* **Nút `Clear` (Làm mới) trên thanh công cụ B767:**
+  * Kích hoạt SP `usp_SanminaPrintQueue_clear` (xử lý an toàn khi NAIS gọi không truyền tham số / `@pProcessUserID IS NULL`) để xóa sạch 100% hàng đợi tạm `STB_SanminaPrintQueue`.
+  * Xóa sạch các dòng hiển thị trên lưới giao diện client (`DeleteDataOption TargetViewRange = All`).
+  * Đưa trạng thái in quay trở lại số bắt đầu của Kế hoạch B763 (`01/800` nếu `PrintedBoxCount = 0`).
+* **Hoàn tất in tem (`usp_SanminaIndiaLabelPrintHist_iud`):**
+  * Tự động dọn dẹp các thùng đã in khỏi `STB_SanminaPrintQueue`.
+  * Cập nhật tiến độ `PrintedBoxCount = PrintedBoxCount + số thùng` trên `STB_SanminaShipmentPlan`.
+
