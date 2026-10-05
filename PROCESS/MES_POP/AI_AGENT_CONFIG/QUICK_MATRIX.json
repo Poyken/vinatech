@@ -542,7 +542,7 @@
         "lưới_tìm_kiếm_lần_2_bị_lặp_dữ_liệu_(6_dò": "Nếu muốn in đơn lẻ: chuyển `데이터 추가` về `False`. Nếu muốn in hàng loạt Pallet/Lô: giữ `데이터 추가` = `True` và dùng queue `STB_SanminaPrintQueue`",
         "s_n_của_tem_outer_(tem_đầu_tiên)_bị_trốn": "SP `usp_SanminaLabelPrint_get_Vietnam` set PrintSerialNo trống cho Outer label -> Sửa SP: gộp Inner1Serial và Inner2Serial thành danh sách phân cách bằng dấu phẩy cho BoxSerialNo và PrintSerialNo của Outer label"
       },
-      "fix_template": "In hàng loạt Pallet B767: Set `데이터 추가` = `True`, truyền `@pBoxCount`, SP tự động tịnh tiến số thùng & serial qua `STB_SanminaPrintQueue`."
+      "fix_template": "Hiện tại vận hành chế độ In đơn lẻ (Lựa chọn A: SP sinh 1 thùng, bỏ qua @pBoxCount). Khi cần bật lại In hàng loạt Pallet v3.0: lấy code từ tools/sql/backup/pre_rollback_20261005/."
     },
     "B781": {
       "name": "Tra SL đóng gói",

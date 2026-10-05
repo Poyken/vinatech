@@ -249,3 +249,13 @@ flowchart TD
   * Tự động dọn dẹp các thùng đã in khỏi `STB_SanminaPrintQueue`.
   * Cập nhật tiến độ `PrintedBoxCount = PrintedBoxCount + số thùng` trên `STB_SanminaShipmentPlan`.
 
+### 6.3 Trạng thái vận hành hiện tại (Production Status - 05/10/2026)
+> [!NOTE]
+> **Quy chuẩn vận hành hiện hành:** Theo yêu cầu ngày 05/10/2026, hệ thống Stored Procedure trên Production `SmartFactoryV2` hiện đang vận hành ở **Chế độ in đơn lẻ từng thùng (Single Box Printing - Lựa chọn A)**:
+> * SP `usp_SanminaLabelPrint_get_Vietnam` tiếp nhận an toàn tham số `@pBoxCount` từ giao diện WinForm NAIS nhưng cố định sinh duy nhất **1 thùng tiếp theo (3 dòng tem: 1 Outer + 2 Inner)** theo tiến độ của B763 (`PrintedBoxCount`).
+> * Bảng `STB_SanminaPrintQueue` được làm sạch (`TRUNCATE TABLE`).
+> * Toàn bộ mã nguồn hoàn chỉnh của phiên bản **In hàng loạt v3.0 (Batch Spooling & Multi-Lot Accumulation)** đã được lưu giữ an toàn tại:
+>   `tools/sql/backup/pre_rollback_20261005/`
+> * Khi nhà máy có nhu cầu chuyển sang in hàng loạt Pallet, chỉ cần deploy lại các file trong thư mục snapshot trên lên DB mà không cần phải tái cấu hình XML giao diện NAIS.
+
+
