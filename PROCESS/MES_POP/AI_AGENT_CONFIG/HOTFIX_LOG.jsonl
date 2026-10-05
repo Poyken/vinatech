@@ -17,3 +17,4 @@
 {"author":"vanduc | ChangeUserID: vanduc | Date: 2026-10-03","db":"SmartFramework","timestamp":"2026-10-03 16:09:54","tables":{},"title":"Kich hoat hien thi nut Clear (Allow=true) \u0026 Phan quyen B767","file":"hotfix_20261003_b767_enable_clear_action.sql"}
 {"author":"vanduc","db":"SmartFactoryV2","timestamp":"2026-10-03 16:18:15","tables":{},"title":"usp_SanminaLabelPrint_get_Vietnam.sql","file":"usp_SanminaLabelPrint_get_Vietnam.sql"}
 {"author":"vanduc","db":"SmartFactoryV2","timestamp":"2026-10-03 16:38:47","tables":{},"title":"usp_SanminaLabelPrint_get_Vietnam.sql","file":"usp_SanminaLabelPrint_get_Vietnam.sql"}
+{"author":"vanduc","db":"SmartFactoryV2","timestamp":"2026-10-05 11:46:13","tables":["SmartFactoryV2.dbo.STB_SanminaPrintQueue"],"title":"ROLLBACK SP IN TEM SANMINA B767/B763 VE NGUYEN TRANG TRUOC 03/10 (OPTION A)","file":"usp_SanminaLabelPrint_get_Vietnam.sql, usp_SanminaIndiaLabelPrintHist_iud.sql"}

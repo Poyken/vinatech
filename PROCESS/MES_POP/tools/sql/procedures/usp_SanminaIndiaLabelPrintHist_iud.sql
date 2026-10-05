@@ -1,22 +1,22 @@
-﻿CREATE   PROCEDURE [dbo].[usp_SanminaIndiaLabelPrintHist_iud]
-    @pProcessUserID VARCHAR(20) = NULL,
-    @pProcessLanguage VARCHAR(20) = NULL,
-    @pSupplierName VARCHAR(50) = NULL,
-    @pSanminaPartNumber VARCHAR(50) = NULL,
-    @pPartDesc NVARCHAR(100) = NULL,
-    @pMFR VARCHAR(50) = NULL,
-    @pMPN VARCHAR(50) = NULL,
-    @pQuantity VARCHAR(10) = NULL,
-    @pPONumber VARCHAR(50) = NULL,
-    @pLotNo VARCHAR(50) = NULL,
-    @pLotCode VARCHAR(6) = NULL,
-    @pPackingDate VARCHAR(6) = NULL,
-    @pInspEmpID VARCHAR(10) = NULL,
-    @pInspEmpName NVARCHAR(100) = NULL,
-    @pCartonBoxNo VARCHAR(10) = NULL,
-    @pBoxSerialNo VARCHAR(50) = NULL,
-    @pPartNumber VARCHAR(50) = NULL,
-    @pLabelClass VARCHAR(20) = NULL
+﻿CREATE OR ALTER PROCEDURE [dbo].[usp_SanminaIndiaLabelPrintHist_iud]
+            @pProcessUserID VARCHAR(20) = NULL,
+		    @pProcessLanguage VARCHAR(20) = NULL,
+            @pSupplierName VARCHAR(50) = NULL,
+            @pSanminaPartNumber VARCHAR(50) = NULL,
+            @pPartDesc NVARCHAR(100) = NULL,
+            @pMFR VARCHAR(50) = NULL,
+            @pMPN VARCHAR(50) = NULL,
+            @pQuantity VARCHAR(10) = NULL,
+            @pPONumber VARCHAR(50) = NULL,
+            @pLotNo VARCHAR(50) = NULL,
+            @pLotCode VARCHAR(6) = NULL,
+            @pPackingDate VARCHAR(6) = NULL,
+            @pInspEmpID VARCHAR(10) = NULL,
+            @pInspEmpName NVARCHAR(100) = NULL,
+            @pCartonBoxNo VARCHAR(10) = NULL,
+            @pBoxSerialNo VARCHAR(50) = NULL,
+            @pPartNumber VARCHAR(50) = NULL,
+            @pLabelClass VARCHAR(20) = NULL
 AS
 BEGIN
 	SET NOCOUNT ON;
@@ -130,14 +130,6 @@ BEGIN
 				GETDATE(),
 				@pProcessUserID
 			);
-		END
-
-		-- 3. Dọn dẹp bản ghi hàng đợi tương ứng trong STB_SanminaPrintQueue
-		IF @pProcessUserID IS NOT NULL AND LTRIM(RTRIM(@pProcessUserID)) <> ''
-		BEGIN
-			DELETE FROM [dbo].[STB_SanminaPrintQueue]
-			WHERE [ProcessUserID] = @pProcessUserID
-			  AND ([CartonBoxNo] = @pCartonBoxNo OR [LotNo] = @pLotNo);
 		END
 	END
 
