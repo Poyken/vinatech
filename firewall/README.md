@@ -4,7 +4,7 @@
 
 ---
 
-## 📚 TRỌN BỘ 5 TẬP GIÁO TRÌNH & HỒ SƠ THỰC CHIẾN
+## 📚 TRỌN BỘ 6 TẬP GIÁO TRÌNH & HỒ SƠ THỰC CHIẾN
 
 Toàn bộ hệ thống kiến thức đã được biên soạn công phu, chuẩn hóa theo giáo trình quốc tế (CompTIA Network+, Cisco CCNA, Fortinet FCP) và gắn chặt với thực tế nhà máy sản xuất của Vinatech:
 
@@ -14,7 +14,8 @@ c:\Users\User Vinatech.DESKTOP-RJJSEQU\Desktop\firewall\
  ├── 📙 02_CAM_NANG_CHUYEN_SAU_FORTIGATE_FORTIOS.md       --> [Tập 2: Cẩm nang chuyên sâu FortiGate FortiOS]
  ├── 📕 03_HO_SO_THUC_TE_4_NHA_MAY_VINATECH.md           --> [Tập 3: Hồ sơ kỹ thuật thực tế 4 nhà máy & Audit]
  ├── 📗 04_SO_TAY_XU_LY_SU_CO_THUC_CHIEN_TROUBLESHOOTING.md --> [Tập 4: Sổ tay xử lý 12 kịch bản sự cố thực chiến]
- └── 🔬 05_THUC_CHIEN_GIAI_PHAU_MANG_HIEN_TAI_CUA_BAN.md --> [Tập 5: Thực chiến giải phẫu mạng chiếc máy bạn đang ngồi]
+ ├── 🔬 05_THUC_CHIEN_GIAI_PHAU_MANG_HIEN_TAI_CUA_BAN.md --> [Tập 5: Thực chiến giải phẫu mạng chiếc máy bạn đang ngồi]
+ └── 🛡️ 06_HO_SO_CHI_TIET_TOAN_BO_THIET_BI_VA_TOPOLOGY_NHA_MAY.md --> [Tập 6: Hồ sơ chi tiết từng chân tơ kẽ tóc thiết bị, VLAN & Topology]
 ```
 
 ### 1. [Tập 1: Giáo trình Nền tảng Mạng & Hệ thống Doanh nghiệp](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/firewall/01_GIAO_TRINH_NEN_TANG_NETWORK_SYSTEM.md)
@@ -27,7 +28,7 @@ c:\Users\User Vinatech.DESKTOP-RJJSEQU\Desktop\firewall\
 
 ### 3. [Tập 3: Hồ sơ Kỹ thuật Mạng Thực tế & Bản đồ An ninh 4 Nhà máy Vinatech](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/firewall/03_HO_SO_THUC_TE_4_NHA_MAY_VINATECH.md)
 * **Đối tượng:** Tài liệu kỹ thuật bàn giao hệ thống thực tế đang chạy.
-* **Nội dung:** 100% dữ liệu sống trích xuất từ 4 thiết bị (Bắc Ninh FGT-80F, Hưng Yên FG-100F, Bắc Giang 1 FGT-80F, Bắc Giang 2 FGT-60F); Bảng chi tiết toàn bộ 67 Firewall Policies; Thiết bị chuyển mạch Cisco Catalyst Core Switch L3 (`192.168.184.1`); Danh bạ thiết bị sống trên VLAN 184 (`MrCuong-ProductionHY`, `PC-Thu-PRODUCTION`, `Admin-PC`, NVR Camera); Mô hình tích hợp hệ thống phần mềm MES (`C:\AwooSystem\`, Database `dbserver.hycap.co.kr,5398`, App Server `192.168.112.254:8601`); **Báo cáo Thẩm định An ninh (Security Audit): Cảnh báo 5 rủi ro bảo mật (Tài khoản lạ `fortiroot1`, VPN mã hóa yếu `des-sha1`, cổng RDP mở trực tiếp, Telnet mở trên Core Switch, lây lan mã độc SMB Workgroup).**
+* **Nội dung:** 100% dữ liệu sống trích xuất từ 4 thiết bị (Bắc Ninh FGT-80F, Hưng Yên FG-100F, Bắc Giang 1 FGT-80F, Bắc Giang 2 FGT-60F); Bảng chi tiết toàn bộ 67 Firewall Policies; Thiết bị chuyển mạch Cisco Catalyst Core Switch L3 (`192.168.184.1`); Đường truyền LACP gộp 2 Gbps (`Link-to-L3`); Danh bạ thiết bị sống trên VLAN 184 (`MrCuong-ProductionHY`, `PC-Thu-PRODUCTION`, `Admin-PC`, NVR Camera); Mô hình tích hợp hệ thống phần mềm MES (`C:\AwooSystem\`, Database `dbserver.hycap.co.kr,5398`, App Server `192.168.112.254:8601`); **Báo cáo Thẩm định An ninh (Security Audit): Cảnh báo 5 rủi ro bảo mật (Tài khoản lạ `fortiroot1`, VPN mã hóa yếu `des-sha1`, cổng RDP mở trực tiếp, Telnet mở trên Core Switch, lây lan mã độc SMB Workgroup).**
 
 ### 4. [Tập 4: Sổ tay Xử lý Sự cố Mạng & Tường lửa Thực chiến (Troubleshooting Playbook)](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/firewall/04_SO_TAY_XU_LY_SU_CO_THUC_CHIEN_TROUBLESHOOTING.md)
 * **Đối tượng:** Cẩm nang bỏ túi khi gặp sự cố mạng trong nhà máy.
@@ -36,6 +37,16 @@ c:\Users\User Vinatech.DESKTOP-RJJSEQU\Desktop\firewall\
 ### 5. [Tập 5: Thực chiến Giải phẫu Mạng & Hệ thống Chiếc Máy Bạn Đang Ngồi](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/firewall/05_THUC_CHIEN_GIAI_PHAU_MANG_HIEN_TAI_CUA_BAN.md)
 * **Đối tượng:** Dự án thực tế mổ xẻ 100% chiếc máy tính `User Vinatech.DESKTOP-RJJSEQU`.
 * **Nội dung:** Đo lường thực tế đường đi của gói tin từ bàn phím bạn qua Switch Cisco L3 Hưng Yên (`192.168.184.1`) ➡️ Tường lửa FortiGate 100F (`10.0.0.1`) ➡️ Ra Internet Viettel (`117.4.123.239`) ➡️ Đi xuyên hầm VPN sang Bắc Ninh chỉ mất đúng **6ms** ➡️ Đi xuyên đại dương sang Wanju Hàn Quốc chỉ mất **144ms**; Bản đồ hàng xóm cùng chuyền (`MrCuong-ProductionHY`, `PC-Thu-PRODUCTION`, NVR Camera); 3 luồng dữ liệu của phần mềm NAIS MES; Kèm 7 bài tập gõ lệnh thực hành ngay trên bàn phím.
+
+### 6. [Tập 6: Hồ sơ Chi tiết Toàn bộ Hạ tầng Mạng, Thiết bị & Topology Hệ thống Vinatech](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/firewall/06_HO_SO_CHI_TIET_TOAN_BO_THIET_BI_VA_TOPOLOGY_NHA_MAY.md)
+* **Đối tượng:** Hồ sơ thẩm định kiến trúc mạng cấp cao, tài liệu vàng cho Kỹ sư Vận hành.
+* **Nội dung:** 
+  * **Nguyên tắc Vận hành An toàn Tuyệt đối (Zero-Impact Protocol):** 4 Điều CẤM và phương thức khảo sát thụ động không gây gián đoạn dây chuyền.
+  * **Mesh Topology 4 Nhà máy & Wanju Korea HQ:** Sơ đồ kết nối chi tiết kèm bảng định tuyến đường hầm VPN.
+  * **Giải phẫu Độc quyền FG-100F Hưng Yên:** Đường Trunk LACP Active 2 Gbps (`port1` + `port2`), tải CPU 1%, 8.800+ phiên mạng; Giám sát SLA SD-WAN Viettel vs VNPT.
+  * **Bảng 8 Phân vùng Mạng (VLAN 10, 150, 155, 160, 184, 220, 228, 234):** Chính xác từng Subnet mask (`/20`, `/21`, `/22`, `/24`), dải IP và vai trò.
+  * **Bảng 15 Firewall Policies & 4 VIP Camera NVR:** Cơ chế cấp phép cho máy tính văn phòng, luồng điều khiển MES và camera.
+  * **Sổ tay 5 bước ứng cứu khẩn cấp:** Chẩn đoán nhanh khi mất mạng MES, mất kết nối Bắc Ninh hoặc database Hàn Quốc.
 
 ---
 

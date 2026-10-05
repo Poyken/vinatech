@@ -1,4 +1,4 @@
-﻿<#
+<#
 .SYNOPSIS
     trace_lineage.ps1 — Truy vet huyet mach du lieu lien he thong (PO/GW -> ERP/Kho -> MES -> POP KIOSK)
 .DESCRIPTION
@@ -120,6 +120,38 @@ SELECT TOP 5 DayPlanNo, Barcode, RouteCode, LineCode, TotalProdQty, TotalDefectQ
 FROM SmartFactoryV2.dbo.MongoToMesPerformance WITH(NOLOCK) 
 WHERE Barcode = @Bar 
 ORDER BY InsertDateTime DESC;
+
+-- 5. KHAU CAU HINH ROUTING PO & MASTER COMPARISON
+DECLARE @TargetPO VARCHAR(50) = ISNULL(@PO, (SELECT TOP 1 PONo FROM SmartFactoryV2.dbo.STB_SetInfo WITH(NOLOCK) WHERE Barcode = @Bar));
+SELECT 
+    POR.RouteIndex, 
+    POR.RouteCode, 
+    ISNULL(RI.RouteName, POR.RouteCode) AS RouteName, 
+    POR.IsInputRoute, 
+    POR.IsOutputRoute,
+    POR.ChangeUserID
+FROM SmartFactoryV2.dbo.STB_ProductionOrderRouting POR WITH(NOLOCK)
+LEFT JOIN SmartFactoryV2.dbo.STB_RouteInfo RI WITH(NOLOCK) ON POR.RouteCode = RI.RouteCode
+WHERE POR.PONo = @TargetPO
+ORDER BY POR.RouteIndex ASC;
+
+SELECT 
+    BRD.RouteIndex, 
+    BRD.RouteCode, 
+    ISNULL(RI.RouteName, BRD.RouteCode) AS RouteName,
+    POI.BasicRoutingCode
+FROM SmartFactoryV2.dbo.STB_ProductionOrderInfo POI WITH(NOLOCK)
+JOIN SmartFactoryV2.dbo.STB_BasicRoutingDetail BRD WITH(NOLOCK) ON POI.BasicRoutingCode = BRD.BasicRoutingCode
+LEFT JOIN SmartFactoryV2.dbo.STB_RouteInfo RI WITH(NOLOCK) ON BRD.RouteCode = RI.RouteCode
+WHERE POI.PONo = @TargetPO
+  AND (
+      (EXISTS (SELECT 1 FROM SmartFactoryV2.dbo.STB_ProductionOrderRouting POR2 WITH(NOLOCK) WHERE POR2.PONo = @TargetPO AND POR2.RouteCode LIKE '%_HY') AND BRD.RouteCode LIKE '%_HY')
+      OR
+      (EXISTS (SELECT 1 FROM SmartFactoryV2.dbo.STB_ProductionOrderRouting POR2 WITH(NOLOCK) WHERE POR2.PONo = @TargetPO AND POR2.RouteCode LIKE '%_BG') AND BRD.RouteCode LIKE '%_BG')
+      OR
+      (NOT EXISTS (SELECT 1 FROM SmartFactoryV2.dbo.STB_ProductionOrderRouting POR2 WITH(NOLOCK) WHERE POR2.PONo = @TargetPO AND (POR2.RouteCode LIKE '%_HY' OR POR2.RouteCode LIKE '%_BG')) AND BRD.RouteCode NOT LIKE '%_HY' AND BRD.RouteCode NOT LIKE '%_BG')
+  )
+ORDER BY BRD.RouteIndex ASC;
 "@
 
 $adapter = New-Object System.Data.SqlClient.SqlDataAdapter($cmd)
@@ -139,6 +171,9 @@ function Out-Block($title, $table, $color="White") {
 }
 
 Out-Block "1. LENH SAN XUAT / PO MASTER DATA" $ds.Tables[0] "Yellow"
+if ($ds.Tables.Count -ge 7 -and $ds.Tables[6].Rows.Count -gt 0) {
+    Out-Block "1.2 DINH TUYEN CONG DOAN PO (STB_ProductionOrderRouting)" $ds.Tables[6] "Yellow"
+}
 Out-Block "2.1 DINH MUC BOM & TON KHO KHO CHUYEN (ROUTE_VN_WH)" $ds.Tables[1] "Cyan"
 Out-Block "2.2 LICH SU NVL DA NAP TREN KIOSK POP (STB_RawMaterialInputHist)" $ds.Tables[2] "Cyan"
 Out-Block "3.1 KHOI TAO TUYEN MES (STB_SetInfo)" $ds.Tables[3] "Green"
@@ -184,6 +219,21 @@ if ($setTable -eq $null -or $setTable.Rows.Count -eq 0) {
     Write-Host "[*] LOT DANG DO DANG TAI CONG DOAN: $lastRoute (Chua hoan thanh luot chot CompleteRoute)." -ForegroundColor Green
 } else {
     Write-Host "[OK] DONG CHAY BINH THUONG: Du lieu thong suot giua PO, MES va Kiosk POP." -ForegroundColor Green
+}
+
+# 2. Kiem tra dut gay routing PO so voi BasicRouting
+if ($ds.Tables.Count -ge 8) {
+    $poRTable = $ds.Tables[6]
+    $mstTable = $ds.Tables[7]
+    if ($poRTable -and $poRTable.Rows.Count -gt 0 -and $mstTable -and $mstTable.Rows.Count -gt 0) {
+        $poRCodes = @($poRTable.Rows | ForEach-Object { "$($_['RouteCode'])".Trim() })
+        $missingRoutes = @($mstTable.Rows | Where-Object { $poRCodes -notcontains "$($_['RouteCode'])".Trim() })
+        if ($missingRoutes.Count -gt 0) {
+            $mNames = ($missingRoutes | ForEach-Object { "$($_['RouteCode']) ($($_['RouteName']))" }) -join ', '
+            Write-Host "[-] NGHEN DINH TUYEN PO: PO bi thieu cong doan so voi BasicRouting: $mNames" -ForegroundColor Red
+            Write-Host "    -> Khac phuc: Tren POP Kiosk se bi nhay coc qua cac cong doan nay. Kiem tra/chinh sua PO tai B310." -ForegroundColor Gray
+        }
+    }
 }
 
 Write-Host "----------------------------------------------------------------------" -ForegroundColor Cyan

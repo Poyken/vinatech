@@ -1,4 +1,4 @@
-﻿# ==============================================================================
+# ==============================================================================
 # pop_trace.ps1 — Ultra-Fast 360° Trace with Smart Identifier Resolver
 # Single Round-Trip | Auto Pattern Detection (Lot / Packing / Machine / Line)
 # Tham chiếu: RULE 6 (Golden Query), POP_KB_01, POP_KB_02, POP_KB_03
@@ -159,6 +159,41 @@ SELECT TOP 30
 FROM SmartFactoryV2.dbo.STB_SetInfo WITH(NOLOCK)
 WHERE PONo = '$t'
 ORDER BY CreateDateTime DESC;
+
+-- 3. PO Routing (STB_ProductionOrderRouting)
+SELECT 
+    POR.RouteIndex, 
+    POR.RouteCode, 
+    ISNULL(RI.RouteName, POR.RouteCode) AS RouteName, 
+    POR.IsInputRoute, 
+    POR.IsOutputRoute,
+    POR.CreateDateTime,
+    POR.CreateUserID,
+    POR.ChangeDateTime,
+    POR.ChangeUserID
+FROM SmartFactoryV2.dbo.STB_ProductionOrderRouting POR WITH(NOLOCK)
+LEFT JOIN SmartFactoryV2.dbo.STB_RouteInfo RI WITH(NOLOCK) ON POR.RouteCode = RI.RouteCode
+WHERE POR.PONo = '$t'
+ORDER BY POR.RouteIndex ASC;
+
+-- 4. Master Basic Routing (STB_BasicRoutingDetail)
+SELECT 
+    BRD.RouteIndex, 
+    BRD.RouteCode, 
+    ISNULL(RI.RouteName, BRD.RouteCode) AS RouteName,
+    POI.BasicRoutingCode
+FROM SmartFactoryV2.dbo.STB_ProductionOrderInfo POI WITH(NOLOCK)
+JOIN SmartFactoryV2.dbo.STB_BasicRoutingDetail BRD WITH(NOLOCK) ON POI.BasicRoutingCode = BRD.BasicRoutingCode
+LEFT JOIN SmartFactoryV2.dbo.STB_RouteInfo RI WITH(NOLOCK) ON BRD.RouteCode = RI.RouteCode
+WHERE POI.PONo = '$t'
+  AND (
+      (EXISTS (SELECT 1 FROM SmartFactoryV2.dbo.STB_ProductionOrderRouting POR2 WITH(NOLOCK) WHERE POR2.PONo = '$t' AND POR2.RouteCode LIKE '%_HY') AND BRD.RouteCode LIKE '%_HY')
+      OR
+      (EXISTS (SELECT 1 FROM SmartFactoryV2.dbo.STB_ProductionOrderRouting POR2 WITH(NOLOCK) WHERE POR2.PONo = '$t' AND POR2.RouteCode LIKE '%_BG') AND BRD.RouteCode LIKE '%_BG')
+      OR
+      (NOT EXISTS (SELECT 1 FROM SmartFactoryV2.dbo.STB_ProductionOrderRouting POR2 WITH(NOLOCK) WHERE POR2.PONo = '$t' AND (POR2.RouteCode LIKE '%_HY' OR POR2.RouteCode LIKE '%_BG')) AND BRD.RouteCode NOT LIKE '%_HY' AND BRD.RouteCode NOT LIKE '%_BG')
+  )
+ORDER BY BRD.RouteIndex ASC;
 "@
 } elseif ($type -eq "MODEL") {
     $cmd.CommandText = @"
@@ -342,6 +377,49 @@ SELECT TOP 5 DAY_PLAN_NO, BARCODE, ROUTE_CODE, TOTAL_PROD_QTY, PACKED_QTY, REMAI
 FROM VINATECH_POP.dbo.VINA_PACKING_REMAIN_QTY WITH(NOLOCK) 
 WHERE BARCODE = @Bar 
 ORDER BY REG_DATE DESC;
+
+-- 10. STB_ProductionOrderRouting (Cau hinh Routing thuc te cua PO)
+IF @PONo IS NOT NULL
+BEGIN
+    SELECT 
+        POR.RouteIndex, 
+        POR.RouteCode, 
+        ISNULL(RI.RouteName, POR.RouteCode) AS RouteName, 
+        POR.IsInputRoute, 
+        POR.IsOutputRoute,
+        POR.CreateDateTime,
+        POR.CreateUserID,
+        POR.ChangeDateTime,
+        POR.ChangeUserID
+    FROM SmartFactoryV2.dbo.STB_ProductionOrderRouting POR WITH(NOLOCK)
+    LEFT JOIN SmartFactoryV2.dbo.STB_RouteInfo RI WITH(NOLOCK) ON POR.RouteCode = RI.RouteCode
+    WHERE POR.PONo = @PONo
+    ORDER BY POR.RouteIndex ASC;
+
+    -- 11. STB_BasicRoutingDetail (Dinh tuyen chuan cua Model de doi chieu bo sot buoc)
+    SELECT 
+        BRD.RouteIndex, 
+        BRD.RouteCode, 
+        ISNULL(RI.RouteName, BRD.RouteCode) AS RouteName,
+        POI.BasicRoutingCode
+    FROM SmartFactoryV2.dbo.STB_ProductionOrderInfo POI WITH(NOLOCK)
+    JOIN SmartFactoryV2.dbo.STB_BasicRoutingDetail BRD WITH(NOLOCK) ON POI.BasicRoutingCode = BRD.BasicRoutingCode
+    LEFT JOIN SmartFactoryV2.dbo.STB_RouteInfo RI WITH(NOLOCK) ON BRD.RouteCode = RI.RouteCode
+    WHERE POI.PONo = @PONo
+      AND (
+          (EXISTS (SELECT 1 FROM SmartFactoryV2.dbo.STB_ProductionOrderRouting POR2 WITH(NOLOCK) WHERE POR2.PONo = @PONo AND POR2.RouteCode LIKE '%_HY') AND BRD.RouteCode LIKE '%_HY')
+          OR
+          (EXISTS (SELECT 1 FROM SmartFactoryV2.dbo.STB_ProductionOrderRouting POR2 WITH(NOLOCK) WHERE POR2.PONo = @PONo AND POR2.RouteCode LIKE '%_BG') AND BRD.RouteCode LIKE '%_BG')
+          OR
+          (NOT EXISTS (SELECT 1 FROM SmartFactoryV2.dbo.STB_ProductionOrderRouting POR2 WITH(NOLOCK) WHERE POR2.PONo = @PONo AND (POR2.RouteCode LIKE '%_HY' OR POR2.RouteCode LIKE '%_BG')) AND BRD.RouteCode NOT LIKE '%_HY' AND BRD.RouteCode NOT LIKE '%_BG')
+      )
+    ORDER BY BRD.RouteIndex ASC;
+END
+ELSE
+BEGIN
+    SELECT 0 AS RouteIndex, '' AS RouteCode, '' AS RouteName, 0 AS IsInputRoute, 0 AS IsOutputRoute, CAST(NULL AS DATETIME) AS CreateDateTime, '' AS CreateUserID, CAST(NULL AS DATETIME) AS ChangeDateTime, '' AS ChangeUserID WHERE 1=0;
+    SELECT 0 AS RouteIndex, '' AS RouteCode, '' AS RouteName, '' AS BasicRoutingCode WHERE 1=0;
+END
 "@
 }
 
@@ -550,6 +628,128 @@ function Show-ModelCard([System.Data.DataTable]$table) {
     Write-Host "+-------------------------------------------------------------------------------+" -ForegroundColor Cyan
 }
 
+function Show-PoRoutingCard([System.Data.DataTable]$poRoutingTable, [System.Data.DataTable]$masterRoutingTable, [System.Data.DataTable]$prodRouteHist, [System.Data.DataTable]$mongoSync, [System.Data.DataTable]$setInfo) {
+    if ($null -eq $poRoutingTable -or $poRoutingTable.Rows.Count -eq 0) {
+        Write-Host "   [-] 1.1. DINH TUYEN CONG DOAN PO: Chua duoc cau hinh trong STB_ProductionOrderRouting" -ForegroundColor DarkYellow
+        return
+    }
+
+    $poNo = if ($setInfo -and $setInfo.Rows.Count -gt 0) { "$($setInfo.Rows[0]['PONo'])".Trim() } else { '' }
+    $matCode = if ($setInfo -and $setInfo.Rows.Count -gt 0) { "$($setInfo.Rows[0]['MaterialCode'])".Trim() } else { '' }
+    $basicCode = if ($masterRoutingTable -and $masterRoutingTable.Rows.Count -gt 0) { "$($masterRoutingTable.Rows[0]['BasicRoutingCode'])".Trim() } else { '' }
+
+    Write-Host ''
+    Write-Host ">>> 1.1. CAU HINH DINH TUYEN PO (STB_ProductionOrderRouting) ($($poRoutingTable.Rows.Count) cong doan):" -ForegroundColor Magenta
+    if ($poNo) {
+        Write-Host "   * PO: $poNo | Model: $matCode | Dinh tuyen goc: $basicCode" -ForegroundColor DarkCyan
+    }
+
+    # 1. Kiem tra xem PO co bi THIEU cong doan chuan nao so voi Basic Routing khong (vi du: thieu Aging V-26_HY)
+    $poRouteCodes = @($poRoutingTable.Rows | ForEach-Object { "$($_['RouteCode'])".Trim() })
+    $missingStandardRoutes = @()
+    if ($masterRoutingTable -and $masterRoutingTable.Rows.Count -gt 0) {
+        foreach ($mRow in $masterRoutingTable.Rows) {
+            $mCode = "$($mRow['RouteCode'])".Trim()
+            if ($poRouteCodes -notcontains $mCode) {
+                $missingStandardRoutes += [PSCustomObject]@{
+                    RouteCode  = $mCode
+                    RouteName  = "$($mRow['RouteName'])".Trim()
+                    RouteIndex = $mRow['RouteIndex']
+                }
+            }
+        }
+    }
+
+    if ($missingStandardRoutes.Count -gt 0) {
+        Write-Host "   +-------------------------------------------------------------------------------+" -ForegroundColor Red
+        Write-Host "   | [!] CANH BAO: PO BI THIEU/BO QUA CONG DOAN SO VOI DINH TUYEN CHUAN!          |" -ForegroundColor Red
+        Write-Host "   +-------------------------------------------------------------------------------+" -ForegroundColor Red
+        foreach ($ms in $missingStandardRoutes) {
+            Write-Host "   * Cong doan bi THIEU : " -NoNewline -ForegroundColor Yellow
+            Write-Host "$($ms.RouteCode) " -ForegroundColor Red -NoNewline
+            Write-Host "($($ms.RouteName)) " -ForegroundColor White -NoNewline
+            Write-Host "[Vi tri chuan: Index $($ms.RouteIndex) cua $basicCode]" -ForegroundColor DarkGray
+        }
+        $changedRow = $poRoutingTable.Rows | Where-Object { $_['ChangeUserID'] -ne [DBNull]::Value -and "$($_['ChangeUserID'])".Trim() -ne '' } | Select-Object -First 1
+        if ($changedRow) {
+            $u = "$($changedRow['ChangeUserID'])".Trim()
+            $d = if ($changedRow['ChangeDateTime'] -ne [DBNull]::Value) { ([datetime]$changedRow['ChangeDateTime']).ToString("dd/MM/yyyy HH:mm:ss") } else { '' }
+            Write-Host "   * Nguoi sua PO       : $u vao luc $d" -ForegroundColor Magenta
+        }
+        Write-Host "   * HAU QUA TRUC TIEP  : POP Kiosk se BO QUA cac cong doan thieu va nhay coc" -ForegroundColor Yellow
+        Write-Host "                          thang den cong doan ke tiep da khai bao trong PO!" -ForegroundColor Yellow
+        Write-Host "   +-------------------------------------------------------------------------------+" -ForegroundColor Red
+    }
+
+    # 2. Xay dung so do luong Tien do (Flowchart)
+    $flowItems = @()
+    $tableRows = @()
+
+    foreach ($pRow in $poRoutingTable.Rows) {
+        $rIdx = $pRow['RouteIndex']
+        $rCode = "$($pRow['RouteCode'])".Trim()
+        $rName = "$($pRow['RouteName'])".Trim()
+        $isInput = [bool]$pRow['IsInputRoute']
+        $isOutput = [bool]$pRow['IsOutputRoute']
+        $changeUser = if ($pRow['ChangeUserID'] -ne [DBNull]::Value) { "$($pRow['ChangeUserID'])".Trim() } else { '' }
+
+        # Check status against ProdRouteHist
+        $histMatch = $null
+        if ($prodRouteHist -and $prodRouteHist.Rows.Count -gt 0) {
+            $histMatch = @($prodRouteHist.Rows | Where-Object { "$($_['RouteCode'])".Trim() -eq $rCode })
+        }
+
+        # Check status against MongoSync
+        $mongoMatch = $null
+        if ($mongoSync -and $mongoSync.Rows.Count -gt 0) {
+            $mongoMatch = @($mongoSync.Rows | Where-Object { "$($_['RouteCode'])".Trim() -eq $rCode })
+        }
+
+        $statusText = "CHUA TOI"
+        $prodQtyStr = "-"
+
+        if ($histMatch -and $histMatch.Count -gt 0) {
+            $lastH = $histMatch[-1]
+            $prodQtyStr = "$($lastH['ProdQty'])"
+            $statusText = "DA CHOT MES"
+            $flowItems += "[$rIdx] $rCode [DA CHOT: $prodQtyStr]"
+        } elseif ($mongoMatch -and $mongoMatch.Count -gt 0) {
+            $mItem = $mongoMatch[0]
+            if ([bool]$mItem['IsDone'] -eq $true) {
+                $statusText = "POP DA CHOT"
+                $prodQtyStr = "$($mItem['TotalProdQty'])"
+                $flowItems += "[$rIdx] $rCode [POP CHOT]"
+            } else {
+                $statusText = "DANG CHO POP"
+                $flowItems += "[$rIdx] $rCode [DANG CHO POP]"
+            }
+        } else {
+            $flowItems += "[$rIdx] $rCode"
+        }
+
+        $tag = ""
+        if ($isInput) { $tag += "[IN]" }
+        if ($isOutput) { $tag += "[OUT]" }
+
+        $tableRows += [PSCustomObject]@{
+            Index      = $rIdx
+            RouteCode  = $rCode
+            RouteName  = $rName
+            TrangThai  = $statusText
+            SanLuong   = $prodQtyStr
+            InOutTag   = if ($tag) { $tag } else { "-" }
+            NguoiSuaPO = if ($changeUser) { $changeUser } else { "-" }
+        }
+    }
+
+    # In flow
+    Write-Host "   -> Luong routing thuc te:" -ForegroundColor Gray
+    Write-Host "      $($flowItems -join ' -> ')" -ForegroundColor Cyan
+
+    # In bang chi tiet
+    $tableRows | Format-Table -AutoSize | Out-String | ForEach-Object { Write-Host $_.TrimEnd() -ForegroundColor White }
+}
+
 if ($Json) {
     function Get-DataVal($row, $col) {
         if ($null -eq $row) { return '' }
@@ -658,6 +858,37 @@ if ($Json) {
     $poCode = try { if ($setRow -and $setRow['PONo'] -ne [DBNull]::Value) { $setRow['PONo'].ToString().Trim() } else { '' } } catch { '' }
     $ctrlNo = try { if ($setRow -and $setRow['ControlNo'] -ne [DBNull]::Value) { $setRow['ControlNo'].ToString().Trim() } else { $t } } catch { $t }
 
+    $poRoutingList = New-Object System.Collections.Generic.List[PSObject]
+    $missingList = New-Object System.Collections.Generic.List[PSObject]
+    if ($ds.Tables.Count -ge 13) {
+        $poRTable = $ds.Tables[11]
+        $mstTable = $ds.Tables[12]
+        if ($poRTable -and $poRTable.Rows.Count -gt 0) {
+            foreach ($pRow in $poRTable.Rows) {
+                $poRoutingList.Add([PSCustomObject]@{
+                    routeIndex = $pRow['RouteIndex']
+                    routeCode = "$($pRow['RouteCode'])".Trim()
+                    routeName = "$($pRow['RouteName'])".Trim()
+                    isInputRoute = [bool]$pRow['IsInputRoute']
+                    isOutputRoute = [bool]$pRow['IsOutputRoute']
+                })
+            }
+        }
+        if ($mstTable -and $mstTable.Rows.Count -gt 0) {
+            $pCodes = @($poRoutingList | ForEach-Object { $_.routeCode })
+            foreach ($mRow in $mstTable.Rows) {
+                $mC = "$($mRow['RouteCode'])".Trim()
+                if ($pCodes -notcontains $mC) {
+                    $missingList.Add([PSCustomObject]@{
+                        routeCode = $mC
+                        routeName = "$($mRow['RouteName'])".Trim()
+                        routeIndex = $mRow['RouteIndex']
+                    })
+                }
+            }
+        }
+    }
+
     $jsonResult = [PSCustomObject]@{
         target = $t
         type = $type
@@ -668,6 +899,8 @@ if ($Json) {
         status = if ($routeList.Count -gt 0) { "COMPLETED_POP" } else { "PENDING" }
         currentRoute = if ($routeList.Count -gt 0) { $routeList[-1].routeName } else { "Khoi tao" }
         routeHistory = $routeList
+        poRouting = $poRoutingList
+        missingStandardRoutes = $missingList
         packingInfo = [PSCustomObject]@{
             packingId = if ($poCode) { "PO-$poCode" } else { "PENDING_PACK" }
             printCount = 0
@@ -699,6 +932,9 @@ if ($type -eq "PACKING") {
     Show-Table "4. CAC LOT DANG TAC NGHEN DONG BO (IsTransferred=0)" $ds.Tables[3] "Magenta"
 } elseif ($type -eq "PO") {
     Show-PoCard $ds.Tables[0]
+    if ($ds.Tables.Count -ge 4) {
+        Show-PoRoutingCard $ds.Tables[2] $ds.Tables[3] $null $null $ds.Tables[0]
+    }
     Show-Table "DANH SACH CAC LOT THUOC PO (STB_SetInfo)" $ds.Tables[1] "Yellow"
 } elseif ($type -eq "MODEL") {
     Show-ModelCard $ds.Tables[0]
@@ -709,6 +945,9 @@ if ($type -eq "PACKING") {
         Show-QcCard $ds.Tables[9]
     }
     Show-LotCard $ds.Tables[0]
+    if ($ds.Tables.Count -ge 13) {
+        Show-PoRoutingCard $ds.Tables[11] $ds.Tables[12] $ds.Tables[1] $ds.Tables[2] $ds.Tables[0]
+    }
     Show-Table "2. TIEN DO CONG DOAN MES (STB_ProdRouteHist)" $ds.Tables[1] "Cyan"
     Show-Table "3. TRANG THAI POP KIOSK & DONG BO (MongoToMesPerformance)" $ds.Tables[2] "Green"
     Show-Table "4. THONG KE PHE PHAM (STB_DefectRepairInfo)" $ds.Tables[3] "Red"

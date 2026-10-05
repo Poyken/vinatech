@@ -71,29 +71,53 @@
 * **URL Quản trị:** `https://10.0.0.1:4443` (hoặc qua IP WAN `14.251.8.52`).
 * **Cổng SSL-VPN:** `10443`
 
-### 2.2. Cấu hình Cổng mạng (Interfaces):
-| Tên Cổng | Loại Cổng | Vai trò | Địa chỉ IP | Ghi chú vận hành |
+### 2.2. Cấu hình Cổng mạng (Interfaces) & Đường truyền LACP 2 Gbps:
+| Tên Cổng | Loại Cổng | Vai trò | Địa chỉ IP / Subnet | Ghi chú vận hành & Liên kết vật lý |
 | :--- | :--- | :--- | :--- | :--- |
-| `Link-to-L3` | Aggregate | LAN | `10.0.0.1 / 255.255.255.0` | Nối trực tiếp sang Core Switch L3 (`10.0.0.2`). |
-| `wan1` | Vật lý | WAN | `14.251.8.52 / 255.255.255.255` | Đường truyền Internet chính (VNPT). |
-| `wan2` | Vật lý | WAN | `117.4.123.239 / 255.255.255.255` | Đường truyền Internet phụ (Viettel). |
-| `dmz` | Vật lý | DMZ | `10.10.10.1 / 255.255.255.0` | Phân vùng cách ly máy chủ. |
-| `lan` | Hardware Switch | LAN | `192.168.100.99 / 255.255.255.0` | Cổng cắm bảo trì kỹ thuật tại chỗ. |
-| `mgmt` | Vật lý | LAN | `192.168.1.99 / 255.255.255.0` | Cổng cứu hộ quản trị chuyên dụng. |
+| `Link-to-L3` | Aggregate (LACP Active) | LAN Core | `10.0.0.1 / 255.255.255.0` | **Gộp 2 cổng vật lý `port1` + `port2` (Băng thông 2 Gbps)** nối thẳng sang Cisco Core Switch L3 (`10.0.0.2`). Chịu tải hơn 7.6 TB dữ liệu! |
+| `wan1` | Vật lý (Alias: `WAN1-VNPT`) | WAN | `14.251.8.52 / 32` | Đường truyền Internet VNPT (PPPoE qua `ppp2`, Gateway `123.29.4.132`). |
+| `wan2` | Vật lý (Alias: `WAN-VIETTEL`) | WAN | `117.4.123.239 / 32` | Đường truyền Internet Viettel (PPPoE qua `ppp3`, Gateway `27.68.227.153`). |
+| `dmz` | Vật lý | DMZ | `10.10.10.1 / 255.255.255.0` | Phân vùng cách ly máy chủ kỹ thuật. |
+| `lan` | Hardware Switch | LAN Local | `192.168.100.99 / 255.255.255.0` | Cổng cắm bảo trì kỹ thuật tại chỗ (Có DHCP cấp `192.168.100.110-210`). |
+| `mgmt` | Vật lý | Management | `192.168.1.99 / 255.255.255.0` | Cổng cứu hộ quản trị chuyên dụng (Có DHCP cấp `192.168.1.110-210`). |
+| `fortilink` | Aggregate | FortiLink | `10.255.1.1 / 255.255.255.0` | Gộp 2 cổng quang 10G `x1` + `x2` sẵn sàng cho FortiSwitch Fabric. |
 
-### 2.3. Bảng định tuyến VLAN qua Core Switch Layer 3:
-* Mạng `192.168.150.0/24` ➡️ Chuyển qua Gateway `10.0.0.2` (VLAN 150).
-* Mạng `192.168.155.0/24` ➡️ Chuyển qua Gateway `10.0.0.2` (VLAN 155).
-* Mạng `192.168.160.0/24` ➡️ Chuyển qua Gateway `10.0.0.2` (VLAN 160).
-* Mạng `192.168.184.0/21` ➡️ Chuyển qua Gateway `10.0.0.2` (VLAN 184 - Dây chuyền sản xuất).
-* Mạng `192.168.220.0/24` ➡️ Chuyển qua Gateway `10.0.0.2` (VLAN 220).
-* Mạng `192.168.228.0/24` ➡️ Chuyển qua Gateway `10.0.0.2` (VLAN 228).
-* Mạng `192.168.234.0/24` ➡️ Chuyển qua Gateway `10.0.0.2` (VLAN 234).
+### 2.3. Bảng định tuyến 8 Phân vùng VLAN qua Core Switch Layer 3:
+Hệ thống mạng Hưng Yên được phân chia thành 8 VLAN tối ưu hóa theo quy chuẩn công nghiệp:
+
+| Tên VLAN | Phân vùng chức năng | Địa chỉ Mạng & Subnet Mask | Dải IP khả dụng (Host Pool) | Gateway (Cisco L3) |
+| :--- | :--- | :--- | :--- | :--- |
+| **VLAN 10** | Đường liên kết Link-to-L3 | `10.0.0.0 / 255.255.255.0` (`/24`) | `10.0.0.1` - `10.0.0.254` (254 IP) | `10.0.0.2` (Cisco) / `10.0.0.1` (FortiGate) |
+| **VLAN 150** | `VLAN150-MGMT` (Quản trị IT) | `192.168.150.0 / 255.255.255.0` (`/24`) | `192.168.150.1` - `192.168.150.254` (254 IP) | `192.168.150.1` |
+| **VLAN 155** | `VLAN155-SERVER` (Máy chủ nội bộ) | `192.168.155.0 / 255.255.255.0` (`/24`) | `192.168.155.1` - `192.168.155.254` (254 IP) | `192.168.155.1` |
+| **VLAN 160** | `VLAN160-FACTORY` (Xưởng Sản xuất, PLC, MES) | `192.168.160.0 / 255.255.240.0` (`/20`) | `192.168.160.1` - `192.168.175.254` (**4.094 IP**) | `192.168.160.1` |
+| **VLAN 184** | `VLAN184-OFFICE` (Văn phòng, Kỹ sư, Máy bạn) | `192.168.184.0 / 255.255.248.0` (`/21`) | `192.168.184.1` - `192.168.191.254` (**2.046 IP**) | `192.168.184.1` |
+| **VLAN 220** | `VLAN220-CCTV` (Camera Giám sát An ninh) | `192.168.220.0 / 255.255.252.0` (`/22`) | `192.168.220.1` - `192.168.223.254` (**1.022 IP**) | `192.168.220.1` |
+| **VLAN 228** | `VLAN228-WIFI` (Mạng Không dây Xưởng/VP) | `192.168.228.0 / 255.255.252.0` (`/22`) | `192.168.228.1` - `192.168.231.254` (**1.022 IP**) | `192.168.228.1` |
+| **VLAN 234** | `VLAN234-Printer` (Máy in Tem Nhãn & Mã vạch) | `192.168.234.0 / 255.255.255.0` (`/24`) | `192.168.234.1` - `192.168.234.254` (254 IP) | `192.168.234.1` |
+
+> 📌 **Ghi chú kiến trúc:** FortiGate 100F định tuyến toàn bộ 8 dải mạng trên về Gateway `10.0.0.2` (Cổng Trunk/Aggregate của Cisco L3 Switch). FortiGate **không bật DHCP** trên các VLAN này; việc cấp phát IP và chuyển tiếp DHCP hoàn toàn do Cisco Core Switch hoặc DHCP Server nội bộ xử lý!
+
+### 2.3.1. Cổng mở từ ngoài Internet vào Hệ thống Camera (Virtual IPs - VIP):
+Hệ thống cho phép Ban Giám đốc và An ninh xem camera xưởng từ xa thông qua 4 quy tắc VIP trên cổng `wan1` (`14.251.8.52`):
+* `14.251.8.52:8001` ➡️ `192.168.184.10:8000` (Luồng truyền hình ảnh NVR-01 Xưởng 1).
+* `14.251.8.52:8002` ➡️ `192.168.184.11:8000` (Luồng truyền hình ảnh NVR-02 Xưởng 2).
+* `14.251.8.52:8003` ➡️ `192.168.184.10:443` (Trang Web SSL Quản trị Camera NVR-01).
+* `14.251.8.52:8004` ➡️ `192.168.184.11:443` (Trang Web SSL Quản trị Camera NVR-02).
+
+### 2.3.2. Đo lường Sức khỏe Đường truyền SD-WAN Hưng Yên (Live SLA Metrics):
+Tường lửa FortiGate 100F giám sát liên tục 2 đường truyền Internet qua cơ chế SLA Health Check (Ping `8.8.8.8` định kỳ):
+* **Đường `wan2` (Viettel `117.4.123.239`):** 
+  * Độ trễ (Latency): **24.06 ms** | Độ biến thiên trễ (Jitter): **0.28 ms** | Tỷ lệ rớt gói (Packet Loss): **0.0%**.
+  * Số phiên hoạt động: **5.243 sessions** (Đang đảm nhận phần lớn lưu lượng văn phòng & MES).
+* **Đường `wan1` (VNPT `14.251.8.52`):**
+  * Độ trễ (Latency): **35.16 ms** | Độ biến thiên trễ (Jitter): **0.18 ms** | Tỷ lệ rớt gói: **0.0%**.
+  * Số phiên hoạt động: **3.558 sessions** (Đảm nhận IPsec VPN và VIP xem Camera).
 
 ### 2.4. Hạ tầng Thiết bị Chuyển mạch Core Switch Layer 3 (Cisco Catalyst):
 * **Hãng sản xuất:** Cisco Systems, Inc. (Nhận diện qua OUI MAC `e4:4e:2d`).
 * **Địa chỉ MAC Gateway:** `e4:4e:2d:4b:8d:51`.
-* **Địa chỉ IP quản trị & Gateway VLAN 184:** `192.168.184.1`.
+* **Địa chỉ IP quản trị & Gateway VLAN 184:** `192.168.184.1` (đồng thời xuất hiện tại `10.0.0.2` trên cổng LACP và `192.168.160.11` trên VLAN sản xuất).
 * **Cổng dịch vụ quản trị đang mở:**
   * Cổng `80` (HTTP Web GUI) & `443` (HTTPS Web GUI).
   * Cổng `22` (SSH - Quản trị dòng lệnh bảo mật).
@@ -101,7 +125,7 @@
 * **Vai trò trong nhà máy:**
   * Thực hiện định tuyến liên phân vùng (**Inter-VLAN Routing**) giữa 8 VLAN nội bộ xưởng mà không cần đẩy gói tin lên FortiGate, giúp giảm tải tối đa cho tường lửa.
   * Đóng vai trò là Default Gateway trực tiếp cho máy tính của bạn và toàn bộ máy trạm, máy in chuyền sản xuất trên VLAN 184.
-  * Cổng kết nối Uplink: Cấu hình địa chỉ IP `10.0.0.2` kết nối sang cổng `Link-to-L3` (`10.0.0.1`) của FortiGate 100F.
+  * Cổng kết nối Uplink: Cấu hình địa chỉ IP `10.0.0.2` kết nối sang cổng `Link-to-L3` (`10.0.0.1`) của FortiGate 100F qua đường LACP Active 2 Gbps.
 
 ### 2.5. Danh bạ Thiết bị Sống trên Phân vùng VLAN 184 (Dây chuyền Sản xuất & Văn phòng Hưng Yên):
 Qua quá trình quét phân giải ARP và dò quét cổng dịch vụ thực tế, đây là danh mục máy móc và nhân sự đang cùng hoạt động trên VLAN 184:

@@ -39,11 +39,15 @@ Từ các lệnh đo kiểm chuyên sâu hệ thống sống, đây là toàn b�
 
 ### 💡 Phát hiện vị trí địa lý & Phân vùng mạng của bạn:
 * **Vị trí vật lý:** Máy tính của bạn đang cắm mạng trực tiếp tại **Nhà máy Hưng Yên (VinaEnesol)**.
-* **Phân vùng mạng:** Địa chỉ `192.168.184.13` thuộc về **VLAN 184** (Phân vùng mạng dành riêng cho Chuyền Sản Xuất, Thiết bị Giám sát NVR và Kỹ sư điều hành xưởng Hưng Yên).
+* **Phân vùng mạng:** Địa chỉ `192.168.184.13` thuộc về **VLAN 184** (Phân vùng `VLAN184-OFFICE` dành riêng cho Khối Điều hành Xưởng, Văn phòng Kỹ thuật và Trạm Giám sát NVR Hưng Yên, dải IP `192.168.184.0/21` gồm 2.046 địa chỉ IP).
+* **Đường truyền Uplink siêu tốc:** Tường lửa FortiGate 100F và Core Switch Cisco L3 kết nối với nhau qua đường Trunk gộp **LACP Active 2 Gbps** (`Link-to-L3` ghép 2 cổng vật lý `port1` + `port2`), đã vận chuyển hơn 7.6 TB dữ liệu sản xuất an toàn.
 * **Quy tắc tường lửa bảo vệ bạn:** Khi bạn lướt web, gói tin của bạn được cấp phép bởi **Rule số 4** trên tường lửa FortiGate 100F Hưng Yên:
   ```text
   Rule #4 [VLAN184-to-INTERNET]: Cổng vào Link-to-L3 -> Cổng ra SDWAN-VINATECH | Action: ACCEPT | NAT: ENABLE
   ```
+* **Đường ra Internet SD-WAN kép:** FortiGate tự động đo kiểm liên tục 2 đường cáp quang:
+  * Viettel `wan2` (`117.4.123.239`): Ping 8.8.8.8 chỉ **24.06 ms**, Jitter 0.28 ms, Loss 0.0% (Đường ưu tiên số 1 của máy bạn).
+  * VNPT `wan1` (`14.251.8.52`): Ping 8.8.8.8 chỉ **35.16 ms**, Jitter 0.18 ms, Loss 0.0% (Đường dự phòng & chạy VPN/VIP).
 
 ---
 
@@ -69,9 +73,13 @@ graph TD
    * MAC OUI: `e4:4e:2d` (Chính hãng Cisco Systems).
    * Mở cổng quản trị: Web `80/443`, dòng lệnh `22 (SSH)` và `23 (Telnet)`.
    * Đảm nhận toàn bộ việc định tuyến Inter-VLAN trong toàn nhà máy Hưng Yên.
-2. **`192.168.184.10` & `192.168.184.11` (Hệ thống Đầu ghi Camera NVR):**
+2. **`192.168.184.10` & `192.168.184.11` (Hệ thống Đầu ghi Camera NVR Xưởng 1 & 2):**
    * Mở cổng `80` (HTTP Web xem camera), `443` (HTTPS) và cổng chuyên dụng `8000` (Giao thức truyền luồng video giám sát xưởng sản xuất).
-   * Được tường lửa FortiGate 100F map qua Virtual IP để xem từ xa.
+   * Được tường lửa FortiGate 100F map qua 4 Virtual IP để xem an toàn từ xa qua IP WAN1 `14.251.8.52`:
+     * `14.251.8.52:8001` ➡️ `192.168.184.10:8000` (Luồng video NVR-01)
+     * `14.251.8.52:8002` ➡️ `192.168.184.11:8000` (Luồng video NVR-02)
+     * `14.251.8.52:8003` ➡️ `192.168.184.10:443` (Web HTTPS NVR-01)
+     * `14.251.8.52:8004` ➡️ `192.168.184.11:443` (Web HTTPS NVR-02)
 3. **`192.168.184.36` (`MrCuong-ProductionHY`):**
    * Máy tính của **Anh Cường** - Quản lý / Giám sát điều hành sản xuất Hưng Yên. Mở cổng chia sẻ dữ liệu Windows File Sharing `135` và `445` (SMB).
 4. **`192.168.184.42` (`PC-Thu-PRODUCTION`):**
