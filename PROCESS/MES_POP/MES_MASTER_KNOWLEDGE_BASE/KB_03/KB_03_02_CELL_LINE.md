@@ -445,27 +445,36 @@ VALUES
 
 ---
 
-### 6.9 [B351] — Lot Chuyển Đổi Nguyên Liệu / Thay Đổi Model
+### 6.9 [B351] — Lot Chuyển Đổi Nguyên Liệu / Thay Đổi Model (PO Transition)
 
-**Khi nào dùng:** Cần đổi mã hàng/model cho Lot đã sản xuất (sản xuất nhầm model, chuyển PO, đổi kế hoạch sản xuất ngày).
+**Khi nào dùng:** 
+1. Cần đổi mã hàng/model cho Lot đã sản xuất (sản xuất nhầm model, chuyển PO, đổi kế hoạch sản xuất ngày).
+2. **Job Chuyển đổi công đoạn Cutting / Slitting (Cắt điện cực / chia cuộn):** Tái điều chuyển các lô phôi lá cực hoặc cuộn BTP dở dang sang Model mới có cùng quy cách độ dày (`MaterialThickness`) và chủng loại foil/than mà không phải hủy phế.
+
+> [!IMPORTANT]
+> **Pre-flight Gate Bất Biến:** Màn hình B351 **CHỈ CHO PHÉP** chuyển đổi các Lot **ĐANG Ở DẠNG BÁN THÀNH PHẨM (WIP)** và **CHƯA ĐÓNG GÓI THÀNH PHẨM (Box Packing)**.
+> Nếu Lot đã có sản lượng đóng gói (`POR.IsOutputRoute = 1` và `ProdQty > 0`), SP `usp_DoChangeMaterialForSetInfo` sẽ ném lỗi chặn đứng: `박스포장한 이력이 있는 LOT는 변경이 불가합니다` (Lot đã đóng gói box không được phép thay đổi).
 
 **Cấu trúc giao diện & Stored Procedures (Master-Detail 2 Grids):**
 
 ```
-Lưới 1 (Master): DayProdPlanForChangeMaterial  ──▶ usp_GetDayProdPlanForChangeMaterial (Search Kế hoạch MỚI)
-Lưới 2 (Detail): SetInfoForChangeMaterial      ──▶ usp_GetSetInfoForChangeMaterial (Search Barcode HIỆN TẠI)
+Lưới 1 (Master): DayProdPlanForChangeMaterial  ──▶ usp_GetDayProdPlanForChangeMaterial (Search Kế hoạch MỚI: IsFixed=1, IsCancel=0)
+Lưới 2 (Detail): SetInfoForChangeMaterial      ──▶ usp_GetSetInfoForChangeMaterial (Search Barcode HIỆN TẠI theo DayPlan Cũ)
 Nút [Thay đổi model] (Action: ChangeMaterial)  ──▶ usp_DoChangeMaterialForSetInfo (Execute chuyển đổi)
 ```
 
 | SP | Chức năng | Dữ liệu đầu vào / đầu ra |
 |----|-----------|--------------------------|
-| `usp_GetDayProdPlanForChangeMaterial` | Lấy danh sách kế hoạch ngày khả dụng để đổi sang | `@pCompanyCode`, `@pWorkCenterCode`, `@pFromDate`, `@pToDate` |
-| `usp_GetSetInfoForChangeMaterial` | Lấy danh sách Lot/Barcode đủ điều kiện đổi | `@pCompanyCode`, `@pWorkCenterCode`, `@pBarcode` |
-| `usp_DoChangeMaterialForSetInfo` | Thực hiện đổi — cập nhật MaterialCode, DayPlanNo | Chạy khi có `TargetDayPlanNo` & `TargetMaterialCode` ở Lưới 2 |
+| `usp_GetDayProdPlanForChangeMaterial` | Lấy danh sách kế hoạch ngày khả dụng để đổi sang | `@pCompanyCode`, `@pWorkCenterCode`, `@pFromDate`, `@pToDate`, `@pPOType` |
+| `usp_GetSetInfoForChangeMaterial` | Lấy danh sách Lot/Barcode đủ điều kiện đổi | `@pDayPlanNo` |
+| `usp_DoChangeMaterialForSetInfo` | Thực hiện đổi — cập nhật MaterialCode, DayPlanNo, sinh Barcode mới, điều chuyển sản lượng PO | `@pControlNo`, `@pTargetDayPlanNo`, `@pProcessUserID` |
 
 **Tác động cơ sở dữ liệu & Khoảng hẫng đồng bộ (System Synchronization Gap):**
-- `B351` tự động cập nhật: **`STB_SetInfo`** (mã mới) + Ghi nhật ký audit **`STB_LotChangeMaterialHistory`**.
-- ⚠️ **`B351` KHÔNG tự động đồng bộ:** `STB_MaterialLotInfo` (kho WMS) và `STB_ProdRouteHist` (lịch sử công đoạn). Khi cần rollback hoặc fix lệch dữ liệu ở B525/B523, phải đồng bộ thủ công cả 4 bảng.
+- `B351` tự động cập nhật: **`STB_SetInfo`** (mã mới, Barcode mới) + **`STB_ProdRouteHist`** & **`STB_DefectRepairInfo`** (PONo, DayPlanNo, MaterialCode) + Điều chuyển sản lượng tích lũy **`STB_ProdRouteSummary`** (Trừ PO cũ, cộng PO mới) + Ghi nhật ký audit **`STB_LotChangeMaterialHistory`**.
+- ⚠️ **`B351` KHÔNG tự động đồng bộ:** 
+  1. `STB_MaterialLotInfo` (kho WMS/tuyến): Cần đồng bộ thủ công để không lỗi quét NVL trạm sau.
+  2. Nút Cắt Kiosk POP: Kiểm tra `MaterialThickness >= 100` trong `STB_MaterialMaster` (Rule 20.3).
+  3. Cân nặng kho thành phẩm: B523 yêu cầu `STB_VIETNAM_BARCODEWEIGHT` + `STB_VN_FINISHGOODS` + `STB_ChangePartNoAndLotNo`.
 
 ```sql
 -- Kiểm tra nhật ký đổi Lot tại B351
@@ -473,6 +482,8 @@ SELECT CPHNo, ControlNo, OldBarcode, NewBarcode, BefMaterialCode, AftMaterialCod
 FROM STB_LotChangeMaterialHistory WITH(NOLOCK)
 WHERE OldBarcode = 'VV...' OR NewBarcode = 'VV...'
 ```
+
+📖 **Cẩm nang chuyên sâu toàn diện:** Xem tài liệu thiết kế & vận hành đầy đủ tại [docs/B351_CUTTING_TRANSITION_GUIDE.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/docs/B351_CUTTING_TRANSITION_GUIDE.md).
 
 👉 **Tra cứu sự cố Thường gặp & Khắc phục lỗi B351:**
 - **Lỗi 1 (Dấu chấm Barcode):** Xem [KB_04_02 §B351 Lỗi 1](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_02_SCREEN_BUGS.md#lỗi-1-barcode-sinh-ra-bị-chèn-ký-tự-dấu-chấm--sai-định-dạng).

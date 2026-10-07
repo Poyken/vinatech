@@ -20,6 +20,9 @@ Related Files:
 
 ## [B351] — Lot Transition (Chuyển đổi Lot)
 
+> 📘 **Cẩm nang vận hành chuyên sâu:** Xem toàn bộ kiến trúc 2 lưới, logic SP `usp_DoChangeMaterialForSetInfo`, quy tắc sinh Barcode mới, và SOP Job Chuyển đổi công đoạn Cutting tại [docs/B351_CUTTING_TRANSITION_GUIDE.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/docs/B351_CUTTING_TRANSITION_GUIDE.md).
+> ⚠️ **Pre-flight Gate:** Chỉ cho phép chuyển đổi Lot WIP **chưa đóng gói Box** (`POR.IsOutputRoute = 1` có `ProdQty = 0`).
+
 ### Lỗi 1: Barcode sinh ra bị chèn ký tự dấu chấm (`.`) sai định dạng
 *   **Triệu chứng:** Sau khi thực hiện chuyển đổi Lot/vật tư tại màn hình **B351**, Barcode sản phẩm mới sinh ra xuất hiện dấu chấm (Ví dụ: `VVPR152.740601`) thay vì ký tự chữ `R` tiêu chuẩn (`VVPR152R740601`). Lỗi này chặn quét công đoạn tiếp theo.
 *   **Nguyên nhân gốc:** Sai lệch logic cắt ghép chuỗi sinh barcode tự động trong SP xử lý transition.

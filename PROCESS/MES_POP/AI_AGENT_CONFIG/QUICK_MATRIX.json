@@ -168,20 +168,26 @@
       "fix_template": "BOM/Route chưa cấu hình cho PO -> Kiểm tra `STB_ProductionOrderRouting`, `STB_ProductionOrderBom`"
     },
     "B351": {
-      "name": "Chuyển đổi Lot",
+      "name": "Chuyển đổi Lot (PO Transition)",
       "module": "Production",
       "sp_get": "usp_GetDayProdPlanForChangeMaterial",
       "sp_iud": "usp_DoChangeMaterialForSetInfo",
       "tables": [
         "STB_SetInfo",
-        "STB_LotChangeMaterialHistory"
+        "STB_LotChangeMaterialHistory",
+        "STB_ProdRouteHist",
+        "STB_DefectRepairInfo",
+        "STB_ProdRouteSummary",
+        "STB_RawMaterialInputHist"
       ],
       "common_bugs": {
+        "chuyển_đổi_công_đoạn_cutting_btp_sang_model_mới": "Tái điều chuyển BTP lá cực / cuộn Slitting sang PO mới trên B351. Điều kiện tiên quyết: Lot chưa đóng gói Box (ProdFinishQty=0). Lưu ý: (1) Cần kiểm tra MaterialThickness >= 100 để không mờ nút Cắt POP Kiosk (Rule 20.3), (2) Đồng bộ STB_MaterialLotInfo cho kho tuyến WMS, (3) Nạp cân nặng STB_VIETNAM_BARCODEWEIGHT trước khi ra B523 — xem docs/B351_CUTTING_TRANSITION_GUIDE.md",
+        "lỗi_popup_`박스포장한_이력이_있는_lot는_변경이_불가합니다`": "Lot đã đi qua công đoạn Đóng gói (POR.IsOutputRoute=1) và có sản lượng đóng thùng -> B351 chặn cứng để bảo vệ tính toàn vẹn thùng hàng -> Phải hủy đóng gói tại B523 trước khi mang sang B351 đổi mã.",
         "barcode_sinh_ra_bị_chèn_ký_tự_dấu_chấm_(": "Sai lệch logic cắt ghép chuỗi sinh barcode tự động -> Sửa đồng loạt Barcode trong `STB_RawMaterialInputHist`, `STB_SetInfo`, `STB_LotChangeMaterialHistory` — xem [KB_04_02 §B351](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_02_SCREEN_BUGS.md#b351--lot-transition-chuyển-đổi-lot)",
         "yêu_cầu_in_tem_gốc_(mã_cũ)_sau_khi_b351_": "Đã chuyển đổi sản xuất tại B351 (lưu `STB_LotChangeMaterialHistory`), B525 tự động in tem mã mới -> ⚠️ **CẦN QUẢN LÝ PHÊ DUYỆT:** Khi được phê duyệt, chạy script rollback đồng bộ 4 bảng (`STB_SetInfo`, `STB_MaterialLotInfo`, `STB_ProdRouteHist`, `STB_LotChangeMaterialHistory`) — xem [KB_04_02 §B351 Lỗi 2](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_02_SCREEN_BUGS.md#lỗi-2-user-yêu-cầu-in-lại-tem-gốc-mã-cũ-sau-khi-sản-xuất-đã-chuyển-đổi-lot-tại-b351)",
         "bấm_nút_\"thay_đổi_model\"_báo_lỗi_popup_r": "Chưa chọn/gán Kế hoạch mục tiêu (Target Plan/Material) từ Lưới 1 xuống Lưới 2 (`SetInfoForChangeMaterial`), khiến các cột `TargetDayPlanNo` / `TargetMaterialCode` bị trống (rỗng) -> Thao tác UI: (1) Tìm Kế hoạch sản xuất mục tiêu ở Lưới 1 (`DayProdPlanForChangeMaterial`), (2) Chọn các dòng Lot ở Lưới 2 và thực hiện gán Target để các cột `TargetDayPlanNo` và `TargetMaterialCode` hiển thị mã mới, (3) Nhấn lại nút \"Thay đổi model\" — xem [KB_04_02 §B351 Lỗi 3](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_02_SCREEN_BUGS.md#lỗi-3-bấm-nút-thay-đổi-model-xuất-hiện-thông-báo-no-data-to-process)"
       },
-      "fix_template": "Sai lệch logic cắt ghép chuỗi sinh barcode tự động -> Sửa đồng loạt Barcode trong `STB_RawMaterialInputHist`, `STB_SetInfo`, `STB_LotChangeMaterialHistory` — xem [KB_04_02 §B351](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/MES_MASTER_KNOWLEDGE_BASE/KB_04/KB_04_02_SCREEN_BUGS.md#b351--lot-transition-chuyển-đổi-lot)"
+      "fix_template": "Sai lệch logic cắt ghép chuỗi sinh barcode tự động -> Sửa đồng loạt Barcode trong `STB_RawMaterialInputHist`, `STB_SetInfo`, `STB_LotChangeMaterialHistory` — xem docs/B351_CUTTING_TRANSITION_GUIDE.md"
     },
     "B353": {
       "name": "Thay đổi tên lot",

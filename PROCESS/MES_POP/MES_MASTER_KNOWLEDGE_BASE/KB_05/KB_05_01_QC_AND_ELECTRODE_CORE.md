@@ -696,6 +696,23 @@ UNION ALL SELECT 'STB_ElectrodeSlittingResult', COUNT(*) FROM STB_ElectrodeSlitt
 
 ---
 
+### 8.12 Quy Trình Chuyển Đổi Lot BTP Điện Cực / Cutting Sang Model Mới Qua Màn Hình B351 (PO Transition)
+
+* **Bối cảnh nghiệp vụ:** Khi cuộn điện cực sau cán ép (Roll-pressed Mother Roll) hoặc các cuộn BTP sau khi cắt xẻ (Slit Child Rolls / Cutting Sheets) cần điều chuyển sang một Kế hoạch sản xuất / Model khác tương thích về độ dày lá than (`MaterialThickness`) và chiều rộng dải xẻ (Width mm).
+* **Cơ chế chuyển đổi trên B351:**
+  1. Khởi tạo Kế hoạch ngày mục tiêu trên **B442** (Kế hoạch Điện cực) hoặc **B450** (`IsFixed = 1`, `IsCancel = 0`).
+  2. Mở màn hình **B351** (`PO 기종변경처리` — Lot Transition):
+     - **Lưới 1 (Master):** Chọn Kế hoạch mục tiêu (Model mới).
+     - **Lưới 2 (Detail):** Gõ `DayPlanNo` cũ của lô điện cực / cutting $\rightarrow$ Gán Target sang Lưới 2 $\rightarrow$ Bấm nút **[Thay đổi model]**.
+  3. Hệ thống thực thi SP `usp_DoChangeMaterialForSetInfo`, tự động sinh Barcode mới theo cấu trúc chuẩn Vinatech, cập nhật `STB_SetInfo`, điều chuyển sản lượng tích lũy trên PO (`STB_ProdRouteSummary`), và ghi log audit vào `STB_LotChangeMaterialHistory`.
+* **3 Cảnh báo kỹ thuật quan trọng cho phân hệ Điện cực:**
+  - ⚠️ **Pre-flight Gate:** Lot điện cực **chưa được đóng gói Box** (`POR.IsOutputRoute = 1` có `ProdQty = 0`).
+  - ⚠️ **Độ dày lá cực (`MaterialThickness`):** Model mới bắt buộc phải có `MaterialThickness >= 100` trong `STB_MaterialMaster`. Nếu nhỏ hơn 100, Kiosk xưởng sẽ tự động làm mờ Nút Cắt điện cực ([Rule 20.3](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/POP_KNOWLEDGE_BASE/POP_KB_07_POP_FAULT_HANDLING_PLAYBOOK.md)).
+  - ⚠️ **Đồng bộ WMS Tuyến:** Sau khi B351 đổi mã, cần đồng bộ `STB_MaterialLotInfo` để chuyền Winding (Quấn cuộn) quét nạp được cuộn cực.
+* 📖 **Chi tiết toàn diện:** Xem cẩm nang [docs/B351_CUTTING_TRANSITION_GUIDE.md](file:///c:/Users/User%20Vinatech.DESKTOP-RJJSEQU/Desktop/PROCESS/MES_POP/docs/B351_CUTTING_TRANSITION_GUIDE.md).
+
+---
+
 ## 9. 🔬 QC Flow Đầy Đủ — IQC → PQC → OQC → Bending/Cutting
 
 ### 9.1 IQC (Incoming Quality Control — Kiểm tra NVL đầu vào)
