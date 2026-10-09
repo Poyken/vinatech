@@ -18,3 +18,7 @@
 {"author":"vanduc","db":"SmartFactoryV2","timestamp":"2026-10-03 16:18:15","tables":{},"title":"usp_SanminaLabelPrint_get_Vietnam.sql","file":"usp_SanminaLabelPrint_get_Vietnam.sql"}
 {"author":"vanduc","db":"SmartFactoryV2","timestamp":"2026-10-03 16:38:47","tables":{},"title":"usp_SanminaLabelPrint_get_Vietnam.sql","file":"usp_SanminaLabelPrint_get_Vietnam.sql"}
 {"author":"vanduc","db":"SmartFactoryV2","timestamp":"2026-10-05 11:46:13","tables":["SmartFactoryV2.dbo.STB_SanminaPrintQueue"],"title":"ROLLBACK SP IN TEM SANMINA B767/B763 VE NGUYEN TRANG TRUOC 03/10 (OPTION A)","file":"usp_SanminaLabelPrint_get_Vietnam.sql, usp_SanminaIndiaLabelPrintHist_iud.sql"}
+{"author":"vanduc (EA Team)","db":"SmartFactoryV2","timestamp":"2026-10-08 16:36:01","tables":{},"title":"hotfix_20261008_FIX_B270_PRODUCT_MACHINE_BY_LINE.sql","file":"hotfix_20261008_FIX_B270_PRODUCT_MACHINE_BY_LINE.sql"}
+{"author":"vanduc","db":"SmartFactoryV2","timestamp":"2026-10-08 17:56:58","tables":{},"title":"undo_B270_MISMATCH_MACHINES_20261008_163359.sql","file":"undo_B270_MISMATCH_MACHINES_20261008_163359.sql"}
+{"author":"vanduc (EA Team)","db":"SmartFactoryV2","timestamp":"2026-10-08 18:06:03","tables":{},"title":"hotfix_20261008_OPTIMAL_HYBRID_MACHINE_MAPPING.sql","file":"hotfix_20261008_OPTIMAL_HYBRID_MACHINE_MAPPING.sql"}
+{"author":"vanduc (EA Team)","db":"SmartFactoryV2","timestamp":"2026-10-08 18:18:47","tables":{},"title":"hotfix_20261008_ENABLE_FULL_MACHINE_VISIBILITY_FOR_ALL_LINES.sql","file":"hotfix_20261008_ENABLE_FULL_MACHINE_VISIBILITY_FOR_ALL_LINES.sql"}

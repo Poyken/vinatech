@@ -5,7 +5,7 @@
 -- Target Screen: [B767] VVT_SanminaLabelPrint
 -- Config Screen: [B763] VVT_SanminaShipmentPlan
 -- =============================================
-CREATE OR ALTER PROCEDURE [dbo].[usp_SanminaLabelPrint_get_Vietnam]
+CREATE   PROCEDURE [dbo].[usp_SanminaLabelPrint_get_Vietnam]
 				@pProcessUserID VARCHAR(20) = null,
 				@pProcessLanguage VARCHAR(20) = null,
 				@pPONumber VARCHAR(50) = null,

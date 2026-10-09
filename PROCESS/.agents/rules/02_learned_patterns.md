@@ -1,4 +1,4 @@
-﻿# 🧠 VINATECH LEARNED PRODUCTION PATTERNS & INCIDENT PLAYBOOKS (02_learned_patterns.md)
+# 🧠 VINATECH LEARNED PRODUCTION PATTERNS & INCIDENT PLAYBOOKS (02_learned_patterns.md)
 
 > **Mục đích:** Nơi lưu trữ tự động và bền vững các bài học vận hành, tiền lệ xử lý sự cố thực tế được đúc kết từ lệnh `/learn` và kinh nghiệm thực chiến của kỹ sư IT (Author: `vanduc`).
 > **Quy tắc cập nhật:** Khi kỹ sư nhắc nhở, sửa lỗi hoặc dùng `/learn`, Agent sẽ bổ sung trực tiếp mẫu hình mới vào tệp này kèm ngày tháng và giải pháp.
@@ -108,6 +108,25 @@
   WHERE MaterialCode = 'GBTPPL-001';
   COMMIT;
   ```
+
+### 16. Chuẩn Hóa Ánh Xạ Thiết Bị Toàn Diện Cho Lot Liên Xưởng (Bắc Ninh -> Hưng Yên & Cụm Máy Hạ Nguồn)
+- **Triệu chứng:** Khi chuyển Lot từ Bắc Ninh xuống Hưng Yên, hoặc công nhân chạy máy giữa các chuyền, Kiosk POP không hiển thị tên máy cần thiết (như Curling DR1/DR2 BN, Riveting BN, Curling C#1..C#10, Sleeving C#1..C#10) khiến công nhân không thể chốt được sản lượng.
+- **Root Cause & Đặc thù liên xưởng:**
+  1. Các máy Bắc Ninh chuyển xuống (`Curling DR1/DR2 BN`, `Riveting DR1/DR2 BN`, `Bọc vỏ BN`) trước đây chỉ được map vào duy nhất `VVHYC-01` với Route `_HY`, trong khi Lot Bắc Ninh có thể chạy ở Line khác (Line 2, 4, 8, `BN_HY`, `TCX1`, `TCX2`) hoặc mang mã Route gốc Bắc Ninh (`_BG` hoặc không có hậu tố).
+  2. Tuyến điều chuyển `BN_HY` có 0 bản ghi mapping trong `STB_ProductMachine`.
+- **Giải pháp dứt điểm (Full Visibility Hotfix):**
+  1. Mở toàn bộ thiết bị Hưng Yên và Bắc Ninh trên toàn bộ các Line (`VVHYC-01..10`, `BN_HY`, `TCX1`, `TCX2`).
+  2. Đa hình hóa RouteCode: Khai báo đồng thời cả 3 hệ mã Route: `_HY` (`V-22_HY..V-25_HY`), `_BG` (`V-22_BG..V-25_BG`) và Route tiêu chuẩn (`V-22..V-25`).
+  3. File Hotfix chuẩn: `hotfix_20261008_ENABLE_FULL_MACHINE_VISIBILITY_FOR_ALL_LINES.sql`.
+  4. Kết quả: 100% OP ở bất kỳ Line nào, chạy Lot Hưng Yên hay Lot Bắc Ninh chuyển xuống, đều luôn luôn nhìn thấy máy mình cần và chốt được sản lượng ngay lập tức.
+
+### 17. Quy Ước Định Danh CSDL CMS: CMS = CMS_VINA (Chấm Công Vân Tay)
+- **Quy ước người dùng:** Khi người dùng đề cập đến **CMS** hoặc **Database CMS**, mặc định 100% hiểu là CSDL **`CMS_VINA`** (Hệ thống Quản lý Chấm công & Vân tay - `ATTENDANCE_CMS`), TUYỆT ĐỐI KHÔNG hiểu sang `WCMS_Standard` / FirmBanking ngân hàng trừ khi người dùng nói rõ "WCMS" hoặc "FirmBanking".
+- **Thông tin kỹ thuật cốt lõi:**
+  - CSDL: `CMS_VINA` (và `CMS_HN` cho Hà Nam).
+  - Vị trí vật lý: Máy chủ `110.11.27.5\MESTESTDB,8080`.
+  - Cổng truy vấn từ MES: Linked Server `[CMS_VINA_LINK]`.
+  - Lưu ý truy cập máy trạm: Kết nối trực tiếp cần đúng port `,8080`, instance `\MESTESTDB`, và tài khoản có quyền (như `sa` qua Linked Server, tránh dùng `vinaadmin` vì chưa map user).
 
 ---
 

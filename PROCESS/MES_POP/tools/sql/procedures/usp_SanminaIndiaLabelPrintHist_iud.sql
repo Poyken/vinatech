@@ -1,4 +1,4 @@
-﻿CREATE OR ALTER PROCEDURE [dbo].[usp_SanminaIndiaLabelPrintHist_iud]
+﻿CREATE   PROCEDURE [dbo].[usp_SanminaIndiaLabelPrintHist_iud]
             @pProcessUserID VARCHAR(20) = NULL,
 		    @pProcessLanguage VARCHAR(20) = NULL,
             @pSupplierName VARCHAR(50) = NULL,
