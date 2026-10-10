@@ -128,6 +128,29 @@
   - Cổng truy vấn từ MES: Linked Server `[CMS_VINA_LINK]`.
   - Lưu ý truy cập máy trạm: Kết nối trực tiếp cần đúng port `,8080`, instance `\MESTESTDB`, và tài khoản có quyền (như `sa` qua Linked Server, tránh dùng `vinaadmin` vì chưa map user).
 
+### 18. In Tem Sanmina 2 Line Song Song [B767] & Chế Độ Smart Reprint (2 Máy Chung PO / Chung Lot / Chung Tài Khoản)
+- **Bối cảnh thực tế (Yêu cầu khẩn xưởng đóng gói - Chị Hoa & Đức IT - 09/10/2026):**
+  - Xưởng đóng gói cần chạy đồng thời **2 máy tính (2 Line dán tem)** cho cùng 1 đơn hàng PO xuất khẩu Sanmina India để kịp tiến độ xuất hàng.
+  - Ràng buộc thực tế: Cả 2 máy tính dùng **chung 1 tài khoản đăng nhập MES**, có trường hợp **chung mã Lot hoặc khác Lot (1 Lot rải rác nhiều Pallet)**.
+  - Vấn đề cũ: Trước đây B767 chỉ có 1 biến đếm đơn luồng `PrintedBoxCount`, 2 máy cùng in sẽ bị tranh chấp (Race Condition), nhảy số thứ tự thùng (`CartonBoxNo`) so le hoặc trùng tem, lộn xộn Serial.
+- **Giải pháp Kiến Trúc 3 Lớp Chốt Chặn (Bulletproof Architecture):**
+  1. **Lớp Giao Diện B767:** Mở 2 ô tìm kiếm `Từ thùng (@pFromBox)` và `Đến thùng (@pToBox)`.
+     - Line 1 nhập: `Từ thùng = 1, Đến thùng = 10` -> In từ `01/20` đến `10/20`.
+     - Line 2 nhập: `Từ thùng = 11, Đến thùng = 20` -> In từ `11/20` đến `20/20`.
+  2. **Lớp Stored Procedure (`usp_SanminaLabelPrint_get_Vietnam`):**
+     - Tự động tìm số thùng tiếp theo `NextBox` độc lập trong dải của Line đó.
+     - Tự động tính Serial tịnh tiến chuẩn xác: `BaseSerial = StartSerial + ((NextBox - 1) * 2)`. Line 2 tự động nối tiếp Serial sau Line 1, tuyệt đối không trùng lặp.
+     - Chốt chặn trần (Upper Boundary Check): Khi Line 1 in đủ 10 thùng, nếu bấm in tiếp thùng 11 hệ thống Raise Error chặn lại, chống in lấn dải của Line 2.
+     - **Smart Reprint (In lại tem rách/lệch):** Khi tem thùng $X$ bị rách, công nhân chỉ cần gõ `Từ thùng = X, Đến thùng = X`. Hệ thống nhận diện tự động bốc lại đúng dữ liệu và Serial gốc ban đầu để in tem thay thế, không làm tăng biến đếm B763.
+  3. **Lớp Đồng Bộ B763 (`usp_SanminaIndiaLabelPrintHist_iud`):**
+     - Đồng bộ tiến độ bằng `COUNT(DISTINCT CartonBoxNo)`. Dù 2 Line in so le thì B763 vẫn đếm chuẩn tổng số thùng đã in, khi gom đủ 20/20 thùng thì tự chuyển `Status = 'COMPLETED'`.
+- **Kết quả nghiệm thu Sandbox (09/10/2026):**
+  - Đã chạy kiểm thử tự động toàn diện qua `run_test.ps1` trên 3 bảng test và 2 SP test độc lập (`_TEST`), đạt **8/8 TEST CASES PASSED (100% ĐẠT)**, tự dọn dẹp sạch bằng `ROLLBACK TRAN`, 0 byte rác.
+- **Kế hoạch triển khai Production (Chủ Nhật):**
+  - Áp dụng logic SP vào `usp_SanminaLabelPrint_get_Vietnam` và `usp_SanminaIndiaLabelPrintHist_iud`.
+  - Mở 2 ô `Từ thùng (@pFromBox)` và `Đến thùng (@pToBox)` trên NAIS Screen Designer B767.
+  - Bàn giao xưởng vận hành 2 Line dán tem song song.
+
 ---
 
 ## 📝 NHẬT KÝ BÀI HỌC MỚI (LEARNED ENTRIES SINK)

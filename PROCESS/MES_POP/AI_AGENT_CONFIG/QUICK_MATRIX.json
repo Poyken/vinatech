@@ -622,8 +622,10 @@
       "name": "Machine Check Sheet",
       "module": "Production",
       "sp_get": "",
-      "sp_iud": "stb_CheckSheetDaily",
-      "tables": [],
+      "sp_iud": "",
+      "tables": [
+        "stb_CheckSheetDaily"
+      ],
       "common_bugs": {},
       "fix_template": "—"
     },
@@ -631,8 +633,11 @@
       "name": "Machine PM",
       "module": "Production",
       "sp_get": "",
-      "sp_iud": "STB_MachinePmHistory, STB_MachinePmItem",
-      "tables": [],
+      "sp_iud": "",
+      "tables": [
+        "STB_MachinePmHistory",
+        "STB_MachinePmItem"
+      ],
       "common_bugs": {},
       "fix_template": "—"
     },

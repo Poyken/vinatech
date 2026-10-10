@@ -1,4 +1,4 @@
-# ==============================================================================
+﻿# ==============================================================================
 # pop_trace.ps1 — Ultra-Fast 360° Trace with Smart Identifier Resolver
 # Single Round-Trip | Auto Pattern Detection (Lot / Packing / Machine / Line)
 # Tham chiếu: RULE 6 (Golden Query), POP_KB_01, POP_KB_02, POP_KB_03
@@ -7,7 +7,8 @@
 param(
     [Parameter(Position = 0, Mandatory = $true)]
     [string]$Target,
-    [switch]$Json
+    [switch]$Json,
+    [switch]$Fast
 )
 
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
@@ -227,6 +228,58 @@ WHERE MaterialCode = '$t'
 ORDER BY CreateDateTime DESC;
 "@
 } else { # LOT / BARCODE / CONTROLNO
+    if ($Fast) {
+        $cmd.CommandText = @"
+SET NOCOUNT ON;
+DECLARE @Ctrl VARCHAR(30) = '$t';
+DECLARE @Bar VARCHAR(50) = '$t';
+
+IF EXISTS (SELECT 1 FROM SmartFactoryV2.dbo.STB_SetInfo WITH(NOLOCK) WHERE ControlNo = '$t')
+    SELECT TOP 1 @Bar = Barcode FROM SmartFactoryV2.dbo.STB_SetInfo WITH(NOLOCK) WHERE ControlNo = '$t';
+ELSE IF EXISTS (SELECT 1 FROM SmartFactoryV2.dbo.STB_SetInfo WITH(NOLOCK) WHERE Barcode = '$t')
+    SELECT TOP 1 @Ctrl = ControlNo FROM SmartFactoryV2.dbo.STB_SetInfo WITH(NOLOCK) WHERE Barcode = '$t';
+
+-- 1. STB_SetInfo (Index Seek)
+SELECT TOP 1 ControlNo, PONo, Barcode, MaterialCode, IsProdFinish, IsLineInput, DefectQty, CreateDateTime 
+FROM SmartFactoryV2.dbo.STB_SetInfo WITH(NOLOCK) 
+WHERE ControlNo = @Ctrl;
+
+-- 2. STB_ProdRouteHist (Index Seek)
+SELECT TOP 20 
+    H.ProdRouteHistNo, 
+    H.ControlNo, 
+    H.RouteCode, 
+    H.WorkCenterCode, 
+    H.ProdQty, 
+    H.JobDate, 
+    H.ProdDateTime, 
+    ISNULL(W.WorkerCode, H.CreateUserID) AS WorkerCode,
+    ISNULL(PW.WorkerName, ISNULL(W.WorkerCode, H.CreateUserID)) AS WorkerName,
+    H.CompleteRoute 
+FROM SmartFactoryV2.dbo.STB_ProdRouteHist H WITH(NOLOCK) 
+OUTER APPLY (
+    SELECT TOP 1 WorkerCode 
+    FROM SmartFactoryV2.dbo.STB_ProdRouteWorkerHist WITH(NOLOCK) 
+    WHERE ProdRouteHistNo = H.ProdRouteHistNo 
+    ORDER BY CreateDateTime DESC
+) W
+LEFT JOIN SmartFactoryV2.dbo.STB_ProdWorkerInfo PW WITH(NOLOCK) ON W.WorkerCode = PW.WorkerCode
+WHERE H.ControlNo = @Ctrl 
+ORDER BY H.ProdRouteHistNo ASC;
+
+-- 3. MongoToMesPerformance (POP Sync)
+SELECT TOP 5 DayPlanNo, Barcode, RouteCode, LineCode, MachineCode, TotalProdQty, TotalDefectQty, IsDone, IsTransferred, InsertDateTime, ModifyDateTime 
+FROM SmartFactoryV2.dbo.MongoToMesPerformance WITH(NOLOCK) 
+WHERE Barcode = @Bar 
+ORDER BY ModifyDateTime DESC;
+
+-- 4. VINA_PACKING_REMAIN_QTY (POP Packing Buffer)
+SELECT TOP 5 DAY_PLAN_NO, BARCODE, ROUTE_CODE, TOTAL_PROD_QTY, PACKED_QTY, REMAIN_QTY, REG_DATE 
+FROM VINATECH_POP.dbo.VINA_PACKING_REMAIN_QTY WITH(NOLOCK) 
+WHERE BARCODE = @Bar 
+ORDER BY REG_DATE DESC;
+"@
+    } else {
     $cmd.CommandText = @"
 SET NOCOUNT ON;
 DECLARE @Ctrl VARCHAR(30) = '$t';
@@ -421,6 +474,7 @@ BEGIN
     SELECT 0 AS RouteIndex, '' AS RouteCode, '' AS RouteName, '' AS BasicRoutingCode WHERE 1=0;
 END
 "@
+    }
 }
 
 $adapter = New-Object System.Data.SqlClient.SqlDataAdapter($cmd)
@@ -941,15 +995,23 @@ if ($type -eq "PACKING") {
     Show-Table "CAC PO GAN NHAT DANG SAN XUAT" $ds.Tables[1] "Yellow"
     Show-Table "CAC LOT GAN NHAT (STB_SetInfo)" $ds.Tables[2] "Cyan"
 } else { # LOT
-    if ($ds.Tables.Count -ge 10 -and $ds.Tables[9].Rows.Count -gt 0) {
-        Show-QcCard $ds.Tables[9]
-    }
-    Show-LotCard $ds.Tables[0]
-    if ($ds.Tables.Count -ge 13) {
-        Show-PoRoutingCard $ds.Tables[11] $ds.Tables[12] $ds.Tables[1] $ds.Tables[2] $ds.Tables[0]
-    }
-    Show-Table "2. TIEN DO CONG DOAN MES (STB_ProdRouteHist)" $ds.Tables[1] "Cyan"
-    Show-Table "3. TRANG THAI POP KIOSK & DONG BO (MongoToMesPerformance)" $ds.Tables[2] "Green"
+    if ($Fast) {
+        Show-LotCard $ds.Tables[0]
+        Show-Table "2. TIEN DO CONG DOAN MES (STB_ProdRouteHist)" $ds.Tables[1] "Cyan"
+        Show-Table "3. TRANG THAI POP KIOSK & DONG BO (MongoToMesPerformance)" $ds.Tables[2] "Green"
+        if ($ds.Tables.Count -ge 4 -and $ds.Tables[3].Rows.Count -gt 0) {
+            Show-Table "4. TIEN DO DONG GOI KIOSK POP (VINA_PACKING_REMAIN_QTY)" $ds.Tables[3] "Magenta"
+        }
+    } else {
+        if ($ds.Tables.Count -ge 10 -and $ds.Tables[9].Rows.Count -gt 0) {
+            Show-QcCard $ds.Tables[9]
+        }
+        Show-LotCard $ds.Tables[0]
+        if ($ds.Tables.Count -ge 13) {
+            Show-PoRoutingCard $ds.Tables[11] $ds.Tables[12] $ds.Tables[1] $ds.Tables[2] $ds.Tables[0]
+        }
+        Show-Table "2. TIEN DO CONG DOAN MES (STB_ProdRouteHist)" $ds.Tables[1] "Cyan"
+        Show-Table "3. TRANG THAI POP KIOSK & DONG BO (MongoToMesPerformance)" $ds.Tables[2] "Green"
     Show-Table "4. THONG KE PHE PHAM (STB_DefectRepairInfo)" $ds.Tables[3] "Red"
     Show-BomCard $ds.Tables[4]
     Show-Table "5.2. LICH SU NVL DA NAP TREN KIOSK POP (STB_RawMaterialInputHist)" $ds.Tables[5] "Magenta"
@@ -966,8 +1028,9 @@ if ($type -eq "PACKING") {
             }
         }
     }
-    Show-Table "6. MAY DANG GAN TREN CHUYEN (VINA_EQUIPMENT_MAPPING)" $ds.Tables[7] "Yellow"
-    Show-Table "7. NHAT KY THAO TAC POP (VINA_POP_ACTION_LOG)" $ds.Tables[8] "Gray"
+        Show-Table "6. MAY DANG GAN TREN CHUYEN (VINA_EQUIPMENT_MAPPING)" $ds.Tables[7] "Yellow"
+        Show-Table "7. NHAT KY THAO TAC POP (VINA_POP_ACTION_LOG)" $ds.Tables[8] "Gray"
+    }
 }
 
 Write-Host ''

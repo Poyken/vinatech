@@ -1,4 +1,4 @@
-﻿# ==============================================================================
+# ==============================================================================
 # ops.ps1 — VINATECH ENTERPRISE MASTER OPERATIONS HUB (v4.0)
 # ==============================================================================
 # Tong Hanh Dinh Dieu Hanh 5 Tru Cot: MES_POP | GROUPWARE | DATABASE | FINAL | .agents
@@ -303,19 +303,35 @@ function Invoke-DeepClean {
     }
     Write-Host "  -> Da thanh ly $purgedLogs tep log cu (>7 ngay)." -ForegroundColor Green
 
-    # Detect Zombie Processes
-    Write-Host "  -> Quet tien trinh chay ngam tren may tram..." -ForegroundColor Gray
-    $zombies = Get-Process -Name "cloudflared", "node" -ErrorAction SilentlyContinue
+    # Detect Zombie Processes via CommandLine Inspection
+    Write-Host "  -> Quet tien trinh chay ngam tren may tram (Zombie CPU Cleanup)..." -ForegroundColor Gray
+    $allProcs = Get-CimInstance Win32_Process -ErrorAction SilentlyContinue
+    $zombies = $allProcs | Where-Object {
+        # 1. Orphaned npx chrome or chrome-remote-interface
+        ($_.Name -eq "node.exe" -and $_.CommandLine -match "npx-cli\.js.*chrome|chrome-remote-interface") -or
+        # 2. Orphaned headless Chrome browser
+        ($_.Name -eq "chrome.exe" -and $_.CommandLine -match "--headless") -or
+        # 3. Orphaned powershell/python background tasks
+        ($_.Name -match "powershell|python" -and $_.CommandLine -match "mes_diagnose|pop_trace|inspect_" -and $_.ProcessId -ne $PID)
+    }
+
     if ($zombies) {
-        Write-Host "     Phat hien $($zombies.Count) tien trinh web/tunnel: $($zombies.Name -join ', ')" -ForegroundColor Yellow
+        Write-Host "     Phat hien $($zombies.Count) tien trinh orphan/zombie can giai phong!" -ForegroundColor Yellow
+        foreach ($zp in $zombies) {
+            Write-Host "       [!] PID $($zp.ProcessId): $($zp.Name)" -ForegroundColor DarkGray
+        }
         if ($Force) {
-            $zombies | Stop-Process -Force -ErrorAction SilentlyContinue
-            Write-Host "     [OK] Da tieu diet cac tien trinh chay ngam de bao ve CPU!" -ForegroundColor Green
+            foreach ($zp in $zombies) {
+                try {
+                    Stop-Process -Id $zp.ProcessId -Force -ErrorAction SilentlyContinue
+                } catch {}
+            }
+            Write-Host "     [OK] Da tieu diet $($zombies.Count) tien trinh orphan ma khong anh huong toi IDE hay Web Portal!" -ForegroundColor Green
         } else {
-            Write-Host "     (Them co -Force de tieu diet cac tien trinh nay neu khong su dung Web Portal)" -ForegroundColor DarkGray
+            Write-Host "     (Them co -Force de tieu diet cac tien trinh nay: .\ops.ps1 clean -Force)" -ForegroundColor DarkGray
         }
     } else {
-        Write-Host "     May tram hoat dong toi uu, khong co zombie process!" -ForegroundColor Green
+        Write-Host "     May tram hoat dong toi uu, khong co zombie process gay qua tai CPU!" -ForegroundColor Green
     }
 
     Write-Host "[OK] Deep Workspace Purge hoan tat!" -ForegroundColor Cyan
@@ -435,6 +451,10 @@ switch ($Command.ToLower()) {
     "audit-kb" {
         Show-OpsBanner
         Write-Host "[*] KHOI CHAY KIEM TOAN ANTI-DRIFT L1 CACHE & LIVE SCHEMA..." -ForegroundColor Yellow
+        $syncScript = Join-Path $scriptDir "MES_POP\tools\sync_matrices.ps1"
+        if (Test-Path $syncScript) {
+            & $syncScript -CheckOnly
+        }
         $mesAudit = Join-Path $scriptDir "MES_POP\tools\audit_l1_cache.ps1"
         if (Test-Path $mesAudit) {
             & $mesAudit

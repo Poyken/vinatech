@@ -21,7 +21,8 @@ param(
     [switch]$Force,
     [switch]$Detail,
     [switch]$Clean,
-    [switch]$Json
+    [switch]$Json,
+    [switch]$Fast
 )
 
 # Gop cac doi so con lai vao Target neu khong chi dinh tuong minh -Target
@@ -110,7 +111,7 @@ switch ($cmdLower) {
         }
         $popTraceScript = Join-Path $toolsDir 'pop_trace.ps1'
         if (Test-Path $popTraceScript) {
-            & $popTraceScript -Target $targetVal -Json:$Json
+            & $popTraceScript -Target $targetVal -Json:$Json -Fast:$Fast
         } else {
             Write-Error "tools/pop_trace.ps1 not found."
         }

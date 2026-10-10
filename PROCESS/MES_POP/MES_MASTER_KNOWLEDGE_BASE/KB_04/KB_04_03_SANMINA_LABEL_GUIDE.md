@@ -258,4 +258,32 @@ flowchart TD
 >   `tools/sql/backup/pre_rollback_20261005/`
 > * Khi nhà máy có nhu cầu chuyển sang in hàng loạt Pallet, chỉ cần deploy lại các file trong thư mục snapshot trên lên DB mà không cần phải tái cấu hình XML giao diện NAIS.
 
+---
+
+## 7. 🚀 Kiến Trúc In Tem Song Song 2 Line / 2 Máy [B767] & Smart Reprint (Verified Sandbox 09/10/2026)
+
+### 7.1 Bối Cảnh Nghiệp Vụ & Ràng Buộc Xưởng
+* **Áp lực xuất hàng:** Xưởng đóng gói cần chạy đồng thời **2 máy tính (2 Line dán tem)** cho cùng 1 đơn hàng PO Sanmina India để tăng gấp đôi năng suất đóng gói.
+* **Ràng buộc:** Cả 2 máy tính dùng **chung 1 tài khoản đăng nhập MES**, có trường hợp **chung mã Lot hoặc khác Lot (1 Lot rải rác nhiều Pallet)**.
+
+### 7.2 Kiến Trúc 3 Lớp Chốt Chặn (Bulletproof Architecture)
+1. **Giao Diện B767:** Bổ sung 2 tham số `@pFromBox` (Từ thùng) và `@pToBox` (Đến thùng).
+   * **Line 1 (Máy 1):** Nhập `Từ thùng = 1, Đến thùng = 10` $\rightarrow$ Tự động in từ `01/TotalBox` đến `10/TotalBox`.
+   * **Line 2 (Máy 2):** Nhập `Từ thùng = 11, Đến thùng = 20` $\rightarrow$ Tự động in từ `11/TotalBox` đến `20/TotalBox`.
+2. **Stored Procedure (`usp_SanminaLabelPrint_get_Vietnam`):**
+   * Tự động tìm số thùng tiếp theo `NextBox` độc lập trong dải của Line đó.
+   * Tính Serial tịnh tiến chuẩn xác: $\text{BaseSerial} = \text{StartSerial} + [(\text{NextBox} - 1) \times 2]$.
+   * **Chốt chặn trần (Upper Boundary Check):** Line 1 in đủ 10 thùng, nếu bấm in tiếp thùng 11 sẽ bị Raise Error chặn lại, không cho in lấn dải của Line 2.
+   * **Smart Reprint (In lại tem rách/lệch):** Khi thùng $X$ bị rách tem, công nhân chỉ cần gõ `Từ thùng = X, Đến thùng = X`. Hệ thống tự bốc lại đúng dữ liệu và Serial gốc ban đầu để in lại tem thay thế, không làm tăng biến đếm B763.
+3. **Đồng Bộ B763 (`usp_SanminaIndiaLabelPrintHist_iud`):**
+   * Đồng bộ tiến độ bằng `COUNT(DISTINCT CartonBoxNo)`. Dù 2 Line in so le thì B763 vẫn đếm chuẩn tổng số lượng thùng đã in, khi gom đủ 20/20 thùng thì tự chuyển `Status = 'COMPLETED'`.
+
+### 7.3 Kết Quả Kiểm Thử Sandbox & Kế Hoạch Triển Khai Thực Tế
+* Đã chạy bộ kiểm thử tự động toàn diện `04_RUN_AUTOMATED_TEST_SUITE_B767.sql` trên 3 bảng `_TEST` và 2 SP `_TEST` biệt lập 100%: **Đạt 8/8 Test Cases Passed (100% PASS)**.
+* **Kế hoạch triển khai lên Production DB (Chủ Nhật):**
+  1. Apply code SP vào `dbo.usp_SanminaLabelPrint_get_Vietnam` và `dbo.usp_SanminaIndiaLabelPrintHist_iud`.
+  2. Mở 2 ô `Từ thùng (@pFromBox)` và `Đến thùng (@pToBox)` trên NAIS Screen Designer B767 (`SmartFramework`).
+  3. Bàn giao cho xưởng vận hành 2 line dán tem song song.
+
+
 

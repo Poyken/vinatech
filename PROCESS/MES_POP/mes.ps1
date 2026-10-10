@@ -28,7 +28,8 @@ param(
     [switch]$Force,
     [switch]$Detail,
     [switch]$Clean,
-    [switch]$Json
+    [switch]$Json,
+    [switch]$Fast
 )
 
 # Gop cac doi so con lai vao Target neu khong chi dinh tuong minh -Target
@@ -256,7 +257,7 @@ function Invoke-SmartAutoRouter {
         Write-Host "-> Tu dong nhan dien '$lotCode' la Ma Lot San Xuat. Khoi chay Golden Query 360 do..." -ForegroundColor Green
         $popTraceScript = Join-Path $toolsDir 'pop_trace.ps1'
         if (Test-Path $popTraceScript) {
-            & $popTraceScript -Target $lotCode -Json:$Json
+            & $popTraceScript -Target $lotCode -Json:$Json -Fast:$Fast
             exit 0
         }
     }
@@ -265,7 +266,7 @@ function Invoke-SmartAutoRouter {
     Write-Host "-> Tu dong nhan dien '$q' -> Khoi chay Golden Query 360 do..." -ForegroundColor Green
     $popTraceScript = Join-Path $toolsDir 'pop_trace.ps1'
     if (Test-Path $popTraceScript) {
-        & $popTraceScript -Target $q -Json:$Json
+        & $popTraceScript -Target $q -Json:$Json -Fast:$Fast
     } else {
         Write-Error 'tools/pop_trace.ps1 not found.'
     }
@@ -339,7 +340,7 @@ elseif ($cmdLower -eq 'trace' -or $cmdLower -eq 'pop-trace') {
 
     $popTraceScript = Join-Path $toolsDir 'pop_trace.ps1'
     if (Test-Path $popTraceScript) {
-        & $popTraceScript -Target $Target -Json:$Json
+        & $popTraceScript -Target $Target -Json:$Json -Fast:$Fast
     } else {
         Write-Error 'tools/pop_trace.ps1 not found.'
     }
